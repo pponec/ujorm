@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Language" content="cs" />
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
+<meta name="Author" content="Pavel Ponec" />
+<meta name="Description" content="So the another JavaBeans" />
+<meta name="keywords" content="UJO, framework, Java, POJO, JavaBean, perzistence, XML, CSV, export, import" /> 
+<title>Unified Access Pattern</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"></link>
+</head>
+
+<body>
+
+<!--
+<div style="text-align:center; margin: auto;">
+<script type="text/javascript"><!-.-
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 728;
+	google_ad_height = 90;
+	google_ad_format = "728x90_as";
+	google_ad_type = "text_image";
+	//2007-10-09: pponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-.->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+-->
+
+
+<h1 style="text-align:center; margin: 0pt 200pt 8pt 0pt;">Unified Access Pattern Design</h1>
+
+<hr />
+
+<div id="xmenu">
+<div id="menu">
+  <strong>Language</strong>
+  <ul class="ulm">
+     <li><a href="index.htm">English</a></li>
+     <li><a href="index-cs.htm">Čeština</a></li>
+  </ul>
+  <strong>Menu</strong>
+  <ul class="ulm">
+     <li><a href="http://ujoframework.blogspot.com/">Blog</a></li>
+     <li><a href="#motivation">Motivation</a></li>
+     <li><a href="#classmodel">Structure (class model)</a></li>
+     <li><a href="#implementation">Implementation in Java language</a></li>
+     <li><a href="#usage">Usage</a></li>
+     <li><a href="#author">About author</a></li>
+  </ul>
+</div>
+
+<!-- === REKLAMA === -->
+<script type="text/javascript"><!--
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 160;
+	google_ad_height = 600;
+	google_ad_format = "160x600_as";
+	google_ad_type = "text_image";
+	//2007-10-09: pponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<!-- === KONEC REKLAMY === -->
+</div>
+
+
+<div id="main">
+    
+    
+    <div class="chapter">
+        <h2 id="motivation">Motivation:</h2>
+        The pattern <strong>Unified Access </strong> describes a type safe access (reading and writing) to values of a <strong>map</strong> object (object that maps keys to values)
+	for a such case where values have got different data types.
+    </div>
+    
+
+    <div class="chapter">
+        <h2 id="classmodel">Structure (class model):</h2>
+        The model contains two classes:
+	<ul>
+	    <li>MyMap - a simple map that maps keys to values</li>
+	    <li>Property - a representative of a map key</li>
+	</ul>
+	
+	<img src="ClassDiagram.png" width="333" height="333" alt="Class Diagram" style="margin: 10px;" />
+        
+    </div>
+    
+    <div class="chapter">
+        <h2 id="implementation">Implementation in Java language</h2>
+        
+        The implementation requires a <strong>generic type</strong> language support
+        that's why the Java SE 5.0 or more must be used.
+        <br />A MyMap class implements a simple map behavior and it contains two keys NAME and AGE.
+<pre class="pre"><span class="java-keywords">import</span> java.util.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> MyMap {
+    
+    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Property&lt;String&gt; NAME = <span class="java-keywords">new</span> Property&lt;String&gt;();
+    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Property&lt;Integer&gt; AGE = <span class="java-keywords">new</span> Property&lt;Integer&gt;();
+    <span class="java-keywords">private</span> Map&lt;Property, Object&gt; data = <span class="java-keywords">new</span> HashMap&lt;Property, Object&gt;();<br />
+    <span class="java-keywords">protected</span> Object <span class="java-layer-method">readValue</span>(Property key) {
+        <span class="java-keywords">return</span> data.<span class="java-layer-method">get</span>(key);
+    }
+    <span class="java-keywords">protected</span> <span class="java-keywords">void</span> <span class="java-layer-method">writeValue</span>(Property key, Object value) {
+        data.<span class="java-layer-method">put</span>(key, value);
+    }
+}</pre>
+
+
+All keys are an instance of a <strong>Property</strong> class, however each of them will provide a value of a different type.
+<br />If both classes (MyMap and Property) will be located in the same package, then it is possible to retain their
+visibility to <strong>protected</strong> so that no strange object can to use them.
+
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Property&lt;VALUE&gt; {<br />
+    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setValue</span>(MyMap map, VALUE value) {
+        map.<span class="java-layer-method">writeValue</span>(<span class="java-keywords">this</span>, value);
+    }
+    <span class="java-keywords">public</span> VALUE <span class="java-layer-method">getValue</span>(MyMap map)  {
+        <span class="java-keywords">return</span> (VALUE) map.<span class="java-layer-method">readValue</span>(<span class="java-keywords">this</span>);
+    }
+}</pre>        
+
+
+This pattern allows a value access by a <strong>methods of key</strong> only. 
+It is possible to verify the method <strong>setValue</strong> accepts declared value type 
+to write into map object and then method <strong>getValue</strong> returns the same data type only.
+
+<pre class="pre">            
+MyMap map = <span class="java-keywords">new</span> <span class="java-layer-method">MyMap</span>();<br />
+MyMap.NAME.<span class="java-layer-method">setValue</span>(map, <span class="java-string-literal">&quot;Peter Prokop&quot;</span>);
+MyMap.AGE .<span class="java-layer-method">setValue</span>(map, <span class="java-numeric-literals">22</span>);
+
+String name = MyMap.NAME.<span class="java-layer-method">getValue</span>(map);
+<span class="java-keywords">int</span>    age  = MyMap.AGE.<span class="java-layer-method">getValue</span>(map);
+System.out.<span class="java-layer-method">println</span>(name + <span class="java-string-literal">&quot; is &quot;</span> + age);
+<br /></pre>        
+
+    </div>
+    
+    <div class="chapter">
+        <h2 id="usage">Usage:</h2>
+The pattern design can be used in place of conventional POJO object. It's meaningful in case there is to need to refer a <strong>method</strong> (set/get), 
+no its value. Here are three samples of usage in a Java language
+<ul>
+    <li>The sort method takes a list of items and its properties (e.g. NAME, AGE) for the ordering. A GenericSorter implementation builds an appropriate comparator oneself .
+<pre class="pre" style="margin-left: 0;">
+<span class="java-keywords">interface</span> GenericSorter {
+    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">sort</span>(List&lt;MyMap&gt; items, Property ... properties);
+}</pre>
+    </li>
+    <li>a child of a TableModel interface, which can to take a list of columns by an argument of a method
+<pre class="pre" style="margin-left: 0;">
+<span class="java-keywords">interface</span> GenericTableModel&lt;MyMap&gt; <span class="java-keywords">extends</span> TableModel {
+    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setColumns</span>(Property ... columns);
+}</pre>
+<li>There is obvious, that all values are saved by a <strong>single method</strong>  writeProperty() only. 
+    In case the MyMap class becomes a <strong>parrent of more classes</strong> (they are written in the same pattern desing), 
+    so the method writeProperty() will become a <strong>central writing point</strong> for all hierarchy of classes.
+    The point is a true place for inserting common <strong>validations, conversions and listeners</strong>.        
+<br />Next method <strong>readProperty()</strong> replaces all NULL values by a value for all Integer types. 
+    In the example a class Property returns a value type by a new method getType().
+<pre  class="pre" style="margin-left: 0;"><span class="java-keywords">protected</span> Object <span class="java-layer-method">readValue</span>(Property key) {
+    Object result = <span class="java-keywords">super</span>.<span class="java-layer-method">readValue</span>(key);<br />
+    <span class="java-keywords">if</span> (result==<span class="java-keywords">null</span>
+    &amp;&amp;  key.<span class="java-layer-method">getType</span>()==Integer.<span class="java-keywords">class</span> ){
+        <span class="java-keywords">return</span> <span class="java-numeric-literals">0</span>;
+    } <span class="java-keywords">else</span> {
+        <span class="java-keywords">return</span> result;
+    }
+}</pre>       
+</li>
+    
+</ul>        
+	
+Two projects has been built by this pattern design at first probably. There are
+<a href="http://jworksheet.ponec.net/index.htm">jWorkSheet</a> and
+<a href="http://ujoframework.org/index.htm">UJO Framework</a>.
+<br />Both projects are available include a source code on <a href="http://sourceforge.net/projects/jworksheet/">SourceForge.net</a> 
+under an open license since 2007-10-24.
+<br />The pattern design was  slightly extended; a final solution is described by two interfaces
+<ul> 
+<li><a href="http://ujoframework.ponec.net/javadoc/org/ujoframework/Ujo.html">Ujo</a> a</li> 
+<li><a href="http://ujoframework.ponec.net/javadoc/org/ujoframework/UjoProperty.html">UjoProperty</a></li> 
+</ul>	
+        
+    </div>
+    
+    
+    <div class="chapter">
+        <h2 id="author">About Author:</h2>
+        <ul>  
+            <li>You can write questions or other messages to me by a blog <a href="http://ujoframework.blogspot.com/">http://ujoframework.blogspot.com/</a>.</li>
+            <li>There exists some more free applications on an authors home page <a href="http://ponec.net/">http://ponec.net/</a> .</li>
+            <li>A contact e-mail: ujoframework@gmail.com</li>
+        </ul>  
+    </div>	
+    <hr style="clear:both;" />
+    
+    <p style="text-align:center"><span class="PPonec">PP</span><span class="ppONEC">one</span><span class="PPonec">(</span><span
+            class="ppONEC">c</span><span class="PPonec">) 2007</span>
+    </p>
+    
+    <div class="chapter" style="text-align: center;">
+        <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" width="14" height="14" alt="NAVRCHOLU.cz" style="border:none" /></a></div></noscript>        
+        
+        <a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+    </div>
+</div>
+<p>&nbsp;</p>
+
+</body>
+</html>

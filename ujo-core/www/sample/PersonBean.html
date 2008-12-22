@@ -1,0 +1,61 @@
+<!-- 
+    Document   : PersonBean
+    Created on : 11.7.2008, 20:33:27
+    Author     : pavel
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>PersonBean.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.comment {color: #969696}
+.line-number {background-color: #e9e8e2}
+.keyword-directive {color: #0000e6}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">Class: PersonBean.java</td></tr></table>
+<pre>
+<span class="line-number"> 1</span> <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> PersonBean {
+<span class="line-number"> 2</span> 
+<span class="line-number"> 3</span>     <span class="keyword-directive">private</span> String name;
+<span class="line-number"> 4</span>     <span class="keyword-directive">private</span> Boolean male;
+<span class="line-number"> 5</span>     <span class="keyword-directive">private</span> Double cash = 0d;
+<span class="line-number"> 6</span> 
+<span class="line-number"> 7</span>     <span class="keyword-directive">public</span> Double getCash() {
+<span class="line-number"> 8</span>         <span class="keyword-directive">return</span> cash;
+<span class="line-number"> 9</span>     }
+<span class="line-number">10</span> 
+<span class="line-number">11</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> setCash(Double cash) {
+<span class="line-number">12</span>         <span class="keyword-directive">this</span>.cash = cash;
+<span class="line-number">13</span>     }
+<span class="line-number">14</span> 
+<span class="line-number">15</span>     <span class="keyword-directive">public</span> Boolean getMale() {
+<span class="line-number">16</span>         <span class="keyword-directive">return</span> male;
+<span class="line-number">17</span>     }
+<span class="line-number">18</span> 
+<span class="line-number">19</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> setMale(Boolean male) {
+<span class="line-number">20</span>         <span class="keyword-directive">this</span>.male = male;
+<span class="line-number">21</span>     }
+<span class="line-number">22</span> 
+<span class="line-number">23</span>     <span class="keyword-directive">public</span> String getName() {
+<span class="line-number">24</span>         <span class="keyword-directive">return</span> name;
+<span class="line-number">25</span>     }
+<span class="line-number">26</span> 
+<span class="line-number">27</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> setName(String name) {
+<span class="line-number">28</span>         <span class="keyword-directive">this</span>.name = name;
+<span class="line-number">29</span>     }
+<span class="line-number">30</span> 
+<span class="line-number">31</span>     <span class="comment">/**</span> <span class="comment">Add</span> <span class="comment">a</span> <span class="comment">value</span> <span class="comment">into</span> <span class="comment">cash</span> <span class="comment">*/</span>
+<span class="line-number">32</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> addCash(<span class="keyword-directive">double</span> cash) {
+<span class="line-number">33</span>         <span class="keyword-directive">double</span> newPrice = <span class="keyword-directive">this</span>.cash + cash;
+<span class="line-number">34</span>         <span class="keyword-directive">this</span>.cash = newPrice;
+<span class="line-number">35</span>     }
+<span class="line-number">36</span> }
+</pre></body>
+</html>

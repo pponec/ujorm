@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="http://ujoframework.org/sample/bin/" 
+  href="parameters.jnlp"> 
+  <information> 
+    <title>UJO Parameters - sample</title> 
+    <vendor>Pavel Ponec</vendor> 
+    <homepage href="."/> 
+    <description>...</description> 
+    <description kind="short">...</description> 
+    <icon href="logo.png"/>
+    <icon kind="splash" href="logo.png"/> 
+    <offline-allowed/> 
+  </information>
+  
+  <security>
+      <all-permissions/> 
+  </security>
+  
+  <resources> 
+    <j2se version="1.5+" max-heap-size="32m"/> 
+    <jar href="ujo-sample.jar"/>
+  </resources> 
+  <application-desc 
+      main-class="org.ParamFrame"> 
+     <argument>test</argument>
+  </application-desc> 
+</jnlp> 
+

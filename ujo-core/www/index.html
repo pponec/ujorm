@@ -1,0 +1,453 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Name       : Firming
+Description: A two-column, fixed-width design suitable for small websites and blogs.
+Version    : 1.0
+Released   : 20080129
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>UJO Framework</title>
+    <link rel="shortcut icon" href="images/favicon2.ico" type="image/x-icon" />
+    <meta name="keywords" content="UJO, Framework, introspection, reflection, property, Java, JavaBean, open source, XML, CSV, serialization, marshal, unmarshal" />
+    <meta name="description" content="The revolutionary architecture of the bean object" />
+    <link href="images/style.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="images/style2.css" rel="stylesheet" type="text/css" media="screen" />
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="menu">
+        <ul>
+          <li><a href="#license">License</a></li>
+          <li class="current_page_item"><a href="http://ujoframework.org/">Homepage</a></li>
+          <li><a href="#reference">Reference</a></li>
+          <li><a href="#download">Download</a></li>
+          <li><a href="#author">Contact</a></li>
+        </ul>
+      </div>
+      <div id="logo">
+        <h1><a href="#">UJO Framework</a></h1>
+        <h2>the revolutionary architecture</h2>
+        <h2><img src="images/ujo80.png" width="80" height="80" alt="Logo" style="margin-left:50px;" /></h2>
+      </div>
+      <hr />
+      <div id="page">
+        <div id="content">
+          
+          <div class="post">
+            <div class="entry">
+              <strong>UJO Framework</strong> is a Java library providing non-traditional object architecture
+              different from <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>. 
+              The original idea was a toy with generic data types of Java 5.0 
+              however over time it appears, that the architecture has some exciting new features.				
+            </div><p class="meta">&nbsp;</p>
+          </div><!-- post -->
+                        
+                        
+          <div class="post">
+            <h2 class="title"><a href="#">Features</a></h2>
+            <div class="entry">
+              
+              <table class="top">
+                <tr><td><a href="javadoc/org/ujoframework/package-summary.html#UJO2"><img src="images/milky-60.png" alt="60.png" width="48" height="48" /></a>
+                  </td><td>
+                    <strong>Revolutionary</strong><br/> object architecture based on two interfaces
+                  </td>
+                  
+                  <td><a href="javadoc/org/ujoframework/package-summary.html#performance"><img src="images/milky-12.png" alt="12.png" width="48" height="48" /></a>
+                  </td><td style="width: 40%;">
+                    <strong>Performance</strong><br/>great performance include a high speed XML serialization
+                </td></tr>
+                
+                <tr><td><a href="javadoc/org/ujoframework/package-summary.html#how"><img src="images/milky-54.png" alt="54.png" width="48" height="48" /></a>
+                  </td><td style="width: 40%;">
+                    <strong>Easy to use</strong>
+                    <br/>short learning,
+                    high object reusability, 
+                    open source
+                  </td>
+                  
+                  <td><a href="javadoc/org/ujoframework/package-summary.html#UJO"><img src="images/milky-44.png" alt="44.png" width="48" height="48" /></a>
+                  </td><td>
+                    <strong>Documentation</strong><br/>detailed documentation include samples of code.
+                </td></tr>
+              </table>
+              
+              <div style="margin-top: 28px;">
+                <strong>More characteristics:</strong>
+                <a href="images/UjoUmlFull.png"><img src="images/UjoUmlFull2-green.png" width="200" height="190" alt="UjoUml.png" style="float:right; margin: 15px 0 0 0px; vertical-align:text-top; border:0" /></a>
+                <ul>
+                  <li>very simple <a href="javadoc/org/ujoframework/Ujo.html#readProperties()">introspection</a></li>  
+                  <li>serialization to / from formats 
+                     <a href="http://en.wikipedia.org/wiki/XML">XML</a>,
+                     <a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> and 
+                     <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">Resource bundle</a></li>
+                  <li>UJO object itself recommends the availability of its attributes for different actions</li>
+                  <li><a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a> support</li>
+                  <li>direct support of the <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a><!-- component--></li>
+                  <li>reduction of UJO source code for an easier maintainance</li>
+                  <li>way for an implementation a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
+                    to only one <a href="javadoc/org/ujoframework/Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">place</a>
+                    for each properties include children</li>
+                  <li>most features are checked by unit tests</li>
+                  <li>tiny framework without further dependencies</li>
+                </ul>        					
+              </div>
+              
+            </div>
+            <p class="meta">&nbsp;</p>
+          </div><!-- post -->
+                        
+                        
+          <div class="post" id="architecture">
+            <img src="images/milky-31.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"><a href="#">Architecture</a></h2>
+            <div class="entry">
+                
+              <strong>UJO</strong> is an abbreviation for <strong>Unified Java Object</strong>
+              and it is a such <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">object</a>
+              which implements an interface <a href="javadoc/org/ujoframework/Ujo.html">Ujo</a>.
+              
+              You can imagine the object UJO like a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">map</a> (an object that maps keys to values)
+              with data access by <strong>methods of the key</strong> for example. 
+              This key is made up of the implementation of the <a href="javadoc/org/ujoframework/UjoProperty.html">UjoProperty</a> 
+              including (among others) two type-safe methods:
+              
+              <ul>
+                <li><a href="javadoc/org/ujoframework/UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - to write the value into the object and</li> 
+                <li><a href="javadoc/org/ujoframework/UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - to read the value.</li>
+              </ul>
+              
+              There is possible to send a property method to an another object simply by the <strong>property key</strong> contrary of the methods of JavaBean object.
+              
+              An example of the use can be a list of table columns sent to the data model (type of TableModel)
+              or references to the methods of the bean in a JSP page. 
+              
+              The core of the project are two interfaces 
+              <a href="javadoc/org/ujoframework/Ujo.html" style="font-style: italic;">Ujo</a> a 
+              <a href="javadoc/org/ujoframework/UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
+              which have got three abstract implementations:
+              
+              <ul>
+                <li><a href="javadoc/org/ujoframework/implementation/map/MapUjo.html">MapUjo</a> - is suitable for simple implementation with sufficient power for common applications, it is based on the object <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
+                <li><a href="javadoc/org/ujoframework/implementation/array/ArrayUjo.html">ArrayUjo</a> - the high performance is implemented by the <strong>object array</strong></li>
+                <li><a href="javadoc/org/ujoframework/implementation/bean/BeanUjo.html">BeanUjo</a> - implementation calls related methods of <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> using a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflection</a></li>
+              </ul>
+              
+              
+              I took inspiration for my work from project <a href="http://cayenne.apache.org/">Cayenne</a> (a solution for an <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a>).
+              I&nbsp;thank the authors for this product.
+              <br />&nbsp;<br />
+              
+            </div>
+            <p class="meta"> <a href="javadoc/org/ujoframework/package-summary.html#UJO" class="permalink">Read more</a> </p>
+          </div><!-- post -->
+                        
+                                                
+                        
+          <div class="post">
+            <img src="images/milky-10.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="sample"><a href="#">Sample of usage:</a></h2>
+            <div class="entry">
+              How do you <strong>write your first</strong> UJO object?	The easiest way is to use some abstract implementation of the Ujo interface.
+              For example see an implementation of the class <i>Person</i> which includes three attributes and a one method to add a&nbsp;cash.
+              
+              <pre class="pre"><span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt&lt;Person&gt; {
+    
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, <span class="java-numeric-literals">0d</span>);
+    
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">addCash</span>(<span class="java-keywords">double</span> cash) {
+    <span class="java-keywords">double</span> newCash = <span class="java-layer-method">get</span>(CASH) + cash;
+    <span class="java-layer-method">set</span>(CASH, newCash);
+  }
+}</pre>
+<!-- -->          
+              <p>Note that a result of the method get(CASH) <strong>needs no casting</strong> to Double type and 
+              the Java <strong>compiler disallows improper parameter types</strong> in the statement set(CASH, newCash).
+              The CASH property have got a default zero value to all Person instances similar like a primitive type do it.              
+              </p>
+              
+              <p>The sample uses an <a href="javadoc/org/ujoframework/extensions/UjoExt.html">extended API</a>                
+              for more conventional property access in a source code
+              that's available since the <strong>UJO release 0.80</strong>.
+              The new solution allows to you to chain more properties according to a model of a some new popular languages.
+              <!-- <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a> -->
+              The extended API is a child of the <a href="javadoc/org/ujoframework/Ujo.html">original API</a> so 
+              you can mix both types because all internal tools are handling the original API still  .
+              </p>
+              
+              <p id="ujoimpl">Sometimes it is not possible to extend an abstract class so you can implements the Ujo interface by four methods only.
+              Note the implementation is valid for <strong>all subclasses</strong> of the Person class too.
+              The sample:</p>
+              
+<pre class="pre"><span class="keyword-directive">import</span> java.util.HashMap;
+<span class="keyword-directive">import</span> org.ujoframework.*;
+<span class="keyword-directive">import</span> org.ujoframework.core.UjoManager;
+<span class="keyword-directive">import</span> org.ujoframework.implementation.map.*;
+
+@SuppressWarnings(<span class="character">&quot;</span><span class="character">unchecked</span><span class="character">&quot;</span>)
+<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">implements</span> Ujo {
+    
+  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Person,String &gt; NAME = <span class="keyword-directive">new</span> MapProperty(<span class="character">&quot;</span><span class="character">Name</span><span class="character">&quot;</span>, String.<span class="keyword-directive">class</span>);
+  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Person,Boolean&gt; MALE = <span class="keyword-directive">new</span> MapProperty(<span class="character">&quot;</span><span class="character">Male</span><span class="character">&quot;</span>, Boolean.<span class="keyword-directive">class</span>);
+  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Person,Double &gt; CASH = <span class="keyword-directive">new</span> MapProperty(<span class="character">&quot;</span><span class="character">Cash</span><span class="character">&quot;</span>, <span class="java-numeric-literals">0d</span>);
+  
+  <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the MapUjo implementation ---</span></span>
+  <span class="keyword-directive">private</span> HashMap map = <span class="keyword-directive">new</span> HashMap();  
+  <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(UjoProperty property) {
+    Object result = map.get(property);
+    <span class="keyword-directive">return</span> result!=<span class="keyword-directive">null</span> ? result : property.getDefault();
+  }
+  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">writeValue</span>(UjoProperty property, Object value) {
+    map.put(property, value);
+  }
+  <span class="keyword-directive">public</span> UjoProperty[] <span class="java-layer-method">readProperties</span>() {
+    <span class="keyword-directive">return</span> UjoManager.getInstance().readProperties(getClass());
+  }
+  <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, UjoProperty property, Object value) {
+    <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+  } <span style="background-color: #fbf1f1"><span class="comment">// --- The end of MapUjo implementation ---</span></span>
+
+  <span class="comment">/** Add cash in the <strong>Ujo implementation</strong> */</span>
+  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> addCash(<span class="keyword-directive">double</span> cash) {
+    <span class="keyword-directive">double</span> newPrice = CASH.of(<span class="keyword-directive">this</span>) + cash;
+    CASH.setValue(<span class="keyword-directive">this</span>, newPrice);
+  }
+}</pre>
+<p>Compare the both samples with a <a href="sample/PersonBean.html">sample code of a JavaBean</a> object.
+If we exclude all imports from the code then the <strong>Ujo implementation</strong> have got slightly less code lines in compare to JavaBeans.
+However the more properties gives significantly the better effect in favour of the Ujo implementation.
+</p>
+<!-- -->           
+
+            </div>
+            <p class="meta"> <a href="javadoc/org/ujoframework/package-summary.html#UJO" class="permalink">To continue</a> </p>
+          </div><!-- post -->
+             
+                        
+                        
+          <div class="post">
+            <h2 class="title" id="reference"><a href="#">Reference project</a></h2>
+            <div class="entry">
+              <a href="http://jworksheet.ponec.net/"><img src="images/jws48.png" width="48" height="48" alt="jws48.png" style="float:right; margin: 0 0 5px 5px; vertical-align:text-top; border:0" /></a>
+              See application <a href="http://jworksheet.ponec.net/">jWorkSheet</a> for more details
+              or an <a href="http://jworksheet.ponec.net/javadoc/">API</a> of the application.
+              Here are some characteristics of <strong>jWorkSheet</strong>:<br />
+              <ul>
+                <li>persistence is made by UJO Framework include application parameters.</li>
+                <li>all table model are a child of UjoTable class.</li>
+                <li>very small size: 200 kB (signed) include the UJO Framework library.</li>
+                <li>the jWorkSheet have used features of UJO release 0.7x (hard core).</li>
+              </ul>
+              Source code is Java 5.0 compatible, an <a href="http://www.netbeans.org/">NetBeans IDE</a> was used. 
+            </div>
+            <p class="meta"> <a href="http://jworksheet.ponec.net/" class="permalink">Read more</a> </p>
+          </div><!-- post -->
+             
+                        
+                        
+          <div class="post">
+            <img src="images/milky-46.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"  id="license"><a href="#">Licence:</a></h2>
+            <div class="entry">
+              Source code was released under license <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br />
+              <br />
+              
+              <div class="pre apache"><code>
+ Copyright 2007-2008 Paul Ponec
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.</code>
+              </div>
+            </div>
+            <p class="meta">&nbsp;</p>
+            
+          </div><!-- post -->
+             
+                        
+                        
+          <div class="post">
+            <img src="images/milky-07.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="download"><a href="#">Download:</a></h2>
+            <div class="entry">
+              You can download an source and binary packages from SourceForge:
+              <ul> 
+                <li>Binary <a href="http://sourceforge.net/projects/ujoframework/">package</a></li>
+                <li>Source <a href="http://sourceforge.net/projects/ujoframework/">package</a></li>
+              </ul>
+              
+            </div>
+            <p class="meta">&nbsp;</p>
+            
+          </div><!-- post -->
+             
+             
+                        
+          <div class="post">
+            <img src="images/milky-27.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="similar"><a href="#">Similar projects:</a></h2>
+            <div class="entry">
+                Here are links to some other projects with similar concerns:                
+                <ul>
+                <li><a href="https://bean-properties.dev.java.net/">Bean-properties</a> - project using Java 5 syntax and object oriented features in order to provide property support that leapfrogs the properties available in Delphi/VB and other languages. The properties implemented in bean-properties use Java's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
+                <li><a href="http://commons.apache.org/attributes/">Commom Attributes</a> - an attribute and metadata solution for the Java 1.4 or earlier enables Java programmers to use C#/.Net-style attributes in their code</li>
+                <li><a href="http://jcp.org/en/jsr/detail?id=175">JSR-175</a> - a metadata facility for the JavaTM Programming Language</li>
+                <li><a href="http://spice.codehaus.org/metaclass/model.html">MetaClass</a> - the attributes are usually specified in the java source files as javadoc markup. The source file is then processed and the metadata is compiled into descriptors that MetaClass is capable of reading. These descriptors are then loaded at runtime to provide metadata about the program elements. </li>
+                <li><a href="http://qdox.codehaus.org/">qDox</a> - a high speed, small footprint parser for extracting class/interface/method definitions from source files complete with JavaDoc @tags. It is designed to be used by active code generators or documentation tools.</li>
+                </ul>
+            </div>
+            <p class="meta">&nbsp;</p>
+            
+          </div><!-- post -->
+             
+             
+                        
+                  <div class="post">
+            <img src="images/milky-06.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"  id="author"><a href="#">Contact:</a></h2>
+            <div class="entry">
+              <ul>  
+                <li>Blog: <a href="http://ujoframework.blogspot.com/">http://ujoframework.blogspot.com/</a></li>
+                <li>Support: <a href="http://sourceforge.net/forum/forum.php?forum_id=744237">discussion forums</a></li>
+                <li>Contact: ujoframework@gmail.com</li>
+                <li>See homepage <a href="http://ponec.net/">http://ponec.net/</a> for more applications of the author.</li>
+            </ul>
+            </div>
+            <p>&nbsp;</p>
+          </div><!-- post -->
+             
+             
+                        
+          <!--              
+          <div class="post">
+            <h2 class="title"><a href="#">Xxx</a></h2>
+            <div class="entry">
+              ...
+            </div>
+            <p class="meta"> <a href="javadoc/org/ujoframework/package-summary.html#UJO" class="permalink">Read more</a> </p>
+          </div><!-.- post -.->
+          -->   
+                        
+                        
+        </div><!-- end #content -->
+        
+        <div id="sidebar">
+          <ul>
+            <li id="search">
+              <h2>Search</h2>
+                <div>
+<form action="http://www.google.cz/cse" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-5317001675717556:njjc462bpai" />
+    <input type="hidden" name="ie" value="windows-1250" />
+    <input type="text" name="q" size="19" />
+    <input type="submit" name="sa" value="Search" />
+  </div>
+</form>
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+              </div>
+            </li>
+            <li>
+              <h2>What</h2>
+              <p>
+                Are you looking for a quick XML persistence?
+                Do you need an easy introspection?
+                Are you developing a&nbsp;thin client?
+                <strong>Try&nbsp;the&nbsp;UJO&nbsp;Framework!</strong><br />
+                <!--<a href="#">More&hellip;</a>-->
+                </p>
+            </li>
+            <li>
+              <h2>Selection</h2>
+              <ul>
+                 <li><a href="presentation/">Presentation<span style="font-style: italic;"> - slide show</span></a></li>
+                 <li><a href="sample/index.htm">Getting started<span style="font-style: italic;"> - tutorial</span></a></li>
+                 <li><a href="sample/parameters.htm">Application parameters<span style="font-style: italic;"> - tutorial</span></a></li>
+                 <li><a href="http://ujoframework.blogspot.com/">Blog</a></li>
+                 <li><a href="#reference">Reference</a></li>
+                 <li><a href="javadoc/index.html">JavaDoc</a></li>
+                 <li><a href="#download">Download</a></li>
+                 <li><a href="#license">License</a></li>
+                 <li><a href="javadoc/changes.txt">Release Notes</a></li>
+                 <li><a href="patternDesing/index.htm">Unified Access Pattern Design</a></li>
+                 <li><a href="#similar">Similar projects</a></li>
+              </ul>
+            </li>
+            
+            <li><h2>advertising </h2>
+              <ul><li>
+<script type="text/javascript"><!--
+google_ad_client = "pub-5317001675717556";
+/* UJO new desing */
+google_ad_slot = "4299553465";
+google_ad_width = 200;
+google_ad_height = 200;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>                
+              </li>
+              <li>
+<script type="text/javascript"><!--
+google_ad_client = "pub-5317001675717556";
+/* UJO new desing */
+google_ad_slot = "4299553465";
+google_ad_width = 200;
+google_ad_height = 200;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>                
+              </li>              
+              </ul>
+            </li>  
+            
+            <li><h2 id="emblems">Emblems</h2>
+              <ul>
+                  
+              <li><a href="http://www.java.net">
+<img height="25" width="90" style="border:0;" alt="java.net Member Button: 90px wide" src="images/javanet_button_90.gif"/>
+</a>
+              </li>    
+              <li>
+<a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+
+<div style="display: none;">
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+</div>
+
+<a href="http://navrcholu.cz/Statistika/111542/" style="text-decoration: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+              </li>         
+              
+              </ul>  
+            </li>  
+          </ul>
+        </div>
+        <!-- end #sidebar -->
+      </div>
+      <!-- end #page -->
+      <div id="footer">
+        <p>(c) 2007-2008 <a href="http://ujoframework.org">UJO Framework</a> from Paul Ponec. Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>. Icons by <a href="http://min.frexy.com">Min Tran</a></p>
+      </div>
+    </div>
+  </body>
+</html>

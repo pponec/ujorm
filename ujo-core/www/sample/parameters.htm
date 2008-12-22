@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Language" content="cs" />
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
+<meta name="Author" content="Pavel Ponec" />
+<meta name="Description" content="So the another JavaBeans" />
+<meta name="keywords" content="sample, UJO, framework, Java, POJO, JavaBean, perzistence, XML, CSV, export, import" /> 
+<title>UJO - How to manage Parameters</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"></link>
+<link rel="stylesheet" type="text/css" href="styles-nb.css"></link>
+</head>
+
+<body>
+
+<!--
+<div style="text-align:center; margin: auto;">
+<script type="text/javascript"><!-.-
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 728;
+	google_ad_height = 90;
+	google_ad_format = "728x90_as";
+	google_ad_type = "text_image";
+	//2007-10-09: ponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-.->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+-->
+
+<h1 style="text-align:center; margin: 0pt 200pt 8pt 0pt;"><a href=".."><img src="../images/ujo64.png" alt="logo" style="margin: 0 10px; vertical-align: text-top; border:0;" /></a>
+Parameter manager</h1>
+
+<hr />
+
+<div id="xmenu">
+<div id="menu">
+  <!-- 
+  <strong>Language</strong>
+  <ul class="ulm">
+     <li><a href="index.htm">English</a></li>
+     <li><a href="index.htm">Čeština</a></li>
+  </ul>  -->
+  <strong>Tutorials</strong>
+  <ul class="ulm">
+     <li><a href="index.htm">How to create a persistent table?</a></li>
+     <li class="bold"><a href="parameters.htm">How to create an application parameters?</a></li>
+     <li><a href="read-only.htm">How to create a read-only UJO?</a></li>
+     <li><a href="index-old.htm">How to use a core by Ujo?</a></li>
+  </ul>
+  <strong>Content</strong>
+  <ul class="ulm">
+     <li><a href="#motivation">Motivation</a></li>
+     <li><a href="#bo">Business objects</a></li>
+     <li><a href="#window">Window implementation</a></li>
+     <li><a href="#xml">XML file</a></li>
+     <li><a href="#download">Download</a></li>
+  </ul>
+</div>
+
+<!-- === REKLAMA === -->
+<script type="text/javascript"><!--
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 160;
+	google_ad_height = 600;
+	google_ad_format = "160x600_as";
+	google_ad_type = "text_image";
+	//2007-10-09: ponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<!-- === KONEC REKLAMY === -->
+</div>
+
+
+<div id="main">
+    
+    <p class="prologue" id="prologue">
+	How to write an application parameter manager simple on the desktop?
+    </p>
+    
+    <div class="chapter">
+        <h2 id="motivation">Motivation:</h2>
+        The document learns to you how to create a persistent parameter manager easy on the desktop by the UJO Framework
+        running on the Java 5.0+ SE.
+        Parameter values will be saved in a Java Resource Bundle text format.
+        We will create two classes only, no <strong>table model</strong>:
+	<ul>
+	  <li>business class Parameters</li>
+  	  <li>window component extends a JFrame class.</li>
+	</ul>
+    The next table shows <strong>all properties</strong> of the <strong>one UJO object</strong>.
+    <a href="bin/parameters.jnlp"><img src="parameters.png" width="579" height="325" alt="parameters.png" style="margin-top: 16px; display: block; border-width: 0px;" /></a>
+    Click on the image to run the sample by Java Web Start
+    </div>
+    
+
+    <div class="chapter">
+        <h2 id="bo">Business object</h2>
+	
+    The sole business class is called Parameters and every one static property constant represents a one <strong>parameter</strong>.
+    We want to edit each value of each parameter on a separate table row.
+    Note that <strong>enumerator</strong> data type is supported too.
+<pre class="pre">
+<span class="keyword-directive">package</span> org;
+
+<span class="keyword-directive">import</span> java.awt.Color;
+<span class="keyword-directive">import</span> java.awt.Rectangle;
+<span class="keyword-directive">import</span> java.util.Calendar;
+<span class="keyword-directive">import</span> java.util.Locale;
+<span class="keyword-directive">import</span> org.ujoframework.UjoProperty;
+<span class="keyword-directive">import</span> org.ujoframework.implementation.map.MapUjo;
+
+<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Parameters <span class="keyword-directive">extends</span> MapUjo {
+    
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">SysTray</span> <span class="comment">action</span> <span class="comment">on</span> <span class="comment">a</span> <span class="comment">second</span> <span class="comment">mous</span><span class="comment">e</span> <span class="comment">click</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive highlight">enum</span> Action {
+        NONE, EVENT, HIDE;
+    }
+    
+    <span class="comment">/**</span> <span class="comment">Localization</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Locale&gt; P_LANG 
+        = newProperty(<span class="character">&quot;</span><span class="character">Language</span><span class="character">&quot;</span>, Locale.getDefault());
+
+    <span class="comment">/**</span> <span class="comment">Working</span> <span class="comment">Hours</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Float&gt; P_WORKING_HOURS 
+        = newProperty(<span class="character">&quot;</span><span class="character">WorkingHours</span><span class="character">&quot;</span>, 8f);
+
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">First</span> <span class="comment">Day</span> <span class="comment">of</span> <span class="comment">the</span> <span class="comment">Week</span> <span class="comment">Day</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Integer&gt; P_FIRST_DAY_OF_WEEK 
+        = newProperty(<span class="character">&quot;</span><span class="character">FirstDayOfWeek</span><span class="character">&quot;</span>, Calendar.getInstance().getFirstDayOfWeek());
+
+    <span class="comment">/**</span> <span class="comment">Decimal</span> <span class="comment">time</span> <span class="comment">format</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_DECIMAL_TIME_FORMAT 
+        = newProperty(<span class="character">&quot;</span><span class="character">DecimalTimeFormat</span><span class="character">&quot;</span>, <span class="keyword-directive">true</span>);
+
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Main</span> <span class="comment">selecton</span> <span class="comment">format</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_MAIN_FORMAT 
+        = newProperty(<span class="character">&quot;</span><span class="character">DateMainFormat</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">EE, yyyy/MM/dd&#39;  Week: &#39;ww</span><span class="character">&quot;</span>);
+
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Export</span> <span class="comment">Date</span> <span class="comment">Selection</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_REPORT_FORMAT 
+        = newProperty(<span class="character">&quot;</span><span class="character">DateReportFormat</span><span class="character">&quot;</span>, P_DATE_MAIN_FORMAT.getDefault() );
+
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Export</span> <span class="comment">Date</span> <span class="comment">Selection</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_REPORT_FORMAT2 
+        = newProperty(<span class="character">&quot;</span><span class="character">DateReportFormat2</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">d&#39;&lt;br/&gt;&lt;span class=</span><span class="ST0">\&quot;</span><span class="character">smallMonth</span><span class="ST0">\&quot;</span><span class="character">&gt;&#39;MMMM&#39;&lt;/span&gt;&#39;</span><span class="character">&quot;</span> );
+
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">complementary</span> <span class="comment">report</span> <span class="comment">CSS</span> <span class="comment">style</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_REPORT_CSS 
+        = newProperty(<span class="character">&quot;</span><span class="character">ReportCSS</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">styles/style.css</span><span class="character">&quot;</span> );
+
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Goto</span> <span class="comment">Date</span> <span class="comment">format</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_GOTO_FORMAT 
+        = newProperty(<span class="character">&quot;</span><span class="character">DateGotoFormat</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">yyyy/MM/dd</span><span class="character">&quot;</span>);
+
+    <span class="comment">/**</span> <span class="comment">A</span> <span class="comment">Color</span> <span class="comment">of</span> <span class="comment">a</span> <span class="comment">private</span> <span class="comment">project</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Color&gt; P_COLOR_PRIVATE 
+        = newProperty(<span class="character">&quot;</span><span class="character">ColorOfPrivateProject</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0x5DA158));
+
+    <span class="comment">/**</span> <span class="comment">A</span> <span class="comment">Color</span> <span class="comment">of</span> <span class="comment">finished</span> <span class="comment">project</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Color&gt; P_COLOR_FINISHED_PROJ 
+        = newProperty(<span class="character">&quot;</span><span class="character">ColorOfFinishedProject</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0xA9AC88));
+
+    <span class="comment">/**</span> <span class="comment">A</span> <span class="comment">Color</span> <span class="comment">of</span> <span class="comment">an</span> <span class="comment">editable</span> <span class="comment">area</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Color&gt; P_COLOR_EDITABLE 
+        = newProperty(<span class="character">&quot;</span><span class="character">ColorOfEditableArea</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0xFFFACD));
+
+    <span class="comment">/**</span> <span class="comment">Action</span> <span class="comment">on</span> <span class="comment">a</span> <span class="comment">second</span> <span class="comment">click</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Action&gt; P_SYSTRAY_SECOND_CLICK 
+        = newProperty(<span class="character">&quot;</span><span class="character">SystemTraySecondClick</span><span class="character">&quot;</span>, <span class="highlight">Action.NONE</span>);
+
+    <span class="comment">/**</span> <span class="comment">Modify</span> <span class="comment">value</span> <span class="comment">of</span> <span class="comment">finished</span> <span class="comment">project</span> <span class="comment">or</span> <span class="comment">task</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_MODIFY_FINESHED_PROJ 
+        = newProperty(<span class="character">&quot;</span><span class="character">ModifyFinishedProject</span><span class="character">&quot;</span>, <span class="keyword-directive">false</span>);
+
+    <span class="comment">/**</span> <span class="comment">Create</span> <span class="comment">a</span> <span class="comment">new</span> <span class="comment">Event</span> <span class="comment">on</span> <span class="comment">an</span> <span class="comment">EXIT</span> <span class="comment">action</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_EXIT_EVENT_CREATE 
+        = newProperty(<span class="character">&quot;</span><span class="character">ExitEventCreating</span><span class="character">&quot;</span>, Boolean.TRUE);
+
+    <span class="comment">/**</span> <span class="comment">Description</span> <span class="comment">of</span> <span class="comment">an</span> <span class="comment">EXIT</span> <span class="comment">action</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_EXIT_EVENT_DESCR 
+        = newProperty(<span class="character">&quot;</span><span class="character">ExitEventDescription</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">EXIT</span><span class="character">&quot;</span>);
+
+    <span class="comment">/**</span> <span class="comment">Hide</span> <span class="comment">Buoon</span> <span class="comment">Icon</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_HIDE_ICONS 
+        = newProperty(<span class="character">&quot;</span><span class="character">HideButtonIcons</span><span class="character">&quot;</span>, <span class="keyword-directive">false</span>);
+
+    <span class="comment">/**</span> <span class="comment">Last</span> <span class="comment">window</span> <span class="comment">size</span> <span class="comment">and</span> <span class="comment">position</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Rectangle&gt; P_WINDOW_SIZE 
+        = newProperty(<span class="character">&quot;</span><span class="character">WindowSize</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Rectangle(0, 0, 622, 405));
+
+    <span class="comment">/**</span> <span class="comment">Restore</span> <span class="comment">a</span> <span class="comment">last</span> <span class="comment">application</span> <span class="comment">window</span> <span class="comment">size</span> <span class="comment">and</span> <span class="comment">position</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_WINDOW_SIZE_RESTORATION 
+        = newProperty(<span class="character">&quot;</span><span class="character">WindowSizeRestoration</span><span class="character">&quot;</span>, <span class="keyword-directive">true</span>);
+}</pre>
+	
+    </div>
+    
+    <div class="chapter">
+        <h2 id="window">Window implementation</h2>
+        A main window is an extension of JFrame from a Swing library. 
+        The Source code is very simple to learn, however some areas are not written by a code guideline. 
+        
+        <p style="margin-top: 0px;">Take note, how an instance of <strong>table model</strong> is created by a UjoTableModel class, all visible table columss are ordered by its constructor.
+        Parameters object is retrieved by a UjoManagerRBundle class.
+        <br />See a source code for details.
+        </p>
+<pre class="pre">
+<span class="keyword-directive">package</span> org;
+
+<span class="keyword-directive">import</span> javax.swing.*;
+
+<span class="keyword-directive">import</span> java.awt.event.*;
+<span class="keyword-directive">import</span> java.io.File;
+<span class="keyword-directive">import</span> org.ujoframework.core.UjoManagerRBundle;
+<span class="keyword-directive">import</span> org.ujoframework.swing.SingleUjoTabModel;
+<span class="keyword-directive">import</span> org.ujoframework.swing.MapPropertyRow;
+<span class="keyword-directive">import</span> <span class="keyword-directive">static</span> org.ujoframework.swing.MapPropertyRow.*;
+
+
+<span class="comment">/**</span> <span class="comment">Parameter</span> <span class="comment">manager</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> ParamFrame <span class="keyword-directive">extends</span> JFrame <span class="keyword-directive">implements</span> ActionListener, Runnable {
+
+  <span class="keyword-directive">private</span> Parameters parameters;
+  <span class="keyword-directive">private</span> File dataFile = <span class="keyword-directive">new</span> File(System.getProperty(<span class="character">&quot;user.home&quot;</span>),<span class="character">&quot;ujo-param.properties&quot;</span>);
+  <span class="keyword-directive">private</span> SingleUjoTabModel model;
+  <span class="keyword-directive">private</span> JTable table;
+
+  <span class="comment">/**</span> <span class="comment">Creates</span> <span class="comment">a</span> <span class="comment">new</span> <span class="comment">instance</span> <span class="comment">of</span> <span class="comment">TableFrame</span> <span class="comment">*/</span>
+
+  <span class="keyword-directive">public</span> ParamFrame() {
+    initComponents();
+    
+    <span class="comment">// Create a TableModel:</span>
+    parameters = loadParameters();
+    model = <span class="keyword-directive">new</span> <span class="highlight">SingleUjoTabModel</span>(parameters, P_NAME, P_CLASSNAME, P_VALUE, P_DEFAULT);
+    table.setModel(model);
+    
+    <span class="comment">// Register a Close Listener:</span>
+    Runtime.getRuntime().addShutdownHook(new Thread(<span class="keyword-directive">this</span>));    
+  }
+  
+  <span class="keyword-directive">public void</span> run() {
+    saveParameters();
+  }
+  
+  <span class="comment">/**</span> <span class="comment">Load</span> <span class="comment">company</span> <span class="comment">from</span> <span class="comment">file</span><span class="comment">.</span> <span class="comment">*/</span>
+  <span class="keyword-directive">private</span> Parameters loadParameters() {
+    <span class="keyword-directive">if</span> (dataFile.isFile()) <span class="keyword-directive">try</span> {
+      <span class="keyword-directive">return</span> UjoManagerRBundle.getInstance(Parameters.<span class="keyword-directive">class</span>).<span class="highlight">loadResourceBundle</span>(dataFile, <span class="keyword-directive">false</span>, <span class="keyword-directive">this</span>);
+    } <span class="keyword-directive">catch</span> (Throwable e) {
+      e.printStackTrace();
+    }
+    <span class="keyword-directive">return</span> <span class="keyword-directive">new</span> Parameters();
+  }
+  
+  <span class="comment">/**</span> <span class="comment">Save</span> <span class="comment">parameter</span> <span class="comment">to</span> <span class="comment">file</span><span class="comment">.</span> <span class="comment">*/</span>
+  <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> saveParameters() {
+    <span class="keyword-directive">try</span> {
+      <span class="keyword-directive">final</span> String msg = <span class="character">&quot;</span><span class="character">Configuration file:</span><span class="character">&quot;</span> ;
+      UjoManagerRBundle.getInstance(Parameters.<span class="keyword-directive">class</span>).<span class="highlight">saveResourceBundle</span>(dataFile, parameters, msg, <span class="keyword-directive">this</span>);
+    } <span class="keyword-directive">catch</span> (Throwable e) {
+      e.printStackTrace();
+    }
+  }
+  
+  <span class="comment">/**</span> <span class="comment">Button</span> <span class="comment">Actions</span> <span class="comment">*/</span>
+  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> actionPerformed(ActionEvent e) {
+    String label = ((JButton)e.getSource()).getText();
+    <span class="keyword-directive">int</span> index = table.getSelectedRow();
+    
+    <span class="keyword-directive">if</span> (<span class="character">&quot;</span><span class="character">Default</span><span class="character">&quot;</span>.equals(label) &amp;&amp; index&gt;=0) {
+        MapPropertyRow row = model.getRow(index);
+        model.<span class="highlight">setValueAt</span>(row.getProperty().getDefault(), index, MapPropertyRow.P_VALUE);
+    }
+  }
+  
+  <span class="comment">/**</span> <span class="comment">Init</span> <span class="comment">GUI</span> <span class="comment">Components</span> <span class="comment">*/</span>
+  <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> initComponents() {
+    table = <span class="keyword-directive">new</span> JTable();  
+    getContentPane().add(<span class="keyword-directive">new</span> JScrollPane(table), java.awt.BorderLayout.CENTER);
+    JPanel panel = <span class="keyword-directive">new</span> JPanel(<span class="keyword-directive">new</span> java.awt.GridLayout(5, 1, 0, 1));
+    getContentPane().add(panel, java.awt.BorderLayout.EAST);
+    addButtons(panel, <span class="character">&quot;</span><span class="character">Default</span><span class="character">&quot;</span>);
+    
+    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    setTitle(<span class="character">&quot;</span><span class="character">Application parameters</span><span class="character">&quot;</span>);
+    pack();
+  }
+  
+  <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> addButtons(JPanel panel, String... labels) {
+    <span class="keyword-directive">for</span>(String label: labels) {
+      JButton button = <span class="keyword-directive">new</span> JButton(label);
+      button.addActionListener(<span class="keyword-directive">this</span>);
+      panel.add(button);
+    }
+  }
+
+  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> main(String args[]) {
+    <span class="keyword-directive">new</span> ParamFrame().setVisible(<span class="keyword-directive">true</span>);
+  }   
+}</pre>        
+    </div>	
+    
+    <div class="chapter">
+        <h2 id="xml">Resource Bundle file:</h2>
+        The content of the Resource Bundle file is here:
+<pre class="pre">
+<span class="comment">#Configuration file:</span>
+<span class="comment">#Tue Aug 05 21:49:55 CEST 2008</span>
+<span class="keyword-directive">FirstDayOfWeek</span>=2
+<span class="keyword-directive">ColorOfFinishedProject</span>=A9AC88
+<span class="keyword-directive">HideButtonIcons</span>=false
+<span class="keyword-directive">ColorOfPrivateProject</span>=5DA158
+<span class="keyword-directive">ColorOfEditableArea</span>=FFFACD
+<span class="keyword-directive">ModifyFinishedProject</span>=false
+<span class="keyword-directive">DateMainFormat</span>=EE, yyyy/MM/dd'  Week\: 'ww
+<span class="keyword-directive">WorkingHours</span>=8.0
+<span class="keyword-directive">ReportCSS</span>=styles/style.css
+<span class="keyword-directive">ExitEventCreating</span>=true
+<span class="keyword-directive">WindowSizeRestoration</span>=true
+<span class="keyword-directive">DateGotoFormat</span>=yyyy/MM/dd
+<span class="keyword-directive">SystemTraySecondClick</span>=NONE
+<span class="keyword-directive">DecimalTimeFormat</span>=true
+<span class="keyword-directive">Language</span>=cs-CZ
+<span class="keyword-directive">ExitEventDescription</span>=EXIT
+<span class="keyword-directive">DateReportFormat</span>=EE, yyyy/MM/dd'  Week\: 'ww
+<span class="keyword-directive">WindowSize</span>=-1,-1,622,405
+<span class="keyword-directive">DateReportFormat2</span>=d'&lt;br/&gt;&lt;span class\="smallMonth"&gt;'MMMM'&lt;/span&gt;'
+</pre>
+    </div>
+        
+    <div class="chapter">
+        <h2 id="download">Download</h2>
+        <!--You can <strong>download</strong> all samples <a href="src/UJO-Sample.zip">in a ZIP format</a>.<br />&nbsp;<br />-->
+        Cut and paste the sample code from HTML page to 3 files in a <strong>org</strong> folder via system clipboard.<br />
+        See a <a href="../javadoc/org/ujoframework/package-summary.html#UJO">UJO Framework description</a> for more informations.
+    </div>	
+        
+    
+    <div class="chapter">
+        <h2 id="author">About Author:</h2>
+        <ul>  
+            <li>You can write questions or other messages to me by a blog <a href="http://ujoframework.blogspot.com/">http://ujoframework.blogspot.com/</a>.</li>
+            <li>There exists some more free applications on an authors home page <a href="http://ponec.net/">http://ponec.net/</a> .</li>
+            <li>A contact e-mail: ujoframework@gmail.com</li>
+        </ul>  
+    </div>	
+    <hr style="clear:both;" />
+    
+    <p style="text-align:center"><span class="PPonec">PP</span><span class="ppONEC">one</span><span class="PPonec">(</span><span
+            class="ppONEC">c</span><span class="PPonec">) 2007-2008</span>
+    </p>
+    
+    <div class="chapter" style="text-align: center;">
+        <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" width="14" height="14" alt="NAVRCHOLU.cz" style="border:none" /></a></div></noscript>        
+        
+        <a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+    </div>
+</div>
+<p>&nbsp;</p>
+
+</body>
+</html>

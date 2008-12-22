@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<body>
+    <Name>My Company</Name>
+    <Person>
+        <ID>1</ID>
+        <FirstName>John</FirstName>
+        <Surname>Brown</Surname>
+        <Age>22</Age>
+        <Cash>175.0</Cash>
+        <Male>true</Male>
+    </Person>
+    <Person>
+        <ID>2</ID>
+        <FirstName>Susan</FirstName>
+        <Surname>Smith</Surname>
+        <Age>50</Age>
+        <Cash>180.0</Cash>
+        <Male>false</Male>
+    </Person>
+</body>
