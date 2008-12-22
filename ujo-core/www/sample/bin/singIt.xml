@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="changeme" default="singIt" basedir=".">
+    
+    
+    <description>Sing the SAMPLE.</description>
+
+    
+    <target name="singIt">
+
+        <signjar  keystore="C:/u/Pavel/Java/Projects2/pponecKeyStore"
+                  alias="pponecKey"
+                  storepass="pponecKeyStorePwd" >
+            <fileset dir="C:/u/Pavel/Java/ProjectUJO/www/sample/bin" includes="**/*.jar" />
+        </signjar>
+
+    </target>
+</project>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+
+<project name="UJO" default="default" basedir=".">
+    <description>Builds, tests, and runs the project UJO.</description>
+    
+    <tstamp>
+       <format property="build.timestamp" pattern="yyyyMMdd'-'HHmmss" />
+       <format property="build.year"      pattern="yyyy" />
+    </tstamp>    
+    
+    
+    <!-- Read build properties -->
+    <property file="Resource/build.properties"/>
+    <property name="encoding" value="UTF-8" />    
+    <property name="manifest.file" value="dist/manifest.txt"/>
+    <property name="year" value="2007-${build.year}" />    
+
+
+    <property name="javadoc.additionalparam" 
+        value="-header '&lt;a href='${homePage}' target='_top' class='UjoLogo'&gt; ${name}&lt;br&gt;release ${version}&lt;/a&gt;' -bottom '&lt;i&gt;Copyright © ${year} &lt;a href='${homePage}' target='_top'&gt; PPonec &lt;/a&gt;'&lt;/i&gt;  -charset 'windows-1250'"
+    />
+    <!-- -.->
+    <echo message="${javadoc.additionalparam}" />
+    <!-.- -->
+    
+    <import file="nbproject/build-impl.xml"/>
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
+
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar-with-manifest:    JAR building (if you are using a manifest)
+      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
+
+    An example of overriding the target for project execution could look like this:
+
+        <target name="run" depends="UJO-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
+    
+    <target name="-pre-jar">
+        <mkdir dir="dist"/>
+        <echo file="${manifest.file}">Main-Class: org.ujoframework.core.UjoManager
+Specification-Title: ${name}
+Specification-Version: ${version}
+Specification-Vendor: Paul Ponec
+Implementation-Title: ${implementationTitle}
+Implementation-Version: ${version}
+Implementation-Vendor: "Paul Ponec"</echo>
+    </target>    
+
+    <target name="-javadoc-build" depends="init">
+        
+        <!-- INIT before JAVADOC: -->
+        <copy file="${src.dir}/org/ujoframework/z_package_${jDocLang}.html" 
+              tofile="${src.dir}/org/ujoframework/package.html"
+              overwrite="true"
+       />
+        
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc additionalparam="${javadoc.additionalparam}" 
+                author="${javadoc.author}" 
+                charset="UTF-8" 
+                destdir="${dist.javadoc.dir}" 
+                docencoding="UTF-8" 
+                encoding="${javadoc.encoding.used}" 
+                failonerror="true" 
+                noindex="${javadoc.noindex}" 
+                nonavbar="${javadoc.nonavbar}" 
+                notree="${javadoc.notree}" 
+                private="${javadoc.private}" 
+                source="${javac.source}" 
+                splitindex="${javadoc.splitindex}" 
+                use="${javadoc.use}" 
+                useexternalfile="true" 
+                version="${javadoc.version}" 
+                windowtitle="${javadoc.windowtitle}"
+            >
+            <classpath>
+                <path path="${javac.classpath}"/>
+            </classpath>
+            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.src-tools.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+        </javadoc>
+        
+        <!-- Append CSS definition: -->
+        <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
+            <filelist dir="${src.dir}/org/ujoframework" files="style.css"/>
+        </concat>
+        <!-- Copy Image(s): -->
+        <copy file="${src.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
+        
+    </target>    
+    
+    
+    <target name="javadocsUml"  depends="init" description="generates javadoc and also UML Diagram">
+        
+        <echo message="src.dir: ${src.dir}"/>
+        <property name="reports.dir" value="${dist.javadoc.dir}/.." />    
+        
+		<mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc additionalparam="${javadoc.additionalparam}" 
+                author="${javadoc.author}" 
+                charset="UTF-8" 
+                destdir="${dist.javadoc.dir}" 
+                docencoding="UTF-8" 
+                encoding="${javadoc.encoding.used}" 
+                failonerror="true" 
+                noindex="${javadoc.noindex}" 
+                nonavbar="${javadoc.nonavbar}" 
+                notree="${javadoc.notree}" 
+                private="${javadoc.private}" 
+                source="${javac.source}" 
+                splitindex="${javadoc.splitindex}" 
+                use="${javadoc.use}" 
+                useexternalfile="true" 
+                version="${javadoc.version}" 
+                windowtitle="${javadoc.windowtitle}"
+            >
+                <classpath>
+                    <path path="${javac.classpath}"/>
+                </classpath>
+                <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+                    <filename name="**/*.java"/>
+                </fileset>
+                <fileset dir="${src.src-tools.dir}" excludes="${excludes}" includes="${includes}">
+                    <filename name="**/*.java"/>
+                </fileset>
+              
+                    
+                <doclet name="org.umlgraph.doclet.UmlGraphDoc"
+                       path="C:\Progra~1\UMLGraph-5.0\lib\UmlGraph.jar">
+                    <param name="-attributes" />
+                    <param name="-operations" />
+                    <param name="-qualify" />
+                    <param name="-types" />
+                    <param name="-visibility" />
+                </doclet>
+	      </javadoc>
+		  <apply executable="dot" 
+                 dest="${reports.dir}" 
+                 parallel="false"
+                 >
+		    <arg value="-Tpng"/>
+		    <arg value="-o"/>
+		     <targetfile/>
+		     <srcfile/>
+		     <fileset dir="${reports.dir}" includes="*.dot"/>
+		     <mapper type="glob" from="*.dot" to="*.png"/>
+		  </apply>
+          
+        <!-- Delete temp files: -->
+        <delete>
+            <fileset dir="${dist.javadoc.dir}" includes="**/*.map,**/*.dot"/>
+        </delete>
+          
+        <!-- Append CSS definition: -->
+        <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
+            <filelist dir="${src.dir}/org/ujoframework" files="style.css"/>
+        </concat>
+        <!-- Copy Image(s): -->
+        <copy file="${src.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
+          
+          
+	</target>    
+    
+</project>

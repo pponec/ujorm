@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Language" content="cs" />
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
+<meta name="Author" content="Pavel Ponec" />
+<meta name="Description" content="So the another JavaBeans" />
+<meta name="keywords" content="sample, UJO, framework, Java, POJO, JavaBean, perzistence, XML, CSV, export, import" /> 
+<title>UJO - Getting Started</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"></link>
+</head>
+
+<body>
+
+<!--
+<div style="text-align:center; margin: auto;">
+<script type="text/javascript"><!-.-
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 728;
+	google_ad_height = 90;
+	google_ad_format = "728x90_as";
+	google_ad_type = "text_image";
+	//2007-10-09: ponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-.->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+-->
+
+<h1 style="text-align:center; margin: 0pt 200pt 8pt 0pt;"><a href=".."><img src="../images/ujo64.png" alt="logo" style="margin: 0 10px; vertical-align: text-top; border:0;" /></a>
+Getting Started</h1>
+
+<hr />
+
+<div id="xmenu">
+<div id="menu">
+  <!-- 
+  <strong>Language</strong>
+  <ul class="ulm">
+     <li><a href="index.htm">English</a></li>
+     <li><a href="index.htm">Čeština</a></li>
+  </ul>  -->
+  <strong>Tutorials</strong>
+  <ul class="ulm">
+     <li class="bold"><a href="index.htm">How to create a persistent table?</a></li>
+     <li><a href="parameters.htm">How to create an application parameters?</a></li>
+     <li><a href="read-only.htm">How to create a read-only UJO?</a></li>
+     <li><a href="index-old.htm">How to use a core by Ujo?</a></li>
+  </ul>
+  <strong>Content</strong>
+  <ul class="ulm">
+     <li><a href="#motivation">Motivation</a></li>
+     <li><a href="#bo">Business objects</a></li>
+     <li><a href="#window">Window implementation</a></li>
+     <li><a href="#xml">XML file</a></li>
+     <li><a href="#download">Download</a></li>
+  </ul>
+</div>
+
+<!-- === REKLAMA === -->
+<script type="text/javascript"><!--
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 160;
+	google_ad_height = 600;
+	google_ad_format = "160x600_as";
+	google_ad_type = "text_image";
+	//2007-10-09: ponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<!-- === KONEC REKLAMY === -->
+</div>
+
+
+<div id="main">
+    
+    <p class="prologue" id="prologue">
+	How to write a persistent table<br /> 
+	by 110 rows of source code on the desktop?
+    </p>
+    
+    <div class="chapter">
+        <h2 id="motivation">Motivation:</h2>
+        The document learns to you, how to create a simple Swing application with a persistent table by the UJO Framework
+        and Java 5.0 SE.
+        We will create three classes without any <strong>table model</strong> class implementation:
+	<ul>
+	  <li>business class Person</li>
+	  <li>business class Company</li>
+  	  <li>window component extends a JFrame class.</li>
+	</ul>
+	All classes contain approximately 110 rows of source code (comments and blank rows was not counted). 
+        See the target screenshot:
+	<!-- <img src="screen.png" width="543" height="229" alt="screen.png" /> -->
+    <a href="bin/company.jnlp"><img src="screen2.png" width="549" height="155" alt="screen2.png" style="margin-top: 16px; display: block; border-width: 0px;" /></a>
+    Click on the image to run the sample by Java Web Start
+    </div>
+    
+
+    <div class="chapter">
+        <h2 id="bo">Business objects</h2>
+	
+	    The first business class is called Person.
+        Every one static property constant represents a one attribute so that a type safe property access is performed by the <strong>related  constant</strong>.
+        A property CASH have got a default value set to zero. The class have got one method to demonstration a work with UJO properties. 
+        Note that result of the method get(CASH) <strong>can't be casted</strong> to a Double type:
+<pre class="pre">
+<span class="java-keywords">package</span> org;
+<span class="java-keywords">import</span> org.ujoframework.implementation.map.*;<br />
+<span class="java-block-comment">/** Person BO */</span>
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt&lt;Person&gt; {<br />
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Integer&gt; ID        = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;ID&quot;</span>, Integer.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,String&gt;  FIRSTNAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;FirstName&quot;</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,String&gt;  SURNAME   = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Surname&quot;</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Integer&gt; AGE       = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Age&quot;</span> , Integer.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Boolean&gt; MALE      = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Male&quot;</span>, Boolean.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Double&gt;  CASH      = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Cash&quot;</span>,<span class="highlight"> <span class="java-numeric-literals">0d</span></span>);<br />
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method"><span class="highlight">addCash</span></span>(<span class="java-keywords">double</span> cash) {
+    <span class="java-keywords">double</span> newCash = <span class="java-layer-method">get</span>(CASH) + cash;
+    <span class="java-layer-method">set</span>(CASH, newCash);
+  }
+}</pre>
+
+The second business class is called Company, it is a root container of all persistent objects in this sample. 
+The Company object contains two properties only. Note how a company name is assigned to a&nbsp;NAME property.
+<br />You can verify that a Java compilator <strong>disclose</strong> a data type different from the String in the <strong>set</strong> method.
+
+<pre class="pre">
+<span class="java-keywords">package</span> org;
+<span class="java-keywords">import</span> org.ujoframework.implementation.map.*;<br />
+<span class="java-block-comment">/** Company BO */</span>
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Company <span class="java-keywords">extends</span> MapUjoExt&lt;Company&gt; {<br />
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Company,String&gt;     NAME    = <span class="java-layer-method">newProperty</span>   (<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapPropertyList&lt;Company,Person&gt; PERSONS = <span class="java-layer-method">newPropertyList</span>(<span class="java-string-literal">&quot;Person&quot;</span>, Person.<span class="java-keywords">class</span>);<br />
+  <span class="java-keywords">public</span> <span class="java-layer-method">Company</span>() {
+    <span class="java-layer-method">set</span>(NAME, <span class="java-string-literal">&quot;My Company&quot;</span>); <span class="java-block-comment">// assign a default company name</span>
+  }
+}</pre>
+	
+    </div>
+    
+    <div class="chapter">
+        <h2 id="window">Window implementation</h2>
+        A main window is an extension of JFrame from a Swing library. 
+        The Source code is very simple to learn, however some areas are not written by a code guideline. 
+        
+        <p style="margin-top: 0px;">Take note, how an instance of <strong>table model</strong> is created by a UjoTableModel class, all visible table columss are ordered by its constructor.
+        Company object is retrieved by a UjoManagerXML class.
+        <br />See a source code for details.
+        </p>
+<pre class="pre">
+<span class="java-keywords">package</span> org;
+<span class="java-keywords">import</span> javax.swing.*;
+<span class="java-keywords">import</span> java.util.*;
+<span class="java-keywords">import</span> java.awt.event.*;
+<span class="java-keywords">import</span> java.io.File;
+<span class="java-keywords">import</span> org.ujoframework.core.UjoManagerXML;
+<span class="java-keywords">import</span> org.ujoframework.swing.UjoTableModel;
+<span class="java-keywords">import static</span> org.Company.*;
+<span class="java-keywords">import static</span> org.Person.*;
+
+<span class="java-block-comment">/** Simple Table Frame. */</span>
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> TableFrame <span class="java-keywords">extends</span> <span class="java-layer-method">JFrame</span> <span class="java-keywords">implements</span> <span class="java-layer-method">ActionListener</span>, <span class="java-layer-method">Runnable</span>  {
+    
+  <span class="java-keywords">private</span> <span class="java-layer-method">File</span> <span class="java-layer-method">dataFile</span> = <span class="java-keywords">new</span> <span class="java-layer-method">File</span>(System.getProperty(<span class="java-string-literal">&quot;user.home&quot;</span>),<span class="java-string-literal">&quot;ujo-company.xml&quot;</span>);
+  <span class="java-keywords">private</span> Company company;
+  <span class="java-keywords">private</span> UjoTableModel&lt;<span class="java-layer-method">Person</span>&gt; model;
+  <span class="java-keywords">private</span> JTable table;
+  
+  <span class="java-block-comment">/** Creates a new instance of TableFrame */</span>
+  <span class="java-keywords">public</span> <span class="java-layer-method">TableFrame</span>() {
+    <span class="java-layer-method">initComponents</span>();
+    
+    <span class="java-block-comment">// Create a TableModel with Columns:</span>
+    model = <span class="java-keywords">new</span> UjoTableModel&lt;Person&gt;(<span class="highlight">ID, FIRSTNAME, SURNAME, AGE, CASH, MALE</span>);
+    <span class="java-block-comment">// ... or use simply:</span>
+    <span class="java-block-comment">// model = new UjoTableModel&lt;Person&gt;(Person.class);</span>
+    table.<span class="java-layer-method">setModel</span>(model);
+    
+    <span class="java-block-comment">// Assing Data into TableModel:</span>
+    company = <span class="java-layer-method">loadCompany</span>();
+    <span class="highlight"><span class="java-layer-method">List</span>&lt;<span class="java-layer-method">Person</span>&gt; persons = company.list(PERSONS);</span> <span class="java-block-comment">// returns a not null list always</span>
+    model.<span class="java-layer-method">setRows</span>(persons);
+    
+    <span class="java-block-comment">// Register a Close Listener:</span>    
+    Runtime.getRuntime().addShutdownHook(new Thread(<span class="java-keywords">this</span>));    
+  }
+  
+  <span class="java-keywords">public void</span> <span class="java-layer-method">run</span>() {
+    <span class="java-layer-method">saveCompany</span>();     
+  }
+  
+  <span class="java-block-comment">/** Load company from file. */</span>
+  <span class="java-keywords">private</span> Company <span class="java-layer-method">loadCompany</span>() {
+    <span class="java-keywords">if</span> (dataFile.<span class="java-layer-method">isFile</span>()) <span class="java-keywords">try</span> {
+      <span class="java-keywords">return</span> <span class="highlight">UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="java-layer-method">parseXML</span></span>(dataFile, Company.<span class="java-keywords">class</span>, <span class="java-string-literal">&quot;Load company&quot;</span>);
+    } <span class="java-keywords">catch</span> (Throwable e) {
+      e.<span class="java-layer-method">printStackTrace</span>();
+    }
+    <span class="java-keywords">return</span> <span class="java-keywords">new</span> <span class="java-layer-method">Company</span>();
+  }
+  
+  <span class="java-block-comment">/** Save company to file. */</span>
+  <span class="java-keywords">private</span> <span class="java-keywords">void</span> <span class="java-layer-method">saveCompany</span>() {
+    <span class="java-keywords">try</span> {
+      String defaultXmlHeader = <span class="java-keywords">null</span>;
+      <span class="highlight">UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="java-layer-method">saveXML</span></span>(dataFile, company, defaultXmlHeader, <span class="java-string-literal">&quot;Save company&quot;</span>);
+    } <span class="java-keywords">catch</span> (Throwable e) {
+      e.<span class="java-layer-method">printStackTrace</span>();
+    }
+  }
+  
+  <span class="java-block-comment">/** Button Actions */</span>
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">actionPerformed</span>(ActionEvent e) {
+    String label = ((JButton)e.<span class="java-layer-method">getSource</span>()).<span class="java-layer-method">getText</span>();
+    <span class="java-keywords">int</span> index = table.<span class="java-layer-method">getSelectedRow</span>();
+    
+    <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;New&quot;</span>.<span class="java-layer-method">equals</span>(label)) {
+      model.<span class="java-layer-method">addRow</span>(<span class="java-keywords">new</span> <span class="java-layer-method">Person</span>());  
+      <span class="java-block-comment">// Very primitive ID generator:</span>    
+      model.<span class="java-layer-method">getRowLast</span>().<span class="java-layer-method">set</span>(ID, model.<span class="java-layer-method">getRowCount</span>());
+    }
+    <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;Delete&quot;</span>.<span class="java-layer-method">equals</span>(label) &amp;&amp; index&gt;=<span class="java-numeric-literals">0</span>) {
+      model.<span class="java-layer-method">deleteRow</span>(index);
+    }
+    <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;Copy&quot;</span>.<span class="java-layer-method">equals</span>(label) &amp;&amp; index&gt;=<span class="java-numeric-literals">0</span>) {
+      <span class="java-keywords">int</span> depth = <span class="java-numeric-literals">2</span>;
+      model.<span class="highlight"><span class="java-layer-method">cloneRow</span>(index, depth, <span class="java-keywords">this</span></span>);
+    }
+    <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;Add $10&quot;</span>.<span class="java-layer-method">equals</span>(label) &amp;&amp; index&gt;=<span class="java-numeric-literals">0</span>) {
+      model.<span class="java-layer-method">getRow</span>(index)<span class="highlight">.addCash(<span class="java-numeric-literals">10d</span>)</span>;
+      model.<span class="java-layer-method">fireTableColumnUpdated</span>(Person.CASH);
+    }
+    <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;3 columns&quot;</span>.<span class="java-layer-method">equals</span>(label)) {
+      model.<span class="java-layer-method">setColumns</span>(<span class="highlight">ID, SURNAME, CASH</span>);
+    }
+    <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;6 columns&quot;</span>.<span class="java-layer-method">equals</span>(label)) {
+      model.<span class="java-layer-method">setColumns</span>(<span class="highlight">ID, FIRSTNAME, SURNAME, AGE, CASH, MALE</span>);
+    }
+  }
+  
+  <span class="java-block-comment">/** Init GUI Components */</span>
+  <span class="java-keywords">private</span> <span class="java-keywords">void</span> <span class="java-layer-method">initComponents</span>() {
+    table = <span class="java-keywords">new</span> <span class="java-layer-method">JTable</span>();  
+    <span class="java-layer-method">getContentPane</span>().<span class="java-layer-method">add</span>(<span class="java-keywords">new</span> <span class="java-layer-method">JScrollPane</span>(table), java.awt.BorderLayout.CENTER);
+    JPanel panel = <span class="java-keywords">new</span> <span class="java-layer-method">JPanel</span>(<span class="java-keywords">new</span> java.awt.<span class="java-layer-method">GridLayout</span>(<span class="java-numeric-literals">6</span>, <span class="java-numeric-literals">1</span>, <span class="java-numeric-literals">0</span>, <span class="java-numeric-literals">1</span>));
+    <span class="java-layer-method">getContentPane</span>().<span class="java-layer-method">add</span>(panel, java.awt.BorderLayout.EAST);
+    addButtons(panel, <span class="java-string-literal">&quot;New&quot;</span>, <span class="java-string-literal">&quot;Delete&quot;</span>, <span class="java-string-literal">&quot;Copy&quot;</span>, <span class="java-string-literal">&quot;Add $10&quot;</span>, <span class="java-string-literal">&quot;3 columns&quot;</span>, <span class="java-string-literal">&quot;6 columns&quot;</span>);
+    
+    <span class="java-layer-method">setDefaultCloseOperation</span>(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    <span class="java-layer-method">setTitle</span>(<span class="java-string-literal">&quot;Persons of Company&quot;</span>);
+    <span class="java-layer-method">setBounds</span>(<span class="java-numeric-literals">100</span>,<span class="java-numeric-literals">200</span>,<span class="java-numeric-literals">550</span>,<span class="java-numeric-literals">165</span>);
+  }
+  
+  <span class="java-keywords">private</span> <span class="java-keywords">void</span> <span class="java-layer-method">addButtons</span>(JPanel panel, String... labels) {
+    <span class="java-keywords">for</span>(String label: labels) {
+      JButton button = <span class="java-keywords">new</span> JButton(label);
+      button.addActionListener(<span class="java-keywords">this</span>);
+      panel.add(button);
+    }
+  }
+
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">void</span> <span class="java-layer-method">main</span>(String args[]) {
+    <span class="java-keywords">new</span> <span class="java-layer-method">TableFrame</span>().<span class="java-layer-method">setVisible</span>(<span class="java-keywords">true</span>);
+  }   
+}</pre>        
+    </div>	
+    
+    <div class="chapter">
+        <h2 id="xml">XML file:</h2>
+        The content of the XML file is here:
+<pre class="pre">
+<span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;</span><span class="xml-pi-start">?&gt;</span>
+<span class="xml-tag">&lt;body</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;Name</span><span class="xml-tag">&gt;</span>My Company<span class="xml-tag">&lt;/Name</span><span class="xml-tag">&gt;</span>  
+  <span class="xml-tag">&lt;Person</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;ID</span><span class="xml-tag">&gt;</span>1<span class="xml-tag">&lt;/ID</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;FirstName</span><span class="xml-tag">&gt;</span>John<span class="xml-tag">&lt;/FirstName</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Surname</span><span class="xml-tag">&gt;</span>Brown<span class="xml-tag">&lt;/Surname</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Age</span><span class="xml-tag">&gt;</span>22<span class="xml-tag">&lt;/Age</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Cash</span><span class="xml-tag">&gt;</span>175.0<span class="xml-tag">&lt;/Cash</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Male</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/Male</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;/Person</span><span class="xml-tag">&gt;</span>    
+  <span class="xml-tag">&lt;Person</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;ID</span><span class="xml-tag">&gt;</span>2<span class="xml-tag">&lt;/ID</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;FirstName</span><span class="xml-tag">&gt;</span>Susan<span class="xml-tag">&lt;/FirstName</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Surname</span><span class="xml-tag">&gt;</span>Smith<span class="xml-tag">&lt;/Surname</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Age</span><span class="xml-tag">&gt;</span>50<span class="xml-tag">&lt;/Age</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Cash</span><span class="xml-tag">&gt;</span>180.0<span class="xml-tag">&lt;/Cash</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;Male</span><span class="xml-tag">&gt;</span>false<span class="xml-tag">&lt;/Male</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;/Person</span><span class="xml-tag">&gt;</span>
+  . . . 
+<span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
+</pre>
+    </div>
+        
+    <div class="chapter">
+        <h2 id="download">Download</h2>
+        <!--You can <strong>download</strong> all samples <a href="src/UJO-Sample.zip">in a ZIP format</a>.<br />&nbsp;<br />-->
+        Cut and paste the sample code from HTML page to 3 files in a <strong>org</strong> folder via system clipboard.<br />
+        See a <a href="../javadoc/org/ujoframework/package-summary.html#UJO">UJO Framework description</a> for more informations.
+    </div>	
+        
+    
+    <div class="chapter">
+        <h2 id="author">About Author:</h2>
+        <ul>  
+            <li>You can write questions or other messages to me by a blog <a href="http://ujoframework.blogspot.com/">http://ujoframework.blogspot.com/</a>.</li>
+            <li>There exists some more free applications on an authors home page <a href="http://ponec.net/">http://ponec.net/</a> .</li>
+            <li>A contact e-mail: ujoframework@gmail.com</li>
+        </ul>  
+    </div>	
+    <hr style="clear:both;" />
+    
+    <p style="text-align:center"><span class="PPonec">PP</span><span class="ppONEC">one</span><span class="PPonec">(</span><span
+            class="ppONEC">c</span><span class="PPonec">) 2007-2008</span>
+    </p>
+    
+    <div class="chapter" style="text-align: center;">
+        <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" width="14" height="14" alt="NAVRCHOLU.cz" style="border:none" /></a></div></noscript>        
+        
+        <a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+    </div>
+</div>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+/*
+ *  Copyright 2007 Paul Ponec
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package org.ujoframework.implementation.bean;
+
+import org.ujoframework.Ujo;
+import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.SuperUjoExt;
+import org.ujoframework.extensions.ValueAgent;
+
+
+/**
+ * This is an Groovy style implementation of a setter and getter methods for an easier access for developpers,
+ * however the methods have got an weaker type control in compare to the MapUjo implementation.
+ * <br>Sample of usage:
+ *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
+ *
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *    
+ *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
+ *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
+ *    set(CHILD, <span class="java-keywords">new</span> Person());
+ *    set(CHILD, NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">Jane</span><span class="java-string-literal">&quot;</span>);
+ *    set(CHILD, CASH, 200d);
+ *        
+ *    String name = get(CHILD, NAME);
+ *    <span class="java-keywords">double</span> cash = get(CHILD, CASH);
+ *  }
+ *}</pre>
+ * 
+ * @see BeanProperty
+ * @author Paul Ponec
+ * @since UJO release 0.80 
+ */
+abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends SuperUjoExt<UJO> {
+    
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+     * BeanProperty.setValue(Ujo,Object) 
+     * to an external access for a better type safe.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     *
+     * @see BeanProperty#setValue(Ujo,Object) BeanProperty.setValue(Ujo,Object)
+     */
+    @SuppressWarnings("unchecked")
+    public void writeValue(final UjoProperty property, final Object value) {
+        assert readUjoManager().assertDirectAssign(property, value);       
+        ((ValueAgent) property).writeValue(this, value);
+    }
+    
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+     * BeanProperty.getValue(Ujo)
+     * to an external access for a better type safe.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     *
+     * @see BeanProperty#getValue(Ujo) BeanProperty.getValue(Ujo)
+     */
+    @SuppressWarnings("unchecked")
+    public Object readValue(final UjoProperty property) {
+        Object result = ((ValueAgent) property).readValue(this);
+        return result!=null ? result : property.getDefault() ;
+    }
+    
+    
+    // --------- STATIC METHODS -------------------
+    
+    /** A Property Factory
+     * @hidden     
+     */
+    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
+        return new BeanProperty<UJO,VALUE> (name, type);
+    }
+    
+    /** A Property Factory, a property type is related from the default value.
+     * @hidden     
+     */
+    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
+        return new BeanProperty<UJO, VALUE>(name, value);
+    }
+
+    /** A PropertyList Factory for a <strong>BeanUjo</strong> object
+     * @hidden     
+     */
+    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
+        return new BeanPropertyList<UJO,ITEM> (name, type);
+    }
+        
+}

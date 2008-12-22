@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Language" content="cs" />
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
+<meta name="Author" content="Pavel Ponec" />
+<meta name="Description" content="So the another JavaBeans" />
+<meta name="keywords" content="UJO, framework, Java, POJO, JavaBean, perzistence, XML, CSV, export, import" /> 
+<title>Návrhový vzor Unified Access</title>
+<link rel="stylesheet" type="text/css" href="../styles.css"></link>
+</head>
+
+<body>
+
+<!--
+<div style="text-align:center; margin: auto;">
+<script type="text/javascript"><!-.-
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 728;
+	google_ad_height = 90;
+	google_ad_format = "728x90_as";
+	google_ad_type = "text_image";
+	//2007-10-09: ponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-.->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+-->
+
+
+<h1 style="text-align:center; margin: 0pt 200pt 8pt 0pt;">Návrhový vzor: Unified Access Pattern</h1>
+
+<hr />
+
+<div id="xmenu">
+<div id="menu">
+  <strong>Jazyk</strong>
+  <ul class="ulm">
+     <li><a href="index.htm">English</a></li>
+     <li><a href="index-cs.htm">Čeština</a></li>
+  </ul>
+  <strong>Menu</strong>
+  <ul class="ulm">
+     <li><a href="http://ujoframework-cs.blogspot.com/">Novinky (blog)</a></li>
+     <li><a href="#motivation">Motivace</a></li>
+     <li><a href="#classmodel">Struktura (class model)</a></li>
+     <li><a href="#implementation">Implementace v jazyce Java</a></li>
+     <li><a href="#usage">Praktické využití</a></li>
+     <li><a href="#author">O autorovi</a></li>
+  </ul>
+</div>
+
+<!-- === REKLAMA === -->
+<script type="text/javascript"><!--
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 160;
+	google_ad_height = 600;
+	google_ad_format = "160x600_as";
+	google_ad_type = "text_image";
+	//2007-10-09: ponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<!-- === KONEC REKLAMY === -->
+</div>
+
+
+<div id="main">
+    
+    
+    <div class="chapter">
+        <h2 id="motivation">Motivace:</h2>
+        Návrhový vzor <strong>Unified Access Pattern</strong> popisuje typově bezpečný přístup (čtení a zápis) <strong>k hodnotám</strong> objektu <strong>mapa</strong> (objekt mapující klíče k hodnotám) v případě, 
+        že datové typy hodnot se vzájemně liší.
+    </div>
+    
+
+    <div class="chapter">
+        <h2 id="classmodel">Struktura (class model):</h2>
+        Model obsahuje dvě třídy:
+	<ul>
+	    <li>MyMap - jednoduchá mapa s relacemi: klíč - hodnota</li>
+	    <li>Property - třída reprezentující klíč mapy MyMap</li>
+	</ul>
+	
+	<img src="ClassDiagram.png" width="333" height="333" alt="Class Diagram" style="margin: 10px;" />
+        
+    </div>
+    
+    <div class="chapter">
+        <h2 id="implementation">Implementace v jazyce Java</h2>
+	Protože implementace vyžaduje podporou generických datových typů, je třeba použít Java SE 5.0, nebo vyšší.
+	<br />Třída MyMap implementuje jednoduchou mapu a obsahuje dva klíče NAME a AGE.
+<pre class="pre"><span class="java-keywords">import</span> java.util.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> MyMap {
+    
+    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Property&lt;String&gt; NAME = <span class="java-keywords">new</span> Property&lt;String&gt;();
+    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Property&lt;Integer&gt; AGE = <span class="java-keywords">new</span> Property&lt;Integer&gt;();
+    <span class="java-keywords">private</span> Map&lt;Property, Object&gt; data = <span class="java-keywords">new</span> HashMap&lt;Property, Object&gt;();<br />
+    <span class="java-keywords">protected</span> Object <span class="java-layer-method">readValue</span>(Property key) {
+        <span class="java-keywords">return</span> data.<span class="java-layer-method">get</span>(key);
+    }
+    <span class="java-keywords">protected</span> <span class="java-keywords">void</span> <span class="java-layer-method">writeValue</span>(Property key, Object value) {
+        data.<span class="java-layer-method">put</span>(key, value);
+    }
+}</pre>
+
+Všechny klíče jsou instance třídy <strong>Property</strong>, nicméně každý z nich bude poskytovat hodnotu jiného datového typu. 
+<br />Pokud budou ležet obě třídy MyMap a Property ve stejném balíku, je možné ponechat viditelnost metod writeValue() a readValue() na <strong>protected</strong>,
+aby je nemohl používat cizí objekt. 
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Property&lt;VALUE&gt; {<br />
+    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setValue</span>(MyMap map, VALUE value) {
+        map.<span class="java-layer-method">writeValue</span>(<span class="java-keywords">this</span>, value);
+    }
+    <span class="java-keywords">public</span> VALUE <span class="java-layer-method">getValue</span>(MyMap map)  {
+        <span class="java-keywords">return</span> (VALUE) map.<span class="java-layer-method">readValue</span>(<span class="java-keywords">this</span>);
+    }
+}</pre>        
+
+
+V návrhovém vzoru se přistupuje k hodnotám mapy pouze pomocí <strong>metod klíče</strong>.
+Na následujícím  kódu lze ověřit, že metoda <strong>setValue</strong> dovolí přiřadit do mapy pouze objekt deklarovaného typu
+a metoda <strong>getValue</strong> tento typ zase vrací.
+<pre class="pre">            
+MyMap map = <span class="java-keywords">new</span> <span class="java-layer-method">MyMap</span>();<br />
+MyMap.NAME.<span class="java-layer-method">setValue</span>(map, <span class="java-string-literal">&quot;Peter Prokop&quot;</span>);
+MyMap.AGE .<span class="java-layer-method">setValue</span>(map, <span class="java-numeric-literals">22</span>);
+
+String name = MyMap.NAME.<span class="java-layer-method">getValue</span>(map);
+<span class="java-keywords">int</span>    age  = MyMap.AGE.<span class="java-layer-method">getValue</span>(map);
+System.out.<span class="java-layer-method">println</span>(name + <span class="java-string-literal">&quot; is &quot;</span> + age);
+<br /></pre>        
+
+    </div>
+    
+    <div class="chapter">
+        <h2 id="usage">Praktické využití:</h2>
+        
+Návrhový vzor může nahradit klasické POJO objekty. Smysl to má v případě, kdy je třeba odkazovat se na <strong>metodu</strong> (set/get) objektu, 
+nikoli na jeho hodnotu. Tři konkrétní příklady využití v jazyku Java:
+<ul>
+    <li>Metoda pro řazení seznamu řádků převezme kromě seznamu objektů také seznam vlastností (například NAME, AGE), podle kterých se řazení provádí. 
+    Sorter si sám sestaví odpovídající komparátor.
+<pre class="pre" style="margin-left: 0;">
+<span class="java-keywords">interface</span> GenericSorter {
+    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">sort</span>(List&lt;MyMap&gt; items, Property ... properties);
+}</pre>
+    </li>
+    <li>potomek rozhraní TableModel, který umí převzít seznam sloupců pomocí argumentu metody
+<pre class="pre" style="margin-left: 0;">
+<span class="java-keywords">interface</span> GenericTableModel&lt;MyMap&gt; <span class="java-keywords">extends</span> TableModel {
+    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setColumns</span>(Property ... columns);
+}</pre>
+   </li>
+   <li>Je zřejmé, že ve třídě MyMap se všechny hodnoty ukládají <strong>jedinou metodou</strong> writeProperty(). 
+       Pokud se ale třída MyMap v stane <strong>rodičem dalších tříd</strong> (napsaných v duchu návrhového vzoru), 
+       tak  metoda writeProperty() se stane <strong>centrálním místem</strong> pro zápis celé hierarchie objektů. 
+       Takové místo je ideální pro pro vkládání <strong>validací, konverzí a listenerů</strong> společných pro všechny zůčastněné objekty.        
+       <br />Následující metoda <strong>readProperty()</strong> zaměňuje všechny nedefinované hodnoty typu Integer za 0. 
+       V této ukázce třída Property vrací návratový typu hodnoty pomocí metody getType().
+<pre  class="pre" style="margin-left: 0;"><span class="java-keywords">protected</span> Object <span class="java-layer-method">readValue</span>(Property key) {
+    Object result = <span class="java-keywords">super</span>.<span class="java-layer-method">readValue</span>(key);<br />
+    <span class="java-keywords">if</span> (result==<span class="java-keywords">null</span>
+    &amp;&amp;  key.<span class="java-layer-method">getType</span>()==Integer.<span class="java-keywords">class</span> ){
+        <span class="java-keywords">return</span> <span class="java-numeric-literals">0</span>;
+    } <span class="java-keywords">else</span> {
+        <span class="java-keywords">return</span> result;
+    }
+}</pre>       
+</li>
+</ul>
+
+
+Pravděpodobně první projekt, který byl postaven na tomto návrhovém vzoru je 
+<a href="http://jworksheet.ponec.net/index-cs.htm">jWorkSheet</a> spolu s&nbsp;projektem 
+<a href="http://ujoframework.org/index-cs.htm">UJO Framework</a>.
+<br />Oba projekty jsou dostupné včetně zdrojových kódů na <a href="http://sourceforge.net/projects/jworksheet/">SourceForge.net</a> pod otevřenou licencí ode dne 2007-10-24.
+<br />Návrhový vzor byl v těchto projektech rozšířen o další metody a formálně je popsán dvojicí rozhraní
+<ul> 
+<li><a href="http://ujoframework.ponec.net/javadoc-cs/org/ujoframework/Ujo.html">Ujo</a> a</li> 
+<li><a href="http://ujoframework.ponec.net/javadoc-cs/org/ujoframework/UjoProperty.html">UjoProperty</a></li> 
+</ul>	
+        
+    </div>
+    
+    
+    <div class="chapter">
+        <h2 id="author">O autorovi:</h2>
+        <ul>  
+            <li>Pro připomínky, dotazy či jiné zprávy můžete použít blog <a href="http://ujoframework-cs.blogspot.com/">http://ujoframework-cs.blogspot.com/</a>.</li>
+            <li>Na domovské stránce autora lze najít některé jeho další volně šiřitelné programy a jiné informace, odkaz je: <a href="http://ponec.net/index_cs.html">http://ponec.net/</a> .</li>
+            <li>Kontaktní email: ujoframework@gmail.com</li>
+        </ul>  
+    </div>	
+    <hr style="clear:both;" />
+    
+    <p style="text-align:center"><span class="PPonec">PP</span><span class="ppONEC">one</span><span class="PPonec">(</span><span
+            class="ppONEC">c</span><span class="PPonec">) 2007</span>
+    </p>
+    
+    <div class="chapter" style="text-align: center;">
+        <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" width="14" height="14" alt="NAVRCHOLU.cz" style="border:none" /></a></div></noscript>        
+        
+        <a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+    </div>
+</div>
+<p>&nbsp;</p>
+
+</body>
+</html>

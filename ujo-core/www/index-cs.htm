@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Language" content="cs" />
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
+<meta name="Author" content="Pavel Ponec" />
+<meta name="Description" content="So the another JavaBeans" />
+<meta name="keywords" content="UJO, framework, Java, POJO, JavaBean, perzistence, XML, CSV, export, import" /> 
+<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+<title>UJO Framework</title>
+<link rel="stylesheet" type="text/css" href="styles.css"></link>
+</head>
+
+<body>
+
+<!--    
+<div style="text-align:center; margin: auto;">
+<script type="text/javascript"><!-.-
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 728;
+	google_ad_height = 90;
+	google_ad_format = "728x90_as";
+	google_ad_type = "text_image";
+	//2007-10-09: pponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-.->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+-->
+
+<h1 style="text-align:center; margin: 0pt 200pt 8pt 0pt;"><img src="images/ujo64.png" alt="logo" style="margin: 0 10px; vertical-align: text-top;" />
+UJO Framework</h1>
+
+<hr />
+
+<div id="xmenu">
+<div id="menu">
+  <strong>Jazyk</strong>
+  <ul class="ulm">
+     <li><a href="index.html">English</a></li>
+     <li><a href="index-cs.htm">Čeština</a></li>
+  </ul>
+  <strong>Menu</strong>
+  <ul class="ulm">
+     <li><a href="presentation/">Prezentace <span style="font-style: italic;">-&nbsp;slide show</span></a></li>
+     <li><a href="http://ujoframework-cs.blogspot.com/">Novinky (blog)</a></li>
+     <li><a href="sample/index.htm">Začínáme <span style="font-style: italic;">-&nbsp;tutoriál</span></a></li>
+     <li><a href="sample/parameters.htm">Parametry aplikace <span style="font-style: italic;">-&nbsp;tutoriál</span></a></li>
+     <li><a href="javadoc/index.html">JavaDoc</a></li>
+     <li><a href="#refAppl">Reference</a></li>
+     <li><a href="#license">Licence</a></li>
+     <li><a href="javadoc/changes.txt">Release Notes</a></li>
+     <li><a href="#download">Stahuj</a></li>
+     <li><a href="patternDesing/index-cs.htm">Návrhový vzor Unified Access</a></li>
+     <li><a href="#author">O autorovi</a></li>
+  </ul>
+</div>
+
+<!-- === REKLAMA === -->
+<script type="text/javascript"><!--
+	google_ad_client = "pub-5317001675717556";
+	google_ad_width = 160;
+	google_ad_height = 600;
+	google_ad_format = "160x600_as";
+	google_ad_type = "text_image";
+	//2007-10-09: pponec.net/ujoframework
+	google_ad_channel = "3262863506";
+	google_color_border = "CCCCCC";
+	google_color_bg = "FBFBFB";
+	google_color_link = "0000FF";
+	google_color_text = "000000";
+	google_color_url = "008000";
+	google_ui_features = "rc:6";
+//-->
+</script>
+<script type="text/javascript"
+	src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<!-- === KONEC REKLAMY === -->
+</div>
+
+
+<div id="main">
+    <p class="prologue" id="prologue">
+        Hledáte rychlou XML perzistenci?<br />
+        Potřebujete předávat v kódu odkaz na metody JavaBean?<br />
+        Tvoříte tenkého klienta?<br />
+        Použijte UJO Framework!<br />
+    </p>
+    
+    
+    <div class="chapter">
+        <a href="images/UjoUmlFull.png"><img src="images/UjoUml.png" width="284" height="320" alt="UjoUml.png" style="float:right; margin: 0 0 15px 30px; vertical-align:text-top; border:0" />
+        </a><span class="appl">UJO Framework</span> je Java knihovna, která poskytuje netradiční architekturu objektů
+        odlišných od <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>. Původní nápad vznikl jako hříčka s generickými datovými typy Java 5.0, 
+        postupem času se však ukázalo, že architektura má několik zajímavých vlastností. Současná verze frameworku nabízí:
+        
+        <ul>
+        <li>otevřený kód</li>
+        <li>revoluční architektura objektu postavená na dvou rozhraních, která zjednodušuje manipulaci objektů pomocí 
+            <a href="http://java.sun.com/docs/books/tutorial/javabeans/">sestavovacího nástroje</a> aplikace
+            při zachování výborné rychlosti <!-- ve srovnání s přístupem k atributům přes Java reflexi--></li>
+        <li>výkonná XML serializace</li>
+        <li><a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> serializace</li>
+        <li><a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">Resource bundle</a> serializace</li>
+        <li>podpora komponenty <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a></li>
+        <li>objekt si řídí sám dostupnost svých atributů</li>
+        <li>property <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
+            je možné implementovat na jednom <a href="javadoc/org/ujoframework/Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">místě</a>
+            pro všechny property třídy včetně potomků</li>
+        <li>podpora <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a></li>
+        <li>úsporný zdrojový kód vašich UJO objektů</li>
+        <li>kontrola unitovými testy</li>
+        <li>malá velikost frameworku bez dalších závislostí</li>
+        </ul>        
+            
+        <span class="appl">UJO</span> je zkratka pro <span style="font-style: italic;">Unified
+        Java Object</span> a označuje takový <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">objekt</a>,
+        který implementuje rozhraní <a href="javadoc/org/ujoframework/Ujo.html">Ujo</a>.
+        
+        Objekt UJO si lze představit například jako <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">mapu</a> (objekt mapující hodnoty ke klíčům), 
+        ke které se přistupuje pomocí <strong>metod klíče</strong>. Klíč je zde tvořen implementací rozhraní <a href="javadoc/org/ujoframework/UjoProperty.html">UjoProperty</a> 
+        obsahující (mimo jiné) dvě typově bezpečné metody:
+        <ul>
+            <li><a href="javadoc/org/ujoframework/UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - pro zápis hodnoty do objektu a</li> 
+            <li><a href="javadoc/org/ujoframework/UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - pro čtení hodnoty.</li>
+        </ul>
+        
+        Na rozdíl od metod objektu JavaBean lze tyto klíče posílat jednoduše dalším objektům, 
+        příkladem využití může být seznam zobrazovaných sloupců tabulky poslaný do datového modelu typu TableModel, 
+        nebo odkazy k metodám beanu na JSP stránce.
+        
+        Jádrem projektu jsou tedy dvě rozhraní 
+        <a href="javadoc/org/ujoframework/Ujo.html" style="font-style: italic;">Ujo</a> a 
+        <a href="javadoc/org/ujoframework/UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
+        ke kterým jsou k dispozici tři abstraktní implementace:
+           <ul>
+               <li><a href="javadoc/org/ujoframework/implementation/map/MapUjo.html">MapUjo</a> - snadná implementace pro vývojáře s dostatečným výkonem pro běžné aplikace postavená na objektu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
+               <li><a href="javadoc/org/ujoframework/implementation/array/ArrayUjo.html">ArrayUjo</a> - špičkový výkon objektů je srovnatelný s rychlostí zápisu do JavaBeans, je implementovaný pomocí <strong>pole objektů</strong></li>
+               <li><a href="javadoc/org/ujoframework/implementation/pojo/PojoUjo.html">PojoUjo</a> - tato implementace mapuje klíče přímo na metody objektu <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> pomocí <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflexe</a></li>
+           </ul>
+        
+        Inspirací pro rozvoj tohoto projektu byla architektura perzistentních objektů v projektu <a href="http://cayenne.apache.org/">Cayenne</a> (nástroj pro řešení 
+        <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a>)
+        <br />&nbsp;<br />
+        
+        <a href="javadoc/org/ujoframework/package-summary.html#UJO">Více informací ...</a>
+        
+    </div>
+    
+    
+
+    <div class="chapter">
+        <h2 id="sample">Příklad použití:</h2>
+        
+        <p style="color: #db4343;"><strong>Poznámka: </strong> česká verze tohoto dokumentu už nepopisuje nové vlastnosti UJO Framewokru implementované od verze 0.80.
+        Pokud vás zajímají i tyto nové vlastnosti, přepněte se, prosím, na <a href="index.html">anglickou verzi</a>.
+        </p>
+        Jak napíšeme třídu objektu UJO?	Nejrychlejší cesta je využít nějakou abstraktní implementaci UJO z tohoto projektu, pomocí pár řádů kódu však můžeme
+        vyrobit i implementaci vlastní. Příkladem může být implementace třídy <i>Person</i>, která obsahuje tři atributy a jednu metodu pro změnu hotovosti.
+        
+<pre class="pre"><span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {
+    
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, <span class="java-numeric-literals">0d</span>);
+    
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">addCash</span>(<span class="java-keywords">double</span> cash) {
+    <span class="java-keywords">double</span> newCash = CASH.<span class="java-layer-method">of</span>(<span class="java-keywords">this</span>) + cash;
+    CASH.<span class="java-layer-method">setValue</span>(<span class="java-keywords">this</span>, newCash);
+  }
+}</pre>
+
+     <!--
+     Od <strong>verze 0.80</strong> je možné použít <strong>rozšířené API</strong> které nabízí čitelnější kód pro přístup a attributům 
+     a umožňuje mimo jiné i řetězení properties podobně jako v jazyku <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a>. Nové API jen rozšiřuje to původní a tak 
+     je možné kombinovat oba typy objektů.
+     
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
+  ...  
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">addCash</span>(<span class="java-keywords">double</span> cash) {
+    <span class="java-keywords">double</span> newCash = <span class="java-layer-method">get</span>(CASH) + cash;
+    <span class="java-layer-method">set</span>(CASH, newCash);
+  }
+}</pre>
+     -->
+
+        <a href="javadoc/org/ujoframework/package-summary.html#how">Pokračování ...</a>
+    </div>
+    
+    
+    <div class="chapter">
+        <h2 id="refAppl">Referenční projekty:</h2>
+        
+        Referenční implementací je Swingový projekt <a href="http://jworksheet.pponec.net/">JWorkSheet</a>, který vytvořil autor UJO Frameworku a který je zveřejněn  pod
+        otevřenou licencí na domovské stránce <a href="http://jworksheet.pponec.net/">http://jworksheet.pponec.net/</a>.
+        Aplikace <strong>jWorkSheet</strong> slouží k měření vašeho času stráveného na projektech. <br/>
+        Na zdrojových kódech lze studovat využití perzistence UJO objektů stejně tak jako snadné propojení kolekce UJO objektů na grafickou komponentou JTable.
+        K dispozici je <a href="http://jworksheet.pponec.net/javadoc/">API</a> projektu ve formátu JavaDoc.<br />
+        
+        <br />
+        Vlastnosti aplikace JWorkSheet:<br />
+        <ul>
+            <li>veškerá persistence je realizovaná pomocí frameworku UJO. V projektu se používá ukládání do formátu 
+            <span style="font-weight: bold;">XML</span>, parametry se ukládají do formátu <span style="font-weight: bold;">Resource Bundle</span>.</li>
+            <li>všechny datové modely objektu JTable jsou buď přímo instancí, nebo potomkem třídy UjoTableModel .</li>
+            <li>zajímavá je malá velikost aplikace jWorkSheet, zabírá
+            přibližně 160 kB včetně knihovny UJO Framework.</li>
+        </ul>
+        Projekt JWorkSheet je napsaný v Java 5.0, vývoj byl realizován v <a href="http://www.netbeans.org/">NetBeans IDE</a> .
+    </div>
+
+    
+    <div class="chapter">
+        <h2 id="license">Licence:</h2>
+        Kód byl uvolněn pod licencí <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br />
+        <br />
+        
+        <div class="apache"><code>
+   Copyright 2007 Pavel Ponec
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+            </code>
+        </div>
+    </div>
+    
+    <div class="chapter">
+        <h2 id="download">Stahuj:</h2>
+        Zdrojové a binární kódy je možné stáhnout na SourceForge zde:
+        <ul> 
+            <li>Binární  <a href="http://sourceforge.net/projects/ujoframework/">balík</a></li>
+            <li>Zdrojové  <a href="http://sourceforge.net/projects/ujoframework/">kódy</a></li>
+        </ul>
+        
+    </div>	
+    
+    
+    <div class="chapter">
+        <h2 id="author">O autorovi:</h2>
+        <ul>  
+            <li>Pro připomínky, dotazy či jiné zprávy můžete použít blog <a href="http://ujoframework-cs.blogspot.com/">http://ujoframework-cs.blogspot.com/</a>.</li>
+            <li>Na domovské stránce autora lze najít některé jeho další volně šiřitelné programy a jiné informace, odkaz je: <a href="http://pponec.net/">http://pponec.net/</a> .</li>
+            <li>Technická podpora: ujoframework@gmail.com</li>
+        </ul>  
+    </div>	
+    <hr style="clear:both;" />
+    
+    <p style="text-align:center"><span class="PPonec">PP</span><span class="ppONEC">one</span><span class="PPonec">(</span><span
+            class="ppONEC">c</span><span class="PPonec">) 2007-2008</span>
+    </p>
+    
+    <div class="chapter" style="text-align: center;">
+        <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" width="14" height="14" alt="NAVRCHOLU.cz" style="border:none" /></a></div></noscript>        
+        
+        <a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+    </div>
+</div>
+<p>&nbsp;</p>
+
+</body>
+</html>

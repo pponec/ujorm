@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<body class="org.ujoframework.implementation.xml.t001_simple.UPerson">
+    <Name>Pavel</Name>
+    <Male>true</Male>
+    <Birth>2007-08-18T17:57:46.703</Birth>
+</body>

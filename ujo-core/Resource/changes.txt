@@ -1,0 +1,99 @@
+The UJO Framework release notes
+*******************************
+
+release 0.82 (2008-11-23)
++ there are three new Ujo implementations for different purposes:
++ FactoryUjo: a factory to creating new instances by a property type, the special parameter constructor is supported as well as no parameter constructor
++ RegistrarUjo: the implementation allows to register the PropertyChangeListener for selected property and an action (before or after) value change
++ FieldUjo: the solution provides an access to a private object fields by UjoProperty
++ all implementations are in a different package structure and they will not in the core in the future
+
+release 0.81 (2008-10-21)
++ new class PathProperty for a composition of several UjoProperties
++ Charset is supported by a UjoManager object
++ UjoProperty implements a CharSequence for an easy access to the property Name
++ new class ListProperty extending UjoPropertyList is created for property ArrayList implementations
++ new method is UjoPropertyList.removeItem(UJO, ITEM) is added
++ new method SuperUjoExt.remove(UjoPropertyList, ITEM) is added
++ small bug fixing and new JUnit tests
+
+release 0.80 (2008-09-07)
++ UJO actions are converted from a primitive type int to an new object UjoAction
++ all ACTION constants are moved to the interface UjoAction
++ serialization performance is improved
++ motivation tutorial in a "slide show" format is available on the home page
++ framework version is available in the manifest of JAR file
++ command line: "java -run ujo.jar" shows version number and some basic information about framework
++ class ZeroProviderImpl was removed, its function was replaced by UjoProperty.getDefault() feature
+- class UjoManagerXML is fixed for a multi thread access
+
+release 0.80.rc3 (2008-08-23)
++ new methods UjoExt.getText(...) and Ujo.setText(...) are available for a text processing
++ new method UjoExt.findProperty(String)
++ SingleUjoTabModel enhancements
++ PojoUjo class was renamed to a more comprehensible name BeanUjo (include properties and subclasses)
++ Properties *Rife was removed from the UJO Framework core for simplification class model
+
+release 0.80.rc2 (2008-08-07)
++ some abstract implementations of UjoExt interface are slightly improved for better type safe features
++ there is created a new method to set columns to a UjoTableModel class
++ methods of UjoTextable interface was extended about the "context" parameter. The original methods is implemented in a SuperUjo class
++ method of UjoCloneable interface was extended about the "context" parameter.
+
+release 0.80.rc (2008-07-13)
++ UjoExt interface is significantly improved for better type safe features
++ documentation extensions
+
+release 0.80.beta (2008-06-23)
++ interface UjoExt offers a more conventional attribute access
++ chaining of properties is supported
++ default value management is just implemented by a new method getDefault() instead of an obsolete solution using an ACTION_ZERO_REPLACE constant
++ Java parameter -enableassertions switch on a value type checking in a method Ujo.writeProperty(...)
++ many documentation areas are supplemented include a JavaDoc
++ Internet home page is redesigned
+
+release 0.75 (2008-05-18)
++ API of PojoProperty class was extended for a better usability
+- bug of Resource Bundle data export was fixed
+
+release 0.74 (2008-05-11)
++ CSV persistence is supported now
++ XML performance was improved
++ new Ujo implementation called UjoPojo is done for a JavaBean class support
++ API of persistence tools was slightly changed for better extension features
+
+release 0.73 (2008-04-14)
++ attributes in a XML export file is supported now
++ performance tuning 
++ XML persistence performance tests are completed and described in documentation  
++ action constants are reevaluated (there is recommended to recompile your project)
+
+release 0.72 (2008-03-16)
++ UJO implementations have got extended API for easier PROPERTY building with a better type saving.
++ class UjoComparator have got new method: equals(UJO ujo1, UJO ujo2)  
++ documentation was supplemented
+
+release 0.71 (2007-11-26)
++ code cleaning: a compilation with parameter "-Xlint:unchecked parameter" doesn't write any warning.
++ API cleaning: an obscure class names with a suffix "Easy" was replaced by a word "Rife"  
++ documentation was improved
+
+release 0.70 (2007-11-16) 
++ project documentation is translated into English
++ unnecessary class MapUjoTextable was removed
++ class SingleUjoTabModel is fixed
+
+release 0.70.beta2 (2007-10-19)
++ project documentation is fixed and significantly extended
++ method UjoTableModel.insertRow(..) is renamed to addRow(..)
+
+release 0.70.beta (2007-10-12)
++ the first public version
++ Ujo interface API is finished
++ XML export / import is working
++ Resource bundle export / import is working
++ a Zero provider is supported
++ project documentation version is available in a Czech language only
+
+-- 
+EOF

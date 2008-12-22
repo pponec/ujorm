@@ -1,0 +1,78 @@
+a img {
+    border: none;
+}
+
+.post .meta {
+	border-top: none;
+	border-bottom: 1px solid #3E5C0E;    
+}
+
+table.top td {
+	/* vertical-align: top; */
+	padding-bottom: 8px;
+}
+
+#logo h1 {style.css (line 137)
+	font-family: Arial,Helvetica,sans-serif;
+}
+
+#logo h1 {
+	text-transform: none;
+	font-size: 50px;
+}
+
+#logo h2 {
+	font-size: 16px;
+}
+
+.post {
+       padding-bottom: 10px;
+}
+
+
+/* ------ CODE SAMPLE --------- */
+
+.pre { 
+	margin: 20px 0px; 
+	border: 1px #57A122 solid; 
+	padding: 5px; 
+	background-color: white; 
+	overflow: auto;
+        width: 466px;
+        
+        -moz-border-radius-bottomleft:7px;
+        -moz-border-radius-bottomright:7px;
+        -moz-border-radius-topleft:7px;
+        -moz-border-radius-topright:7px;
+        
+}
+.java-block-comment {color: #969696}
+.java-string-literal {color: #99006b}
+.java-layer-method {font-family: Monospaced; font-weight: bold}
+.java-keywords {color: #0000e6; }
+.java-annotation {color: #32ae07;}
+
+.xml-attribute {color: #007c00}
+.xml-pi-start {color: #00007c; font-family: Monospaced; font-weight: bold;}
+.xml-tag {color: #0000ff}
+.xml-value {color: #99006b}
+.xml-pi-content {color: #00007c}
+
+.apache {
+	margin: 0em 1px;
+	padding: 0em 1px;
+	white-space: pre;
+	overflow: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+.highlight {
+   background-color: #fffe80;
+}
+
+/* -------- Code Sample NetBeans 6.0 ----------------- */
+
+.comment {color: #969696; }
+.character, .java-string-literal {color: #ce7b00; }
+.keyword-directive {color: #0000e6; }
+
