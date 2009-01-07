@@ -15,7 +15,7 @@ import org.ujoframework.extensions.UjoPropertyList;
  * Manager of BeanUjo
  * @author pavel
  */
-public class BeanManager<UJO extends Ujo, VALUE> {
+public class BeanManager<UJO,VALUE> {
     
     private final UjoProperty property;
     
@@ -30,9 +30,9 @@ public class BeanManager<UJO extends Ujo, VALUE> {
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
-    public void writeValue(final UJO ujo, final VALUE value) throws IllegalArgumentException {
+    public void writeValue(final UJO bean, final VALUE value) throws IllegalArgumentException {
         try {
-            getMethod(ujo, true).invoke(ujo, value);
+            getMethod(bean, true).invoke(bean, value);
         } catch (Exception e) {
             throw new IllegalArgumentException("BeanProperty:"+property.getName()+"="+value, e);
         }
@@ -41,9 +41,9 @@ public class BeanManager<UJO extends Ujo, VALUE> {
     /** WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
-    public Object readValue(final UJO ujo) throws IllegalArgumentException {
+    public Object readValue(final UJO bean) throws IllegalArgumentException {
         try {
-            return getMethod(ujo, false).invoke(ujo);
+            return getMethod(bean, false).invoke(bean);
         } catch (Exception e) {
             throw new IllegalArgumentException("BeanProperty:"+property.getName(), e);
         }
@@ -131,8 +131,8 @@ public class BeanManager<UJO extends Ujo, VALUE> {
     }    
     
     /** Create new instance of BeanManager */
-    public static <UJO extends Ujo, VALUE> BeanManager<UJO, VALUE> getInstance(UjoProperty property) {
-        return new BeanManager<UJO, VALUE>(property);
+    public static <UJO,VALUE> BeanManager<UJO,VALUE> getInstance(UjoProperty property) {
+        return new BeanManager<UJO,VALUE>(property);
     }
 
     @Override
