@@ -1,6 +1,10 @@
 The UJO Framework release notes
 *******************************
 
+release 0.83 (2009-XX-XX)
++ UjoCriteria supports a searching for objects on the list
++ support or the Proxy pattern design of a BeanUjo class
+
 release 0.82 (2008-11-23)
 + there are three new Ujo implementations for different purposes:
 + FactoryUjo: a factory to creating new instances by a property type, the special parameter constructor is supported as well as no parameter constructor
