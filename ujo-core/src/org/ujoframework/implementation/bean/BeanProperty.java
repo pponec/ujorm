@@ -28,10 +28,10 @@ import org.ujoframework.extensions.ValueAgent;
  */
 public class BeanProperty<UJO extends Ujo,VALUE> 
     extends SuperProperty<UJO,VALUE> 
-    implements ValueAgent<UJO, Object> {
+    implements ValueAgent<Object,Object> {
 
     /** Bean Manager instance */
-    private final BeanManager<UJO, Object> beanManager;
+    private final BeanManager<Object,Object> beanManager;
     
     /**
      * Constructor
@@ -56,15 +56,15 @@ public class BeanProperty<UJO extends Ujo,VALUE>
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
-    public void writeValue(final UJO ujo, final Object value) throws IllegalArgumentException {
-        beanManager.writeValue(ujo, value);
+    public void writeValue(final Object bean, final Object value) throws IllegalArgumentException {
+        beanManager.writeValue(bean, value);
     }
     
     /** WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
-    public Object readValue(final UJO ujo) throws IllegalArgumentException {
-        return beanManager.readValue(ujo);
+    public Object readValue(final Object bean) throws IllegalArgumentException {
+        return beanManager.readValue(bean);
     }
         
 }
