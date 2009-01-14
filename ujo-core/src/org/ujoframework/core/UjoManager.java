@@ -434,14 +434,14 @@ public class UjoManager {
     }
 
         /** An assignable test. */
-    public boolean assertDirectAssign(UjoProperty property, Object value) throws IllegalArgumentException {
+    public boolean assertDirectAssign(final UjoProperty property, final Object value) throws IllegalArgumentException {
         return assertDirect(property, value) 
             && assertAssign(property, value)
             ;
     }
 
     /** An assignable test. */
-    public boolean assertDirect(UjoProperty property, Object value) throws IllegalArgumentException {
+    public boolean assertDirect(final UjoProperty property, final Object value) throws IllegalArgumentException {
         if (!property.isDirect()) {
             final String msg
             = "The property \"" 
@@ -457,7 +457,7 @@ public class UjoManager {
     
     
     /** An assignable test. */
-    public boolean assertAssign(UjoProperty property, Object value) throws IllegalArgumentException {
+    public boolean assertAssign(final UjoProperty property, final Object value) throws IllegalArgumentException {
         boolean result = value==null || property.getType().isInstance(value);
         if (!result) {
             final String msg
@@ -478,8 +478,7 @@ public class UjoManager {
     
     // ---------------------------------------------------------------------
 
-    /** Set a value to an Ujo object by a selected properties.
-     */
+    /** Set a value to an Ujo object by a selected properties. */
     @SuppressWarnings("unchecked")
     public static void setValue(final Ujo ujo, final UjoProperty prop, final Object value) {
         if (prop.isDirect()) {
