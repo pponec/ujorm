@@ -28,15 +28,15 @@ import org.ujoframework.UjoProperty;
  */
 public class ExpressionValue<UJO extends Ujo> implements Expression<UJO> {
     
-    final private UjoProperty  property;
-    final private OperatorEval operator;
-    final private Object       value;
+    final private UjoProperty property;
+    final private Operator    operator;
+    final private Object      value;
     
-    public ExpressionValue(UjoProperty<UJO,? extends Object> property, OperatorEval operator, UjoProperty<UJO,Object> value) {
+    public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, UjoProperty<UJO,Object> value) {
         this(property, operator, (Object) value);    
     }
     
-    public ExpressionValue(UjoProperty<UJO,? extends Object> property, OperatorEval operator, Object value) {
+    public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, Object value) {
         this.property = property;
         this.value    = value;
         this.operator = operator;
@@ -50,7 +50,7 @@ public class ExpressionValue<UJO extends Ujo> implements Expression<UJO> {
             case EQ:
             case NOT_EQ:
                 boolean result = property.equals(ujo, value2);
-                return operator==OperatorEval.EQ ? result : !result ;
+                return operator==Operator.EQ ? result : !result ;
             case REGEXP:
             case NOT_REGEXP:
                 Pattern p = value2 instanceof Pattern 
@@ -59,7 +59,7 @@ public class ExpressionValue<UJO extends Ujo> implements Expression<UJO> {
                     ;
                 Object val1 = property.getValue(ujo);
                 boolean result2 = val1!=null && p.matcher(val1.toString()).matches();
-                return operator==OperatorEval.REGEXP ? result2 : !result2 ;
+                return operator==Operator.REGEXP ? result2 : !result2 ;
         }
         
         Comparable val2 = (Comparable) value2;

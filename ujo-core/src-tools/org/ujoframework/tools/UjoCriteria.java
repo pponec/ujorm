@@ -88,7 +88,7 @@ public class UjoCriteria<UJO extends Ujo> {
 
     /** Equals */
     public Expression<UJO> newExpr(UjoProperty<UJO, ? extends Object> property, Object value) {
-        return new ExpressionValue<UJO>(property, OperatorEval.EQ, value);
+        return new ExpressionValue<UJO>(property, Operator.EQ, value);
     }
 
     /** TRUE / FALSE */
@@ -98,11 +98,11 @@ public class UjoCriteria<UJO extends Ujo> {
     }
 
     
-    public Expression<UJO> newExpr(UjoProperty<UJO, ? extends Object> property, OperatorEval operator, Object value) {
+    public Expression<UJO> newExpr(UjoProperty<UJO, ? extends Object> property, Operator operator, Object value) {
         return new ExpressionValue<UJO>(property, operator, value);
     }
 
-    public Expression<UJO> newExpression(UjoProperty<UJO, ? extends Object> property1, OperatorEval operator, UjoProperty<UJO, Object> value) {
+    public Expression<UJO> newExpression(UjoProperty<UJO, ?> property1, Operator operator, UjoProperty<UJO, Object> value) {
         return new ExpressionValue<UJO>(property1, operator, value);
     }
 
