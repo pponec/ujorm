@@ -15,7 +15,7 @@ import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.tools.UjoCriteria;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.OperatorBinary;
-import org.ujoframework.tools.criteria.OperatorEval;
+import org.ujoframework.tools.criteria.Operator;
 import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
 
 /**
@@ -80,7 +80,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_02a() {
         UjoCriteria uc  = UjoCriteria.create();
-        Expression  ex1 = uc.newExpr(CASH, OperatorEval.GT, 10.0);
+        Expression  ex1 = uc.newExpr(CASH, Operator.GT, 10.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(3, result.size());
         assertEquals("Marry", result.get(0).get(NAME) );
@@ -89,7 +89,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_02b() {
         UjoCriteria uc  = UjoCriteria.create();
-        Expression  ex1 = uc.newExpr(CASH, OperatorEval.LT, 20.0);
+        Expression  ex1 = uc.newExpr(CASH, Operator.LT, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -99,7 +99,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_03a() {
         UjoCriteria uc  = UjoCriteria.create();
-        Expression  ex1 = uc.newExpr(MOTHER_CASH, OperatorEval.GT, 20.0);
+        Expression  ex1 = uc.newExpr(MOTHER_CASH, Operator.GT, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(2, result.size());
     }
@@ -107,7 +107,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_03b() {
         UjoCriteria uc  = UjoCriteria.create();
-        Expression  ex1 = uc.newExpr(MOTHER_CASH, OperatorEval.EQ, 20.0);
+        Expression  ex1 = uc.newExpr(MOTHER_CASH, Operator.EQ, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -116,8 +116,8 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_04a() {
         UjoCriteria uc  = UjoCriteria.create();
-        Expression  ex1 = uc.newExpr(CASH, OperatorEval.GT, 10.0);
-        Expression  ex2 = uc.newExpr(CASH, OperatorEval.LT, 30.0);
+        Expression  ex1 = uc.newExpr(CASH, Operator.GT, 10.0);
+        Expression  ex2 = uc.newExpr(CASH, Operator.LT, 30.0);
         Expression  exp = ex1.join(OperatorBinary.AND, ex2);
         List<ExtPerson> result = uc.select(persons, exp);
         assertEquals(1, result.size());

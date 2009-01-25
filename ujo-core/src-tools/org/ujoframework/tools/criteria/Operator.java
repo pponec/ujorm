@@ -22,7 +22,7 @@ package org.ujoframework.tools.criteria;
  *
  * @author pavel
  */
-public enum OperatorEval {
+public enum Operator {
      GT,
      GE,
      LT,

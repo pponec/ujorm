@@ -21,7 +21,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  *
- * @author pavel
+ * @author Ponec
  */
 public class UjoCoder {
 
