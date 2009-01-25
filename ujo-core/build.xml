@@ -100,13 +100,13 @@ Implementation-Version: ${version}
 Implementation-Vendor: "Paul Ponec"</echo>
     </target>    
 
-    <target name="-javadoc-build" depends="init">
+    <target name="-javadoc-buildXXX" depends="init">
         
-        <!-- INIT before JAVADOC: -->
+        <!-- INIT before JAVADOC: -->  <!--
         <copy file="${src.dir}/org/ujoframework/z_package_${jDocLang}.html" 
               tofile="${src.dir}/org/ujoframework/package.html"
               overwrite="true"
-       />
+       /> -->
         
         <mkdir dir="${dist.javadoc.dir}"/>
         <javadoc additionalparam="${javadoc.additionalparam}" 
@@ -134,6 +134,9 @@ Implementation-Vendor: "Paul Ponec"</echo>
                 <filename name="**/*.java"/>
             </fileset>
             <fileset dir="${src.src-tools.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.src-db.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
         </javadoc>
@@ -182,6 +185,9 @@ Implementation-Vendor: "Paul Ponec"</echo>
                     <filename name="**/*.java"/>
                 </fileset>
                 <fileset dir="${src.src-tools.dir}" excludes="${excludes}" includes="${includes}">
+                    <filename name="**/*.java"/>
+                </fileset>
+                <fileset dir="${src.src-db.dir}" excludes="${excludes}" includes="${includes}">
                     <filename name="**/*.java"/>
                 </fileset>
               

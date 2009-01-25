@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-
 package org.ujoframework.core;
 
 import java.util.ArrayList;
@@ -24,8 +23,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * Ujo Iterator
- * @author pavel
+ * Ujo iterator have got some extended functions:
+ * <ul>
+ *    <li>iterator can provide optionally a count of items by a size() method</li>
+ *    <li>iterator can be used in generic loop syntax for( : ) </li>
+ *    <li>iterator can create a List object</li>
+ * </ul>
+
+ * @author Ponec
  */
 public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
 
@@ -72,7 +77,7 @@ public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
         throw new UnsupportedOperationException();
     }
 
-    /** Copy items to a List */
+    /** Copy items to a new List */
     public List<T> toList() {
         final List<T> result = new ArrayList<T>(size>=0 ? size : 10);
         for (T item : this) {

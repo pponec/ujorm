@@ -15,21 +15,20 @@ import org.ujoframework.tools.criteria.Expression;
 /**
  *
  * @author pavel
- */
-// @SuppressWarnings("unchecked")
+ */  // @SuppressWarnings("unchecked")
 public class Sample {
 
+    /** Using INSERT */
     public void useCreateItem() {
 
         Session session = DbHandler.getInstance().getSession();
 
         BoOrder order = new BoOrder();
         BoOrder.DATE.setValue(order, new Date());
-        BoOrder.DESCR.setValue(order, "The First Order");
-
+        BoOrder.DESCR.setValue(order, "My first order");
 
         BoItem item = new BoItem();
-        BoItem.DESCR.setValue(item, "Yellow table");
+        BoItem.DESCR.setValue(item, "yellow table");
         BoItem.ORDER.setValue(item, order);
 
 
@@ -43,6 +42,7 @@ public class Sample {
         }
     }
 
+    /** Using SELECT by a object relations */
     public void useRelation() {
 
         Session session = DbHandler.getInstance().getSession();
@@ -60,22 +60,19 @@ public class Sample {
                 System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
             }
         }
-
-        session.commit();
-        session.rollback();
     }
 
 
+    /** Using SELECT by QUERY */
     public void useSelection() {
 
         Session session = DbHandler.getInstance().getSession();
 
-
         Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.ID);
         Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE);
-        Expression<BoOrder> expA = exp1.and(exp2);
+        Expression<BoOrder> expr = exp1.and(exp2);
 
-        Query<BoOrder> query = session.createQuery(BoOrder.class, expA);
+        Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
         query.sizeRequired(true);
         query.readOnly(false);
         query.setParameter(BoOrder.ID, 10L);
