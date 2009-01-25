@@ -29,15 +29,17 @@ import org.ujoframework.implementation.map.MapUjo;
  *    <li>type safe query language!</li>
  *    <li>no more a LazyInitialization exception :-)</li>
  *    <li>no confusing proxy business objects</li>
- *    <li>no more list properties, for a collection is designed by a new object called <a href="../../core/UjoIterator.html">UjoIterator</a>. The List object provides a toList() method however, if you need it</li>
- *    <li>very small framework without library dependences</li>
+ *    <li>no more list properties, a new object called <a href="../../core/UjoIterator.html">UjoIterator</a>  is designed for a collection. The UjoIterator provides a toList() method however</li>
+ *    <li>very small framework without more library dependences</li>
  * </ul>
  * Some other features:
  * <ul>
  *    <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
- *    <li>missing cache is siutable for a large transactions and a selecting uncommited data</li>
- *    <li>all persistent objects are based on the Ujo interface, specialy on a TableUjo implementation</li>
+ *    <li>lazy initialization of properties and lazy initialization items of a collection is supported</li>
+ *    <li>missing cache is siutable for a large transactions and a selecting uncommited changes</li>
+ *    <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
  *    <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annoatations can be owerwrited by a XML files </li>
+ *    <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a better security</li>
  * </ul>
  * The sample of use:
  * <pre class="pre">
@@ -85,25 +87,20 @@ import org.ujoframework.implementation.map.MapUjo;
  *      }
  *  }
  *
- *
  *  <span class="comment">&#47;**</span> <span class="comment">Using</span> <span class="comment">SELECT</span> <span class="comment">by</span> <span class="comment">QUERY</span> <span class="comment">*&#47;</span>
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelection() {
  *
  *      Session session = DbHandler.getInstance().getSession();
- *
- *      Expression&lt;BoOrder&gt; exp1 = Expression.newInstance(BoOrder.ID);
- *      Expression&lt;BoOrder&gt; exp2 = Expression.newInstance(BoOrder.DATE);
+
+ *      Expression&lt;BoOrder&gt; exp1 = Expression.newInstance(BoOrder.ID, 10L);
+ *      Expression&lt;BoOrder&gt; exp2 = Expression.newInstance(BoOrder.DATE, <span class="keyword-directive">new</span> Date());
  *      Expression&lt;BoOrder&gt; expr = exp1.and(exp2);
  *
  *      Query&lt;BoOrder&gt; query = session.createQuery(BoOrder.<span class="keyword-directive">class</span>, expr);
  *      query.sizeRequired(<span class="keyword-directive">true</span>);
  *      query.readOnly(<span class="keyword-directive">false</span>);
- *      query.setParameter(BoOrder.ID, 10L);
- *      query.setParameter(BoOrder.DATE, <span class="keyword-directive">new</span> Date());
  *
- *      BoOrder order = session.single(query);
- *
- *      <span class="keyword-directive">for</span> (BoOrder o : session.iterate( query ) ) {
+ *      <span class="keyword-directive">for</span> (BoOrder order : session.iterate( query ) ) {
  *          Long id = BoOrder.ID.of(order);
  *          String descr = BoOrder.DESCR.of(order);
  *          System.out.println(<span class="character">&quot;</span><span class="character">Order id: </span><span class="character">&quot;</span> + id + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + descr);

@@ -20,7 +20,6 @@ public class Sample {
 
     /** Using INSERT */
     public void useCreateItem() {
-
         Session session = DbHandler.getInstance().getSession();
 
         BoOrder order = new BoOrder();
@@ -30,7 +29,6 @@ public class Sample {
         BoItem item = new BoItem();
         BoItem.DESCR.setValue(item, "yellow table");
         BoItem.ORDER.setValue(item, order);
-
 
         session.save(order);
         session.save(item);
@@ -44,7 +42,6 @@ public class Sample {
 
     /** Using SELECT by a object relations */
     public void useRelation() {
-
         Session session = DbHandler.getInstance().getSession();
         BoDatabase db = session.getDatabase();
 
@@ -62,27 +59,21 @@ public class Sample {
         }
     }
 
-
     /** Using SELECT by QUERY */
     public void useSelection() {
-
         Session session = DbHandler.getInstance().getSession();
 
-        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.ID);
-        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE);
+        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.ID, 10L);
+        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE, new Date());
         Expression<BoOrder> expr = exp1.and(exp2);
 
         Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
         query.sizeRequired(true);
         query.readOnly(false);
-        query.setParameter(BoOrder.ID, 10L);
-        query.setParameter(BoOrder.DATE, new Date());
-
-        BoOrder order = session.single(query);
 
         for (BoOrder o : session.iterate( query ) ) {
-            Long id = BoOrder.ID.of(order);
-            String descr = BoOrder.DESCR.of(order);
+            Long id = BoOrder.ID.of(o);
+            String descr = BoOrder.DESCR.of(o);
             System.out.println("Order id: " + id + " descr: " + descr);
         }
     }

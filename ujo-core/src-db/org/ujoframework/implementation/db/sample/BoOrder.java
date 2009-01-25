@@ -11,18 +11,22 @@ import org.ujoframework.implementation.db.TableUjo;
 import org.ujoframework.implementation.db.UjoRelative;
 
 /**
- *
+ * Simple order for goods with a collection of Items.
  * @Table=bo_order
  */
 public class BoOrder extends TableUjo {
 
-    /** @id */
+    /** Unique key
+     * @id
+     */
     public static final UjoProperty<BoOrder,Long> ID = newProperty("id", Long.class);
+    /** User key */
     public static final UjoProperty<BoOrder,Integer> USER_ID = newProperty("usrId", Integer.class);
+    /** Description of the order */
     public static final UjoProperty<BoOrder,String> DESCR = newProperty("description", String.class);
+    /** Date of creation */
     public static final UjoProperty<BoOrder,Date> DATE = newProperty("date", Date.class);
-
-    /** Select BoOrder */
+    /** References to Itemsr */
     public static final UjoRelative<BoOrder,BoItem> ITEMS = newRelation("items", BoItem.class);
 
 }
