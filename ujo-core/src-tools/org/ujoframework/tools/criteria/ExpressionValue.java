@@ -26,7 +26,7 @@ import org.ujoframework.UjoProperty;
  * Expression
  * @author pavel
  */
-public class ExpressionValue<UJO extends Ujo> implements Expression<UJO> {
+public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     
     final private UjoProperty property;
     final private Operator    operator;
@@ -93,9 +93,6 @@ public class ExpressionValue<UJO extends Ujo> implements Expression<UJO> {
         return o1.compareTo(o2);
     }
         
-    public Expression<UJO> join(OperatorBinary operator, Expression<UJO> expr) {
-        return new ExpressionBinary<UJO>(this, operator, expr);
-    }
 
     @Override
     public String toString() {

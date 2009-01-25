@@ -5,27 +5,30 @@
 
 package org.ujoframework.implementation.db;
 
-import org.ujoframework.implementation.db.sample.BoDatabase;
+import org.ujoframework.Ujo;
+import org.ujoframework.UjoProperty;
+import org.ujoframework.implementation.db.sample.BoOrder;
+import org.ujoframework.tools.criteria.Expression;
 
 /**
  *
  * @author pavel
  */
-public class DbConnection {
+public class Query<UJO extends Ujo> {
 
-    public void commit() {
+    public Query(Class<UJO> aClass, Expression<UJO> expA) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public BoDatabase getDatabase() {
+    public void readOnly(boolean b) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void rollback() {
+    public <ITEM> void setParameter(UjoProperty<UJO,ITEM> property, ITEM value) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void save(TableUjo ujo) {
+    public void sizeRequired(boolean b) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

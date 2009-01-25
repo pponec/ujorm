@@ -6,7 +6,7 @@
 package org.ujoframework.implementation.db.sample;
 
 import org.ujoframework.implementation.db.TableUjo;
-import org.ujoframework.implementation.db.UjoRelation;
+import org.ujoframework.implementation.db.UjoRelative;
 
 /**
  * An table definition of the one database.
@@ -15,10 +15,10 @@ import org.ujoframework.implementation.db.UjoRelation;
 public class BoDatabase extends TableUjo {
 
     /** Customer order */
-    public static final UjoRelation<BoDatabase,BoOrder> ORDERS = newRelation("ORD_ORDER", BoOrder.class);
+    public static final UjoRelative<BoDatabase,BoOrder> ORDERS = newRelation("ORD_ORDER", BoOrder.class);
 
     /** Items of the Customer order */
-    public static final UjoRelation<BoDatabase,BoItem> ORDER_ITEMS = newRelation("ORD_ITEMS", BoItem.class);
+    public static final UjoRelative<BoDatabase,BoItem> ORDER_ITEMS = newRelation("ORD_ITEMS", BoItem.class);
 
 
 

@@ -17,8 +17,10 @@
 
 package org.ujoframework.core;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -68,6 +70,15 @@ public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
      */
     public void remove() {
         throw new UnsupportedOperationException();
+    }
+
+    /** Copy items to a List */
+    public List<T> toList() {
+        final List<T> result = new ArrayList<T>(size>=0 ? size : 10);
+        for (T item : this) {
+            result.add(item);
+        }
+        return result;
     }
 
 

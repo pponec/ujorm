@@ -16,6 +16,7 @@
 
 package org.ujoframework.implementation.db;
 
+import java.beans.Expression;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.beans.EventRegistrar;
@@ -50,12 +51,11 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
     @Override
     public Object readValue(UjoProperty property) {
         Object result = super.readValue(property);
-        if (result==null
-        && property instanceof UjoRelation
-        && true /* Is persistent property */
+        if (property instanceof UjoRelative
+        &&  handler.isPersistent(property)
         ){
-            result = handler.loadIterator(this, (UjoRelation) property);
-            super.writeValue(property, result);
+            // Don't save the result!
+            result = handler.getSession().iterate(property);
         }
         return result;
     }
@@ -84,8 +84,8 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
     /** A PropertyIterator Factory
      * @hidden
      */
-    protected static <UJO extends TableUjo, ITEM extends TableUjo> UjoRelation<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
-        return new UjoRelation<UJO,ITEM> (name, type);
+    protected static <UJO extends TableUjo, ITEM extends TableUjo> UjoRelative<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
+        return new UjoRelative<UJO,ITEM> (name, type);
     }
 
 }

@@ -7,18 +7,21 @@ package org.ujoframework.implementation.db.sample;
 
 import java.util.Date;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.implementation.db.DbConnection;
+import org.ujoframework.implementation.db.Session;
 import org.ujoframework.implementation.db.DbHandler;
+import org.ujoframework.implementation.db.Query;
+import org.ujoframework.tools.criteria.Expression;
 
 /**
  *
  * @author pavel
  */
+// @SuppressWarnings("unchecked")
 public class Sample {
 
-    public void testCreateItem() {
+    public void useCreateItem() {
 
-        DbHandler handler = DbHandler.getInstance();
+        Session session = DbHandler.getInstance().getSession();
 
         BoOrder order = new BoOrder();
         BoOrder.DATE.setValue(order, new Date());
@@ -30,20 +33,20 @@ public class Sample {
         BoItem.ORDER.setValue(item, order);
 
 
-        DbConnection connection = handler.getConnection();
+        session.save(order);
+        session.save(item);
 
-        connection.save(order);
-        connection.save(item);
-
-        connection.commit();
-        connection.rollback();
+        if (true) {
+           session.commit();
+        } else {
+           session.rollback();
+        }
     }
 
-    public void testRelation() {
+    public void useRelation() {
 
-        DbHandler handler = DbHandler.getInstance();
-        DbConnection connection = handler.getConnection();
-        BoDatabase db = connection.getDatabase();
+        Session session = DbHandler.getInstance().getSession();
+        BoDatabase db = session.getDatabase();
 
         UjoIterator<BoOrder> orders  = BoDatabase.ORDERS.of(db);
         for (BoOrder order : orders) {
@@ -58,16 +61,33 @@ public class Sample {
             }
         }
 
-        connection.commit();
-        connection.rollback();
-    }
-
-    public void testSelection() {
-
-        
+        session.commit();
+        session.rollback();
     }
 
 
+    public void useSelection() {
 
+        Session session = DbHandler.getInstance().getSession();
+
+
+        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.ID);
+        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE);
+        Expression<BoOrder> expA = exp1.and(exp2);
+
+        Query<BoOrder> query = session.createQuery(BoOrder.class, expA);
+        query.sizeRequired(true);
+        query.readOnly(false);
+        query.setParameter(BoOrder.ID, 10L);
+        query.setParameter(BoOrder.DATE, new Date());
+
+        BoOrder order = session.single(query);
+
+        for (BoOrder o : session.iterate( query ) ) {
+            Long id = BoOrder.ID.of(order);
+            String descr = BoOrder.DESCR.of(order);
+            System.out.println("Order id: " + id + " descr: " + descr);
+        }
+    }
 
 }

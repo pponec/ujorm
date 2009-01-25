@@ -23,7 +23,7 @@ import org.ujoframework.Ujo;
  *
  * @author pavel
  */
-public class ExpressionBinary<UJO extends Ujo> implements Expression<UJO> {
+public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
 
     final private Expression<UJO> expr1;
     final private Expression<UJO> expr2;
@@ -43,17 +43,12 @@ public class ExpressionBinary<UJO extends Ujo> implements Expression<UJO> {
         boolean e1 = expr1.evaluate(ujo);
         switch (operator) {
             case AND    : return e1 &&  expr2.evaluate(ujo);
-            case AND_NOT: return e1 && !expr2.evaluate(ujo);
             case OR     : return e1 ||  expr2.evaluate(ujo); 
-            case OR_NOT : return e1 || !expr2.evaluate(ujo); 
             default:  
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }
     }
 
-    public Expression<UJO> join(OperatorBinary operator, Expression<UJO> expr) {
-        return new ExpressionBinary<UJO>(this, operator, expr);
-    }
 
     @Override
     public String toString() {

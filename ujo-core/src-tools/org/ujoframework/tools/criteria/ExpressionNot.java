@@ -24,7 +24,7 @@ import org.ujoframework.Ujo;
  * Expression
  * @author pavel
  */
-final public class ExpressionNot<UJO extends Ujo> implements Expression<UJO> {
+final public class ExpressionNot<UJO extends Ujo> extends Expression<UJO> {
     
     final private Expression<UJO> expression;
     
@@ -36,14 +36,6 @@ final public class ExpressionNot<UJO extends Ujo> implements Expression<UJO> {
         return !expression.evaluate(ujo);
     }
         
-    public Expression<UJO> join(OperatorBinary operator, Expression<UJO> expr) {
-        return new ExpressionBinary<UJO>(this, operator, expr);
-    }
-
-    public static <UJO extends Ujo> Expression<UJO> create(final Expression<UJO> expr) {
-        return new ExpressionNot<UJO>(expr);
-    }
-
     @Override
     public String toString() {
         return "!(" + expression + ")";

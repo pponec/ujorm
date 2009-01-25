@@ -12,7 +12,7 @@ import org.ujoframework.implementation.map.MapProperty;
  * Relation 1:N to another table
  * @author pavel
  */
-public class UjoRelation<UJO extends TableUjo, ITEM  extends TableUjo>
+public class UjoRelative<UJO extends TableUjo, ITEM  extends TableUjo>
     extends MapProperty<UJO, UjoIterator<ITEM>>
 {
 
@@ -20,7 +20,7 @@ public class UjoRelation<UJO extends TableUjo, ITEM  extends TableUjo>
 
     /** Constructor */
     @SuppressWarnings("unchecked")
-    public UjoRelation(String name, Class<ITEM> itemType) {
+    public UjoRelative(String name, Class<ITEM> itemType) {
         super(name, (Class<UjoIterator<ITEM>>) (Class) UjoIterator.class );
         this.itemType = itemType;
     }

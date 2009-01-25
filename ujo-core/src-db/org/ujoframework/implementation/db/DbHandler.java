@@ -6,6 +6,7 @@
 package org.ujoframework.implementation.db;
 
 import org.ujoframework.Ujo;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 
 /**
@@ -17,21 +18,23 @@ public class DbHandler {
      private static DbHandler handler = new DbHandler();
 
     /** Load Iterator from DB */
-    public UjoIterator loadIterator(Ujo ujo, UjoRelation property) {
+    public UjoIterator loadIterator(Ujo ujo, UjoRelative property) {
         // todo
         return null;
     }
 
-    /** Get DbConnection */
-    public DbConnection getConnection() {
+    /** Get Session */
+    public Session getSession() {
         // TODO
-        return new DbConnection();
+        return new Session();
     }
 
     public static DbHandler getInstance() {
         return handler;
     }
 
-
+    boolean isPersistent(UjoProperty property) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
 }
