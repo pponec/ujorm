@@ -27,12 +27,10 @@ import org.ujoframework.Ujo;
 public enum OperatorBinary {
     /** (e1 AND e2) */
     AND,
-    /** (e1 AND (NOT e2)) */
-    AND_NOT,
     /** (e1 OR e2) */
     OR,
-    /** (e1 OR (NOT e2)) */
-    OR_NOT;
+    /** (e1 XOR e2) */
+    XOR;
 
     /** Join two expressions. */ 
     public <UJO extends Ujo> Expression<UJO> join(final Expression<UJO> ex1, final Expression<UJO> ex2) {

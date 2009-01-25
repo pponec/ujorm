@@ -94,7 +94,7 @@ public class UjoCriteria<UJO extends Ujo> {
     /** TRUE / FALSE */
     @SuppressWarnings("unchecked")
     public Expression<UJO> newExpr(boolean value) {
-        return (Expression<UJO>) (value ? Expression.TRUE : Expression.FALSE);
+        return Expression.newInstance(value);
     }
 
     
@@ -114,9 +114,6 @@ public class UjoCriteria<UJO extends Ujo> {
         return expr1.join(OperatorBinary.OR, expr2);
     }
 
-    public Expression<UJO> exprNot(Expression<UJO> expr) {
-        return ExpressionNot.create(expr);
-    }
 
 //    /** Not implemented yet */
 //    public void sortBy(UjoComparator comparator) {

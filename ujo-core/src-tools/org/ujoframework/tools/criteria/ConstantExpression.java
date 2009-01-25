@@ -23,21 +23,20 @@ import org.ujoframework.Ujo;
  * The expression value is independent on the UJO object.
  * @author pavel
  */
-final public class ExpressionIndependent<UJO extends Ujo> implements Expression<UJO> {
-    
+final class ConstantExpression<UJO extends Ujo> extends Expression<UJO> {
+
+    public static final Expression<Ujo> TRUE  = new ConstantExpression<Ujo>(true);
+    public static final Expression<Ujo> FALSE = new ConstantExpression<Ujo>(false);
+
     private final boolean result;
     
-    ExpressionIndependent(final boolean result) {
+    ConstantExpression(final boolean result) {
         this.result = result;
     }
 
     /** Return the value from constructor always. */
     public boolean evaluate(UJO ujo) {
         return result;
-    }
-
-    public Expression<UJO> join(OperatorBinary operator, Expression<UJO> expr) {
-        return new ExpressionBinary<UJO>(this, operator, expr);
     }
 
     @Override
