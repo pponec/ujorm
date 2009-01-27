@@ -16,6 +16,7 @@
 
 package org.ujoframework.implementation.db;
 
+import org.ujoframework.core.orm.DbHandler;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.beans.EventRegistrar;
@@ -36,10 +37,10 @@ import org.ujoframework.implementation.map.MapUjo;
  * <ul>
  *    <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
  *    <li>lazy initialization of properties and lazy initialization items of a collection is supported</li>
- *    <li>missing cache is siutable for a large transactions and a selecting uncommited changes</li>
  *    <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
  *    <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annoatations can be owerwrited by a XML files </li>
  *    <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a better security</li>
+ *    <li>missing cache is siutable for a large transactions and a selecting uncommited changes</li>
  * </ul>
  * The sample of use:
  * <pre class="pre">
@@ -124,7 +125,7 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
     }
 
 
-
+    /** A method for an internal use. */
     @Override
     public void writeValue(UjoProperty property, Object value) {
         Object oldValue = readValue(property);
@@ -133,6 +134,7 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
         eventRegistrar.firePropertyChange(property, oldValue, value, false);
     }
 
+    /** A method for an internal use. */
     @Override
     public Object readValue(UjoProperty property) {
         Object result = super.readValue(property);
