@@ -126,11 +126,10 @@ public class UjoManager {
             final Field[] fields = type.getFields();
             for (int j=0; j<fields.length; j++) {
                 field = fields[j];
-                if (field.getModifiers()==PROPERTY_MODIFIER
+                if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
                 &&  UjoProperty.class.isAssignableFrom(field.getType())
                 ){
-                    Object property = field.get(null);
-                    UjoProperty ujoProp = (UjoProperty) field.get(property);
+                    UjoProperty ujoProp = (UjoProperty) field.get(null);
                     if (ujoProp.isDirect()) {
                        propertyList.add( ujoProp);                     
                     }
@@ -638,6 +637,30 @@ public class UjoManager {
     public void copy(Ujo source, Ujo target) {
         copy(source, target, (UjoProperty[]) null);
     }
+
+    
+    /** Get a UjoProperty field. */
+    public static Field getPropertyField(Class<? extends Ujo> type, UjoProperty property) {
+        Field result = null;
+        try {
+            final Field[] fields = type.getFields();
+            for (int j=0; j<fields.length; j++) {
+                result = fields[j];
+                if (result.getModifiers()==UjoManager.PROPERTY_MODIFIER
+                &&  UjoProperty.class.isAssignableFrom(result.getType())
+                ){
+                    final Object p = result.get(null);
+                    if (p==property) {
+                        break;
+                    }
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(String.valueOf(result), e);
+        }
+        return result;
+    }
+
     
     /** Regurns information about current library. */
     public static String ujoFrameworkInfo() {
@@ -656,7 +679,7 @@ public class UjoManager {
         ;    
         return result;
     }
-    
+
     /** Show an information about the framework */
     public static void main(String[] args) {
         System.out.println(ujoFrameworkInfo());
