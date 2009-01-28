@@ -32,6 +32,8 @@ public class Sample {
 
     /** Using INSERT */
     public void useCreateItem() {
+
+        DbHandler.getInstance().createDatabase(BoDatabase.class);
         Session session = DbHandler.getInstance().getSession();
 
         BoOrder order = new BoOrder();

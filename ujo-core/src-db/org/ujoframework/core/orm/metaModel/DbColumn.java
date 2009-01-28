@@ -14,12 +14,13 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.ao;
+package org.ujoframework.core.orm.metaModel;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.implementation.db.UjoRelative;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
@@ -44,6 +45,11 @@ public class DbColumn extends MapUjo {
     public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", String.class);
     /** DB table */
     public static final ListProperty<DbColumn,DbTable> TABLE = newPropertyList("table", DbTable.class);
+
+
+    public DbColumn(DbTable table, UjoRelative tableRelative) {
+
+    }
 
 
     /** Get property value */

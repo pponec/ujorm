@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.ao;
+package org.ujoframework.core.orm.metaModel;
 
 import java.util.List;
 import org.ujoframework.Ujo;
