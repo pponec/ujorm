@@ -21,7 +21,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
- *
+ * DB table medadata.
  * @author pavel
  */
 public class DbTable extends MapUjo {

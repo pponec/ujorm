@@ -22,8 +22,7 @@ import org.ujoframework.implementation.db.TableUjo;
 import org.ujoframework.implementation.db.UjoRelative;
 
 /**
- * An table definition of the one database.
- * @database=JDBC/MY_DATABASE
+ * An table definition of the one database (a sample).
  */
 @Database(jdbc="jdbc://connection")
 public class BoDatabase extends TableUjo {

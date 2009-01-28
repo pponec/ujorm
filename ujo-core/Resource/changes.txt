@@ -1,7 +1,7 @@
 The UJO Framework release notes
 *******************************
 
-release 0.83 (2009-XX-XX)
+release 0.83.beta (2009-XX-XX)
 + ORM support - the early alpha version of API
 + UjoCriteria supports a searching for objects on the list
 + support or the Proxy pattern design of a BeanUjo class

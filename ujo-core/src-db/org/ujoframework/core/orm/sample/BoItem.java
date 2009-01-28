@@ -21,7 +21,7 @@ import org.ujoframework.core.orm.annot.Id;
 import org.ujoframework.implementation.db.TableUjo;
 
 /**
- * Each Item have got a reference to a common Order.
+ * Each Item have got a reference to a common Order (a sample).
  * @Table=bo_item
  */
 public class BoItem extends TableUjo {

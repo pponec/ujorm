@@ -92,13 +92,13 @@ import org.ujoframework.implementation.map.MapUjo;
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelection() {
  *
  *      Session session = DbHandler.getInstance().getSession();
-
- *      Expression&lt;BoOrder&gt; exp1 = Expression.newInstance(BoOrder.ID, 10L);
- *      Expression&lt;BoOrder&gt; exp2 = Expression.newInstance(BoOrder.DATE, <span class="keyword-directive">new</span> Date());
+ *
+ *      Expression&lt;BoOrder&gt; exp1 = Expression.newInstance(BoOrder.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
+ *      Expression&lt;BoOrder&gt; exp2 = Expression.newInstance(BoOrder.DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
  *      Expression&lt;BoOrder&gt; expr = exp1.and(exp2);
  *
  *      Query&lt;BoOrder&gt; query = session.createQuery(BoOrder.<span class="keyword-directive">class</span>, expr);
- *      query.sizeRequired(<span class="keyword-directive">true</span>);
+ *      query.sizeRequired(<span class="keyword-directive">true</span>); <span class="comment">// need a count of iterator items, a default value is false</span>
  *      query.readOnly(<span class="keyword-directive">false</span>);
  *
  *      <span class="keyword-directive">for</span> (BoOrder order : session.iterate( query ) ) {

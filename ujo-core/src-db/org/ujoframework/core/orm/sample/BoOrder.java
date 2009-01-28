@@ -25,7 +25,7 @@ import org.ujoframework.implementation.db.TableUjo;
 import org.ujoframework.implementation.db.UjoRelative;
 
 /**
- * Simple order for goods with a collection of Items.
+ * Simple order for goods with a collection of Items (a sample).
  * @Table=bo_order
  */
 public class BoOrder extends TableUjo {

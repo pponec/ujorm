@@ -22,6 +22,7 @@ import org.ujoframework.core.orm.Session;
 import org.ujoframework.core.orm.DbHandler;
 import org.ujoframework.core.orm.Query;
 import org.ujoframework.tools.criteria.Expression;
+import org.ujoframework.tools.criteria.Operator;
 
 /**
  *
@@ -35,7 +36,7 @@ public class Sample {
 
         BoOrder order = new BoOrder();
         BoOrder.DATE.setValue(order, new Date());
-        BoOrder.DESCR.setValue(order, "My first order");
+        BoOrder.DESCR.setValue(order, "test order");
 
         BoItem item = new BoItem();
         BoItem.DESCR.setValue(item, "yellow table");
@@ -74,13 +75,13 @@ public class Sample {
     public void useSelection() {
         Session session = DbHandler.getInstance().getSession();
 
-        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.ID, 10L);
-        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE, new Date());
+        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.DESCR, "test order");
+        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE, Operator.LE, new Date());
         Expression<BoOrder> expr = exp1.and(exp2);
 
         Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
-        query.sizeRequired(true);
-        query.readOnly(false);
+        query.sizeRequired(true);  // need a count of iterator items, a default value is false
+        query.readOnly(false);     // Read onlyl result;
 
         for (BoOrder o : session.iterate( query ) ) {
             Long id = BoOrder.ID.of(o);
