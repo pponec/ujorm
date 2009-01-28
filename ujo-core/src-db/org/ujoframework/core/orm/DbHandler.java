@@ -16,7 +16,10 @@
 
 package org.ujoframework.core.orm;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.orm.metaModel.Db;
 import org.ujoframework.implementation.db.TableUjo;
 
 /**
@@ -26,7 +29,9 @@ import org.ujoframework.implementation.db.TableUjo;
 public class DbHandler {
 
     private static DbHandler handler = new DbHandler();
+
     private Session session = new Session();
+    private Db database;
 
     /** The Sigleton constructor */
     protected DbHandler() {
@@ -46,14 +51,20 @@ public class DbHandler {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /** Load a metada */
-    public <UJO extends TableUjo> void loadMeta(Class<UJO> root) {
-
+    /** Load a database model. */
+    public <UJO extends TableUjo> void loadDatabase(Class<? extends TableUjo> databaseModel) {
+        TableUjo model = null;
+        try {
+            model = databaseModel.newInstance();
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Can't create instance of " + databaseModel,ex);
+        }
+        database = new Db(model);
     }
 
-    /** Load a metada */
-    public <UJO extends TableUjo> void createDb(Class<UJO> root) {
-        loadMeta(root);
+    /** Load a metada and create database */
+    public <UJO extends TableUjo> void createDatabase(Class<? extends TableUjo> databaseModel) {
+        loadDatabase(databaseModel);
     }
 
 

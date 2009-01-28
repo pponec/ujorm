@@ -13,12 +13,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujoframework.core.orm.ao;
+package org.ujoframework.core.orm.metaModel;
 
+import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
+import org.ujoframework.core.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.implementation.db.UjoRelative;
 import org.ujoframework.implementation.map.MapUjo;
+
 
 /**
  * DB table medadata.
@@ -31,12 +36,28 @@ public class DbTable extends MapUjo {
     public static final UjoProperty<DbTable,String> NAME = newProperty("name", String.class);
     /** Unique Primary Key */
     public static final UjoProperty<DbTable,DbPK> PK = newProperty("pk", DbPK.class);
-    /** Java UJO class */
-    public static final UjoProperty<DbTable,Class> TABLE_CLASS = newProperty("tableClass", Class.class);
+    /** Database relative property (a base definition of table) */
+    public static final UjoProperty<DbTable,UjoRelative> DB_RELATIVE = newProperty("dbRelative", UjoRelative.class);
     /** Columns */
     public static final ListProperty<DbTable,DbColumn> COLUMNS = newPropertyList("columns", DbColumn.class);
     /** Database */
     public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
+
+    public DbTable(Db database, UjoRelative dbRelative) {
+        DATABASE.setValue(this, database);
+        DB_RELATIVE.setValue(this, dbRelative);
+
+        Field field = UjoManager.getPropertyField(database.getClass(), dbRelative);
+        Table table = field.getAnnotation(Table.class);
+        NAME.setValue(this, table!=null ? table.name() : dbRelative.getName());
+
+        for (UjoProperty property : UjoManager.getInstance().readProperties(dbRelative.getItemType())) {
+            if (property instanceof UjoRelative) {
+                DbColumn column = new DbColumn(this, (UjoRelative)property);
+                COLUMNS.addItem(this, column);
+            }
+        }
+    }
 
 
     /** Compare two objects by its PrimaryKey */
@@ -44,6 +65,13 @@ public class DbTable extends MapUjo {
         final DbPK pk = PK.of(this);
         return pk.equals(ujo1, ujo2);
     }
+
+    /** Table Name */
+    @Override
+    public String toString() {
+        return NAME.of(this);
+    }
+
 
 
 }
