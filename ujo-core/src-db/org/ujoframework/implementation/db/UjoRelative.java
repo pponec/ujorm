@@ -11,6 +11,7 @@ import org.ujoframework.implementation.map.MapProperty;
 /**
  * Relation 1:N to another table
  * @author pavel
+ * @see org.ujoframework.core.UjoIterator
  */
 public class UjoRelative<UJO extends TableUjo, ITEM  extends TableUjo>
     extends MapProperty<UJO, UjoIterator<ITEM>>

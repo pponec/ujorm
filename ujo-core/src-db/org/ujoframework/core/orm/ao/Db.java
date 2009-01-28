@@ -21,7 +21,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
- *
+ * A logical database description.
  * @author pavel
  */
 public class Db extends MapUjo {

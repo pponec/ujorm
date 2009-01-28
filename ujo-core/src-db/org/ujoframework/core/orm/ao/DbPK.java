@@ -23,7 +23,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
- *
+ * The table primary key.
  * @author pavel
  */
 public class DbPK extends MapUjo {

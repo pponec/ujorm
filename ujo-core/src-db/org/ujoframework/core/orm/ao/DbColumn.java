@@ -23,7 +23,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
- *
+ * Database column metadata
  * @author pavel
  */
 public class DbColumn extends MapUjo {
