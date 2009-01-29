@@ -640,7 +640,7 @@ public class UjoManager {
 
     
     /** Get a UjoProperty field. */
-    public static Field getPropertyField(Class<? extends Ujo> type, UjoProperty property) {
+    public Field getPropertyField(Class<? extends Ujo> type, UjoProperty property) {
         Field result = null;
         try {
             final Field[] fields = type.getFields();

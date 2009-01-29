@@ -31,7 +31,7 @@ public class CriteriaSample {
     //
 
     UjoCriteria<Person> criteria = UjoCriteria.create();
-    Expression<Person> exp = criteria.newExpr(NAME, "John");
+    Expression<Person> exp = Expression.newInstance(NAME, "John");
     UjoComparator     sort = UjoComparator.create(true, NAME);
     List<Person>    result = criteria.select(persons, exp, sort);
         

@@ -86,35 +86,6 @@ public class UjoCriteria<UJO extends Ujo> {
         return result;
     }
 
-    /** Equals */
-    public Expression<UJO> newExpr(UjoProperty<UJO, ? extends Object> property, Object value) {
-        return new ExpressionValue<UJO>(property, Operator.EQ, value);
-    }
-
-    /** TRUE / FALSE */
-    @SuppressWarnings("unchecked")
-    public Expression<UJO> newExpr(boolean value) {
-        return Expression.newInstance(value);
-    }
-
-    
-    public Expression<UJO> newExpr(UjoProperty<UJO, ? extends Object> property, Operator operator, Object value) {
-        return new ExpressionValue<UJO>(property, operator, value);
-    }
-
-    public Expression<UJO> newExpression(UjoProperty<UJO, ?> property1, Operator operator, UjoProperty<UJO, Object> value) {
-        return new ExpressionValue<UJO>(property1, operator, value);
-    }
-
-    public Expression<UJO> exprAnd(Expression<UJO> expr1, Expression<UJO> expr2) {
-        return expr1.join(OperatorBinary.AND, expr2);
-    }
-
-    public Expression<UJO> exprOr(Expression<UJO> expr1, Expression<UJO> expr2) {
-        return expr1.join(OperatorBinary.OR, expr2);
-    }
-
-
 //    /** Not implemented yet */
 //    public void sortBy(UjoComparator comparator) {
 //        this.comparator = comparator;
