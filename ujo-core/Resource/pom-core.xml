@@ -1,0 +1,20 @@
+<project>
+  <groupId>org.ujoframework</groupId>
+  <artifactId>core</artifactId>
+  <packaging>jar</packaging>
+  <name>UJO Framework</name>
+  <version>0.83</version>
+  <description>UJO Framework provides a special type save bean architecture based on property constants.</description>
+  <url>http://ujoframework.org/</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <!-- Source Code Management -->
+    <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/</url>
+  </scm>
+</project>
