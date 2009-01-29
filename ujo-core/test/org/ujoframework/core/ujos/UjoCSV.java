@@ -9,10 +9,8 @@
 
 package org.ujoframework.core.ujos;
 
-import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.map.MapUjo;
-import static org.ujoframework.extensions.UjoAction.*;
 
 /**
  *

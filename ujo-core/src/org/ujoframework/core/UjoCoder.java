@@ -26,7 +26,7 @@ import org.ujoframework.UjoProperty;
 public class UjoCoder {
 
     /** Date formatter / parser */
-    public static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private /*public*/ static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     /** Typ konstruktoru */
     public static final Class[] CONSTRUCTOR_TYPE = new Class[]{String.class};
     // === CONVERTING VALUES ===
@@ -74,7 +74,9 @@ public class UjoCoder {
             }
             result = sb.toString();
         } else if (value instanceof Date) {
-            result = FORMAT_DATE.format((Date) value);
+            synchronized (FORMAT_DATE) {
+               result = FORMAT_DATE.format((Date) value);
+            }
         } else if (value instanceof Color) {
             result = Integer.toHexString(((Color) value).getRGB() & 0xffffff | 0x1000000).substring(1).toUpperCase();
         } else if (value instanceof File) {
@@ -185,8 +187,10 @@ public class UjoCoder {
             }
             if (Date.class.isAssignableFrom(type)) {
                 try {
-                    final Date result = FORMAT_DATE.parse(aValue);
-                    return result;
+                    synchronized (FORMAT_DATE) {
+                        final Date result = FORMAT_DATE.parse(aValue);
+                        return result;
+                    }
                 } catch (ParseException ex) {
                     new IllegalArgumentException("\"" + aValue + "\" " + type, ex);
                 }

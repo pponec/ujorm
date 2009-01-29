@@ -10,10 +10,13 @@ package org.ujoframework.core;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Locale;
 import org.ujoframework.MyTestCase;
+import org.ujoframework.UjoProperty;
+import org.ujoframework.core.ujos.UjoCSV;
 
 /**
  *
@@ -341,7 +344,20 @@ public class UjoManagerTest extends MyTestCase {
         result   = (Class) manager.decodeValue(type, manager.encodeValue(expected, false));
         assertEquals("3", expected, result);
     }
-        
+
+    /** Test of UjoManager.getPropertyField(..) */
+    public void testPropertyField() throws IllegalArgumentException, IllegalAccessException {
+
+        UjoCSV ujo = new UjoCSV();
+
+        for (UjoProperty p1 : ujo.readProperties()) {
+            Field field = UjoManager.getInstance().getPropertyField(ujo.getClass(), p1);
+            Object p2 = field.get(null);
+            assertEquals(p1, p2);
+        }
+
+    }
+    
     
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
