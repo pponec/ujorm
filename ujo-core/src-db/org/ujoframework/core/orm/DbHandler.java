@@ -16,10 +16,9 @@
 
 package org.ujoframework.core.orm;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.orm.metaModel.Db;
+import org.ujoframework.core.orm.metaModel.DbRoot;
 import org.ujoframework.implementation.db.TableUjo;
 
 /**
@@ -31,7 +30,7 @@ public class DbHandler {
     private static DbHandler handler = new DbHandler();
 
     private Session session = new Session();
-    private Db database;
+    private DbRoot databases = new DbRoot();
 
     /** The Sigleton constructor */
     protected DbHandler() {
@@ -53,13 +52,17 @@ public class DbHandler {
 
     /** Load a database model. */
     public <UJO extends TableUjo> void loadDatabase(Class<? extends TableUjo> databaseModel) {
-        TableUjo model = null;
+        TableUjo model = getInstance(databaseModel);
+        databases.add(new Db(model));
+    }
+
+    /** Create instance */
+    private TableUjo getInstance(Class<? extends TableUjo> databaseModel) {
         try {
-            model = databaseModel.newInstance();
+            return databaseModel.newInstance();
         } catch (Exception ex) {
             throw new IllegalArgumentException("Can't create instance of " + databaseModel,ex);
         }
-        database = new Db(model);
     }
 
     /** Load a metada and create database */
