@@ -47,7 +47,7 @@ public class DbTable extends MapUjo {
         DATABASE.setValue(this, database);
         DB_RELATIVE.setValue(this, dbRelative);
 
-        Field field = UjoManager.getPropertyField(database.getClass(), dbRelative);
+        Field field = UjoManager.getInstance().getPropertyField(database.getClass(), dbRelative);
         Table table = field.getAnnotation(Table.class);
         NAME.setValue(this, table!=null ? table.name() : dbRelative.getName());
 
