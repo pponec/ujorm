@@ -355,7 +355,6 @@ public class UjoManagerTest extends MyTestCase {
             Object p2 = field.get(null);
             assertEquals(p1, p2);
         }
-
     }
     
     
