@@ -8,7 +8,7 @@
             <source-roots>
                 <root id="src.dir" name="Source Core"/>
                 <root id="src.src-tools.dir" name="Source Tools"/>
-                <root id="src.src-db.dir" name="Source DB"/>
+                <root id="src.src-db.dir" name="Source ORM"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir"/>
