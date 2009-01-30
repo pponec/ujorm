@@ -42,8 +42,12 @@ public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
     public boolean evaluate(UJO ujo) {
         boolean e1 = expr1.evaluate(ujo);
         switch (operator) {
-            case AND    : return e1 &&  expr2.evaluate(ujo);
-            case OR     : return e1 ||  expr2.evaluate(ujo); 
+            case AND    : return   e1 &&  expr2.evaluate(ujo);
+            case OR     : return   e1 ||  expr2.evaluate(ujo);
+            case XOR    : return   e1 !=  expr2.evaluate(ujo);
+            case NAND   : return !(e1 &&  expr2.evaluate(ujo));
+            case NOR    : return !(e1 ||  expr2.evaluate(ujo));
+            case EQ     : return   e1 ==  expr2.evaluate(ujo) ;
             default:  
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }

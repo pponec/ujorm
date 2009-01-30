@@ -12,9 +12,13 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
 
+
+/*
+ * The last change: $Date: $
+ * Release: $Revision: $
+ */
 
 package org.ujoframework.tools.criteria;
 
@@ -25,12 +29,18 @@ import org.ujoframework.Ujo;
  * @author pavel
  */
 public enum OperatorBinary {
-    /** (e1 AND e2) */
+    /** (a AND b) */
     AND,
-    /** (e1 OR e2) */
+    /** (a OR b) */
     OR,
-    /** (e1 XOR e2) */
-    XOR;
+    /** (a != b) <br>Note: the SQL language may not support the operator. */
+    XOR,
+    /** NOT (a OR b) <br>Note: the SQL language may not support the operator. */
+    NOR,
+    /** NOT (a AND b) <br>Note: the SQL language may not support the operator. */
+    NAND,
+    /** (a == b) <br>Note: the SQL language may not support the operator. */
+    EQ;
 
     /** Join two expressions. */ 
     public <UJO extends Ujo> Expression<UJO> join(final Expression<UJO> ex1, final Expression<UJO> ex2) {
