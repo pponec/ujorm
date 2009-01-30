@@ -14,16 +14,14 @@
  *  limitations under the License.
  */   
    
-
-
 package org.ujoframework.tools.criteria;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * An expression
- * @author pavel
+ * An abstraction expression provides an factory methods.
+ * @author Ponec
  */
 public abstract class Expression<UJO extends Ujo> {
     
@@ -51,35 +49,52 @@ public abstract class Expression<UJO extends Ujo> {
      * New expression instance
      * @param property UjoProperty
      * @param operator Operator
-     * @param value Value or UjoProperty
+     * @param value Value or UjoProperty can be type of
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>List<TYPE> - list of values</li>
+     * <li>UjoProperty - reference to an related entity</li>
+     * <li>THE SAME property - the value will be assigned using the property later</li>
+     * </ul>
      * @return
      */
-    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,?> property, Operator operator, Object value) {
+    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property, Operator operator, Object value) {
         return new ExpressionValue<UJO>(property, operator, value);
     }
 
     /**
      * New equals instance
      * @param property UjoProperty
-     * @param value Value or UjoProperty
+     * @param value Value or UjoProperty can be type of
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>List<TYPE> - list of values</li>
+     * <li>UjoProperty - reference to an related entity</li>
+     * <li>THE SAME property - the value will be assigned using the property later</li>
+     * </ul>
      * @return
      */
-    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,?> property, Object value) {
+    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property, Object value) {
         return new ExpressionValue<UJO>(property, Operator.EQ, value);
     }
 
     /**
      * New equals instance
      * @param property UjoProperty
-     * @param value Value or UjoProperty
+     * @param value Value or UjoProperty can be type of
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>List<TYPE> - list of values</li>
+     * <li>UjoProperty - reference to an related entity</li>
+     * <li>THE SAME property - the value will be assigned using the property later</li>
+     * </ul>
      * @return
      */
-    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,?> property) {
+    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property) {
         return new ExpressionValue<UJO>(property, Operator.EQ, property);
     }
 
-
-
+    /** This is an constane expression independed on an entity. */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> Expression<UJO> newInstance(boolean value) {
         return (Expression<UJO>) (value 
