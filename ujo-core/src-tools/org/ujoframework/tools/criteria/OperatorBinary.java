@@ -33,7 +33,7 @@ public enum OperatorBinary {
     AND,
     /** (a OR b) */
     OR,
-    /** (a != b) <br>Note: the SQL language may not support the operator. */
+    /** (a XOR b) <br>Note: the SQL language may not support the operator. */
     XOR,
     /** NOT (a OR b) <br>Note: the SQL language may not support the operator. */
     NOR,
@@ -43,8 +43,8 @@ public enum OperatorBinary {
     EQ;
 
     /** Join two expressions. */ 
-    public <UJO extends Ujo> Expression<UJO> join(final Expression<UJO> ex1, final Expression<UJO> ex2) {
-        return ex1.join(this, ex2);
+    public <UJO extends Ujo> Expression<UJO> join(final Expression<UJO> a, final Expression<UJO> b) {
+        return a.join(this, b);
     }
          
 }
