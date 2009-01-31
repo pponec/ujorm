@@ -16,15 +16,15 @@
 
 package org.ujoframework.core.orm.metaModel;
 
+import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.implementation.map.MapUjo;
 
 /**
  * A logical database description.
  * The class is a root of database configuration.
  * @author pavel
  */
-public class DbRoot extends MapUjo {
+public class DbRoot extends AbstractMetaModel {
 
     /** List of tables */
     public static final ListProperty<DbRoot,Db> DATABASES = newPropertyList("database", Db.class);

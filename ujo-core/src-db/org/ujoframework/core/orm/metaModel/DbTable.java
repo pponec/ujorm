@@ -19,21 +19,21 @@ import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
+import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.db.UjoRelative;
-import org.ujoframework.implementation.map.MapUjo;
 
 
 /**
  * DB table medadata.
  * @author pavel
  */
-public class DbTable extends MapUjo {
+public class DbTable extends AbstractMetaModel {
 
 
     /** DB table name */
-    public static final UjoProperty<DbTable,String> NAME = newProperty("name", String.class);
+    public static final UjoProperty<DbTable,String> NAME = newProperty("name", "");
     /** Unique Primary Key */
     public static final UjoProperty<DbTable,DbPK> PK = newProperty("pk", DbPK.class);
     /** Database relative property (a base definition of table) */
@@ -43,15 +43,20 @@ public class DbTable extends MapUjo {
     /** Database */
     public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
 
-    public DbTable(Db database, UjoRelative dbRelative) {
+    public DbTable(Db database, UjoRelative propertyTable) {
         DATABASE.setValue(this, database);
-        DB_RELATIVE.setValue(this, dbRelative);
+        DB_RELATIVE.setValue(this, propertyTable);
 
-        Field field = UjoManager.getInstance().getPropertyField(database.getClass(), dbRelative);
-        Table table = field.getAnnotation(Table.class);
-        NAME.setValue(this, table!=null ? table.name() : dbRelative.getName());
+        final Field field = UjoManager.getInstance().getPropertyField(database.getClass(), propertyTable);
+        final Table table = field.getAnnotation(Table.class);
+        if (table!=null) {
+            NAME.setValue(this, table.name());
+        }
+        if (NAME.isDefault(this)) {
+            NAME.setValue(this, propertyTable.getName());
+        }
 
-        for (UjoProperty property : UjoManager.getInstance().readProperties(dbRelative.getItemType())) {
+        for (UjoProperty property : UjoManager.getInstance().readProperties(propertyTable.getItemType())) {
             if (property instanceof UjoRelative) {
                 DbColumn column = new DbColumn(this, (UjoRelative)property);
                 COLUMNS.addItem(this, column);

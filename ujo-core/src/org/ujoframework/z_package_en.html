@@ -1,0 +1,658 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html lang="en"><head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1250"><title>package.html - UJO (en)</title>
+        
+        <link rel="stylesheet" type="text/css" href="style.css" title="style">
+        <script type="text/javascript">
+function loadCSS (cssUrl) {
+var oLink = document.createElement("link")
+oLink.href = cssUrl;
+oLink.rel = "stylesheet";
+oLink.type = "text/css";
+document.body.appendChild(oLink);
+        } </script>
+    </head>
+
+    <body style="background-color: white;">
+        The UJO Framework tutorial<br>
+        <br>
+        <!-- [AddSense] -->
+        <h2 id="UJO"><img style="width: 32px; height: 32px; margin-right: 10px;" alt="UJO Icons" src="ujo32.png">Content</h2>
+          <ul>
+              <li><a href="#UJO2">What is UJO?</a></li>
+              <li><a href="#how">How to write the first UJO object?</a></li>
+              <li><a href="#defaultvalues">Default values</a></li>
+              <li><a href="#ujoext">Interface UjoExt</a></li>
+              <li><a href="#javabean">How to create the JavaBean?</a></li>
+              <li><a href="#xml">XML serialization</a></li>
+              <li><a href="#tablemodel">Support of the JTable component</a></li>
+              <li><a href="#how2">What about the extensions?</a></li>
+              <li><a href="#performance">Performance</a></li>
+              <li><a href="#possibilities">Other possibilities of usage?</a></li>
+              <li><a href="#refAppl">Referential Application</a></li>
+              <li><a href="#where">Project home</a></li>
+              <li><a href="#license">License</a></li>
+              <li><a href="#faq">FAQ</a></li>
+              <li><a href="#changes">Release notes</a></li>
+          </ul>        
+        
+        
+        <h2 id="UJO2">What is UJO ?</h2>
+        <a href="UjoUmlFull.png" target="_top"><img src="UjoUml.png" width="284" height="320" alt="UjoUml.png" style="margin: 0 0 10px 10px; border: 0; float: right;" ></a>
+        <span class="appl">UJO Framework</span>  
+        provides objects with a different architecture from JavaBeans. The original idea was 
+        a toy with generic data types of Java 5.0 however over time it appears, 
+        that the architecture has some exciting <strong>features</strong>:
+        <ul>
+        <li>an easy object introspection without a heavy PropertyDescriptor implementation</li>
+        <li>value type safe solution</li>
+        <li>a transfer of the UJO object properties (not values) by a collection</li>
+        <li>the core of the building has two interfaces for an easy implementation</li>
+        </ul>
+
+        These properties open up new possibilities for the use in the J2EE mainly in a production 
+        of generic operations over objects. Framework contains some tools for managing the UJO object 
+        in addition. So what are the main <strong>advantages</strong>?
+
+        <ul>
+        <li>the possibility to copy all or selected attributes from source to new object by a one statement (<a href="extensions/SuperUjoExt.html#copyTo(org.ujoframework.Ujo, org.ujoframework.UjoProperty...)">method</a>)</li>
+        <li>clone the object by a selected depth</li>
+        <li>use a generic comparator</li>
+        <li>find a property by its text name</li>
+        <li>write a value by the found property to an another object or a collection of objects</li>
+        <li>restore a default value of the property</li>
+        <li>easy text conversions of the properties</li>
+        <li>simplified work with an arrays (you can't initialize array before add method e.g.)</li>
+        <li>generic toString() method for easy debugging</li>
+        <li>easy visualization of UJO object(s) by JTable</li>
+        <li>easy persistence of UJO to different formats include XML</li>
+        <li>criteria tool for searching the Ujo objects in list</li>
+        <li>the object itself recommends the availability of its attributes</li>
+        <li>there is possible to implement a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
+            to only one <a href="Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">place</a>
+            for each properties include children</li>
+        <li>support of <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a></li>
+        <li>checking by unit tests</li>
+        <li>tiny framework without further dependencies</li>
+        <li>open source</li>
+        </ul>        
+            
+        <span class="appl">UJO</span> is an abbreviation for <span style="font-style: italic;">Unified Java Object</span> 
+        and they are all <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">objects</a>,
+	    which implements an interface <a href="Ujo.html">Ujo</a>.
+        
+        You can imagine the object UJO like a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">map</a> (an object that maps keys to values)
+        with data access by <strong>methods of the key</strong> for example. 
+        This key is made up of the implementation of the <a href="UjoProperty.html">UjoProperty</a> 
+        including (among others) two type-safe methods:
+        
+        <ul>
+            <li><a href="UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - to write the value into the object and</li> 
+            <li><a href="UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - to read the value (you can use an alias called of() optionally)</li>
+        </ul>
+        
+        There is possible to send the keys to another objects simply contrary of the methods of JavaBean object.
+        An example of usage can be a list of table columns sent to the data model type of TableModel 
+        or references to the methods of the bean in a JSP page. 
+        
+        The core of the project are two interfaces 
+        <a href="Ujo.html" style="font-style: italic;">Ujo</a> a 
+        <a href="UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
+        which have got three abstract implementation:
+         
+           <ul>
+               <li><a href="implementation/map/MapUjo.html">MapUjo</a> - easy for developers to implement with a sufficient performance for common applications based on the object <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
+               <li><a href="implementation/array/ArrayUjo.html">ArrayUjo</a> - hight performance objects are comparable to the speed of the JavaBeans, implemented by the <strong>object array</strong></li>
+               <li><a href="implementation/bean/BeanUjo.html">BeanUjo</a> - the implementation maps the keys directly to the methods of <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> object using <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflection</a></li>
+           </ul>
+        
+	
+	I took inspiration for my work from project <a href="http://cayenne.apache.org/">Cayenne</a> (a solution for a persistence BO 
+	<a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a>)
+        
+        <br>
+        <h2 id="how">How ?</h2>
+        How to write the first UJO object? The fastest way is to use some abstract UJO implementation from this project and via few code lines we can make quickly 
+        and easily our own implementation, too. Here is an example - the implementation of the <i>Person</i> class by an abstract <a href="#Changes">MapUjo</a> class.
+        
+        <h3>The class code</h3>
+        An easy exemplary formation of the <i>Person</i> class:
+        
+<pre class="pre"><span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> MapUjo {<br> 
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">Person</span>,String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">Person</span>,Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, Double.<span class="java-keywords">class</span>);<br> 
+}</pre>
+        Now, when the <i>Person</i> class is done, we can make its instance and enter or fetch some data. It´s possible to use one of two API methods for writing the object attributes:
+        <ol>
+            <li><i>Person.<strong>writeValue</strong>(UjoProperty, Object)</i>, or</li>
+            <li><i>UjoProperty.<strong>setValue</strong>(person, Object)</i>. </li>
+        </ol>
+        
+        These methods are equivalent from a point of result, but the second solution offers the type safe access during the writing and reading of a value. 
+        A show of the second (2) method use up:
+        
+<pre class="pre"><span class="java-keywords">import static</span> org.Person.*;
+Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>();<br>
+<span class="java-block-comment">// Writing:</span>
+NAME.<span class="java-layer-method">setValue</span>(person, <span class="java-string-literal">"Paul Ponec"</span>);
+MALE.<span class="java-layer-method">setValue</span>(person, <span class="java-keywords">true</span>);
+CASH.<span class="java-layer-method">setValue</span>(person, <span class="java-numeric-literals">34.5</span>);<br>
+<span class="java-block-comment">// Reading:</span>
+String  name = NAME.<span class="java-layer-method">of</span>(person); <span class="java-block-comment">// method of() is an alias for UjoProperty.getValue()</span>
+<span class="java-keywords">boolean</span> male = MALE.<span class="java-layer-method">of</span>(person);
+<span class="java-keywords">double</span>  cash = CASH.<span class="java-layer-method">of</span>(person);
+<br></pre>
+
+     There is possible to use an <strong>extended API</strong> with a more obvious source code 
+     to the property access since the UJO <strong>release 0.80</strong>.
+     The new solution allows to you a chaining more properties according to the model of a language 
+     <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a>.
+     The new API extends the old one so that you can use an combination of both types.
+     
+<pre class="pre"><span class="java-keywords">import static</span> org.Person.*;
+Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>(); <span class="java-block-comment">// An extension of MapUjoExt</span><br>
+<span class="java-block-comment">// Writing:</span>
+person.<span class="java-layer-method">set</span>(NAME, <span class="java-string-literal">"Paul Ponec"</span>);
+person.<span class="java-layer-method">set</span>(MALE, <span class="java-keywords">true</span>);
+person.<span class="java-layer-method">set</span>(CASH, <span class="java-numeric-literals">34.5</span>);<br>
+<span class="java-block-comment">// Reading:</span>
+String  name = person.<span class="java-layer-method">get</span>(NAME);
+<span class="java-keywords">boolean</span> male = person.<span class="java-layer-method">get</span>(MALE);
+<span class="java-keywords">double</span>  cash = person.<span class="java-layer-method">get</span>(CASH);
+<br></pre>
+
+        <strong>A note: </strong><br>
+        If you use a compilation parameter <strong>-Xlint:unchecked</strong>, an assembler can warn you of absent declaration of generic data types in the UjoProperty initialization sometimes. 
+        There are three possibilities now:<br>
+        <ul>
+            <li>to complement the generic data types to the right side of the expression according to the left side, or</li>
+            <li>to switch off the <strong>-Xlint:unchecked</strong> parameter. The switched off parameter is implied to the IDE NetBeans setting.</li>
+            <li>the class can be equipped an annotation <i>@SuppressWarnings("unchecked")</i>
+                <br />I've chosen this possibility myself, the code is getting clearer and in the case 
+                of collision in the same line it´s possible to find it out easily.</li>
+            <li>since version 0.72 is possible to use a type safe method <strong>newProperty(name, type)</strong> pro building a Property object.</li>
+        </ul>
+        <h3>The implementation of the equals() method</h3>
+        Our <i>Person</i> class has the <i>equals()</i> function implemented already, which inherited from parental class <i>MapUjo</i>. 
+        But if you want by some reason to write your own Ujo implementation with this method, it´s enough to write into the class this code:
+        
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">equals</span>(Object obj) {
+  <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">equals</span>(<span class="java-keywords">this</span>, (Ujo) obj );
+}<span class="java-block-comment"></span>
+</pre>
+
+        <h3>Implementation of the clone() method</h3>
+        Analogous to the equals method you can make the <i>clone()</i> method :
+<pre class="pre"><span class="java-block-comment"></span><span class="java-block-comment"></span><span class="java-keywords">public</span> Object <span class="java-layer-method">clone</span>() {
+  <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">clone</span>(<span class="java-keywords">this</span>, 1, <span class="java-keywords">null</span>);
+}
+</pre>
+
+        <h3>Implementation of the hash() method</h3>
+        A similar example of the <i>hash()</i> method implementation:
+<pre class="pre"><span class="java-block-comment"></span><span class="java-block-comment"></span><span class="java-keywords">public</span> <span class="java-keywords">int</span> <span class="java-layer-method">hash</span>() {
+  <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">getHash</span>(<span class="java-keywords">this</span>);
+}
+</pre>
+        All of these implementations are generally applicable to all the Ujo objects posterity.
+        
+        
+        <h2 id="ujoext">Interface UjoExt</h2>
+        The most of information in this tutorial are related to a basic <a href="Ujo.html">Ujo</a> interface however since a version UJO Framework 0.80 is available an extended interface 
+        called UjoExt for an&nbsp;easier utilization in a source code. The extended features are described by a <a href="http://ujoframework.org/presentation/">slide show</a> format in a different document
+        or you can try an <a href="extensions/UjoExt.html">UjoExt</a> JavaDoc description.
+        <p>&nbsp;</p>
+
+        
+        
+
+        <h2 id="defaultvalues">Default values</h2>
+        
+        A JavaBean property can have got an implicit value by the sample: 
+<pre class="pre">{ 
+  <span class="java-keywords">private</span> Double cash = <span class="java-numeric-literals highlight">10.0</span>; 
+}</pre>
+  
+        The UJO property can have got a default value. All the implementations of method Ujo.readValue(...) from this frameworks
+        replaces an undefined value (NULL) by the default value from the UjoProperty.
+
+<pre class="pre">{ 
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double&gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Cash&quot;</span>, <span class="java-numeric-literals highlight">10.0</span>);
+}</pre>
+
+        Notes: 
+        <ul>
+            <li>there is possible to restore a default value by the write NULL value to an UJO object.</li>
+            <li>if a default value is not specified than the default value is null</li>
+        </ul>
+        
+        
+        <p>&nbsp;</p>
+
+        
+        <h2 id="javabean">How to create the JavaBean?</h2>
+        It´s easy to make the JavaBean from the UJO object. It´s enough to implement a setter and a getter for each attribute. An example of usage:
+<pre class="pre">
+<span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {<br>
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String&gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double&gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;cash&quot;</span>, Double.<span class="java-keywords">class</span>);<br>    
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setName</span>(String name) {
+    NAME.<span class="java-layer-method">setValue</span>(<span class="java-keywords">this</span>, name);
+  }
+  <span class="java-keywords">public</span> String <span class="java-layer-method">getName</span>() {
+    <span class="java-keywords">return</span> <span class="java-layer-method">NAME</span>.getValue(<span class="java-keywords">this</span>);
+  }
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setCash</span>(<span class="java-layer-method">Double</span> cash) {
+    CASH.<span class="java-layer-method">setValue</span>(<span class="java-keywords">this</span>, cash);
+  }
+  <span class="java-keywords">public</span> <span class="java-layer-method">Double</span> <span class="java-layer-method">getCash</span>() {
+    <span class="java-keywords">return</span> CASH.<span class="java-layer-method">getValue</span>(<span class="java-keywords">this</span>);
+  }
+}</pre>
+
+There is possible to use an special implementation <a href="implementation/bean/BeanUjo.html">BeanUjo</a> to an implementation UJO features to your complete JavaBeans.
+This <strong>BeanUjo</strong> implementation calls JavaBean setters and getters by a Java reflection for writing and reading values (fields). 
+A name of Ujo property must accord with a related name of the JavaBean attribute (methods) in the implementation.
+There is allowed to use a primitive types of the object fields if you can (e.g. Double -> double).
+<pre class="pre">
+<span class="java-keywords">import</span> org.ujoframework.implementation.bean.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> <span class="highlight">BeanUjo</span> {<br>
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty&lt;Person, String&gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;<span class="highlight">name</span>&quot;</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty&lt;Person, Double&gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;<span class="highlight">cash</span>&quot;</span>, Double.<span class="java-keywords">class</span>);
+  
+  <span class="java-keywords">private</span> String myname;
+  <span class="java-keywords">private</span> Double mycash;
+  
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">set<span class="highlight">Name</span></span>(String name) {
+    <span class="java-keywords">this</span>.myname = name;
+  }
+  <span class="java-keywords">public</span> String <span class="java-layer-method">get<span class="highlight">Name</span></span>() {
+    <span class="java-keywords">return</span> myname;
+  }
+  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">set<span class="highlight">Cash</span></span>(<span class="java-layer-method">Double</span> cash) {
+    <span class="java-keywords">this</span>.mycash = cash;
+  }
+  <span class="java-keywords">public</span> <span class="java-layer-method">Double</span> <span class="java-layer-method">get<span class="highlight">Cash</span></span>() {
+    <span class="java-keywords">return</span> mycash;
+  }
+}</pre>
+        
+        <strong>Keep the mind</strong> that getters of implementation <strong>BeanUjo</strong> don't call a method Ujo.readProperty(..) similar like setters don't call Ujo.writeProperty().
+        For example this is the reason why method getCash() can't return a default value from UjoProperty for example. 
+        The way NAME.getValue(...) works fine.
+        
+        <h2 id="xml">XML serialization</h2>
+        Usage of an serialization is very simple, that is how the code looks like:
+<pre class="pre"> Person person;
+...<br>
+<span class="java-block-comment">// Make Serialization:</span>
+UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="java-layer-method">saveXML</span>(writer, person, <span class="java-keywords">null</span>, <span class="java-string-literal">"My Export"</span>);<br>
+<span class="java-block-comment">// Make Deserialization:</span>
+person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="java-layer-method">parseXML</span>(inputStream, Person.<span class="java-keywords">class</span>, <span class="java-string-literal">"My Import"</span>);<br>
+</pre>
+
+        A content of created XML:
+<pre class="pre"><span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version="1.0" encoding="UTF-8"</span><span class="xml-pi-start">?&gt;</span>
+<span class="xml-tag">&lt;body</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;Name</span><span class="xml-tag">&gt;</span>Paul Ponec<span class="xml-tag">&lt;/Name</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;Male</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/Male</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;Cash</span><span class="xml-tag">&gt;</span>34.5<span class="xml-tag">&lt;/Cash</span><span class="xml-tag">&gt;</span>
+<span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
+</pre>
+
+<h3>List Property</h3>
+It´s often very useful some attribute to contain a <strong>list</strong> of another UJO objects. 
+It´s possible to make the <strong>ArrayList&lt;UjoItem&gt;</strong> type object though, but preferable is to use for an attribute the <a href="#">ListProperty</a> class. 
+The first reason is a clearer content of an export to XML, because an export doesn't contain the information about the data type items of the list.
+I recommend to read up API for more detailed information.
+   <br>&nbsp;<br>
+
+Recommended solution for the implementation of a link <strong>1:N</strong> for the Person - Child objects.
+<pre class="pre">
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo { 
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty &lt;Person,String&gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ListProperty&lt;Person,Child&gt; CHILDS = <span class="java-layer-method">newPropertyList</span>(<span class="java-string-literal">&quot;Child&quot;</span>, Child.<span class="java-keywords">class</span>);
+}
+</pre>
+
+       <h3 id="xmlAuthrization">An authorization of an attribute export</h3>
+       What to do, when you need to export only some of the UJO object attributes and to ignore the rest?
+       There is the <strong>readAuthorization(...)</strong> method for this case. 
+       <br>This method can allow a participation of the chosen attributes in dependence on:
+
+        <ul>
+            <li>the action type (XML export, Resource Bundle export, ...) include an action context</li>
+            <li>the attribute</li>
+            <li>his value</li>
+        </ul>
+       
+On the following example we will illustrate, how the suppression of the <strong>NAME</strong> attribute by an export into XML looks like:
+<pre class="pre">
+<span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, UjoProperty property, Object value) {
+  <span class="java-keywords">switch</span>(action.getType()) {
+    <span class="java-keywords">case</span> ACTION_XML_EXPORT: 
+      <span class="java-keywords">return</span> property!=NAME;
+    <span class="java-keywords">default</span>: {
+      <span class="java-keywords">return</span> <span class="java-keywords">super</span>.<span class="java-layer-method">readAuthorization</span>(action, property, value);
+    }
+  }
+}</pre>
+
+        Notice: because all the <i>Properties</i> of the UJO object are the final type, it is not necessary
+        to compare by the <i>equals()</i> method, but it is possible to use a quicker operator  <strong>==</strong>.
+
+<h3>Writing XML attribute</h3>
+The UJO Framework enables to write some <strong>properties</strong> like a XML attribute contrary of the XML element (it a default feature). 
+There are two ways how to get the target:
+<ul>
+  <li>make own implementation of the method <strong>readAuthorization(...)</strong>. 
+      There is used an authorization action ACTION_XML_ELEMENT for resolution properties, a result value  FALSE is request to write an XML attribute for selected property. 
+      See the next sample of usage for a NAME property like a XML attribute:
+<pre class="pre"><span class="java-annotation">@</span>Override
+<span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, UjoProperty property, Object value) {
+  <span class="java-keywords">switch</span>(action) {
+    <span class="java-keywords">case</span> ACTION_XML_ELEMENT: <span class="java-keywords">return</span> property!=NAME; // the NAME will be an attribute of an element
+    <span class="java-keywords">default</span>: <span class="java-keywords">return</span> <span class="java-keywords">super</span>.<span class="java-layer-method">readAuthorization</span>(action, property, value);
+  }
+}
+</pre>
+  </li>
+  <li>if you use an abstract parent class (MapUjo, ArrayUjo) then it is possible to mark the property by an annotation  <strong>@XmlAttribute</strong> by next sample:
+<pre class="pre"><span class="java-annotation">@</span>XmlAttribute
+<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+</pre>
+      A default implementation of the method <strong>readAuthorization(...)</strong> located in a parent class can recognized annotation 
+      and so the feature describe above works by the same way.
+  </li>
+</ul>
+        
+           
+        <h2 id="tablemodel">Support of the JTable component</h2>
+        The UJO Framework contains a support for the UJO object list displaying in the JTable. For simple editable table creating it´s not necessary 
+        to create any new class, <strong>you can only create</strong> the <a href="swing/UjoTableModel.html">UjoTableModel</a> class instance and to set it to the <i>JTable</i> object using the <i>setModel()</i> method. 
+        Example of simple usage:
+
+<pre class="pre">
+<span class="java-block-comment">// Create a model for all attributes:</span>
+UjoTableModel&lt;Person&gt; model = <span class="java-keywords">new</span> <span class="java-layer-method">UjoTableModel</span>(Person.NAME, Person.MALE, Person.BIRTH);
+<span class="java-block-comment">// or simply: ... model = new UjoTableModel(Person.class)</span>
+jTable.<span class="java-layer-method">setModel</span>(model);<br>
+<span class="java-block-comment">// We can set an data optionally:</span>
+List&lt;Person&gt; persons = <span class="java-keywords">new</span> <span class="java-layer-method">ArrayList</span>();
+model.<span class="java-layer-method">setRows</span>(persons);<br>
+</pre>        
+        
+        Other possibilities of the <i>UjoTableModel</i> class::
+        <pre class="pre">
+<span class="java-block-comment">// Add a row:</span>
+model.<span class="java-layer-method">addRow</span>(<span class="java-keywords">new</span> <span class="java-layer-method">Person</span>());<br>
+<span class="java-block-comment">// Set a value:</span>
+model.<span class="java-layer-method">setValueAt</span>(<span class="java-string-literal">"Prokop"</span>, <span class="java-numeric-literals">0</span>, Person.NAME );<br>
+<span class="java-block-comment">// Get a last row of table:</span>
+Person person = model.<span class="java-layer-method">getRowLast</span>();<br>
+<span class="java-block-comment">//</span><span class="java-block-comment"> Sort the model:</span>
+model.<span class="java-layer-method">sort</span>(<span class="java-keywords">true</span>, Person.NAME);<br>
+</pre>
+    
+        <h3>Confrontation with the AbstractTableModel</h3>
+        For creating a new <strong>editable</strong> table data model you have to implement or overwrite a few methods of the <i>AbstractTableModel</i> abstract class.
+        <ul style="color: rgb(192, 192, 192);">
+            <li>getColumnName(int column)</li>
+            <li>getColumnClass(int column)</li>
+            <li>getColumnCount()</li>
+            <li>getRowCount()</li>
+            <li>getValueAt(int rowIndex, int columnIndex)</li>
+            <li>setValueAt(Object value, int rowIndex, int columnIndex)</li>
+        </ul>
+
+        All of these methods in the UjoTableModel class you´ll get implemented yet. 
+        A name of the column and corresponding class are taken straightly from the <i>UjoProperty</i> object, a column list inputs in constructor.
+        
+        
+        <h2 id="how2">What about the extensions?</h2>
+        If you need to create a descendant of the Person class, define in the descendant just new attributes. 
+        The <i>UjoProperty[]</i> list will be procured during the first call the <i>readProperties()</i> method by the help of the 
+        Java reflection, all another values are taken from the cache.
+        <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {<br>
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">PersonExt</span>,Float&gt; WEIGHT = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Weight"</span>, Float.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">PersonExt</span>,Date&gt;  BORN   = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Born"</span>  , Date.<span class="java-keywords">class</span>);<br>
+}</pre>
+        
+        
+        <h2 id="performance">Performance</h2>
+        The processing performance of the UJO objects is dependent on the implementation. During the processing of the <i>MapUjo</i> type object 
+        is performance (writing/reading) approximately consistent with the operations writing/reading of the <i>HashMap</i> object. 
+        The <i>ArrayUjo</i> solution provides the quicker implementation, the JavaBean object is the speediest.<br>
+        <br>
+        There are the results of a simple mensuration in the following table. 
+        <br />Environment: Windows XP system, Intel DuoCore 1.66 MHz processor, 1GB RAM, JRE 6.0, UJO Framework <span style="font-weight: bold">0.80</span>.
+        <br>
+        The test description:
+        <ul>
+            <li>a number of the test iterations is 5 million</li>
+            <li>for each iteration a new instance of the <i>Ujo</i> interface will be created</li>
+            <li>the values of 10 attributes will be written,</li>
+            <li>all the values will be read</li>
+            <li>the object will be released for a Garbage collector.</li>
+            <li>the result values are an arithmetic average from four tests</li>
+            <li>executing clasess: ArrayUjoTest, MapUjoTest, BeanUjoTest, PojoTest from JUnit tests</li>
+        </ul>
+        
+        <table style="text-align: left;" border="1" cellpadding="2" cellspacing="0">
+             <tr valign="top">
+                <th style="text-align: left;">Implementation</th>
+                <th style="text-align: right;">Performance<br /><span style="font-weight: normal;">[sec per 5M loops]</span></th>
+                <th style="text-align: right; width: 100px;">Ratio<br /><span style="font-weight: normal;">[%]</span></th>
+            </tr>
+            <tr>
+                <td align="left">ArrayUjo</td>
+                <td align="right">1.972</td>
+                <td align="right">177</td>
+            </tr>
+            <tr>
+                <td align="left">MapUjo</td>
+                <td align="right">6.651</td>
+                <td align="right">597</td>
+            </tr>
+            <tr>
+                <td align="left">BeanUjo</td>
+                <td align="right">20.995</td>
+                <td align="right">1883</td>
+            </tr>
+            <tr style="font-style: italic; color: #AAAAFF;">
+                <td align="left">JavaBean</td>
+                <td align="right">1.115</td>
+                <td align="right">100</td>
+            </tr>
+        </table>
+        
+        
+        It´s evidently from the table, that the performance of the <i>ArrayUjo</i> implementation is high and it gets near to the JavaBeans object performance.
+        The results can be affected in some cases by costs of making an instance of a primitive values.
+        However the speed of JavaBeans dramatically drops near to <i>BeanUjo</i> value  
+        in case a property access via <strong>Java reflection</strong> tools.
+        
+
+        <p id="performancexml"><strong>The XML serialization of UJO objects</strong> is based on a quick SAX parser, performance tests are very favorable,
+                   mainly a comparison to XML serialization implemented in JER (classes XMLEncoder, XMLDecoder).
+        </p>
+        A measurement was provided on the same PC like the last test (UJO release 0.74), all results are shown in next table.<br>
+        A test description:<br>
+        <ul>
+            <li>all business object are the same type (in scope one test)</li>
+            <li>every one business object contains 11 attributes include one for a recursion type of ArrayList</li>
+            <li>count of total instances is 6.000 objects</li>
+            <li>maximal deep is 4 object levels</li>
+            <li>test was performed by a class XmlSpeedTest2 (second pass) from JUnit tests</li>
+            <li>the result values are an arithmetic average from four tests</li>
+        </ul>
+        <br>
+        <table style="text-align: left;" border="1" cellpadding="2" cellspacing="0">
+             <tr valign="top">
+                <th style="text-align: left;">Implementation</th>
+                <th style="text-align: right;">Time of serialization<br /><span style="font-weight: normal;"> [sec]</span></th>
+                <th style="text-align: right;">Time of deserialization<br /><span style="font-weight: normal;"> [sec]</span></th>
+                <th style="text-align: right;">Total ratio<br /><span style="font-weight: normal;">[%]</span></th>
+            </tr>
+            <tr>
+                <td align="left">ArrayUjo</td>
+                <td align="right">0.329</td>
+                <td align="right" style="color: red; font-weight:bold;">0.448</td>
+                <td align="right">111</td>
+            </tr>
+            <tr>
+                <td align="left">MapUjo</td>
+                <td align="right">0.340</td>
+                <td align="right">0.474</td>
+                <td align="right">116</td>
+            </tr>
+            <tr>
+                <td align="left">BeanUjo</td>
+                <td align="right">0.386</td>
+                <td align="right">0.483</td>
+                <td align="right">124</td>
+            </tr>
+            <tr style="font-style: italic; color: #9999FF;">
+                <td align="left">XMLEncoder</td>
+                <td align="right">2.922</td>
+                <td align="right">1.790</td>
+                <td align="right">672</td>
+            </tr>
+            <tr style="font-style: italic; color: #9999FF;">
+                <td align="left">JAXB 2.1.7</td>
+                <td align="right">0,207</td>
+                <td align="right">0,495</td>
+                <td align="right">100</td>
+            </tr>
+        </table>
+        
+        <br />Conclusion: The XML serialization implemented in UJO Framework is approximately six times faster 
+        in comparison with the XML persistence implemented in JRE 6.0. 
+        The UJO speed of serialization is slightly smaller than the speed of the great JAXB framework,
+        however all UJO implementations got a the <span style="color: red; font-weight:bold;">shortest time of deserialization</span>.
+        
+        <h2 id="possibilities">Other possibilities of usage?</h2>
+        What are the other possibilities of usage?
+        
+        
+        <h3>Commons</h3>
+        <ul>
+            <li><a href="tools/UjoCriteria.html">UjoCriteria</a> allows to search an Ujo objects from the list of Ujo objects.</li>
+            <li><a href="extensions/PathProperty.html">PathProperty</a> class is an composite of a UjoProperty objects. 
+                The PathProperty class can be used wherever is used UjoProperty - with a one important exception: 
+                do not send the PathProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...).</li>
+            <li><a href="implementation/factory/FactoryUjo.html">FactoryUjo</a> is a generic object maker.</li>
+        </ul>
+        
+        <h3>Persistence</h3>
+        <ul>
+            <li>you can save all the hierarchy of UJO objects in XML format by the help of the UjoManagerXML class. For another information see the UjoXml class.</li>
+            <li>UJO object can be saved in the <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">PropertyResourceBundle</a> format.</li>
+            <li>UJO object will be possible to save in CSV format in some future version.</li>
+            <li>The usage of UJO objects in the framework Cayenne (solution for the <a href="http://pt.wikipedia.org/wiki/ORM">ORM</a>). 
+                The Cayenne works with persistent classes analogous to implementation MapUjo. Because the persistent objects are created by pattern, 
+                the pattern can be change easily in that way, it will implement the <i>Ujo</i> interface. </li>
+        </ul>
+        
+        
+        <h3>Servlet</h3>
+        The UJO usage in servlets is not described in detail yet, but the basic idea for the text characteristics processing of the ServletRequest object is circa here:
+<pre class="pre">ServletRequest request;
+UjoTextable person;
+UjoProperty personName;
+...
+person.<span class="java-layer-method">writeValueString</span>(<span class="java-layer-method"></span>personName, request.<span class="java-layer-method">getParameters</span>(personName.<span class="java-layer-method">getName</span>());
+</pre>
+
+        <br>
+        <h2 id="refAppl">Referential Application</h2>
+        The application <a href="http://jworksheet.ponec.net/"><strong>jWorkSheet</strong></a> is a referential implementation. 
+        This Swing project was powered by the UJO Framework. It is published under an open license on a home page <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>. 
+        The <strong>jWorkSheet</strong> is an application for time tracking different projects.        
+
+        <br>You can study the usage of the UJO object persistence and its collaboration with a graphics component JTable on the source codes.
+        <br>
+        <br>
+        The jWorkSheet application characteristics::<br>
+        <ul>
+            <li>all the persistence is realized by the UJO framework. It is used the saving into <strong>XML</strong> format in project, 
+                parameters are saved into the Resource Bundle format.</li>
+            <li>all the data models of the JTable object are straight the instance or a child of the UjoTable class.</li>
+            <li>the small size of jWorkSheet application is interesting, it takes up about 170 kB including the UJO library.</li>
+        </ul>
+        The JWorkSheet project is written in Java 5.0, the progress was realized by the <a href="http://www.netbeans.org/">NetBeans IDE</a>.
+        
+        <h2 id="where">Where ?</h2>
+        The project home page: <a href="http://ujoframework.org/">http://ujoframework.org/</a><br>
+        Referential implementation: <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>.
+        Another implementations: (here can be referenced your project).<br>
+        
+        <h2 id="license">License</h2>
+        The code was released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>.<br>
+        <br>
+        <div class="apache"><code>
+   Copyright 2007 Paul Ponec
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+            </code>
+        </div>
+        
+        
+        
+        
+        <h2 id="faq">FAQ</h2>
+        <ul>
+            <li>Q: Is the list of the Properties objects ordered?</li>
+            <ul><li>A: Depends on the implementation. 
+                    The <i>ArrayUjo</i> class returns an ordered list always. 
+                    The <i>MapUjo</i> class returns the list ordered by the occurrence in the source code generally.
+                    However methods of Java reflection returns a items in undefined order officially,
+                    so if a right ordination is critical for your project, then use the ArrayUjo implementation.
+            </li></ul>
+            
+            <li>Q: What will be the retrieved UJO values, which were not initiated yet?</li>
+            <ul><li>A: The result depends on UJO object implementation. The default implementation (SuperUjo) returns a default value from UjoProperty.
+            </li></ul>
+            
+            <li>Q: How to localize the properties names?</li>
+            <ul><li>A: The properties names can be used as a key for selecting in the <i>java.util.ResourceBundle</i> type object.</li>
+            </ul>
+            
+            <li>Q: Are somewhere any other types of the UJO usage?</li>
+            <ul><li>A: You find another examples except the JWorkSheet application in the UJO framework JUnit tests.</li>
+            </ul>
+            
+            <li>Q: Isn't the UJO work slow?</li>
+            <ul><li>A: Implementation is very quick, see the chapter <a href="package.html#performance">Performance</a>.</li>
+            </ul>
+        </ul>
+        
+        <!--
+        <h2 id="bestPractises">Dotace</h2>
+        Pokud se vám projekt líbí, můžete ho podpořit na účet: ... TODO.<br>
+        -->
+        
+        <br>
+        <h2 id="changes">Release notes</h2>        
+        <ul>
+        <li>2008/10 - The version 0.81 brings a PathProperty and the first version of Criteria.</li>
+        <li>2008/09 - The version 0.80 brings an UjoExt interface.</li>
+        <li>2007/10 - The first public version 0.70 is free under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>.</li>
+        </ul>
+        See a detail <a href="../../changes.txt">release notes</a> in a text format for more information.
+        <br>&nbsp;
+        <br>
+</body></html>

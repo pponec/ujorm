@@ -19,14 +19,14 @@ package org.ujoframework.core.orm.metaModel;
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.implementation.map.MapUjo;
 
 /**
  * The table primary key.
  * @author pavel
  */
-public class DbPK extends MapUjo {
+public class DbPK extends AbstractMetaModel {
 
     /** DB columns */
     public static final UjoProperty<DbPK,DbTable> TABLE = newProperty("table", DbTable.class);

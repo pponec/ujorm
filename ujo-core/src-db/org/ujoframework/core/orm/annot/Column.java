@@ -25,11 +25,18 @@ import org.ujoframework.core.orm.DbType;
 @Target(value=ElementType.FIELD)
 public @interface Column {
 
+    /** Column name */
     String name() default "";
+    /** Database column type */
     DbType type() default DbType.UNDEFINED;
+    /** Database column lenght */
     int maxLenght() default -1;
+    /** Database column presision */
     int precision() default -1;
+    /** Not null value */
     boolean mandatory() default false;
+    /** The column is included in the index of the name. */
+    String indexName() default "";
 
     
 }
