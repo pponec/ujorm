@@ -77,9 +77,23 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return -1;
     }
 
+    /** Returns a default value */
     public VALUE getDefault() {
         return (VALUE) last().getDefault();
     }
+
+    /** Indicates whether a parameter value of the ujo "equal to" this default value. */
+    @Override
+    public boolean isDefault(Ujo ujo) {
+        Object value = ujo.readValue(this);
+        VALUE defaultValue = getDefault();
+        final boolean result
+        =  value==defaultValue
+        || (defaultValue!=null && defaultValue.equals(value))
+        ;
+        return result;
+    }
+
 
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
