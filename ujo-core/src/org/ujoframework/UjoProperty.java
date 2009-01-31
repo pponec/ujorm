@@ -67,7 +67,11 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
      * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
      * @see Ujo#readValue(UjoProperty)
      */
-    public VALUE getDefault();    
+    public VALUE getDefault();
+
+
+    /** Indicates whether a parameter value of the ujo "equal to" this default value. */
+    public boolean isDefault(Ujo ujo);
     
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.

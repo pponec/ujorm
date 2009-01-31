@@ -18,7 +18,6 @@ package org.ujoframework.extensions;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 
 /**
  * A AbstractProperty property implementation.
@@ -111,10 +110,9 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
         setValue(ujo, defaultValue);
     }
         
-    /** Is value default? */
+    /** Indicates whether a parameter value of the ujo "equal to" this default value. */
+    @Override
     public boolean isDefault(Ujo ujo) {
-        UjoManager.getInstance().equals(ujo, ujo);
-        
         Object value = ujo.readValue(this);
         final boolean result
         =  value==defaultValue
