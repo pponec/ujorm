@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -128,21 +129,44 @@ public class UjoCoder {
             if (aValue.length() == 0) {
                 return null;
             }
-            if (Number.class.isAssignableFrom(type)) {
-                final Constructor constructor = type.getConstructor(CONSTRUCTOR_TYPE);
-                final Object result = constructor.newInstance(new Object[]{aValue});
+            if (Integer.class==type) {
+                // Memory optimalization: returns the same instances in interval from -128 to 127 include.
+                final int result = Integer.parseInt(aValue);
                 return result;
             }
-            if (Boolean.class==type) {
-                final Boolean result = Boolean.valueOf(aValue);
-                return result;
+            if (Number.class.isAssignableFrom(type)) {
+                if (Short.class==type) {
+                    final short result = Short.parseShort(aValue);
+                    return result;
+                }
+                if (Long.class==type) {
+                    final Long result = new Long(aValue);
+                    return 0L==result ? ZeroProvider.ZERO_LONG : result;
+                }
+                if (Float.class==type) {
+                    final Float result = new Float(aValue);
+                    return 0f==result ? ZeroProvider.ZERO_FLOAT : result;
+                }
+                if (Double.class==type) {
+                    final Double result = new Double(aValue);
+                    return 0d==result ? ZeroProvider.ZERO_DOUBLE : result;
+                }
+                if (BigDecimal.class==type) {
+                    final BigDecimal result = new BigDecimal(aValue);
+                    return result;
+                }
+                if (true) {
+                    final Constructor constructor = type.getConstructor(CONSTRUCTOR_TYPE);
+                    final Object result = constructor.newInstance(new Object[]{aValue});
+                    return result;
+                }
             }
             if (Boolean.class==type) {
                 final Boolean result = Boolean.valueOf(aValue);
                 return result;
             }
             if (Character.class==type) {
-                final Character result = Character.valueOf((char) Integer.parseInt(aValue));
+                final char result = (char) Integer.parseInt(aValue);
                 return result;
             }
             if (byte[].class==type) {
