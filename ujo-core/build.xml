@@ -100,13 +100,13 @@ Implementation-Version: ${version}
 Implementation-Vendor: "Paul Ponec"</echo>
     </target>    
 
-    <target name="-javadoc-buildXXX" depends="init">
+    <target name="-javadoc-build" depends="init">
         
-        <!-- INIT before JAVADOC: -->  <!--
+        <!-- INIT before JAVADOC: -->
         <copy file="${src.dir}/org/ujoframework/z_package_${jDocLang}.html" 
               tofile="${src.dir}/org/ujoframework/package.html"
               overwrite="true"
-       /> -->
+       />
         
         <mkdir dir="${dist.javadoc.dir}"/>
         <javadoc additionalparam="${javadoc.additionalparam}" 
@@ -159,7 +159,14 @@ Implementation-Vendor: "Paul Ponec"</echo>
         <echo message="src.dir: ${src.dir}"/>
         <property name="reports.dir" value="${dist.javadoc.dir}/.." />    
         
-		<mkdir dir="${dist.javadoc.dir}"/>
+        <!-- INIT before JAVADOC: -->
+        <copy file="${src.dir}/org/ujoframework/z_package_${jDocLang}.html" 
+              tofile="${src.dir}/org/ujoframework/package.html"
+              overwrite="true"
+       />
+       <mkdir dir="${dist.javadoc.dir}"/>
+
+
         <javadoc additionalparam="${javadoc.additionalparam}" 
                 author="${javadoc.author}" 
                 charset="UTF-8" 
