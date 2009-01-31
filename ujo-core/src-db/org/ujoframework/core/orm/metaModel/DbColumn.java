@@ -16,21 +16,23 @@
 
 package org.ujoframework.core.orm.metaModel;
 
+import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
+import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.DbType;
-import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.core.orm.annot.Column;
 import org.ujoframework.implementation.db.UjoRelative;
-import org.ujoframework.implementation.map.MapUjo;
 
 /**
  * Database column metadata
  * @author pavel
  */
-public class DbColumn extends MapUjo {
+public class DbColumn extends AbstractMetaModel {
 
     /** DB column name */
-    public static final UjoProperty<DbColumn,String> NAME = newProperty("name", String.class);
+    public static final UjoProperty<DbColumn,String> NAME = newProperty("name", "");
     /** Class property */
     public static final UjoProperty<DbColumn,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
     /** Column NOT-NULL */
@@ -42,15 +44,38 @@ public class DbColumn extends MapUjo {
     /** Column value precision */
     public static final UjoProperty<DbColumn,Integer> PRECISION = newProperty("precision", -1);
     /** DB Default value */
-    public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", String.class);
+    public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", "");
     /** DB table */
-    public static final ListProperty<DbColumn,DbTable> TABLE = newPropertyList("table", DbTable.class);
+    public static final UjoProperty<DbColumn,DbTable> TABLE = newProperty("table", DbTable.class);
+    /** The column is included in the index of the name */
+    public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", String.class);
 
 
-    public DbColumn(DbTable table, UjoRelative tableRelative) {
+    public DbColumn(DbTable table, UjoProperty propertyColumn) {
+
+        TABLE.setValue(this, table);
+        PROPERTY.setValue(this, propertyColumn);
+
+        Field field = UjoManager.getInstance().getPropertyField(table.getClass(), propertyColumn);
+        Column column = field.getAnnotation(Column.class);
+
+        if (column!=null) {
+            NAME      .setValue(this, propertyColumn.getName());
+            MANDATORY .setValue(this, column.mandatory());
+            MAX_LENGTH.setValue(this, column.maxLenght());
+            PRECISION .setValue(this, column.precision());
+            TYPE      .setValue(this, column.type());
+            INDEX_NAME.setValue(this, column.indexName());
+        }
+
+        if (NAME.isDefault(this)) {
+            NAME.setValue(this, propertyColumn.getName());
+        }
+        if (TYPE.isDefault(this)) {
+            DbTable.DATABASE.of(table).changeDbType(this);
+        }
 
     }
-
 
     /** Get property value */
     @SuppressWarnings("unchecked")

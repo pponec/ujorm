@@ -17,32 +17,32 @@
 package org.ujoframework.core.orm.metaModel;
 
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.orm.AbstractMetaModel;
+import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Database;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.db.TableUjo;
 import org.ujoframework.implementation.db.UjoRelative;
-import org.ujoframework.implementation.map.MapUjo;
 
 /**
  * A logical database description.
  * @author pavel
  */
-public class Db extends MapUjo {
+public class Db extends AbstractMetaModel {
 
     /** List of tables */
     public static final ListProperty<Db,DbTable> TABLES = newPropertyList("table", DbTable.class);
     /** Database connection */
-    public static final UjoProperty<Db,String> CONNECTION = newProperty("connection", String.class);
+    public static final UjoProperty<Db,String> CONNECTION = newProperty("connection", "");
     /** Database root instance */
     public static final UjoProperty<Db,TableUjo> ROOT = newProperty("root", TableUjo.class);
     /** Database name */
-    public static final UjoProperty<Db,String> NAME = newProperty("name", String.class);
+    public static final UjoProperty<Db,String> NAME = newProperty("name", "");
     /** LDPA */
-    public static final UjoProperty<Db,String> LDAP = newProperty("ldap", String.class);
+    public static final UjoProperty<Db,String> LDAP = newProperty("ldap", "");
 
     public Db(TableUjo database) {
         ROOT.setValue(this, database);
-        NAME.setValue(this, database.getClass().getSimpleName());
 
         Database annotDB = database.getClass().getAnnotation(Database.class);
         if (annotDB!=null) {
@@ -50,7 +50,34 @@ public class Db extends MapUjo {
             CONNECTION.setValue(this, annotDB.jdbc());
             LDAP.setValue(this, annotDB.ldap());
         }
+        if (NAME.isDefault(this)) {
+            NAME.setValue(this, database.getClass().getSimpleName());
+        }
         init(database);
+    }
+
+    /** Change DbType by a Java property */
+   @SuppressWarnings("unchecked")
+    public void changeDbType(DbColumn column) {
+       UjoProperty property = DbColumn.PROPERTY.of(column);
+
+       Class type = property.getType();
+        if (String.class==type) {
+            DbColumn.TYPE.setValue(column, DbType.VARCHAR);
+            changeDefault(column, property, 128);
+        }
+        else if (Integer.class==type) {
+            DbColumn.TYPE.setValue(column, DbType.INT);
+            if (DbColumn.MAX_LENGTH.isDefault(column)) {
+                DbColumn.MAX_LENGTH.setValue(column, 8);
+            }
+        }
+        else if (String.class==type) {
+            DbColumn.TYPE.setValue(column, DbType.VARCHAR);
+            if (DbColumn.MAX_LENGTH.isDefault(column)) {
+                DbColumn.MAX_LENGTH.setValue(column, 128);
+            }
+        }
     }
 
     /** Init Data */
