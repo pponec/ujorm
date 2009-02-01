@@ -663,9 +663,9 @@ public class UjoManager {
 
     
     /** Regurns information about current library. */
-    public static String ujoFrameworkInfo() {
+    public static String projectInfo() {
         final String URL = "http://ujoframework.org/";
-        final Package p  = UjoManager.class.getPackage();
+        final Package p  = Ujo.class.getPackage();
         final String CR  = System.getProperty("line.separator");
 
         String result
@@ -682,7 +682,7 @@ public class UjoManager {
 
     /** Show an information about the framework */
     public static void main(String[] args) {
-        System.out.println(ujoFrameworkInfo());
+        System.out.println(projectInfo());
     }
     
 }
