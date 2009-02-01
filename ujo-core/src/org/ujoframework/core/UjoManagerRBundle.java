@@ -75,13 +75,15 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         java.util.Properties props = new java.util.Properties();
         UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_EXPORT, context);
         for (UjoProperty prop : getProperties()) {
-            
+
             final Object valueObj = UjoManager.getValue(ujo, prop);
             final String valueStr = getText(ujo, prop, valueObj, action);
             
             final boolean authorized 
-            = valueStr!=null 
-            && ujo.readAuthorization(action, prop, valueObj);
+            =  valueStr!=null
+            && ujo.readAuthorization(action, prop, valueObj)
+            && !getUjoManager().isTransientAttribute(prop)
+            ;
             
             if (authorized) {
                 props.setProperty(prop.getName(), valueStr);

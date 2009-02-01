@@ -17,6 +17,9 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
 
@@ -36,7 +39,12 @@ public class XmlSpeedTest extends MyTestCase {
     public XmlSpeedTest(String testName) {
         super(testName);
     }
-    
+
+    /** Is the JaxbXmlEnabled test enabled? */
+    protected boolean isJaxbXmlEnabled() {
+        return false;
+    }
+
     public static TestSuite suite() {
         return new TestSuite(XmlSpeedTest.class);
     }
@@ -243,36 +251,37 @@ public class XmlSpeedTest extends MyTestCase {
             if (decoder!=null) { decoder.close(); }
         }
     }
-    
+
     public void testJaxbXML() throws Throwable {
-    /* JAXB *./
-        System.out.println("PojoJAXB:Speed: " + suite().toString());
-        ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-jaxb.xml");
-        
-        PojoTree root = new PojoTree();
-        root.init(new ZCounter(getCount()), DEEP);
-        callGC();
-        
-        if (true) {
-            long time1 = System.currentTimeMillis();
-            JAXBContext context = JAXBContext.newInstance(PojoTree.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            m.marshal(root, dataFile);
-            long time2 = System.currentTimeMillis();
-            //
-            long time3 = System.currentTimeMillis();
-            InputStream is = createIS(dataFile);
-            Unmarshaller u = context.createUnmarshaller();
-            PojoTree o = (PojoTree) u.unmarshal(is);
-            long time4 = System.currentTimeMillis();
-            
-            assertEquals(getCount(), o.size()+1);
-            System.out.println(">>> PojoJAXB: "
-            + getTime(time1, time2, time3, time4)
-            );
+        if (isJaxbXmlEnabled()) {
+
+            System.out.println("PojoJAXB:Speed: " + suite().toString());
+            ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-jaxb.xml");
+
+            PojoTree root = new PojoTree();
+            root.init(new ZCounter(getCount()), DEEP);
+            callGC();
+
+            if (true) {
+                long time1 = System.currentTimeMillis();
+                JAXBContext context = JAXBContext.newInstance(PojoTree.class);
+                Marshaller m = context.createMarshaller();
+                m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                m.marshal(root, dataFile);
+                long time2 = System.currentTimeMillis();
+                //
+                long time3 = System.currentTimeMillis();
+                InputStream is = createIS(dataFile);
+                Unmarshaller u = context.createUnmarshaller();
+                PojoTree o = (PojoTree) u.unmarshal(is);
+                long time4 = System.currentTimeMillis();
+
+                assertEquals(getCount(), o.size()+1);
+                System.out.println(">>> PojoJAXB: "
+                + getTime(time1, time2, time3, time4)
+                );
+            }
         }
-    /.**/
     }
     
     public void testJavolution() throws Throwable {

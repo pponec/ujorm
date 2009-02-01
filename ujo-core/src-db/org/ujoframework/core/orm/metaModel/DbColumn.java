@@ -74,7 +74,6 @@ public class DbColumn extends AbstractMetaModel {
         if (TYPE.isDefault(this)) {
             DbTable.DATABASE.of(table).changeDbType(this);
         }
-
     }
 
     /** Get property value */

@@ -104,7 +104,10 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             boolean printSepar = false;
             for (UjoProperty p : getProperties()) {
                 
-                if (ujo==null || ujo.readAuthorization(new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context), p, null)) {
+                if (!getUjoManager().isTransientAttribute(p)
+                && (ujo==null
+                ||  ujo.readAuthorization(new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context), p, null))
+                ){
                     if (printSepar) {
                         out.write(separator);
                     } else {
@@ -121,7 +124,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             for (UjoProperty p : getProperties()) {
                 UjoAction action = new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context);
                 final String value  = getText(ujo, p, UNDEFINED, action);
-                if (ujo.readAuthorization(action, p, value)) {
+                if (ujo.readAuthorization(action, p, value)
+                && !getUjoManager().isTransientAttribute(p)
+                ){
                     if (printSepar) {
                         out.write(separator);
                     } else {

@@ -43,7 +43,7 @@ abstract public class UjoService<UJO extends Ujo> {
     final private boolean textable;
     
     /** Special UjoManager. Value null means a DEFAULT value */
-    private UjoManager ujoManager;
+    private UjoManager ujoManager = UjoManager.getInstance();
     
     /** Creates a new instance of UjoService */
     public UjoService(Class<UJO> ujoClass) {
@@ -67,10 +67,7 @@ abstract public class UjoService<UJO extends Ujo> {
         return textable;
     }
     
-    public UjoManager getUjoManager() {
-        if (ujoManager==null) {
-            ujoManager = UjoManager.getInstance();
-        }
+    public final UjoManager getUjoManager() {
         return ujoManager;
     }
     
@@ -82,7 +79,7 @@ abstract public class UjoService<UJO extends Ujo> {
     /** Get required properties */
     public UjoProperty[] getProperties() {
         if (properties==null) {
-            properties = getUjoManager().readProperties(getUjoClass());
+            properties = ujoManager.readProperties(getUjoClass());
         }
         return properties;
     }
@@ -91,7 +88,7 @@ abstract public class UjoService<UJO extends Ujo> {
     public String getText(final UJO ujo, final UjoProperty prop, final Object value, final UjoAction action) {
         final String result = textable
         ? ((UjoTextable)ujo).readValueString(prop, action) // TODO
-        : getUjoManager().encodeValue(value!=UNDEFINED ? value : UjoManager.getValue(ujo, prop), false)
+        : ujoManager.encodeValue(value!=UNDEFINED ? value : UjoManager.getValue(ujo, prop), false)
         ;
         return result;
     }
@@ -101,7 +98,7 @@ abstract public class UjoService<UJO extends Ujo> {
         if (textable) {
             ((UjoTextable)ujo).writeValueString(prop, value, type, action);
         } else {
-            final Object o = getUjoManager().decodeValue(type!=null ? type : prop.getType(), value);
+            final Object o = ujoManager.decodeValue(type!=null ? type : prop.getType(), value);
             UjoManager.setValue(ujo, prop, o);
         }
     }

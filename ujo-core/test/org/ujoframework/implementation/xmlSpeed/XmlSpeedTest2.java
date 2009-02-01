@@ -19,6 +19,12 @@ public class XmlSpeedTest2 extends XmlSpeedTest {
     public XmlSpeedTest2(String testName) {
         super(testName);
     }
+
+    /** Is the JaxbXmlEnabled test enabled? */
+    @Override
+    protected boolean isJaxbXmlEnabled() {
+        return true;
+    }
     
     public static TestSuite suite() {
         return new TestSuite(XmlSpeedTest2.class);
@@ -63,8 +69,10 @@ public class XmlSpeedTest2 extends XmlSpeedTest {
     }
     
     public void testJaxbXML1() throws Throwable {
-        System.out.println("PojoJAXB.Speed:WARMING: " + suite().toString());
-        super.testJaxbXML();
+        if (isJaxbXmlEnabled()) {
+            System.out.println("PojoJAXB.Speed:WARMING: " + suite().toString());
+            super.testJaxbXML();
+        }
     }
 
     public void testJavolution1() throws Throwable {

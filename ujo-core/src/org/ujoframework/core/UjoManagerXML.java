@@ -154,12 +154,13 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         
         // Write attributes:
         for (UjoProperty property : ujo.readProperties()) {
-            Object value = ujo.readValue(property);  // Only direct property from readProperties()
+            Object value = ujo.readValue(property);  // it is always a direct property from readProperties()
             
             if (value!=null
             && !Ujo.class.isAssignableFrom(property.getType())
             && !ujo.readAuthorization(actionElement, property, value)
             &&  ujo.readAuthorization(actionExport , property, value)
+            && !getUjoManager().isTransientAttribute(property)
             ){
                 final String valueStr = ujo.readValueString(property, actionExport);
                 writer.write(' ');
@@ -348,7 +349,8 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         } else if (value instanceof List) {
             for (Object item : (List<Object>) value) {
                 printItem(writer, itemType, item, ujo, prop);
-            }
+        }
+
 //      // A Feature of the Future:
 //      } else if (value instanceof Object[]) {
 //          Object[] val = (Object[]) value;
@@ -364,7 +366,6 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             ;
             printText2Xml(writer, str);
         }
-        
     }
     
 }
