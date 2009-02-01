@@ -175,7 +175,11 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
         return (LIST) ((UjoPropertyList)property).getList(this);
     }
     
-    
+    /** Indicates whether a parameter value "equal to" property default value. */
+    public <UJO extends UJO_IMPL, VALUE> boolean isDefault(UjoProperty<UJO, VALUE> property) {
+        return property.isDefault(this);
+    }
+
     // ----------- TEXT --------------
     
     

@@ -16,7 +16,6 @@
 
 package org.ujoframework.core;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -28,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.extensions.*;
 import org.ujoframework.implementation.array.ArrayUjo;
@@ -48,10 +48,13 @@ public class UjoManager {
     protected static UjoManager instance = new UjoManager();
     
     /** A properties cache. */
-    protected HashMap<Class, UjoProperty[]> propertiesCache;
+    private HashMap<Class, UjoProperty[]> propertiesCache;
     
-    /** A XML attributes cache. */
-    protected HashSet<UjoProperty> attributesCache = null;
+    /** A XML <strong>attribute</strong> cache. */
+    private HashSet<UjoProperty> attributesCache = null;
+
+    /** A transient <strong>attribute</strong> cache. */
+    private HashSet<UjoProperty> transientCache = null;
     
     /** Are properties reversed? */
     private Boolean arePropertiesReversed = null;
@@ -134,13 +137,12 @@ public class UjoManager {
                        propertyList.add( ujoProp);                     
                     }
                     
-                    // Look-up XML attribute:
-                    for (Annotation a : field.getDeclaredAnnotations()) {
-                        if (a instanceof XmlAttribute) {
-                            cacheXmlAttribute(ujoProp);
-                            break;
-                        }
-                    }
+                    // set caches:
+                    final XmlAttribute xa = field.getAnnotation(XmlAttribute.class);
+                    if (xa!=null) { cacheXmlAttribute(ujoProp); }
+
+                    final Transient tr = field.getAnnotation(Transient.class);
+                    if (tr!=null) { cacheTransientAttribute(ujoProp); }
                 }
             }
         } catch (IllegalAccessException e) {
@@ -405,11 +407,18 @@ public class UjoManager {
         return text!=null && text.length()>0;
     }
     
-    /** Returns an UJO proprty. */
+    /** Is the property an XML attribute? */
     public boolean isXmlAttribute(final UjoProperty property) {
         final boolean result = attributesCache!=null && attributesCache.contains(property);
         return result;
     }
+
+    /** Is the property an Transient attribute? */
+    public boolean isTransientAttribute(final UjoProperty property) {
+        final boolean result = transientCache!=null && transientCache.contains(property);
+        return result;
+    }
+
 
     public final Object decodeValue(final UjoProperty property, final String aValue) {
         return coder.decodeValue(property.getType(), aValue);
@@ -432,7 +441,15 @@ public class UjoManager {
         attributesCache.add(attribute);
     }
 
-        /** An assignable test. */
+    /** Mark a property to transient attribute in a cache. */
+    private void cacheTransientAttribute(final UjoProperty attribute) {
+        if (transientCache==null) {
+            transientCache = new HashSet<UjoProperty>();
+        }
+        transientCache.add(attribute);
+    }
+
+    /** An assignable test. */
     public boolean assertDirectAssign(final UjoProperty property, final Object value) throws IllegalArgumentException {
         return assertDirect(property, value) 
             && assertAssign(property, value)

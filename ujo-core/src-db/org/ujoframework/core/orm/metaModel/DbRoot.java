@@ -16,6 +16,12 @@
 
 package org.ujoframework.core.orm.metaModel;
 
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
 
@@ -25,6 +31,9 @@ import org.ujoframework.extensions.ListProperty;
  * @author pavel
  */
 public class DbRoot extends AbstractMetaModel {
+
+    public static final Logger LOGGER = Logger.getLogger(DbRoot.class.getName());
+
 
     /** List of tables */
     public static final ListProperty<DbRoot,Db> DATABASES = newPropertyList("database", Db.class);
@@ -49,6 +58,24 @@ public class DbRoot extends AbstractMetaModel {
     /** Add a new database into repository. */
     final public void add(Db database) {
         DATABASES.addItem(this, database);
+    }
+
+    /** Returns all model in a XML format */
+    @Override
+    public String toString() {
+        CharArrayWriter out = new CharArrayWriter(128);
+        try {
+            print(out);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Can't export model into XML");
+        }
+        return out.toString();
+    }
+
+    /** Pring all model in a XML format */
+    public void print(Writer writer) throws IOException {
+        final String defaultXmlHeader = null;
+        UjoManagerXML.getInstance().saveXML(writer, this, defaultXmlHeader, getClass());
     }
 
 }
