@@ -16,7 +16,11 @@
 
 package org.ujoframework.core.orm;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.orm.metaModel.Db;
 import org.ujoframework.core.orm.metaModel.DbRoot;
 import org.ujoframework.implementation.db.TableUjo;
@@ -26,6 +30,9 @@ import org.ujoframework.implementation.db.TableUjo;
  * @author pavel
  */
 public class DbHandler {
+
+    public static final Logger LOGGER = Logger.getLogger(DbHandler.class.getName());
+
 
     private static DbHandler handler = new DbHandler();
 
@@ -47,13 +54,21 @@ public class DbHandler {
 
 
     public boolean isPersistent(UjoProperty property) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        
+        final boolean resultFalse
+        =  List.class.isAssignableFrom(property.getType())
+        || UjoManager.getInstance().isTransientProperty(property)
+        ;
+        return !resultFalse;
     }
 
     /** Load a database model. */
     public <UJO extends TableUjo> void loadDatabase(Class<? extends TableUjo> databaseModel) {
         TableUjo model = getInstance(databaseModel);
         databases.add(new Db(model));
+
+        LOGGER.log(Level.INFO, databases.toString());
+
     }
 
     /** Create instance */

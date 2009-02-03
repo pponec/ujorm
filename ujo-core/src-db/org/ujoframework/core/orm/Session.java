@@ -45,7 +45,7 @@ public class Session {
     }
 
     public void save(TableUjo ujo) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        throw new UnsupportedOperationException("SAVE is not yet implemented");
     }
 
     public <UJO extends TableUjo> UJO Load(Class ujo, Object id) {
@@ -61,7 +61,7 @@ public class Session {
     }
 
     public <UJO extends TableUjo> UjoIterator<UJO> iterate(UjoProperty property) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        throw new UnsupportedOperationException("Not yet implemented: " + property);
     }
 
 

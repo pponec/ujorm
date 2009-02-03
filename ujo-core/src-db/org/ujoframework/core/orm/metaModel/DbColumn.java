@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
+import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Column;
@@ -46,6 +47,7 @@ public class DbColumn extends AbstractMetaModel {
     /** DB Default value */
     public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", "");
     /** DB table */
+    @Transient
     public static final UjoProperty<DbColumn,DbTable> TABLE = newProperty("table", DbTable.class);
     /** The column is included in the index of the name */
     public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", String.class);
@@ -82,4 +84,11 @@ public class DbColumn extends AbstractMetaModel {
         final Object result = PROPERTY.of(this).of(ujo);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return NAME.of(this);
+    }
+
+
 }

@@ -82,7 +82,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
             final boolean authorized 
             =  valueStr!=null
             && ujo.readAuthorization(action, prop, valueObj)
-            && !getUjoManager().isTransientAttribute(prop)
+            && !getUjoManager().isTransientProperty(prop)
             ;
             
             if (authorized) {
