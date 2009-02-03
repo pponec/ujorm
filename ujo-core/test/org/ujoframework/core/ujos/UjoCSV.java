@@ -9,6 +9,7 @@
 
 package org.ujoframework.core.ujos;
 
+import org.ujoframework.core.orm.annot.Column;
 import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.map.MapUjo;
 
@@ -17,7 +18,8 @@ import org.ujoframework.implementation.map.MapUjo;
  * @author Pavel Ponec
  */
 public class UjoCSV extends MapUjo{
-    
+
+    @Column(id=true, mandatory=true)
     public static final MapProperty<UjoCSV, String> P1 = newProperty("P1", String.class);
     public static final MapProperty<UjoCSV, String> P2 = newProperty("P2", String.class);
     public static final MapProperty<UjoCSV, String> P3 = newProperty("P3", String.class);
