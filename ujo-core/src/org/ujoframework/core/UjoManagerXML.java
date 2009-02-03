@@ -160,7 +160,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             && !Ujo.class.isAssignableFrom(property.getType())
             && !ujo.readAuthorization(actionElement, property, value)
             &&  ujo.readAuthorization(actionExport , property, value)
-            && !getUjoManager().isTransientAttribute(property)
+            && !getUjoManager().isTransientProperty(property)
             ){
                 final String valueStr = ujo.readValueString(property, actionExport);
                 writer.write(' ');
@@ -186,7 +186,8 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             || !ujo.readAuthorization(actionExport , property, value)
             || !ujo.readAuthorization(actionElement, property, value)
             || (value instanceof List && ((List)value).size()==0)
-            ) {
+            || getUjoManager().isTransientProperty(property)
+            ){
                 continue;
             }
             final Class baseType = value.getClass()!=property.getType() ? value.getClass() : null ;

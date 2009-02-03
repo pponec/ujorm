@@ -17,6 +17,7 @@
 package org.ujoframework.core.orm.metaModel;
 
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Database;
@@ -34,7 +35,8 @@ public class Db extends AbstractMetaModel {
     public static final ListProperty<Db,DbTable> TABLES = newPropertyList("table", DbTable.class);
     /** Database connection */
     public static final UjoProperty<Db,String> CONNECTION = newProperty("connection", "");
-    /** Database root instance */
+    /** DB class root instance */
+    @Transient
     public static final UjoProperty<Db,TableUjo> ROOT = newProperty("root", TableUjo.class);
     /** Database name */
     public static final UjoProperty<Db,String> NAME = newProperty("name", "");
@@ -53,7 +55,18 @@ public class Db extends AbstractMetaModel {
         if (NAME.isDefault(this)) {
             NAME.setValue(this, database.getClass().getSimpleName());
         }
-        init(database);
+
+
+        for (UjoProperty tableProperty : database.readProperties()) {
+
+            if (tableProperty instanceof UjoRelative) {
+                UjoRelative tProperty = (UjoRelative) tableProperty;
+
+                DbTable table = new DbTable(this, tProperty);
+                TABLES.addItem(this, table);
+            }
+        }
+
     }
 
     /** Change DbType by a Java property */
@@ -78,21 +91,6 @@ public class Db extends AbstractMetaModel {
                 DbColumn.MAX_LENGTH.setValue(column, 128);
             }
         }
-    }
-
-    /** Init Data */
-    private Db init(TableUjo database) {
-
-        for (UjoProperty tableProperty : database.readProperties()) {
-
-            if (tableProperty instanceof UjoRelative) {
-                UjoRelative tProperty = (UjoRelative) tableProperty;
-
-                DbTable table = new DbTable(this, tProperty);
-                TABLES.addItem(this, table);
-            }
-        }
-        return this;
     }
 
     /** Name of Database. */

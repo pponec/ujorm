@@ -76,5 +76,19 @@ public class DbPK extends AbstractMetaModel {
         return true;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(10);
+
+        for (DbColumn column : COLUMNS.getList(this)) {
+            if (sb.length()>0) { sb.append(','); }
+            sb.append(column.toString());
+        }
+
+        return sb.toString();
+    }
+
+
+
 
 }

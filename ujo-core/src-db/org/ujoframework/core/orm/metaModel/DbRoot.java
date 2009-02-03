@@ -54,7 +54,6 @@ public class DbRoot extends AbstractMetaModel {
         return null;
     }
 
-
     /** Add a new database into repository. */
     final public void add(Db database) {
         DATABASES.addItem(this, database);
@@ -66,8 +65,9 @@ public class DbRoot extends AbstractMetaModel {
         CharArrayWriter out = new CharArrayWriter(128);
         try {
             print(out);
+            out.append("\n---\n");
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Can't export model into XML");
+            LOGGER.log(Level.SEVERE, "Can't export model into XML", ex);
         }
         return out.toString();
     }

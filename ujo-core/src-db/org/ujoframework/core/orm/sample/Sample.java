@@ -92,4 +92,14 @@ public class Sample {
         }
     }
 
+    /** Test */
+    public static void main(String[] args) {
+        Sample sample = new Sample();
+
+        sample.useCreateItem();
+        //sample.useRelation();
+        //sample.useSelection();
+
+    }
+
 }

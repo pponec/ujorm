@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
+import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
@@ -36,11 +37,13 @@ public class DbTable extends AbstractMetaModel {
     public static final UjoProperty<DbTable,String> NAME = newProperty("name", "");
     /** Unique Primary Key */
     public static final UjoProperty<DbTable,DbPK> PK = newProperty("pk", DbPK.class);
-    /** Database relative property (a base definition of table) */
+    /** Database relative <strong>property</strong> (a base definition of table) */
+    @Transient
     public static final UjoProperty<DbTable,UjoRelative> DB_RELATIVE = newProperty("dbRelative", UjoRelative.class);
     /** Columns */
     public static final ListProperty<DbTable,DbColumn> COLUMNS = newPropertyList("columns", DbColumn.class);
     /** Database */
+    @Transient
     public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
 
     public DbTable(Db database, UjoRelative propertyTable) {

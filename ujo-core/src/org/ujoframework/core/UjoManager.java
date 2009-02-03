@@ -413,8 +413,8 @@ public class UjoManager {
         return result;
     }
 
-    /** Is the property an Transient attribute? */
-    public boolean isTransientAttribute(final UjoProperty property) {
+    /** Is the property an Transient? */
+    public boolean isTransientProperty(final UjoProperty property) {
         final boolean result = transientCache!=null && transientCache.contains(property);
         return result;
     }
