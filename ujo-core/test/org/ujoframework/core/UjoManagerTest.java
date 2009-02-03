@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.orm.annot.Column;
 import org.ujoframework.core.ujos.UjoCSV;
 
 /**
@@ -353,7 +354,14 @@ public class UjoManagerTest extends MyTestCase {
         for (UjoProperty p1 : ujo.readProperties()) {
             Field field = UjoManager.getInstance().getPropertyField(ujo.getClass(), p1);
             Object p2 = field.get(null);
-            assertEquals(p1, p2);
+            assertSame(p1, p2);
+
+            if (p2==UjoCSV.P1) {
+                Column column = field.getAnnotation(Column.class);
+                assertNotNull(column);
+                assertEquals(true, column.id());
+            }
+
         }
     }
     
