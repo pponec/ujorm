@@ -33,13 +33,16 @@ import org.ujoframework.implementation.db.UjoRelative;
 public class DbColumn extends AbstractMetaModel {
 
     /** DB column name */
+    public static final UjoProperty<DbColumn,Boolean> ID = newProperty("id", false);
+    /** DB column name */
     public static final UjoProperty<DbColumn,String> NAME = newProperty("name", "");
     /** Class property */
+    @Transient
     public static final UjoProperty<DbColumn,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
     /** Column NOT-NULL */
     public static final UjoProperty<DbColumn,Boolean> MANDATORY = newProperty("mandatory", false);
     /** Database Type */
-    public static final UjoProperty<DbColumn,DbType> TYPE = newProperty("dbType", DbType.UNDEFINED);
+    public static final UjoProperty<DbColumn,DbType> TYPE = newProperty("dbType", DbType.Automatic);
     /** Column value length */
     public static final UjoProperty<DbColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
     /** Column value precision */
@@ -54,15 +57,13 @@ public class DbColumn extends AbstractMetaModel {
 
 
     public DbColumn(DbTable table, UjoProperty propertyColumn) {
-
-        TABLE.setValue(this, table);
-        PROPERTY.setValue(this, propertyColumn);
-
+        
         Field field = UjoManager.getInstance().getPropertyField(table.getClass(), propertyColumn);
         Column column = field.getAnnotation(Column.class);
 
         if (column!=null) {
-            NAME      .setValue(this, propertyColumn.getName());
+            NAME      .setValue(this, column.name());
+            ID        .setValue(this, column.id());
             MANDATORY .setValue(this, column.mandatory());
             MAX_LENGTH.setValue(this, column.maxLenght());
             PRECISION .setValue(this, column.precision());
@@ -70,6 +71,10 @@ public class DbColumn extends AbstractMetaModel {
             INDEX_NAME.setValue(this, column.indexName());
         }
 
+        if (true) {
+            TABLE.setValue(this, table);
+            PROPERTY.setValue(this, propertyColumn);
+        }
         if (NAME.isDefault(this)) {
             NAME.setValue(this, propertyColumn.getName());
         }

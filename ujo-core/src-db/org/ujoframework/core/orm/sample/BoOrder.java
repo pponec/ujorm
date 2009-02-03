@@ -20,7 +20,6 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Column;
-import org.ujoframework.core.orm.annot.Id;
 import org.ujoframework.implementation.db.TableUjo;
 import org.ujoframework.implementation.db.UjoRelative;
 
@@ -31,7 +30,7 @@ import org.ujoframework.implementation.db.UjoRelative;
 public class BoOrder extends TableUjo {
 
     /** Unique key */
-    @Id()
+    @Column(id=true)
     public static final UjoProperty<BoOrder,Long> ID = newProperty("id", Long.class);
     /** User key */
     public static final UjoProperty<BoOrder,Integer> USER_ID = newProperty("usrId", Integer.class);

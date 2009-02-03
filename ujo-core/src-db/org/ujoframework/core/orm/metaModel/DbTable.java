@@ -36,12 +36,13 @@ public class DbTable extends AbstractMetaModel {
     /** DB table name */
     public static final UjoProperty<DbTable,String> NAME = newProperty("name", "");
     /** Unique Primary Key */
+    @Transient
     public static final UjoProperty<DbTable,DbPK> PK = newProperty("pk", DbPK.class);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
     public static final UjoProperty<DbTable,UjoRelative> DB_RELATIVE = newProperty("dbRelative", UjoRelative.class);
-    /** Columns */
-    public static final ListProperty<DbTable,DbColumn> COLUMNS = newPropertyList("columns", DbColumn.class);
+    /** Table Columns */
+    public static final ListProperty<DbTable,DbColumn> COLUMNS = newPropertyList("column", DbColumn.class);
     /** Database */
     @Transient
     public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
@@ -59,12 +60,23 @@ public class DbTable extends AbstractMetaModel {
             NAME.setValue(this, propertyTable.getName());
         }
 
-        for (UjoProperty property : UjoManager.getInstance().readProperties(propertyTable.getItemType())) {
-            if (property instanceof UjoRelative) {
-                DbColumn column = new DbColumn(this, (UjoRelative)property);
+        DbPK dpk = new DbPK();
+        PK.setValue(this, dpk);
+
+        UjoManager ujoManager = UjoManager.getInstance();
+        for (UjoProperty property : ujoManager.readProperties(propertyTable.getItemType())) {
+
+            if (!ujoManager.isTransientProperty(property)) {
+
+                DbColumn column = new DbColumn(this, property);
                 COLUMNS.addItem(this, column);
+
+                if (DbColumn.ID.of(column)) {
+                    DbPK.COLUMNS.addItem(dpk, column);
+                }
             }
         }
+
     }
 
 
