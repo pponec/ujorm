@@ -84,11 +84,7 @@ public class DbPK extends AbstractMetaModel {
             if (sb.length()>0) { sb.append(','); }
             sb.append(column.toString());
         }
-
         return sb.toString();
     }
-
-
-
 
 }

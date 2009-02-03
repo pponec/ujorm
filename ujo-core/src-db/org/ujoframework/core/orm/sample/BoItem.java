@@ -17,7 +17,7 @@
 package org.ujoframework.core.orm.sample;
 
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.orm.annot.Id;
+import org.ujoframework.core.orm.annot.Column;
 import org.ujoframework.implementation.db.TableUjo;
 
 /**
@@ -27,7 +27,7 @@ import org.ujoframework.implementation.db.TableUjo;
 public class BoItem extends TableUjo {
 
     /** Unique key */
-    @Id()
+    @Column(id=true)
     public static final UjoProperty<BoItem,Long> ID = newProperty("id", Long.class);
     /** User key */
     public static final UjoProperty<BoItem,Integer> USER_ID = newProperty("usrId", Integer.class);

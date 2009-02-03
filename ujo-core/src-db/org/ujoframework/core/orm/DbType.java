@@ -22,8 +22,8 @@ package org.ujoframework.core.orm;
  */
 public enum DbType {
 
-    /** Type by a Java property */
-    UNDEFINED,
+    /** Get the type by a Java property */
+    Automatic,
     INT,
     BOOLEAN,
     TINYINT,
