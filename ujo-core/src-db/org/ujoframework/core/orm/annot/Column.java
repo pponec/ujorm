@@ -25,10 +25,10 @@ import org.ujoframework.core.orm.DbType;
 @Target(value=ElementType.FIELD)
 public @interface Column {
 
-    /** The primary key */
-    boolean id() default false;
     /** Column name */
     String name() default "";
+    /** The primary key */
+    boolean pk() default false;
     /** Database column type */
     DbType type() default DbType.Automatic;
     /** Database column lenght */

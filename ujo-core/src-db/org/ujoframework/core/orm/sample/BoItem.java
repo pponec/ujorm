@@ -27,7 +27,7 @@ import org.ujoframework.implementation.db.TableUjo;
 public class BoItem extends TableUjo {
 
     /** Unique key */
-    @Column(id=true)
+    @Column(pk=true)
     public static final UjoProperty<BoItem,Long> ID = newProperty("id", Long.class);
     /** User key */
     public static final UjoProperty<BoItem,Integer> USER_ID = newProperty("usrId", Integer.class);

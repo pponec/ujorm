@@ -25,7 +25,6 @@ import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Column;
-import org.ujoframework.implementation.db.UjoRelative;
 
 /**
  * Database column metadata
@@ -37,7 +36,7 @@ public class DbColumn extends AbstractMetaModel {
     @XmlAttribute
     public static final UjoProperty<DbColumn,String> NAME = newProperty("name", "");
     /** DB column name */
-    public static final UjoProperty<DbColumn,Boolean> ID = newProperty("id", false);
+    public static final UjoProperty<DbColumn,Boolean> PK = newProperty("pk", false);
     /** Class property */
     @Transient
     public static final UjoProperty<DbColumn,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
@@ -60,12 +59,12 @@ public class DbColumn extends AbstractMetaModel {
 
     public DbColumn(DbTable table, UjoProperty propertyColumn) {
         
-        Field field = UjoManager.getInstance().getPropertyField(table.getClass(), propertyColumn);
+        Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_RELATIVE.of(table).getItemType(), propertyColumn);
         Column column = field.getAnnotation(Column.class);
 
         if (column!=null) {
             NAME      .setValue(this, column.name());
-            ID        .setValue(this, column.id());
+            PK        .setValue(this, column.pk());
             MANDATORY .setValue(this, column.mandatory());
             MAX_LENGTH.setValue(this, column.maxLenght());
             PRECISION .setValue(this, column.precision());
