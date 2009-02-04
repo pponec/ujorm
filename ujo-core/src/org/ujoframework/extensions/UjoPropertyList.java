@@ -58,5 +58,8 @@ public interface UjoPropertyList<UJO extends Ujo, LIST extends List<ITEM>,ITEM> 
      * @since 0.81
      */
     public boolean removeItem(UJO ujo, ITEM value);
+
+    /** Indicates whether a list of items is null or empty. */
+    public boolean isDefault(UJO ujo);
     
 }

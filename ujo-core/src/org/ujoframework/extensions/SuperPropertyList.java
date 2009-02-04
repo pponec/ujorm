@@ -118,5 +118,12 @@ abstract public class SuperPropertyList<UJO extends Ujo,LIST extends List<ITEM>,
     public <PROPERTY extends SuperProperty> PROPERTY setDefault(LIST value) {
         throw new UnsupportedOperationException("Property list can't have a non null value.");
     }
+
+    /** Indicates whether a list of items is null or empty. */
+    @Override
+    public boolean isDefault(UJO ujo) {
+        LIST list = getValue(ujo);
+        return list==null || list.isEmpty();
+    }
     
 }

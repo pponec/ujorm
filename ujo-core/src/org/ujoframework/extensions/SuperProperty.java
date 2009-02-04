@@ -112,8 +112,8 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
         
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
-    public boolean isDefault(Ujo ujo) {
-        Object value = ujo.readValue(this);
+    public boolean isDefault(UJO ujo) {
+        VALUE value = getValue(ujo);
         final boolean result
         =  value==defaultValue
         || (defaultValue!=null && defaultValue.equals(value))
