@@ -19,6 +19,7 @@ package org.ujoframework.core.orm;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
@@ -76,5 +77,15 @@ abstract public class AbstractMetaModel extends MapUjo {
             property.setValue(ujo, value);
         }
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+        if (action.getType()==UjoAction.ACTION_XML_EXPORT) {
+            return !property.isDefault(this);
+        }
+        return super.readAuthorization(action, property, value);
+    }
+
 
 }

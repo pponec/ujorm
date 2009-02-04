@@ -21,6 +21,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
+import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Column;
@@ -33,9 +34,10 @@ import org.ujoframework.implementation.db.UjoRelative;
 public class DbColumn extends AbstractMetaModel {
 
     /** DB column name */
-    public static final UjoProperty<DbColumn,Boolean> ID = newProperty("id", false);
-    /** DB column name */
+    @XmlAttribute
     public static final UjoProperty<DbColumn,String> NAME = newProperty("name", "");
+    /** DB column name */
+    public static final UjoProperty<DbColumn,Boolean> ID = newProperty("id", false);
     /** Class property */
     @Transient
     public static final UjoProperty<DbColumn,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
