@@ -20,6 +20,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
+import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
@@ -34,6 +35,7 @@ public class DbTable extends AbstractMetaModel {
 
 
     /** DB table name */
+    @XmlAttribute
     public static final UjoProperty<DbTable,String> NAME = newProperty("name", "");
     /** Unique Primary Key */
     @Transient

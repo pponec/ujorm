@@ -21,6 +21,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
+import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Database;
@@ -34,6 +35,9 @@ import org.ujoframework.implementation.db.UjoRelative;
  */
 public class Db extends AbstractMetaModel {
 
+    /** Database name */
+    @XmlAttribute
+    public static final UjoProperty<Db,String> NAME = newProperty("name", "");
     /** List of tables */
     public static final ListProperty<Db,DbTable> TABLES = newPropertyList("table", DbTable.class);
     /** Database connection */
@@ -41,8 +45,6 @@ public class Db extends AbstractMetaModel {
     /** DB class root instance */
     @Transient
     public static final UjoProperty<Db,TableUjo> ROOT = newProperty("root", TableUjo.class);
-    /** Database name */
-    public static final UjoProperty<Db,String> NAME = newProperty("name", "");
     /** LDPA */
     public static final UjoProperty<Db,String> LDAP = newProperty("ldap", "");
 
