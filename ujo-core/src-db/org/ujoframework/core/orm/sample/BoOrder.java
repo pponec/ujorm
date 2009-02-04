@@ -30,7 +30,7 @@ import org.ujoframework.implementation.db.UjoRelative;
 public class BoOrder extends TableUjo {
 
     /** Unique key */
-    @Column(id=true)
+    @Column(pk=true)
     public static final UjoProperty<BoOrder,Long> ID = newProperty("id", Long.class);
     /** User key */
     public static final UjoProperty<BoOrder,Integer> USER_ID = newProperty("usrId", Integer.class);

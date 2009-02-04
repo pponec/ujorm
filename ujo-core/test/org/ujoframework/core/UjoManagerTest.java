@@ -359,7 +359,7 @@ public class UjoManagerTest extends MyTestCase {
             if (p2==UjoCSV.P1) {
                 Column column = field.getAnnotation(Column.class);
                 assertNotNull(column);
-                assertEquals(true, column.id());
+                assertEquals(true, column.pk());
             }
 
         }

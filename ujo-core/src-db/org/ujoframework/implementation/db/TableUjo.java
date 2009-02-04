@@ -28,6 +28,7 @@ import org.ujoframework.implementation.map.MapUjo;
  * A simple implementation of an ORM solution. Why new ORM mapping?
  * <ul>
  *    <li>type safe query language!</li>
+ *    <li>easy to configure the ORM model by java source code (optionaly by XML)</li>
  *    <li>no more a LazyInitialization exception :-)</li>
  *    <li>no confusing proxy business objects</li>
  *    <li>no more list properties, a new object called <a href="../../core/UjoIterator.html">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
