@@ -71,7 +71,7 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
 
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
-    public boolean isDefault(Ujo ujo);
+    public boolean isDefault(UJO ujo);
     
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.

@@ -125,6 +125,11 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends Ujo {
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
         ( UjoPropertyList<UJO,LIST,ITEM> property
         );
+
+
+    /** Indicates whether a parameter value "equal to" property default value. */
+    public <UJO extends UJO_IMPL, VALUE> boolean isDefault
+        ( UjoProperty<UJO, VALUE> property);
     
     /**
      * Returns a String value by a NULL context.

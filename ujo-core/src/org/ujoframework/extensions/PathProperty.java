@@ -84,8 +84,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
-    public boolean isDefault(Ujo ujo) {
-        Object value = ujo.readValue(this);
+    public boolean isDefault(UJO ujo) {
+        VALUE value = getValue(ujo);
         VALUE defaultValue = getDefault();
         final boolean result
         =  value==defaultValue
