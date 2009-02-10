@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.metaModel;
+package org.ujoframework.orm.metaModel;
 
 import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
@@ -22,9 +22,9 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
-import org.ujoframework.core.orm.AbstractMetaModel;
-import org.ujoframework.core.orm.DbType;
-import org.ujoframework.core.orm.annot.Column;
+import org.ujoframework.orm.AbstractMetaModel;
+import org.ujoframework.orm.DbType;
+import org.ujoframework.orm.annot.Column;
 
 /**
  * Database column metadata

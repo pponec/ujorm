@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.metaModel;
+package org.ujoframework.orm.metaModel;
 
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.orm.AbstractMetaModel;
+import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
 
 /**

@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.orm.annot.Column;
+import org.ujoframework.orm.annot.Column;
 import org.ujoframework.core.ujos.UjoCSV;
 
 /**

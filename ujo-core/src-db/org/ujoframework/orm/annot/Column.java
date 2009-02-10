@@ -14,16 +14,31 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.annot;
+package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
+import org.ujoframework.orm.DbType;
 
 /** 
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)
-public @interface GeneratedValue {
+public @interface Column {
 
-    GenerationType strategy() default GenerationType.MEMO_SEQUENCE;
+    /** Column name */
+    String name() default "";
+    /** The primary key */
+    boolean pk() default false;
+    /** Database column type */
+    DbType type() default DbType.Automatic;
+    /** Database column lenght */
+    int maxLenght() default -1;
+    /** Database column presision */
+    int precision() default -1;
+    /** Not null value */
+    boolean mandatory() default false;
+    /** The column is included in the index of the name. */
+    String indexName() default "";
+
     
 }

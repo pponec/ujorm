@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm;
+package org.ujoframework.orm;
 
 import org.ujoframework.implementation.db.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.core.orm.sample.BoDatabase;
+import org.ujoframework.orm.sample.BoDatabase;
 import org.ujoframework.tools.criteria.Expression;
 
 /**

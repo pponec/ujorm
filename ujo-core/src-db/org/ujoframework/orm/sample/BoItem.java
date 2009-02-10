@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.sample;
+package org.ujoframework.orm.sample;
 
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.orm.annot.Column;
+import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.db.TableUjo;
 
 /**

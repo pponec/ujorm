@@ -14,15 +14,20 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.annot;
+package org.ujoframework.orm.annot;
+import java.lang.annotation.*;
 
-/**
- *
- * @author pavel
+/** 
+ * Use the annotation to mark a UjoProperty static field like XML Attribute.
  */
-public enum GenerationType {
+@Retention(value=RetentionPolicy.RUNTIME)
+@Target(value=ElementType.TYPE)
+public @interface Database {
 
-    MEMO_SEQUENCE,
-    DB_SEQUENCE;
+    String name() default "";
+    String ldap() default "";
+    String jdbc() default "";
 
+
+    
 }

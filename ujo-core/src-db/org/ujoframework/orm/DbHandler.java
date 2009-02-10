@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm;
+package org.ujoframework.orm;
 
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.core.orm.metaModel.Db;
-import org.ujoframework.core.orm.metaModel.DbRoot;
+import org.ujoframework.orm.metaModel.Db;
+import org.ujoframework.orm.metaModel.DbRoot;
 import org.ujoframework.implementation.db.TableUjo;
 
 /**

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.metaModel;
+package org.ujoframework.orm.metaModel;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.core.orm.AbstractMetaModel;
+import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
 
 /**
