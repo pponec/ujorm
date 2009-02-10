@@ -16,7 +16,7 @@
 
 package org.ujoframework.implementation.db;
 
-import org.ujoframework.core.orm.DbHandler;
+import org.ujoframework.orm.DbHandler;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.beans.EventRegistrar;

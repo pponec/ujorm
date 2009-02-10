@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.metaModel;
+package org.ujoframework.orm.metaModel;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,9 +22,9 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
-import org.ujoframework.core.orm.AbstractMetaModel;
-import org.ujoframework.core.orm.DbType;
-import org.ujoframework.core.orm.annot.Database;
+import org.ujoframework.orm.AbstractMetaModel;
+import org.ujoframework.orm.DbType;
+import org.ujoframework.orm.annot.Database;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.db.TableUjo;
 import org.ujoframework.implementation.db.RelationToMany;

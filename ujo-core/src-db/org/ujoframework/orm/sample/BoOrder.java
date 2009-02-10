@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.sample;
+package org.ujoframework.orm.sample;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.orm.DbType;
-import org.ujoframework.core.orm.annot.Column;
+import org.ujoframework.orm.DbType;
+import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.db.TableUjo;
 import org.ujoframework.implementation.db.RelationToMany;
 

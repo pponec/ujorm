@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.sample;
+package org.ujoframework.orm.sample;
 
 import java.util.Date;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.core.orm.Session;
-import org.ujoframework.core.orm.DbHandler;
-import org.ujoframework.core.orm.Query;
+import org.ujoframework.orm.Session;
+import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.Query;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.Operator;
 

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm.annot;
+package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
 
 /** 
@@ -22,10 +22,8 @@ import java.lang.annotation.*;
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)
-public @interface Table {
+public @interface GeneratedValue {
 
-    String name();
-
-
+    GenerationType strategy() default GenerationType.MEMO_SEQUENCE;
     
 }

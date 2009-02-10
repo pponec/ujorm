@@ -9,7 +9,7 @@
 
 package org.ujoframework.core.ujos;
 
-import org.ujoframework.core.orm.annot.Column;
+import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.map.MapUjo;
 

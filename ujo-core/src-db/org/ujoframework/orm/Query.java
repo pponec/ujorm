@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.core.orm;
+package org.ujoframework.orm;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
