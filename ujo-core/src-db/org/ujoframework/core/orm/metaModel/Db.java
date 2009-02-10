@@ -27,7 +27,7 @@ import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Database;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.db.TableUjo;
-import org.ujoframework.implementation.db.UjoRelative;
+import org.ujoframework.implementation.db.RelationToMany;
 
 /**
  * A logical database description.
@@ -64,8 +64,8 @@ public class Db extends AbstractMetaModel {
 
         for (UjoProperty tableProperty : database.readProperties()) {
 
-            if (tableProperty instanceof UjoRelative) {
-                UjoRelative tProperty = (UjoRelative) tableProperty;
+            if (tableProperty instanceof RelationToMany) {
+                RelationToMany tProperty = (RelationToMany) tableProperty;
 
                 DbTable table = new DbTable(this, tProperty);
                 TABLES.addItem(this, table);
@@ -75,7 +75,7 @@ public class Db extends AbstractMetaModel {
     }
 
     /** Change DbType by a Java property */
-   @SuppressWarnings("unchecked")
+   //@SuppressWarnings("unchecked")
     public void changeDbType(DbColumn column) {
        UjoProperty property = DbColumn.PROPERTY.of(column);
 

@@ -42,6 +42,7 @@ public interface UjoAction {
      * then the property is <b>attribute</b>, otherwise TRUE value means <b>element</b>.
      * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
      */
+    @Deprecated
     public static final int ACTION_XML_ELEMENT = 4;
     /** An authorization action (of a UjoProperty) for a Resource Bundle export.
      * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)

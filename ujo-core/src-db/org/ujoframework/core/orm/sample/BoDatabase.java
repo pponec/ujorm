@@ -19,7 +19,7 @@ package org.ujoframework.core.orm.sample;
 import org.ujoframework.core.orm.annot.Database;
 import org.ujoframework.core.orm.annot.Table;
 import org.ujoframework.implementation.db.TableUjo;
-import org.ujoframework.implementation.db.UjoRelative;
+import org.ujoframework.implementation.db.RelationToMany;
 
 /**
  * An table definition of the one database (a sample).
@@ -29,10 +29,10 @@ public class BoDatabase extends TableUjo {
 
     /** Customer order. The used annotation overwrites a database name from the property name. */
     @Table(name="ORD_ORDER_NEW")
-    public static final UjoRelative<BoDatabase,BoOrder> ORDERS = newRelation("ORD_ORDER", BoOrder.class);
+    public static final RelationToMany<BoDatabase,BoOrder> ORDERS = newRelation("ORD_ORDER", BoOrder.class);
 
     /** Items of the Customer order */
-    public static final UjoRelative<BoDatabase,BoItem> ORDER_ITEMS = newRelation("ORD_ITEMS", BoItem.class);
+    public static final RelationToMany<BoDatabase,BoItem> ORDER_ITEMS = newRelation("ORD_ITEMS", BoItem.class);
 
 
 

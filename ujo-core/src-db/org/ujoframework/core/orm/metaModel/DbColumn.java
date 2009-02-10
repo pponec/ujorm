@@ -37,24 +37,24 @@ public class DbColumn extends AbstractMetaModel {
     public static final UjoProperty<DbColumn,String> NAME = newProperty("name", "");
     /** DB column name */
     public static final UjoProperty<DbColumn,Boolean> PK = newProperty("pk", false);
-    /** Class property */
-    @Transient
-    public static final UjoProperty<DbColumn,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
-    /** Column NOT-NULL */
-    public static final UjoProperty<DbColumn,Boolean> MANDATORY = newProperty("mandatory", false);
     /** Database Type */
     public static final UjoProperty<DbColumn,DbType> TYPE = newProperty("dbType", DbType.Automatic);
+    /** Column NOT-NULL */
+    public static final UjoProperty<DbColumn,Boolean> MANDATORY = newProperty("mandatory", false);
     /** Column value length */
     public static final UjoProperty<DbColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
     /** Column value precision */
     public static final UjoProperty<DbColumn,Integer> PRECISION = newProperty("precision", -1);
     /** DB Default value */
     public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", "");
+    /** The column is included in the index of the name */
+    public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", "");
+    /** Ujo column property */
+    @Transient
+    public static final UjoProperty<DbColumn,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
     /** DB table */
     @Transient
     public static final UjoProperty<DbColumn,DbTable> TABLE = newProperty("table", DbTable.class);
-    /** The column is included in the index of the name */
-    public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", String.class);
 
 
     public DbColumn(DbTable table, UjoProperty propertyColumn) {
