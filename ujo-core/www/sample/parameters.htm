@@ -235,8 +235,8 @@ Parameter manager</h1>
 <span class="keyword-directive">import</span> java.io.File;
 <span class="keyword-directive">import</span> org.ujoframework.core.UjoManagerRBundle;
 <span class="keyword-directive">import</span> org.ujoframework.swing.SingleUjoTabModel;
-<span class="keyword-directive">import</span> org.ujoframework.swing.MapPropertyRow;
-<span class="keyword-directive">import</span> <span class="keyword-directive">static</span> org.ujoframework.swing.MapPropertyRow.*;
+<span class="keyword-directive">import</span> org.ujoframework.swing.UjoPropertyRow;
+<span class="keyword-directive">import</span> <span class="keyword-directive">static</span> org.ujoframework.swing.UjoPropertyRow.*;
 
 
 <span class="comment">/**</span> <span class="comment">Parameter</span> <span class="comment">manager</span><span class="comment">.</span> <span class="comment">*/</span>
@@ -291,8 +291,8 @@ Parameter manager</h1>
     <span class="keyword-directive">int</span> index = table.getSelectedRow();
     
     <span class="keyword-directive">if</span> (<span class="character">&quot;</span><span class="character">Default</span><span class="character">&quot;</span>.equals(label) &amp;&amp; index&gt;=0) {
-        MapPropertyRow row = model.getRow(index);
-        model.<span class="highlight">setValueAt</span>(row.getProperty().getDefault(), index, MapPropertyRow.P_VALUE);
+        UjoPropertyRow row = model.getRow(index);
+        model.<span class="highlight">setValueAt</span>(row.getProperty().getDefault(), index, UjoPropertyRow.P_VALUE);
     }
   }
   

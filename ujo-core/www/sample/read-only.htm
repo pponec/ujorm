@@ -103,14 +103,13 @@ How to create a read-only UJO ?</h1>
         by an Ujo API. See the next sample:
 <pre class="pre">
 <span class="keyword-directive">package</span> org;
-<span class="keyword-directive">import</span> org.ujoframework.UjoProperty;
-<span class="keyword-directive">import</span> org.ujoframework.implementation.map.*;
+<span class="keyword-directive">import</span> org.ujoframework.*;
 
-<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> PersonRO <span class="keyword-directive">extends</span> MapUjoExt&lt;PersonRO&gt; {
+<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> PersonRO <span class="keyword-directive">extends</span> org.ujoframework.implementation.map.MapUjoExt&lt;PersonRO&gt; {
 
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> MapProperty&lt;PersonRO,Integer&gt; ID   = newProperty(<span class="character">&quot;</span><span class="character">id</span><span class="character">&quot;</span>  , Integer.<span class="keyword-directive">class</span>);
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> MapProperty&lt;PersonRO,String&gt;  NAME = newProperty(<span class="character">&quot;</span><span class="character">name</span><span class="character">&quot;</span>, String.<span class="keyword-directive">class</span>);
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> MapProperty&lt;PersonRO,Boolean&gt; LOCK = newProperty(<span class="character">&quot;</span><span class="character">LOCK</span><span class="character">&quot;</span>, <span class="highlight"><span class="keyword-directive">false</span></span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;PersonRO,Integer&gt; ID   = newProperty(<span class="character">&quot;</span><span class="character">id</span><span class="character">&quot;</span>  , Integer.<span class="keyword-directive">class</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;PersonRO,String&gt;  NAME = newProperty(<span class="character">&quot;</span><span class="character">name</span><span class="character">&quot;</span>, String.<span class="keyword-directive">class</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;PersonRO,Boolean&gt; LOCK = newProperty(<span class="character">&quot;</span><span class="character">LOCK</span><span class="character">&quot;</span>, <span class="highlight"><span class="keyword-directive">false</span></span>);
 
     <span class="keyword-directive">public</span> PersonRO(Integer id, String name) {
         set(ID, id);
