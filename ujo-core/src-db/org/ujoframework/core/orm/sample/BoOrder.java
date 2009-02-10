@@ -21,7 +21,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.orm.DbType;
 import org.ujoframework.core.orm.annot.Column;
 import org.ujoframework.implementation.db.TableUjo;
-import org.ujoframework.implementation.db.UjoRelative;
+import org.ujoframework.implementation.db.RelationToMany;
 
 /**
  * Simple order for goods with a collection of Items (a sample).
@@ -40,6 +40,6 @@ public class BoOrder extends TableUjo {
     /** Date of creation */
     public static final UjoProperty<BoOrder,Date> DATE = newProperty("date", Date.class);
     /** References to Itemsr */
-    public static final UjoRelative<BoOrder,BoItem> ITEMS = newRelation("items", BoItem.class);
+    public static final RelationToMany<BoOrder,BoItem> ITEMS = newRelation("items", BoItem.class);
 
 }

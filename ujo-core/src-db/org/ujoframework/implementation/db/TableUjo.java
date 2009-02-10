@@ -111,7 +111,7 @@ import org.ujoframework.implementation.map.MapUjo;
  * <strong>Note</strong>: the API desing a very early prototype, methods are not implemented yet.
  *
  * @author Ponec
- * @see org.ujoframework.implementation.db.UjoRelative
+ * @see org.ujoframework.implementation.db.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
 public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<UJO> {
@@ -138,7 +138,7 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
     @Override
     public Object readValue(UjoProperty property) {
         Object result = super.readValue(property);
-        if (property instanceof UjoRelative
+        if (property instanceof RelationToMany
         &&  handler.isPersistent(property)
         ){
             // Don't save the result!
@@ -171,8 +171,8 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
     /** A PropertyIterator Factory
      * @hidden
      */
-    protected static <UJO extends TableUjo, ITEM extends TableUjo> UjoRelative<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
-        return new UjoRelative<UJO,ITEM> (name, type);
+    protected static <UJO extends TableUjo, ITEM extends TableUjo> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
+        return new RelationToMany<UJO,ITEM> (name, type);
     }
 
 }

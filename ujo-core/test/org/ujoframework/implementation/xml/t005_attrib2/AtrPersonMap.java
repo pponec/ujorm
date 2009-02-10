@@ -10,6 +10,7 @@
 package org.ujoframework.implementation.xml.t005_attrib2;
 
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.map.MapPropertyList;
@@ -25,6 +26,7 @@ public class AtrPersonMap extends MapUjo  {
 
 
     public static final MapProperty<AtrPersonMap, String> NAME_ELEM = newProperty("name", String.class);
+    @XmlAttribute
     public static final MapProperty<AtrPersonMap, String> NAME_ATTR = newProperty("name", String.class);
     public static final MapPropertyList<AtrPersonMap, AtrPersonMap> CHILDS = newPropertyList("child", AtrPersonMap.class);
     

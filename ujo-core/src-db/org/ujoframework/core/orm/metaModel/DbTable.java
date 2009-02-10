@@ -24,7 +24,7 @@ import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.core.orm.AbstractMetaModel;
 import org.ujoframework.core.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.implementation.db.UjoRelative;
+import org.ujoframework.implementation.db.RelationToMany;
 
 
 /**
@@ -42,18 +42,20 @@ public class DbTable extends AbstractMetaModel {
     public static final UjoProperty<DbTable,DbPK> PK = newProperty("pk", DbPK.class);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<DbTable,UjoRelative> DB_RELATIVE = newProperty("dbRelative", UjoRelative.class);
+    public static final UjoProperty<DbTable,RelationToMany> DB_RELATIVE = newProperty("dbRelative", RelationToMany.class);
     /** Table Columns */
     public static final ListProperty<DbTable,DbColumn> COLUMNS = newPropertyList("column", DbColumn.class);
+    /** Table relations to many */
+    public static final ListProperty<DbTable,DbRelation2m> RELATIONS = newPropertyList("relation2m", DbRelation2m.class);
     /** Database */
     @Transient
     public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
 
-    public DbTable(Db database, UjoRelative propertyTable) {
+    public DbTable(Db database, RelationToMany propertyTable) {
         DATABASE.setValue(this, database);
         DB_RELATIVE.setValue(this, propertyTable);
 
-        final Field field = UjoManager.getInstance().getPropertyField(database.getClass(), propertyTable);
+        final Field field = UjoManager.getInstance().getPropertyField(database, propertyTable);
         final Table table = field.getAnnotation(Table.class);
         if (table!=null) {
             NAME.setValue(this, table.name());
@@ -70,11 +72,17 @@ public class DbTable extends AbstractMetaModel {
 
             if (!ujoManager.isTransientProperty(property)) {
 
-                DbColumn column = new DbColumn(this, property);
-                COLUMNS.addItem(this, column);
+                if (property instanceof RelationToMany) {
+                    DbRelation2m relation = new DbRelation2m(this, property);
+                    RELATIONS.addItem(this, relation);
+                } else {
 
-                if (DbColumn.PK.of(column)) {
-                    DbPK.COLUMNS.addItem(dpk, column);
+                    DbColumn column = new DbColumn(this, property);
+                    COLUMNS.addItem(this, column);
+
+                    if (DbColumn.PK.of(column)) {
+                        DbPK.COLUMNS.addItem(dpk, column);
+                    }
                 }
             }
         }

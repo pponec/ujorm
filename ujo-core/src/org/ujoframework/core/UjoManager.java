@@ -369,6 +369,7 @@ public class UjoManager {
             if (prop.getName().hashCode()==nameHash  // speed up
             &&  prop.getName().equals(name)
             &&  ujo.readAuthorization(action, prop, null)==result
+            && (action.getType()==UjoAction.ACTION_XML_ELEMENT ? !isXmlAttribute(prop) : true)==result
             ){
                 return prop;
             }
@@ -655,6 +656,10 @@ public class UjoManager {
         copy(source, target, (UjoProperty[]) null);
     }
 
+    /** Get a UjoProperty field. */
+    public Field getPropertyField(Ujo ujo, UjoProperty property) {
+        return getPropertyField(ujo.getClass(), property);
+    }
     
     /** Get a UjoProperty field. */
     public Field getPropertyField(Class/*<? extends Ujo>*/ type, UjoProperty property) {

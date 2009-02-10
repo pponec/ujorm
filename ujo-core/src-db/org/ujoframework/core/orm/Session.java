@@ -45,7 +45,7 @@ public class Session {
     }
 
     public void save(TableUjo ujo) {
-        throw new UnsupportedOperationException("SAVE is not yet implemented");
+        throw new UnsupportedOperationException("The SAVE method is not yet implemented");
     }
 
     public <UJO extends TableUjo> UJO Load(Class ujo, Object id) {

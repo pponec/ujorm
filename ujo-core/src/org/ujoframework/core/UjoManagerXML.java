@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
 public class UjoManagerXML extends UjoService<UjoTextable> {
     
     /** XML HEADER */
-    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     
     /** A name of Java Class of XML attribute. */
     public static final String ATTR_CLASS      = "javaClass";
