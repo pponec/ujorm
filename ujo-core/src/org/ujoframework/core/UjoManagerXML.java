@@ -135,6 +135,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     /** Write properties to XML include a XML header. */
+    @SuppressWarnings("deprecation")
     public void saveXML(Writer writer, String tag, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
         this.actionElement = new UjoActionImpl(UjoAction.ACTION_XML_ELEMENT, context);

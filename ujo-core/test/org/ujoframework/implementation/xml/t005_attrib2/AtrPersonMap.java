@@ -31,6 +31,7 @@ public class AtrPersonMap extends MapUjo  {
     public static final MapPropertyList<AtrPersonMap, AtrPersonMap> CHILDS = newPropertyList("child", AtrPersonMap.class);
     
     
+    @SuppressWarnings("deprecation")
     public boolean readAuthorization(final UjoAction action, final UjoProperty property, final Object value) {
         
         switch(action.getType()) {
