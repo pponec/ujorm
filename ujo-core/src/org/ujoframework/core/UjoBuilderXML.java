@@ -64,6 +64,7 @@ class UjoBuilderXML extends DefaultHandler {
     protected ArrayList<String[]> $attributes = new ArrayList<String[]>();
     
     /** Constructor. */
+    @SuppressWarnings("deprecation")
     /*protected*/ UjoBuilderXML(Class resultType, Object context) {
         this.rootType = resultType!=null ? resultType : Object.class ;
         this.actionImport  = new UjoActionImpl(UjoAction.ACTION_XML_IMPORT , context);

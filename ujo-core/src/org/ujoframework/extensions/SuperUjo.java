@@ -57,12 +57,7 @@ public abstract class SuperUjo implements Ujo, UjoTextable, UjoCloneable {
      * @see org.ujoframework.extensions.UjoAction Action Constants
      */
     public boolean readAuthorization(final UjoAction action, final UjoProperty property, final Object value) {
-        final boolean result 
-        = action.getType()==ACTION_XML_ELEMENT
-        ? !readUjoManager().isXmlAttribute(property)
-        : true
-        ;
-        return result;
+        return true;
     }
     
     /**

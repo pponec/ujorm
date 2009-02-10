@@ -354,6 +354,7 @@ public class UjoManager {
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      */
+    @SuppressWarnings("deprecation")
     public UjoProperty findProperty
     ( final Ujo ujo
     , final String name
