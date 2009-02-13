@@ -11,7 +11,8 @@
                 <root id="src.src-orm.dir" name="Source ORM"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir"/>
+                <root id="test.src.dir" name="Test Core"/>
+                <root id="test.test-orm.dir" name="Test ORM"/>
             </test-roots>
         </data>
     </configuration>

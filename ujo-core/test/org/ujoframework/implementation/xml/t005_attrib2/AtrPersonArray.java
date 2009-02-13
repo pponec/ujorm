@@ -9,13 +9,10 @@
 
 package org.ujoframework.implementation.xml.t005_attrib2;
 
-import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.XmlAttribute;
-import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.array.ArrayProperty;
 import org.ujoframework.implementation.array.ArrayPropertyList;
 import org.ujoframework.implementation.array.ArrayUjo;
-import static org.ujoframework.extensions.UjoAction.*;
 
 
 /**
