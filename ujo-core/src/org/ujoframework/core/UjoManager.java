@@ -369,8 +369,10 @@ public class UjoManager {
         for (UjoProperty prop : ujo.readProperties()) {
             if (prop.getName().hashCode()==nameHash  // speed up
             &&  prop.getName().equals(name)
-            &&  ujo.readAuthorization(action, prop, null)==result
-            && (action.getType()==UjoAction.ACTION_XML_ELEMENT ? !isXmlAttribute(prop) : true)==result
+            && (action.getType()==UjoAction.ACTION_XML_ELEMENT
+                ? !isXmlAttribute(prop)
+                : ujo.readAuthorization(action, prop, null)
+               )==result
             ){
                 return prop;
             }
