@@ -13,32 +13,33 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.ujoframework.orm.sample;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.db.TableUjo;
+import org.ujoframework.implementation.db.RelationToMany;
 
 /**
- * Each Item have got a reference to a common Order (a sample).
- * @Table=bo_item
+ * Simple order for goods with a collection of Items (a sample).
+ * @Table=bo_order
  */
-public class BoItem extends TableUjo {
+public class Order extends TableUjo {
 
     /** Unique key */
-    @Column(pk = true)
-    public static final UjoProperty<BoItem,Long> ID = newProperty("id", Long.class);
+    @Column(pk=true)
+    public static final UjoProperty<Order,Long> ID = newProperty("id", Long.class);
     /** User key */
-    public static final UjoProperty<BoItem,Integer> USER_ID = newProperty("usrId", Integer.class);
-    /** Description of Item */
-    public static final UjoProperty<BoItem,String> DESCR = newProperty("description", String.class);
-    /** A reference to common Order */
-    public static final UjoProperty<BoItem,BoOrder> ORDER = newProperty("order", BoOrder.class);
+    public static final UjoProperty<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
+    /** Description of the order */
+    @Column(type=DbType.VARCHAR, name="DESCR")
+    public static final UjoProperty<Order,String> DESCR = newProperty("description", String.class);
+    /** Date of creation */
+    public static final UjoProperty<Order,Date> DATE = newProperty("date", Date.class);
+    /** References to Itemsr */
+    public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
 
-    // -------------------------------
-
-    /** A property to an Date of Order */
-    public static final UjoProperty<BoItem,Date> ORDER_DATE = PathProperty.create(ORDER, BoOrder.DATE);
 }

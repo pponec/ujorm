@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.ujoframework.orm.sample;
 
 import java.util.Date;
@@ -25,20 +26,22 @@ import org.ujoframework.implementation.db.TableUjo;
  * Each Item have got a reference to a common Order (a sample).
  * @Table=bo_item
  */
-public class BoItem extends TableUjo {
+public class Item extends TableUjo {
 
     /** Unique key */
-    @Column(pk = true)
-    public static final UjoProperty<BoItem,Long> ID = newProperty("id", Long.class);
+    @Column(pk=true)
+    public static final UjoProperty<Item,Long> ID = newProperty("id", Long.class);
     /** User key */
-    public static final UjoProperty<BoItem,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final UjoProperty<Item,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of Item */
-    public static final UjoProperty<BoItem,String> DESCR = newProperty("description", String.class);
+    public static final UjoProperty<Item,String> DESCR = newProperty("description", String.class);
     /** A reference to common Order */
-    public static final UjoProperty<BoItem,BoOrder> ORDER = newProperty("order", BoOrder.class);
+    public static final UjoProperty<Item,Order> ORDER = newProperty("order", Order.class);
 
-    // -------------------------------
+    // ----------- PATH ------------
 
     /** A property to an Date of Order */
-    public static final UjoProperty<BoItem,Date> ORDER_DATE = PathProperty.create(ORDER, BoOrder.DATE);
+    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.create(ORDER, Order.DATE);
+
+
 }
