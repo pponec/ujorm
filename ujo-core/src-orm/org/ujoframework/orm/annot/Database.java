@@ -26,7 +26,8 @@ public @interface Database {
 
     String name() default "";
     String ldap() default "";
-    String jdbc() default "";
+    String jdbcUrl() default "";
+    String jdbcClass() default "";
 
 
     
