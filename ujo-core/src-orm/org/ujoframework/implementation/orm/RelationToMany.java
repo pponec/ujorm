@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.implementation.db;
+package org.ujoframework.implementation.orm;
 
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.implementation.map.MapProperty;

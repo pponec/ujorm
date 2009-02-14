@@ -24,7 +24,7 @@ import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.implementation.db.RelationToMany;
+import org.ujoframework.implementation.orm.RelationToMany;
 
 
 /**

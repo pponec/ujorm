@@ -20,8 +20,8 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.db.TableUjo;
-import org.ujoframework.implementation.db.RelationToMany;
+import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.RelationToMany;
 
 /**
  * Simple order for goods with a collection of Items (a sample).

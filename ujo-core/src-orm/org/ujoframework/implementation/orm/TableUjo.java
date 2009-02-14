@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.implementation.db;
+package org.ujoframework.implementation.orm;
 
 import org.ujoframework.orm.DbHandler;
 import org.ujoframework.Ujo;
