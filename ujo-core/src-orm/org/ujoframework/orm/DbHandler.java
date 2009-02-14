@@ -23,7 +23,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.orm.metaModel.Db;
 import org.ujoframework.orm.metaModel.DbRoot;
-import org.ujoframework.implementation.db.TableUjo;
+import org.ujoframework.implementation.orm.TableUjo;
 
 /**
  * The basic class for an ORM support.

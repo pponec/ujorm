@@ -19,7 +19,7 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.db.TableUjo;
+import org.ujoframework.implementation.orm.TableUjo;
 
 /**
  * Each Item have got a reference to a common Order (a sample).

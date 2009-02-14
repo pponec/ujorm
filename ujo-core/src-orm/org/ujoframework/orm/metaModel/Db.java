@@ -26,8 +26,8 @@ import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Database;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.implementation.db.TableUjo;
-import org.ujoframework.implementation.db.RelationToMany;
+import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.RelationToMany;
 
 /**
  * A logical database description.

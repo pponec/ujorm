@@ -18,8 +18,8 @@ package org.ujoframework.orm.sample;
 
 import org.ujoframework.orm.annot.Database;
 import org.ujoframework.orm.annot.Table;
-import org.ujoframework.implementation.db.TableUjo;
-import org.ujoframework.implementation.db.RelationToMany;
+import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.RelationToMany;
 
 /**
  * An table definition of the one database (a sample).

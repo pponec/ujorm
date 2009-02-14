@@ -16,7 +16,7 @@
 
 package org.ujoframework.orm;
 
-import org.ujoframework.implementation.db.*;
+import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.sample.BoDatabase;
