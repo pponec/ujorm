@@ -29,15 +29,14 @@ import org.ujoframework.implementation.map.MapUjo;
  * <ul>
  *    <li>type safe query language!</li>
  *    <li>easy to configure the ORM model by java source code (optionaly by XML)</li>
- *    <li>no more a LazyInitialization exception :-)</li>
+ *    <li>never more a LazyInitialization exception though the lazy initialization is supported</li>
  *    <li>no confusing proxy business objects</li>
- *    <li>no more list properties, a new object called <a href="../../core/UjoIterator.html">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
+ *    <li>no list properties - a new object called <a href="../../core/UjoIterator.html">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
  *    <li>very small framework without more library dependences</li>
  * </ul>
  * Some other features:
  * <ul>
  *    <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
- *    <li>lazy initialization of properties and lazy initialization items of a collection is supported</li>
  *    <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
  *    <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annoatations can be owerwrited by a XML files </li>
  *    <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a better security</li>
