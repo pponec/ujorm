@@ -28,6 +28,7 @@ import org.ujoframework.orm.annot.Database;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
+import java.sql.*;
 
 /**
  * A logical database description.
@@ -40,8 +41,10 @@ public class Db extends AbstractMetaModel {
     public static final UjoProperty<Db,String> NAME = newProperty("name", "");
     /** List of tables */
     public static final ListProperty<Db,DbTable> TABLES = newPropertyList("table", DbTable.class);
-    /** Database connection */
+    /** JDBC URL connection */
     public static final UjoProperty<Db,String> CONNECTION = newProperty("connection", "");
+    /** JDBC Class */
+    public static final UjoProperty<Db,String> JDBC_CLASS = newProperty("jdbcClass", "");
     /** DB class root instance */
     @Transient
     public static final UjoProperty<Db,TableUjo> ROOT = newProperty("root", TableUjo.class);
@@ -54,7 +57,8 @@ public class Db extends AbstractMetaModel {
         Database annotDB = database.getClass().getAnnotation(Database.class);
         if (annotDB!=null) {
             NAME.setValue(this, annotDB.name());
-            CONNECTION.setValue(this, annotDB.jdbc());
+            CONNECTION.setValue(this, annotDB.jdbcUrl());
+            JDBC_CLASS.setValue(this, annotDB.jdbcClass());
             LDAP.setValue(this, annotDB.ldap());
         }
         if (NAME.isDefault(this)) {
@@ -75,7 +79,6 @@ public class Db extends AbstractMetaModel {
     }
 
     /** Change DbType by a Java property */
-   //@SuppressWarnings("unchecked")
     public void changeDbType(DbColumn column) {
        UjoProperty property = DbColumn.PROPERTY.of(column);
 
@@ -118,6 +121,13 @@ public class Db extends AbstractMetaModel {
     @Override
     public String toString() {
         return NAME.of(this);
+    }
+
+    /** Create connection */
+    public Connection createConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("org.h2.Driver");
+        final Connection result = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+        return result;
     }
 
 }

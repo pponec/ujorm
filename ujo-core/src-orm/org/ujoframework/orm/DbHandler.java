@@ -62,9 +62,9 @@ public class DbHandler {
         return !resultFalse;
     }
 
-    /** Load a database model. */
-    public <UJO extends TableUjo> void loadDatabase(Class<? extends TableUjo> databaseModel) {
-        TableUjo model = getInstance(databaseModel);
+    /** Load a database model from paramater */
+    public <UJO extends TableUjo> void loadDatabase(Class<UJO> databaseModel) {
+        TableUjo model = getInstance(databaseModel, false);
         databases.add(new Db(model));
 
         LOGGER.log(Level.INFO, databases.toString());
@@ -72,7 +72,11 @@ public class DbHandler {
     }
 
     /** Create instance */
-    private TableUjo getInstance(Class<? extends TableUjo> databaseModel) {
+    private <UJO extends TableUjo> TableUjo getInstance(Class<UJO> databaseModel, boolean create) {
+
+        if (create) {
+            loadDatabase(databaseModel);
+        }
         try {
             return databaseModel.newInstance();
         } catch (Exception ex) {
@@ -81,8 +85,8 @@ public class DbHandler {
     }
 
     /** Load a metada and create database */
-    public <UJO extends TableUjo> void createDatabase(Class<? extends TableUjo> databaseModel) {
-        loadDatabase(databaseModel);
+    public <UJO extends TableUjo> void createDatabase(Class<UJO> databaseModel) {
+        getInstance(databaseModel, true);
     }
 
 
