@@ -51,7 +51,7 @@ abstract public class MyTestCase extends TestCase {
                 assertEquals("Property \"" + property.getName() + "\"", o1, o2);
             }
         }
-        
+       
         
         for (int i=properties.length-1; i>=0; i--) {
             UjoProperty property = properties[i];
