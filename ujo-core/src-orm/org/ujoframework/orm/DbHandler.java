@@ -52,7 +52,7 @@ public class DbHandler {
         return session;
     }
 
-
+    /** Is the parameter a persistent property? */
     public boolean isPersistent(UjoProperty property) {
         
         final boolean resultFalse
@@ -63,31 +63,38 @@ public class DbHandler {
     }
 
     /** Load a database model from paramater */
-    public <UJO extends TableUjo> void loadDatabase(Class<UJO> databaseModel) {
-        TableUjo model = getInstance(databaseModel, false);
-        databases.add(new Db(model));
+    public <UJO extends TableUjo> Db loadDatabase(Class<UJO> databaseModel) {
+        UJO model = getInstance(databaseModel);
+        Db dbModel  = new Db(model);
+        databases.add(dbModel);
 
         LOGGER.log(Level.INFO, databases.toString());
-
-    }
-
-    /** Create instance */
-    private <UJO extends TableUjo> TableUjo getInstance(Class<UJO> databaseModel, boolean create) {
-
-        if (create) {
-            loadDatabase(databaseModel);
-        }
-        try {
-            return databaseModel.newInstance();
-        } catch (Exception ex) {
-            throw new IllegalArgumentException("Can't create instance of " + databaseModel,ex);
-        }
+        return dbModel;
     }
 
     /** Load a metada and create database */
-    public <UJO extends TableUjo> void createDatabase(Class<UJO> databaseModel) {
-        getInstance(databaseModel, true);
+    public <UJO extends TableUjo> Db createDatabase(Class<UJO> databaseModel) {
+
+        Db dbModel = loadDatabase(databaseModel);
+        dbModel.create();
+
+
+        return dbModel;
     }
+
+
+
+
+    /** Create an instance from the class */
+    private <UJO extends TableUjo> UJO getInstance(Class<UJO> databaseModel) {
+        try {
+            return databaseModel.newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can't create instance of " + databaseModel, e);
+        }
+    }
+
+
 
 
 

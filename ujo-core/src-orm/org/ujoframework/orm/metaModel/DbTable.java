@@ -80,7 +80,7 @@ public class DbTable extends AbstractMetaModel {
                     DbColumn column = new DbColumn(this, property);
                     COLUMNS.addItem(this, column);
 
-                    if (DbColumn.PK.of(column)) {
+                    if (DbColumn.PRIMARY_KEY.of(column)) {
                         DbPK.COLUMNS.addItem(dpk, column);
                     }
                 }

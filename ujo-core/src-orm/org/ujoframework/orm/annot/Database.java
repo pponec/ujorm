@@ -28,6 +28,8 @@ public @interface Database {
     String ldap() default "";
     String jdbcUrl() default "";
     String jdbcClass() default "";
+    String user()     default "";
+    String password() default "";
 
 
     

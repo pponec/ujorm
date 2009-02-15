@@ -24,7 +24,7 @@ import org.ujoframework.implementation.orm.RelationToMany;
 /**
  * An table definition of the one database (a sample).
  */
-@Database(jdbcUrl="jdbc:h2:mem:", jdbcClass="org.h2.Driver")
+@Database(jdbcUrl="jdbc:h2:mem:", jdbcClass="org.h2.Driver", user="sa", password="")
 public class MyDatabase extends TableUjo {
 
     /** Customer order. The used annotation overwrites a database name from the property name. */
