@@ -93,25 +93,6 @@ public class DbColumn extends AbstractMetaModel {
         return result;
     }
 
-    /** Print DbType */
-    public void printColumn(Appendable writer) throws IOException {
-
-        writer.append( NAME.of(this) );
-        writer.append( ' ' );
-        writer.append( TYPE.of(this).name() );
-
-        if (!MAX_LENGTH.isDefault(this)) {
-           writer.append( "(" + MAX_LENGTH.of(this) );
-           if (!PRECISION.isDefault(this)) {
-               writer.append( ", " + PRECISION.of(this) );
-           }
-           writer.append( ");" );
-            if (PRIMARY_KEY.of(this)) {
-                writer.append(" PRIMARY KEY");
-            }
-        }
-    }
-
     @Override
     public String toString() {
         return NAME.of(this);

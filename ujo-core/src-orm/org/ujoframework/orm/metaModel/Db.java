@@ -16,8 +16,6 @@
 
 package org.ujoframework.orm.metaModel;
 
-import java.io.CharArrayWriter;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -33,6 +31,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
+import org.ujoframework.orm.SqlRenderer;
 
 /**
  * A logical database description.
@@ -48,12 +47,12 @@ public class Db extends AbstractMetaModel {
     /** Database name */
     @XmlAttribute
     public static final UjoProperty<Db,String> NAME = newProperty("name", "");
+    /**  SQL renderer type of SqlRenderer. */
+    public static final UjoProperty<Db,Class> RENDERER = newProperty("renderer", Class.class);
     /** List of tables */
     public static final ListProperty<Db,DbTable> TABLES = newPropertyList("table", DbTable.class);
     /** JDBC URL connection */
     public static final UjoProperty<Db,String> JDBC_URL = newProperty("jdbcUrl", "");
-    /** JDBC Class */
-    public static final UjoProperty<Db,String> JDBC_CLASS = newProperty("jdbcClass", "");
     /** DB user */
     public static final UjoProperty<Db,String> USER = newProperty("user", "");
     /** DB password */
@@ -65,20 +64,27 @@ public class Db extends AbstractMetaModel {
     /** LDPA */
     public static final UjoProperty<Db,String> LDAP = newProperty("ldap", "");
 
+    // --------------------
+
+    private SqlRenderer renderer;
+
     public Db(TableUjo database) {
         ROOT.setValue(this, database);
 
         Database annotDB = database.getClass().getAnnotation(Database.class);
         if (annotDB!=null) {
             NAME.setValue(this, annotDB.name());
+            RENDERER.setValue(this, annotDB.renderer());
             JDBC_URL.setValue(this, annotDB.jdbcUrl());
-            JDBC_CLASS.setValue(this, annotDB.jdbcClass());
             USER.setValue(this, annotDB.user());
             PASSWORD.setValue(this, annotDB.password());
             LDAP.setValue(this, annotDB.ldap());
         }
         if (NAME.isDefault(this)) {
             NAME.setValue(this, database.getClass().getSimpleName());
+        }
+        if (JDBC_URL.isDefault(this)) {
+            JDBC_URL.setValue(this, getRenderer().getJdbcUrl());
         }
 
 
@@ -91,8 +97,19 @@ public class Db extends AbstractMetaModel {
                 TABLES.addItem(this, table);
             }
         }
-
     }
+
+    /** Returns an SQL renderer. */
+    public SqlRenderer getRenderer() {
+        if (renderer==null) try {
+            renderer = (SqlRenderer) RENDERER.of(this).newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't create an instance of " + renderer, e);
+        }
+        return renderer;
+    }
+
+
 
     /** Change DbType by a Java property */
     public void changeDbType(DbColumn column) {
@@ -137,12 +154,12 @@ public class Db extends AbstractMetaModel {
     public void create() {
         Connection conn = null;
         Statement stat = null;
-        String sql = null;
+        StringBuilder sql = new StringBuilder(256);
         try {
-            sql  = createSql();
+            getRenderer().createDatabase(this, sql);
             conn = createConnection();
             stat = conn.createStatement();
-            stat.executeUpdate(sql);
+            stat.executeUpdate(sql.toString());
             conn.commit();
 
         } catch (Throwable e) {
@@ -161,25 +178,6 @@ public class Db extends AbstractMetaModel {
                 LOGGER.log(Level.WARNING, "Can't rollback DB" + toString(), ex);
             }
         }
-    }
-
-    /** Private SQL statement */
-    public String createSql() throws IOException {
-        StringBuilder result = new StringBuilder(256);
-
-        for (DbTable table : TABLES.getList(this)) {
-            result.append("CREATE TABLE ");
-            result.append(DbTable.NAME.of(table));
-            String separator = "\n( ";
-            for (DbColumn column : DbTable.COLUMNS.getList(table)) {
-                result.append(separator);
-                separator = "\n, ";
-                column.printColumn(result);
-            }
-            result.append("}\n");
-        }
-        result.toString();
-        return result.toString();
     }
 
     /** Close a connection, statement and a result set. */
@@ -209,7 +207,7 @@ public class Db extends AbstractMetaModel {
 
     /** Create connection */
     public Connection createConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(JDBC_CLASS.of(this));
+        Class.forName(getRenderer().getJdbcDriver());
         final Connection result = DriverManager.getConnection
             ( JDBC_URL.of(this)
             , USER.of(this)

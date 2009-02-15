@@ -20,11 +20,12 @@ import org.ujoframework.orm.annot.Database;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.orm.renderers.H2Renderer;
 
 /**
  * An table definition of the one database (a sample).
  */
-@Database(jdbcUrl="jdbc://connection")
+@Database(renderer=H2Renderer.class, user="sa", password="")
 public class BoDatabase extends TableUjo {
 
     /** Customer order. The used annotation overwrites a database name from the property name. */
