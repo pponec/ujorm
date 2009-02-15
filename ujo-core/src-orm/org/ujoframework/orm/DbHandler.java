@@ -78,7 +78,6 @@ public class DbHandler {
         Db dbModel = loadDatabase(databaseModel);
         dbModel.create();
 
-
         return dbModel;
     }
 

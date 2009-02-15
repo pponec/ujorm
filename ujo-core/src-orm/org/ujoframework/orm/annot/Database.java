@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
+import org.ujoframework.orm.SqlRenderer;
 
 /** 
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
@@ -24,11 +25,17 @@ import java.lang.annotation.*;
 @Target(value=ElementType.TYPE)
 public @interface Database {
 
+    /** Name of database */
     String name() default "";
+    /** SQL renderer by a DB Vendor. */
+    Class<? extends SqlRenderer> renderer();
+    /** LDAP */
     String ldap() default "";
+    /** JDBC Url */
     String jdbcUrl() default "";
-    String jdbcClass() default "";
+    /** Connection User */
     String user()     default "";
+    /** Connection password */
     String password() default "";
 
 
