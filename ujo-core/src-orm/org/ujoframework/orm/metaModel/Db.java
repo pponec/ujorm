@@ -16,9 +16,13 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.io.CharArrayWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
@@ -35,6 +39,11 @@ import java.sql.*;
  * @author pavel
  */
 public class Db extends AbstractMetaModel {
+    
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(Db.class.toString());
+
+
 
     /** Database name */
     @XmlAttribute
@@ -42,9 +51,14 @@ public class Db extends AbstractMetaModel {
     /** List of tables */
     public static final ListProperty<Db,DbTable> TABLES = newPropertyList("table", DbTable.class);
     /** JDBC URL connection */
-    public static final UjoProperty<Db,String> CONNECTION = newProperty("connection", "");
+    public static final UjoProperty<Db,String> JDBC_URL = newProperty("jdbcUrl", "");
     /** JDBC Class */
     public static final UjoProperty<Db,String> JDBC_CLASS = newProperty("jdbcClass", "");
+    /** DB user */
+    public static final UjoProperty<Db,String> USER = newProperty("user", "");
+    /** DB password */
+    @Transient
+    public static final UjoProperty<Db,String> PASSWORD = newProperty("password", "");
     /** DB class root instance */
     @Transient
     public static final UjoProperty<Db,TableUjo> ROOT = newProperty("root", TableUjo.class);
@@ -57,8 +71,10 @@ public class Db extends AbstractMetaModel {
         Database annotDB = database.getClass().getAnnotation(Database.class);
         if (annotDB!=null) {
             NAME.setValue(this, annotDB.name());
-            CONNECTION.setValue(this, annotDB.jdbcUrl());
+            JDBC_URL.setValue(this, annotDB.jdbcUrl());
             JDBC_CLASS.setValue(this, annotDB.jdbcClass());
+            USER.setValue(this, annotDB.user());
+            PASSWORD.setValue(this, annotDB.password());
             LDAP.setValue(this, annotDB.ldap());
         }
         if (NAME.isDefault(this)) {
@@ -117,6 +133,74 @@ public class Db extends AbstractMetaModel {
         }
     }
 
+    /** Vytvoøí DB */
+    public void create() {
+        Connection conn = null;
+        Statement stat = null;
+        String sql = null;
+        try {
+            sql  = createSql();
+            conn = createConnection();
+            stat = conn.createStatement();
+            stat.executeUpdate(sql);
+            conn.commit();
+
+        } catch (Throwable e) {
+            if (conn!=null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    LOGGER.log(Level.WARNING, "Can't rollback DB" + toString(), ex);
+                }
+            }
+            throw new IllegalArgumentException("Statement error:\n" + sql, e);
+        } finally {
+            try {
+                close(conn, stat, null);
+            } catch (SQLException ex) {
+                LOGGER.log(Level.WARNING, "Can't rollback DB" + toString(), ex);
+            }
+        }
+    }
+
+    /** Private SQL statement */
+    public String createSql() throws IOException {
+        StringBuilder result = new StringBuilder(256);
+
+        for (DbTable table : TABLES.getList(this)) {
+            result.append("CREATE TABLE ");
+            result.append(DbTable.NAME.of(table));
+            String separator = "\n( ";
+            for (DbColumn column : DbTable.COLUMNS.getList(table)) {
+                result.append(separator);
+                separator = "\n, ";
+                column.printColumn(result);
+            }
+            result.append("}\n");
+        }
+        result.toString();
+        return result.toString();
+    }
+
+    /** Close a connection, statement and a result set. */
+    private void close(Connection connection, Statement statement, ResultSet rs) throws SQLException {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } finally {
+                if (connection != null) {
+                    connection.close();
+                }
+            }
+        }
+    }
+
     /** Name of Database. */
     @Override
     public String toString() {
@@ -125,9 +209,14 @@ public class Db extends AbstractMetaModel {
 
     /** Create connection */
     public Connection createConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.Driver");
-        final Connection result = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+        Class.forName(JDBC_CLASS.of(this));
+        final Connection result = DriverManager.getConnection
+            ( JDBC_URL.of(this)
+            , USER.of(this)
+            , PASSWORD.of(this)
+            );
         return result;
     }
+
 
 }

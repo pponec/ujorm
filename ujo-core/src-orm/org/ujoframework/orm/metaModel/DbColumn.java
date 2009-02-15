@@ -16,6 +16,8 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -35,8 +37,8 @@ public class DbColumn extends AbstractMetaModel {
     /** DB column name */
     @XmlAttribute
     public static final UjoProperty<DbColumn,String> NAME = newProperty("name", "");
-    /** DB column name */
-    public static final UjoProperty<DbColumn,Boolean> PK = newProperty("pk", false);
+    /** DB primary key */
+    public static final UjoProperty<DbColumn,Boolean> PRIMARY_KEY = newProperty("pk", false);
     /** Database Type */
     public static final UjoProperty<DbColumn,DbType> TYPE = newProperty("dbType", DbType.Automatic);
     /** Column NOT-NULL */
@@ -64,7 +66,7 @@ public class DbColumn extends AbstractMetaModel {
 
         if (column!=null) {
             NAME      .setValue(this, column.name());
-            PK        .setValue(this, column.pk());
+            PRIMARY_KEY        .setValue(this, column.pk());
             MANDATORY .setValue(this, column.mandatory());
             MAX_LENGTH.setValue(this, column.maxLenght());
             PRECISION .setValue(this, column.precision());
@@ -89,6 +91,25 @@ public class DbColumn extends AbstractMetaModel {
     final public Object getValue(Ujo ujo) {
         final Object result = PROPERTY.of(this).of(ujo);
         return result;
+    }
+
+    /** Print DbType */
+    public void printColumn(Appendable writer) throws IOException {
+
+        writer.append( NAME.of(this) );
+        writer.append( ' ' );
+        writer.append( TYPE.of(this).name() );
+
+        if (!MAX_LENGTH.isDefault(this)) {
+           writer.append( "(" + MAX_LENGTH.of(this) );
+           if (!PRECISION.isDefault(this)) {
+               writer.append( ", " + PRECISION.of(this) );
+           }
+           writer.append( ");" );
+            if (PRIMARY_KEY.of(this)) {
+                writer.append(" PRIMARY KEY");
+            }
+        }
     }
 
     @Override

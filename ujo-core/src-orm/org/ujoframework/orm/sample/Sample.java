@@ -27,7 +27,7 @@ import org.ujoframework.tools.criteria.Operator;
 /**
  *
  * @author pavel
- */  // @SuppressWarnings("unchecked")
+ */
 public class Sample {
 
     /** Using INSERT */
