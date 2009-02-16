@@ -16,14 +16,13 @@
 
 package org.ujoframework.orm.metaModel;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.lang.reflect.Field;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
+import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
@@ -32,15 +31,12 @@ import org.ujoframework.orm.annot.Column;
  * Database column metadata
  * @author pavel
  */
-public class DbColumn extends AbstractMetaModel {
+public class DbColumn extends DbRelation2m {
 
-    /** DB column name */
-    @XmlAttribute
-    public static final UjoProperty<DbColumn,String> NAME = newProperty("name", "");
     /** DB primary key */
-    public static final UjoProperty<DbColumn,Boolean> PRIMARY_KEY = newProperty("pk", false);
+    public static final UjoProperty<DbColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
     /** Database Type */
-    public static final UjoProperty<DbColumn,DbType> TYPE = newProperty("dbType", DbType.Automatic);
+    public static final UjoProperty<DbColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
     /** Column NOT-NULL */
     public static final UjoProperty<DbColumn,Boolean> MANDATORY = newProperty("mandatory", false);
     /** Column value length */
@@ -51,17 +47,10 @@ public class DbColumn extends AbstractMetaModel {
     public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", "");
     /** The column is included in the index of the name */
     public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", "");
-    /** Ujo column property */
-    @Transient
-    public static final UjoProperty<DbColumn,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
-    /** DB table */
-    @Transient
-    public static final UjoProperty<DbColumn,DbTable> TABLE = newProperty("table", DbTable.class);
 
-
-    public DbColumn(DbTable table, UjoProperty propertyColumn) {
+    public DbColumn(DbTable table, UjoProperty tableProperty) {
         
-        Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_RELATIVE.of(table).getItemType(), propertyColumn);
+        Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (column!=null) {
@@ -70,26 +59,25 @@ public class DbColumn extends AbstractMetaModel {
             MANDATORY .setValue(this, column.mandatory());
             MAX_LENGTH.setValue(this, column.maxLenght());
             PRECISION .setValue(this, column.precision());
-            TYPE      .setValue(this, column.type());
+            DB_TYPE      .setValue(this, column.type());
             INDEX_NAME.setValue(this, column.indexName());
         }
 
         if (true) {
             TABLE.setValue(this, table);
-            PROPERTY.setValue(this, propertyColumn);
+            TABLE_PROPERTY.setValue(this, tableProperty);
         }
         if (NAME.isDefault(this)) {
-            NAME.setValue(this, propertyColumn.getName());
+            NAME.setValue(this, tableProperty.getName());
         }
-        if (TYPE.isDefault(this)) {
+        if (DB_TYPE.isDefault(this)) {
             DbTable.DATABASE.of(table).changeDbType(this);
         }
     }
 
-    /** Get property value */
-    @SuppressWarnings("unchecked")
-    final public Object getValue(Ujo ujo) {
-        final Object result = PROPERTY.of(this).of(ujo);
+    /** Iz it Foreign key ? */
+    public boolean isForeignKey() {
+        final boolean result = TableUjo.class.isAssignableFrom( DbColumn.TABLE_PROPERTY.of(this).getType() );
         return result;
     }
 

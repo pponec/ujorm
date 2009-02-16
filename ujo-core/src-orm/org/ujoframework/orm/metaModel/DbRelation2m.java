@@ -21,6 +21,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
+import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.annot.Column;
 
@@ -31,19 +32,19 @@ import org.ujoframework.orm.annot.Column;
 public class DbRelation2m extends AbstractMetaModel {
 
     /** DB column name */
-    //@XmlAttribute
+    @XmlAttribute
     public static final UjoProperty<DbRelation2m,String> NAME = newProperty("name", "");
-    /** UJO relation property */
+    /** Table property */
     @Transient
-    public static final UjoProperty<DbRelation2m,UjoProperty> PROPERTY = newProperty("property", UjoProperty.class);
+    public static final UjoProperty<DbRelation2m,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
     /** DB table */
     @Transient
     public static final UjoProperty<DbRelation2m,DbTable> TABLE = newProperty("table", DbTable.class);
 
 
-    public DbRelation2m(DbTable table, UjoProperty propertyColumn) {
+    public DbRelation2m(DbTable table, UjoProperty tableProperty) {
         
-        Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_RELATIVE.of(table).getItemType(), propertyColumn);
+        Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (column!=null) {
@@ -51,15 +52,19 @@ public class DbRelation2m extends AbstractMetaModel {
         }
         if (true) {
             TABLE.setValue(this, table);
-            PROPERTY.setValue(this, propertyColumn);
+            TABLE_PROPERTY.setValue(this, tableProperty);
         }
-        changeDefault(this, NAME, propertyColumn.getName());
+        changeDefault(this, NAME, tableProperty.getName());
     }
+
+    protected DbRelation2m() {
+    }
+
 
     /** Get property value */
     @SuppressWarnings("unchecked")
     final public Object getValue(Ujo ujo) {
-        final Object result = PROPERTY.of(this).of(ujo);
+        final Object result = TABLE_PROPERTY.of(this).of(ujo);
         return result;
     }
 

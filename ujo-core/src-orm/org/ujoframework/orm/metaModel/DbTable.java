@@ -25,6 +25,7 @@ import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.orm.DbHandler;
 
 
 /**
@@ -42,7 +43,7 @@ public class DbTable extends AbstractMetaModel {
     public static final UjoProperty<DbTable,DbPK> PK = newProperty("pk", DbPK.class);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<DbTable,RelationToMany> DB_RELATIVE = newProperty("dbRelative", RelationToMany.class);
+    public static final UjoProperty<DbTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
     /** Table Columns */
     public static final ListProperty<DbTable,DbColumn> COLUMNS = newPropertyList("column", DbColumn.class);
     /** Table relations to many */
@@ -51,34 +52,38 @@ public class DbTable extends AbstractMetaModel {
     @Transient
     public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
 
-    public DbTable(Db database, RelationToMany propertyTable) {
+    public DbTable(Db database, RelationToMany dbProperty) {
         DATABASE.setValue(this, database);
-        DB_RELATIVE.setValue(this, propertyTable);
+        DB_PROPERTY.setValue(this, dbProperty);
 
-        final Field field = UjoManager.getInstance().getPropertyField(database, propertyTable);
+        final Field field = UjoManager.getInstance().getPropertyField(database, dbProperty);
         final Table table = field.getAnnotation(Table.class);
         if (table!=null) {
             NAME.setValue(this, table.name());
         }
         if (NAME.isDefault(this)) {
-            NAME.setValue(this, propertyTable.getName());
+            NAME.setValue(this, dbProperty.getName());
         }
 
         DbPK dpk = new DbPK();
         PK.setValue(this, dpk);
 
+        DbHandler dbHandler = DbHandler.getInstance();
         UjoManager ujoManager = UjoManager.getInstance();
-        for (UjoProperty property : ujoManager.readProperties(propertyTable.getItemType())) {
+        for (UjoProperty property : ujoManager.readProperties(dbProperty.getItemType())) {
 
             if (!ujoManager.isTransientProperty(property)) {
+
 
                 if (property instanceof RelationToMany) {
                     DbRelation2m relation = new DbRelation2m(this, property);
                     RELATIONS.addItem(this, relation);
+                    dbHandler.addProperty(property, relation);
                 } else {
 
                     DbColumn column = new DbColumn(this, property);
                     COLUMNS.addItem(this, column);
+                    dbHandler.addProperty(property, column);
 
                     if (DbColumn.PRIMARY_KEY.of(column)) {
                         DbPK.COLUMNS.addItem(dpk, column);
@@ -101,7 +106,5 @@ public class DbTable extends AbstractMetaModel {
     public String toString() {
         return NAME.of(this);
     }
-
-
 
 }

@@ -113,40 +113,44 @@ public class Db extends AbstractMetaModel {
 
     /** Change DbType by a Java property */
     public void changeDbType(DbColumn column) {
-       UjoProperty property = DbColumn.PROPERTY.of(column);
+       UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
 
        Class type = property.getType();
 
         if (String.class==type) {
-            DbColumn.TYPE.setValue(column, DbType.VARCHAR);
+            DbColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
             changeDefault(column, DbColumn.MAX_LENGTH, 128);
         }
         else if (Integer.class==type) {
-            DbColumn.TYPE.setValue(column, DbType.INT);
+            DbColumn.DB_TYPE.setValue(column, DbType.INT);
             changeDefault(column, DbColumn.MAX_LENGTH, 8);
         }
+        else if (Long.class==type) {
+            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            //changeDefault(column, DbColumn.MAX_LENGTH, 16);
+        }
         else if (BigInteger.class.isAssignableFrom(type)) {
-            DbColumn.TYPE.setValue(column, DbType.BIGINT);
+            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
             changeDefault(column, DbColumn.MAX_LENGTH, 16);
         }
         else if (Double.class==type) {
-            DbColumn.TYPE.setValue(column, DbType.DECIMAL);
+            DbColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
             changeDefault(column, DbColumn.MAX_LENGTH, 8);
             changeDefault(column, DbColumn.PRECISION, 2);
         }
         else if (BigDecimal.class==type) {
-            DbColumn.TYPE.setValue(column, DbType.DECIMAL);
+            DbColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
             changeDefault(column, DbColumn.MAX_LENGTH, 8);
             changeDefault(column, DbColumn.PRECISION, 2);
         }
         else if (java.sql.Date.class.isAssignableFrom(type)) {
-            DbColumn.TYPE.setValue(column, DbType.DATE);
+            DbColumn.DB_TYPE.setValue(column, DbType.DATE);
         }
         else if (Date.class.isAssignableFrom(type)) {
-            DbColumn.TYPE.setValue(column, DbType.TIMESTAMP);
+            DbColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
         else if (TableUjo.class.isAssignableFrom(type)) {
-            DbColumn.TYPE.setValue(column, DbType.INT);
+            DbColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }
 
