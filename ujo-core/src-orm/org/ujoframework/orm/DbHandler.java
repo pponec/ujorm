@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,9 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.orm.metaModel.Db;
 import org.ujoframework.orm.metaModel.DbRoot;
 import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.metaModel.DbColumn;
+import org.ujoframework.orm.metaModel.DbRelation2m;
+import org.ujoframework.orm.metaModel.DbTable;
 
 /**
  * The basic class for an ORM support.
@@ -38,6 +42,8 @@ public class DbHandler {
 
     private Session session = new Session();
     private DbRoot databases = new DbRoot();
+
+    private HashMap<UjoProperty,DbRelation2m> propertyMap = new HashMap<UjoProperty,DbRelation2m> ();
 
     /** The Sigleton constructor */
     protected DbHandler() {
@@ -94,7 +100,39 @@ public class DbHandler {
     }
 
 
+    /** Find a table of the paramemeter property. */
+    public DbTable findTable(UjoProperty property) {
+        final DbRelation2m column = findColumn(property);
+        return column!=null ? DbRelation2m.TABLE.of(column) : null ;
+    }
+
+    /** Find a table of the paramemeter property. */
+    public DbRelation2m findColumn(UjoProperty property) {
+        final DbRelation2m result = propertyMap.get(property);
+        return result;
+    }
 
 
+    /** Map a property to the table */
+    @SuppressWarnings("unchecked")
+    public void addProperty(UjoProperty property, DbRelation2m newColumn) {
+
+        DbRelation2m oldColumn = findColumn(property);
+
+        if (oldColumn == null) {
+            propertyMap.put(property, newColumn);
+        } else {
+            final DbTable oldTable = DbColumn.TABLE.of(oldColumn);
+            final DbTable newTable = DbColumn.TABLE.of(newColumn);
+
+            final Class oldType = DbTable.DB_PROPERTY.of(oldTable).getItemType();
+            final Class newType = DbTable.DB_PROPERTY.of(newTable).getItemType();
+
+            if (newType.isAssignableFrom(oldType)) {
+                // Only a parent can be assigned:
+                propertyMap.put(property, newColumn);
+            }
+        }
+    }
 
 }

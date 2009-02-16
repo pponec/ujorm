@@ -40,7 +40,7 @@ public class DbPK extends AbstractMetaModel {
 
         for (DbColumn column : COLUMNS.of(this)) {
             
-            final UjoProperty property = DbColumn.PROPERTY.of(column);
+            final UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
             final Object o2  = property.of(ujo2);
             final boolean ok = property.equals(ujo1, o2);
             if (!ok) {
@@ -66,8 +66,8 @@ public class DbPK extends AbstractMetaModel {
             final DbColumn c1 = columns1.get(i);
             final DbColumn c2 = columns2.get(i);
 
-            final UjoProperty p1 = DbColumn.PROPERTY.of(c1);
-            final UjoProperty p2 = DbColumn.PROPERTY.of(c2);
+            final UjoProperty p1 = DbColumn.TABLE_PROPERTY.of(c1);
+            final UjoProperty p2 = DbColumn.TABLE_PROPERTY.of(c2);
 
             if (p1!=p2) {
                 return false;
