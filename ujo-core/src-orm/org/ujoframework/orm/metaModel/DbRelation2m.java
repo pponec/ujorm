@@ -47,17 +47,27 @@ public class DbRelation2m extends AbstractMetaModel {
         Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
-        if (column!=null) {
-            NAME      .setValue(this, column.name());
-        }
         if (true) {
             TABLE.setValue(this, table);
             TABLE_PROPERTY.setValue(this, tableProperty);
+        }
+        if (column!=null) {
+            NAME.setValue(this, column.name());
         }
         changeDefault(this, NAME, tableProperty.getName());
     }
 
     protected DbRelation2m() {
+    }
+
+    /** It is a DB column */
+    public boolean isColumn() {
+        return false;
+    }
+
+    /** Is it a Foreign Key ? */
+    public boolean isForeignKey() {
+        return false;
     }
 
 
