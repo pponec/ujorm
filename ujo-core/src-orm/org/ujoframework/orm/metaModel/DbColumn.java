@@ -17,13 +17,9 @@
 package org.ujoframework.orm.metaModel;
 
 import java.lang.reflect.Field;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.core.annot.Transient;
-import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 
@@ -49,33 +45,32 @@ public class DbColumn extends DbRelation2m {
     public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", "");
 
     public DbColumn(DbTable table, UjoProperty tableProperty) {
-        
+        super(table, tableProperty);
+
         Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (column!=null) {
-            NAME      .setValue(this, column.name());
-            PRIMARY_KEY        .setValue(this, column.pk());
-            MANDATORY .setValue(this, column.mandatory());
-            MAX_LENGTH.setValue(this, column.maxLenght());
-            PRECISION .setValue(this, column.precision());
-            DB_TYPE      .setValue(this, column.type());
-            INDEX_NAME.setValue(this, column.indexName());
-        }
-
-        if (true) {
-            TABLE.setValue(this, table);
-            TABLE_PROPERTY.setValue(this, tableProperty);
-        }
-        if (NAME.isDefault(this)) {
-            NAME.setValue(this, tableProperty.getName());
+            PRIMARY_KEY.setValue(this, column.pk());
+            MANDATORY  .setValue(this, column.mandatory());
+            MAX_LENGTH .setValue(this, column.maxLenght());
+            PRECISION  .setValue(this, column.precision());
+            DB_TYPE    .setValue(this, column.type());
+            INDEX_NAME .setValue(this, column.indexName());
         }
         if (DB_TYPE.isDefault(this)) {
             DbTable.DATABASE.of(table).changeDbType(this);
         }
     }
 
-    /** Iz it Foreign key ? */
+    /** It is a DB column */
+    @Override
+    public boolean isColumn() {
+        return true;
+    }
+
+    /** Is it a Foreign Key ? */
+    @Override
     public boolean isForeignKey() {
         final boolean result = TableUjo.class.isAssignableFrom( DbColumn.TABLE_PROPERTY.of(this).getType() );
         return result;

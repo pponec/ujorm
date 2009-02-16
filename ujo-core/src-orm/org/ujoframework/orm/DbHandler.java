@@ -135,4 +135,16 @@ public class DbHandler {
         }
     }
 
+    /** Find a table model by the dbClass */
+    public DbTable findTableModel(Class<TableUjo> dbClass) {
+        for (Db db : DbRoot.DATABASES.getList(databases)) {
+            for (DbTable table : Db.TABLES.getList(db)) {
+                if (DbTable.DB_PROPERTY.of(table).getItemType()==dbClass) {
+                    return table;
+                }
+            }
+        }
+        return null;
+    }
+
 }

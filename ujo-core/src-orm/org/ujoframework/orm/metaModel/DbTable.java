@@ -76,11 +76,11 @@ public class DbTable extends AbstractMetaModel {
 
 
                 if (property instanceof RelationToMany) {
-                    DbRelation2m relation = new DbRelation2m(this, property);
-                    RELATIONS.addItem(this, relation);
-                    dbHandler.addProperty(property, relation);
-                } else {
+                    DbRelation2m column = new DbRelation2m(this, property);
+                    RELATIONS.addItem(this, column);
+                    dbHandler.addProperty(property, column);
 
+                } else {
                     DbColumn column = new DbColumn(this, property);
                     COLUMNS.addItem(this, column);
                     dbHandler.addProperty(property, column);
@@ -91,7 +91,6 @@ public class DbTable extends AbstractMetaModel {
                 }
             }
         }
-
     }
 
 
