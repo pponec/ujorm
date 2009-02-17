@@ -52,7 +52,7 @@ public class DbColumn extends DbRelation2m {
 
         if (column!=null) {
             PRIMARY_KEY.setValue(this, column.pk());
-            MANDATORY  .setValue(this, column.mandatory());
+            MANDATORY  .setValue(this, column.mandatory() || column.pk());
             MAX_LENGTH .setValue(this, column.maxLenght());
             PRECISION  .setValue(this, column.precision());
             DB_TYPE    .setValue(this, column.type());
@@ -60,6 +60,9 @@ public class DbColumn extends DbRelation2m {
         }
         if (DB_TYPE.isDefault(this)) {
             DbTable.DATABASE.of(table).changeDbType(this);
+        }
+        if (MAX_LENGTH.isDefault(this)) {
+            DbTable.DATABASE.of(table).changeDbLength(this);
         }
     }
 

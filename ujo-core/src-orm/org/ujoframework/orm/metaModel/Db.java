@@ -119,6 +119,52 @@ public class Db extends AbstractMetaModel {
 
         if (String.class==type) {
             DbColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
+        }
+        else if (Integer.class==type) {
+            DbColumn.DB_TYPE.setValue(column, DbType.INT);
+        }
+        else if (Long.class==type) {
+            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+        }
+        else if (BigInteger.class.isAssignableFrom(type)) {
+            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+        }
+        else if (Double.class==type || BigDecimal.class==type) {
+            DbColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
+        }
+        else if (java.sql.Date.class.isAssignableFrom(type)) {
+            DbColumn.DB_TYPE.setValue(column, DbType.DATE);
+        }
+        else if (Date.class.isAssignableFrom(type)) {
+            DbColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+        }
+        else if (TableUjo.class.isAssignableFrom(type)) {
+            DbColumn.DB_TYPE.setValue(column, DbType.INT);
+        }
+    }
+
+    /** Change DbType by a Java property */
+    public void changeDbLength(DbColumn column) {
+
+        switch (DbColumn.DB_TYPE.of(column)) {
+            case DECIMAL:
+                changeDefault(column, DbColumn.MAX_LENGTH, 8);
+                changeDefault(column, DbColumn.PRECISION, 2);
+                break;
+            case VARCHAR:
+            case VARCHAR_IGNORECASE:
+                changeDefault(column, DbColumn.MAX_LENGTH, 128);
+                break;
+            default:
+        }
+
+
+       UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+
+       Class type = property.getType();
+
+        if (String.class==type) {
+            DbColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
             changeDefault(column, DbColumn.MAX_LENGTH, 128);
         }
         else if (Integer.class==type) {
@@ -153,6 +199,7 @@ public class Db extends AbstractMetaModel {
             DbColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }
+
 
     /** Vytvoøí DB */
     public void create() {
