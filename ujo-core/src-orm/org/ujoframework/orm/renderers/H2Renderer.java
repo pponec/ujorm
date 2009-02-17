@@ -82,12 +82,12 @@ public class H2Renderer implements SqlRenderer {
                writer.append( ", " + DbColumn.PRECISION.of(column) );
            }
            writer.append( ")" );
-           if (DbColumn.PRIMARY_KEY.of(column)) {
-               writer.append(" PRIMARY KEY");
-           }
         }
         if (!DbColumn.MANDATORY.isDefault(column)) {
            writer.append( " NOT NULL" );
+        }
+        if (DbColumn.PRIMARY_KEY.of(column)) {
+           writer.append(" PRIMARY KEY");
         }
     }
 

@@ -61,6 +61,7 @@ public class DbTable extends AbstractMetaModel {
         final Field field  = UjoManager.getInstance().getPropertyField(database, dbProperty);
         final Table table1 = field.getAnnotation(Table.class);
         final Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
+        
         if (table1!=null) {
             NAME.setValue(this, table1.name());
         }
