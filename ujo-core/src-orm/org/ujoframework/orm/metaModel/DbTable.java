@@ -52,14 +52,20 @@ public class DbTable extends AbstractMetaModel {
     @Transient
     public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
 
+
+    @SuppressWarnings("unchecked")
     public DbTable(Db database, RelationToMany dbProperty) {
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
-        final Field field = UjoManager.getInstance().getPropertyField(database, dbProperty);
-        final Table table = field.getAnnotation(Table.class);
-        if (table!=null) {
-            NAME.setValue(this, table.name());
+        final Field field  = UjoManager.getInstance().getPropertyField(database, dbProperty);
+        final Table table1 = field.getAnnotation(Table.class);
+        final Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
+        if (table1!=null) {
+            NAME.setValue(this, table1.name());
+        }
+        if (table2!=null) {
+            NAME.setValue(this, table2.name());
         }
         if (NAME.isDefault(this)) {
             NAME.setValue(this, dbProperty.getName());

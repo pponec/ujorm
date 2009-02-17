@@ -21,11 +21,9 @@ import java.lang.annotation.*;
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
-@Target(value=ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Table {
 
     String name();
-
-
     
 }

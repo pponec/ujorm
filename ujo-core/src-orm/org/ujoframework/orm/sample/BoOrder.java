@@ -22,11 +22,12 @@ import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.orm.annot.Table;
 
 /**
  * Simple order for goods with a collection of Items (a sample).
- * @Table=bo_order
  */
+@Table(name="bo_order")
 public class BoOrder extends TableUjo {
 
     /** Unique key */
