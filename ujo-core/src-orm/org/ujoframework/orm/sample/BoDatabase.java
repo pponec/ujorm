@@ -33,7 +33,7 @@ public class BoDatabase extends TableUjo {
     public static final RelationToMany<BoDatabase,BoOrder> ORDERS = newRelation("ORD_ORDER", BoOrder.class);
 
     /** Items of the Customer order */
-    public static final RelationToMany<BoDatabase,BoItem> ORDER_ITEMS = newRelation("ORD_ITEMS", BoItem.class);
+    public static final RelationToMany<BoDatabase,BoItem> ORDER_ITEMS = newRelation("ORD_ITEM", BoItem.class);
 
 
 

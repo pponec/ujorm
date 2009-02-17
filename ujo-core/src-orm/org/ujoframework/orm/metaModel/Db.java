@@ -166,6 +166,10 @@ public class Db extends AbstractMetaModel {
             stat.executeUpdate(sql.toString());
             conn.commit();
 
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info(sql.toString());
+            }
+
         } catch (Throwable e) {
             if (conn!=null) {
                 try {
