@@ -61,7 +61,7 @@ public class H2Renderer implements SqlRenderer {
                 printColumn(column, result, null);
             }
         }
-        result.append(");\n");
+        result.append("\n\t);\n");
     }
 
 
@@ -86,6 +86,9 @@ public class H2Renderer implements SqlRenderer {
                writer.append(" PRIMARY KEY");
            }
         }
+        if (!DbColumn.MANDATORY.isDefault(column)) {
+           writer.append( " NOT NULL" );
+        }
     }
 
     /** Print a SQL to create a Foreign key. */
@@ -95,8 +98,11 @@ public class H2Renderer implements SqlRenderer {
         final Class type = property.getType();
         final DbTable table = DbHandler.getInstance().findTable(property);
         final DbPK pk = DbTable.PK.of(table);
+        String separator = "";
         
         for (DbColumn col : DbPK.COLUMNS.getList(pk)) {
+            writer.append(separator);
+            separator = "\n\t, ";
             printColumn(col, writer, prefix );
         }
     }

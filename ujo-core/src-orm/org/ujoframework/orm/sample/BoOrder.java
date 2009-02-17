@@ -35,7 +35,7 @@ public class BoOrder extends TableUjo {
     /** User key */
     public static final UjoProperty<BoOrder,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of the order */
-    @Column(type=DbType.VARCHAR, name="DESCR")
+    @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
     public static final UjoProperty<BoOrder,String> DESCR = newProperty("description", String.class);
     /** Date of creation */
     public static final UjoProperty<BoOrder,Date> DATE = newProperty("date", Date.class);
