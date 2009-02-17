@@ -43,6 +43,7 @@ public class DbHandler {
     private Session session = new Session();
     private DbRoot databases = new DbRoot();
 
+    /** Map a property to a database column model */
     private HashMap<UjoProperty,DbRelation2m> propertyMap = new HashMap<UjoProperty,DbRelation2m> ();
 
     /** The Sigleton constructor */
@@ -74,7 +75,10 @@ public class DbHandler {
         Db dbModel  = new Db(model);
         databases.add(dbModel);
 
-        LOGGER.log(Level.INFO, databases.toString());
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info(databases.toString());
+        }
+        
         return dbModel;
     }
 

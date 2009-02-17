@@ -17,10 +17,13 @@
 package org.ujoframework.orm.renderers;
 
 import java.io.IOException;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.DbHandler;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.metaModel.Db;
 import org.ujoframework.orm.metaModel.DbColumn;
+import org.ujoframework.orm.metaModel.DbPK;
 import org.ujoframework.orm.metaModel.DbTable;
 
 /** H2 (http://www.h2database.com) */
@@ -53,9 +56,9 @@ public class H2Renderer implements SqlRenderer {
             separator = "\n\t, ";
 
             if ( column.isForeignKey() ) {
-                printColumnFK(column, result);
+                printColumnFK(column, result, "FK_" + DbTable.NAME.of(table) + "_");
             } else {
-                printColumn(column, result);
+                printColumn(column, result, null);
             }
         }
         result.append(");\n");
@@ -63,7 +66,11 @@ public class H2Renderer implements SqlRenderer {
 
 
     /** Print a SQL to create column */
-    public void printColumn(DbColumn column, Appendable writer) throws IOException {
+    public void printColumn(DbColumn column, Appendable writer, String prefix) throws IOException {
+
+        if (prefix!=null) {
+            writer.append( prefix );
+        }
 
         writer.append( DbColumn.NAME.of(column) );
         writer.append( ' ' );
@@ -82,21 +89,15 @@ public class H2Renderer implements SqlRenderer {
     }
 
     /** Print a SQL to create a Foreign key. */
-    public void printColumnFK(DbColumn column, Appendable writer) throws IOException {
+    public void printColumnFK(DbColumn column, Appendable writer, String prefix) throws IOException {
 
-        writer.append( DbColumn.NAME.of(column) );
-        writer.append( ' ' );
-        writer.append( DbColumn.DB_TYPE.of(column).name() );
-
-        if (!DbColumn.MAX_LENGTH.isDefault(column)) {
-           writer.append( "(" + DbColumn.MAX_LENGTH.of(column) );
-           if (!DbColumn.PRECISION.isDefault(column)) {
-               writer.append( ", " + DbColumn.PRECISION.of(column) );
-           }
-           writer.append( ")" );
-           if (DbColumn.PRIMARY_KEY.of(column)) {
-               writer.append(" PRIMARY KEY");
-           }
+        final UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+        final Class type = property.getType();
+        final DbTable table = DbHandler.getInstance().findTable(property);
+        final DbPK pk = DbTable.PK.of(table);
+        
+        for (DbColumn col : DbPK.COLUMNS.getList(pk)) {
+            printColumn(col, writer, prefix );
         }
     }
 
