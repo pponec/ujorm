@@ -92,8 +92,6 @@ public class DbHandler {
     }
 
 
-
-
     /** Create an instance from the class */
     private <UJO extends TableUjo> UJO getInstance(Class<UJO> databaseModel) {
         try {
@@ -104,24 +102,12 @@ public class DbHandler {
     }
 
 
-    /** Find a table of the paramemeter property. */
-    public DbTable findTable(UjoProperty property) {
-        final DbRelation2m column = findColumn(property);
-        return column!=null ? DbRelation2m.TABLE.of(column) : null ;
-    }
-
-    /** Find a table of the paramemeter property. */
-    public DbRelation2m findColumn(UjoProperty property) {
-        final DbRelation2m result = propertyMap.get(property);
-        return result;
-    }
-
 
     /** Map a property to the table */
     @SuppressWarnings("unchecked")
     public void addProperty(UjoProperty property, DbRelation2m newColumn) {
 
-        DbRelation2m oldColumn = findColumn(property);
+        DbRelation2m oldColumn = findColumnModel(property);
 
         if (oldColumn == null) {
             propertyMap.put(property, newColumn);
@@ -137,6 +123,18 @@ public class DbHandler {
                 propertyMap.put(property, newColumn);
             }
         }
+    }
+
+    /** Find a table of the paramemeter property. */
+    public DbTable findTableModel(UjoProperty property) {
+        final DbRelation2m column = findColumnModel(property);
+        return column!=null ? DbRelation2m.TABLE.of(column) : null ;
+    }
+
+    /** Find a table of the paramemeter property. */
+    public DbRelation2m findColumnModel(UjoProperty property) {
+        final DbRelation2m result = propertyMap.get(property);
+        return result;
     }
 
     /** Find a table model by the dbClass */
