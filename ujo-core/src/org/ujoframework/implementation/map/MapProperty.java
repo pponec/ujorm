@@ -29,22 +29,39 @@ public class MapProperty<UJO extends Ujo,VALUE>
     extends SuperProperty<UJO,VALUE> {
        
     /** Constructor */
-    public MapProperty(String name, Class<VALUE> type) {
-        super(name, type, -1);
+    public MapProperty(final String name, final Class<VALUE> type) {
+        this(name, type, -1);
+    }
+
+    /**
+     * Constructor with an property order
+     * @param name
+     * @param type
+     * @param index On order of the property.
+     */
+    public MapProperty(final String name, final Class<VALUE> type, final int index) {
+        super(name, type, index);
+    }
+
+    /** Constructor with a default value
+     * @param defaultValue The value must be type of VALUE exactly (no child).
+     */
+    public MapProperty(final String name, final VALUE defaultValue) {
+        this(name, defaultValue, -1);
     }
 
     /** Constructor with a default value
      * @param defaultValue The value must be type of VALUE exactly (no child).
      */
     @SuppressWarnings("unchecked")
-    public MapProperty(String name, VALUE defaultValue) {
-        this(name, (Class<VALUE>) (Object) defaultValue.getClass());
+    public MapProperty(final String name, final VALUE defaultValue, final int index) {
+        this(name, (Class<VALUE>) (Object) defaultValue.getClass(), index);
         setDefault(defaultValue);
     }
-    
+
     /** Constructor */
-    public MapProperty(UjoProperty<UJO, VALUE> otherProperty) {
-        this(otherProperty.getName(), otherProperty.getType());
+    public MapProperty(UjoProperty<UJO, VALUE> otherProperty, int index) {
+        this(otherProperty.getName(), otherProperty.getType(), index);
     }
     
 }

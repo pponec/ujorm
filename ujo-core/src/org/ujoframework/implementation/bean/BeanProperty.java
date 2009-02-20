@@ -37,19 +37,21 @@ public class BeanProperty<UJO extends Ujo,VALUE>
      * Constructor
      * @param name The parameter MUST be a JavaBeans property name. The name will be used for building a Java reflection method name in a time of the first call.
      * @param type Type of a JavaBeans setter input method or getter output method.
+     * @param index An order of property.
      */
-    public BeanProperty(String name, Class<VALUE> type) {
-        super(name, type, -1);
+    public BeanProperty(String name, Class<VALUE> type, final int index) {
+        super(name, type, index);
         beanManager = BeanManager.getInstance(this);
     }
     
     /** Constructor with a default value
      * @param name The parameter MUST be a JavaBeans property name. The name will be used for building a Java reflection method name in a time of the first call.
      * @param defaultValue The value must be type of VALUE exactly (no child).
+     * @param index An order of property.
      */
     @SuppressWarnings("unchecked")
-    public BeanProperty(String name, VALUE defaultValue) {
-        this(name, (Class<VALUE>) (Object) defaultValue.getClass());
+    public BeanProperty(String name, VALUE defaultValue, final int index) {
+        this(name, (Class<VALUE>) (Object) defaultValue.getClass(), index);
         setDefault(defaultValue);
     }
     

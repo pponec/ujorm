@@ -104,7 +104,7 @@ public abstract class ArrayUjo extends SuperUjo {
     
     // --------- STATIC METHODS -------------------
     
-    /** A Property Factory 
+    /** A Property Factory creates new property and assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> ArrayProperty<UJO,VALUE> newProperty
@@ -115,7 +115,7 @@ public abstract class ArrayUjo extends SuperUjo {
         return new ArrayProperty<UJO,VALUE> (name, type, index);
     }
 
-    /** A Property Factory 
+    /** A Property Factory creates new property and assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> ArrayProperty<UJO, VALUE> newProperty
@@ -126,7 +126,7 @@ public abstract class ArrayUjo extends SuperUjo {
         return new ArrayProperty<UJO, VALUE>(name, value, index);
     }
 
-    /** A Property Factory 
+    /** A Property Factory creates new property and assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo, ITEM> ArrayPropertyList<UJO,ITEM> newPropertyList

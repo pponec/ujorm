@@ -36,5 +36,16 @@ public class MapPropertyList<UJO extends Ujo, ITEM>
     public MapPropertyList(String name, Class<ITEM> itemType) {
         super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, -1);
     }
-    
+
+    /**
+     * Constuctor
+     * @param name Property name
+     * @param itemType Property type
+     * @param index An order of property.
+     */
+    @SuppressWarnings("unchecked")
+    public MapPropertyList(String name, Class<ITEM> itemType, int index) {
+        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, index);
+    }
+
 }

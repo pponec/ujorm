@@ -38,8 +38,8 @@ public class FieldPropertyList<UJO extends Ujo, ITEM>
     
     /** Constructor */
     @SuppressWarnings("unchecked")
-    public FieldPropertyList(String name, Class<ITEM> itemType, ValueAgent<UJO, ArrayList<ITEM>> agent) {
-        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, -1);
+    public FieldPropertyList(String name, Class<ITEM> itemType, int index, ValueAgent<UJO, ArrayList<ITEM>> agent) {
+        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, index);
         this.agent = agent;
     }
     

@@ -30,7 +30,6 @@ import org.ujoframework.core.UjoManager;
  */
 abstract public class FactoryUjoExt<UJO_IMPL extends FactoryUjoExt> extends FactoryUjo {
     
-    
     /** Getter based on one UjoProperty */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get

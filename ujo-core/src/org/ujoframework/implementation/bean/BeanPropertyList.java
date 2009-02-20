@@ -38,8 +38,8 @@ public class BeanPropertyList<UJO extends Ujo, ITEM>
     
     /** Constructor */
     @SuppressWarnings("unchecked")
-    public BeanPropertyList(String name, Class<ITEM> itemType) {
-        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, -1);
+    public BeanPropertyList(String name, Class<ITEM> itemType, int index) {
+        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, index);
         beanManager = BeanManager.getInstance(this);
     }
     

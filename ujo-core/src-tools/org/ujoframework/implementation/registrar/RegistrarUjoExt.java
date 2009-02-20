@@ -16,7 +16,6 @@
 
 package org.ujoframework.implementation.registrar;
 
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.beans.EventRegistrar;
 import org.ujoframework.beans.UjoPropertyChangeSupport;

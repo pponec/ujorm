@@ -167,11 +167,11 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
 
     // --------- STATIC METHODS -------------------
 
-    /** A PropertyIterator Factory
+    /** A PropertyIterator Factory creates an new property and assign a next index.
      * @hidden
      */
     protected static <UJO extends TableUjo, ITEM extends TableUjo> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
-        return new RelationToMany<UJO,ITEM> (name, type);
+        return new RelationToMany<UJO,ITEM> (name, type, _nextPropertyIndex());
     }
 
 }

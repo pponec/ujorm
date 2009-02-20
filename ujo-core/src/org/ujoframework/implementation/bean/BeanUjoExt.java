@@ -84,21 +84,21 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends SuperUjoExt<UJO
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type);
+        return new BeanProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
     }
     
     /** A Property Factory, a property type is related from the default value.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value);
+        return new BeanProperty<UJO, VALUE>(name, value, _nextPropertyIndex());
     }
 
     /** A PropertyList Factory for a <strong>BeanUjo</strong> object
      * @hidden     
      */
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new BeanPropertyList<UJO,ITEM> (name, type);
+        return new BeanPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex());
     }
         
 }
