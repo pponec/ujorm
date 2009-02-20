@@ -67,7 +67,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @composed 1 - * BeanProperty
   */
 public abstract class BeanUjo extends SuperUjo {
-    
+
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
      * BeanProperty.setValue(Ujo,Object) 
      * to an external access for a better type safe.
@@ -99,24 +99,27 @@ public abstract class BeanUjo extends SuperUjo {
     // --------- STATIC METHODS -------------------
     
     /** A Property Factory, a default value is null.
+     * Method assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type);
+        return new BeanProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
     }
     
     /** A Property Factory, a property type is related from the default value.
+     *  Method assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value);
+        return new BeanProperty<UJO, VALUE>(name, value, _nextPropertyIndex());
     }
 
-    /** A PropertyList Factory for a <strong>BeanUjo</strong> object
+    /** A PropertyList Factory for a <strong>BeanUjo</strong> object.
+     * Method assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new BeanPropertyList<UJO,ITEM> (name, type);
+        return new BeanPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex());
     }
     
 }

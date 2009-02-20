@@ -37,6 +37,16 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
      * @param type Type of property
      * @param index Default value is -1
      */
+    public SuperProperty(String name, Class<VALUE> type) {
+        this(name, type, -1);
+    }
+
+    /**
+     * Property constructor.
+     * @param name Name of property
+     * @param type Type of property
+     * @param index Default value is -1
+     */
     public SuperProperty(String name, Class<VALUE> type, int index) {
         if (name==null) { throw new IllegalArgumentException("Name must not be null."); }
         if (type==null) { throw new IllegalArgumentException("Type must not be null."); }

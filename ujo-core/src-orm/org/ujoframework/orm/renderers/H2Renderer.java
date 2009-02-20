@@ -57,6 +57,7 @@ public class H2Renderer implements SqlRenderer {
 
             if ( column.isForeignKey() ) {
                 final UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+                @SuppressWarnings("unchecked")
                 final DbTable foreignTable = DbHandler.getInstance().findTableModel(property.getType());
                 printColumnFK(column, writer, getForeignKeyPrefix(foreignTable));
             } else {

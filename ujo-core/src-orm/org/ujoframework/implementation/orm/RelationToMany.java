@@ -26,6 +26,18 @@ public class RelationToMany<UJO extends TableUjo, ITEM  extends TableUjo>
         this.itemType = itemType;
     }
 
+    /** Constructor
+     * @param name Property name.
+     * @param itemType The type of item.
+     * @param index An property order
+     */
+    @SuppressWarnings("unchecked")
+    public RelationToMany(String name, Class<ITEM> itemType, int index) {
+        super(name, (Class<UjoIterator<ITEM>>) (Class) UjoIterator.class, index );
+        this.itemType = itemType;
+    }
+
+
     /** Returns ItemType */
     public Class<ITEM> getItemType() {
         return itemType;

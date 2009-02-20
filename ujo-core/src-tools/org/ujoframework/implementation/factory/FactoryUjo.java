@@ -32,7 +32,7 @@ import org.ujoframework.extensions.SuperUjo;
  * @composed 1 - * FactoryProperty
   */
 public abstract class FactoryUjo extends SuperUjo {
-    
+
     /** It is an unsupported function in this implementation. */
     public void writeValue(final UjoProperty property, final Object value) {
         throw new UnsupportedOperationException();
@@ -56,7 +56,7 @@ public abstract class FactoryUjo extends SuperUjo {
         ( String name
         , Class<VALUE> type
         ) {
-        return new FactoryProperty<UJO,VALUE> (name, type);
+        return new FactoryProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
     }
     
 }

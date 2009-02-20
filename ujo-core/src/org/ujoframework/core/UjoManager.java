@@ -39,7 +39,7 @@ import static org.ujoframework.extensions.UjoAction.*;
  * @author Pavel Ponec
  * @composed 1 - 1 UjoCoder
  */
-public class UjoManager {
+public class UjoManager implements Comparator<UjoProperty> {
     
     /** Requested modifier of property definitions. */
     public static final int PROPERTY_MODIFIER = Modifier.STATIC|Modifier.PUBLIC|Modifier.FINAL;
@@ -156,19 +156,22 @@ public class UjoManager {
             if (isPropertiesReversed()) {
                 revertArray(result);
             }
-            Arrays.sort(result, new Comparator<UjoProperty>() {
-                public int compare(final UjoProperty u1, final UjoProperty u2) {
-                    return u1.getIndex()<u2.getIndex() ? -1
-                    :      u1.getIndex()>u2.getIndex() ? +1
-                    :                                     0
-                    ;
-                }
-            });
-        }
-        
+            Arrays.sort(result, this);
+        }        
         return result;
     }
     
+    /** Compare Ujo properties. An undefined property indexes (-1 are sorted to the end. */
+    public int compare(final UjoProperty p1, final UjoProperty p2) {
+        int i1 = p1.getIndex()>=0 ? p1.getIndex() : Integer.MAX_VALUE;
+        int i2 = p2.getIndex()>=0 ? p2.getIndex() : Integer.MAX_VALUE;
+
+        return i1>i2 ?  1
+        :      i2<i2 ? -1
+        :               0
+        ;
+    }
+
     /** Sort properties. */
     protected void sortProperties(final Class type, final UjoProperty[] properties) {
         if (properties.length>0) {

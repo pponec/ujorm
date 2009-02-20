@@ -113,7 +113,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends SuperUjoExt<U
         return new ArrayProperty<UJO,VALUE> (name, type, index);
     }
 
-    /** A Property Factory, a property type is related from the default value.
+    /** A Property Factory. A property type is related from the default value.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> ArrayProperty<UJO, VALUE> newProperty

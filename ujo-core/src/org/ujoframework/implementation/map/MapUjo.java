@@ -88,24 +88,27 @@ public abstract class MapUjo extends SuperUjo {
     // --------- STATIC METHODS -------------------
     
     /** A Property Factory, a default value is null.
+     * Method assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> MapProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return new MapProperty<UJO,VALUE> (name, type);
+        return new MapProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
     }
     
     /** A Property Factory
+     * Method assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new MapProperty<UJO, VALUE>(name, value);
+        return new MapProperty<UJO, VALUE>(name, value, _nextPropertyIndex());
     }
     
     /** A PropertyList Factory
+     * Method assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo, ITEM> MapPropertyList<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new MapPropertyList<UJO,ITEM> (name, type);
+        return new MapPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex());
     }
     
 }

@@ -21,7 +21,7 @@ import org.ujoframework.extensions.SuperProperty;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
- * A Map property implementation.
+ * A Field property implementation.
  * @see FieldProperty
  * @author Pavel Ponec
  */
@@ -37,8 +37,8 @@ public class FieldProperty<UJO extends Ujo,VALUE>
      * @param name The parameter MUST be a JavaBeans property name. The name will be used for building a Java reflection method name in a time of the first call.
      * @param type Type of a JavaBeans setter input method or getter output method.
      */
-    public FieldProperty(String name, Class<VALUE> type, ValueAgent<UJO,VALUE> agent) {
-        super(name, type, -1);
+    public FieldProperty(String name, Class<VALUE> type, int index, ValueAgent<UJO,VALUE> agent) {
+        super(name, type, index);
         this.agent = agent;
     }
     
@@ -47,8 +47,8 @@ public class FieldProperty<UJO extends Ujo,VALUE>
      * @param defaultValue The value must be type of VALUE exactly (no child).
      */
     @SuppressWarnings("unchecked")
-    public FieldProperty(String name, VALUE defaultValue, ValueAgent<UJO,VALUE> agent) {
-        this(name, (Class<VALUE>) (Object) defaultValue.getClass(), agent);
+    public FieldProperty(String name, VALUE defaultValue, int index, ValueAgent<UJO,VALUE> agent) {
+        this(name, (Class<VALUE>) (Object) defaultValue.getClass(), index, agent);
         setDefault(defaultValue);
     }
     

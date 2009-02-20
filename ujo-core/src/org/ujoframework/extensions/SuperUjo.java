@@ -30,6 +30,17 @@ import static org.ujoframework.extensions.UjoAction.*;
  * @author Pavel Ponec
  */
 public abstract class SuperUjo implements Ujo, UjoTextable, UjoCloneable {
+
+    /** A property order index. The field is used in a static method newProperty(..). */
+    private static int _propertyIndex = 0;
+
+    /** Returns a next property index.
+     * The UJO property indexes from this method may not be in continuous series
+     * however they have the <strong>upward direction</strong> always.
+     */
+    protected static final synchronized int _nextPropertyIndex() {
+        return _propertyIndex++;
+    }
     
     /** Returns an UjoManager */
     protected UjoManager readUjoManager() {
