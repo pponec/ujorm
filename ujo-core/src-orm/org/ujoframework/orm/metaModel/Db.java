@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -97,6 +98,18 @@ public class Db extends AbstractMetaModel {
                 TABLES.addItem(this, table);
             }
         }
+    }
+
+    /** Create an SQL insert */
+    public String createInsert(TableUjo ujo) {
+        SqlRenderer renderer = getRenderer();
+        StringBuilder result = new StringBuilder();
+        try {
+            renderer.printInsert(ujo, result);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result.toString();
     }
 
     /** Returns an SQL renderer. */
@@ -254,7 +267,7 @@ public class Db extends AbstractMetaModel {
         }
     }
 
-    /** Name of Database. */
+    /** Returns a NAME of the Database. */
     @Override
     public String toString() {
         return NAME.of(this);
@@ -270,6 +283,29 @@ public class Db extends AbstractMetaModel {
             );
         return result;
     }
+
+    /** Equals */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Db) {
+            Db db = (Db) obj;
+
+            final String name1 = Db.NAME.of(this);
+            final String name2 = Db.NAME.of(db);
+
+            return name1.equals(name2);
+        } else {
+            return false;
+        }
+    }
+
+    /** Hash code */
+    @Override
+    public int hashCode() {
+        final String name = Db.NAME.of(this);
+        return name.hashCode();
+    }
+
 
 
 }

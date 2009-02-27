@@ -21,6 +21,8 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.annot.GenerationType;
 
 /**
  * The table primary key.
@@ -33,6 +35,9 @@ public class DbPK extends AbstractMetaModel {
 
     /** DB table */
     public static final ListProperty<DbPK,DbColumn> COLUMNS = newPropertyList("columns", DbColumn.class);
+
+    private long primaryKeyCounter = 0;
+
 
     /** Compare two objects by PrimaryKey */
     @SuppressWarnings("unchecked")
@@ -85,6 +90,37 @@ public class DbPK extends AbstractMetaModel {
             sb.append(column.toString());
         }
         return sb.toString();
+    }
+
+
+    /** Returns a next primary key. The minimal value is 1. */
+    public synchronized long nextPrimaryKey() {
+        return ++primaryKeyCounter;
+    }
+
+    /** Assign a PK from framework in case the PK generator is type of MEMO_SEQUENCE. */
+    @SuppressWarnings("unchecked")
+    public boolean assignPrimaryKey(TableUjo table) {
+        int count = COLUMNS.getItemCount(this);
+        if (count==1) {
+            DbColumn column = COLUMNS.getItem(this, 0);
+
+            switch (DbColumn.PRIMARY_KEY_GEN.of(column)) {
+                case MEMO_SEQUENCE:
+                    UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+                    if (Long.class==property.getType()) {
+                        property.setValue(table, nextPrimaryKey());
+                        return true;
+                    }
+                    if (Integer.class==property.getType()) {
+                        property.setValue(table, (int) nextPrimaryKey());
+                        return true;
+                    }
+               default:
+                   return false;
+            }
+        }
+        throw new IllegalArgumentException("Table " + table + " must have defined only one primary key type of Long or Integer");
     }
 
 }

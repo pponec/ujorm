@@ -69,8 +69,8 @@ public class DbHandler {
         return !resultFalse;
     }
 
-    /** Load a database model from paramater */
-    public <UJO extends TableUjo> Db loadDatabase(Class<UJO> databaseModel) {
+    /** load a database model from paramater */
+    public <UJO extends TableUjo> Db loadDatabase(Class<? extends UJO> databaseModel) {
         UJO model = getInstance(databaseModel);
         Db dbModel  = new Db(model);
         databases.add(dbModel);
@@ -82,7 +82,7 @@ public class DbHandler {
         return dbModel;
     }
 
-    /** Load a metada and create database */
+    /** load a metada and create database */
     public <UJO extends TableUjo> Db createDatabase(Class<UJO> databaseModel) {
 
         Db dbModel = loadDatabase(databaseModel);

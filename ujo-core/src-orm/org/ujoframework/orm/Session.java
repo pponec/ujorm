@@ -16,17 +16,30 @@
 
 package org.ujoframework.orm;
 
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
+import org.ujoframework.orm.metaModel.Db;
+import org.ujoframework.orm.metaModel.DbTable;
 import org.ujoframework.orm.sample.BoDatabase;
 import org.ujoframework.tools.criteria.Expression;
 
 /**
- *
+ * ORM session.
  * @author pavel
  */
 public class Session {
+
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
+
+
+    /** Database connection */
+    private HashMap<Db,Connection> connections = new HashMap<Db,Connection>();
 
     public void commit() {
         throw new UnsupportedOperationException("Not yet implemented");
@@ -44,11 +57,20 @@ public class Session {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /** Insert object into table. */
     public void save(TableUjo ujo) {
-        throw new UnsupportedOperationException("The SAVE method is not yet implemented");
+        @SuppressWarnings("unchecked")
+        DbTable table = DbHandler.getInstance().findTableModel( (Class) ujo.getClass());
+        table.assignPrimaryKey(ujo);
+        Db db = DbTable.DATABASE.of(table);
+        String sql = db.createInsert(ujo);
+        Connection conn = getConnection(db);
+
+        
+        
     }
 
-    public <UJO extends TableUjo> UJO Load(Class ujo, Object id) {
+    public <UJO extends TableUjo> UJO load(Class ujo, Object id) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
     
@@ -64,5 +86,44 @@ public class Session {
         throw new UnsupportedOperationException("Not yet implemented: " + property);
     }
 
+    /** Get connection for a required database. */
+    public Connection getConnection(Db database) throws IllegalStateException {
+        Connection result = connections.get(database);
+        if (result==null) {
+            try {
+                result = database.createConnection();
+            } catch (Exception e) {
+                throw new IllegalStateException("Can't create an connection for " + database, e);
+            }
+            connections.put(database, result);
+        }
+        return result;
+    }
+
+     /** Close all DB connections.
+     * @throws java.lang.IllegalStateException The exception contains a bug from Connection close;
+     */
+    public void closeSession() throws IllegalStateException {
+
+        Throwable exception = null;
+        Db database = null;
+        String errMessage = "Can't close connection for DB ";
+
+        for (Db db : connections.keySet()) {
+            try {
+                Connection conn = connections.get(db);
+                conn.close();
+            } catch (Throwable e) {
+                LOGGER.log(Level.SEVERE, errMessage + db, e);
+                if (exception==null) {
+                    exception = e;
+                    database = db;
+                }
+            }
+        }
+        if (exception!=null) {
+            throw new IllegalStateException(errMessage + database, exception);
+        }
+    }
 
 }

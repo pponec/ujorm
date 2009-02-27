@@ -17,6 +17,7 @@
 package org.ujoframework.orm;
 
 import java.io.IOException;
+import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.Db;
 import org.ujoframework.orm.metaModel.DbColumn;
 import org.ujoframework.orm.metaModel.DbTable;
@@ -45,6 +46,10 @@ public interface SqlRenderer {
 
     /** Print a SQL to create a Foreign Key. */
     public void printColumnFK(DbColumn column, Appendable writer, String prefix) throws IOException;
+
+    /** Print a SQL to INSERT */
+    public void printInsert(TableUjo ujo, Appendable writer) throws IOException;
+
 
 
 }

@@ -22,6 +22,7 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
+import org.ujoframework.orm.annot.GenerationType;
 
 /**
  * Database column metadata
@@ -43,6 +44,8 @@ public class DbColumn extends DbRelation2m {
     public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", "");
     /** The column is included in the index of the name */
     public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", "");
+    /** DB primary key generator */
+    public static final UjoProperty<DbColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.MEMO_SEQUENCE);
 
     public DbColumn(DbTable table, UjoProperty tableProperty) {
         super(table, tableProperty);

@@ -17,7 +17,7 @@
 package org.ujoframework.orm.annot;
 
 /**
- *
+ * Generation type of PRIMARY_KEY.
  * @author pavel
  */
 public enum GenerationType {
