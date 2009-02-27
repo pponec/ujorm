@@ -25,6 +25,7 @@ import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.DbHandler;
 
 
@@ -33,7 +34,6 @@ import org.ujoframework.orm.DbHandler;
  * @author pavel
  */
 public class DbTable extends AbstractMetaModel {
-
 
     /** DB table name */
     @XmlAttribute
@@ -100,6 +100,20 @@ public class DbTable extends AbstractMetaModel {
         }
     }
 
+
+    /** Assign a PK from framework */
+    public void assignPrimaryKey(TableUjo table) {
+        Class type = DB_PROPERTY.of(this).getItemType();
+        if (type.isInstance(table)) {
+            DbPK pk = PK.of(this);
+            boolean ok = pk.assignPrimaryKey(table);
+            if (!ok) {
+                throw new RuntimeException("DB SEQUENCE is not supported for " + type);
+            }
+        } else {
+            throw new IllegalArgumentException("Argument is not type of " + type);
+        }
+    }
 
     /** Compare two objects by its PrimaryKey */
     public boolean equals(Ujo ujo1, Ujo ujo2) {

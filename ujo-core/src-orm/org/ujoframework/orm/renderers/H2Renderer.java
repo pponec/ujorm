@@ -18,6 +18,7 @@ package org.ujoframework.orm.renderers;
 
 import java.io.IOException;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.DbHandler;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.metaModel.Db;
@@ -166,5 +167,11 @@ public class H2Renderer implements SqlRenderer {
 
         return sb.toString();
     }
+
+    /** Print a SQL to INSERT */
+    public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
+        throw new UnsupportedOperationException(getClass() + ".printInsert() method");
+    }
+
 
 }

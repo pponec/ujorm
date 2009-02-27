@@ -17,13 +17,13 @@
 package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
 
-/** 
+/**
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)
-public @interface GeneratedValue {
+public @interface ColumnPkGenerator {
+
 
     GenerationType strategy() default GenerationType.MEMO_SEQUENCE;
-    
 }
