@@ -276,8 +276,12 @@ public class UjoCoder {
     /**
      * Returns true, if the Class is type of Ujo, List or Object[].
      */
-    public boolean isContainerType(Class baseType) {
-        final boolean result = Ujo.class.isAssignableFrom(baseType) || List.class.isAssignableFrom(baseType) || Object[].class.isAssignableFrom(baseType);
+    public boolean isContainerType(final Class baseType) {
+        final boolean result 
+            =  Ujo.class.isAssignableFrom(baseType)
+            || List.class.isAssignableFrom(baseType)
+            || Object[].class.isAssignableFrom(baseType)
+            ;
         return result;
     }
 }

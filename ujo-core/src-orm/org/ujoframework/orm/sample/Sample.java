@@ -33,7 +33,12 @@ public class Sample {
     /** Using INSERT */
     public void useCreateItem() {
 
-        DbHandler.getInstance().createDatabase(BoDatabase.class);
+        if (true) {
+            DbHandler.getInstance().createDatabase(BoDatabase.class);
+        } else {
+            DbHandler.getInstance().loadDatabase(BoDatabase.class);
+
+        }
         Session session = DbHandler.getInstance().getSession();
 
         BoOrder order = new BoOrder();
@@ -44,6 +49,9 @@ public class Sample {
         BoItem.DESCR.setValue(item, "yellow table");
         BoItem.ORDER.setValue(item, order);
 
+        System.out.println("order: "  + order.toString());
+        System.out.println("item: "   + item.toString());
+
         session.save(order);
         session.save(item);
 
@@ -52,6 +60,8 @@ public class Sample {
         } else {
            session.rollback();
         }
+
+        //session.close();
     }
 
     /** Using SELECT by a object relations */
@@ -94,11 +104,15 @@ public class Sample {
 
     /** Test */
     public static void main(String[] args) {
-        Sample sample = new Sample();
 
-        sample.useCreateItem();
-        //sample.useRelation();
-        //sample.useSelection();
+        try {
+            Sample sample = new Sample();
+            sample.useCreateItem();
+            //sample.useRelation();
+            //sample.useSelection();
+        } finally {
+           DbHandler.getInstance().getSession().close();
+        }
 
     }
 

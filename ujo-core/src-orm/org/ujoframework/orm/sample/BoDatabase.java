@@ -25,7 +25,7 @@ import org.ujoframework.orm.renderers.H2Renderer;
 /**
  * An table definition of the one database (a sample).
  */
-@Database(renderer=H2Renderer.class, user="sa", password="")
+@Database(renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 public class BoDatabase extends TableUjo {
 
     /** Customer order. The used annotation overwrites a database name from the property name. */

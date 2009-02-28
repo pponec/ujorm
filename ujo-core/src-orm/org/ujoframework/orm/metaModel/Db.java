@@ -32,6 +32,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
+import org.ujoframework.orm.DbHandler;
 import org.ujoframework.orm.SqlRenderer;
 
 /**
@@ -216,7 +217,7 @@ public class Db extends AbstractMetaModel {
 
     /** Vytvoøí DB */
     public void create() {
-        Connection conn = null;
+        Connection conn = DbHandler.getInstance().getSession().getConnection(this);
         Statement stat = null;
         StringBuilder sql = new StringBuilder(256);
         try {
@@ -241,28 +242,39 @@ public class Db extends AbstractMetaModel {
             throw new IllegalArgumentException("Statement error:\n" + sql, e);
         } finally {
             try {
-                close(conn, stat, null);
-            } catch (SQLException ex) {
+                close(conn, stat, null, true);
+            } catch (IllegalStateException ex) {
                 LOGGER.log(Level.WARNING, "Can't rollback DB" + toString(), ex);
             }
         }
     }
 
     /** Close a connection, statement and a result set. */
-    private void close(Connection connection, Statement statement, ResultSet rs) throws SQLException {
+    public static void close(Connection connection, Statement statement, ResultSet rs, boolean throwExcepton) throws IllegalStateException {
+
         try {
-            if (rs != null) {
-                rs.close();
-            }
-        } finally {
+
             try {
-                if (statement != null) {
-                    statement.close();
+                if (rs != null) {
+                    rs.close();
                 }
             } finally {
-                if (connection != null) {
-                    connection.close();
+                try {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                } finally {
+                    if (connection != null) {
+                        connection.close();
+                    }
                 }
+            }
+        } catch (Throwable e) {
+            String msg = "Can't close a SQL object";
+            if (throwExcepton) {
+                throw new IllegalStateException(msg, e);
+            } else {
+                LOGGER.log(Level.SEVERE, msg, e);
             }
         }
     }

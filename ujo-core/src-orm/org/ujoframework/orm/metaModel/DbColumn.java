@@ -17,9 +17,12 @@
 package org.ujoframework.orm.metaModel;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.DbHandler;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.orm.annot.GenerationType;
@@ -69,7 +72,7 @@ public class DbColumn extends DbRelation2m {
         }
     }
 
-    /** It is a DB column */
+    /** It is a DB column (either a value of a foreign key) */
     @Override
     public boolean isColumn() {
         return true;
@@ -78,13 +81,30 @@ public class DbColumn extends DbRelation2m {
     /** Is it a Foreign Key ? */
     @Override
     public boolean isForeignKey() {
-        final boolean result = TableUjo.class.isAssignableFrom( DbColumn.TABLE_PROPERTY.of(this).getType() );
+        final boolean result = DbColumn.TABLE_PROPERTY.of(this).isTypeOf(TableUjo.class);
         return result;
     }
 
+    /** Returns foreign columns if the column is a Foreign colum. */
+    @SuppressWarnings("unchecked")
+    public List<DbColumn> getForeignColumns() {
+        List<DbColumn> result;
+        Class type = DbColumn.TABLE_PROPERTY.of(this).getType();
+        DbTable table = DbHandler.getInstance().findTableModel(type);
+        if (table!=null) {
+            DbPK pk = DbTable.PK.of(table);
+            result = pk.COLUMNS.getList(pk);
+        } else {
+            result = Collections.emptyList();
+        }
+        return result;
+    }
+
+    /** Returns a TABLE and COLUMN names. */
     @Override
     public String toString() {
-        return NAME.of(this);
+        final  DbTable table = TABLE.of(this);
+        return DbTable.NAME.of(table) + '.' + NAME.of(this);
     }
 
 

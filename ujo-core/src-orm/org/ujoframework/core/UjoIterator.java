@@ -86,6 +86,13 @@ public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
         return result;
     }
 
+    /** Returns a count of items. */
+    @Override
+    public String toString() {
+        return "size: " + size;
+    }
+
+
 
     // --- STATIC FACTORY ---------
 

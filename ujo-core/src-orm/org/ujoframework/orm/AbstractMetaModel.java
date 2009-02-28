@@ -87,5 +87,10 @@ abstract public class AbstractMetaModel extends MapUjo {
         return super.readAuthorization(action, property, value);
     }
 
+    /** Returns true, if the argument text is not null and not empty. */
+    protected boolean isValid(final CharSequence text) {
+        final boolean result = text!=null && text.length()>0;
+        return result;
+    }
 
 }

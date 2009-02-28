@@ -104,10 +104,12 @@ public class DbPK extends AbstractMetaModel {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
             DbColumn column = COLUMNS.getItem(this, 0);
-
             switch (DbColumn.PRIMARY_KEY_GEN.of(column)) {
                 case MEMO_SEQUENCE:
                     UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+                    if (property.of(table)!=null) {
+                        return false;
+                    }
                     if (Long.class==property.getType()) {
                         property.setValue(table, nextPrimaryKey());
                         return true;
