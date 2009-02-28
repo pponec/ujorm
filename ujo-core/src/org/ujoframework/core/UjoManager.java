@@ -391,20 +391,37 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Print a String representation */
     public String toString(Ujo ujo) {
         StringBuilder result = new StringBuilder(32);
-        for(UjoProperty property : ujo.readProperties()) {
-            Object objVal = ujo.readValue(property);
-            String value
-            = objVal instanceof Ujo ? "UJO:" + objVal.hashCode()
-            : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, new UjoActionImpl(ACTION_TO_STRING, this))
-            : coder.encodeValue(ujo, property)
-            ;
-            result.append("<");
+        result.append(ujo.getClass().getSimpleName());
+        UjoProperty[] properties = ujo.readProperties();
+
+        for(int i=0; i<properties.length; ++i) {
+            UjoProperty property = properties[i];
+            boolean list = property instanceof UjoPropertyList;
+            String quotationMark = property.isTypeOf(CharSequence.class) ? "\"" : "" ;
+            
+            String value;
+            try {
+                Object objVal = ujo.readValue(property);
+                value
+                = list ? ((UjoPropertyList)property).getItemCount(ujo) + "]"
+                : objVal instanceof Ujo ? "UJO:" + objVal.hashCode()
+                : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, new UjoActionImpl(ACTION_TO_STRING, this))
+                : coder.encodeValue(ujo, property)
+                ;
+            } catch (Throwable e) {
+                value = e.getClass().getSimpleName();
+            }
+            result.append(i==0 ? "[" : ", ");
             result.append(property.getName());
-            result.append(">=");
+            result.append(list ? "[" : "=");
+            result.append(quotationMark);
             result.append(value);
-            result.append(" ");
+            result.append(quotationMark);
         }
-        
+
+        if (properties.length>0) {
+            result.append("]");
+        }
         return result.toString();
     }
     
