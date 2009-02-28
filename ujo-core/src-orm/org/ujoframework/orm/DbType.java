@@ -16,34 +16,54 @@
 
 package org.ujoframework.orm;
 
+import java.sql.Types;
+
 /**
- *
+ * Supported DbTypes
  * @author pavel
  */
 public enum DbType {
 
     /** Get the type by a Java property */
-    Automatic,
-    INT,
-    BOOLEAN,
-    TINYINT,
-    SMALLINT,
-    BIGINT,
-    IDENTITY,
-    DECIMAL,
-    DOUBLE,
-    REAL,
-    TIME,
-    DATE,
-    TIMESTAMP,
-    //BINARY,
-    //OTHER,
-    VARCHAR,
-    VARCHAR_IGNORECASE,
-    CHAR
-    //BLOB,
-    //CLOB,
-    //UUID,
-    //ARRAY,
+    Automatic(Integer.MIN_VALUE),
+    INT(Types.INTEGER),
+    BOOLEAN(Types.BOOLEAN),
+    TINYINT(Types.TINYINT),
+    SMALLINT(Types.SMALLINT),
+    BIGINT(Types.BIGINT),
+    DECIMAL(Types.DECIMAL),
+    DOUBLE(Types.DOUBLE),
+    REAL(Types.REAL),
+    TIME(Types.TIME),
+    DATE(Types.DATE),
+    TIMESTAMP(Types.TIMESTAMP),
+    //IDENTITY(Types.IDENTITY),
+    //BINARY(Types.BINARY),
+    //OTHER(Types.OTHER),
+    VARCHAR(Types.VARCHAR),
+    VARCHAR_IGNORECASE(Types.VARCHAR),
+    CHAR(Types.CHAR),
+    //BLOB(Types.BLOB),
+    //CLOB(Types.CLOB),
+    //UUID(Types.UUID),
+    //ARRAY(Types.ARRAY),
     ;
+
+    private DbType(int sqlType) {
+        this.sqlType = sqlType;
+    }
+
+    /** Returns an JDBC SQL type
+     * @see java.sql.Types
+     */
+    private final int sqlType;
+
+
+    /** Returns an JDBC SQL type
+     * @see java.sql.Types
+     */
+    public int getSqlType() {
+        return sqlType;
+    }
+
 }

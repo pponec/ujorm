@@ -168,9 +168,43 @@ public class H2Renderer implements SqlRenderer {
         return sb.toString();
     }
 
-    /** Print a SQL to INSERT */
+    /** Print an INSERT SQL statement.  */
+    @SuppressWarnings("unchecked")
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
-        throw new UnsupportedOperationException(getClass() + ".printInsert() method");
+        
+         DbTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
+         StringBuilder values = new StringBuilder();
+
+         writer.append("INSERT INTO ");
+         writer.append(table.getFullName());
+         writer.append("\n\t");
+
+         String separator = "(";
+         for (DbColumn column : DbTable.COLUMNS.getList(table)) {
+             if (column.isForeignKey()) {
+                for (DbColumn col : column.getForeignColumns()) {
+                    final Class type = DbColumn.TABLE_PROPERTY.of(column).getType();
+                    final DbTable tab = DbHandler.getInstance().findTableModel(type);
+                    writer.append(separator);
+                    writer.append(getForeignKeyPrefix(tab));
+                    writer.append(DbColumn.NAME.of(col));
+                    values.append(separator);
+                    values.append("?");
+                    separator = ", ";
+                }
+             } 
+             else if (column.isColumn()) {
+                 writer.append(separator);
+                 writer.append(DbColumn.NAME.of(column));
+                 values.append(separator);
+                 values.append("?");
+                 separator = ", ";
+             }
+         }
+
+         writer.append(")\n\tVALUES ");
+         writer.append(values);
+         writer.append(");");
     }
 
 

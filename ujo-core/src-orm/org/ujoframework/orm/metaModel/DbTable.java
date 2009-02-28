@@ -100,6 +100,21 @@ public class DbTable extends AbstractMetaModel {
         }
     }
 
+    /** Returns a table name include a name of database. */
+    public String getFullName() {
+        final Db db = DATABASE.of(this);
+        final String dbName = Db.NAME.of(db);
+        final String tableName = NAME.of(this);
+
+        if (isValid(dbName)) {
+           //return dbName + "." + tableName; // TODO
+           return tableName;
+        } else {
+           return tableName;
+        }
+
+    }
+
 
     /** Assign a PK from framework */
     public void assignPrimaryKey(TableUjo table) {

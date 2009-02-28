@@ -63,7 +63,7 @@ public class DbHandler {
     public boolean isPersistent(UjoProperty property) {
         
         final boolean resultFalse
-        =  List.class.isAssignableFrom(property.getType())
+        =  property.isTypeOf(List.class)
         || UjoManager.getInstance().isTransientProperty(property)
         ;
         return !resultFalse;
@@ -137,7 +137,7 @@ public class DbHandler {
         return result;
     }
 
-    /** Find a table model by the dbClass */
+    /** Find a table model by the dbClass. Returns null of table is not found. */
     public DbTable findTableModel(Class<TableUjo> dbClass) {
         for (Db db : DbRoot.DATABASES.getList(databases)) {
             for (DbTable table : Db.TABLES.getList(db)) {

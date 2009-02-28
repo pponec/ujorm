@@ -47,9 +47,7 @@ public interface SqlRenderer {
     /** Print a SQL to create a Foreign Key. */
     public void printColumnFK(DbColumn column, Appendable writer, String prefix) throws IOException;
 
-    /** Print a SQL to INSERT */
+    /** Print an INSERT SQL statement.  */
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException;
-
-
 
 }

@@ -63,7 +63,7 @@ abstract public class MyTestCase extends TestCase {
                 assertEquals(item, (byte[]) o1, (byte[]) o2);
             } else if (char[].class.equals(property.getType())) {
                 assertEquals(item, (char[]) o1, (char[]) o2);
-            } else if (List.class.isAssignableFrom(property.getType())) {
+            } else if (property.isTypeOf(List.class)) {
                 assertEquals(item, (List) o1, (List) o2);
             } else {
                 assertEquals(item, o1, o2);
