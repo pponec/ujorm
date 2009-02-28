@@ -97,6 +97,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
+    @SuppressWarnings("unchecked")
     public boolean isTypeOf(final Class type) {
         return type.isAssignableFrom(getType());
     }

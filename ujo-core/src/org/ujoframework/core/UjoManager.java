@@ -389,6 +389,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Print a String representation */
+    @SuppressWarnings("unchecked")
     public String toString(Ujo ujo) {
         StringBuilder result = new StringBuilder(32);
         result.append(ujo.getClass().getSimpleName());
