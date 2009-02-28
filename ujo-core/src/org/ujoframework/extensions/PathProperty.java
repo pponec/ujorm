@@ -115,13 +115,22 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
 
     /**
-     * An alias for getValue(Ujo) .
-     * 
+     * An alias for a method getValue(Ujo) .
      * @see #getValue(Ujo)
      */
     final public VALUE of(final UJO ujo) {
         return getValue(ujo);
     }
+
+//    /**
+//     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
+//     * @param ujo If a null parameter is used then the null value is returned.
+//     * @return Returns a type safe value from the ujo object.
+//     * @see #getValue(Ujo)
+//     */
+//    public VALUE takeFrom(UJO ujo) {
+//        return getValue(ujo);
+//    }
     
     @Override
     public String toString() {

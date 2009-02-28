@@ -3,8 +3,9 @@ The UJO Framework release notes
 
 release 0.84.beta (2009-XX-XX)
 + ORM support - the early alpha version of API
-+ new method: UjoProperty.isDefault(...) is done
++ new method: UjoProperty.isDefault(UJO) indicates whether a parameter value of the ujo "equal to" the property default value
 + method Ujo.readProperties(..) returns the result properties in a natural order in case the properties was builded by a default newProperty() method
+
 
 release 0.831 (2009-01-31)
 + performance improving: deserialization ArrayUjo is about 36% faster in compare to JAXB

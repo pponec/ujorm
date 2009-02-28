@@ -43,17 +43,27 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object. 
      * <br>The method calls a method <a href="Ujo.html#readValue(org.ujoframework.UjoProperty)">Ujo.readValue(UjoProperty)</a> allways.
+     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
+     * @return Returns a type safe value from the ujo object.
      * @see Ujo#readValue(UjoProperty)
      */
     public VALUE getValue(UJO ujo);
     
     
     /**
-     * An alias for getValue(Ujo) .
+     * An alias for a method getValue(Ujo) .
      * @see #getValue(Ujo)
      */
     public VALUE of(UJO ujo);
     
+
+//    /**
+//     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
+//     * @param ujo If a null parameter is used then the null value is returned.
+//     * @return Returns a type safe value from the ujo object.
+//     * @see #getValue(Ujo)
+//     */
+//    public VALUE takeFrom(UJO ujo);
 
     /** Returns a property index or value -1 if the property index is not defined.
      * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used 
@@ -70,7 +80,7 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
     public VALUE getDefault();
 
 
-    /** Indicates whether a parameter value of the ujo "equal to" this default value. */
+    /** Indicates whether a parameter value of the ujo "equal to" this property default value. */
     public boolean isDefault(UJO ujo);
     
     /**
