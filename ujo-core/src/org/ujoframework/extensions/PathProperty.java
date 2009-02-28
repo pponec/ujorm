@@ -46,6 +46,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return properties[properties.length - 1];
     }
 
+    /** Full property name */
     public String getName() {
         StringBuilder result = new StringBuilder(32);
         for (UjoProperty p : properties) {
@@ -57,6 +58,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return result.toString();
     }
 
+    /** Property type */
     public Class<VALUE> getType() {
         return last().getType();
     }
@@ -94,7 +96,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return result;
     }
 
-
+    /** Returns true if the property type is a type or subtype of the parameter class. */
+    public boolean isTypeOf(final Class type) {
+        return type.isAssignableFrom(getType());
+    }
+    
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
      * 

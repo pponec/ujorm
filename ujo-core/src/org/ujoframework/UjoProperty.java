@@ -100,6 +100,8 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
      */
     public boolean isDirect();
     
+    /** Returns true if the property type is a type or subtype of the parameter class. */
+    public boolean isTypeOf(Class type);
     
     /** Returns a name of Property. */
     @Override

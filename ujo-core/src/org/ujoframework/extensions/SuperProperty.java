@@ -151,6 +151,11 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
     public final boolean isDirect() {
         return true;
     }
+
+    /** Returns true if the property type is a type or subtype of the parameter class. */
+    public boolean isTypeOf(final Class type) {
+        return type.isAssignableFrom(this.type);
+    }
     
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
