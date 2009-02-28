@@ -153,6 +153,7 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
+    @SuppressWarnings("unchecked")
     public boolean isTypeOf(final Class type) {
         return type.isAssignableFrom(this.type);
     }
