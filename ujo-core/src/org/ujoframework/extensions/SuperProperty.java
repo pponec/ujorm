@@ -83,6 +83,8 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
     /**
      * It is a basic method for getting an appropriate type safe value from an MapUjo object. 
      * <br>For the getting value is used internally a method <a href="MapUjo.html#readValue(org.ujoframework.UjoProperty)">MapUjo.readValue(UjoProperty)</a>.
+     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
+     * @return Returns a type safe value from the ujo object.
      * @see SuperUjo#readValue(UjoProperty)
      */
     @SuppressWarnings("unchecked")
@@ -92,12 +94,23 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
     }
     
     /**
-     * An alias for getValue(Ujo) .
+     * An alias for a method getValue(Ujo) .
      * @see #getValue(Ujo)
      */
     final public VALUE of(final UJO ujo) {
         return getValue(ujo);
     }
+
+//    /**
+//     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
+//     * @param ujo If a null parameter is used then the null value is returned.
+//     * @return Returns a type safe value from the ujo object.
+//     * @see #getValue(Ujo)
+//     */
+//    final public VALUE takeFrom(final UJO ujo) {
+//        final Object result = ujo!=null ? ujo.readValue(this) : null ;
+//        return (VALUE) result;
+//    }
     
     /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...). 
      * If the default value is not modified, returns the <code>null<code>.
