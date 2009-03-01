@@ -18,6 +18,7 @@
 
 package org.ujoframework.tools.criteria;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -37,6 +38,21 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     }
     
     public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, Object value) {
+
+        // A validation test:
+        switch (operator) {
+            case EQUALS_CASE_INSENSITIVE:
+            case STARTS:
+            case STARTS_CASE_INSENSITIVE:
+            case ENDS:
+            case ENDS_CASE_INSENSITIVE:
+            case CONTAINS:
+            case CONTAINS_CASE_INSENSITIVE:
+                 makeCharSequenceTest(property);
+                 makeCharSequenceTest(value);
+                 break;
+        }
+
         this.property = property;
         this.value    = value;
         this.operator = operator;
@@ -45,6 +61,7 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     @SuppressWarnings("unchecked")
     public boolean evaluate(UJO ujo) {
         Object value2 = value instanceof UjoProperty ? ((UjoProperty)value).getValue(ujo) : value;
+        boolean caseInsensitve = true;
         
         switch (operator) {
             case EQ:
@@ -60,6 +77,42 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
                 Object val1 = property.getValue(ujo);
                 boolean result2 = val1!=null && p.matcher(val1.toString()).matches();
                 return operator==Operator.REGEXP ? result2 : !result2 ;
+            case STARTS:
+            case ENDS:
+            case CONTAINS:
+                 caseInsensitve = false;
+            case EQUALS_CASE_INSENSITIVE:
+            case STARTS_CASE_INSENSITIVE:
+            case ENDS_CASE_INSENSITIVE:
+            case CONTAINS_CASE_INSENSITIVE: {
+                Object object = property.of(ujo);
+                if (object==value2              ) { return true ; }
+                if (object==null || value2==null) { return false; }
+
+                String t1 = object.toString();
+                String t2 = value2.toString();
+
+                if (caseInsensitve) {
+                    t1 = t1.toUpperCase(Locale.ENGLISH);
+                    t2 = t2.toUpperCase(Locale.ENGLISH);
+                }
+
+                switch (operator) {
+                    case EQUALS_CASE_INSENSITIVE:
+                         return t1.equals(t2);
+                    case STARTS:
+                    case STARTS_CASE_INSENSITIVE:
+                         return t1.startsWith(t2);
+                    case ENDS:
+                    case ENDS_CASE_INSENSITIVE:
+                         return t1.endsWith(t2);
+                    case CONTAINS:
+                    case CONTAINS_CASE_INSENSITIVE:
+                         return t1.contains(t2);
+                    default:
+                         throw new IllegalStateException("State:" + operator);
+                }
+            }
         }
         
         Comparable val2 = (Comparable) value2;
@@ -69,13 +122,30 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
         int result = compare(val1, val2);
         
         switch (operator) {
-            case LT: return result< 0;       
-            case LE: return result<=0;       
-            case GT: return result> 0;       
-            case GE: return result>=0;       
+            case LT: return result< 0;
+            case LE: return result<=0;
+            case GT: return result> 0;
+            case GE: return result>=0;
         }
-        
+
+
+
         throw new IllegalArgumentException("Illegal operator: " + operator);
+    }
+
+    /** Test a value is instance of CharSequence or a type UjoProperty is type of CharSequence.
+     * If property is not valid than throw Exception.
+     */
+    protected void makeCharSequenceTest(Object value) throws IllegalArgumentException {
+        if (value instanceof CharSequence
+        ||  value instanceof UjoProperty
+        && ((UjoProperty)value).isTypeOf(CharSequence.class)
+        ){
+            return;
+        } else {
+            final String msg = "Property type must by String or CharSequence";
+            throw new IllegalArgumentException(msg);
+        }
     }
 
     /** Compare two object */
