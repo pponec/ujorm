@@ -33,6 +33,7 @@ import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.SqlRenderer;
 
 /**
@@ -250,7 +251,7 @@ public class Db extends AbstractMetaModel {
     }
 
     /** Close a connection, statement and a result set. */
-    public static void close(Connection connection, Statement statement, ResultSet rs, boolean throwExcepton) throws IllegalStateException {
+    public static void close(Connection connection, JdbcStatement statement, ResultSet rs, boolean throwExcepton) throws IllegalStateException {
 
         try {
 
@@ -278,6 +279,36 @@ public class Db extends AbstractMetaModel {
             }
         }
     }
+
+    /** Close a connection, statement and a result set. */
+    public static void close(Connection connection, Statement statement, ResultSet rs, boolean throwExcepton) throws IllegalStateException {
+
+        try {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } finally {
+                try {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                } finally {
+                    if (connection != null) {
+                        connection.close();
+                    }
+                }
+            }
+        } catch (Throwable e) {
+            String msg = "Can't close a SQL object";
+            if (throwExcepton) {
+                throw new IllegalStateException(msg, e);
+            } else {
+                LOGGER.log(Level.SEVERE, msg, e);
+            }
+        }
+    }
+
 
     /** Returns a NAME of the Database. */
     @Override

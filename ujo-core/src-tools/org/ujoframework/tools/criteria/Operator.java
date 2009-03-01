@@ -49,5 +49,6 @@ public enum Operator {
     /** Only for a CharSequence subtypes (include String) */
     CONTAINS,
     /** Only for a CharSequence subtypes (include String) */
-    CONTAINS_CASE_INSENSITIVE,;
+    CONTAINS_CASE_INSENSITIVE,
+    ;
 }

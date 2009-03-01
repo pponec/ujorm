@@ -29,6 +29,7 @@ public class DirtyExpression<UJO extends Ujo> extends Expression<UJO>  {
     /**
      * Create new plain SQL statement however all UjoProperties are replaced by a DB metamodel.
      */
+    @SuppressWarnings("unchecked")
     public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(Object... sqlStatement) {
         return new DirtyExpression(sqlStatement);
     }

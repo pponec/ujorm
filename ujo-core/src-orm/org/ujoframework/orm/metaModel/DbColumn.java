@@ -100,6 +100,14 @@ public class DbColumn extends DbRelation2m {
         return result;
     }
 
+    /** Returns a property value from a table */
+    @SuppressWarnings("unchecked")
+    public Object getValue(TableUjo table) {
+        final UjoProperty property = TABLE_PROPERTY.of(this);
+        final Object result = property.of(table);
+        return result;
+    }
+
     /** Returns a TABLE and COLUMN names. */
     @Override
     public String toString() {

@@ -398,7 +398,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         for(int i=0; i<properties.length; ++i) {
             UjoProperty property = properties[i];
             boolean list = property instanceof UjoPropertyList;
-            String quotationMark = property.isTypeOf(CharSequence.class) ? "\"" : "" ;
+            String textSeparator = property.isTypeOf(CharSequence.class) ? "\"" : "" ;
             
             String value;
             try {
@@ -415,9 +415,9 @@ public class UjoManager implements Comparator<UjoProperty> {
             result.append(i==0 ? "[" : ", ");
             result.append(property.getName());
             result.append(list ? "[" : "=");
-            result.append(quotationMark);
+            result.append(textSeparator);
             result.append(value);
-            result.append(quotationMark);
+            result.append(textSeparator);
         }
 
         if (properties.length>0) {
