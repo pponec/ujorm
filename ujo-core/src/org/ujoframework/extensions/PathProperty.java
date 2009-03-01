@@ -40,9 +40,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         this.properties = properties;
     }
 
-    /** Get Last property */
+    /** Get the last property */
     @SuppressWarnings("unchecked")
-    private <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> last() {
+    public final <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> lastProperty() {
         return properties[properties.length - 1];
     }
 
@@ -60,19 +60,35 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Property type */
     public Class<VALUE> getType() {
-        return last().getType();
+        return lastProperty().getType();
     }
 
-    /** Get a value from an Ujo object by a chain of properties. 
-     * If a value  (not last) is null, then the result is null.
+    /** Get a semifinal value from an Ujo object by a chain of properties.
+     * If a value  (not lastProperty) is null, then the result is null.
+     */
+    @SuppressWarnings("unchecked")
+    public Ujo getSemifinalValue(UJO ujo) {
+
+        Ujo result = ujo;
+        for (int i=0; i<properties.length-1; i++) {
+            if (result==null) { return result; }
+            result = (Ujo) properties[i].getValue(result);
+        }
+        return result;
+    }
+
+    /** Get a value from an Ujo object by a chain of properties.
+     * If a value  (not lastProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     public VALUE getValue(UJO ujo) {
-        return (VALUE) UjoManager.getInstance().getValueNull(ujo, properties);
+        Ujo u = getSemifinalValue(ujo);
+        return  u!=null ? (VALUE) lastProperty().of(u) : null ;
     }
 
     public void setValue(UJO ujo, VALUE value) {
-        UjoManager.getInstance().setValue(ujo, properties, value);
+        final Ujo u = getSemifinalValue(ujo);
+        lastProperty().setValue(u, value);
     }
 
     public int getIndex() {
@@ -81,7 +97,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Returns a default value */
     public VALUE getDefault() {
-        return (VALUE) last().getDefault();
+        return (VALUE) lastProperty().getDefault();
     }
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
