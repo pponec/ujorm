@@ -547,7 +547,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     
     /** Get a value from an Ujo object by a selected property.
-     * If a not last value is null, then is throwded a NullPointe exception.
+     * If a not lastProperty value is null, then is throwded a NullPointe exception.
      */
     @SuppressWarnings("unchecked")
     public static Object getValue(final Ujo ujo, final UjoProperty prop) {
@@ -560,7 +560,7 @@ public class UjoManager implements Comparator<UjoProperty> {
 
     
     /** Get a value from an Ujo object by a chain of properties. 
-     * If a not last value is null, then is throwded a NullPointe exception.
+     * If a not lastProperty value is null, then is throwded a NullPointe exception.
      */
     @SuppressWarnings("unchecked")
     public <VALUE> VALUE getValue(Ujo ujo, UjoProperty... props) {
@@ -571,22 +571,6 @@ public class UjoManager implements Comparator<UjoProperty> {
         return (VALUE) result;
     }    
 
-    
-    /** Get a value from an Ujo object by a chain of properties. 
-     * If a value  (not last) is null, then the result is null.
-     */
-    @SuppressWarnings("unchecked")
-    public <VALUE> VALUE getValueNull(Ujo ujo, UjoProperty... props) {
-        Object result = ujo;
-
-        for (UjoProperty p : props) {
-            if (result==null) { return null; }
-            result = getValue((Ujo)result, p);
-        }
-        return (VALUE) result;
-    }    
-    
-    
     
     /** UjoCoder */
     public UjoCoder getCoder() {
@@ -601,10 +585,18 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Get a text value from property */
     @SuppressWarnings("unchecked")
     public String getText(Ujo ujo, UjoProperty property, UjoAction action) {
-        final String result = (ujo instanceof UjoTextable)
-            ? ((UjoTextable) ujo).readValueString(property, action)
-            : encodeValue(getValue(ujo, property), false);
-        return result;
+
+        if (property.isDirect()) {
+            final String result = (ujo instanceof UjoTextable)
+                ? ((UjoTextable) ujo).readValueString(property, action)
+                : encodeValue(getValue(ujo, property), false);
+            return result;
+        } else {
+            final PathProperty pathProperty = (PathProperty) property;
+            final UjoProperty p = pathProperty.lastProperty();
+            final Ujo         u = pathProperty.getSemifinalValue(ujo);
+            return getText(u, p, action);
+        }
     }
 
     /**
@@ -615,12 +607,21 @@ public class UjoManager implements Comparator<UjoProperty> {
      * @param type Subtype of value
      * @param action Context action
      */
+    @SuppressWarnings("unchecked")
     public void setText(Ujo ujo, UjoProperty property, String value, Class type, UjoAction action) {
-        if (ujo instanceof UjoTextable) {
-            ((UjoTextable) ujo).writeValueString(property, value, type, action!=null ? action : UjoAction.DUMMY);
+
+        if (property.isDirect()) {
+            if (ujo instanceof UjoTextable) {
+                ((UjoTextable) ujo).writeValueString(property, value, type, action!=null ? action : UjoAction.DUMMY);
+            } else {
+                final Object o = decodeValue(property, value);
+                setValue(ujo, property, o);
+            }
         } else {
-            final Object o = decodeValue(property, value);
-            setValue(ujo, property, o);
+            final PathProperty pathProperty = (PathProperty) property;
+            final UjoProperty p = pathProperty.lastProperty();
+            final Ujo         u = pathProperty.getSemifinalValue(ujo);
+            setText(u, p, value, type, action);
         }
     }
     

@@ -75,7 +75,8 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
         , VALUE value) {
         
         final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2);
-        set(path, value);    }
+        set(path, value);
+    }
 
     /** Setter  based on three properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
