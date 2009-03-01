@@ -98,7 +98,7 @@ public class Session {
 
     /** Insert object into table. */
     public void save(TableUjo ujo) throws IllegalStateException {
-        PreparedStatement ps = null;
+        JdbcStatement statement = null;
 
         try {
             DbTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
@@ -106,67 +106,15 @@ public class Session {
             Db db = DbTable.DATABASE.of(table);
             String sql = db.createInsert(ujo);
             LOGGER.log(Level.INFO, sql);
-            Connection conn = getConnection(db);
-            ps = conn.prepareStatement(sql);
-            assignValues(ps, ujo);
-            ps.executeUpdate(); // execute insert statement
+            statement = getStatement(db, sql);
+            statement.assignValues(ujo);
+            LOGGER.log(Level.INFO, statement.getTextParameters());
+            statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
-            Db.close(null, ps, null, false);
+            Db.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
         }
-        Db.close(null, ps, null, true);
-    }
-
-    /** Assign values into the prepared statement */
-    public int assignValues(PreparedStatement ps, TableUjo table) throws SQLException {
-        final DbTable dbTable = DbHandler.getInstance().findTableModel((Class) table.getClass());
-        final List<DbColumn> columns = DbTable.COLUMNS.getList(dbTable);
-        return assignValues(ps, table, columns, 0);
-    }
-
-
-    /** Assign values into the prepared statement */
-    protected int assignValues(PreparedStatement ps, TableUjo table, List<DbColumn> columns, int columnOffset) throws SQLException {
-        for (DbColumn column : columns) {
-            UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
-            Object value = table!=null ? property.of(table) : null ;
-
-            if (column.isForeignKey()) {
-                columnOffset += assignValues(ps, (TableUjo) value, column.getForeignColumns(), columnOffset);
-            }
-            else if (column.isColumn()) {
-                ++columnOffset;
-                Class type = property.getType();
-                int sqlType = DbColumn.DB_TYPE.of(column).getSqlType();
-
-
-                try {
-                    if (value==null) {
-                        ps.setNull(columnOffset, sqlType);
-                    } else switch (sqlType) {
-                        case Types.DATE:
-                            final java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) value).getTime());
-                            ps.setDate(columnOffset, sqlDate);
-                            break;
-                        case Types.TIMESTAMP:
-                            final java.sql.Timestamp sqlStamp = new java.sql.Timestamp(((java.util.Date) value).getTime());
-                            ps.setTimestamp(columnOffset, sqlStamp);
-                            break;
-                        case Types.TIME:
-                            final java.sql.Time sqlTime = new java.sql.Time(((java.util.Date) value).getTime());
-                            ps.setTime(columnOffset, sqlTime);
-                            break;
-                        default:
-                            ps.setObject(columnOffset, value, sqlType);
-                            break;
-                    }
-                } catch (Throwable e) {
-                    String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", table.getClass().getSimpleName(), column, columnOffset, value);
-                    throw new IllegalStateException(msg, e);
-                }
-            }
-        }
-        return columnOffset;
+        Db.close(null, statement, null, true);
     }
 
 
@@ -198,6 +146,12 @@ public class Session {
             }
             connections.put(database, result);
         }
+        return result;
+    }
+
+    /** Create new statement */
+    public JdbcStatement getStatement(Db database, CharSequence sql) throws SQLException {
+        final JdbcStatement result = new JdbcStatement(getConnection(database), sql);
         return result;
     }
 
