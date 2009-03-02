@@ -108,7 +108,7 @@ public class Session {
             LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
             statement.assignValues(ujo);
-            LOGGER.log(Level.INFO, statement.getTextParameters());
+            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
             Db.close(null, statement, null, false);
