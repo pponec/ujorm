@@ -148,11 +148,12 @@ public class JdbcStatement {
 
         if (logValues) {
             String textSeparator = property.isTypeOf(CharSequence.class) ? "\"" : "";
+            String textValue = UjoManager.getInstance().getText(table, property, UjoAction.DUMMY);
+
             values.append(parameterPointer==1 ? "[" : ", " );
             values.append(textSeparator);
-            String textValue = UjoManager.getInstance().getText(table, property, UjoAction.DUMMY);
-            values.append(textSeparator);
             values.append(textValue);
+            values.append(textSeparator);
         }
     }
 
