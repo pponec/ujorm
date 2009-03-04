@@ -16,30 +16,71 @@
 
 package org.ujoframework.orm;
 
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.tools.criteria.Expression;
 
 /**
- *
- * @author pavel
+ * ORM query.
+ * @author Ponec
  */
-public class Query<UJO extends Ujo> {
+public class Query<UJO extends TableUjo> {
 
-    public Query(Class<UJO> aClass, Expression<UJO> expA) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
+    final private Class<UJO> tableType;
+    final private Expression<UJO> expression;
+    final private Session session;
 
-    public void readOnly(boolean b) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /** There is required to know a count of selected items before reading a resultset */
+    private boolean countRequest = false;
+    /** Result is a readOnly, default value is false */
+    private boolean readOnly = false;
+
+    public Query(Class<UJO> tableType, Expression<UJO> expression, Session session) {
+        this.tableType = tableType;
+        this.expression = expression;
+        this.session = session;
     }
 
     public <ITEM> void setParameter(UjoProperty<UJO,ITEM> property, ITEM value) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void sizeRequired(boolean b) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /** Result is a readOnly, default value is false */
+    public boolean isReadOnly() {
+        return readOnly;
     }
+
+    /** Result is a readOnly, default value is false */
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    /** There is required to know a count of selected items before reading a resultset */
+    public boolean isCountRequest() {
+        return countRequest;
+    }
+
+    /** There is required to know a count of selected items before reading a resultset */
+    public void setCountRequest(boolean countRequest) {
+        this.countRequest = countRequest;
+    }
+
+    /** Expression */
+    public Expression<UJO> getExpression() {
+        return expression;
+    }
+
+    /** Session */
+    public Session getSession() {
+        return session;
+    }
+
+    /** Table Type */
+    public Class<UJO> getTableType() {
+        return tableType;
+    }
+
+
+
 
 }
