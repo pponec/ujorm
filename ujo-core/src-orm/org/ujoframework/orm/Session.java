@@ -17,18 +17,15 @@
 package org.ujoframework.orm;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.ujoframework.Ujo;
 import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.metaModel.Db;
-import org.ujoframework.orm.metaModel.DbColumn;
 import org.ujoframework.orm.metaModel.DbTable;
 import org.ujoframework.orm.sample.BoDatabase;
 import org.ujoframework.tools.criteria.Expression;
@@ -85,11 +82,11 @@ public class Session {
         if (exception!=null) {
             throw new IllegalStateException(errMessage + database, exception);
         }
-        
     }
 
-    public <UJO extends TableUjo> Query<UJO> createQuery(Class<UJO> aClass, Expression<UJO> expA) {
-        throw new UnsupportedOperationException("Not yet implemented");
+
+    public <UJO extends TableUjo> Query<UJO> createQuery(Class<UJO> aClass, Expression<UJO> expression) {
+        return new Query<UJO>(aClass, expression, this);
     }
 
     public BoDatabase getDatabase() {
@@ -117,6 +114,29 @@ public class Session {
         Db.close(null, statement, null, true);
     }
 
+    /** Run SQL SELECT by query. */
+    public <UJO extends TableUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
+        JdbcStatement statement = null;
+        Class<? extends TableUjo> type = query.getTableType();
+
+        try {
+            DbTable table = DbHandler.getInstance().findTableModel(type);
+            Db db = DbTable.DATABASE.of(table);
+            String sql = db.createSelect(ujo);
+            LOGGER.log(Level.INFO, sql);
+            statement = getStatement(db, sql);
+            statement.assignValues(ujo);
+            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            statement.executeUpdate(); // execute insert statement
+        } catch (Throwable e) {
+            Db.close(null, statement, null, false);
+            throw new IllegalStateException("ILLEGAL SQL INSERT", e);
+        }
+        Db.close(null, statement, null, true);
+        return null;
+    }
+
+
 
     public <UJO extends TableUjo> UJO load(Class ujo, Object id) {
         throw new UnsupportedOperationException("Not yet implemented");
@@ -126,9 +146,6 @@ public class Session {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public <UJO extends TableUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
     public <UJO extends TableUjo> UjoIterator<UJO> iterate(UjoProperty property) {
         throw new UnsupportedOperationException("Not yet implemented: " + property);

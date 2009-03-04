@@ -17,6 +17,7 @@
 package org.ujoframework.orm.renderers;
 
 import java.io.IOException;
+import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.DbHandler;
@@ -168,7 +169,7 @@ public class H2Renderer implements SqlRenderer {
         return sb.toString();
     }
 
-    /** Print an INSERT SQL statement.  */
+    /** Print an SQL INSERT statement.  */
     @SuppressWarnings("unchecked")
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
         
@@ -179,32 +180,61 @@ public class H2Renderer implements SqlRenderer {
          writer.append(table.getFullName());
          writer.append("\n\t");
 
-         String separator = "(";
-         for (DbColumn column : DbTable.COLUMNS.getList(table)) {
-             if (column.isForeignKey()) {
+         final String separator = "(";
+         printTableColumns(DbTable.COLUMNS.getList(table), writer, values, separator);
+
+         writer.append(")\n\tVALUES ");
+         writer.append(values);
+         writer.append(");");
+    }
+
+    /** Print an SQL INSERT statement.  */
+    @SuppressWarnings("unchecked")
+    public void printSelect(TableUjo ujo, Appendable writer) throws IOException {
+
+         DbTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
+         StringBuilder values = null;
+
+         writer.append("SELECT ");
+         printTableColumns(DbTable.COLUMNS.getList(table), writer, values, "");
+         writer.append("\n\tFROM ");
+         writer.append(table.getFullName());
+         writer.append("\n\t");
+
+         if (!true) {
+             writer.append(" WHERE ...");
+         }
+         writer.append(";");
+    }
+
+
+
+    /** Print table columns */
+    protected void printTableColumns(List<DbColumn> columns, Appendable writer, Appendable values, String separator) throws IOException {
+        for (DbColumn column : columns) {
+            if (column.isForeignKey()) {
                 for (DbColumn col : column.getForeignColumns()) {
                     final Class type = DbColumn.TABLE_PROPERTY.of(column).getType();
                     final DbTable tab = DbHandler.getInstance().findTableModel(type);
                     writer.append(separator);
                     writer.append(getForeignKeyPrefix(tab));
                     writer.append(DbColumn.NAME.of(col));
-                    values.append(separator);
-                    values.append("?");
+                    if (values!=null) {
+                        values.append(separator);
+                        values.append("?");
+                    }
                     separator = ", ";
                 }
-             } 
-             else if (column.isColumn()) {
-                 writer.append(separator);
-                 writer.append(DbColumn.NAME.of(column));
-                 values.append(separator);
-                 values.append("?");
-                 separator = ", ";
-             }
-         }
-
-         writer.append(")\n\tVALUES ");
-         writer.append(values);
-         writer.append(");");
+            } else if (column.isColumn()) {
+                writer.append(separator);
+                writer.append(DbColumn.NAME.of(column));
+                if (values!=null) {
+                    values.append(separator);
+                    values.append("?");                    
+                }
+                separator = ", ";
+            }
+        }
     }
 
 

@@ -43,25 +43,47 @@ public class Sample {
 
         BoOrder order = new BoOrder();
         BoOrder.DATE.setValue(order, new Date());
-        BoOrder.DESCR.setValue(order, "test order");
+        BoOrder.DESCR.setValue(order, "John's order");
 
-        BoItem item = new BoItem();
-        BoItem.DESCR.setValue(item, "yellow table");
-        BoItem.ORDER.setValue(item, order);
+        BoItem item1 = new BoItem();
+        BoItem.DESCR.setValue(item1, "yellow table");
+        BoItem.ORDER.setValue(item1, order);
+        BoItem item2 = new BoItem();
+        BoItem.DESCR.setValue(item2, "green window");
+        BoItem.ORDER.setValue(item2, order);
 
         System.out.println("order: "  + order.toString());
-        System.out.println("item: "   + item.toString());
+        System.out.println("item1: "  + item1.toString());
+        System.out.println("item2: "  + item2.toString());
 
         session.save(order);
-        session.save(item);
+        session.save(item1);
+        session.save(item2);
 
         if (true) {
            session.commit();
         } else {
            session.rollback();
         }
+    }
 
-        //session.close();
+    /** Using SELECT by QUERY */
+    public void useSelection() {
+        Session session = DbHandler.getInstance().getSession();
+
+        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.DESCR, "John's order");
+        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE, Operator.LE, new Date());
+        Expression<BoOrder> expr = exp1.and(exp2);
+
+        Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
+        query.setCountRequest(true);  // need a count of iterator items, a default value is false
+        query.setReadOnly(false);     // Read onlyl result;
+
+        for (BoOrder o : session.iterate( query ) ) {
+            Long id = BoOrder.ID.of(o);
+            String descr = BoOrder.DESCR.of(o);
+            System.out.println("Order id: " + id + " descr: " + descr);
+        }
     }
 
     /** Using SELECT by a object relations */
@@ -83,33 +105,16 @@ public class Sample {
         }
     }
 
-    /** Using SELECT by QUERY */
-    public void useSelection() {
-        Session session = DbHandler.getInstance().getSession();
-
-        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.DESCR, "test order");
-        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE, Operator.LE, new Date());
-        Expression<BoOrder> expr = exp1.and(exp2);
-
-        Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
-        query.sizeRequired(true);  // need a count of iterator items, a default value is false
-        query.readOnly(false);     // Read onlyl result;
-
-        for (BoOrder o : session.iterate( query ) ) {
-            Long id = BoOrder.ID.of(o);
-            String descr = BoOrder.DESCR.of(o);
-            System.out.println("Order id: " + id + " descr: " + descr);
-        }
-    }
-
     /** Test */
     public static void main(String[] args) {
 
         try {
             Sample sample = new Sample();
             sample.useCreateItem();
+            sample.useSelection();
             //sample.useRelation();
-            //sample.useSelection();
+
+            //session.close();
         } finally {
            DbHandler.getInstance().getSession().close();
         }
