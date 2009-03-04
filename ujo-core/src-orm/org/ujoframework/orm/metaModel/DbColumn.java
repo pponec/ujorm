@@ -17,8 +17,10 @@
 package org.ujoframework.orm.metaModel;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -49,6 +51,12 @@ public class DbColumn extends DbRelation2m {
     public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", "");
     /** DB primary key generator */
     public static final UjoProperty<DbColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.MEMO_SEQUENCE);
+
+
+    /** Foreign column names. */
+    private String[] foreignNames = null;
+    private static final String[] EMPTY_NAMES = new String[0];
+
 
     public DbColumn(DbTable table, UjoProperty tableProperty) {
         super(table, tableProperty);
@@ -85,7 +93,7 @@ public class DbColumn extends DbRelation2m {
         return result;
     }
 
-    /** Returns foreign columns if the column is a Foreign colum. */
+    /** Returns an original foreign columns in case a foreign column. */
     @SuppressWarnings("unchecked")
     public List<DbColumn> getForeignColumns() {
         List<DbColumn> result;
@@ -93,10 +101,52 @@ public class DbColumn extends DbRelation2m {
         DbTable table = DbHandler.getInstance().findTableModel(type);
         if (table!=null) {
             DbPK pk = DbTable.PK.of(table);
-            result = pk.COLUMNS.getList(pk);
+            result = DbPK.COLUMNS.getList(pk);
         } else {
             result = Collections.emptyList();
         }
+        return result;
+    }
+
+    /** Returns names of foreign columns.
+     * <br>TODO: Is a time to an optimalization ?
+     */
+    @SuppressWarnings("unchecked")
+    private String[] getForeignColumnNames() {
+        if (foreignNames==null) {
+            final Class type = DbColumn.TABLE_PROPERTY.of(this).getType();
+            final DbTable foreignTable = DbHandler.getInstance().findTableModel(type);
+            if (foreignTable!=null && isForeignKey()) {
+                final DbPK pk = DbTable.PK.of(foreignTable);
+                final List<DbColumn> dbColumns = DbPK.COLUMNS.getList(pk);
+                final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1 ? NAME.of(this) : "", ", ");
+
+                ArrayList<String> fNames = new ArrayList<String>(dbColumns.size());
+                for (int i=0; i<dbColumns.size(); i++) {
+                    String name;
+                    if (tokenizer.hasMoreTokens()) {
+                        name = tokenizer.nextToken();
+                    } else {
+                        name = "fk_"
+                          // + DbTable.NAME.of(foreignTable)
+                             + DbColumn.NAME.of(this)
+                             + "_"
+                             + DbColumn.NAME.of(dbColumns.get(i))
+                             ;
+                    }
+                    fNames.add(name);
+                }
+                foreignNames = fNames.toArray(new String[fNames.size()]);
+            } else {
+                foreignNames = EMPTY_NAMES;
+            }
+        }
+        return foreignNames;
+    }
+
+    /** Returns a name of foreign column by index */
+    public String getForeignColumnName(int index) {
+        final String result = getForeignColumnNames()[index];
         return result;
     }
 

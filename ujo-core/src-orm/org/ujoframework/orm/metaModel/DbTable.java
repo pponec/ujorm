@@ -50,11 +50,11 @@ public class DbTable extends AbstractMetaModel {
     public static final ListProperty<DbTable,DbRelation2m> RELATIONS = newPropertyList("relation2m", DbRelation2m.class);
     /** Database */
     @Transient
-    public static final UjoProperty<DbTable,Db> DATABASE = newProperty("database", Db.class);
+    public static final UjoProperty<DbTable,DbModel> DATABASE = newProperty("database", DbModel.class);
 
 
     @SuppressWarnings("unchecked")
-    public DbTable(Db database, RelationToMany dbProperty) {
+    public DbTable(DbModel database, RelationToMany dbProperty) {
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
@@ -102,8 +102,8 @@ public class DbTable extends AbstractMetaModel {
 
     /** Returns a table name include a name of database. */
     public String getFullName() {
-        final Db db = DATABASE.of(this);
-        final String dbName = Db.NAME.of(db);
+        final DbModel db = DATABASE.of(this);
+        final String dbName = DbModel.NAME.of(db);
         final String tableName = NAME.of(this);
 
         if (isValid(dbName)) {

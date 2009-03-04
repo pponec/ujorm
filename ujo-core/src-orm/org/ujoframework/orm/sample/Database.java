@@ -16,7 +16,7 @@
 
 package org.ujoframework.orm.sample;
 
-import org.ujoframework.orm.annot.Database;
+import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
@@ -25,15 +25,15 @@ import org.ujoframework.orm.renderers.H2Renderer;
 /**
  * An table definition of the one database (a sample).
  */
-@Database(renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
-public class BoDatabase extends TableUjo {
+@Db(renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+public class Database extends TableUjo {
 
     /** Customer order. The used annotation overwrites a database name from the property name. */
     @Table(name="ORD_ORDER_NEW")
-    public static final RelationToMany<BoDatabase,BoOrder> ORDERS = newRelation("ORD_ORDER", BoOrder.class);
+    public static final RelationToMany<Database,BoOrder> ORDERS = newRelation("ORD_ORDER", BoOrder.class);
 
     /** Items of the Customer order */
-    public static final RelationToMany<BoDatabase,BoItem> ORDER_ITEMS = newRelation("ORD_ITEM", BoItem.class);
+    public static final RelationToMany<Database,BoItem> ORDER_ITEMS = newRelation("ORD_ITEM", BoItem.class);
 
 
 

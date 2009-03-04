@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.orm.metaModel.Db;
+import org.ujoframework.orm.metaModel.DbModel;
 import org.ujoframework.orm.metaModel.DbRoot;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.DbColumn;
@@ -70,9 +70,9 @@ public class DbHandler {
     }
 
     /** load a database model from paramater */
-    public <UJO extends TableUjo> Db loadDatabase(Class<? extends UJO> databaseModel) {
+    public <UJO extends TableUjo> DbModel loadDatabase(Class<? extends UJO> databaseModel) {
         UJO model = getInstance(databaseModel);
-        Db dbModel  = new Db(model);
+        DbModel dbModel  = new DbModel(model);
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {
@@ -83,9 +83,9 @@ public class DbHandler {
     }
 
     /** load a metada and create database */
-    public <UJO extends TableUjo> Db createDatabase(Class<UJO> databaseModel) {
+    public <UJO extends TableUjo> DbModel createDatabase(Class<UJO> databaseModel) {
 
-        Db dbModel = loadDatabase(databaseModel);
+        DbModel dbModel = loadDatabase(databaseModel);
         dbModel.create();
 
         return dbModel;
@@ -139,8 +139,8 @@ public class DbHandler {
 
     /** Find a table model by the dbClass. Returns null of table is not found. */
     public DbTable findTableModel(Class<? extends TableUjo> dbClass) {
-        for (Db db : DbRoot.DATABASES.getList(databases)) {
-            for (DbTable table : Db.TABLES.getList(db)) {
+        for (DbModel db : DbRoot.DATABASES.getList(databases)) {
+            for (DbTable table : DbModel.TABLES.getList(db)) {
                 if (DbTable.DB_PROPERTY.of(table).getItemType()==dbClass) {
                     return table;
                 }

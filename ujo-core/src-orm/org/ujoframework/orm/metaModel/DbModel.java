@@ -27,54 +27,54 @@ import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.DbType;
-import org.ujoframework.orm.annot.Database;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import org.ujoframework.orm.DbHandler;
 import org.ujoframework.orm.JdbcStatement;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.annot.Db;
 
 /**
  * A logical database description.
  * @author pavel
  */
-public class Db extends AbstractMetaModel {
-    
+public class DbModel extends AbstractMetaModel {
+
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(Db.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(DbModel.class.toString());
 
 
-
-    /** Database name */
+    /** DbModel name */
     @XmlAttribute
-    public static final UjoProperty<Db,String> NAME = newProperty("name", "");
+    public static final UjoProperty<DbModel,String> NAME = newProperty("name", "");
     /**  SQL renderer type of SqlRenderer. */
-    public static final UjoProperty<Db,Class> RENDERER = newProperty("renderer", Class.class);
+    public static final UjoProperty<DbModel,Class> RENDERER = newProperty("renderer", Class.class);
     /** List of tables */
-    public static final ListProperty<Db,DbTable> TABLES = newPropertyList("table", DbTable.class);
+    public static final ListProperty<DbModel,DbTable> TABLES = newPropertyList("table", DbTable.class);
     /** JDBC URL connection */
-    public static final UjoProperty<Db,String> JDBC_URL = newProperty("jdbcUrl", "");
+    public static final UjoProperty<DbModel,String> JDBC_URL = newProperty("jdbcUrl", "");
     /** DB user */
-    public static final UjoProperty<Db,String> USER = newProperty("user", "");
+    public static final UjoProperty<DbModel,String> USER = newProperty("user", "");
     /** DB password */
     @Transient
-    public static final UjoProperty<Db,String> PASSWORD = newProperty("password", "");
+    public static final UjoProperty<DbModel,String> PASSWORD = newProperty("password", "");
     /** DB class root instance */
     @Transient
-    public static final UjoProperty<Db,TableUjo> ROOT = newProperty("root", TableUjo.class);
+    public static final UjoProperty<DbModel,TableUjo> ROOT = newProperty("root", TableUjo.class);
     /** LDPA */
-    public static final UjoProperty<Db,String> LDAP = newProperty("ldap", "");
+    public static final UjoProperty<DbModel,String> LDAP = newProperty("ldap", "");
 
     // --------------------
 
     private SqlRenderer renderer;
 
-    public Db(TableUjo database) {
+    public DbModel(TableUjo database) {
         ROOT.setValue(this, database);
 
-        Database annotDB = database.getClass().getAnnotation(Database.class);
+        Db annotDB = database.getClass().getAnnotation(Db.class);
         if (annotDB!=null) {
             NAME.setValue(this, annotDB.name());
             RENDERER.setValue(this, annotDB.renderer());
@@ -112,6 +112,13 @@ public class Db extends AbstractMetaModel {
             throw new RuntimeException(e);
         }
         return result.toString();
+    }
+
+
+    /** Create an SQL select */
+    public String createSelect(Query query) {
+        // TODO;
+        return "";
     }
 
     /** Returns an SQL renderer. */
@@ -310,7 +317,7 @@ public class Db extends AbstractMetaModel {
     }
 
 
-    /** Returns a NAME of the Database. */
+    /** Returns a NAME of the DbModel. */
     @Override
     public String toString() {
         return NAME.of(this);
@@ -330,11 +337,11 @@ public class Db extends AbstractMetaModel {
     /** Equals */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Db) {
-            Db db = (Db) obj;
+        if (obj instanceof DbModel) {
+            DbModel db = (DbModel) obj;
 
-            final String name1 = Db.NAME.of(this);
-            final String name2 = Db.NAME.of(db);
+            final String name1 = DbModel.NAME.of(this);
+            final String name2 = DbModel.NAME.of(db);
 
             return name1.equals(name2);
         } else {
@@ -345,7 +352,7 @@ public class Db extends AbstractMetaModel {
     /** Hash code */
     @Override
     public int hashCode() {
-        final String name = Db.NAME.of(this);
+        final String name = DbModel.NAME.of(this);
         return name.hashCode();
     }
 

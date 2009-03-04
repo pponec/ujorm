@@ -17,17 +17,17 @@
 package org.ujoframework.orm;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujoframework.Ujo;
 import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.orm.metaModel.Db;
+import org.ujoframework.orm.metaModel.DbModel;
 import org.ujoframework.orm.metaModel.DbTable;
-import org.ujoframework.orm.sample.BoDatabase;
+import org.ujoframework.orm.sample.Database;
 import org.ujoframework.tools.criteria.Expression;
 
 /**
@@ -42,7 +42,7 @@ public class Session {
 
 
     /** Database connection */
-    private HashMap<Db,Connection> connections = new HashMap<Db,Connection>();
+    private HashMap<DbModel,Connection> connections = new HashMap<DbModel,Connection>();
 
 
     /** Make a commit for all databases. */
@@ -60,10 +60,10 @@ public class Session {
      */
     protected void commit(boolean commit) {
         Throwable exception = null;
-        Db database = null;
+        DbModel database = null;
         String errMessage = "Can't make commit of DB ";
 
-        for (Db db : connections.keySet()) {
+        for (DbModel db : connections.keySet()) {
             try {
                 Connection conn = connections.get(db);
                 if (commit) {
@@ -89,7 +89,7 @@ public class Session {
         return new Query<UJO>(aClass, expression, this);
     }
 
-    public BoDatabase getDatabase() {
+    public Database getDatabase() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -100,7 +100,7 @@ public class Session {
         try {
             DbTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
             table.assignPrimaryKey(ujo);
-            Db db = DbTable.DATABASE.of(table);
+            DbModel db = DbTable.DATABASE.of(table);
             String sql = db.createInsert(ujo);
             LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
@@ -108,10 +108,10 @@ public class Session {
             LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
-            Db.close(null, statement, null, false);
+            DbModel.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
         }
-        Db.close(null, statement, null, true);
+        DbModel.close(null, statement, null, true);
     }
 
     /** Run SQL SELECT by query. */
@@ -121,18 +121,15 @@ public class Session {
 
         try {
             DbTable table = DbHandler.getInstance().findTableModel(type);
-            Db db = DbTable.DATABASE.of(table);
-            String sql = db.createSelect(ujo);
+            DbModel db = DbTable.DATABASE.of(table);
+            String sql = db.createSelect(query);
             LOGGER.log(Level.INFO, sql);
-            statement = getStatement(db, sql);
-            statement.assignValues(ujo);
-            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
-            statement.executeUpdate(); // execute insert statement
+            ResultSet rs = statement.executeQuery(); // execute select statement
         } catch (Throwable e) {
-            Db.close(null, statement, null, false);
+            DbModel.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
         }
-        Db.close(null, statement, null, true);
+        DbModel.close(null, statement, null, true);
         return null;
     }
 
@@ -152,7 +149,7 @@ public class Session {
     }
 
     /** Get connection for a required database and set an autocommit na false. */
-    public Connection getConnection(Db database) throws IllegalStateException {
+    public Connection getConnection(DbModel database) throws IllegalStateException {
         Connection result = connections.get(database);
         if (result==null) {
             try {
@@ -167,7 +164,7 @@ public class Session {
     }
 
     /** Create new statement */
-    public JdbcStatement getStatement(Db database, CharSequence sql) throws SQLException {
+    public JdbcStatement getStatement(DbModel database, CharSequence sql) throws SQLException {
         final JdbcStatement result = new JdbcStatement(getConnection(database), sql);
         return result;
     }
@@ -178,10 +175,10 @@ public class Session {
     public void close() throws IllegalStateException {
 
         Throwable exception = null;
-        Db database = null;
+        DbModel database = null;
         String errMessage = "Can't close connection for DB ";
 
-        for (Db db : connections.keySet()) {
+        for (DbModel db : connections.keySet()) {
             try {
                 Connection conn = connections.get(db);
                 conn.close();

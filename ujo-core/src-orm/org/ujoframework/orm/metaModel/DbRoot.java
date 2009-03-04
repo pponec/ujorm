@@ -36,18 +36,18 @@ public class DbRoot extends AbstractMetaModel {
 
 
     /** List of tables */
-    public static final ListProperty<DbRoot,Db> DATABASES = newPropertyList("database", Db.class);
+    public static final ListProperty<DbRoot,DbModel> DATABASES = newPropertyList("database", DbModel.class);
 
     /** Returns the first database or return null */
-    public Db getDatabase() {
-        final Db result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
+    public DbModel getDatabase() {
+        final DbModel result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
         return result;
     }
 
     /** Returns the first database with required name or returns null; */
-    public Db getDatabase(String name) {
-        for (Db database : DATABASES.getList(this)) {
-            if (Db.NAME.equals(database, name)) {
+    public DbModel getDatabase(String name) {
+        for (DbModel database : DATABASES.getList(this)) {
+            if (DbModel.NAME.equals(database, name)) {
                 return database;
             }
         }
@@ -55,7 +55,7 @@ public class DbRoot extends AbstractMetaModel {
     }
 
     /** Add a new database into repository. */
-    final public void add(Db database) {
+    final public void add(DbModel database) {
         DATABASES.addItem(this, database);
     }
 

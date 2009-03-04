@@ -22,7 +22,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.DbHandler;
 import org.ujoframework.orm.SqlRenderer;
-import org.ujoframework.orm.metaModel.Db;
+import org.ujoframework.orm.metaModel.DbModel;
 import org.ujoframework.orm.metaModel.DbColumn;
 import org.ujoframework.orm.metaModel.DbPK;
 import org.ujoframework.orm.metaModel.DbTable;
@@ -41,8 +41,8 @@ public class H2Renderer implements SqlRenderer {
     }
 
     /** Print a SQL script to crate database */
-    public void createDatabase(Db database, Appendable writer) throws IOException {
-        for (DbTable table : Db.TABLES.getList(database)) {
+    public void createDatabase(DbModel database, Appendable writer) throws IOException {
+        for (DbTable table : DbModel.TABLES.getList(database)) {
             printTable(table, writer);
             printForeignKey(table, writer);
         }
@@ -58,10 +58,7 @@ public class H2Renderer implements SqlRenderer {
             separator = "\n\t, ";
 
             if ( column.isForeignKey() ) {
-                final UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
-                @SuppressWarnings("unchecked")
-                final DbTable foreignTable = DbHandler.getInstance().findTableModel(property.getType());
-                printColumnFK(column, writer, getForeignKeyPrefix(foreignTable));
+                printFKColumns(column, writer);
             } else {
                 printColumn(column, writer, null);
             }
@@ -90,14 +87,14 @@ public class H2Renderer implements SqlRenderer {
         writer.append("\n\tADD FOREIGN KEY");
 
         String separator = "(";
-        for (DbColumn fkColumn : DbPK.COLUMNS.of(foreignKeys)) {
-            String prefix = getForeignKeyPrefix(foreignTable);
+        List<DbColumn> columns = DbPK.COLUMNS.of(foreignKeys);
+        int columnsSize = columns.size();
 
-
+        for (int i=0; i<columnsSize; ++i) {
             writer.append(separator);
             separator = ", ";
-            writer.append(prefix);
-            writer.append(DbColumn.NAME.of(fkColumn));
+            final String name = column.getForeignColumnName(i);
+            writer.append(name);
         }
 
         writer.append(")\n\tREFERENCES ");
@@ -116,14 +113,19 @@ public class H2Renderer implements SqlRenderer {
 
     }
 
-    /** Print a SQL to create column */
-    public void printColumn(DbColumn column, Appendable writer, String fkPrefix) throws IOException {
+    /**
+     *  Print a SQL to create column
+     * @param column Database Column
+     * @param name The name parameter is not mandatory, in case a null value the column name is used.
+     * @throws java.io.IOException
+     */
+    public void printColumn(DbColumn column, Appendable writer, String name) throws IOException {
 
-        if (fkPrefix!=null) {
-            writer.append( fkPrefix );
+        if (name==null) {
+            name = DbColumn.NAME.of(column);
         }
 
-        writer.append( DbColumn.NAME.of(column) );
+        writer.append( name );
         writer.append( ' ' );
         writer.append( DbColumn.DB_TYPE.of(column).name() );
 
@@ -137,37 +139,26 @@ public class H2Renderer implements SqlRenderer {
         if (!DbColumn.MANDATORY.isDefault(column)) {
            writer.append( " NOT NULL" );
         }
-        if (DbColumn.PRIMARY_KEY.of(column) && fkPrefix==null) {
+        if (DbColumn.PRIMARY_KEY.of(column) && name==null) {
            writer.append(" PRIMARY KEY");
         }
     }
 
-    /** Print a SQL to create a Foreign key. */
-    public void printColumnFK(DbColumn column, Appendable writer, String prefix) throws IOException {
+    /** Print a SQL to create foreign keys. */
+    public void printFKColumns(DbColumn column, Appendable writer) throws IOException {
 
-        final UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
-        final Class type = property.getType();
-        final DbTable table = DbHandler.getInstance().findTableModel(property);
-        final DbPK pk = DbTable.PK.of(table);
+        List<DbColumn> columns = column.getForeignColumns();
         String separator = "";
-        
-        for (DbColumn col : DbPK.COLUMNS.getList(pk)) {
+
+        for (int i=0; i<columns.size(); ++i) {
+            DbColumn col = columns.get(i);
             writer.append(separator);
             separator = "\n\t, ";
-            printColumn(col, writer, prefix );
+            String name = column.getForeignColumnName(i);
+            printColumn(col, writer, name );
         }
     }
 
-    /** Return a Primary Key prefix. */
-    public String getForeignKeyPrefix(DbTable table) {
-
-        StringBuilder sb = new StringBuilder(16);
-        sb.append("fk_");
-        sb.append(DbTable.NAME.of(table));
-        sb.append("_");
-
-        return sb.toString();
-    }
 
     /** Print an SQL INSERT statement.  */
     @SuppressWarnings("unchecked")
@@ -178,12 +169,11 @@ public class H2Renderer implements SqlRenderer {
 
          writer.append("INSERT INTO ");
          writer.append(table.getFullName());
-         writer.append("\n\t");
+         writer.append("\n\t(");
 
-         final String separator = "(";
-         printTableColumns(DbTable.COLUMNS.getList(table), writer, values, separator);
+         printTableColumns(DbTable.COLUMNS.getList(table), writer, values);
 
-         writer.append(")\n\tVALUES ");
+         writer.append(")\n\tVALUES (");
          writer.append(values);
          writer.append(");");
     }
@@ -196,7 +186,7 @@ public class H2Renderer implements SqlRenderer {
          StringBuilder values = null;
 
          writer.append("SELECT ");
-         printTableColumns(DbTable.COLUMNS.getList(table), writer, values, "");
+         printTableColumns(DbTable.COLUMNS.getList(table), writer, values);
          writer.append("\n\tFROM ");
          writer.append(table.getFullName());
          writer.append("\n\t");
@@ -210,15 +200,14 @@ public class H2Renderer implements SqlRenderer {
 
 
     /** Print table columns */
-    protected void printTableColumns(List<DbColumn> columns, Appendable writer, Appendable values, String separator) throws IOException {
+    @SuppressWarnings("unchecked")
+    protected void printTableColumns(List<DbColumn> columns, Appendable writer, Appendable values) throws IOException {
+        String separator = "";
         for (DbColumn column : columns) {
             if (column.isForeignKey()) {
-                for (DbColumn col : column.getForeignColumns()) {
-                    final Class type = DbColumn.TABLE_PROPERTY.of(column).getType();
-                    final DbTable tab = DbHandler.getInstance().findTableModel(type);
+                for (int i=0; i<column.getForeignColumns().size(); ++i) {
                     writer.append(separator);
-                    writer.append(getForeignKeyPrefix(tab));
-                    writer.append(DbColumn.NAME.of(col));
+                    writer.append(column.getForeignColumnName(i));
                     if (values!=null) {
                         values.append(separator);
                         values.append("?");

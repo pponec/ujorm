@@ -19,7 +19,7 @@ package org.ujoframework.orm;
 import java.util.Date;
 import junit.framework.TestCase;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.orm.sample.BoDatabase;
+import org.ujoframework.orm.sample.Database;
 import org.ujoframework.orm.sample.BoItem;
 import org.ujoframework.orm.sample.BoOrder;
 import org.ujoframework.tools.criteria.Expression;
@@ -56,7 +56,7 @@ public class OrmSampleTest extends TestCase {
     /** Using INSERT */
     public void useCreateItem() {
 
-        DbHandler.getInstance().createDatabase(BoDatabase.class);
+        DbHandler.getInstance().createDatabase(Database.class);
         Session session = DbHandler.getInstance().getSession();
 
         BoOrder order = new BoOrder();
@@ -80,9 +80,9 @@ public class OrmSampleTest extends TestCase {
     /** Using SELECT by a object relations */
     public void useRelation() {
         Session session = DbHandler.getInstance().getSession();
-        BoDatabase db = session.getDatabase();
+        Database db = session.getDatabase();
 
-        UjoIterator<BoOrder> orders  = BoDatabase.ORDERS.of(db);
+        UjoIterator<BoOrder> orders  = Database.ORDERS.of(db);
         for (BoOrder order : orders) {
             Long id = BoOrder.ID.of(order);
             String descr = BoOrder.DESCR.of(order);
@@ -105,8 +105,8 @@ public class OrmSampleTest extends TestCase {
         Expression<BoOrder> expr = exp1.and(exp2);
 
         Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
-        query.sizeRequired(true);  // need a count of iterator items, a default value is false
-        query.readOnly(false);     // Read onlyl result;
+        query.setCountRequest(true);  // need a count of iterator items, a default value is false
+        query.setReadOnly(false);     // Read onlyl result;
 
         for (BoOrder o : session.iterate( query ) ) {
             Long id = BoOrder.ID.of(o);

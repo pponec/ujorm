@@ -25,7 +25,10 @@ import org.ujoframework.orm.DbType;
 @Target(value=ElementType.FIELD)
 public @interface Column {
 
-    /** Column name */
+    /** The database column name.
+     * If an appropriate UjoProperty is a relation to another ORM object with more primary keys, 
+     * then the several names can be separated by a space or comma character.
+     */
     String name() default "";
     /** The primary key */
     boolean pk() default false;
