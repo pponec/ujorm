@@ -18,7 +18,7 @@ package org.ujoframework.orm;
 
 import java.io.IOException;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.metaModel.Db;
+import org.ujoframework.orm.metaModel.DbModel;
 import org.ujoframework.orm.metaModel.DbColumn;
 import org.ujoframework.orm.metaModel.DbTable;
 
@@ -35,17 +35,16 @@ public interface SqlRenderer {
     public String getJdbcDriver();
 
     /** Print a SQL script to crate database */
-    public void createDatabase(Db database, Appendable writer) throws IOException ;
+    public void createDatabase(DbModel database, Appendable writer) throws IOException ;
 
     /** Print a SQL sript to create table */
     public void printTable(DbTable table, Appendable result) throws IOException ;
 
-
     /** Print a SQL to create column */
-    public void printColumn(DbColumn column, Appendable writer, String prefix) throws IOException;
+    public void printColumn(DbColumn column, Appendable writer, String name) throws IOException;
 
     /** Print a SQL to create a Foreign Key. */
-    public void printColumnFK(DbColumn column, Appendable writer, String prefix) throws IOException;
+    public void printFKColumns(DbColumn column, Appendable writer) throws IOException;
 
     /** Print an INSERT SQL statement.  */
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException;

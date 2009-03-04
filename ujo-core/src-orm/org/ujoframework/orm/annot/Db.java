@@ -23,7 +23,7 @@ import org.ujoframework.orm.SqlRenderer;
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.TYPE)
-public @interface Database {
+public @interface Db {
 
     /** Name of database */
     String name() default "";

@@ -16,7 +16,7 @@
 
 package org.ujoframework.orm;
 
-import org.ujoframework.orm.sample.BoDatabase;
+import org.ujoframework.orm.sample.Database;
 
 /**
  * Singleton
@@ -37,7 +37,7 @@ public class OrmSessionProvider {
     public Session getSession() {
 
         if (session==null) {
-            DbHandler.getInstance().createDatabase(BoDatabase.class);
+            DbHandler.getInstance().createDatabase(Database.class);
             session = DbHandler.getInstance().getSession();
         }
 

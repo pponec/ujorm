@@ -34,9 +34,9 @@ public class Sample {
     public void useCreateItem() {
 
         if (true) {
-            DbHandler.getInstance().createDatabase(BoDatabase.class);
+            DbHandler.getInstance().createDatabase(Database.class);
         } else {
-            DbHandler.getInstance().loadDatabase(BoDatabase.class);
+            DbHandler.getInstance().loadDatabase(Database.class);
 
         }
         Session session = DbHandler.getInstance().getSession();
@@ -89,9 +89,9 @@ public class Sample {
     /** Using SELECT by a object relations */
     public void useRelation() {
         Session session = DbHandler.getInstance().getSession();
-        BoDatabase db = session.getDatabase();
+        Database db = session.getDatabase();
 
-        UjoIterator<BoOrder> orders  = BoDatabase.ORDERS.of(db);
+        UjoIterator<BoOrder> orders  = Database.ORDERS.of(db);
         for (BoOrder order : orders) {
             Long id = BoOrder.ID.of(order);
             String descr = BoOrder.DESCR.of(order);

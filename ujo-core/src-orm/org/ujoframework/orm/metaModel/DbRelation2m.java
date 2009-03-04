@@ -31,7 +31,10 @@ import org.ujoframework.orm.annot.Column;
  */
 public class DbRelation2m extends AbstractMetaModel {
 
-    /** DB column name */
+    /** The database column name.
+     * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
+     * then the several names can be separated by a space or comma character.
+     */
     @XmlAttribute
     public static final UjoProperty<DbRelation2m,String> NAME = newProperty("name", "");
     /** Table property */
@@ -40,7 +43,6 @@ public class DbRelation2m extends AbstractMetaModel {
     /** DB table */
     @Transient
     public static final UjoProperty<DbRelation2m,DbTable> TABLE = newProperty("table", DbTable.class);
-
 
     public DbRelation2m(DbTable table, UjoProperty tableProperty) {
         
