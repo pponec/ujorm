@@ -34,12 +34,14 @@ import org.ujoframework.implementation.map.MapUjoExt;
 @SuppressWarnings("unchecked")
 public class UjoPropertyRow extends MapUjoExt {
     
+    /** Index of property */
+    public static final MapProperty<UjoPropertyRow,Integer> P_INDEX    = new MapProperty("Index" , Integer.class);
     /** Name of property */
     public static final MapProperty<UjoPropertyRow,String> P_NAME      = new MapProperty("Name" , String.class);
-    /** Class of property */
-    public static final MapProperty<UjoPropertyRow,Class>  P_CLASS     = new MapProperty("Class", Class.class );
+    /** Type of property */
+    public static final MapProperty<UjoPropertyRow,Class>  P_TYPE      = new MapProperty("Type", Class.class );
     /** Class name without packages */
-    public static final MapProperty<UjoPropertyRow,String> P_CLASSNAME = new MapProperty("Type" , String.class);
+    public static final MapProperty<UjoPropertyRow,String> P_TYPENAME  = new MapProperty("TypeName" , String.class);
     /** Value */
     public static final MapProperty<UjoPropertyRow,Object> P_VALUE     = new MapProperty("Value", Object.class);
     /** Text Value */
@@ -88,22 +90,23 @@ public class UjoPropertyRow extends MapUjoExt {
     
     /** Read Value */
     @Override
-    public Object readValue(UjoProperty aProperty) {
+    public Object readValue(final UjoProperty aProperty) {
+        if (aProperty==P_INDEX)   { return property.getIndex(); }
         if (aProperty==P_NAME)    { return property.getName(); }
-        if (aProperty==P_CLASS)   { return property.getType(); }
+        if (aProperty==P_TYPE)    { return property.getType(); }
         if (aProperty==P_DEFAULT) { return property.getDefault(); }
         if (aProperty==P_VALUE)   { return property.getValue(content); }
         if (aProperty==P_TEXT)    { return UjoManager.getInstance().getText(content, property, new UjoActionImpl(this)); }
-        if (aProperty==P_CLASSNAME) {
-            String result = property.getType().getName();
-            int i = 1 + result.lastIndexOf('.');
+        if (aProperty==P_TYPENAME){
+            final String result = property.getType().getName();
+            final int i = 1 + result.lastIndexOf('.');
             return result.substring(i);
         }
         throw new UnsupportedOperationException("Can't read property " + property);
     }
     
     /** Returns an assigned property (a parameter e.g.) */
-    public UjoProperty getProperty() {
+    public final UjoProperty getProperty() {
         return property;
     }
     
