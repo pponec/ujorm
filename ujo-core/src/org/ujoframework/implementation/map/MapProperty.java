@@ -50,6 +50,7 @@ public class MapProperty<UJO extends Ujo,VALUE>
         this(name, defaultValue, -1);
     }
 
+
     /** Constructor with a default value
      * @param defaultValue The value must be type of VALUE exactly (no child).
      */

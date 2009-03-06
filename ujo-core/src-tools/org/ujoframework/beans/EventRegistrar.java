@@ -31,7 +31,7 @@ public interface EventRegistrar<UJO extends Ujo> {
      * @param property Property
      * @param listener Listener
      * @param before The null value means that listener will be called before as well as after reading/writting value to UJO.
-     * @return
+     * @return A result of the operation
      */
     public boolean addPropertyChangeListener
         ( final UjoProperty<UJO,?> property

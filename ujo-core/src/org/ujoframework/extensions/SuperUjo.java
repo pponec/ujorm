@@ -32,7 +32,7 @@ import static org.ujoframework.extensions.UjoAction.*;
 public abstract class SuperUjo implements Ujo, UjoTextable, UjoCloneable {
 
     /** A property order index. The field is used in a static method newProperty(..). 
-     * @see _nextPropertyIndex()
+     * @see #_nextPropertyIndex()
      */
     protected static int _propertyIndex = 0;
 

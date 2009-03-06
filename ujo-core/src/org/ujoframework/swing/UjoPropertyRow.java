@@ -39,9 +39,9 @@ public class UjoPropertyRow extends MapUjoExt {
     /** Name of property */
     public static final MapProperty<UjoPropertyRow,String> P_NAME      = new MapProperty("Name" , String.class);
     /** Type of property */
-    public static final MapProperty<UjoPropertyRow,Class>  P_TYPE      = new MapProperty("Type", Class.class );
+    public static final MapProperty<UjoPropertyRow,Class>  P_TYPE      = new MapProperty("Class", Class.class );
     /** Class name without packages */
-    public static final MapProperty<UjoPropertyRow,String> P_TYPENAME  = new MapProperty("TypeName" , String.class);
+    public static final MapProperty<UjoPropertyRow,String> P_TYPENAME  = new MapProperty("Type" , String.class);
     /** Value */
     public static final MapProperty<UjoPropertyRow,Object> P_VALUE     = new MapProperty("Value", Object.class);
     /** Text Value */

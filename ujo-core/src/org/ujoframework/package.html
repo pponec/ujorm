@@ -40,8 +40,9 @@ document.body.appendChild(oLink);
         <h2 id="UJO2">What is UJO ?</h2>
         <a href="UjoUmlFull.png" target="_top"><img src="UjoUml.png" width="284" height="320" alt="UjoUml.png" style="margin: 0 0 10px 10px; border: 0; float: right;" ></a>
         <span class="appl">UJO Framework</span>  
-        provides objects with a different architecture from JavaBeans. The original idea was 
-        a toy with generic data types of Java 5.0 however over time it appears, 
+        provides objects with a different architecture from JavaBeans, 
+        where each property has its own static object with a generic type methods. 
+        The original idea was a toy with generic data types of Java 5.0 however over time it appears,
         that the architecture has some exciting <strong>features</strong>:
         <ul>
         <li>an easy object introspection without a heavy PropertyDescriptor implementation</li>
@@ -210,22 +211,23 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
 
         <h2 id="defaultvalues">Default values</h2>
         
-        A JavaBean property can have got an implicit value by the sample: 
+        A JavaBean property can have got a default value by the sample:
 <pre class="pre">{ 
   <span class="java-keywords">private</span> Double cash = <span class="java-numeric-literals highlight">10.0</span>; 
 }</pre>
   
-        The UJO property can have got a default value. All the implementations of method Ujo.readValue(...) from this frameworks
+        Also the UJO property can have got a default value. All the implementations of method Ujo.readValue(...) from this frameworks
         replaces an undefined value (NULL) by the default value from the UjoProperty.
 
 <pre class="pre">{ 
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double&gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Cash&quot;</span>, <span class="java-numeric-literals highlight">10.0</span>);
 }</pre>
 
-        Notes: 
+        Special features:
         <ul>
-            <li>there is possible to restore a default value by the write NULL value to an UJO object.</li>
-            <li>if a default value is not specified than the default value is null</li>
+            <li>the default value is available even if the original property value is changed</li>
+            <li>if any property value is changed to a NULL then the property method returns the default value (the feature can be suppressd by overriding method: Ujo.readProperty)</li>
+            <li>interface UjoProperty provides some methods to use the default value</li>
         </ul>
         
         
@@ -479,7 +481,7 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
         <p id="performancexml"><strong>The XML serialization of UJO objects</strong> is based on a quick SAX parser, performance tests are very favorable,
                    mainly a comparison to XML serialization implemented in JER (classes XMLEncoder, XMLDecoder).
         </p>
-        A measurement was provided on the same PC like the last test (UJO release 0.74), all results are shown in next table.<br>
+        A measurement was provided on the same PC like the last test (UJO release <span style="font-weight: bold">0.84</span>), all results are shown in next table.<br>
         A test description:<br>
         <ul>
             <li>all business object are the same type (in scope one test)</li>
@@ -499,32 +501,32 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
             </tr>
             <tr>
                 <td align="left">ArrayUjo</td>
-                <td align="right">0.329</td>
-                <td align="right" style="color: red; font-weight:bold;">0.448</td>
-                <td align="right">111</td>
+                <td align="right">0.332</td>
+                <td align="right" style="color: red; font-weight:bold;">0.305</td>
+                <td align="right">93</td>
             </tr>
             <tr>
                 <td align="left">MapUjo</td>
                 <td align="right">0.340</td>
-                <td align="right">0.474</td>
-                <td align="right">116</td>
+                <td align="right">0.340</td>
+                <td align="right">99</td>
             </tr>
             <tr>
                 <td align="left">BeanUjo</td>
-                <td align="right">0.386</td>
-                <td align="right">0.483</td>
-                <td align="right">124</td>
+                <td align="right">0.375</td>
+                <td align="right">0.336</td>
+                <td align="right">104</td>
             </tr>
             <tr style="font-style: italic; color: #9999FF;">
                 <td align="left">XMLEncoder</td>
-                <td align="right">2.922</td>
-                <td align="right">1.790</td>
-                <td align="right">672</td>
+                <td align="right">2.797</td>
+                <td align="right">1.770</td>
+                <td align="right">668</td>
             </tr>
             <tr style="font-style: italic; color: #9999FF;">
-                <td align="left">JAXB 2.1.7</td>
-                <td align="right">0,207</td>
-                <td align="right">0,495</td>
+                <td align="left">JAXB</td>
+                <td align="right">0.211</td>
+                <td align="right">0.473</td>
                 <td align="right">100</td>
             </tr>
         </table>
@@ -567,15 +569,12 @@ UjoProperty personName;
 person.<span class="java-layer-method">writeValueString</span>(<span class="java-layer-method"></span>personName, request.<span class="java-layer-method">getParameters</span>(personName.<span class="java-layer-method">getName</span>());
 </pre>
 
-        <br>
         <h2 id="refAppl">Referential Application</h2>
-        The application <a href="http://jworksheet.ponec.net/"><strong>jWorkSheet</strong></a> is a referential implementation. 
-        This Swing project was powered by the UJO Framework. It is published under an open license on a home page <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>. 
+        The <a href="http://jworksheet.ponec.net/"><strong>jWorkSheet</strong></a> is a referential implementation of the framework.
+        This Swing project is powered by the UJO Framework. It is published under an open license on a home page <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>.
         The <strong>jWorkSheet</strong> is an application for time tracking different projects.        
 
-        <br>You can study the usage of the UJO object persistence and its collaboration with a graphics component JTable on the source codes.
-        <br>
-        <br>
+        <br />You can study the usage of the UJO object persistence and its collaboration with a graphics component JTable on the source codes.
         The jWorkSheet application characteristics::<br>
         <ul>
             <li>all the persistence is realized by the UJO framework. It is used the saving into <strong>XML</strong> format in project, 
@@ -583,7 +582,16 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
             <li>all the data models of the JTable object are straight the instance or a child of the UjoTable class.</li>
             <li>the small size of jWorkSheet application is interesting, it takes up about 170 kB including the UJO library.</li>
         </ul>
-        The JWorkSheet project is written in Java 5.0, the progress was realized by the <a href="http://www.netbeans.org/">NetBeans IDE</a>.
+        The jWorkSheet project is written in Java 5.0, the development was realized by the <a href="http://www.netbeans.org/">NetBeans IDE</a>.
+
+        <br>&nbsp;</br>
+        <a href="http://pekiline.ponec.net/">PekiLine</a> - the desktop application manages your personal (English) vocabulary to learn.
+        <ul>
+            <li>the application can get an translation word from a <a href="http://www.google.com/dictionary">Google dictionary</a> include a pronunciation in case you are on-line</li>
+            <li>you can modify all items of vocabulary, sort columns or mark word to a print</li>
+            <li>personal data are stored in a XML file located in the user home subdirectory</li>
+        </ul>
+
         
         <h2 id="where">Where ?</h2>
         The project home page: <a href="http://ujoframework.org/">http://ujoframework.org/</a><br>
@@ -615,24 +623,19 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         
         <h2 id="faq">FAQ</h2>
         <ul>
-            <li>Q: Is the list of the Properties objects ordered?</li>
-            <ul><li>A: Depends on the implementation. 
-                    The <i>ArrayUjo</i> class returns an ordered list always. 
-                    The <i>MapUjo</i> class returns the list ordered by the occurrence in the source code generally.
-                    However methods of Java reflection returns a items in undefined order officially,
-                    so if a right ordination is critical for your project, then use the ArrayUjo implementation.
+            <li>Q: Is the list of the Properties objects ordered by a natural order?</li>
+            <ul><li>A: The result depends on the implementation. All properties are sorted by a <strong>property index</strong> by default.
+                    All implementations from the UJO Framework returns its properties in a natural order on condition that the properties
+                    where created by a factory method newProperty(..). The <i>ArrayUjo</i> has assigned all indexes explicitly.
+                    If the index numers have got the same value then the natural ordering is no guarantee by a Sun Microsystems specificaton.
             </li></ul>
             
             <li>Q: What will be the retrieved UJO values, which were not initiated yet?</li>
             <ul><li>A: The result depends on UJO object implementation. The default implementation (SuperUjo) returns a default value from UjoProperty.
             </li></ul>
             
-            <li>Q: How to localize the properties names?</li>
-            <ul><li>A: The properties names can be used as a key for selecting in the <i>java.util.ResourceBundle</i> type object.</li>
-            </ul>
-            
-            <li>Q: Are somewhere any other types of the UJO usage?</li>
-            <ul><li>A: You find another examples except the JWorkSheet application in the UJO framework JUnit tests.</li>
+            <li>Q: Are somewhere any other UJO usage?</li>
+            <ul><li>A: You find another examples in the jWorkSheet application and in the JUnit tests too.</li>
             </ul>
             
             <li>Q: Isn't the UJO work slow?</li>
@@ -648,7 +651,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         <br>
         <h2 id="changes">Release notes</h2>        
         <ul>
-        <li>2008/10 - The version 0.81 brings a PathProperty and the first version of Criteria.</li>
+        <!-- <li>2008/10 - The version 0.81 brings a PathProperty and the first version of Criteria.</li> -->
         <li>2008/09 - The version 0.80 brings an UjoExt interface.</li>
         <li>2007/10 - The first public version 0.70 is free under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>.</li>
         </ul>
