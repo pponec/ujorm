@@ -110,7 +110,7 @@ import org.ujoframework.implementation.map.MapUjo;
  * <strong>Note</strong>: the API desing a very early prototype, methods are not implemented yet.
  *
  * @author Ponec
- * @see org.ujoframework.implementation.db.RelationToMany
+ * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
 public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<UJO> {

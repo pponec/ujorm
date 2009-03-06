@@ -56,7 +56,7 @@ public abstract class Expression<UJO extends Ujo> {
      * <li>UjoProperty - reference to a related entity</li>
      * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
-     * @return
+     * @return A new expression
      */
     public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property, Operator operator, Object value) {
         return new ExpressionValue<UJO>(property, operator, value);
@@ -72,7 +72,7 @@ public abstract class Expression<UJO extends Ujo> {
      * <li>UjoProperty - reference to a related entity</li>
      * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
-     * @return
+     * @return A new expression
      */
     public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property, Object value) {
         return new ExpressionValue<UJO>(property, Operator.EQ, value);
@@ -81,14 +81,12 @@ public abstract class Expression<UJO extends Ujo> {
     /**
      * New equals instance
      * @param property UjoProperty
-     * @param value Value or UjoProperty can be type of
      * <ul>
      * <li>TYPE - parameter value</li>
      * <li>List&lt;TYPE&gt; - list of values</li>
      * <li>UjoProperty - reference to a related entity</li>
      * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
-     * @return
      */
     public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property) {
         return new ExpressionValue<UJO>(property, Operator.EQ, property);
