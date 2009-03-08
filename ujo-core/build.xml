@@ -136,7 +136,7 @@ Implementation-Vendor: "Paul Ponec"</echo>
             <fileset dir="${src.src-tools.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
-            <fileset dir="${src.src-db.dir}" excludes="${excludes}" includes="${includes}">
+            <fileset dir="${src.src-orm.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
         </javadoc>

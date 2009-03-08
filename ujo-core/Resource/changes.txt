@@ -1,11 +1,15 @@
 The UJO Framework release notes
 *******************************
 
-release 0.84.beta (2009-XX-XX)
+release 0.85 (2009-XX-XX)
 + ORM support - the early alpha version of API
+
+release 0.84 (2009-03-08)
 + new method: UjoProperty.isDefault(UJO) indicates whether a parameter value of the ujo "equal to" the property default value
-+ new method: UjoProperty.isTypeOf(Class) returns true if property type is a type (or subtype) of the parameter.
++ new method: UjoProperty.isTypeOf(Class) returns true if property type is a type (or subtype) of the parameter
++ new property UjoPropertyRow.P_INDEX shows a property index
 + method Ujo.readProperties(..) returns the result properties in a natural order in case the properties was builded by a default newProperty() method
++ text reading from a PathProperty is fixed
 
 
 release 0.831 (2009-01-31)
