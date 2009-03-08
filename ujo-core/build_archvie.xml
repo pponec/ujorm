@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<!-- 
+*********************************************
+* Author : PPone(c)2002
+* Purpose: Create an ZIP archiv.
+* Start  : "c:\jdk1.4\bin\java.exe" -jar "C:\Program Files\ant-1.5.1\lib\ant.jar" -verbose -buildfile archive.ant
+*
+*********************************************
+-->
+<project name="archive-JavaProject" basedir="." default="archive">
+
+    <target name="ini" description="Initial">
+        <!-- Time stamp -->
+        <tstamp/>
+
+        <!-- A name for ZIP file (without excension) -->
+        <property name="zipFile" value="..${file.separator}ujo-${DSTAMP}-${TSTAMP}" />
+
+        <!-- Parrents, separated by "," character. -->
+        <property name="include" value="*.*,src*/**,nbproject/**,test/**,Resource/**,www/*.*,www/patternDesing/**,www/sample/**,www/_new/**" />
+        
+	<!-- Parrents, separated by "," character. -->
+        <property name="exclude" value=",**/.*,**/*.class*,**/*.rar,**/*.java~,*.log,www/_new/htmlLayout/**" />
+
+
+        <!-- A root of the backuped directories -->
+        <property name="root" value="${basedir}"/>
+
+
+        <!-- - - - - - - - - INFORMATION - - - - - - - - - - -->
+        <echo message="  zipFile  : ${zipFile}"/>
+        <echo message="  os.name  : ${os.name}"  />
+        <echo message="  basedir  : ${basedir}"  />
+        <echo message="  user.dir : ${user.dir}" />
+        <echo message="  ant.file : ${ant.file}" />
+        <echo message="  java.home: ${java.home}"/>
+        <echo message="  tstamp   : ${DSTAMP}.${TSTAMP} - ${TODAY}"/>
+        <echo message="  root     : ${root}"/>
+
+    </target>
+
+
+    <target name="archive" depends="ini" description="Create new archiv.">
+
+        <!-- Jméno zálohy. -->
+        <echo message="Creating an archiv file: ${zipFile}.tgz"/>
+
+        <!--
+        <zip destfile="${zipFile}.zip" whenempty="create">
+           <fileset 
+              dir="${root}"
+              includes="${include}"
+              excludes="${exclude}"
+              casesensitive="no"
+            />
+        </zip>
+        -->
+
+        <tar destfile="${zipFile}.tgz" 
+              basedir="${root}"
+              includes="${include}"
+              excludes="${exclude}"
+              compression="gzip"
+        />
+
+        <!--
+        <tar destfile="${zipFile}.tbz" 
+              basedir="${root}"
+              includes="${include}"
+              excludes="${exclude}"
+              compression="bzip2"
+        />
+        -->
+
+        <!-- Copy to other dir. 
+        <copy file="${zipFile}" todir="d:/"></copy> 
+        -->
+
+    </target>
+</project>
