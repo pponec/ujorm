@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
 <meta name="Author" content="Pavel Ponec" />
 <meta name="Description" content="So the another JavaBeans" />
-<meta name="keywords" content="sample, UJO, framework, Java, POJO, JavaBean, perzistence, XML, CSV, export, import" /> 
+<meta name="keywords" content="sample, UJO, framework, Java, Swing, POJO, JavaBean, perzistence, XML, CSV, export, import, 99 rows, 99, table, JTable" />
 <title>UJO - Getting Started</title>
 <link rel="stylesheet" type="text/css" href="../styles.css"></link>
 </head>
@@ -96,26 +96,30 @@ Getting Started</h1>
     
     <p class="prologue" id="prologue">
 	How to write a persistent table<br /> 
-	by 110 rows of source code on the desktop?
+	by the 99 rows of source code on the desktop?
     </p>
     
     <div class="chapter">
         <h2 id="motivation">Motivation:</h2>
         The document learns to you, how to create a simple Swing application with a persistent table by the UJO Framework
         and Java 5.0 SE.
-        We will create three classes without any <strong>table model</strong> class implementation:
+        We create three classes without a <strong>table model</strong> class implementation:
 	<ul>
 	  <li>business class Person</li>
 	  <li>business class Company</li>
   	  <li>window component extends a JFrame class.</li>
 	</ul>
-	All classes contain approximately 110 rows of source code (comments and blank rows was not counted). 
+	All classes contain <strong>99 rows</strong> of source code (comments, blank rows and imports are not counted).
         See the target screenshot:
 	<!-- <img src="screen.png" width="543" height="229" alt="screen.png" /> -->
-    <a href="bin/company.jnlp"><img src="screen2.png" width="549" height="155" alt="screen2.png" style="margin-top: 16px; display: block; border-width: 0px;" /></a>
-    Click on the image to run the sample by Java Web Start
+    <a href ="bin/company.jnlp"><img
+       src  ="screen2.png"
+       alt  ="Click on the image to run the sample"
+       title="Click on the image to run the sample"
+       style="width: 549px; height:155px; margin-top: 16px; display: block; border-width: 0px;"
+     /></a>
+    <span style="font-style: italic;">Click on the image to run the sample by Java Web Start</span>
     </div>
-    
 
     <div class="chapter">
         <h2 id="bo">Business objects</h2>
@@ -262,25 +266,22 @@ The Company object contains two properties only. Note how a company name is assi
   
   <span class="java-block-comment">/** Init GUI Components */</span>
   <span class="java-keywords">private</span> <span class="java-keywords">void</span> <span class="java-layer-method">initComponents</span>() {
-    table = <span class="java-keywords">new</span> <span class="java-layer-method">JTable</span>();  
-    <span class="java-layer-method">getContentPane</span>().<span class="java-layer-method">add</span>(<span class="java-keywords">new</span> <span class="java-layer-method">JScrollPane</span>(table), java.awt.BorderLayout.CENTER);
-    JPanel panel = <span class="java-keywords">new</span> <span class="java-layer-method">JPanel</span>(<span class="java-keywords">new</span> java.awt.<span class="java-layer-method">GridLayout</span>(<span class="java-numeric-literals">6</span>, <span class="java-numeric-literals">1</span>, <span class="java-numeric-literals">0</span>, <span class="java-numeric-literals">1</span>));
-    <span class="java-layer-method">getContentPane</span>().<span class="java-layer-method">add</span>(panel, java.awt.BorderLayout.EAST);
-    addButtons(panel, <span class="java-string-literal">&quot;New&quot;</span>, <span class="java-string-literal">&quot;Delete&quot;</span>, <span class="java-string-literal">&quot;Copy&quot;</span>, <span class="java-string-literal">&quot;Add $10&quot;</span>, <span class="java-string-literal">&quot;3 columns&quot;</span>, <span class="java-string-literal">&quot;6 columns&quot;</span>);
-    
-    <span class="java-layer-method">setDefaultCloseOperation</span>(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     <span class="java-layer-method">setTitle</span>(<span class="java-string-literal">&quot;Persons of Company&quot;</span>);
+    table = <span class="java-keywords">new</span> <span class="java-layer-method">JTable</span>();  
+    JPanel panel = <span class="java-keywords">new</span> <span class="java-layer-method">JPanel</span>(<span class="java-keywords">new</span> java.awt.<span class="java-layer-method">GridLayout</span>(<span class="java-numeric-literals">6</span>, <span class="java-numeric-literals">1</span>, <span class="java-numeric-literals">0</span>, <span class="java-numeric-literals">1</span>));
+    <span class="java-layer-method">getContentPane</span>().<span class="java-layer-method">add</span>(<span class="java-keywords">new</span> <span class="java-layer-method">JScrollPane</span>(table), java.awt.BorderLayout.CENTER);
+    <span class="java-layer-method">getContentPane</span>().<span class="java-layer-method">add</span>(panel, java.awt.BorderLayout.EAST);
+    <span class="java-layer-method">setDefaultCloseOperation</span>(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     <span class="java-layer-method">setBounds</span>(<span class="java-numeric-literals">100</span>,<span class="java-numeric-literals">200</span>,<span class="java-numeric-literals">550</span>,<span class="java-numeric-literals">165</span>);
-  }
-  
-  <span class="java-keywords">private</span> <span class="java-keywords">void</span> <span class="java-layer-method">addButtons</span>(JPanel panel, String... labels) {
-    <span class="java-keywords">for</span>(String label: labels) {
-      JButton button = <span class="java-keywords">new</span> JButton(label);
-      button.addActionListener(<span class="java-keywords">this</span>);
-      panel.add(button);
+
+    String[] labels = {<span class="java-string-literal">&quot;New&quot;</span>, <span class="java-string-literal">&quot;Delete&quot;</span>, <span class="java-string-literal">&quot;Copy&quot;</span>, <span class="java-string-literal">&quot;Add $10&quot;</span>, <span class="java-string-literal">&quot;3 columns&quot;</span>, <span class="java-string-literal">&quot;6 columns&quot;</span>};
+    <span class="keyword-directive">for</span> (String label : labels){
+       JButton button = <span class="java-keywords">new</span> JButton(label);
+       button.<span class="java-layer-method">addActionListener</span>(<span class="java-keywords">this</span>);
+       panel.<span class="java-layer-method">add</span>(button);
     }
   }
-
+  
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">void</span> <span class="java-layer-method">main</span>(String args[]) {
     <span class="java-keywords">new</span> <span class="java-layer-method">TableFrame</span>().<span class="java-layer-method">setVisible</span>(<span class="java-keywords">true</span>);
   }   
