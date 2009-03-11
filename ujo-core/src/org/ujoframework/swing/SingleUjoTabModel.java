@@ -30,7 +30,7 @@ import org.ujoframework.extensions.UjoAction;
  */
 public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> {
     
-    /** Typ øádkù */
+    /** Property row */
     public static final UjoPropertyRow ROWS = null;
     
     /**
