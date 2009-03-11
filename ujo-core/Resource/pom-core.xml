@@ -7,7 +7,7 @@
   <artifactId>core</artifactId>
   <packaging>jar</packaging>
   <name>UJO Framework</name>
-  <version>0.83</version>
+  <version>0.84</version>
   <description>UJO Framework provides a special type save bean architecture based on property constants.</description>
   <url>http://ujoframework.org/</url>
   <licenses>
