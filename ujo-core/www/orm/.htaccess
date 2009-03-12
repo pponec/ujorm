@@ -1,0 +1,21 @@
+# nastaveni vychozi stranky adresare
+DirectoryIndex index.html index.htm index.xhtml index.php
+
+# povoleni zobrazeni obsahu adresare, pokud chybi vychozi soubor
+Options Indexes
+
+####### Redirect to new domain ######
+RewriteEngine on
+Options +FollowSymlinks
+
+RewriteCond %{HTTP_HOST} ^pekiline.pponec.net
+RewriteRule (.*) http://pekiline.ponec.net/$1 [R=301,QSA,L]
+
+
+####### Redirect na verzi domény s www ######
+# RewriteEngine on
+# Options +FollowSymlinks
+# RewriteCond %{HTTP_HOST} ^ponec.net
+# RewriteRule (.*) http://pponec.net/$1 [R=301,QSA,L]
+
+AddType application/x-java-jnlp-file jnlp
