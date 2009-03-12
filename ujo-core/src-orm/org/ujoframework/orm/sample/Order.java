@@ -25,22 +25,23 @@ import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.annot.Table;
 
 /**
- * Simple order for goods with a collection of Items (a sample).
+ * The column mapping to DB table ORDER (a sample of usage).
+ * Note, that the Order object has got an collection of Items.
  */
 @Table(name="bo_order")
-public class BoOrder extends TableUjo {
+public class Order extends TableUjo<Order> {
 
     /** Unique key */
     @Column(pk=true)
-    public static final UjoProperty<BoOrder,Long> ID = newProperty("id", Long.class);
+    public static final UjoProperty<Order,Long> ID = newProperty("id", Long.class);
     /** User key */
-    public static final UjoProperty<BoOrder,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final UjoProperty<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of the order */
     @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
-    public static final UjoProperty<BoOrder,String> DESCR = newProperty("description", String.class);
+    public static final UjoProperty<Order,String> DESCR = newProperty("description", String.class);
     /** Date of creation */
-    public static final UjoProperty<BoOrder,Date> DATE = newProperty("date", Date.class);
+    public static final UjoProperty<Order,Date> DATE = newProperty("date", Date.class);
     /** References to Itemsr */
-    public static final RelationToMany<BoOrder,BoItem> ITEMS = newRelation("items", BoItem.class);
+    public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
 
 }
