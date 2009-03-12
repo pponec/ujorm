@@ -35,15 +35,17 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
     /** Getter based on one UjoProperty */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( UjoProperty<UJO, VALUE> property) {
-        return (VALUE) UjoManager.getValue(this, property);
+        ( final UjoProperty<UJO, VALUE> property
+        ) {
+        final Object result = ((UjoProperty) property).of(this);
+        return (VALUE) result;
     }
 
     /** Getter based on two properties */
     @SuppressWarnings("unchecked")
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, VALUE> property2) {
+        ( final UjoProperty<UJO1, UJO2 > property1
+        , final UjoProperty<UJO2, VALUE> property2) {
         
         final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2);
         return get(path);    }
@@ -51,9 +53,10 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
     /** Getter based on three properties */
     @SuppressWarnings("unchecked")
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, UJO3 > property2
-        , UjoProperty<UJO3, VALUE> property3 ) {
+        ( final UjoProperty<UJO1, UJO2 > property1
+        , final UjoProperty<UJO2, UJO3 > property2
+        , final UjoProperty<UJO3, VALUE> property3
+        ) {
 
         final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2, property3);
         return get(path);    }
@@ -61,18 +64,20 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
     /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
     @SuppressWarnings({"unchecked"})
     public <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
-        ( UjoProperty<UJO, VALUE> property
-        , VALUE value) {
+        ( final UjoProperty<UJO, VALUE> property
+        , final VALUE value
+        ) {
         readUjoManager().assertAssign(property, value);
-        UjoManager.setValue(this, property, value);
+        ((UjoProperty)property).setValue(this, value);
         return (UJO_IMPL) this;
     }
 
     /** Setter  based on two properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> void set
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, VALUE> property2
-        , VALUE value) {
+        ( final UjoProperty<UJO1, UJO2 > property1
+        , final UjoProperty<UJO2, VALUE> property2
+        , final VALUE value
+        ) {
         
         final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2);
         set(path, value);
@@ -80,10 +85,11 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
 
     /** Setter  based on three properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, UJO3 > property2
-        , UjoProperty<UJO3, VALUE> property3
-        , VALUE value) {
+        ( final UjoProperty<UJO1, UJO2 > property1
+        , final UjoProperty<UJO2, UJO3 > property2
+        , final UjoProperty<UJO3, VALUE> property3
+        , final VALUE value
+        ) {
 
         final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2, property3);
         set(path, value);    
@@ -96,7 +102,8 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> int getItemCount
-        (UjoPropertyList<UJO,LIST,ITEM> property) {
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
+        ) {
         return ((UjoPropertyList)property).getItemCount(this);
     }
     
@@ -105,8 +112,8 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> UJO_IMPL add
-        ( UjoPropertyList<UJO,LIST,ITEM> property
-        , ITEM value 
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
+        , final ITEM value
         ) {
         property.addItem((UJO) this, value);
         return (UJO_IMPL) this;
@@ -117,8 +124,9 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> UJO_IMPL set
-        ( UjoPropertyList<UJO,LIST,ITEM> property
-        , int index, ITEM value
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
+        , final int index
+        , final ITEM value
         ) {
         property.setItem((UJO)this, index, value);
         return (UJO_IMPL) this;
@@ -129,8 +137,8 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM get
-        ( UjoPropertyList<UJO,LIST,ITEM> property
-        , int index
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
+        , final int index
         ) {
         return (ITEM) ((UjoPropertyList)property).getItem(this, index);
     }
@@ -144,8 +152,8 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM remove
-        ( UjoPropertyList<UJO,LIST,ITEM> property
-        , int index
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
+        , final int index
         ) {
         return (ITEM) ((UjoPropertyList)property).getList(this).remove(index);
     }
@@ -158,8 +166,8 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> boolean remove
-        ( UjoPropertyList<UJO,LIST,ITEM> property
-        , ITEM item
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
+        , final ITEM item
         ) {
         return ((UjoPropertyList)property).removeItem(this, item);
     }
@@ -171,7 +179,7 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        (UjoPropertyList<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         ) {
         return (LIST) ((UjoPropertyList)property).getList(this);
     }
@@ -179,7 +187,7 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
     /** Indicates whether a parameter value "equal to" property default value. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> boolean isDefault
-        ( UjoProperty<UJO, VALUE> property) {
+        ( final UjoProperty<UJO, VALUE> property) {
         final boolean result = ((UjoProperty) property).isDefault(this);
         return result;
     }
@@ -226,7 +234,7 @@ public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo impl
      * @return The first UjoProperty with the same name.
      * @throws java.lang.IllegalArgumentException If property not found.
      */
-    public UjoProperty findProperty(String propertyName) throws IllegalArgumentException {
+    public UjoProperty findProperty(final String propertyName) throws IllegalArgumentException {
         
         final boolean throwException = true;
         return UjoManager.getInstance().findProperty(this, propertyName, throwException);
