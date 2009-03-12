@@ -24,6 +24,11 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Table {
 
+    /** A table name */
     String name();
+    /** Is the mapping to a database VIEW? */
+    boolean view() default false;
+    /** Mapping to the SQL type of SELECT. */
+    String  sql() default  "";
     
 }
