@@ -38,6 +38,14 @@ public class DbRoot extends AbstractMetaModel {
     /** List of tables */
     public static final ListProperty<DbRoot,DbModel> DATABASES = newPropertyList("database", DbModel.class);
 
+    /** ORM parameters */
+    public static final ListProperty<DbRoot,OrmParameters> PARAMETERS = newPropertyList("parameters", OrmParameters.class);
+
+    public DbRoot() {
+        PARAMETERS.setValue(this, new OrmParameters());
+    }
+
+
     /** Returns the first database or return null */
     public DbModel getDatabase() {
         final DbModel result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
