@@ -20,8 +20,8 @@ import java.util.Date;
 import junit.framework.TestCase;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.sample.Database;
-import org.ujoframework.orm.sample.BoItem;
-import org.ujoframework.orm.sample.BoOrder;
+import org.ujoframework.orm.sample.Item;
+import org.ujoframework.orm.sample.Order;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.Operator;
 
@@ -59,13 +59,13 @@ public class OrmSampleTest extends TestCase {
         DbHandler.getInstance().createDatabase(Database.class);
         Session session = DbHandler.getInstance().getSession();
 
-        BoOrder order = new BoOrder();
-        BoOrder.DATE.setValue(order, new Date());
-        BoOrder.DESCR.setValue(order, "test order");
+        Order order = new Order();
+        Order.DATE.setValue(order, new Date());
+        Order.DESCR.setValue(order, "test order");
 
-        BoItem item = new BoItem();
-        BoItem.DESCR.setValue(item, "yellow table");
-        BoItem.ORDER.setValue(item, order);
+        Item item = new Item();
+        Item.DESCR.setValue(item, "yellow table");
+        Item.ORDER.setValue(item, order);
 
         session.save(order);
         session.save(item);
@@ -82,15 +82,15 @@ public class OrmSampleTest extends TestCase {
         Session session = DbHandler.getInstance().getSession();
         Database db = session.getDatabase();
 
-        UjoIterator<BoOrder> orders  = Database.ORDERS.of(db);
-        for (BoOrder order : orders) {
-            Long id = BoOrder.ID.of(order);
-            String descr = BoOrder.DESCR.of(order);
+        UjoIterator<Order> orders  = Database.ORDERS.of(db);
+        for (Order order : orders) {
+            Long id = Order.ID.of(order);
+            String descr = Order.DESCR.of(order);
             System.out.println("Order id: " + id + " descr: " + descr);
 
-            for (BoItem item : BoOrder.ITEMS.of(order)) {
-                Long itemId = BoItem.ID.of(item);
-                String itemDescr = BoItem.DESCR.of(item);
+            for (Item item : Order.ITEMS.of(order)) {
+                Long itemId = Item.ID.of(item);
+                String itemDescr = Item.DESCR.of(item);
                 System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
             }
         }
@@ -100,17 +100,17 @@ public class OrmSampleTest extends TestCase {
     public void useSelection() {
         Session session = DbHandler.getInstance().getSession();
 
-        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.DESCR, "test order");
-        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE, Operator.LE, new Date());
-        Expression<BoOrder> expr = exp1.and(exp2);
+        Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "test order");
+        Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
+        Expression<Order> expr = exp1.and(exp2);
 
-        Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
+        Query<Order> query = session.createQuery(Order.class, expr);
         query.setCountRequest(true);  // need a count of iterator items, a default value is false
         query.setReadOnly(false);     // Read onlyl result;
 
-        for (BoOrder o : session.iterate( query ) ) {
-            Long id = BoOrder.ID.of(o);
-            String descr = BoOrder.DESCR.of(o);
+        for (Order o : session.iterate( query ) ) {
+            Long id = Order.ID.of(o);
+            String descr = Order.DESCR.of(o);
             System.out.println("Order id: " + id + " descr: " + descr);
         }
     }

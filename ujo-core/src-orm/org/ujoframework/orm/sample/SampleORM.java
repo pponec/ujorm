@@ -25,32 +25,32 @@ import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.Operator;
 
 /**
- *
- * @author pavel
+ * SampleORM of usages: INSERT, SELECT
+ * @author Pavel Ponec
  */
-public class Sample {
+public class SampleORM {
 
-    /** Using INSERT */
+    /** Create database and using INSERT */
     public void useCreateItem() {
 
         if (true) {
             DbHandler.getInstance().createDatabase(Database.class);
         } else {
             DbHandler.getInstance().loadDatabase(Database.class);
-
         }
         Session session = DbHandler.getInstance().getSession();
 
-        BoOrder order = new BoOrder();
-        BoOrder.DATE.setValue(order, new Date());
-        BoOrder.DESCR.setValue(order, "John's order");
+        Order order = new Order();
+        order.set(Order.DATE, new Date());
+        order.set(Order.DESCR, "John's order");
 
-        BoItem item1 = new BoItem();
-        BoItem.DESCR.setValue(item1, "yellow table");
-        BoItem.ORDER.setValue(item1, order);
-        BoItem item2 = new BoItem();
-        BoItem.DESCR.setValue(item2, "green window");
-        BoItem.ORDER.setValue(item2, order);
+        Item item1 = new Item();
+        item1.set(Item.DESCR, "Yellow table");
+        item1.set(Item.ORDER, order);
+
+        Item item2 = new Item();
+        item2.set(Item.ORDER, order);
+        item2.set(Item.DESCR, "Green window");
 
         System.out.println("order: "  + order.toString());
         System.out.println("item1: "  + item1.toString());
@@ -71,17 +71,17 @@ public class Sample {
     public void useSelection() {
         Session session = DbHandler.getInstance().getSession();
 
-        Expression<BoOrder> exp1 = Expression.newInstance(BoOrder.DESCR, "John's order");
-        Expression<BoOrder> exp2 = Expression.newInstance(BoOrder.DATE, Operator.LE, new Date());
-        Expression<BoOrder> expr = exp1.and(exp2);
+        Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "John's order");
+        Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
+        Expression<Order> expr = exp1.and(exp2);
 
-        Query<BoOrder> query = session.createQuery(BoOrder.class, expr);
+        Query<Order> query = session.createQuery(Order.class, expr);
         query.setCountRequest(true);  // need a count of iterator items, a default value is false
         query.setReadOnly(false);     // Read onlyl result;
 
-        for (BoOrder o : session.iterate( query ) ) {
-            Long id = BoOrder.ID.of(o);
-            String descr = BoOrder.DESCR.of(o);
+        for (Order order : session.iterate( query ) ) {
+            Long id = order.get(Order.ID);
+            String descr = order.get(Order.DESCR);
             System.out.println("Order id: " + id + " descr: " + descr);
         }
     }
@@ -91,15 +91,15 @@ public class Sample {
         Session session = DbHandler.getInstance().getSession();
         Database db = session.getDatabase();
 
-        UjoIterator<BoOrder> orders  = Database.ORDERS.of(db);
-        for (BoOrder order : orders) {
-            Long id = BoOrder.ID.of(order);
-            String descr = BoOrder.DESCR.of(order);
+        UjoIterator<Order> orders  = Database.ORDERS.of(db);
+        for (Order order : orders) {
+            Long id = order.get(Order.ID);
+            String descr = order.get(Order.DESCR);
             System.out.println("Order id: " + id + " descr: " + descr);
 
-            for (BoItem item : BoOrder.ITEMS.of(order)) {
-                Long itemId = BoItem.ID.of(item);
-                String itemDescr = BoItem.DESCR.of(item);
+            for (Item item : order.get(Order.ITEMS)) {
+                Long itemId = item.get(Item.ID);
+                String itemDescr = item.get(Item.DESCR);
                 System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
             }
         }
@@ -109,7 +109,7 @@ public class Sample {
     public static void main(String[] args) {
 
         try {
-            Sample sample = new Sample();
+            SampleORM sample = new SampleORM();
             sample.useCreateItem();
             sample.useSelection();
             //sample.useRelation();

@@ -22,23 +22,24 @@ import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.TableUjo;
 
 /**
- * Each Item have got a reference to a common Order (a sample).
+ * The column mapping to DB table ITEM (a sample of usage).
+ * Note, that the Item object have got a reference to a Order object.
  * @Table=bo_item
  */
-public class BoItem extends TableUjo {
+public class Item extends TableUjo<Item> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<BoItem,Long> ID = newProperty("id", Long.class);
+    public static final UjoProperty<Item,Long> ID = newProperty("id", Long.class);
     /** User key */
-    public static final UjoProperty<BoItem,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final UjoProperty<Item,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of Item */
-    public static final UjoProperty<BoItem,String> DESCR = newProperty("description", String.class);
+    public static final UjoProperty<Item,String> DESCR = newProperty("description", String.class);
     /** A reference to common Order */
-    public static final UjoProperty<BoItem,BoOrder> ORDER = newProperty("fk_order", BoOrder.class);
+    public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);
 
     // -------------------------------
 
     /** A property to an Date of Order */
-    public static final UjoProperty<BoItem,Date> ORDER_DATE = PathProperty.create(ORDER, BoOrder.DATE);
+    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.create(ORDER, Order.DATE);
 }
