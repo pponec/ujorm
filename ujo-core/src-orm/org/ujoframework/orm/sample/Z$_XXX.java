@@ -26,7 +26,7 @@ import java.sql.Timestamp;
  *
  * @author    Roman "Dagi" Pichlík
  */
-public abstract class $_Xxx {
+public abstract class Z$_XXX {
 
     /**
      * Konstanta oznaèující SQL pøíkaz <tt>select</tt>

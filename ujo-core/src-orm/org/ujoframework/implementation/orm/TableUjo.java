@@ -52,7 +52,7 @@ import org.ujoframework.implementation.map.MapUjo;
  *
  *      Order order = <span class="keyword-directive">new</span> Order();
  *      order.set(Order.DATE, <span class="keyword-directive">new</span> Date());
- *      order.set(Order.DESCR.setValue, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
+ *      order.set(Order.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
  *
  *      Item item = <span class="keyword-directive">new</span> Item();
  *      item.set(Item.ORDER, order);
@@ -167,14 +167,16 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
     }
 
 
-    /** Getter based on one UjoProperty */
+    /** Getter based on UjoProperty implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
         final Object result = ((UjoProperty) property).of(this);
         return (VALUE) result;
     }
 
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
+    /** Setter  based on UjoProperty. Type of value is checked in the runtime.
+     * The method was implemented by a pattern UjoExt.
+     */
     @SuppressWarnings({"unchecked"})
     public <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
         ( final UjoProperty<UJO, VALUE> property
