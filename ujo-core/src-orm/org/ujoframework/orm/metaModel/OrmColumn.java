@@ -33,24 +33,24 @@ import org.ujoframework.orm.annot.GenerationType;
  * Database column metadata
  * @author pavel
  */
-public class DbColumn extends DbRelation2m {
+public class OrmColumn extends OrmRelation2Many {
 
     /** DB primary key */
-    public static final UjoProperty<DbColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
+    public static final UjoProperty<OrmColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
     /** Database Type */
-    public static final UjoProperty<DbColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
+    public static final UjoProperty<OrmColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
     /** Column NOT-NULL */
-    public static final UjoProperty<DbColumn,Boolean> MANDATORY = newProperty("mandatory", false);
+    public static final UjoProperty<OrmColumn,Boolean> MANDATORY = newProperty("mandatory", false);
     /** Column value length */
-    public static final UjoProperty<DbColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
+    public static final UjoProperty<OrmColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
     /** Column value precision */
-    public static final UjoProperty<DbColumn,Integer> PRECISION = newProperty("precision", -1);
+    public static final UjoProperty<OrmColumn,Integer> PRECISION = newProperty("precision", -1);
     /** DB Default value */
-    public static final UjoProperty<DbColumn,String> DEFAULT_VALUE = newProperty("default", "");
+    public static final UjoProperty<OrmColumn,String> DEFAULT_VALUE = newProperty("default", "");
     /** The column is included in the index of the name */
-    public static final UjoProperty<DbColumn,String> INDEX_NAME = newProperty("indexName", "");
+    public static final UjoProperty<OrmColumn,String> INDEX_NAME = newProperty("indexName", "");
     /** DB primary key generator */
-    public static final UjoProperty<DbColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.MEMO_SEQUENCE);
+    public static final UjoProperty<OrmColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.MEMO_SEQUENCE);
 
 
     /** Foreign column names. */
@@ -58,10 +58,10 @@ public class DbColumn extends DbRelation2m {
     private static final String[] EMPTY_NAMES = new String[0];
 
 
-    public DbColumn(DbTable table, UjoProperty tableProperty) {
+    public OrmColumn(OrmTable table, UjoProperty tableProperty) {
         super(table, tableProperty);
 
-        Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
+        Field field = UjoManager.getInstance().getPropertyField(OrmTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (column!=null) {
@@ -73,10 +73,10 @@ public class DbColumn extends DbRelation2m {
             INDEX_NAME .setValue(this, column.indexName());
         }
         if (DB_TYPE.isDefault(this)) {
-            DbTable.DATABASE.of(table).changeDbType(this);
+            OrmTable.DATABASE.of(table).changeDbType(this);
         }
         if (MAX_LENGTH.isDefault(this)) {
-            DbTable.DATABASE.of(table).changeDbLength(this);
+            OrmTable.DATABASE.of(table).changeDbLength(this);
         }
     }
 
@@ -89,19 +89,19 @@ public class DbColumn extends DbRelation2m {
     /** Is it a Foreign Key ? */
     @Override
     public boolean isForeignKey() {
-        final boolean result = DbColumn.TABLE_PROPERTY.of(this).isTypeOf(TableUjo.class);
+        final boolean result = OrmColumn.TABLE_PROPERTY.of(this).isTypeOf(TableUjo.class);
         return result;
     }
 
     /** Returns an original foreign columns in case a foreign column. */
     @SuppressWarnings("unchecked")
-    public List<DbColumn> getForeignColumns() {
-        List<DbColumn> result;
-        Class type = DbColumn.TABLE_PROPERTY.of(this).getType();
-        DbTable table = DbHandler.getInstance().findTableModel(type);
+    public List<OrmColumn> getForeignColumns() {
+        List<OrmColumn> result;
+        Class type = OrmColumn.TABLE_PROPERTY.of(this).getType();
+        OrmTable table = DbHandler.getInstance().findTableModel(type);
         if (table!=null) {
-            DbPK pk = DbTable.PK.of(table);
-            result = DbPK.COLUMNS.getList(pk);
+            OrmPKey pk = OrmTable.PK.of(table);
+            result = OrmPKey.COLUMNS.getList(pk);
         } else {
             result = Collections.emptyList();
         }
@@ -114,11 +114,11 @@ public class DbColumn extends DbRelation2m {
     @SuppressWarnings("unchecked")
     private String[] getForeignColumnNames() {
         if (foreignNames==null) {
-            final Class type = DbColumn.TABLE_PROPERTY.of(this).getType();
-            final DbTable foreignTable = DbHandler.getInstance().findTableModel(type);
+            final Class type = OrmColumn.TABLE_PROPERTY.of(this).getType();
+            final OrmTable foreignTable = DbHandler.getInstance().findTableModel(type);
             if (foreignTable!=null && isForeignKey()) {
-                final DbPK pk = DbTable.PK.of(foreignTable);
-                final List<DbColumn> dbColumns = DbPK.COLUMNS.getList(pk);
+                final OrmPKey pk = OrmTable.PK.of(foreignTable);
+                final List<OrmColumn> dbColumns = OrmPKey.COLUMNS.getList(pk);
                 final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1 ? NAME.of(this) : "", ", ");
 
                 ArrayList<String> fNames = new ArrayList<String>(dbColumns.size());
@@ -128,10 +128,10 @@ public class DbColumn extends DbRelation2m {
                         name = tokenizer.nextToken();
                     } else {
                         name = "fk_"
-                          // + DbTable.NAME.of(foreignTable)
-                             + DbColumn.NAME.of(this)
+                          // + OrmTable.NAME.of(foreignTable)
+                             + OrmColumn.NAME.of(this)
                              + "_"
-                             + DbColumn.NAME.of(dbColumns.get(i))
+                             + OrmColumn.NAME.of(dbColumns.get(i))
                              ;
                     }
                     fNames.add(name);
@@ -161,8 +161,8 @@ public class DbColumn extends DbRelation2m {
     /** Returns a TABLE and COLUMN names. */
     @Override
     public String toString() {
-        final  DbTable table = TABLE.of(this);
-        return DbTable.NAME.of(table) + '.' + NAME.of(this);
+        final  OrmTable table = TABLE.of(this);
+        return OrmTable.NAME.of(table) + '.' + NAME.of(this);
     }
 
 

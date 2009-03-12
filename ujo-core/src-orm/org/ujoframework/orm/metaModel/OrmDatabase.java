@@ -41,37 +41,37 @@ import org.ujoframework.orm.annot.Db;
  * A logical database description.
  * @author pavel
  */
-public class DbModel extends AbstractMetaModel {
+public class OrmDatabase extends AbstractMetaModel {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(DbModel.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(OrmDatabase.class.toString());
 
 
-    /** DbModel name */
+    /** OrmDatabase name */
     @XmlAttribute
-    public static final UjoProperty<DbModel,String> NAME = newProperty("name", "");
+    public static final UjoProperty<OrmDatabase,String> NAME = newProperty("name", "");
     /**  SQL renderer type of SqlRenderer. */
-    public static final UjoProperty<DbModel,Class> RENDERER = newProperty("renderer", Class.class);
+    public static final UjoProperty<OrmDatabase,Class> RENDERER = newProperty("renderer", Class.class);
     /** List of tables */
-    public static final ListProperty<DbModel,DbTable> TABLES = newPropertyList("table", DbTable.class);
+    public static final ListProperty<OrmDatabase,OrmTable> TABLES = newPropertyList("table", OrmTable.class);
     /** JDBC URL connection */
-    public static final UjoProperty<DbModel,String> JDBC_URL = newProperty("jdbcUrl", "");
+    public static final UjoProperty<OrmDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
     /** DB user */
-    public static final UjoProperty<DbModel,String> USER = newProperty("user", "");
+    public static final UjoProperty<OrmDatabase,String> USER = newProperty("user", "");
     /** DB password */
     @Transient
-    public static final UjoProperty<DbModel,String> PASSWORD = newProperty("password", "");
+    public static final UjoProperty<OrmDatabase,String> PASSWORD = newProperty("password", "");
     /** DB class root instance */
     @Transient
-    public static final UjoProperty<DbModel,TableUjo> ROOT = newProperty("root", TableUjo.class);
+    public static final UjoProperty<OrmDatabase,TableUjo> ROOT = newProperty("root", TableUjo.class);
     /** LDPA */
-    public static final UjoProperty<DbModel,String> LDAP = newProperty("ldap", "");
+    public static final UjoProperty<OrmDatabase,String> LDAP = newProperty("ldap", "");
 
     // --------------------
 
     private SqlRenderer renderer;
 
-    public DbModel(TableUjo database) {
+    public OrmDatabase(TableUjo database) {
         ROOT.setValue(this, database);
 
         Db annotDB = database.getClass().getAnnotation(Db.class);
@@ -96,7 +96,7 @@ public class DbModel extends AbstractMetaModel {
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;
 
-                DbTable table = new DbTable(this, tProperty);
+                OrmTable table = new OrmTable(this, tProperty);
                 TABLES.addItem(this, table);
             }
         }
@@ -134,91 +134,91 @@ public class DbModel extends AbstractMetaModel {
 
 
     /** Change DbType by a Java property */
-    public void changeDbType(DbColumn column) {
-       UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+    public void changeDbType(OrmColumn column) {
+       UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
 
        Class type = property.getType();
 
         if (String.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
+            OrmColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
         else if (Integer.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.INT);
+            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
         }
         else if (Long.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
         }
         else if (BigInteger.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
         }
         else if (Double.class==type || BigDecimal.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
+            OrmColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
         }
         else if (java.sql.Date.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.DATE);
+            OrmColumn.DB_TYPE.setValue(column, DbType.DATE);
         }
         else if (Date.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+            OrmColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
         else if (TableUjo.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.INT);
+            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }
 
     /** Change DbType by a Java property */
-    public void changeDbLength(DbColumn column) {
+    public void changeDbLength(OrmColumn column) {
 
-        switch (DbColumn.DB_TYPE.of(column)) {
+        switch (OrmColumn.DB_TYPE.of(column)) {
             case DECIMAL:
-                changeDefault(column, DbColumn.MAX_LENGTH, 8);
-                changeDefault(column, DbColumn.PRECISION, 2);
+                changeDefault(column, OrmColumn.MAX_LENGTH, 8);
+                changeDefault(column, OrmColumn.PRECISION, 2);
                 break;
             case VARCHAR:
             case VARCHAR_IGNORECASE:
-                changeDefault(column, DbColumn.MAX_LENGTH, 128);
+                changeDefault(column, OrmColumn.MAX_LENGTH, 128);
                 break;
             default:
         }
 
 
-       UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+       UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
 
        Class type = property.getType();
 
         if (String.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
-            changeDefault(column, DbColumn.MAX_LENGTH, 128);
+            OrmColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
+            changeDefault(column, OrmColumn.MAX_LENGTH, 128);
         }
         else if (Integer.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.INT);
-            changeDefault(column, DbColumn.MAX_LENGTH, 8);
+            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
+            changeDefault(column, OrmColumn.MAX_LENGTH, 8);
         }
         else if (Long.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
-            //changeDefault(column, DbColumn.MAX_LENGTH, 16);
+            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            //changeDefault(column, OrmColumn.MAX_LENGTH, 16);
         }
         else if (BigInteger.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.BIGINT);
-            changeDefault(column, DbColumn.MAX_LENGTH, 16);
+            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            changeDefault(column, OrmColumn.MAX_LENGTH, 16);
         }
         else if (Double.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
-            changeDefault(column, DbColumn.MAX_LENGTH, 8);
-            changeDefault(column, DbColumn.PRECISION, 2);
+            OrmColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
+            changeDefault(column, OrmColumn.MAX_LENGTH, 8);
+            changeDefault(column, OrmColumn.PRECISION, 2);
         }
         else if (BigDecimal.class==type) {
-            DbColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
-            changeDefault(column, DbColumn.MAX_LENGTH, 8);
-            changeDefault(column, DbColumn.PRECISION, 2);
+            OrmColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
+            changeDefault(column, OrmColumn.MAX_LENGTH, 8);
+            changeDefault(column, OrmColumn.PRECISION, 2);
         }
         else if (java.sql.Date.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.DATE);
+            OrmColumn.DB_TYPE.setValue(column, DbType.DATE);
         }
         else if (Date.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+            OrmColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
         else if (TableUjo.class.isAssignableFrom(type)) {
-            DbColumn.DB_TYPE.setValue(column, DbType.INT);
+            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }
 
@@ -317,7 +317,7 @@ public class DbModel extends AbstractMetaModel {
     }
 
 
-    /** Returns a NAME of the DbModel. */
+    /** Returns a NAME of the OrmDatabase. */
     @Override
     public String toString() {
         return NAME.of(this);
@@ -337,11 +337,11 @@ public class DbModel extends AbstractMetaModel {
     /** Equals */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof DbModel) {
-            DbModel db = (DbModel) obj;
+        if (obj instanceof OrmDatabase) {
+            OrmDatabase db = (OrmDatabase) obj;
 
-            final String name1 = DbModel.NAME.of(this);
-            final String name2 = DbModel.NAME.of(db);
+            final String name1 = OrmDatabase.NAME.of(this);
+            final String name2 = OrmDatabase.NAME.of(db);
 
             return name1.equals(name2);
         } else {
@@ -352,7 +352,7 @@ public class DbModel extends AbstractMetaModel {
     /** Hash code */
     @Override
     public int hashCode() {
-        final String name = DbModel.NAME.of(this);
+        final String name = OrmDatabase.NAME.of(this);
         return name.hashCode();
     }
 

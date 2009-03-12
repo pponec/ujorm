@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.orm.metaModel.DbModel;
-import org.ujoframework.orm.metaModel.DbTable;
+import org.ujoframework.orm.metaModel.OrmDatabase;
+import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.orm.sample.Database;
 import org.ujoframework.tools.criteria.Expression;
 
@@ -42,7 +42,7 @@ public class Session {
 
 
     /** Database connection */
-    private HashMap<DbModel,Connection> connections = new HashMap<DbModel,Connection>();
+    private HashMap<OrmDatabase,Connection> connections = new HashMap<OrmDatabase,Connection>();
 
 
     /** Make a commit for all databases. */
@@ -60,10 +60,10 @@ public class Session {
      */
     protected void commit(boolean commit) {
         Throwable exception = null;
-        DbModel database = null;
+        OrmDatabase database = null;
         String errMessage = "Can't make commit of DB ";
 
-        for (DbModel db : connections.keySet()) {
+        for (OrmDatabase db : connections.keySet()) {
             try {
                 Connection conn = connections.get(db);
                 if (commit) {
@@ -98,9 +98,9 @@ public class Session {
         JdbcStatement statement = null;
 
         try {
-            DbTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
+            OrmTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
             table.assignPrimaryKey(ujo);
-            DbModel db = DbTable.DATABASE.of(table);
+            OrmDatabase db = OrmTable.DATABASE.of(table);
             String sql = db.createInsert(ujo);
             LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
@@ -108,10 +108,10 @@ public class Session {
             LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
-            DbModel.close(null, statement, null, false);
+            OrmDatabase.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
         }
-        DbModel.close(null, statement, null, true);
+        OrmDatabase.close(null, statement, null, true);
     }
 
     /** Run SQL SELECT by query. */
@@ -120,16 +120,16 @@ public class Session {
         Class<? extends TableUjo> type = query.getTableType();
 
         try {
-            DbTable table = DbHandler.getInstance().findTableModel(type);
-            DbModel db = DbTable.DATABASE.of(table);
+            OrmTable table = DbHandler.getInstance().findTableModel(type);
+            OrmDatabase db = OrmTable.DATABASE.of(table);
             String sql = db.createSelect(query);
             LOGGER.log(Level.INFO, sql);
             ResultSet rs = statement.executeQuery(); // execute select statement
         } catch (Throwable e) {
-            DbModel.close(null, statement, null, false);
+            OrmDatabase.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
         }
-        DbModel.close(null, statement, null, true);
+        OrmDatabase.close(null, statement, null, true);
         return null;
     }
 
@@ -149,7 +149,7 @@ public class Session {
     }
 
     /** Get connection for a required database and set an autocommit na false. */
-    public Connection getConnection(DbModel database) throws IllegalStateException {
+    public Connection getConnection(OrmDatabase database) throws IllegalStateException {
         Connection result = connections.get(database);
         if (result==null) {
             try {
@@ -164,7 +164,7 @@ public class Session {
     }
 
     /** Create new statement */
-    public JdbcStatement getStatement(DbModel database, CharSequence sql) throws SQLException {
+    public JdbcStatement getStatement(OrmDatabase database, CharSequence sql) throws SQLException {
         final JdbcStatement result = new JdbcStatement(getConnection(database), sql);
         return result;
     }
@@ -175,10 +175,10 @@ public class Session {
     public void close() throws IllegalStateException {
 
         Throwable exception = null;
-        DbModel database = null;
+        OrmDatabase database = null;
         String errMessage = "Can't close connection for DB ";
 
-        for (DbModel db : connections.keySet()) {
+        for (OrmDatabase db : connections.keySet()) {
             try {
                 Connection conn = connections.get(db);
                 conn.close();
