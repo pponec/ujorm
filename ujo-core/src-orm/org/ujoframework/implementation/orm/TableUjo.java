@@ -38,9 +38,10 @@ import org.ujoframework.implementation.map.MapUjo;
  * <ul>
  *    <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
  *    <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
+ *    <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
  *    <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annoatations can be owerwrited by a XML files </li>
- *    <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a better security</li>
- *    <li>missing cache is siutable for a large transactions and a selecting uncommited changes</li>
+ *    <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a hight security</li>
+ *    <li>restricted cache is suitable for a large transactions and a selecting uncommited changes</li>
  * </ul>
  * The sample of use:
  * <pre class="pre">
@@ -114,7 +115,7 @@ import org.ujoframework.implementation.map.MapUjo;
  * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
-public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<UJO> {
+public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegistrar<UJO_IMPL> {
     
     final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
     final private DbHandler handler;
@@ -149,7 +150,7 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
 
     /** Add property Listener */
     public boolean addPropertyChangeListener
-        ( UjoProperty<UJO,?> property
+        ( UjoProperty<UJO_IMPL,?> property
         , Boolean before
         , UjoPropertyChangeListener listener
         ) {
@@ -158,13 +159,31 @@ public class TableUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<
 
     /** Remove property Listener */
     public boolean removePropertyChangeListener
-        ( UjoProperty<UJO,?> property
+        ( UjoProperty<UJO_IMPL,?> property
         , Boolean before
         , UjoPropertyChangeListener listener
         ) {
          return eventRegistrar.removePropertyChangeListener(property, before, listener);
     }
 
+
+    /** Getter based on one UjoProperty */
+    @SuppressWarnings("unchecked")
+    public <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
+        final Object result = ((UjoProperty) property).of(this);
+        return (VALUE) result;
+    }
+
+    /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
+    @SuppressWarnings({"unchecked"})
+    public <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
+        ( final UjoProperty<UJO, VALUE> property
+        , final VALUE value
+        ) {
+        readUjoManager().assertAssign(property, value);
+        ((UjoProperty)property).setValue(this, value);
+        return (UJO_IMPL) this;
+    }
 
     // --------- STATIC METHODS -------------------
 
