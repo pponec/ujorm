@@ -77,7 +77,7 @@ public class SampleORM {
 
         Query<Order> query = session.createQuery(Order.class, expr);
         query.setCountRequest(true);  // need a count of iterator items, a default value is false
-        query.setReadOnly(false);     // Read onlyl result;
+        query.setReadOnly(false);     // Read only result;
 
         for (Order order : session.iterate( query ) ) {
             Long id = order.get(Order.ID);

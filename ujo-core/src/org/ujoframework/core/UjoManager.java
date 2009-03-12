@@ -499,7 +499,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** An assignable test. */
     public boolean assertAssign(final UjoProperty property, final Object value) throws IllegalArgumentException {
-        boolean result = value==null || property.getType().isInstance(value);
+        final boolean result = value==null || property.getType().isInstance(value);
         if (!result) {
             final String msg
             = "The property \"" 
