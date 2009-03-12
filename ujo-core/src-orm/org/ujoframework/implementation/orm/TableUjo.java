@@ -27,12 +27,12 @@ import org.ujoframework.implementation.map.MapUjo;
 /**
  * A simple implementation of an ORM solution. Why new ORM mapping?
  * <ul>
- *    <li>type safe query language!</li>
- *    <li>easy to configure the ORM model by java source code (optionaly by XML)</li>
- *    <li>never more a LazyInitialization exception though the lazy initialization is supported</li>
+ *    <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
+ *    <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
  *    <li>no confusing proxy business objects</li>
- *    <li>no list properties - a new object called <a href="../../core/UjoIterator.html">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
- *    <li>very small framework without more library dependences</li>
+ *    <li>no list properties are supported but a special object called <a href="../../core/UjoIterator.html">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
+ *    <li>easy to configure the ORM model by java source code, optionaly by annotations or a XML file</li>
+ *    <li>small framework without more library dependences</li>
  * </ul>
  * Some other features:
  * <ul>
@@ -49,13 +49,13 @@ import org.ujoframework.implementation.map.MapUjo;
  *
  *      Session session = DbHandler.getInstance().getSession();
  *
- *      BoOrder order = <span class="keyword-directive">new</span> BoOrder();
- *      BoOrder.DATE.setValue(order, <span class="keyword-directive">new</span> Date());
- *      BoOrder.DESCR.setValue(order, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
+ *      Order order = <span class="keyword-directive">new</span> Order();
+ *      order.set(Order.DATE, <span class="keyword-directive">new</span> Date());
+ *      order.set(Order.DESCR.setValue, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
  *
- *      BoItem item = <span class="keyword-directive">new</span> BoItem();
- *      BoItem.DESCR.setValue(item, <span class="character">&quot;</span><span class="character">yellow table</span><span class="character">&quot;</span>);
- *      BoItem.ORDER.setValue(item, order);
+ *      Item item = <span class="keyword-directive">new</span> Item();
+ *      item.set(Item.ORDER, order);
+ *      item.set(Item.DESCR, <span class="character">&quot;</span><span class="character">yellow table</span><span class="character">&quot;</span>);
  *
  *      session.save(order);
  *      session.save(item);
@@ -67,47 +67,48 @@ import org.ujoframework.implementation.map.MapUjo;
  *      }
  *  }
  *
- *  <span class="comment">&#47;** Using SELECT by a object relations *&#47;</span>
- *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useRelation() {
- *
- *      Session session = DbHandler.getInstance().getSession();
- *      BoDatabase db = session.getDatabase();
- *
- *      UjoIterator&lt;BoOrder&gt; orders = BoDatabase.ORDERS.of(db);
- *      <span class="keyword-directive">for</span> (BoOrder order : orders) {
- *          Long id = BoOrder.ID.of(order);
- *          String descr = BoOrder.DESCR.of(order);
- *          System.out.println(<span class="character">&quot;</span><span class="character">Order id: </span><span class="character">&quot;</span> + id + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + descr);
- *
- *          <span class="keyword-directive">for</span> (BoItem item : BoOrder.ITEMS.of(order)) {
- *              Long itemId = BoItem.ID.of(item);
- *              String itemDescr = BoItem.DESCR.of(item);
- *              System.out.println(<span class="character">&quot;</span><span class="character"> Item id: </span><span class="character">&quot;</span> + itemId + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + itemDescr);
- *          }
- *      }
- *  }
  *
  *  <span class="comment">&#47;** Using SELECT by QUERY *&#47;</span>
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelection() {
  *
  *      Session session = DbHandler.getInstance().getSession();
  *
- *      Expression&lt;BoOrder&gt; exp1 = Expression.newInstance(BoOrder.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
- *      Expression&lt;BoOrder&gt; exp2 = Expression.newInstance(BoOrder.DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
- *      Expression&lt;BoOrder&gt; expr = exp1.and(exp2);
+ *      Expression&lt;Order&gt; exp1 = Expression.newInstance(Order.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
+ *      Expression&lt;Order&gt; exp2 = Expression.newInstance(Order.DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
+ *      Expression&lt;Order&gt; expr = exp1.and(exp2);
  *
- *      Query&lt;BoOrder&gt; query = session.createQuery(BoOrder.<span class="keyword-directive">class</span>, expr);
+ *      Query&lt;Order&gt; query = session.createQuery(Order.<span class="keyword-directive">class</span>, expr);
  *      query.sizeRequired(<span class="keyword-directive">true</span>); <span class="comment">// need a count of iterator items, a default value is false</span>
  *      query.readOnly(<span class="keyword-directive">false</span>);
  *
- *      <span class="keyword-directive">for</span> (BoOrder order : session.iterate(query) ) {
- *          Long id = BoOrder.ID.of(order);
- *          String descr = BoOrder.DESCR.of(order);
+ *      <span class="keyword-directive">for</span> (Order order : session.iterate(query) ) {
+ *          Long id = order.get(Order.ID);
+ *          String descr = order.get(Order.DESCR);
  *          System.out.println(<span class="character">&quot;</span><span class="character">Order id: </span><span class="character">&quot;</span> + id + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + descr);
+ *      }
+ *  }
+ *
+ *  <span class="comment">&#47;** Using SELECT by an object relation(s) *&#47;</span>
+ *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useRelation() {
+ *
+ *      Session session = DbHandler.getInstance().getSession();
+ *      BoDatabase db = session.getDatabase();
+ *
+ *      UjoIterator&lt;Order&gt; orders = db.get(BoDatabase.ORDERS);
+ *      <span class="keyword-directive">for</span> (Order order : orders) {
+ *          Long id = order.get(Order.ID);
+ *          String descr = order.get(Order.DESCR);
+ *          System.out.println(<span class="character">&quot;</span><span class="character">Order id: </span><span class="character">&quot;</span> + id + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + descr);
+ *
+ *          <span class="keyword-directive">for</span> (Item item : Order.ITEMS.of(order)) {
+ *              Long itemId = item.get(Item.ID);
+ *              String itemDescr = item.get(Item.DESCR.of);
+ *              System.out.println(<span class="character">&quot;</span><span class="character"> Item id: </span><span class="character">&quot;</span> + itemId + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + itemDescr);
+ *          }
  *      }
  *  }</pre>
  *
- * <strong>Note</strong>: the API desing a very early prototype, methods are not implemented yet.
+ * <strong>Note</strong>: the API desing a very early prototype, some methods are not implemented yet.
  *
  * @author Ponec
  * @see org.ujoframework.implementation.orm.RelationToMany

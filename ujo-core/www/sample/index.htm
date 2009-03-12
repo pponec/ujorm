@@ -62,7 +62,7 @@ Getting Started</h1>
   <ul class="ulm">
      <li><a href="#motivation">Motivation</a></li>
      <li><a href="#bo">Business objects</a></li>
-     <li><a href="#window">Window implementation</a></li>
+     <li><a href="#window">Application window</a></li>
      <li><a href="#xml">XML file</a></li>
      <li><a href="#download">Download</a></li>
   </ul>
@@ -111,7 +111,7 @@ Getting Started</h1>
   	  <li>window component extends a JFrame class.</li>
 	</ul>
 	All three classes contain <strong>99 rows</strong> of source code (comments, blank rows and imports are not counted).
-        See the screenshot:
+        See the screenshot of the result:
 	<!-- <img src="screen.png" width="543" height="229" alt="screen.png" /> -->
     <a href ="bin/company.jnlp"><img
        src  ="screen2.png"
@@ -166,14 +166,14 @@ The Company object contains two properties only. Note how a company name is assi
     </div>
     
     <div class="chapter">
-        <h2 id="window">Window implementation</h2>
-        A main window is an extension of JFrame from a Swing library. 
-        The Source code is very simple to learn, however some areas are not written by a code guideline. 
+        <h2 id="window">Application window</h2>
+        The application window is an extension of JFrame from the Swing library.
+        A source code is very simple to learn, however some areas are not written by a code guideline.        
+        Take note, how an instance of <strong>table model</strong> is created 
+        by the <strong>UjoTableModel</strong> class, all visible table colums are ordered by its constructor.
+        Company object is retrieved by a <strong>UjoManagerXML</strong> class.
+        See the next code for details.
         
-        <p style="margin-top: 0px;">Take note, how an instance of <strong>table model</strong> is created by a UjoTableModel class, all visible table columss are ordered by its constructor.
-        Company object is retrieved by a UjoManagerXML class.
-        <br />See a source code for details.
-        </p>
 <pre class="pre">
 <span class="java-keywords">package</span> org;
 <span class="java-keywords">import</span> javax.swing.*;
@@ -254,14 +254,14 @@ The Company object contains two properties only. Note how a company name is assi
       model.<span class="highlight"><span class="java-layer-method">cloneRow</span>(index, depth, <span class="java-keywords">this</span></span>);
     }
     <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;Add $10&quot;</span>.<span class="java-layer-method">equals</span>(label) &amp;&amp; index&gt;=<span class="java-numeric-literals">0</span>) {
-      model.<span class="java-layer-method">getRow</span>(index)<span class="highlight">.addCash(<span class="java-numeric-literals">10d</span>)</span>;
+      model.<span class="java-layer-method">getRow</span>(index).<span class="highlight">addCash(<span class="java-numeric-literals">10d</span>)</span>;
       model.<span class="java-layer-method">fireTableColumnUpdated</span>(Person.CASH);
     }
     <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;3 columns&quot;</span>.<span class="java-layer-method">equals</span>(label)) {
-      model.<span class="java-layer-method">setColumns</span>(<span class="highlight">ID, SURNAME, CASH</span>);
+      model.<span class="highlight"><span class="java-layer-method">setColumns</span>(ID, SURNAME, CASH)</span>;
     }
     <span class="java-keywords">if</span> (<span class="java-string-literal">&quot;6 columns&quot;</span>.<span class="java-layer-method">equals</span>(label)) {
-      model.<span class="java-layer-method">setColumns</span>(<span class="highlight">ID, FIRSTNAME, SURNAME, AGE, CASH, MALE</span>);
+      model.<span class="java-layer-method">setColumns</span>(ID, FIRSTNAME, SURNAME, AGE, CASH, MALE);
     }
   }
   
