@@ -25,7 +25,7 @@ import org.ujoframework.beans.UjoPropertyChangeListener;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
- * A simple implementation of an ORM solution. Why new ORM mapping?
+ * A simple implementation of an ORM solution. Why a new ORM mapping?
  * <ul>
  *    <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
  *    <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
@@ -36,12 +36,12 @@ import org.ujoframework.implementation.map.MapUjo;
  * </ul>
  * Some other features:
  * <ul>
- *    <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
  *    <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
  *    <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
  *    <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annoatations can be owerwrited by a XML files </li>
  *    <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a hight security</li>
  *    <li>restricted cache is suitable for a large transactions and a selecting uncommited changes</li>
+ *    <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
  * </ul>
  * The sample of use:
  * <pre class="pre">
