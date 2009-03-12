@@ -22,20 +22,20 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.annot.GenerationType;
 
 /**
  * The table primary key.
  * @author pavel
  */
-public class DbPK extends AbstractMetaModel {
+public class OrmPKey extends AbstractMetaModel {
 
     /** DB columns */
-    public static final UjoProperty<DbPK,DbTable> TABLE = newProperty("table", DbTable.class);
+    public static final UjoProperty<OrmPKey,OrmTable> TABLE = newProperty("table", OrmTable.class);
 
     /** DB table */
-    public static final ListProperty<DbPK,DbColumn> COLUMNS = newPropertyList("columns", DbColumn.class);
+    public static final ListProperty<OrmPKey,OrmColumn> COLUMNS = newPropertyList("columns", OrmColumn.class);
 
+    /** Primary key counter. */
     private long primaryKeyCounter = 0;
 
 
@@ -43,9 +43,9 @@ public class DbPK extends AbstractMetaModel {
     @SuppressWarnings("unchecked")
     public boolean equals(Ujo ujo1, Ujo ujo2) {
 
-        for (DbColumn column : COLUMNS.of(this)) {
+        for (OrmColumn column : COLUMNS.of(this)) {
             
-            final UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+            final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
             final Object o2  = property.of(ujo2);
             final boolean ok = property.equals(ujo1, o2);
             if (!ok) {
@@ -58,21 +58,21 @@ public class DbPK extends AbstractMetaModel {
     /** Compares two primary keys. */
     @Override
     public boolean equals(Object obj) {
-        DbPK other = (DbPK) obj;
+        OrmPKey other = (OrmPKey) obj;
 
-        List<DbColumn> columns1 = COLUMNS.getList(this);
-        List<DbColumn> columns2 = COLUMNS.getList(other);
+        List<OrmColumn> columns1 = COLUMNS.getList(this);
+        List<OrmColumn> columns2 = COLUMNS.getList(other);
 
         if (columns1.size()!=columns2.size()) {
             return false;
         }
 
         for (int i=columns1.size()-1; i>=0; i--) {
-            final DbColumn c1 = columns1.get(i);
-            final DbColumn c2 = columns2.get(i);
+            final OrmColumn c1 = columns1.get(i);
+            final OrmColumn c2 = columns2.get(i);
 
-            final UjoProperty p1 = DbColumn.TABLE_PROPERTY.of(c1);
-            final UjoProperty p2 = DbColumn.TABLE_PROPERTY.of(c2);
+            final UjoProperty p1 = OrmColumn.TABLE_PROPERTY.of(c1);
+            final UjoProperty p2 = OrmColumn.TABLE_PROPERTY.of(c2);
 
             if (p1!=p2) {
                 return false;
@@ -85,7 +85,7 @@ public class DbPK extends AbstractMetaModel {
     public String toString() {
         StringBuilder sb = new StringBuilder(10);
 
-        for (DbColumn column : COLUMNS.getList(this)) {
+        for (OrmColumn column : COLUMNS.getList(this)) {
             if (sb.length()>0) { sb.append(','); }
             sb.append(column.toString());
         }
@@ -103,10 +103,10 @@ public class DbPK extends AbstractMetaModel {
     public boolean assignPrimaryKey(TableUjo table) {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
-            DbColumn column = COLUMNS.getItem(this, 0);
-            switch (DbColumn.PRIMARY_KEY_GEN.of(column)) {
+            OrmColumn column = COLUMNS.getItem(this, 0);
+            switch (OrmColumn.PRIMARY_KEY_GEN.of(column)) {
                 case MEMO_SEQUENCE:
-                    UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+                    UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
                     if (property.of(table)!=null) {
                         return false;
                     }

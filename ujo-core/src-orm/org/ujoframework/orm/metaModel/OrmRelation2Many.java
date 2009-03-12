@@ -29,24 +29,24 @@ import org.ujoframework.orm.annot.Column;
  * The database/object relation to many.
  * @author pavel
  */
-public class DbRelation2m extends AbstractMetaModel {
+public class OrmRelation2Many extends AbstractMetaModel {
 
     /** The database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
     @XmlAttribute
-    public static final UjoProperty<DbRelation2m,String> NAME = newProperty("name", "");
+    public static final UjoProperty<OrmRelation2Many,String> NAME = newProperty("name", "");
     /** Table property */
     @Transient
-    public static final UjoProperty<DbRelation2m,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
+    public static final UjoProperty<OrmRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
     /** DB table */
     @Transient
-    public static final UjoProperty<DbRelation2m,DbTable> TABLE = newProperty("table", DbTable.class);
+    public static final UjoProperty<OrmRelation2Many,OrmTable> TABLE = newProperty("table", OrmTable.class);
 
-    public DbRelation2m(DbTable table, UjoProperty tableProperty) {
+    public OrmRelation2Many(OrmTable table, UjoProperty tableProperty) {
         
-        Field field = UjoManager.getInstance().getPropertyField(DbTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
+        Field field = UjoManager.getInstance().getPropertyField(OrmTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (true) {
@@ -59,7 +59,7 @@ public class DbRelation2m extends AbstractMetaModel {
         changeDefault(this, NAME, tableProperty.getName());
     }
 
-    protected DbRelation2m() {
+    protected OrmRelation2Many() {
     }
 
     /** It is a DB column */

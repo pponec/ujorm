@@ -18,9 +18,9 @@ package org.ujoframework.orm;
 
 import java.io.IOException;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.metaModel.DbModel;
-import org.ujoframework.orm.metaModel.DbColumn;
-import org.ujoframework.orm.metaModel.DbTable;
+import org.ujoframework.orm.metaModel.OrmDatabase;
+import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmTable;
 
 /**
  * SQL renderer API
@@ -35,16 +35,16 @@ public interface SqlRenderer {
     public String getJdbcDriver();
 
     /** Print a SQL script to crate database */
-    public void createDatabase(DbModel database, Appendable writer) throws IOException ;
+    public void createDatabase(OrmDatabase database, Appendable writer) throws IOException ;
 
     /** Print a SQL sript to create table */
-    public void printTable(DbTable table, Appendable result) throws IOException ;
+    public void printTable(OrmTable table, Appendable result) throws IOException ;
 
     /** Print a SQL to create column */
-    public void printColumn(DbColumn column, Appendable writer, String name) throws IOException;
+    public void printColumn(OrmColumn column, Appendable writer, String name) throws IOException;
 
     /** Print a SQL to create a Foreign Key. */
-    public void printFKColumns(DbColumn column, Appendable writer) throws IOException;
+    public void printFKColumns(OrmColumn column, Appendable writer) throws IOException;
 
     /** Print an INSERT SQL statement.  */
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException;

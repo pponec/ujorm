@@ -33,28 +33,28 @@ import org.ujoframework.orm.DbHandler;
  * DB table medadata.
  * @author pavel
  */
-public class DbTable extends AbstractMetaModel {
+public class OrmTable extends AbstractMetaModel {
 
     /** DB table name */
     @XmlAttribute
-    public static final UjoProperty<DbTable,String> NAME = newProperty("name", "");
+    public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "");
     /** Unique Primary Key */
     @Transient
-    public static final UjoProperty<DbTable,DbPK> PK = newProperty("pk", DbPK.class);
+    public static final UjoProperty<OrmTable,OrmPKey> PK = newProperty("pk", OrmPKey.class);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<DbTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
+    public static final UjoProperty<OrmTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
     /** Table Columns */
-    public static final ListProperty<DbTable,DbColumn> COLUMNS = newPropertyList("column", DbColumn.class);
+    public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class);
     /** Table relations to many */
-    public static final ListProperty<DbTable,DbRelation2m> RELATIONS = newPropertyList("relation2m", DbRelation2m.class);
+    public static final ListProperty<OrmTable,OrmRelation2Many> RELATIONS = newPropertyList("relation2m", OrmRelation2Many.class);
     /** Database */
     @Transient
-    public static final UjoProperty<DbTable,DbModel> DATABASE = newProperty("database", DbModel.class);
+    public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class);
 
 
     @SuppressWarnings("unchecked")
-    public DbTable(DbModel database, RelationToMany dbProperty) {
+    public OrmTable(OrmDatabase database, RelationToMany dbProperty) {
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
@@ -72,7 +72,7 @@ public class DbTable extends AbstractMetaModel {
             NAME.setValue(this, dbProperty.getName());
         }
 
-        DbPK dpk = new DbPK();
+        OrmPKey dpk = new OrmPKey();
         PK.setValue(this, dpk);
 
         DbHandler dbHandler = DbHandler.getInstance();
@@ -83,17 +83,17 @@ public class DbTable extends AbstractMetaModel {
 
 
                 if (property instanceof RelationToMany) {
-                    DbRelation2m column = new DbRelation2m(this, property);
+                    OrmRelation2Many column = new OrmRelation2Many(this, property);
                     RELATIONS.addItem(this, column);
                     dbHandler.addProperty(property, column);
 
                 } else {
-                    DbColumn column = new DbColumn(this, property);
+                    OrmColumn column = new OrmColumn(this, property);
                     COLUMNS.addItem(this, column);
                     dbHandler.addProperty(property, column);
 
-                    if (DbColumn.PRIMARY_KEY.of(column)) {
-                        DbPK.COLUMNS.addItem(dpk, column);
+                    if (OrmColumn.PRIMARY_KEY.of(column)) {
+                        OrmPKey.COLUMNS.addItem(dpk, column);
                     }
                 }
             }
@@ -102,8 +102,8 @@ public class DbTable extends AbstractMetaModel {
 
     /** Returns a table name include a name of database. */
     public String getFullName() {
-        final DbModel db = DATABASE.of(this);
-        final String dbName = DbModel.NAME.of(db);
+        final OrmDatabase db = DATABASE.of(this);
+        final String dbName = OrmDatabase.NAME.of(db);
         final String tableName = NAME.of(this);
 
         if (isValid(dbName)) {
@@ -120,7 +120,7 @@ public class DbTable extends AbstractMetaModel {
     public void assignPrimaryKey(TableUjo table) {
         Class type = DB_PROPERTY.of(this).getItemType();
         if (type.isInstance(table)) {
-            DbPK pk = PK.of(this);
+            OrmPKey pk = PK.of(this);
             boolean ok = pk.assignPrimaryKey(table);
             if (!ok) {
                 throw new RuntimeException("DB SEQUENCE is not supported for " + type);
@@ -132,7 +132,7 @@ public class DbTable extends AbstractMetaModel {
 
     /** Compare two objects by its PrimaryKey */
     public boolean equals(Ujo ujo1, Ujo ujo2) {
-        final DbPK pk = PK.of(this);
+        final OrmPKey pk = PK.of(this);
         return pk.equals(ujo1, ujo2);
     }
 

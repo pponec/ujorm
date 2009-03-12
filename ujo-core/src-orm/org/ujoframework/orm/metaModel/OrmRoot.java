@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
@@ -30,32 +31,33 @@ import org.ujoframework.extensions.ListProperty;
  * The class is a root of database configuration.
  * @author pavel
  */
-public class DbRoot extends AbstractMetaModel {
+public class OrmRoot extends AbstractMetaModel {
 
-    public static final Logger LOGGER = Logger.getLogger(DbRoot.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(OrmRoot.class.getName());
 
 
     /** List of tables */
-    public static final ListProperty<DbRoot,DbModel> DATABASES = newPropertyList("database", DbModel.class);
+    public static final ListProperty<OrmRoot,OrmDatabase> DATABASES = newPropertyList("database", OrmDatabase.class);
 
     /** ORM parameters */
-    public static final ListProperty<DbRoot,OrmParameters> PARAMETERS = newPropertyList("parameters", OrmParameters.class);
+    public static final UjoProperty<OrmRoot,OrmParameters> PARAMETERS = newProperty("parameters", OrmParameters.class);
 
-    public DbRoot() {
+    public OrmRoot() {
+        // A default instance:
         PARAMETERS.setValue(this, new OrmParameters());
     }
 
 
     /** Returns the first database or return null */
-    public DbModel getDatabase() {
-        final DbModel result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
+    public OrmDatabase getDatabase() {
+        final OrmDatabase result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
         return result;
     }
 
     /** Returns the first database with required name or returns null; */
-    public DbModel getDatabase(String name) {
-        for (DbModel database : DATABASES.getList(this)) {
-            if (DbModel.NAME.equals(database, name)) {
+    public OrmDatabase getDatabase(String name) {
+        for (OrmDatabase database : DATABASES.getList(this)) {
+            if (OrmDatabase.NAME.equals(database, name)) {
                 return database;
             }
         }
@@ -63,7 +65,7 @@ public class DbRoot extends AbstractMetaModel {
     }
 
     /** Add a new database into repository. */
-    final public void add(DbModel database) {
+    final public void add(OrmDatabase database) {
         DATABASES.addItem(this, database);
     }
 

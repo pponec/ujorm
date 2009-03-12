@@ -17,8 +17,8 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.metaModel.DbColumn;
-import org.ujoframework.orm.metaModel.DbTable;
+import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmTable;
 
 /**
  * JdbcStatement
@@ -76,19 +76,19 @@ public class JdbcStatement {
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
     public void assignValues(TableUjo table) throws SQLException {
-        final DbTable dbTable = DbHandler.getInstance().findTableModel((Class) table.getClass());
-        final List<DbColumn> columns = DbTable.COLUMNS.getList(dbTable);
+        final OrmTable dbTable = DbHandler.getInstance().findTableModel((Class) table.getClass());
+        final List<OrmColumn> columns = OrmTable.COLUMNS.getList(dbTable);
         assignValues(table, columns);
     }
 
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
-    public void assignValues(TableUjo table, List<DbColumn> columns) throws SQLException {
-        for (DbColumn column : columns) {
+    public void assignValues(TableUjo table, List<OrmColumn> columns) throws SQLException {
+        for (OrmColumn column : columns) {
 
             if (column.isForeignKey()) {
-                UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+                UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
                 Object value = table!=null ? property.of(table) : null ;
                 assignValues((TableUjo) value, column.getForeignColumns());
             } else if (column.isColumn()) {
@@ -99,15 +99,15 @@ public class JdbcStatement {
 
     /** Add a next value to a SQL prepared statement. */
     @SuppressWarnings("unchecked")
-    public void assignValue(final TableUjo table, final DbColumn column) throws SQLException {
+    public void assignValue(final TableUjo table, final OrmColumn column) throws SQLException {
 
         ++parameterPointer;
 
-        UjoProperty property = DbColumn.TABLE_PROPERTY.of(column);
+        UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
         Object value = table!=null ? property.of(table) : null ;
 
         Class type = property.getType();
-        int sqlType = DbColumn.DB_TYPE.of(column).getSqlType();
+        int sqlType = OrmColumn.DB_TYPE.of(column).getSqlType();
         logValue(table, property);
 
         try {
