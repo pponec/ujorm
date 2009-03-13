@@ -34,15 +34,15 @@
         <div>
         <img src="../images/ujo64.png" alt="logo" style="margin: 0px; top: 0; float: left" />
         <h1  style="margin: 2px 0 1px 75px;"> ORM module of the UJO Framework</h1>
-        <div style="margin: 2px 0 25px 75px; font-style: italic; color: gray;">a new implementation of the object - relation mapping</div>
+        <div style="margin: 2px 0 25px 75px; font-style: italic; color: gray;">a new implementation of the object-relation mapping</div>
         </div>
 
-        <!-- This is short description of a new ORM implementation. --> Why the new ORM mapping?
+        <!-- This is short description of a new ORM implementation. --> Why a new ORM mapping?
         <ul>
            <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
            <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
            <li>no confusing proxy business objects</li>
-           <li>no list properties are supported but a special object called <a href="../../core/UjoIterator.html">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
+           <li>no list properties are supported but a special object called <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/core/UjoIterator.java?view=markup">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
            <li>easy to configure the ORM model by java source code, optionaly by annotations or a XML file</li>
            <li>small framework without more library dependences</li>
         </ul>
@@ -94,11 +94,11 @@ The next source code calls a SELECT by a UJO query language:
 <pre name="code" class="java">
   Session session = DbHandler.getInstance().getSession();
 
-  Expression&gt;Order&lt; exp1 = Expression.newInstance(Order.DESCR, "John's order");
-  Expression&gt;Order&lt; exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
-  Expression&gt;Order&lt; expr = exp1.and(exp2);
+  Expression&lt;Order&gt; exp1 = Expression.newInstance(Order.DESCR, "John's order");
+  Expression&lt;Order&gt; exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
+  Expression&lt;Order&gt; expr = exp1.and(exp2);
 
-  Query&gt;Order&lt; query = session.createQuery(Order.class, expr);
+  Query&lt;Order&gt; query = session.createQuery(Order.class, expr);
   query.setCountRequest(true);  // need a count of iterator items, a default value is false
   query.setReadOnly(false);     // Read only result;
 
