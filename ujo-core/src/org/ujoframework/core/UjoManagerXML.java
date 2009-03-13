@@ -59,6 +59,8 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     public static final String ATTR_LIST       = "javaList";
     /** A name of Java Class of XML List attribute. */
     public static final String ATTR_ITEM       = "javaItem";
+    /** Root element name */
+    protected String rootElementName = "body";
     
     /** Break XML file */
     protected boolean breakLineEnabled = true;
@@ -67,6 +69,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     protected UjoAction actionExport;
     /** A CONTEXT of the actionExport */
     protected UjoAction actionElement;
+
     
     /** Constructor. */
     protected UjoManagerXML() {
@@ -108,7 +111,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     
-    /** Write properties to XML include XML header. A root tag is "body". */
+    /** Write properties to XML include XML header. A root tag is "body" by default. */
     public void saveXML(File xmlFile, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         final OutputStream os = getOutputStream(xmlFile);
         try {
@@ -118,7 +121,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
     }
     
-    /** Write properties to XML include XML header. A root tag is "body". */
+    /** Write properties to XML include XML header. A root tag is "body" by default. */
     public void saveXML(OutputStream outStream, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         final Writer writer = new OutputStreamWriter(outStream, UTF_8);
         try {
@@ -128,21 +131,21 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
     }
     
-    /** Write properties to XML include XML header. A root tag is "body". */
+    /** Write properties to XML include XML header. A root tag is "body" by default. */
     public void saveXML(Writer writer, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
-        saveXML(writer, "body", ujo, xmlHeader, context);
+        saveXML(writer, rootElementName, ujo, xmlHeader, context);
         writer.flush();
     }
     
     /** Write properties to XML include a XML header. */
     @SuppressWarnings("deprecation")
-    public void saveXML(Writer writer, String tag, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
+    public void saveXML(Writer writer, String rootElementName, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
         this.actionElement = new UjoActionImpl(UjoAction.ACTION_XML_ELEMENT, context);
         writer.write(xmlHeader!=null ? xmlHeader : XML_HEADER );
         
         @SuppressWarnings("unchecked")
-        MapProperty property = new MapProperty(tag, ujo.getClass());
+        MapProperty property = new MapProperty(rootElementName, ujo.getClass());
         printProperty(null, property, null, null, ujo, writer);
         
     }
@@ -369,5 +372,16 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             printText2Xml(writer, str);
         }
     }
-    
+
+    /** Name of the root element */
+    public String getRootElementName() {
+        return rootElementName;
+    }
+
+    /** Name of the root element */
+    public void setRootElementName(String rootElementName) {
+        this.rootElementName = rootElementName;
+    }
+
+
 }
