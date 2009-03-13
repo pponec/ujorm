@@ -37,7 +37,7 @@
         <div style="margin: 2px 0 25px 75px; font-style: italic; color: gray;">a new implementation of the object - relation mapping</div>
         </div>
 
-        A simple implementation of an ORM solution. Why a new ORM mapping?
+        <!-- This is short description of a new ORM implementation. --> Why the new ORM mapping?
         <ul>
            <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
            <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
@@ -50,13 +50,13 @@
         <ul>
            <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
            <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
-           <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annoatations can be owerwrited by a XML files </li>
-           <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a hight security</li>
+           <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files </li>
+           <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
            <li>restricted cache is suitable for a large transactions and a selecting uncommited changes</li>
            <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
         </ul>
 
-        <strong>Note</strong>: the API desing a very early prototype, some methods are not implemented yet.
+        <strong>Note</strong>: the API design a very early prototype, some methods are not implemented yet.
 
 
         <h3>A sample of use</h3>
@@ -90,7 +90,7 @@
   session.commit();
 </pre>
 
-The next source code calls a SELECT by a query language:
+The next source code calls a SELECT by a UJO query language:
 <pre name="code" class="java">
   Session session = DbHandler.getInstance().getSession();
 
@@ -109,12 +109,12 @@ The next source code calls a SELECT by a query language:
   }
 </pre>
 
-The next source code calls a SELECT by an object relation:
+The next source code calls a SELECT by an UJO object relation:
 <pre name="code" class="java">
   Session session = DbHandler.getInstance().getSession();
   Database db = session.getDatabase();
 
-  UjoIterator&lt;Order&gt; orders  = Database.ORDERS.of(db);
+  UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
   for (Order order : orders) {
       Long id = order.get(Order.ID);
       String descr = order.get(Order.DESCR);
@@ -133,9 +133,10 @@ The next source code calls a SELECT by an object relation:
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of metamodel</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - Java of the ORM</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using</li>
               <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
               <li><a href="http://ujoframework.org/javadoc.beta/">JavaDoc</a> beta version</li>
+              <li><a href="http://ujoframework.org/presentation/">UJO quick start</a> (a slide show)</li>
           </ul>
 
         <h3>License:</h3>
