@@ -65,11 +65,11 @@
 
 <pre name="code" class="java">
   if (true) {
-      DbHandler.getInstance().createDatabase(Database.class);
+      OrmHandler.getInstance().createDatabase(Database.class);
   } else {
-      DbHandler.getInstance().loadDatabase(Database.class);
+      OrmHandler.getInstance().loadDatabase(Database.class);
   }
-  Session session = DbHandler.getInstance().getSession();
+  Session session = OrmHandler.getInstance().getSession();
 
   Order order = new Order();
   order.set(Order.DATE , new Date());
@@ -92,7 +92,7 @@
 
 The next source code calls a SELECT by a UJO query language:
 <pre name="code" class="java">
-  Session session = DbHandler.getInstance().getSession();
+  Session session = OrmHandler.getInstance().getSession();
 
   Expression&lt;Order&gt; exp1 = Expression.newInstance(Order.DESCR, "John's order");
   Expression&lt;Order&gt; exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
@@ -111,7 +111,7 @@ The next source code calls a SELECT by a UJO query language:
 
 The next source code calls a SELECT by an UJO object relation:
 <pre name="code" class="java">
-  Session session = DbHandler.getInstance().getSession();
+  Session session = OrmHandler.getInstance().getSession();
   Database db = session.getDatabase();
 
   UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
