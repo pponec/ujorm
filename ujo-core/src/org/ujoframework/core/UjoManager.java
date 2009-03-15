@@ -398,11 +398,13 @@ public class UjoManager implements Comparator<UjoProperty> {
         for(int i=0; i<properties.length; ++i) {
             UjoProperty property = properties[i];
             boolean list = property instanceof UjoPropertyList;
-            String textSeparator = property.isTypeOf(CharSequence.class) ? "\"" : "" ;
+            String textSeparator = "";
             
             String value;
             try {
                 Object objVal = ujo.readValue(property);
+                textSeparator = objVal instanceof CharSequence ? "\"" : "" ;
+                
                 value
                 = list ? ((UjoPropertyList)property).getItemCount(ujo) + "]"
                 : objVal instanceof Ujo ? "UJO:" + objVal.hashCode()

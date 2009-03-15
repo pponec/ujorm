@@ -157,5 +157,13 @@ public class JdbcStatement {
         }
     }
 
-
+    @Override
+    public String toString() {
+        if (ps!=null) {
+            return ps.toString();
+        } else {
+            return super.toString();
+        }
+    }
+    
 }

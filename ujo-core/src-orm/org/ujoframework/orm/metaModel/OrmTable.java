@@ -129,6 +129,13 @@ public class OrmTable extends AbstractMetaModel {
             throw new IllegalArgumentException("Argument is not type of " + type);
         }
     }
+    
+    /** Returns a new instance or the BO. */
+    public TableUjo createBO() throws InstantiationException, IllegalAccessException {
+        Class type = DB_PROPERTY.of(this).getItemType();
+        Object result = type.newInstance();
+        return (TableUjo) result;        
+    }
 
     /** Compare two objects by its PrimaryKey */
     public boolean equals(Ujo ujo1, Ujo ujo2) {

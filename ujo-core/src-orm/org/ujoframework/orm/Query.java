@@ -16,8 +16,11 @@
 
 package org.ujoframework.orm;
 
+import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
 
 /**
@@ -26,7 +29,8 @@ import org.ujoframework.tools.criteria.Expression;
  */
 public class Query<UJO extends TableUjo> {
 
-    final private Class<UJO> tableType;
+    final private OrmTable table;
+    final private List<OrmColumn> columns;
     final private Expression<UJO> expression;
     final private Session session;
 
@@ -36,7 +40,8 @@ public class Query<UJO extends TableUjo> {
     private boolean readOnly = false;
 
     public Query(Class<UJO> tableType, Expression<UJO> expression, Session session) {
-        this.tableType = tableType;
+        this.table = OrmHandler.getInstance().findTableModel(tableType);
+        this.columns = OrmTable.COLUMNS.getList(table);
         this.expression = expression;
         this.session = session;
     }
@@ -76,11 +81,18 @@ public class Query<UJO extends TableUjo> {
     }
 
     /** Table Type */
-    public Class<UJO> getTableType() {
-        return tableType;
+    public OrmTable getTableModel() {
+        return table;
     }
 
+    /** Get Column List */
+    public List<OrmColumn> getColumns() {
+        return columns;
+    }
 
-
+    /** Get Column List */
+    public OrmColumn getColumn(int index) {
+        return columns.get(index);
+    }
 
 }
