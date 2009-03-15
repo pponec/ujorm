@@ -16,14 +16,11 @@
 
 package org.ujoframework.core;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.Query;
 
 /**
  * Ujo iterator have got some extended functions:
@@ -35,61 +32,37 @@ import org.ujoframework.orm.Query;
 
  * @author Ponec
  */
-abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
+public class UjoIteratorImpl<T> extends UjoIterator<T> {
 
+    final private Enumeration<T> e;
+    final private int size;
+
+    public UjoIteratorImpl(final Enumeration<T> enumeration, int size ) {
+        this.e = enumeration;
+        this.size = size;
+    }
+
+    public UjoIteratorImpl(final Enumeration<T> enumeration) {
+        this(enumeration, -1);
+    }
 
     /** Tests if this enumeration contains more elements. */
-    abstract public boolean hasNext();
+    public boolean hasNext() {
+        return e.hasMoreElements();
+    }
 
     /**
      * Returns the next element if exists.
      * @return     the next element
      * @exception  NoSuchElementException no more elements exist.
      */
-    abstract public T next() throws NoSuchElementException;
+    public T next() throws NoSuchElementException {
+        return e.nextElement();
+    }
 
     /** Returns a count of items or value -1 if the count is not defined. */
     public int size() {
-        return -1;
-    }
-
-    /** Returns the same instance */
-    public Iterator<T> iterator() {
-        return this;
-    }
-
-    /** An unsupported method.
-     * @deprecated The method is not implemented.
-     */
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
-    /** Copy items to a new List */
-    public List<T> toList() {
-        final List<T> result = new ArrayList<T>(size()>=0 ? size() : 10);
-        for (T item : this) {
-            result.add(item);
-        }
-        return result;
-    }
-
-    /** Returns a count of items. */
-    @Override
-    public String toString() {
-        return "size: " + size();
-    }
-
-    // --- STATIC FACTORY ---------
-
-    @SuppressWarnings("unchecked")
-    final public static <T> UjoIteratorImpl<T> getIntance(final Enumeration<T> enumeration) {
-        return new UjoIteratorImpl(enumeration);
-    }
-
-    @SuppressWarnings("unchecked")
-    final public static <T extends TableUjo> ResultSetIterator<T> getIntance(Query<T> query, ResultSet rs) {
-        return new ResultSetIterator(query, rs);
+        return size;
     }
 
 

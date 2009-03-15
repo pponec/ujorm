@@ -152,10 +152,24 @@ public class OrmColumn extends OrmRelation2Many {
 
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
-    public Object getValue(TableUjo table) {
+    public Object getValue(final TableUjo table) {
         final UjoProperty property = TABLE_PROPERTY.of(this);
         final Object result = property.of(table);
         return result;
+    }
+
+    /** Returns a property value from a table */
+    @SuppressWarnings("unchecked")
+    public void setValue(final TableUjo table, final Object value) {
+        final UjoProperty property = TABLE_PROPERTY.of(this);
+        property.setValue(table, value);
+    }
+
+
+    /** Returns a Java Class of value */
+    public Class getType() {
+        final UjoProperty property = TABLE_PROPERTY.of(this);
+        return property.getType();
     }
 
     /** Returns a TABLE and COLUMN names. */

@@ -117,8 +117,14 @@ public class OrmDatabase extends AbstractMetaModel {
 
     /** Create an SQL select */
     public String createSelect(Query query) {
-        // TODO;
-        return "";
+        SqlRenderer renderer = getRenderer();
+        StringBuilder result = new StringBuilder();
+        try {
+            renderer.printSelect(query, result);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result.toString();
     }
 
     /** Returns an SQL renderer. */
@@ -229,7 +235,7 @@ public class OrmDatabase extends AbstractMetaModel {
         Statement stat = null;
         StringBuilder sql = new StringBuilder(256);
         try {
-            getRenderer().createDatabase(this, sql);
+            getRenderer().printCreateDatabase(this, sql);
             conn = createConnection();
             stat = conn.createStatement();
             stat.executeUpdate(sql.toString());

@@ -21,6 +21,7 @@ import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.OrmHandler;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
@@ -28,6 +29,7 @@ import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 
 /** H2 (http://www.h2database.com) */
+@SuppressWarnings("unchecked")
 public class H2Renderer implements SqlRenderer {
 
     /** Returns a default JDBC Driver */
@@ -41,7 +43,7 @@ public class H2Renderer implements SqlRenderer {
     }
 
     /** Print a SQL script to crate database */
-    public void createDatabase(OrmDatabase database, Appendable writer) throws IOException {
+    public void printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException {
         for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
             printTable(table, writer);
             printForeignKey(table, writer);
@@ -58,9 +60,9 @@ public class H2Renderer implements SqlRenderer {
             separator = "\n\t, ";
 
             if ( column.isForeignKey() ) {
-                printFKColumns(column, writer);
+                printFKColumnsDeclaration(column, writer);
             } else {
-                printColumn(column, writer, null);
+                printColumnDeclaration(column, writer, null);
             }
         }
         writer.append("\n\t);\n");
@@ -76,7 +78,7 @@ public class H2Renderer implements SqlRenderer {
     }
 
     /** Print foreign key for  */
-    @SuppressWarnings("unchecked")
+    
     public void printForeignKey(OrmColumn column, OrmTable table, Appendable writer) throws IOException {
         final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
         final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(property.getType());
@@ -119,7 +121,7 @@ public class H2Renderer implements SqlRenderer {
      * @param name The name parameter is not mandatory, in case a null value the column name is used.
      * @throws java.io.IOException
      */
-    public void printColumn(OrmColumn column, Appendable writer, String name) throws IOException {
+    public void printColumnDeclaration(OrmColumn column, Appendable writer, String name) throws IOException {
 
         if (name==null) {
             name = OrmColumn.NAME.of(column);
@@ -145,7 +147,7 @@ public class H2Renderer implements SqlRenderer {
     }
 
     /** Print a SQL to create foreign keys. */
-    public void printFKColumns(OrmColumn column, Appendable writer) throws IOException {
+    public void printFKColumnsDeclaration(OrmColumn column, Appendable writer) throws IOException {
 
         List<OrmColumn> columns = column.getForeignColumns();
         String separator = "";
@@ -155,13 +157,13 @@ public class H2Renderer implements SqlRenderer {
             writer.append(separator);
             separator = "\n\t, ";
             String name = column.getForeignColumnName(i);
-            printColumn(col, writer, name );
+            printColumnDeclaration(col, writer, name );
         }
     }
 
 
     /** Print an SQL INSERT statement.  */
-    @SuppressWarnings("unchecked")
+    
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
         
          OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
@@ -179,7 +181,7 @@ public class H2Renderer implements SqlRenderer {
     }
 
     /** Print an SQL INSERT statement.  */
-    @SuppressWarnings("unchecked")
+    
     public void printSelect(TableUjo ujo, Appendable writer) throws IOException {
 
          OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
@@ -200,7 +202,7 @@ public class H2Renderer implements SqlRenderer {
 
 
     /** Print table columns */
-    @SuppressWarnings("unchecked")
+    
     protected void printTableColumns(List<OrmColumn> columns, Appendable writer, Appendable values) throws IOException {
         String separator = "";
         for (OrmColumn column : columns) {
@@ -226,5 +228,14 @@ public class H2Renderer implements SqlRenderer {
         }
     }
 
+    /** Print SQL SELECT */
+    public void printSelect(Query query, StringBuilder result) throws IOException {
+        result.append("SELECT ");
+        printTableColumns(query.getColumns(), result, null);
+        result.append("\n\tFROM ");
+        result.append(OrmTable.NAME.of(query.getTableModel()));
+        // TODO : WHERE
+        result.append(";");
+    }
 
 }

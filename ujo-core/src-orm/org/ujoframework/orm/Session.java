@@ -117,22 +117,22 @@ public class Session {
     /** Run SQL SELECT by query. */
     public <UJO extends TableUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
         JdbcStatement statement = null;
-        Class<? extends TableUjo> type = query.getTableType();
 
         try {
-            OrmTable table = OrmHandler.getInstance().findTableModel(type);
+            OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
             String sql = db.createSelect(query);
             LOGGER.log(Level.INFO, sql);
+            statement = getStatement(db, sql);
             ResultSet rs = statement.executeQuery(); // execute select statement
-        } catch (Throwable e) {
-            OrmDatabase.close(null, statement, null, false);
-            throw new IllegalStateException("ILLEGAL SQL INSERT", e);
-        }
-        OrmDatabase.close(null, statement, null, true);
-        return null;
-    }
+            UjoIterator<UJO> result = UjoIterator.getIntance(query, rs);
+            return result;
 
+        } catch (Throwable e) {
+            throw new IllegalStateException("ILLEGAL SQL SELECT", e);
+        }
+
+    }
 
 
     public <UJO extends TableUjo> UJO load(Class ujo, Object id) {
