@@ -13,7 +13,7 @@ import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.OrmColumn;
 
 /**
- * ResultSet iterator
+ * ResultSet iterator. It is not thread safe implementation.
  * @author pavel
  */
 public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
@@ -21,10 +21,10 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
     final Query query;
     final ResultSet rs;
 
-    private boolean rowReady = false;
+    /** It the cursor ready for reading? After a recored reading the value will be false. */
+    private boolean cursorReady = false;
+    /** Has a resultset a next row? */
     private boolean hasNext = true;
-    /** The end of ResultSet */
-    private boolean eor = false;
 
     public ResultSetIterator(Query query, ResultSet rs) {
         this.query = query;
@@ -33,53 +33,60 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
 
     /**
      * Returns true if the recored has next record
-     * @return
      * @throws java.lang.IllegalStateException
      */
     @Override
     public boolean hasNext() throws IllegalStateException {
         try {
-            return rs.next();
+            if (!cursorReady) {
+                cursorReady = true;
+                hasNext = rs.next();
+                if (!hasNext) {
+                    rs.close();
+                }
+            }
+            return hasNext;
+
         } catch (SQLException e) {
-            throw new IllegalStateException("hasNext excepton", e);
+            throw new IllegalStateException("A hasNext() reading exception", e);
         }
     }
 
+    /** Returns a next table row. */
     @SuppressWarnings("unchecked")
     @Override
     public T next() throws NoSuchElementException {
 
-        if (eor) {
+        if (!hasNext()) {
             throw new NoSuchElementException("Query: " + query.toString());
         }
         try {
-
+            cursorReady = false; // switch off the cursor flag.
             T row = (T) query.getTableModel().createBO();
             int colCount = query.getColumns().size();
-            for (int i = 0; i<colCount; i++) {
+
+            for (int i=0; i<colCount; i++) {
                 final OrmColumn column = query.getColumn(i);
                 Class type = column.getType();
                 Object value = rs.getObject(i + 1);
 
-                final DbType dbType = OrmColumn.DB_TYPE.of(column);
-//                switch (dbType) {
-//                    case (DATE):
-//                        if (java.util.Date.class.equals(type)) {
-//                            java.util.Date d = (java.util.Date) value;
-//                            value = new java.util.Date(d.getTime());
-//                        }
-//                        break;
-//                    default:
-//                }
-
+                switch (OrmColumn.DB_TYPE.of(column)) {
+                    case DATE: {
+                        if (value==null
+                        ||  type==value.getClass()) {
+                            // OK
+                        } else if (java.util.Date.class==type){
+                            value = new java.util.Date( ((java.util.Date) value).getTime() );
+                        }
+                    }
+                    default:
+                }
                 column.setValue(row, value);
-
             }
-
             return row;
         } catch (Throwable e) {
             throw new UnsupportedOperationException("Query: " + query, e);
         }
-
     }
+    
 }
