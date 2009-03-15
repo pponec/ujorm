@@ -31,7 +31,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
-import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
@@ -225,7 +225,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
     /** Vytvoøí DB */
     public void create() {
-        Connection conn = DbHandler.getInstance().getSession().getConnection(this);
+        Connection conn = OrmHandler.getInstance().getSession().getConnection(this);
         Statement stat = null;
         StringBuilder sql = new StringBuilder(256);
         try {

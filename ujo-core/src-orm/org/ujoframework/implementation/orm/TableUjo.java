@@ -16,7 +16,7 @@
 
 package org.ujoframework.implementation.orm;
 
-import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.beans.EventRegistrar;
@@ -48,7 +48,7 @@ import org.ujoframework.implementation.map.MapUjo;
  *  <span class="comment">&#47;** Using INSERT *&#47;</span>
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useCreateItem() {
  *
- *      Session session = DbHandler.getInstance().getSession();
+ *      Session session = OrmHandler.getInstance().getSession();
  *
  *      Order order = <span class="keyword-directive">new</span> Order();
  *      order.set(Order.DATE, <span class="keyword-directive">new</span> Date());
@@ -72,7 +72,7 @@ import org.ujoframework.implementation.map.MapUjo;
  *  <span class="comment">&#47;** Using SELECT by QUERY *&#47;</span>
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelection() {
  *
- *      Session session = DbHandler.getInstance().getSession();
+ *      Session session = OrmHandler.getInstance().getSession();
  *
  *      Expression&lt;Order&gt; exp1 = Expression.newInstance(Order.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
  *      Expression&lt;Order&gt; exp2 = Expression.newInstance(Order.DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
@@ -92,7 +92,7 @@ import org.ujoframework.implementation.map.MapUjo;
  *  <span class="comment">&#47;** Using SELECT by an object relation(s) *&#47;</span>
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useRelation() {
  *
- *      Session session = DbHandler.getInstance().getSession();
+ *      Session session = OrmHandler.getInstance().getSession();
  *      BoDatabase db = session.getDatabase();
  *
  *      UjoIterator&lt;Order&gt; orders = db.get(BoDatabase.ORDERS);
@@ -118,10 +118,10 @@ import org.ujoframework.implementation.map.MapUjo;
 public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegistrar<UJO_IMPL> {
     
     final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
-    final private DbHandler handler;
+    final private OrmHandler handler;
 
     public TableUjo() {
-        handler = DbHandler.getInstance();
+        handler = OrmHandler.getInstance();
         //handler.registerPropertis(getClass(), readProperties());
     }
 

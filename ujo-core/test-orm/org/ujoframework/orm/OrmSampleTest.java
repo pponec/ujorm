@@ -56,8 +56,8 @@ public class OrmSampleTest extends TestCase {
     /** Using INSERT */
     public void useCreateItem() {
 
-        DbHandler.getInstance().createDatabase(Database.class);
-        Session session = DbHandler.getInstance().getSession();
+        OrmHandler.getInstance().createDatabase(Database.class);
+        Session session = OrmHandler.getInstance().getSession();
 
         Order order = new Order();
         Order.DATE.setValue(order, new Date());
@@ -79,7 +79,7 @@ public class OrmSampleTest extends TestCase {
 
     /** Using SELECT by a object relations */
     public void useRelation() {
-        Session session = DbHandler.getInstance().getSession();
+        Session session = OrmHandler.getInstance().getSession();
         Database db = session.getDatabase();
 
         UjoIterator<Order> orders  = Database.ORDERS.of(db);
@@ -98,7 +98,7 @@ public class OrmSampleTest extends TestCase {
 
     /** Using SELECT by QUERY */
     public void useSelection() {
-        Session session = DbHandler.getInstance().getSession();
+        Session session = OrmHandler.getInstance().getSession();
 
         Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "test order");
         Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());

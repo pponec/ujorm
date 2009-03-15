@@ -26,7 +26,7 @@ import org.ujoframework.orm.annot.Table;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.OrmHandler;
 
 
 /**
@@ -75,7 +75,7 @@ public class OrmTable extends AbstractMetaModel {
         OrmPKey dpk = new OrmPKey();
         PK.setValue(this, dpk);
 
-        DbHandler dbHandler = DbHandler.getInstance();
+        OrmHandler dbHandler = OrmHandler.getInstance();
         UjoManager ujoManager = UjoManager.getInstance();
         for (UjoProperty property : ujoManager.readProperties(dbProperty.getItemType())) {
 

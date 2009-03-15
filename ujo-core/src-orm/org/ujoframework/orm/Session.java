@@ -98,7 +98,7 @@ public class Session {
         JdbcStatement statement = null;
 
         try {
-            OrmTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
+            OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
             table.assignPrimaryKey(ujo);
             OrmDatabase db = OrmTable.DATABASE.of(table);
             String sql = db.createInsert(ujo);
@@ -120,7 +120,7 @@ public class Session {
         Class<? extends TableUjo> type = query.getTableType();
 
         try {
-            OrmTable table = DbHandler.getInstance().findTableModel(type);
+            OrmTable table = OrmHandler.getInstance().findTableModel(type);
             OrmDatabase db = OrmTable.DATABASE.of(table);
             String sql = db.createSelect(query);
             LOGGER.log(Level.INFO, sql);

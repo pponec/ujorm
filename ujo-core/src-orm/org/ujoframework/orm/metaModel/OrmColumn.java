@@ -24,7 +24,7 @@ import java.util.StringTokenizer;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.orm.annot.GenerationType;
@@ -98,7 +98,7 @@ public class OrmColumn extends OrmRelation2Many {
     public List<OrmColumn> getForeignColumns() {
         List<OrmColumn> result;
         Class type = OrmColumn.TABLE_PROPERTY.of(this).getType();
-        OrmTable table = DbHandler.getInstance().findTableModel(type);
+        OrmTable table = OrmHandler.getInstance().findTableModel(type);
         if (table!=null) {
             OrmPKey pk = OrmTable.PK.of(table);
             result = OrmPKey.COLUMNS.getList(pk);
@@ -115,7 +115,7 @@ public class OrmColumn extends OrmRelation2Many {
     private String[] getForeignColumnNames() {
         if (foreignNames==null) {
             final Class type = OrmColumn.TABLE_PROPERTY.of(this).getType();
-            final OrmTable foreignTable = DbHandler.getInstance().findTableModel(type);
+            final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(type);
             if (foreignTable!=null && isForeignKey()) {
                 final OrmPKey pk = OrmTable.PK.of(foreignTable);
                 final List<OrmColumn> dbColumns = OrmPKey.COLUMNS.getList(pk);
