@@ -19,7 +19,7 @@ package org.ujoframework.orm.sample;
 import java.util.Date;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.Session;
-import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.Query;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.Operator;
@@ -34,11 +34,11 @@ public class SampleORM {
     public void useCreateItem() {
 
         if (true) {
-            DbHandler.getInstance().createDatabase(Database.class);
+            OrmHandler.getInstance().createDatabase(Database.class);
         } else {
-            DbHandler.getInstance().loadDatabase(Database.class);
+            OrmHandler.getInstance().loadDatabase(Database.class);
         }
-        Session session = DbHandler.getInstance().getSession();
+        Session session = OrmHandler.getInstance().getSession();
 
         Order order = new Order();
         order.set(Order.DATE, new Date());
@@ -69,7 +69,7 @@ public class SampleORM {
 
     /** Using SELECT by QUERY */
     public void useSelection() {
-        Session session = DbHandler.getInstance().getSession();
+        Session session = OrmHandler.getInstance().getSession();
 
         Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "John's order");
         Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
@@ -88,7 +88,7 @@ public class SampleORM {
 
     /** Using SELECT by a object relations */
     public void useRelation() {
-        Session session = DbHandler.getInstance().getSession();
+        Session session = OrmHandler.getInstance().getSession();
         Database db = session.getDatabase();
 
         UjoIterator<Order> orders  = Database.ORDERS.of(db);
@@ -116,7 +116,7 @@ public class SampleORM {
 
             //session.close();
         } finally {
-           DbHandler.getInstance().getSession().close();
+           OrmHandler.getInstance().getSession().close();
         }
 
     }

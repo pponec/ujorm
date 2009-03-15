@@ -37,8 +37,8 @@ public class OrmSessionProvider {
     public Session getSession() {
 
         if (session==null) {
-            DbHandler.getInstance().createDatabase(Database.class);
-            session = DbHandler.getInstance().getSession();
+            OrmHandler.getInstance().createDatabase(Database.class);
+            session = OrmHandler.getInstance().getSession();
         }
 
         return session;

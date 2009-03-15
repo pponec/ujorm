@@ -33,12 +33,12 @@ import org.ujoframework.orm.metaModel.OrmTable;
  * The basic class for an ORM support.
  * @author pavel
  */
-public class DbHandler {
+public class OrmHandler {
 
-    public static final Logger LOGGER = Logger.getLogger(DbHandler.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(OrmHandler.class.getName());
 
 
-    private static DbHandler handler = new DbHandler();
+    private static OrmHandler handler = new OrmHandler();
 
     private Session session = new Session();
     private OrmRoot databases = new OrmRoot();
@@ -47,10 +47,10 @@ public class DbHandler {
     private HashMap<UjoProperty,OrmRelation2Many> propertyMap = new HashMap<UjoProperty,OrmRelation2Many> ();
 
     /** The Sigleton constructor */
-    protected DbHandler() {
+    protected OrmHandler() {
     }
 
-    public static DbHandler getInstance() {
+    public static OrmHandler getInstance() {
         return handler;
     }
 

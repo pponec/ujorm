@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.DbHandler;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
@@ -79,7 +79,7 @@ public class H2Renderer implements SqlRenderer {
     @SuppressWarnings("unchecked")
     public void printForeignKey(OrmColumn column, OrmTable table, Appendable writer) throws IOException {
         final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
-        final OrmTable foreignTable = DbHandler.getInstance().findTableModel(property.getType());
+        final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(property.getType());
         OrmPKey foreignKeys = OrmTable.PK.of(foreignTable);
 
         writer.append("ALTER TABLE ");
@@ -164,7 +164,7 @@ public class H2Renderer implements SqlRenderer {
     @SuppressWarnings("unchecked")
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
         
-         OrmTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
+         OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
          StringBuilder values = new StringBuilder();
 
          writer.append("INSERT INTO ");
@@ -182,7 +182,7 @@ public class H2Renderer implements SqlRenderer {
     @SuppressWarnings("unchecked")
     public void printSelect(TableUjo ujo, Appendable writer) throws IOException {
 
-         OrmTable table = DbHandler.getInstance().findTableModel((Class) ujo.getClass());
+         OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
          StringBuilder values = null;
 
          writer.append("SELECT ");
