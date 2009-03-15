@@ -37,19 +37,18 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
      */
     @Override
     public boolean hasNext() throws IllegalStateException {
-        try {
-            if (!cursorReady) {
-                cursorReady = true;
-                hasNext = rs.next();
-                if (!hasNext) {
-                    rs.close();
-                }
+        
+        if (!cursorReady) try {
+            cursorReady = true;
+            hasNext = rs.next();
+            if (!hasNext) {
+                rs.close();
             }
-            return hasNext;
-
         } catch (SQLException e) {
             throw new IllegalStateException("A hasNext() reading exception", e);
         }
+        return hasNext;
+
     }
 
     /** Returns a next table row. */

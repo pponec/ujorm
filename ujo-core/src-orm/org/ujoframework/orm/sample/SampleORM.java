@@ -52,9 +52,9 @@ public class SampleORM {
         item2.set(Item.ORDER, order);
         item2.set(Item.DESCR, "Green window");
 
-        System.out.println("order: "  + order.toString());
-        System.out.println("item1: "  + item1.toString());
-        System.out.println("item2: "  + item2.toString());
+        System.out.println("order: " + order.toString());
+        System.out.println("item1: " + item1.toString());
+        System.out.println("item2: " + item2.toString());
 
         session.save(order);
         session.save(item1);
