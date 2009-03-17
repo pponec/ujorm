@@ -93,7 +93,7 @@ public class Session {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /** Insert object into table. */
+    /** INSERT object into table. */
     public void save(TableUjo ujo) throws IllegalStateException {
         JdbcStatement statement = null;
 
@@ -121,9 +121,13 @@ public class Session {
         try {
             OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
-            String sql = db.createSelect(query);
-            LOGGER.log(Level.INFO, sql);
+            StringBuilder sql = new StringBuilder();
+            ExpressionDecoder decoder = db.createSelect(query, sql);
+            LOGGER.log(Level.INFO, sql.toString());
             statement = getStatement(db, sql);
+            statement.assignValues(decoder);
+            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+
             ResultSet rs = statement.executeQuery(); // execute select statement
             UjoIterator<UJO> result = UjoIterator.getIntance(query, rs);
             return result;

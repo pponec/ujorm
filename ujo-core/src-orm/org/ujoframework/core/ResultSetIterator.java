@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.OrmColumn;
 

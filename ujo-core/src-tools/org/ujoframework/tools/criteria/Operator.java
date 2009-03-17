@@ -19,7 +19,7 @@ package org.ujoframework.tools.criteria;
  * An expression operators.
  * @author Ponec
  */
-public enum Operator {
+public enum Operator implements AbstractOperator {
     /** Equals the value */
     EQ,
     /** Not equals the value */
@@ -51,4 +51,16 @@ public enum Operator {
     /** Only for a CharSequence subtypes (include String) */
     CONTAINS_CASE_INSENSITIVE,
     ;
+
+
+    /** The implementace is a VALUE type (not a binary one) */
+    public final boolean isBinary() {
+        return false;
+    }
+
+    /** Returns Enum */
+    public final Enum getEnum() {
+        return this;
+    }
+
 }

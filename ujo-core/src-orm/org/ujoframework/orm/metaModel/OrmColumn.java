@@ -179,5 +179,10 @@ public class OrmColumn extends OrmRelation2Many {
         return OrmTable.NAME.of(table) + '.' + NAME.of(this);
     }
 
+    /** Returns full name. */
+    public String getFullName() {
+        return NAME.of(this);
+    }
+
 
 }

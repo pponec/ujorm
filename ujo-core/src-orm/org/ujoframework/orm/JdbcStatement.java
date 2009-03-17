@@ -97,16 +97,39 @@ public class JdbcStatement {
         }
     }
 
-    /** Add a next value to a SQL prepared statement. */
+
+    /** Assign values into the prepared statement */
+    public void assignValues(ExpressionDecoder decoder) throws SQLException {
+        for (int i=0; i<decoder.getColumnCount(); ++i) {
+            final OrmColumn column = decoder.getColumn(i);
+            final Object value = decoder.getValue(i);
+            assignValue(column, value, null);
+        }
+    }
+
+
+        /** Add a next value to a SQL prepared statement. */
     @SuppressWarnings("unchecked")
     public void assignValue(final TableUjo table, final OrmColumn column) throws SQLException {
+
+        final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+        final Object value = table!=null ? property.of(table) : null ;
+
+        assignValue(column, value, table);
+    }
+
+
+    /** Add a next value to a SQL prepared statement. */
+    @SuppressWarnings("unchecked")
+    public void assignValue
+        ( final OrmColumn column
+        , final Object value
+        , final TableUjo table
+        ) throws SQLException {
 
         ++parameterPointer;
 
         UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
-        Object value = table!=null ? property.of(table) : null ;
-
-        Class type = property.getType();
         int sqlType = OrmColumn.DB_TYPE.of(column).getSqlType();
         logValue(table, property);
 
@@ -143,7 +166,7 @@ public class JdbcStatement {
         }
     }
 
-    /** Log a value value in a text format. */
+    /** Log a value value into a text format. */
     protected void logValue(final TableUjo table, final UjoProperty property) {
 
         if (logValues) {

@@ -39,6 +39,24 @@ public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
         this.operator = operator;
     }
 
+    /** Returns the left node of the parrent */
+    @Override
+    public final Expression<UJO> getLeftNode() {
+        return expr1;
+    }
+
+    /** Returns the right node of the parrent */
+    @Override
+    public final Expression<UJO> getRightNote() {
+        return expr2;
+    }
+
+    /** Returns an operator */
+    @Override
+    public final OperatorBinary getOperator() {
+        return operator;
+    }
+
     public boolean evaluate(UJO ujo) {
         boolean e1 = expr1.evaluate(ujo);
         switch (operator) {
@@ -48,6 +66,7 @@ public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
             case NAND   : return !(e1 &&  expr2.evaluate(ujo));
             case NOR    : return !(e1 ||  expr2.evaluate(ujo));
             case EQ     : return   e1 ==  expr2.evaluate(ujo) ;
+            case NOT    : return  !e1 ;
             default:  
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }
