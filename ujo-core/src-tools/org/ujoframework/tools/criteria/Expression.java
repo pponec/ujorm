@@ -40,8 +40,15 @@ public abstract class Expression<UJO extends Ujo> {
     }
 
     public Expression<UJO> not() {
-        return new ExpressionNot<UJO>(this);
+        return new ExpressionBinary<UJO>(this, OperatorBinary.NOT, this);
     }
+
+    /** Returns the left node of the parrent */
+    abstract public Object getLeftNode();
+    /** Returns the right node of the parrent */
+    abstract public Object getRightNote();
+    /** Returns an operator */
+    abstract public AbstractOperator getOperator();
 
     // ------ STATIC FACTORY --------
 

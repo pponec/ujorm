@@ -34,6 +34,24 @@ final class ConstantExpression<UJO extends Ujo> extends Expression<UJO> {
         this.result = result;
     }
 
+    /** Returns the same instance */
+    @Override
+    final public Expression getLeftNode() {
+        return this;
+    }
+
+    /** Returns the same instance */
+    @Override
+    final public Object getRightNote() {
+        return this;
+    }
+
+    /** Operator is undefined */
+    @Override
+    final public AbstractOperator getOperator() {
+        return null;
+    }
+
     /** Return the value from constructor always. */
     public boolean evaluate(UJO ujo) {
         return result;

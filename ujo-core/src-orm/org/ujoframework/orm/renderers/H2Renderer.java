@@ -13,13 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujoframework.orm.renderers;
 
 import java.io.IOException;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.ExpressionDecoder;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
@@ -27,10 +27,11 @@ import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.tools.criteria.Expression;
 
 /** H2 (http://www.h2database.com) */
 @SuppressWarnings("unchecked")
-public class H2Renderer implements SqlRenderer {
+public class H2Renderer extends SqlRenderer {
 
     /** Returns a default JDBC Driver */
     public String getJdbcUrl() {
@@ -59,7 +60,7 @@ public class H2Renderer implements SqlRenderer {
             writer.append(separator);
             separator = "\n\t, ";
 
-            if ( column.isForeignKey() ) {
+            if (column.isForeignKey()) {
                 printFKColumnsDeclaration(column, writer);
             } else {
                 printColumnDeclaration(column, writer, null);
@@ -71,14 +72,13 @@ public class H2Renderer implements SqlRenderer {
     /** Print foreign key */
     public void printForeignKey(OrmTable table, Appendable writer) throws IOException {
         for (OrmColumn column : OrmTable.COLUMNS.getList(table)) {
-            if ( column.isForeignKey() ) {
+            if (column.isForeignKey()) {
                 printForeignKey(column, table, writer);
             }
         }
     }
 
     /** Print foreign key for  */
-    
     public void printForeignKey(OrmColumn column, OrmTable table, Appendable writer) throws IOException {
         final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
         final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(property.getType());
@@ -92,7 +92,7 @@ public class H2Renderer implements SqlRenderer {
         List<OrmColumn> columns = OrmPKey.COLUMNS.of(foreignKeys);
         int columnsSize = columns.size();
 
-        for (int i=0; i<columnsSize; ++i) {
+        for (int i = 0; i < columnsSize; ++i) {
             writer.append(separator);
             separator = ", ";
             final String name = column.getForeignColumnName(i);
@@ -123,26 +123,26 @@ public class H2Renderer implements SqlRenderer {
      */
     public void printColumnDeclaration(OrmColumn column, Appendable writer, String name) throws IOException {
 
-        if (name==null) {
+        if (name == null) {
             name = OrmColumn.NAME.of(column);
         }
 
-        writer.append( name );
-        writer.append( ' ' );
-        writer.append( OrmColumn.DB_TYPE.of(column).name() );
+        writer.append(name);
+        writer.append(' ');
+        writer.append(OrmColumn.DB_TYPE.of(column).name());
 
         if (!OrmColumn.MAX_LENGTH.isDefault(column)) {
-           writer.append( "(" + OrmColumn.MAX_LENGTH.of(column) );
-           if (!OrmColumn.PRECISION.isDefault(column)) {
-               writer.append( ", " + OrmColumn.PRECISION.of(column) );
-           }
-           writer.append( ")" );
+            writer.append("(" + OrmColumn.MAX_LENGTH.of(column));
+            if (!OrmColumn.PRECISION.isDefault(column)) {
+                writer.append(", " + OrmColumn.PRECISION.of(column));
+            }
+            writer.append(")");
         }
         if (!OrmColumn.MANDATORY.isDefault(column)) {
-           writer.append( " NOT NULL" );
+            writer.append(" NOT NULL");
         }
-        if (OrmColumn.PRIMARY_KEY.of(column) && name==null) {
-           writer.append(" PRIMARY KEY");
+        if (OrmColumn.PRIMARY_KEY.of(column) && name == null) {
+            writer.append(" PRIMARY KEY");
         }
     }
 
@@ -152,90 +152,30 @@ public class H2Renderer implements SqlRenderer {
         List<OrmColumn> columns = column.getForeignColumns();
         String separator = "";
 
-        for (int i=0; i<columns.size(); ++i) {
+        for (int i = 0; i < columns.size(); ++i) {
             OrmColumn col = columns.get(i);
             writer.append(separator);
             separator = "\n\t, ";
             String name = column.getForeignColumnName(i);
-            printColumnDeclaration(col, writer, name );
+            printColumnDeclaration(col, writer, name);
         }
     }
 
-
     /** Print an SQL INSERT statement.  */
-    
     public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
-        
-         OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
-         StringBuilder values = new StringBuilder();
 
-         writer.append("INSERT INTO ");
-         writer.append(table.getFullName());
-         writer.append("\n\t(");
+        OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
+        StringBuilder values = new StringBuilder();
 
-         printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
+        writer.append("INSERT INTO ");
+        writer.append(table.getFullName());
+        writer.append("\n\t(");
 
-         writer.append(")\n\tVALUES (");
-         writer.append(values);
-         writer.append(");");
+        printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
+
+        writer.append(")\n\tVALUES (");
+        writer.append(values);
+        writer.append(");");
     }
-
-    /** Print an SQL INSERT statement.  */
-    
-    public void printSelect(TableUjo ujo, Appendable writer) throws IOException {
-
-         OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
-         StringBuilder values = null;
-
-         writer.append("SELECT ");
-         printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
-         writer.append("\n\tFROM ");
-         writer.append(table.getFullName());
-         writer.append("\n\t");
-
-         if (!true) {
-             writer.append(" WHERE ...");
-         }
-         writer.append(";");
-    }
-
-
-
-    /** Print table columns */
-    
-    protected void printTableColumns(List<OrmColumn> columns, Appendable writer, Appendable values) throws IOException {
-        String separator = "";
-        for (OrmColumn column : columns) {
-            if (column.isForeignKey()) {
-                for (int i=0; i<column.getForeignColumns().size(); ++i) {
-                    writer.append(separator);
-                    writer.append(column.getForeignColumnName(i));
-                    if (values!=null) {
-                        values.append(separator);
-                        values.append("?");
-                    }
-                    separator = ", ";
-                }
-            } else if (column.isColumn()) {
-                writer.append(separator);
-                writer.append(OrmColumn.NAME.of(column));
-                if (values!=null) {
-                    values.append(separator);
-                    values.append("?");                    
-                }
-                separator = ", ";
-            }
-        }
-    }
-
-    /** Print SQL SELECT */
-    public void printSelect(Query query, StringBuilder result) throws IOException {
-        result.append("SELECT ");
-        printTableColumns(query.getColumns(), result, null);
-        result.append("\n\tFROM ");
-        result.append(OrmTable.NAME.of(query.getTableModel()));
-        // TODO : WHERE
-        result.append(";");
-    }
-
 }
+

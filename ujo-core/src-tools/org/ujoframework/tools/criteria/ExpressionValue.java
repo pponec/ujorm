@@ -58,6 +58,25 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
         this.operator = operator;
     }
 
+    /** Returns the left node of the parrent */
+    @Override
+    public final UjoProperty getLeftNode() {
+        return property;
+    }
+
+    /** Returns the right node of the parrent */
+    @Override
+    public final Object getRightNote() {
+        return value;
+    }
+
+    /** Returns an operator */
+    @Override
+    public final Operator getOperator() {
+        return operator;
+    }
+
+
     @SuppressWarnings("unchecked")
     public boolean evaluate(UJO ujo) {
         Object value2 = value instanceof UjoProperty ? ((UjoProperty)value).getValue(ujo) : value;
@@ -168,6 +187,5 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     public String toString() {
         return property + " " + operator.name() + " " + value;
     }
-    
 
 }

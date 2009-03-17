@@ -28,7 +28,7 @@ import org.ujoframework.Ujo;
  * Binary operator
  * @author pavel
  */
-public enum OperatorBinary {
+public enum OperatorBinary implements AbstractOperator {
     /** (a AND b) */
     AND,
     /** (a OR b) */
@@ -40,11 +40,23 @@ public enum OperatorBinary {
     /** NOT (a AND b) <br>Note: the SQL language may not support the operator. */
     NAND,
     /** (a == b) <br>Note: the SQL language may not support the operator. */
-    EQ;
+    EQ,
+    /** (!a) */
+    NOT,
+    ;
 
     /** Join two expressions. */ 
     public <UJO extends Ujo> Expression<UJO> join(final Expression<UJO> a, final Expression<UJO> b) {
         return a.join(this, b);
     }
-         
+
+    /** The operator is the BINARY type (not a value one) */
+    public final boolean isBinary() {
+        return false;
+    }
+
+    /** Returns Enum */
+    public final Enum getEnum() {
+        return this;
+    }
 }

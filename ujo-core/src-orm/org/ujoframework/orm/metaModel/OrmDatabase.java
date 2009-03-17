@@ -31,11 +31,13 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
+import org.ujoframework.orm.ExpressionDecoder;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.annot.Db;
+import org.ujoframework.tools.criteria.Expression;
 
 /**
  * A logical database description.
@@ -116,15 +118,14 @@ public class OrmDatabase extends AbstractMetaModel {
 
 
     /** Create an SQL select */
-    public String createSelect(Query query) {
+    public ExpressionDecoder createSelect(Query query, Appendable result ) {
         SqlRenderer renderer = getRenderer();
-        StringBuilder result = new StringBuilder();
         try {
-            renderer.printSelect(query, result);
+            final ExpressionDecoder decoder = renderer.printSelect(query, result);
+            return decoder;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return result.toString();
     }
 
     /** Returns an SQL renderer. */
