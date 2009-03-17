@@ -131,7 +131,13 @@ public class JdbcStatement {
 
         UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
         int sqlType = OrmColumn.DB_TYPE.of(column).getSqlType();
-        logValue(table, property);
+
+        if (table!=null) {
+           logValue(table, property);
+        } else if (logValues) {
+           String textValue = UjoManager.getInstance().encodeValue(value, false);
+           logValue(textValue, property);
+        }
 
         try {
             if (value==null) {
@@ -168,10 +174,17 @@ public class JdbcStatement {
 
     /** Log a value value into a text format. */
     protected void logValue(final TableUjo table, final UjoProperty property) {
+        if (logValues) {
+            String textValue = UjoManager.getInstance().getText(table, property, UjoAction.DUMMY);
+            logValue(textValue, property);
+        }
+    }
+
+    /** Log a value value into a text format. */
+    protected void logValue(final String textValue, final UjoProperty property) {
 
         if (logValues) {
             String textSeparator = property.isTypeOf(CharSequence.class) ? "\"" : "";
-            String textValue = UjoManager.getInstance().getText(table, property, UjoAction.DUMMY);
 
             values.append(parameterPointer==1 ? "[" : ", " );
             values.append(textSeparator);
@@ -179,6 +192,7 @@ public class JdbcStatement {
             values.append(textSeparator);
         }
     }
+
 
     @Override
     public String toString() {

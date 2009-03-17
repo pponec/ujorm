@@ -72,6 +72,11 @@ public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
         }
     }
 
+    /** Is it a Binary Expression */
+    @Override
+    final public boolean isBinary() {
+        return true;
+    }
 
     @Override
     public String toString() {
