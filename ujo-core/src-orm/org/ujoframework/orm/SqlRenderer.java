@@ -16,6 +16,7 @@
 package org.ujoframework.orm;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -163,7 +164,7 @@ abstract public class SqlRenderer {
         } else if (right instanceof List) {
             throw new UnsupportedOperationException("List is not supported yet: " + operator);
         } else {
-            String f = String.format(template, column.getFullName(), "?");
+            String f = MessageFormat.format(template, column.getFullName(), "?");
             writer.append(f);
             return expr;
         }

@@ -40,7 +40,7 @@ public class ExpressionDecoder {
 
     /** Unpack expression. */
     protected void unpack(final Expression e) {
-        if (e.getOperator().isBinary()) {
+        if (e.isBinary()) {
             unpackBinary((ExpressionBinary)e);
         } else try {
             ExpressionValue value = renderer.print((ExpressionValue) e, sql);

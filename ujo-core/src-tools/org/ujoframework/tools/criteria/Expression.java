@@ -108,4 +108,9 @@ public abstract class Expression<UJO extends Ujo> {
             );
     }
 
+    /** Is a Binary expression? */
+    public boolean isBinary() {
+        return false;
+    }
+
 }
