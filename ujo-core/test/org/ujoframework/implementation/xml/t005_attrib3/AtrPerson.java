@@ -10,7 +10,6 @@
 package org.ujoframework.implementation.xml.t005_attrib3;
 
 import java.util.Date;
-import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.*;
 import org.ujoframework.implementation.map.MapPropertyList;
 import org.ujoframework.implementation.map.MapUjo;

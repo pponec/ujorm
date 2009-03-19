@@ -29,6 +29,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
+import org.ujoframework.core.annot.XmlElementBody;
 import org.ujoframework.extensions.*;
 import org.ujoframework.implementation.array.ArrayUjo;
 import org.ujoframework.swing.UjoPropertyRow;
@@ -49,6 +50,9 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** A properties cache. */
     private HashMap<Class, UjoProperty[]> propertiesCache;
+
+    /** A XML <strong>element body</strong> cache */
+    private HashMap<Class, UjoProperty> xmlBodyCache;
     
     /** A XML <strong>attribute</strong> cache. */
     private HashSet<UjoProperty> attributesCache = null;
@@ -137,12 +141,17 @@ public class UjoManager implements Comparator<UjoProperty> {
                        propertyList.add( ujoProp);                     
                     }
                     
-                    // set caches:
-                    final XmlAttribute xa = field.getAnnotation(XmlAttribute.class);
-                    if (xa!=null) { cacheXmlAttribute(ujoProp); }
-
+                    // set the transient cache:
                     final Transient tr = field.getAnnotation(Transient.class);
-                    if (tr!=null) { cacheTransientAttribute(ujoProp); }
+                    // set the xml attribute cache:
+                    final XmlAttribute xa = field.getAnnotation(XmlAttribute.class);
+                    // set the xml element body cache:
+                    final XmlElementBody xb = field.getAnnotation(XmlElementBody.class);
+                    
+                    if      (tr!=null) { cacheTransientAttribute(ujoProp)  ; }
+                    else if (xa!=null) { cacheXmlAttribute(ujoProp)        ; }
+                    else if (xb!=null) { cacheXmlElementBody(type, ujoProp); }
+
                 }
             }
         } catch (IllegalAccessException e) {
@@ -434,9 +443,22 @@ public class UjoManager implements Comparator<UjoProperty> {
         return text!=null && text.length()>0;
     }
     
+    /** Returns a Element body of the class or the null if no property was found. */
+    public UjoProperty getXmlElementBody(final Class type) {
+        final UjoProperty result
+            = xmlBodyCache!=null
+            ? xmlBodyCache.get(type)
+            : null
+            ;
+        return result;
+    }
+
     /** Is the property an XML attribute? */
     public boolean isXmlAttribute(final UjoProperty property) {
-        final boolean result = attributesCache!=null && attributesCache.contains(property);
+        final boolean result 
+            =  attributesCache!=null
+            && attributesCache.contains(property)
+            ;
         return result;
     }
 
@@ -445,7 +467,6 @@ public class UjoManager implements Comparator<UjoProperty> {
         final boolean result = transientCache!=null && transientCache.contains(property);
         return result;
     }
-
 
     public final Object decodeValue(final UjoProperty property, final String aValue) {
         return coder.decodeValue(property.getType(), aValue);
@@ -461,11 +482,35 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Mark a property to XML attribute in a cache. */
+    @SuppressWarnings("unchecked")
     private void cacheXmlAttribute(final UjoProperty attribute) {
+        if (attribute.isTypeOf(Ujo.class)
+        ||  attribute instanceof ListProperty
+        ){
+            return;
+        }
         if (attributesCache==null) {
             attributesCache = new HashSet<UjoProperty>();
         }
         attributesCache.add(attribute);
+    }
+
+    /** Mark a property to XML element in a cache. */
+    @SuppressWarnings("unchecked")
+    private void cacheXmlElementBody(final Class type, final UjoProperty property) {
+
+        if (property.isTypeOf(Ujo.class)
+        ||  property instanceof ListProperty
+        ){
+            return;
+        }
+        if (xmlBodyCache==null) {
+            xmlBodyCache = new HashMap<Class, UjoProperty>(4);
+        }
+        UjoProperty old = xmlBodyCache.get(type);
+        if (old==null || old.getIndex()<property.getIndex()) {
+            xmlBodyCache.put(type, property);
+        }
     }
 
     /** Mark a property to transient attribute in a cache. */
