@@ -101,7 +101,9 @@ class UjoBuilderXML extends DefaultHandler {
     , String qualifiedName
     , Attributes attribs
     ) throws SAXException {
-        
+
+
+        setBodyText($value);
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
         $parentObj   = objectList.size() !=0 ? objectList.getLast() : null ;
         $property    = ($parentObj instanceof Ujo) ? getUjoManager().findProperty((Ujo)$parentObj, $elementName, actionImport, true, !ignoreMissingProp) : null ;
@@ -195,6 +197,7 @@ class UjoBuilderXML extends DefaultHandler {
         // String elementName = simpleName.length()!=0 ? simpleName : qualifiedName ;
         
         if ($elementCont) {
+            setBodyText($value);
             if (objectList.size()>1) {
                 objectList.removeLast();
             }
@@ -272,7 +275,27 @@ class UjoBuilderXML extends DefaultHandler {
     public UjoManager getUjoManager() {
         return UjoManager.getInstance();
     }
-    
+
+    /** Set a Body Text. */
+    protected void setBodyText(final CharSequence text) {
+
+        if (objectList.isEmpty()) { return; }
+        final Object ujo = objectList.getLast();
+        final UjoProperty property = getUjoManager().getXmlElementBody(ujo.getClass());
+
+        if (property!=null) {
+            String bodyText = text.toString().trim();
+            if (bodyText.length()==0) {
+                return;
+            }
+            if (ujo instanceof UjoTextable) {
+                ((UjoTextable)ujo).writeValueString(property, bodyText, null, actionImport);
+            } else {
+                final Object bodyObj = getUjoManager().decodeValue(property, bodyText);
+                ((UjoTextable)ujo).writeValue(property, bodyObj);
+            }
+        }
+    }
     
     
 }

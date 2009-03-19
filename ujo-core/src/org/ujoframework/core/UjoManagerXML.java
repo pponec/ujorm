@@ -183,6 +183,8 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     
     /** Write required properties to a XML writer. */
     public void printProperties(Writer writer, UjoTextable ujo, UjoProperty[] properties) throws IOException {
+        UjoProperty bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
+
         for (UjoProperty property : properties) {
             Object value = ujo.readValue(property); // Only direct property from readProperties()
             
@@ -202,6 +204,8 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                     Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
                     printProperty( ujo, property, itemClass, baseType, item, writer );
                 }
+            } else if (bodyProperty==property) {
+                printValue2XML(writer, Object.class, value, ujo, property);
             } else {
                 printProperty(ujo, property, baseType, null, value, writer);
 //          } else if (value instanceof Object[]) {
@@ -354,7 +358,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         } else if (value instanceof List) {
             for (Object item : (List<Object>) value) {
                 printItem(writer, itemType, item, ujo, prop);
-        }
+            }
 
 //      // A Feature of the Future:
 //      } else if (value instanceof Object[]) {
