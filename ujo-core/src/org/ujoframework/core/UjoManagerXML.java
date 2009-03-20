@@ -205,6 +205,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                     printProperty( ujo, property, itemClass, baseType, item, writer );
                 }
             } else if (bodyProperty==property) {
+                writeNewLine(writer);
                 printValue2XML(writer, Object.class, value, ujo, property);
             } else {
                 printProperty(ujo, property, baseType, null, value, writer);
