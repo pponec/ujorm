@@ -287,16 +287,15 @@ There is allowed to use a primitive types of the object fields if you can (e.g. 
         The way NAME.getValue(...) works fine.
         
         <h2 id="xml">XML serialization</h2>
-        Usage of an serialization is very simple, that is how the code looks like:
-<pre class="pre"> Person person;
-...<br>
+        Usage of an UJO serialization is very simple, that is how the code looks like:
+<pre class="pre">Person person = somePersonProvider().getPerson();<br>
 <span class="java-block-comment">// Make Serialization:</span>
 UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="java-layer-method">saveXML</span>(writer, person, <span class="java-keywords">null</span>, <span class="java-string-literal">"My Export"</span>);<br>
 <span class="java-block-comment">// Make Deserialization:</span>
 person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="java-layer-method">parseXML</span>(inputStream, Person.<span class="java-keywords">class</span>, <span class="java-string-literal">"My Import"</span>);<br>
 </pre>
 
-        A content of created XML:
+        A content of created XML is now:
 <pre class="pre"><span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version="1.0" encoding="UTF-8"</span><span class="xml-pi-start">?&gt;</span>
 <span class="xml-tag">&lt;body</span><span class="xml-tag">&gt;</span>
   <span class="xml-tag">&lt;Name</span><span class="xml-tag">&gt;</span>Paul Ponec<span class="xml-tag">&lt;/Name</span><span class="xml-tag">&gt;</span>
@@ -305,7 +304,7 @@ person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<spa
 <span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
 </pre>
 
-<h3>List Property</h3>
+<h3 id="listProperty">List property</h3>
 It´s often very useful some attribute to contain a <strong>list</strong> of another UJO objects. 
 It´s possible to make the <strong>ArrayList&lt;UjoItem&gt;</strong> type object though, but preferable is to use for an attribute the <a href="#">ListProperty</a> class. 
 The first reason is a clearer content of an export to XML, because an export doesn't contain the information about the data type items of the list.
@@ -320,7 +319,7 @@ Recommended solution for the implementation of a link <strong>1:N</strong> for t
 }
 </pre>
 
-       <h3 id="xmlAuthrization">An authorization of an attribute export</h3>
+       <h3 id="xmlAuthorization">Hidden elements</h3>
        What to do, when you need to export only some of the UJO object attributes and to ignore the rest?
        There is the <strong>readAuthorization(...)</strong> method for this case. 
        <br>This method can allow a participation of the chosen attributes in dependence on:
@@ -346,32 +345,36 @@ On the following example we will illustrate, how the suppression of the <strong>
         Notice: because all the <i>Properties</i> of the UJO object are the final type, it is not necessary
         to compare by the <i>equals()</i> method, but it is possible to use a quicker operator  <strong>==</strong>.
 
-<h3>Writing XML attribute</h3>
-The UJO Framework enables to write some <strong>properties</strong> like a XML attribute contrary of the XML element (it a default feature). 
-There are two ways how to get the target:
-<ul>
-  <li>make own implementation of the method <strong>readAuthorization(...)</strong>. 
-      There is used an authorization action ACTION_XML_ELEMENT for resolution properties, a result value  FALSE is request to write an XML attribute for selected property. 
-      See the next sample of usage for a NAME property like a XML attribute:
-<pre class="pre"><span class="java-annotation">@</span>Override
-<span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, UjoProperty property, Object value) {
-  <span class="java-keywords">switch</span>(action) {
-    <span class="java-keywords">case</span> ACTION_XML_ELEMENT: <span class="java-keywords">return</span> property!=NAME; // the NAME will be an attribute of an element
-    <span class="java-keywords">default</span>: <span class="java-keywords">return</span> <span class="java-keywords">super</span>.<span class="java-layer-method">readAuthorization</span>(action, property, value);
-  }
-}
-</pre>
-  </li>
-  <li>if you use an abstract parent class (MapUjo, ArrayUjo) then it is possible to mark the property by an annotation  <strong>@XmlAttribute</strong> by next sample:
+<h3 id="xmlAttributes">The attributes</h3>
+The UJO Framework enables to write some <strong>properties</strong> like a XML attribute of the element contrary of the XML child element (it is a default feature).
+The solution is to use an annotation <strong>@XmlAttribute</strong> by next sample:
 <pre class="pre"><span class="java-annotation">@</span>XmlAttribute
 <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
 </pre>
-      A default implementation of the method <strong>readAuthorization(...)</strong> located in a parent class can recognized annotation 
-      and so the feature describe above works by the same way.
-  </li>
-</ul>
-        
-           
+
+
+        <h3 id="xmlBodyValue">Body value</h3>
+        There is possible print the a one property value per object like an element <strong>body text</strong>.
+        For the purpose is designed an annotation <strong>@XmlElementBody</strong> by next sample:
+<pre class="pre"><span class="java-annotation">@</span>@XmlElementBody
+<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Ujo,String&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, String.<span class="java-keywords">class</span>);
+</pre>
+        A content of the new XML file using both annotations <strong>@XmlAttribute</strong> and <strong>@XmlElementBody</strong> is next:
+<pre class="pre"><span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version="1.0" encoding="UTF-8"</span><span class="xml-pi-start">?&gt;</span>
+<span class="xml-tag">&lt;body Name</span>="Paul Ponec"<span class="xml-tag">&gt;</span>
+  true
+  <span class="xml-tag">&lt;Cash</span><span class="xml-tag">&gt;</span>34.5<span class="xml-tag">&lt;/Cash</span><span class="xml-tag">&gt;</span>
+<span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
+</pre>
+
+        Some more features:
+        <ul>
+          <li>there is recommended that only one property was signed by the annotation XmlElementBody in the class</li>
+          <li>if more XmlElementBody annotated properties are identified than the framework will be considered the valid property with the highest index</li>
+          <li>if a property has an annotation XmlAttribute so the XmlElementBody is ignored.</li>
+        </ul>
+
+     
         <h2 id="tablemodel">Support of the JTable component</h2>
         The UJO Framework contains a support for the UJO object list displaying in the JTable. For simple editable table creating it´s not necessary 
         to create any new class, <strong>you can only create</strong> the <a href="swing/UjoTableModel.html">UjoTableModel</a> class instance and to set it to the <i>JTable</i> object using the <i>setModel()</i> method. 
