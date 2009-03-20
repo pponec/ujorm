@@ -35,34 +35,34 @@ import org.ujoframework.extensions.UjoAction;
 /** Use an subclass on your own risk.
  * <br>Use an API of UjoManagerXML insted of. */
 class UjoBuilderXML extends DefaultHandler {
-    
-    /** An Object hierarchy (Ujo or ListElement) */
-    final protected LinkedList objectList = new LinkedList();
-    
+
+    /** An Object hierarchy (Ujo or Element) */
+    final protected LinkedList<Element> objectList = new LinkedList<Element>();
+
     /** Class of the root. */
     final protected Class rootType;
-    
+
     /** Import action */
     final protected UjoAction actionImport;
     /** XML Element action */
     final protected UjoAction actionElement;
-    
+
     /** Ignore missing property related to an ELEMENT or ATTRIBUTE during XML import. */
     private boolean ignoreMissingProp = false;
-    
+
     // -- Temporarry fields --
     protected String  $elementName  = null;
     protected Class   $elementType  = null;
     protected UjoProperty $property = null;
     protected Class   $listType     = null;
     protected Class   $itemType     = null;
-    protected Object  $parentObj    = null;
+    protected Element $parentObj    = null;
     protected boolean $elementCont  = false;
     protected StringBuilder $value  = new StringBuilder(64);
-    
+
     /** A list of XML attributes, one item is always a pair: attribute - value */
     protected ArrayList<String[]> $attributes = new ArrayList<String[]>();
-    
+
     /** Constructor. */
     @SuppressWarnings("deprecation")
     /*protected*/ UjoBuilderXML(Class resultType, Object context) {
@@ -70,15 +70,15 @@ class UjoBuilderXML extends DefaultHandler {
         this.actionImport  = new UjoActionImpl(UjoAction.ACTION_XML_IMPORT , context);
         this.actionElement = new UjoActionImpl(UjoAction.ACTION_XML_ELEMENT, context);
     }
-    
+
     @Override
     public void startDocument() throws SAXException {
     }
-    
+
     @Override
     public void endDocument() throws SAXException {
     }
-    
+
     /**
      * <p>This event allows up to three name components for each element:</p>
      * <ol>
@@ -102,18 +102,19 @@ class UjoBuilderXML extends DefaultHandler {
     , Attributes attribs
     ) throws SAXException {
 
-
-        setBodyText($value);
+        addBodyText($value);
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
-        $parentObj   = objectList.size() !=0 ? objectList.getLast() : null ;
-        $property    = ($parentObj instanceof Ujo) ? getUjoManager().findProperty((Ujo)$parentObj, $elementName, actionImport, true, !ignoreMissingProp) : null ;
-        $elementType = $parentObj==null ? rootType : null ;
+        $parentObj   = objectList.isEmpty() ? new Element(null) : objectList.getLast() ;
+        $property    = $parentObj.isUjo()
+	                 ? getUjoManager().findProperty($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
+		             : null ;
+        $elementType = $parentObj.isRoot() ? rootType : null ;
         $listType    = null;
         $itemType    = null;
         $elementCont = false;
         $value.setLength(0);
         $attributes.clear();
-        
+
         if (attribs!=null) for (int i=0; i<attribs.getLength(); i++) try {
             String attribName = attribs.getLocalName(i);
             if (isEmpty(attribName)) {
@@ -131,38 +132,40 @@ class UjoBuilderXML extends DefaultHandler {
         } catch (ClassNotFoundException ex) {
             throw new IllegalArgumentException(ex);
         }
-        
+
         // Find an ELEMENT class:
         if ($elementType==null) {
-            if ($parentObj==null) {
+            if ($parentObj.isRoot()) {
                 throw new IllegalStateException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
             }
-            $elementType = $parentObj instanceof Ujo
+            $elementType = $parentObj.isUjo()
             ? ($property instanceof UjoPropertyList ? ((UjoPropertyList)$property).getItemType() : $property.getType())
-            : ((ListElement)$parentObj).getItemType()
+            : ($parentObj.itemType)
             ;
-            
         }
-        
+
         if ($elementType==null) {
             throw new IllegalStateException("Tag <" + $elementName + "> can't find class.");
         } else try {
-            
+
             boolean isUJO = UjoTextable.class.isAssignableFrom($elementType);
             boolean isList = List.class.isAssignableFrom($elementType);
             if (isUJO || isList){
                 $elementCont = true;
                 Object container = $elementType.newInstance(); // UjoContainer
-                objectList.add(isUJO ? container : new ListElement((List)container, $itemType) );
-                
-                if (isUJO && $attributes.size()>0) {
+                objectList.add(isUJO
+                    ? new Element((Ujo)container)
+                    : new Element((List)container, $itemType)
+		    );
+
+                if (isUJO && !$attributes.isEmpty()) {
                     addAttributes((UjoTextable) container);
                 }
-                
+
                 // Save container into parent:
-                if ($parentObj instanceof Ujo) {
-                    Ujo ujoParent = (Ujo) $parentObj;
-                    
+                if ($parentObj.isUjo()) {
+                    Ujo ujoParent = $parentObj.ujo;
+
                     if ($property instanceof UjoPropertyList) {
                         List list = (List) ujoParent.readValue($property);
                         if (list==null) {
@@ -176,17 +179,17 @@ class UjoBuilderXML extends DefaultHandler {
                     } else if ($property!=null) {
                         ujoParent.writeValue($property, container);
                     }
-                    
-                } else if ($parentObj instanceof ListElement) {
-                    ((ListElement)$parentObj).add(container);
+
+                } else if ($parentObj.isList()) {
+                    $parentObj.add(container);
                 }
             }
-            
+
         } catch (Exception ex) {
             throw new IllegalArgumentException( "Can't create instance of " + $elementType, ex );
         }
     }
-    
+
     /** End the scope of a prefix-URI mapping. */
     @Override
     public void endElement
@@ -195,107 +198,164 @@ class UjoBuilderXML extends DefaultHandler {
     , String qualifiedName
     ) throws SAXException {
         // String elementName = simpleName.length()!=0 ? simpleName : qualifiedName ;
-        
+
         if ($elementCont) {
-            setBodyText($value);
+
+            addBodyText($value);
+            objectList.getLast().saveBody();
+
             if (objectList.size()>1) {
                 objectList.removeLast();
             }
-        } else if ($parentObj instanceof UjoTextable) {
+        } else if ($parentObj.ujo instanceof UjoTextable) {
             // Vrite Value:
-            ((UjoTextable) $parentObj).writeValueString($property, $value.toString(), $elementType, actionImport);
+            ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);
             $value.setLength(0);
             $elementCont = true;
-        } else if ($parentObj instanceof ListElement) {
+        } else if ($parentObj.isList()) {
             // Vrite Value/Container:
-            ((ListElement)$parentObj).add( getUjoManager().decodeValue($elementType, $value.toString()) );
+            $parentObj.list.add( getUjoManager().decodeValue($elementType, $value.toString()) );
             $value.setLength(0);
             $elementCont = true;
         }
-        
+
     }
-    
+
     /** Appned an part of tag value. */
     @Override
     public void characters(char buf[], int offset, int len) throws SAXException {
         $value.append(buf, offset, len);
     }
-    
+
     // === UTILITIES ==============================
-    
+
     /** Returns true, if text in not empty. */
     protected final boolean isEmpty(CharSequence text) {
         return text==null || text.length()==0;
     }
-    
+
     /** Returns root */
     public Ujo getRoot() {
-        return objectList.size()>0 ? (Ujo) objectList.get(0) : null ;
+        return objectList.isEmpty() ? null : objectList.get(0).ujo ;
     }
-    
+
     @SuppressWarnings("unchecked")
     public static <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context)
     throws ParserConfigurationException, SAXException, IOException {
-        
+
         // Parser Factory
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setValidating(validate);
-        
+
         // Parse the input
         UjoBuilderXML handler = new UjoBuilderXML(classType, context);
         SAXParser saxParser = factory.newSAXParser();
         saxParser.parse( inputStream, handler);
-        
+
         return (T) handler.getRoot();
     }
-    
+
     /** Add all XML attributes from internal buffer to UJO. */
     protected void addAttributes(final UjoTextable ujo) {
         for (String[] attrib : $attributes) {
-            
+
             UjoProperty prop = getUjoManager().findProperty(ujo, attrib[0], actionElement, false, !ignoreMissingProp);
             if (prop!=null){
                 ujo.writeValueString(prop, attrib[1], null, actionImport);
             }
         }
     }
-    
-    
+
+
     /** Ignore missing property related to an ELEMENT or ATTRIBUTE during XML import. */
     public boolean isIgnoreMissingProp() {
         return ignoreMissingProp;
     }
-    
+
     /** Ignore missing property related to an ELEMENT or ATTRIBUTE during XML import. */
     public void setIgnoreMissingProp(boolean ignoreMissingProp) {
         this.ignoreMissingProp = ignoreMissingProp;
     }
-    
+
     /** Returns DEFAULT UjoManager. */
     public UjoManager getUjoManager() {
         return UjoManager.getInstance();
     }
 
-    /** Set a Body Text. */
-    protected void setBodyText(final CharSequence text) {
-
+    /** Set a BodyText. */
+    protected void addBodyText(CharSequence bodyText) {
         if (objectList.isEmpty()) { return; }
-        final Object ujo = objectList.getLast();
-        final UjoProperty property = getUjoManager().getXmlElementBody(ujo.getClass());
+        objectList.getLast().addBody(bodyText);
+    }
 
-        if (property!=null) {
-            String bodyText = text.toString().trim();
-            if (bodyText.length()==0) {
-                return;
-            }
-            if (ujo instanceof UjoTextable) {
-                ((UjoTextable)ujo).writeValueString(property, bodyText, null, actionImport);
-            } else {
-                final Object bodyObj = getUjoManager().decodeValue(property, bodyText);
-                ((UjoTextable)ujo).writeValue(property, bodyObj);
+
+    /**
+     * List include metaInfo.
+     * @author Pavel Ponec
+     */
+    class Element {
+
+        final List<Object> list;
+        final Class itemType;
+        final Ujo ujo;
+        final UjoProperty bodyProperty;
+        final StringBuilder body;
+
+        public Element(List<Object> list, Class itemType, Ujo ujo) {
+            this.list     = list;
+            this.itemType = itemType;
+            this.ujo      = ujo;
+            //
+            this.bodyProperty = ujo!=null ? getUjoManager().getXmlElementBody(ujo.getClass()) : null ;
+            this.body = bodyProperty!=null ? new StringBuilder() : null ;
+        }
+
+        public Element(List<Object> list, Class itemType) {
+            this(list, itemType, null);
+        }
+
+        public Element(Ujo ujo) {
+            this(null, null, ujo);
+        }
+
+        /** Add new item to Listl */
+        public void add(Object item) {
+            list.add(item);
+        }
+
+        public boolean isRoot() {
+            return ujo==null && list==null;
+        }
+
+        public boolean isUjo() {
+            return ujo!=null;
+        }
+        public boolean isList() {
+            return list!=null;
+        }
+
+        // ---------------------
+
+        public void addBody(CharSequence text) {
+            if (body!=null) {
+                body.append(text);
             }
         }
+
+        /** Save body by the body property. */
+        public void saveBody() {
+            if (body!=null) {
+                String bodyText = body.toString().trim();
+                if (bodyText.length()==0) { return; }
+
+                if (ujo instanceof UjoTextable) {
+                    ((UjoTextable)ujo).writeValueString(bodyProperty, bodyText, null, actionImport);
+                } else {
+                    final Object bodyObj = getUjoManager().decodeValue(bodyProperty, bodyText);
+                    ((UjoTextable)ujo).writeValue(bodyProperty, bodyObj);
+                }
+            }
+        }
+
     }
-    
-    
 }
