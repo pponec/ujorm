@@ -41,7 +41,7 @@ public class T001b_Test extends MyTestCase {
         CharArrayWriter writer = new CharArrayWriter(256);
         //
         UPerson person = createPerson();
-        person.NAME.setValue(person, name);
+        UPerson.NAME.setValue(person, name);
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
         
         if (printText) {
