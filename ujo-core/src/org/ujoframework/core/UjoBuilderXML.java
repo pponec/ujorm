@@ -36,7 +36,8 @@ import org.ujoframework.extensions.UjoAction;
 final class UjoBuilderXML extends DefaultHandler {
 
     /** An Object hierarchy (Ujo or Element) */
-    final protected List<Element> elementList = new ArrayList<Element>();
+    private Element[] elementList = new Element[16];
+    int lastElement = -1;
 
     /** Class of the root. */
     final protected Class rootType;
@@ -106,7 +107,7 @@ final class UjoBuilderXML extends DefaultHandler {
 
         addBodyText($value);
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
-        $parentObj   = elementList.isEmpty() ? new Element(null) : getLastElement() ;
+        $parentObj   = lastElement<0 ? new Element() : getLastElement() ;
         $property    = $parentObj.isUjo()
 	                 ? ujoManager.findProperty($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
 		             : null ;
@@ -155,10 +156,9 @@ final class UjoBuilderXML extends DefaultHandler {
             if (isUJO || isList){
                 $elementCont = true;
                 Object container = $elementType.newInstance(); // UjoContainer
-                elementList.add(isUJO
-                    ? new Element((Ujo)container)
-                    : new Element((List)container, $itemType)
-		    );
+
+                if (isUJO) newElement().init((Ujo)container);
+                else       newElement().init((List)container, $itemType);
 
                 if (isUJO && !$attributes.isEmpty()) {
                     addAttributes((UjoTextable) container);
@@ -206,8 +206,8 @@ final class UjoBuilderXML extends DefaultHandler {
             addBodyText($value);
             getLastElement().saveBody();
 
-            if (elementList.size()>1) {
-                elementList.remove(elementList.size()-1);
+            if (lastElement>0) {
+                lastElement--;
             }
         } else if ($parentObj.ujo instanceof UjoTextable) {
             // Vrite Value:
@@ -238,7 +238,7 @@ final class UjoBuilderXML extends DefaultHandler {
 
     /** Returns root */
     public Ujo getRoot() {
-        return elementList.isEmpty() ? null : elementList.get(0).ujo ;
+        return lastElement<0 ? null : elementList[0].ujo ;
     }
 
     @SuppressWarnings("unchecked")
@@ -281,15 +281,31 @@ final class UjoBuilderXML extends DefaultHandler {
 
     /** Set a BodyText. */
     protected void addBodyText(CharSequence bodyText) {
-        if (elementList.isEmpty()) { return; }
+        if (lastElement<0) { return; }
         getLastElement().addBody(bodyText);
     }
 
     /** Returns the last element from the object list  */
     final protected Element getLastElement() {
-        return elementList.get(elementList.size()-1);
-
+        return elementList[lastElement];
     }
+
+    /** Returns the new element from the object list  */
+    final protected Element newElement() {
+        if (++lastElement==elementList.length) {
+            Element[] newElem = new Element[lastElement + 32];
+            System.arraycopy(elementList, 0, newElem, 0, elementList.length);
+            elementList = newElem;
+        }
+
+        Element result = elementList[lastElement];
+        if (result==null) {
+            result = new Element();
+            elementList[lastElement] = result;
+        }
+        return elementList[lastElement];
+    }
+
 
     /**
      * List include metaInfo.
@@ -297,13 +313,13 @@ final class UjoBuilderXML extends DefaultHandler {
      */
     final class Element {
 
-        final List<Object> list;
-        final Class itemType;
-        final Ujo ujo;
-        final UjoProperty bodyProperty;
-        final StringBuilder body;
+        List<Object> list;
+        Class itemType;
+        Ujo ujo;
+        UjoProperty bodyProperty;
+        StringBuilder body;
 
-        public Element(List<Object> list, Class itemType, Ujo ujo) {
+        public void init(List<Object> list, Class itemType, Ujo ujo) {
             this.list     = list;
             this.itemType = itemType;
             this.ujo      = ujo;
@@ -312,21 +328,21 @@ final class UjoBuilderXML extends DefaultHandler {
             this.body = bodyProperty!=null ? new StringBuilder() : null ;
         }
 
-        public Element(List<Object> list, Class itemType) {
-            this(list, itemType, null);
+        public void init(List<Object> list, Class itemType) {
+            init(list, itemType, null);
         }
 
-        public Element(Ujo ujo) {
-            this(null, null, ujo);
+        public void init(Ujo ujo) {
+            init(null, null, ujo);
         }
 
-        /** Add new item to Listl */
+        /** Add new item to List */
         public void add(Object item) {
             list.add(item);
         }
 
         public boolean isRoot() {
-            return ujo==null && list==null;
+            return ujo==list; // ujo==null && list==null;
         }
 
         public boolean isUjo() {
