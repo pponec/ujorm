@@ -19,7 +19,6 @@ package org.ujoframework.core;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ujoframework.UjoProperty;
@@ -34,10 +33,10 @@ import org.ujoframework.extensions.UjoAction;
 
 /** Use an subclass on your own risk.
  * <br>Use an API of UjoManagerXML insted of. */
-class UjoBuilderXML extends DefaultHandler {
+final class UjoBuilderXML extends DefaultHandler {
 
     /** An Object hierarchy (Ujo or Element) */
-    final protected LinkedList<Element> objectList = new LinkedList<Element>();
+    final protected List<Element> elementList = new ArrayList<Element>();
 
     /** Class of the root. */
     final protected Class rootType;
@@ -46,6 +45,8 @@ class UjoBuilderXML extends DefaultHandler {
     final protected UjoAction actionImport;
     /** XML Element action */
     final protected UjoAction actionElement;
+    /** UjoManager */
+    final protected UjoManager ujoManager;
 
     /** Ignore missing property related to an ELEMENT or ATTRIBUTE during XML import. */
     private boolean ignoreMissingProp = false;
@@ -65,10 +66,11 @@ class UjoBuilderXML extends DefaultHandler {
 
     /** Constructor. */
     @SuppressWarnings("deprecation")
-    /*protected*/ UjoBuilderXML(Class resultType, Object context) {
+    /*protected*/ UjoBuilderXML(Class resultType, Object context, UjoManager ujoManager) {
         this.rootType = resultType!=null ? resultType : Object.class ;
         this.actionImport  = new UjoActionImpl(UjoAction.ACTION_XML_IMPORT , context);
         this.actionElement = new UjoActionImpl(UjoAction.ACTION_XML_ELEMENT, context);
+        this.ujoManager    = ujoManager;
     }
 
     @Override
@@ -104,9 +106,9 @@ class UjoBuilderXML extends DefaultHandler {
 
         addBodyText($value);
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
-        $parentObj   = objectList.isEmpty() ? new Element(null) : objectList.getLast() ;
+        $parentObj   = elementList.isEmpty() ? new Element(null) : getLastElement() ;
         $property    = $parentObj.isUjo()
-	                 ? getUjoManager().findProperty($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
+	                 ? ujoManager.findProperty($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
 		             : null ;
         $elementType = $parentObj.isRoot() ? rootType : null ;
         $listType    = null;
@@ -153,7 +155,7 @@ class UjoBuilderXML extends DefaultHandler {
             if (isUJO || isList){
                 $elementCont = true;
                 Object container = $elementType.newInstance(); // UjoContainer
-                objectList.add(isUJO
+                elementList.add(isUJO
                     ? new Element((Ujo)container)
                     : new Element((List)container, $itemType)
 		    );
@@ -202,10 +204,10 @@ class UjoBuilderXML extends DefaultHandler {
         if ($elementCont) {
 
             addBodyText($value);
-            objectList.getLast().saveBody();
+            getLastElement().saveBody();
 
-            if (objectList.size()>1) {
-                objectList.removeLast();
+            if (elementList.size()>1) {
+                elementList.remove(elementList.size()-1);
             }
         } else if ($parentObj.ujo instanceof UjoTextable) {
             // Vrite Value:
@@ -214,7 +216,7 @@ class UjoBuilderXML extends DefaultHandler {
             $elementCont = true;
         } else if ($parentObj.isList()) {
             // Vrite Value/Container:
-            $parentObj.list.add( getUjoManager().decodeValue($elementType, $value.toString()) );
+            $parentObj.list.add( ujoManager.decodeValue($elementType, $value.toString()) );
             $value.setLength(0);
             $elementCont = true;
         }
@@ -236,11 +238,11 @@ class UjoBuilderXML extends DefaultHandler {
 
     /** Returns root */
     public Ujo getRoot() {
-        return objectList.isEmpty() ? null : objectList.get(0).ujo ;
+        return elementList.isEmpty() ? null : elementList.get(0).ujo ;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context)
+    public static <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context, UjoManager ujoManager)
     throws ParserConfigurationException, SAXException, IOException {
 
         // Parser Factory
@@ -248,7 +250,7 @@ class UjoBuilderXML extends DefaultHandler {
         factory.setValidating(validate);
 
         // Parse the input
-        UjoBuilderXML handler = new UjoBuilderXML(classType, context);
+        UjoBuilderXML handler = new UjoBuilderXML(classType, context, ujoManager);
         SAXParser saxParser = factory.newSAXParser();
         saxParser.parse( inputStream, handler);
 
@@ -259,7 +261,7 @@ class UjoBuilderXML extends DefaultHandler {
     protected void addAttributes(final UjoTextable ujo) {
         for (String[] attrib : $attributes) {
 
-            UjoProperty prop = getUjoManager().findProperty(ujo, attrib[0], actionElement, false, !ignoreMissingProp);
+            UjoProperty prop = ujoManager.findProperty(ujo, attrib[0], actionElement, false, !ignoreMissingProp);
             if (prop!=null){
                 ujo.writeValueString(prop, attrib[1], null, actionImport);
             }
@@ -277,23 +279,23 @@ class UjoBuilderXML extends DefaultHandler {
         this.ignoreMissingProp = ignoreMissingProp;
     }
 
-    /** Returns DEFAULT UjoManager. */
-    public UjoManager getUjoManager() {
-        return UjoManager.getInstance();
-    }
-
     /** Set a BodyText. */
     protected void addBodyText(CharSequence bodyText) {
-        if (objectList.isEmpty()) { return; }
-        objectList.getLast().addBody(bodyText);
+        if (elementList.isEmpty()) { return; }
+        getLastElement().addBody(bodyText);
     }
 
+    /** Returns the last element from the object list  */
+    final protected Element getLastElement() {
+        return elementList.get(elementList.size()-1);
+
+    }
 
     /**
      * List include metaInfo.
      * @author Pavel Ponec
      */
-    class Element {
+    final class Element {
 
         final List<Object> list;
         final Class itemType;
@@ -306,7 +308,7 @@ class UjoBuilderXML extends DefaultHandler {
             this.itemType = itemType;
             this.ujo      = ujo;
             //
-            this.bodyProperty = ujo!=null ? getUjoManager().getXmlElementBody(ujo.getClass()) : null ;
+            this.bodyProperty = ujo!=null ? ujoManager.getXmlElementBody(ujo.getClass()) : null ;
             this.body = bodyProperty!=null ? new StringBuilder() : null ;
         }
 
@@ -351,7 +353,7 @@ class UjoBuilderXML extends DefaultHandler {
                 if (ujo instanceof UjoTextable) {
                     ((UjoTextable)ujo).writeValueString(bodyProperty, bodyText, null, actionImport);
                 } else {
-                    final Object bodyObj = getUjoManager().decodeValue(bodyProperty, bodyText);
+                    final Object bodyObj = ujoManager.decodeValue(bodyProperty, bodyText);
                     ((UjoTextable)ujo).writeValue(bodyProperty, bodyObj);
                 }
             }
