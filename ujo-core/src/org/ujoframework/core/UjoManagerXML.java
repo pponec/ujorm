@@ -107,7 +107,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
      * An Deserialization of Ujo object.
      */
     public <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context) throws ParserConfigurationException, SAXException, IOException {
-        return UjoBuilderXML.parseXML(inputStream, classType, validate, context);
+        return UjoBuilderXML.parseXML(inputStream, classType, validate, context, getUjoManager());
     }
     
     

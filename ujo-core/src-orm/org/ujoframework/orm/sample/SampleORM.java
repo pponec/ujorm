@@ -82,7 +82,7 @@ public class SampleORM {
         for (Order order : session.iterate( query ) ) {
             Long id = order.get(Order.ID);
             String descr = order.get(Order.DESCR);
-            System.out.println("Order id: " + id + " descr: " + descr);
+            System.out.println("ROW: " + order);
         }
     }
 

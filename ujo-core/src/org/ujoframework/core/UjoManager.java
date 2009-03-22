@@ -444,7 +444,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Returns a Element body of the class or the null if no property was found. */
-    public UjoProperty getXmlElementBody(final Class type) {
+    public final UjoProperty getXmlElementBody(final Class type) {
         final UjoProperty result
             = xmlBodyCache!=null
             ? xmlBodyCache.get(type)
@@ -454,7 +454,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
 
     /** Is the property an XML attribute? */
-    public boolean isXmlAttribute(final UjoProperty property) {
+    public final boolean isXmlAttribute(final UjoProperty property) {
         final boolean result 
             =  attributesCache!=null
             && attributesCache.contains(property)
@@ -463,7 +463,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
 
     /** Is the property an Transient? */
-    public boolean isTransientProperty(final UjoProperty property) {
+    public final boolean isTransientProperty(final UjoProperty property) {
         final boolean result = transientCache!=null && transientCache.contains(property);
         return result;
     }
