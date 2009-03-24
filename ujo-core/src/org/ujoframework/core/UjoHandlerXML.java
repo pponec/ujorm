@@ -33,7 +33,7 @@ import org.ujoframework.extensions.UjoAction;
 
 /** Use an subclass on your own risk.
  * <br>Use an API of UjoManagerXML insted of. */
-final class UjoBuilderXML extends DefaultHandler {
+final class UjoHandlerXML extends DefaultHandler {
 
     /** An Object hierarchy (Ujo or Element) */
     private Element[] elementList = new Element[16];
@@ -67,7 +67,7 @@ final class UjoBuilderXML extends DefaultHandler {
 
     /** Constructor. */
     @SuppressWarnings("deprecation")
-    /*protected*/ UjoBuilderXML(Class resultType, Object context, UjoManager ujoManager) {
+    /*protected*/ UjoHandlerXML(Class resultType, Object context, UjoManager ujoManager) {
         this.rootType = resultType!=null ? resultType : Object.class ;
         this.actionImport  = new UjoActionImpl(UjoAction.ACTION_XML_IMPORT , context);
         this.actionElement = new UjoActionImpl(UjoAction.ACTION_XML_ELEMENT, context);
@@ -250,7 +250,7 @@ final class UjoBuilderXML extends DefaultHandler {
         factory.setValidating(validate);
 
         // Parse the input
-        UjoBuilderXML handler = new UjoBuilderXML(classType, context, ujoManager);
+        UjoHandlerXML handler = new UjoHandlerXML(classType, context, ujoManager);
         SAXParser saxParser = factory.newSAXParser();
         saxParser.parse( inputStream, handler);
 
