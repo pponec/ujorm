@@ -40,7 +40,14 @@ public class Query<UJO extends TableUjo> {
     private boolean readOnly = false;
 
     public Query(Class<UJO> tableType, Expression<UJO> expression, Session session) {
-        this.table = OrmHandler.getInstance().findTableModel(tableType);
+        this( OrmHandler.getInstance().findTableModel(tableType)
+            , expression
+            , session
+            );
+    }
+
+    public Query(OrmTable table, Expression<UJO> expression, Session session) {
+        this.table = table;
         this.columns = OrmTable.COLUMNS.getList(table);
         this.expression = expression;
         this.session = session;

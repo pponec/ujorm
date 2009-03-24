@@ -102,13 +102,13 @@ public class JdbcStatement {
     public void assignValues(ExpressionDecoder decoder) throws SQLException {
         for (int i=0; i<decoder.getColumnCount(); ++i) {
             final OrmColumn column = decoder.getColumn(i);
-            final Object value = decoder.getValue(i);
+            final Object value = decoder.getValueExtended(i);
             assignValue(column, value, null);
         }
     }
 
 
-        /** Add a next value to a SQL prepared statement. */
+    /** Add a next value to a SQL prepared statement. */
     @SuppressWarnings("unchecked")
     public void assignValue(final TableUjo table, final OrmColumn column) throws SQLException {
 
