@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujoframework.orm;
 
 import java.sql.Connection;
@@ -25,10 +24,14 @@ import java.util.logging.Logger;
 import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
+import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmDatabase;
+import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.orm.sample.Database;
 import org.ujoframework.tools.criteria.Expression;
+import org.ujoframework.tools.criteria.ExpressionBinary;
+import org.ujoframework.tools.criteria.ExpressionValue;
 
 /**
  * ORM session.
@@ -39,11 +42,8 @@ public class Session {
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
-
-
     /** Database connection */
-    private HashMap<OrmDatabase,Connection> connections = new HashMap<OrmDatabase,Connection>();
-
+    private HashMap<OrmDatabase, Connection> connections = new HashMap<OrmDatabase, Connection>();
 
     /** Make a commit for all databases. */
     public void commit() {
@@ -67,26 +67,47 @@ public class Session {
             try {
                 Connection conn = connections.get(db);
                 if (commit) {
-                   conn.commit();
+                    conn.commit();
                 } else {
-                   conn.rollback();
+                    conn.rollback();
                 }
             } catch (Throwable e) {
                 LOGGER.log(Level.SEVERE, errMessage + db, e);
-                if (exception==null) {
+                if (exception == null) {
                     exception = e;
                     database = db;
                 }
             }
         }
-        if (exception!=null) {
+        if (exception != null) {
             throw new IllegalStateException(errMessage + database, exception);
         }
     }
 
-
     public <UJO extends TableUjo> Query<UJO> createQuery(Class<UJO> aClass, Expression<UJO> expression) {
         return new Query<UJO>(aClass, expression, this);
+    }
+
+    /** The table class is derived from a first expression column. */
+    public <UJO extends TableUjo> Query<UJO> createQuery(Expression<UJO> expression) {
+        OrmRelation2Many column = getBasicColumn(expression);
+        OrmTable table = OrmRelation2Many.TABLE.of(column);
+        return new Query<UJO>(table, expression, this);
+    }
+
+    /** Returns the first basic column */
+    public OrmRelation2Many getBasicColumn(Expression expression) {
+        while (expression.isBinary()) {
+            expression = ((ExpressionBinary) expression).getLeftNode();
+        }
+
+        UjoProperty property = ((ExpressionValue)expression).getLeftNode();
+        while (!property.isDirect()) {
+            property = ((PathProperty)property).getProperty(0);
+        }
+
+        OrmRelation2Many result = OrmHandler.getInstance().findColumnModel(property);
+        return result;
     }
 
     public Database getDatabase() {
@@ -138,15 +159,13 @@ public class Session {
 
     }
 
-
     public <UJO extends TableUjo> UJO load(Class ujo, Object id) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
-    
+
     public <UJO extends TableUjo> UJO single(Query query) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
 
     public <UJO extends TableUjo> UjoIterator<UJO> iterate(UjoProperty property) {
         throw new UnsupportedOperationException("Not yet implemented: " + property);
@@ -155,7 +174,7 @@ public class Session {
     /** Get connection for a required database and set an autocommit na false. */
     public Connection getConnection(OrmDatabase database) throws IllegalStateException {
         Connection result = connections.get(database);
-        if (result==null) {
+        if (result == null) {
             try {
                 result = database.createConnection();
                 result.setAutoCommit(false);
@@ -173,7 +192,7 @@ public class Session {
         return result;
     }
 
-     /** Close all DB connections.
+    /** Close all DB connections.
      * @throws java.lang.IllegalStateException The exception contains a bug from Connection close;
      */
     public void close() throws IllegalStateException {
@@ -188,15 +207,14 @@ public class Session {
                 conn.close();
             } catch (Throwable e) {
                 LOGGER.log(Level.SEVERE, errMessage + db, e);
-                if (exception==null) {
+                if (exception == null) {
                     exception = e;
                     database = db;
                 }
             }
         }
-        if (exception!=null) {
+        if (exception != null) {
             throw new IllegalStateException(errMessage + database, exception);
         }
     }
-
 }

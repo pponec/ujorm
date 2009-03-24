@@ -18,7 +18,6 @@ package org.ujoframework.extensions;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 
 /**
  * A <strong>PathProperty</strong> class is an composite of a UjoProperty objects.
@@ -42,8 +41,18 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Get the last property */
     @SuppressWarnings("unchecked")
-    public final <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> lastProperty() {
+    final public<UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> lastProperty() {
         return properties[properties.length - 1];
+    }
+
+    /** Get a property from selected positon. */
+    final public UjoProperty getProperty(int index) {
+        return properties[index];
+    }
+
+    /** Returns a count of properties */
+    final public int getPropertyCount() {
+        return properties.length;
     }
 
     /** Full property name */
@@ -91,7 +100,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         lastProperty().setValue(u, value);
     }
 
-    public int getIndex() {
+    final public int getIndex() {
         return -1;
     }
 
@@ -188,7 +197,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         System.arraycopy(properties, 0, result, 0, result.length);
         return result;
     }
-    
+
     // ================ STATIC ================
     
     /** Create new instance

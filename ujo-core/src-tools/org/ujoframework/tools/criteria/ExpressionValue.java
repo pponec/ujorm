@@ -182,6 +182,18 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
         return o1.compareTo(o2);
     }
         
+    /** Is the operator insensitive. */
+    public boolean isInsensitive() {
+        switch (operator) {
+            case EQUALS_CASE_INSENSITIVE:
+            case STARTS_CASE_INSENSITIVE:
+            case ENDS_CASE_INSENSITIVE:
+            case CONTAINS_CASE_INSENSITIVE:
+                 return true;
+            default:
+                 return false;
+        }
+    }
 
     @Override
     public String toString() {

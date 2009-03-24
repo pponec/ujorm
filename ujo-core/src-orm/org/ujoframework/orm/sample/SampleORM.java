@@ -68,7 +68,7 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
-    public void useSelection() {
+    public void useOrderSelection() {
         Session session = OrmHandler.getInstance().getSession();
 
         Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "John's order");
@@ -82,9 +82,23 @@ public class SampleORM {
         for (Order order : session.iterate( query ) ) {
             Long id = order.get(Order.ID);
             String descr = order.get(Order.DESCR);
-            System.out.println("ROW: " + order);
+            System.out.println("ORDER ROW: " + order);
         }
     }
+
+    /** Using SELECT by QUERY */
+    public void useItemSelection() {
+        Session session = OrmHandler.getInstance().getSession();
+
+        Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Query<Item> query = session.createQuery(expr);
+
+        for (Item item : session.iterate( query ) ) {
+            System.out.println("ITEM ROW: " + item);
+        }
+    }
+
+
 
     /** Using SELECT by a object relations */
     public void useRelation() {
@@ -111,14 +125,13 @@ public class SampleORM {
         try {
             SampleORM sample = new SampleORM();
             sample.useCreateItem();
-            sample.useSelection();
+            sample.useOrderSelection();
+            sample.useItemSelection();
             //sample.useRelation();
-
             //session.close();
         } finally {
            OrmHandler.getInstance().getSession().close();
         }
-
     }
 
 }

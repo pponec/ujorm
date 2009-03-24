@@ -13,6 +13,7 @@ import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.ExpressionBinary;
 import org.ujoframework.tools.criteria.ExpressionValue;
+import org.ujoframework.tools.criteria.Operator;
 
 /**
  * SQL Expression Decoder.
@@ -84,11 +85,44 @@ public class ExpressionDecoder {
         return ormColumn;
     }
 
+    /** Returns operator. */
+    public Operator getOperator(int i) {
+        final Operator result = values.get(i).getOperator();
+        return result;
+    }
+
     /** Returns value */
     public Object getValue(int i) {
         Object result = values.get(i).getRightNote();
         return result;
     }
+
+    /** Returns an extended value to the SQL statement */
+    public Object getValueExtended(int i) {
+        ExpressionValue expr = values.get(i);
+        Object value = expr.getRightNote();
+
+        if (value==null) {
+            return value;
+        }
+        if (expr.isInsensitive()) {
+            value = value.toString().toUpperCase();
+        }
+        switch (expr.getOperator()) {
+            case CONTAINS:
+            case CONTAINS_CASE_INSENSITIVE:
+                return "%"+value+"%";
+            case STARTS:
+            case STARTS_CASE_INSENSITIVE:
+                return     value+"%";
+            case ENDS:
+            case ENDS_CASE_INSENSITIVE:
+                return "%"+value;
+            default:
+                return     value;
+        }
+    }
+
 
     public Expression getExpression() {
         return e;
