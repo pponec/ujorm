@@ -72,11 +72,15 @@ public class OrmRelation2Many extends AbstractMetaModel {
         return false;
     }
 
+    /** Returns a column property */
+    public final UjoProperty getProperty() {
+        return TABLE_PROPERTY.of(this);
+    }
 
     /** Get property value */
     @SuppressWarnings("unchecked")
     final public Object getValue(Ujo ujo) {
-        final Object result = TABLE_PROPERTY.of(this).of(ujo);
+        final Object result = getProperty().of(ujo);
         return result;
     }
 
