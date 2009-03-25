@@ -396,13 +396,18 @@ public class UjoManager implements Comparator<UjoProperty> {
             return null;
         }
     }
-    
+
     /** Print a String representation */
     @SuppressWarnings("unchecked")
     public String toString(Ujo ujo) {
+        return toString(ujo, ujo.readProperties());
+    }
+
+    /** Print a String representation */
+    @SuppressWarnings("unchecked")
+    public String toString(Ujo ujo, UjoProperty[] properties) {
         StringBuilder result = new StringBuilder(32);
         result.append(ujo.getClass().getSimpleName());
-        UjoProperty[] properties = ujo.readProperties();
 
         for(int i=0; i<properties.length; ++i) {
             UjoProperty property = properties[i];
