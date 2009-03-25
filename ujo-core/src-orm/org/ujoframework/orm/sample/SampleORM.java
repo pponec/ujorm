@@ -94,7 +94,9 @@ public class SampleORM {
         Query<Item> query = session.createQuery(expr);
 
         for (Item item : session.iterate( query ) ) {
-            System.out.println("ITEM ROW: " + item);
+
+            Order order = Item.ORDER.of(item);
+            System.out.println("ITEM ROW: " + item + " ORDER: " + order);
         }
     }
 
@@ -125,8 +127,11 @@ public class SampleORM {
         try {
             SampleORM sample = new SampleORM();
             sample.useCreateItem();
+            System.out.println(". . . . . . . . . . . . . . . .");
             sample.useOrderSelection();
-            sample.useItemSelection();
+            //sample.useItemSelection();
+
+            // --------------------------
             //sample.useRelation();
             //session.close();
         } finally {

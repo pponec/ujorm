@@ -171,19 +171,37 @@ public class Session {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /** Find column by a table type. */
+    private OrmColumn findOrmColumn(OrmTable table, Class tableType) {
+        for (OrmColumn column : OrmTable.COLUMNS.of(table)) {
+            if (column.isForeignKey()
+            &&  column.getProperty().getType()==tableType) {
+                return column;
+            }
+        }
+        return null;
+    }
+
+
     /** Iterate property of values
      * @param property
      * @param values
      */
-    public <UJO extends TableUjo> UjoIterator<UJO> iterate(RelationToMany property, TableUjo values) {
+    public <UJO extends TableUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, TableUjo value) {
 
-        Class tableClass = property.getItemType();
-        OrmTable table = OrmHandler.getInstance().findTableModel(tableClass);
+        final Class tableClass = property.getItemType();
+        final OrmTable table   = OrmHandler.getInstance().findTableModel(tableClass);
+        final OrmColumn column = findOrmColumn(table, value.getClass());
 
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (column==null) {
+            throw new IllegalStateException("Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName());
+        }
 
-        // return null;
-        
+        Expression expr = Expression.newInstance(column.getProperty(), value);
+        Query query = createQuery(expr);
+        UjoIterator result = iterate(query);
+
+        return result;
     }
 
     /** Get connection for a required database and set an autocommit na false. */

@@ -16,6 +16,10 @@
 
 package org.ujoframework.implementation.orm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -23,6 +27,7 @@ import org.ujoframework.beans.EventRegistrar;
 import org.ujoframework.beans.UjoPropertyChangeSupport;
 import org.ujoframework.beans.UjoPropertyChangeListener;
 import org.ujoframework.core.UjoIterator;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.map.MapUjo;
 import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.Session;
@@ -152,7 +157,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         if (property instanceof RelationToMany
         &&  handler.isPersistent(property)
         ){
-            result = session.iterate( (RelationToMany) property, this);
+            result = session.iterateInternal( (RelationToMany) property, this);
             // Don't save the result!
         }
         return result;
@@ -206,6 +211,22 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
     public void writeSession(Session session) {
         this.session = session;
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public String toString() {
+        UjoProperty[] properties = readProperties();
+        List<UjoProperty> props = new ArrayList(Arrays.asList(properties));
+        for (int i=props.size()-1; i>=0; --i) {
+            UjoProperty p = props.get(i);
+            if (p instanceof RelationToMany) {
+                props.remove(i);
+            }
+        }
+        return UjoManager.getInstance().toString(this, props.toArray(new UjoProperty[props.size()]));
+    }
+
+
 
     // --------- STATIC METHODS -------------------
 
