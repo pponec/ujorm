@@ -19,12 +19,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
@@ -101,9 +105,9 @@ public class Session {
             expression = ((ExpressionBinary) expression).getLeftNode();
         }
 
-        UjoProperty property = ((ExpressionValue)expression).getLeftNode();
+        UjoProperty property = ((ExpressionValue) expression).getLeftNode();
         while (!property.isDirect()) {
-            property = ((PathProperty)property).getProperty(0);
+            property = ((PathProperty) property).getProperty(0);
         }
 
         OrmRelation2Many result = OrmHandler.getInstance().findColumnModel(property);
@@ -167,8 +171,19 @@ public class Session {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public <UJO extends TableUjo> UjoIterator<UJO> iterate(UjoProperty property) {
-        throw new UnsupportedOperationException("Not yet implemented: " + property);
+    /** Iterate property of values
+     * @param property
+     * @param values
+     */
+    public <UJO extends TableUjo> UjoIterator<UJO> iterate(RelationToMany property, TableUjo values) {
+
+        Class tableClass = property.getItemType();
+        OrmTable table = OrmHandler.getInstance().findTableModel(tableClass);
+
+        throw new UnsupportedOperationException("Not yet implemented");
+
+        // return null;
+        
     }
 
     /** Get connection for a required database and set an autocommit na false. */
@@ -189,6 +204,38 @@ public class Session {
     /** Create new statement */
     public JdbcStatement getStatement(OrmDatabase database, CharSequence sql) throws SQLException {
         final JdbcStatement result = new JdbcStatement(getConnection(database), sql);
+        return result;
+    }
+
+    /**
+     * Load UJO by a unique id. If the result is not unique, then an exception is throwed.
+     * @param property Property
+     * @param id Valud ID
+     * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
+     */
+    public TableUjo loadById
+        ( final UjoProperty property
+        , final Object id
+        , final boolean mandatory
+        ) throws RuntimeException, NoSuchElementException
+    {
+        OrmColumn column = (OrmColumn) OrmHandler.getInstance().findColumnModel(property);
+        List<OrmColumn> columns = column.getForeignColumns();
+        if (columns.size() != 1) {
+            throw new UnsupportedOperationException("There is supported only a one-column foreign key now: " + column);
+        }
+        Expression expr = Expression.newInstance(columns.get(0).getProperty(), id);
+        Query query = createQuery(expr);
+        UjoIterator iterator = iterate(query);
+
+        final TableUjo result
+            = (mandatory || iterator.hasNext())
+            ? (TableUjo) iterator.next()
+            : null
+            ;
+        if (iterator.hasNext()) {
+            throw new RuntimeException("Ambiguous key " + id);
+        }
         return result;
     }
 

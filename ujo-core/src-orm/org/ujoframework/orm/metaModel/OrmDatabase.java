@@ -142,7 +142,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
     /** Change DbType by a Java property */
     public void changeDbType(OrmColumn column) {
-       UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+       UjoProperty property = column.getProperty();
 
        Class type = property.getType();
 
@@ -188,7 +188,7 @@ public class OrmDatabase extends AbstractMetaModel {
         }
 
 
-       UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+       UjoProperty property = column.getProperty();
 
        Class type = property.getType();
 

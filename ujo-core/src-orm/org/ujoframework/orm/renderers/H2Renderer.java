@@ -80,7 +80,7 @@ public class H2Renderer extends SqlRenderer {
 
     /** Print foreign key for  */
     public void printForeignKey(OrmColumn column, OrmTable table, Appendable writer) throws IOException {
-        final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+        final UjoProperty property = column.getProperty();
         final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(property.getType());
         OrmPKey foreignKeys = OrmTable.PK.of(foreignTable);
 

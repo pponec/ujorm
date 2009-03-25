@@ -72,17 +72,17 @@ abstract public class SqlRenderer {
             case LE:
                 return "{0}<={1}";
             case EQUALS_CASE_INSENSITIVE:
-                return "upper({0})={1}";
+                return "UPPER({0})={1}";
             case STARTS_CASE_INSENSITIVE:
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS_CASE_INSENSITIVE:
-                return "upper({0}) like {1}";
+                return "UPPER({0}) LIKE {1}";
             case STARTS:
             case ENDS:
             case CONTAINS:
-                return "{0} like {1}";
-            case REGEXP: // "{0}={1}";
-            case NOT_REGEXP: // "{0}={1}";
+                return "{0} LIKE {1}";
+            case REGEXP: 
+            case NOT_REGEXP:
             default:
                 throw new UnsupportedOperationException("Unsupported: " + operator);
         }

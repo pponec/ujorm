@@ -88,7 +88,7 @@ public class JdbcStatement {
         for (OrmColumn column : columns) {
 
             if (column.isForeignKey()) {
-                UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+                UjoProperty property = column.getProperty();
                 Object value = table!=null ? property.of(table) : null ;
                 assignValues((TableUjo) value, column.getForeignColumns());
             } else if (column.isColumn()) {
@@ -112,7 +112,7 @@ public class JdbcStatement {
     @SuppressWarnings("unchecked")
     public void assignValue(final TableUjo table, final OrmColumn column) throws SQLException {
 
-        final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+        final UjoProperty property = column.getProperty();
         final Object value = table!=null ? property.of(table) : null ;
 
         assignValue(column, value, table);
@@ -129,7 +129,7 @@ public class JdbcStatement {
 
         ++parameterPointer;
 
-        UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+        UjoProperty property = column.getProperty();
         int sqlType = OrmColumn.DB_TYPE.of(column).getSqlType();
 
         if (table!=null) {

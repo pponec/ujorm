@@ -26,6 +26,7 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.DbType;
+import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.orm.annot.GenerationType;
 
@@ -89,7 +90,7 @@ public class OrmColumn extends OrmRelation2Many {
     /** Is it a Foreign Key ? */
     @Override
     public boolean isForeignKey() {
-        final boolean result = OrmColumn.TABLE_PROPERTY.of(this).isTypeOf(TableUjo.class);
+        final boolean result = getProperty().isTypeOf(TableUjo.class);
         return result;
     }
 
@@ -97,7 +98,7 @@ public class OrmColumn extends OrmRelation2Many {
     @SuppressWarnings("unchecked")
     public List<OrmColumn> getForeignColumns() {
         List<OrmColumn> result;
-        Class type = OrmColumn.TABLE_PROPERTY.of(this).getType();
+        Class type = getProperty().getType();
         OrmTable table = OrmHandler.getInstance().findTableModel(type);
         if (table!=null) {
             OrmPKey pk = OrmTable.PK.of(table);
@@ -114,7 +115,7 @@ public class OrmColumn extends OrmRelation2Many {
     @SuppressWarnings("unchecked")
     private String[] getForeignColumnNames() {
         if (foreignNames==null) {
-            final Class type = OrmColumn.TABLE_PROPERTY.of(this).getType();
+            final Class type = getProperty().getType();
             final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(type);
             if (foreignTable!=null && isForeignKey()) {
                 final OrmPKey pk = OrmTable.PK.of(foreignTable);
@@ -153,22 +154,29 @@ public class OrmColumn extends OrmRelation2Many {
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
     public Object getValue(final TableUjo table) {
-        final UjoProperty property = TABLE_PROPERTY.of(this);
+        final UjoProperty property = getProperty();
         final Object result = property.of(table);
         return result;
     }
 
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
-    public void setValue(final TableUjo table, final Object value) {
-        final UjoProperty property = TABLE_PROPERTY.of(this);
+    public void setValue(final TableUjo table, Object value) {
+        final UjoProperty property = getProperty();
+
+        if (isForeignKey()
+        &&   value !=null
+        && !(value instanceof TableUjo)) {
+           value = new ForeignKey(value);
+        }
+
         property.setValue(table, value);
     }
 
 
     /** Returns a Java Class of value */
     public Class getType() {
-        final UjoProperty property = TABLE_PROPERTY.of(this);
+        final UjoProperty property = getProperty();
         return property.getType();
     }
 
@@ -183,6 +191,5 @@ public class OrmColumn extends OrmRelation2Many {
     public String getFullName() {
         return NAME.of(this);
     }
-
 
 }

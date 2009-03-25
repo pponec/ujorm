@@ -22,7 +22,10 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.beans.EventRegistrar;
 import org.ujoframework.beans.UjoPropertyChangeSupport;
 import org.ujoframework.beans.UjoPropertyChangeListener;
+import org.ujoframework.core.UjoIterator;
 import org.ujoframework.implementation.map.MapUjo;
+import org.ujoframework.orm.ForeignKey;
+import org.ujoframework.orm.Session;
 
 /**
  * A simple implementation of an ORM solution. Why a new ORM mapping?
@@ -119,6 +122,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
     
     final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
     final private OrmHandler handler;
+    private Session session;
 
     public TableUjo() {
         handler = OrmHandler.getInstance();
@@ -137,13 +141,19 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
 
     /** A method for an internal use. */
     @Override
-    public Object readValue(UjoProperty property) {
+    public Object readValue(final UjoProperty property) {
         Object result = super.readValue(property);
+
+        if (result instanceof ForeignKey) {
+            result = session.loadById(property, ((ForeignKey)result).getValue(), true);
+            super.writeValue(property, result);
+        }
+        else
         if (property instanceof RelationToMany
         &&  handler.isPersistent(property)
         ){
+            result = session.iterate( (RelationToMany) property, this);
             // Don't save the result!
-            result = handler.getSession().iterate(property);
         }
         return result;
     }
@@ -185,6 +195,16 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         readUjoManager().assertAssign(property, value);
         ((UjoProperty)property).setValue(this, value);
         return (UJO_IMPL) this;
+    }
+
+    /** Read session */
+    public Session readSession() {
+        return session;
+    }
+
+    /** write session */
+    public void writeSession(Session session) {
+        this.session = session;
     }
 
     // --------- STATIC METHODS -------------------

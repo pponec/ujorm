@@ -45,7 +45,7 @@ public class OrmPKey extends AbstractMetaModel {
 
         for (OrmColumn column : COLUMNS.of(this)) {
             
-            final UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+            final UjoProperty property = column.getProperty();
             final Object o2  = property.of(ujo2);
             final boolean ok = property.equals(ujo1, o2);
             if (!ok) {
@@ -71,8 +71,8 @@ public class OrmPKey extends AbstractMetaModel {
             final OrmColumn c1 = columns1.get(i);
             final OrmColumn c2 = columns2.get(i);
 
-            final UjoProperty p1 = OrmColumn.TABLE_PROPERTY.of(c1);
-            final UjoProperty p2 = OrmColumn.TABLE_PROPERTY.of(c2);
+            final UjoProperty p1 = c1.getProperty();
+            final UjoProperty p2 = c2.getProperty();
 
             if (p1!=p2) {
                 return false;
@@ -106,7 +106,7 @@ public class OrmPKey extends AbstractMetaModel {
             OrmColumn column = COLUMNS.getItem(this, 0);
             switch (OrmColumn.PRIMARY_KEY_GEN.of(column)) {
                 case MEMO_SEQUENCE:
-                    UjoProperty property = OrmColumn.TABLE_PROPERTY.of(column);
+                    UjoProperty property = column.getProperty();
                     if (property.of(table)!=null) {
                         return false;
                     }

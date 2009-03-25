@@ -61,6 +61,7 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
         try {
             cursorReady = false; // switch off the cursor flag.
             T row = (T) query.getTableModel().createBO();
+            row.writeSession(query.getSession());
             int colCount = query.getColumns().size();
 
             for (int i=0; i<colCount; i++) {
