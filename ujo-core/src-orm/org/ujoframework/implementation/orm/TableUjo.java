@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -29,7 +30,7 @@ import org.ujoframework.beans.UjoPropertyChangeListener;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.map.MapUjo;
-import org.ujoframework.orm.ForeignKey;
+import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.Session;
 
 /**
@@ -149,8 +150,8 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
     public Object readValue(final UjoProperty property) {
         Object result = super.readValue(property);
 
-        if (result instanceof ForeignKey) {
-            result = session.loadById(property, ((ForeignKey)result).getValue(), true);
+        if (result instanceof UniqueKey) {
+            result = session.loadById(property, ((UniqueKey)result).getValue(), true);
             super.writeValue(property, result);
         }
         else
@@ -213,20 +214,14 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public String toString() {
-        UjoProperty[] properties = readProperties();
-        List<UjoProperty> props = new ArrayList(Arrays.asList(properties));
-        for (int i=props.size()-1; i>=0; --i) {
-            UjoProperty p = props.get(i);
-            if (p instanceof RelationToMany) {
-                props.remove(i);
-            }
+    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+        switch (action.getType()) {
+            case UjoAction.ACTION_TO_STRING:
+                return !(property instanceof RelationToMany);
+            default:
+                return super.readAuthorization(action, property, value);
         }
-        return UjoManager.getInstance().toString(this, props.toArray(new UjoProperty[props.size()]));
     }
-
-
 
     // --------- STATIC METHODS -------------------
 

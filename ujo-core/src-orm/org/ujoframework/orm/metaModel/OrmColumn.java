@@ -26,7 +26,7 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.DbType;
-import org.ujoframework.orm.ForeignKey;
+import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.orm.annot.GenerationType;
 
@@ -167,7 +167,7 @@ public class OrmColumn extends OrmRelation2Many {
         if (isForeignKey()
         &&   value !=null
         && !(value instanceof TableUjo)) {
-           value = new ForeignKey(value);
+           value = new UniqueKey(value);
         }
 
         property.setValue(table, value);
