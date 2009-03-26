@@ -408,9 +408,12 @@ public class UjoManager implements Comparator<UjoProperty> {
     public String toString(Ujo ujo, UjoProperty[] properties) {
         StringBuilder result = new StringBuilder(32);
         result.append(ujo.getClass().getSimpleName());
+        UjoAction action = new UjoActionImpl(ACTION_TO_STRING, this);
 
         for(int i=0; i<properties.length; ++i) {
             UjoProperty property = properties[i];
+            if (!ujo.readAuthorization(action, property, this)) { continue; }
+
             boolean list = property instanceof UjoPropertyList;
             String textSeparator = "";
             
@@ -422,7 +425,7 @@ public class UjoManager implements Comparator<UjoProperty> {
                 value
                 = list ? ((UjoPropertyList)property).getItemCount(ujo) + "]"
                 : objVal instanceof Ujo ? "UJO:" + objVal.hashCode()
-                : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, new UjoActionImpl(ACTION_TO_STRING, this))
+                : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, action)
                 : coder.encodeValue(ujo, property)
                 ;
             } catch (Throwable e) {

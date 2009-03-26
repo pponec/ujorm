@@ -14,18 +14,27 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm.sample;
-
-import java.sql.SQLException;
+package org.ujoframework.orm;
 
 /**
- *
+ * A Unique key of a table
  * @author pavel
  */
-public class DatabaseException extends RuntimeException {
+public class UniqueKey {
 
-    DatabaseException(String message, SQLException e, String sql, Object[] params) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private final Object value;
+
+    public UniqueKey(Object value) {
+        this.value = value;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value) + '\u00b4';
     }
 
 }
