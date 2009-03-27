@@ -40,7 +40,7 @@ public class OrmHandler {
 
     private static OrmHandler handler = new OrmHandler();
 
-    private Session session = new Session();
+    private Session session = new Session(this);
     private OrmRoot databases = new OrmRoot();
 
     /** Map a property to a database column model */
@@ -54,7 +54,9 @@ public class OrmHandler {
         return handler;
     }
 
-     /** Get Session */
+     /** Get Session 
+      * <br/>TODO: getSession from a map by key.
+      */
     public Session getSession() {
         return session;
     }

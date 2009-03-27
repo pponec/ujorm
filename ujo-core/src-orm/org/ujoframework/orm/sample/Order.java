@@ -18,6 +18,7 @@ package org.ujoframework.orm.sample;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -43,5 +44,36 @@ public class Order extends TableUjo<Order> {
     public static final UjoProperty<Order,Date> DATE = newProperty("date", Date.class);
     /** References to Itemsr */
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
+    
+
+    // --- An optional code: POJO setters and getters ----
+
+    public Long getId() {
+        return get(ID);
+    }
+    public void setId(Long id) {
+        set(ID, id);
+    }
+    public Integer getUsrId() {
+        return get(USER_ID);
+    }
+    public void setUsrId(Integer usrId) {
+        set(USER_ID, usrId);
+    }
+    public String getDescr() {
+        return get(DESCR);
+    }
+    public void setDescr(String descr) {
+        set(DESCR, descr);
+    }
+    public Date getDate() {
+        return get(DATE);
+    }
+    public void setDate(Date date) {
+        set(DATE, date);
+    }
+    public UjoIterator<Item> getItems() {
+        return get(ITEMS);
+    }
 
 }
