@@ -127,14 +127,10 @@ import org.ujoframework.orm.Session;
 public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegistrar<UJO_IMPL> {
     
     final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
-    final private OrmHandler handler;
     private Session session;
 
     public TableUjo() {
-        handler = OrmHandler.getInstance();
-        //handler.registerPropertis(getClass(), readProperties());
     }
-
 
     /** A method for an internal use. */
     @Override
@@ -156,7 +152,8 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         }
         else
         if (property instanceof RelationToMany
-        &&  handler.isPersistent(property)
+        &&  session!=null
+        &&  session.getHandler().isPersistent(property)
         ){
             result = session.iterateInternal( (RelationToMany) property, this);
             // Don't save the result!

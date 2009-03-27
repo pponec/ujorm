@@ -46,8 +46,21 @@ public class Session {
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
+
+    /** Handler */
+    private final OrmHandler handler;
+
     /** Database connection */
     private HashMap<OrmDatabase, Connection> connections = new HashMap<OrmDatabase, Connection>();
+
+    public Session(OrmHandler handler) {
+        this.handler = handler;
+    }
+
+    /** Returns a handler */
+    final public OrmHandler getHandler() {
+        return handler;
+    }
 
     /** Make a commit for all databases. */
     public void commit() {

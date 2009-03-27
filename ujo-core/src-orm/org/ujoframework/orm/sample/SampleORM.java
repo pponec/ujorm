@@ -129,7 +129,7 @@ public class SampleORM {
             sample.useCreateItem();
             System.out.println(". . . . . . . . . . . . . . . .");
             sample.useOrderSelection();
-            //sample.useItemSelection();
+            sample.useItemSelection();
 
             // --------------------------
             //sample.useRelation();
