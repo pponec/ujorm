@@ -129,8 +129,7 @@ public class SampleORM {
         Session session = OrmHandler.getInstance().getSession();
         Database db = session.getDatabase(Database.class);
 
-        UjoIterator<Order> orders  = Database.ORDERS.of(db);
-
+        UjoIterator<Order> orders = db.get(Database.ORDERS);
         for (Order order : orders) {
             Long id = order.getId();
             String descr = order.getDescr();
