@@ -87,27 +87,51 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
-    public void useItemSelection() {
+    public void useItemSelection_1() {
         Session session = OrmHandler.getInstance().getSession();
 
         Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(expr);
 
-        for (Item item : session.iterate( query ) ) {
-
+        for (Item item : session.iterate( query )) {
             Order order = Item.ORDER.of(item);
             System.out.println("ITEM ROW: " + item + " ORDER: " + order);
         }
     }
 
+    /** Using SELECT by QUERY */
+    public void useItemSelection_2() {
+        Session session = OrmHandler.getInstance().getSession();
 
+        Order orderValue = session.load(Order.class, 1L);
+        Expression<Item> expr = Expression.newInstance(Item.ORDER, orderValue);
+        Query<Item> query = session.createQuery(expr);
+
+        for (Item item : session.iterate( query )) {
+            Order order2 = Item.ORDER.of(item);
+            System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
+        }
+    }
+
+    /** Using SELECT by QUERY */
+    public void useItemSelection_3() {
+        Session session = OrmHandler.getInstance().getSession();
+
+        Order orderValue = session.load(Order.class, 1L);
+
+        for (Item item : Order.ITEMS.of(orderValue)) {
+            Order order2 = Item.ORDER.of(item);
+            System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
+        }
+    }
 
     /** Using SELECT by a object relations */
     public void useRelation() {
         Session session = OrmHandler.getInstance().getSession();
-        Database db = session.getDatabase();
+        Database db = session.getDatabase(Database.class);
 
         UjoIterator<Order> orders  = Database.ORDERS.of(db);
+
         for (Order order : orders) {
             Long id = order.get(Order.ID);
             String descr = order.get(Order.DESCR);
@@ -129,11 +153,14 @@ public class SampleORM {
             sample.useCreateItem();
             System.out.println(". . . . . . . . . . . . . . . .");
             sample.useOrderSelection();
-            sample.useItemSelection();
-
+            sample.useItemSelection_1();
+            sample.useItemSelection_2();
+            sample.useItemSelection_3();
+            sample.useRelation();
             // --------------------------
-            //sample.useRelation();
             //session.close();
+        } catch (Throwable e) {
+            e.printStackTrace();
         } finally {
            OrmHandler.getInstance().getSession().close();
         }

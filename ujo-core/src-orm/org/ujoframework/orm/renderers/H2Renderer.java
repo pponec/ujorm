@@ -46,8 +46,10 @@ public class H2Renderer extends SqlRenderer {
     /** Print a SQL script to crate database */
     public void printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException {
         for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
-            printTable(table, writer);
-            printForeignKey(table, writer);
+            if (table.isPersistent()) {
+                printTable(table, writer);
+                printForeignKey(table, writer);
+            }
         }
     }
 

@@ -24,15 +24,23 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * Expression
+ * Expression of a value.
  * @author pavel
  */
 public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
+
+    public static final Expression<Ujo> TRUE  = new ExpressionValue<Ujo>(true);
+    public static final Expression<Ujo> FALSE = new ExpressionValue<Ujo>(false);
     
     final private UjoProperty property;
     final private Operator    operator;
-    final private Object      value;
+    final protected Object    value;
     
+    /** Creante an Expression constant */
+    public ExpressionValue(boolean value) {
+        this(null, null, value);
+    }
+
     /** An undefined operator (null) is replaced by EQ. */
     public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, UjoProperty<UJO,Object> value) {
         this(property, operator, (Object) value);    
@@ -41,8 +49,11 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     /** An undefined operator (null) is replaced by EQ. */
     public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, Object value) {
 
+        if (property==null) {
+            value = (Boolean) value; // Type test for the ExpressionConstant.
+        }
         if (operator==null) {
-            operator = Operator.EQ;
+            operator = Operator.EQ;  // The default operator.
         }
         
         // A validation test:
@@ -153,8 +164,6 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
             case GE: return result>=0;
         }
 
-
-
         throw new IllegalArgumentException("Illegal operator: " + operator);
     }
 
@@ -199,6 +208,11 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
             default:
                  return false;
         }
+    }
+    
+    /** Is the result independet on the object? */
+    public boolean isConstant() {
+        return property==null;
     }
 
     @Override

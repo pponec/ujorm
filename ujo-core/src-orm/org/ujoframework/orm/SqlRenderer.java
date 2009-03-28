@@ -149,7 +149,9 @@ abstract public class SqlRenderer {
             throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
         }
 
-        if (right instanceof UjoProperty) {
+        if (expr.isConstant()) {
+            writer.append( expr.evaluate(null) ? "1=1" : "1=0" );
+        } else if (right instanceof UjoProperty) {
             final UjoProperty rightProperty = (UjoProperty) right;
             final OrmColumn col2 = (OrmColumn) OrmHandler.getInstance().findColumnModel(rightProperty);
 
@@ -212,8 +214,8 @@ abstract public class SqlRenderer {
             if (!sql.isEmpty()) {
                 writer.append(" WHERE ");
                 writer.append(ed.getSql());
-                result = ed;
             }
+            result = ed;
         }
         writer.append(";");
         return result;
