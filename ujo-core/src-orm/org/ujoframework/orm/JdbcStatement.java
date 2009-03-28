@@ -114,7 +114,17 @@ public class JdbcStatement {
         for (int i=0; i<decoder.getColumnCount(); ++i) {
             final OrmColumn column = decoder.getColumn(i);
             final Object value = decoder.getValueExtended(i);
-            assignValue(column, value, null);
+
+            if (column.isForeignKey()) {
+                List<OrmColumn> fc = column.getForeignColumns();
+                TableUjo table = (TableUjo) value;
+                for (OrmColumn rColumn : fc) {
+                    Object rValue = rColumn.getValue(table);
+                    assignValue(rColumn, rValue, table);
+                }                
+            } else {
+               assignValue(column, value, null);
+            }
         }
     }
 
