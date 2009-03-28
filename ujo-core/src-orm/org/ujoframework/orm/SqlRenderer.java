@@ -19,9 +19,11 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.ExpressionValue;
@@ -121,12 +123,12 @@ abstract public class SqlRenderer {
     public ExpressionValue print(ExpressionValue expr, Appendable writer) throws IOException {
         Operator operator = expr.getOperator();
         UjoProperty property = expr.getLeftNode();
-        Object right = expr.getRightNote();
+        Object right = expr.getRightNode();
 
         OrmColumn column = (OrmColumn) OrmHandler.getInstance().findColumnModel(property);
-        String columnName = OrmColumn.NAME.of(column);
 
-        if (right == null) {
+        if (right==null ) {
+            String columnName = OrmColumn.NAME.of(column);
             switch (operator) {
                 case EQ:
                 case EQUALS_CASE_INSENSITIVE:
@@ -161,6 +163,9 @@ abstract public class SqlRenderer {
                 String f = String.format(template, column.getFullName(), col2.getFullName());
                 writer.append(f);
             }
+        } else if (column.isForeignKey()) {
+           printiForeignKey(expr, column, template, writer);
+           return expr;
         } else if (right instanceof List) {
             throw new UnsupportedOperationException("List is not supported yet: " + operator);
         } else {
@@ -169,6 +174,27 @@ abstract public class SqlRenderer {
             return expr;
         }
         return null;
+    }
+
+    /** Print all items of the foreign key */
+    public void printiForeignKey
+        ( final ExpressionValue expr
+        , final OrmColumn column
+        , final String template
+        , final Appendable writer
+        ) throws IOException
+    {
+        int size = column.getForeignColumns().size();
+        for (int i=0; i<size; i++) {
+            if (i>0) {
+                writer.append(' ');
+                writer.append(expr.getOperator().name());
+                writer.append(' ');
+            }
+
+            String f = MessageFormat.format(template, column.getForeignColumnName(i), "?");
+            writer.append(f);
+        }
     }
 
     /** Print SQL SELECT */

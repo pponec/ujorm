@@ -33,12 +33,18 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     final private Operator    operator;
     final private Object      value;
     
+    /** An undefined operator (null) is replaced by EQ. */
     public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, UjoProperty<UJO,Object> value) {
         this(property, operator, (Object) value);    
     }
-    
+
+    /** An undefined operator (null) is replaced by EQ. */
     public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, Object value) {
 
+        if (operator==null) {
+            operator = Operator.EQ;
+        }
+        
         // A validation test:
         switch (operator) {
             case EQUALS_CASE_INSENSITIVE:
@@ -66,7 +72,7 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
 
     /** Returns the right node of the parrent */
     @Override
-    public final Object getRightNote() {
+    public final Object getRightNode() {
         return value;
     }
 

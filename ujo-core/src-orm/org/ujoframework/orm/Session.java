@@ -176,10 +176,6 @@ public class Session {
 
     }
 
-    public <UJO extends TableUjo> UJO load(Class ujo, Object id) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
     public <UJO extends TableUjo> UJO single(Query query) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
@@ -238,19 +234,50 @@ public class Session {
         return result;
     }
 
+
+
+    /**
+     * Load UJO by a unique id. If a result is not found then a null value is passed.
+     * @param property Property
+     * @param id Valud ID
+     */
+    public <UJO extends TableUjo> UJO load
+        ( final Class<UJO> tableType
+        , final Object id
+        ) throws NoSuchElementException
+    {
+        final boolean mandatory = false;
+        final OrmTable table = handler.findTableModel(tableType);
+        final OrmColumn column = table.getFirstPK();
+
+        Expression expr = Expression.newInstance(column.getProperty(), id);
+        Query query = createQuery(expr);
+        UjoIterator iterator = iterate(query);
+
+        final UJO result
+            = (mandatory || iterator.hasNext())
+            ? (UJO) iterator.next()
+            : null
+            ;
+        if (iterator.hasNext()) {
+            throw new RuntimeException("Ambiguous key " + id);
+        }
+        return result;
+    }
+
     /**
      * Load UJO by a unique id. If the result is not unique, then an exception is throwed.
      * @param property Property
      * @param id Valud ID
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */
-    public TableUjo loadById
-        ( final UjoProperty property
+    public <UJO extends TableUjo> UJO load
+        ( final UjoProperty relatedProperty
         , final Object id
         , final boolean mandatory
-        ) throws RuntimeException, NoSuchElementException
+        ) throws NoSuchElementException
     {
-        OrmColumn column = (OrmColumn) OrmHandler.getInstance().findColumnModel(property);
+        OrmColumn column = (OrmColumn) OrmHandler.getInstance().findColumnModel(relatedProperty);
         List<OrmColumn> columns = column.getForeignColumns();
         if (columns.size() != 1) {
             throw new UnsupportedOperationException("There is supported only a one-column foreign key now: " + column);
@@ -259,9 +286,9 @@ public class Session {
         Query query = createQuery(expr);
         UjoIterator iterator = iterate(query);
 
-        final TableUjo result
+        final UJO result
             = (mandatory || iterator.hasNext())
-            ? (TableUjo) iterator.next()
+            ? (UJO) iterator.next()
             : null
             ;
         if (iterator.hasNext()) {
