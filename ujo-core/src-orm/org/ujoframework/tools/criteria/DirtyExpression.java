@@ -44,7 +44,7 @@ public class DirtyExpression<UJO extends Ujo> extends Expression<UJO>  {
 
     /** It is not omplemented */
     @Override
-    public Object getRightNote() {
+    public Object getRightNode() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

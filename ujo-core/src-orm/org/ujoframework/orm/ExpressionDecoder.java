@@ -42,7 +42,7 @@ public class ExpressionDecoder {
     public ExpressionDecoder(Expression e, SqlRenderer renderer) {
         this.e = e;
         this.renderer = renderer;
-        this.sql = new StringBuilder();
+        this.sql = new StringBuilder(64);
         this.values = new ArrayList<ExpressionValue>();
 
         if (e!=null) {
@@ -75,7 +75,7 @@ public class ExpressionDecoder {
                 sql.append(" ");
                 sql.append(eb.getOperator().name());
                 sql.append(" ");
-                unpack(eb.getRightNote());
+                unpack(eb.getRightNode());
                 if (or) sql.append(") ");
                 break;
             default:
@@ -104,14 +104,14 @@ public class ExpressionDecoder {
 
     /** Returns value */
     public Object getValue(int i) {
-        Object result = values.get(i).getRightNote();
+        Object result = values.get(i).getRightNode();
         return result;
     }
 
     /** Returns an extended value to the SQL statement */
     public Object getValueExtended(int i) {
         ExpressionValue expr = values.get(i);
-        Object value = expr.getRightNote();
+        Object value = expr.getRightNode();
 
         if (value==null) {
             return value;
@@ -125,12 +125,12 @@ public class ExpressionDecoder {
                 return "%"+value+"%";
             case STARTS:
             case STARTS_CASE_INSENSITIVE:
-                return     value+"%";
+                return value+"%";
             case ENDS:
             case ENDS_CASE_INSENSITIVE:
                 return "%"+value;
             default:
-                return     value;
+                return value;
         }
     }
 

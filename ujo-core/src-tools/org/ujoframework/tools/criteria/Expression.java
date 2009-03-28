@@ -46,7 +46,7 @@ public abstract class Expression<UJO extends Ujo> {
     /** Returns the left node of the parrent */
     abstract public Object getLeftNode();
     /** Returns the right node of the parrent */
-    abstract public Object getRightNote();
+    abstract public Object getRightNode();
     /** Returns an operator */
     abstract public AbstractOperator getOperator();
 
@@ -82,7 +82,7 @@ public abstract class Expression<UJO extends Ujo> {
      * @return A new expression
      */
     public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property, Object value) {
-        return new ExpressionValue<UJO>(property, Operator.EQ, value);
+        return new ExpressionValue<UJO>(property, null, value);
     }
 
     /**

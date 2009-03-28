@@ -42,7 +42,7 @@ final class ConstantExpression<UJO extends Ujo> extends Expression<UJO> {
 
     /** Returns the same instance */
     @Override
-    final public Object getRightNote() {
+    final public Object getRightNode() {
         return this;
     }
 

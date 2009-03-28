@@ -47,7 +47,7 @@ public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
 
     /** Returns the right node of the parrent */
     @Override
-    public final Expression<UJO> getRightNote() {
+    public final Expression<UJO> getRightNode() {
         return expr2;
     }
 

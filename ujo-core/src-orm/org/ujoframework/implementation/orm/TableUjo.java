@@ -147,7 +147,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         Object result = super.readValue(property);
 
         if (result instanceof UniqueKey) {
-            result = session.loadById(property, ((UniqueKey)result).getValue(), true);
+            result = session.load(property, ((UniqueKey)result).getValue(), true);
             super.writeValue(property, result);
         }
         else

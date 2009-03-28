@@ -94,7 +94,7 @@ public class OrmPKey extends AbstractMetaModel {
 
 
     /** Returns a next primary key. The minimal value is 1. */
-    public synchronized long nextPrimaryKey() {
+    protected synchronized long nextPrimaryKey() {
         return ++primaryKeyCounter;
     }
 
@@ -123,6 +123,11 @@ public class OrmPKey extends AbstractMetaModel {
             }
         }
         throw new IllegalArgumentException("Table " + table + " must have defined only one primary key type of Long or Integer");
+    }
+
+    /** Returns the first column. */
+    public OrmColumn getFirstColumn() {
+        return COLUMNS.of(this).get(0);
     }
 
 }
