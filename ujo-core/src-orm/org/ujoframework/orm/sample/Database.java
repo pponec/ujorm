@@ -26,7 +26,7 @@ import org.ujoframework.orm.renderers.H2Renderer;
  * An table mapping to a database (a sample of usage).
  */
 @Db(renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
-public class Database extends TableUjo {
+public class Database extends TableUjo<Database> {
 
     /** Customer order. The used annotation overwrites a database name from the property name. */
     @Table(name="ORD_ORDER_NEW")

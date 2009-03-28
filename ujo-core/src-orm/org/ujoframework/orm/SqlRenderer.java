@@ -58,9 +58,9 @@ abstract public class SqlRenderer {
     abstract public void printInsert(TableUjo ujo, Appendable writer) throws IOException;
 
     /** Returns an SQL expression template. */
-    public String getExpressionTemplate(Operator operator) {
+    public String getExpressionTemplate(ExpressionValue expr) {
 
-        switch (operator) {
+        switch (expr.getOperator()) {
             case EQ:
                 return "{0}={1}";
             case NOT_EQ:
@@ -83,10 +83,15 @@ abstract public class SqlRenderer {
             case ENDS:
             case CONTAINS:
                 return "{0} LIKE {1}";
+            case €_FIXED:
+                return expr.evaluate(null)
+                    ? "1=1"
+                    : "1=0"
+                    ;
             case REGEXP: 
             case NOT_REGEXP:
             default:
-                throw new UnsupportedOperationException("Unsupported: " + operator);
+                throw new UnsupportedOperationException("Unsupported: " + expr.getOperator());
         }
     }
 
@@ -144,13 +149,13 @@ abstract public class SqlRenderer {
             }
         }
 
-        String template = getExpressionTemplate(operator);
+        String template = getExpressionTemplate(expr);
         if (template == null) {
             throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
         }
 
         if (expr.isConstant()) {
-            writer.append( expr.evaluate(null) ? "1=1" : "1=0" );
+            writer.append( template );
         } else if (right instanceof UjoProperty) {
             final UjoProperty rightProperty = (UjoProperty) right;
             final OrmColumn col2 = (OrmColumn) OrmHandler.getInstance().findColumnModel(rightProperty);

@@ -12,8 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
 
 
 package org.ujoframework.tools.criteria;
@@ -29,7 +28,9 @@ import org.ujoframework.UjoProperty;
  */
 public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
 
+    /** True constant expression */
     public static final Expression<Ujo> TRUE  = new ExpressionValue<Ujo>(true);
+    /** False constant expression */
     public static final Expression<Ujo> FALSE = new ExpressionValue<Ujo>(false);
     
     final private UjoProperty property;
@@ -38,7 +39,7 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     
     /** Creante an Expression constant */
     public ExpressionValue(boolean value) {
-        this(null, null, value);
+        this(null, Operator.€_FIXED, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
@@ -96,7 +97,13 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
 
     @SuppressWarnings("unchecked")
     public boolean evaluate(UJO ujo) {
-        Object value2 = value instanceof UjoProperty ? ((UjoProperty)value).getValue(ujo) : value;
+        if (isConstant()) {
+            return (Boolean) value;
+        }
+        Object value2 = value instanceof UjoProperty
+            ? ((UjoProperty)value).getValue(ujo)
+            : value
+            ;
         boolean caseInsensitve = true;
         
         switch (operator) {
@@ -184,16 +191,13 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
 
     /** Compare two object */
     @SuppressWarnings("unchecked")
-    protected int compare(Comparable o1, Comparable o2) {
-        if (o1==o2) {
-            return 0;
-        }
-        if (o1==null) {
-            return +1;
-        }
-        if (o2==null) {
-            return -1;
-        }
+    protected int compare
+        ( final Comparable o1
+        , final Comparable o2
+    ) {
+        if (o1==o2  ) { return  0; }
+        if (o1==null) { return +1; }
+        if (o2==null) { return -1; }
         return o1.compareTo(o2);
     }
         
@@ -210,14 +214,19 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
         }
     }
     
-    /** Is the result independet on the object? */
-    public boolean isConstant() {
-        return property==null;
+    /** Is the expression result independent on the bean object? */
+    public final boolean isConstant() {
+        return operator==Operator.€_FIXED;
     }
 
     @Override
     public String toString() {
-        return property + " " + operator.name() + " " + value;
+        String result
+            = isConstant()
+            ? ""
+            : (property + " " + operator.name() + " ")
+            ;
+        return result + value;
     }
 
 }
