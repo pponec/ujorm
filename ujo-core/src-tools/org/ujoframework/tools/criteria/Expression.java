@@ -103,8 +103,8 @@ public abstract class Expression<UJO extends Ujo> {
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> Expression<UJO> newInstance(boolean value) {
         return (Expression<UJO>) (value 
-            ? ConstantExpression.TRUE
-            : ConstantExpression.FALSE
+            ? ExpressionValue.TRUE
+            : ExpressionValue.FALSE
             );
     }
 
@@ -112,5 +112,4 @@ public abstract class Expression<UJO extends Ujo> {
     public boolean isBinary() {
         return false;
     }
-
 }

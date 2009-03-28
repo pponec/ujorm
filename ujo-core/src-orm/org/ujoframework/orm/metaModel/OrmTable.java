@@ -112,7 +112,6 @@ public class OrmTable extends AbstractMetaModel {
         } else {
            return tableName;
         }
-
     }
 
 
@@ -143,15 +142,20 @@ public class OrmTable extends AbstractMetaModel {
         return pk.equals(ujo1, ujo2);
     }
 
-    /** Table Name */
-    @Override
-    public String toString() {
-        return NAME.of(this);
-    }
 
     /** Returns a first PK */
     public OrmColumn getFirstPK() {
         return PK.of(this).getFirstColumn();
+    }
+
+    /** Is the instance a database relation model? */
+    public boolean isPersistent() {
+        return DATABASE.of(this)!=null;
+    }
+
+    /** Database model is not persistent. A side efect is that the DATABASE property has hot a null value. */
+    public void setNotPersistent() {
+        DATABASE.setValue(this, null);
     }
 
 }

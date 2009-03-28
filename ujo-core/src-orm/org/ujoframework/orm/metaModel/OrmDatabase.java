@@ -37,7 +37,6 @@ import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.annot.Db;
-import org.ujoframework.tools.criteria.Expression;
 
 /**
  * A logical database description.
@@ -47,6 +46,8 @@ public class OrmDatabase extends AbstractMetaModel {
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(OrmDatabase.class.toString());
+    /** Add a DB relation into table models */
+    private static final boolean ADD_DB_MODEL = true;
 
 
     /** OrmDatabase name */
@@ -101,6 +102,14 @@ public class OrmDatabase extends AbstractMetaModel {
                 OrmTable table = new OrmTable(this, tProperty);
                 TABLES.addItem(this, table);
             }
+        }
+        if (ADD_DB_MODEL) {
+            // Add database relations:
+            @SuppressWarnings("unchecked")
+            RelationToMany relation = new RelationToMany(NAME.of(this), database.getClass());
+            OrmTable table = new OrmTable(this, relation);
+            table.setNotPersistent();
+            TABLES.addItem(this, table);
         }
     }
 

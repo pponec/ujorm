@@ -56,7 +56,9 @@ public class ExpressionDecoder {
             unpackBinary((ExpressionBinary)e);
         } else try {
             ExpressionValue value = renderer.print((ExpressionValue) e, sql);
-            values.add(value);
+            if (value!=null) {
+                values.add(value);
+            }
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }

@@ -118,17 +118,28 @@ public class Session {
             expression = ((ExpressionBinary) expression).getLeftNode();
         }
 
-        UjoProperty property = ((ExpressionValue) expression).getLeftNode();
+        ExpressionValue exprValue = (ExpressionValue) expression;
+        if (exprValue.isConstant()) {
+            return null;
+        }
+        UjoProperty property = exprValue.getLeftNode();
         while (!property.isDirect()) {
             property = ((PathProperty) property).getProperty(0);
         }
 
-        OrmRelation2Many result = OrmHandler.getInstance().findColumnModel(property);
+        OrmRelation2Many result = handler.findColumnModel(property);
         return result;
     }
 
-    public Database getDatabase() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /** Returns a Database instance */
+    public <DB extends TableUjo> DB getDatabase(Class<DB> dbType) {
+        try {
+            DB result = dbType.newInstance();
+            result.writeSession(this);
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException("Can't create database from: " + dbType);
+        }
     }
 
     /** INSERT object into table. */
@@ -136,7 +147,7 @@ public class Session {
         JdbcStatement statement = null;
 
         try {
-            OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
+            OrmTable table = handler.findTableModel((Class) ujo.getClass());
             table.assignPrimaryKey(ujo);
             OrmDatabase db = OrmTable.DATABASE.of(table);
             String sql = db.createInsert(ujo);
@@ -199,15 +210,21 @@ public class Session {
     public <UJO extends TableUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, TableUjo value) {
 
         final Class tableClass = property.getItemType();
-        final OrmTable table   = OrmHandler.getInstance().findTableModel(tableClass);
+        final OrmTable table   = handler.findTableModel(tableClass);
         final OrmColumn column = findOrmColumn(table, value.getClass());
 
         if (column==null) {
-            throw new IllegalStateException("Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName());
+            OrmTable origTable = handler.findTableModel(value.getClass());
+            if (origTable.isPersistent()) {
+               throw new IllegalStateException("Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName());
+            }
         }
 
-        Expression expr = Expression.newInstance(column.getProperty(), value);
-        Query query = createQuery(expr);
+        Expression expr = column!=null 
+            ? Expression.newInstance(column.getProperty(), value)
+            : Expression.newInstance(true)
+            ;
+        Query query = createQuery(tableClass, expr);
         UjoIterator result = iterate(query);
 
         return result;
@@ -277,7 +294,7 @@ public class Session {
         , final boolean mandatory
         ) throws NoSuchElementException
     {
-        OrmColumn column = (OrmColumn) OrmHandler.getInstance().findColumnModel(relatedProperty);
+        OrmColumn column = (OrmColumn) handler.findColumnModel(relatedProperty);
         List<OrmColumn> columns = column.getForeignColumns();
         if (columns.size() != 1) {
             throw new UnsupportedOperationException("There is supported only a one-column foreign key now: " + column);
