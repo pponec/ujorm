@@ -164,7 +164,7 @@ abstract public class SqlRenderer {
                 writer.append(f);
             }
         } else if (column.isForeignKey()) {
-           printiForeignKey(expr, column, template, writer);
+           printForeignKey(expr, column, template, writer);
            return expr;
         } else if (right instanceof List) {
             throw new UnsupportedOperationException("List is not supported yet: " + operator);
@@ -177,7 +177,7 @@ abstract public class SqlRenderer {
     }
 
     /** Print all items of the foreign key */
-    public void printiForeignKey
+    public void printForeignKey
         ( final ExpressionValue expr
         , final OrmColumn column
         , final String template

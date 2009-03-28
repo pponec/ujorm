@@ -16,19 +16,13 @@
 
 package org.ujoframework.implementation.orm;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.ujoframework.extensions.UjoAction;
-import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.beans.EventRegistrar;
 import org.ujoframework.beans.UjoPropertyChangeSupport;
 import org.ujoframework.beans.UjoPropertyChangeListener;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.map.MapUjo;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.Session;
@@ -178,7 +172,6 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         ) {
          return eventRegistrar.removePropertyChangeListener(property, before, listener);
     }
-
 
     /** Getter based on UjoProperty implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
