@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
@@ -43,19 +42,159 @@ abstract public class SqlRenderer {
     abstract public String getJdbcDriver();
 
     /** Print a SQL script to crate database */
-    abstract public void printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException;
+    public void printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException {
+        for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
+            if (table.isPersistent()) {
+                printTable(table, writer);
+                printForeignKey(table, writer);
+            }
+        }
+    }
 
     /** Print a SQL sript to create table */
-    abstract public void printTable(OrmTable table, Appendable result) throws IOException;
+    public void printTable(OrmTable table, Appendable writer) throws IOException {
+        writer.append("CREATE TABLE ");
+        writer.append(OrmTable.NAME.of(table));
+        String separator = "\n\t( ";
+        for (OrmColumn column : OrmTable.COLUMNS.getList(table)) {
+            writer.append(separator);
+            separator = "\n\t, ";
 
-    /** Print a SQL to create column */
-    abstract public void printColumnDeclaration(OrmColumn column, Appendable writer, String name) throws IOException;
+            if (column.isForeignKey()) {
+                printFKColumnsDeclaration(column, writer);
+            } else {
+                printColumnDeclaration(column, writer, null);
+            }
+        }
+        writer.append("\n\t);\n");
+    }
 
-    /** Print a SQL to create a Foreign Key. */
-    abstract public void printFKColumnsDeclaration(OrmColumn column, Appendable writer) throws IOException;
+    /** Print foreign key */
+    public void printForeignKey(OrmTable table, Appendable writer) throws IOException {
+        for (OrmColumn column : OrmTable.COLUMNS.getList(table)) {
+            if (column.isForeignKey()) {
+                printForeignKey(column, table, writer);
+            }
+        }
+    }
 
-    /** Print an INSERT SQL statement.  */
-    abstract public void printInsert(TableUjo ujo, Appendable writer) throws IOException;
+    /** Print foreign key for  */
+    public void printForeignKey(OrmColumn column, OrmTable table, Appendable writer) throws IOException {
+        final UjoProperty property = column.getProperty();
+        final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(property.getType());
+        OrmPKey foreignKeys = OrmTable.PK.of(foreignTable);
+
+        writer.append("ALTER TABLE ");
+        writer.append(OrmTable.NAME.of(table));
+        writer.append("\n\tADD FOREIGN KEY");
+
+        String separator = "(";
+        List<OrmColumn> columns = OrmPKey.COLUMNS.of(foreignKeys);
+        int columnsSize = columns.size();
+
+        for (int i = 0; i < columnsSize; ++i) {
+            writer.append(separator);
+            separator = ", ";
+            final String name = column.getForeignColumnName(i);
+            writer.append(name);
+        }
+
+        writer.append(")\n\tREFERENCES ");
+        writer.append(OrmTable.NAME.of(foreignTable));
+        separator = "(";
+
+        for (OrmColumn fkColumn : OrmPKey.COLUMNS.of(foreignKeys)) {
+            writer.append(separator);
+            separator = ", ";
+            writer.append(OrmColumn.NAME.of(fkColumn));
+        }
+
+        writer.append(")");
+        //writer.append("\n\tON DELETE CASCADE");
+        writer.append("\n\t;");
+
+    }
+
+    /**
+     *  Print a SQL to create column
+     * @param column Database Column
+     * @param name The name parameter is not mandatory, in case a null value the column name is used.
+     * @throws java.io.IOException
+     */
+    public void printColumnDeclaration(OrmColumn column, Appendable writer, String name) throws IOException {
+
+        if (name == null) {
+            name = OrmColumn.NAME.of(column);
+        }
+
+        writer.append(name);
+        writer.append(' ');
+        writer.append(OrmColumn.DB_TYPE.of(column).name());
+
+        if (!OrmColumn.MAX_LENGTH.isDefault(column)) {
+            writer.append("(" + OrmColumn.MAX_LENGTH.of(column));
+            if (!OrmColumn.PRECISION.isDefault(column)) {
+                writer.append(", " + OrmColumn.PRECISION.of(column));
+            }
+            writer.append(")");
+        }
+        if (!OrmColumn.MANDATORY.isDefault(column)) {
+            writer.append(" NOT NULL");
+        }
+        if (OrmColumn.PRIMARY_KEY.of(column) && name == null) {
+            writer.append(" PRIMARY KEY");
+        }
+    }
+
+    /** Print a SQL to create foreign keys. */
+    public void printFKColumnsDeclaration(OrmColumn column, Appendable writer) throws IOException {
+
+        List<OrmColumn> columns = column.getForeignColumns();
+        String separator = "";
+
+        for (int i = 0; i < columns.size(); ++i) {
+            OrmColumn col = columns.get(i);
+            writer.append(separator);
+            separator = "\n\t, ";
+            String name = column.getForeignColumnName(i);
+            printColumnDeclaration(col, writer, name);
+        }
+    }
+
+    /** Print an SQL INSERT statement.  */
+    public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
+
+        OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
+        StringBuilder values = new StringBuilder();
+
+        writer.append("INSERT INTO ");
+        writer.append(table.getFullName());
+        writer.append("\n\t(");
+
+        printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
+
+        writer.append(")\n\tVALUES (");
+        writer.append(values);
+        writer.append(");");
+    }
+
+    /** Print an SQL UPDATE statement.  */
+    public void printUpdate(TableUjo ujo, List<OrmColumn> changedColumns, Appendable writer) throws IOException {
+
+        OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
+        StringBuilder values = new StringBuilder();
+
+        writer.append("UPDATE ");
+        writer.append(table.getFullName());
+        writer.append("\n\tSET (");
+
+        printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
+
+        writer.append(")\n\tVALUES (");
+        writer.append(values);
+        writer.append(");");
+    }
+
 
     /** Returns an SQL expression template. */
     public String getExpressionTemplate(ExpressionValue expr) {

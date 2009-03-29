@@ -31,6 +31,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
+import java.util.List;
 import org.ujoframework.orm.ExpressionDecoder;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
@@ -125,6 +126,22 @@ public class OrmDatabase extends AbstractMetaModel {
         return result.toString();
     }
 
+
+    /** Create an SQL update */
+    public String createUpdate(TableUjo ujo, List<OrmColumn> changedColumns) {
+
+
+
+
+        SqlRenderer renderer = getRenderer();
+        StringBuilder result = new StringBuilder();
+        try {
+            renderer.printUpdate(ujo, changedColumns, result);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result.toString();
+    }
 
     /** Create an SQL select */
     public ExpressionDecoder createSelect(Query query, Appendable result ) {

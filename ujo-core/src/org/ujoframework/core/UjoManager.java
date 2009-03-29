@@ -41,6 +41,9 @@ import static org.ujoframework.extensions.UjoAction.*;
  * @composed 1 - 1 UjoCoder
  */
 public class UjoManager implements Comparator<UjoProperty> {
+
+    /** En empty list of UjoProperties. */
+    public static final UjoProperty[] EMPTY_PROPERTIES = new UjoProperty[0];
     
     /** Requested modifier of property definitions. */
     public static final int PROPERTY_MODIFIER = Modifier.STATIC|Modifier.PUBLIC|Modifier.FINAL;

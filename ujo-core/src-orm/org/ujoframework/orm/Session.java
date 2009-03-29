@@ -18,6 +18,7 @@ package org.ujoframework.orm;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,9 +31,9 @@ import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmDatabase;
+import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.orm.sample.Database;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.ExpressionBinary;
 import org.ujoframework.tools.criteria.ExpressionValue;
@@ -156,11 +157,71 @@ public class Session {
             statement.assignValues(ujo);
             LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
+            ujo.writeSession(this);
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
         }
         OrmDatabase.close(null, statement, null, true);
+    }
+
+    /** UPDATE object into table. */
+    public void update(TableUjo ujo) throws IllegalStateException {
+        JdbcStatement statement = null;
+
+        try {
+            OrmTable table = handler.findTableModel((Class) ujo.getClass());
+            OrmDatabase db = OrmTable.DATABASE.of(table);
+            List<OrmColumn> changedColumns = getOrmColumns(ujo.readChangedProperties());
+            if (changedColumns.size()==0) {
+                LOGGER.warning("No changes to update in the object: " + ujo);
+                return;
+            }
+            String sql = db.createUpdate(ujo, changedColumns);
+            LOGGER.log(Level.INFO, sql);
+            statement = getStatement(db, sql);
+            statement.assignValues(ujo);
+            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            statement.executeUpdate(); // execute insert statement
+            ujo.writeSession(this);
+        } catch (Throwable e) {
+            OrmDatabase.close(null, statement, null, false);
+            throw new IllegalStateException("ILLEGAL SQL INSERT", e);
+        }
+        OrmDatabase.close(null, statement, null, true);
+    }
+
+    /** Convert a property array to a column list. */
+    protected List<OrmColumn> getOrmColumns(UjoProperty... properties) {
+        final List<OrmColumn> result = new ArrayList<OrmColumn>(properties.length);
+
+        for (UjoProperty property : properties) {
+            OrmRelation2Many column = handler.findColumnModel(property);
+            if (column instanceof OrmColumn) {
+                result.add((OrmColumn) column);
+            }
+        }
+        return result;
+    }
+
+    /** Returns an expression by a PrimaryKey */
+    protected Expression createPkExpression(TableUjo table) {
+        Expression result = null;
+        OrmTable ormTable = handler.findTableModel(table.getClass());
+        OrmPKey ormKey = OrmTable.PK.of(ormTable);
+        List<OrmColumn> keys = OrmPKey.COLUMNS.of(ormKey);
+
+        for (OrmColumn ormColumn : keys) {
+            Expression expr = Expression.newInstance(ormColumn.getProperty(), ormColumn.getValue(table));
+            result = result!=null
+                ? result.and(expr)
+                : expr
+                ;
+        }
+        return result!=null
+            ? result
+            : Expression.newInstance(false)
+            ;
     }
 
     /** Run SQL SELECT by query. */
