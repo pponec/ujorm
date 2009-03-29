@@ -105,7 +105,7 @@ public class Session {
         return new Query<UJO>(aClass, expression, this);
     }
 
-    /** The table class is derived from a first expression column. */
+    /** The table class is derived from the first expression column. */
     public <UJO extends TableUjo> Query<UJO> createQuery(Expression<UJO> expression) {
         OrmRelation2Many column = getBasicColumn(expression);
         OrmTable table = OrmRelation2Many.TABLE.of(column);

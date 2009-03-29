@@ -148,7 +148,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
         return rowIndex>=0 && rowIndex<rows.size() ? rows.get(rowIndex) : null ;
     }
     
-    /** Returns a lastRow of the model or null, if the model have got no rows. */
+    /** Returns the lastRow of the model or null, if the model have got no rows. */
     public ROW getRowLast() {
         return getRowNullable(rows.size()-1);
     }
