@@ -143,7 +143,7 @@ public class OrmTable extends AbstractMetaModel {
     }
 
 
-    /** Returns a first PK */
+    /** Returns the first PK */
     public OrmColumn getFirstPK() {
         return PK.of(this).getFirstColumn();
     }

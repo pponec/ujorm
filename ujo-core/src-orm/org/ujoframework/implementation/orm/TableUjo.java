@@ -126,7 +126,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
     public TableUjo() {
     }
 
-    /** A method for an internal use. */
+    /** A method for an internal use only. */
     @Override
     public void writeValue(UjoProperty property, Object value) {
         Object oldValue = readValue(property);
@@ -135,7 +135,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         eventRegistrar.firePropertyChange(property, oldValue, value, false);
     }
 
-    /** A method for an internal use. */
+    /** A method for an internal use only. */
     @Override
     public Object readValue(final UjoProperty property) {
         Object result = super.readValue(property);
@@ -193,16 +193,17 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         return (UJO_IMPL) this;
     }
 
-    /** Read session */
+    /** Read a session */
     public Session readSession() {
         return session;
     }
 
-    /** write session */
+    /** Write a session */
     public void writeSession(Session session) {
         this.session = session;
     }
 
+    /** Test an authorization of the action. */
     @Override
     public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
         switch (action.getType()) {

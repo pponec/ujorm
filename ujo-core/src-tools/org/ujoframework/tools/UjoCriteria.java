@@ -49,7 +49,7 @@ import org.ujoframework.tools.criteria.*;
  */
 public class UjoCriteria<UJO extends Ujo> {
 
-    /** Find a first UJO by an expression or return NULL if any object was not found. */
+    /** Find the first UJO by an expression or return NULL if any object was not found. */
     public UJO findFirst(List<UJO> list, Expression<UJO> expression) {
         for (UJO ujo : list) {
             if (expression.evaluate(ujo)) {

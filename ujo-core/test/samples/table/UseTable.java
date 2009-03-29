@@ -68,7 +68,7 @@ public class UseTable {
         // Set a value
         model.setValueAt("Prokop", 0, Person.NAME );
         
-        // Get a last row of table:
+        // Get the last row of table:
         Person person = model.getRowLast();
         
         // Sort the model:
