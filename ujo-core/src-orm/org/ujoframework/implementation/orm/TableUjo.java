@@ -16,13 +16,14 @@
 
 package org.ujoframework.implementation.orm;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.beans.EventRegistrar;
-import org.ujoframework.beans.UjoPropertyChangeSupport;
-import org.ujoframework.beans.UjoPropertyChangeListener;
+import org.ujoframework.core.ChangeRegister;
 import org.ujoframework.core.UjoIterator;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.map.MapUjo;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.Session;
@@ -118,10 +119,12 @@ import org.ujoframework.orm.Session;
  * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
-public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegistrar<UJO_IMPL> {
+public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements ChangeRegister {
     
-    final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
+    /** Orm session */
     private Session session;
+    /** Set of changes */
+    private Set<UjoProperty> changes = null;
 
     public TableUjo() {
     }
@@ -129,11 +132,15 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
     /** A method for an internal use only. */
     @Override
     public void writeValue(UjoProperty property, Object value) {
-        Object oldValue = readValue(property);
-        eventRegistrar.firePropertyChange(property, oldValue, value, true);
+        if (session!=null) {
+            if (changes==null) {
+                changes = new HashSet<UjoProperty>(8);
+            }
+            changes.add(property);
+        }
         super.writeValue(property, value);
-        eventRegistrar.firePropertyChange(property, oldValue, value, false);
     }
+
 
     /** A method for an internal use only. */
     @Override
@@ -155,23 +162,17 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements EventRegis
         return result;
     }
 
-    /** Add property Listener */
-    public boolean addPropertyChangeListener
-        ( UjoProperty<UJO_IMPL,?> property
-        , Boolean before
-        , UjoPropertyChangeListener listener
-        ) {
-        return eventRegistrar.addPropertyChangeListener(property, before, listener);
+    /** Returns a changed properties. */
+    @Override
+    public UjoProperty[] readChangedProperties() {
+        final UjoProperty[] result
+            = changes!=null
+            ? changes.toArray(new UjoProperty[changes.size()])
+            : UjoManager.EMPTY_PROPERTIES
+            ;
+        return result;
     }
 
-    /** Remove property Listener */
-    public boolean removePropertyChangeListener
-        ( UjoProperty<UJO_IMPL,?> property
-        , Boolean before
-        , UjoPropertyChangeListener listener
-        ) {
-         return eventRegistrar.removePropertyChangeListener(property, before, listener);
-    }
 
     /** Getter based on UjoProperty implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")

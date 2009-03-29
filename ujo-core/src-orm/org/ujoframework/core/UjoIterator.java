@@ -48,7 +48,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
      */
     abstract public T next() throws NoSuchElementException;
 
-    /** Returns a count of items or value -1 if the count is not defined. */
+    /** Returns a count of items or value -1 if the count is not known. */
     public int size() {
         return -1;
     }

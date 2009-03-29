@@ -80,7 +80,7 @@ public class OrmSampleTest extends TestCase {
     /** Using SELECT by a object relations */
     public void useRelation() {
         Session session = OrmHandler.getInstance().getSession();
-        Database db = session.getDatabase();
+        Database db = session.getDatabase(Database.class);
 
         UjoIterator<Order> orders  = Database.ORDERS.of(db);
         for (Order order : orders) {

@@ -27,6 +27,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.OrmHandler;
+import org.ujoframework.tools.criteria.Expression;
 
 
 /**

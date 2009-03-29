@@ -141,6 +141,18 @@ public class SampleORM {
         }
     }
 
+    /** Using UPDATE */
+    public void useUpdate() {
+        Session session = OrmHandler.getInstance().getSession();
+        // TODO ...
+    }
+
+    /** Using DELETE */
+    public void useDelete() {
+        Session session = OrmHandler.getInstance().getSession();
+        // TODO ...
+    }
+
     /** Test */
     public static void main(String[] args) {
 
@@ -153,6 +165,10 @@ public class SampleORM {
             sample.useItemSelection_3();
             sample.useRelation();
             // --------------------------
+            sample.useUpdate();
+            sample.useDelete();
+
+
             //session.close();
         } catch (Throwable e) {
             e.printStackTrace();
