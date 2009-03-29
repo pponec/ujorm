@@ -36,8 +36,44 @@ public class Item extends TableUjo<Item> {
     /** Description of Item */
     public static final UjoProperty<Item,String> DESCR = newProperty("description", String.class);
     /** A reference to common Order */
-    public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);
-    
-    /** A composed PATH property to an Date of Order */
+    public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);    
+    /** A composed PATH property to an Date of Order (!) */
     public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.create(Item.ORDER, Order.DATE);
+
+
+    // --- An optional implementation of commonly used setters and getters ---
+
+    public Long getId() {
+        return get(ID);
+    }
+    public void setId(Long id) {
+        set(ID, id);
+    }
+    public Integer getUsrId() {
+        return get(USER_ID);
+    }
+    public void setUsrId(Integer usrId) {
+        set(USER_ID, usrId);
+    }
+    public String getDescr() {
+        return get(DESCR);
+    }
+    public void setDescr(String descr) {
+        set(DESCR, descr);
+    }
+    public Order getOrder() {
+        return get(ORDER);
+    }
+    public void setOrder(Order descr) {
+        set(ORDER, descr);
+    }
+
+
+    
+    /** Example of the composed PATH property */
+    public Date getOrderDate() {
+        // An alternative solution for: getOrder().getDate();
+        return get(ORDER_DATE);
+    }
+
 }

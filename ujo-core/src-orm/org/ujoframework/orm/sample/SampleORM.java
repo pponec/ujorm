@@ -45,12 +45,12 @@ public class SampleORM {
         order.setDescr("John's order");
 
         Item item1 = new Item();
-        item1.set(Item.ORDER, order);
-        item1.set(Item.DESCR, "Yellow table");
+        item1.setOrder(order);
+        item1.setDescr("Yellow table");
 
         Item item2 = new Item();
-        item2.set(Item.ORDER, order);
-        item2.set(Item.DESCR, "Green window");
+        item2.setOrder(order);
+        item2.setDescr("Green window");
 
         System.out.println("order: " + order);
         System.out.println("item1: " + item1);
@@ -81,7 +81,7 @@ public class SampleORM {
 
         for (Order order : session.iterate( query)) {
             String descr = order.getDescr();
-            System.out.println("ORDER ROW: " + order);
+            System.out.println("ORDER ROW: " + order + " // descr: " + descr);
         }
     }
 
@@ -93,7 +93,7 @@ public class SampleORM {
         Query<Item> query = session.createQuery(expr);
 
         for (Item item : session.iterate( query )) {
-            Order order = item.get(Item.ORDER);
+            Order order = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order);
         }
     }
@@ -107,7 +107,7 @@ public class SampleORM {
         Query<Item> query = session.createQuery(expr);
 
         for (Item item : session.iterate( query )) {
-            Order order2 = item.get(Item.ORDER);
+            Order order2 = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
         }
     }
@@ -115,11 +115,10 @@ public class SampleORM {
     /** Using SELECT by QUERY */
     public void useItemSelection_3() {
         Session session = OrmHandler.getInstance().getSession();
-
         Order orderValue = session.load(Order.class, 1L);
 
         for (Item item : orderValue.getItems()) {
-            Order order2 = item.get(Item.ORDER);
+            Order order2 = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
         }
     }
@@ -131,13 +130,12 @@ public class SampleORM {
 
         UjoIterator<Order> orders = db.get(Database.ORDERS);
         for (Order order : orders) {
-            Long id = order.getId();
             String descr = order.getDescr();
-            System.out.println("Order id: " + id + " descr: " + descr);
+            System.out.println("Order: " + order + " // descr: " + descr);
 
             for (Item item : order.getItems()) {
-                Long itemId = item.get(Item.ID);
-                String itemDescr = item.get(Item.DESCR);
+                Long itemId = item.getId();
+                String itemDescr = item.getDescr();
                 System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
             }
         }
