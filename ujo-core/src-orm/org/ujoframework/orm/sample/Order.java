@@ -46,7 +46,7 @@ public class Order extends TableUjo<Order> {
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
     
 
-    // --- An optional implementation of POJO setters and getters ----
+    // --- An optional implementation of commonly used setters and getters ---
 
     public Long getId() {
         return get(ID);
