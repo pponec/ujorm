@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -38,7 +39,10 @@ public class OrmPKey extends AbstractMetaModel {
     /** Primary key counter. */
     private long primaryKeyCounter = 0;
 
-
+    public OrmPKey() {
+        COLUMNS.setValue(this, new ArrayList<OrmColumn>(0));
+    }
+    
     /** Compare two objects by PrimaryKey */
     @SuppressWarnings("unchecked")
     public boolean equals(Ujo ujo1, Ujo ujo2) {
