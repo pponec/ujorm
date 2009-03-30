@@ -5,7 +5,7 @@
 
 package org.ujoframework.implementation.field;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
@@ -15,7 +15,7 @@ import org.ujoframework.extensions.ValueAgent;
 public class Person extends FieldUjo {
     
     private Long cash;
-    private ArrayList<Person> childs;
+    private List<Person> childs;
     
     public static FieldProperty<Person,Long> CASH 
         = newProperty("CASH", Long.class
@@ -31,11 +31,11 @@ public class Person extends FieldUjo {
     
     public static FieldPropertyList<Person,Person> CHILDS 
         = newPropertyList("CHILDS", Person.class
-        , new ValueAgent<Person,ArrayList<Person>>() {
-        public void writeValue(Person ujo, ArrayList<Person> value) { 
+        , new ValueAgent<Person,List<Person>>() {
+        public void writeValue(Person ujo, List<Person> value) {
             ujo.childs = value; 
         }
-        public ArrayList<Person> readValue(Person ujo) { 
+        public List<Person> readValue(Person ujo) {
             return ujo.childs; 
         }
     });

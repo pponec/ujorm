@@ -9,7 +9,7 @@
 
 package org.ujoframework.implementation.xmlSpeed;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.util.List;
 import org.ujoframework.extensions.ValueAgent;
@@ -22,15 +22,15 @@ import org.ujoframework.implementation.field.FieldUjoImplChild;
  */
 public class FieldTree extends FieldUjoImplChild {
     
-    private ArrayList<FieldTree> childs;
+    private List<FieldTree> childs;
 
     
-    /** (ArrayList) */
-    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDS = newPropertyList("CHILDS", FieldTree.class, new ValueAgent<FieldTree,ArrayList<FieldTree>>() {
-        public void writeValue(FieldTree ujo, ArrayList<FieldTree> value) { 
+    /** (List) */
+    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDS = newPropertyList("CHILDS", FieldTree.class, new ValueAgent<FieldTree,List<FieldTree>>() {
+        public void writeValue(FieldTree ujo, List<FieldTree> value) {
             ujo.childs = value; 
         }
-        public ArrayList<FieldTree> readValue(FieldTree ujo) { 
+        public List<FieldTree> readValue(FieldTree ujo) {
             return ujo.childs; 
         }
     });
@@ -38,10 +38,10 @@ public class FieldTree extends FieldUjoImplChild {
     
     
     
-    public void setChilds(ArrayList<FieldTree> childs) {
+    public void setChilds(List<FieldTree> childs) {
         this.childs = childs;
     }
-    public ArrayList<FieldTree> getChilds() {
+    public List<FieldTree> getChilds() {
         return childs;
     }
 

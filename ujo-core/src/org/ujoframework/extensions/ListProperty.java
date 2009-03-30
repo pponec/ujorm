@@ -16,13 +16,13 @@
 
 package org.ujoframework.extensions;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.ujoframework.Ujo;
 
 /**
  * Simplification version of the UjoPropertyList of type <strong>ArrayList</strong>.
  * @author Pavel Ponec
  */
-public interface ListProperty<UJO extends Ujo, ITEM> extends UjoPropertyList<UJO,ArrayList<ITEM>,ITEM> {
+public interface ListProperty<UJO extends Ujo, ITEM> extends UjoPropertyList<UJO,List<ITEM>,ITEM> {
     
 }

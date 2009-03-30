@@ -16,7 +16,7 @@
 
 package org.ujoframework.implementation.bean;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.core.BeanManager;
 import org.ujoframework.extensions.ListProperty;
@@ -24,12 +24,12 @@ import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
- * Property List implementation. There is used an ArrayList collection.
+ * Property List implementation. There is used an List collection.
  * @see BeanProperty
  * @author Pavel Ponec  
  */
 public class BeanPropertyList<UJO extends Ujo, ITEM> 
-    extends AbstractPropertyList<UJO, ArrayList<ITEM>, ITEM>
+    extends AbstractPropertyList<UJO, List<ITEM>, ITEM>
     implements ValueAgent<Object,Object>, ListProperty<UJO, ITEM>
     {
     
@@ -39,7 +39,7 @@ public class BeanPropertyList<UJO extends Ujo, ITEM>
     /** Constructor */
     @SuppressWarnings("unchecked")
     public BeanPropertyList(String name, Class<ITEM> itemType, int index) {
-        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, index);
+        super(name, (Class<List<ITEM>>) (Class) List.class, itemType, index);
         beanManager = BeanManager.getInstance(this);
     }
     

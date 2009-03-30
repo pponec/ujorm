@@ -16,6 +16,7 @@
 
 package org.ujoframework.extensions;
 
+import java.util.ArrayList;
 import org.ujoframework.implementation.array.*;
 import java.util.Collections;
 import java.util.Comparator;
@@ -87,11 +88,15 @@ abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITE
      * Return a not null List. If original list value is empty, the new List is created.
      * @see #getItem(Ujo,int)
      */
+    @SuppressWarnings("unchecked")
     public LIST getList(final UJO ujo) {
         LIST result = getValue(ujo);
         if (result==null) {
             try {
-                result = getType().newInstance();
+                result = getType().isInterface()
+                    ? (LIST) new ArrayList()
+                    : getType().newInstance()
+                    ;
                 setValue(ujo, result);
             } catch (InstantiationException ex) { throw new IllegalStateException("Can't create an empty list: " + getType(), ex);
             } catch (IllegalAccessException ex) { throw new IllegalStateException("Can't create an empty list: " + getType(), ex);
