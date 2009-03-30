@@ -196,10 +196,14 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             ){
                 continue;
             }
-            final Class baseType = value.getClass()!=property.getType() ? value.getClass() : null ;
-            final Class itemType = property instanceof UjoPropertyList ? ((UjoPropertyList)property).getItemType() : null ;
+
             
             if (value instanceof List) {
+                final Class itemType = property instanceof UjoPropertyList ? ((UjoPropertyList)property).getItemType() : null ;
+                final Class baseType = property.getType()==List.class || property.getType()==value.getClass()
+                    ? null
+                    : value.getClass()
+                    ;
                 for (Object item : (List) value) {
                     Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
                     printProperty( ujo, property, itemClass, baseType, item, writer );
@@ -208,6 +212,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                 writeNewLine(writer);
                 printValue2XML(writer, Object.class, value, ujo, property);
             } else {
+                final Class baseType = value.getClass()!=property.getType() ? value.getClass() : null ;
                 printProperty(ujo, property, baseType, null, value, writer);
 //          } else if (value instanceof Object[]) {
 //                // PoP:TODO

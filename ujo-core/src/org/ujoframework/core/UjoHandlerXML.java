@@ -174,7 +174,10 @@ final class UjoHandlerXML extends DefaultHandler {
                             if ($listType==null) {
                                 $listType = ((UjoPropertyList)$property).getType();
                             }
-                            list = (List) $listType.newInstance();
+                            list = $listType.isInterface()
+                                ? new ArrayList()
+                                : (List) $listType.newInstance()
+                                ;
                             ujoParent.writeValue($property, list);
                         }
                         list.add(container);

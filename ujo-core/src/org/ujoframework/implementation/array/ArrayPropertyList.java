@@ -16,24 +16,24 @@
 
 package org.ujoframework.implementation.array;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.AbstractPropertyList;
 
 /**
- * Property List implementation with an ArrayList collection.
+ * Property List implementation with an List collection.
  * @see ArrayUjo
  * @author Paul Ponec
  */
 public class ArrayPropertyList<UJO extends Ujo, ITEM> 
-    extends AbstractPropertyList<UJO, ArrayList<ITEM>, ITEM>
+    extends AbstractPropertyList<UJO, List<ITEM>, ITEM>
     implements ListProperty<UJO, ITEM>, Comparable<ArrayPropertyList> {
     
     /** Constructor */
     @SuppressWarnings("unchecked")
     public ArrayPropertyList(String name, Class<ITEM> itemType, int index) {
-        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, index);
+        super(name, (Class<List<ITEM>>) (Class) List.class, itemType, index);
     }
     
     /** Compare to another ArrayProperty object by a index code. */

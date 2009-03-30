@@ -16,7 +16,7 @@
 
 package org.ujoframework.implementation.field;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.AbstractPropertyList;
@@ -24,36 +24,36 @@ import org.ujoframework.extensions.ValueAgent;
 import org.ujoframework.implementation.bean.BeanProperty;
 
 /**
- * Property List implementation. There is used an ArrayList collection.
+ * Property List implementation. There is used an List collection.
  * @see BeanProperty
  * @author Pavel Ponec  
  */
 public class FieldPropertyList<UJO extends Ujo, ITEM> 
-    extends AbstractPropertyList<UJO, ArrayList<ITEM>, ITEM>
-    implements ValueAgent<UJO,  ArrayList<ITEM>>, ListProperty<UJO, ITEM>
+    extends AbstractPropertyList<UJO, List<ITEM>, ITEM>
+    implements ValueAgent<UJO,  List<ITEM>>, ListProperty<UJO, ITEM>
 {
     
     /** Bean Manager instance */
-    private final ValueAgent<UJO, ArrayList<ITEM>> agent;    
+    private final ValueAgent<UJO, List<ITEM>> agent;
     
     /** Constructor */
     @SuppressWarnings("unchecked")
-    public FieldPropertyList(String name, Class<ITEM> itemType, int index, ValueAgent<UJO, ArrayList<ITEM>> agent) {
-        super(name, (Class<ArrayList<ITEM>>) (Class) ArrayList.class, itemType, index);
+    public FieldPropertyList(String name, Class<ITEM> itemType, int index, ValueAgent<UJO, List<ITEM>> agent) {
+        super(name, (Class<List<ITEM>>) (Class) List.class, itemType, index);
         this.agent = agent;
     }
     
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
-    public void writeValue(UJO ujo, ArrayList<ITEM> value) throws IllegalArgumentException {
+    public void writeValue(UJO ujo, List<ITEM> value) throws IllegalArgumentException {
         agent.writeValue(ujo, value);
     }
 
     /** WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
-    public ArrayList<ITEM> readValue(UJO ujo) throws IllegalArgumentException {
+    public List<ITEM> readValue(UJO ujo) throws IllegalArgumentException {
         return agent.readValue(ujo);
     }
     

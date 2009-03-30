@@ -9,7 +9,6 @@
 
 package org.ujoframework.implementation.xmlSpeed;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.ujoframework.implementation.bean.*;
@@ -23,12 +22,12 @@ public class BeanTree extends BeanUjoImplChild {
     public static final BeanPropertyList<BeanTree, BeanTree> PRO_CHILDS = newPropertyList("Child", BeanTree.class);
     
     
-    private ArrayList<PojoTree> childs;
+    private List<PojoTree> childs;
     
-    public void setChilds(ArrayList<PojoTree> childs) {
+    public void setChilds(List<PojoTree> childs) {
         this.childs = childs;
     }
-    public ArrayList<PojoTree> getChilds() {
+    public List<PojoTree> getChilds() {
         return childs;
     }
 

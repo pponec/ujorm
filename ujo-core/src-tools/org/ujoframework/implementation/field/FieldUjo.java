@@ -16,7 +16,7 @@
 
 package org.ujoframework.implementation.field;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.AbstractUjo;
@@ -31,7 +31,7 @@ import org.ujoframework.extensions.ValueAgent;
  * <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">extends</span> FieldUjo {
  *   
  *   <span class="keyword-directive">private</span> Long cash;
- *   <span class="keyword-directive">private</span> ArrayList&lt;Person&gt; childs;
+ *   <span class="keyword-directive">private</span> List&lt;Person&gt; childs;
  *   
  *   <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> FieldProperty&lt;Person,Long&gt; CASH 
  *     = newProperty(<span class="character">"</span><span class="character">CASH</span><span class="character">"</span>, Long.<span class="keyword-directive">class</span>
@@ -47,11 +47,11 @@ import org.ujoframework.extensions.ValueAgent;
  *   
  *   <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> FieldPropertyList&lt;Person,Person&gt; CHILDS 
  *     = newPropertyList(<span class="character">"</span><span class="character">CHILDS</span><span class="character">"</span>, Person.<span class="keyword-directive">class</span>
- *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,ArrayList&lt;Person&gt;&gt;() {
- *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Person ujo, ArrayList&lt;Person&gt; value) { 
+ *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,List&lt;Person&gt;&gt;() {
+ *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Person ujo, List&lt;Person&gt; value) {
  *         ujo.childs = value; 
  *     }
- *     <span class="keyword-directive">public</span> ArrayList&lt;Person&gt; readValue(Person ujo) { 
+ *     <span class="keyword-directive">public</span> List&lt;Person&gt; readValue(Person ujo) {
  *         <span class="keyword-directive">return</span> ujo.childs; 
  *     }
  *   });
@@ -122,7 +122,7 @@ public abstract class FieldUjo extends AbstractUjo {
     protected static <UJO extends Ujo, ITEM> FieldPropertyList<UJO, ITEM> newPropertyList
         ( String name
         , Class<ITEM> type
-        , ValueAgent<UJO, ArrayList<ITEM>> agent
+        , ValueAgent<UJO, List<ITEM>> agent
         ) {
         return new FieldPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex(), agent);
     }
