@@ -19,7 +19,7 @@ package org.ujoframework.implementation.map;
 import java.util.ArrayList;
 import org.ujoframework.Ujo;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.extensions.SuperPropertyList;
+import org.ujoframework.extensions.AbstractPropertyList;
 
 /**
  * Property List implementation. There is used an ArrayList collection.
@@ -27,7 +27,7 @@ import org.ujoframework.extensions.SuperPropertyList;
  * @author Pavel Ponec
  */
 public class MapPropertyList<UJO extends Ujo, ITEM> 
-    extends SuperPropertyList<UJO, ArrayList<ITEM>, ITEM>
+    extends AbstractPropertyList<UJO, ArrayList<ITEM>, ITEM>
     implements ListProperty<UJO, ITEM>
     {
     

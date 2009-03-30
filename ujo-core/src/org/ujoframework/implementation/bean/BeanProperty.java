@@ -18,7 +18,7 @@ package org.ujoframework.implementation.bean;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.core.BeanManager;
-import org.ujoframework.extensions.SuperProperty;
+import org.ujoframework.extensions.AbstractProperty;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
@@ -27,7 +27,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @author Pavel Ponec
  */
 public class BeanProperty<UJO extends Ujo,VALUE> 
-    extends SuperProperty<UJO,VALUE> 
+    extends AbstractProperty<UJO,VALUE>
     implements ValueAgent<Object,Object> {
 
     /** Bean Manager instance */

@@ -29,7 +29,7 @@ import static org.ujoframework.extensions.UjoAction.*;
 
  * @author Pavel Ponec
  */
-public abstract class SuperUjo implements Ujo, UjoTextable, UjoCloneable {
+public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
     /** A property order index. The field is used in a static method newProperty(..). 
      * @see #_nextPropertyIndex()

@@ -17,7 +17,7 @@ package org.ujoframework.implementation.array;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperUjoExt;
+import org.ujoframework.extensions.AbstractUjoExt;
 
 
 /**
@@ -45,7 +45,7 @@ import org.ujoframework.extensions.SuperUjoExt;
  * @author Paul Ponec
  * @since UJO release 0.80 
  */
-abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends SuperUjoExt<UJO> {
+abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoExt<UJO> {
     
     
     /** An Incrementator. Use a new counter for each subclass by sample:

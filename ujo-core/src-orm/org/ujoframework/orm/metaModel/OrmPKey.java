@@ -42,7 +42,7 @@ public class OrmPKey extends AbstractMetaModel {
     public OrmPKey() {
         COLUMNS.setValue(this, new ArrayList<OrmColumn>(0));
     }
-    
+
     /** Compare two objects by PrimaryKey */
     @SuppressWarnings("unchecked")
     public boolean equals(Ujo ujo1, Ujo ujo2) {
