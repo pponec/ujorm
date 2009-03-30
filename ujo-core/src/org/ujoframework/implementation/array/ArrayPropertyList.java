@@ -19,7 +19,7 @@ package org.ujoframework.implementation.array;
 import java.util.ArrayList;
 import org.ujoframework.Ujo;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.extensions.SuperPropertyList;
+import org.ujoframework.extensions.AbstractPropertyList;
 
 /**
  * Property List implementation with an ArrayList collection.
@@ -27,7 +27,7 @@ import org.ujoframework.extensions.SuperPropertyList;
  * @author Paul Ponec
  */
 public class ArrayPropertyList<UJO extends Ujo, ITEM> 
-    extends SuperPropertyList<UJO, ArrayList<ITEM>, ITEM> 
+    extends AbstractPropertyList<UJO, ArrayList<ITEM>, ITEM>
     implements ListProperty<UJO, ITEM>, Comparable<ArrayPropertyList> {
     
     /** Constructor */

@@ -18,7 +18,7 @@ package org.ujoframework.implementation.map;
 import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperUjoExt;
+import org.ujoframework.extensions.AbstractUjoExt;
 
 /**
  * This is an Groovy style implementation of a setter and getter methods for an easier access for developpers,
@@ -45,7 +45,7 @@ import org.ujoframework.extensions.SuperUjoExt;
  * @author Paul Ponec
  * @since UJO release 0.80 
  */
-abstract public class MapUjoExt<UJO extends MapUjoExt> extends SuperUjoExt<UJO> {
+abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJO> {
 
     /** Object data */
     protected HashMap<UjoProperty, Object> data;

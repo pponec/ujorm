@@ -21,10 +21,10 @@ import org.ujoframework.UjoProperty;
 
 /**
  * A AbstractProperty property implementation.
- * @see SuperUjo
+ * @see AbstractUjo
  * @author Pavel Ponec
  */
-public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
+public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     
     private final String name;
     private final Class<VALUE> type;
@@ -37,7 +37,7 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
      * @param type Type of property
      * @param index Default value is -1
      */
-    public SuperProperty(String name, Class<VALUE> type) {
+    public AbstractProperty(String name, Class<VALUE> type) {
         this(name, type, -1);
     }
 
@@ -47,7 +47,7 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
      * @param type Type of property
      * @param index Default value is -1
      */
-    public SuperProperty(String name, Class<VALUE> type, int index) {
+    public AbstractProperty(String name, Class<VALUE> type, int index) {
         if (name==null) { throw new IllegalArgumentException("Name must not be null."); }
         if (type==null) { throw new IllegalArgumentException("Type must not be null."); }
         
@@ -74,7 +74,7 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
     /**
      * It is a basic method for setting an appropriate type safe value to an MapUjo object. 
      * <br>For the setting value is used internally a method <a href="MapUjo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">MapUjo.writeValue(UjoProperty, Object)</a>.
-     * @see SuperUjo#writeValue(UjoProperty,Object)
+     * @see AbstractUjo#writeValue(UjoProperty,Object)
      */
     final public void setValue(final UJO ujo, final VALUE value) {
         ujo.writeValue(this, value);
@@ -85,7 +85,7 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
      * <br>For the getting value is used internally a method <a href="MapUjo.html#readValue(org.ujoframework.UjoProperty)">MapUjo.readValue(UjoProperty)</a>.
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
-     * @see SuperUjo#readValue(UjoProperty)
+     * @see AbstractUjo#readValue(UjoProperty)
      */
     @SuppressWarnings("unchecked")
     final public VALUE getValue(final UJO ujo) {
@@ -123,7 +123,7 @@ public abstract class SuperProperty<UJO extends Ujo,VALUE> implements UjoPropert
      * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current property!
      */
     @SuppressWarnings("unchecked")
-    public <PROPERTY extends SuperProperty> PROPERTY setDefault(VALUE value) {
+    public <PROPERTY extends AbstractProperty> PROPERTY setDefault(VALUE value) {
         defaultValue = value;
         return (PROPERTY) this;
     }

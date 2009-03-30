@@ -30,7 +30,7 @@ import org.ujoframework.swing.UjoPropertyRow;
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * @author Pavel Ponec
  */
-public abstract class SuperUjoExt<UJO_IMPL extends UjoExt> extends SuperUjo implements UjoExt<UJO_IMPL> {
+public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUjo implements UjoExt<UJO_IMPL> {
     
     /** Getter based on one UjoProperty */
     @SuppressWarnings("unchecked")

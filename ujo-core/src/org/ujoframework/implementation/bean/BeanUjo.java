@@ -18,7 +18,7 @@ package org.ujoframework.implementation.bean;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperUjo;
+import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
@@ -66,7 +66,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @author Pavel Ponec
  * @composed 1 - * BeanProperty
   */
-public abstract class BeanUjo extends SuperUjo {
+public abstract class BeanUjo extends AbstractUjo {
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
      * BeanProperty.setValue(Ujo,Object) 

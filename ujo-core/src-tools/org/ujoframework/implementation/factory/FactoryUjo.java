@@ -18,7 +18,7 @@ package org.ujoframework.implementation.factory;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperUjo;
+import org.ujoframework.extensions.AbstractUjo;
 
 /**
  * The Ujo Factory. A method called readValue() create new instance of the property always by a property type.
@@ -31,7 +31,7 @@ import org.ujoframework.extensions.SuperUjo;
  * @since 0.81 
  * @composed 1 - * FactoryProperty
   */
-public abstract class FactoryUjo extends SuperUjo {
+public abstract class FactoryUjo extends AbstractUjo {
 
     /** It is an unsupported function in this implementation. */
     public void writeValue(final UjoProperty property, final Object value) {

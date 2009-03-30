@@ -19,7 +19,7 @@ package org.ujoframework.implementation.map;
 import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperUjo;
+import org.ujoframework.extensions.AbstractUjo;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>
@@ -42,7 +42,7 @@ import org.ujoframework.extensions.SuperUjo;
  * @author Pavel Ponec
  * @composed 1 - * MapProperty
   */
-public abstract class MapUjo extends SuperUjo {
+public abstract class MapUjo extends AbstractUjo {
     
     /** Object data */
     protected HashMap<UjoProperty,Object> data;

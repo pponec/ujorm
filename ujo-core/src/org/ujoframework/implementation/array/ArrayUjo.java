@@ -18,7 +18,7 @@ package org.ujoframework.implementation.array;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperUjo;
+import org.ujoframework.extensions.AbstractUjo;
 
 /**
  * This is a very fast abstract implementation of Ujo.
@@ -48,7 +48,7 @@ import org.ujoframework.extensions.SuperUjo;
  * @author Pavel Ponec
  * @composed 1 - * ArrayProperty
  */
-public abstract class ArrayUjo extends SuperUjo {
+public abstract class ArrayUjo extends AbstractUjo {
     
     /** An Incrementator. Use a new counter for each subclass by sample:
      *<pre class="pre">

@@ -4,6 +4,7 @@ The UJO Framework release notes
 release 0.85 (2009-XX-XX)
 + ORM support - the early alpha version of API
 + XML element body value support by the annotation @XmlElementBody
++ Super classes was renamed to the Abstract classes
 
 release 0.84 (2009-03-08)
 + new method: UjoProperty.isDefault(UJO) indicates whether a parameter value of the ujo "equal to" the property default value

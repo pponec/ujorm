@@ -19,7 +19,7 @@ package org.ujoframework.implementation.field;
 import java.util.ArrayList;
 import org.ujoframework.Ujo;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.extensions.SuperPropertyList;
+import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.ValueAgent;
 import org.ujoframework.implementation.bean.BeanProperty;
 
@@ -29,7 +29,7 @@ import org.ujoframework.implementation.bean.BeanProperty;
  * @author Pavel Ponec  
  */
 public class FieldPropertyList<UJO extends Ujo, ITEM> 
-    extends SuperPropertyList<UJO, ArrayList<ITEM>, ITEM> 
+    extends AbstractPropertyList<UJO, ArrayList<ITEM>, ITEM>
     implements ValueAgent<UJO,  ArrayList<ITEM>>, ListProperty<UJO, ITEM>
 {
     

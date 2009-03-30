@@ -19,7 +19,7 @@ package org.ujoframework.implementation.field;
 import java.util.ArrayList;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperUjoExt;
+import org.ujoframework.extensions.AbstractUjoExt;
 import org.ujoframework.extensions.ValueAgent;
 
 
@@ -63,7 +63,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @composed 1 - * FieldProperty
  * @since UJO release 0.81 
  */
-abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends SuperUjoExt<UJO> {
+abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoExt<UJO> {
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
      * FieldProperty.setValue(Ujo,Object) 

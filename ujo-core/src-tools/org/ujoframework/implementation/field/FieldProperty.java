@@ -17,7 +17,7 @@
 package org.ujoframework.implementation.field;
 
 import org.ujoframework.Ujo;
-import org.ujoframework.extensions.SuperProperty;
+import org.ujoframework.extensions.AbstractProperty;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
@@ -26,7 +26,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @author Pavel Ponec
  */
 public class FieldProperty<UJO extends Ujo,VALUE> 
-    extends SuperProperty<UJO,VALUE> 
+    extends AbstractProperty<UJO,VALUE>
     implements ValueAgent<UJO,VALUE> {
 
     /** Property Agent */

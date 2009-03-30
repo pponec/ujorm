@@ -18,14 +18,14 @@ package org.ujoframework.implementation.array;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperProperty;
+import org.ujoframework.extensions.AbstractProperty;
 
 /**
  * An array property implementation
  * @see ArrayUjo
  * @author Paul Ponec
  */
-public class ArrayProperty<UJO extends Ujo,VALUE> extends SuperProperty<UJO,VALUE> implements Comparable<ArrayProperty> {
+public class ArrayProperty<UJO extends Ujo,VALUE> extends AbstractProperty<UJO,VALUE> implements Comparable<ArrayProperty> {
     
     /** Constructor */
     public ArrayProperty(String name, Class<VALUE> type, int index) {

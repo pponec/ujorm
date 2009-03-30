@@ -29,14 +29,14 @@ import org.ujoframework.core.UjoComparator;
  * @see ArrayUjo
  * @author Paul Ponec
  */
-abstract public class SuperPropertyList<UJO extends Ujo,LIST extends List<ITEM>, ITEM> 
-    extends SuperProperty<UJO, LIST> 
+abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITEM>, ITEM>
+    extends AbstractProperty<UJO, LIST>
     implements UjoPropertyList<UJO,LIST,ITEM> {
     
     private final Class<ITEM> itemType;
     
     /** Constructor */
-    public SuperPropertyList(String name, Class<LIST> type, Class<ITEM> itemType, int index) {
+    public AbstractPropertyList(String name, Class<LIST> type, Class<ITEM> itemType, int index) {
         super(name, type, index);
         this.itemType = itemType;
     }
@@ -115,7 +115,7 @@ abstract public class SuperPropertyList<UJO extends Ujo,LIST extends List<ITEM>,
      */
     @Override
     @Deprecated 
-    public <PROPERTY extends SuperProperty> PROPERTY setDefault(LIST value) {
+    public <PROPERTY extends AbstractProperty> PROPERTY setDefault(LIST value) {
         throw new UnsupportedOperationException("Property list can't have a non null value.");
     }
 

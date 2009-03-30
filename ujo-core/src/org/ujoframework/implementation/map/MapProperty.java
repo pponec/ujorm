@@ -18,7 +18,7 @@ package org.ujoframework.implementation.map;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SuperProperty;
+import org.ujoframework.extensions.AbstractProperty;
 
 /**
  * A Abstract property implementation.
@@ -26,7 +26,7 @@ import org.ujoframework.extensions.SuperProperty;
  * @author Pavel Ponec
  */
 public class MapProperty<UJO extends Ujo,VALUE> 
-    extends SuperProperty<UJO,VALUE> {
+    extends AbstractProperty<UJO,VALUE> {
        
     /** Constructor */
     public MapProperty(final String name, final Class<VALUE> type) {

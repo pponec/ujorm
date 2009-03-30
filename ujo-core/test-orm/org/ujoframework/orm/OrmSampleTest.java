@@ -120,7 +120,7 @@ public class OrmSampleTest extends TestCase {
 
 
     /**
-     * Test of getItemCount method, of class SuperPropertyList.
+     * Test of getItemCount method, of class AbstractPropertyList.
      */
     public void testGetItemCount() {
     }

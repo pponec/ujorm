@@ -13,14 +13,14 @@ import static org.ujoframework.extensions.PersonExt.*;
  * List testing ...
  * @author pavel
  */
-public class SuperPropertyListTest extends MyTestCase {
+public class AbstractPropertyListTest extends MyTestCase {
     
-    public SuperPropertyListTest(String testName) {
+    public AbstractPropertyListTest(String testName) {
         super(testName);
     }  
     
     public static TestSuite suite() {
-        return new TestSuite(SuperPropertyListTest.class);
+        return new TestSuite(AbstractPropertyListTest.class);
     }    
 
     @Override
@@ -34,7 +34,7 @@ public class SuperPropertyListTest extends MyTestCase {
     }
 
     /**
-     * Test of getItemCount method, of class SuperPropertyList.
+     * Test of getItemCount method, of class AbstractPropertyList.
      */
     public void testGetItemCount() {
         System.out.println("getItemCount");
@@ -92,7 +92,7 @@ public class SuperPropertyListTest extends MyTestCase {
     }
 
     /**
-     * Test of getItemCount method, of class SuperPropertyList.
+     * Test of getItemCount method, of class AbstractPropertyList.
      */
     public void testGetItemCount_EXT() {
         System.out.println("getItemCount_EXT");
