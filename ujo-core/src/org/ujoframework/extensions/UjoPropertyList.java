@@ -21,7 +21,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * A property metadata of Unified Data Object.
+ * A property list metadata of Unified Data Object.
  * @author Pavel Ponec
  */
 public interface UjoPropertyList<UJO extends Ujo, LIST extends List<ITEM>,ITEM> extends UjoProperty<UJO,LIST> {

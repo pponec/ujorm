@@ -33,7 +33,8 @@ import org.ujoframework.core.UjoComparator;
 abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITEM>, ITEM>
     extends AbstractProperty<UJO, LIST>
     implements UjoPropertyList<UJO,LIST,ITEM> {
-    
+
+    /** Class of the list item. */
     private final Class<ITEM> itemType;
     
     /** Constructor */
