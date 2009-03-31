@@ -86,7 +86,8 @@ abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITE
     }
     
     /**
-     * Return a not null List. If original list value is empty, the new List is created.
+     * Returns a not null List. If original list value is null, then a new List is created by a property type.
+     * If the property type is an interface then the ArrayList instance is used.
      * @see #getItem(Ujo,int)
      */
     @SuppressWarnings("unchecked")
