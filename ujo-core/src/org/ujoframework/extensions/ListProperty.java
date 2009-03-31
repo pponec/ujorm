@@ -20,7 +20,7 @@ import java.util.List;
 import org.ujoframework.Ujo;
 
 /**
- * Simplification version of the UjoPropertyList of type <strong>ArrayList</strong>.
+ * Simplification version of the UjoPropertyList of type <strong>List</strong>.
  * @author Pavel Ponec
  */
 public interface ListProperty<UJO extends Ujo, ITEM> extends UjoPropertyList<UJO,List<ITEM>,ITEM> {
