@@ -162,14 +162,19 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements ChangeRegi
         return result;
     }
 
-    /** Returns a changed properties. */
+    /** Returns a changed properties. The method is not the thread save.
+     * @param clear True value clears the property changes.
+     */
     @Override
-    public UjoProperty[] readChangedProperties() {
+    public UjoProperty[] readChangedProperties(boolean clear) {
         final UjoProperty[] result
             = changes!=null
             ? changes.toArray(new UjoProperty[changes.size()])
             : UjoManager.EMPTY_PROPERTIES
             ;
+        if (clear) {
+            changes = null;
+        }
         return result;
     }
 

@@ -144,7 +144,12 @@ public class SampleORM {
     /** Using UPDATE */
     public void useUpdate() {
         Session session = OrmHandler.getInstance().getSession();
-        // TODO ...
+        Order order = session.load(Order.class, 1L);
+        order.setDate(new Date());
+
+        session.update(order);
+        session.commit();
+
     }
 
     /** Using DELETE */

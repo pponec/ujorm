@@ -13,7 +13,10 @@ import org.ujoframework.UjoProperty;
  */
 public interface ChangeRegister {
 
-    /** Returns changed properties. */
-    public UjoProperty[] readChangedProperties();
+    /**
+     *  Returns changed properties.
+     * @param clear True value clears the property changes.
+     */
+    public UjoProperty[] readChangedProperties(boolean clear);
 
 }

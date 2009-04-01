@@ -172,17 +172,22 @@ public class Session {
         try {
             OrmTable table = handler.findTableModel((Class) ujo.getClass());
             OrmDatabase db = OrmTable.DATABASE.of(table);
-            List<OrmColumn> changedColumns = getOrmColumns(ujo.readChangedProperties());
+            List<OrmColumn> changedColumns = getOrmColumns(ujo.readChangedProperties(true));
             if (changedColumns.size()==0) {
                 LOGGER.warning("No changes to update in the object: " + ujo);
                 return;
             }
-            String sql = db.createUpdate(ujo, changedColumns);
-            LOGGER.log(Level.INFO, sql);
+            final Expression expression = createPkExpression(ujo);
+            final OrmTable ormTable = handler.findTableModel(ujo.getClass());
+            final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
+            String sql = db.createUpdate(ormTable, changedColumns, decoder);
+            LOGGER.log(Level.INFO, sql.toString());
+
             statement = getStatement(db, sql);
-            statement.assignValues(ujo);
+            statement.assignValues(ujo, changedColumns);
+            statement.assignValues(decoder);
             LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
-            statement.executeUpdate(); // execute insert statement
+            statement.executeUpdate(); // execute update statement
             ujo.writeSession(this);
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);

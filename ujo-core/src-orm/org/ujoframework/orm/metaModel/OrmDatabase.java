@@ -38,6 +38,7 @@ import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.annot.Db;
+import org.ujoframework.tools.criteria.Expression;
 
 /**
  * A logical database description.
@@ -127,16 +128,12 @@ public class OrmDatabase extends AbstractMetaModel {
     }
 
 
-    /** Create an SQL update */
-    public String createUpdate(TableUjo ujo, List<OrmColumn> changedColumns) {
-
-
-
-
+    /** Create an SQL update of the one row */
+    public String createUpdate(OrmTable table, List<OrmColumn> changedColumns, ExpressionDecoder decoder) {
         SqlRenderer renderer = getRenderer();
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(64);
         try {
-            renderer.printUpdate(ujo, changedColumns, result);
+            renderer.printUpdate(table, changedColumns, decoder, result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
