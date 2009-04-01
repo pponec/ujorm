@@ -76,6 +76,7 @@ public class JdbcStatement {
         ps.close();
     }
 
+    /** Run INSERT, UPDATE or DELETE. */
     public int executeUpdate() throws SQLException {
         return ps.executeUpdate();
     }

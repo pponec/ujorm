@@ -179,22 +179,33 @@ abstract public class SqlRenderer {
     }
 
     /** Print an SQL UPDATE statement.  */
-    public void printUpdate(TableUjo ujo, List<OrmColumn> changedColumns, Appendable writer) throws IOException {
-
-        OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
-        StringBuilder values = new StringBuilder();
+    public void printUpdate
+        ( OrmTable table
+        , List<OrmColumn> changedColumns
+        , ExpressionDecoder decoder
+        , Appendable writer
+        ) throws IOException
+    {
 
         writer.append("UPDATE ");
         writer.append(table.getFullName());
-        writer.append("\n\tSET (");
+        writer.append("\n\tSET ");
 
-        printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
-
-        writer.append(")\n\tVALUES (");
-        writer.append(values);
-        writer.append(");");
+        for (int i=0; i<changedColumns.size(); i++) {
+            OrmColumn ormColumn = changedColumns.get(i);
+            if (ormColumn.isPrimaryKey()) {
+                throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
+            }
+            if (i>0) {
+                writer.append(", ");
+            }
+            writer.append(ormColumn.getFullName());
+            writer.append("=? ");
+        }
+        writer.append("\n\tWHERE ");
+        writer.append(decoder.getSql());
+        writer.append(";");
     }
-
 
     /** Returns an SQL expression template. */
     public String getExpressionTemplate(ExpressionValue expr) {

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.ExpressionBinary;
 import org.ujoframework.tools.criteria.ExpressionValue;
@@ -38,6 +39,10 @@ public class ExpressionDecoder {
     final private Expression e;
     final private StringBuilder sql;
     final private List<ExpressionValue> values;
+
+    public ExpressionDecoder(Expression e, OrmTable ormTable) {
+        this(e, ormTable.getDatabase().getRenderer());
+    }
 
     public ExpressionDecoder(Expression e, SqlRenderer renderer) {
         this.e = e;

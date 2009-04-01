@@ -159,4 +159,9 @@ public class OrmTable extends AbstractMetaModel {
         DATABASE.setValue(this, null);
     }
 
+    /** Returns the database */
+    final public OrmDatabase getDatabase() {
+        return DATABASE.of(this);
+    }
+
 }

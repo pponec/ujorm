@@ -94,6 +94,13 @@ public class OrmColumn extends OrmRelation2Many {
         return result;
     }
 
+    /** Is it a Primary Key? */
+    public boolean isPrimaryKey() {
+        final boolean result = PRIMARY_KEY.of(this);
+        return result;
+    }
+
+
     /** Returns an original foreign columns in case a foreign column. */
     @SuppressWarnings("unchecked")
     public List<OrmColumn> getForeignColumns() {
