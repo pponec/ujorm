@@ -69,17 +69,17 @@ public class SampleORM {
 
     /** Using SELECT by QUERY */
     public void useSelectionOfOrder() {
-        Session session = OrmHandler.getInstance().getSession();
 
         Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "John's order");
         Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
         Expression<Order> expr = exp1.and(exp2);
 
+        Session session = OrmHandler.getInstance().getSession();
         Query<Order> query = session.createQuery(Order.class, expr);
         query.setCountRequest(true);  // need a count of iterator items, a default value is false
         query.setReadOnly(false);     // Read only result;
 
-        for (Order order : session.iterate( query)) {
+        for (Order order : query.iterate()) {
             String descr = order.getDescr();
             System.out.println("ORDER ROW: " + order + " // descr: " + descr);
         }
@@ -106,7 +106,7 @@ public class SampleORM {
         Expression<Item> expr = Expression.newInstance(Item.ORDER, orderValue);
         Query<Item> query = session.createQuery(expr);
 
-        for (Item item : session.iterate( query )) {
+        for (Item item : query.iterate()) {
             Order order2 = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
         }
