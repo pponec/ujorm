@@ -161,12 +161,14 @@ public class Session {
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
+        } finally {
+            OrmDatabase.close(null, statement, null, true);
         }
-        OrmDatabase.close(null, statement, null, true);
     }
 
     /** UPDATE object into table. */
-    public void update(TableUjo ujo) throws IllegalStateException {
+    public int update(TableUjo ujo) throws IllegalStateException {
+        int result = 0;
         JdbcStatement statement = null;
 
         try {
@@ -175,7 +177,7 @@ public class Session {
             List<OrmColumn> changedColumns = getOrmColumns(ujo.readChangedProperties(true));
             if (changedColumns.size()==0) {
                 LOGGER.warning("No changes to update in the object: " + ujo);
-                return;
+                return result;
             }
             final Expression expression = createPkExpression(ujo);
             final OrmTable ormTable = handler.findTableModel(ujo.getClass());
@@ -187,14 +189,60 @@ public class Session {
             statement.assignValues(ujo, changedColumns);
             statement.assignValues(decoder);
             LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
-            statement.executeUpdate(); // execute update statement
+            result = statement.executeUpdate(); // execute update statement
             ujo.writeSession(this);
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
+        } finally {
+            OrmDatabase.close(null, statement, null, true);
         }
-        OrmDatabase.close(null, statement, null, true);
+        return result;
     }
+
+    /** Try to delete the object form parameter.
+     * @param table The one object to delete
+     * @return Returns a number of the realy deleted objects.
+     */
+    public <UJO extends TableUjo> int delete(TableUjo table) {
+        final Expression expr = createPkExpression(table);
+        final int result = delete(table.getClass(), expr);
+        table.writeSession(null);
+        return result;
+    }
+
+
+    /** Delete all object object form parameter.
+     * @param tableType Type of table to delete
+     * @param expr filter for deleting tables.
+     * @return Returns a number of the realy deleted objects.
+     */
+    public <UJO extends TableUjo> int delete(final Class<UJO> tableType, final Expression<UJO> expression) {
+        int result = 0;
+        JdbcStatement statement = null;
+
+        try {
+            OrmTable table = handler.findTableModel(tableType);
+            OrmDatabase db = OrmTable.DATABASE.of(table);
+            final OrmTable ormTable = handler.findTableModel(tableType);
+            final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
+            String sql = db.createDelete(ormTable, decoder);
+            LOGGER.log(Level.INFO, sql.toString());
+
+            statement = getStatement(db, sql);
+            statement.assignValues(decoder);
+            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            result = statement.executeUpdate(); // execute delete statement
+        } catch (Throwable e) {
+            OrmDatabase.close(null, statement, null, false);
+            throw new IllegalStateException("ILLEGAL SQL UPDATE", e);
+        } finally {
+            OrmDatabase.close(null, statement, null, true);
+        }
+        return result;
+
+    }
+
 
     /** Convert a property array to a column list. */
     protected List<OrmColumn> getOrmColumns(UjoProperty... properties) {
@@ -250,7 +298,6 @@ public class Session {
         } catch (Throwable e) {
             throw new IllegalStateException("ILLEGAL SQL SELECT", e);
         }
-
     }
 
     public <UJO extends TableUjo> UJO single(Query query) {
@@ -267,7 +314,6 @@ public class Session {
         }
         return null;
     }
-
 
     /** Iterate property of values
      * @param property
