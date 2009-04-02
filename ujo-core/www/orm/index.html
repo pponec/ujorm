@@ -55,12 +55,10 @@
            <li>restricted cache is suitable for a large transactions and a selecting uncommited changes</li>
            <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
         </ul>
-
-        <strong>Note</strong>: the API design a very early prototype, some methods are not implemented yet.
+        <strong>Note</strong>: the current release is an early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements on the in-memory database table.
 
 
         <h3>A sample of use</h3>
-
         See how to create database and INSERT an order with two items into database:
 
 <pre name="code" class="java">
@@ -72,16 +70,16 @@
   Session session = OrmHandler.getInstance().getSession();
 
   Order order = new Order();
-  order.set(Order.DATE , new Date());
-  order.set(Order.DESCR, "John's order");
+  order.setDate(new Date());
+  order.setDescr("John's order");
 
   Item item1 = new Item();
-  item1.set(Item.ORDER, order);
-  item1.set(Item.DESCR, "Yellow table");
+  item1.setOrder(order);
+  item1.setDescr("Yellow table");
 
   Item item2 = new Item();
-  item2.set(Item.ORDER, order);
-  item2.set(Item.DESCR, "Green window");
+  item2.setOrder(order);
+  item2.setDescr("Green window");
 
   session.save(order);
   session.save(item1);
@@ -92,20 +90,16 @@
 
 The next source code calls a SELECT by a UJO query language:
 <pre name="code" class="java">
-  Session session = OrmHandler.getInstance().getSession();
-
   Expression&lt;Order&gt; exp1 = Expression.newInstance(Order.DESCR, "John's order");
   Expression&lt;Order&gt; exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
   Expression&lt;Order&gt; expr = exp1.and(exp2);
 
+  Session session = OrmHandler.getInstance().getSession();
   Query&lt;Order&gt; query = session.createQuery(Order.class, expr);
-  query.setCountRequest(true);  // need a count of iterator items, a default value is false
-  query.setReadOnly(false);     // Read only result;
 
-  for (Order order : session.iterate( query ) ) {
-      Long id = order.get(Order.ID);
-      String descr = order.get(Order.DESCR);
-      System.out.println("Order id: " + id + " descr: " + descr);
+  for (Order order : query.iterate()) {
+      String descr = order.getDescr();
+      System.out.println("ORDER ROW: " + order + " // descr: " + descr);
   }
 </pre>
 
@@ -116,13 +110,12 @@ The next source code calls a SELECT by an UJO object relation:
 
   UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
   for (Order order : orders) {
-      Long id = order.get(Order.ID);
-      String descr = order.get(Order.DESCR);
-      System.out.println("Order id: " + id + " descr: " + descr);
+      String descr = order.getDescr();
+      System.out.println("Order: " + order + " // descr: " + descr);
 
-      for (Item item : order.get(Order.ITEMS)) {
-          Long itemId = item.get(Item.ID);
-          String itemDescr = item.get(Item.DESCR);
+      for (Item item : order.getItems()) {
+          Long itemId = item.getId();
+          String itemDescr = item.getDescr();
           System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
       }
   }
@@ -130,9 +123,9 @@ The next source code calls a SELECT by an UJO object relation:
 
         <h3>More sources:</h3>
           <ul>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of business object</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of business object</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of metamodel</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description for a metamodel</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using</li>
               <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
               <li><a href="http://ujoframework.org/javadoc.beta/">JavaDoc</a> beta version</li>

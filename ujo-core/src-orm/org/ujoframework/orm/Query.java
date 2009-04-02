@@ -18,6 +18,7 @@ package org.ujoframework.orm;
 
 import java.util.List;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoIterator;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmTable;
@@ -102,4 +103,9 @@ public class Query<UJO extends TableUjo> {
         return columns.get(index);
     }
 
+    /** Create a new iterator by the query. */
+    public UjoIterator<UJO> iterate() {
+        final UjoIterator<UJO> result = session.iterate(this);
+        return result;
+    }
 }

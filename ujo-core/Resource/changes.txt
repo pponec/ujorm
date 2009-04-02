@@ -2,7 +2,7 @@ The UJO Framework release notes
 *******************************
 
 release 0.85 (2009-XX-XX)
-+ ORM support - the early alpha version of API
++ ORM support - the early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements on the in-memory database table
 + XML element body value support by the annotation @XmlElementBody
 + Super classes was renamed to the Abstract classes
 
