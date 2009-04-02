@@ -31,7 +31,7 @@ import org.ujoframework.tools.criteria.Operator;
 public class SampleORM {
 
     /** Create database and using INSERT */
-    public void useCreateItem() {
+    public void useInsert() {
 
         if (true) {
             OrmHandler.getInstance().createDatabase(Database.class);
@@ -68,7 +68,7 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
-    public void useOrderSelection() {
+    public void useSelectionOfOrder() {
         Session session = OrmHandler.getInstance().getSession();
 
         Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "John's order");
@@ -86,7 +86,7 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
-    public void useItemSelection_1() {
+    public void useSelectionOfItem_1() {
         Session session = OrmHandler.getInstance().getSession();
 
         Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
@@ -99,7 +99,7 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
-    public void useItemSelection_2() {
+    public void useSelectionOfItem_2() {
         Session session = OrmHandler.getInstance().getSession();
 
         Order orderValue = session.load(Order.class, 1L);
@@ -113,7 +113,7 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
-    public void useItemSelection_3() {
+    public void useSelectionOfItem_3() {
         Session session = OrmHandler.getInstance().getSession();
         Order orderValue = session.load(Order.class, 1L);
 
@@ -149,32 +149,31 @@ public class SampleORM {
 
         session.update(order);
         session.commit();
-
     }
 
-    /** Using DELETE */
+    /** Using DELETE SQL */
     public void useDelete() {
         Session session = OrmHandler.getInstance().getSession();
-        // TODO ...
+        Expression<Item> expr = Expression.newInstance(Item.ID, 1);
+        int count = session.delete(Item.class, expr);
+        session.commit();
+        System.out.println("There are DELETED rows: " + count);
     }
 
     /** Test */
     public static void main(String[] args) {
-
         try {
+
             SampleORM sample = new SampleORM();
-            sample.useCreateItem();
-            sample.useOrderSelection();
-            sample.useItemSelection_1();
-            sample.useItemSelection_2();
-            sample.useItemSelection_3();
+            sample.useInsert();
+            sample.useSelectionOfOrder();
+            sample.useSelectionOfItem_1();
+            sample.useSelectionOfItem_2();
+            sample.useSelectionOfItem_3();
             sample.useRelation();
-            // --------------------------
             sample.useUpdate();
             sample.useDelete();
 
-
-            //session.close();
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {

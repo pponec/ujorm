@@ -140,6 +140,18 @@ public class OrmDatabase extends AbstractMetaModel {
         return result.toString();
     }
 
+    /** Create an SQL delete by an expression. */
+    public String createDelete(OrmTable table, ExpressionDecoder decoder) {
+        SqlRenderer renderer = getRenderer();
+        StringBuilder result = new StringBuilder(64);
+        try {
+            renderer.printDelete(table, decoder, result);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result.toString();
+    }
+
     /** Create an SQL select */
     public ExpressionDecoder createSelect(Query query, Appendable result ) {
         SqlRenderer renderer = getRenderer();

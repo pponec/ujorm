@@ -60,7 +60,7 @@ public class ExpressionDecoder {
         if (e.isBinary()) {
             unpackBinary((ExpressionBinary)e);
         } else try {
-            ExpressionValue value = renderer.print((ExpressionValue) e, sql);
+            ExpressionValue value = renderer.printCondition((ExpressionValue) e, sql);
             if (value!=null) {
                 values.add(value);
             }

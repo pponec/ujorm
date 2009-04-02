@@ -207,6 +207,20 @@ abstract public class SqlRenderer {
         writer.append(";");
     }
 
+    /** Print an SQL DELETE statement.  */
+    public void printDelete
+        ( OrmTable table
+        , ExpressionDecoder decoder
+        , Appendable writer
+        ) throws IOException
+    {
+        writer.append("DELETE FROM ");
+        writer.append(table.getFullName());
+        writer.append(" WHERE ");
+        writer.append(decoder.getSql());
+        writer.append(";");
+    }
+
     /** Returns an SQL expression template. */
     public String getExpressionTemplate(ExpressionValue expr) {
 
@@ -272,10 +286,10 @@ abstract public class SqlRenderer {
     }
 
 
-    /** Print expression.
+    /** Print a conditon phrase by the expression.
      * @return A value expression to assign into the SQL query.
      */
-    public ExpressionValue print(ExpressionValue expr, Appendable writer) throws IOException {
+    public ExpressionValue printCondition(ExpressionValue expr, Appendable writer) throws IOException {
         Operator operator = expr.getOperator();
         UjoProperty property = expr.getLeftNode();
         Object right = expr.getRightNode();
