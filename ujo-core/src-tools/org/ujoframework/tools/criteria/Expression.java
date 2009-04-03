@@ -99,13 +99,25 @@ public abstract class Expression<UJO extends Ujo> {
         return new ExpressionValue<UJO>(property, Operator.EQ, property);
     }
 
-    /** This is an constane expression independed on an entity. */
+    /** This is an constane expression independed on an entity.
+     * It is recommended not to use this solution in ORM.
+     */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> Expression<UJO> newInstance(boolean value) {
-        return (Expression<UJO>) (value 
+        return (Expression<UJO>) (value
             ? ExpressionValue.TRUE
             : ExpressionValue.FALSE
             );
+    }
+
+    /** This is a constant expression independed on the property and the ujo entity. A result is the TRUE allways. */
+    public static <UJO extends Ujo> Expression<UJO> newInstanceTrue(UjoProperty<UJO,?> property) {
+        return new ExpressionValue<UJO>(property, Operator.€_FIXED, true);
+    }
+
+    /** This is a constant expression independed on the property and the ujo entity. A result is the FALSE allways. */
+    public static <UJO extends Ujo> Expression<UJO> newInstanceFalse(UjoProperty<UJO,?> property) {
+        return new ExpressionValue<UJO>(property, Operator.€_FIXED, false);
     }
 
     /** Is a Binary expression? */

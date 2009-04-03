@@ -113,14 +113,14 @@ public class Session {
         return new Query<UJO>(table, expression, this);
     }
 
-    /** Returns the first basic column */
+    /** Returns the first "basic" column of expression. */
     public OrmRelation2Many getBasicColumn(Expression expression) {
         while (expression.isBinary()) {
             expression = ((ExpressionBinary) expression).getLeftNode();
         }
 
         ExpressionValue exprValue = (ExpressionValue) expression;
-        if (exprValue.isConstant()) {
+        if (exprValue.getLeftNode()==null) {
             return null;
         }
         UjoProperty property = exprValue.getLeftNode();
