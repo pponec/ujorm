@@ -40,13 +40,25 @@ public class Query<UJO extends TableUjo> {
     /** Result is a readOnly, default value is false */
     private boolean readOnly = false;
 
-    public Query(Class<UJO> tableType, Expression<UJO> expression, Session session) {
-        this( OrmHandler.getInstance().findTableModel(tableType)
+    /**
+     * Create new ORM query.
+     * @param tableClass Table can be null if the expression parameter is not null and contains a table Property.
+     * @param expression If expression is null, then a TRUE constant expression is used.
+     * @param session Session
+     */
+    public Query(Class<UJO> tableClass, Expression<UJO> expression, Session session) {
+        this( OrmHandler.getInstance().findTableModel(tableClass)
             , expression
             , session
             );
     }
 
+    /**
+     * Create new ORM query.
+     * @param tableClass Table model
+     * @param expression If expression is null, then a TRUE constant expression is used.
+     * @param session Session
+     */
     public Query(OrmTable table, Expression<UJO> expression, Session session) {
         this.table = table;
         this.columns = OrmTable.COLUMNS.getList(table);
