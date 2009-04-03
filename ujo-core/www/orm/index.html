@@ -50,12 +50,12 @@
         <ul>
            <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
            <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
-           <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files </li>
+           <li>default ORM mapping is based on the UjoProperty however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files </li>
            <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
            <li>restricted cache is suitable for a large transactions and a selecting uncommited changes</li>
            <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
         </ul>
-        <strong>Note</strong>: the current release is an early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements on the in-memory database table.
+        <strong>Note</strong>: the current release is an early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements with no cache on the in-memory database table.
 
 
         <h3>A sample of use</h3>
@@ -95,7 +95,7 @@ The next source code calls a SELECT by a UJO query language:
   Expression&lt;Order&gt; expr = exp1.and(exp2);
 
   Session session = OrmHandler.getInstance().getSession();
-  Query&lt;Order&gt; query = session.createQuery(Order.class, expr);
+  Query&lt;Order&gt; query = session.createQuery(expr);
 
   for (Order order : query.iterate()) {
       String descr = order.getDescr();
@@ -125,7 +125,7 @@ The next source code calls a SELECT by an UJO object relation:
           <ul>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description for a metamodel</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description of a metamodel</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using</li>
               <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
               <li><a href="http://ujoframework.org/javadoc.beta/">JavaDoc</a> beta version</li>

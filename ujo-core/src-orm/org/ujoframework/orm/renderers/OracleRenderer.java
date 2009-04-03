@@ -16,7 +16,19 @@
 
 package org.ujoframework.orm.renderers;
 
+import org.ujoframework.orm.SqlRenderer;
+
 /** Oracle (www.oracle.com/)  - renderer is not supported yet */
-public class OracleRenderer extends H2Renderer {
+public class OracleRenderer extends SqlRenderer {
+
+    @Override
+    public String getJdbcUrl() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getJdbcDriver() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

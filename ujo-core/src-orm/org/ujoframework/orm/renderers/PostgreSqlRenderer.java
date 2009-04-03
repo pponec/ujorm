@@ -16,7 +16,19 @@
 
 package org.ujoframework.orm.renderers;
 
+import org.ujoframework.orm.SqlRenderer;
+
 /** PostgreSQL (http://www.postgresql.org/) - renderer is not supported yet */
-public class PostgreSqlRenderer extends H2Renderer {
+public class PostgreSqlRenderer extends SqlRenderer {
+
+    @Override
+    public String getJdbcUrl() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getJdbcDriver() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

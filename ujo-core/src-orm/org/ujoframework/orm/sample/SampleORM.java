@@ -75,7 +75,7 @@ public class SampleORM {
         Expression<Order> expr = exp1.and(exp2);
 
         Session session = OrmHandler.getInstance().getSession();
-        Query<Order> query = session.createQuery(Order.class, expr);
+        Query<Order> query = session.createQuery(expr);
         query.setCountRequest(true);  // need a count of iterator items, a default value is false
         query.setReadOnly(false);     // Read only result;
 

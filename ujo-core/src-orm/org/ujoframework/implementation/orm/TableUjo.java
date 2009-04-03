@@ -105,9 +105,9 @@ import org.ujoframework.orm.Session;
  *          String descr = order.get(Order.DESCR);
  *          System.out.println(<span class="character">&quot;</span><span class="character">Order id: </span><span class="character">&quot;</span> + id + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + descr);
  *
- *          <span class="keyword-directive">for</span> (Item item : Order.ITEMS.of(order)) {
+ *          <span class="keyword-directive">for</span> (Item item : order.get(Order.ITEMS)) {
  *              Long itemId = item.get(Item.ID);
- *              String itemDescr = item.get(Item.DESCR.of);
+ *              String itemDescr = item.get(Item.DESCR);
  *              System.out.println(<span class="character">&quot;</span><span class="character"> Item id: </span><span class="character">&quot;</span> + itemId + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + itemDescr);
  *          }
  *      }

@@ -16,7 +16,19 @@
 
 package org.ujoframework.orm.renderers;
 
+import org.ujoframework.orm.SqlRenderer;
+
 /** Derby (http://db.apache.org/derby/)  - renderer is not supported yet */
-public class DerbyRenderer extends H2Renderer {
+public class DerbyRenderer extends SqlRenderer {
+
+    @Override
+    public String getJdbcUrl() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getJdbcDriver() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }
