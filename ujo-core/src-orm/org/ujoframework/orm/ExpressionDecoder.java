@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
@@ -29,7 +30,7 @@ import org.ujoframework.tools.criteria.Operator;
 
 /**
  * SQL Expression Decoder.
- * @author pavel
+ * @author Ponec
  */
 public class ExpressionDecoder {
 
@@ -141,7 +142,6 @@ public class ExpressionDecoder {
         }
     }
 
-
     public Expression getExpression() {
         return e;
     }
@@ -155,5 +155,21 @@ public class ExpressionDecoder {
         return sql.length()==0;
     }
 
+    /** Returns the first direct property. */
+    public UjoProperty getBaseProperty() {
+        UjoProperty result = null;
+        for (ExpressionValue eval : values) {
+            if (eval.getLeftNode()!=null) {
+                result = eval.getLeftNode();
+                break;
+            }
+        }
+        while(result!=null
+          && !result.isDirect()
+        ){
+            result = ((PathProperty)result).getProperty(0);
+        }
+        return result;
+    }
 
 }
