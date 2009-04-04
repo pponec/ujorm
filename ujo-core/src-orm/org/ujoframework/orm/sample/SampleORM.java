@@ -68,52 +68,51 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
-    public void useSelectionOfOrder() {
+    public void useSelectOrders() {
 
         Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "John's order");
         Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
         Expression<Order> expr = exp1.and(exp2);
 
         Session session = OrmHandler.getInstance().getSession();
-        Query<Order> query = session.createQuery(expr);
-        query.setCountRequest(true);  // need a count of iterator items, a default value is false
-        query.setReadOnly(false);     // Read only result;
+        UjoIterator<Order> orders = session.createQuery(expr).iterate();
+        System.out.println("ORDER COUNT: " + orders.count());
 
-        for (Order order : query.iterate()) {
+        for (Order order : orders) {
             String descr = order.getDescr();
             System.out.println("ORDER ROW: " + order + " // descr: " + descr);
         }
     }
 
     /** Using SELECT by QUERY */
-    public void useSelectionOfItem_1() {
+    public void useSelectItems_1() {
         Session session = OrmHandler.getInstance().getSession();
 
         Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
-        Query<Item> query = session.createQuery(expr);
+        UjoIterator<Item> items = session.createQuery(expr).iterate();
 
-        for (Item item : session.iterate( query )) {
+        for (Item item : items) {
             Order order = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order);
         }
     }
 
     /** Using SELECT by QUERY */
-    public void useSelectionOfItem_2() {
+    public void useSelectItems_2() {
         Session session = OrmHandler.getInstance().getSession();
 
         Order orderValue = session.load(Order.class, 1L);
         Expression<Item> expr = Expression.newInstance(Item.ORDER, orderValue);
-        Query<Item> query = session.createQuery(expr);
+        UjoIterator<Item> items = session.createQuery(expr).iterate();
 
-        for (Item item : query.iterate()) {
+        for (Item item : items) {
             Order order2 = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
         }
     }
 
     /** Using SELECT by QUERY */
-    public void useSelectionOfItem_3() {
+    public void useSelectItems_3() {
         Session session = OrmHandler.getInstance().getSession();
         Order orderValue = session.load(Order.class, 1L);
 
@@ -121,6 +120,33 @@ public class SampleORM {
             Order order2 = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
         }
+    }
+
+    /** Using SELECT by QUERY */
+    public void useSelectCount() {
+        Session session = OrmHandler.getInstance().getSession();
+        Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Query<Item> query = session.createQuery(expr);
+
+        long count = query.getCount();
+        System.out.println("Count of the order items: " + count);
+    }
+
+    /** Using SKIP on UjoIterator */
+    public void useIteratorSkip() {
+        Session session = OrmHandler.getInstance().getSession();
+        Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.NOT_EQ, "XXXXX");
+        UjoIterator<Item> iterator = session.createQuery(expr).iterate();
+        
+        boolean skip = iterator.skip(0);
+        if (iterator.hasNext()) {
+            Item item = iterator.next();
+            System.out.println("Item : " + item);
+        }
+
+        skip = iterator.skip(1);
+        boolean isNext =  iterator.hasNext();
+        System.out.println("Next: " + isNext);
     }
 
     /** Using SELECT by a object relations */
@@ -166,10 +192,12 @@ public class SampleORM {
 
             SampleORM sample = new SampleORM();
             sample.useInsert();
-            sample.useSelectionOfOrder();
-            sample.useSelectionOfItem_1();
-            sample.useSelectionOfItem_2();
-            sample.useSelectionOfItem_3();
+            sample.useSelectOrders();
+            sample.useSelectItems_1();
+            sample.useSelectItems_2();
+            sample.useSelectItems_3();
+            sample.useSelectCount();
+            sample.useIteratorSkip();
             sample.useRelation();
             sample.useUpdate();
             sample.useDelete();

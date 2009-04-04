@@ -277,6 +277,32 @@ public class Session {
             ;
     }
 
+    /** Returns a count of rows */
+    public <UJO extends TableUjo> long getRowCount(Query<UJO> query) {
+        long result = -1;
+        JdbcStatement statement = null;
+        ResultSet rs = null;
+
+        OrmTable table = query.getTableModel();
+        OrmDatabase db = OrmTable.DATABASE.of(table);
+        StringBuilder sql = new StringBuilder();
+        ExpressionDecoder decoder = db.createSelect(query, sql, true);
+        LOGGER.log(Level.INFO, sql.toString());
+        try {
+            statement = getStatement(db, sql);
+            statement.assignValues(decoder);
+            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+
+            rs = statement.executeQuery(); // execute a select statement
+            result = rs.next() ? rs.getLong(1) : 0 ;
+        } catch (Exception e) {
+            throw new RuntimeException("Can't perform SQL statement: " + sql, e);
+        } finally {
+            OrmDatabase.close(null, statement, rs, false);
+        }
+        return result;
+    }
+
     /** Run SQL SELECT by query. */
     public <UJO extends TableUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
         JdbcStatement statement = null;
@@ -285,13 +311,13 @@ public class Session {
             OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
             StringBuilder sql = new StringBuilder();
-            ExpressionDecoder decoder = db.createSelect(query, sql);
+            ExpressionDecoder decoder = db.createSelect(query, sql, false);
             LOGGER.log(Level.INFO, sql.toString());
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
             LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
 
-            ResultSet rs = statement.executeQuery(); // execute select statement
+            ResultSet rs = statement.executeQuery(); // execute a select statement
             UjoIterator<UJO> result = UjoIterator.getIntance(query, rs);
             return result;
 

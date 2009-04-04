@@ -95,9 +95,10 @@ The next source code calls a SELECT by a UJO query language:
   Expression&lt;Order&gt; expr = exp1.and(exp2);
 
   Session session = OrmHandler.getInstance().getSession();
-  Query&lt;Order&gt; query = session.createQuery(expr);
+  UjoIterator&lt;Order&gt; orders = session.createQuery(expr).iterate();
+  System.out.println("ORDER COUNT: " + orders.count());
 
-  for (Order order : query.iterate()) {
+  for (Order order : orders) {
       String descr = order.getDescr();
       System.out.println("ORDER ROW: " + order + " // descr: " + descr);
   }
@@ -107,8 +108,8 @@ The next source code calls a SELECT by an UJO object relation:
 <pre name="code" class="java">
   Session session = OrmHandler.getInstance().getSession();
   Database db = session.getDatabase();
-
   UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
+  
   for (Order order : orders) {
       String descr = order.getDescr();
       System.out.println("Order: " + order + " // descr: " + descr);
@@ -126,7 +127,7 @@ The next source code calls a SELECT by an UJO object relation:
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description of a metamodel</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using, the code is ready for immediate launch inside the project.</li>
               <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
               <li><a href="http://ujoframework.org/javadoc.beta/">JavaDoc</a> beta version</li>
               <li><a href="http://ujoframework.org/presentation/">UJO quick start</a> (a slide show)</li>
