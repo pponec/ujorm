@@ -28,7 +28,7 @@ import org.ujoframework.orm.Query;
 /**
  * Ujo iterator have got some extended functions:
  * <ul>
- *    <li>iterator can provide optionally a count of items by a size() method</li>
+ *    <li>iterator can provide optionally a count of items by a count() method</li>
  *    <li>iterator can be used in generic loop syntax for( : ) </li>
  *    <li>iterator can create a List object</li>
  * </ul>
@@ -49,8 +49,8 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     abstract public T next() throws NoSuchElementException;
 
     /** Returns a count of items or value -1 if the count is not known. */
-    public int size() {
-        return -1;
+    public long count() {
+        return -1L;
     }
 
     /** Returns the same instance */
@@ -65,9 +65,21 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
         throw new UnsupportedOperationException();
     }
 
+    /** Skip some items by the parameter.
+     * @param count A count of item to skip.
+     * @return Returns a true value if the skip count was no limited.
+     */
+    public boolean skip(int count) {
+        for (; count>0 && hasNext(); --count) {
+            next();
+        }
+        return count==0;
+    }
+
+
     /** Copy items to a new List */
-    public List<T> toList() {
-        final List<T> result = new ArrayList<T>(size()>=0 ? size() : 10);
+    public List<T> toList() throws IllegalStateException {
+        final List<T> result = new ArrayList<T>(32);
         for (T item : this) {
             result.add(item);
         }
@@ -77,7 +89,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     /** Returns a count of items. */
     @Override
     public String toString() {
-        return "size: " + size();
+        return "size: " + count();
     }
 
     // --- STATIC FACTORY ---------

@@ -369,10 +369,14 @@ abstract public class SqlRenderer {
     }
 
     /** Print SQL SELECT */
-    public ExpressionDecoder printSelect(Query query, Appendable writer) throws IOException {
+    public ExpressionDecoder printSelect(Query query, Appendable writer, boolean count) throws IOException {
         ExpressionDecoder result = null;
         writer.append("SELECT ");
-        printTableColumns(query.getColumns(), writer, null);
+        if (count) {
+            writer.append("COUNT(*)");
+        } else {
+            printTableColumns(query.getColumns(), writer, null);
+        }
         writer.append("\n\tFROM ");
         writer.append(OrmTable.NAME.of(query.getTableModel()));
 

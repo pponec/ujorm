@@ -66,6 +66,12 @@ public class Query<UJO extends TableUjo> {
         this.session = session;
     }
 
+    /** Returns a count of the items */
+    public long getCount() {
+        final long result = session.getRowCount(this);
+        return result;
+    }
+
     public <ITEM> void setParameter(UjoProperty<UJO,ITEM> property, ITEM value) {
         throw new UnsupportedOperationException("Not yet implemented");
     }

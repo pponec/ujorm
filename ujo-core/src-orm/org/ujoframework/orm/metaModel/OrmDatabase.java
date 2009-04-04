@@ -38,7 +38,6 @@ import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.annot.Db;
-import org.ujoframework.tools.criteria.Expression;
 
 /**
  * A logical database description.
@@ -152,11 +151,17 @@ public class OrmDatabase extends AbstractMetaModel {
         return result.toString();
     }
 
-    /** Create an SQL select */
-    public ExpressionDecoder createSelect(Query query, Appendable result ) {
+    /**
+     * Create an SQL select
+     * @param query Ujo query
+     * @param result An appendable object for writting the result SQL statement.
+     * @param count The true value is a request to return a count of filtered row only.
+     * @return
+     */
+    public ExpressionDecoder createSelect(Query query, Appendable result, boolean count) {
         SqlRenderer renderer = getRenderer();
         try {
-            final ExpressionDecoder decoder = renderer.printSelect(query, result);
+            final ExpressionDecoder decoder = renderer.printSelect(query, result, count);
             return decoder;
         } catch (IOException e) {
             throw new RuntimeException(e);

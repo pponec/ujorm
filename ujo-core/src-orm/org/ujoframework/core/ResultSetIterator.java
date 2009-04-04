@@ -12,15 +12,19 @@ import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.OrmColumn;
 
 /**
- * ResultSet iterator. It is not thread safe implementation.
+ * ResultSet iterator. It is not a thread safe implementation.
  * @author pavel
  */
 public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
 
     final Query query;
     final ResultSet rs;
+    /** A count of the item count, the negative value means the undefined value. */
+    private long count = -1L;
+    /** A state before the first reading a BO. An auxiliary variable.*/
+    private boolean initState = true;
 
-    /** It the cursor ready for reading? After a recored reading the value will be false. */
+    /** It the cursor ready for reading? After a row reading the value will be set to false. */
     private boolean cursorReady = false;
     /** Has a resultset a next row? */
     private boolean hasNext = true;
@@ -82,10 +86,37 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
                 column.setValue(row, value);
             }
             row.writeSession(query.getSession());
+            if (initState) { initState=false; }
             return row;
         } catch (Throwable e) {
             throw new UnsupportedOperationException("Query: " + query, e);
         }
     }
-    
+
+    /** Returns the count if items.
+     * The fist call can perform a new SQL statement.
+     * This additional SQL calling is skipped if the result is zero.
+     */
+    @Override
+    public long count() {
+        if (count<0L) {
+            count = !hasNext() && initState
+            ? 0L
+            : query.getCount()
+            ;
+        }
+        return count;
+    }
+
+    /** Skip some rows by the parameter without reading date from a ResultSet.
+     * @param count A count of item to skip.
+     * @return Returns a true value if the skip count was no limited.
+     */
+    @Override
+    public boolean skip(int count) {
+        for (; count>0 && hasNext(); --count) {
+            cursorReady=false;
+        }
+        return count==0;
+    }
 }

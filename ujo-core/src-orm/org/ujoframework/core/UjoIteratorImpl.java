@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 /**
  * Ujo iterator have got some extended functions:
  * <ul>
- *    <li>iterator can provide optionally a count of items by a size() method</li>
+ *    <li>iterator can provide optionally a count of items by a count() method</li>
  *    <li>iterator can be used in generic loop syntax for( : ) </li>
  *    <li>iterator can create a List object</li>
  * </ul>
@@ -32,11 +32,11 @@ import java.util.NoSuchElementException;
 public class UjoIteratorImpl<T> extends UjoIterator<T> {
 
     final private Enumeration<T> e;
-    final private int size;
+    final private long count;
 
-    public UjoIteratorImpl(final Enumeration<T> enumeration, int size ) {
+    public UjoIteratorImpl(final Enumeration<T> enumeration, long count) {
         this.e = enumeration;
-        this.size = size;
+        this.count = count;
     }
 
     public UjoIteratorImpl(final Enumeration<T> enumeration) {
@@ -58,8 +58,9 @@ public class UjoIteratorImpl<T> extends UjoIterator<T> {
     }
 
     /** Returns a count of items or value -1 if the count is not defined. */
-    public int size() {
-        return size;
+    @Override
+    public long count() {
+        return count;
     }
 
 
