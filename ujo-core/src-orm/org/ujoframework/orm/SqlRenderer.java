@@ -169,11 +169,11 @@ abstract public class SqlRenderer {
 
         writer.append("INSERT INTO ");
         writer.append(table.getFullName());
-        writer.append("\n\t(");
+        writer.append(" (");
 
         printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
 
-        writer.append(")\n\tVALUES (");
+        writer.append(") VALUES (");
         writer.append(values);
         writer.append(");");
     }

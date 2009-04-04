@@ -38,7 +38,6 @@ public class SampleORM {
         } else {
             OrmHandler.getInstance().loadDatabase(Database.class);
         }
-        Session session = OrmHandler.getInstance().getSession();
 
         Order order = new Order();
         order.setDate(new Date());
@@ -56,6 +55,7 @@ public class SampleORM {
         System.out.println("item1: " + item1);
         System.out.println("item2: " + item2);
 
+        Session session = OrmHandler.getInstance().getSession();
         session.save(order);
         session.save(item1);
         session.save(item2);
