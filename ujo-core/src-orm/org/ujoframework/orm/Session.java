@@ -45,6 +45,9 @@ import org.ujoframework.tools.criteria.ExpressionValue;
 @SuppressWarnings(value = "unchecked")
 public class Session {
 
+    /** Commin title to print the SQL VALUES */
+    private static final String SQL_VALUES = "SQL VALUES: ";
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
 
@@ -155,7 +158,7 @@ public class Session {
             LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
             statement.assignValues(ujo);
-            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
             ujo.writeSession(this);
         } catch (Throwable e) {
@@ -188,7 +191,7 @@ public class Session {
             statement = getStatement(db, sql);
             statement.assignValues(ujo, changedColumns);
             statement.assignValues(decoder);
-            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
             result = statement.executeUpdate(); // execute update statement
             ujo.writeSession(this);
         } catch (Throwable e) {
@@ -231,7 +234,7 @@ public class Session {
 
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
-            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
             result = statement.executeUpdate(); // execute delete statement
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
@@ -291,7 +294,7 @@ public class Session {
         try {
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
-            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
             rs = statement.executeQuery(); // execute a select statement
             result = rs.next() ? rs.getLong(1) : 0 ;
@@ -315,7 +318,7 @@ public class Session {
             LOGGER.log(Level.INFO, sql.toString());
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
-            LOGGER.log(Level.INFO, "VALUES: " + statement.getAssignedValues());
+            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
             ResultSet rs = statement.executeQuery(); // execute a select statement
             UjoIterator<UJO> result = UjoIterator.getIntance(query, rs);

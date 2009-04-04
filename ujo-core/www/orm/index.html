@@ -67,7 +67,6 @@
   } else {
       OrmHandler.getInstance().loadDatabase(Database.class);
   }
-  Session session = OrmHandler.getInstance().getSession();
 
   Order order = new Order();
   order.setDate(new Date());
@@ -81,6 +80,7 @@
   item2.setOrder(order);
   item2.setDescr("Green window");
 
+  Session session = OrmHandler.getInstance().getSession();
   session.save(order);
   session.save(item1);
   session.save(item2);
@@ -96,7 +96,7 @@ The next source code calls a SELECT by a UJO query language:
 
   Session session = OrmHandler.getInstance().getSession();
   UjoIterator&lt;Order&gt; orders = session.createQuery(expr).iterate();
-  System.out.println("ORDER COUNT: " + orders.count());
+  System.out.println("ORDER COUNT: " + orders.count()); // method calls SQL SELECT COUNT(*) in case the iterator can provide first item!
 
   for (Order order : orders) {
       String descr = order.getDescr();
