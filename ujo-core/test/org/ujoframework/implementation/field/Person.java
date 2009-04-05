@@ -10,7 +10,7 @@ import org.ujoframework.extensions.ValueAgent;
 
 /**
  * DEMO
- * @author pavel
+ * @author Pavel Ponec
  */
 public class Person extends FieldUjo {
     

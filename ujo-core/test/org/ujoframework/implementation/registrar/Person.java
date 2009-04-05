@@ -9,7 +9,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class Person extends RegistrarUjoExt<Person> {
     

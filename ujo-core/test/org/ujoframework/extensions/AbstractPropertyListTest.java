@@ -11,7 +11,7 @@ import static org.ujoframework.extensions.PersonExt.*;
 
 /**
  * List testing ...
- * @author pavel
+ * @author Pavel Ponec
  */
 public class AbstractPropertyListTest extends MyTestCase {
     

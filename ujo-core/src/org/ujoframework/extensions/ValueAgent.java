@@ -8,7 +8,7 @@ package org.ujoframework.extensions;
 /**
  * The ValueAgent make reading or writing a property value.
  * The interface is designed for implementation to a UjoProperty.
- * @author pavel
+ * @author Pavel Ponec
  */
 public interface ValueAgent<UJO,VALUE> {
    

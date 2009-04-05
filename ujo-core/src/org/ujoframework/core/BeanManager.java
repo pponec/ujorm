@@ -13,7 +13,7 @@ import org.ujoframework.extensions.UjoPropertyList;
 
 /**
  * Manager of BeanUjo
- * @author pavel
+ * @author Pavel Ponec
  */
 public class BeanManager<UJO,VALUE> {
     

@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class DatabaseException extends RuntimeException {
 

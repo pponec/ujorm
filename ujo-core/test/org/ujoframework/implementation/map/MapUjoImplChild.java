@@ -13,7 +13,7 @@ import java.util.Date;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class MapUjoImplChild extends MapUjoImpl {
     

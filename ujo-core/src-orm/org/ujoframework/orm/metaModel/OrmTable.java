@@ -31,7 +31,7 @@ import org.ujoframework.orm.OrmHandler;
 
 /**
  * DB table medadata.
- * @author pavel
+ * @author Pavel Ponec
  * @composed 1 - * OrmRelation2Many
  * @composed 1 - * OrmColumn
  * @composed 1 - 1 OrmPKey

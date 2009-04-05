@@ -14,7 +14,7 @@ import org.ujoframework.extensions.ValueAgent;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class FieldUjoImpl extends FieldUjo {
     

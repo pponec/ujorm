@@ -41,7 +41,7 @@ import org.ujoframework.orm.annot.Db;
 
 /**
  * A logical database description.
- * @author pavel
+ * @author Pavel Ponec
  * @composed 1 - * OrmTable
  */
 public class OrmDatabase extends AbstractMetaModel {

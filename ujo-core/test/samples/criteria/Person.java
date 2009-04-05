@@ -10,7 +10,7 @@ import org.ujoframework.implementation.map.MapUjoExt;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class Person extends MapUjoExt<Person> {
     

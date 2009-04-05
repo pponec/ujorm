@@ -32,7 +32,7 @@ import org.ujoframework.orm.annot.GenerationType;
 
 /**
  * Database column metadata
- * @author pavel
+ * @author Pavel Ponec
  * @composed 1 - * DbType
  */
 public class OrmColumn extends OrmRelation2Many {

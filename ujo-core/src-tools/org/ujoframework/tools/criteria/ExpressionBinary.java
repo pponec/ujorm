@@ -21,7 +21,7 @@ import org.ujoframework.Ujo;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
 

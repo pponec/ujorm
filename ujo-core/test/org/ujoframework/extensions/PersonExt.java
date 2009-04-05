@@ -11,7 +11,7 @@ import org.ujoframework.implementation.map.MapUjoExt;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class PersonExt extends MapUjoExt<PersonExt> {
     

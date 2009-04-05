@@ -16,7 +16,7 @@ import org.ujoframework.implementation.pojo.PojoImplChild;
 
 /**
  * A POJO Object
- * @author pavel
+ * @author Pavel Ponec
  */
 @javax.xml.bind.annotation.XmlRootElement @javax.xml.bind.annotation.XmlType  /*JAXB*/
 public class PojoTree 

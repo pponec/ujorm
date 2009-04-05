@@ -17,7 +17,7 @@ import org.ujoframework.implementation.array.ArrayUjo;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class AtrPersonArray extends ArrayUjo  {
 

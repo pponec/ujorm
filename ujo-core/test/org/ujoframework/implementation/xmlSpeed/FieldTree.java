@@ -18,7 +18,7 @@ import org.ujoframework.implementation.field.FieldUjoImplChild;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class FieldTree extends FieldUjoImplChild {
     

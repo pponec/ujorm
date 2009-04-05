@@ -31,7 +31,7 @@ import org.ujoframework.orm.metaModel.OrmTable;
 
 /**
  * The basic class for an ORM support.
- * @author pavel
+ * @author Pavel Ponec
  * @composed 1 - 1 OrmRoot
  */
 public class OrmHandler {

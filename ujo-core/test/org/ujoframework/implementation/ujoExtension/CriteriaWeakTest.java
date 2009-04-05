@@ -20,7 +20,7 @@ import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
 
 /**
  * Criteria test
- * @author pavel
+ * @author Pavel Ponec
  */
 public class CriteriaWeakTest extends MyTestCase {
     

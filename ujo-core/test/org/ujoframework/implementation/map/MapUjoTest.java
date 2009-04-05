@@ -13,7 +13,7 @@ import org.ujoframework.MyTestCase;
 
 /**
  * HashMap Unified Data Object Test
- * @author pavel
+ * @author Pavel Ponec
  */
 public class MapUjoTest extends MyTestCase {
     

@@ -18,7 +18,7 @@ import static org.ujoframework.core.ZeroProvider.*;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UTechnicalBean extends MapUjo  {
     

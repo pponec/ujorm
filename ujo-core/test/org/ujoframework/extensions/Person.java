@@ -11,7 +11,7 @@ import org.ujoframework.implementation.map.MapUjo;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class Person extends MapUjo {
     

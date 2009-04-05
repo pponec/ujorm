@@ -23,7 +23,7 @@ import org.ujoframework.orm.AbstractMetaModel;
 /**
  * A logical database description.
  * The class is a root of database configuration.
- * @author pavel
+ * @author Pavel Ponec
  */
 public class OrmParameters extends AbstractMetaModel {
 

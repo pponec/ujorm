@@ -20,7 +20,7 @@ import org.ujoframework.orm.sample.Database;
 
 /**
  * Singleton
- * @author pavel
+ * @author Pavel Ponec
  */
 public class OrmSessionProvider {
 

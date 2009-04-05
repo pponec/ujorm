@@ -24,7 +24,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  * Expression of a value.
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
 

@@ -11,7 +11,7 @@ import org.ujoframework.beans.UjoPropertyChangeListener;
 
 /**
  * Listener
- * @author pavel
+ * @author Pavel Ponec
  */
 public class Listener implements UjoPropertyChangeListener {
     

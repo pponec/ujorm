@@ -17,7 +17,7 @@ import org.ujoframework.implementation.map.MapProperty;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class AtrPerson3 extends MapUjo  {
     

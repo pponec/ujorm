@@ -15,7 +15,7 @@ import org.ujoframework.implementation.map.MapUjoImplChild;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class MapTree extends MapUjoImplChild {
     

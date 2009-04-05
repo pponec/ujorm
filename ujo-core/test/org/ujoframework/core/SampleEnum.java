@@ -7,7 +7,7 @@ package org.ujoframework.core;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public enum SampleEnum {
     ZERO, ONE, TWO;

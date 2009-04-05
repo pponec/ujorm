@@ -14,7 +14,7 @@ import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
 
 /**
  * HashMap Unified Data Object Test
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ExtUjoTest extends MyTestCase {
     

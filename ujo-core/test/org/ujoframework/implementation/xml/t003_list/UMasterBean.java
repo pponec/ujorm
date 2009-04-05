@@ -14,7 +14,7 @@ import org.ujoframework.implementation.map.MapUjo;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UMasterBean extends MapUjo  {
     

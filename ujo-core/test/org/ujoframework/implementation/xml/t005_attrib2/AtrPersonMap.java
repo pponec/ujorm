@@ -20,7 +20,7 @@ import static org.ujoframework.extensions.UjoAction.*;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class AtrPersonMap extends MapUjo  {
 
