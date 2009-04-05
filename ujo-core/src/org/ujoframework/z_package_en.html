@@ -181,19 +181,19 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
         
 <pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">equals</span>(Object obj) {
   <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">equals</span>(<span class="java-keywords">this</span>, (Ujo) obj );
-}<span class="java-block-comment"></span>
+}
 </pre>
 
         <h3>Implementation of the clone() method</h3>
         Analogous to the equals method you can make the <i>clone()</i> method :
-<pre class="pre"><span class="java-block-comment"></span><span class="java-block-comment"></span><span class="java-keywords">public</span> Object <span class="java-layer-method">clone</span>() {
+<pre class="pre"><span class="java-keywords">public</span> Object <span class="java-layer-method">clone</span>() {
   <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">clone</span>(<span class="java-keywords">this</span>, 1, <span class="java-keywords">null</span>);
 }
 </pre>
 
         <h3>Implementation of the hash() method</h3>
         A similar example of the <i>hash()</i> method implementation:
-<pre class="pre"><span class="java-block-comment"></span><span class="java-block-comment"></span><span class="java-keywords">public</span> <span class="java-keywords">int</span> <span class="java-layer-method">hash</span>() {
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">int</span> <span class="java-layer-method">hash</span>() {
   <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">getHash</span>(<span class="java-keywords">this</span>);
 }
 </pre>
@@ -397,9 +397,10 @@ model.<span class="java-layer-method">addRow</span>(<span class="java-keywords">
 <span class="java-block-comment">// Set a value:</span>
 model.<span class="java-layer-method">setValueAt</span>(<span class="java-string-literal">"Prokop"</span>, <span class="java-numeric-literals">0</span>, Person.NAME );<br>
 <span class="java-block-comment">// Get the last row of table:</span>
-Person person = model.<span class="java-layer-method">getRowLast</span>();<br>
-<span class="java-block-comment">//</span><span class="java-block-comment"> Sort the model:</span>
-model.<span class="java-layer-method">sort</span>(<span class="java-keywords">true</span>, Person.NAME);<br>
+Person person = model.<span class="java-layer-method">getRowLast</span>();<br />
+<span class="java-block-comment">// Sort the model:</span>
+model.<span class="java-layer-method">sort</span>(Person.NAME); <span class="java-block-comment">// or descending:</span>
+model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-layer-method">descending()</span>);<br />
 </pre>
     
         <h3>Confrontation with the AbstractTableModel</h3>

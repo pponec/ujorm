@@ -24,8 +24,8 @@ import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
  */
 public class CriteriaTest extends MyTestCase {
     
-    PathProperty<ExtPerson,Double> MOTHER_CASH  = PathProperty.create(MOTHER, CASH);
-    PathProperty<ExtPerson,Double> GMOTHER_CASH = PathProperty.create(MOTHER, MOTHER, CASH);
+    PathProperty<ExtPerson,Double> MOTHER_CASH  = PathProperty.newInstance(MOTHER, CASH);
+    PathProperty<ExtPerson,Double> GMOTHER_CASH = PathProperty.newInstance(MOTHER, MOTHER, CASH);
     
     private List<ExtPerson> persons;
     
