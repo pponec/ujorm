@@ -72,7 +72,7 @@ public class UseTable {
         Person person = model.getRowLast();
         
         // Sort the model:
-        model.sort(true, Person.NAME);
+        model.sort(Person.NAME);
         
         
         

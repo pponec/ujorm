@@ -109,10 +109,10 @@ abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITE
     
     /** Sort a list by its properties. */
     @SuppressWarnings("unchecked")
-    public void sort(UJO ujo, boolean asc, UjoProperty ... properties) {
+    public void sort(UJO ujo, UjoProperty ... properties) {
         LIST list = getValue(ujo);
         if ( list!=null) {
-            Comparator comp = new UjoComparator(asc, properties);
+            Comparator comp = new UjoComparator(properties);
             Collections.sort(list, comp);
         }
     }

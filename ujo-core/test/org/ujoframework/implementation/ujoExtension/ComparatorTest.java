@@ -70,7 +70,7 @@ public class ComparatorTest extends MyTestCase {
     
     public void testInit_01() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        UjoComparator comp = UjoComparator.create(true, NAME);
+        UjoComparator comp = UjoComparator.newInstance(NAME);
         List<ExtPerson> result = uc.select(persons, comp);
         
         assertEquals("Eva", result.get(0).get(NAME) );
@@ -78,7 +78,7 @@ public class ComparatorTest extends MyTestCase {
     
     public void testInit_02() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        UjoComparator comp = UjoComparator.create(true, MOTHERS_NAME);
+        UjoComparator comp = UjoComparator.newInstance(MOTHERS_NAME);
         List<ExtPerson> result = uc.select(persons, comp);
         
         assertEquals("Eva", result.get(0).get(MOTHERS_NAME) );

@@ -41,7 +41,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Get the last property */
     @SuppressWarnings("unchecked")
-    final public<UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> lastProperty() {
+    final public<UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastProperty() {
         return properties[properties.length - 1];
     }
 
@@ -69,11 +69,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Property type */
     public Class<VALUE> getType() {
-        return lastProperty().getType();
+        return getLastProperty().getType();
     }
 
     /** Get a semifinal value from an Ujo object by a chain of properties.
-     * If a value  (not lastProperty) is null, then the result is null.
+     * If a value  (not getLastProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     public Ujo getSemifinalValue(UJO ujo) {
@@ -87,17 +87,17 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
 
     /** Get a value from an Ujo object by a chain of properties.
-     * If a value  (not lastProperty) is null, then the result is null.
+     * If a value  (not getLastProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     public VALUE getValue(UJO ujo) {
         Ujo u = getSemifinalValue(ujo);
-        return  u!=null ? (VALUE) lastProperty().of(u) : null ;
+        return  u!=null ? (VALUE) getLastProperty().of(u) : null ;
     }
 
     public void setValue(UJO ujo, VALUE value) {
         final Ujo u = getSemifinalValue(ujo);
-        lastProperty().setValue(u, value);
+        getLastProperty().setValue(u, value);
     }
 
     final public int getIndex() {
@@ -106,7 +106,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Returns a default value */
     public VALUE getDefault() {
-        return (VALUE) lastProperty().getDefault();
+        return (VALUE) getLastProperty().getDefault();
     }
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
@@ -191,7 +191,17 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     public final boolean isDirect() {
         return false;
     }
-    
+
+    /** A flag for an ascending direction of order. */
+    public boolean isAscending() {
+        return getLastProperty().isAscending();
+    }
+
+    /** Create a new instance of the property with a descending direction of order. */
+    public UjoProperty<UJO,VALUE> descending() {
+        return isAscending() ? new SortingProperty<UJO,VALUE>(this, false) : this ;
+    }
+
     public UjoProperty[] toArray() {
         UjoProperty[] result = new UjoProperty[properties.length];
         System.arraycopy(properties, 0, result, 0, result.length);

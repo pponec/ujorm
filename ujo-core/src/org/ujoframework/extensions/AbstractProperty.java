@@ -148,8 +148,20 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
      * Returns a true value, if the property contains more properties.
      * The composite property is excluded from from function Ujo.readProperties() by default.
      */
+    @Override
     public final boolean isDirect() {
         return true;
+    }
+
+    /** A flag for a direction of sorting. This method returns true allways. */
+    @Override
+    public boolean isAscending() {
+        return true;
+    }
+
+    /** Create a new <strong>indirect</strong> instance of the property with a descending direction of order. */
+    public UjoProperty<UJO, VALUE> descending() {
+        return new SortingProperty<UJO, VALUE>(this, false);
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
@@ -157,7 +169,7 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
     public boolean isTypeOf(final Class type) {
         return type.isAssignableFrom(this.type);
     }
-    
+
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
      * 
