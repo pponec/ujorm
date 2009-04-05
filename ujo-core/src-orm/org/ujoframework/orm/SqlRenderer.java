@@ -369,29 +369,27 @@ abstract public class SqlRenderer {
     }
 
     /** Print SQL SELECT */
-    public ExpressionDecoder printSelect(Query query, Appendable writer, boolean count) throws IOException {
-        ExpressionDecoder result = null;
-        writer.append("SELECT ");
+    public String printSelect(Query query, boolean count) throws IOException {
+        StringBuilder result = new StringBuilder();
+        result.append("SELECT ");
         if (count) {
-            writer.append("COUNT(*)");
+            result.append("COUNT(*)");
         } else {
-            printTableColumns(query.getColumns(), writer, null);
+            printTableColumns(query.getColumns(), result, null);
         }
-        writer.append("\n\tFROM ");
-        writer.append(OrmTable.NAME.of(query.getTableModel()));
+        result.append("\n\tFROM ");
+        result.append(OrmTable.NAME.of(query.getTableModel()));
 
-        Expression e = query.getExpression();
-        if (e != null) {
-            ExpressionDecoder ed = new ExpressionDecoder(e, this);
+        if (query.getExpression() != null) {
+            ExpressionDecoder ed = query.getDecoder();
             String sql = ed.getSql();
             if (!sql.isEmpty()) {
-                writer.append(" WHERE ");
-                writer.append(ed.getSql());
+                result.append(" WHERE ");
+                result.append(ed.getSql());
             }
-            result = ed;
         }
-        writer.append(";");
-        return result;
+        result.append(";");
+        return result.toString();
     }
 
 }

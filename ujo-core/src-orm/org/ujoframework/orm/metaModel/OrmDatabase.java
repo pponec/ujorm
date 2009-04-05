@@ -158,11 +158,10 @@ public class OrmDatabase extends AbstractMetaModel {
      * @param count The true value is a request to return a count of filtered row only.
      * @return
      */
-    public ExpressionDecoder createSelect(Query query, Appendable result, boolean count) {
-        SqlRenderer renderer = getRenderer();
+    public String createSelect(Query query, boolean count) {
         try {
-            final ExpressionDecoder decoder = renderer.printSelect(query, result, count);
-            return decoder;
+            final String result = getRenderer().printSelect(query, count);
+            return result;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -33,6 +33,7 @@ public class Query<UJO extends TableUjo> {
     final private OrmTable table;
     final private List<OrmColumn> columns;
     final private Expression<UJO> expression;
+    final private ExpressionDecoder decoder;
     final private Session session;
 
     /** There is required to know a count of selected items before reading a resultset */
@@ -64,6 +65,7 @@ public class Query<UJO extends TableUjo> {
         this.columns = OrmTable.COLUMNS.getList(table);
         this.expression = expression;
         this.session = session;
+        this.decoder = new ExpressionDecoder(expression, table);
     }
 
     /** Returns a count of the items */
@@ -99,6 +101,11 @@ public class Query<UJO extends TableUjo> {
     /** Expression */
     public Expression<UJO> getExpression() {
         return expression;
+    }
+
+    /** Retuns an expression Decoder */
+    final public ExpressionDecoder getDecoder() {
+        return decoder;
     }
 
     /** Session */
