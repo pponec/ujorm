@@ -22,23 +22,19 @@ import org.ujoframework.UjoProperty;
 
 /**
  * Comparator of Ujo objects.
- * <br>
- *
  * @author Pavel Ponec
  */
 public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have a generic type! */
     implements Comparator<Ujo> {
     
     final UjoProperty[] properties;
-    final boolean asc;
     
     /** Creates a new instance of UjoComparator 
      * @param asc order of sorting
      * @param properties sorting criteria are ordered by importance to down.
      */
-    public UjoComparator(boolean asc, UjoProperty ... properties) {
+    public UjoComparator(final UjoProperty ... properties) {
         this.properties = properties;
-        this.asc = asc;
     }
     
     /**
@@ -51,13 +47,15 @@ public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have a gen
     @SuppressWarnings("unchecked")
     public int compare(Ujo u1, Ujo u2) {
         for (UjoProperty property : properties) {
+
             Comparable c1 = (Comparable) UjoManager.getValue(u1, property);
             Comparable c2 = (Comparable) UjoManager.getValue(u2, property);
             
             if (c1==c2  ) { continue;  }
             if (c1==null) { return +1; }
             if (c2==null) { return -1; }
-            int result = asc
+
+            int result = property.isAscending()
             ? c1.compareTo(c2)
             : c2.compareTo(c1)
             ;
@@ -72,11 +70,13 @@ public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have a gen
         StringBuilder sb = new StringBuilder(32);
         for (UjoProperty property : properties) {
             if (sb.length()>0) {
-                sb.append(',');
+                sb.append(", ");
             }
             sb.append(property.getName());
+            sb.append("[");
+            sb.append(property.isDirect() ? "ASC" : "DESC");
+            sb.append("]");
         }
-        sb.append(" (").append(asc ? "ASC)" : "DESC)");
         return sb.toString();
     }
     
@@ -89,13 +89,8 @@ public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have a gen
     // ------------ STATIC ------------
     
     /** Create new comparator */
-    public static UjoComparator create(boolean asc, UjoProperty ... properties) {
-        return new UjoComparator(asc, properties);
-    }
-    
-    /** Create new comparator */
-    public static  UjoComparator create(UjoProperty ... properties) {
-        return create(true, properties);
+    public static UjoComparator newInstance(UjoProperty ... properties) {
+        return new UjoComparator(properties);
     }
     
 }

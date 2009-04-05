@@ -248,8 +248,8 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * @param asc Ascending / Descending. Null value are always on the end.
      * @param properties Array of properties. A property value must be comparable.
      */
-    public void sort(boolean asc, UjoProperty ... properties) {
-        final Comparator<Ujo> comp = new UjoComparator(asc, properties);
+    public void sort(UjoProperty ... properties) {
+        final Comparator<Ujo> comp = new UjoComparator(properties);
         sort(comp);
     }
     

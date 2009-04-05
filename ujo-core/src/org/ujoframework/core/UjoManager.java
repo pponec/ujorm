@@ -605,7 +605,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     
     /** Get a value from an Ujo object by a selected property.
-     * If a not lastProperty value is null, then is throwded a NullPointe exception.
+     * If a not getLastProperty value is null, then is throwded a NullPointe exception.
      */
     @SuppressWarnings("unchecked")
     public static Object getValue(final Ujo ujo, final UjoProperty prop) {
@@ -618,7 +618,7 @@ public class UjoManager implements Comparator<UjoProperty> {
 
     
     /** Get a value from an Ujo object by a chain of properties. 
-     * If a not lastProperty value is null, then is throwded a NullPointe exception.
+     * If a not getLastProperty value is null, then is throwded a NullPointe exception.
      */
     @SuppressWarnings("unchecked")
     public <VALUE> VALUE getValue(Ujo ujo, UjoProperty... props) {
@@ -651,7 +651,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             return result;
         } else {
             final PathProperty pathProperty = (PathProperty) property;
-            final UjoProperty p = pathProperty.lastProperty();
+            final UjoProperty p = pathProperty.getLastProperty();
             final Ujo         u = pathProperty.getSemifinalValue(ujo);
             return getText(u, p, action);
         }
@@ -677,7 +677,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             }
         } else {
             final PathProperty pathProperty = (PathProperty) property;
-            final UjoProperty p = pathProperty.lastProperty();
+            final UjoProperty p = pathProperty.getLastProperty();
             final Ujo         u = pathProperty.getSemifinalValue(ujo);
             setText(u, p, value, type, action);
         }
