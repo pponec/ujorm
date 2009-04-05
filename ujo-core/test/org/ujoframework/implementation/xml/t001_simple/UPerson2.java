@@ -21,7 +21,7 @@ import org.ujoframework.implementation.map.MapProperty;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
 public class UPerson2 implements Ujo, UjoTextable  {

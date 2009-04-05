@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * A POJO Object
- * @author pavel
+ * @author Pavel Ponec
  */
 public class PojoImplChild extends PojoImpl {
     

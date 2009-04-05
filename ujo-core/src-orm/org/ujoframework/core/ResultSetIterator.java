@@ -13,7 +13,7 @@ import org.ujoframework.orm.metaModel.OrmColumn;
 
 /**
  * ResultSet iterator. It is not a thread safe implementation.
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
 

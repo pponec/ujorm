@@ -15,7 +15,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ArrayUjoChildTest extends MyTestCase {
     

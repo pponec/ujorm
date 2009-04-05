@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * A BEAN Object
- * @author pavel
+ * @author Pavel Ponec
  */
 public class BeanUjoImpl extends BeanUjo {
     

@@ -7,7 +7,7 @@ package org.ujoframework.tools.criteria;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public interface AbstractOperator {
 

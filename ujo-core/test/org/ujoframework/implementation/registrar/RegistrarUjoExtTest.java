@@ -10,7 +10,7 @@ import static org.ujoframework.implementation.registrar.Person.*;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class RegistrarUjoExtTest extends TestCase {
     

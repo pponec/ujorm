@@ -9,7 +9,7 @@ import org.ujoframework.Ujo;
 
 /**
  * A ditry expression is inteded for a SQL statements only.
- * @author pavel
+ * @author Pavel Ponec
  */
 public class DirtyExpression<UJO extends Ujo> extends Expression<UJO>  {
 

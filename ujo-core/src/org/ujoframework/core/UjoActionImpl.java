@@ -9,7 +9,7 @@ import org.ujoframework.extensions.UjoAction;
 
 /**
  * A default implementation of the UjoAction.
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UjoActionImpl implements UjoAction {
     

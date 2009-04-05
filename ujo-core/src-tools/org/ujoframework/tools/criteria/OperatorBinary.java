@@ -26,7 +26,7 @@ import org.ujoframework.Ujo;
 
 /**
  * Binary operator
- * @author pavel
+ * @author Pavel Ponec
  */
 public enum OperatorBinary implements AbstractOperator {
     /** (a AND b) */

@@ -16,7 +16,7 @@ import org.ujoframework.implementation.map.MapProperty;
 
 /**
  * User Factory
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UserFactory extends UjoManager {
     

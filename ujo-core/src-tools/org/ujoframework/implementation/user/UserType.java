@@ -9,7 +9,7 @@ import org.ujoframework.Ujo;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public interface UserType extends Ujo {
     

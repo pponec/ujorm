@@ -15,7 +15,7 @@ import org.ujoframework.implementation.array.ArrayUjoImplChild;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ArrayTree extends ArrayUjoImplChild {
     

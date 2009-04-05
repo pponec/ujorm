@@ -14,7 +14,7 @@ import static samples.criteria.Person.*;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class CriteriaSample {
     

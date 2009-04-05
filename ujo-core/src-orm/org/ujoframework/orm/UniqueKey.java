@@ -18,7 +18,7 @@ package org.ujoframework.orm;
 
 /**
  * A Unique key of a table
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UniqueKey {
 

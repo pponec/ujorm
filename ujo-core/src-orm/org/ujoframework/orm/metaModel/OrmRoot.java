@@ -29,7 +29,7 @@ import org.ujoframework.extensions.ListProperty;
 /**
  * A logical database description.
  * The class is a root of database configuration.
- * @author pavel
+ * @author Pavel Ponec
  * @composed 1 - * OrmDatabase
  * @composed 1 - 1 OrmParameters
  */

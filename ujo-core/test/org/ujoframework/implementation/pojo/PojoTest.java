@@ -14,7 +14,7 @@ import org.ujoframework.MyTestCase;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class PojoTest extends MyTestCase {
     

@@ -9,7 +9,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  * Return a changed properties.
- * @author pavel
+ * @author Pavel Ponec
  */
 public interface ChangeRegister {
 

@@ -18,7 +18,7 @@ import org.ujoframework.implementation.map.MapProperty;
 
 /**
  * An UnifiedDataObject Imlpementation
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UItemBean extends MapUjo  {
     

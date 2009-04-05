@@ -33,7 +33,7 @@ import org.ujoframework.orm.metaModel.OrmTable;
 
 /**
  * JdbcStatement
- * @author pavel
+ * @author Pavel Ponec
  */
 public class JdbcStatement {
 

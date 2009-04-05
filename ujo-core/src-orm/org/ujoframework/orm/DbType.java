@@ -20,7 +20,7 @@ import java.sql.Types;
 
 /**
  * Supported DbTypes
- * @author pavel
+ * @author Pavel Ponec
  */
 public enum DbType {
 

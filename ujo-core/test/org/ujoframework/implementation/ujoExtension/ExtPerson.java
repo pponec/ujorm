@@ -11,7 +11,7 @@ import org.ujoframework.extensions.PathProperty;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ExtPerson extends MapUjoExt<ExtPerson> {
 

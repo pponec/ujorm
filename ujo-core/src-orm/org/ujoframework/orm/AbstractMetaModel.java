@@ -24,7 +24,7 @@ import org.ujoframework.implementation.map.MapUjo;
 
 /**
  * Abstract Metamodel
- * @author pavel
+ * @author Pavel Ponec
  */
 abstract public class AbstractMetaModel extends MapUjo {
 

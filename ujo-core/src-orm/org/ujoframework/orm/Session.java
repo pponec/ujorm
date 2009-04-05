@@ -40,7 +40,7 @@ import org.ujoframework.tools.criteria.ExpressionValue;
 
 /**
  * ORM session.
- * @author pavel
+ * @author Pavel Ponec
  */
 @SuppressWarnings(value = "unchecked")
 public class Session {
