@@ -11,7 +11,8 @@ package org.ujoframework.core.annot;
 import java.lang.annotation.*;
 
 /** 
- * Use the annotation to mark a UjoProperty static field like a Transient.
+ * Use the annotation to mark a UjoProperty static field to a transient state.
+ * Values of the transient properties are not stored by any way.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)

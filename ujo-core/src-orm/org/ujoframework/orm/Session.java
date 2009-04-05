@@ -217,7 +217,7 @@ public class Session {
 
     /** Delete all object object form parameter.
      * @param tableType Type of table to delete
-     * @param expr filter for deleting tables.
+     * @param expression filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
     public <UJO extends TableUjo> int delete(final Class<UJO> tableType, final Expression<UJO> expression) {
@@ -343,8 +343,8 @@ public class Session {
     }
 
     /** Iterate property of values
-     * @param property
-     * @param values
+     * @param property Table property
+     * @param value A value type of TableUjo
      */
     public <UJO extends TableUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, TableUjo value) {
 
@@ -394,8 +394,8 @@ public class Session {
 
     /**
      * Load UJO by a unique id. If a result is not found then a null value is passed.
-     * @param property Property
-     * @param id Valud ID
+     * @param tableType Type of Ujo
+     * @param id Value ID
      */
     public <UJO extends TableUjo> UJO load
         ( final Class<UJO> tableType
@@ -423,7 +423,7 @@ public class Session {
 
     /**
      * Load UJO by a unique id. If the result is not unique, then an exception is throwed.
-     * @param property Property
+     * @param relatedProperty Related property
      * @param id Valud ID
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */

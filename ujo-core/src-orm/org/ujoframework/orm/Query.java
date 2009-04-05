@@ -27,6 +27,8 @@ import org.ujoframework.tools.criteria.Expression;
 /**
  * ORM query.
  * @author Ponec
+ * @composed 1 - 1 Session
+ * @composed 1 - 1 ExpressionDecoder
  */
 public class Query<UJO extends TableUjo> {
 
@@ -56,7 +58,7 @@ public class Query<UJO extends TableUjo> {
 
     /**
      * Create new ORM query.
-     * @param tableClass Table model
+     * @param table Table model
      * @param expression If expression is null, then a TRUE constant expression is used.
      * @param session Session
      */

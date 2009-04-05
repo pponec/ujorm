@@ -26,7 +26,8 @@ import org.ujoframework.implementation.orm.TableUjo;
 
 /**
  * The table primary key.
- * @author pavel
+ * @author Ponec
+ * @composed 1 - * OrmColumn
  */
 public class OrmPKey extends AbstractMetaModel {
 

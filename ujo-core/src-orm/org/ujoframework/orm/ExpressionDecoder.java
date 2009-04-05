@@ -31,6 +31,7 @@ import org.ujoframework.tools.criteria.Operator;
 /**
  * SQL Expression Decoder.
  * @author Ponec
+ * @composed 1 - 1 SqlRenderer
  */
 public class ExpressionDecoder {
 
