@@ -22,9 +22,9 @@ import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
  */
 public class ComparatorTest extends MyTestCase {
     
-    PathProperty<ExtPerson,Double> MOTHERS_CASH  = PathProperty.create(MOTHER, CASH);
-    PathProperty<ExtPerson,String> MOTHERS_NAME  = PathProperty.create(MOTHER, NAME);
-    PathProperty<ExtPerson,Double> GMOTHERS_CASH = PathProperty.create(MOTHER, MOTHER, CASH);
+    PathProperty<ExtPerson,Double> MOTHERS_CASH  = PathProperty.newInstance(MOTHER, CASH);
+    PathProperty<ExtPerson,String> MOTHERS_NAME  = PathProperty.newInstance(MOTHER, NAME);
+    PathProperty<ExtPerson,Double> GMOTHERS_CASH = PathProperty.newInstance(MOTHER, MOTHER, CASH);
     
     private List<ExtPerson> persons;
     

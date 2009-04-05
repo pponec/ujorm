@@ -153,16 +153,6 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     final public VALUE of(final UJO ujo) {
         return getValue(ujo);
     }
-
-//    /**
-//     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
-//     * @param ujo If a null parameter is used then the null value is returned.
-//     * @return Returns a type safe value from the ujo object.
-//     * @see #getValue(Ujo)
-//     */
-//    public VALUE takeFrom(UJO ujo) {
-//        return getValue(ujo);
-//    }
     
     @Override
     public String toString() {
@@ -192,16 +182,21 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return false;
     }
 
-    /** A flag for an ascending direction of order. */
+    /** A flag for an ascending direction of order. For the result is significant only the last property.
+     * @see org.ujoframework.core.UjoComparator
+     */
     public boolean isAscending() {
         return getLastProperty().isAscending();
     }
 
-    /** Create a new instance of the property with a descending direction of order. */
+    /** Create a new instance of the property with a descending direction of order.
+     * @see org.ujoframework.core.UjoComparator
+     */
     public UjoProperty<UJO,VALUE> descending() {
         return isAscending() ? new SortingProperty<UJO,VALUE>(this, false) : this ;
     }
 
+    /** Returns an array of the contained properties. */
     public UjoProperty[] toArray() {
         UjoProperty[] result = new UjoProperty[properties.length];
         System.arraycopy(properties, 0, result, 0, result.length);
@@ -213,16 +208,16 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(UjoProperty<UJO, VALUE> property) {
+    public static final <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property) {
         return new PathProperty<UJO, VALUE>(property);
     }
 
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> create
-        ( UjoProperty<UJO1, UJO2> property1
-        , UjoProperty<UJO2, VALUE> property2
+    public static final <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+        ( final UjoProperty<UJO1, UJO2> property1
+        , final UjoProperty<UJO2, VALUE> property2
         ) {
         return new PathProperty<UJO1, VALUE>(property1, property2);
     }
@@ -230,10 +225,10 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> create
-        ( UjoProperty<UJO1, UJO2> property1
-        , UjoProperty<UJO2, UJO3> property2
-        , UjoProperty<UJO3, VALUE> property3
+    public static final <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+        ( final UjoProperty<UJO1, UJO2> property1
+        , final UjoProperty<UJO2, UJO3> property2
+        , final UjoProperty<UJO3, VALUE> property3
         ) {
         return new PathProperty<UJO1, VALUE>(property1, property2, property3);
     }
@@ -241,11 +236,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> create
-        ( UjoProperty<UJO1, UJO2> property1
-        , UjoProperty<UJO2, UJO3> property2
-        , UjoProperty<UJO3, UJO4> property3
-        , UjoProperty<UJO4, VALUE> property4
+    public static final <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+        ( final UjoProperty<UJO1, UJO2> property1
+        , final UjoProperty<UJO2, UJO3> property2
+        , final UjoProperty<UJO3, UJO4> property3
+        , final UjoProperty<UJO4, VALUE> property4
         ) {
         return new PathProperty<UJO1, VALUE>(property1, property2, property3, property4);
     }
@@ -254,7 +249,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      * @hidden 
      */
     @SuppressWarnings("unchecked")
-    public static final <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> createPro(UjoProperty<UJO, ? extends Object>... properties) {
+    public static final <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(UjoProperty<UJO, ? extends Object>... properties) {
         return new PathProperty(properties);
     }
 

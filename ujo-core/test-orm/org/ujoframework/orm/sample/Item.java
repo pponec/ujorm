@@ -41,7 +41,7 @@ public class Item extends TableUjo {
     // ----------- PATH ------------
 
     /** A property to an Date of Order */
-    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.create(ORDER, Order.DATE);
+    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.newInstance(ORDER, Order.DATE);
 
 
 }

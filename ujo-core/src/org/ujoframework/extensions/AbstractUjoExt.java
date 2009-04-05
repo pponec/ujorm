@@ -47,7 +47,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         ( final UjoProperty<UJO1, UJO2 > property1
         , final UjoProperty<UJO2, VALUE> property2) {
         
-        final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2);
+        final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2);
         return get(path);    }
 
     /** Getter based on three properties */
@@ -58,7 +58,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         , final UjoProperty<UJO3, VALUE> property3
         ) {
 
-        final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2, property3);
+        final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2, property3);
         return get(path);    }
 
     /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
@@ -79,7 +79,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         , final VALUE value
         ) {
         
-        final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2);
+        final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2);
         set(path, value);
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         , final VALUE value
         ) {
 
-        final PathProperty<UJO1, VALUE> path = PathProperty.create(property1, property2, property3);
+        final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2, property3);
         set(path, value);    
     }
 

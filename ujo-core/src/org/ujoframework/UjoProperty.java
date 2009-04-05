@@ -103,10 +103,15 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
     /** Returns true if the property type is a type or subtype of the parameter class. */
     public boolean isTypeOf(Class type);
 
-    /** A flag for an ascending direction of sorting. It is recommended that the default result was true. */
+    /** A flag for an ascending direction of sorting. It is recommended that the default result was true. 
+     * @see org.ujoframework.core.UjoComparator
+     */
     public boolean isAscending();
     
-    /** Create a new instance of the property with a descending direction of sorting. */
+    /** Create a new instance of the property with a descending direction of sorting.
+     * @return returns a new instance of UjoProperty.
+     * @see org.ujoframework.core.UjoComparator
+     */
     public UjoProperty<UJO,VALUE> descending();
 
     /** Returns a name of Property. */

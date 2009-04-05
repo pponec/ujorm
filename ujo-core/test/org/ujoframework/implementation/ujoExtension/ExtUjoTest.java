@@ -78,8 +78,8 @@ public class ExtUjoTest extends MyTestCase {
         
         person.get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 10D);
 
-        String name1 = person.get(PathProperty.create(MOTHER, MOTHER, MOTHER, NAME));
-        Double cash1 = person.get(PathProperty.create(MOTHER, MOTHER, MOTHER, CASH));
+        String name1 = person.get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, NAME));
+        Double cash1 = person.get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, CASH));
 
         String name2 = person.get(MOTHER, MOTHER, NAME);
         Double cash2 = person.get(MOTHER, MOTHER, CASH);

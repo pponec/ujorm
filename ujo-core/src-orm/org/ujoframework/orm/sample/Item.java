@@ -38,7 +38,7 @@ public class Item extends TableUjo<Item> {
     /** A reference to common Order */
     public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);    
     /** A composed PATH property to an Date of Order (!) */
-    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.create(Item.ORDER, Order.DATE);
+    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.newInstance(Item.ORDER, Order.DATE);
 
 
     // --- An optional implementation of commonly used setters and getters ---
