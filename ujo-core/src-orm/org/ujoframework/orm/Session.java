@@ -288,12 +288,11 @@ public class Session {
 
         OrmTable table = query.getTableModel();
         OrmDatabase db = OrmTable.DATABASE.of(table);
-        StringBuilder sql = new StringBuilder();
-        ExpressionDecoder decoder = db.createSelect(query, sql, true);
-        LOGGER.log(Level.INFO, sql.toString());
+        String sql = db.createSelect(query, true);
+        LOGGER.log(Level.INFO, sql);
         try {
             statement = getStatement(db, sql);
-            statement.assignValues(decoder);
+            statement.assignValues(query.getDecoder());
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
             rs = statement.executeQuery(); // execute a select statement
@@ -313,11 +312,10 @@ public class Session {
         try {
             OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
-            StringBuilder sql = new StringBuilder();
-            ExpressionDecoder decoder = db.createSelect(query, sql, false);
-            LOGGER.log(Level.INFO, sql.toString());
+            String sql = db.createSelect(query, false);
+            LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
-            statement.assignValues(decoder);
+            statement.assignValues(query.getDecoder());
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
             ResultSet rs = statement.executeQuery(); // execute a select statement
