@@ -245,7 +245,6 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     
     /**
      * Sort data by a property list.
-     * @param asc Ascending / Descending. Null value are always on the end.
      * @param properties Array of properties. A property value must be comparable.
      */
     public void sort(UjoProperty ... properties) {

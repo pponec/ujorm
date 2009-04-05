@@ -31,9 +31,11 @@ public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have a gen
     
     final UjoProperty[] properties;
     
-    /** Creates a new instance of UjoComparator 
-     * @param asc order of sorting
+    /** Creates a new instance of UjoComparator
      * @param properties sorting criteria are ordered by importance to down.
+     *        A direction of the sorting is used by a method UjoProperty#isAscending().
+     * @see UjoProperty#isAscending()
+     * @see UjoProperty#descending()
      */
     public UjoComparator(final UjoProperty ... properties) {
         this.properties = properties;

@@ -33,6 +33,7 @@ import org.ujoframework.orm.annot.GenerationType;
 /**
  * Database column metadata
  * @author pavel
+ * @composed 1 - * DbType
  */
 public class OrmColumn extends OrmRelation2Many {
 

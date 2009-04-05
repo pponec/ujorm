@@ -42,6 +42,7 @@ import org.ujoframework.orm.annot.Db;
 /**
  * A logical database description.
  * @author pavel
+ * @composed 1 - * OrmTable
  */
 public class OrmDatabase extends AbstractMetaModel {
 
@@ -154,9 +155,7 @@ public class OrmDatabase extends AbstractMetaModel {
     /**
      * Create an SQL select
      * @param query Ujo query
-     * @param result An appendable object for writting the result SQL statement.
      * @param count The true value is a request to return a count of filtered row only.
-     * @return
      */
     public String createSelect(Query query, boolean count) {
         try {

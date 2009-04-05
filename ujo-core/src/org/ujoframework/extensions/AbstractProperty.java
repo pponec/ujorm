@@ -35,7 +35,6 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
      * Property constructor.
      * @param name Name of property
      * @param type Type of property
-     * @param index Default value is -1
      */
     public AbstractProperty(String name, Class<VALUE> type) {
         this(name, type, -1);
@@ -100,17 +99,6 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
     final public VALUE of(final UJO ujo) {
         return getValue(ujo);
     }
-
-//    /**
-//     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
-//     * @param ujo If a null parameter is used then the null value is returned.
-//     * @return Returns a type safe value from the ujo object.
-//     * @see #getValue(Ujo)
-//     */
-//    final public VALUE takeFrom(final UJO ujo) {
-//        final Object result = ujo!=null ? ujo.readValue(this) : null ;
-//        return (VALUE) result;
-//    }
     
     /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...). 
      * If the default value is not modified, returns the <code>null<code>.
@@ -153,13 +141,20 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
         return true;
     }
 
-    /** A flag for a direction of sorting. This method returns true allways. */
+    /** A flag for a direction of sorting. This method returns true allways.
+     * @since 0.85
+     * @see org.ujoframework.core.UjoComparator
+     */
     @Override
     public boolean isAscending() {
         return true;
     }
 
-    /** Create a new <strong>indirect</strong> instance of the property with a descending direction of order. */
+    /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
+     * @since 0.85
+     * @see #isAscending()
+     * @see org.ujoframework.core.UjoComparator
+     */
     public UjoProperty<UJO, VALUE> descending() {
         return new SortingProperty<UJO, VALUE>(this, false);
     }
@@ -209,6 +204,5 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
     public final String toString() {
         return name;
     }
-    
-    
+
 }

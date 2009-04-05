@@ -27,12 +27,14 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.OrmHandler;
-import org.ujoframework.tools.criteria.Expression;
 
 
 /**
  * DB table medadata.
  * @author pavel
+ * @composed 1 - * OrmRelation2Many
+ * @composed 1 - * OrmColumn
+ * @composed 1 - 1 OrmPKey
  */
 public class OrmTable extends AbstractMetaModel {
 

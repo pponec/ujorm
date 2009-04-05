@@ -30,6 +30,8 @@ import org.ujoframework.extensions.ListProperty;
  * A logical database description.
  * The class is a root of database configuration.
  * @author pavel
+ * @composed 1 - * OrmDatabase
+ * @composed 1 - 1 OrmParameters
  */
 public class OrmRoot extends AbstractMetaModel {
 
