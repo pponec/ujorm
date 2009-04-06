@@ -44,7 +44,7 @@
            <li>no confusing proxy business objects</li>
            <li>no list properties are supported but a special object called <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/core/UjoIterator.java?view=markup">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
            <li>easy to configure the ORM model by java source code, optionaly by annotations or a XML file</li>
-           <li>small framework without more library dependences</li>
+           <li>very small framework without more library dependences, the current size of the JAR file is around 160 kB</li>
         </ul>
         Some other features:
         <ul>
@@ -104,7 +104,7 @@ The next source code calls a SELECT by a UJO query language:
   }
 </pre>
 
-The next source code calls a SELECT by an UJO object relation:
+The next source code calls a SELECT by an UJO object <strong>relation</strong>:
 <pre name="code" class="java">
   Session session = OrmHandler.getInstance().getSession();
   Database db = session.getDatabase();

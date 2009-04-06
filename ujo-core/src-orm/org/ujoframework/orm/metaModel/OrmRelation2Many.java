@@ -27,7 +27,7 @@ import org.ujoframework.orm.annot.Column;
 
 /**
  * The database/object relation to many.
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class OrmRelation2Many extends AbstractMetaModel {
 

@@ -17,7 +17,7 @@ package org.ujoframework.tools.criteria;
 
 /**
  * An expression operators.
- * @author Ponec
+ * @author Pavel Ponec
  */
 public enum Operator implements AbstractOperator {
     /** Equals the value */

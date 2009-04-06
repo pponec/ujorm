@@ -12,7 +12,7 @@ import junit.framework.TestSuite;
 
 /**
  * XmlSpeedTest2 - this is no regular test case.
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class XmlSpeedTest2 extends XmlSpeedTest {
     

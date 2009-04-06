@@ -10,7 +10,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  * A property for a direction of sorting.
- * @author Ponec
+ * @author Pavel Ponec
  */
 final public class SortingProperty<UJO extends Ujo,VALUE> extends PathProperty<UJO,VALUE> {
     

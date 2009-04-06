@@ -24,7 +24,7 @@ import org.ujoframework.UjoProperty;
  * or "constrained" property.  A PropertyChangeEvent object is sent as an
  * argument to the PropertyChangeListener and VetoableChangeListener methods.
  * <P>See more information in a PropertyChangeEvent.
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class UjoPropertyChangeEvent extends PropertyChangeEvent {
     

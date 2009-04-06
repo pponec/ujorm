@@ -7,12 +7,11 @@ package org.ujoframework.core;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.UjoPropertyList;
 
 /**
- * Manager of BeanUjo
+ * Manager of <code>BeanUjo</code>
  * @author Pavel Ponec
  */
 public class BeanManager<UJO,VALUE> {

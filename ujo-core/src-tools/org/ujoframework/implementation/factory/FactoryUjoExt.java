@@ -21,7 +21,7 @@ import org.ujoframework.core.UjoManager;
 
 
 /**
- * En extended Ujo implementation. The method does not implement all UjoExt method!
+ * En extended <code>Ujo</code> implementation. The method does not implement all <code>UjoExt</code> method!
  *
  * @see FactoryProperty
  * @author Pavel Ponec

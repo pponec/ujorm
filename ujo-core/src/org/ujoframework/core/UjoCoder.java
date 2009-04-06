@@ -21,8 +21,8 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- *
- * @author Ponec
+ * A tool for encoding an object to a text and a text back to the object.
+ * @author Pavel Ponec
  */
 public class UjoCoder {
 

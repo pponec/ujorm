@@ -24,7 +24,7 @@ import org.ujoframework.extensions.AbstractUjo;
  * The Ujo Factory. A method called readValue() create new instance of the property always by a property type.
  * <br>Each the property type class (see getType() method) must have got at least one of constructor:
  * <ul>
- * <li>an two parameters constructor with types <pre>Ujo</code> and <code>UjoProperty</code> or</li>.
+ * <li>an two parameters constructor with types <code>Ujo</code> and <code>UjoProperty</code> or</li>
  * <li>a no parameter constructor</li>
  * </ul>
  * @author Pavel Ponec

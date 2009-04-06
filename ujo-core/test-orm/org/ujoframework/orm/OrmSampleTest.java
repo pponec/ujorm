@@ -27,7 +27,7 @@ import org.ujoframework.tools.criteria.Operator;
 
 /**
  *
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class OrmSampleTest extends TestCase {
     

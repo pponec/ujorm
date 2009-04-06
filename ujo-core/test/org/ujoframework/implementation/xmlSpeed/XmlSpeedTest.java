@@ -29,7 +29,7 @@ import org.ujoframework.core.UjoManagerXML;
 
 /**
  * XmlSpeedTest
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class XmlSpeedTest extends MyTestCase {
     

@@ -24,7 +24,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  * A Property Change Support for the UJO objects.
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegistrar<Ujo>*/ {
     
