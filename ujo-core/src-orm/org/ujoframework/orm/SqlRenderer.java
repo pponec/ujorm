@@ -30,7 +30,7 @@ import org.ujoframework.tools.criteria.Operator;
 
 /**
  * SQL renderer API
- * @author Ponec
+ * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
 abstract public class SqlRenderer {

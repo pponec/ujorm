@@ -33,7 +33,7 @@ import org.ujoframework.orm.Query;
  *    <li>iterator can create a List object</li>
  * </ul>
 
- * @author Ponec
+ * @author Pavel Ponec
  */
 abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
 

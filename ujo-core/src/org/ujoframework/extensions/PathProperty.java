@@ -28,7 +28,7 @@ import org.ujoframework.UjoProperty;
  * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included 
  * in the list returned by Ujo.readProperties().
  * 
- * @author Ponec
+ * @author Pavel Ponec
  * @since 0.81
  */
 public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VALUE> {

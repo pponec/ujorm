@@ -21,7 +21,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  * An abstraction expression provides an factory methods.
- * @author Ponec
+ * @author Pavel Ponec
  */
 public abstract class Expression<UJO extends Ujo> {
     

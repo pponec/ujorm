@@ -22,7 +22,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.AbstractUjo;
 
 /**
- * This is a simple abstract implementation of Ujo. <br>
+ * This is a simple abstract implementation of <code>Ujo</code>.<br>
  * For implementation define only a "public static final MapProperty" constants in a child class.
  * The code syntax is Java 1.5 complied.<br>
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.

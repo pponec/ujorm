@@ -26,7 +26,7 @@ import org.ujoframework.tools.criteria.Expression;
 
 /**
  * ORM query.
- * @author Ponec
+ * @author Pavel Ponec
  * @composed 1 - 1 Session
  * @composed 1 - 1 ExpressionDecoder
  */

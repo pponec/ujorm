@@ -115,7 +115,7 @@ import org.ujoframework.orm.Session;
  *
  * <strong>Note</strong>: the API desing a very early prototype, some methods are not implemented yet.
  *
- * @author Ponec
+ * @author Pavel Ponec
  * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */

@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  *    <li>iterator can create a List object</li>
  * </ul>
 
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class UjoIteratorImpl<T> extends UjoIterator<T> {
 

@@ -44,7 +44,7 @@ import org.ujoframework.tools.criteria.*;
  * List&lt;Person&gt; <strong style="color:blue;">result</strong> = criteria.select(persons, exp, sort);
 </pre>
  * 
- * @author Ponec
+ * @author Pavel Ponec
  * @since 0.81
  */
 public class UjoCriteria<UJO extends Ujo> {

@@ -21,11 +21,11 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.AbstractUjo;
 
 /**
- * This is a very fast abstract implementation of Ujo.
+ * This is a very fast abstract implementation of <code>Ujo</code>.
  * For implementation define only a "public static final ArrayUjoProperty" constants and a "readPropertyCount()" method in a child class.
  * The code syntax is Java 1.5 complied.
  * <br>All properties must be objects (no primitive types) in the current version of UJO Framework.
- * <br>Features: very good performance, an order of properties from "readProperties()" method is guaranteed and independed on a Java implementation.
+ * <br>Features: very good performance, an order of properties from "<code>readProperties()</code>" method is guaranteed and independed on a Java implementation.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujoframework.implementation.array.*;

@@ -21,7 +21,7 @@ import org.ujoframework.implementation.map.MapUjo;
 
 /**
  * A MapUjo implementation with a Property change listener support.
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class UserUjo<UJO extends Ujo> extends MapUjo implements UserType {
     

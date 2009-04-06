@@ -52,7 +52,7 @@ import org.ujoframework.implementation.map.MapUjoExt;
  *    <span class="keyword-directive">return</span> eventRegistrar.removePropertyChangeListener(property, before, listener);
  *  }
  *}</pre>
- * @author Ponec
+ * @author Pavel Ponec
  */
 public class UserUjoExt<UJO extends UserUjoExt> extends MapUjoExt<UJO> implements EventRegistrar<UJO> {
     
