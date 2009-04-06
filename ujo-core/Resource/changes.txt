@@ -6,6 +6,7 @@ release 0.85 (2009-04-XX)
 + XML element body value support by the annotation @XmlElementBody
 + all 'Super' classes was renamed to the prefix 'Abstract' classes
 + interface UjoProperty has new methods for a direction of sorting: isAscending(), descending()
++ JavaDoc completition
 
 release 0.84 (2009-03-08)
 + new method: UjoProperty.isDefault(UJO) indicates whether a parameter value of the ujo "equal to" the property default value
