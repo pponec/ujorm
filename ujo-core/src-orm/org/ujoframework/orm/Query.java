@@ -16,11 +16,15 @@
 
 package org.ujoframework.orm;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
+import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
 
@@ -38,6 +42,8 @@ public class Query<UJO extends TableUjo> {
     final private ExpressionDecoder decoder;
     final private Session session;
 
+    /** A list of properties to sorting */
+    private List<UjoProperty> order;
     /** There is required to know a count of selected items before reading a resultset */
     private boolean countRequest = false;
     /** Result is a readOnly, default value is false */
@@ -68,6 +74,8 @@ public class Query<UJO extends TableUjo> {
         this.expression = expression;
         this.session = session;
         this.decoder = new ExpressionDecoder(expression, table);
+
+        setOrder(); // set undefined ordering
     }
 
     /** Returns a count of the items */
@@ -135,4 +143,37 @@ public class Query<UJO extends TableUjo> {
         final UjoIterator<UJO> result = session.iterate(this);
         return result;
     }
+
+    /** Get the order item list. The method returns a not null result allways. */
+    final public List<UjoProperty> getOrder() {
+        return order;
+    }
+
+    /** Set the order item list. Use a <code>null</code> value to clear the all items. */
+    public Query<UJO> setOrder(UjoProperty... order) {
+        this.order = new ArrayList<UjoProperty>(Math.max(order.length, 4));
+        for (final UjoProperty p : order) {
+            this.order.add(p);
+        }
+        return this;
+    }
+
+    /** Add a item to the end of order list. */
+    public Query<UJO> addOrderItem(UjoProperty property) {
+        order.add(property);
+        return this;
+    }
+
+    /** Returns an order column. A method for an internal use only. */
+    public OrmColumn readOrderColumn(int i) {
+        UjoProperty property = order.get(i);
+
+        while(!property.isDirect()) {
+            property = ((PathProperty)property).getLastProperty();
+        }
+
+        OrmRelation2Many result = session.getHandler().findColumnModel(property);
+        return (OrmColumn) result;
+    }
+
 }

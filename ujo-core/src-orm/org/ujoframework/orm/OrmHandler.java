@@ -38,7 +38,6 @@ public class OrmHandler {
 
     public static final Logger LOGGER = Logger.getLogger(OrmHandler.class.getName());
 
-
     private static OrmHandler handler = new OrmHandler();
 
     private Session session = new Session(this);
