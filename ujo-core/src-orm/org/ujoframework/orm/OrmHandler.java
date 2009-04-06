@@ -79,7 +79,7 @@ public class OrmHandler {
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.info("DATABASE METAMODEL:\n"+databases.toString());
+            LOGGER.info("DATABASE META-MODEL:\n"+databases.toString());
         }
         
         return dbModel;
