@@ -24,7 +24,6 @@ import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.ExpressionValue;
 import org.ujoframework.tools.criteria.Operator;
 
@@ -368,7 +367,10 @@ abstract public class SqlRenderer {
         }
     }
 
-    /** Print SQL SELECT */
+    /** Print SQL SELECT
+     * @param query The UJO query
+     * @param count only count of items is required;
+     */
     public String printSelect(Query query, boolean count) throws IOException {
         StringBuilder result = new StringBuilder();
         result.append("SELECT ");
@@ -388,8 +390,28 @@ abstract public class SqlRenderer {
                 result.append(ed.getSql());
             }
         }
+        if (!count && !query.getOrder().isEmpty()) {
+            printSelectOrder(query, result);
+        }
         result.append(";");
         return result.toString();
     }
 
+    /** Print SQL SELECT */
+    public void printSelectOrder(Query query, Appendable writer) throws IOException {
+        
+        writer.append(" ORDER BY ");
+        final List<UjoProperty> props = query.getOrder();
+        for (int i=0; i<props.size(); i++) {
+            OrmColumn column = query.readOrderColumn(i);
+            boolean ascending = props.get(i).isAscending();
+            if (i>0) {
+                writer.append(", ");
+            }
+            writer.append(column.getFullName());
+            if (!ascending) {
+                writer.append(" DESC");
+            }
+        }
+    }
 }

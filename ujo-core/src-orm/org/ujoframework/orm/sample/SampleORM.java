@@ -89,7 +89,7 @@ public class SampleORM {
         Session session = OrmHandler.getInstance().getSession();
 
         Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
-        UjoIterator<Item> items = session.createQuery(expr).iterate();
+        UjoIterator<Item> items = session.createQuery(expr).setOrder(Item.ID.descending()).iterate();
 
         for (Item item : items) {
             Order order = item.getOrder();
