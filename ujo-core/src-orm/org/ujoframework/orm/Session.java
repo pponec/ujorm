@@ -46,7 +46,7 @@ import org.ujoframework.tools.criteria.ExpressionValue;
 public class Session {
 
     /** Commin title to print the SQL VALUES */
-    private static final String SQL_VALUES = "SQL VALUES: ";
+    private static final String SQL_VALUES = "\n-- SQL VALUES: ";
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
@@ -186,12 +186,13 @@ public class Session {
             final OrmTable ormTable = handler.findTableModel(ujo.getClass());
             final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
             String sql = db.createUpdate(ormTable, changedColumns, decoder);
-            LOGGER.log(Level.INFO, sql.toString());
-
             statement = getStatement(db, sql);
             statement.assignValues(ujo, changedColumns);
             statement.assignValues(decoder);
-            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
+
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+            }
             result = statement.executeUpdate(); // execute update statement
             ujo.writeSession(this);
         } catch (Throwable e) {
@@ -203,15 +204,15 @@ public class Session {
         return result;
     }
 
-    /** Try to delete the object form parameter.
-     * @param table The one object to delete
+    /** Delete all object object form parameter.
+     * @param tableType Type of table to delete
+     * @param expression filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    public <UJO extends TableUjo> int delete(TableUjo table) {
-        final Expression expr = createPkExpression(table);
-        final int result = delete(table.getClass(), expr);
-        table.writeSession(null);
-        return result;
+    public <UJO extends TableUjo> int delete(final Expression<UJO> expression) {
+        final OrmRelation2Many column = getBasicColumn(expression);
+        final OrmTable table = OrmRelation2Many.TABLE.of(column);
+        return delete(table, expression);
     }
 
 
@@ -221,20 +222,32 @@ public class Session {
      * @return Returns a number of the realy deleted objects.
      */
     public <UJO extends TableUjo> int delete(final Class<UJO> tableType, final Expression<UJO> expression) {
+        final OrmTable table = handler.findTableModel(tableType);
+        return delete(table, expression);
+    }
+
+
+
+    /** Delete all object object form parameter.
+     * @param tableType Type of table to delete
+     * @param expression filter for deleting tables.
+     * @return Returns a number of the realy deleted objects.
+     */
+    protected <UJO extends TableUjo> int delete(final OrmTable ormTable, final Expression<UJO> expression) {
         int result = 0;
         JdbcStatement statement = null;
 
         try {
-            OrmTable table = handler.findTableModel(tableType);
-            OrmDatabase db = OrmTable.DATABASE.of(table);
-            final OrmTable ormTable = handler.findTableModel(tableType);
+
+            final OrmDatabase db = OrmTable.DATABASE.of(ormTable);
             final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
             String sql = db.createDelete(ormTable, decoder);
-            LOGGER.log(Level.INFO, sql.toString());
-
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
-            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
+
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+            }
             result = statement.executeUpdate(); // execute delete statement
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
@@ -313,11 +326,12 @@ public class Session {
             OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
             String sql = db.createSelect(query, false);
-            LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
             statement.assignValues(query.getDecoder());
-            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+            }
             ResultSet rs = statement.executeQuery(); // execute a select statement
             UjoIterator<UJO> result = UjoIterator.getIntance(query, rs);
             return result;
@@ -355,7 +369,8 @@ public class Session {
         if (column==null) {
             OrmTable origTable = handler.findTableModel(value.getClass());
             if (origTable.isPersistent()) {
-               throw new IllegalStateException("Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName());
+                String msg = "Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName();
+                throw new IllegalStateException(msg);
             }
         }
 

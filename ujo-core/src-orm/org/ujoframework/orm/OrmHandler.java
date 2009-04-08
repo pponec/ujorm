@@ -143,6 +143,7 @@ public class OrmHandler {
     public OrmTable findTableModel(Class<? extends TableUjo> dbClass) {
         for (OrmDatabase db : OrmRoot.DATABASES.getList(databases)) {
             for (OrmTable table : OrmDatabase.TABLES.getList(db)) {
+                // Class has a unique instance in the same classloader:
                 if (OrmTable.DB_PROPERTY.of(table).getItemType()==dbClass) {
                     return table;
                 }

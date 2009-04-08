@@ -181,7 +181,7 @@ public class SampleORM {
     public void useDelete() {
         Session session = OrmHandler.getInstance().getSession();
         Expression<Item> expr = Expression.newInstance(Item.ID, 1);
-        int count = session.delete(Item.class, expr);
+        int count = session.delete(expr);
         session.commit();
         System.out.println("There are DELETED rows: " + count);
     }
