@@ -68,7 +68,7 @@ public class JdbcStatement {
         &&  values.length()>0) {
             return values.toString() + "]";
         } else {
-            return "?";
+            return "NONE";
         }
     }
 

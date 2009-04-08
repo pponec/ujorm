@@ -149,7 +149,7 @@ public class Query<UJO extends TableUjo> {
         return order;
     }
 
-    /** Set the order item list. Use a <code>null</code> value to clear the all items. */
+    /** Set the order item list to an SQL ORDER BY phrase. */
     public Query<UJO> setOrder(UjoProperty... order) {
         this.order = new ArrayList<UjoProperty>(Math.max(order.length, 4));
         for (final UjoProperty p : order) {
