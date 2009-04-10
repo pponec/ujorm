@@ -48,4 +48,15 @@ public class MapPropertyList<UJO extends Ujo, ITEM>
         super(name, (Class<List<ITEM>>) (Class) List.class, itemType, index);
     }
 
+    // --------- STATIC METHODS -------------------
+
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends Ujo, ITEM> MapPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
+        return new MapPropertyList<UJO,ITEM> (name, type, index);
+    }
+
+
 }

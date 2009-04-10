@@ -54,5 +54,25 @@ public class ArrayProperty<UJO extends Ujo,VALUE> extends AbstractProperty<UJO,V
         : 0
         ;
         return result;
-    }    
+    }
+
+    // --------- STATIC METHODS -------------------
+
+    /** A Property Factory, a default value is null.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends Ujo,VALUE> ArrayProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
+        return new ArrayProperty<UJO,VALUE> (name, type, index);
+    }
+
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends Ujo, VALUE> ArrayProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
+        return new ArrayProperty<UJO, VALUE>(name, value, index);
+    }
+
+
 }

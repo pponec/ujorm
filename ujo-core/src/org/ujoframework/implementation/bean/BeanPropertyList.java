@@ -56,5 +56,17 @@ public class BeanPropertyList<UJO extends Ujo, ITEM>
     public Object readValue(Object bean) {
         return beanManager.readValue(bean);
     }
+
+    // --------- STATIC METHODS -------------------
+
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
+        return new BeanPropertyList<UJO,ITEM> (name, type, index);
+    }
+
+
     
 }
