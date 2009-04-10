@@ -68,5 +68,25 @@ public class BeanProperty<UJO extends Ujo,VALUE>
     public Object readValue(final Object bean) throws IllegalArgumentException {
         return beanManager.readValue(bean);
     }
-        
+
+    // --------- STATIC METHODS -------------------
+
+    /** A Property Factory, a default value is null.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
+        return new BeanProperty<UJO,VALUE> (name, type, index);
+    }
+
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
+        return new BeanProperty<UJO, VALUE>(name, value, index);
+    }
+
+
+    
 }

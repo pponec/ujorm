@@ -44,6 +44,19 @@ public class ArrayPropertyList<UJO extends Ujo, ITEM>
         : 0
         ;
         return result;
-    }    
+    }
+
+
+    // --------- STATIC METHODS -------------------
+
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends Ujo, ITEM> ArrayPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
+        return new ArrayPropertyList<UJO,ITEM> (name, type, index);
+    }
+
+
     
 }
