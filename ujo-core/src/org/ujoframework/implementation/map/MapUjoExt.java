@@ -48,7 +48,7 @@ import org.ujoframework.extensions.AbstractUjoExt;
 abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJO> {
 
     /** Object data */
-    protected HashMap<UjoProperty, Object> data;
+    final protected HashMap<UjoProperty, Object> data;
 
     /** Constructor */
     public MapUjoExt() {
