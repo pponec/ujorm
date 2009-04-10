@@ -3,9 +3,11 @@ The UJO Framework release notes
 
 release 0.85 (2009-04-XX)
 + ORM support - the early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements on the in-memory database table
++ new interface UjoMiddle extends the Ujo interface for two methods (set + get)
++ the original UjoMiddle interface extends UjoMiddle now
 + XML element body value support by the annotation @XmlElementBody
-+ all 'Super' classes was renamed to the prefix 'Abstract' classes
 + interface UjoProperty has new methods for a direction of sorting: isAscending(), descending()
++ all 'Super' classes was renamed to the prefix 'Abstract' classes
 + JavaDoc completition
 
 release 0.84 (2009-03-08)

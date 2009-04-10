@@ -28,14 +28,14 @@ import org.ujoframework.UjoProperty;
  * All methods are type safe likewise the usage of the Ujo interface - exclude two methods with an unlimited count of properties: setVal(...) and getVal(...).
  * 
  *<br>Sample of usage:
- *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
+ *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo <span class="java-keywords">implements</span> UjoMiddle {
  *
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> MapProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> MapProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> MapProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
- *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
+ *    set(NAME, <span class="java-string-literal">&quot;George&quot;</span>);
  *    set(CHILD, <span class="java-keywords">new</span> Person());
  *    set(CHILD, NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">Jane</span><span class="java-string-literal">&quot;</span>);
  *    set(CHILD, CASH, 200d);
@@ -47,12 +47,8 @@ import org.ujoframework.UjoProperty;
  * @author Paul Ponec
  * @since UJO release 0.80 
  */
-public interface UjoExt<UJO_IMPL extends UjoExt> extends Ujo {
+public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
     
-    /** Getter based on one UjoProperty */
-    public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( UjoProperty<UJO, VALUE> property);
-
     /** Getter based on two properties */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
         ( UjoProperty<UJO1, UJO2 > property1
@@ -63,11 +59,6 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends Ujo {
         ( UjoProperty<UJO1, UJO2 > property1
         , UjoProperty<UJO2, UJO3 > property2
         , UjoProperty<UJO3, VALUE> property3 );
-
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
-    public <UJO extends UJO_IMPL, VALUE> Ujo set
-        ( UjoProperty<UJO, VALUE> property
-        , VALUE value);
 
     /** Setter  based on two properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> void set
