@@ -23,6 +23,11 @@ import org.ujoframework.extensions.UjoMiddle;
 
 /**
  * This is an middle extended implementation of a setter and getter methods for an easier access for developpers.
+ * <br />Notes:
+ * <ul>
+ *   <li>the NULL key is not supported in this implementation</li>
+ *   <li>the map implementation is a proxy to an internal Map&lt;String,Object&gt; object</li>
+ * </ul>
  * <br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapImplUjoMiddle {
  *
