@@ -31,8 +31,12 @@ import org.ujoframework.extensions.AbstractUjo;
  * the <code>UjoMiddle</code>
  * and <code>Map&lt;CharSequence,Object&gt;</code> interfaces.
  * A child implementation can use "public static final MapProperty" constants for its UjoProperties.
- * The map key can be any CharSequence object include an UjoProperty from its implementation.
- * <br>Note: the map implementation is a proxy to an internal Map&lt;String,Object&gt; object.
+ * The map key can be any CharSequence object include a <strong>direct</strong> UjoProperty from its implementation.
+ * <br>Notes:
+ * <ul>
+ *   <li>the NULL key is not supported in this implementation</li>
+ *   <li>the map implementation is a proxy to an internal Map&lt;String,Object&gt; object</li>
+ * </ul>
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
@@ -106,7 +110,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
     }
 
     /** Returns <tt>true</tt> if this map contains a mapping for the specified key.
-     * @param key Any CharSequence include UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
      */
     @Override public boolean containsKey(Object key) {
         return data.containsKey(key.toString());
@@ -119,7 +123,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
 
     /** Returns the value to which the specified key is mapped, the {@code null}
      * is not supported
-     * @param key Any CharSequence include UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
      * @return
      */
     @Override public Object get(Object key) {
@@ -128,7 +132,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
 
     /**
      * Associates the specified value with the specified key in this map.
-     * @param key Any CharSequence include UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
      * @param value
      * @return the previous value associated with <tt>key</tt>,
      *         or <tt>null</tt> if there was no mapping for <tt>key</tt>.
@@ -139,7 +143,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
 
     /**
      * Removes the mapping for the specified key from this map if present.
-     * @param key Any CharSequence include UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
      * @return the previous value associated with <tt>key</tt>,
      *         or <tt>null</tt> if there was no mapping for <tt>key</tt>.
      */
