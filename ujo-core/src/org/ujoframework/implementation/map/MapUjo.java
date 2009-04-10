@@ -23,7 +23,7 @@ import org.ujoframework.extensions.AbstractUjo;
 
 /**
  * This is a simple abstract implementation of <code>Ujo</code>.<br>
- * For implementation define only a "public static final MapProperty" constants in a child class.
+ * Child implementation can use "public static final MapProperty" constants for its UjoProperties.
  * The code syntax is Java 1.5 complied.<br>
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * <h3>Sample of usage</h3>
@@ -45,7 +45,7 @@ import org.ujoframework.extensions.AbstractUjo;
 public abstract class MapUjo extends AbstractUjo {
     
     /** Object data */
-    protected HashMap<UjoProperty,Object> data;
+    final protected HashMap<UjoProperty,Object> data;
     
     /** Constructor */
     public MapUjo() {
