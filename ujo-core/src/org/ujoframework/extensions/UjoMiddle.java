@@ -48,5 +48,27 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
     public <UJO extends UJO_IMPL, VALUE> Ujo set
         ( UjoProperty<UJO, VALUE> property
         , VALUE value);
+
+    /**
+     * Returns a String value by a NULL context.
+     * otherwise method returns an instance of String.
+     * <br>The method can be an alias for a method readValueString(...)
+     *
+     * @param property A Property
+     * @return If property type is "container" then result is null.
+     */
+    public String getText(final UjoProperty property);
+
+
+
+    /**
+     * Set value from a String format by a NULL context. Property can't be an "container" type (Ujo, List, Object[]).
+     * <br>The method can be an alias for a method writeValueString(...)
+     * @param property Property
+     * @param value String value
+     */
+    public void setText(final UjoProperty property, final String value);
+
+
         
 }
