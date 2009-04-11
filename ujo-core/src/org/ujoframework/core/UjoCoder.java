@@ -108,6 +108,13 @@ public class UjoCoder {
             for (int i=0; i<size; i++) {
                 if (i>0) { lresult.append(separator); }
                 final String txt = encodeValue(lvalue.get(i), regenerationTest);
+                if (regenerationTest && txt.indexOf(separator)>=0) {
+                    String msg
+                        = "The item of list '" + txt
+                        + "' must not contain the separator character '" + separator + "'"
+                        ;
+                    throw new IllegalArgumentException(msg);
+                }
                 lresult.append(txt);
             }
             result = lresult.toString();
