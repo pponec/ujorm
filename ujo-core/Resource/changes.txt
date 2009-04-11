@@ -3,7 +3,7 @@ The UJO Framework release notes
 
 release 0.85 (2009-04-XX)
 + ORM support - the early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements on the in-memory database table
-+ new interface UjoMiddle extends the Ujo interface for two methods (set + get)
++ new interface UjoMiddle extends the Ujo interface for four methods (set, get, setText, getText)
 + the original UjoMiddle interface extends UjoMiddle now
 + new MapImplUjo implements an API of the Map interface
 + XML element body value support by the annotation @XmlElementBody

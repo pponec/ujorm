@@ -116,7 +116,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
     // ---- An UjoTextable implementation -----
     
     /**
-     * Get an original value in a String format. If property type is a "container" type (Ujo, List, Object[]), method returns null,
+     * Get an original value in a String format. Property must be an direct type.
      * otherwise method returns an instance of String.
      *
      * @param property A direct property only. See a method UjoProperty.isDirect().
@@ -133,7 +133,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
     
     /**
-     * Set value from a String format. Property can't be an "container" type (Ujo, List, Object[]).
+     * Set value from a String format. Property must be an direct type.
      *
      * @param property A direct property only. See a method UjoProperty.isDirect().
      * @param value String value

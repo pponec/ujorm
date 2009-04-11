@@ -198,25 +198,22 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     /**
      * Returns a String value by a NULL context.
      * otherwise method returns an instance of String.
-     * <br>The method is an alias for a method readValueString(...)
      *
      * @param property A Property
      * @return If property type is "container" then result is null.
      */
     public String getText(final UjoProperty property) {
-        return readValueString(property, null);
+        return readUjoManager().getText(this, property, null);
     }
     
-    
-    
     /**
-     * Set value from a String format by a NULL context. Property can't be an "container" type (Ujo, List, Object[]).
+     * Set value from a String format by a NULL context. Types Ujo, List, Object[] are not supported by default.
      * <br>The method is an alias for a method writeValueString(...)
      * @param property Property
      * @param value String value
      */
     public void setText(final UjoProperty property, final String value) {
-        writeValueString(property, value, null, null);
+        readUjoManager().setText(this, property, value, null, null);
     }       
     
     

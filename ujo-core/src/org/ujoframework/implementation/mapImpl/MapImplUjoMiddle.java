@@ -59,16 +59,40 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
     }
 
     /** Getter based on one UjoProperty */
+    @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
         return (VALUE) ((UjoProperty)property).of(this);
     }
 
     /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
+    @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> Ujo set(final UjoProperty<UJO, VALUE> property, final VALUE value) {
         assert readUjoManager().assertDirectAssign(property, value);
         ((UjoProperty)property).setValue(this, value);
         return this;
     }
+
+    /**
+     * Returns a String value by a NULL context.
+     * otherwise method returns an instance of String.
+     *
+     * @param property A Property
+     * @return If property type is "container" then result is null.
+     */
+    public String getText(final UjoProperty property) {
+        return readUjoManager().getText(this, property, null);
+    }
+
+    /**
+     * Set value from a String format by a NULL context. Types Ujo, List, Object[] are not supported by default.
+     * <br>The method is an alias for a method writeValueString(...)
+     * @param property Property
+     * @param value String value
+     */
+    public void setText(final UjoProperty property, final String value) {
+        readUjoManager().setText(this, property, value, null, null);
+    }
+
 
 
 
