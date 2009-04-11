@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.implementation.xml.t006_body;
+package org.ujoframework.implementation.xml.t007_body;
 
 import java.util.Date;
 import org.ujoframework.core.annot.XmlElementBody;
@@ -19,11 +19,11 @@ import org.ujoframework.implementation.map.MapProperty;
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class AtrPerson3 extends MapUjo  {
+public class AtrPerson2 extends MapUjo  {
     
-    public static final MapProperty<AtrPerson3, String>  NAME = newProperty("Name", String.class );
-    public static final MapProperty<AtrPerson3, Boolean> MALE = newProperty("Male", Boolean.class);
     @XmlElementBody
-    public static final MapProperty<AtrPerson3, Date>   BIRTH = newProperty("Birth", Date.class  );
+    public static final MapProperty<AtrPerson2, String>  NAME = newProperty("Name", String.class );
+    public static final MapProperty<AtrPerson2, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final MapProperty<AtrPerson2, Date>   BIRTH = newProperty("Birth", Date.class  );
      
 }

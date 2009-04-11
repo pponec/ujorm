@@ -147,7 +147,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         
         @SuppressWarnings("unchecked")
         MapProperty property = new MapProperty(rootElementName, ujo.getClass());
-        printProperty(null, property, null, null, ujo, writer);
+        printProperty(null, property, null, null, ujo, writer, false);
         
     }
     
@@ -205,16 +205,25 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                     ? null
                     : value.getClass()
                     ;
-                for (Object item : (List) value) {
-                    Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
-                    printProperty( ujo, property, itemClass, baseType, item, writer );
+
+                if (property instanceof UjoPropertyList
+                && ((UjoPropertyList)property).isItemTypeOf(Ujo.class)) {
+                    for (Object item : (List) value) {
+                        Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
+                        printProperty( ujo, property, itemClass, baseType, item, writer, false );
+                    }
+                } else {                    
+                    final Class baseType2 = null; //value.getClass()!=property.getType() ? value.getClass() : null ;
+                    printProperty(ujo, property, baseType2, null, value, writer, true);
                 }
+
+
             } else if (bodyProperty==property) {
                 writeNewLine(writer);
-                printValue2XML(writer, Object.class, value, ujo, property);
+                printValue2XML(writer, Object.class, value, ujo, property, true);
             } else {
                 final Class baseType = value.getClass()!=property.getType() ? value.getClass() : null ;
-                printProperty(ujo, property, baseType, null, value, writer);
+                printProperty(ujo, property, baseType, null, value, writer, false);
 //          } else if (value instanceof Object[]) {
 //                // PoP:TODO
             }
@@ -239,6 +248,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , Class listType
     , final Object value
     , final Writer writer
+    , final boolean simpleProperty
     ) throws IOException {
         
         // --------------
@@ -276,7 +286,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
         
         writer.write('>');
-        printValue2XML(writer, Object.class, value, ujo, property);
+        printValue2XML(writer, Object.class, value, ujo, property, simpleProperty);
         writer.write("</");
         writer.write(property.getName());
         writer.write('>');
@@ -307,7 +317,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             writer.write("\"");
         }
         writer.write('>');
-        printValue2XML(writer, defaultType, value, ujo, prop);
+        printValue2XML(writer, defaultType, value, ujo, prop, false);
         writer.write("</");
         writer.write(ATTR_ITEM);
         writer.write('>');
@@ -356,13 +366,14 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , final Object value
     , final UjoTextable ujo
     , final UjoProperty prop
+    , final boolean simpleProperty
     ) throws IOException {
         
         if (value == null) {
             // NOTHING;
         } else if (value instanceof UjoTextable) {
             printProperties(writer, (UjoTextable)value);
-        } else if (value instanceof List) {
+        } else if (!simpleProperty && value instanceof List) {
             for (Object item : (List<Object>) value) {
                 printItem(writer, itemType, item, ujo, prop);
             }

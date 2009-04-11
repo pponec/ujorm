@@ -1,11 +1,11 @@
 /*
- * T004a2_Test.java
+ * T008a1_Test.java
  * JUnit based test
  *
  * Created on 8. èerven 2007, 23:42
  */
 
-package org.ujoframework.implementation.xml.t006_body;
+package org.ujoframework.implementation.xml.t008_array;
 
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
@@ -18,14 +18,14 @@ import org.ujoframework.core.UjoManagerXML;
  *
  * @author Pavel Ponec
  */
-public class T004a2_Test extends MyTestCase {
+public class T008a1_Test extends MyTestCase {
     
-    public T004a2_Test(String testName) {
+    public T008a1_Test(String testName) {
         super(testName);
     }
     
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T004a2_Test.class);
+        TestSuite suite = new TestSuite(T008a1_Test.class);
         return suite;
     }
     
@@ -36,7 +36,7 @@ public class T004a2_Test extends MyTestCase {
         System.out.println("testPrintXML: " + suite().toString());
         CharArrayWriter writer = new CharArrayWriter(256);
         try {
-            AtrPerson2 person = createPerson();
+            AtrPerson person = createPerson();
             // Serialization:
             UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
             
@@ -53,21 +53,26 @@ public class T004a2_Test extends MyTestCase {
         System.out.println("testPrintXML: " + suite().toString());
         CharArrayWriter writer = new CharArrayWriter(256);
         //
-        AtrPerson2 person = createPerson();
+        AtrPerson person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
         ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
-        AtrPerson2 person2 = UjoManagerXML.getInstance().parseXML(is, AtrPerson2.class, false);
-        
+        AtrPerson person2 = UjoManagerXML.getInstance().parseXML(is, AtrPerson.class, false);
+        AtrPerson.NUMBERS.of(person2); AtrPerson.NUMBERS.of(person);
         assertEquals(person, person2);
     }
     
     
     
-    protected AtrPerson2 createPerson() {
-        AtrPerson2 result = new AtrPerson2();
-        AtrPerson2.NAME.setValue(result, "Pavel");
-        AtrPerson2.MALE.setValue(result,  true);
-        AtrPerson2.BIRTH.setValue(result, new Date());
+    protected AtrPerson createPerson() {
+        AtrPerson result = new AtrPerson();
+        AtrPerson.NAME.setValue(result, "Pavel");
+        AtrPerson.MALE.setValue(result,  true);
+        AtrPerson.BIRTH.setValue(result, new Date());
+        AtrPerson.NUMBERS.addItem(result, 10);
+        AtrPerson.NUMBERS.addItem(result, 20);
+        AtrPerson.NUMBERS.addItem(result, 30);
+        AtrPerson.NUMBERS.addItem(result, 40);
+
         
         return result;
     }

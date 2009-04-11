@@ -218,7 +218,7 @@ final class UjoHandlerXML extends DefaultHandler {
             $elementCont = true;
         } else if ($parentObj.isList()) {
             // Vrite Value/Container:
-            $parentObj.list.add( ujoManager.decodeValue($elementType, $value.toString()) );
+            $parentObj.list.add( ujoManager.decodeValue($property, $value.toString(), $elementType) );
             $value.setLength(0);
             $elementCont = true;
         }
@@ -227,7 +227,7 @@ final class UjoHandlerXML extends DefaultHandler {
 
     /** Appned an part of tag value. */
     @Override
-    public void characters(char buf[], int offset, int len) throws SAXException {
+    public void characters(char[] buf, int offset, int len) throws SAXException {
         $value.append(buf, offset, len);
     }
 
@@ -371,7 +371,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 if (ujo instanceof UjoTextable) {
                     ((UjoTextable)ujo).writeValueString(bodyProperty, bodyText, null, actionImport);
                 } else {
-                    final Object bodyObj = ujoManager.decodeValue(bodyProperty, bodyText);
+                    final Object bodyObj = ujoManager.decodeValue(bodyProperty, bodyText, null);
                     ((UjoTextable)ujo).writeValue(bodyProperty, bodyObj);
                 }
             }

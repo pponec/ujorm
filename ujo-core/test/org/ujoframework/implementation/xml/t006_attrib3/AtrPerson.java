@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.implementation.xml.t005_attrib3;
+package org.ujoframework.implementation.xml.t006_attrib3;
 
 import java.util.Date;
 import org.ujoframework.core.annot.*;

@@ -53,6 +53,12 @@ abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITE
     public Class<ITEM> getItemType() {
         return itemType;
     }
+
+    /** Returns true if the item type is a type or subtype of the parameter class. */
+    @SuppressWarnings("unchecked")
+    public boolean isItemTypeOf(final Class type) {
+        return type.isAssignableFrom(itemType);
+    }
     
     /**
      * Returns a value of property. The result is the same, like Ujo#getValue(UjoPropertyList) .get(index) .
