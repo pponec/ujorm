@@ -5,7 +5,7 @@
  * Created on 8. èerven 2007, 23:42
  */
 
-package org.ujoframework.implementation.xml.t005_attrib3;
+package org.ujoframework.implementation.xml.t006_attrib3;
 
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;

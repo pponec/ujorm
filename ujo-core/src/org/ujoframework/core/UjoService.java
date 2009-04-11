@@ -105,7 +105,7 @@ abstract public class UjoService<UJO extends Ujo> {
         if (textable) {
             ((UjoTextable)ujo).writeValueString(prop, value, type, action);
         } else {
-            final Object o = ujoManager.decodeValue(type!=null ? type : prop.getType(), value);
+            final Object o = ujoManager.decodeValue(prop, value, type);
             UjoManager.setValue(ujo, prop, o);
         }
     }

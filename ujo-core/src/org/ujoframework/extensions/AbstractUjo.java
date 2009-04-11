@@ -142,7 +142,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      */
     public void writeValueString(final UjoProperty property, final String value, final Class type, final UjoAction action) {
-        final Object valueObj = readUjoManager().decodeValue(type!=null ? type : property.getType(), value);
+        final Object valueObj = readUjoManager().decodeValue(property, value, type);
         writeValue(property, valueObj);
     }
     

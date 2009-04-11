@@ -1,15 +1,17 @@
 /*
- * T004a2_Test.java
+ * T004a_Test.java
  * JUnit based test
  *
  * Created on 8. èerven 2007, 23:42
  */
 
-package org.ujoframework.implementation.xml.t006_body;
+package org.ujoframework.implementation.xml.t007_body;
 
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.core.UjoManagerXML;
@@ -18,14 +20,14 @@ import org.ujoframework.core.UjoManagerXML;
  *
  * @author Pavel Ponec
  */
-public class T004a3_Test extends MyTestCase {
+public class T004b_Test extends MyTestCase {
     
-    public T004a3_Test(String testName) {
+    public T004b_Test(String testName) {
         super(testName);
     }
     
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T004a3_Test.class);
+        TestSuite suite = new TestSuite(T004b_Test.class);
         return suite;
     }
     
@@ -36,9 +38,9 @@ public class T004a3_Test extends MyTestCase {
         System.out.println("testPrintXML: " + suite().toString());
         CharArrayWriter writer = new CharArrayWriter(256);
         try {
-            AtrPerson3 person = createPerson();
+            AtrPerson person = createPerson();
             // Serialization:
-            UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
+            UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST Context");
             
             System.out.println("XML==PERSON:\n" + writer.toString());
         } catch (Throwable ex) {
@@ -53,21 +55,34 @@ public class T004a3_Test extends MyTestCase {
         System.out.println("testPrintXML: " + suite().toString());
         CharArrayWriter writer = new CharArrayWriter(256);
         //
-        AtrPerson3 person = createPerson();
+        AtrPerson person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
         ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
-        AtrPerson3 person2 = UjoManagerXML.getInstance().parseXML(is, AtrPerson3.class, false);
+        AtrPerson person2 = UjoManagerXML.getInstance().parseXML(is, AtrPerson.class, false);
         
         assertEquals(person, person2);
     }
     
     
     
-    protected AtrPerson3 createPerson() {
-        AtrPerson3 result = new AtrPerson3();
-        AtrPerson3.NAME.setValue(result, "Pavel");
-        AtrPerson3.MALE.setValue(result,  true);
-        AtrPerson3.BIRTH.setValue(result, new Date());
+    protected AtrPerson createPerson() {
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.set(Calendar.YEAR,3000);
+        
+        AtrPerson result = createPersonOne(); sleep(10);
+        AtrPerson.MALE  .setValue(result, false);
+        AtrPerson.NAME  .setValue(result, "JIøINA");
+        AtrPerson.BIRTH .setValue(result, cal.getTime());
+        AtrPerson.CHILDS.addItem(result, createPersonOne());
+        
+        return result;
+    }
+
+    protected AtrPerson createPersonOne() {
+        AtrPerson result = new AtrPerson();
+        AtrPerson.NAME.setValue(result, "Pavel");
+        AtrPerson.MALE.setValue(result,  true);
+        AtrPerson.BIRTH.setValue(result, new Date());
         
         return result;
     }

@@ -32,6 +32,9 @@ public interface UjoPropertyList<UJO extends Ujo, LIST extends List<ITEM>,ITEM> 
     /** Returns a count of Items. If the property is null, method returns 0. */
     public int getItemCount(UJO ujo);
     
+    /** Returns true if the item type is a type or subtype of the parameter class. */
+    public boolean isItemTypeOf(Class type);
+
     /**
      * Returns a value of property. The result is the same, like Ujo#readValue(UjoPropertyList).
      */

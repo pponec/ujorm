@@ -80,7 +80,7 @@ public class UjoPropertyRow extends MapUjoExt {
             if (content instanceof UjoTextable) {
                 ((UjoTextable) content).writeValueString(property, value, subtype, action);
             } else {
-                final Object objValue = readUjoManager().decodeValue(property.getType(), value);
+                final Object objValue = readUjoManager().decodeValue(property, value, subtype);
                 content.writeValue(property, objValue);
             }
         } else {

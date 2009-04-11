@@ -13,12 +13,14 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.UjoPropertyList;
 
 /**
  * A tool for encoding an object to a text and a text back to the object.
@@ -27,19 +29,15 @@ import org.ujoframework.UjoProperty;
 public class UjoCoder {
 
     /** Date formatter / parser */
-    private /*public*/ static final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private /*public*/ final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     /** Typ konstruktoru */
     public static final Class[] CONSTRUCTOR_TYPE = new Class[]{String.class};
+
     // === CONVERTING VALUES ===
-    /** Encode value to a String representation. */
-    public String encodeValue(Ujo ujo, UjoProperty property) {
-        Object origValue = ujo.readValue(property);
-        Class type = origValue != null ? origValue.getClass() : property.getType();
-        if (isContainerType(type)) {
-            return null;
-        }
-        final String result = encodeValue(origValue, false);
-        return result;
+    
+    /** Returns a list separator */
+    public char getSeparator() {
+        return ',';
     }
 
     /**
@@ -102,6 +100,17 @@ public class UjoCoder {
             result = ((Class) value).getName();
         } else if (value instanceof Charset) {
             result = ((Charset) value).name();
+        } else if (value instanceof List) {
+            StringBuilder lresult = new StringBuilder(64);
+            List lvalue = (List) value;
+            char separator = getSeparator();
+            int size = lvalue.size();
+            for (int i=0; i<size; i++) {
+                if (i>0) { lresult.append(separator); }
+                final String txt = encodeValue(lvalue.get(i), regenerationTest);
+                lresult.append(txt);
+            }
+            result = lresult.toString();
         } else {
             if (regenerationTest) {
                 try { // Testing of a regeneration:
@@ -115,8 +124,32 @@ public class UjoCoder {
         return result;
     }
 
+    /** Restore an Object value from a String representation and write it into ujo.
+     * <br>If value can't be decoded, an IllegalArgumentException is throwed.
+     */
+    @SuppressWarnings("unchecked")
+    public Object decodeValue(final UjoProperty property, final String aValue, final Class type) throws IllegalArgumentException {
+        if (property instanceof UjoPropertyList) {
+            if (aValue==null || aValue.length()==0) { return null; }
+            List result = new ArrayList();
+            UjoPropertyList propertyList = (UjoPropertyList) property;
+            String separator = String.valueOf(getSeparator());
+            StringTokenizer st = new StringTokenizer(aValue, separator);
+            while (st.hasMoreTokens()) {
+                final String text = st.nextToken();
+                final Object val  = decodeValue(propertyList.getItemType(), text);
+                result.add(val);
+            }
+            return result;
+        } else {
+            final Object result = decodeValue(type!=null ? type : property.getType(), aValue);
+            return result;
+        }
+    }
+
+
     /** Restore an Object value from a String representation.
-     * <br>If value can't be decodet, an IllegalArgumentException is throwed.
+     * <br>If value can't be decoded, an IllegalArgumentException is throwed.
      */
     @SuppressWarnings("unchecked")
     public Object decodeValue(final Class type, final String aValue) throws IllegalArgumentException {

@@ -7,10 +7,9 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.implementation.xml.t006_body;
+package org.ujoframework.implementation.xml.t008_array;
 
 import java.util.Date;
-import org.ujoframework.core.annot.XmlElementBody;
 import org.ujoframework.implementation.map.MapUjo;
 import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.map.MapPropertyList;
@@ -23,9 +22,8 @@ import org.ujoframework.implementation.map.MapPropertyList;
 public class AtrPerson extends MapUjo  {
     
     public static final MapProperty<AtrPerson, String>  NAME = newProperty("Name", String.class );
-    @XmlElementBody
     public static final MapProperty<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
     public static final MapProperty<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
-    public static final MapPropertyList<AtrPerson, AtrPerson> CHILDS = newPropertyList("Child", AtrPerson.class);
+    public static final MapPropertyList<AtrPerson, Integer> NUMBERS = newPropertyList("Child", Integer.class);
      
 }

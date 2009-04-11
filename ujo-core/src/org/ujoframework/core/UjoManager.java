@@ -429,7 +429,7 @@ public class UjoManager implements Comparator<UjoProperty> {
                 = list ? ((UjoPropertyList)property).getItemCount(ujo) + "]"
                 : objVal instanceof Ujo ? "UJO:" + objVal.hashCode()
                 : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, action)
-                : coder.encodeValue(ujo, property)
+                : coder.encodeValue(ujo, false)
                 ;
             } catch (Throwable e) {
                 value = e.getClass().getSimpleName();
@@ -479,8 +479,8 @@ public class UjoManager implements Comparator<UjoProperty> {
         return result;
     }
 
-    public final Object decodeValue(final UjoProperty property, final String aValue) {
-        return coder.decodeValue(property.getType(), aValue);
+    public final Object decodeValue(final UjoProperty property, final String aValue, Class type) {
+        return coder.decodeValue(property, aValue, type);
     }
 
     public final Object decodeValue(final Class type, final String aValue) {
@@ -491,7 +491,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     public final String encodeValue(final Object value, final boolean regenerationTest) {
         return coder.encodeValue(value, regenerationTest);
     }
-    
+
     /** Mark a property to XML attribute in a cache. */
     @SuppressWarnings("unchecked")
     private void cacheXmlAttribute(final UjoProperty attribute) {
@@ -672,7 +672,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             if (ujo instanceof UjoTextable) {
                 ((UjoTextable) ujo).writeValueString(property, value, type, action!=null ? action : UjoAction.DUMMY);
             } else {
-                final Object o = decodeValue(property, value);
+                final Object o = decodeValue(property, value, type);
                 setValue(ujo, property, o);
             }
         } else {
