@@ -24,12 +24,12 @@ import org.ujoframework.UjoProperty;
  * <br>If you can use an UJO persistence (XML, CSV, ResourceBundle) then the all affected UJO classes must have got next features:
  * <ul>
  *   <li>no parameter constructor and</li>
- *   <li>non UJO properties must have got a features of PropertyTextable *</li>
+ *   <li>non UJO properties must have got a features of ValueTextable *</li>
  *   <li>property type of List must be implemented by a UjoPropertyList implementation (only XML persistence supports the one)</li>
  * </ul>
  * 
+ * @see ValueTextable See ValueTextable for suppored data types.
  * @author Pavel Ponec
- * @see PropertyTextable * See a PropertyTextable for more information.
  */
 public interface UjoTextable extends Ujo {
     

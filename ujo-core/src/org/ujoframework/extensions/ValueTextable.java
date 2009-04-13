@@ -18,15 +18,15 @@ package org.ujoframework.extensions;
 
 /**
  * A special interface for a terminology only, an implementation is not reasnonable in the UJO Framework.
- * PropertyTextable is every one object, wich have got implemented method toString() so that the result can be used
+ * ValueTextable is every one object, wich have got implemented method toString() so that the result can be used
  * to restore a new equal object by its a single constructor parameter type of String.
- * <br>This is a "PropertyTextable" test for an <strong>Integer</strong> class:
+ * <br>This is a "ValueTextable" test for an <strong>Integer</strong> class:
  * <pre class="pre">
  *  Integer textable1 = <span class="java-keywords">new</span> <span class="java-layer-method">Integer</span>(<span class="java-numeric-literals">7</span>);
  *  Integer textable2 = <span class="java-keywords">new</span> <span class="java-layer-method">Integer</span>(textable1.<span class="java-layer-method">toString()</span>);
  *  <span class="java-keywords">boolean</span> result = textable1.<span class="java-layer-method">equals</span>(textable2);
  * </pre>
- * <br>Some completed PropertyTextable classes from a Java API are
+ * <br>Some completed ValueTextable classes from a Java API are
  * <ul>
  *   <li>Boolean</li>
  *   <li>Short</li>
@@ -36,11 +36,12 @@ package org.ujoframework.extensions;
  *   <li>Double</li>
  *   <li>String</li>
  * </ul>
- * These classes have <strong>NOT</strong> behaviour of PropertyTextable, <br>however UJO Framework supports these types similar like PropertyTextable:
+ * These classes have <strong>NOT</strong> behaviour of ValueTextable, <br>however UJO Framework supports these types similar like ValueTextable:
  * <ul>
  *   <li>Byte</li>
  *   <li>Character</li>
  *   <li>java.util.Date</li>
+ *   <li>java.sql.Date (time 0:00:00.000)</li>
  *   <li>byte[]</li>
  *   <li>char[]</li>
  *   <li>Locale</li>
@@ -50,13 +51,17 @@ package org.ujoframework.extensions;
  *   <li>Enum</li>
  *   <li>Class</li>
  *   <li>Charset</li>
+ *   <li>List&lt;some-type-above&gt; with some restrictions for <strong>deserialization</strong>:<br />
+ *       value property must be type of UjoPropertyList and
+ *       the serialized text must not contain a separator character comma ','
+ *   </li>
  * </ul>
  * 
  * 
  * @author Pavel Ponec
  * @see UjoTextable
  */
-public interface PropertyTextable {
+public interface ValueTextable {
     
     /** A result must be acceptable for one constructor parameter (of the same class) to restore an equal object. */
     @Override

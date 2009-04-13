@@ -9,6 +9,7 @@ package org.ujoframework.implementation.xml.t008_array;
 
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
+import java.util.Calendar;
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
@@ -67,7 +68,7 @@ public class T008a1_Test extends MyTestCase {
         AtrPerson result = new AtrPerson();
         AtrPerson.NAME.setValue(result, "Pavel");
         AtrPerson.MALE.setValue(result,  true);
-        AtrPerson.BIRTH.setValue(result, new Date());
+        AtrPerson.BIRTH.setValue(result, new java.sql.Date(2009, Calendar.APRIL, 12));
         AtrPerson.NUMBERS.addItem(result, 10);
         AtrPerson.NUMBERS.addItem(result, 20);
         AtrPerson.NUMBERS.addItem(result, 30);
