@@ -12,6 +12,8 @@ release 0.85 (2009-04-XX)
 + new method: UjoPropertyList.isItemTypeOf(Class) returns true if property type is a type (or subtype) of the parameter
 + new factory methods of UjoProperty implementations
 + all 'Super' classes was renamed to the prefix 'Abstract' classes
++ class PropertyTextable is was renamed to ValueTextable
++ text serializable for the type java.sql.Date is supported
 + JavaDoc completition
 
 release 0.84 (2009-03-08)
