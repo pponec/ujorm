@@ -30,6 +30,8 @@ public class UjoCoder {
 
     /** Date formatter / parser */
     private /*public*/ final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    /** Date formatter / parser */
+    private /*public*/ final SimpleDateFormat FORMAT_DAY  = new SimpleDateFormat("yyyy-MM-dd");
     /** Typ konstruktoru */
     public static final Class[] CONSTRUCTOR_TYPE = new Class[]{String.class};
 
@@ -73,7 +75,9 @@ public class UjoCoder {
             }
             result = sb.toString();
         } else if (value instanceof Date) {
-            synchronized (FORMAT_DATE) {
+            if (value instanceof java.sql.Date) synchronized (FORMAT_DAY) {
+               result = FORMAT_DAY.format((java.sql.Date) value);
+            } else synchronized (FORMAT_DATE) {
                result = FORMAT_DATE.format((Date) value);
             }
         } else if (value instanceof Color) {
@@ -251,10 +255,13 @@ public class UjoCoder {
             }
             if (Date.class.isAssignableFrom(type)) {
                 try {
-                    synchronized (FORMAT_DATE) {
-                        final Date result = FORMAT_DATE.parse(aValue);
-                        return result;
+                    Date result;
+                    if (java.sql.Date.class.isAssignableFrom(type)) synchronized (FORMAT_DAY) {
+                       result = new java.sql.Date(FORMAT_DAY.parse(aValue).getTime());
+                    } else synchronized (FORMAT_DATE) {
+                       result = FORMAT_DATE.parse(aValue);
                     }
+                    return result;
                 } catch (ParseException ex) {
                     new IllegalArgumentException("\"" + aValue + "\" " + type, ex);
                 }

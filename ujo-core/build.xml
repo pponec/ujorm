@@ -16,7 +16,7 @@
     <property file="Resource/build.properties"/>
     <property name="encoding" value="UTF-8" />    
     <property name="manifest.file" value="dist/manifest.txt"/>
-    <property name="year" value="2007-${build.year}" />    
+    <property name="year" value="2007-${build.year}" />
 
 
     <property name="javadoc.additionalparam" 
