@@ -54,7 +54,7 @@ public class MapPropertyList<UJO extends Ujo, ITEM>
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> MapPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
+    public static <UJO extends Ujo, ITEM> MapPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
         return new MapPropertyList<UJO,ITEM> (name, type, index);
     }
 

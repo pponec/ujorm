@@ -71,7 +71,7 @@ public class MapProperty<UJO extends Ujo,VALUE>
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo,VALUE> MapProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
+    public static <UJO extends Ujo,VALUE> MapProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
         return new MapProperty<UJO,VALUE> (name, type, index);
     }
 
@@ -79,7 +79,7 @@ public class MapProperty<UJO extends Ujo,VALUE>
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
+    public static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
         return new MapProperty<UJO, VALUE>(name, value, index);
     }
     

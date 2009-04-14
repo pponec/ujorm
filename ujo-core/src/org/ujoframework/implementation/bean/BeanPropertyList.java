@@ -63,7 +63,7 @@ public class BeanPropertyList<UJO extends Ujo, ITEM>
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
+    public static <UJO extends Ujo, ITEM> BeanPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
         return new BeanPropertyList<UJO,ITEM> (name, type, index);
     }
 

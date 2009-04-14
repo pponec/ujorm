@@ -53,7 +53,7 @@ public class ArrayPropertyList<UJO extends Ujo, ITEM>
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> ArrayPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
+    public static <UJO extends Ujo, ITEM> ArrayPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
         return new ArrayPropertyList<UJO,ITEM> (name, type, index);
     }
 
