@@ -479,10 +479,33 @@ public class UjoManager implements Comparator<UjoProperty> {
         return result;
     }
 
+    /**
+     * Decode text value
+     * @param property Property is used for a result class
+     * @param aValue Text value to decode.
+     * @param type Optional subtype class of the property type.
+     * @return Instance of new result.
+     */
     public final Object decodeValue(final UjoProperty property, final String aValue, Class type) {
         return coder.decodeValue(property, aValue, type);
     }
 
+    /**
+     * Decode text value
+     * @param property Property is used for a result class
+     * @param aValue Text value to decode.
+     * @return Instance of new result.
+     */
+    public final Object decodeValue(final UjoProperty property, final String aValue) {
+        return coder.decodeValue(property, aValue, null);
+    }
+
+    /**
+     * Decode text value
+     * @param type Parameter is used for a result class.
+     * @param aValue Text value to decode.
+     * @return Instance of new result.
+     */
     public final Object decodeValue(final Class type, final String aValue) {
         return coder.decodeValue(type, aValue);
     }
