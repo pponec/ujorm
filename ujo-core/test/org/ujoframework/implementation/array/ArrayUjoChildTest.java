@@ -38,6 +38,7 @@ public class ArrayUjoChildTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujoframework.mapImlp.AUnifiedDataObject.
      */
+    @SuppressWarnings("static-access")
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
         

@@ -789,6 +789,36 @@ public class UjoManager implements Comparator<UjoProperty> {
         return result;
     }
 
+    /** Check ujo properties to a unique name.
+     * There is recommended to calll the method from static block after UjoProperty initialization.
+     * The beneficial side effect is loading a property cache.
+     * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
+     */
+    protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalStateException {
+        final HashSet<String> names = new HashSet<String>(16);
+        if (enabled) for (UjoProperty property : readProperties(type)) {
+            if (!names.add(property.getName())) {
+                throw new IllegalStateException
+                    ( "Property '"
+                    + property
+                    + "' is duplicate in the "
+                    + type
+                    );
+            }
+        }
+
+    }
+
+    /** Check ujo properties to a unique name.
+     * There is recommended to calll the method from static block after UjoProperty initialization.
+     * The beneficial side effect is loading a property cache.
+     * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
+     */
+    public static void checkUniqueProperties(final Class<? extends Ujo> type) throws IllegalStateException {
+         getInstance().checkUniqueProperties(type, true);
+    }
+
+
     
     /** Regurns information about current library. */
     public static String projectInfo() {

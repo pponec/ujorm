@@ -9,6 +9,7 @@
 
 package org.ujoframework.implementation.bean;
 import java.util.Date;
+import org.ujoframework.core.UjoManager;
 
 /**
  * A BEAN Object
@@ -26,7 +27,10 @@ public class BeanUjoImplChild extends BeanUjoImpl {
     public static final BeanProperty<BeanUjoImplChild,Date>    PRO_P8 = newProperty("P8", Date.class);
     /** (Float) */
     public static final BeanProperty<BeanUjoImplChild,Float>   PRO_P9 = newProperty("P9", Float.class);    
-    
+
+
+    // --- An optional property unique name test ---
+    static { UjoManager.checkUniqueProperties(BeanUjoImpl.class); }
     
     // ------- STANDARD BEAN --------------------
     
