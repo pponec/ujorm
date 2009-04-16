@@ -25,7 +25,7 @@ import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.Operator;
 
 /**
- * SampleORM of usages: INSERT, SELECT
+ * SampleORM of usages: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE.
  * @author Pavel Ponec
  */
 public class SampleORM {

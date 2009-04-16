@@ -17,6 +17,7 @@ package org.ujoframework.orm.sample;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -68,12 +69,14 @@ public class Item extends TableUjo<Item> {
         set(ORDER, descr);
     }
 
-
-    
     /** Example of the composed PATH property */
     public Date getOrderDate() {
         // An alternative solution for: getOrder().getDate();
         return get(ORDER_DATE);
     }
+
+    // --- An optional property unique name test ---
+    static { UjoManager.checkUniqueProperties(Item.class); }
+
 
 }

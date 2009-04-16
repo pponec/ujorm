@@ -16,6 +16,7 @@
    
 package org.ujoframework.extensions;
 
+import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
@@ -39,7 +40,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         this.properties = properties;
     }
 
-    /** Get the last property */
+    /** Get the last property of the current object. The result can't be a direct property. */
     @SuppressWarnings("unchecked")
     final public<UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastProperty() {
         return properties[properties.length - 1];
@@ -196,11 +197,16 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return isAscending() ? new SortingProperty<UJO,VALUE>(this, false) : this ;
     }
 
-    /** Returns an array of the contained properties. */
-    public UjoProperty[] toArray() {
-        UjoProperty[] result = new UjoProperty[properties.length];
-        System.arraycopy(properties, 0, result, 0, result.length);
-        return result;
+    /** Add all direct properties to the list form parameter. */
+    @SuppressWarnings("unchecked")
+    public void addDirectProperties(List<UjoProperty> result) {
+        for (UjoProperty p : properties) {
+            if (p.isDirect()) {
+                result.add(p);
+            } else {
+                ((PathProperty)p).addDirectProperties(result);
+            }
+        }
     }
 
     // ================ STATIC ================
