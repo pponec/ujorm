@@ -63,7 +63,7 @@ public class T008a1_Test extends MyTestCase {
     }
     
     
-    
+    @SuppressWarnings("deprecation")
     protected AtrPerson createPerson() {
         AtrPerson result = new AtrPerson();
         AtrPerson.NAME.setValue(result, "Pavel");

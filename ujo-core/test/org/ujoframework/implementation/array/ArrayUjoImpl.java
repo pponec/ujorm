@@ -10,6 +10,7 @@
 package org.ujoframework.implementation.array;
 
 import java.util.Date;
+import org.ujoframework.core.UjoManager;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -30,6 +31,9 @@ public class ArrayUjoImpl extends ArrayUjo {
     public static final ArrayProperty<ArrayUjoImpl,String>  PRO_P2 = newProperty("P2", String.class, propertyCount++);
     public static final ArrayProperty<ArrayUjoImpl,Date>    PRO_P3 = newProperty("P3", Date.class, propertyCount++);
     public static final ArrayProperty<ArrayUjoImpl,Float>   PRO_P4 = newProperty("P4", Float.class, propertyCount++);
+
+    // --- An optional property unique name test ---
+    static { UjoManager.checkUniqueProperties(ArrayUjoImpl.class); }
 
     /** Creates a new instance of UnifiedDataObjectImlp */
     public ArrayUjoImpl() {
