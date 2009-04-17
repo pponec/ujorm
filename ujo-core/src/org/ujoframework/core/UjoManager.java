@@ -52,7 +52,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     protected static UjoManager instance = new UjoManager();
     
     /** A properties cache. */
-    private HashMap<Class, UjoProperty[]> propertiesCache;
+    final private HashMap<Class, UjoProperty[]> propertiesCache;
 
     /** A XML <strong>element body</strong> cache */
     private HashMap<Class, UjoProperty> xmlBodyCache;
@@ -70,19 +70,13 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** Constructor. */
     public UjoManager() {
-        init();
+        this.propertiesCache = new HashMap<Class, UjoProperty[]>();
+        this.coder = new UjoCoder();
     }
     
     /** Get a default initialization */
     public static final UjoManager getInstance() {
         return instance;
-    }
-    
-    /** A default initializton of the object. */
-    @SuppressWarnings("unchecked")
-    protected void init() {
-        propertiesCache = new HashMap();
-        coder = new UjoCoder();
     }
     
     /** Returns a reversed order of objects. */
@@ -456,6 +450,11 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** Returns a Element body of the class or the null if no property was found. */
     public final UjoProperty getXmlElementBody(final Class type) {
+
+        if (propertiesCache.get(type)==null) {
+            readProperties(type); // Load cache;
+        }
+
         final UjoProperty result
             = xmlBodyCache!=null
             ? xmlBodyCache.get(type)
