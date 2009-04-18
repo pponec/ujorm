@@ -2,7 +2,7 @@
  * AUnifiedDataObjectTest.java
  * JUnit based test
  *
- * Created on 3. èerven 2007, 23:31
+ * Created on 3. June 2007, 23:31
  */
 
 package org.ujoframework.implementation.xmlSpeed;
@@ -61,7 +61,7 @@ public class XmlSpeedTest extends MyTestCase {
     }
     
     
-    /** Vrací èas v minutách */
+    /** Returns time in minutes */
     private String getTime(long t1, long t2, long t3, long t4) {
         double time1 = (t2 - t1) / 1000d;
         double time2 = (t4 - t3) / 1000d;

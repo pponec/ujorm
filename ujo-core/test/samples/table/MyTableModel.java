@@ -1,7 +1,7 @@
 /*
  * MyTableModel.java
  *
- * Created on 17. èerven 2007, 11:33
+ * Created on 17. June 2007, 11:33
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

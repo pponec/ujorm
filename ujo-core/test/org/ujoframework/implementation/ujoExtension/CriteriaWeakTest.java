@@ -2,7 +2,7 @@
  * HUnifiedDataObjectTest.java
  * JUnit based test
  *
- * Created on 3. èerven 2007, 23:00
+ * Created on 3. June 2007, 23:00
  */
 
 package org.ujoframework.implementation.ujoExtension;

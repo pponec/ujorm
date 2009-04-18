@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <html lang="cs"><head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1250"><title>package.html - UJO (cz)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>package.html - UJO (cz)</title>
         
         <link rel="stylesheet" type="text/css" href="style.css" title="style">
         <script type="text/javascript">
@@ -14,22 +14,22 @@ document.body.appendChild(oLink);
     </head>
     
     <body style="background-color: white;">
-        Návod pro použití knihovny UJO Framework.<br>
+        NĂˇvod pro pouĹľitĂ­ knihovny UJO Framework.<br>
         <br>
         <!-- [AddSense] -->
         <h2 id="UJO"><img style="width: 32px; height: 32px; margin-right: 10px;" alt="UJO Icons" src="ujo32.png">Obsah</h2>
           <ul>
               <li><a href="#UJO2">Co je UJO?</a></li>
-              <li><a href="#why">Proč používat architekturu UJO?</a></li>
-              <li><a href="#how">Jak napíšeme třídu objektu UJO?</a></li>
+              <li><a href="#why">ProÄŤ pouĹľĂ­vat architekturu UJO?</a></li>
+              <li><a href="#how">Jak napĂ­Ĺˇeme tĹ™Ă­du objektu UJO?</a></li>
               <li><a href="#xml">XML serializace</a></li>
-              <li><a href="#javabean">Jak vytvořit JavaBean?</a></li>
+              <li><a href="#javabean">Jak vytvoĹ™it JavaBean?</a></li>
               <li><a href="#tablemodel">Podpora komponenty JTable</a></li>
-              <li><a href="#how2">Jak na rozšíření?</a></li>
-              <li><a href="#performance">Výkon</a></li>
-              <li><a href="#how3">Jaké jsou další možnosti využití?</a></li>
-              <li><a href="#refAppl">Referenční aplikace</a></li>
-              <li><a href="#where">Domovská stránka projektu</a></li>
+              <li><a href="#how2">Jak na rozĹˇĂ­Ĺ™enĂ­?</a></li>
+              <li><a href="#performance">VĂ˝kon</a></li>
+              <li><a href="#how3">JakĂ© jsou dalĹˇĂ­ moĹľnosti vyuĹľitĂ­?</a></li>
+              <li><a href="#refAppl">ReferenÄŤnĂ­ aplikace</a></li>
+              <li><a href="#where">DomovskĂˇ strĂˇnka projektu</a></li>
               <li><a href="#license">Licence</a></li>
               <li><a href="#faq">FAQ</a></li>
           </ul>           
@@ -38,125 +38,125 @@ document.body.appendChild(oLink);
         <h2 id="UJO2">Co je UJO ?</h2>
         
         <a href="UjoUmlFull.png" target="_top"><img src="UjoUml.png" width="284" height="320" alt="UjoUml.png" style="margin: 0 0 10px 10px; border: 0; float: right;" ></a>
-        <span class="appl">UJO Framework</span> je Java knihovna, která poskytuje netradiční architekturu objektů
-        odlišných od <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>. Původní nápad vznikl jako hříčka s generickými datovými typy Java 5.0, 
-        postupem času se však ukázalo, že architektura má několik zajímavých vlastností. Současná verze frameworku nabízí:
+        <span class="appl">UJO Framework</span> je Java knihovna, kterĂˇ poskytuje netradiÄŤnĂ­ architekturu objektĹŻ
+        odliĹˇnĂ˝ch od <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>. PĹŻvodnĂ­ nĂˇpad vznikl jako hĹ™Ă­ÄŤka s generickĂ˝mi datovĂ˝mi typy Java 5.0, 
+        postupem ÄŤasu se vĹˇak ukĂˇzalo, Ĺľe architektura mĂˇ nÄ›kolik zajĂ­mavĂ˝ch vlastnostĂ­. SouÄŤasnĂˇ verze frameworku nabĂ­zĂ­:
         
         <ul>
-        <li>otevřený kód</li>
-        <li>revoluční architektura objektu postavená na dvou rozhraních, která zjednodušuje manipulaci objektů pomocí 
-            <a href="http://java.sun.com/docs/books/tutorial/javabeans/">sestavovacího nástroje</a> aplikace
-            při zachování výborné rychlosti <!-- ve srovnání s přístupem k atributům přes Java reflexi--></li>
-        <li>výkonná XML serializace</li>
+        <li>otevĹ™enĂ˝ kĂłd</li>
+        <li>revoluÄŤnĂ­ architektura objektu postavenĂˇ na dvou rozhranĂ­ch, kterĂˇ zjednoduĹˇuje manipulaci objektĹŻ pomocĂ­ 
+            <a href="http://java.sun.com/docs/books/tutorial/javabeans/">sestavovacĂ­ho nĂˇstroje</a> aplikace
+            pĹ™i zachovĂˇnĂ­ vĂ˝bornĂ© rychlosti <!-- ve srovnĂˇnĂ­ s pĹ™Ă­stupem k atributĹŻm pĹ™es Java reflexi--></li>
+        <li>vĂ˝konnĂˇ XML serializace</li>
         <li><a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> serializace</li>
         <li><a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">Resource bundle</a> serializace</li>
         <li>podpora komponenty <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a></li>
-        <li>objekt si řídí sám dostupnost svých atributů</li>
+        <li>objekt si Ĺ™Ă­dĂ­ sĂˇm dostupnost svĂ˝ch atributĹŻ</li>
         <li>property <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
-            je možné implementovat na jednom <a href="Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">místě</a>
-            pro všechny property třídy včetně potomků</li>
+            je moĹľnĂ© implementovat na jednom <a href="Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">mĂ­stÄ›</a>
+            pro vĹˇechny property tĹ™Ă­dy vÄŤetnÄ› potomkĹŻ</li>
         <li>podpora <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a></li>
-        <li>úsporný zdrojový kód vašich UJO objektů</li>
-        <li>kontrola unitovými testy</li>
-        <li>malá velikost frameworku bez dalších závislostí</li>
+        <li>ĂşspornĂ˝ zdrojovĂ˝ kĂłd vaĹˇich UJO objektĹŻ</li>
+        <li>kontrola unitovĂ˝mi testy</li>
+        <li>malĂˇ velikost frameworku bez dalĹˇĂ­ch zĂˇvislostĂ­</li>
         </ul>        
             
         <span class="appl">UJO</span> je zkratka pro <span style="font-style: italic;">Unified
-        Java Object</span> a označuje takový <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">objekt</a>,
-        který implementuje rozhraní <a href="Ujo.html">Ujo</a>.
+        Java Object</span> a oznaÄŤuje takovĂ˝ <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">objekt</a>,
+        kterĂ˝ implementuje rozhranĂ­ <a href="Ujo.html">Ujo</a>.
         
-        Objekt UJO si lze představit například jako <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">mapu</a> (objekt mapující hodnoty ke klíčům), 
-        ke které se přistupuje pomocí <strong>metod klíče</strong>. Klíč je zde tvořen implementací rozhraní <a href="UjoProperty.html">UjoProperty</a> 
-        obsahující (mimo jiné) dvě typově bezpečné metody:
+        Objekt UJO si lze pĹ™edstavit napĹ™Ă­klad jako <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">mapu</a> (objekt mapujĂ­cĂ­ hodnoty ke klĂ­ÄŤĹŻm), 
+        ke kterĂ© se pĹ™istupuje pomocĂ­ <strong>metod klĂ­ÄŤe</strong>. KlĂ­ÄŤ je zde tvoĹ™en implementacĂ­ rozhranĂ­ <a href="UjoProperty.html">UjoProperty</a> 
+        obsahujĂ­cĂ­ (mimo jinĂ©) dvÄ› typovÄ› bezpeÄŤnĂ© metody:
         <ul>
-            <li><a href="UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - pro zápis hodnoty do objektu a</li> 
-            <li><a href="UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - pro čtení hodnoty.</li>
+            <li><a href="UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - pro zĂˇpis hodnoty do objektu a</li> 
+            <li><a href="UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - pro ÄŤtenĂ­ hodnoty.</li>
         </ul>
         
-        Na rozdíl od metod objektu JavaBean lze tyto klíče posílat jednoduše dalším objektům, 
-        příkladem využití může být seznam zobrazovaných sloupců tabulky poslaný do datového modelu typu TableModel, 
-        nebo odkazy k metodám beanu na JSP stránce.
+        Na rozdĂ­l od metod objektu JavaBean lze tyto klĂ­ÄŤe posĂ­lat jednoduĹˇe dalĹˇĂ­m objektĹŻm, 
+        pĹ™Ă­kladem vyuĹľitĂ­ mĹŻĹľe bĂ˝t seznam zobrazovanĂ˝ch sloupcĹŻ tabulky poslanĂ˝ do datovĂ©ho modelu typu TableModel, 
+        nebo odkazy k metodĂˇm beanu na JSP strĂˇnce.
         
-        Jádrem projektu jsou tedy dvě rozhraní 
+        JĂˇdrem projektu jsou tedy dvÄ› rozhranĂ­ 
         <a href="Ujo.html" style="font-style: italic;">Ujo</a> a 
         <a href="UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
-        ke kterým jsou k dispozici tři abstraktní implementace:
+        ke kterĂ˝m jsou k dispozici tĹ™i abstraktnĂ­ implementace:
            <ul>
-               <li><a href="implementation/map/MapUjo.html">MapUjo</a> - snadná implementace pro vývojáře s dostatečným výkonem pro běžné aplikace postavená na objektu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
-               <li><a href="implementation/array/ArrayUjo.html">ArrayUjo</a> - špičkový výkon objektů je srovnatelný s rychlostí zápisu do JavaBeans, je implementovaný pomocí <strong>pole objektů</strong></li>
-               <li><a href="implementation/bean/BeanUjo.html">BeanUjo</a> - tato implementace mapuje klíče přímo na metody objektu <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> pomocí <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflexe</a></li>
+               <li><a href="implementation/map/MapUjo.html">MapUjo</a> - snadnĂˇ implementace pro vĂ˝vojĂˇĹ™e s dostateÄŤnĂ˝m vĂ˝konem pro bÄ›ĹľnĂ© aplikace postavenĂˇ na objektu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
+               <li><a href="implementation/array/ArrayUjo.html">ArrayUjo</a> - ĹˇpiÄŤkovĂ˝ vĂ˝kon objektĹŻ je srovnatelnĂ˝ s rychlostĂ­ zĂˇpisu do JavaBeans, je implementovanĂ˝ pomocĂ­ <strong>pole objektĹŻ</strong></li>
+               <li><a href="implementation/bean/BeanUjo.html">BeanUjo</a> - tato implementace mapuje klĂ­ÄŤe pĹ™Ă­mo na metody objektu <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> pomocĂ­ <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflexe</a></li>
            </ul>
         
-        Inspirací pro rozvoj tohoto projektu byla architektura perzistentních objektů v projektu <a href="http://cayenne.apache.org/">Cayenne</a> (nástroj pro řešení 
+        InspiracĂ­ pro rozvoj tohoto projektu byla architektura perzistentnĂ­ch objektĹŻ v projektu <a href="http://cayenne.apache.org/">Cayenne</a> (nĂˇstroj pro Ĺ™eĹˇenĂ­ 
         <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a>)
         <br />
         
         
-        <h2 id="why">Proč ?</h2>
-        Proč používat architekturu <strong>UJO</strong>?
-        Objekty <strong>UJO</strong> nabízí
-        několik zajímavých vlastností, které je odlišují od tradičních <strong>JavaBeans</strong> objektů:<br>
+        <h2 id="why">ProÄŤ ?</h2>
+        ProÄŤ pouĹľĂ­vat architekturu <strong>UJO</strong>?
+        Objekty <strong>UJO</strong> nabĂ­zĂ­
+        nÄ›kolik zajĂ­mavĂ˝ch vlastnostĂ­, kterĂ© je odliĹˇujĂ­ od tradiÄŤnĂ­ch <strong>JavaBeans</strong> objektĹŻ:<br>
         <ul>
-            <li>snadná <strong>serializace</strong>
-                objektů do formátů XML <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html"><i>PropertyResourceBundle</i></a>
+            <li>snadnĂˇ <strong>serializace</strong>
+                objektĹŻ do formĂˇtĹŻ XML <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html"><i>PropertyResourceBundle</i></a>
                 a <a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a>.</li>
-            <li>architektura objektů je obecně vhodná pro strojové zpracování atributů
-                objektu. Příkladem využití může být <strong> generická</strong>
-            implementace metod <i>equals()</i>, <i>hash()</i> a řady dalších..</li>
-            <li>architektura umožňuje vytvořit odkaz
+            <li>architektura objektĹŻ je obecnÄ› vhodnĂˇ pro strojovĂ© zpracovĂˇnĂ­ atributĹŻ
+                objektu. PĹ™Ă­kladem vyuĹľitĂ­ mĹŻĹľe bĂ˝t <strong> generickĂˇ</strong>
+            implementace metod <i>equals()</i>, <i>hash()</i> a Ĺ™ady dalĹˇĂ­ch..</li>
+            <li>architektura umoĹľĹuje vytvoĹ™it odkaz
                 na atribut UJO
-                (nikoli jejich hodnot) a celý seznam atributů lze předat do nějaké
-                metody - například ve formátu  <a href="UjoProperty.html">UjoProperty[]</a>.
-            Tuto vlastnost lze využít například pro definici sloupců tabulky, či pro označení sloupců pro řazení seznamu UJO objektů.</li>
-            <li>defaultní implementace UJO objektů jsou součástí projektu.</li>
-            <li>framework obsahuje připravenou implementaci UjoTableModel pro <strong>Swing</strong>. Pro jednoduchou vizualizaci UJO
-            objektů není třeba implementovat rozhraní <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/table/TableModel.html">TableModel</a>.</li>
-            <li>architektura je vhodná pro stavbu <strong>dynamických objektů</strong>
-            za běhu aplikace (zatím není implementováno)</li>
-            <li>knihovna je velice malá (zabírá kolem 65kB) a je nezávislá na
-                knihovnách třetích stran. Tuto vlastnost lze
-            zhodnotit například v menších aplikacích spustitelných <strong>Java Web Start</strong>.</li>
-            <li>pokud oželíme některé typové kontroly je možné framework
-            přepsat do verze Java SE 1.4.</li>
-            <li>četnost využití metod Java reflexe je minimální a v případě potřeby je možné napsat vlastní implementaci UJO objektů bez reflexe.</li>
-            <li>pro zápis jednoho atributu postačuje <strong>jediný řádek zdrojového kódu</strong>, JavaBeans potřebují (při standardním zápisu) řádků 7 (1 field + 3 řádky setter + 3 getter).
-            <li>krátká doba učení, jádro projektu tvoří pouze <strong>dva základní typy rozhraní</strong> (Interface), dále
-            jejich implementace a třídu <strong>UjoManager</strong>, která poskytuje UJO objektům služby (nejen perzistentní ).</li>
-            <li>funkce frameworku je pravidelně kontrolována řadou JUnitových testů.</li>
+                (nikoli jejich hodnot) a celĂ˝ seznam atributĹŻ lze pĹ™edat do nÄ›jakĂ©
+                metody - napĹ™Ă­klad ve formĂˇtu  <a href="UjoProperty.html">UjoProperty[]</a>.
+            Tuto vlastnost lze vyuĹľĂ­t napĹ™Ă­klad pro definici sloupcĹŻ tabulky, ÄŤi pro oznaÄŤenĂ­ sloupcĹŻ pro Ĺ™azenĂ­ seznamu UJO objektĹŻ.</li>
+            <li>defaultnĂ­ implementace UJO objektĹŻ jsou souÄŤĂˇstĂ­ projektu.</li>
+            <li>framework obsahuje pĹ™ipravenou implementaci UjoTableModel pro <strong>Swing</strong>. Pro jednoduchou vizualizaci UJO
+            objektĹŻ nenĂ­ tĹ™eba implementovat rozhranĂ­ <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/table/TableModel.html">TableModel</a>.</li>
+            <li>architektura je vhodnĂˇ pro stavbu <strong>dynamickĂ˝ch objektĹŻ</strong>
+            za bÄ›hu aplikace (zatĂ­m nenĂ­ implementovĂˇno)</li>
+            <li>knihovna je velice malĂˇ (zabĂ­rĂˇ kolem 65kB) a je nezĂˇvislĂˇ na
+                knihovnĂˇch tĹ™etĂ­ch stran. Tuto vlastnost lze
+            zhodnotit napĹ™Ă­klad v menĹˇĂ­ch aplikacĂ­ch spustitelnĂ˝ch <strong>Java Web Start</strong>.</li>
+            <li>pokud oĹľelĂ­me nÄ›kterĂ© typovĂ© kontroly je moĹľnĂ© framework
+            pĹ™epsat do verze Java SE 1.4.</li>
+            <li>ÄŤetnost vyuĹľitĂ­ metod Java reflexe je minimĂˇlnĂ­ a v pĹ™Ă­padÄ› potĹ™eby je moĹľnĂ© napsat vlastnĂ­ implementaci UJO objektĹŻ bez reflexe.</li>
+            <li>pro zĂˇpis jednoho atributu postaÄŤuje <strong>jedinĂ˝ Ĺ™Ăˇdek zdrojovĂ©ho kĂłdu</strong>, JavaBeans potĹ™ebujĂ­ (pĹ™i standardnĂ­m zĂˇpisu) Ĺ™ĂˇdkĹŻ 7 (1 field + 3 Ĺ™Ăˇdky setter + 3 getter).
+            <li>krĂˇtkĂˇ doba uÄŤenĂ­, jĂˇdro projektu tvoĹ™Ă­ pouze <strong>dva zĂˇkladnĂ­ typy rozhranĂ­</strong> (Interface), dĂˇle
+            jejich implementace a tĹ™Ă­du <strong>UjoManager</strong>, kterĂˇ poskytuje UJO objektĹŻm sluĹľby (nejen perzistentnĂ­ ).</li>
+            <li>funkce frameworku je pravidelnÄ› kontrolovĂˇna Ĺ™adou JUnitovĂ˝ch testĹŻ.</li>
         </ul>
-        Objekt typu <strong>JavaBean</strong> očekává implementaci
-        metody <i>equals() </i>pro každou třídu a implementace jsou zpravidla
-        různé pro různé třídy. Na rozdíl od toho objekt UJO umožňuje implementaci této metody
-        pouze v rodičovské třídě.  Pokud z nějakého důvodu není
-        možné vytvořit společného rodiče, metodu <i>equals()</i> lze implementovat
-        jedním programovým řádkem společným pro
-        všechny třídy. Příklad implementace je uveden dále.
+        Objekt typu <strong>JavaBean</strong> oÄŤekĂˇvĂˇ implementaci
+        metody <i>equals() </i>pro kaĹľdou tĹ™Ă­du a implementace jsou zpravidla
+        rĹŻznĂ© pro rĹŻznĂ© tĹ™Ă­dy. Na rozdĂ­l od toho objekt UJO umoĹľĹuje implementaci tĂ©to metody
+        pouze v rodiÄŤovskĂ© tĹ™Ă­dÄ›.  Pokud z nÄ›jakĂ©ho dĹŻvodu nenĂ­
+        moĹľnĂ© vytvoĹ™it spoleÄŤnĂ©ho rodiÄŤe, metodu <i>equals()</i> lze implementovat
+        jednĂ­m programovĂ˝m Ĺ™Ăˇdkem spoleÄŤnĂ˝m pro
+        vĹˇechny tĹ™Ă­dy. PĹ™Ă­klad implementace je uveden dĂˇle.
         <ul>
         </ul>
-        Objekty UJO jsou otevřené pro implementaci
-        dalších vlastností a v případě potřeby lze
+        Objekty UJO jsou otevĹ™enĂ© pro implementaci
+        dalĹˇĂ­ch vlastnostĂ­ a v pĹ™Ă­padÄ› potĹ™eby lze
         implementovat vlastnosti typu  <strong>JavaBean</strong>,
         <strong>Serizalizable</strong>
         atd.
-        Protože implementace byla postavena na Java™ 5.0, tak i příklady v dokumentu jsou demonstrovány na této verzi jazyka Java.  
-        S určitým omezením (ztráta typové kontroly) je však možné UJO implementovat v nižších verzích jazyka Java.<br>
+        ProtoĹľe implementace byla postavena na Javaâ„˘ 5.0, tak i pĹ™Ă­klady v dokumentu jsou demonstrovĂˇny na tĂ©to verzi jazyka Java.  
+        S urÄŤitĂ˝m omezenĂ­m (ztrĂˇta typovĂ© kontroly) je vĹˇak moĹľnĂ© UJO implementovat v niĹľĹˇĂ­ch verzĂ­ch jazyka Java.<br>
         <br>
         <h2 id="how">Jak ?</h2>
-        Jak napíšeme třídu objektu UJO?
-        Nejrychlejší cesta je využít nějakou abstraktní implementaci UJO z tohoto projektu, pomocí pár řádů kódu však můžeme
-        vyrobit snadno i svoji vlastní implementaci. Příkladem nechť
-        je implementace třídy <i>Person</i> pomocí abstraktní třídy <a href="#Changes">MapUjo</a>.
+        Jak napĂ­Ĺˇeme tĹ™Ă­du objektu UJO?
+        NejrychlejĹˇĂ­ cesta je vyuĹľĂ­t nÄ›jakou abstraktnĂ­ implementaci UJO z tohoto projektu, pomocĂ­ pĂˇr Ĺ™ĂˇdĹŻ kĂłdu vĹˇak mĹŻĹľeme
+        vyrobit snadno i svoji vlastnĂ­ implementaci. PĹ™Ă­kladem nechĹĄ
+        je implementace tĹ™Ă­dy <i>Person</i> pomocĂ­ abstraktnĂ­ tĹ™Ă­dy <a href="#Changes">MapUjo</a>.
         
-        <h3>Kód třídy</h3>
-        Jednoduché vzorové vytvoření třídy Person je zde:
+        <h3>KĂłd tĹ™Ă­dy</h3>
+        JednoduchĂ© vzorovĂ© vytvoĹ™enĂ­ tĹ™Ă­dy Person je zde:
 <pre class="pre"><span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {<br> 
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, Double.<span class="java-keywords">class</span>);<br> 
 }</pre>
-        Teď, když máme hotovou třídu Person můžeme vytvořit její instanci a zapsat či načíst nějaká data. Pro
-        zápis atributů objektu lze využít jednu ze dvou metod API:<i><br>
+        TeÄŹ, kdyĹľ mĂˇme hotovou tĹ™Ă­du Person mĹŻĹľeme vytvoĹ™it jejĂ­ instanci a zapsat ÄŤi naÄŤĂ­st nÄ›jakĂˇ data. Pro
+        zĂˇpis atributĹŻ objektu lze vyuĹľĂ­t jednu ze dvou metod API:<i><br>
         </i>
         <ol>
             <li><i>Person.<strong>writeValue</strong>(UjoProperty, Object)</i>,
@@ -164,9 +164,9 @@ document.body.appendChild(oLink);
             <li><i>UjoProperty.<strong>setValue</strong>(person,
             Object)</i>. </li>
         </ol>
-        Z pohledu výsledku jsou obě metody ekvivalentní, nicméně druhé
-        řešení poskytuje <b>typovou kontrolu</b> při zápisu i čtení hodnoty.
-        Ukázka použití druhého (2) přístupu je zde:
+        Z pohledu vĂ˝sledku jsou obÄ› metody ekvivalentnĂ­, nicmĂ©nÄ› druhĂ©
+        Ĺ™eĹˇenĂ­ poskytuje <b>typovou kontrolu</b> pĹ™i zĂˇpisu i ÄŤtenĂ­ hodnoty.
+        UkĂˇzka pouĹľitĂ­ druhĂ©ho (2) pĹ™Ă­stupu je zde:
 <pre class="pre"><span class="java-keywords">import static</span> org.Person.*;
 Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>();<br>
 <span class="java-block-comment">// Writing:</span>
@@ -179,9 +179,9 @@ String  name = NAME.<span class="java-layer-method">of</span>(person); <span cla
 <span class="java-keywords">double</span>  cash = CASH.<span class="java-layer-method">of</span>(person);
 <br></pre>
 
-     Od <strong>verze 0.80</strong> je možné použít <strong>rozšířené API</strong> které nabízí čitelnější kód pro přístup a attributům 
-     a umožňuje mimo jiné i řetězení properties podobně jako v jazyku <a href="http://en.wikipedia.org/wiki/Groovy_%28programming_language%29">Groovy</a>. Nové API jen rozšiřuje to původní a tak 
-     je možné kombinovat oba typy objektů.
+     Od <strong>verze 0.80</strong> je moĹľnĂ© pouĹľĂ­t <strong>rozĹˇĂ­Ĺ™enĂ© API</strong> kterĂ© nabĂ­zĂ­ ÄŤitelnÄ›jĹˇĂ­ kĂłd pro pĹ™Ă­stup a attributĹŻm 
+     a umoĹľĹuje mimo jinĂ© i Ĺ™etÄ›zenĂ­ properties podobnÄ› jako v jazyku <a href="http://en.wikipedia.org/wiki/Groovy_%28programming_language%29">Groovy</a>. NovĂ© API jen rozĹˇiĹ™uje to pĹŻvodnĂ­ a tak 
+     je moĹľnĂ© kombinovat oba typy objektĹŻ.
      
 <pre class="pre"><span class="java-keywords">import static</span> org.Person.*;
 Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>(); <span class="java-block-comment">// An extension of MapUjoExt</span><br>
@@ -196,41 +196,41 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
 <br></pre>
      
 
-        <strong>Poznámka: </strong><br>
-        Pokud používáte kompilační parametr <strong>-Xlint:unchecked</strong>,
-        kompilátor vás občas upozorní na chybějící deklarace <strong>Generických datových typů</strong>
-        při inicializaci MapProperty. Máte tři možnosti:<br>
+        <strong>PoznĂˇmka: </strong><br>
+        Pokud pouĹľĂ­vĂˇte kompilaÄŤnĂ­ parametr <strong>-Xlint:unchecked</strong>,
+        kompilĂˇtor vĂˇs obÄŤas upozornĂ­ na chybÄ›jĂ­cĂ­ deklarace <strong>GenerickĂ˝ch datovĂ˝ch typĹŻ</strong>
+        pĹ™i inicializaci MapProperty. MĂˇte tĹ™i moĹľnosti:<br>
         <ul>
-            <li>generické datové typy doplňovat i na pravou stranu výrazu podle vzoru levé části výrazu, nebo</li>
-            <li>parametr <strong>-Xlint:unchecked</strong> při kompilaci nezapínat</li>
-            <li>třídu označit anotací <i>@SuppressWarnings("unchecked")</i>.
-                <br />Osobně jsem zvolil tuto možnost, kód se zprůhlední 
-                a případné kolize na stejném řádku je možné snadno uhlídat.</li>
-            <li>od verze 0.72 je pro tvorbu Property implementovaná typově bezpečná metoda <strong>newProperty(name, type)</strong></li>
+            <li>generickĂ© datovĂ© typy doplĹovat i na pravou stranu vĂ˝razu podle vzoru levĂ© ÄŤĂˇsti vĂ˝razu, nebo</li>
+            <li>parametr <strong>-Xlint:unchecked</strong> pĹ™i kompilaci nezapĂ­nat</li>
+            <li>tĹ™Ă­du oznaÄŤit anotacĂ­ <i>@SuppressWarnings("unchecked")</i>.
+                <br />OsobnÄ› jsem zvolil tuto moĹľnost, kĂłd se zprĹŻhlednĂ­ 
+                a pĹ™Ă­padnĂ© kolize na stejnĂ©m Ĺ™Ăˇdku je moĹľnĂ© snadno uhlĂ­dat.</li>
+            <li>od verze 0.72 je pro tvorbu Property implementovanĂˇ typovÄ› bezpeÄŤnĂˇ metoda <strong>newProperty(name, type)</strong></li>
         </ul>
         <h3>Implementace metody equals()</h3>
-        Naše třída <i>Person</i> má funkci <i>equals()</i> už implementovanou, protože ji zdědila z rodičovské třídy <i>MapUjo</i>.
-        Pokud však z nějakého důvodu chcete napsat vlastní implementaci UJO s touto metodou, stačí do třídy zapsat kód:<br>
+        NaĹˇe tĹ™Ă­da <i>Person</i> mĂˇ funkci <i>equals()</i> uĹľ implementovanou, protoĹľe ji zdÄ›dila z rodiÄŤovskĂ© tĹ™Ă­dy <i>MapUjo</i>.
+        Pokud vĹˇak z nÄ›jakĂ©ho dĹŻvodu chcete napsat vlastnĂ­ implementaci UJO s touto metodou, staÄŤĂ­ do tĹ™Ă­dy zapsat kĂłd:<br>
 <pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">equals</span>(Object obj) {
   <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">equals</span>(<span class="java-keywords">this</span>, (Ujo) obj );
 }<span class="java-block-comment"></span>
 </pre>
         <h3>Implementace metody clone()</h3>
-        Podobně jak v případě metody equals můžete vytvořit implementaci metody <i>clone()</i>:<br>
+        PodobnÄ› jak v pĹ™Ă­padÄ› metody equals mĹŻĹľete vytvoĹ™it implementaci metody <i>clone()</i>:<br>
 <pre class="pre"><span class="java-block-comment"></span><span class="java-block-comment"></span><span class="java-keywords">public</span> Object <span class="java-layer-method">clone</span>() {
   <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">clone</span>(<span class="java-keywords">this</span>, 1, <span class="java-keywords">null</span>);
 }
 </pre>
         <h3>Implementace metody hash()</h3>
-        Podobný příklad implementace metody <span style="font-style: italic;">hash()</span>
+        PodobnĂ˝ pĹ™Ă­klad implementace metody <span style="font-style: italic;">hash()</span>
         :<br>
 <pre class="pre"><span class="java-block-comment"></span><span class="java-block-comment"></span><span class="java-keywords">public</span> <span class="java-keywords">int</span> <span class="java-layer-method">hash</span>() {
   <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">getHash</span>(<span class="java-keywords">this</span>);
 }
 </pre>
-        Všechny uvedené implementace jsou zpravidla vhodné i pro všechny potomky Ujo objektů.<br>
+        VĹˇechny uvedenĂ© implementace jsou zpravidla vhodnĂ© i pro vĹˇechny potomky Ujo objektĹŻ.<br>
         <h2 id="xml">XML serializace</h2>
-        Použití serializace je velice jednoduché, kód vypadá takto:<br>
+        PouĹľitĂ­ serializace je velice jednoduchĂ©, kĂłd vypadĂˇ takto:<br>
 <pre class="pre"> Person person;
 ...<br>
 <span class="java-block-comment">// Make Serialization:</span>
@@ -239,7 +239,7 @@ UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="
 person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<span class="java-layer-method">parseXML</span>(inputStream, Person.<span class="java-keywords">class</span>, <span class="java-string-literal">"My Import"</span>);<br>
 </pre>
 
-        Obsah vytvořeného XML vypadá takto:
+        Obsah vytvoĹ™enĂ©ho XML vypadĂˇ takto:
 <pre class="pre"><span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version="1.0" encoding="UTF-8"</span><span class="xml-pi-start">?&gt;</span>
 <span class="xml-tag">&lt;body</span><span class="xml-tag">&gt;</span>
   <span class="xml-tag">&lt;Name</span><span class="xml-tag">&gt;</span>Paul Ponec<span class="xml-tag">&lt;/Name</span><span class="xml-tag">&gt;</span>
@@ -250,12 +250,12 @@ person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<spa
 
 
 <h3>List Property</h3>
-Často se hodí, aby nějaký atribut obsahoval <strong>seznam</strong> dalších UJO objektů. Je sice možné vytvořit 
-atribut typu <strong>ArrayList&lt;UjoItem&gt;</strong>, nicméně vhodnější je použít pro atribut třídu <a href="#">UjoPropertyList</a>. Prvním z důvodů je čistší obsah exportu do XML, 
-protože export neobsahuje informace o <strong>datových typech</strong> položek Listu. 
-Pro podrobnější informaci doporučuji prostudovat API.
+ÄŚasto se hodĂ­, aby nÄ›jakĂ˝ atribut obsahoval <strong>seznam</strong> dalĹˇĂ­ch UJO objektĹŻ. Je sice moĹľnĂ© vytvoĹ™it 
+atribut typu <strong>ArrayList&lt;UjoItem&gt;</strong>, nicmĂ©nÄ› vhodnÄ›jĹˇĂ­ je pouĹľĂ­t pro atribut tĹ™Ă­du <a href="#">UjoPropertyList</a>. PrvnĂ­m z dĹŻvodĹŻ je ÄŤistĹˇĂ­ obsah exportu do XML, 
+protoĹľe export neobsahuje informace o <strong>datovĂ˝ch typech</strong> poloĹľek Listu. 
+Pro podrobnÄ›jĹˇĂ­ informaci doporuÄŤuji prostudovat API.
 <br>&nbsp;<br>
-Doporučené řešení pro implementaci vazby <strong>1:N</strong> pro objekty Person - Child.
+DoporuÄŤenĂ© Ĺ™eĹˇenĂ­ pro implementaci vazby <strong>1:N</strong> pro objekty Person - Child.
 <pre class="pre">
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo { 
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty    &lt;Person,String&gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
@@ -263,16 +263,16 @@ Doporučené řešení pro implementaci vazby <strong>1:N</strong> pro objekty Person
 }
 </pre>
 
-        <h3 id="xmlAuthrization">Zákaz exportu</h3>
-        Co když je třeba exportovat jen některé atributy UJO objektu a jiné ignorovat?
-        <br>Pro tento případ slouží metoda <strong>readAuthorization(...)</strong>, která může povolit účast vybraných atributů v závislosti na:
+        <h3 id="xmlAuthrization">ZĂˇkaz exportu</h3>
+        Co kdyĹľ je tĹ™eba exportovat jen nÄ›kterĂ© atributy UJO objektu a jinĂ© ignorovat?
+        <br>Pro tento pĹ™Ă­pad slouĹľĂ­ metoda <strong>readAuthorization(...)</strong>, kterĂˇ mĹŻĹľe povolit ĂşÄŤast vybranĂ˝ch atributĹŻ v zĂˇvislosti na:
         <ul>
         <li>typu akce (XML export, Resource Bundle export, ...)</li>
         <li>atributu</li>
-        <li>jeho hodnotě</li>
-        <li>a případně i na kontextu celé akce</li>
+        <li>jeho hodnotÄ›</li>
+        <li>a pĹ™Ă­padnÄ› i na kontextu celĂ© akce</li>
         </ul>
-        Na následujícím případě si ukážeme, jak vypadá potlačení atributu <strong>NAME</strong> při exportu do XML:
+        Na nĂˇsledujĂ­cĂ­m pĹ™Ă­padÄ› si ukĂˇĹľeme, jak vypadĂˇ potlaÄŤenĂ­ atributu <strong>NAME</strong> pĹ™i exportu do XML:
 <pre class="pre">
 <span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(<span class="java-keywords">int</span> action, UjoProperty property, Object value, Object context) {
   <span class="java-keywords">switch</span>(action) {
@@ -283,14 +283,14 @@ Doporučené řešení pro implementaci vazby <strong>1:N</strong> pro objekty Person
     }
   }
 }</pre>        
-        Poznámka: protože všechny vlastnosti (Properties) UJO objektu jsou typu final, není třeba je porovnávat metodou <strong>equals()</strong>, 
-        ale je možné použít rychlejší porovnání operátorem <strong>==</strong>.
+        PoznĂˇmka: protoĹľe vĹˇechny vlastnosti (Properties) UJO objektu jsou typu final, nenĂ­ tĹ™eba je porovnĂˇvat metodou <strong>equals()</strong>, 
+        ale je moĹľnĂ© pouĹľĂ­t rychlejĹˇĂ­ porovnĂˇnĂ­ operĂˇtorem <strong>==</strong>.
         
-<h3>Zápis XML atributu</h3>
-UJO Framework nabízí možnost ukládat vybrané <strong>property</strong> jako atribut na místo XML elementu (defaultní vlastnost). K dosažení cíle vedou dvě cesty:
+<h3>ZĂˇpis XML atributu</h3>
+UJO Framework nabĂ­zĂ­ moĹľnost uklĂˇdat vybranĂ© <strong>property</strong> jako atribut na mĂ­sto XML elementu (defaultnĂ­ vlastnost). K dosaĹľenĂ­ cĂ­le vedou dvÄ› cesty:
 <ul>
-  <li>implementovat vlastní řešení metody <strong>readAuthorization(...)</strong>. 
-      Pro rozlišení se využívá autorizační test pro akci ACTION_XML_ELEMENT, návratová hodnota FALSE je zpráva pro zápis XML atributu. Příklad použití, ve kterém se property NAME zapisuje jako XML atribut:
+  <li>implementovat vlastnĂ­ Ĺ™eĹˇenĂ­ metody <strong>readAuthorization(...)</strong>. 
+      Pro rozliĹˇenĂ­ se vyuĹľĂ­vĂˇ autorizaÄŤnĂ­ test pro akci ACTION_XML_ELEMENT, nĂˇvratovĂˇ hodnota FALSE je zprĂˇva pro zĂˇpis XML atributu. PĹ™Ă­klad pouĹľitĂ­, ve kterĂ©m se property NAME zapisuje jako XML atribut:
 <pre class="pre"><span class="java-annotation">@</span>Override
 <span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(<span class="java-keywords">int</span> action, UjoProperty property, Object value, Object context) {
   <span class="java-keywords">switch</span>(action) {
@@ -300,19 +300,19 @@ UJO Framework nabízí možnost ukládat vybrané <strong>property</strong> jako atri
 }
 </pre>
   </li>
-  <li>pokud použiváte některého abstraktního rodiče (MapUjo, ArrayUjo), je možné označit property přímo anotací <strong>@XmlAttribute</strong> podle vzoru:
+  <li>pokud pouĹľivĂˇte nÄ›kterĂ©ho abstraktnĂ­ho rodiÄŤe (MapUjo, ArrayUjo), je moĹľnĂ© oznaÄŤit property pĹ™Ă­mo anotacĂ­ <strong>@XmlAttribute</strong> podle vzoru:
 <pre class="pre"><span class="java-annotation">@</span>XmlAttribute
 <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
 </pre>
-      Výchozí implementace metody <strong>readAuthorization(...)</strong> v rodičovské třídě rozpoznává přiřazenou anotaci 
-      a tak mechanismus stále funguje výše popsaným způsobem.
+      VĂ˝chozĂ­ implementace metody <strong>readAuthorization(...)</strong> v rodiÄŤovskĂ© tĹ™Ă­dÄ› rozpoznĂˇvĂˇ pĹ™iĹ™azenou anotaci 
+      a tak mechanismus stĂˇle funguje vĂ˝Ĺˇe popsanĂ˝m zpĹŻsobem.
   </li>
 </ul>
 
         
 
-        <h2 id="javabean">Jak vytvořit JavaBean?</h2>
-        Z UJO objektu snadno vyrobíte JavaBean, stačí implementovat setter a getter pro každý atribut. Příklad použití:
+        <h2 id="javabean">Jak vytvoĹ™it JavaBean?</h2>
+        Z UJO objektu snadno vyrobĂ­te JavaBean, staÄŤĂ­ implementovat setter a getter pro kaĹľdĂ˝ atribut. PĹ™Ă­klad pouĹľitĂ­:
 <pre class="pre">
 <span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {<br>
@@ -332,13 +332,13 @@ UJO Framework nabízí možnost ukládat vybrané <strong>property</strong> jako atri
   }
 }</pre>
 
-Od verze Ujo Framework 0.74 je pro snadnou implementaci UJO do objektů JavaBeans připravena třída <a href="implementation/bean/BeanUjo.html">BeanUjo</a>.
+Od verze Ujo Framework 0.74 je pro snadnou implementaci UJO do objektĹŻ JavaBeans pĹ™ipravena tĹ™Ă­da <a href="implementation/bean/BeanUjo.html">BeanUjo</a>.
            
         <h2 id="tablemodel">Podpora komponenty JTable</h2>
-        UJO Framework obsahuje podporu pro zobrazování seznamu (List) UJO objektů v tabulce JTable.
-        Pro vytvoření jednoduché editovatelné tabulky není třeba vytvářet žádnou novou třídu, stačí pouze <strong>vytvořit instanci třídy</strong> <a href="swing/UjoTableModel.html">UjoTableModel</a> 
-        a tu pak vložit do objektu JTable metodou setModel().
-        Příklad jednoduchého použití následuje:
+        UJO Framework obsahuje podporu pro zobrazovĂˇnĂ­ seznamu (List) UJO objektĹŻ v tabulce JTable.
+        Pro vytvoĹ™enĂ­ jednoduchĂ© editovatelnĂ© tabulky nenĂ­ tĹ™eba vytvĂˇĹ™et ĹľĂˇdnou novou tĹ™Ă­du, staÄŤĂ­ pouze <strong>vytvoĹ™it instanci tĹ™Ă­dy</strong> <a href="swing/UjoTableModel.html">UjoTableModel</a> 
+        a tu pak vloĹľit do objektu JTable metodou setModel().
+        PĹ™Ă­klad jednoduchĂ©ho pouĹľitĂ­ nĂˇsleduje:
 <pre class="pre">
 <span class="java-block-comment">// Create a model for all attributes:</span>
 UjoTableModel&lt;Person&gt; model = <span class="java-keywords">new</span> <span class="java-layer-method">UjoTableModel</span>(Person.NAME, Person.MALE, Person.BIRTH);
@@ -349,7 +349,7 @@ List&lt;Person&gt; persons = <span class="java-keywords">new</span> <span class=
 model.<span class="java-layer-method">setRows</span>(persons);<br>
 </pre>        
         
-        <br />Další možnosti třídy UjoTableModel:
+        <br />DalĹˇĂ­ moĹľnosti tĹ™Ă­dy UjoTableModel:
         <pre class="pre">
 <span class="java-block-comment">// Add a row:</span>
 model.<span class="java-layer-method">addRow</span>(<span class="java-keywords">new</span> <span class="java-layer-method">Person</span>());<br>
@@ -361,9 +361,9 @@ Person person = model.<span class="java-layer-method">getRowLast</span>();<br>
 model.<span class="java-layer-method">sort</span>(<span class="java-keywords">true</span>, Person.NAME);<br>
 </pre>
     
-        <h3>Srovnání s AbstractTableModel</h3>
-        Pro vytvoření datového modelu <strong>editovatelné</strong> tabulky je třeba implementovat či přepsat (overwrite) 
-        několik metod abstraktní třídy AbstractTableModel.
+        <h3>SrovnĂˇnĂ­ s AbstractTableModel</h3>
+        Pro vytvoĹ™enĂ­ datovĂ©ho modelu <strong>editovatelnĂ©</strong> tabulky je tĹ™eba implementovat ÄŤi pĹ™epsat (overwrite) 
+        nÄ›kolik metod abstraktnĂ­ tĹ™Ă­dy AbstractTableModel.
         <br>
         <ul style="color: rgb(192, 192, 192);">
             <li>getColumnName(int column)</li>
@@ -374,44 +374,44 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
             <li>setValueAt(Object value, int rowIndex, int columnIndex)</li>
         </ul>
         
-        Všechny tyto metody ve třídě UjoTableModel dostanete už implementované.
-        Jméno sloupce a odpovídající třída se berou z přímo objektu UjoProperty, seznam sloupců se vkládá v konstruktoru.
+        VĹˇechny tyto metody ve tĹ™Ă­dÄ› UjoTableModel dostanete uĹľ implementovanĂ©.
+        JmĂ©no sloupce a odpovĂ­dajĂ­cĂ­ tĹ™Ă­da se berou z pĹ™Ă­mo objektu UjoProperty, seznam sloupcĹŻ se vklĂˇdĂˇ v konstruktoru.
         
         
-        <h2 id="how2">Jak na rozšíření?</h2>
-        Pokud potřebujete vyrobit potomka třídy Person, stačí v potomkovi
-        definovat pouze nové atributy. Při prvním volání metody
+        <h2 id="how2">Jak na rozĹˇĂ­Ĺ™enĂ­?</h2>
+        Pokud potĹ™ebujete vyrobit potomka tĹ™Ă­dy Person, staÄŤĂ­ v potomkovi
+        definovat pouze novĂ© atributy. PĹ™i prvnĂ­m volĂˇnĂ­ metody
         readProperties() se seznam <span style="font-style: italic;">UjoProperty[]</span>
-        získá pomocí Java reflexe, všechny ostatní hodnoty se už berou z cache.<br>
+        zĂ­skĂˇ pomocĂ­ Java reflexe, vĹˇechny ostatnĂ­ hodnoty se uĹľ berou z cache.<br>
 <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> PersonExt <span class="java-keywords">extends</span> Person {<br>
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;PersonExt,Float&gt; WEIGHT = <span class="java-keywords">new</span> <span class="java-layer-method">MapProperty</span>(<span class="java-string-literal">"Weight"</span>, Float.<span class="java-keywords">class</span>);
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;PersonExt,Date&gt;  BORN   = <span class="java-keywords">new</span> <span class="java-layer-method">MapProperty</span>(<span class="java-string-literal">"Born"</span>  , Date.<span class="java-keywords">class</span>);<br>
 }</pre>
         
         
-        <h2 id="performance">Výkon</h2>
-        Rychlost zpracování UJO objektů je závislá na implementaci. Při
-        zpracování objektu typu <span style="font-style: italic;">MapUjo</span>
-        je rychlost  (zápis/čtení) přibližně shodná s operacemi zápis/čtení objektu HashMap. Rychlejší implementaci poskytuje
-        řešení ArrayUjo, nejrychlejší je objekt JavaBean.<br>
+        <h2 id="performance">VĂ˝kon</h2>
+        Rychlost zpracovĂˇnĂ­ UJO objektĹŻ je zĂˇvislĂˇ na implementaci. PĹ™i
+        zpracovĂˇnĂ­ objektu typu <span style="font-style: italic;">MapUjo</span>
+        je rychlost  (zĂˇpis/ÄŤtenĂ­) pĹ™ibliĹľnÄ› shodnĂˇ s operacemi zĂˇpis/ÄŤtenĂ­ objektu HashMap. RychlejĹˇĂ­ implementaci poskytuje
+        Ĺ™eĹˇenĂ­ ArrayUjo, nejrychlejĹˇĂ­ je objekt JavaBean.<br>
         <br>
-        Výsledky jednoduchého měření jsou uvedeny v následující tabulce.
-        <br />Prostředí Windows XP, procesor Intel DuoCore 1.66 MHz, JRE 1.6.0_04, UJO Framework 0.74 .<br>
+        VĂ˝sledky jednoduchĂ©ho mÄ›Ĺ™enĂ­ jsou uvedeny v nĂˇsledujĂ­cĂ­ tabulce.
+        <br />ProstĹ™edĂ­ Windows XP, procesor Intel DuoCore 1.66 MHz, JRE 1.6.0_04, UJO Framework 0.74 .<br>
         Popis testu: <br>
         <ul>
-            <li>počet iterací testu je 5 milionů </li>
-            <li>v každé iteraci se vytvoří nová instance UJO objektu, </li>
-            <li>zapíšou se hodnoty 10-ti  atributů, </li>
-            <li>všechny hodnoty se přečtou, </li>
-            <li>objekt se uvolní pro Garbage collector a</li>
-            <li>zveřejněné výsledky jsou aritmetickým průměrem hodnot ze čtyř pokusů</li>
+            <li>poÄŤet iteracĂ­ testu je 5 milionĹŻ </li>
+            <li>v kaĹľdĂ© iteraci se vytvoĹ™Ă­ novĂˇ instance UJO objektu, </li>
+            <li>zapĂ­Ĺˇou se hodnoty 10-ti  atributĹŻ, </li>
+            <li>vĹˇechny hodnoty se pĹ™eÄŤtou, </li>
+            <li>objekt se uvolnĂ­ pro Garbage collector a</li>
+            <li>zveĹ™ejnÄ›nĂ© vĂ˝sledky jsou aritmetickĂ˝m prĹŻmÄ›rem hodnot ze ÄŤtyĹ™ pokusĹŻ</li>
         </ul>
         <br>
         <table style="text-align: left;" border="1" cellpadding="2" cellspacing="0">
             <tr valign="top">
                 <th style="text-align: left;">Implementace</th>
-                <th style="text-align: right;">Rychlost<br /><span style="font-weight: normal;">[sec / za 5M cyklů]</span></th>
-                <th style="text-align: right; width: 100px;">Poměr<br /><span style="font-weight: normal;">[%]</span></th>
+                <th style="text-align: right;">Rychlost<br /><span style="font-weight: normal;">[sec / za 5M cyklĹŻ]</span></th>
+                <th style="text-align: right; width: 100px;">PomÄ›r<br /><span style="font-weight: normal;">[%]</span></th>
             </tr>
             <tr>
                 <td align="left">ArrayUjo</td>
@@ -435,23 +435,23 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
             </tr>
         </table>
         
-        <br>Z tabulky je zřejmé, že rychlost implementace <i>ArrayUjo</i> a blíží se rychlosti JavaBeans objektů.
-        Výsledky může ovlivnit v některých případech režie spojená s vytvářením instancí hodnoty atributů.
-        Rychlost přístupu JavaBeans se však výrazně sníží v případě, že objektům JavaBeans budeme přistupovat 
-        přes nástroje <strong>Java</strong> reflexe, hodnoty pak budou odpovídat času <i>BeanUjo</i>.
+        <br>Z tabulky je zĹ™ejmĂ©, Ĺľe rychlost implementace <i>ArrayUjo</i> a blĂ­ĹľĂ­ se rychlosti JavaBeans objektĹŻ.
+        VĂ˝sledky mĹŻĹľe ovlivnit v nÄ›kterĂ˝ch pĹ™Ă­padech reĹľie spojenĂˇ s vytvĂˇĹ™enĂ­m instancĂ­ hodnoty atributĹŻ.
+        Rychlost pĹ™Ă­stupu JavaBeans se vĹˇak vĂ˝raznÄ› snĂ­ĹľĂ­ v pĹ™Ă­padÄ›, Ĺľe objektĹŻm JavaBeans budeme pĹ™istupovat 
+        pĹ™es nĂˇstroje <strong>Java</strong> reflexe, hodnoty pak budou odpovĂ­dat ÄŤasu <i>BeanUjo</i>.
         
-        <p><strong>Serializace UJO objektů</strong> z XML je postavena na rychlém SAX parseru, rychlostní testy jsou velice příznivé
-           zejména ve srovnání s rychlostí XML serializace (XMLEncoder, XMLDecoder) implementované v JRE.
+        <p><strong>Serializace UJO objektĹŻ</strong> z XML je postavena na rychlĂ©m SAX parseru, rychlostnĂ­ testy jsou velice pĹ™Ă­znivĂ©
+           zejmĂ©na ve srovnĂˇnĂ­ s rychlostĂ­ XML serializace (XMLEncoder, XMLDecoder) implementovanĂ© v JRE.
         </p>
-        Měření bylo provedeno za stejných podmínek jako minulý test (UJO verze 0.74), výsledky jsou opět v tabulce.<br>
+        MÄ›Ĺ™enĂ­ bylo provedeno za stejnĂ˝ch podmĂ­nek jako minulĂ˝ test (UJO verze 0.74), vĂ˝sledky jsou opÄ›t v tabulce.<br>
         Popis testu: <br>
         <ul>
-            <li>všechny business objekty jsou stejného typu (v rámci jednoho testu)</li>
-            <li>každý business objekt obsahuje 11 atributů včetně jednoho rekurzivního typu ArrayList</li>
-            <li>celkový počet instancí business objektu 6000</li>
-            <li>maximální hloubka zanoření 4 levels</li>
-            <li>test byl proveden třídou XmlSpeedTest2 (druhý průchod) ze skupiny JUnit testů</li>
-            <li>zveřejněné výsledky jsou aritmetickým průměrem hodnot ze čtyř pokusů</li>
+            <li>vĹˇechny business objekty jsou stejnĂ©ho typu (v rĂˇmci jednoho testu)</li>
+            <li>kaĹľdĂ˝ business objekt obsahuje 11 atributĹŻ vÄŤetnÄ› jednoho rekurzivnĂ­ho typu ArrayList</li>
+            <li>celkovĂ˝ poÄŤet instancĂ­ business objektu 6000</li>
+            <li>maximĂˇlnĂ­ hloubka zanoĹ™enĂ­ 4 levels</li>
+            <li>test byl proveden tĹ™Ă­dou XmlSpeedTest2 (druhĂ˝ prĹŻchod) ze skupiny JUnit testĹŻ</li>
+            <li>zveĹ™ejnÄ›nĂ© vĂ˝sledky jsou aritmetickĂ˝m prĹŻmÄ›rem hodnot ze ÄŤtyĹ™ pokusĹŻ</li>
         </ul>
         <br>
         <table style="text-align: left;" border="1" cellpadding="2" cellspacing="0">
@@ -459,7 +459,7 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
                 <th style="text-align: left;">Implementace</th>
                 <th style="text-align: right;">Rychlost serializace<br /><span style="font-weight: normal;">[sec]</span></th>
                 <th style="text-align: right;">Rychlost deserializace<br /><span style="font-weight: normal;">[sec]</span></th>
-                <th style="text-align: right;">Poměr celkem<br /><span style="font-weight: normal;">[%]</span></th>
+                <th style="text-align: right;">PomÄ›r celkem<br /><span style="font-weight: normal;">[%]</span></th>
             </tr>
             <tr>
                 <td align="left">ArrayUjo</td>
@@ -493,26 +493,26 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
             </tr>
         </table>
         
-        <br />Závěr: XML perzistence implementovaná v UJO Frameworku je více než <strong>pětkrát rychlejší</strong> ve srovnání s XML perzistencí implementovanou v JRE 6.0.
-        Výsledky také napovídají, že rychlost zápisu UJO objektů je ve srovnání ostatními úkoly serializace málo významná.
+        <br />ZĂˇvÄ›r: XML perzistence implementovanĂˇ v UJO Frameworku je vĂ­ce neĹľ <strong>pÄ›tkrĂˇt rychlejĹˇĂ­</strong> ve srovnĂˇnĂ­ s XML perzistencĂ­ implementovanou v JRE 6.0.
+        VĂ˝sledky takĂ© napovĂ­dajĂ­, Ĺľe rychlost zĂˇpisu UJO objektĹŻ je ve srovnĂˇnĂ­ ostatnĂ­mi Ăşkoly serializace mĂˇlo vĂ˝znamnĂˇ.
         
         
         
         <h2 id="how3">Jak?</h2>
-        Jaké jsou další možnosti využití ?<br>
+        JakĂ© jsou dalĹˇĂ­ moĹľnosti vyuĹľitĂ­ ?<br>
         
         <h3>Perzistence</h3>
         <ul>
-            <li>Celou hierarchii UJO objektů lze uložit ve formátu XML pomocí třídy UjoManagerXML. Pro další informaci viz třídu UjoXml .</li>
-            <li>UJO objekt lze ukládat ve formátu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html"><span style="font-style: italic;">PropertyResourceBundle</span></a>.</li>
-            <li>UJO objekt bude možné v některé další verzi ukládat ve formátu CSV.</li>
-            <li>Použití UJO objektů ve frameworku <a href="http://cayenne.apache.org/">Cayenne</a> (nástroj
-                pro řešení <a href="http://pt.wikipedia.org/wiki/ORM">ORM</a>).
-                Cayenne pracuje s perzistentními třídami podobně, jako implementace <i>MapUjo</i>. Protože
-                perzistentní objekty se tvoří pomocí šablony, lze šablonu snadno upravit tak, aby implementovala rozhraní <strong>Ujo</strong>.</li>
+            <li>Celou hierarchii UJO objektĹŻ lze uloĹľit ve formĂˇtu XML pomocĂ­ tĹ™Ă­dy UjoManagerXML. Pro dalĹˇĂ­ informaci viz tĹ™Ă­du UjoXml .</li>
+            <li>UJO objekt lze uklĂˇdat ve formĂˇtu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html"><span style="font-style: italic;">PropertyResourceBundle</span></a>.</li>
+            <li>UJO objekt bude moĹľnĂ© v nÄ›kterĂ© dalĹˇĂ­ verzi uklĂˇdat ve formĂˇtu CSV.</li>
+            <li>PouĹľitĂ­ UJO objektĹŻ ve frameworku <a href="http://cayenne.apache.org/">Cayenne</a> (nĂˇstroj
+                pro Ĺ™eĹˇenĂ­ <a href="http://pt.wikipedia.org/wiki/ORM">ORM</a>).
+                Cayenne pracuje s perzistentnĂ­mi tĹ™Ă­dami podobnÄ›, jako implementace <i>MapUjo</i>. ProtoĹľe
+                perzistentnĂ­ objekty se tvoĹ™Ă­ pomocĂ­ Ĺˇablony, lze Ĺˇablonu snadno upravit tak, aby implementovala rozhranĂ­ <strong>Ujo</strong>.</li>
         </ul>
         <h3>Servlet</h3>
-        Využití UJO v servletech zatím není podrobně popsáné, nicméně základní myšlenka pro zpracování textových parametrů objektu ServletRequest je asi tato:<br>
+        VyuĹľitĂ­ UJO v servletech zatĂ­m nenĂ­ podrobnÄ› popsĂˇnĂ©, nicmĂ©nÄ› zĂˇkladnĂ­ myĹˇlenka pro zpracovĂˇnĂ­ textovĂ˝ch parametrĹŻ objektu ServletRequest je asi tato:<br>
 <pre class="pre">ServletRequest request;
 UjoTextable person;
 UjoProperty personName;
@@ -521,31 +521,31 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
 </pre>
 
         <br>
-        <h2 id="refAppl">Referenční aplikace</h2>
-        Referenční implementací je Swingový projekt <a href="http://jworksheet.ponec.net/"><strong>jWorkSheet</strong></a>, který vytvořil autor UJO Frameworku a který je zveřejněn  pod
-        otevřenou licencí na domovské stránce <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>.
-        Aplikace <strong>jWorkSheet</strong> slouží k měření vašeho času stráveného na projektech. 
-        <br> Na zdrojových kódech lze studovat využití perzistence UJO objektů
-        stejně tak jako snadné propojení kolekce UJO objektů s grafickou komponentou JTable.
+        <h2 id="refAppl">ReferenÄŤnĂ­ aplikace</h2>
+        ReferenÄŤnĂ­ implementacĂ­ je SwingovĂ˝ projekt <a href="http://jworksheet.ponec.net/"><strong>jWorkSheet</strong></a>, kterĂ˝ vytvoĹ™il autor UJO Frameworku a kterĂ˝ je zveĹ™ejnÄ›n  pod
+        otevĹ™enou licencĂ­ na domovskĂ© strĂˇnce <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>.
+        Aplikace <strong>jWorkSheet</strong> slouĹľĂ­ k mÄ›Ĺ™enĂ­ vaĹˇeho ÄŤasu strĂˇvenĂ©ho na projektech. 
+        <br> Na zdrojovĂ˝ch kĂłdech lze studovat vyuĹľitĂ­ perzistence UJO objektĹŻ
+        stejnÄ› tak jako snadnĂ© propojenĂ­ kolekce UJO objektĹŻ s grafickou komponentou JTable.
         <br>
         <br>
         Vlastnosti aplikace jWorkSheet:<br>
         <ul>
-            <li>veškerá persistence je realizovaná pomocí frameworku UJO. V projektu se používá ukládání do formátu <strong>XML</strong>, parametry se
-            ukládají do formátu <strong>Resource Bundle</strong>.</li>
-            <li>všechny datové modely objektu JTable jsou buď přímo instancí, nebo potomkem UjoTable .</li>
-            <li>zajímavá je malá velikost aplikace jWorkSheet, zabírá přibližně 170 kB včetně knihovny UJO.</li>
+            <li>veĹˇkerĂˇ persistence je realizovanĂˇ pomocĂ­ frameworku UJO. V projektu se pouĹľĂ­vĂˇ uklĂˇdĂˇnĂ­ do formĂˇtu <strong>XML</strong>, parametry se
+            uklĂˇdajĂ­ do formĂˇtu <strong>Resource Bundle</strong>.</li>
+            <li>vĹˇechny datovĂ© modely objektu JTable jsou buÄŹ pĹ™Ă­mo instancĂ­, nebo potomkem UjoTable .</li>
+            <li>zajĂ­mavĂˇ je malĂˇ velikost aplikace jWorkSheet, zabĂ­rĂˇ pĹ™ibliĹľnÄ› 170 kB vÄŤetnÄ› knihovny UJO.</li>
         </ul>
-        Projekt JWorkSheet je napsaný v Java 5.0, vývoj byl realizován v <a href="http://www.netbeans.org/">NetBeans IDE</a> .
+        Projekt JWorkSheet je napsanĂ˝ v Java 5.0, vĂ˝voj byl realizovĂˇn v <a href="http://www.netbeans.org/">NetBeans IDE</a> .
         
         <h2 id="where">Kde?</h2>
-        Domovská stránka projektu: <a href="http://ujoframework.org/">http://ujoframework.org/</a><br>
-        Referenční implementace: <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>.
-        <br>Další implementnace: (zde může být odkaz i na váš projekt).<br>
+        DomovskĂˇ strĂˇnka projektu: <a href="http://ujoframework.org/">http://ujoframework.org/</a><br>
+        ReferenÄŤnĂ­ implementace: <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>.
+        <br>DalĹˇĂ­ implementnace: (zde mĹŻĹľe bĂ˝t odkaz i na vĂˇĹˇ projekt).<br>
         
         
         <h2 id="license">Licence</h2>
-        Kód byl uvolněn pod licencí <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br>
+        KĂłd byl uvolnÄ›n pod licencĂ­ <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br>
         <br>
         <div class="apache"><code>
    Copyright 2007 Pavel Ponec
@@ -569,47 +569,47 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         
         <h2 id="faq">FAQ</h2>
         <ul>
-            <li>Q: Seznam objektů Properties je seřazený?</li>
-            <ul><li>A: Záleží to na implementaci.
-                    Třída ArrayUjo vrací seznam seřazený vždy. 
-                    Třída MapUjo vrací Properties zpravidla v pořadí ve kterém jsou zapsány ve zdrojovém kódu.
-                    Protože však metoda Java reflexe toto pořadí negarantuje, tak v případě, 
-                    že je chybné pořadí properties může být kritické je doporučeno nějaké řešení na principu ArrayUjo.
+            <li>Q: Seznam objektĹŻ Properties je seĹ™azenĂ˝?</li>
+            <ul><li>A: ZĂˇleĹľĂ­ to na implementaci.
+                    TĹ™Ă­da ArrayUjo vracĂ­ seznam seĹ™azenĂ˝ vĹľdy. 
+                    TĹ™Ă­da MapUjo vracĂ­ Properties zpravidla v poĹ™adĂ­ ve kterĂ©m jsou zapsĂˇny ve zdrojovĂ©m kĂłdu.
+                    ProtoĹľe vĹˇak metoda Java reflexe toto poĹ™adĂ­ negarantuje, tak v pĹ™Ă­padÄ›, 
+                    Ĺľe je chybnĂ© poĹ™adĂ­ properties mĹŻĹľe bĂ˝t kritickĂ© je doporuÄŤeno nÄ›jakĂ© Ĺ™eĹˇenĂ­ na principu ArrayUjo.
             </li></ul>
             
-            <li>Q: Jaký bude výsledek při čtení hodnot UJO, které nebyly dosud iniciované? </li>
-            <ul><li>A: výsledek je závislý na implementaci UJO objektu</li>
-                <li>B: Výchozí implementaci (AbstractUjo) vrací defaultní hodnotu z UjoProperty.</li>
+            <li>Q: JakĂ˝ bude vĂ˝sledek pĹ™i ÄŤtenĂ­ hodnot UJO, kterĂ© nebyly dosud iniciovanĂ©? </li>
+            <ul><li>A: vĂ˝sledek je zĂˇvislĂ˝ na implementaci UJO objektu</li>
+                <li>B: VĂ˝chozĂ­ implementaci (AbstractUjo) vracĂ­ defaultnĂ­ hodnotu z UjoProperty.</li>
             </ul>
             
-            <li>Q: Je možné nějak vyčistit Properties cache?</li>
-            <ul><li>A: Ano, metodou ve třídě UjoManager.</li>
+            <li>Q: Je moĹľnĂ© nÄ›jak vyÄŤistit Properties cache?</li>
+            <ul><li>A: Ano, metodou ve tĹ™Ă­dÄ› UjoManager.</li>
             </ul>
             
-            <li>Q: Jak lokalizovat názvy properties?</li>
-            <ul><li>A: Názvy properties lze použít jako klíč pro vyledání v objektu typu <span style="font-style: italic;">java.util.ResourceBundle</span></li>
+            <li>Q: Jak lokalizovat nĂˇzvy properties?</li>
+            <ul><li>A: NĂˇzvy properties lze pouĹľĂ­t jako klĂ­ÄŤ pro vyledĂˇnĂ­ v objektu typu <span style="font-style: italic;">java.util.ResourceBundle</span></li>
             </ul>
             
-            <li>Q: Jsou někde další příklady použití UJO?</li>
-            <ul><li>A: Další příklady najdete kromě aplikace JWorkSheet i v JUnitových testech UJO Frameworku.</li>
+            <li>Q: Jsou nÄ›kde dalĹˇĂ­ pĹ™Ă­klady pouĹľitĂ­ UJO?</li>
+            <ul><li>A: DalĹˇĂ­ pĹ™Ă­klady najdete kromÄ› aplikace JWorkSheet i v JUnitovĂ˝ch testech UJO Frameworku.</li>
             </ul>
             
-            <li>Q: Není zpracování UJO pomalé?</li>
-            <ul><li>A: Implementace je velice rychlá, viz kapitola <a href="package.html#performance">Výkon</a>.</li>
+            <li>Q: NenĂ­ zpracovĂˇnĂ­ UJO pomalĂ©?</li>
+            <ul><li>A: Implementace je velice rychlĂˇ, viz kapitola <a href="package.html#performance">VĂ˝kon</a>.</li>
             </ul>
         </ul>
         
         <!--
     <h2 id="bestPractises">Dotace</h2>
-    Pokud se vám projekt líbí, můžete ho podpořit na účet: ... TODO.<br>
+    Pokud se vĂˇm projekt lĂ­bĂ­, mĹŻĹľete ho podpoĹ™it na ĂşÄŤet: ... TODO.<br>
     -->
         <br>
-        <h2 id="changes">Seznam změn</h2>
+        <h2 id="changes">Seznam zmÄ›n</h2>
         <ul>
-        <li>2008/06 - Verze 0.80 přichází s rozhraním UjoExt</li>
-        <li>2007/10 - První veřejná verze 0.70 je uvolněna pod licencí <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>.</li>
+        <li>2008/06 - Verze 0.80 pĹ™ichĂˇzĂ­ s rozhranĂ­m UjoExt</li>
+        <li>2007/10 - PrvnĂ­ veĹ™ejnĂˇ verze 0.70 je uvolnÄ›na pod licencĂ­ <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>.</li>
         </ul>
-        Podrobějśí informace jsou ve <a href="../../changes.txt">změnovém listu</a>, který je dostuplný v textovém formátu.
+        PodrobÄ›jĹ›Ă­ informace jsou ve <a href="../../changes.txt">zmÄ›novĂ©m listu</a>, kterĂ˝ je dostuplnĂ˝ v textovĂ©m formĂˇtu.
         <br>&nbsp;
         <br>
 </body></html>

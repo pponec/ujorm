@@ -2,7 +2,7 @@
  * AUnifiedDataObjectTest.java
  * JUnit based test
  *
- * Created on 3. èerven 2007, 23:31
+ * Created on 3. June 2007, 23:31
  */
 
 package org.ujoframework.implementation.xmlSpeed;

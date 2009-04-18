@@ -1,7 +1,7 @@
 /*
  * ZCounter.java
  *
- * Created on 23. bøezen 2008, 9:11
+ * Created on 23. March 2008, 9:11
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

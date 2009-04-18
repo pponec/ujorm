@@ -18,7 +18,9 @@ package org.ujoframework.orm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmColumn;
@@ -166,11 +168,36 @@ public class ExpressionDecoder {
             }
         }
         while(result!=null
-          && !result.isDirect()
+        &&   !result.isDirect()
         ){
             result = ((PathProperty)result).getProperty(0);
         }
         return result;
     }
+
+    /** Returns the unique direct property relations. */
+    @SuppressWarnings("unchecked")
+    protected UjoProperty[] getPropertyRelations() {
+        Set<UjoProperty> result = new HashSet<UjoProperty>();
+        ArrayList<UjoProperty> dirs = new ArrayList<UjoProperty>();
+
+        for (ExpressionValue value : values) {
+            UjoProperty p1 = value.getLeftNode();
+            Object      p2 = value.getRightNode();
+
+            if (!p1.isDirect()) {
+                ((PathProperty) p1).addDirectProperties(dirs);
+                dirs.remove(dirs.size()-1); // remove the last direct property
+            }
+            if (p2 instanceof PathProperty) {
+                ((PathProperty) p2).addDirectProperties(dirs);
+                dirs.remove(dirs.size()-1); // remove the last direct property
+            }
+        }
+
+        result.addAll(dirs);
+        return result.toArray(new UjoProperty[result.size()]);
+    }
+
 
 }

@@ -2,7 +2,7 @@
  * T004a_Test.java
  * JUnit based test
  *
- * Created on 8. èerven 2007, 23:42
+ * Created on 8. June 2007, 23:42
  */
 
 package org.ujoframework.implementation.xml.t007_body;
@@ -71,7 +71,7 @@ public class T004b_Test extends MyTestCase {
         
         AtrPerson result = createPersonOne(); sleep(10);
         AtrPerson.MALE  .setValue(result, false);
-        AtrPerson.NAME  .setValue(result, "JIøINA");
+        AtrPerson.NAME  .setValue(result, "JIÅ˜INA");
         AtrPerson.BIRTH .setValue(result, cal.getTime());
         AtrPerson.CHILDS.addItem(result, createPersonOne());
         

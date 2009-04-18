@@ -14,37 +14,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-/**
- * Abstraktní pøedek pro JDBC operace (podporuje <tt>select, insert, update a delete</tt>), kterı
- * umoòuje efektivnì pracovat resultset. Díky tomu se nekontaminuje klientskı kód
- * èasto se opakujícím JDBC kódem a nemusí se explicitnì starat o zpracování
+/** 
+ * AbstraktnÃ­ pÅ™edek pro JDBC operace (podporuje <tt>select, insert, update a delete</tt>), kterÃ½
+ * umoÅ¾Åˆuje efektivnÄ› pracovat resultset. DÃ­ky tomu se nekontaminuje klientskÃ½ kÃ³d
+ * Äasto se opakujÃ­cÃ­m JDBC kÃ³dem a nemusÃ­ se explicitnÄ› starat o zpracovÃ¡nÃ­
  * <code>{@link java.sql.SQLException}</code>.
  * <p>
- * Potomkové musí pøepsat metodu <code>{@link #handleRow(ResultSet)}</code> pokud
- * chtìjí zpracovat resultset (platí pro <tt>select</tt>) a <code>{@link #getConnection()}</code>,
- * kterou budou poskytovat databázové pøipojení.</p>
+ * PotomkovÃ© musÃ­ pÅ™epsat metodu <code>{@link #handleRow(ResultSet)}</code> pokud
+ * chtÄ›jÃ­ zpracovat resultset (platÃ­ pro <tt>select</tt>) a <code>{@link #getConnection()}</code>,
+ * kterou budou poskytovat databÃ¡zovÃ© pÅ™ipojenÃ­.</p>
  *
- * @author    Roman "Dagi" Pichlík
+ * @author    Roman "Dagi" PichlÃ­k
  */
 public abstract class Z$_XXX {
 
     /**
-     * Konstanta oznaèující SQL pøíkaz <tt>select</tt>
+     * Konstanta oznaÄujÃ­cÃ­ SQL pÅ™Ã­kaz <tt>select</tt>
      */
     private static final int SELECT_QUERY = 0;
     /**
-     * Konstanta oznaèující <tt>insert, update, delete</tt>
+     * Konstanta oznaÄujÃ­cÃ­ <tt>insert, update, delete</tt>
      */
     private static final int UPDATE_QUERY = 1;
 
     /**
-     * Provede <tt>select</tt> SQL pøíkaz. Pøes vıslednı resultset se prochází a kadı
-     * øádek se pøedává k zpracování metodì <code>{@link #handleRow(ResultSet)}</code>.
-     * V pøípadì, e vznikne {@link SQLException} je pøedána k zpracování metodì
+     * Provede <tt>select</tt> SQL pÅ™Ã­kaz. PÅ™es vÃ½slednÃ½ resultset se prochÃ¡zÃ­ a kaÅ¾dÃ½
+     * Å™Ã¡dek se pÅ™edÃ¡vÃ¡ k zpracovÃ¡nÃ­ metodÄ› <code>{@link #handleRow(ResultSet)}</code>.
+     * V pÅ™Ã­padÄ›, Å¾e vznikne {@link SQLException} je pÅ™edÃ¡na k zpracovÃ¡nÃ­ metodÄ›
      * <code>{@link #handleSQLException(SQLException, String, Object[])}</code>
      *
-     * @param sql SQL pøíkaz (<em>nesmí bıt <code>null</code></em>)
-     * @param params parametry pro SQL (<em>mùe bıt <code>null</code></em>)
+     * @param sql SQL pÅ™Ã­kaz (<em>nesmÃ­ bÃ½t <code>null</code></em>)
+     * @param params parametry pro SQL (<em>mÅ¯Å¾e bÃ½t <code>null</code></em>)
      *
      * @throws NullPointerException pokud je SQL <code>null</code>
      *
@@ -59,14 +59,14 @@ public abstract class Z$_XXX {
     }
 
     /**
-     * Provede SQL pøíkaz typu <tt>insert, update, delete</tt> a vrátí poèet
-     * modifikovanıch øádek. V pøípadì, e vznikne {@link SQLException} je pøedána k zpracování metodì
+     * Provede SQL pÅ™Ã­kaz typu <tt>insert, update, delete</tt> a vrÃ¡tÃ­ poÄet
+     * modifikovanÃ½ch Å™Ã¡dek. V pÅ™Ã­padÄ›, Å¾e vznikne {@link SQLException} je pÅ™edÃ¡na k zpracovÃ¡nÃ­ metodÄ›
      * <code>{@link #handleSQLException(SQLException, String, Object[])}</code>.
      *
-     * @param sql SQL pøíkaz (<em>nesmí bıt <code>null</code></em>)
-     * @param params parametry pro SQL (<em>mùe bıt <code>null</code></em>)
+     * @param sql SQL pÅ™Ã­kaz (<em>nesmÃ­ bÃ½t <code>null</code></em>)
+     * @param params parametry pro SQL (<em>mÅ¯Å¾e bÃ½t <code>null</code></em>)
      *
-     * @return poèet modifikovanıch øádek
+     * @return poÄet modifikovanÃ½ch Å™Ã¡dek
      *
      * @throws NullPointerException pokud je SQL <code>null</code>
      */
@@ -79,14 +79,14 @@ public abstract class Z$_XXX {
     }
 
     /**
-     * Realizuje vlastní vykonání pøíkazu
-     * @param sql SQL pøíkaz
+     * Realizuje vlastnÃ­ vykonÃ¡nÃ­ pÅ™Ã­kazu
+     * @param sql SQL pÅ™Ã­kaz
      * @param params parametr
      * @param queryType typ SQL  (insert, select, update ,delete)
      *
      * @return rows affected
      *
-     * @throws SQLException v pøípadì, e nìjaká vznikne
+     * @throws SQLException v pÅ™Ã­padÄ›, Å¾e nÄ›jakÃ¡ vznikne
      */
     private int executeQueryInternal(String sql, Object params[], int queryType) throws SQLException {
         if (sql == null) {
@@ -118,25 +118,25 @@ public abstract class Z$_XXX {
     }
 
     /**
-     * Vrací databázové pøipojení, které se pouije pro vykonání SQL pøíkazu.
+     * VracÃ­ databÃ¡zovÃ© pÅ™ipojenÃ­, kterÃ© se pouÅ¾ije pro vykonÃ¡nÃ­ SQL pÅ™Ã­kazu.
      *
-     * @return databázové pøipojení
+     * @return databÃ¡zovÃ© pÅ™ipojenÃ­
      */
     protected abstract Connection getConnection() throws SQLException;
 
     /**
-     * Metoda, ve které se implementuje vlastní zpracování øádku resultsetu.
+     * Metoda, ve kterÃ© se implementuje vlastnÃ­ zpracovÃ¡nÃ­ Å™Ã¡dku resultsetu.
      *
      * @param rs resultset
-     * @throws SQLException v pøípadì, e nìjaká vznikne
+     * @throws SQLException v pÅ™Ã­padÄ›, Å¾e nÄ›jakÃ¡ vznikne
      */
     protected abstract void handleRow(ResultSet rs) throws SQLException;
 
     /**
-     * Slouí k nastavení parametrù pro SQL pøíkaz podle poøadí. Nastavení hodnot
-     * <code>null</code> není podporováno.
+     * SlouÅ¾Ã­ k nastavenÃ­ parametrÅ¯ pro SQL pÅ™Ã­kaz podle poÅ™adÃ­. NastavenÃ­ hodnot
+     * <code>null</code> nenÃ­ podporovÃ¡no.
      *
-     * <h4><a name="supported-types">Podporované datové typy</a></h4>
+     * <h4><a name="supported-types">PodporovanÃ© datovÃ© typy</a></h4>
      * <ul>
      *  <li><code>{@link BigDecimal}</code></li>
      *  <li><code>{@link Date}</code></li>
@@ -151,16 +151,16 @@ public abstract class Z$_XXX {
      *
      * @param ps statement
      * @param params parametry
-     * @throws SQLException v pøípadì, e nìjaká vznikne
-     * @throws UnsupportedOperationException pokud se jedná o parametr mimo <a href="#supported-types">podporované
-     * datové typy</a>.
+     * @throws SQLException v pÅ™Ã­padÄ›, Å¾e nÄ›jakÃ¡ vznikne
+     * @throws UnsupportedOperationException pokud se jednÃ¡ o parametr mimo <a href="#supported-types">podporovanÃ©
+     * datovÃ© typy</a>.
      */
     protected void setParams(PreparedStatement ps, Object params[]) throws SQLException {
         Object paramValue = null;
         for (int i = 0; i < params.length;) {
             paramValue = params[i];
             if (paramValue == null) {
-                throw new UnsupportedOperationException("Nastavení hodnoty null není podporováno");
+                throw new UnsupportedOperationException("NastavenÃ­ hodnoty null nenÃ­ podporovÃ¡no");
             } else if (paramValue instanceof BigDecimal) {
                 ps.setBigDecimal(++i, (BigDecimal) paramValue);
             } else if (paramValue instanceof Date) {
@@ -185,32 +185,32 @@ public abstract class Z$_XXX {
             } else if (paramValue instanceof Long) {
                 ps.setLong(++i, ((Long) paramValue).longValue());
             } else {
-                throw new UnsupportedOperationException("Podpora datového typu " + paramValue.getClass() + " není prozatím implementována!");
+                throw new UnsupportedOperationException("Podpora datovÃ©ho typu " + paramValue.getClass() + " nenÃ­ prozatÃ­m implementovÃ¡na!");
             }
         }
     }
 
     /**
-     * Umoòuje ošetøit vzniklou <code>{@link SQLException}</code>. Defaultnì je
-     * implementována tak, e vzniklá vıjimka je obalena do <code>{@link DatabaseException}</code>.
-     * Potomkové mohou toto chování libovolnì pøepsat napø. vıjimku zapsat do logu,
-     * lokalizovat text vıjímky apod.
+     * UmoÅ¾Åˆuje oÅ¡etÅ™it vzniklou <code>{@link SQLException}</code>. DefaultnÄ› je 
+     * implementovÃ¡na tak, Å¾e vzniklÃ¡ vÃ½jimka je obalena do <code>{@link DatabaseException}</code>.
+     * PotomkovÃ© mohou toto chovÃ¡nÃ­ libovolnÄ› pÅ™epsat napÅ™. vÃ½jimku zapsat do logu,
+     * lokalizovat text vÃ½jÃ­mky apod.
      *
-     * @param e vzniklá vıjimka
-     * @param sql SQL pøíkaz, pøi kterém vznikla vıjímka
+     * @param e vzniklÃ¡ vÃ½jimka
+     * @param sql SQL pÅ™Ã­kaz, pÅ™i kterÃ©m vznikla vÃ½jÃ­mka
      * @param params parametry pro SQL
      */
     protected DatabaseException handleSQLException(SQLException e, String sql, Object params[]) {
-        String message = "Vznikla neoèekávaná chyba bìhem databázové operace!";
+        String message = "Vznikla neoÄekÃ¡vanÃ¡ chyba bÄ›hem databÃ¡zovÃ© operace!";
         return new DatabaseException(message, e, sql, params);
     }
 
     /**
-     * Provede bezpeèné uzavøení statemntu, resultsetu a databázového pøipojení.
-     * @param con databázové pøipojení
+     * Provede bezpeÄnÃ© uzavÅ™enÃ­ statemntu, resultsetu a databÃ¡zovÃ©ho pÅ™ipojenÃ­.
+     * @param con databÃ¡zovÃ© pÅ™ipojenÃ­
      * @param ps statemnt
      * @param rs resultset
-     * @throws SQLException v pøípadì, e nìjaká vznikne
+     * @throws SQLException v pÅ™Ã­padÄ›, Å¾e nÄ›jakÃ¡ vznikne
      */
     private void close(Connection con, PreparedStatement ps, ResultSet rs) throws SQLException {
         try {

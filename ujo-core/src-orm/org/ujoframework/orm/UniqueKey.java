@@ -37,4 +37,20 @@ public class UniqueKey {
         return String.valueOf(value) + '\u00b4';
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof UniqueKey
+            && value.equals(((UniqueKey)obj).value );
+    }
+
+    @Override
+    public int hashCode() {
+        final int result = 29 * 5
+            + (this.value != null
+            ? this.value.hashCode()
+            : 0)
+            ;
+        return result;
+    }
+
 }

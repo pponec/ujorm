@@ -1,7 +1,7 @@
 /*
  * UjoCSV.java
  *
- * Created on 3. kvìten 2008, 21:06
+ * Created on 3. May 2008, 21:06
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

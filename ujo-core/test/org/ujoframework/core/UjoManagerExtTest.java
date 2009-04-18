@@ -2,7 +2,7 @@
  * UjoManagerExtTest.java
  * JUnit based test
  *
- * Created on 16. èerven 2007, 15:23
+ * Created on 16. June 2007, 15:23
  */
 
 package org.ujoframework.core;

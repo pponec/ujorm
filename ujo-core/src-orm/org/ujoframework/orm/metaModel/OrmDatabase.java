@@ -268,7 +268,7 @@ public class OrmDatabase extends AbstractMetaModel {
     }
 
 
-    /** Vytvoøí DB */
+    /** Create DB */
     public void create() {
         Connection conn = OrmHandler.getInstance().getSession().getConnection(this);
         Statement stat = null;

@@ -2,7 +2,7 @@
  * T008a1_Test.java
  * JUnit based test
  *
- * Created on 8. èerven 2007, 23:42
+ * Created on 8. June 2007, 23:42
  */
 
 package org.ujoframework.implementation.xml.t008_array;

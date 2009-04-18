@@ -1,7 +1,7 @@
 /*
  * Usage.java
  *
- * Created on 10. èerven 2007, 10:42
+ * Created on 10. June 2007, 10:42
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
