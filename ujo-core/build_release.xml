@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1250"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 *********************************************
 * Author : PPone(c)2008
@@ -65,7 +65,7 @@ Implementation-Vendor: "Paul Ponec"</echo>
 
     <target name="public-build" depends="clean,jar,javadoc" description="Create new archiv.">
 
-        <!-- Jméno zálohy. -->
+        <!-- JmĂ©no zĂˇlohy. -->
         <echo message="Creating an builld archiv file: ${dist.zip}"/>
         
         <!-- replace in the html file -->
