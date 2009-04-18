@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.implementation.orm.*;
@@ -56,6 +58,9 @@ public class Session {
 
     /** Database connection */
     private HashMap<OrmDatabase, Connection> connections = new HashMap<OrmDatabase, Connection>();
+
+    /** A session cache */
+    private Map<Object, TableUjo> cache = new WeakHashMap<Object, TableUjo>();
 
     public Session(OrmHandler handler) {
         this.handler = handler;
