@@ -12,6 +12,7 @@
             </source-roots>
             <test-roots>
                 <root id="test.src.dir" name="Test Core"/>
+                <root id="test.test-tools.dir" name="Test Tools"/>
                 <root id="test.test-orm.dir" name="Test ORM"/>
             </test-roots>
         </data>

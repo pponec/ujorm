@@ -156,28 +156,28 @@ public class XmlSpeedTest extends MyTestCase {
     
     
     public void testFieldUjoXML() throws Throwable {
-        System.out.println("FieldUjo:Speed: " + suite().toString());
-        ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-FIELD.xml");
-        
-        FieldTree tree = new FieldTree();
-        tree.init(new ZCounter(getCount()), DEEP);
-        callGC();
-        
-        long time1 = System.currentTimeMillis();
-        String defaultXmlHeader = null;
-        UjoManagerXML.getInstance().saveXML(dataFile, tree, defaultXmlHeader, "Save");
-        long time2 = System.currentTimeMillis();
-        //
-        InputStream is = createIS(dataFile);
-        long time3 = System.currentTimeMillis();
-        FieldTree fieldTree =
-        UjoManagerXML.getInstance().parseXML(is, FieldTree.class, "Load");
-        long time4 = System.currentTimeMillis();
-        
-        assertEquals(getCount(), fieldTree.size()+1);
-        System.out.println(">>> FieldUjo: "
-        + getTime(time1, time2, time3, time4)
-        );
+//        System.out.println("FieldUjo:Speed: " + suite().toString());
+//        ByteArrayOutputStream dataFile = createOS(getTestDir()+"data-FIELD.xml");
+//
+//        FieldTree tree = new FieldTree();
+//        tree.init(new ZCounter(getCount()), DEEP);
+//        callGC();
+//
+//        long time1 = System.currentTimeMillis();
+//        String defaultXmlHeader = null;
+//        UjoManagerXML.getInstance().saveXML(dataFile, tree, defaultXmlHeader, "Save");
+//        long time2 = System.currentTimeMillis();
+//        //
+//        InputStream is = createIS(dataFile);
+//        long time3 = System.currentTimeMillis();
+//        FieldTree fieldTree =
+//        UjoManagerXML.getInstance().parseXML(is, FieldTree.class, "Load");
+//        long time4 = System.currentTimeMillis();
+//
+//        assertEquals(getCount(), fieldTree.size()+1);
+//        System.out.println(">>> FieldUjo: "
+//        + getTime(time1, time2, time3, time4)
+//        );
     }
     
     
