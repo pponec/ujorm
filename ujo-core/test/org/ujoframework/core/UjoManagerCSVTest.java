@@ -2,7 +2,7 @@
  * UjoManagerCSVTest.java
  * JUnit based test
  *
- * Created on 3. kvìten 2008, 20:26
+ * Created on 3. May 2008, 20:26
  */
 
 package org.ujoframework.core;

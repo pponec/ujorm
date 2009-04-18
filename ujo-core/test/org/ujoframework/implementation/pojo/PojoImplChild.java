@@ -1,7 +1,7 @@
 /*
  * UnifiedDataObjectImlp.java
  *
- * Created on 3. èerven 2007, 23:00
+ * Created on 3. June 2007, 23:00
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

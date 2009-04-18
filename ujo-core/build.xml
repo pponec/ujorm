@@ -20,7 +20,7 @@
 
 
     <property name="javadoc.additionalparam" 
-        value="-header '&lt;a href='${homePage}' target='_top' class='UjoLogo'&gt; ${name}&lt;br&gt;release ${version}&lt;/a&gt;' -bottom '&lt;i&gt;Copyright © ${year} &lt;a href='${homePage}' target='_top'&gt; PPonec &lt;/a&gt;'&lt;/i&gt;  -charset 'windows-1250'"
+        value="-header '&lt;a href='${homePage}' target='_top' class='UjoLogo'&gt; ${name}&lt;br&gt;release ${version}&lt;/a&gt;' -bottom '&lt;i&gt;Copyright © ${year} &lt;a href='${homePage}' target='_top'&gt; PPonec &lt;/a&gt;'&lt;/i&gt;  -charset 'UTF-8'"
     />
     <!-- -.->
     <echo message="${javadoc.additionalparam}" />

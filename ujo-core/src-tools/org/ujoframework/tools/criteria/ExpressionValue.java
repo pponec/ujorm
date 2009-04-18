@@ -39,7 +39,7 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     
     /** Creante an Expression constant */
     public ExpressionValue(boolean value) {
-        this(null, Operator.€_FIXED, value);
+        this(null, Operator.â‚¬_FIXED, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
@@ -216,7 +216,7 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
     
     /** Is the expression result independent on the bean object? */
     public final boolean isConstant() {
-        return operator==Operator.€_FIXED;
+        return operator==Operator.â‚¬_FIXED;
     }
 
     @Override

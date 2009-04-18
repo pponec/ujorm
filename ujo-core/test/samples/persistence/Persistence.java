@@ -1,7 +1,7 @@
 /*
  * Persistence.java
  *
- * Created on 9. kvìten 2008, 21:26
+ * Created on 9. May 2008, 21:26
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

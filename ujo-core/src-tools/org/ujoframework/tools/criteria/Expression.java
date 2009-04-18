@@ -112,12 +112,12 @@ public abstract class Expression<UJO extends Ujo> {
 
     /** This is a constant expression independed on the property and the ujo entity. A result is the TRUE allways. */
     public static <UJO extends Ujo> Expression<UJO> newInstanceTrue(UjoProperty<UJO,?> property) {
-        return new ExpressionValue<UJO>(property, Operator.€_FIXED, true);
+        return new ExpressionValue<UJO>(property, Operator.â‚¬_FIXED, true);
     }
 
     /** This is a constant expression independed on the property and the ujo entity. A result is the FALSE allways. */
     public static <UJO extends Ujo> Expression<UJO> newInstanceFalse(UjoProperty<UJO,?> property) {
-        return new ExpressionValue<UJO>(property, Operator.€_FIXED, false);
+        return new ExpressionValue<UJO>(property, Operator.â‚¬_FIXED, false);
     }
 
     /** Is a Binary expression? */

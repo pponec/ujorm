@@ -1,7 +1,7 @@
 /*
  * UseTable.java
  *
- * Created on 17. øíjen 2007, 19:08
+ * Created on 17. October 2007, 19:08
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

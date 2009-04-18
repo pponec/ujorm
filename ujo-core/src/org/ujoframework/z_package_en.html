@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <html lang="en"><head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1250"><title>package.html - UJO (en)</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>package.html - UJO (en)</title>
         
         <link rel="stylesheet" type="text/css" href="style.css" title="style">
         <script type="text/javascript">
@@ -125,7 +125,7 @@ document.body.appendChild(oLink);
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">Person</span>,Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, Double.<span class="java-keywords">class</span>);<br> 
 }</pre>
-        Now, when the <i>Person</i> class is done, we can make its instance and enter or fetch some data. It´s possible to use one of two API methods for writing the object attributes:
+        Now, when the <i>Person</i> class is done, we can make its instance and enter or fetch some data. ItÂ´s possible to use one of two API methods for writing the object attributes:
         <ol>
             <li><i>Person.<strong>writeValue</strong>(UjoProperty, Object)</i>, or</li>
             <li><i>UjoProperty.<strong>setValue</strong>(person, Object)</i>. </li>
@@ -172,12 +172,12 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
             <li>to switch off the <strong>-Xlint:unchecked</strong> parameter. The switched off parameter is implied to the IDE NetBeans setting.</li>
             <li>the class can be equipped an annotation <i>@SuppressWarnings("unchecked")</i>
                 <br />I've chosen this possibility myself, the code is getting clearer and in the case 
-                of collision in the same line it´s possible to find it out easily.</li>
+                of collision in the same line itÂ´s possible to find it out easily.</li>
             <li>since version 0.72 is possible to use a type safe method <strong>newProperty(name, type)</strong> pro building a Property object.</li>
         </ul>
         <h3>The implementation of the equals() method</h3>
         Our <i>Person</i> class has the <i>equals()</i> function implemented already, which inherited from parental class <i>MapUjo</i>. 
-        But if you want by some reason to write your own Ujo implementation with this method, it´s enough to write into the class this code:
+        But if you want by some reason to write your own Ujo implementation with this method, itÂ´s enough to write into the class this code:
         
 <pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">equals</span>(Object obj) {
   <span class="java-keywords"></span><span class="java-keywords">return</span> UjoManager.<span class="java-layer-method">getInstanceManager</span>().<span class="java-layer-method">equals</span>(<span class="java-keywords">this</span>, (Ujo) obj );
@@ -235,7 +235,7 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
 
         
         <h2 id="javabean">How to create the JavaBean?</h2>
-        It´s easy to make the JavaBean from the UJO object. It´s enough to implement a setter and a getter for each attribute. An example of usage:
+        ItÂ´s easy to make the JavaBean from the UJO object. ItÂ´s enough to implement a setter and a getter for each attribute. An example of usage:
 <pre class="pre">
 <span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {<br>
@@ -305,8 +305,8 @@ person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<spa
 </pre>
 
 <h3 id="listProperty">List property</h3>
-It´s often very useful some attribute to contain a <strong>list</strong> of another UJO objects. 
-It´s possible to make the <strong>ArrayList&lt;UjoItem&gt;</strong> type object though, but preferable is to use for an attribute the <a href="#">ListProperty</a> class. 
+ItÂ´s often very useful some attribute to contain a <strong>list</strong> of another UJO objects. 
+ItÂ´s possible to make the <strong>ArrayList&lt;UjoItem&gt;</strong> type object though, but preferable is to use for an attribute the <a href="#">ListProperty</a> class. 
 The first reason is a clearer content of an export to XML, because an export doesn't contain the information about the data type items of the list.
 I recommend to read up API for more detailed information.
    <br>&nbsp;<br>
@@ -376,7 +376,7 @@ The solution is to use an annotation <strong>@XmlAttribute</strong> by next samp
 
      
         <h2 id="tablemodel">Support of the JTable component</h2>
-        The UJO Framework contains a support for the UJO object list displaying in the JTable. For simple editable table creating it´s not necessary 
+        The UJO Framework contains a support for the UJO object list displaying in the JTable. For simple editable table creating itÂ´s not necessary 
         to create any new class, <strong>you can only create</strong> the <a href="swing/UjoTableModel.html">UjoTableModel</a> class instance and to set it to the <i>JTable</i> object using the <i>setModel()</i> method. 
         Example of simple usage:
 
@@ -414,7 +414,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
             <li>setValueAt(Object value, int rowIndex, int columnIndex)</li>
         </ul>
 
-        All of these methods in the UjoTableModel class you´ll get implemented yet. 
+        All of these methods in the UjoTableModel class youÂ´ll get implemented yet. 
         A name of the column and corresponding class are taken straightly from the <i>UjoProperty</i> object, a column list inputs in constructor.
         
         
@@ -476,7 +476,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         </table>
         
         
-        It´s evidently from the table, that the performance of the <i>ArrayUjo</i> implementation is high and it gets near to the JavaBeans object performance.
+        ItÂ´s evidently from the table, that the performance of the <i>ArrayUjo</i> implementation is high and it gets near to the JavaBeans object performance.
         The results can be affected in some cases by costs of making an instance of a primitive values.
         However the speed of JavaBeans dramatically drops near to <i>BeanUjo</i> value  
         in case a property access via <strong>Java reflection</strong> tools.
@@ -649,7 +649,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         
         <!--
         <h2 id="bestPractises">Dotace</h2>
-        Pokud se vám projekt líbí, můžete ho podpořit na účet: ... TODO.<br>
+        Pokud se vĂˇm projekt lĂ­bĂ­, mĹŻĹľete ho podpoĹ™it na ĂşÄŤet: ... TODO.<br>
         -->
         
         <br>

@@ -1,7 +1,7 @@
 /*
  * Person.java
  *
- * Created on 9. èerven 2007, 22:29
+ * Created on 9. June 2007, 22:29
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.

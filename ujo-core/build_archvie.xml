@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1250"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 *********************************************
 * Author : PPone(c)2002
@@ -42,7 +42,7 @@
 
     <target name="archive" depends="ini" description="Create new archiv.">
 
-        <!-- Jméno zálohy. -->
+        <!-- JmĂ©no zĂˇlohy. -->
         <echo message="Creating an archiv file: ${zipFile}.tgz"/>
 
         <!--

@@ -2,7 +2,7 @@
  * TXmlTest_1.java
  * JUnit based test
  *
- * Created on 8. èerven 2007, 23:42
+ * Created on 8. June 2007, 23:42
  */
 
 package org.ujoframework.implementation.xml.test2;
