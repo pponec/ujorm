@@ -573,7 +573,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             ;
             throw new IllegalArgumentException(msg);            
         }
-        return false;
+        return true;
     }
     
     
