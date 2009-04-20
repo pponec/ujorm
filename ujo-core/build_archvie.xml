@@ -17,7 +17,7 @@
         <property name="zipFile" value="..${file.separator}ujo-${DSTAMP}-${TSTAMP}" />
 
         <!-- Parrents, separated by "," character. -->
-        <property name="include" value="*.*,src*/**,nbproject/**,test/**,Resource/**,www/*.*,www/patternDesing/**,www/sample/**,www/_new/**" />
+        <property name="include" value="*.*,src*/**,test*/**,nbproject/**,Resource/**,www/*.*,www/patternDesing/**,www/sample/**,www/_new/**" />
         
 	<!-- Parrents, separated by "," character. -->
         <property name="exclude" value=",**/.*,**/*.class*,**/*.rar,**/*.java~,*.log,www/_new/htmlLayout/**" />
