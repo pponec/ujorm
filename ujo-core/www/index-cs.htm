@@ -49,20 +49,20 @@ UJO Framework</h1>
   <strong>Jazyk</strong>
   <ul class="ulm">
      <li><a href="index.html">English</a></li>
-     <li><a href="index-cs.htm">Èeština</a></li>
+     <li><a href="index-cs.htm">ÄŒeÅ¡tina</a></li>
   </ul>
   <strong>Menu</strong>
   <ul class="ulm">
      <li><a href="presentation/">Prezentace <span style="font-style: italic;">-&nbsp;slide show</span></a></li>
      <li><a href="http://ujoframework-cs.blogspot.com/">Novinky (blog)</a></li>
-     <li><a href="sample/index.htm">Zaèínáme <span style="font-style: italic;">-&nbsp;tutoriál</span></a></li>
-     <li><a href="sample/parameters.htm">Parametry aplikace <span style="font-style: italic;">-&nbsp;tutoriál</span></a></li>
+     <li><a href="sample/index.htm">ZaÄÃ­nÃ¡me <span style="font-style: italic;">-&nbsp;tutoriÃ¡l</span></a></li>
+     <li><a href="sample/parameters.htm">Parametry aplikace <span style="font-style: italic;">-&nbsp;tutoriÃ¡l</span></a></li>
      <li><a href="javadoc/index.html">JavaDoc</a></li>
      <li><a href="#refAppl">Reference</a></li>
      <li><a href="#license">Licence</a></li>
      <li><a href="javadoc/changes.txt">Release Notes</a></li>
      <li><a href="#download">Stahuj</a></li>
-     <li><a href="patternDesing/index-cs.htm">Návrhovı vzor Unified Access</a></li>
+     <li><a href="patternDesing/index-cs.htm">NÃ¡vrhovÃ½ vzor Unified Access</a></li>
      <li><a href="#author">O autorovi</a></li>
   </ul>
 </div>
@@ -93,82 +93,82 @@ UJO Framework</h1>
 
 <div id="main">
     <p class="prologue" id="prologue">
-        Hledáte rychlou XML perzistenci?<br />
-        Potøebujete pøedávat v kódu odkaz na metody JavaBean?<br />
-        Tvoøíte tenkého klienta?<br />
-        Pouijte UJO Framework!<br />
+        HledÃ¡te rychlou XML perzistenci?<br />
+        PotÅ™ebujete pÅ™edÃ¡vat v kÃ³du odkaz na metody JavaBean?<br />
+        TvoÅ™Ã­te tenkÃ©ho klienta?<br />
+        PouÅ¾ijte UJO Framework!<br />
     </p>
     
     
     <div class="chapter">
         <a href="images/UjoUmlFull.png"><img src="images/UjoUml.png" width="284" height="320" alt="UjoUml.png" style="float:right; margin: 0 0 15px 30px; vertical-align:text-top; border:0" />
-        </a><span class="appl">UJO Framework</span> je Java knihovna, která poskytuje netradièní architekturu objektù
-        odlišnıch od <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>. Pùvodní nápad vznikl jako høíèka s generickımi datovımi typy Java 5.0, 
-        postupem èasu se však ukázalo, e architektura má nìkolik zajímavıch vlastností. Souèasná verze frameworku nabízí:
+        </a><span class="appl">UJO Framework</span> je Java knihovna, kterÃ¡ poskytuje netradiÄnÃ­ architekturu objektÅ¯
+        odliÅ¡nÃ½ch od <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>. PÅ¯vodnÃ­ nÃ¡pad vznikl jako hÅ™Ã­Äka s generickÃ½mi datovÃ½mi typy Java 5.0, 
+        postupem Äasu se vÅ¡ak ukÃ¡zalo, Å¾e architektura mÃ¡ nÄ›kolik zajÃ­mavÃ½ch vlastnostÃ­. SouÄasnÃ¡ verze frameworku nabÃ­zÃ­:
         
         <ul>
-        <li>otevøenı kód</li>
-        <li>revoluèní architektura objektu postavená na dvou rozhraních, která zjednodušuje manipulaci objektù pomocí 
-            <a href="http://java.sun.com/docs/books/tutorial/javabeans/">sestavovacího nástroje</a> aplikace
-            pøi zachování vıborné rychlosti <!-- ve srovnání s pøístupem k atributùm pøes Java reflexi--></li>
-        <li>vıkonná XML serializace</li>
+        <li>otevÅ™enÃ½ kÃ³d</li>
+        <li>revoluÄnÃ­ architektura objektu postavenÃ¡ na dvou rozhranÃ­ch, kterÃ¡ zjednoduÅ¡uje manipulaci objektÅ¯ pomocÃ­ 
+            <a href="http://java.sun.com/docs/books/tutorial/javabeans/">sestavovacÃ­ho nÃ¡stroje</a> aplikace
+            pÅ™i zachovÃ¡nÃ­ vÃ½bornÃ© rychlosti <!-- ve srovnÃ¡nÃ­ s pÅ™Ã­stupem k atributÅ¯m pÅ™es Java reflexi--></li>
+        <li>vÃ½konnÃ¡ XML serializace</li>
         <li><a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> serializace</li>
         <li><a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">Resource bundle</a> serializace</li>
         <li>podpora komponenty <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a></li>
-        <li>objekt si øídí sám dostupnost svıch atributù</li>
+        <li>objekt si Å™Ã­dÃ­ sÃ¡m dostupnost svÃ½ch atributÅ¯</li>
         <li>property <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
-            je moné implementovat na jednom <a href="javadoc/org/ujoframework/Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">místì</a>
-            pro všechny property tøídy vèetnì potomkù</li>
+            je moÅ¾nÃ© implementovat na jednom <a href="javadoc/org/ujoframework/Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">mÃ­stÄ›</a>
+            pro vÅ¡echny property tÅ™Ã­dy vÄetnÄ› potomkÅ¯</li>
         <li>podpora <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a></li>
-        <li>úspornı zdrojovı kód vašich UJO objektù</li>
-        <li>kontrola unitovımi testy</li>
-        <li>malá velikost frameworku bez dalších závislostí</li>
+        <li>ÃºspornÃ½ zdrojovÃ½ kÃ³d vaÅ¡ich UJO objektÅ¯</li>
+        <li>kontrola unitovÃ½mi testy</li>
+        <li>malÃ¡ velikost frameworku bez dalÅ¡Ã­ch zÃ¡vislostÃ­</li>
         </ul>        
             
         <span class="appl">UJO</span> je zkratka pro <span style="font-style: italic;">Unified
-        Java Object</span> a oznaèuje takovı <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">objekt</a>,
-        kterı implementuje rozhraní <a href="javadoc/org/ujoframework/Ujo.html">Ujo</a>.
+        Java Object</span> a oznaÄuje takovÃ½ <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">objekt</a>,
+        kterÃ½ implementuje rozhranÃ­ <a href="javadoc/org/ujoframework/Ujo.html">Ujo</a>.
         
-        Objekt UJO si lze pøedstavit napøíklad jako <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">mapu</a> (objekt mapující hodnoty ke klíèùm), 
-        ke které se pøistupuje pomocí <strong>metod klíèe</strong>. Klíè je zde tvoøen implementací rozhraní <a href="javadoc/org/ujoframework/UjoProperty.html">UjoProperty</a> 
-        obsahující (mimo jiné) dvì typovì bezpeèné metody:
+        Objekt UJO si lze pÅ™edstavit napÅ™Ã­klad jako <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">mapu</a> (objekt mapujÃ­cÃ­ hodnoty ke klÃ­ÄÅ¯m), 
+        ke kterÃ© se pÅ™istupuje pomocÃ­ <strong>metod klÃ­Äe</strong>. KlÃ­Ä je zde tvoÅ™en implementacÃ­ rozhranÃ­ <a href="javadoc/org/ujoframework/UjoProperty.html">UjoProperty</a> 
+        obsahujÃ­cÃ­ (mimo jinÃ©) dvÄ› typovÄ› bezpeÄnÃ© metody:
         <ul>
-            <li><a href="javadoc/org/ujoframework/UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - pro zápis hodnoty do objektu a</li> 
-            <li><a href="javadoc/org/ujoframework/UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - pro ètení hodnoty.</li>
+            <li><a href="javadoc/org/ujoframework/UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - pro zÃ¡pis hodnoty do objektu a</li> 
+            <li><a href="javadoc/org/ujoframework/UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - pro ÄtenÃ­ hodnoty.</li>
         </ul>
         
-        Na rozdíl od metod objektu JavaBean lze tyto klíèe posílat jednoduše dalším objektùm, 
-        pøíkladem vyuití mùe bıt seznam zobrazovanıch sloupcù tabulky poslanı do datového modelu typu TableModel, 
-        nebo odkazy k metodám beanu na JSP stránce.
+        Na rozdÃ­l od metod objektu JavaBean lze tyto klÃ­Äe posÃ­lat jednoduÅ¡e dalÅ¡Ã­m objektÅ¯m, 
+        pÅ™Ã­kladem vyuÅ¾itÃ­ mÅ¯Å¾e bÃ½t seznam zobrazovanÃ½ch sloupcÅ¯ tabulky poslanÃ½ do datovÃ©ho modelu typu TableModel, 
+        nebo odkazy k metodÃ¡m beanu na JSP strÃ¡nce.
         
-        Jádrem projektu jsou tedy dvì rozhraní 
+        JÃ¡drem projektu jsou tedy dvÄ› rozhranÃ­ 
         <a href="javadoc/org/ujoframework/Ujo.html" style="font-style: italic;">Ujo</a> a 
         <a href="javadoc/org/ujoframework/UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
-        ke kterım jsou k dispozici tøi abstraktní implementace:
+        ke kterÃ½m jsou k dispozici tÅ™i abstraktnÃ­ implementace:
            <ul>
-               <li><a href="javadoc/org/ujoframework/implementation/map/MapUjo.html">MapUjo</a> - snadná implementace pro vıvojáøe s dostateènım vıkonem pro bìné aplikace postavená na objektu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
-               <li><a href="javadoc/org/ujoframework/implementation/array/ArrayUjo.html">ArrayUjo</a> - špièkovı vıkon objektù je srovnatelnı s rychlostí zápisu do JavaBeans, je implementovanı pomocí <strong>pole objektù</strong></li>
-               <li><a href="javadoc/org/ujoframework/implementation/pojo/PojoUjo.html">PojoUjo</a> - tato implementace mapuje klíèe pøímo na metody objektu <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> pomocí <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflexe</a></li>
+               <li><a href="javadoc/org/ujoframework/implementation/map/MapUjo.html">MapUjo</a> - snadnÃ¡ implementace pro vÃ½vojÃ¡Å™e s dostateÄnÃ½m vÃ½konem pro bÄ›Å¾nÃ© aplikace postavenÃ¡ na objektu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
+               <li><a href="javadoc/org/ujoframework/implementation/array/ArrayUjo.html">ArrayUjo</a> - Å¡piÄkovÃ½ vÃ½kon objektÅ¯ je srovnatelnÃ½ s rychlostÃ­ zÃ¡pisu do JavaBeans, je implementovanÃ½ pomocÃ­ <strong>pole objektÅ¯</strong></li>
+               <li><a href="javadoc/org/ujoframework/implementation/pojo/PojoUjo.html">PojoUjo</a> - tato implementace mapuje klÃ­Äe pÅ™Ã­mo na metody objektu <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> pomocÃ­ <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflexe</a></li>
            </ul>
         
-        Inspirací pro rozvoj tohoto projektu byla architektura perzistentních objektù v projektu <a href="http://cayenne.apache.org/">Cayenne</a> (nástroj pro øešení 
+        InspiracÃ­ pro rozvoj tohoto projektu byla architektura perzistentnÃ­ch objektÅ¯ v projektu <a href="http://cayenne.apache.org/">Cayenne</a> (nÃ¡stroj pro Å™eÅ¡enÃ­ 
         <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a>)
         <br />&nbsp;<br />
         
-        <a href="javadoc/org/ujoframework/package-summary.html#UJO">Více informací ...</a>
+        <a href="javadoc/org/ujoframework/package-summary.html#UJO">VÃ­ce informacÃ­ ...</a>
         
     </div>
     
     
 
     <div class="chapter">
-        <h2 id="sample">Pøíklad pouití:</h2>
+        <h2 id="sample">PÅ™Ã­klad pouÅ¾itÃ­:</h2>
         
-        <p style="color: #db4343;"><strong>Poznámka: </strong> èeská verze tohoto dokumentu u nepopisuje nové vlastnosti UJO Framewokru implementované od verze 0.80.
-        Pokud vás zajímají i tyto nové vlastnosti, pøepnìte se, prosím, na <a href="index.html">anglickou verzi</a>.
+        <p style="color: #db4343;"><strong>PoznÃ¡mka: </strong> ÄeskÃ¡ verze tohoto dokumentu uÅ¾ nepopisuje novÃ© vlastnosti UJO Framewokru implementovanÃ© od verze 0.80.
+        Pokud vÃ¡s zajÃ­majÃ­ i tyto novÃ© vlastnosti, pÅ™epnÄ›te se, prosÃ­m, na <a href="index.html">anglickou verzi</a>.
         </p>
-        Jak napíšeme tøídu objektu UJO?	Nejrychlejší cesta je vyuít nìjakou abstraktní implementaci UJO z tohoto projektu, pomocí pár øádù kódu však mùeme
-        vyrobit i implementaci vlastní. Pøíkladem mùe bıt implementace tøídy <i>Person</i>, která obsahuje tøi atributy a jednu metodu pro zmìnu hotovosti.
+        Jak napÃ­Å¡eme tÅ™Ã­du objektu UJO?	NejrychlejÅ¡Ã­ cesta je vyuÅ¾Ã­t nÄ›jakou abstraktnÃ­ implementaci UJO z tohoto projektu, pomocÃ­ pÃ¡r Å™Ã¡dÅ¯ kÃ³du vÅ¡ak mÅ¯Å¾eme
+        vyrobit i implementaci vlastnÃ­. PÅ™Ã­kladem mÅ¯Å¾e bÃ½t implementace tÅ™Ã­dy <i>Person</i>, kterÃ¡ obsahuje tÅ™i atributy a jednu metodu pro zmÄ›nu hotovosti.
         
 <pre class="pre"><span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {
@@ -184,9 +184,9 @@ UJO Framework</h1>
 }</pre>
 
      <!--
-     Od <strong>verze 0.80</strong> je moné pouít <strong>rozšíøené API</strong> které nabízí èitelnìjší kód pro pøístup a attributùm 
-     a umoòuje mimo jiné i øetìzení properties podobnì jako v jazyku <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a>. Nové API jen rozšiøuje to pùvodní a tak 
-     je moné kombinovat oba typy objektù.
+     Od <strong>verze 0.80</strong> je moÅ¾nÃ© pouÅ¾Ã­t <strong>rozÅ¡Ã­Å™enÃ© API</strong> kterÃ© nabÃ­zÃ­ ÄitelnÄ›jÅ¡Ã­ kÃ³d pro pÅ™Ã­stup a attributÅ¯m 
+     a umoÅ¾Åˆuje mimo jinÃ© i Å™etÄ›zenÃ­ properties podobnÄ› jako v jazyku <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a>. NovÃ© API jen rozÅ¡iÅ™uje to pÅ¯vodnÃ­ a tak 
+     je moÅ¾nÃ© kombinovat oba typy objektÅ¯.
      
 <pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
   ...  
@@ -197,35 +197,35 @@ UJO Framework</h1>
 }</pre>
      -->
 
-        <a href="javadoc/org/ujoframework/package-summary.html#how">Pokraèování ...</a>
+        <a href="javadoc/org/ujoframework/package-summary.html#how">PokraÄovÃ¡nÃ­ ...</a>
     </div>
     
     
     <div class="chapter">
-        <h2 id="refAppl">Referenèní projekty:</h2>
+        <h2 id="refAppl">ReferenÄnÃ­ projekty:</h2>
         
-        Referenèní implementací je Swingovı projekt <a href="http://jworksheet.pponec.net/">JWorkSheet</a>, kterı vytvoøil autor UJO Frameworku a kterı je zveøejnìn  pod
-        otevøenou licencí na domovské stránce <a href="http://jworksheet.pponec.net/">http://jworksheet.pponec.net/</a>.
-        Aplikace <strong>jWorkSheet</strong> slouí k mìøení vašeho èasu stráveného na projektech. <br/>
-        Na zdrojovıch kódech lze studovat vyuití perzistence UJO objektù stejnì tak jako snadné propojení kolekce UJO objektù na grafickou komponentou JTable.
-        K dispozici je <a href="http://jworksheet.pponec.net/javadoc/">API</a> projektu ve formátu JavaDoc.<br />
+        ReferenÄnÃ­ implementacÃ­ je SwingovÃ½ projekt <a href="http://jworksheet.pponec.net/">JWorkSheet</a>, kterÃ½ vytvoÅ™il autor UJO Frameworku a kterÃ½ je zveÅ™ejnÄ›n  pod
+        otevÅ™enou licencÃ­ na domovskÃ© strÃ¡nce <a href="http://jworksheet.pponec.net/">http://jworksheet.pponec.net/</a>.
+        Aplikace <strong>jWorkSheet</strong> slouÅ¾Ã­ k mÄ›Å™enÃ­ vaÅ¡eho Äasu strÃ¡venÃ©ho na projektech. <br/>
+        Na zdrojovÃ½ch kÃ³dech lze studovat vyuÅ¾itÃ­ perzistence UJO objektÅ¯ stejnÄ› tak jako snadnÃ© propojenÃ­ kolekce UJO objektÅ¯ na grafickou komponentou JTable.
+        K dispozici je <a href="http://jworksheet.pponec.net/javadoc/">API</a> projektu ve formÃ¡tu JavaDoc.<br />
         
         <br />
         Vlastnosti aplikace JWorkSheet:<br />
         <ul>
-            <li>veškerá persistence je realizovaná pomocí frameworku UJO. V projektu se pouívá ukládání do formátu 
-            <span style="font-weight: bold;">XML</span>, parametry se ukládají do formátu <span style="font-weight: bold;">Resource Bundle</span>.</li>
-            <li>všechny datové modely objektu JTable jsou buï pøímo instancí, nebo potomkem tøídy UjoTableModel .</li>
-            <li>zajímavá je malá velikost aplikace jWorkSheet, zabírá
-            pøiblinì 160 kB vèetnì knihovny UJO Framework.</li>
+            <li>veÅ¡kerÃ¡ persistence je realizovanÃ¡ pomocÃ­ frameworku UJO. V projektu se pouÅ¾Ã­vÃ¡ uklÃ¡dÃ¡nÃ­ do formÃ¡tu 
+            <span style="font-weight: bold;">XML</span>, parametry se uklÃ¡dajÃ­ do formÃ¡tu <span style="font-weight: bold;">Resource Bundle</span>.</li>
+            <li>vÅ¡echny datovÃ© modely objektu JTable jsou buÄ pÅ™Ã­mo instancÃ­, nebo potomkem tÅ™Ã­dy UjoTableModel .</li>
+            <li>zajÃ­mavÃ¡ je malÃ¡ velikost aplikace jWorkSheet, zabÃ­rÃ¡
+            pÅ™ibliÅ¾nÄ› 160 kB vÄetnÄ› knihovny UJO Framework.</li>
         </ul>
-        Projekt JWorkSheet je napsanı v Java 5.0, vıvoj byl realizován v <a href="http://www.netbeans.org/">NetBeans IDE</a> .
+        Projekt JWorkSheet je napsanÃ½ v Java 5.0, vÃ½voj byl realizovÃ¡n v <a href="http://www.netbeans.org/">NetBeans IDE</a> .
     </div>
 
     
     <div class="chapter">
         <h2 id="license">Licence:</h2>
-        Kód byl uvolnìn pod licencí <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br />
+        KÃ³d byl uvolnÄ›n pod licencÃ­ <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br />
         <br />
         
         <div class="apache"><code>
@@ -248,10 +248,10 @@ UJO Framework</h1>
     
     <div class="chapter">
         <h2 id="download">Stahuj:</h2>
-        Zdrojové a binární kódy je moné stáhnout na SourceForge zde:
+        ZdrojovÃ© a binÃ¡rnÃ­ kÃ³dy je moÅ¾nÃ© stÃ¡hnout na SourceForge zde:
         <ul> 
-            <li>Binární  <a href="http://sourceforge.net/projects/ujoframework/">balík</a></li>
-            <li>Zdrojové  <a href="http://sourceforge.net/projects/ujoframework/">kódy</a></li>
+            <li>BinÃ¡rnÃ­  <a href="http://sourceforge.net/projects/ujoframework/">balÃ­k</a></li>
+            <li>ZdrojovÃ©  <a href="http://sourceforge.net/projects/ujoframework/">kÃ³dy</a></li>
         </ul>
         
     </div>	
@@ -260,15 +260,15 @@ UJO Framework</h1>
     <div class="chapter">
         <h2 id="author">O autorovi:</h2>
         <ul>  
-            <li>Pro pøipomínky, dotazy èi jiné zprávy mùete pouít blog <a href="http://ujoframework-cs.blogspot.com/">http://ujoframework-cs.blogspot.com/</a>.</li>
-            <li>Na domovské stránce autora lze najít nìkteré jeho další volnì šiøitelné programy a jiné informace, odkaz je: <a href="http://pponec.net/">http://pponec.net/</a> .</li>
-            <li>Technická podpora: ujoframework@gmail.com</li>
+            <li>Pro pÅ™ipomÃ­nky, dotazy Äi jinÃ© zprÃ¡vy mÅ¯Å¾ete pouÅ¾Ã­t blog <a href="http://ujoframework-cs.blogspot.com/">http://ujoframework-cs.blogspot.com/</a>.</li>
+            <li>Na domovskÃ© strÃ¡nce autora lze najÃ­t nÄ›kterÃ© jeho dalÅ¡Ã­ volnÄ› Å¡iÅ™itelnÃ© programy a jinÃ© informace, odkaz je: <a href="http://pponec.net/">http://pponec.net/</a> .</li>
+            <li>TechnickÃ¡ podpora: ujoframework@gmail.com</li>
         </ul>  
     </div>	
     <hr style="clear:both;" />
     
     <p style="text-align:center"><span class="PPonec">PP</span><span class="ppONEC">one</span><span class="PPonec">(</span><span
-            class="ppONEC">c</span><span class="PPonec">) 2007-2008</span>
+            class="ppONEC">c</span><span class="PPonec">) 2007-2009</span>
     </p>
     
     <div class="chapter" style="text-align: center;">
