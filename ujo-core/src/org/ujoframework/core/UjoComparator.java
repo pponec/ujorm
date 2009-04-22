@@ -21,7 +21,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * Comparator of Ujo objects. A direction is the sorting is controlled by attribute UjoProperty.isAscending() .
+ * A generic comparator for the Ujo objects. A direction is the sorting is controlled by attribute UjoProperty.isAscending() .
  * @author Pavel Ponec
  * @see UjoProperty#isAscending()
  * @see UjoProperty#descending() 

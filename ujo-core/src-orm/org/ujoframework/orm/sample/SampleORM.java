@@ -123,6 +123,18 @@ public class SampleORM {
     }
 
     /** Using SELECT by QUERY */
+    public void useSelectItems_4() {
+        Expression<Item> expr = Expression.newInstance(Item.ORDER_DATE, Operator.LE, new Date());
+        Session session = OrmHandler.getInstance().getSession();
+        UjoIterator<Item> items = session.createQuery(expr).iterate();
+
+        for (Item item : items) {
+            System.out.println("Item: " + item);
+        }
+    }
+
+
+    /** Using SELECT by QUERY */
     public void useSelectCount() {
         Session session = OrmHandler.getInstance().getSession();
         Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
@@ -196,6 +208,7 @@ public class SampleORM {
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
+            sample.useSelectItems_4();
             sample.useSelectCount();
             sample.useIteratorSkip();
             sample.useRelation();

@@ -381,7 +381,7 @@ public class Session {
 
         Expression expr = column!=null 
             ? Expression.newInstance(column.getProperty(), value)
-            : Expression.newInstance(true)
+            : Expression.newInstanceTrue(table.getFirstPK().getProperty())
             ;
         Query query = createQuery(tableClass, expr);
         UjoIterator result = iterate(query);

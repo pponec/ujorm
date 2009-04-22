@@ -229,19 +229,29 @@ public class UjoManager implements Comparator<UjoProperty> {
      * @param obj2 Optional parameter
      * @return Returns true, if objects are the same.
      */
-    public boolean equalsUjo(Ujo obj1, Ujo obj2)  {
-        if (obj1==obj2) {
+    public boolean equalsUjo(final Ujo u1, final Ujo u2)  {
+        return equalsUjo(u1, u2, u1!=null ? u1.readProperties() : null);
+    }
+    
+    /**
+     * Test if obj1 equalsUjo obj2. If obj1 object is Array, method call an equalsArray() method, else use en method equalsUjo().
+     *
+     * @param obj1 First parameter
+     * @param obj2 Optional parameter
+     * @return Returns true, if objects are the same.
+     */
+    public boolean equalsUjo(final Ujo u1, final Ujo u2, UjoProperty... properties)  {
+        if (u1==u2) {
             return true;
         }
-        if (obj1==null || obj2==null) {
+        if (u1==null || u2==null) {
             return false;
         }
-        if (obj1.getClass().equals(obj2.getClass())) {
-            UjoProperty[] properties = obj1.readProperties();
+        if (u1.getClass().equals(u2.getClass())) {
             for (int i=properties.length-1; i>=0; i--) {
                 UjoProperty property = properties[i];
-                final Object o1 = getValue(obj1, property);
-                final Object o2 = getValue(obj2, property);
+                final Object o1 = getValue(u1, property);
+                final Object o2 = getValue(u2, property);
                 if (! equals(o1, o2)) {
                     return false;
                 }
@@ -250,7 +260,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         }
         return false;
     }
-    
+
     /**
      * Test if array1 equalsUjo to array2. There are supported types:
      * <ul>

@@ -93,8 +93,8 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
     public boolean equals(UJO ujo, VALUE value);
     
     /**
-     * If the property is the direct property of the related UJO class then method returns the TRUE value.
-     * Indirect (composite) properties are excluded from from function Ujo.readProperties() by default
+     * If the property is the direct property of the related UJO class then method returns the TRUE value.<br />
+     * Note: Indirect (composite) properties are excluded from from function Ujo.readProperties() by default
      * and these properties should not be sent to methods Ujo.writeValue() and Ujo.readValue().
      * @since 0.81
      */
@@ -109,7 +109,7 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
      */
     public boolean isAscending();
     
-    /** Create a new instance of the <strong>indirect</strong> property with a descending direction of sorting.
+    /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
      * @return returns a new instance of the indirect UjoProperty
      * @since 0.85
      * @see #isAscending()

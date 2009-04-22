@@ -40,14 +40,14 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         this.properties = properties;
     }
 
-    /** Get the last property of the current object. The result can't be a direct property. */
+    /** Get the last property of the current object. The result may not be the direct property. */
     @SuppressWarnings("unchecked")
     final public<UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastProperty() {
         return properties[properties.length - 1];
     }
 
-    /** Get a property from selected positon. */
-    final public UjoProperty getProperty(int index) {
+    /** Get a property from selected positon.. The result may not be the direct property. */
+    final public UjoProperty getProperty(final int index) {
         return properties[index];
     }
 

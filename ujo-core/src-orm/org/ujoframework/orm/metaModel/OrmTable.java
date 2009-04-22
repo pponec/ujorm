@@ -166,4 +166,11 @@ public class OrmTable extends AbstractMetaModel {
         return DATABASE.of(this);
     }
 
+    /** Compare object by the same instance. */
+    @Override
+    public boolean equals(Object obj) {
+        return this==obj;
+    }
+
+
 }

@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
+import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmRoot;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -127,15 +128,14 @@ public class OrmHandler {
         }
     }
 
-    /** Find a table of the paramemeter property. */
-    public OrmTable findTableModel(UjoProperty property) {
-        final OrmRelation2Many column = findColumnModel(property);
-        return column!=null ? OrmRelation2Many.TABLE.of(column) : null ;
-    }
-
-    /** Find a table of the paramemeter property. */
-    public OrmRelation2Many findColumnModel(UjoProperty property) {
-        final OrmRelation2Many result = propertyMap.get(property);
+    /** Find a Relation/Column model of the paramemeter property.
+     * @param property Parameter can be type of Property of PathProperty (direct or indirect);
+     */
+    public OrmRelation2Many findColumnModel(UjoProperty pathProperty) {
+        while (!pathProperty.isDirect()) {
+            pathProperty = ((PathProperty)pathProperty).getLastProperty();
+        }
+        final OrmRelation2Many result = propertyMap.get(pathProperty);
         return result;
     }
 

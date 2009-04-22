@@ -132,7 +132,11 @@ public class OrmPKey extends AbstractMetaModel {
 
     /** Returns the first column. */
     public OrmColumn getFirstColumn() {
-        return COLUMNS.of(this).get(0);
+        return getColumn(0);
     }
 
+    /** Returns column on the selected position. */
+    public OrmColumn getColumn(int i) {
+        return COLUMNS.of(this).get(i);
+    }
 }
