@@ -167,11 +167,6 @@ public class Query<UJO extends TableUjo> {
     /** Returns an order column. A method for an internal use only. */
     public OrmColumn readOrderColumn(int i) {
         UjoProperty property = order.get(i);
-
-        while(!property.isDirect()) {
-            property = ((PathProperty)property).getLastProperty();
-        }
-
         OrmRelation2Many result = session.getHandler().findColumnModel(property);
         return (OrmColumn) result;
     }

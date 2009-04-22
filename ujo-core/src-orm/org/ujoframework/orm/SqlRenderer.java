@@ -18,7 +18,9 @@ package org.ujoframework.orm;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Set;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
@@ -261,6 +263,7 @@ abstract public class SqlRenderer {
     /** Print table columns */
     public void printTableColumns(List<OrmColumn> columns, Appendable writer, Appendable values) throws IOException {
         String separator = "";
+        boolean select = values==null;
         for (OrmColumn column : columns) {
             if (column.isForeignKey()) {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
@@ -274,7 +277,7 @@ abstract public class SqlRenderer {
                 }
             } else if (column.isColumn()) {
                 writer.append(separator);
-                writer.append(OrmColumn.NAME.of(column));
+                writer.append(select ? column.getFullName() : OrmColumn.NAME.of(column));
                 if (values != null) {
                     values.append(separator);
                     values.append("?");
@@ -380,15 +383,25 @@ abstract public class SqlRenderer {
             printTableColumns(query.getColumns(), result, null);
         }
         result.append("\n\tFROM ");
-        result.append(OrmTable.NAME.of(query.getTableModel()));
 
         if (query.getExpression() != null) {
             ExpressionDecoder ed = query.getDecoder();
+
+            OrmTable[] tables = ed.getTables(query.getTableModel());
+
+            for (int i=0; i<tables.length; ++i) {
+                OrmTable table = tables[i];
+                if (i>0) result.append(", ");
+                result.append(table.getFullName());
+            }
+
             String sql = ed.getSql();
             if (!sql.isEmpty()) {
                 result.append(" WHERE ");
                 result.append(ed.getSql());
             }
+        } else {
+            result.append(OrmTable.NAME.of(query.getTableModel()));
         }
         if (!count && !query.getOrder().isEmpty()) {
             printSelectOrder(query, result);

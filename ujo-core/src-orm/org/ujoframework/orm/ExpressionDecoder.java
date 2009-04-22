@@ -24,6 +24,7 @@ import java.util.Set;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
 import org.ujoframework.tools.criteria.ExpressionBinary;
@@ -43,6 +44,7 @@ public class ExpressionDecoder {
     final private Expression e;
     final private StringBuilder sql;
     final private List<ExpressionValue> values;
+    final private Set<OrmTable> tables;
 
     public ExpressionDecoder(Expression e, OrmTable ormTable) {
         this(e, ormTable.getDatabase().getRenderer());
@@ -53,9 +55,11 @@ public class ExpressionDecoder {
         this.renderer = renderer;
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ExpressionValue>();
+        this.tables = new HashSet<OrmTable>();
 
         if (e!=null) {
             unpack(e);
+            writeRelations();
         }
     }
 
@@ -100,7 +104,7 @@ public class ExpressionDecoder {
         return values.size();
     }
 
-    /** Returns column */
+    /** Returns direct column */
     public OrmColumn getColumn(int i) {
         UjoProperty p = values.get(i).getLeftNode();
         OrmColumn ormColumn = (OrmColumn) handler.findColumnModel(p);
@@ -175,6 +179,46 @@ public class ExpressionDecoder {
         return result;
     }
 
+    /** Writer a relation conditions: */
+    @SuppressWarnings("unchecked")
+    protected void writeRelations() {
+        UjoProperty[] relations = getPropertyRelations();
+
+        boolean parenthesis = sql.length()>0 && relations.length>0;
+        if (parenthesis) {
+            sql.append(" AND (");
+        }
+
+        boolean andOperator = false;
+        for (UjoProperty property : relations) try {
+            OrmColumn fk1 = (OrmColumn) handler.findColumnModel(property);
+            OrmTable   t2 = handler.findTableModel(property.getType());
+            OrmPKey   pk2 = OrmTable.PK.of(t2);
+            //
+            tables.add(OrmColumn.TABLE.of(fk1));
+            tables.add(t2);
+
+            for (int i=fk1.getForeignColumns().size()-1; i>=0; i--) {
+
+                if (andOperator) {
+                    sql.append(" AND ");
+                } else {
+                    andOperator=true;
+                }
+
+                fk1.printForeignColumnFullName(i, sql);
+                sql.append(" = ");
+                pk2.getColumn(i).printFullName(sql);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+        if (parenthesis) {
+            sql.append(")");
+        }
+    }
+
     /** Returns the unique direct property relations. */
     @SuppressWarnings("unchecked")
     protected UjoProperty[] getPropertyRelations() {
@@ -199,5 +243,10 @@ public class ExpressionDecoder {
         return result.toArray(new UjoProperty[result.size()]);
     }
 
+    /** Returns all participated tables include the parameter table. */
+    public OrmTable[] getTables(OrmTable baseTable) {
+        tables.add(baseTable);
+        return tables.toArray(new OrmTable[tables.size()]);
+    }
 
 }

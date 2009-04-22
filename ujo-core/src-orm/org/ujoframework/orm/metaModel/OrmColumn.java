@@ -16,11 +16,14 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -191,13 +194,38 @@ public class OrmColumn extends OrmRelation2Many {
     /** Returns a TABLE and COLUMN names. */
     @Override
     public String toString() {
-        final  OrmTable table = TABLE.of(this);
-        return OrmTable.NAME.of(table) + '.' + NAME.of(this);
+         return getFullName();
     }
 
-    /** Returns full name. */
+    /** Returns the full name. */
     public String getFullName() {
-        return NAME.of(this);
+        try {
+            StringBuilder sb = new StringBuilder(32);
+            printFullName(sb);
+            return sb.toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
+
+    /** Print the full name. */
+    public void printFullName(Appendable out) throws IOException {
+        final OrmTable table = TABLE.of(this);
+        final String tableName = OrmTable.NAME.of(table);
+
+        out.append(tableName);
+        out.append('.');
+        out.append(NAME.of(this));
+    }
+
+    /** Print a full name of foreign column by index */
+    public void printForeignColumnFullName(int index, Appendable out) throws IOException {
+        OrmTable table = TABLE.of(this);
+        out.append(OrmTable.NAME.of(table));
+        out.append('.');
+        out.append(getForeignColumnNames()[index]);
+    }
+
+
 
 }

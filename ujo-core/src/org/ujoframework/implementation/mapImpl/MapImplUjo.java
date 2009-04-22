@@ -36,7 +36,7 @@ import org.ujoframework.extensions.AbstractUjo;
  * <ul>
  *   <li>the NULL key is not supported in this implementation</li>
  *   <li>the map implementation is a proxy to an internal Map&lt;String,Object&gt; object</li>
- *   <li>this class will be moved into tools package in the future</li>
+ *   <li>this class will be moved into a module Tools in future</li>
  * </ul>
  * <h3>Sample of usage</h3>
  * <pre class="pre">

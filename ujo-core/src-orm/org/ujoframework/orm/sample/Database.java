@@ -29,11 +29,11 @@ import org.ujoframework.orm.renderers.H2Renderer;
 public class Database extends TableUjo<Database> {
 
     /** Customer order. The used annotation overwrites a database name from the property name. */
-    @Table(name="ORD_ORDER_NEW")
-    public static final RelationToMany<Database,Order> ORDERS = newRelation("ORD_ORDER", Order.class);
+    @Table(name="ord_order_new")
+    public static final RelationToMany<Database,Order> ORDERS = newRelation("ord_order", Order.class);
 
     /** Items of the Customer order */
-    public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation("ORD_ITEM", Item.class);
+    public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation("ord_item", Item.class);
 
 
 
