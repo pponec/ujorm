@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -55,7 +53,7 @@ public class OrmColumn extends OrmRelation2Many {
     /** The column is included in the index of the name */
     public static final UjoProperty<OrmColumn,String> INDEX_NAME = newProperty("indexName", "");
     /** DB primary key generator */
-    public static final UjoProperty<OrmColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.MEMO_SEQUENCE);
+    public static final UjoProperty<OrmColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.DB_SEQUENCE);
 
 
     /** Foreign column names. */

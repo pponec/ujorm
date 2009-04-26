@@ -16,7 +16,6 @@
 
 package org.ujoframework.orm.metaModel;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -31,12 +30,10 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
-import java.util.List;
-import org.ujoframework.orm.ExpressionDecoder;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
-import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
 
 /**
@@ -75,8 +72,10 @@ public class OrmDatabase extends AbstractMetaModel {
     // --------------------
 
     private SqlRenderer renderer;
+    private UjoSequencer sequencer;
 
     public OrmDatabase(TableUjo database) {
+        sequencer = new UjoSequencer(this);
         ROOT.setValue(this, database);
 
         Db annotDB = database.getClass().getAnnotation(Db.class);
@@ -115,58 +114,8 @@ public class OrmDatabase extends AbstractMetaModel {
         }
     }
 
-    /** Create an SQL insert */
-    public String createInsert(TableUjo ujo) {
-        SqlRenderer renderer = getRenderer();
-        StringBuilder result = new StringBuilder();
-        try {
-            renderer.printInsert(ujo, result);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result.toString();
-    }
 
-
-    /** Create an SQL update of the one row */
-    public String createUpdate(OrmTable table, List<OrmColumn> changedColumns, ExpressionDecoder decoder) {
-        SqlRenderer renderer = getRenderer();
-        StringBuilder result = new StringBuilder(64);
-        try {
-            renderer.printUpdate(table, changedColumns, decoder, result);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result.toString();
-    }
-
-    /** Create an SQL delete by an expression. */
-    public String createDelete(OrmTable table, ExpressionDecoder decoder) {
-        SqlRenderer renderer = getRenderer();
-        StringBuilder result = new StringBuilder(64);
-        try {
-            renderer.printDelete(table, decoder, result);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return result.toString();
-    }
-
-    /**
-     * Create an SQL select
-     * @param query Ujo query
-     * @param count The true value is a request to return a count of filtered row only.
-     */
-    public String createSelect(Query query, boolean count) {
-        try {
-            final String result = getRenderer().printSelect(query, count);
-            return result;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /** Returns an SQL renderer. */
+    /** Returns a SQL renderer for the current database. */
     public SqlRenderer getRenderer() {
         if (renderer==null) try {
             renderer = (SqlRenderer) RENDERER.of(this).newInstance();
@@ -272,17 +221,20 @@ public class OrmDatabase extends AbstractMetaModel {
     public void create() {
         Connection conn = OrmHandler.getInstance().getSession().getConnection(this);
         Statement stat = null;
-        StringBuilder sql = new StringBuilder(256);
+        String sql = "";
         try {
-            getRenderer().printCreateDatabase(this, sql);
+            sql = getRenderer().printCreateDatabase(this, new StringBuilder(256)).toString();
             conn = createConnection();
             stat = conn.createStatement();
-            stat.executeUpdate(sql.toString());
+            stat.executeUpdate(sql);
             conn.commit();
 
             if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.info(sql.toString());
+                LOGGER.info(sql);
             }
+
+            // Create UJO-ORM sequence;
+            sequencer.createSequence(conn);
 
         } catch (Throwable e) {
             if (conn!=null) {
@@ -359,6 +311,11 @@ public class OrmDatabase extends AbstractMetaModel {
                 LOGGER.log(Level.SEVERE, msg, e);
             }
         }
+    }
+
+    /** Returns common sequencer. */
+    public UjoSequencer getSequencer() {
+        return sequencer;
     }
 
 

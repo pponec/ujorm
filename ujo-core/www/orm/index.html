@@ -50,7 +50,7 @@
         <ul>
            <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
            <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
-           <li>default ORM mapping is based on the UjoProperty however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files </li>
+           <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
            <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
            <li>restricted cache is suitable for a large transactions and a selecting uncommited changes</li>
            <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
@@ -122,7 +122,7 @@ The next source code calls a SELECT by an UJO object <strong>relation</strong>:
   }
 </pre>
 
-        <h3>More sources:</h3>
+        <h3 id="sources">More sources:</h3>
           <ul>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
@@ -133,11 +133,23 @@ The next source code calls a SELECT by an UJO object <strong>relation</strong>:
               <li><a href="http://ujoframework.org/presentation/">UJO quick start</a> (a slide show)</li>
           </ul>
 
-        <h3>License:</h3>
+        <h3 id="license">License:</h3>
           <ul>
               <li><a href="http://www.apache.org/licenses/LICENSE-2.0.html">UJO Framework</a> has a license <a href="http://www.gnu.org/licenses/gpl-2.0.txt">Apache License, Version 2.0</a></li>
               <li>no more dependences</li>
           </ul>
+
+        <h3 id="author">About author:</h3>
+
+          <p>The author Pavel Ponec has experiences with the 4GL database query language for eight years .
+          Since 2000 he started to work on different projects primarily in the Java<sup style="font-size: 6px">TM</sup> language,
+          in the year 2008 he has got the certificate Sun Certified Programmer for the Java<sup style="font-size: 6px">TM</sup>&nbsp;2 SE&nbsp;5.0.
+          <br />
+          He likes Java<!--<sup style="font-size: 6px">TM</sup>-->
+          development and he believes that Java applications support
+          an extension of Linux so as to users can choose any application freely for their
+          operation system.
+          </p>
 
         <hr />
            <!--
