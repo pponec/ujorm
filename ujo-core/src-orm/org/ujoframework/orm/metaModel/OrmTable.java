@@ -75,7 +75,7 @@ public class OrmTable extends AbstractMetaModel {
             NAME.setValue(this, dbProperty.getName());
         }
 
-        OrmPKey dpk = new OrmPKey();
+        OrmPKey dpk = new OrmPKey(this);
         PK.setValue(this, dpk);
 
         OrmHandler dbHandler = OrmHandler.getInstance();
@@ -119,11 +119,11 @@ public class OrmTable extends AbstractMetaModel {
 
 
     /** Assign a PK from framework */
-    public void assignPrimaryKey(TableUjo table) {
-        Class type = DB_PROPERTY.of(this).getItemType();
+    public void assignPrimaryKey(final TableUjo table) {
+        final Class type = DB_PROPERTY.of(this).getItemType();
         if (type.isInstance(table)) {
-            OrmPKey pk = PK.of(this);
-            boolean ok = pk.assignPrimaryKey(table);
+            final OrmPKey pk = PK.of(this);
+            final boolean ok = pk.assignPrimaryKey(table);
             if (!ok) {
                 throw new RuntimeException("DB SEQUENCE is not supported for " + type);
             }

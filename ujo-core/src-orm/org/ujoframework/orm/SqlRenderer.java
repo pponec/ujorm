@@ -18,9 +18,7 @@ package org.ujoframework.orm;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Set;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
@@ -43,13 +41,14 @@ abstract public class SqlRenderer {
     abstract public String getJdbcDriver();
 
     /** Print a SQL script to crate database */
-    public void printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException {
+    public Appendable printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException {
         for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
             if (table.isPersistent()) {
                 printTable(table, writer);
                 printForeignKey(table, writer);
             }
         }
+        return writer;
     }
 
     /** Print a SQL sript to create table */
@@ -163,7 +162,7 @@ abstract public class SqlRenderer {
     }
 
     /** Print an SQL INSERT statement.  */
-    public void printInsert(TableUjo ujo, Appendable writer) throws IOException {
+    public Appendable printInsert(TableUjo ujo, Appendable writer) throws IOException {
 
         OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
         StringBuilder values = new StringBuilder();
@@ -177,17 +176,18 @@ abstract public class SqlRenderer {
         writer.append(") VALUES (");
         writer.append(values);
         writer.append(");");
+
+        return writer;
     }
 
     /** Print an SQL UPDATE statement.  */
-    public void printUpdate
+    public Appendable printUpdate
         ( OrmTable table
         , List<OrmColumn> changedColumns
         , ExpressionDecoder decoder
         , Appendable writer
         ) throws IOException
     {
-
         writer.append("UPDATE ");
         writer.append(table.getFullName());
         writer.append("\n\tSET ");
@@ -206,10 +206,11 @@ abstract public class SqlRenderer {
         writer.append("\n\tWHERE ");
         writer.append(decoder.getSql());
         writer.append(";");
+        return writer;
     }
 
     /** Print an SQL DELETE statement.  */
-    public void printDelete
+    public Appendable printDelete
         ( OrmTable table
         , ExpressionDecoder decoder
         , Appendable writer
@@ -220,6 +221,8 @@ abstract public class SqlRenderer {
         writer.append(" WHERE ");
         writer.append(decoder.getSql());
         writer.append(";");
+
+        return writer;
     }
 
     /** Returns an SQL expression template. */
@@ -427,4 +430,26 @@ abstract public class SqlRenderer {
             }
         }
     }
+
+    /** Print SQL CREATE SEQUENCE. */
+    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable writer) throws IOException {
+        writer.append("CREATE SEQUENCE IF NOT EXISTS ");
+        writer.append(sequence.getSequenceName());
+        writer.append(" START WITH " + sequence.getInitValue());
+        writer.append(" INCREMENT BY " + sequence.getInitIncrement());
+        writer.append(" CACHE " + sequence.getInitCacheSize());
+        writer.append(";");
+        return writer;
+    }
+
+    /** Print SQL NEXT SEQUENCE. */
+    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable writer) throws IOException {
+        writer.append("SELECT CURRVAL('");
+        writer.append(sequence.getSequenceName());
+        writer.append("'), NEXTVAL('");
+        writer.append(sequence.getSequenceName());
+        writer.append("');");
+        return writer;
+    }
+
 }

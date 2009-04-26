@@ -39,8 +39,10 @@ public class OrmPKey extends AbstractMetaModel {
 
     /** Primary key counter. */
     private long primaryKeyCounter = 0;
+    final private OrmDatabase database;
 
-    public OrmPKey() {
+    public OrmPKey(OrmTable table) {
+        this.database = OrmTable.DATABASE.of(table);
         COLUMNS.setValue(this, new ArrayList<OrmColumn>(0));
     }
 
@@ -108,13 +110,26 @@ public class OrmPKey extends AbstractMetaModel {
     public boolean assignPrimaryKey(TableUjo table) {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
+
             OrmColumn column = COLUMNS.getItem(this, 0);
+            UjoProperty property = column.getProperty();
+            if (property.of(table)!=null) {
+                return false;
+            }
+
             switch (OrmColumn.PRIMARY_KEY_GEN.of(column)) {
-                case MEMO_SEQUENCE:
-                    UjoProperty property = column.getProperty();
-                    if (property.of(table)!=null) {
-                        return false;
+                case DB_SEQUENCE:
+
+                    final long value = database.getSequencer().nextValue(table.readSession());
+                    if (Long.class==property.getType()) {
+                        property.setValue(table, value);
+                        return true;
                     }
+                    if (Integer.class==property.getType()) {
+                        property.setValue(table, (int) value);
+                        return true;
+                    }
+                case MEMO_SEQUENCE:
                     if (Long.class==property.getType()) {
                         property.setValue(table, nextPrimaryKey());
                         return true;

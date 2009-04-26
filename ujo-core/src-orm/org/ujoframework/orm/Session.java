@@ -154,18 +154,19 @@ public class Session {
     /** INSERT object into table. */
     public void save(TableUjo ujo) throws IllegalStateException {
         JdbcStatement statement = null;
+        String sql = "";
 
         try {
             OrmTable table = handler.findTableModel((Class) ujo.getClass());
+            ujo.writeSession(this);
             table.assignPrimaryKey(ujo);
             OrmDatabase db = OrmTable.DATABASE.of(table);
-            String sql = db.createInsert(ujo);
+            sql = db.getRenderer().printInsert(ujo, out(128)).toString();
             LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
             statement.assignValues(ujo);
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
-            ujo.writeSession(this);
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
             throw new IllegalStateException("ILLEGAL SQL INSERT", e);
@@ -190,7 +191,7 @@ public class Session {
             final Expression expression = createPkExpression(ujo);
             final OrmTable ormTable = handler.findTableModel(ujo.getClass());
             final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
-            String sql = db.createUpdate(ormTable, changedColumns, decoder);
+            String sql = db.getRenderer().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(ujo, changedColumns);
             statement.assignValues(decoder);
@@ -241,12 +242,12 @@ public class Session {
     protected <UJO extends TableUjo> int delete(final OrmTable ormTable, final Expression<UJO> expression) {
         int result = 0;
         JdbcStatement statement = null;
+        String sql = "";
 
         try {
-
             final OrmDatabase db = OrmTable.DATABASE.of(ormTable);
             final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
-            String sql = db.createDelete(ormTable, decoder);
+            sql = db.getRenderer().printDelete(ormTable, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
 
@@ -306,9 +307,12 @@ public class Session {
 
         OrmTable table = query.getTableModel();
         OrmDatabase db = OrmTable.DATABASE.of(table);
-        String sql = db.createSelect(query, true);
-        LOGGER.log(Level.INFO, sql);
+        String sql = "";
+
         try {
+            sql = db.getRenderer().printSelect(query, true);
+            LOGGER.log(Level.INFO, sql);
+
             statement = getStatement(db, sql);
             statement.assignValues(query.getDecoder());
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
@@ -326,11 +330,12 @@ public class Session {
     /** Run SQL SELECT by query. */
     public <UJO extends TableUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
         JdbcStatement statement = null;
+        String sql = "";
 
         try {
             OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
-            String sql = db.createSelect(query, false);
+            sql = db.getRenderer().printSelect(query, false);
             statement = getStatement(db, sql);
             statement.assignValues(query.getDecoder());
 
@@ -342,7 +347,7 @@ public class Session {
             return result;
 
         } catch (Throwable e) {
-            throw new IllegalStateException("ILLEGAL SQL SELECT", e);
+            throw new IllegalStateException("ILLEGAL SQL SELECT: " + sql, e);
         }
     }
 
@@ -497,5 +502,10 @@ public class Session {
         if (exception != null) {
             throw new IllegalStateException(errMessage + database, exception);
         }
+    }
+
+    /** Create new StringBuilder instance */
+    private StringBuilder out(int capacity) {
+        return new StringBuilder(capacity);
     }
 }
