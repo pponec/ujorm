@@ -56,7 +56,7 @@ public class Query<UJO extends TableUjo> {
      * @param session Session
      */
     public Query(Class<UJO> tableClass, Expression<UJO> expression, Session session) {
-        this( OrmHandler.getInstance().findTableModel(tableClass)
+        this( session.getHandler().findTableModel(tableClass)
             , expression
             , session
             );
@@ -75,7 +75,7 @@ public class Query<UJO extends TableUjo> {
         this.session = session;
         this.decoder = new ExpressionDecoder(expression, table);
 
-        setOrder(); // set undefined ordering
+        setOrder(); // set an undefined ordering
     }
 
     /** Returns a count of the items */

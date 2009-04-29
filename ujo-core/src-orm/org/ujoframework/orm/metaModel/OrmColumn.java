@@ -108,7 +108,7 @@ public class OrmColumn extends OrmRelation2Many {
     public List<OrmColumn> getForeignColumns() {
         List<OrmColumn> result;
         Class type = getProperty().getType();
-        OrmTable table = OrmHandler.getInstance().findTableModel(type);
+        OrmTable table = getHandler().findTableModel(type);
         if (table!=null) {
             OrmPKey pk = OrmTable.PK.of(table);
             result = OrmPKey.COLUMNS.getList(pk);
@@ -125,7 +125,7 @@ public class OrmColumn extends OrmRelation2Many {
     private String[] getForeignColumnNames() {
         if (foreignNames==null) {
             final Class type = getProperty().getType();
-            final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(type);
+            final OrmTable foreignTable = getHandler().findTableModel(type);
             if (foreignTable!=null && isForeignKey()) {
                 final OrmPKey pk = OrmTable.PK.of(foreignTable);
                 final List<OrmColumn> dbColumns = OrmPKey.COLUMNS.getList(pk);

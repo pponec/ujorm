@@ -47,16 +47,18 @@ public class OrmHandler {
     /** Map a property to a database column model */
     private HashMap<UjoProperty,OrmRelation2Many> propertyMap = new HashMap<UjoProperty,OrmRelation2Many> ();
 
-    /** The Sigleton constructor */
-    protected OrmHandler() {
+    /** The (Sigleton ?) constructor */
+    public OrmHandler() {
     }
 
+    /** A candidate to removing */
+    // @Deprecated
     public static OrmHandler getInstance() {
         return handler;
     }
 
      /** Get Session 
-      * <br/>TODO: getSession from a map by key.
+      * <br/>TODO: getDefaultSession from a map by key.
       */
     public Session getSession() {
         return session;
@@ -75,7 +77,7 @@ public class OrmHandler {
     /** load a database model from paramater */
     public <UJO extends TableUjo> OrmDatabase loadDatabase(Class<? extends UJO> databaseModel) {
         UJO model = getInstance(databaseModel);
-        OrmDatabase dbModel  = new OrmDatabase(model);
+        OrmDatabase dbModel  = new OrmDatabase(this, model);
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {

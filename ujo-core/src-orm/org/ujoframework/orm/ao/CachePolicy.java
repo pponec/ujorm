@@ -14,35 +14,21 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm;
 
-import org.ujoframework.orm.sample.Database;
+package org.ujoframework.orm.ao;
 
 /**
- * Singleton
+ * CachePolicy is available inside a one session only. If you close the session then close database connection and clear cache.
  * @author Pavel Ponec
  */
-public class OrmSessionProvider {
+public enum CachePolicy {
 
-    public static final OrmSessionProvider ormSessionProvider = new OrmSessionProvider();
-
-    private Session session = null;
-
-
-    private OrmSessionProvider() {
-    }
-
-
-    /** Returns an session or create the one if missing */
-    public Session getSession() {
-
-        if (session==null) {
-            OrmHandler.getInstance().createDatabase(Database.class);
-            session = OrmHandler.getInstance().getSession();
-        }
-
-        return session;
-
-    }
+    /** No chage is inabled */
+    NONE,
+    /** CachePolicy is onable on relation many-to-one only.
+     * @deprecated the attribute is not supported yet.
+     */
+    MANY_TO_ONE,
+    ;
 
 }

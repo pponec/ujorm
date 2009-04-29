@@ -34,6 +34,13 @@ import org.ujoframework.tools.criteria.Operator;
 @SuppressWarnings("unchecked")
 abstract public class SqlRenderer {
 
+    protected OrmHandler ormHandler;
+
+    /** Set the OrmHandler - for internal use only. */
+    public void setHandler(OrmHandler ormHandler) {
+        this.ormHandler = ormHandler;
+    }
+
     /** Returns a default JDBC Driver */
     abstract public String getJdbcUrl();
 
@@ -81,7 +88,7 @@ abstract public class SqlRenderer {
     /** Print foreign key for  */
     public void printForeignKey(OrmColumn column, OrmTable table, Appendable writer) throws IOException {
         final UjoProperty property = column.getProperty();
-        final OrmTable foreignTable = OrmHandler.getInstance().findTableModel(property.getType());
+        final OrmTable foreignTable = ormHandler.findTableModel(property.getType());
         OrmPKey foreignKeys = OrmTable.PK.of(foreignTable);
 
         writer.append("ALTER TABLE ");
@@ -164,7 +171,7 @@ abstract public class SqlRenderer {
     /** Print an SQL INSERT statement.  */
     public Appendable printInsert(TableUjo ujo, Appendable writer) throws IOException {
 
-        OrmTable table = OrmHandler.getInstance().findTableModel((Class) ujo.getClass());
+        OrmTable table = ormHandler.findTableModel((Class) ujo.getClass());
         StringBuilder values = new StringBuilder();
 
         writer.append("INSERT INTO ");
@@ -299,7 +306,7 @@ abstract public class SqlRenderer {
         UjoProperty property = expr.getLeftNode();
         Object right = expr.getRightNode();
 
-        OrmColumn column = (OrmColumn) OrmHandler.getInstance().findColumnModel(property);
+        OrmColumn column = (OrmColumn) ormHandler.findColumnModel(property);
 
         if (right==null ) {
             String columnName = OrmColumn.NAME.of(column);
@@ -327,7 +334,7 @@ abstract public class SqlRenderer {
             writer.append( template );
         } else if (right instanceof UjoProperty) {
             final UjoProperty rightProperty = (UjoProperty) right;
-            final OrmColumn col2 = (OrmColumn) OrmHandler.getInstance().findColumnModel(rightProperty);
+            final OrmColumn col2 = (OrmColumn) ormHandler.findColumnModel(rightProperty);
 
             if (!rightProperty.isDirect()) {
                 throw new UnsupportedOperationException("Two tables is not supported yet");

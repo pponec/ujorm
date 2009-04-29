@@ -23,6 +23,7 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.orm.AbstractMetaModel;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.annot.Column;
 
 /**
@@ -81,6 +82,12 @@ public class OrmRelation2Many extends AbstractMetaModel {
     @SuppressWarnings("unchecked")
     final public Object getValue(Ujo ujo) {
         final Object result = getProperty().of(ujo);
+        return result;
+    }
+
+    /** OrmHandler */
+    public OrmHandler getHandler() {
+        final OrmHandler result = TABLE.of(this).getDatabase().getOrmHandler();
         return result;
     }
 

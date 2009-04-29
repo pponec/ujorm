@@ -88,7 +88,7 @@ public class JdbcStatement {
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
     public void assignValues(TableUjo table) throws SQLException {
-        final OrmTable dbTable = OrmHandler.getInstance().findTableModel((Class) table.getClass());
+        final OrmTable dbTable = table.readSession().getHandler().findTableModel((Class) table.getClass());
         final List<OrmColumn> columns = OrmTable.COLUMNS.getList(dbTable);
         assignValues(table, columns);
     }

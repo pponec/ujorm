@@ -19,7 +19,7 @@ package org.ujoframework.orm.metaModel;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.AbstractMetaModel;
-import org.ujoframework.orm.metaModel.ao.Cache;
+import org.ujoframework.orm.ao.CachePolicy;
 
 /**
  * A logical database description.
@@ -31,7 +31,7 @@ public class OrmParameters extends AbstractMetaModel {
     public static final Logger LOGGER = Logger.getLogger(OrmParameters.class.getName());
 
     /** Enabnle / desable a session cache */
-    public static final UjoProperty<OrmParameters,Cache> CACHE = newProperty("cache", Cache.NONE);
+    public static final UjoProperty<OrmParameters,CachePolicy> CACHE = newProperty("cache", CachePolicy.NONE);
 
 
 }
