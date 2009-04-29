@@ -78,7 +78,7 @@ public class OrmTable extends AbstractMetaModel {
         OrmPKey dpk = new OrmPKey(this);
         PK.setValue(this, dpk);
 
-        OrmHandler dbHandler = OrmHandler.getInstance();
+        OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
         for (UjoProperty property : ujoManager.readProperties(dbProperty.getItemType())) {
 

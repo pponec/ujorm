@@ -31,6 +31,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.orm.ao.CacheKey;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmPKey;
@@ -54,13 +55,13 @@ public class Session {
     private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
 
     /** Handler */
-    private final OrmHandler handler;
+    final private OrmHandler handler;
 
     /** Database connection */
     private HashMap<OrmDatabase, Connection> connections = new HashMap<OrmDatabase, Connection>();
 
     /** A session cache */
-    private Map<Object, TableUjo> cache = new WeakHashMap<Object, TableUjo>();
+    private Map<CacheKey, TableUjo> cache = new WeakHashMap<CacheKey, TableUjo>();
 
     public Session(OrmHandler handler) {
         this.handler = handler;

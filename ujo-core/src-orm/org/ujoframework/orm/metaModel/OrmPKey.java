@@ -50,8 +50,7 @@ public class OrmPKey extends AbstractMetaModel {
     @SuppressWarnings("unchecked")
     public boolean equals(Ujo ujo1, Ujo ujo2) {
 
-        for (OrmColumn column : COLUMNS.of(this)) {
-            
+        for (OrmColumn column : COLUMNS.of(this)) {            
             final UjoProperty property = column.getProperty();
             final Object o2  = property.of(ujo2);
             final boolean ok = property.equals(ujo1, o2);

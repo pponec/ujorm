@@ -32,6 +32,7 @@ import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
+import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
@@ -71,10 +72,12 @@ public class OrmDatabase extends AbstractMetaModel {
 
     // --------------------
 
+    private OrmHandler ormHandler;
     private SqlRenderer renderer;
     private UjoSequencer sequencer;
 
-    public OrmDatabase(TableUjo database) {
+    public OrmDatabase(OrmHandler ormHandler, TableUjo database) {
+        this.ormHandler = ormHandler;
         sequencer = new UjoSequencer(this);
         ROOT.setValue(this, database);
 
@@ -119,6 +122,7 @@ public class OrmDatabase extends AbstractMetaModel {
     public SqlRenderer getRenderer() {
         if (renderer==null) try {
             renderer = (SqlRenderer) RENDERER.of(this).newInstance();
+            renderer.setHandler(ormHandler);
         } catch (Exception e) {
             throw new IllegalStateException("Can't create an instance of " + renderer, e);
         }
@@ -219,7 +223,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
     /** Create DB */
     public void create() {
-        Connection conn = OrmHandler.getInstance().getSession().getConnection(this);
+        Connection conn = ormHandler.getSession().getConnection(this);
         Statement stat = null;
         String sql = "";
         try {
@@ -318,6 +322,12 @@ public class OrmDatabase extends AbstractMetaModel {
         return sequencer;
     }
 
+    /** OrmHandler */
+    public OrmHandler getOrmHandler() {
+        return ormHandler;
+    }
+
+
 
     /** Returns a NAME of the OrmDatabase. */
     @Override
@@ -359,5 +369,9 @@ public class OrmDatabase extends AbstractMetaModel {
     }
 
 
+    /** Returns a default handler session. */
+    public Session getDefaultSession() {
+        return ormHandler.getSession();
+    }
 
 }

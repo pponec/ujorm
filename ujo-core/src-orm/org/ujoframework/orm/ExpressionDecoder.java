@@ -24,6 +24,7 @@ import java.util.Set;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
@@ -38,7 +39,7 @@ import org.ujoframework.tools.criteria.Operator;
  */
 public class ExpressionDecoder {
 
-    final private OrmHandler handler = OrmHandler.getInstance();
+    final private OrmHandler handler;
     final private SqlRenderer renderer;
 
     final private Expression e;
@@ -47,18 +48,19 @@ public class ExpressionDecoder {
     final private Set<OrmTable> tables;
 
     public ExpressionDecoder(Expression e, OrmTable ormTable) {
-        this(e, ormTable.getDatabase().getRenderer());
+        this(e, ormTable.getDatabase());
     }
 
-    public ExpressionDecoder(Expression e, SqlRenderer renderer) {
-        this.e = e;
-        this.renderer = renderer;
+    public ExpressionDecoder(Expression expr, OrmDatabase database) {
+        this.e = expr;
+        this.renderer = database.getRenderer();
+        this.handler  = database.getOrmHandler();
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ExpressionValue>();
         this.tables = new HashSet<OrmTable>();
 
-        if (e!=null) {
-            unpack(e);
+        if (expr!=null) {
+            unpack(expr);
             writeRelations();
         }
     }
