@@ -31,7 +31,15 @@ public class OrmParameters extends AbstractMetaModel {
     public static final Logger LOGGER = Logger.getLogger(OrmParameters.class.getName());
 
     /** Enabnle / desable a session cache */
-    public static final UjoProperty<OrmParameters,CachePolicy> CACHE = newProperty("cache", CachePolicy.NONE);
+    public static final UjoProperty<OrmParameters,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE);
+    /** Is the enabled cache implemented by WeakHashMap? The false value implements an HashMap instance. Default value is TRUE. */
+    public static final UjoProperty<OrmParameters,Boolean> CACHE_WEAK = newProperty("cacheWeak", true);
 
 
+    /** Is the cache enabled? */
+    public boolean isCacheEnabled() {
+        final boolean result = OrmParameters.CACHE_POLICY.of(this)!=CachePolicy.NONE;
+        return result;
+    }
+    
 }

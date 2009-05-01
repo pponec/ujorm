@@ -6,60 +6,72 @@
 package org.ujoframework.orm.ao;
 
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
-import org.ujoframework.orm.metaModel.OrmTable;
 
 /**
- * Cache key.
+ * UJO CacheKey
  * @author pavel
  */
-final public class CacheKey {
+abstract public class CacheKey {
 
-    /** Value key */
-    final private TableUjo tableUjo;
+    /** Hash Code */
     private int hash = 0;
 
-    public CacheKey(final TableUjo tableUjo) {
-        this.tableUjo = tableUjo;
-    }
+    /** Count of PKs */
+    abstract public int size();
 
-    /** Has the two objects the same PK ? */
+    /** Returns a PK on the selected index. PK must not be null. */
+    abstract public Object getValue(int index);
+
+    /** TableUjo class */
+    abstract public Class getType();
+
+
+    /** Has the two objects the same PK values include BO type ? */
     @Override
     public boolean equals(Object obj) {
-        final CacheKey key = (CacheKey) obj;
-        if (this.tableUjo.getClass()!=key.tableUjo.getClass()) {
+        final CacheKey cache = (CacheKey) obj;
+        if (this.getType()!=cache.getType()) {
             return false;
         }
-        final boolean result = getPK().equals(this.tableUjo, key.tableUjo);
-        return result;
+        for (int i=size()-1; i>=0; --i) {
+            final Object v1 = this.getValue(i);
+            final Object v2 = cache.getValue(i);
+            if (!v1.equals(v2)) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    /** Returns PK of the BO. */
-    private OrmPKey getPK() {
-        final OrmTable table = tableUjo.readSession().getHandler().findTableModel(tableUjo.getClass());
-        final OrmPKey ormPKey = OrmTable.PK.of(table);
-        return ormPKey;
-    }
-
+    /** Returns hash code */
     @Override
     public int hashCode() {
         if (hash==0) {
-            int hsh = 7;
-            final OrmPKey ormPKey = getPK();
-
-            for (OrmColumn ormColumn : OrmPKey.COLUMNS.of(ormPKey)) {
-                Object val = ormColumn.getValue(tableUjo);
-                if (true) {
-                   hsh = 67 * hsh + val.hashCode();
-                } else {
-                   // Primary key must not be NULL !!!
-                   hsh = 67 * hsh + (val!=null ? val.hashCode() : 0);
-                }
+            int h = 7 + getType().hashCode();
+            for (int i=size()-1; i>=0; --i) {
+                h = 67 * h + getValue(i).hashCode();
             }
-            hash = hsh!=0 ? hsh : 1 ; // no zero
+            hash = h!=0 ? h : 1 ; // no zero result
         }
         return hash;
+    }
+
+    // --------------- FACTORY -----------------------
+
+    /** Constructor for the TableUjo */
+    public static CacheKey newInstance(TableUjo ujo, OrmPKey pkey) {
+        return new UjoCacheKey(ujo, pkey);
+    }
+
+    /** Constructor for one keyk */
+    public static CacheKey newInstance(Class type, Object pk) {
+        return new OneCacheKey(type, pk);
+    }
+
+    /** Constructor for many keys */
+    public static CacheKey newInstance(Class type, Object... pks) {
+        return new ManyCacheKey(type, pks);
     }
 
 }

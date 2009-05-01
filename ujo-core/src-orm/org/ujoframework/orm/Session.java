@@ -35,6 +35,7 @@ import org.ujoframework.orm.ao.CacheKey;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmPKey;
+import org.ujoframework.orm.metaModel.OrmParameters;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.tools.criteria.Expression;
@@ -43,6 +44,7 @@ import org.ujoframework.tools.criteria.ExpressionValue;
 
 /**
  * ORM session.
+ * <br />Methods of the session are not thread safe.
  * @author Pavel Ponec
  */
 @SuppressWarnings(value = "unchecked")
@@ -54,17 +56,24 @@ public class Session {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
 
-    /** Handler */
+    /** Handler. */
     final private OrmHandler handler;
+    /** Orm parameters. */
+    final private OrmParameters params;
 
     /** Database connection */
-    private HashMap<OrmDatabase, Connection> connections = new HashMap<OrmDatabase, Connection>();
+    private Map<OrmDatabase, Connection> connections = new HashMap<OrmDatabase, Connection>(2);
 
     /** A session cache */
-    private Map<CacheKey, TableUjo> cache = new WeakHashMap<CacheKey, TableUjo>();
-
+    private Map<CacheKey, TableUjo> cache;
+    
     public Session(OrmHandler handler) {
         this.handler = handler;
+        this.params = handler.getParameters();
+        this.cache = OrmParameters.CACHE_WEAK.of(params)
+            ? new WeakHashMap<CacheKey, TableUjo>()
+            : new HashMap<CacheKey, TableUjo>()
+            ;
     }
 
     /** Returns a handler */
@@ -453,7 +462,7 @@ public class Session {
      * @param id Valud ID
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */
-    public <UJO extends TableUjo> UJO load
+    public <UJO extends TableUjo> UJO loadInternal
         ( final UjoProperty relatedProperty
         , final Object id
         , final boolean mandatory
@@ -464,6 +473,19 @@ public class Session {
         if (columns.size() != 1) {
             throw new UnsupportedOperationException("There is supported only a one-column foreign key now: " + column);
         }
+
+        // FIND CACHE:
+        boolean cache = params.isCacheEnabled();
+        OrmTable tableModel = null;
+        if (cache) {
+            tableModel = OrmColumn.TABLE.of(columns.get(0));
+            TableUjo r = findCache(OrmTable.DB_PROPERTY.of(tableModel).getItemType(), id);
+            if (r!=null) {
+                return (UJO) r;
+            }
+        }
+
+        // SELECT DB
         Expression expr = Expression.newInstance(columns.get(0).getProperty(), id);
         Query query = createQuery(expr);
         UjoIterator iterator = iterate(query);
@@ -476,6 +498,10 @@ public class Session {
         if (iterator.hasNext()) {
             throw new RuntimeException("Ambiguous key " + id);
         }
+        
+        if (cache) {
+            addCache(result, OrmTable.PK.of(tableModel));
+        }
         return result;
     }
 
@@ -484,6 +510,7 @@ public class Session {
      */
     public void close() throws IllegalStateException {
 
+        cache = null;
         Throwable exception = null;
         OrmDatabase database = null;
         String errMessage = "Can't close connection for DB ";
@@ -509,4 +536,34 @@ public class Session {
     private StringBuilder out(int capacity) {
         return new StringBuilder(capacity);
     }
+
+    /** Add value into cache */
+    public void addCache(TableUjo ujo, OrmPKey pkey) {
+        CacheKey key = CacheKey.newInstance(ujo, pkey);
+        cache.put(key, ujo);
+    }
+
+
+    public TableUjo findCache(Class type, Object value) {
+        CacheKey key = CacheKey.newInstance(type, value);
+        return cache.get(key);
+    }
+
+    public TableUjo findCache(Class type, Object... values) {
+        CacheKey key = CacheKey.newInstance(type, values);
+        return cache.get(key);
+    }
+
+    /** Clear the cache. */
+    public void cacheClear() {
+        new HashMap().clear();
+        cache.clear();
+    }
+
+    /** Returns parameters */
+    final public OrmParameters getParameters() {
+        return params;
+    }
+
 }
+

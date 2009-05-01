@@ -27,6 +27,7 @@ import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmRoot;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmParameters;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
 
@@ -41,8 +42,8 @@ public class OrmHandler {
 
     private static OrmHandler handler = new OrmHandler();
 
-    private Session session = new Session(this);
     private OrmRoot databases = new OrmRoot();
+    private Session session = new Session(this);
 
     /** Map a property to a database column model */
     private HashMap<UjoProperty,OrmRelation2Many> propertyMap = new HashMap<UjoProperty,OrmRelation2Many> ();
@@ -74,7 +75,7 @@ public class OrmHandler {
         return !resultFalse;
     }
 
-    /** load a database model from paramater */
+    /** LoadInternal a database model from paramater */
     public <UJO extends TableUjo> OrmDatabase loadDatabase(Class<? extends UJO> databaseModel) {
         UJO model = getInstance(databaseModel);
         OrmDatabase dbModel  = new OrmDatabase(this, model);
@@ -87,7 +88,7 @@ public class OrmHandler {
         return dbModel;
     }
 
-    /** load a metada and create database */
+    /** LoadInternal a metada and create database */
     public <UJO extends TableUjo> OrmDatabase createDatabase(Class<UJO> databaseModel) {
 
         OrmDatabase dbModel = loadDatabase(databaseModel);
@@ -152,6 +153,11 @@ public class OrmHandler {
             }
         }
         return null;
+    }
+
+    /** Returns parameters */
+    public OrmParameters getParameters() {
+        return OrmRoot.PARAMETERS.of(databases);
     }
 
 }
