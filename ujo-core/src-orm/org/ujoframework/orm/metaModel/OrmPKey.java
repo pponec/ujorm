@@ -46,47 +46,6 @@ public class OrmPKey extends AbstractMetaModel {
         COLUMNS.setValue(this, new ArrayList<OrmColumn>(0));
     }
 
-    /** Compare two objects by PrimaryKey */
-    @SuppressWarnings("unchecked")
-    public boolean equals(Ujo ujo1, Ujo ujo2) {
-
-        for (OrmColumn column : COLUMNS.of(this)) {            
-            final UjoProperty property = column.getProperty();
-            final Object o2  = property.of(ujo2);
-            final boolean ok = property.equals(ujo1, o2);
-            if (!ok) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /** Compares two primary keys. */
-    @Override
-    public boolean equals(Object obj) {
-        OrmPKey other = (OrmPKey) obj;
-
-        List<OrmColumn> columns1 = COLUMNS.getList(this);
-        List<OrmColumn> columns2 = COLUMNS.getList(other);
-
-        if (columns1.size()!=columns2.size()) {
-            return false;
-        }
-
-        for (int i=columns1.size()-1; i>=0; i--) {
-            final OrmColumn c1 = columns1.get(i);
-            final OrmColumn c2 = columns2.get(i);
-
-            final UjoProperty p1 = c1.getProperty();
-            final UjoProperty p2 = c2.getProperty();
-
-            if (p1!=p2) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(10);

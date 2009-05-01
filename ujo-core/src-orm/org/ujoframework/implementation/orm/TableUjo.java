@@ -148,7 +148,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements ChangeRegi
         Object result = super.readValue(property);
 
         if (result instanceof UniqueKey) {
-            result = session.load(property, ((UniqueKey)result).getValue(), true);
+            result = session.loadInternal(property, ((UniqueKey)result).getValue(), true);
             super.writeValue(property, result);
         }
         else

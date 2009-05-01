@@ -25,9 +25,7 @@ public enum CachePolicy {
 
     /** No chage is inabled */
     NONE,
-    /** CachePolicy is onable on relation many-to-one only.
-     * @deprecated the attribute is not supported yet.
-     */
+    /** CachePolicy is onable on relation many-to-one only. */
     MANY_TO_ONE,
     ;
 

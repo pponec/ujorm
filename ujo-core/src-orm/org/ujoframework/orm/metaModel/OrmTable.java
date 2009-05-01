@@ -139,13 +139,6 @@ public class OrmTable extends AbstractMetaModel {
         return (TableUjo) result;        
     }
 
-    /** Compare two objects by its PrimaryKey */
-    public boolean equals(Ujo ujo1, Ujo ujo2) {
-        final OrmPKey pk = PK.of(this);
-        return pk.equals(ujo1, ujo2);
-    }
-
-
     /** Returns the first PK */
     public OrmColumn getFirstPK() {
         return PK.of(this).getFirstColumn();
