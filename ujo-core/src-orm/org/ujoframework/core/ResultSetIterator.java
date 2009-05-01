@@ -19,6 +19,8 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
 
     final Query query;
     final ResultSet rs;
+    /** Is the query a view? */
+    final boolean view;
     /** A count of the item count, the negative value means the undefined value. */
     private long count = -1L;
     /** A state before the first reading a BO. An auxiliary variable.*/
@@ -31,7 +33,8 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
 
     public ResultSetIterator(Query query, ResultSet rs) {
         this.query = query;
-        this.rs = rs;
+        this.rs   = rs;
+        this.view = query.getTable().isSelectModel();
     }
 
     /**
@@ -70,7 +73,10 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
             for (int i=0; i<colCount; i++) {
                 final OrmColumn column = query.getColumn(i);
                 Class type = column.getType();
-                Object value = rs.getObject(i + 1);
+                Object value = view 
+                    ? rs.getObject(OrmColumn.NAME.of(column))
+                    : rs.getObject(i + 1)
+                    ;
 
                 switch (OrmColumn.DB_TYPE.of(column)) {
                     case DATE: {

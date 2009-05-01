@@ -53,7 +53,7 @@ public class OrmDatabase extends AbstractMetaModel {
     /** OrmDatabase name */
     @XmlAttribute
     public static final UjoProperty<OrmDatabase,String> NAME = newProperty("name", "");
-    /**  SQL renderer type of SqlRenderer. */
+    /** SQL renderer type of SqlRenderer. */
     public static final UjoProperty<OrmDatabase,Class> RENDERER = newProperty("renderer", Class.class);
     /** List of tables */
     public static final ListProperty<OrmDatabase,OrmTable> TABLES = newPropertyList("table", OrmTable.class);
@@ -262,7 +262,6 @@ public class OrmDatabase extends AbstractMetaModel {
     public static void close(Connection connection, JdbcStatement statement, ResultSet rs, boolean throwExcepton) throws IllegalStateException {
 
         try {
-
             try {
                 if (rs != null) {
                     rs.close();

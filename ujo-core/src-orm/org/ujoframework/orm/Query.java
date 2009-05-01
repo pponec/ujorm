@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
@@ -147,6 +145,11 @@ public class Query<UJO extends TableUjo> {
     /** Get the order item list. The method returns a not null result allways. */
     final public List<UjoProperty> getOrder() {
         return order;
+    }
+
+    /** Returns table model */
+    public OrmTable getTable() {
+        return table;
     }
 
     /** Set the order item list to an SQL ORDER BY phrase. */

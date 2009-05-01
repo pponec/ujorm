@@ -49,7 +49,6 @@ public class OrmRoot extends AbstractMetaModel {
         PARAMETERS.setValue(this, new OrmParameters());
     }
 
-
     /** Returns the first database or return null */
     public OrmDatabase getDatabase() {
         final OrmDatabase result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
