@@ -155,7 +155,8 @@ public class ExpressionDecoder {
         return e;
     }
 
-    public String getSql() {
+    /** Returns a SQL WHERE 'expression' of an empty string if no conditon is found. */
+    public String getWhere() {
         return sql.toString();
     }
 

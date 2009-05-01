@@ -24,6 +24,7 @@ import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.OrmView;
 import org.ujoframework.tools.criteria.ExpressionValue;
 import org.ujoframework.tools.criteria.Operator;
 
@@ -50,7 +51,9 @@ abstract public class SqlRenderer {
     /** Print a SQL script to crate database */
     public Appendable printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException {
         for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
-            if (table.isPersistent()) {
+            if (table.isPersistent()
+            && !table.isView()
+            ){
                 printTable(table, writer);
                 printForeignKey(table, writer);
             }
@@ -211,8 +214,8 @@ abstract public class SqlRenderer {
             writer.append("=? ");
         }
         writer.append("\n\tWHERE ");
-        writer.append(decoder.getSql());
-        writer.append(";");
+        writer.append(decoder.getWhere());
+        writer.append(';');
         return writer;
     }
 
@@ -226,8 +229,8 @@ abstract public class SqlRenderer {
         writer.append("DELETE FROM ");
         writer.append(table.getFullName());
         writer.append(" WHERE ");
-        writer.append(decoder.getSql());
-        writer.append(";");
+        writer.append(decoder.getWhere());
+        writer.append(';');
 
         return writer;
     }
@@ -380,19 +383,71 @@ abstract public class SqlRenderer {
         }
     }
 
-    /** Print SQL SELECT
+    /** Print a SQL SELECT by table model and query
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    public String printSelect(Query query, boolean count) throws IOException {
-        StringBuilder result = new StringBuilder();
-        result.append("SELECT ");
-        if (count) {
-            result.append("COUNT(*)");
-        } else {
-            printTableColumns(query.getColumns(), result, null);
+    public Appendable printSelect
+        ( final OrmTable table
+        , final Query query
+        , final boolean count
+        , final Appendable out
+        ) throws IOException {
+
+        return table.isView()
+            ? printSelectView(table, query, count, out)
+            : printSelectTable(query, count, out)
+            ;
+    }
+
+
+    /** Print SQL view SELECT
+     * @param query The UJO query
+     * @param count only count of items is required;
+     */
+    protected Appendable printSelectView(OrmTable table, Query query, boolean count, Appendable out) throws IOException {
+        OrmView select = OrmTable.SELECT_MODEL.of(table);
+        String where = query.getDecoder().getWhere();
+        List<UjoProperty> order = query.getOrder();
+
+        for (UjoProperty p : select.readProperties()) {
+            String value = (String) p.of(select);
+
+            if (p==OrmView.SELECT && count) {
+                out.append(p.toString());
+                out.append( "COUNT(*)" );
+            } else if (p==OrmView.WHERE && value.length()+where.length()>0) {
+                out.append(p.toString());
+                out.append( value );
+                out.append( value.isEmpty() || where.isEmpty() ? "" : " AND " );
+                out.append( where );
+            } else if (p==OrmView.ORDER && !order.isEmpty()){
+                out.append(p.toString());
+                out.append( value );
+                out.append( value.isEmpty() || order.isEmpty() ? "" : " AND " );
+                printSelectOrder(query, out);
+            } else if (value.length()>0) {
+                out.append(p.toString());
+                out.append( value );
+            }
         }
-        result.append("\n\tFROM ");
+        out.append(';');
+        return out;
+    }
+
+
+    /** Print SQL database SELECT
+     * @param query The UJO query
+     * @param count only count of items is required;
+     */
+    protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
+        out.append("SELECT ");
+        if (count) {
+            out.append("COUNT(*)");
+        } else {
+            printTableColumns(query.getColumns(), out, null);
+        }
+        out.append("\n\tFROM ");
 
         if (query.getExpression() != null) {
             ExpressionDecoder ed = query.getDecoder();
@@ -401,26 +456,27 @@ abstract public class SqlRenderer {
 
             for (int i=0; i<tables.length; ++i) {
                 OrmTable table = tables[i];
-                if (i>0) result.append(", ");
-                result.append(table.getFullName());
+                if (i>0) out.append(", ");
+                out.append(table.getFullName());
             }
 
-            String sql = ed.getSql();
+            String sql = ed.getWhere();
             if (!sql.isEmpty()) {
-                result.append(" WHERE ");
-                result.append(ed.getSql());
+                out.append(" WHERE ");
+                out.append(ed.getWhere());
             }
         } else {
-            result.append(OrmTable.NAME.of(query.getTableModel()));
+            out.append(OrmTable.NAME.of(query.getTableModel()));
         }
         if (!count && !query.getOrder().isEmpty()) {
-            printSelectOrder(query, result);
+            printSelectOrder(query, out);
         }
-        result.append(";");
-        return result.toString();
+        out.append(';');
+        return out;
     }
 
-    /** Print SQL SELECT */
+
+    /** Print SQL ORDER BY */
     public void printSelectOrder(Query query, Appendable writer) throws IOException {
         
         writer.append(" ORDER BY ");
@@ -445,7 +501,7 @@ abstract public class SqlRenderer {
         writer.append(" START WITH " + sequence.getInitValue());
         writer.append(" INCREMENT BY " + sequence.getInitIncrement());
         writer.append(" CACHE " + sequence.getInitCacheSize());
-        writer.append(";");
+        writer.append(';');
         return writer;
     }
 

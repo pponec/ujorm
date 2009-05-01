@@ -18,14 +18,16 @@ package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
 
 /** 
- * Use the annotation to mark a UjoProperty static field like XML Attribute.
- * @see View
+ * View is a description of database view. Use it simillary like a table.
+ * @see Table
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface Table {
+public @interface View {
 
-    /** A table name. Default value is taken from a relation property name. */
+    /** A view name. Default value is taken from a relation property name. */
     String name() default "";
+    /** Mapping a VIEW to the SQL SELECT. */
+    String  select() default "";
     
 }

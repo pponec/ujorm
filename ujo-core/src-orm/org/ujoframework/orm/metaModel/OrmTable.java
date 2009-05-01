@@ -16,7 +16,6 @@
 package org.ujoframework.orm.metaModel;
 
 import java.lang.reflect.Field;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
@@ -27,6 +26,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.OrmHandler;
+import org.ujoframework.orm.annot.View;
 
 
 /**
@@ -41,16 +41,23 @@ public class OrmTable extends AbstractMetaModel {
     /** DB table name */
     @XmlAttribute
     public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "");
+    /** Table Columns */
+    public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class);
+    /** Table relations to many */
+    public static final ListProperty<OrmTable,OrmRelation2Many> RELATIONS = newPropertyList("relation2m", OrmRelation2Many.class);
+    /** Is it a model of a database view ? */
+    public static final UjoProperty<OrmTable,Boolean> VIEW = newProperty("view", false);
+    /** SQL SELECT statement */
+    public static final UjoProperty<OrmTable,String> SELECT = newProperty("select", "");
+    /** SQL SELECT model. Note: this model must not be persistent due a blank spaces in key names. */
+    @Transient
+    public static final UjoProperty<OrmTable,OrmView> SELECT_MODEL = newProperty("selectModel", OrmView.class);
     /** Unique Primary Key */
     @Transient
     public static final UjoProperty<OrmTable,OrmPKey> PK = newProperty("pk", OrmPKey.class);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
     public static final UjoProperty<OrmTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
-    /** Table Columns */
-    public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class);
-    /** Table relations to many */
-    public static final ListProperty<OrmTable,OrmRelation2Many> RELATIONS = newPropertyList("relation2m", OrmRelation2Many.class);
     /** Database */
     @Transient
     public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class);
@@ -61,19 +68,29 @@ public class OrmTable extends AbstractMetaModel {
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
-        final Field field  = UjoManager.getInstance().getPropertyField(database, dbProperty);
-        final Table table1 = field.getAnnotation(Table.class);
-        final Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
-        
-        if (table1!=null) {
-            NAME.setValue(this, table1.name());
+        final Field field = UjoManager.getInstance().getPropertyField(database, dbProperty);
+        View view1 = field.getAnnotation(View.class);
+        View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
+        VIEW.setValue(this, view1!=null || view2!=null);
+
+        if (VIEW.of(this)) {
+            if (view1!=null) changeDefault(this, SELECT, view1.select());
+            if (view1!=null) changeDefault(this, NAME  , view1.name());
+            if (view2!=null) changeDefault(this, SELECT, view2.select());
+            if (view2!=null) changeDefault(this, NAME  , view2.name());
+
+            if (!SELECT.isDefault(this)) {
+                SELECT_MODEL.setValue(this, new OrmView(SELECT.of(this)));
+            }
+        } else {
+            Table table1 = field.getAnnotation(Table.class);
+            Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
+            if (table1!=null) changeDefault(this, NAME, table1.name());
+            if (table2!=null) changeDefault(this, NAME, table2.name());
         }
-        if (table2!=null) {
-            NAME.setValue(this, table2.name());
-        }
-        if (NAME.isDefault(this)) {
-            NAME.setValue(this, dbProperty.getName());
-        }
+        changeDefault(this, NAME, dbProperty.getName());
+
+        // -----------------------------------------------
 
         OrmPKey dpk = new OrmPKey(this);
         PK.setValue(this, dpk);
@@ -83,7 +100,6 @@ public class OrmTable extends AbstractMetaModel {
         for (UjoProperty property : ujoManager.readProperties(dbProperty.getItemType())) {
 
             if (!ujoManager.isTransientProperty(property)) {
-
 
                 if (property instanceof RelationToMany) {
                     OrmRelation2Many column = new OrmRelation2Many(this, property);
@@ -147,6 +163,16 @@ public class OrmTable extends AbstractMetaModel {
     /** Is the instance a database relation model? */
     public boolean isPersistent() {
         return DATABASE.of(this)!=null;
+    }
+
+    /** Is the instance a database relation model? */
+    public boolean isView() {
+        return VIEW.of(this);
+    }
+
+    /** Is the query from a select model ? */
+    public boolean isSelectModel() {
+        return SELECT_MODEL.of(this)!=null;
     }
 
     /** Database model is not persistent. A side efect is that the DATABASE property has hot a null value. */

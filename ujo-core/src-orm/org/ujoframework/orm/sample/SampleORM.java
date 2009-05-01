@@ -84,6 +84,20 @@ public class SampleORM {
         }
     }
 
+    /** Using SELECT by VIEW QUERY */
+    public void useSelectViewOrders() {
+
+        Expression<ViewOrder> expr = Expression.newInstance(ViewOrder.ID, Operator.GE, 0);
+        Session session = OrmHandler.getInstance().getSession();
+        UjoIterator<ViewOrder> orders = session.createQuery(expr).iterate();
+        System.out.println("VIEW-ORDER COUNT: " + orders.count());
+
+        for (ViewOrder order : orders) {
+            System.out.println("ORDER ROW: " + order);
+        }
+    }
+
+
     /** Using SELECT by QUERY */
     public void useSelectItems_1() {
         Session session = OrmHandler.getInstance().getSession();
@@ -205,6 +219,7 @@ public class SampleORM {
             SampleORM sample = new SampleORM();
             sample.useInsert();
             sample.useSelectOrders();
+            sample.useSelectViewOrders();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();

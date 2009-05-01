@@ -320,7 +320,7 @@ public class Session {
         String sql = "";
 
         try {
-            sql = db.getRenderer().printSelect(query, true);
+            sql = db.getRenderer().printSelect(table, query, true, out(128)).toString();
             LOGGER.log(Level.INFO, sql);
 
             statement = getStatement(db, sql);
@@ -345,7 +345,8 @@ public class Session {
         try {
             OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
-            sql = db.getRenderer().printSelect(query, false);
+
+            sql = db.getRenderer().printSelect(table, query, false, out(128)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(query.getDecoder());
 

@@ -35,6 +35,8 @@ public class Database extends TableUjo<Database> {
     /** Items of the Customer order */
     public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation("ord_item", Item.class);
 
+    /** View to aggregate data. */
+    public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation("bo_order", ViewOrder.class);
 
 
 }
