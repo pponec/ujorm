@@ -13,8 +13,8 @@ import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.tools.UjoCriteria;
-import org.ujoframework.tools.criteria.Expression;
-import org.ujoframework.tools.criteria.OperatorBinary;
+import org.ujoframework.tools.criteria.Criterion;
+import org.ujoframework.tools.criteria.BinaryOperator;
 import org.ujoframework.tools.criteria.Operator;
 import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
 
@@ -70,7 +70,7 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_01() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        Expression<ExtPerson>  ex1 = Expression.newInstance(CASH, 10.0);
+        Criterion<ExtPerson>  ex1 = Criterion.newInstance(CASH, 10.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -78,7 +78,7 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_02a() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        Expression<ExtPerson>  ex1 = Expression.newInstance(CASH, Operator.GT, 10.0);
+        Criterion<ExtPerson>  ex1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(3, result.size());
         assertEquals("Marry", result.get(0).get(NAME) );
@@ -86,7 +86,7 @@ public class CriteriaTest extends MyTestCase {
 
     public void testInit_02b() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        Expression<ExtPerson>  ex1 = Expression.newInstance(CASH, Operator.LT, 20.0);
+        Criterion<ExtPerson>  ex1 = Criterion.newInstance(CASH, Operator.LT, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -95,14 +95,14 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_03a() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        Expression<ExtPerson>  ex1 = Expression.newInstance(MOTHER_CASH, Operator.GT, 20.0);
+        Criterion<ExtPerson>  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.GT, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(2, result.size());
     }
     
     public void testInit_03b() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        Expression<ExtPerson>  ex1 = Expression.newInstance(MOTHER_CASH, Operator.EQ, 20.0);
+        Criterion<ExtPerson>  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.EQ, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -110,9 +110,9 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_04a() {
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        Expression<ExtPerson>  ex1 = Expression.newInstance(CASH, Operator.GT, 10.0);
-        Expression<ExtPerson>  ex2 = Expression.newInstance(CASH, Operator.LT, 30.0);
-        Expression<ExtPerson>  exp = ex1.join(OperatorBinary.AND, ex2);
+        Criterion<ExtPerson>  ex1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
+        Criterion<ExtPerson>  ex2 = Criterion.newInstance(CASH, Operator.LT, 30.0);
+        Criterion<ExtPerson>  exp = ex1.join(BinaryOperator.AND, ex2);
         List<ExtPerson> result = uc.select(persons, exp);
         assertEquals(1, result.size());
         assertEquals("Marry", result.get(0).get(NAME) );
@@ -123,7 +123,7 @@ public class CriteriaTest extends MyTestCase {
         persons.get(0).set(NAME, null);
         
         UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
-        Expression<ExtPerson>  exp = Expression.newInstance(NAME, Operator.EQ, null);
+        Criterion<ExtPerson>  exp = Criterion.newInstance(NAME, Operator.EQ, null);
         List<ExtPerson> result = uc.select(persons, exp);
         assertEquals(1, result.size());
         assertEquals(10.0, result.get(0).get(CASH) );

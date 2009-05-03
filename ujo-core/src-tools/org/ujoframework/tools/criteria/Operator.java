@@ -16,7 +16,7 @@
 package org.ujoframework.tools.criteria;
 
 /**
- * An expression operators.
+ * An criterion operators.
  * @author Pavel Ponec
  */
 public enum Operator implements AbstractOperator {

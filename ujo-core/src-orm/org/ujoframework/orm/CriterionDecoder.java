@@ -27,50 +27,50 @@ import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.tools.criteria.Expression;
-import org.ujoframework.tools.criteria.ExpressionBinary;
-import org.ujoframework.tools.criteria.ExpressionValue;
+import org.ujoframework.tools.criteria.Criterion;
+import org.ujoframework.tools.criteria.BinaryCriterion;
+import org.ujoframework.tools.criteria.ValueCriterion;
 import org.ujoframework.tools.criteria.Operator;
 
 /**
- * SQL Expression Decoder.
+ * SQL Criterion Decoder.
  * @author Pavel Ponec
  * @composed 1 - 1 SqlRenderer
  */
-public class ExpressionDecoder {
+public class CriterionDecoder {
 
     final private OrmHandler handler;
     final private SqlRenderer renderer;
 
-    final private Expression e;
+    final private Criterion criterion;
     final private StringBuilder sql;
-    final private List<ExpressionValue> values;
+    final private List<ValueCriterion> values;
     final private Set<OrmTable> tables;
 
-    public ExpressionDecoder(Expression e, OrmTable ormTable) {
+    public CriterionDecoder(Criterion e, OrmTable ormTable) {
         this(e, ormTable.getDatabase());
     }
 
-    public ExpressionDecoder(Expression expr, OrmDatabase database) {
-        this.e = expr;
+    public CriterionDecoder(Criterion criterion, OrmDatabase database) {
+        this.criterion = criterion;
         this.renderer = database.getRenderer();
         this.handler  = database.getOrmHandler();
         this.sql = new StringBuilder(64);
-        this.values = new ArrayList<ExpressionValue>();
+        this.values = new ArrayList<ValueCriterion>();
         this.tables = new HashSet<OrmTable>();
 
-        if (expr!=null) {
-            unpack(expr);
+        if (criterion!=null) {
+            unpack(criterion);
             writeRelations();
         }
     }
 
-    /** Unpack expression. */
-    protected void unpack(final Expression e) {
-        if (e.isBinary()) {
-            unpackBinary((ExpressionBinary)e);
+    /** Unpack criterion. */
+    protected void unpack(final Criterion c) {
+        if (c.isBinary()) {
+            unpackBinary((BinaryCriterion)c);
         } else try {
-            ExpressionValue value = renderer.printCondition((ExpressionValue) e, sql);
+            ValueCriterion value = renderer.printCondition((ValueCriterion) c, sql);
             if (value!=null) {
                 values.add(value);
             }
@@ -79,8 +79,8 @@ public class ExpressionDecoder {
         }
     }
 
-    /** Unpack expression. */
-    private void unpackBinary(final ExpressionBinary eb) {
+    /** Unpack criterion. */
+    private void unpackBinary(final BinaryCriterion eb) {
 
         boolean or = false;
         switch (eb.getOperator()) {
@@ -127,7 +127,7 @@ public class ExpressionDecoder {
 
     /** Returns an extended value to the SQL statement */
     public Object getValueExtended(int i) {
-        ExpressionValue expr = values.get(i);
+        ValueCriterion expr = values.get(i);
         Object value = expr.getRightNode();
 
         if (value==null) {
@@ -151,8 +151,9 @@ public class ExpressionDecoder {
         }
     }
 
-    public Expression getExpression() {
-        return e;
+    /** Returns the criterion from costructor. */
+    public Criterion getCriterion() {
+        return criterion;
     }
 
     /** Returns a SQL WHERE 'expression' of an empty string if no conditon is found. */
@@ -168,7 +169,7 @@ public class ExpressionDecoder {
     /** Returns the first direct property. */
     public UjoProperty getBaseProperty() {
         UjoProperty result = null;
-        for (ExpressionValue eval : values) {
+        for (ValueCriterion eval : values) {
             if (eval.getLeftNode()!=null) {
                 result = eval.getLeftNode();
                 break;
@@ -228,7 +229,7 @@ public class ExpressionDecoder {
         Set<UjoProperty> result = new HashSet<UjoProperty>();
         ArrayList<UjoProperty> dirs = new ArrayList<UjoProperty>();
 
-        for (ExpressionValue value : values) {
+        for (ValueCriterion value : values) {
             UjoProperty p1 = value.getLeftNode();
             Object      p2 = value.getRightNode();
 

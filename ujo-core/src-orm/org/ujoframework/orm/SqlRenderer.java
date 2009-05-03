@@ -25,7 +25,7 @@ import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.orm.metaModel.OrmView;
-import org.ujoframework.tools.criteria.ExpressionValue;
+import org.ujoframework.tools.criteria.ValueCriterion;
 import org.ujoframework.tools.criteria.Operator;
 
 /**
@@ -249,7 +249,7 @@ abstract public class SqlRenderer {
     public Appendable printUpdate
         ( OrmTable table
         , List<OrmColumn> changedColumns
-        , ExpressionDecoder decoder
+        , CriterionDecoder decoder
         , Appendable out
         ) throws IOException
     {
@@ -278,7 +278,7 @@ abstract public class SqlRenderer {
     /** Print an SQL DELETE statement.  */
     public Appendable printDelete
         ( OrmTable table
-        , ExpressionDecoder decoder
+        , CriterionDecoder decoder
         , Appendable out
         ) throws IOException
     {
@@ -291,8 +291,8 @@ abstract public class SqlRenderer {
         return out;
     }
 
-    /** Returns an SQL expression template. */
-    public String getExpressionTemplate(ExpressionValue expr) {
+    /** Returns an SQL criterion template. */
+    public String getCriterionTemplate(ValueCriterion expr) {
 
         switch (expr.getOperator()) {
             case EQ:
@@ -361,10 +361,10 @@ abstract public class SqlRenderer {
     }
 
 
-    /** Print a conditon phrase by the expression.
-     * @return A value expression to assign into the SQL query.
+    /** Print a conditon phrase by the criterion.
+     * @return A value criterion to assign into the SQL query.
      */
-    public ExpressionValue printCondition(ExpressionValue expr, Appendable out) throws IOException {
+    public ValueCriterion printCondition(ValueCriterion expr, Appendable out) throws IOException {
         Operator operator = expr.getOperator();
         UjoProperty property = expr.getLeftNode();
         Object right = expr.getRightNode();
@@ -388,7 +388,7 @@ abstract public class SqlRenderer {
             }
         }
 
-        String template = getExpressionTemplate(expr);
+        String template = getCriterionTemplate(expr);
         if (template == null) {
             throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
         }
@@ -424,7 +424,7 @@ abstract public class SqlRenderer {
 
     /** Print all items of the foreign key */
     public void printForeignKey
-        ( final ExpressionValue expr
+        ( final ValueCriterion expr
         , final OrmColumn column
         , final String template
         , final Appendable out
@@ -509,8 +509,8 @@ abstract public class SqlRenderer {
         }
         out.append("\n\tFROM ");
 
-        if (query.getExpression() != null) {
-            ExpressionDecoder ed = query.getDecoder();
+        if (query.getCriterion() != null) {
+            CriterionDecoder ed = query.getDecoder();
 
             OrmTable[] tables = ed.getTables(query.getTableModel());
 

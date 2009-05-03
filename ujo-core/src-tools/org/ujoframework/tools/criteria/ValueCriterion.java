@@ -23,35 +23,35 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * Expression of a value.
+ * Criterion of a value.
  * @author Pavel Ponec
  */
-public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
+public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
-    /** True constant expression */
-    public static final Expression<Ujo> TRUE  = new ExpressionValue<Ujo>(true);
-    /** False constant expression */
-    public static final Expression<Ujo> FALSE = new ExpressionValue<Ujo>(false);
+    /** True constant criterion */
+    public static final Criterion<Ujo> TRUE  = new ValueCriterion<Ujo>(true);
+    /** False constant criterion */
+    public static final Criterion<Ujo> FALSE = new ValueCriterion<Ujo>(false);
     
     final private UjoProperty property;
     final private Operator    operator;
     final protected Object    value;
     
-    /** Creante an Expression constant */
-    public ExpressionValue(boolean value) {
+    /** Creante an Criterion constant */
+    public ValueCriterion(boolean value) {
         this(null, Operator.€_FIXED, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, UjoProperty<UJO,Object> value) {
+    public ValueCriterion(UjoProperty<UJO,? extends Object> property, Operator operator, UjoProperty<UJO,Object> value) {
         this(property, operator, (Object) value);    
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ExpressionValue(UjoProperty<UJO,? extends Object> property, Operator operator, Object value) {
+    public ValueCriterion(UjoProperty<UJO,? extends Object> property, Operator operator, Object value) {
 
         if (property==null) {
-            value = (Boolean) value; // Type test for the ExpressionConstant.
+            value = (Boolean) value; // Type test for the CriterionConstant.
         }
         if (operator==null) {
             operator = Operator.EQ;  // The default operator.
@@ -214,7 +214,7 @@ public class ExpressionValue<UJO extends Ujo> extends Expression<UJO> {
         }
     }
     
-    /** Is the expression result independent on the bean object? */
+    /** Is the criterion result independent on the bean object? */
     public final boolean isConstant() {
         return operator==Operator.€_FIXED;
     }

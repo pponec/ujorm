@@ -23,56 +23,56 @@ import org.ujoframework.Ujo;
  *
  * @author Pavel Ponec
  */
-public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
+public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
-    final private Expression<UJO> expr1;
-    final private Expression<UJO> expr2;
-    final private OperatorBinary operator;
+    final private Criterion<UJO> crn1;
+    final private Criterion<UJO> crn2;
+    final private BinaryOperator operator;
     
-    public ExpressionBinary
-        ( final Expression<UJO> expr1
-        , final OperatorBinary operator
-        , final Expression<UJO> expr2
+    public BinaryCriterion
+        ( final Criterion<UJO> criterion1
+        , final BinaryOperator operator
+        , final Criterion<UJO> criterion2
         ) {
-        this.expr1 = expr1;
-        this.expr2 = expr2;
+        this.crn1 = criterion1;
+        this.crn2 = criterion2;
         this.operator = operator;
     }
 
     /** Returns the left node of the parrent */
     @Override
-    public final Expression<UJO> getLeftNode() {
-        return expr1;
+    public final Criterion<UJO> getLeftNode() {
+        return crn1;
     }
 
     /** Returns the right node of the parrent */
     @Override
-    public final Expression<UJO> getRightNode() {
-        return expr2;
+    public final Criterion<UJO> getRightNode() {
+        return crn2;
     }
 
     /** Returns an operator */
     @Override
-    public final OperatorBinary getOperator() {
+    public final BinaryOperator getOperator() {
         return operator;
     }
 
     public boolean evaluate(UJO ujo) {
-        boolean e1 = expr1.evaluate(ujo);
+        boolean e1 = crn1.evaluate(ujo);
         switch (operator) {
-            case AND    : return   e1 &&  expr2.evaluate(ujo);
-            case OR     : return   e1 ||  expr2.evaluate(ujo);
-            case XOR    : return   e1 !=  expr2.evaluate(ujo);
-            case NAND   : return !(e1 &&  expr2.evaluate(ujo));
-            case NOR    : return !(e1 ||  expr2.evaluate(ujo));
-            case EQ     : return   e1 ==  expr2.evaluate(ujo) ;
+            case AND    : return   e1 &&  crn2.evaluate(ujo);
+            case OR     : return   e1 ||  crn2.evaluate(ujo);
+            case XOR    : return   e1 !=  crn2.evaluate(ujo);
+            case NAND   : return !(e1 &&  crn2.evaluate(ujo));
+            case NOR    : return !(e1 ||  crn2.evaluate(ujo));
+            case EQ     : return   e1 ==  crn2.evaluate(ujo) ;
             case NOT    : return  !e1 ;
             default:  
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }
     }
 
-    /** Is it a Binary Expression */
+    /** Is it a Binary Criterion */
     @Override
     final public boolean isBinary() {
         return true;
@@ -80,7 +80,7 @@ public class ExpressionBinary<UJO extends Ujo> extends Expression<UJO> {
 
     @Override
     public String toString() {
-        return "{" + expr1 + ") " + operator.name() + " (" + expr2 + ")";
+        return "{" + crn1 + ") " + operator.name() + " (" + crn2 + ")";
     }
     
     

@@ -21,7 +21,7 @@ import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.Query;
-import org.ujoframework.tools.criteria.Expression;
+import org.ujoframework.tools.criteria.Criterion;
 import org.ujoframework.tools.criteria.Operator;
 
 /**
@@ -70,9 +70,9 @@ public class SampleORM {
     /** Using SELECT by QUERY */
     public void useSelectOrders() {
 
-        Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "John's order");
-        Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
-        Expression<Order> expr = exp1.and(exp2);
+        Criterion<Order> crn1 = Criterion.newInstance(Order.DESCR, "John's order");
+        Criterion<Order> crn2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+        Criterion<Order> expr = crn1.and(crn2);
 
         Session session = OrmHandler.getInstance().getSession();
         UjoIterator<Order> orders = session.createQuery(expr).iterate();
@@ -87,7 +87,7 @@ public class SampleORM {
     /** Using SELECT by VIEW QUERY */
     public void useSelectViewOrders() {
 
-        Expression<ViewOrder> expr = Expression.newInstance(ViewOrder.ID, Operator.GE, 0);
+        Criterion<ViewOrder> expr = Criterion.newInstance(ViewOrder.ID, Operator.GE, 0);
         Session session = OrmHandler.getInstance().getSession();
         UjoIterator<ViewOrder> orders = session.createQuery(expr).iterate();
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
@@ -102,7 +102,7 @@ public class SampleORM {
     public void useSelectItems_1() {
         Session session = OrmHandler.getInstance().getSession();
 
-        Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> expr = Criterion.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         UjoIterator<Item> items = session.createQuery(expr).setOrder(Item.ID.descending()).iterate();
 
         for (Item item : items) {
@@ -116,7 +116,7 @@ public class SampleORM {
         Session session = OrmHandler.getInstance().getSession();
 
         Order orderValue = session.load(Order.class, 1L);
-        Expression<Item> expr = Expression.newInstance(Item.ORDER, orderValue);
+        Criterion<Item> expr = Criterion.newInstance(Item.ORDER, orderValue);
         UjoIterator<Item> items = session.createQuery(expr).iterate();
 
         for (Item item : items) {
@@ -138,7 +138,7 @@ public class SampleORM {
 
     /** Using SELECT by QUERY */
     public void useSelectItems_4() {
-        Expression<Item> expr = Expression.newInstance(Item.ORDER_DATE, Operator.LE, new Date());
+        Criterion<Item> expr = Criterion.newInstance(Item.ORDER_DATE, Operator.LE, new Date());
         Session session = OrmHandler.getInstance().getSession();
         UjoIterator<Item> items = session.createQuery(expr).iterate();
 
@@ -151,7 +151,7 @@ public class SampleORM {
     /** Using SELECT by QUERY */
     public void useSelectCount() {
         Session session = OrmHandler.getInstance().getSession();
-        Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> expr = Criterion.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(expr);
 
         long count = query.getCount();
@@ -161,7 +161,7 @@ public class SampleORM {
     /** Using SKIP on UjoIterator */
     public void useIteratorSkip() {
         Session session = OrmHandler.getInstance().getSession();
-        Expression<Item> expr = Expression.newInstance(Item.DESCR, Operator.NOT_EQ, "XXXXX");
+        Criterion<Item> expr = Criterion.newInstance(Item.DESCR, Operator.NOT_EQ, "XXXXX");
         UjoIterator<Item> iterator = session.createQuery(expr).iterate();
         
         boolean skip = iterator.skip(0);
@@ -206,7 +206,7 @@ public class SampleORM {
     /** Using DELETE SQL */
     public void useDelete() {
         Session session = OrmHandler.getInstance().getSession();
-        Expression<Item> expr = Expression.newInstance(Item.ID, 1);
+        Criterion<Item> expr = Criterion.newInstance(Item.ID, 1);
         int count = session.delete(expr);
         session.commit();
         System.out.println("There are DELETED rows: " + count);

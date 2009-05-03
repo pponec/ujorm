@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoComparator;
 import org.ujoframework.tools.criteria.*;
 
@@ -39,7 +38,7 @@ import org.ujoframework.tools.criteria.*;
  * List&lt;Person&gt; persons = Arrays.asList(child, mother, father);
  *
  * UjoCriteria&lt;Person&gt; criteria = UjoCriteria.create();
- * Expression&lt;Person&gt; exp = criteria.newExpr(NAME, <span class="character">&quot;</span><span class="character">John</span><span class="character">&quot;</span>);
+ * Criterion&lt;Person&gt; exp = criteria.newExpr(NAME, <span class="character">&quot;</span><span class="character">John</span><span class="character">&quot;</span>);
  * UjoComparator&lt;Person&gt; sort = UjoComparator.create(HIGH, NAME);
  * List&lt;Person&gt; <strong style="color:blue;">result</strong> = criteria.select(persons, exp, sort);
 </pre>
@@ -49,10 +48,10 @@ import org.ujoframework.tools.criteria.*;
  */
 public class UjoCriteria<UJO extends Ujo> {
 
-    /** Find the first UJO by an expression or return NULL if any object was not found. */
-    public UJO findFirst(List<UJO> list, Expression<UJO> expression) {
+    /** Find the first UJO by an criterion or return NULL if any object was not found. */
+    public UJO findFirst(List<UJO> list, Criterion<UJO> criterion) {
         for (UJO ujo : list) {
-            if (expression.evaluate(ujo)) {
+            if (criterion.evaluate(ujo)) {
                 return ujo;
             }
         }
@@ -66,16 +65,16 @@ public class UjoCriteria<UJO extends Ujo> {
         return result;
     }
 
-    /** Create a sublist of a list by an Ujo expression. */
-    public List<UJO> select(List<UJO> list, Expression<UJO> expression) {
-        return select(list, expression, null);
+    /** Create a sublist of a list by an Ujo criterion. */
+    public List<UJO> select(List<UJO> list, Criterion<UJO> criterion) {
+        return select(list, criterion, null);
     }
 
-    /** Create a sublist of a list by an Ujo expression. */
-    public List<UJO> select(List<UJO> list, Expression<UJO> expression, UjoComparator sorting) {
+    /** Create a sublist of a list by an Ujo criterion. */
+    public List<UJO> select(List<UJO> list, Criterion<UJO> criterion, UjoComparator sorting) {
         List<UJO> result = new ArrayList<UJO>();
         for (UJO ujo : list) {
-            if (expression.evaluate(ujo)) {
+            if (criterion.evaluate(ujo)) {
                 result.add(ujo);
             }
         }

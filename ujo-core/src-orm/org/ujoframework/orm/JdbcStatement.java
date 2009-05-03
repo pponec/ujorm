@@ -111,7 +111,7 @@ public class JdbcStatement {
 
 
     /** Assign values into the prepared statement */
-    public void assignValues(ExpressionDecoder decoder) throws SQLException {
+    public void assignValues(CriterionDecoder decoder) throws SQLException {
         for (int i=0; i<decoder.getColumnCount(); ++i) {
             final OrmColumn column = decoder.getColumn(i);
             final Object value = decoder.getValueExtended(i);
