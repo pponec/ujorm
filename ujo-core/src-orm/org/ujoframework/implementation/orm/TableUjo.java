@@ -78,11 +78,11 @@ import org.ujoframework.orm.Session;
  *
  *      Session session = OrmHandler.getInstance().getSession();
  *
- *      Criterion&lt;Order&gt; exp1 = Criterion.newInstance(Order.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
- *      Criterion&lt;Order&gt; exp2 = Criterion.newInstance(Order.DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
- *      Criterion&lt;Order&gt; expr = exp1.and(exp2);
+ *      Criterion&lt;Order&gt; crn1 = Criterion.newInstance(Order.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
+ *      Criterion&lt;Order&gt; crn2 = Criterion.newInstance(Order.DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
+ *      Criterion&lt;Order&gt; crit = crn1.and(crn2);
  *
- *      Query&lt;Order&gt; query = session.createQuery(Order.<span class="keyword-directive">class</span>, expr);
+ *      Query&lt;Order&gt; query = session.createQuery(Order.<span class="keyword-directive">class</span>, crit);
  *      query.sizeRequired(<span class="keyword-directive">true</span>); <span class="comment">// need a count of iterator items, a default value is false</span>
  *      query.readOnly(<span class="keyword-directive">false</span>);
  *
