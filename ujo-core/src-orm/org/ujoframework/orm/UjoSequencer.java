@@ -88,7 +88,7 @@ public class UjoSequencer {
 
     /** Returns a database name */
     public String getDatabasName() {
-        return OrmDatabase.NAME.of(database);
+        return OrmDatabase.SCHEMA.of(database);
     }
 
     /** Returns an init sequence value. */

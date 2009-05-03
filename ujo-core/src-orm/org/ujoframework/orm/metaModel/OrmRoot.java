@@ -58,7 +58,7 @@ public class OrmRoot extends AbstractMetaModel {
     /** Returns the first database with required name or returns null; */
     public OrmDatabase getDatabase(String name) {
         for (OrmDatabase database : DATABASES.getList(this)) {
-            if (OrmDatabase.NAME.equals(database, name)) {
+            if (OrmDatabase.SCHEMA.equals(database, name)) {
                 return database;
             }
         }

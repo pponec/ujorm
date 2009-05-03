@@ -41,6 +41,8 @@ public class OrmTable extends AbstractMetaModel {
     /** DB table name */
     @XmlAttribute
     public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "");
+    /** Name of table schema. */
+    public static final UjoProperty<OrmTable,String> SCHEMA = newProperty("schema", "");
     /** Table Columns */
     public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class);
     /** Table relations to many */
@@ -49,7 +51,7 @@ public class OrmTable extends AbstractMetaModel {
     public static final UjoProperty<OrmTable,Boolean> VIEW = newProperty("view", false);
     /** SQL SELECT statement */
     public static final UjoProperty<OrmTable,String> SELECT = newProperty("select", "");
-    /** SQL SELECT model. Note: this model must not be persistent due a blank spaces in key names. */
+    /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
     public static final UjoProperty<OrmTable,OrmView> SELECT_MODEL = newProperty("selectModel", OrmView.class);
     /** Unique Primary Key */
@@ -74,10 +76,12 @@ public class OrmTable extends AbstractMetaModel {
         VIEW.setValue(this, view1!=null || view2!=null);
 
         if (VIEW.of(this)) {
-            if (view1!=null) changeDefault(this, SELECT, view1.select());
             if (view1!=null) changeDefault(this, NAME  , view1.name());
-            if (view2!=null) changeDefault(this, SELECT, view2.select());
+            if (view1!=null) changeDefault(this, SCHEMA, view1.schema());
+            if (view1!=null) changeDefault(this, SELECT, view1.select());
             if (view2!=null) changeDefault(this, NAME  , view2.name());
+            if (view2!=null) changeDefault(this, SCHEMA, view2.schema());
+            if (view2!=null) changeDefault(this, SELECT, view2.select());
 
             if (!SELECT.isDefault(this)) {
                 SELECT_MODEL.setValue(this, new OrmView(SELECT.of(this)));
@@ -85,9 +89,12 @@ public class OrmTable extends AbstractMetaModel {
         } else {
             Table table1 = field.getAnnotation(Table.class);
             Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
-            if (table1!=null) changeDefault(this, NAME, table1.name());
-            if (table2!=null) changeDefault(this, NAME, table2.name());
+            if (table1!=null) changeDefault(this, NAME  , table1.name());
+            if (table1!=null) changeDefault(this, SCHEMA, table1.schema());
+            if (table2!=null) changeDefault(this, NAME  , table2.name());
+            if (table2!=null) changeDefault(this, SCHEMA, table2.schema());
         }
+        changeDefault(this, SCHEMA, OrmDatabase.SCHEMA.of(database));
         changeDefault(this, NAME, dbProperty.getName());
 
         // -----------------------------------------------
@@ -155,7 +162,7 @@ public class OrmTable extends AbstractMetaModel {
         return VIEW.of(this);
     }
 
-    /** Is the query from a select model ? */
+    /** Is the query from a SQL select model ? */
     public boolean isSelectModel() {
         return SELECT_MODEL.of(this)!=null;
     }

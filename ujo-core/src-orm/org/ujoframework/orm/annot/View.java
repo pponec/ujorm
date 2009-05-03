@@ -29,5 +29,7 @@ public @interface View {
     String name() default "";
     /** Mapping a VIEW to the SQL SELECT. */
     String  select() default "";
+    /** Name of schema. If the value is empty than a default database schema is used. */
+    String schema() default "";
     
 }

@@ -50,20 +50,15 @@ abstract public class SqlRenderer {
 
     /** Print a SQL script to crate database */
     public Appendable printCreateDatabase(OrmDatabase database, Appendable out) throws IOException {
-        boolean init=true;
+        for (String schema : database.getSchemas()) {
+            printCreateSchema(schema, out);
+            println(out);
+        }
+
         for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
             if (table.isPersistent()
             && !table.isView()
             ){
-                if (init) {
-                    init = false;
-                    printCreateSchema(database, out);
-                    println(out);
-                    if (false) {
-                        printCommit(out);
-                        println(out);
-                    }
-                }
                 printTable(table, out);
                 println(out);
                 printForeignKey(table, out);
@@ -73,17 +68,18 @@ abstract public class SqlRenderer {
     }
 
     /** Print SQL 'CREATE SCHEMA' */
-    public Appendable printCreateSchema(OrmDatabase db, Appendable out) throws IOException {
+    public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
         out.append("CREATE SCHEMA IF NOT EXISTS ");
-        out.append(OrmDatabase.NAME.of(db));
-        out.append("; ");
+        out.append(schema);
+        out.append(';');
         return out;
     }
 
     /** Print SQL 'SET SCHEMA' */
-    public Appendable printDefaultSchema(OrmDatabase db, Appendable out) throws IOException {
+    @Deprecated
+    public Appendable printDefaultSchema(String schema, Appendable out) throws IOException {
         out.append("SET SCHEMA ");
-        out.append(OrmDatabase.NAME.of(db));
+        out.append(schema);
         out.append(';');
         return out;
     }
@@ -91,7 +87,7 @@ abstract public class SqlRenderer {
     /** Print a SQL sript to create table */
     public void printFullName(final OrmTable table, final Appendable out) throws IOException {
         final OrmDatabase db = OrmTable.DATABASE.of(table);
-        final String dbName  = OrmDatabase.NAME.of(db);
+        final String dbName  = OrmDatabase.SCHEMA.of(db);
         final String tableName = OrmTable.NAME.of(table);
 
         if (isValid(dbName)) {
