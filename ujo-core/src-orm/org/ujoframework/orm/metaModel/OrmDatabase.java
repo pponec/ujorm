@@ -30,6 +30,9 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Session;
@@ -50,9 +53,9 @@ public class OrmDatabase extends AbstractMetaModel {
     private static final boolean ADD_DB_MODEL = true;
 
 
-    /** OrmDatabase schema */
+    /** OrmDatabase default schema */
     @XmlAttribute
-    public static final UjoProperty<OrmDatabase,String> NAME = newProperty("name", "");
+    public static final UjoProperty<OrmDatabase,String> SCHEMA = newProperty("schema", "");
     /** SQL renderer type of SqlRenderer. */
     public static final UjoProperty<OrmDatabase,Class> RENDERER = newProperty("renderer", Class.class);
     /** List of tables */
@@ -83,15 +86,15 @@ public class OrmDatabase extends AbstractMetaModel {
 
         Db annotDB = database.getClass().getAnnotation(Db.class);
         if (annotDB!=null) {
-            NAME.setValue(this, annotDB.schema());
+            SCHEMA.setValue(this, annotDB.schema());
             RENDERER.setValue(this, annotDB.renderer());
             JDBC_URL.setValue(this, annotDB.jdbcUrl());
             USER.setValue(this, annotDB.user());
             PASSWORD.setValue(this, annotDB.password());
             LDAP.setValue(this, annotDB.ldap());
         }
-        if (NAME.isDefault(this)) {
-            NAME.setValue(this, database.getClass().getSimpleName());
+        if (SCHEMA.isDefault(this)) {
+            SCHEMA.setValue(this, database.getClass().getSimpleName());
         }
         if (JDBC_URL.isDefault(this)) {
             JDBC_URL.setValue(this, getRenderer().getJdbcUrl());
@@ -110,7 +113,7 @@ public class OrmDatabase extends AbstractMetaModel {
         if (ADD_DB_MODEL) {
             // Add database relations:
             @SuppressWarnings("unchecked")
-            RelationToMany relation = new RelationToMany(NAME.of(this), database.getClass());
+            RelationToMany relation = new RelationToMany(SCHEMA.of(this), database.getClass());
             OrmTable table = new OrmTable(this, relation);
             table.setNotPersistent();
             TABLES.addItem(this, table);
@@ -328,10 +331,10 @@ public class OrmDatabase extends AbstractMetaModel {
 
 
 
-    /** Returns a NAME of the OrmDatabase. */
+    /** Returns a SCHEMA of the OrmDatabase. */
     @Override
     public String toString() {
-        return NAME.of(this);
+        return SCHEMA.of(this);
     }
 
     /** Create connection */
@@ -351,8 +354,8 @@ public class OrmDatabase extends AbstractMetaModel {
         if (obj instanceof OrmDatabase) {
             OrmDatabase db = (OrmDatabase) obj;
 
-            final String name1 = OrmDatabase.NAME.of(this);
-            final String name2 = OrmDatabase.NAME.of(db);
+            final String name1 = OrmDatabase.SCHEMA.of(this);
+            final String name2 = OrmDatabase.SCHEMA.of(db);
 
             return name1.equals(name2);
         } else {
@@ -363,7 +366,7 @@ public class OrmDatabase extends AbstractMetaModel {
     /** Hash code */
     @Override
     public int hashCode() {
-        final String name = OrmDatabase.NAME.of(this);
+        final String name = OrmDatabase.SCHEMA.of(this);
         return name.hashCode();
     }
 
@@ -373,4 +376,14 @@ public class OrmDatabase extends AbstractMetaModel {
         return ormHandler.getSession();
     }
 
+    /** Get all table schemas. */
+    public Set<String> getSchemas() {
+        final Set<String> result = new HashSet<String>();
+        for (OrmTable table : TABLES.of(this)) {
+            if (table.isPersistent() && !table.isSelectModel()) {
+                result.add(OrmTable.SCHEMA.of(table).toLowerCase());
+            }
+        }
+        return result;
+    }
 }

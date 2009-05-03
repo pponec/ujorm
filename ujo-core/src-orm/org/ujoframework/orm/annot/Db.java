@@ -25,7 +25,7 @@ import org.ujoframework.orm.SqlRenderer;
 @Target(value=ElementType.TYPE)
 public @interface Db {
 
-    /** Name of database schema. */
+    /** Default name of table schema. If value is empty than a class name is used. */
     String schema() default "";
     /** SQL renderer by a DB Vendor. */
     Class<? extends SqlRenderer> renderer();
