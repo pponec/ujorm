@@ -325,23 +325,23 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     
     
     /** Print escaped text to XML */
-    public void printText2Xml(final Writer writer, final String text) throws IOException {
+    public void printText2Xml(final Appendable out, final String text) throws IOException {
         int length = text.length();
         for (int i=0; i<length; i++) {
             final char c = text.charAt(i);
             switch(c) {
-                case '<' : writer.write("&lt;"  ); break;
-                case '>' : writer.write("&gt;"  ); break;
-                case '&' : writer.write("&amp;" ); break;
-                case '"' : writer.write("&quot;"); break;
-                case '\'': writer.write("&apos;"); break;
+                case '<' : out.append("&lt;"  ); break;
+                case '>' : out.append("&gt;"  ); break;
+                case '&' : out.append("&amp;" ); break;
+                case '"' : out.append("&quot;"); break;
+                case '\'': out.append("&apos;"); break;
                 default  : {
-                    if (c<=32) {
-                        writer.write("&#");
-                        writer.write(Integer.toString(c));
-                        writer.write(';');
+                    if (c<32) { // Condition include space: (c<=32)
+                        out.append("&#");
+                        out.append(Integer.toString(c));
+                        out.append(';');
                     } else {
-                        writer.write(c);
+                        out.append(c);
                     }
                 }
             }
@@ -350,9 +350,9 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     
     
     /** Conditionaly write new line. */
-    public final void writeNewLine(final Writer writer) throws IOException {
+    public final void writeNewLine(final Appendable out) throws IOException {
         if (breakLineEnabled) {
-            writer.write('\n');
+            out.append('\n');
         }
     }
     
