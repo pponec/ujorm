@@ -25,10 +25,10 @@ import org.ujoframework.orm.renderers.H2Renderer;
 /**
  * An table mapping to a database (a sample of usage).
  */
-@Db(name="db1", renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+@Db(schema="db1", renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 public class Database extends TableUjo<Database> {
 
-    /** Customer order. The used annotation overwrites a database name from the property name. */
+    /** Customer order. The used annotation overwrites a database schema from the property schema. */
     @Table(name="ord_order_new")
     public static final RelationToMany<Database,Order> ORDERS = newRelation("ord_order", Order.class);
 

@@ -28,7 +28,7 @@ import org.ujoframework.orm.renderers.H2Renderer;
 @Db( renderer=H2Renderer.class, user="sa", password="")
 public class MyDatabase extends TableUjo {
 
-    /** Customer order. The used annotation overwrites a database name from the property name. */
+    /** Customer order. The used annotation overwrites a database schema from the property schema. */
     @Table(name="ORD_ORDER_NEW")
     public static final RelationToMany<MyDatabase,Order> ORDERS = newRelation("ORD_ORDER", Order.class);
 

@@ -25,8 +25,8 @@ import org.ujoframework.orm.SqlRenderer;
 @Target(value=ElementType.TYPE)
 public @interface Db {
 
-    /** Name of database */
-    String name() default "";
+    /** Name of database schema. */
+    String schema() default "";
     /** SQL renderer by a DB Vendor. */
     Class<? extends SqlRenderer> renderer();
     /** LDAP */
