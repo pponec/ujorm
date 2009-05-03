@@ -100,11 +100,11 @@ public class OrmSampleTest extends TestCase {
     public void useSelection() {
         Session session = OrmHandler.getInstance().getSession();
 
-        Criterion<Order> exp1 = Criterion.newInstance(Order.DESCR, "test order");
-        Criterion<Order> exp2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
-        Criterion<Order> expr = exp1.and(exp2);
+        Criterion<Order> crn1 = Criterion.newInstance(Order.DESCR, "test order");
+        Criterion<Order> crn2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+        Criterion<Order> crit = crn1.and(crn2);
 
-        Query<Order> query = session.createQuery(Order.class, expr);
+        Query<Order> query = session.createQuery(Order.class, crit);
         query.setCountRequest(true);  // need a count of iterator items, a default value is false
         query.setReadOnly(false);     // Read onlyl result;
 

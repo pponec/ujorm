@@ -127,16 +127,16 @@ public class CriterionDecoder {
 
     /** Returns an extended value to the SQL statement */
     public Object getValueExtended(int i) {
-        ValueCriterion expr = values.get(i);
-        Object value = expr.getRightNode();
+        ValueCriterion crit = values.get(i);
+        Object value = crit.getRightNode();
 
         if (value==null) {
             return value;
         }
-        if (expr.isInsensitive()) {
+        if (crit.isInsensitive()) {
             value = value.toString().toUpperCase();
         }
-        switch (expr.getOperator()) {
+        switch (crit.getOperator()) {
             case CONTAINS:
             case CONTAINS_CASE_INSENSITIVE:
                 return "%"+value+"%";

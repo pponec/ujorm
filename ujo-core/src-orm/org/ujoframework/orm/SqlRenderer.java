@@ -292,9 +292,9 @@ abstract public class SqlRenderer {
     }
 
     /** Returns an SQL criterion template. */
-    public String getCriterionTemplate(ValueCriterion expr) {
+    public String getCriterionTemplate(ValueCriterion crit) {
 
-        switch (expr.getOperator()) {
+        switch (crit.getOperator()) {
             case EQ:
                 return "{0}={1}";
             case NOT_EQ:
@@ -318,14 +318,14 @@ abstract public class SqlRenderer {
             case CONTAINS:
                 return "{0} LIKE {1}";
             case €_FIXED:
-                return expr.evaluate(null)
+                return crit.evaluate(null)
                     ? "1=1"
                     : "1=0"
                     ;
             case REGEXP: 
             case NOT_REGEXP:
             default:
-                throw new UnsupportedOperationException("Unsupported: " + expr.getOperator());
+                throw new UnsupportedOperationException("Unsupported: " + crit.getOperator());
         }
     }
 
@@ -364,10 +364,10 @@ abstract public class SqlRenderer {
     /** Print a conditon phrase by the criterion.
      * @return A value criterion to assign into the SQL query.
      */
-    public ValueCriterion printCondition(ValueCriterion expr, Appendable out) throws IOException {
-        Operator operator = expr.getOperator();
-        UjoProperty property = expr.getLeftNode();
-        Object right = expr.getRightNode();
+    public ValueCriterion printCondition(ValueCriterion crit, Appendable out) throws IOException {
+        Operator operator = crit.getOperator();
+        UjoProperty property = crit.getLeftNode();
+        Object right = crit.getRightNode();
 
         OrmColumn column = (OrmColumn) ormHandler.findColumnModel(property);
 
@@ -388,12 +388,12 @@ abstract public class SqlRenderer {
             }
         }
 
-        String template = getCriterionTemplate(expr);
+        String template = getCriterionTemplate(crit);
         if (template == null) {
             throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
         }
 
-        if (expr.isConstant()) {
+        if (crit.isConstant()) {
             out.append( template );
         } else if (right instanceof UjoProperty) {
             final UjoProperty rightProperty = (UjoProperty) right;
@@ -410,21 +410,21 @@ abstract public class SqlRenderer {
                 out.append(f);
             }
         } else if (column.isForeignKey()) {
-           printForeignKey(expr, column, template, out);
-           return expr;
+           printForeignKey(crit, column, template, out);
+           return crit;
         } else if (right instanceof List) {
             throw new UnsupportedOperationException("List is not supported yet: " + operator);
         } else {
             String f = MessageFormat.format(template, column.getFullName(), "?");
             out.append(f);
-            return expr;
+            return crit;
         }
         return null;
     }
 
     /** Print all items of the foreign key */
     public void printForeignKey
-        ( final ValueCriterion expr
+        ( final ValueCriterion crit
         , final OrmColumn column
         , final String template
         , final Appendable out
@@ -434,7 +434,7 @@ abstract public class SqlRenderer {
         for (int i=0; i<size; i++) {
             if (i>0) {
                 out.append(' ');
-                out.append(expr.getOperator().name());
+                out.append(crit.getOperator().name());
                 out.append(' ');
             }
 
