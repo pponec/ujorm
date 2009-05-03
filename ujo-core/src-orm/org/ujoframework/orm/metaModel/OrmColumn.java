@@ -25,7 +25,6 @@ import java.util.StringTokenizer;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.annot.Column;
@@ -192,29 +191,25 @@ public class OrmColumn extends OrmRelation2Many {
     /** Returns a TABLE and COLUMN names. */
     @Override
     public String toString() {
-         return getFullName();
+        return getFullName();
     }
 
-    /** Returns the full name. */
+    /** Returns a DB, TABLE and COLUMN name. */
     public String getFullName() {
         try {
-            StringBuilder sb = new StringBuilder(32);
-            printFullName(sb);
-            return sb.toString();
+            final String result = TABLE.of(this)
+                .getDatabase()
+                .getRenderer()
+                .printFullName(this, new StringBuilder(32))
+                .toString()
+                ;
+            return result;
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    /** Print the full name. */
-    public void printFullName(Appendable out) throws IOException {
-        final OrmTable table = TABLE.of(this);
-        final String tableName = OrmTable.NAME.of(table);
 
-        out.append(tableName);
-        out.append('.');
-        out.append(NAME.of(this));
-    }
 
     /** Print a full name of foreign column by index */
     public void printForeignColumnFullName(int index, Appendable out) throws IOException {

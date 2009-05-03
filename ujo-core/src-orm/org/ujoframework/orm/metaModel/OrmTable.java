@@ -119,21 +119,6 @@ public class OrmTable extends AbstractMetaModel {
         }
     }
 
-    /** Returns a table name include a name of database. */
-    public String getFullName() {
-        final OrmDatabase db = DATABASE.of(this);
-        final String dbName = OrmDatabase.NAME.of(db);
-        final String tableName = NAME.of(this);
-
-        if (isValid(dbName)) {
-           //return dbName + "." + tableName; // TODO
-           return tableName;
-        } else {
-           return tableName;
-        }
-    }
-
-
     /** Assign a PK from framework */
     public void assignPrimaryKey(final TableUjo table) {
         final Class type = DB_PROPERTY.of(this).getItemType();
