@@ -211,7 +211,7 @@ public class ExpressionDecoder {
 
                 fk1.printForeignColumnFullName(i, sql);
                 sql.append(" = ");
-                pk2.getColumn(i).printFullName(sql);
+                renderer.printFullName(pk2.getColumn(i), sql);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

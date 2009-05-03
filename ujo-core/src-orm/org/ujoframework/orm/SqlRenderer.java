@@ -49,80 +49,133 @@ abstract public class SqlRenderer {
     abstract public String getJdbcDriver();
 
     /** Print a SQL script to crate database */
-    public Appendable printCreateDatabase(OrmDatabase database, Appendable writer) throws IOException {
+    public Appendable printCreateDatabase(OrmDatabase database, Appendable out) throws IOException {
+        boolean init=true;
         for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
             if (table.isPersistent()
             && !table.isView()
             ){
-                printTable(table, writer);
-                printForeignKey(table, writer);
+                if (init) {
+                    init = false;
+                    printCreateSchema(database, out);
+                    println(out);
+                    if (false) {
+                        printCommit(out);
+                        println(out);
+                    }
+                }
+                printTable(table, out);
+                println(out);
+                printForeignKey(table, out);
             }
         }
-        return writer;
+        return out;
+    }
+
+    /** Print SQL 'CREATE SCHEMA' */
+    public Appendable printCreateSchema(OrmDatabase db, Appendable out) throws IOException {
+        out.append("CREATE SCHEMA IF NOT EXISTS ");
+        out.append(OrmDatabase.NAME.of(db));
+        out.append("; ");
+        return out;
+    }
+
+    /** Print SQL 'SET SCHEMA' */
+    public Appendable printDefaultSchema(OrmDatabase db, Appendable out) throws IOException {
+        out.append("SET SCHEMA ");
+        out.append(OrmDatabase.NAME.of(db));
+        out.append(';');
+        return out;
     }
 
     /** Print a SQL sript to create table */
-    public void printTable(OrmTable table, Appendable writer) throws IOException {
-        writer.append("CREATE TABLE ");
-        writer.append(OrmTable.NAME.of(table));
+    public void printFullName(final OrmTable table, final Appendable out) throws IOException {
+        final OrmDatabase db = OrmTable.DATABASE.of(table);
+        final String dbName  = OrmDatabase.NAME.of(db);
+        final String tableName = OrmTable.NAME.of(table);
+
+        if (isValid(dbName)) {
+            out.append(dbName);
+            out.append('.');
+        }
+        out.append(tableName);
+    }
+
+    /** Print a SQL sript to create table */
+    public Appendable printFullName(final OrmColumn column, final Appendable out) throws IOException {
+        final OrmTable table = OrmColumn.TABLE.of(column);
+
+        printFullName(table, out);
+        out.append('.');
+        out.append(OrmColumn.NAME.of(column));
+        
+        return out;
+    }
+
+    /** Print a SQL sript to create table */
+    public Appendable printTable(OrmTable table, Appendable out) throws IOException {
+        out.append("CREATE TABLE ");
+        printFullName(table, out);
         String separator = "\n\t( ";
         for (OrmColumn column : OrmTable.COLUMNS.getList(table)) {
-            writer.append(separator);
+            out.append(separator);
             separator = "\n\t, ";
 
             if (column.isForeignKey()) {
-                printFKColumnsDeclaration(column, writer);
+                printFKColumnsDeclaration(column, out);
             } else {
-                printColumnDeclaration(column, writer, null);
+                printColumnDeclaration(column, null, out);
             }
         }
-        writer.append("\n\t);\n");
+        out.append("\n\t);");
+        return out;
     }
 
     /** Print foreign key */
-    public void printForeignKey(OrmTable table, Appendable writer) throws IOException {
+    public Appendable printForeignKey(OrmTable table, Appendable out) throws IOException {
         for (OrmColumn column : OrmTable.COLUMNS.getList(table)) {
             if (column.isForeignKey()) {
-                printForeignKey(column, table, writer);
+                printForeignKey(column, table, out);
             }
         }
+        return out;
     }
 
     /** Print foreign key for  */
-    public void printForeignKey(OrmColumn column, OrmTable table, Appendable writer) throws IOException {
+    public Appendable printForeignKey(OrmColumn column, OrmTable table, Appendable out) throws IOException {
         final UjoProperty property = column.getProperty();
         final OrmTable foreignTable = ormHandler.findTableModel(property.getType());
         OrmPKey foreignKeys = OrmTable.PK.of(foreignTable);
 
-        writer.append("ALTER TABLE ");
-        writer.append(OrmTable.NAME.of(table));
-        writer.append("\n\tADD FOREIGN KEY");
+        out.append("ALTER TABLE ");
+        printFullName(table, out);
+        out.append("\n\tADD FOREIGN KEY");
 
         String separator = "(";
         List<OrmColumn> columns = OrmPKey.COLUMNS.of(foreignKeys);
         int columnsSize = columns.size();
 
         for (int i = 0; i < columnsSize; ++i) {
-            writer.append(separator);
+            out.append(separator);
             separator = ", ";
             final String name = column.getForeignColumnName(i);
-            writer.append(name);
+            out.append(name);
         }
 
-        writer.append(")\n\tREFERENCES ");
-        writer.append(OrmTable.NAME.of(foreignTable));
+        out.append(")\n\tREFERENCES ");
+        printFullName(foreignTable, out);
         separator = "(";
 
         for (OrmColumn fkColumn : OrmPKey.COLUMNS.of(foreignKeys)) {
-            writer.append(separator);
+            out.append(separator);
             separator = ", ";
-            writer.append(OrmColumn.NAME.of(fkColumn));
+            out.append(OrmColumn.NAME.of(fkColumn));
         }
 
-        writer.append(")");
-        //writer.append("\n\tON DELETE CASCADE");
-        writer.append("\n\t;");
-
+        out.append(")");
+        //out.append("\n\tON DELETE CASCADE");
+        out.append("\n\t;");
+        return out;
     }
 
     /**
@@ -131,63 +184,65 @@ abstract public class SqlRenderer {
      * @param name The name parameter is not mandatory, in case a null value the column name is used.
      * @throws java.io.IOException
      */
-    public void printColumnDeclaration(OrmColumn column, Appendable writer, String name) throws IOException {
+    public Appendable printColumnDeclaration(OrmColumn column, String name, Appendable out) throws IOException {
 
         if (name == null) {
             name = OrmColumn.NAME.of(column);
         }
 
-        writer.append(name);
-        writer.append(' ');
-        writer.append(OrmColumn.DB_TYPE.of(column).name());
+        out.append(name);
+        out.append(' ');
+        out.append(OrmColumn.DB_TYPE.of(column).name());
 
         if (!OrmColumn.MAX_LENGTH.isDefault(column)) {
-            writer.append("(" + OrmColumn.MAX_LENGTH.of(column));
+            out.append("(" + OrmColumn.MAX_LENGTH.of(column));
             if (!OrmColumn.PRECISION.isDefault(column)) {
-                writer.append(", " + OrmColumn.PRECISION.of(column));
+                out.append(", " + OrmColumn.PRECISION.of(column));
             }
-            writer.append(")");
+            out.append(")");
         }
         if (!OrmColumn.MANDATORY.isDefault(column)) {
-            writer.append(" NOT NULL");
+            out.append(" NOT NULL");
         }
         if (OrmColumn.PRIMARY_KEY.of(column) && name == null) {
-            writer.append(" PRIMARY KEY");
+            out.append(" PRIMARY KEY");
         }
+        return out;
     }
 
     /** Print a SQL to create foreign keys. */
-    public void printFKColumnsDeclaration(OrmColumn column, Appendable writer) throws IOException {
+    public Appendable printFKColumnsDeclaration(OrmColumn column, Appendable out) throws IOException {
 
         List<OrmColumn> columns = column.getForeignColumns();
         String separator = "";
 
         for (int i = 0; i < columns.size(); ++i) {
             OrmColumn col = columns.get(i);
-            writer.append(separator);
+            out.append(separator);
             separator = "\n\t, ";
             String name = column.getForeignColumnName(i);
-            printColumnDeclaration(col, writer, name);
+            printColumnDeclaration(col, name, out);
         }
+        return out;
     }
 
     /** Print an SQL INSERT statement.  */
-    public Appendable printInsert(TableUjo ujo, Appendable writer) throws IOException {
+    public Appendable printInsert(TableUjo ujo, Appendable out) throws IOException {
 
         OrmTable table = ormHandler.findTableModel((Class) ujo.getClass());
         StringBuilder values = new StringBuilder();
 
-        writer.append("INSERT INTO ");
-        writer.append(table.getFullName());
-        writer.append(" (");
+        out.append("INSERT INTO ");
+        printFullName(table, out);
+        out.append(" (");
 
-        printTableColumns(OrmTable.COLUMNS.getList(table), writer, values);
+        printTableColumns(OrmTable.COLUMNS.getList(table), values, out);
 
-        writer.append(") VALUES (");
-        writer.append(values);
-        writer.append(");");
+        out.append(") VALUES (");
+        out.append(values);
+        out.append(");");
 
-        return writer;
+        return out;
     }
 
     /** Print an SQL UPDATE statement.  */
@@ -195,12 +250,12 @@ abstract public class SqlRenderer {
         ( OrmTable table
         , List<OrmColumn> changedColumns
         , ExpressionDecoder decoder
-        , Appendable writer
+        , Appendable out
         ) throws IOException
     {
-        writer.append("UPDATE ");
-        writer.append(table.getFullName());
-        writer.append("\n\tSET ");
+        out.append("UPDATE ");
+        printFullName(table, out);
+        out.append("\n\tSET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
             OrmColumn ormColumn = changedColumns.get(i);
@@ -208,31 +263,32 @@ abstract public class SqlRenderer {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
             if (i>0) {
-                writer.append(", ");
+                out.append(", ");
             }
-            writer.append(ormColumn.getFullName());
-            writer.append("=? ");
+            printFullName(ormColumn, out);
+
+            out.append("=? ");
         }
-        writer.append("\n\tWHERE ");
-        writer.append(decoder.getWhere());
-        writer.append(';');
-        return writer;
+        out.append("\n\tWHERE ");
+        out.append(decoder.getWhere());
+        out.append(';');
+        return out;
     }
 
     /** Print an SQL DELETE statement.  */
     public Appendable printDelete
         ( OrmTable table
         , ExpressionDecoder decoder
-        , Appendable writer
+        , Appendable out
         ) throws IOException
     {
-        writer.append("DELETE FROM ");
-        writer.append(table.getFullName());
-        writer.append(" WHERE ");
-        writer.append(decoder.getWhere());
-        writer.append(';');
+        out.append("DELETE FROM ");
+        printFullName(table, out);
+        out.append(" WHERE ");
+        out.append(decoder.getWhere());
+        out.append(';');
 
-        return writer;
+        return out;
     }
 
     /** Returns an SQL expression template. */
@@ -274,14 +330,14 @@ abstract public class SqlRenderer {
     }
 
     /** Print table columns */
-    public void printTableColumns(List<OrmColumn> columns, Appendable writer, Appendable values) throws IOException {
+    public void printTableColumns(List<OrmColumn> columns, Appendable values, Appendable out) throws IOException {
         String separator = "";
         boolean select = values==null;
         for (OrmColumn column : columns) {
             if (column.isForeignKey()) {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
-                    writer.append(separator);
-                    writer.append(column.getForeignColumnName(i));
+                    out.append(separator);
+                    out.append(column.getForeignColumnName(i));
                     if (values != null) {
                         values.append(separator);
                         values.append("?");
@@ -289,8 +345,12 @@ abstract public class SqlRenderer {
                     separator = ", ";
                 }
             } else if (column.isColumn()) {
-                writer.append(separator);
-                writer.append(select ? column.getFullName() : OrmColumn.NAME.of(column));
+                out.append(separator);
+                if (select) {
+                    printFullName(column, out);
+                } else {
+                    out.append(OrmColumn.NAME.of(column));
+                }
                 if (values != null) {
                     values.append(separator);
                     values.append("?");
@@ -304,7 +364,7 @@ abstract public class SqlRenderer {
     /** Print a conditon phrase by the expression.
      * @return A value expression to assign into the SQL query.
      */
-    public ExpressionValue printCondition(ExpressionValue expr, Appendable writer) throws IOException {
+    public ExpressionValue printCondition(ExpressionValue expr, Appendable out) throws IOException {
         Operator operator = expr.getOperator();
         UjoProperty property = expr.getLeftNode();
         Object right = expr.getRightNode();
@@ -316,12 +376,12 @@ abstract public class SqlRenderer {
             switch (operator) {
                 case EQ:
                 case EQUALS_CASE_INSENSITIVE:
-                    writer.append(columnName);
-                    writer.append(" IS NULL");
+                    out.append(columnName);
+                    out.append(" IS NULL");
                     return null;
                 case NOT_EQ:
-                    writer.append(columnName);
-                    writer.append(" IS NOT NULL");
+                    out.append(columnName);
+                    out.append(" IS NOT NULL");
                     return null;
                 default:
                     throw new UnsupportedOperationException("Comparation the NULL value is forbiden by a operator: " + operator);
@@ -334,7 +394,7 @@ abstract public class SqlRenderer {
         }
 
         if (expr.isConstant()) {
-            writer.append( template );
+            out.append( template );
         } else if (right instanceof UjoProperty) {
             final UjoProperty rightProperty = (UjoProperty) right;
             final OrmColumn col2 = (OrmColumn) ormHandler.findColumnModel(rightProperty);
@@ -347,16 +407,16 @@ abstract public class SqlRenderer {
             }
             if (true) {
                 String f = String.format(template, column.getFullName(), col2.getFullName());
-                writer.append(f);
+                out.append(f);
             }
         } else if (column.isForeignKey()) {
-           printForeignKey(expr, column, template, writer);
+           printForeignKey(expr, column, template, out);
            return expr;
         } else if (right instanceof List) {
             throw new UnsupportedOperationException("List is not supported yet: " + operator);
         } else {
             String f = MessageFormat.format(template, column.getFullName(), "?");
-            writer.append(f);
+            out.append(f);
             return expr;
         }
         return null;
@@ -367,19 +427,19 @@ abstract public class SqlRenderer {
         ( final ExpressionValue expr
         , final OrmColumn column
         , final String template
-        , final Appendable writer
+        , final Appendable out
         ) throws IOException
     {
         int size = column.getForeignColumns().size();
         for (int i=0; i<size; i++) {
             if (i>0) {
-                writer.append(' ');
-                writer.append(expr.getOperator().name());
-                writer.append(' ');
+                out.append(' ');
+                out.append(expr.getOperator().name());
+                out.append(' ');
             }
 
             String f = MessageFormat.format(template, column.getForeignColumnName(i), "?");
-            writer.append(f);
+            out.append(f);
         }
     }
 
@@ -445,7 +505,7 @@ abstract public class SqlRenderer {
         if (count) {
             out.append("COUNT(*)");
         } else {
-            printTableColumns(query.getColumns(), out, null);
+            printTableColumns(query.getColumns(), null, out);
         }
         out.append("\n\tFROM ");
 
@@ -457,7 +517,7 @@ abstract public class SqlRenderer {
             for (int i=0; i<tables.length; ++i) {
                 OrmTable table = tables[i];
                 if (i>0) out.append(", ");
-                out.append(table.getFullName());
+                printFullName(table, out);
             }
 
             String sql = ed.getWhere();
@@ -477,42 +537,60 @@ abstract public class SqlRenderer {
 
 
     /** Print SQL ORDER BY */
-    public void printSelectOrder(Query query, Appendable writer) throws IOException {
+    public void printSelectOrder(Query query, Appendable out) throws IOException {
         
-        writer.append(" ORDER BY ");
+        out.append(" ORDER BY ");
         final List<UjoProperty> props = query.getOrder();
         for (int i=0; i<props.size(); i++) {
             OrmColumn column = query.readOrderColumn(i);
             boolean ascending = props.get(i).isAscending();
             if (i>0) {
-                writer.append(", ");
+                out.append(", ");
             }
-            writer.append(column.getFullName());
+            printFullName(column, out);
             if (!ascending) {
-                writer.append(" DESC");
+                out.append(" DESC");
             }
         }
     }
 
     /** Print SQL CREATE SEQUENCE. */
-    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable writer) throws IOException {
-        writer.append("CREATE SEQUENCE IF NOT EXISTS ");
-        writer.append(sequence.getSequenceName());
-        writer.append(" START WITH " + sequence.getInitValue());
-        writer.append(" INCREMENT BY " + sequence.getInitIncrement());
-        writer.append(" CACHE " + sequence.getInitCacheSize());
-        writer.append(';');
-        return writer;
+    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("CREATE SEQUENCE IF NOT EXISTS ");
+        out.append(sequence.getSequenceName());
+        out.append(" START WITH " + sequence.getInitValue());
+        out.append(" INCREMENT BY " + sequence.getInitIncrement());
+        out.append(" CACHE " + sequence.getInitCacheSize());
+        out.append(';');
+        return out;
     }
 
     /** Print SQL NEXT SEQUENCE. */
-    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable writer) throws IOException {
-        writer.append("SELECT CURRVAL('");
-        writer.append(sequence.getSequenceName());
-        writer.append("'), NEXTVAL('");
-        writer.append(sequence.getSequenceName());
-        writer.append("');");
-        return writer;
+    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("SELECT CURRVAL('");
+        out.append(sequence.getSequenceName());
+        out.append("'), NEXTVAL('");
+        out.append(sequence.getSequenceName());
+        out.append("');");
+        return out;
     }
+
+    /** Returns true, if the argument text is not null and not empty. */
+    protected boolean isValid(final CharSequence text) {
+        final boolean result = text!=null && text.length()>0;
+        return result;
+    }
+
+    /** Print the new line. */
+    final public void println(final Appendable out) throws IOException {
+        out.append('\n');
+    }
+
+    /** Print SQL 'CREATE SCHEMA' */
+    public Appendable printCommit(Appendable out) throws IOException {
+        out.append("COMMIT;");
+        return out;
+    }
+
 
 }
