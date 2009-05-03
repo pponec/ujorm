@@ -88,14 +88,14 @@
   session.commit();
 </pre>
 
-The next source code calls a SELECT by a UJO query language:
+The next source code calls a SELECT by a UJO Criteria:
 <pre name="code" class="java">
-  Expression&lt;Order&gt; exp1 = Expression.newInstance(Order.DESCR, "John's order");
-  Expression&lt;Order&gt; exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
-  Expression&lt;Order&gt; expr = exp1.and(exp2);
+  Criterion&lt;Order&gt; c1 = Criterion.newInstance(Order.DESCR, "John's order");
+  Criterion&lt;Order&gt; c2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+  Criterion&lt;Order&gt; criterion = c1.and(c2);
 
   Session session = OrmHandler.getInstance().getSession();
-  UjoIterator&lt;Order&gt; orders = session.createQuery(expr).iterate();
+  UjoIterator&lt;Order&gt; orders = session.createQuery(criterion).iterate();
   System.out.println("ORDER COUNT: " + orders.count()); // method calls SQL SELECT COUNT(*) in case the iterator can provide first item!
 
   for (Order order : orders) {

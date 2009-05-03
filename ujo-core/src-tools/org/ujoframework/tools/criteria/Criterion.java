@@ -20,27 +20,27 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * An abstraction expression provides an factory methods.
+ * An abstraction criterion provides an factory methods.
  * @author Pavel Ponec
  */
-public abstract class Expression<UJO extends Ujo> {
+public abstract class Criterion<UJO extends Ujo> {
     
     public abstract boolean evaluate(UJO ujo);
     
-    public Expression<UJO> join(OperatorBinary operator, Expression<UJO> expr) {
-        return new ExpressionBinary<UJO>(this, operator, expr);
+    public Criterion<UJO> join(BinaryOperator operator, Criterion<UJO> criterion) {
+        return new BinaryCriterion<UJO>(this, operator, criterion);
     }
 
-    public Expression<UJO> and(Expression<UJO> expr) {
-        return join(OperatorBinary.AND, expr);
+    public Criterion<UJO> and(Criterion<UJO> criterion) {
+        return join(BinaryOperator.AND, criterion);
     }
 
-    public Expression<UJO> or(Expression<UJO> expr) {
-        return join(OperatorBinary.OR, expr);
+    public Criterion<UJO> or(Criterion<UJO> criterion) {
+        return join(BinaryOperator.OR, criterion);
     }
 
-    public Expression<UJO> not() {
-        return new ExpressionBinary<UJO>(this, OperatorBinary.NOT, this);
+    public Criterion<UJO> not() {
+        return new BinaryCriterion<UJO>(this, BinaryOperator.NOT, this);
     }
 
     /** Returns the left node of the parrent */
@@ -53,7 +53,7 @@ public abstract class Expression<UJO extends Ujo> {
     // ------ STATIC FACTORY --------
 
     /**
-     * New expression instance
+     * New criterion instance
      * @param property UjoProperty
      * @param operator Operator
      * @param value Value or UjoProperty can be type of
@@ -63,10 +63,14 @@ public abstract class Expression<UJO extends Ujo> {
      * <li>UjoProperty - reference to a related entity</li>
      * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
-     * @return A new expression
+     * @return A new criterion
      */
-    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property, Operator operator, Object value) {
-        return new ExpressionValue<UJO>(property, operator, value);
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
+        ( UjoProperty<UJO,TYPE> property
+        , Operator operator
+        , Object value
+        ) {
+        return new ValueCriterion<UJO>(property, operator, value);
     }
 
     /**
@@ -79,10 +83,13 @@ public abstract class Expression<UJO extends Ujo> {
      * <li>UjoProperty - reference to a related entity</li>
      * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
-     * @return A new expression
+     * @return A the new Criterion
      */
-    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property, Object value) {
-        return new ExpressionValue<UJO>(property, null, value);
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
+        ( UjoProperty<UJO,TYPE> property
+        , Object value
+        ) {
+        return new ValueCriterion<UJO>(property, null, value);
     }
 
     /**
@@ -95,32 +102,32 @@ public abstract class Expression<UJO extends Ujo> {
      * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
      */
-    public static <UJO extends Ujo, TYPE> Expression<UJO> newInstance(UjoProperty<UJO,TYPE> property) {
-        return new ExpressionValue<UJO>(property, Operator.EQ, property);
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance(UjoProperty<UJO,TYPE> property) {
+        return new ValueCriterion<UJO>(property, Operator.EQ, property);
     }
 
-    /** This is an constane expression independed on an entity.
+    /** This is an constane criterion independed on an entity.
      * It is recommended not to use this solution in ORM.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo> Expression<UJO> newInstance(boolean value) {
-        return (Expression<UJO>) (value
-            ? ExpressionValue.TRUE
-            : ExpressionValue.FALSE
+    public static <UJO extends Ujo> Criterion<UJO> newInstance(boolean value) {
+        return (Criterion<UJO>) (value
+            ? ValueCriterion.TRUE
+            : ValueCriterion.FALSE
             );
     }
 
-    /** This is a constant expression independed on the property and the ujo entity. A result is the TRUE allways. */
-    public static <UJO extends Ujo> Expression<UJO> newInstanceTrue(UjoProperty<UJO,?> property) {
-        return new ExpressionValue<UJO>(property, Operator.€_FIXED, true);
+    /** This is a constant criterion independed on the property and the ujo entity. A result is the TRUE allways. */
+    public static <UJO extends Ujo> Criterion<UJO> newInstanceTrue(UjoProperty<UJO,?> property) {
+        return new ValueCriterion<UJO>(property, Operator.€_FIXED, true);
     }
 
-    /** This is a constant expression independed on the property and the ujo entity. A result is the FALSE allways. */
-    public static <UJO extends Ujo> Expression<UJO> newInstanceFalse(UjoProperty<UJO,?> property) {
-        return new ExpressionValue<UJO>(property, Operator.€_FIXED, false);
+    /** This is a constant criterion independed on the property and the ujo entity. A result is the FALSE allways. */
+    public static <UJO extends Ujo> Criterion<UJO> newInstanceFalse(UjoProperty<UJO,?> property) {
+        return new ValueCriterion<UJO>(property, Operator.€_FIXED, false);
     }
 
-    /** Is a Binary expression? */
+    /** Is a Binary criterion? */
     public boolean isBinary() {
         return false;
     }

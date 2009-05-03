@@ -24,20 +24,20 @@ import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.tools.criteria.Expression;
+import org.ujoframework.tools.criteria.Criterion;
 
 /**
  * ORM query.
  * @author Pavel Ponec
  * @composed 1 - 1 Session
- * @composed 1 - 1 ExpressionDecoder
+ * @composed 1 - 1 CriterionDecoder
  */
 public class Query<UJO extends TableUjo> {
 
     final private OrmTable table;
     final private List<OrmColumn> columns;
-    final private Expression<UJO> expression;
-    final private ExpressionDecoder decoder;
+    final private Criterion<UJO> criterion;
+    final private CriterionDecoder decoder;
     final private Session session;
 
     /** A list of properties to sorting */
@@ -49,13 +49,13 @@ public class Query<UJO extends TableUjo> {
 
     /**
      * Create new ORM query.
-     * @param tableClass Table can be null if the expression parameter is not null and contains a table Property.
-     * @param expression If expression is null, then a TRUE constant expression is used.
+     * @param tableClass Table can be null if the criterion parameter is not null and contains a table Property.
+     * @param criterion If criterion is null, then a TRUE constant criterion is used.
      * @param session Session
      */
-    public Query(Class<UJO> tableClass, Expression<UJO> expression, Session session) {
+    public Query(Class<UJO> tableClass, Criterion<UJO> criterion, Session session) {
         this( session.getHandler().findTableModel(tableClass)
-            , expression
+            , criterion
             , session
             );
     }
@@ -63,15 +63,15 @@ public class Query<UJO extends TableUjo> {
     /**
      * Create new ORM query.
      * @param table Table model
-     * @param expression If expression is null, then a TRUE constant expression is used.
+     * @param criterion If criterion is null, then a TRUE constant criterion is used.
      * @param session Session
      */
-    public Query(OrmTable table, Expression<UJO> expression, Session session) {
+    public Query(OrmTable table, Criterion<UJO> criterion, Session session) {
         this.table = table;
         this.columns = OrmTable.COLUMNS.getList(table);
-        this.expression = expression;
+        this.criterion = criterion;
         this.session = session;
-        this.decoder = new ExpressionDecoder(expression, table);
+        this.decoder = new CriterionDecoder(criterion, table);
 
         setOrder(); // set an undefined ordering
     }
@@ -106,13 +106,13 @@ public class Query<UJO extends TableUjo> {
         this.countRequest = countRequest;
     }
 
-    /** Expression */
-    public Expression<UJO> getExpression() {
-        return expression;
+    /** Criterion */
+    public Criterion<UJO> getCriterion() {
+        return criterion;
     }
 
-    /** Retuns an expression Decoder */
-    final public ExpressionDecoder getDecoder() {
+    /** Retuns a Criterion Decoder */
+    final public CriterionDecoder getDecoder() {
         return decoder;
     }
 

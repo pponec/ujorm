@@ -22,7 +22,7 @@ import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.sample.Database;
 import org.ujoframework.orm.sample.Item;
 import org.ujoframework.orm.sample.Order;
-import org.ujoframework.tools.criteria.Expression;
+import org.ujoframework.tools.criteria.Criterion;
 import org.ujoframework.tools.criteria.Operator;
 
 /**
@@ -100,9 +100,9 @@ public class OrmSampleTest extends TestCase {
     public void useSelection() {
         Session session = OrmHandler.getInstance().getSession();
 
-        Expression<Order> exp1 = Expression.newInstance(Order.DESCR, "test order");
-        Expression<Order> exp2 = Expression.newInstance(Order.DATE, Operator.LE, new Date());
-        Expression<Order> expr = exp1.and(exp2);
+        Criterion<Order> exp1 = Criterion.newInstance(Order.DESCR, "test order");
+        Criterion<Order> exp2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+        Criterion<Order> expr = exp1.and(exp2);
 
         Query<Order> query = session.createQuery(Order.class, expr);
         query.setCountRequest(true);  // need a count of iterator items, a default value is false

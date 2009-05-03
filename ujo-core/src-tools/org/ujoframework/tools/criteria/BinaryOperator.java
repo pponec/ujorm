@@ -28,7 +28,7 @@ import org.ujoframework.Ujo;
  * Binary operator
  * @author Pavel Ponec
  */
-public enum OperatorBinary implements AbstractOperator {
+public enum BinaryOperator implements AbstractOperator {
     /** (a AND b) */
     AND,
     /** (a OR b) */
@@ -45,8 +45,8 @@ public enum OperatorBinary implements AbstractOperator {
     NOT,
     ;
 
-    /** Join two expressions. */ 
-    public <UJO extends Ujo> Expression<UJO> join(final Expression<UJO> a, final Expression<UJO> b) {
+    /** Join two criterions. */
+    public <UJO extends Ujo> Criterion<UJO> join(final Criterion<UJO> a, final Criterion<UJO> b) {
         return a.join(this, b);
     }
 

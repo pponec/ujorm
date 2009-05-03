@@ -38,9 +38,9 @@ import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmParameters;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.tools.criteria.Expression;
-import org.ujoframework.tools.criteria.ExpressionBinary;
-import org.ujoframework.tools.criteria.ExpressionValue;
+import org.ujoframework.tools.criteria.Criterion;
+import org.ujoframework.tools.criteria.BinaryCriterion;
+import org.ujoframework.tools.criteria.ValueCriterion;
 
 /**
  * ORM session.
@@ -120,24 +120,24 @@ public class Session {
         }
     }
 
-    public <UJO extends TableUjo> Query<UJO> createQuery(Class<UJO> aClass, Expression<UJO> expression) {
-        return new Query<UJO>(aClass, expression, this);
+    public <UJO extends TableUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
+        return new Query<UJO>(aClass, criterion, this);
     }
 
-    /** The table class is derived from the first expression column. */
-    public <UJO extends TableUjo> Query<UJO> createQuery(Expression<UJO> expression) {
-        OrmRelation2Many column = getBasicColumn(expression);
+    /** The table class is derived from the first criterion column. */
+    public <UJO extends TableUjo> Query<UJO> createQuery(Criterion<UJO> criterion) {
+        OrmRelation2Many column = getBasicColumn(criterion);
         OrmTable table = OrmRelation2Many.TABLE.of(column);
-        return new Query<UJO>(table, expression, this);
+        return new Query<UJO>(table, criterion, this);
     }
 
-    /** Returns the first "basic" column of expression. */
-    public OrmRelation2Many getBasicColumn(Expression expression) {
-        while (expression.isBinary()) {
-            expression = ((ExpressionBinary) expression).getLeftNode();
+    /** Returns the first "basic" column of criterion. */
+    public OrmRelation2Many getBasicColumn(Criterion criterion) {
+        while (criterion.isBinary()) {
+            criterion = ((BinaryCriterion) criterion).getLeftNode();
         }
 
-        ExpressionValue exprValue = (ExpressionValue) expression;
+        ValueCriterion exprValue = (ValueCriterion) criterion;
         if (exprValue.getLeftNode()==null) {
             return null;
         }
@@ -198,9 +198,9 @@ public class Session {
                 LOGGER.warning("No changes to update in the object: " + ujo);
                 return result;
             }
-            final Expression expression = createPkExpression(ujo);
+            final Criterion criterion = createPkCriterion(ujo);
             final OrmTable ormTable = handler.findTableModel(ujo.getClass());
-            final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
+            final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
             String sql = db.getRenderer().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(ujo, changedColumns);
@@ -222,41 +222,41 @@ public class Session {
 
     /** Delete all object object form parameter.
      * @param tableType Type of table to delete
-     * @param expression filter for deleting tables.
+     * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    public <UJO extends TableUjo> int delete(final Expression<UJO> expression) {
-        final OrmRelation2Many column = getBasicColumn(expression);
+    public <UJO extends TableUjo> int delete(final Criterion<UJO> criterion) {
+        final OrmRelation2Many column = getBasicColumn(criterion);
         final OrmTable table = OrmRelation2Many.TABLE.of(column);
-        return delete(table, expression);
+        return delete(table, criterion);
     }
 
 
     /** Delete all object object form parameter.
      * @param tableType Type of table to delete
-     * @param expression filter for deleting tables.
+     * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    public <UJO extends TableUjo> int delete(final Class<UJO> tableType, final Expression<UJO> expression) {
+    public <UJO extends TableUjo> int delete(final Class<UJO> tableType, final Criterion<UJO> criterion) {
         final OrmTable table = handler.findTableModel(tableType);
-        return delete(table, expression);
+        return delete(table, criterion);
     }
 
 
 
     /** Delete all object object form parameter.
      * @param tableType Type of table to delete
-     * @param expression filter for deleting tables.
+     * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    protected <UJO extends TableUjo> int delete(final OrmTable ormTable, final Expression<UJO> expression) {
+    protected <UJO extends TableUjo> int delete(final OrmTable ormTable, final Criterion<UJO> criterion) {
         int result = 0;
         JdbcStatement statement = null;
         String sql = "";
 
         try {
             final OrmDatabase db = OrmTable.DATABASE.of(ormTable);
-            final ExpressionDecoder decoder = new ExpressionDecoder(expression, ormTable);
+            final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
             sql = db.getRenderer().printDelete(ormTable, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
@@ -289,23 +289,23 @@ public class Session {
         return result;
     }
 
-    /** Returns an expression by a PrimaryKey */
-    protected Expression createPkExpression(TableUjo table) {
-        Expression result = null;
+    /** Returns an criterion by a PrimaryKey */
+    protected Criterion createPkCriterion(TableUjo table) {
+        Criterion result = null;
         OrmTable ormTable = handler.findTableModel(table.getClass());
         OrmPKey ormKey = OrmTable.PK.of(ormTable);
         List<OrmColumn> keys = OrmPKey.COLUMNS.of(ormKey);
 
         for (OrmColumn ormColumn : keys) {
-            Expression expr = Expression.newInstance(ormColumn.getProperty(), ormColumn.getValue(table));
+            Criterion crn = Criterion.newInstance(ormColumn.getProperty(), ormColumn.getValue(table));
             result = result!=null
-                ? result.and(expr)
-                : expr
+                ? result.and(crn)
+                : crn
                 ;
         }
         return result!=null
             ? result
-            : Expression.newInstance(false)
+            : Criterion.newInstance(false)
             ;
     }
 
@@ -395,11 +395,11 @@ public class Session {
             }
         }
 
-        Expression expr = column!=null 
-            ? Expression.newInstance(column.getProperty(), value)
-            : Expression.newInstanceTrue(table.getFirstPK().getProperty())
+        Criterion crit = column!=null
+            ? Criterion.newInstance(column.getProperty(), value)
+            : Criterion.newInstanceTrue(table.getFirstPK().getProperty())
             ;
-        Query query = createQuery(tableClass, expr);
+        Query query = createQuery(tableClass, crit);
         UjoIterator result = iterate(query);
 
         return result;
@@ -442,8 +442,8 @@ public class Session {
         final OrmTable table = handler.findTableModel(tableType);
         final OrmColumn column = table.getFirstPK();
 
-        Expression expr = Expression.newInstance(column.getProperty(), id);
-        Query query = createQuery(expr);
+        Criterion crn = Criterion.newInstance(column.getProperty(), id);
+        Query query = createQuery(crn);
         UjoIterator iterator = iterate(query);
 
         final UJO result
@@ -487,8 +487,8 @@ public class Session {
         }
 
         // SELECT DB
-        Expression expr = Expression.newInstance(columns.get(0).getProperty(), id);
-        Query query = createQuery(expr);
+        Criterion crn = Criterion.newInstance(columns.get(0).getProperty(), id);
+        Query query = createQuery(crn);
         UjoIterator iterator = iterate(query);
 
         final UJO result
