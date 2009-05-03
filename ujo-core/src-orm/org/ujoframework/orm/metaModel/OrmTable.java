@@ -38,31 +38,34 @@ import org.ujoframework.orm.annot.View;
  */
 public class OrmTable extends AbstractMetaModel {
 
+    /** Property count */
+    protected static int propertyCount = AbstractMetaModel.propertyCount;
+
     /** DB table name */
     @XmlAttribute
-    public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "");
+    public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "", propertyCount++);
     /** Name of table schema. */
-    public static final UjoProperty<OrmTable,String> SCHEMA = newProperty("schema", "");
+    public static final UjoProperty<OrmTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** Table Columns */
-    public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class);
+    public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class, propertyCount++);
     /** Table relations to many */
-    public static final ListProperty<OrmTable,OrmRelation2Many> RELATIONS = newPropertyList("relation2m", OrmRelation2Many.class);
+    public static final ListProperty<OrmTable,OrmRelation2Many> RELATIONS = newPropertyList("relation2m", OrmRelation2Many.class, propertyCount++);
     /** Is it a model of a database view ? */
-    public static final UjoProperty<OrmTable,Boolean> VIEW = newProperty("view", false);
+    public static final UjoProperty<OrmTable,Boolean> VIEW = newProperty("view", false, propertyCount++);
     /** SQL SELECT statement */
-    public static final UjoProperty<OrmTable,String> SELECT = newProperty("select", "");
+    public static final UjoProperty<OrmTable,String> SELECT = newProperty("select", "", propertyCount++);
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
-    public static final UjoProperty<OrmTable,OrmView> SELECT_MODEL = newProperty("selectModel", OrmView.class);
+    public static final UjoProperty<OrmTable,OrmView> SELECT_MODEL = newProperty("selectModel", OrmView.class, propertyCount++);
     /** Unique Primary Key */
     @Transient
-    public static final UjoProperty<OrmTable,OrmPKey> PK = newProperty("pk", OrmPKey.class);
+    public static final UjoProperty<OrmTable,OrmPKey> PK = newProperty("pk", OrmPKey.class, propertyCount++);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<OrmTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
+    public static final UjoProperty<OrmTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class, propertyCount++);
     /** Database */
     @Transient
-    public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class);
+    public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class, propertyCount++);
 
 
     @SuppressWarnings("unchecked")
@@ -124,6 +127,12 @@ public class OrmTable extends AbstractMetaModel {
                 }
             }
         }
+    }
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
     }
 
     /** Assign a PK from framework */

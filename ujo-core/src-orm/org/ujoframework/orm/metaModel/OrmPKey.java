@@ -31,11 +31,14 @@ import org.ujoframework.implementation.orm.TableUjo;
  */
 public class OrmPKey extends AbstractMetaModel {
 
+    /** Property count */
+    protected static int propertyCount = AbstractMetaModel.propertyCount;
+
     /** DB columns */
-    public static final UjoProperty<OrmPKey,OrmTable> TABLE = newProperty("table", OrmTable.class);
+    public static final UjoProperty<OrmPKey,OrmTable> TABLE = newProperty("table", OrmTable.class, propertyCount++);
 
     /** DB table */
-    public static final ListProperty<OrmPKey,OrmColumn> COLUMNS = newPropertyList("columns", OrmColumn.class);
+    public static final ListProperty<OrmPKey,OrmColumn> COLUMNS = newPropertyList("columns", OrmColumn.class, propertyCount++);
 
     /** Primary key counter. */
     private long primaryKeyCounter = 0;
@@ -44,6 +47,12 @@ public class OrmPKey extends AbstractMetaModel {
     public OrmPKey(OrmTable table) {
         this.database = OrmTable.DATABASE.of(table);
         COLUMNS.setValue(this, new ArrayList<OrmColumn>(0));
+    }
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
     }
 
     @Override

@@ -36,17 +36,25 @@ import org.ujoframework.extensions.ListProperty;
 public class OrmRoot extends AbstractMetaModel {
 
     public static final Logger LOGGER = Logger.getLogger(OrmRoot.class.getName());
+    /** Property count */
+    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
 
     /** List of tables */
-    public static final ListProperty<OrmRoot,OrmDatabase> DATABASES = newPropertyList("database", OrmDatabase.class);
+    public static final ListProperty<OrmRoot,OrmDatabase> DATABASES = newPropertyList("database", OrmDatabase.class, propertyCount++);
 
     /** ORM parameters */
-    public static final UjoProperty<OrmRoot,OrmParameters> PARAMETERS = newProperty("parameters", OrmParameters.class);
+    public static final UjoProperty<OrmRoot,OrmParameters> PARAMETERS = newProperty("parameters", OrmParameters.class, propertyCount++);
 
     public OrmRoot() {
         // A default instance:
         PARAMETERS.setValue(this, new OrmParameters());
+    }
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
     }
 
     /** Returns the first database or return null */

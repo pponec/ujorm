@@ -32,18 +32,21 @@ import org.ujoframework.orm.annot.Column;
  */
 public class OrmRelation2Many extends AbstractMetaModel {
 
+    /** Property count */
+    protected static int propertyCount = AbstractMetaModel.propertyCount;
+
     /** The database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
     @XmlAttribute
-    public static final UjoProperty<OrmRelation2Many,String> NAME = newProperty("name", "");
+    public static final UjoProperty<OrmRelation2Many,String> NAME = newProperty("name", "", propertyCount++);
     /** Table property */
     @Transient
-    public static final UjoProperty<OrmRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
+    public static final UjoProperty<OrmRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class, propertyCount++);
     /** DB table */
     @Transient
-    public static final UjoProperty<OrmRelation2Many,OrmTable> TABLE = newProperty("table", OrmTable.class);
+    public static final UjoProperty<OrmRelation2Many,OrmTable> TABLE = newProperty("table", OrmTable.class, propertyCount++);
 
     public OrmRelation2Many(OrmTable table, UjoProperty tableProperty) {
         
@@ -58,6 +61,12 @@ public class OrmRelation2Many extends AbstractMetaModel {
             NAME.setValue(this, column.name());
         }
         changeDefault(this, NAME, tableProperty.getName());
+    }
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
     }
 
     protected OrmRelation2Many() {
