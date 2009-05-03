@@ -50,7 +50,7 @@ public class OrmDatabase extends AbstractMetaModel {
     private static final boolean ADD_DB_MODEL = true;
 
 
-    /** OrmDatabase name */
+    /** OrmDatabase schema */
     @XmlAttribute
     public static final UjoProperty<OrmDatabase,String> NAME = newProperty("name", "");
     /** SQL renderer type of SqlRenderer. */
@@ -83,7 +83,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
         Db annotDB = database.getClass().getAnnotation(Db.class);
         if (annotDB!=null) {
-            NAME.setValue(this, annotDB.name());
+            NAME.setValue(this, annotDB.schema());
             RENDERER.setValue(this, annotDB.renderer());
             JDBC_URL.setValue(this, annotDB.jdbcUrl());
             USER.setValue(this, annotDB.user());
