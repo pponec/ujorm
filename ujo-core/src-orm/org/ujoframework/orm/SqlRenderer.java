@@ -86,12 +86,11 @@ abstract public class SqlRenderer {
 
     /** Print a SQL sript to create table */
     public void printFullName(final OrmTable table, final Appendable out) throws IOException {
-        final OrmDatabase db = OrmTable.DATABASE.of(table);
-        final String dbName  = OrmDatabase.SCHEMA.of(db);
+        final String tableSchema = OrmTable.SCHEMA.of(table);
         final String tableName = OrmTable.NAME.of(table);
 
-        if (isValid(dbName)) {
-            out.append(dbName);
+        if (isValid(tableSchema)) {
+            out.append(tableSchema);
             out.append('.');
         }
         out.append(tableName);

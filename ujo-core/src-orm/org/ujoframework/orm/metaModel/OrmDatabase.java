@@ -31,7 +31,6 @@ import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
@@ -51,27 +50,28 @@ public class OrmDatabase extends AbstractMetaModel {
     private static final Logger LOGGER = Logger.getLogger(OrmDatabase.class.toString());
     /** Add a DB relation into table models */
     private static final boolean ADD_DB_MODEL = true;
-
+    /** Property count */
+    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** OrmDatabase default schema */
     @XmlAttribute
-    public static final UjoProperty<OrmDatabase,String> SCHEMA = newProperty("schema", "");
+    public static final UjoProperty<OrmDatabase,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** SQL renderer type of SqlRenderer. */
-    public static final UjoProperty<OrmDatabase,Class> RENDERER = newProperty("renderer", Class.class);
+    public static final UjoProperty<OrmDatabase,Class> RENDERER = newProperty("renderer", Class.class, propertyCount++);
     /** List of tables */
-    public static final ListProperty<OrmDatabase,OrmTable> TABLES = newPropertyList("table", OrmTable.class);
+    public static final ListProperty<OrmDatabase,OrmTable> TABLES = newPropertyList("table", OrmTable.class, propertyCount++);
     /** JDBC URL connection */
-    public static final UjoProperty<OrmDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
+    public static final UjoProperty<OrmDatabase,String> JDBC_URL = newProperty("jdbcUrl", "", propertyCount++);
     /** DB user */
-    public static final UjoProperty<OrmDatabase,String> USER = newProperty("user", "");
+    public static final UjoProperty<OrmDatabase,String> USER = newProperty("user", "", propertyCount++);
     /** DB password */
     @Transient
-    public static final UjoProperty<OrmDatabase,String> PASSWORD = newProperty("password", "");
+    public static final UjoProperty<OrmDatabase,String> PASSWORD = newProperty("password", "", propertyCount++);
     /** DB class root instance */
     @Transient
-    public static final UjoProperty<OrmDatabase,TableUjo> ROOT = newProperty("root", TableUjo.class);
+    public static final UjoProperty<OrmDatabase,TableUjo> ROOT = newProperty("root", TableUjo.class, propertyCount++);
     /** LDPA */
-    public static final UjoProperty<OrmDatabase,String> LDAP = newProperty("ldap", "");
+    public static final UjoProperty<OrmDatabase,String> LDAP = newProperty("ldap", "", propertyCount++);
 
     // --------------------
 
@@ -120,6 +120,12 @@ public class OrmDatabase extends AbstractMetaModel {
         }
     }
 
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
+    }
 
     /** Returns a SQL renderer for the current database. */
     public SqlRenderer getRenderer() {

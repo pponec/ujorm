@@ -37,22 +37,25 @@ import org.ujoframework.orm.annot.GenerationType;
  */
 public class OrmColumn extends OrmRelation2Many {
 
+    /** Property count */
+    protected static int propertyCount = OrmRelation2Many.propertyCount;
+
     /** DB primary key */
-    public static final UjoProperty<OrmColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
+    public static final UjoProperty<OrmColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false, propertyCount++);
     /** Database Type */
-    public static final UjoProperty<OrmColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
+    public static final UjoProperty<OrmColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic, propertyCount++);
     /** Column NOT-NULL */
-    public static final UjoProperty<OrmColumn,Boolean> MANDATORY = newProperty("mandatory", false);
+    public static final UjoProperty<OrmColumn,Boolean> MANDATORY = newProperty("mandatory", false, propertyCount++);
     /** Column value length */
-    public static final UjoProperty<OrmColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
+    public static final UjoProperty<OrmColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1, propertyCount++);
     /** Column value precision */
-    public static final UjoProperty<OrmColumn,Integer> PRECISION = newProperty("precision", -1);
+    public static final UjoProperty<OrmColumn,Integer> PRECISION = newProperty("precision", -1, propertyCount++);
     /** DB Default value */
-    public static final UjoProperty<OrmColumn,String> DEFAULT_VALUE = newProperty("default", "");
+    public static final UjoProperty<OrmColumn,String> DEFAULT_VALUE = newProperty("default", "", propertyCount++);
     /** The column is included in the index of the name */
-    public static final UjoProperty<OrmColumn,String> INDEX_NAME = newProperty("indexName", "");
+    public static final UjoProperty<OrmColumn,String> INDEX_NAME = newProperty("indexName", "", propertyCount++);
     /** DB primary key generator */
-    public static final UjoProperty<OrmColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.DB_SEQUENCE);
+    public static final UjoProperty<OrmColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.DB_SEQUENCE, propertyCount++);
 
 
     /** Foreign column names. */
@@ -80,6 +83,12 @@ public class OrmColumn extends OrmRelation2Many {
         if (MAX_LENGTH.isDefault(this)) {
             OrmTable.DATABASE.of(table).changeDbLength(this);
         }
+    }
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
     }
 
     /** It is a DB column (either a value of a foreign key) */

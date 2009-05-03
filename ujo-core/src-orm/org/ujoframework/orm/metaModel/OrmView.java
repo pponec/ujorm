@@ -18,13 +18,15 @@ public class OrmView  extends AbstractMetaModel {
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(OrmView.class.toString());
+    /** Property count */
+    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    public static final UjoProperty<OrmView,String> SELECT = newProperty("SELECT "   , "");
-    public static final UjoProperty<OrmView,String> FROM   = newProperty(" FROM "    , "");
-    public static final UjoProperty<OrmView,String> WHERE  = newProperty(" WHERE "   , "");
-    public static final UjoProperty<OrmView,String> GROUP  = newProperty(" GROUP BY ", "");
-    public static final UjoProperty<OrmView,String> ORDER  = newProperty(" ORDER BY ", "");
-    public static final UjoProperty<OrmView,String> LIMIT  = newProperty(" LIMIT "   , "");
+    public static final UjoProperty<OrmView,String> SELECT = newProperty("SELECT "   , "", propertyCount++);
+    public static final UjoProperty<OrmView,String> FROM   = newProperty(" FROM "    , "", propertyCount++);
+    public static final UjoProperty<OrmView,String> WHERE  = newProperty(" WHERE "   , "", propertyCount++);
+    public static final UjoProperty<OrmView,String> GROUP  = newProperty(" GROUP BY ", "", propertyCount++);
+    public static final UjoProperty<OrmView,String> ORDER  = newProperty(" ORDER BY ", "", propertyCount++);
+    public static final UjoProperty<OrmView,String> LIMIT  = newProperty(" LIMIT "   , "", propertyCount++);
 
     public static String END_CHAR = ";";
 
@@ -37,6 +39,12 @@ public class OrmView  extends AbstractMetaModel {
      */
     public OrmView(String select) {
         parse(select);
+    }
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
     }
 
     /** Parse the SQL SELECT. */

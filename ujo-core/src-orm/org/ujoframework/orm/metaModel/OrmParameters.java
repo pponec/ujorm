@@ -29,12 +29,20 @@ import org.ujoframework.orm.ao.CachePolicy;
 public class OrmParameters extends AbstractMetaModel {
 
     public static final Logger LOGGER = Logger.getLogger(OrmParameters.class.getName());
+    /** Property count */
+    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** Enabnle / desable a session cache */
-    public static final UjoProperty<OrmParameters,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE);
+    public static final UjoProperty<OrmParameters,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE, propertyCount++);
     /** Is the enabled cache implemented by WeakHashMap? The false value implements an HashMap instance. Default value is TRUE. */
-    public static final UjoProperty<OrmParameters,Boolean> CACHE_WEAK = newProperty("cacheWeak", true);
+    public static final UjoProperty<OrmParameters,Boolean> CACHE_WEAK = newProperty("cacheWeak", true, propertyCount++);
 
+
+    /** Property Count */
+    @Override
+    public int readPropertyCount() {
+        return propertyCount;
+    }
 
     /** Is the cache enabled? */
     public boolean isCacheEnabled() {
