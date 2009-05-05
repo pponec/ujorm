@@ -25,6 +25,7 @@ import org.ujoframework.implementation.orm.TableUjo;
 /**
  * The column mapping to DB table ITEM (a sample of usage).
  * Note, that the Item object have got a reference to a Order object.
+ * @hidden
  * @Table=bo_item
  */
 public class Item extends TableUjo<Item> {

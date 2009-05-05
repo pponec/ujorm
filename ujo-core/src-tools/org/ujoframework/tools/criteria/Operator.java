@@ -51,7 +51,7 @@ public enum Operator implements AbstractOperator {
     /** Only for a CharSequence subtypes (include String) */
     CONTAINS_CASE_INSENSITIVE,
     /** Operator for an internal use only. The result is independent on a bean object */
-    €_FIXED,
+    XX_FIXED,
     ;
 
 

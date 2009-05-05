@@ -13,7 +13,7 @@ import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.core.UjoComparator;
 import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.tools.UjoCriteria;
+import org.ujoframework.tools.criteria.CriteriaTools;
 import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
 
 /**
@@ -69,7 +69,7 @@ public class ComparatorTest extends MyTestCase {
 
     
     public void testInit_01() {
-        UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
+        CriteriaTools<ExtPerson> uc  = CriteriaTools.newInstance();
         UjoComparator comp = UjoComparator.newInstance(NAME);
         List<ExtPerson> result = uc.select(persons, comp);
         
@@ -77,7 +77,7 @@ public class ComparatorTest extends MyTestCase {
     }
     
     public void testInit_02() {
-        UjoCriteria<ExtPerson> uc  = UjoCriteria.create();
+        CriteriaTools<ExtPerson> uc  = CriteriaTools.newInstance();
         UjoComparator comp = UjoComparator.newInstance(MOTHERS_NAME);
         List<ExtPerson> result = uc.select(persons, comp);
         

@@ -25,6 +25,7 @@ import org.ujoframework.orm.annot.View;
 
 /**
  * The column mapping to FROM view.
+ * @hidden
  */
 @View(select="SELECT count(*) AS itemCount, id, usrId FROM db1.bo_order GROUP BY id ORDER BY id")
 public class ViewOrder extends TableUjo<ViewOrder> {

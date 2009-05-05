@@ -89,7 +89,7 @@ public abstract class MapUjo extends AbstractUjo {
     
     /** A Property Factory, a default value is null.
      * Method assigns a next property index.
-     * @hidden     
+     * @hidden
      */
     protected static <UJO extends Ujo,VALUE> MapProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
         return new MapProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
@@ -97,7 +97,7 @@ public abstract class MapUjo extends AbstractUjo {
     
     /** A Property Factory
      * Method assigns a next property index.
-     * @hidden     
+     * @hidden
      */
     protected static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newProperty(String name, VALUE value) {
         return new MapProperty<UJO, VALUE>(name, value, _nextPropertyIndex());
@@ -105,7 +105,7 @@ public abstract class MapUjo extends AbstractUjo {
     
     /** A PropertyList Factory
      * Method assigns a next property index.
-     * @hidden     
+     * @hidden
      */
     protected static <UJO extends Ujo, ITEM> MapPropertyList<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
         return new MapPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex());

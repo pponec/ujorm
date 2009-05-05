@@ -15,14 +15,14 @@
  */   
    
 
-package org.ujoframework.tools;
+package org.ujoframework.tools.criteria;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.core.UjoComparator;
-import org.ujoframework.tools.criteria.*;
+
 
 /**
  * The Criteria class is a simple tool to search UJO objects in the list.
@@ -37,16 +37,15 @@ import org.ujoframework.tools.criteria.*;
  *
  * List&lt;Person&gt; persons = Arrays.asList(child, mother, father);
  *
- * UjoCriteria&lt;Person&gt; criteria = UjoCriteria.create();
- * Criterion&lt;Person&gt; exp = criteria.newExpr(NAME, <span class="character">&quot;</span><span class="character">John</span><span class="character">&quot;</span>);
+ * Criterion&lt;Person&gt; exp = Criterion.newInstance(NAME, <span class="character">&quot;</span><span class="character">John</span><span class="character">&quot;</span>);
  * UjoComparator&lt;Person&gt; sort = UjoComparator.create(HIGH, NAME);
- * List&lt;Person&gt; <strong style="color:blue;">result</strong> = criteria.select(persons, exp, sort);
+ * List&lt;Person&gt; <strong style="color:blue;">result</strong> = CriteriaTools.newInstance().select(persons, exp, sort);
 </pre>
  * 
  * @author Pavel Ponec
  * @since 0.81
  */
-public class UjoCriteria<UJO extends Ujo> {
+public class CriteriaTools<UJO extends Ujo> {
 
     /** Find the first UJO by an criterion or return NULL if any object was not found. */
     public UJO findFirst(List<UJO> list, Criterion<UJO> criterion) {
@@ -85,15 +84,11 @@ public class UjoCriteria<UJO extends Ujo> {
         return result;
     }
 
-//    /** Not implemented yet */
-//    public void sortBy(UjoComparator comparator) {
-//        this.comparator = comparator;
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
+    // ----------- STATIC -------------
 
-    // ===========================================================
-    
-    public static <UJO extends Ujo> UjoCriteria<UJO> create() {
-        return new UjoCriteria<UJO>();
+    /** Create a new instance */
+    public static <UJO extends Ujo> CriteriaTools<UJO> newInstance() {
+        return new CriteriaTools<UJO>();
     }
+
 }

@@ -52,41 +52,32 @@ import org.ujoframework.orm.Session;
  *  <span class="comment">&#47;** Using INSERT *&#47;</span>
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useCreateItem() {
  *
- *      Session session = OrmHandler.getInstance().getSession();
- *
  *      Order order = <span class="keyword-directive">new</span> Order();
  *      order.set(Order.DATE, <span class="keyword-directive">new</span> Date());
- *      order.set(Order.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
+ *      order.set(Order.DESCR, <span class="character">&quot;John's order&quot;</span>);
  *
  *      Item item = <span class="keyword-directive">new</span> Item();
  *      item.set(Item.ORDER, order);
- *      item.set(Item.DESCR, <span class="character">&quot;</span><span class="character">yellow table</span><span class="character">&quot;</span>);
+ *      item.set(Item.DESCR, <span class="character">&quot;Yellow table&quot;</span>);
  *
+ *      Session session = OrmHandler.getInstance().getSession();
  *      session.save(order);
  *      session.save(item);
- *
- *      <span class="keyword-directive">if</span> (<span class="keyword-directive">true</span>) {
- *         session.commit();
- *      } <span class="keyword-directive">else</span> {
- *         session.rollback();
- *      }
+ *      session.commit();
  *  }
  *
  *
  *  <span class="comment">&#47;** Using SELECT by QUERY *&#47;</span>
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelection() {
  *
- *      Session session = OrmHandler.getInstance().getSession();
- *
- *      Criterion&lt;Order&gt; crn1 = Criterion.newInstance(Order.DESCR, <span class="character">&quot;</span><span class="character">test order</span><span class="character">&quot;</span>);
+ *      Criterion&lt;Order&gt; crn1 = Criterion.newInstance(Order.DESCR, <span class="character">&quot;John's order&quot;</span>);
  *      Criterion&lt;Order&gt; crn2 = Criterion.newInstance(Order.DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
  *      Criterion&lt;Order&gt; crit = crn1.and(crn2);
  *
- *      Query&lt;Order&gt; query = session.createQuery(Order.<span class="keyword-directive">class</span>, crit);
- *      query.sizeRequired(<span class="keyword-directive">true</span>); <span class="comment">// need a count of iterator items, a default value is false</span>
- *      query.readOnly(<span class="keyword-directive">false</span>);
+ *      Session session = OrmHandler.getInstance().getSession();
+ *      UjoIterator&lt;Order&gt; orders = session.createQuery(crit).iterate();
  *
- *      <span class="keyword-directive">for</span> (Order order : session.iterate(query) ) {
+ *      <span class="keyword-directive">for</span> (Order order : orders ) {
  *          Long id = order.get(Order.ID);
  *          String descr = order.get(Order.DESCR);
  *          System.out.println(<span class="character">&quot;</span><span class="character">Order id: </span><span class="character">&quot;</span> + id + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + descr);
@@ -98,8 +89,8 @@ import org.ujoframework.orm.Session;
  *
  *      Session session = OrmHandler.getInstance().getSession();
  *      BoDatabase db = session.getDatabase();
- *
  *      UjoIterator&lt;Order&gt; orders = db.get(BoDatabase.ORDERS);
+ *
  *      <span class="keyword-directive">for</span> (Order order : orders) {
  *          Long id = order.get(Order.ID);
  *          String descr = order.get(Order.DESCR);
@@ -112,8 +103,6 @@ import org.ujoframework.orm.Session;
  *          }
  *      }
  *  }</pre>
- *
- * <strong>Note</strong>: the API desing a very early prototype, some methods are not implemented yet.
  *
  * @author Pavel Ponec
  * @see org.ujoframework.implementation.orm.RelationToMany
