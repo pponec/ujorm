@@ -52,10 +52,10 @@
            <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
            <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
            <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
-           <li>restricted cache is suitable for a large transactions and a selecting uncommited changes</li>
+           <li>restricted cache is suitable for a large transactions, because it does not cause any OutOfMemoryException</li>
            <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
         </ul>
-        <strong>Note</strong>: the current release is an early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements with no cache on the in-memory database table.
+        <strong>Note</strong>: the current release is an early BETA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements.
 
 
         <h3>A sample of use</h3>
