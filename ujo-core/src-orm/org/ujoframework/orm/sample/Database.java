@@ -24,6 +24,7 @@ import org.ujoframework.orm.renderers.H2Renderer;
 
 /**
  * An table mapping to a database (a sample of usage).
+ * @hidden
  */
 @Db(schema="db1", renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 public class Database extends TableUjo<Database> {

@@ -12,7 +12,7 @@ import java.util.List;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.tools.UjoCriteria;
+import org.ujoframework.tools.criteria.CriteriaTools;
 import org.ujoframework.tools.criteria.Criterion;
 import org.ujoframework.tools.criteria.BinaryOperator;
 import org.ujoframework.tools.criteria.Operator;
@@ -70,7 +70,7 @@ public class CriteriaWeakTest extends MyTestCase {
     
     @SuppressWarnings("unchecked")
     public void testInit_01() {
-        UjoCriteria uc  = UjoCriteria.create();
+        CriteriaTools uc  = CriteriaTools.newInstance();
         Criterion  ex1 = Criterion.newInstance(CASH, 10.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
@@ -79,7 +79,7 @@ public class CriteriaWeakTest extends MyTestCase {
     
     @SuppressWarnings("unchecked")
     public void testInit_02a() {
-        UjoCriteria uc  = UjoCriteria.create();
+        CriteriaTools uc  = CriteriaTools.newInstance();
         Criterion  ex1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(3, result.size());
@@ -88,7 +88,7 @@ public class CriteriaWeakTest extends MyTestCase {
 
     @SuppressWarnings("unchecked")
     public void testInit_02b() {
-        UjoCriteria uc  = UjoCriteria.create();
+        CriteriaTools uc  = CriteriaTools.newInstance();
         Criterion  ex1 = Criterion.newInstance(CASH, Operator.LT, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
@@ -98,7 +98,7 @@ public class CriteriaWeakTest extends MyTestCase {
     
     @SuppressWarnings("unchecked")
     public void testInit_03a() {
-        UjoCriteria uc  = UjoCriteria.create();
+        CriteriaTools uc  = CriteriaTools.newInstance();
         Criterion  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.GT, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(2, result.size());
@@ -106,7 +106,7 @@ public class CriteriaWeakTest extends MyTestCase {
     
     @SuppressWarnings("unchecked")
     public void testInit_03b() {
-        UjoCriteria uc  = UjoCriteria.create();
+        CriteriaTools uc  = CriteriaTools.newInstance();
         Criterion  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.EQ, 20.0);
         List<ExtPerson> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
@@ -115,7 +115,7 @@ public class CriteriaWeakTest extends MyTestCase {
     
     @SuppressWarnings("unchecked")
     public void testInit_04a() {
-        UjoCriteria uc  = UjoCriteria.create();
+        CriteriaTools uc  = CriteriaTools.newInstance();
         Criterion  ex1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
         Criterion  ex2 = Criterion.newInstance(CASH, Operator.LT, 30.0);
         Criterion  exp = ex1.join(BinaryOperator.AND, ex2);

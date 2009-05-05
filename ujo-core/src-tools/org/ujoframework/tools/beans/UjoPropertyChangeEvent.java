@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.beans;
+package org.ujoframework.tools.beans;
 
 import java.beans.PropertyChangeEvent;
 import org.ujoframework.UjoProperty;

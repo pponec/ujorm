@@ -39,7 +39,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     
     /** Creante an Criterion constant */
     public ValueCriterion(boolean value) {
-        this(null, Operator.€_FIXED, value);
+        this(null, Operator.XX_FIXED, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
@@ -216,7 +216,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     
     /** Is the criterion result independent on the bean object? */
     public final boolean isConstant() {
-        return operator==Operator.€_FIXED;
+        return operator==Operator.XX_FIXED;
     }
 
     @Override

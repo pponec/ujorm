@@ -6,8 +6,8 @@
 package org.ujoframework.implementation.registrar;
 
 import java.util.ArrayList;
-import org.ujoframework.beans.UjoPropertyChangeEvent;
-import org.ujoframework.beans.UjoPropertyChangeListener;
+import org.ujoframework.tools.beans.UjoPropertyChangeEvent;
+import org.ujoframework.tools.beans.UjoPropertyChangeListener;
 
 /**
  * Listener

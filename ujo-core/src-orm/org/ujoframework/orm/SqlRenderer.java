@@ -312,7 +312,7 @@ abstract public class SqlRenderer {
             case ENDS:
             case CONTAINS:
                 return "{0} LIKE {1}";
-            case €_FIXED:
+            case XX_FIXED:
                 return crit.evaluate(null)
                     ? "1=1"
                     : "1=0"

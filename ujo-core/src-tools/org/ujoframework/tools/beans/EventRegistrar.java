@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.beans;
+package org.ujoframework.tools.beans;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;

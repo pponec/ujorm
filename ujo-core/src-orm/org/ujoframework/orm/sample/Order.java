@@ -29,6 +29,7 @@ import org.ujoframework.orm.annot.Table;
 /**
  * The column mapping to DB table ORDER (a sample of usage).
  * Note, that the Order object has got an collection of Items.
+ * @hidden
  */
 @Table(name="bo_order")
 public class Order extends TableUjo<Order> {
