@@ -52,14 +52,14 @@
            <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
            <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
            <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
-           <li>internal object cache is based on the object WeakHashMap so that large transaction does not cause any OutOfMemoryException</li>
+           <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
            <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
         </ul>
         <strong>Note</strong>: the current release is an early BETA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements.
 
 
         <h3>A sample of use</h3>
-        See how to create database and INSERT an order with two items into database:
+        See how to create database and to how to INSERT an order with two items into database:
 
 <pre name="code" class="java">
   if (true) {
@@ -88,7 +88,7 @@
   session.commit();
 </pre>
 
-The next source code calls a SELECT by a UJO Criteria:
+The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
 <pre name="code" class="java">
   Criterion&lt;Order&gt; criter1 = Criterion.newInstance(Order.DESCR, "John's order");
   Criterion&lt;Order&gt; criter2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
@@ -127,6 +127,7 @@ The next source code calls a SELECT by an UJO object <strong>relation</strong>:
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description of a metamodel</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/ViewOrder.java?view=markup">View</a> - Use of a native SQL query</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using, the code is ready for immediate launch inside the project.</li>
               <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
               <li><a href="http://ujoframework.org/javadoc.beta/">JavaDoc</a> beta version</li>
