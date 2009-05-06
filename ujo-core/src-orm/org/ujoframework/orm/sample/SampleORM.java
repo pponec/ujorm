@@ -164,7 +164,7 @@ public class SampleORM {
         Criterion<Item> crit = Criterion.newInstance(Item.DESCR, Operator.NOT_EQ, "XXXXX");
         UjoIterator<Item> iterator = session.createQuery(crit).iterate();
         
-        boolean skip = iterator.skip(0);
+        boolean skip = iterator.skip(1);
         if (iterator.hasNext()) {
             Item item = iterator.next();
             System.out.println("Item : " + item);
