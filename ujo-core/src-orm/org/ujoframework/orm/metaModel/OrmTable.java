@@ -45,6 +45,7 @@ public class OrmTable extends AbstractMetaModel {
     @XmlAttribute
     public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "", propertyCount++);
     /** Name of table schema. */
+    @Transient
     public static final UjoProperty<OrmTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** Table Columns */
     public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class, propertyCount++);
