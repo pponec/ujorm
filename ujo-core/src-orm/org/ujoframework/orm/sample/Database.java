@@ -20,6 +20,7 @@ import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.orm.annot.View;
 import org.ujoframework.orm.renderers.H2Renderer;
 
 /**
@@ -30,14 +31,15 @@ import org.ujoframework.orm.renderers.H2Renderer;
 public class Database extends TableUjo<Database> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */
-    @Table(name="ord_order_new")
+    @Table(name="ord_order")
     public static final RelationToMany<Database,Order> ORDERS = newRelation("ord_order", Order.class);
 
     /** Items of the Customer order */
     public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation("ord_item", Item.class);
 
     /** View to aggregate data. */
-    public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation("bo_order", ViewOrder.class);
+    @View(name="ord_order")
+    public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation("view_order", ViewOrder.class);
 
 
 }

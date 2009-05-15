@@ -21,12 +21,12 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.orm.AbstractMetaModel;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.annot.Table;
+import org.ujoframework.orm.annot.View;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.OrmHandler;
-import org.ujoframework.orm.annot.View;
 
 
 /**
@@ -41,8 +41,10 @@ public class OrmTable extends AbstractMetaModel {
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    /** DB table name */
+    /** DB table id */
     @XmlAttribute
+    public static final UjoProperty<OrmTable,String> ID = newProperty("id", "", propertyCount++);
+    /** DB table name */
     public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "", propertyCount++);
     /** Name of table schema. */
     @Transient
@@ -71,10 +73,12 @@ public class OrmTable extends AbstractMetaModel {
 
     @SuppressWarnings("unchecked")
     public OrmTable(OrmDatabase database, RelationToMany dbProperty) {
+        ID.setValue(this, dbProperty.getName());
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
-        final Field field = UjoManager.getInstance().getPropertyField(database, dbProperty);
+        final Field field = UjoManager.getInstance().getPropertyField(OrmDatabase.ROOT.of(database), dbProperty);
+
         View view1 = field.getAnnotation(View.class);
         View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
         VIEW.setValue(this, view1!=null || view2!=null);

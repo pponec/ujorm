@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<body>
+    <database schema="db1">
+        <renderer>org.ujoframework.orm.renderers.H2Renderer</renderer>
+        <table id="ord_order">
+            <name>ord_order</name>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <mandatory>true</mandatory>
+            </column>
+            <column id="usrId">
+                <name>usrId</name>
+                <dbType>INT</dbType>
+                <maxLength>8</maxLength>
+            </column>
+            <column id="description">
+                <name>DESCR</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="date">
+                <name>date</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+            <relation2m id="items">
+                <name>items</name>
+            </relation2m>
+        </table>
+        <table id="ord_item">
+            <name>ord_item</name>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <mandatory>true</mandatory>
+            </column>
+            <column id="usrId">
+                <name>usrId</name>
+                <dbType>INT</dbType>
+                <maxLength>8</maxLength>
+            </column>
+            <column id="description">
+                <name>description</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="fk_order">
+                <name>fk_order</name>
+                <dbType>INT</dbType>
+            </column>
+        </table>
+        <table id="view_order">
+            <name>ord_order</name>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <mandatory>true</mandatory>
+            </column>
+            <column id="usrId">
+                <name>usrId</name>
+                <dbType>INT</dbType>
+                <maxLength>8</maxLength>
+            </column>
+            <column id="itemCount">
+                <name>itemCount</name>
+                <dbType>INT</dbType>
+                <maxLength>8</maxLength>
+            </column>
+            <view>true</view>
+            <select>SELECT id, usrId, count(*) AS itemCount FROM db1.ord_order GROUP BY id ORDER BY id</select>
+        </table>
+        <table id="db1">
+            <name>ord_order</name>
+            <relation2m id="ord_order">
+                <name>ord_order</name>
+            </relation2m>
+            <relation2m id="ord_item">
+                <name>ord_item</name>
+            </relation2m>
+            <relation2m id="view_order">
+                <name>view_order</name>
+            </relation2m>
+            <view>true</view>
+        </table>
+        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <user>sa</user>
+    </database>
+    <parameters></parameters>
+</body>
