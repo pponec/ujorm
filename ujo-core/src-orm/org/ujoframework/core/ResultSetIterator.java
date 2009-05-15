@@ -73,7 +73,7 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
             for (int i=0; i<colCount; i++) {
                 final OrmColumn column = query.getColumn(i);
                 Class type = column.getType();
-                Object value = view 
+                Object value = view
                     ? rs.getObject(OrmColumn.NAME.of(column))
                     : rs.getObject(i + 1)
                     ;

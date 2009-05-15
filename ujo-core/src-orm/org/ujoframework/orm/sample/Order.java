@@ -31,7 +31,7 @@ import org.ujoframework.orm.annot.Table;
  * Note, that the Order object has got an collection of Items.
  * @hidden
  */
-@Table(name="bo_order")
+@Table(name="ord_order")
 public class Order extends TableUjo<Order> {
 
     /** Unique key */

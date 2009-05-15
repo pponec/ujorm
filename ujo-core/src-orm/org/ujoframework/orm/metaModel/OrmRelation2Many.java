@@ -35,11 +35,13 @@ public class OrmRelation2Many extends AbstractMetaModel {
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
+    /** The database ID. */
+    @XmlAttribute
+    public static final UjoProperty<OrmRelation2Many,String> ID = newProperty("id", "", propertyCount++);
     /** The database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
-    @XmlAttribute
     public static final UjoProperty<OrmRelation2Many,String> NAME = newProperty("name", "", propertyCount++);
     /** Table property */
     @Transient
@@ -54,6 +56,7 @@ public class OrmRelation2Many extends AbstractMetaModel {
         Column column = field.getAnnotation(Column.class);
 
         if (true) {
+            ID.setValue(this, tableProperty.getName());
             TABLE.setValue(this, table);
             TABLE_PROPERTY.setValue(this, tableProperty);
         }
