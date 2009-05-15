@@ -20,7 +20,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * A AbstractProperty property implementation.
+ * An AbstractProperty property implementation.
  * @see AbstractUjo
  * @author Pavel Ponec
  */

@@ -94,7 +94,7 @@ public abstract class FieldUjo extends AbstractUjo {
     
     // --------- STATIC METHODS -------------------
     
-    /** A Property Factory, a default value is null.
+    /** Returns a new instance of property where the default value is null.
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newProperty
@@ -105,7 +105,7 @@ public abstract class FieldUjo extends AbstractUjo {
         return new FieldProperty<UJO,VALUE> (name, type, _nextPropertyIndex(), agent);
     }
     
-    /** A Property Factory
+    /** A Property Factory creates a new property and assigns a next property index.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> FieldProperty<UJO, VALUE> newProperty

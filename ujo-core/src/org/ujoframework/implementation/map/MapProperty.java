@@ -21,7 +21,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.AbstractProperty;
 
 /**
- * A Abstract property implementation.
+ * A MapUjo Property implementation.
  * @see MapUjo
  * @author Pavel Ponec
  */
@@ -67,7 +67,7 @@ public class MapProperty<UJO extends Ujo,VALUE>
 
     // --------- STATIC METHODS -------------------
 
-    /** A Property Factory, a default value is null.
+    /** Returns a new instance of property where the default value is null.
      * Method assigns a next property index.
      * @hidden
      */

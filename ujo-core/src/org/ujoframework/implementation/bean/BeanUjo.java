@@ -98,7 +98,7 @@ public abstract class BeanUjo extends AbstractUjo {
     
     // --------- STATIC METHODS -------------------
     
-    /** A Property Factory, a default value is null.
+    /** Returns a new instance of property where the default value is null.
      * Method assigns a next property index.
      * @hidden     
      */

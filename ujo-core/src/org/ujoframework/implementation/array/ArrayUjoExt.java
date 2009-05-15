@@ -102,7 +102,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
     
     // --------- STATIC METHODS -------------------
     
-    /** A Property Factory, a default value is null.
+    /** Returns a new instance of property where the default value is null.
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> ArrayProperty<UJO,VALUE> newProperty
@@ -113,7 +113,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
         return new ArrayProperty<UJO,VALUE> (name, type, index);
     }
 
-    /** A Property Factory. A property type is related from the default value.
+    /** Returns a new Property Factory. A property type is related from the default value.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> ArrayProperty<UJO, VALUE> newProperty
