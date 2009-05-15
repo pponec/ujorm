@@ -96,7 +96,7 @@ abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoEx
     
     // --------- STATIC METHODS -------------------
     
-    /** A Property Factory, a default value is null.
+    /** Returns a new instance of property where the default value is null.
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newProperty

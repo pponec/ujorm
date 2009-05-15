@@ -88,7 +88,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
     
     // --------- STATIC METHODS -------------------
     
-    /** A Property Factory
+    /** Returns a new instance of property where the default value is null.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {

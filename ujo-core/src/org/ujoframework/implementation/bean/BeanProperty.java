@@ -71,7 +71,7 @@ public class BeanProperty<UJO extends Ujo,VALUE>
 
     // --------- STATIC METHODS -------------------
 
-    /** A Property Factory, a default value is null.
+    /** Returns a new instance of property where the default value is null.
      * Method assigns a next property index.
      * @hidden
      */
@@ -79,8 +79,7 @@ public class BeanProperty<UJO extends Ujo,VALUE>
         return new BeanProperty<UJO,VALUE> (name, type, index);
     }
 
-    /** A Property Factory
-     * Method assigns a next property index.
+    /** A Property Factory creates new property and assigns a next property index.
      * @hidden
      */
     public static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
