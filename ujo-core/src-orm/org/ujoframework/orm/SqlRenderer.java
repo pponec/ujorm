@@ -75,7 +75,7 @@ abstract public class SqlRenderer {
         return out;
     }
 
-    /** Print SQL 'SET SCHEMA' */
+    /** Print SQL 'SET SCHEMA'. The method is not used yet. */
     @Deprecated
     public Appendable printDefaultSchema(String schema, Appendable out) throws IOException {
         out.append("SET SCHEMA ");
@@ -136,7 +136,7 @@ abstract public class SqlRenderer {
         return out;
     }
 
-    /** Print foreign key for  */
+    /** Print foreign key for the parameter column */
     public Appendable printForeignKey(OrmColumn column, OrmTable table, Appendable out) throws IOException {
         final UjoProperty property = column.getProperty();
         final OrmTable foreignTable = ormHandler.findTableModel(property.getType());
@@ -146,20 +146,18 @@ abstract public class SqlRenderer {
         printFullName(table, out);
         out.append("\n\tADD FOREIGN KEY");
 
-        String separator = "(";
         List<OrmColumn> columns = OrmPKey.COLUMNS.of(foreignKeys);
         int columnsSize = columns.size();
 
-        for (int i = 0; i < columnsSize; ++i) {
-            out.append(separator);
-            separator = ", ";
+        for (int i=0; i<columnsSize; ++i) {
+            out.append(i==0 ? "(" : ", ");
             final String name = column.getForeignColumnName(i);
             out.append(name);
         }
 
         out.append(")\n\tREFERENCES ");
         printFullName(foreignTable, out);
-        separator = "(";
+        String separator = "(";
 
         for (OrmColumn fkColumn : OrmPKey.COLUMNS.of(foreignKeys)) {
             out.append(separator);
@@ -184,7 +182,6 @@ abstract public class SqlRenderer {
         if (name == null) {
             name = OrmColumn.NAME.of(column);
         }
-
         out.append(name);
         out.append(' ');
         out.append(OrmColumn.DB_TYPE.of(column).name());
@@ -209,12 +206,10 @@ abstract public class SqlRenderer {
     public Appendable printFKColumnsDeclaration(OrmColumn column, Appendable out) throws IOException {
 
         List<OrmColumn> columns = column.getForeignColumns();
-        String separator = "";
 
-        for (int i = 0; i < columns.size(); ++i) {
+        for (int i=0; i<columns.size(); ++i) {
             OrmColumn col = columns.get(i);
-            out.append(separator);
-            separator = "\n\t, ";
+            out.append(i==0 ? "" : "\n\t, ");
             String name = column.getForeignColumnName(i);
             printColumnDeclaration(col, name, out);
         }
@@ -257,11 +252,8 @@ abstract public class SqlRenderer {
             if (ormColumn.isPrimaryKey()) {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
-            if (i>0) {
-                out.append(", ");
-            }
+            out.append(i==0 ? "" :  ", ");
             printFullName(ormColumn, out);
-
             out.append("=? ");
         }
         out.append("\n\tWHERE ");
@@ -312,7 +304,7 @@ abstract public class SqlRenderer {
             case ENDS:
             case CONTAINS:
                 return "{0} LIKE {1}";
-            case XX_FIXED:
+            case X_FIXED:
                 return crit.evaluate(null)
                     ? "1=1"
                     : "1=0"
@@ -324,7 +316,13 @@ abstract public class SqlRenderer {
         }
     }
 
-    /** Print table columns */
+    /**
+     * Print table columns
+     * @param columns List of tablel columns
+     * @param values An output in case a value rendereing for INSERT example.
+     * @param out Table columns output.
+     * @throws java.io.IOException
+     */
     public void printTableColumns(List<OrmColumn> columns, Appendable values, Appendable out) throws IOException {
         String separator = "";
         boolean select = values==null;
