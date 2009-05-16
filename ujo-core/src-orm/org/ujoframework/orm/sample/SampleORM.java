@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.sample;
 
+import java.net.URL;
 import java.util.Date;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.Session;
@@ -33,6 +34,7 @@ public class SampleORM {
     /** Create database and using INSERT */
     public void useInsert() {
 
+        OrmHandler.getInstance().config(getClass().getResource("/org/ujoframework/orm/sample/config.xml"), true);
         if (true) {
             OrmHandler.getInstance().createDatabase(Database.class);
         } else {

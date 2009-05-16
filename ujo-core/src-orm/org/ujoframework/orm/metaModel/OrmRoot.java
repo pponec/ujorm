@@ -40,11 +40,9 @@ public class OrmRoot extends AbstractMetaModel {
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-
     /** List of tables */
     public static final ListProperty<OrmRoot,OrmDatabase> DATABASES = newPropertyList("database", OrmDatabase.class, propertyCount++);
     /** ORM parameters */
-    @Transient
     public static final UjoProperty<OrmRoot,OrmParameters> PARAMETERS = newProperty("parameters", OrmParameters.class, propertyCount++);
 
     public OrmRoot() {

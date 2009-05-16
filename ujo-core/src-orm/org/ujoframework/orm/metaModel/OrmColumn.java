@@ -63,6 +63,9 @@ public class OrmColumn extends OrmRelation2Many {
     private static final String[] EMPTY_NAMES = new String[0];
 
 
+    public OrmColumn() {
+    }
+
     public OrmColumn(OrmTable table, UjoProperty tableProperty) {
         super(table, tableProperty);
 
