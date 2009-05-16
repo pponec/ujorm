@@ -52,7 +52,7 @@
                 <dbType>INT</dbType>
             </column>
         </table>
-        <table id="view_order">
+        <table id="view_order" view="true">
             <name>ord_order</name>
             <column id="id">
                 <name>id</name>
@@ -70,10 +70,9 @@
                 <dbType>INT</dbType>
                 <maxLength>8</maxLength>
             </column>
-            <view>true</view>
             <select>SELECT id, usrId, count(*) AS itemCount FROM db1.ord_order GROUP BY id ORDER BY id</select>
         </table>
-        <table id="db1">
+        <table id="db1" view="true">
             <name>ord_order</name>
             <relation2m id="ord_order">
                 <name>ord_order</name>
@@ -84,10 +83,8 @@
             <relation2m id="view_order">
                 <name>view_order</name>
             </relation2m>
-            <view>true</view>
         </table>
         <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
         <user>sa</user>
     </database>
-    <parameters></parameters>
 </body>

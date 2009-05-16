@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManagerXML;
+import org.ujoframework.core.annot.Transient;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
 
@@ -42,8 +43,8 @@ public class OrmRoot extends AbstractMetaModel {
 
     /** List of tables */
     public static final ListProperty<OrmRoot,OrmDatabase> DATABASES = newPropertyList("database", OrmDatabase.class, propertyCount++);
-
     /** ORM parameters */
+    @Transient
     public static final UjoProperty<OrmRoot,OrmParameters> PARAMETERS = newProperty("parameters", OrmParameters.class, propertyCount++);
 
     public OrmRoot() {

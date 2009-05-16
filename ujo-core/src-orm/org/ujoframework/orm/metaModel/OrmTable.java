@@ -54,6 +54,7 @@ public class OrmTable extends AbstractMetaModel {
     /** Table relations to many */
     public static final ListProperty<OrmTable,OrmRelation2Many> RELATIONS = newPropertyList("relation2m", OrmRelation2Many.class, propertyCount++);
     /** Is it a model of a database view ? */
+    @XmlAttribute
     public static final UjoProperty<OrmTable,Boolean> VIEW = newProperty("view", false, propertyCount++);
     /** SQL SELECT statement */
     public static final UjoProperty<OrmTable,String> SELECT = newProperty("select", "", propertyCount++);
