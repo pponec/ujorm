@@ -16,12 +16,16 @@
 
 package org.ujoframework.orm;
 
+import java.io.BufferedInputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
+import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmRoot;
@@ -42,7 +46,10 @@ public class OrmHandler {
 
     private static OrmHandler handler = new OrmHandler();
 
+    /** List of databases */
     private OrmRoot databases = new OrmRoot();
+    /** Temporary configuration */
+    private OrmRoot configuration = null;
     private Session session = new Session(this);
 
     /** Map a property to a database column model */
@@ -65,6 +72,38 @@ public class OrmHandler {
         return session;
     }
 
+    /** Load parameters from an external XML file.
+     * The initialization must be finished before an ORM definition loading.
+     */
+    public boolean config(String url) throws IllegalArgumentException {
+        try {
+            return config(new URL(url), true);
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Configuration file is not valid " + url , e);
+        }
+    }
+
+    /** Load parameters from an external XML file.
+     * The initialization must be finished before an ORM definition loading.
+     */
+    public boolean config(URL url, boolean throwsException) throws IllegalArgumentException {
+        try {
+            configuration = UjoManagerXML.getInstance().parseXML
+            ( new BufferedInputStream(url.openStream())
+            , OrmRoot.class
+            , this
+            );
+            return true;
+
+        } catch (Exception e) {
+            if (throwsException) {
+            throw new IllegalArgumentException("Configuration file is not valid ", e);
+            } else {
+               return false;
+            }
+        }
+    }
+
     /** Is the parameter a persistent property? */
     public boolean isPersistent(UjoProperty property) {
         
@@ -79,6 +118,8 @@ public class OrmHandler {
     public <UJO extends TableUjo> OrmDatabase loadDatabase(Class<? extends UJO> databaseModel) {
         UJO model = getInstance(databaseModel);
         OrmDatabase dbModel  = new OrmDatabase(this, model);
+        // TODO: load a config parameters ....
+
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {

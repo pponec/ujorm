@@ -79,6 +79,9 @@ public class OrmDatabase extends AbstractMetaModel {
     private SqlRenderer renderer;
     private UjoSequencer sequencer;
 
+    public OrmDatabase() {
+    }
+
     public OrmDatabase(OrmHandler ormHandler, TableUjo database) {
         this.ormHandler = ormHandler;
         sequencer = new UjoSequencer(this);

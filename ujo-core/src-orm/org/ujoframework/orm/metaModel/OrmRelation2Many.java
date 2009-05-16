@@ -50,6 +50,9 @@ public class OrmRelation2Many extends AbstractMetaModel {
     @Transient
     public static final UjoProperty<OrmRelation2Many,OrmTable> TABLE = newProperty("table", OrmTable.class, propertyCount++);
 
+    public OrmRelation2Many() {
+    }
+    
     public OrmRelation2Many(OrmTable table, UjoProperty tableProperty) {
         
         Field field = UjoManager.getInstance().getPropertyField(OrmTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
@@ -70,9 +73,6 @@ public class OrmRelation2Many extends AbstractMetaModel {
     @Override
     public int readPropertyCount() {
         return propertyCount;
-    }
-
-    protected OrmRelation2Many() {
     }
 
     /** It is a DB column */

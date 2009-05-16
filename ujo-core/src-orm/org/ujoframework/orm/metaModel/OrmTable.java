@@ -71,6 +71,9 @@ public class OrmTable extends AbstractMetaModel {
     @Transient
     public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class, propertyCount++);
 
+    /** No parameter constructor. */
+    public OrmTable() {
+    }
 
     @SuppressWarnings("unchecked")
     public OrmTable(OrmDatabase database, RelationToMany dbProperty) {
