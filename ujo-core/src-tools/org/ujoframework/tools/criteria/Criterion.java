@@ -119,12 +119,12 @@ public abstract class Criterion<UJO extends Ujo> {
 
     /** This is a constant criterion independed on the property and the ujo entity. A result is the TRUE allways. */
     public static <UJO extends Ujo> Criterion<UJO> newInstanceTrue(UjoProperty<UJO,?> property) {
-        return new ValueCriterion<UJO>(property, Operator.XX_FIXED, true);
+        return new ValueCriterion<UJO>(property, Operator.X_FIXED, true);
     }
 
     /** This is a constant criterion independed on the property and the ujo entity. A result is the FALSE allways. */
     public static <UJO extends Ujo> Criterion<UJO> newInstanceFalse(UjoProperty<UJO,?> property) {
-        return new ValueCriterion<UJO>(property, Operator.XX_FIXED, false);
+        return new ValueCriterion<UJO>(property, Operator.X_FIXED, false);
     }
 
     /** Is a Binary criterion? */
