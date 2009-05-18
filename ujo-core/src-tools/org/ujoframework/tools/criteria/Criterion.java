@@ -22,8 +22,8 @@ import org.ujoframework.UjoProperty;
 /**
  * An abstract criterion provides a basic interface and static factory methods. You can use it:
  * <ul>
- *    <li>like a generic UJO object validator (1)</li>
- *    <li>to create a query on the UJO list (2)</li>
+ *    <li>like a generic UJO object validator (2)</li>
+ *    <li>to create a query on the UJO list (1)</li>
  * </ul>
  *
  * There is allowed to join two instances (based on the same BO) to a binary tree by a new Criterion.
