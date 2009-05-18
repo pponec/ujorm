@@ -82,34 +82,39 @@ public class OrmDatabase extends AbstractMetaModel {
     public OrmDatabase() {
     }
 
-    public OrmDatabase(OrmHandler ormHandler, TableUjo database) {
+    public OrmDatabase(OrmHandler ormHandler, TableUjo database, OrmDatabase param) {
         this.ormHandler = ormHandler;
         sequencer = new UjoSequencer(this);
         ROOT.setValue(this, database);
 
-        Db annotDB = database.getClass().getAnnotation(Db.class);
-        if (annotDB!=null) {
-            SCHEMA.setValue(this, annotDB.schema());
-            RENDERER.setValue(this, annotDB.renderer());
-            JDBC_URL.setValue(this, annotDB.jdbcUrl());
-            USER.setValue(this, annotDB.user());
-            PASSWORD.setValue(this, annotDB.password());
-            LDAP.setValue(this, annotDB.ldap());
-        }
-        if (SCHEMA.isDefault(this)) {
-            SCHEMA.setValue(this, database.getClass().getSimpleName());
-        }
-        if (JDBC_URL.isDefault(this)) {
-            JDBC_URL.setValue(this, getRenderer().getJdbcUrl());
+        if (param!=null) {
+            changeDefault(this, SCHEMA  , SCHEMA.of(param));
+            changeDefault(this, RENDERER, RENDERER.of(param));
+            changeDefault(this, JDBC_URL, JDBC_URL.of(param));
+            changeDefault(this, USER    , USER.of(param));
+            changeDefault(this, PASSWORD, PASSWORD.of(param));
+            changeDefault(this, LDAP    , LDAP.of(param));
         }
 
+        Db annotDB = database.getClass().getAnnotation(Db.class);
+        if (annotDB!=null) {
+            changeDefault(this, SCHEMA  , annotDB.schema());
+            changeDefault(this, RENDERER, annotDB.renderer());
+            changeDefault(this, JDBC_URL, annotDB.jdbcUrl());
+            changeDefault(this, USER    , annotDB.user());
+            changeDefault(this, PASSWORD, annotDB.password());
+            changeDefault(this, LDAP    , annotDB.ldap());
+        }
+
+        changeDefault(this, SCHEMA  , database.getClass().getSimpleName());
+        changeDefault(this, JDBC_URL, getRenderer().getJdbcUrl());
 
         for (UjoProperty tableProperty : database.readProperties()) {
 
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;
-
-                OrmTable table = new OrmTable(this, tProperty);
+                OrmTable par   = param.findTable(tProperty.getName());
+                OrmTable table = new OrmTable(this, tProperty, par);
                 TABLES.addItem(this, table);
             }
         }
@@ -117,7 +122,7 @@ public class OrmDatabase extends AbstractMetaModel {
             // Add database relations:
             @SuppressWarnings("unchecked")
             RelationToMany relation = new RelationToMany(SCHEMA.of(this), database.getClass());
-            OrmTable table = new OrmTable(this, relation);
+            OrmTable table = new OrmTable(this, relation, null);
             table.setNotPersistent();
             TABLES.addItem(this, table);
         }
@@ -394,5 +399,18 @@ public class OrmDatabase extends AbstractMetaModel {
             }
         }
         return result;
+    }
+
+    /** Finds the first table by ID or returns null.
+     * The method is for internal use only.
+     */
+    OrmTable findTable(String id) {
+
+        if (isValid(id)) for (OrmTable table : TABLES.getList(this)) {
+            if (OrmTable.ID.equals(table, id)) {
+                return table;
+            }
+        }
+        return null;
     }
 }

@@ -53,7 +53,7 @@ public class OrmRelation2Many extends AbstractMetaModel {
     public OrmRelation2Many() {
     }
     
-    public OrmRelation2Many(OrmTable table, UjoProperty tableProperty) {
+    public OrmRelation2Many(OrmTable table, UjoProperty tableProperty, OrmRelation2Many param) {
         
         Field field = UjoManager.getInstance().getPropertyField(OrmTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
@@ -62,6 +62,9 @@ public class OrmRelation2Many extends AbstractMetaModel {
             ID.setValue(this, tableProperty.getName());
             TABLE.setValue(this, table);
             TABLE_PROPERTY.setValue(this, tableProperty);
+        }
+        if (param!=null) {
+            changeDefault(this, NAME, NAME.of(param));
         }
         if (column!=null) {
             NAME.setValue(this, column.name());
