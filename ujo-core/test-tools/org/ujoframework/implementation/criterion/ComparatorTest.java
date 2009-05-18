@@ -5,7 +5,7 @@
  * Created on 3. June 2007, 23:00
  */
 
-package org.ujoframework.implementation.ujoExtension;
+package org.ujoframework.implementation.criterion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.core.UjoComparator;
 import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.tools.criteria.CriteriaTools;
-import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
+import org.ujoframework.tools.criteria.CriteriaTool;
+import static org.ujoframework.implementation.criterion.Person.*;
 
 /**
  * Criteria test
@@ -22,11 +22,11 @@ import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
  */
 public class ComparatorTest extends MyTestCase {
     
-    PathProperty<ExtPerson,Double> MOTHERS_CASH  = PathProperty.newInstance(MOTHER, CASH);
-    PathProperty<ExtPerson,String> MOTHERS_NAME  = PathProperty.newInstance(MOTHER, NAME);
-    PathProperty<ExtPerson,Double> GMOTHERS_CASH = PathProperty.newInstance(MOTHER, MOTHER, CASH);
+    PathProperty<Person,Double> MOTHERS_CASH  = PathProperty.newInstance(MOTHER, CASH);
+    PathProperty<Person,String> MOTHERS_NAME  = PathProperty.newInstance(MOTHER, NAME);
+    PathProperty<Person,Double> GMOTHERS_CASH = PathProperty.newInstance(MOTHER, MOTHER, CASH);
     
-    private List<ExtPerson> persons;
+    private List<Person> persons;
     
     public ComparatorTest(String testName) {
         super(testName);
@@ -37,8 +37,8 @@ public class ComparatorTest extends MyTestCase {
         return suite;
     }
     
-    private ExtPerson newPerson(String name, Double cash) {
-        ExtPerson result = new ExtPerson();
+    private Person newPerson(String name, Double cash) {
+        Person result = new Person();
         result.set(NAME, name);
         result.set(CASH, cash);
         
@@ -48,12 +48,12 @@ public class ComparatorTest extends MyTestCase {
     
     @Override
     protected void setUp() throws Exception {
-        persons = new ArrayList<ExtPerson>();
+        persons = new ArrayList<Person>();
         
-        ExtPerson p = newPerson("John" , 10.0);
-        ExtPerson m = newPerson("Marry", 20.0);
-        ExtPerson g = newPerson("Julia", 30.0);
-        ExtPerson e = newPerson("Eva"  , 40.0);
+        Person p = newPerson("John" , 10.0);
+        Person m = newPerson("Marry", 20.0);
+        Person g = newPerson("Julia", 30.0);
+        Person e = newPerson("Eva"  , 40.0);
         
         p.set(MOTHER, m);
         m.set(MOTHER, g);
@@ -69,17 +69,17 @@ public class ComparatorTest extends MyTestCase {
 
     
     public void testInit_01() {
-        CriteriaTools<ExtPerson> uc  = CriteriaTools.newInstance();
+        CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         UjoComparator comp = UjoComparator.newInstance(NAME);
-        List<ExtPerson> result = uc.select(persons, comp);
+        List<Person> result = uc.select(persons, comp);
         
         assertEquals("Eva", result.get(0).get(NAME) );
     }
     
     public void testInit_02() {
-        CriteriaTools<ExtPerson> uc  = CriteriaTools.newInstance();
+        CriteriaTool<Person> uc  = CriteriaTool.newInstance();
         UjoComparator comp = UjoComparator.newInstance(MOTHERS_NAME);
-        List<ExtPerson> result = uc.select(persons, comp);
+        List<Person> result = uc.select(persons, comp);
         
         assertEquals("Eva", result.get(0).get(MOTHERS_NAME) );
     }

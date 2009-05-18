@@ -20,8 +20,35 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * An abstraction criterion provides an factory methods.
+ * An abstract criterion provides a basic interface and static factory methods. You can use it:
+ * <ul>
+ *    <li>like a generic UJO object validator (1)</li>
+ *    <li>to create a query on the UJO list (2)</li>
+ * </ul>
+ *
+ * There is allowed to join two instances (based on the same BO) to a binary tree by a new Criterion.
+ * Some common operators (and, or, not) are implemeted into a special join method of the Criteron class.
+ *
+ * <h3>Example of use</h3>
+ * <pre class="pre"><span class="comment">// Make a criterion:</span>
+ * Criterion&lt;Person&gt; crn1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
+ * Criterion&lt;Person&gt; crn2 = Criterion.newInstance(CASH, Operator.LE, 20.0);
+ * Criterion&lt;Person&gt; criterion = crn1.and(crn2);
+ *
+ * <span class="comment">// Use a criterion (1):</span>
+ * CriteriaTool&lt;Person&gt; ct = CriteriaTool.newInstance();
+ * List&lt;Person&gt; result = ct.select(persons, criterion);
+ * assertEquals(1, result.size());
+ * assertEquals(20.0, CASH.of(result.get(0)));
+ *
+ * <span class="comment">// Use a criterion (2):</span>
+ * Person person = result.get(0);
+ * <span class="keyword-directive">boolean</span> validation = criterion.evaluate(person);
+ * assertTrue(validation);
+ * </pre>
+ *
  * @author Pavel Ponec
+ * @composed 1 - 1 AbstractOperator
  */
 public abstract class Criterion<UJO extends Ujo> {
     
@@ -56,12 +83,12 @@ public abstract class Criterion<UJO extends Ujo> {
      * New criterion instance
      * @param property UjoProperty
      * @param operator Operator
-     * @param value Value or UjoProperty can be type of
+     * @param value Value or UjoProperty can be one type of
      * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>List&lt;TYPE&gt; - list of values</li>
+     * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
-     * <li>THE SAME property - the value will be assigned using the property later</li>
+     * <li>List&lt;TYPE&gt; - list of values (TODO)</li>
+     * <li>THE SAME property - the value will be assigned using the property later (TODO)</li>
      * </ul>
      * @return A new criterion
      */
