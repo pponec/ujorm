@@ -20,7 +20,7 @@ package org.ujoframework.tools.criteria;
 import org.ujoframework.Ujo;
 
 /**
- *
+ * The BinaryCriterion class allows to join two another Criterions into the binary tree.
  * @author Pavel Ponec
  */
 public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
