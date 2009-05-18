@@ -76,7 +76,7 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     @SuppressWarnings("unchecked")
-    public OrmTable(OrmDatabase database, RelationToMany dbProperty) {
+    public OrmTable(OrmDatabase database, RelationToMany dbProperty, OrmTable parTable) {
         ID.setValue(this, dbProperty.getName());
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
@@ -86,6 +86,13 @@ public class OrmTable extends AbstractMetaModel {
         View view1 = field.getAnnotation(View.class);
         View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
         VIEW.setValue(this, view1!=null || view2!=null);
+
+        if (parTable!=null) {
+            changeDefault(this, NAME  , NAME.of(parTable));
+            changeDefault(this, SCHEMA, SCHEMA.of(parTable));
+            changeDefault(this, SELECT, SELECT.of(parTable));
+            changeDefault(this, VIEW  , VIEW.of(parTable));
+        }
 
         if (VIEW.of(this)) {
             if (view1!=null) changeDefault(this, NAME  , view1.name());
@@ -121,12 +128,14 @@ public class OrmTable extends AbstractMetaModel {
             if (!ujoManager.isTransientProperty(property)) {
 
                 if (property instanceof RelationToMany) {
-                    OrmRelation2Many column = new OrmRelation2Many(this, property);
+                    OrmRelation2Many param = parTable!=null ? parTable.findRelation(property.getName()) : null;
+                    OrmRelation2Many column = new OrmRelation2Many(this, property, param);
                     RELATIONS.addItem(this, column);
                     dbHandler.addProperty(property, column);
 
                 } else {
-                    OrmColumn column = new OrmColumn(this, property);
+                    OrmColumn param  = parTable!=null ? parTable.findColumn(property.getName()) : null;
+                    OrmColumn column = new OrmColumn(this, property, param);
                     COLUMNS.addItem(this, column);
                     dbHandler.addProperty(property, column);
 
@@ -201,5 +210,26 @@ public class OrmTable extends AbstractMetaModel {
         return this==obj;
     }
 
+    /** Finds the first column by ID or returns null. The method is for internal use only. */
+    OrmColumn findColumn(String id) {
+
+        if (isValid(id)) for (OrmColumn column : COLUMNS.of(this)) {
+            if (OrmColumn.ID.equals(column, id)) {
+                return column;
+            }
+        }
+        return null;
+    }
+
+    /** Finds the first relation by ID or returns null. The method is for internal use only. */
+    OrmRelation2Many findRelation(String id) {
+
+        if (isValid(id)) for (OrmRelation2Many relation : RELATIONS.of(this)) {
+            if (OrmRelation2Many.ID.equals(relation, id)) {
+                return relation;
+            }
+        }
+        return null;
+    }
 
 }

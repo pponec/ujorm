@@ -30,6 +30,7 @@ import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmRoot;
 import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmParameters;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
@@ -93,11 +94,18 @@ public class OrmHandler {
             , OrmRoot.class
             , this
             );
+
+            // Assign parameters:
+            OrmParameters params = OrmRoot.PARAMETERS.of(configuration);
+            if (params!=null) {
+                OrmRoot.PARAMETERS.setValue(databases, params);
+            }
+
             return true;
 
         } catch (Exception e) {
             if (throwsException) {
-            throw new IllegalArgumentException("Configuration file is not valid ", e);
+               throw new IllegalArgumentException("Configuration file is not valid ", e);
             } else {
                return false;
             }
@@ -116,10 +124,15 @@ public class OrmHandler {
 
     /** LoadInternal a database model from paramater */
     public <UJO extends TableUjo> OrmDatabase loadDatabase(Class<? extends UJO> databaseModel) {
-        UJO model = getInstance(databaseModel);
-        OrmDatabase dbModel  = new OrmDatabase(this, model);
-        // TODO: load a config parameters ....
 
+        // Load a configuration parameters:
+        Db annotDb = databaseModel.getAnnotation(Db.class);
+        String schemaDb = annotDb!=null ? annotDb.schema() : null;
+        OrmDatabase paramDb = configuration.removeDb(schemaDb);
+
+        // Create the ORM DB model:
+        UJO model = getInstance(databaseModel);
+        OrmDatabase dbModel  = new OrmDatabase(this, model, paramDb);
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {

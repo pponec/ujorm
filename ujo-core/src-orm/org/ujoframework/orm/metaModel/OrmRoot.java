@@ -23,7 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.core.annot.Transient;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
 
@@ -94,6 +93,23 @@ public class OrmRoot extends AbstractMetaModel {
     public void print(Writer writer) throws IOException {
         final String defaultXmlHeader = null;
         UjoManagerXML.getInstance().saveXML(writer, this, defaultXmlHeader, getClass());
+    }
+
+    /** Returns the first database with the same schemaName - and remove it from the list.
+     * The method is for internal use only.
+     * @param schemaName The identifier for looking the database
+     */
+    public OrmDatabase removeDb(String schemaName) {
+        if (super.readOnly()) {
+            throw new UnsupportedOperationException("The internal state is 'read only'");
+        }
+        if (isValid(schemaName)) for (OrmDatabase db : DATABASES.getList(this)) {
+            if (OrmDatabase.SCHEMA.equals(db, schemaName)) {
+                DATABASES.getList(this).remove(db);
+                return db;
+            }
+        }
+        return null;
     }
 
 }

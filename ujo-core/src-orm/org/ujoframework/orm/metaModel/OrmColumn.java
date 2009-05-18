@@ -66,20 +66,29 @@ public class OrmColumn extends OrmRelation2Many {
     public OrmColumn() {
     }
 
-    public OrmColumn(OrmTable table, UjoProperty tableProperty) {
-        super(table, tableProperty);
+    public OrmColumn(OrmTable table, UjoProperty tableProperty, OrmColumn param) {
+        super(table, tableProperty, param);
 
         Field field = UjoManager.getInstance().getPropertyField(OrmTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
-        if (column!=null) {
-            PRIMARY_KEY.setValue(this, column.pk());
-            MANDATORY  .setValue(this, column.mandatory() || column.pk());
-            MAX_LENGTH .setValue(this, column.maxLenght());
-            PRECISION  .setValue(this, column.precision());
-            DB_TYPE    .setValue(this, column.type());
-            INDEX_NAME .setValue(this, column.indexName());
+        if (param!=null) {
+            changeDefault(this, PRIMARY_KEY, PRIMARY_KEY.of(param));
+            changeDefault(this, MANDATORY  , MANDATORY.of(param) || PRIMARY_KEY.of(param));
+            changeDefault(this, MAX_LENGTH , MAX_LENGTH.of(param));
+            changeDefault(this, PRECISION  , PRECISION.of(param));
+            changeDefault(this, DB_TYPE    , DB_TYPE.of(param));
+            changeDefault(this, INDEX_NAME , INDEX_NAME.of(param));
         }
+        if (column!=null) {
+            changeDefault(this, PRIMARY_KEY, column.pk());
+            changeDefault(this, MANDATORY  , column.mandatory() || column.pk());
+            changeDefault(this, MAX_LENGTH , column.maxLenght());
+            changeDefault(this, PRECISION  , column.precision());
+            changeDefault(this, DB_TYPE    , column.type());
+            changeDefault(this, INDEX_NAME , column.indexName());
+        }
+
         if (DB_TYPE.isDefault(this)) {
             OrmTable.DATABASE.of(table).changeDbType(this);
         }

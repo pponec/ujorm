@@ -16,7 +16,6 @@
 
 package org.ujoframework.orm.sample;
 
-import java.net.URL;
 import java.util.Date;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.Session;
