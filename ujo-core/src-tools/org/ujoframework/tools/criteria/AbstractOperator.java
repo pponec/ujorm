@@ -11,7 +11,7 @@ package org.ujoframework.tools.criteria;
  */
 public interface AbstractOperator {
 
-    /** Is the operator binary type ? */
+    /** Is the operator a binary type ? */
     public boolean isBinary();
 
     /** Returns Enum */

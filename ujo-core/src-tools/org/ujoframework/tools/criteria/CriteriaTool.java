@@ -39,13 +39,13 @@ import org.ujoframework.core.UjoComparator;
  *
  * Criterion&lt;Person&gt; exp = Criterion.newInstance(NAME, <span class="character">&quot;</span><span class="character">John</span><span class="character">&quot;</span>);
  * UjoComparator&lt;Person&gt; sort = UjoComparator.create(HIGH, NAME);
- * List&lt;Person&gt; <strong style="color:blue;">result</strong> = CriteriaTools.newInstance().select(persons, exp, sort);
+ * List&lt;Person&gt; <strong style="color:blue;">result</strong> = CriteriaTool.newInstance().select(persons, exp, sort);
 </pre>
  * 
  * @author Pavel Ponec
  * @since 0.81
  */
-public class CriteriaTools<UJO extends Ujo> {
+public class CriteriaTool<UJO extends Ujo> {
 
     /** Find the first UJO by an criterion or return NULL if any object was not found. */
     public UJO findFirst(List<UJO> list, Criterion<UJO> criterion) {
@@ -87,8 +87,8 @@ public class CriteriaTools<UJO extends Ujo> {
     // ----------- STATIC -------------
 
     /** Create a new instance */
-    public static <UJO extends Ujo> CriteriaTools<UJO> newInstance() {
-        return new CriteriaTools<UJO>();
+    public static <UJO extends Ujo> CriteriaTool<UJO> newInstance() {
+        return new CriteriaTool<UJO>();
     }
 
 }

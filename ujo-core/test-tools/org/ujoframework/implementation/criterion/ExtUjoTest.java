@@ -5,12 +5,12 @@
  * Created on 3. June 2007, 23:00
  */
 
-package org.ujoframework.implementation.ujoExtension;
+package org.ujoframework.implementation.criterion;
 
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.extensions.PathProperty;
-import static org.ujoframework.implementation.ujoExtension.ExtPerson.*;
+import static org.ujoframework.implementation.criterion.Person.*;
 
 /**
  * HashMap Unified Data Object Test
@@ -41,10 +41,10 @@ public class ExtUjoTest extends MyTestCase {
         double cashExp  = 200D;
         
         
-        ExtPerson person = new ExtPerson();
+        Person person = new Person();
         
         person.set(NAME, nameExp1);
-        person.set(MOTHER, new ExtPerson());
+        person.set(MOTHER, new Person());
         person.set(MOTHER, NAME, nameExp2);
         person.set(MOTHER, CASH, cashExp);
         
@@ -59,7 +59,7 @@ public class ExtUjoTest extends MyTestCase {
     
     public void testInit2() throws Throwable {
         
-        ExtPerson person = new ExtPerson();
+        Person person = new Person();
         person.init();
         
         String name = person.get(MOTHER, NAME);
@@ -68,11 +68,11 @@ public class ExtUjoTest extends MyTestCase {
 
     public void testInit3() throws Throwable {
 
-        ExtPerson person = new ExtPerson();
+        Person person = new Person();
         person.set(NAME, "Jack").set(CASH, 50d);
-        person.set(MOTHER, new ExtPerson());
-        person.set(MOTHER, MOTHER, new ExtPerson());
-        person.set(MOTHER, MOTHER, MOTHER, new ExtPerson());
+        person.set(MOTHER, new Person());
+        person.set(MOTHER, MOTHER, new Person());
+        person.set(MOTHER, MOTHER, MOTHER, new Person());
         
         Object o = person.get(MOTHER, MOTHER, MOTHER);
         

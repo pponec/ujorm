@@ -41,7 +41,7 @@ public enum BinaryOperator implements AbstractOperator {
     NAND,
     /** (a == b) <br>Note: the SQL language may not support the operator. */
     EQ,
-    /** (!a) */
+    /** NOT a */
     NOT,
     ;
 
