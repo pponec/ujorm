@@ -53,8 +53,10 @@ public class OrmDatabase extends AbstractMetaModel {
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    /** OrmDatabase default schema */
+    /** The meta-model id */
     @XmlAttribute
+    public static final UjoProperty<OrmDatabase,String> ID = newProperty("id", "", propertyCount++);
+    /** OrmDatabase default schema */
     public static final UjoProperty<OrmDatabase,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** SQL renderer type of SqlRenderer. */
     public static final UjoProperty<OrmDatabase,Class> RENDERER = newProperty("renderer", Class.class, propertyCount++);
@@ -106,6 +108,7 @@ public class OrmDatabase extends AbstractMetaModel {
             changeDefault(this, LDAP    , annotDB.ldap());
         }
 
+        changeDefault(this, ID      , database.getClass().getSimpleName());
         changeDefault(this, SCHEMA  , database.getClass().getSimpleName());
         changeDefault(this, JDBC_URL, getRenderer().getJdbcUrl());
 
@@ -113,7 +116,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;
-                OrmTable par   = param.findTable(tProperty.getName());
+                OrmTable par   = param!=null ? param.findTable(tProperty.getName()) : null;
                 OrmTable table = new OrmTable(this, tProperty, par);
                 TABLES.addItem(this, table);
             }

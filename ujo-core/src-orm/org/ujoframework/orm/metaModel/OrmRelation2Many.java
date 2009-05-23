@@ -35,7 +35,7 @@ public class OrmRelation2Many extends AbstractMetaModel {
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    /** The database ID. */
+    /** The meta-model ID. */
     @XmlAttribute
     public static final UjoProperty<OrmRelation2Many,String> ID = newProperty("id", "", propertyCount++);
     /** The database column name.

@@ -104,7 +104,7 @@ public class OrmRoot extends AbstractMetaModel {
             throw new UnsupportedOperationException("The internal state is 'read only'");
         }
         if (isValid(schemaName)) for (OrmDatabase db : DATABASES.getList(this)) {
-            if (OrmDatabase.SCHEMA.equals(db, schemaName)) {
+            if (OrmDatabase.ID.equals(db, schemaName)) {
                 DATABASES.getList(this).remove(db);
                 return db;
             }

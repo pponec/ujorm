@@ -17,6 +17,7 @@
 package org.ujoframework.orm.sample;
 
 
+import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -33,8 +34,8 @@ public class ViewOrder extends TableUjo<ViewOrder> {
     /** Unique key */
     @Column(pk=true)
     public static final UjoProperty<ViewOrder,Long> ID = newProperty("id", Long.class);
-    /** User key */
-    public static final UjoProperty<ViewOrder,Integer> USER_ID = newProperty("usrId", Integer.class);
+    /** Date of creation */
+    public static final UjoProperty<ViewOrder,Date> DATE = newProperty("usrId", Date.class);
     /** ItemCount */
     public static final UjoProperty<ViewOrder,Integer> ITEM_COUNT = newProperty("itemCount", 0);
 

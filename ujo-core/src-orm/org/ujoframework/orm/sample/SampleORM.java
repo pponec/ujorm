@@ -16,11 +16,13 @@
 
 package org.ujoframework.orm.sample;
 
+import java.net.URL;
 import java.util.Date;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.Query;
+import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.tools.criteria.Criterion;
 import org.ujoframework.tools.criteria.Operator;
 
@@ -30,15 +32,25 @@ import org.ujoframework.tools.criteria.Operator;
  */
 public class SampleORM {
 
-    /** Create database and using INSERT */
-    public void useInsert() {
+    /** Before the first use you must load a meta-model. */
+    public void loadMetaModel() {
 
-        OrmHandler.getInstance().config(getClass().getResource("/org/ujoframework/orm/sample/config.xml"), true);
+        boolean yesICanLoadExternalConfig = true;
+        if (yesICanLoadExternalConfig) {
+
+            URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
+            OrmHandler.getInstance().config(config, true);
+        }
+
         if (true) {
             OrmHandler.getInstance().createDatabase(Database.class);
         } else {
             OrmHandler.getInstance().loadDatabase(Database.class);
         }
+    }
+
+    /** Create database and using INSERT */
+    public void useInsert() {
 
         Order order = new Order();
         order.setDate(new Date());
@@ -213,11 +225,24 @@ public class SampleORM {
         System.out.println("There are DELETED rows: " + count);
     }
 
+    /** Using the column metadata */
+    public void useMetadata() {
+        OrmColumn c = (OrmColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
+
+        System.out.println("** COLUMN METADATA:");
+        System.out.println("DB name: " + c.getFullName());
+        System.out.println("Length : " + c.getMaxLength());
+        System.out.println("NotNull: " + c.isMandatory());
+        System.out.println("PrimKey: " + c.isPrimaryKey());
+    }
+
+
     /** Test */
     public static void main(String[] args) {
         try {
-
             SampleORM sample = new SampleORM();
+
+            sample.loadMetaModel();
             sample.useInsert();
             sample.useSelectOrders();
             sample.useSelectViewOrders();
@@ -230,6 +255,7 @@ public class SampleORM {
             sample.useRelation();
             sample.useUpdate();
             sample.useDelete();
+            sample.useMetadata();
 
         } catch (Throwable e) {
             e.printStackTrace();

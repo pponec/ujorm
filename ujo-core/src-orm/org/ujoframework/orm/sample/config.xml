@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <body>
-    <database schema="db1">
+    <database id="Database">
+        <schema>db1</schema>
         <renderer>org.ujoframework.orm.renderers.H2Renderer</renderer>
         <table id="ord_order">
             <name>ord_order</name>
@@ -87,4 +88,5 @@
         <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
         <user>sa</user>
     </database>
+    <parameters></parameters>
 </body>
