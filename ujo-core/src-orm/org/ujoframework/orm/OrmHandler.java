@@ -128,7 +128,7 @@ public class OrmHandler {
         // Load a configuration parameters:
         Db annotDb = databaseModel.getAnnotation(Db.class);
         String schemaDb = annotDb!=null ? annotDb.schema() : null;
-        OrmDatabase paramDb = configuration.removeDb(schemaDb);
+        OrmDatabase paramDb = configuration!=null ? configuration.removeDb(schemaDb) : null;
 
         // Create the ORM DB model:
         UJO model = getInstance(databaseModel);

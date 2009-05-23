@@ -41,7 +41,7 @@ public class OrmTable extends AbstractMetaModel {
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    /** DB table id */
+    /** The meta-model id */
     @XmlAttribute
     public static final UjoProperty<OrmTable,String> ID = newProperty("id", "", propertyCount++);
     /** DB table name */

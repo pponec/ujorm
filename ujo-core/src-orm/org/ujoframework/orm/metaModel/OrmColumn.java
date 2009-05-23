@@ -122,6 +122,25 @@ public class OrmColumn extends OrmRelation2Many {
         return result;
     }
 
+    /** Returns a maximal db column length in the database.
+     * @return If property is undefined then the method returns value -1.
+     */
+    public int getMaxLength() {
+        return MAX_LENGTH.of(this);
+    }
+
+    /** Returns the db column precision.
+     * @return If property is undefined then the method returns value -1.
+     */
+    public int getPrecesion() {
+        return PRECISION.of(this);
+    }
+
+    /** Returns true if the related db column is NOT NULL. */
+    public boolean isMandatory() {
+        return MANDATORY.of(this);
+    }
+
 
     /** Returns an original foreign columns in case a foreign column. */
     @SuppressWarnings("unchecked")
