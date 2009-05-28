@@ -28,8 +28,8 @@ import org.ujoframework.orm.annot.View;
  * The column mapping to FROM view.
  * @hidden
  */
-@View(select="SELECT ord_order.id, ord_order.date, count(*) AS itemCount"
-    + " FROM db1.ord_order, db1.ord_item"
+@View(select="SELECT ord_order.id, count(*) AS itemCount"
+    + " FROM db1.ord_order ord_order, db1.ord_item ord_item"
     + " WHERE ord_order.id = ord_item.fk_order"
     + " GROUP BY ord_order.id"
     + " ORDER BY ord_order.id")
@@ -38,8 +38,6 @@ public class ViewOrder extends TableUjo<ViewOrder> {
     /** Unique key */
     @Column(pk=true)
     public static final UjoProperty<ViewOrder,Long> ID = newProperty("id", Long.class);
-    /** Date of creation */
-    public static final UjoProperty<ViewOrder,Date> DATE = newProperty("date", Date.class);
     /** ItemCount */
     public static final UjoProperty<ViewOrder,Integer> ITEM_COUNT = newProperty("itemCount", 0);
 
