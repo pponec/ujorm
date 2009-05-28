@@ -5,11 +5,7 @@
 
 package org.ujoframework.orm;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 
 /**
@@ -18,8 +14,8 @@ import org.ujoframework.orm.metaModel.OrmDatabase;
  */
 public class UjoSequencer {
 
-    /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(UjoSequencer.class.toString());
+    //** Logger */
+    //private static final java.util.logging.Logger.Logger LOGGER = java.util.logging.Logger.Logger.getLogger(UjoSequencer.class.toString());
 
     final private OrmDatabase database;
     private long sequence = 0;
@@ -58,28 +54,6 @@ public class UjoSequencer {
             return sequence;
         }
     }
-
-    /** Returns a next sequence value */
-    public synchronized void createSequence(Connection conn) {
-        Statement stat = null;
-        ResultSet res = null;
-        String sql = "";
-        try {
-            sql = database.getRenderer().printCreateSequence(this, new StringBuilder(30)).toString();
-            if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.info(sql);
-            }
-
-            stat = conn.createStatement();
-            stat.executeUpdate(sql);
-            conn.commit();
-        } catch (Throwable e) {
-            throw new IllegalStateException("ILLEGAL SQL: " + sql, e);
-        } finally {
-            OrmDatabase.close(null, stat, res, true);
-        }
-    }
-
 
     /** Returns sequence name */
     public String getSequenceName() {
