@@ -64,6 +64,8 @@ public class OrmDatabase extends AbstractMetaModel {
     public static final ListProperty<OrmDatabase,OrmTable> TABLES = newPropertyList("table", OrmTable.class, propertyCount++);
     /** JDBC URL connection */
     public static final UjoProperty<OrmDatabase,String> JDBC_URL = newProperty("jdbcUrl", "", propertyCount++);
+    /** JDBC Driver */
+    public static final UjoProperty<OrmDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "", propertyCount++);
     /** DB user */
     public static final UjoProperty<OrmDatabase,String> USER = newProperty("user", "", propertyCount++);
     /** DB password */
@@ -93,6 +95,7 @@ public class OrmDatabase extends AbstractMetaModel {
             changeDefault(this, SCHEMA  , SCHEMA.of(param));
             changeDefault(this, RENDERER, RENDERER.of(param));
             changeDefault(this, JDBC_URL, JDBC_URL.of(param));
+            changeDefault(this, JDBC_DRIVER, JDBC_DRIVER.of(param));
             changeDefault(this, USER    , USER.of(param));
             changeDefault(this, PASSWORD, PASSWORD.of(param));
             changeDefault(this, LDAP    , LDAP.of(param));
@@ -103,6 +106,7 @@ public class OrmDatabase extends AbstractMetaModel {
             changeDefault(this, SCHEMA  , annotDB.schema());
             changeDefault(this, RENDERER, annotDB.renderer());
             changeDefault(this, JDBC_URL, annotDB.jdbcUrl());
+            changeDefault(this, JDBC_DRIVER, annotDB.jdbcDriver());
             changeDefault(this, USER    , annotDB.user());
             changeDefault(this, PASSWORD, annotDB.password());
             changeDefault(this, LDAP    , annotDB.ldap());
@@ -111,6 +115,7 @@ public class OrmDatabase extends AbstractMetaModel {
         changeDefault(this, ID      , database.getClass().getSimpleName());
         changeDefault(this, SCHEMA  , database.getClass().getSimpleName());
         changeDefault(this, JDBC_URL, getRenderer().getJdbcUrl());
+        changeDefault(this, JDBC_DRIVER, getRenderer().getJdbcDriver());
 
         for (UjoProperty tableProperty : database.readProperties()) {
 
@@ -209,7 +214,7 @@ public class OrmDatabase extends AbstractMetaModel {
         }
         else if (Integer.class==type) {
             OrmColumn.DB_TYPE.setValue(column, DbType.INT);
-            changeDefault(column, OrmColumn.MAX_LENGTH, 8);
+            //changeDefault(column, OrmColumn.MAX_LENGTH, 8);
         }
         else if (Long.class==type) {
             OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
@@ -245,20 +250,52 @@ public class OrmDatabase extends AbstractMetaModel {
     public void create() {
         Connection conn = ormHandler.getSession().getConnection(this);
         Statement stat = null;
+        StringBuilder out = new StringBuilder(128);
         String sql = "";
         try {
-            sql = getRenderer().printCreateDatabase(this, new StringBuilder(256)).toString();
             conn = createConnection();
             stat = conn.createStatement();
-            stat.executeUpdate(sql);
-            conn.commit();
 
-            if (LOGGER.isLoggable(Level.INFO)) {
+            // 1. Create schemas:
+            for (String schema : getSchemas()) {
+                out.setLength(0);
+                sql = getRenderer().printCreateSchema(schema, out).toString();
+                stat.executeUpdate(sql);
                 LOGGER.info(sql);
             }
 
-            // Create UJO-ORM sequence;
-            sequencer.createSequence(conn);
+            // 2. Create tables:
+            for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
+                if (table.isPersistent()
+                && !table.isView()
+                ){
+                    out.setLength(0);
+                    sql = getRenderer().printTable(table, out).toString();
+                    stat.executeUpdate(sql);
+                    LOGGER.info(sql);
+                }
+            }
+
+            // 3. Create Foreign Keys:
+            for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
+                if (table.isPersistent()
+                && !table.isView()
+                ){
+                    out.setLength(0);
+                    sql = getRenderer().printForeignKey(table, out).toString();
+                    stat.executeUpdate(sql);
+                    LOGGER.info(sql);
+                }
+            }
+
+            // 4. Create Sequence;
+            if (true) {
+                out.setLength(0);
+                sql = getRenderer().printCreateSequence(sequencer, out).toString();
+                stat.executeUpdate(sql);
+                LOGGER.info(sql);
+            }
+            conn.commit();
 
         } catch (Throwable e) {
             if (conn!=null) {
@@ -354,14 +391,15 @@ public class OrmDatabase extends AbstractMetaModel {
         return SCHEMA.of(this);
     }
 
-    /** Create connection */
+    /** Create connection with auto-commit false. */
     public Connection createConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(getRenderer().getJdbcDriver());
+        Class.forName(JDBC_DRIVER.of(this));
         final Connection result = DriverManager.getConnection
             ( JDBC_URL.of(this)
             , USER.of(this)
             , PASSWORD.of(this)
             );
+        result.setAutoCommit(false);
         return result;
     }
 

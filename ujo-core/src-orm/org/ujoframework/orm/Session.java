@@ -411,7 +411,6 @@ public class Session {
         if (result == null) {
             try {
                 result = database.createConnection();
-                result.setAutoCommit(false);
             } catch (Exception e) {
                 throw new IllegalStateException("Can't create an connection for " + database, e);
             }

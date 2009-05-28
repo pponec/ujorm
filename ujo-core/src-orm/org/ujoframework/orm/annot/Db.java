@@ -33,6 +33,8 @@ public @interface Db {
     String ldap() default "";
     /** JDBC Url */
     String jdbcUrl() default "";
+    /** JDBC Driver */
+    String jdbcDriver() default "";
     /** Connection User */
     String user()     default "";
     /** Connection password */

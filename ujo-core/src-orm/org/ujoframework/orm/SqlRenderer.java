@@ -48,30 +48,10 @@ abstract public class SqlRenderer {
     /** Returns a JDBC Driver */
     abstract public String getJdbcDriver();
 
-    /** Print a SQL script to crate database */
-    public Appendable printCreateDatabase(OrmDatabase database, Appendable out) throws IOException {
-        for (String schema : database.getSchemas()) {
-            printCreateSchema(schema, out);
-            println(out);
-        }
-
-        for (OrmTable table : OrmDatabase.TABLES.getList(database)) {
-            if (table.isPersistent()
-            && !table.isView()
-            ){
-                printTable(table, out);
-                println(out);
-                printForeignKey(table, out);
-            }
-        }
-        return out;
-    }
-
     /** Print SQL 'CREATE SCHEMA' */
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
         out.append("CREATE SCHEMA IF NOT EXISTS ");
         out.append(schema);
-        out.append(';');
         return out;
     }
 
@@ -80,7 +60,6 @@ abstract public class SqlRenderer {
     public Appendable printDefaultSchema(String schema, Appendable out) throws IOException {
         out.append("SET SCHEMA ");
         out.append(schema);
-        out.append(';');
         return out;
     }
 
@@ -122,7 +101,7 @@ abstract public class SqlRenderer {
                 printColumnDeclaration(column, null, out);
             }
         }
-        out.append("\n\t);");
+        out.append("\n\t)");
         return out;
     }
 
@@ -167,7 +146,6 @@ abstract public class SqlRenderer {
 
         out.append(")");
         //out.append("\n\tON DELETE CASCADE");
-        out.append("\n\t;");
         return out;
     }
 
@@ -177,11 +155,9 @@ abstract public class SqlRenderer {
      * @param name The name parameter is not mandatory, in case a null value the column name is used.
      * @throws java.io.IOException
      */
-    public Appendable printColumnDeclaration(OrmColumn column, String name, Appendable out) throws IOException {
+    public Appendable printColumnDeclaration(OrmColumn column, String aName, Appendable out) throws IOException {
 
-        if (name == null) {
-            name = OrmColumn.NAME.of(column);
-        }
+        String name = aName!=null ? aName : OrmColumn.NAME.of(column);
         out.append(name);
         out.append(' ');
         out.append(OrmColumn.DB_TYPE.of(column).name());
@@ -196,7 +172,7 @@ abstract public class SqlRenderer {
         if (!OrmColumn.MANDATORY.isDefault(column)) {
             out.append(" NOT NULL");
         }
-        if (OrmColumn.PRIMARY_KEY.of(column) && name == null) {
+        if (OrmColumn.PRIMARY_KEY.of(column) && aName == null) {
             out.append(" PRIMARY KEY");
         }
         return out;
@@ -230,7 +206,7 @@ abstract public class SqlRenderer {
 
         out.append(") VALUES (");
         out.append(values);
-        out.append(");");
+        out.append(")");
 
         return out;
     }
@@ -258,7 +234,6 @@ abstract public class SqlRenderer {
         }
         out.append("\n\tWHERE ");
         out.append(decoder.getWhere());
-        out.append(';');
         return out;
     }
 
@@ -273,7 +248,6 @@ abstract public class SqlRenderer {
         printFullName(table, out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
-        out.append(';');
 
         return out;
     }
@@ -484,7 +458,6 @@ abstract public class SqlRenderer {
                 out.append( value );
             }
         }
-        out.append(';');
         return out;
     }
 
@@ -524,7 +497,6 @@ abstract public class SqlRenderer {
         if (!count && !query.getOrder().isEmpty()) {
             printSelectOrder(query, out);
         }
-        out.append(';');
         return out;
     }
 
@@ -554,7 +526,6 @@ abstract public class SqlRenderer {
         out.append(" START WITH " + sequence.getInitValue());
         out.append(" INCREMENT BY " + sequence.getInitIncrement());
         out.append(" CACHE " + sequence.getInitCacheSize());
-        out.append(';');
         return out;
     }
 
@@ -564,7 +535,7 @@ abstract public class SqlRenderer {
         out.append(sequence.getSequenceName());
         out.append("'), NEXTVAL('");
         out.append(sequence.getSequenceName());
-        out.append("');");
+        out.append("')");
         return out;
     }
 
@@ -581,7 +552,7 @@ abstract public class SqlRenderer {
 
     /** Print SQL 'CREATE SCHEMA' */
     public Appendable printCommit(Appendable out) throws IOException {
-        out.append("COMMIT;");
+        out.append("COMMIT");
         return out;
     }
 

@@ -21,13 +21,13 @@ import org.ujoframework.orm.annot.Table;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.annot.View;
-import org.ujoframework.orm.renderers.H2Renderer;
 
 /**
  * An table mapping to a database (a sample of usage).
  * @hidden
  */
-@Db(schema="db1", renderer=H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+@Db(schema="db1", renderer=org.ujoframework.orm.renderers.H2Renderer.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+//@Db(schema="db1", renderer=org.ujoframework.orm.renderers.DerbyRenderer.class, user="sa", password="", jdbcUrl="jdbc:derby:C:\\temp\\derby-sample;create=true")
 public class Database extends TableUjo<Database> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */

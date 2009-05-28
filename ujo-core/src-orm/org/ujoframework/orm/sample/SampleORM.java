@@ -35,7 +35,7 @@ public class SampleORM {
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel() {
 
-        boolean yesICanLoadExternalConfig = true;
+        boolean yesICanLoadExternalConfig = false;
         if (yesICanLoadExternalConfig) {
 
             URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
@@ -230,10 +230,10 @@ public class SampleORM {
         OrmColumn c = (OrmColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
 
         System.out.println("** COLUMN METADATA:");
-        System.out.println("DB name: " + c.getFullName());
-        System.out.println("Length : " + c.getMaxLength());
-        System.out.println("NotNull: " + c.isMandatory());
-        System.out.println("PrimKey: " + c.isPrimaryKey());
+        System.out.println("\t DB name: " + c.getFullName());
+        System.out.println("\t Length : " + c.getMaxLength());
+        System.out.println("\t NotNull: " + c.isMandatory());
+        System.out.println("\t PrimKey: " + c.isPrimaryKey());
     }
 
 
