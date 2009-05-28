@@ -32,6 +32,7 @@ import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Session;
@@ -260,8 +261,10 @@ public class OrmDatabase extends AbstractMetaModel {
             for (String schema : getSchemas()) {
                 out.setLength(0);
                 sql = getRenderer().printCreateSchema(schema, out).toString();
-                stat.executeUpdate(sql);
-                LOGGER.info(sql);
+                if (isValid(sql)) {
+                    stat.executeUpdate(sql);
+                    LOGGER.info(sql);
+                }
             }
 
             // 2. Create tables:
@@ -283,8 +286,10 @@ public class OrmDatabase extends AbstractMetaModel {
                 ){
                     out.setLength(0);
                     sql = getRenderer().printForeignKey(table, out).toString();
-                    stat.executeUpdate(sql);
-                    LOGGER.info(sql);
+                    if (isValid(sql)) {
+                        stat.executeUpdate(sql);
+                        LOGGER.info(sql);
+                    }
                 }
             }
 
@@ -292,8 +297,14 @@ public class OrmDatabase extends AbstractMetaModel {
             if (true) {
                 out.setLength(0);
                 sql = getRenderer().printCreateSequence(sequencer, out).toString();
-                stat.executeUpdate(sql);
-                LOGGER.info(sql);
+                StringTokenizer st = new StringTokenizer(sql, ";");
+                while (st.hasMoreTokens()) {
+                    sql = st.nextToken().trim();
+                    if (isValid(sql)) {
+                        stat.executeUpdate(sql);
+                        LOGGER.info(sql);
+                    }
+                }
             }
             conn.commit();
 

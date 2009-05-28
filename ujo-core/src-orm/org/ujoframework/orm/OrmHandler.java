@@ -84,23 +84,39 @@ public class OrmHandler {
         }
     }
 
+
+    /** Save the ORM parameters.
+     * The assigning must be finished before an ORM definition loading.
+     */
+    public void config(OrmParameters params) throws IllegalArgumentException {
+        OrmRoot.PARAMETERS.setValue(databases, params);
+    }
+
+    /** Save the ORM configuration include parameters (if the parameters are not null).
+     * The assigning must be finished before an ORM definition loading.
+     */
+    public void config(OrmRoot config) throws IllegalArgumentException {
+         this.configuration = config;
+
+        // The parameters assigning:
+        OrmParameters params = OrmRoot.PARAMETERS.of(configuration);
+        if (params!=null) {
+            config(params);
+        }
+    }
+
     /** Load parameters from an external XML file.
      * The initialization must be finished before an ORM definition loading.
      */
     public boolean config(URL url, boolean throwsException) throws IllegalArgumentException {
         try {
-            configuration = UjoManagerXML.getInstance().parseXML
+            final OrmRoot conf = UjoManagerXML.getInstance().parseXML
             ( new BufferedInputStream(url.openStream())
             , OrmRoot.class
             , this
             );
 
-            // Assign parameters:
-            OrmParameters params = OrmRoot.PARAMETERS.of(configuration);
-            if (params!=null) {
-                OrmRoot.PARAMETERS.setValue(databases, params);
-            }
-
+            config(conf);
             return true;
 
         } catch (Exception e) {

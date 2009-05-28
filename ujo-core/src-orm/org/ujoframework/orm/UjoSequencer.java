@@ -37,7 +37,7 @@ public class UjoSequencer {
             return ++sequence;
         } else {
             JdbcStatement statement = null;
-            ResultSet res = null;            
+            ResultSet res = null;
             String sql = "";
             try {
                 sql = database.getRenderer().printSeqNextValue(this, new StringBuilder(64)).toString();
@@ -57,7 +57,7 @@ public class UjoSequencer {
 
     /** Returns sequence name */
     public String getSequenceName() {
-        return "UjoOrmSequence";
+        return "OrmUjoSequence";
     }
 
     /** Returns a database name */

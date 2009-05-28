@@ -33,7 +33,7 @@ public class DerbyRenderer extends SqlRenderer {
         return "jdbc:derby:c:\\temp\\derby-sample;create=true";
     }
 
-    /** Embeded driver */
+    /** Embeded driver is default */
     @Override
     public String getJdbcDriver() {
         return "org.apache.derby.jdbc.EmbeddedDriver";
@@ -50,12 +50,27 @@ public class DerbyRenderer extends SqlRenderer {
     /** Print SQL CREATE SEQUENCE. */
     @Override
     public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
-        // TODO:
-        out.append("CREATE SEQUENCE ");
-        out.append(sequence.getSequenceName());
-        out.append(" START WITH " + sequence.getInitValue());
-        out.append(" INCREMENT BY " + sequence.getInitIncrement());
-        out.append(" CACHE " + sequence.getInitCacheSize());
+        String seqTable = sequence.getDatabasName()+'.'+sequence.getSequenceName();
+        out.append("CREATE TABLE ");
+        out.append(seqTable);
+        out.append("\n\t( id VARCHAR(128) NOT NULL PRIMARY KEY");
+        out.append("\n\t, seq BIGINT DEFAULT 0 ");
+        out.append("\n\t, step INT DEFAULT 32 ");
+        out.append("\n\t);");
+        // Insert data
+        out.append("INSERT INTO ");
+        out.append(seqTable);
+        out.append(" (id) VALUES ('ALL')");
+        return out;
+    }
+
+    /** Print SQL NEXT SEQUENCE. */
+    @Override
+    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+        String seqTable = sequence.getDatabasName()+'.'+sequence.getSequenceName();
+        out.append("SELECT seq, seq+step FROM ");
+        out.append(seqTable);
+        out.append(" WHERE id='ALL'");
         return out;
     }
 
