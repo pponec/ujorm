@@ -24,6 +24,7 @@ import org.ujoframework.UjoProperty;
  * <ul>
  *    <li>like a generic UJO object validator (2)</li>
  *    <li>to create a query on the UJO list (1)</li>
+ *    <li>the class is used to build 'SQL query' in the module </strong>ujo-orm</strong> (sience 0.90)</li>
  * </ul>
  *
  * There is allowed to join two instances (based on the same BO) to a binary tree by a new Criterion.
@@ -47,6 +48,7 @@ import org.ujoframework.UjoProperty;
  * assertTrue(validation);
  * </pre>
  *
+ * @since 0.90
  * @author Pavel Ponec
  * @composed 1 - 1 AbstractOperator
  */

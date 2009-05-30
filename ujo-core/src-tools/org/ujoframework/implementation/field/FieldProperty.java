@@ -23,6 +23,7 @@ import org.ujoframework.extensions.ValueAgent;
 /**
  * A Field property implementation.
  * @see FieldProperty
+ * @since ujo-tool
  * @author Pavel Ponec
  */
 public class FieldProperty<UJO extends Ujo,VALUE> 

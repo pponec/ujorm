@@ -26,7 +26,7 @@ import org.ujoframework.extensions.ValueAgent;
  * A Factory property implementation.
  * @see FactoryProperty
  * @author Pavel Ponec
- * @since 0.81
+ * @since ujo-tool
  */
 public class FactoryProperty<UJO extends Ujo,VALUE>
     extends AbstractProperty<UJO,VALUE>

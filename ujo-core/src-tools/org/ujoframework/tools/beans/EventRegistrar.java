@@ -22,6 +22,7 @@ import org.ujoframework.UjoProperty;
 
 /**
  * EventRegistrar
+ * @since ujo-tool
  * @author Pavel Ponec
  */
 public interface EventRegistrar<UJO extends Ujo> {

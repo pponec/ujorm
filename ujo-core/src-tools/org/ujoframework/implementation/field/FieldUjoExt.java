@@ -61,7 +61,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @see FieldProperty
  * @author Pavel Ponec
  * @composed 1 - * FieldProperty
- * @since UJO release 0.81 
+ * @since ujo-tool
  */
 abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoExt<UJO> {
     

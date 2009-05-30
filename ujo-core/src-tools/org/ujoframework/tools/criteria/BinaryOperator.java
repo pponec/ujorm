@@ -25,7 +25,8 @@ package org.ujoframework.tools.criteria;
 import org.ujoframework.Ujo;
 
 /**
- * Binary operator
+ * The criterion binary operator
+ * @since 0.90
  * @author Pavel Ponec
  */
 public enum BinaryOperator implements AbstractOperator {

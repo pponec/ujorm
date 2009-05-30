@@ -6,8 +6,9 @@
 package org.ujoframework.tools.criteria;
 
 /**
- *
+ * The abstract criteria operator
  * @author Pavel Ponec
+ * @since 0.90
  */
 public interface AbstractOperator {
 

@@ -43,7 +43,7 @@ import org.ujoframework.core.UjoComparator;
 </pre>
  * 
  * @author Pavel Ponec
- * @since 0.81
+ * @since 0.90
  */
 public class CriteriaTool<UJO extends Ujo> {
 
