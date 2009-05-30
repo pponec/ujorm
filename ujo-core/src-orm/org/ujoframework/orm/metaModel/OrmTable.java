@@ -71,8 +71,12 @@ public class OrmTable extends AbstractMetaModel {
     @Transient
     public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class, propertyCount++);
 
+    /** The unique table name over all Databases of the one OrmHandler. */
+    private final String alias;
+
     /** No parameter constructor. */
     public OrmTable() {
+        alias = "";
     }
 
     @SuppressWarnings("unchecked")
@@ -115,6 +119,7 @@ public class OrmTable extends AbstractMetaModel {
         }
         changeDefault(this, SCHEMA, OrmDatabase.SCHEMA.of(database));
         changeDefault(this, NAME, dbProperty.getName());
+        alias = NAME.of(this); // + "_" +  dbProperty.getIndex();
 
         // -----------------------------------------------
 
@@ -189,6 +194,11 @@ public class OrmTable extends AbstractMetaModel {
         return VIEW.of(this);
     }
 
+    /** Is the instance a database persistent table? A false value neans that the object is a relation model or view. */
+    public boolean isTable() {
+        return isPersistent() && !isView();
+    }
+
     /** Is the query from a SQL select model ? */
     public boolean isSelectModel() {
         return SELECT_MODEL.of(this)!=null;
@@ -197,6 +207,11 @@ public class OrmTable extends AbstractMetaModel {
     /** Database model is not persistent. A side efect is that the DATABASE property has hot a null value. */
     public void setNotPersistent() {
         DATABASE.setValue(this, null);
+    }
+
+    /** Returns a unique table name over all Databases of the one OrmHandler. */
+    public final String getAlias() {
+        return alias;
     }
 
     /** Returns the database */

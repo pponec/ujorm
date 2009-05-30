@@ -269,9 +269,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
             // 2. Create tables:
             for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
-                if (table.isPersistent()
-                && !table.isView()
-                ){
+                if (table.isTable()) {
                     out.setLength(0);
                     sql = getRenderer().printTable(table, out).toString();
                     stat.executeUpdate(sql);
@@ -281,9 +279,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
             // 3. Create Foreign Keys:
             for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
-                if (table.isPersistent()
-                && !table.isView()
-                ){
+                if (table.isTable()){
                     out.setLength(0);
                     sql = getRenderer().printForeignKey(table, out).toString();
                     if (isValid(sql)) {

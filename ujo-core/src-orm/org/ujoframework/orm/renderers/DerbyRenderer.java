@@ -21,6 +21,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.SqlRenderer;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 
@@ -50,30 +51,56 @@ public class DerbyRenderer extends SqlRenderer {
     /** Print SQL CREATE SEQUENCE. */
     @Override
     public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
-        String seqTable = sequence.getDatabasName()+'.'+sequence.getSequenceName();
+        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
         out.append("CREATE TABLE ");
         out.append(seqTable);
         out.append("\n\t( id VARCHAR(128) NOT NULL PRIMARY KEY");
-        out.append("\n\t, seq BIGINT DEFAULT 0 ");
-        out.append("\n\t, step INT DEFAULT 32 ");
+        out.append("\n\t, seq BIGINT DEFAULT " + 0);
+        out.append("\n\t, step INT DEFAULT " + sequence.getInitIncrement());
         out.append("\n\t);");
-        // Insert data
+        println(out);
+
+        // Insert common data:
         out.append("INSERT INTO ");
         out.append(seqTable);
-        out.append(" (id) VALUES ('ALL')");
+        out.append(" (id) VALUES ('"+COMMON_SEQ_TABLE_KEY+"');");
+        println(out);
+
+        for (OrmTable table : OrmDatabase.TABLES.getValue(sequence.getDatabase())) {
+            if (table.isTable()) {
+                // Insert common data:
+                out.append("INSERT INTO ");
+                out.append(seqTable);
+                out.append(" (id) VALUES ('"+OrmTable.NAME.of(table)+"');");
+                println(out);
+            }
+        }
         return out;
     }
 
     /** Print SQL NEXT SEQUENCE. */
     @Override
     public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        String seqTable = sequence.getDatabasName()+'.'+sequence.getSequenceName();
+        OrmTable table = sequence.getTable();
+        String tableKey = table!=null ? OrmTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
+
+        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
         out.append("SELECT seq, seq+step FROM ");
         out.append(seqTable);
-        out.append(" WHERE id='ALL'");
+        out.append(" WHERE id='"+tableKey+"'");
         return out;
     }
 
+    /** Print SQL NEXT SEQUENCE Update or return null. The method is intended for an emulator of the sequence. */
+    @Override
+    public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
+        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
+        out.append("UPDATE ");
+        out.append(seqTable);
+        out.append(" SET seq=seq+step");
+        out.append(" WHERE id=?");
+        return out;
+    }
 
 
     /** Print foreign key for the parameter column */

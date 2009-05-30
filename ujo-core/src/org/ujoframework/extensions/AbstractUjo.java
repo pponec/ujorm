@@ -36,7 +36,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      */
     protected static int _propertyIndex = 0;
 
-    /** Returns a next property index.
+    /** Returns a next property index by a synchronized method.
      * The UJO property indexed by this method may not be in continuous series
      * however numbers have the <strong>upward direction</strong> always.
      */

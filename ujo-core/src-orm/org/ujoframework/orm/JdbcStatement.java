@@ -215,6 +215,10 @@ public class JdbcStatement {
         }
     }
 
+    /** Returns prepared statement - for internal use only */
+    PreparedStatement getPreparedStatement() {
+        return ps;
+    }
 
     @Override
     public String toString() {
