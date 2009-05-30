@@ -16,19 +16,67 @@
 
 package org.ujoframework.orm.renderers;
 
+import java.io.IOException;
 import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.UjoSequencer;
 
-/** PostgreSQL (http://www.postgresql.org/) - renderer is not supported yet */
+/** PostgreSQL (http://www.postgresql.org/) */
 public class PostgreSqlRenderer extends SqlRenderer {
 
     @Override
     public String getJdbcUrl() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "";
     }
 
     @Override
     public String getJdbcDriver() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "org.postgresql.Driver";
     }
+
+    /** Print SQL 'CREATE SCHEMA' */
+    @Override
+    public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
+        out.append("CREATE SCHEMA ");
+        out.append(schema);
+        return out;
+    }
+
+    /** Print SQL CREATE SEQUENCE. */
+    @Override
+    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+
+        String seqName
+            = sequence.getDatabasSchema()
+            + '.'
+            + sequence.getSequenceName()
+            ;
+        out.append("CREATE SEQUENCE ");
+        out.append(seqName);
+        out.append(" START WITH " + sequence.getInitValue());
+        out.append(" INCREMENT BY " + sequence.getInitIncrement());
+        out.append(" CACHE " + sequence.getInitDbCache());
+
+        // 
+        return out;
+    }
+
+
+
+    /** Print SQL NEXT SEQUENCE. */
+    @Override
+    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+        String seqName
+            = sequence.getDatabasSchema()
+            + '.'
+            + sequence.getSequenceName()
+            ;
+        out.append("SELECT CURRVAL('");
+        out.append(seqName);
+        out.append("'), NEXTVAL('");
+        out.append(seqName);
+        out.append("')");
+        return out;
+    }
+
 
 }
