@@ -67,7 +67,7 @@ public class OrmPKey extends AbstractMetaModel {
     }
 
 
-    /** Returns a next primary key. The minimal value is 1. */
+    /** Returns a next primary key by a synchronized method. The minimal value is 1. */
     protected synchronized long nextPrimaryKey() {
         return ++primaryKeyCounter;
     }

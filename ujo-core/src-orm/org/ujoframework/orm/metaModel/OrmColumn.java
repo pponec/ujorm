@@ -249,12 +249,10 @@ public class OrmColumn extends OrmRelation2Many {
         }
     }
 
-
-
-    /** Print a full name of foreign column by index */
+    /** Print a full 'alias' name of foreign column by index */
     public void printForeignColumnFullName(int index, Appendable out) throws IOException {
         OrmTable table = TABLE.of(this);
-        out.append(OrmTable.NAME.of(table));
+        out.append(table.getAlias());
         out.append('.');
         out.append(getForeignColumnNames()[index]);
     }

@@ -70,7 +70,7 @@ public class CriterionDecoder {
         if (c.isBinary()) {
             unpackBinary((BinaryCriterion)c);
         } else try {
-            ValueCriterion value = renderer.printCondition((ValueCriterion) c, sql);
+            ValueCriterion value = renderer.printCriterion((ValueCriterion) c, sql);
             if (value!=null) {
                 values.add(value);
             }

@@ -20,7 +20,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
@@ -34,6 +33,9 @@ import org.ujoframework.tools.criteria.Operator;
  */
 @SuppressWarnings("unchecked")
 abstract public class SqlRenderer {
+
+    /** The table key for a common sequence emulator. */
+    public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
 
     protected OrmHandler ormHandler;
 
@@ -63,7 +65,7 @@ abstract public class SqlRenderer {
         return out;
     }
 
-    /** Print a SQL sript to create table */
+    /** Print a full SQL table name by sample: SCHEMA.TABLE  */
     public void printFullName(final OrmTable table, final Appendable out) throws IOException {
         final String tableSchema = OrmTable.SCHEMA.of(table);
         final String tableName = OrmTable.NAME.of(table);
@@ -75,11 +77,20 @@ abstract public class SqlRenderer {
         out.append(tableName);
     }
 
-    /** Print a SQL sript to create table */
+    /** Print a full SQL table alias name by sample: SCHEMA.TABLE ALIAS */
+    public void printFullAliasName(final OrmTable table, final Appendable out) throws IOException {
+        printFullName(table, out);
+        out.append(' ');
+        out.append(table.getAlias());
+    }
+
+
+    /** Print a full SQL column alias name by sample: TABLE_ALIAS.COLUMN */
     public Appendable printFullName(final OrmColumn column, final Appendable out) throws IOException {
         final OrmTable table = OrmColumn.TABLE.of(column);
 
-        printFullName(table, out);
+        //printFullName(table, out);
+        out.append(table.getAlias());
         out.append('.');
         out.append(OrmColumn.NAME.of(column));
         
@@ -220,7 +231,7 @@ abstract public class SqlRenderer {
         ) throws IOException
     {
         out.append("UPDATE ");
-        printFullName(table, out);
+        printFullAliasName(table, out);
         out.append("\n\tSET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
@@ -229,7 +240,7 @@ abstract public class SqlRenderer {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i==0 ? "" :  ", ");
-            printFullName(ormColumn, out);
+            out.append(OrmColumn.NAME.of(ormColumn));
             out.append("=? ");
         }
         out.append("\n\tWHERE ");
@@ -245,7 +256,7 @@ abstract public class SqlRenderer {
         ) throws IOException
     {
         out.append("DELETE FROM ");
-        printFullName(table, out);
+        printFullAliasName(table, out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
 
@@ -293,17 +304,22 @@ abstract public class SqlRenderer {
     /**
      * Print table columns
      * @param columns List of tablel columns
-     * @param values An output in case a value rendereing for INSERT example.
+     * @param printAlias Print columns include alias.
+     * @param columns List of tablel columns
      * @param out Table columns output.
      * @throws java.io.IOException
      */
     public void printTableColumns(List<OrmColumn> columns, Appendable values, Appendable out) throws IOException {
         String separator = "";
-        boolean select = values==null;
+        boolean select = values==null; // SELECT
         for (OrmColumn column : columns) {
             if (column.isForeignKey()) {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
+                    if (select) {
+                        out.append(OrmColumn.TABLE.of(column).getAlias());
+                        out.append('.');
+                    }
                     out.append(column.getForeignColumnName(i));
                     if (values != null) {
                         values.append(separator);
@@ -331,7 +347,7 @@ abstract public class SqlRenderer {
     /** Print a conditon phrase by the criterion.
      * @return A value criterion to assign into the SQL query.
      */
-    public ValueCriterion printCondition(ValueCriterion crit, Appendable out) throws IOException {
+    public ValueCriterion printCriterion(ValueCriterion crit, Appendable out) throws IOException {
         Operator operator = crit.getOperator();
         UjoProperty property = crit.getLeftNode();
         Object right = crit.getRightNode();
@@ -483,7 +499,7 @@ abstract public class SqlRenderer {
             for (int i=0; i<tables.length; ++i) {
                 OrmTable table = tables[i];
                 if (i>0) out.append(", ");
-                printFullName(table, out);
+                printFullAliasName(table, out);
             }
 
             String sql = ed.getWhere();
@@ -525,7 +541,7 @@ abstract public class SqlRenderer {
         out.append(sequence.getSequenceName());
         out.append(" START WITH " + sequence.getInitValue());
         out.append(" INCREMENT BY " + sequence.getInitIncrement());
-        out.append(" CACHE " + sequence.getInitCacheSize());
+        out.append(" CACHE " + sequence.getInitDbCache());
         return out;
     }
 
@@ -536,6 +552,11 @@ abstract public class SqlRenderer {
         out.append("'), NEXTVAL('");
         out.append(sequence.getSequenceName());
         out.append("')");
+        return out;
+    }
+
+    /** Print SQL NEXT SEQUENCE Update or print none. The method is intended for an emulator of the sequence. */
+    public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
         return out;
     }
 
