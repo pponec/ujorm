@@ -537,7 +537,7 @@ abstract public class SqlRenderer {
 
     /** Print SQL CREATE SEQUENCE. */
     public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("CREATE SEQUENCE IF NOT EXISTS ");
+        out.append("CREATE SEQUENCE ");
         out.append(sequence.getSequenceName());
         out.append(" START WITH " + sequence.getInitValue());
         out.append(" INCREMENT BY " + sequence.getInitIncrement());

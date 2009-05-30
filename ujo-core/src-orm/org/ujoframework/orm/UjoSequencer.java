@@ -93,7 +93,7 @@ public class UjoSequencer {
 
     /** The cache of a database sequence is zero by default. */
     public int getInitDbCache() {
-        return 0;
+        return 1;
     }
 
     /** Returns model of the database */
