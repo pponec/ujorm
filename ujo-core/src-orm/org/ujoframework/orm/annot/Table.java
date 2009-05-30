@@ -27,6 +27,8 @@ public @interface Table {
 
     /** A table name. Default value is taken from a relation property name. */
     String name() default "";
+    /** Table alias name. The default value is taken from a name. */
+    String alias() default "";
     /** Name of schema. If the value is empty than a default database schema is used. */
     String schema() default "";
     
