@@ -5,6 +5,7 @@
         <renderer>org.ujoframework.orm.renderers.H2Renderer</renderer>
         <table id="ord_order">
             <name>ord_order</name>
+            <alias>ord_order</alias>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -14,7 +15,6 @@
             <column id="usrId">
                 <name>usrId</name>
                 <dbType>INT</dbType>
-                <maxLength>8</maxLength>
             </column>
             <column id="description">
                 <name>DESCR</name>
@@ -32,6 +32,7 @@
         </table>
         <table id="ord_item">
             <name>ord_item</name>
+            <alias>ord_item</alias>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -41,7 +42,6 @@
             <column id="usrId">
                 <name>usrId</name>
                 <dbType>INT</dbType>
-                <maxLength>8</maxLength>
             </column>
             <column id="description">
                 <name>description</name>
@@ -55,26 +55,22 @@
         </table>
         <table id="view_order" view="true">
             <name>ord_order</name>
+            <alias>ord_order</alias>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
                 <mandatory>true</mandatory>
             </column>
-            <column id="usrId">
-                <name>usrId</name>
-                <dbType>INT</dbType>
-                <maxLength>8</maxLength>
-            </column>
             <column id="itemCount">
                 <name>itemCount</name>
                 <dbType>INT</dbType>
-                <maxLength>8</maxLength>
             </column>
-            <select>SELECT id, usrId, count(*) AS itemCount FROM db1.ord_order GROUP BY id ORDER BY id</select>
+            <select>SELECT ord_order.id, count(*) AS itemCount FROM db1.ord_order ord_order, db1.ord_item ord_item WHERE ord_order.id = ord_item.fk_order GROUP BY ord_order.id ORDER BY ord_order.id</select>
         </table>
         <table id="db1" view="true">
             <name>ord_order</name>
+            <alias>ord_order</alias>
             <relation2m id="ord_order">
                 <name>ord_order</name>
             </relation2m>
@@ -86,6 +82,7 @@
             </relation2m>
         </table>
         <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
         <user>sa</user>
     </database>
     <parameters></parameters>
