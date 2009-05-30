@@ -27,6 +27,8 @@ public @interface View {
 
     /** A view name. Default value is taken from a relation property name. */
     String name() default "";
+    /** View alias name. The default value is taken from a name. */
+    String alias() default "";
     /** Mapping a VIEW to the SQL SELECT. */
     String  select() default "";
     /** Name of schema. If the value is empty than a default database schema is used. */

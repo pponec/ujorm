@@ -46,6 +46,8 @@ public class OrmTable extends AbstractMetaModel {
     public static final UjoProperty<OrmTable,String> ID = newProperty("id", "", propertyCount++);
     /** DB table name */
     public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "", propertyCount++);
+    /** The unique table/view name over all Databases in scope one OrmHandler */
+    public static final UjoProperty<OrmTable,String> ALIAS = newProperty("alias", "", propertyCount++);
     /** Name of table schema. */
     @Transient
     public static final UjoProperty<OrmTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
@@ -71,12 +73,8 @@ public class OrmTable extends AbstractMetaModel {
     @Transient
     public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class, propertyCount++);
 
-    /** The unique table name over all Databases of the one OrmHandler. */
-    private final String alias;
-
     /** No parameter constructor. */
     public OrmTable() {
-        alias = "";
     }
 
     @SuppressWarnings("unchecked")
@@ -93,6 +91,7 @@ public class OrmTable extends AbstractMetaModel {
 
         if (parTable!=null) {
             changeDefault(this, NAME  , NAME.of(parTable));
+            changeDefault(this, ALIAS , ALIAS.of(parTable));
             changeDefault(this, SCHEMA, SCHEMA.of(parTable));
             changeDefault(this, SELECT, SELECT.of(parTable));
             changeDefault(this, VIEW  , VIEW.of(parTable));
@@ -100,9 +99,11 @@ public class OrmTable extends AbstractMetaModel {
 
         if (VIEW.of(this)) {
             if (view1!=null) changeDefault(this, NAME  , view1.name());
+            if (view1!=null) changeDefault(this, ALIAS , view1.alias());
             if (view1!=null) changeDefault(this, SCHEMA, view1.schema());
             if (view1!=null) changeDefault(this, SELECT, view1.select());
             if (view2!=null) changeDefault(this, NAME  , view2.name());
+            if (view2!=null) changeDefault(this, ALIAS , view2.alias());
             if (view2!=null) changeDefault(this, SCHEMA, view2.schema());
             if (view2!=null) changeDefault(this, SELECT, view2.select());
 
@@ -113,13 +114,15 @@ public class OrmTable extends AbstractMetaModel {
             Table table1 = field.getAnnotation(Table.class);
             Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
             if (table1!=null) changeDefault(this, NAME  , table1.name());
+            if (table1!=null) changeDefault(this, ALIAS , table1.alias());
             if (table1!=null) changeDefault(this, SCHEMA, table1.schema());
             if (table2!=null) changeDefault(this, NAME  , table2.name());
+            if (table2!=null) changeDefault(this, ALIAS , table2.alias());
             if (table2!=null) changeDefault(this, SCHEMA, table2.schema());
         }
         changeDefault(this, SCHEMA, OrmDatabase.SCHEMA.of(database));
         changeDefault(this, NAME, dbProperty.getName());
-        alias = NAME.of(this); // + "_" +  dbProperty.getIndex();
+        changeDefault(this, ALIAS, NAME.of(this));
 
         // -----------------------------------------------
 
@@ -210,8 +213,8 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     /** Returns a unique table name over all Databases of the one OrmHandler. */
-    public final String getAlias() {
-        return alias;
+    public String getAlias() {
+        return ALIAS.of(this);
     }
 
     /** Returns the database */
