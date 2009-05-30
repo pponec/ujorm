@@ -28,7 +28,7 @@ import org.ujoframework.extensions.AbstractUjo;
  * <li>a no parameter constructor</li>
  * </ul>
  * @author Pavel Ponec
- * @since 0.81 
+ * @since ujo-tool
  * @composed 1 - * FactoryProperty
   */
 public abstract class FactoryUjo extends AbstractUjo {

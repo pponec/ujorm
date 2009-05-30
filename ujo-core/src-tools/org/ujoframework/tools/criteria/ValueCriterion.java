@@ -23,7 +23,8 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * Criterion of a value.
+ * The value criterion implementation.
+ * @since 0.90
  * @author Pavel Ponec
  */
 public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {

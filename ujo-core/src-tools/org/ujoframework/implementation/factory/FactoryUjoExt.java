@@ -25,7 +25,7 @@ import org.ujoframework.core.UjoManager;
  *
  * @see FactoryProperty
  * @author Pavel Ponec
- * @since 0.81 
+ * @since ujo-tool
  * @composed 1 - * FactoryProperty
  */
 abstract public class FactoryUjoExt<UJO_IMPL extends FactoryUjoExt> extends FactoryUjo {

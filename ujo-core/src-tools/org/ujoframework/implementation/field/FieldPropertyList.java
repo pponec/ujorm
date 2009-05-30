@@ -26,6 +26,7 @@ import org.ujoframework.implementation.bean.BeanProperty;
 /**
  * Property List implementation. There is used an List collection.
  * @see BeanProperty
+ * @since ujo-tool
  * @author Pavel Ponec  
  */
 public class FieldPropertyList<UJO extends Ujo, ITEM> 

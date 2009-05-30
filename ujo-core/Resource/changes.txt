@@ -1,17 +1,20 @@
 The UJO Framework release notes
 *******************************
 
+release 0.86 (2009-XX-XX)
++ ORM support - the BETA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements on the in-memory database table
++ new factory methods of UjoProperty implementations
+
 release 0.85 (2009-04-20)
-+ ORM support - the early ALPHA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements on the in-memory database table
 + new interface UjoMiddle extends the Ujo interface in four methods (set, get, setText, getText)
 + the original UjoExt interface extends UjoMiddle now
-+ new class MapImplUjo implements the Map interface
-+ XML body element value is supported by a new annotation @XmlElementBody
++ the first Map & Ujo implementation is called MapImplUjo
++ new annotation @XmlElementBody supports a XML body value now
++ List serialization of the plain objects is supported (e.g. List<Integer>)
 + there is supported a text serialization of the list of simple objects (e.g. List<Integer>)
 + text serialization of the type java.sql.Date is supported
 + interface UjoProperty has new methods for a direction of sorting: isAscending(), descending()
 + new method UjoPropertyList.isItemTypeOf(Class) tests that property type is a type (or subtype) of the parameter
-+ new factory methods of UjoProperty implementations
 + all 'Super' classes was renamed to the prefix 'Abstract' classes
 + class PropertyTextable is was renamed to ValueTextable
 + small bug fixing
