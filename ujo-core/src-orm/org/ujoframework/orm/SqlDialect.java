@@ -28,7 +28,7 @@ import org.ujoframework.criterion.ValueCriterion;
 import org.ujoframework.criterion.Operator;
 
 /**
- * SQL renderer API
+ * SQL dialect API
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")

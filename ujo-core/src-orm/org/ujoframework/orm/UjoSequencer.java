@@ -44,7 +44,7 @@ public class UjoSequencer {
             String sql = "";
             StringBuilder out = new StringBuilder(64);
             try {
-                sql = database.getRenderer().printSeqNextValue(this, out).toString();
+                sql = database.getDialect().printSeqNextValue(this, out).toString();
                 statement = session.getStatement(database, sql);
                 res = statement.executeQuery();
                 res.next();
@@ -53,7 +53,7 @@ public class UjoSequencer {
 
                 // update sequence:
                 out.setLength(0);
-                sql = database.getRenderer().printSeqNextValueUpdate(this, out).toString();
+                sql = database.getDialect().printSeqNextValueUpdate(this, out).toString();
                 if (sql.length()>0) {
                     // TODO: update must be updated by a different DB connection !!!
                     String tableKey = table!=null ? OrmTable.NAME.of(table) : SqlDialect.COMMON_SEQ_TABLE_KEY ;

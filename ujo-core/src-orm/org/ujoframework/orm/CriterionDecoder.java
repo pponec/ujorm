@@ -40,7 +40,7 @@ import org.ujoframework.criterion.Operator;
 public class CriterionDecoder {
 
     final private OrmHandler handler;
-    final private SqlDialect renderer;
+    final private SqlDialect dialect;
 
     final private Criterion criterion;
     final private StringBuilder sql;
@@ -53,7 +53,7 @@ public class CriterionDecoder {
 
     public CriterionDecoder(Criterion criterion, OrmDatabase database) {
         this.criterion = criterion;
-        this.renderer = database.getRenderer();
+        this.dialect = database.getDialect();
         this.handler  = database.getOrmHandler();
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ValueCriterion>();
@@ -70,7 +70,7 @@ public class CriterionDecoder {
         if (c.isBinary()) {
             unpackBinary((BinaryCriterion)c);
         } else try {
-            ValueCriterion value = renderer.printCriterion((ValueCriterion) c, sql);
+            ValueCriterion value = dialect.printCriterion((ValueCriterion) c, sql);
             if (value!=null) {
                 values.add(value);
             }
@@ -212,7 +212,7 @@ public class CriterionDecoder {
 
                 fk1.printForeignColumnFullName(i, sql);
                 sql.append(" = ");
-                renderer.printFullName(pk2.getColumn(i), sql);
+                dialect.printFullName(pk2.getColumn(i), sql);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

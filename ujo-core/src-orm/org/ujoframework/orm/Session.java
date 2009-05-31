@@ -171,7 +171,7 @@ public class Session {
             ujo.writeSession(this);
             table.assignPrimaryKey(ujo);
             OrmDatabase db = OrmTable.DATABASE.of(table);
-            sql = db.getRenderer().printInsert(ujo, out(128)).toString();
+            sql = db.getDialect().printInsert(ujo, out(128)).toString();
             LOGGER.log(Level.INFO, sql);
             statement = getStatement(db, sql);
             statement.assignValues(ujo);
@@ -201,7 +201,7 @@ public class Session {
             final Criterion criterion = createPkCriterion(ujo);
             final OrmTable ormTable = handler.findTableModel(ujo.getClass());
             final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
-            String sql = db.getRenderer().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
+            String sql = db.getDialect().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(ujo, changedColumns);
             statement.assignValues(decoder);
@@ -257,7 +257,7 @@ public class Session {
         try {
             final OrmDatabase db = OrmTable.DATABASE.of(ormTable);
             final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
-            sql = db.getRenderer().printDelete(ormTable, decoder, out(64)).toString();
+            sql = db.getDialect().printDelete(ormTable, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
 
@@ -320,7 +320,7 @@ public class Session {
         String sql = "";
 
         try {
-            sql = db.getRenderer().printSelect(table, query, true, out(128)).toString();
+            sql = db.getDialect().printSelect(table, query, true, out(128)).toString();
             LOGGER.log(Level.INFO, sql);
 
             statement = getStatement(db, sql);
@@ -346,7 +346,7 @@ public class Session {
             OrmTable table = query.getTableModel();
             OrmDatabase db = OrmTable.DATABASE.of(table);
 
-            sql = db.getRenderer().printSelect(table, query, false, out(128)).toString();
+            sql = db.getDialect().printSelect(table, query, false, out(128)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(query.getDecoder());
 

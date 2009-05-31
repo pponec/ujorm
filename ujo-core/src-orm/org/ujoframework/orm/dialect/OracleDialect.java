@@ -18,7 +18,7 @@ package org.ujoframework.orm.dialect;
 
 import org.ujoframework.orm.SqlDialect;
 
-/** Oracle (www.oracle.com/)  - renderer is not supported yet */
+/** Oracle (www.oracle.com/)  - dialect is not supported yet */
 public class OracleDialect extends SqlDialect {
 
     @Override

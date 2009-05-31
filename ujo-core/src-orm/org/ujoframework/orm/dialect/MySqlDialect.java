@@ -18,7 +18,7 @@ package org.ujoframework.orm.dialect;
 
 import org.ujoframework.orm.SqlDialect;
 
-/** MySQL (http://dev.mysql.com/) - renderer is not supported yet */
+/** MySQL (http://dev.mysql.com/) - dialect is not supported yet */
 public class MySqlDialect extends SqlDialect {
 
     @Override
