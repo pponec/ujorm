@@ -36,7 +36,7 @@ import java.util.StringTokenizer;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.Session;
-import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
 
@@ -59,8 +59,8 @@ public class OrmDatabase extends AbstractMetaModel {
     public static final UjoProperty<OrmDatabase,String> ID = newProperty("id", "", propertyCount++);
     /** OrmDatabase default schema */
     public static final UjoProperty<OrmDatabase,String> SCHEMA = newProperty("schema", "", propertyCount++);
-    /** SQL renderer type of SqlRenderer. */
-    public static final UjoProperty<OrmDatabase,Class> RENDERER = newProperty("renderer", Class.class, propertyCount++);
+    /** SQL dialect type of Class&lt;SqlDialect&gt; */
+    public static final UjoProperty<OrmDatabase,Class> DIALECT = newProperty("dialect", Class.class, propertyCount++);
     /** List of tables */
     public static final ListProperty<OrmDatabase,OrmTable> TABLES = newPropertyList("table", OrmTable.class, propertyCount++);
     /** JDBC URL connection */
@@ -81,7 +81,7 @@ public class OrmDatabase extends AbstractMetaModel {
     // --------------------
 
     private OrmHandler ormHandler;
-    private SqlRenderer renderer;
+    private SqlDialect renderer;
     private UjoSequencer sequencer;
 
     public OrmDatabase() {
@@ -94,7 +94,7 @@ public class OrmDatabase extends AbstractMetaModel {
 
         if (param!=null) {
             changeDefault(this, SCHEMA  , SCHEMA.of(param));
-            changeDefault(this, RENDERER, RENDERER.of(param));
+            changeDefault(this, DIALECT , DIALECT.of(param));
             changeDefault(this, JDBC_URL, JDBC_URL.of(param));
             changeDefault(this, JDBC_DRIVER, JDBC_DRIVER.of(param));
             changeDefault(this, USER    , USER.of(param));
@@ -105,7 +105,7 @@ public class OrmDatabase extends AbstractMetaModel {
         Db annotDB = database.getClass().getAnnotation(Db.class);
         if (annotDB!=null) {
             changeDefault(this, SCHEMA  , annotDB.schema());
-            changeDefault(this, RENDERER, annotDB.renderer());
+            changeDefault(this, DIALECT , annotDB.dialect());
             changeDefault(this, JDBC_URL, annotDB.jdbcUrl());
             changeDefault(this, JDBC_DRIVER, annotDB.jdbcDriver());
             changeDefault(this, USER    , annotDB.user());
@@ -144,10 +144,10 @@ public class OrmDatabase extends AbstractMetaModel {
         return propertyCount;
     }
 
-    /** Returns a SQL renderer for the current database. */
-    public SqlRenderer getRenderer() {
+    /** Returns a SQL dialect for the current database. */
+    public SqlDialect getRenderer() {
         if (renderer==null) try {
-            renderer = (SqlRenderer) RENDERER.of(this).newInstance();
+            renderer = (SqlDialect) DIALECT.of(this).newInstance();
             renderer.setHandler(ormHandler);
         } catch (Exception e) {
             throw new IllegalStateException("Can't create an instance of " + renderer, e);

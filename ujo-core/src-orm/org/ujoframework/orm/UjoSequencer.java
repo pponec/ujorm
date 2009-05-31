@@ -56,7 +56,7 @@ public class UjoSequencer {
                 sql = database.getRenderer().printSeqNextValueUpdate(this, out).toString();
                 if (sql.length()>0) {
                     // TODO: update must be updated by a different DB connection !!!
-                    String tableKey = table!=null ? OrmTable.NAME.of(table) : SqlRenderer.COMMON_SEQ_TABLE_KEY ;
+                    String tableKey = table!=null ? OrmTable.NAME.of(table) : SqlDialect.COMMON_SEQ_TABLE_KEY ;
                     statement = session.getStatement(database, sql);
                     statement.getPreparedStatement().setString(1, tableKey);
                     statement.executeUpdate();

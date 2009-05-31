@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm.renderers;
+package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
-import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
 
 /** PostgreSQL (http://www.postgresql.org/) */
-public class PostgreSqlRenderer extends SqlRenderer {
+public class PostgreSqlDialect extends SqlDialect {
 
     @Override
     public String getJdbcUrl() {

@@ -20,12 +20,12 @@ import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.orm.renderers.H2Renderer;
+import org.ujoframework.orm.dialect.H2Dialect;
 
 /**
  * An table definition of the one database (a sample).
  */
-@Db( renderer=H2Renderer.class, user="sa", password="")
+@Db( dialect=H2Dialect.class, user="sa", password="")
 public class MyDatabase extends TableUjo {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */

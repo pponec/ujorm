@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm.renderers;
+package org.ujoframework.orm.dialect;
 
-import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.SqlDialect;
 
-/** MySQL (http://dev.mysql.com/) - renderer is not supported yet */
-public class MySqlRenderer extends SqlRenderer {
+/** Oracle (www.oracle.com/)  - renderer is not supported yet */
+public class OracleDialect extends SqlDialect {
 
     @Override
     public String getJdbcUrl() {
