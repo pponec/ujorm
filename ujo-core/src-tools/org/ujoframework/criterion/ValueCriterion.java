@@ -15,7 +15,7 @@
  */
 
 
-package org.ujoframework.tools.criteria;
+package org.ujoframework.criterion;
 
 import java.util.Locale;
 import java.util.regex.Pattern;

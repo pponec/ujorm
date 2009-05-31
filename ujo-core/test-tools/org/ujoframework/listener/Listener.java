@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.implementation.registrar;
+package org.ujoframework.listener;
 
 import java.util.ArrayList;
-import org.ujoframework.tools.beans.UjoPropertyChangeEvent;
-import org.ujoframework.tools.beans.UjoPropertyChangeListener;
+import org.ujoframework.listener.UjoPropertyChangeEvent;
+import org.ujoframework.listener.UjoPropertyChangeListener;
 
 /**
  * Listener

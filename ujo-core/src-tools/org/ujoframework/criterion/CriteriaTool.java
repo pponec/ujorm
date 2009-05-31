@@ -15,7 +15,7 @@
  */   
    
 
-package org.ujoframework.tools.criteria;
+package org.ujoframework.criterion;
 
 import java.util.ArrayList;
 import java.util.Collections;

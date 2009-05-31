@@ -5,12 +5,12 @@
  * Created on 3. June 2007, 23:00
  */
 
-package org.ujoframework.implementation.criterion;
+package org.ujoframework.criterion;
 
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.extensions.PathProperty;
-import static org.ujoframework.implementation.criterion.Person.*;
+import static org.ujoframework.criterion.Person.*;
 
 /**
  * HashMap Unified Data Object Test

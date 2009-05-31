@@ -3,10 +3,10 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.implementation.registrar;
+package org.ujoframework.listener;
 
 import junit.framework.TestCase;
-import static org.ujoframework.implementation.registrar.Person.*;
+import static org.ujoframework.listener.Person.*;
 
 /**
  *

@@ -24,7 +24,7 @@ import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.tools.criteria.Criterion;
+import org.ujoframework.criterion.Criterion;
 
 /**
  * ORM query.

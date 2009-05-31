@@ -27,10 +27,10 @@ import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.tools.criteria.Criterion;
-import org.ujoframework.tools.criteria.BinaryCriterion;
-import org.ujoframework.tools.criteria.ValueCriterion;
-import org.ujoframework.tools.criteria.Operator;
+import org.ujoframework.criterion.Criterion;
+import org.ujoframework.criterion.BinaryCriterion;
+import org.ujoframework.criterion.ValueCriterion;
+import org.ujoframework.criterion.Operator;
 
 /**
  * SQL Criterion Decoder.

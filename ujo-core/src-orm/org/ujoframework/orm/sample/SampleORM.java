@@ -23,8 +23,8 @@ import org.ujoframework.orm.Session;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.OrmColumn;
-import org.ujoframework.tools.criteria.Criterion;
-import org.ujoframework.tools.criteria.Operator;
+import org.ujoframework.criterion.Criterion;
+import org.ujoframework.criterion.Operator;
 
 /**
  * SampleORM of usages: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE.

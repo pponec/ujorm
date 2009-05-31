@@ -22,8 +22,8 @@ import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.sample.Database;
 import org.ujoframework.orm.sample.Item;
 import org.ujoframework.orm.sample.Order;
-import org.ujoframework.tools.criteria.Criterion;
-import org.ujoframework.tools.criteria.Operator;
+import org.ujoframework.criterion.Criterion;
+import org.ujoframework.criterion.Operator;
 
 /**
  *

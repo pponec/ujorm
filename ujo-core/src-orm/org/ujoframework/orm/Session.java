@@ -38,9 +38,9 @@ import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmParameters;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.tools.criteria.Criterion;
-import org.ujoframework.tools.criteria.BinaryCriterion;
-import org.ujoframework.tools.criteria.ValueCriterion;
+import org.ujoframework.criterion.Criterion;
+import org.ujoframework.criterion.BinaryCriterion;
+import org.ujoframework.criterion.ValueCriterion;
 
 /**
  * ORM session.

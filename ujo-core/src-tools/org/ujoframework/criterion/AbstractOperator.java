@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.tools.criteria;
+package org.ujoframework.criterion;
 
 /**
  * The abstract criteria operator
