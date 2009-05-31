@@ -239,7 +239,7 @@ public class OrmColumn extends OrmRelation2Many {
         try {
             final String result = TABLE.of(this)
                 .getDatabase()
-                .getRenderer()
+                .getDialect()
                 .printFullName(this, new StringBuilder(32))
                 .toString()
                 ;

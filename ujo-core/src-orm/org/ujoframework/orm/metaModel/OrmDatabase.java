@@ -81,7 +81,7 @@ public class OrmDatabase extends AbstractMetaModel {
     // --------------------
 
     private OrmHandler ormHandler;
-    private SqlDialect renderer;
+    private SqlDialect dialect;
     private UjoSequencer sequencer;
 
     public OrmDatabase() {
@@ -115,8 +115,8 @@ public class OrmDatabase extends AbstractMetaModel {
 
         changeDefault(this, ID      , database.getClass().getSimpleName());
         changeDefault(this, SCHEMA  , database.getClass().getSimpleName());
-        changeDefault(this, JDBC_URL, getRenderer().getJdbcUrl());
-        changeDefault(this, JDBC_DRIVER, getRenderer().getJdbcDriver());
+        changeDefault(this, JDBC_URL, getDialect().getJdbcUrl());
+        changeDefault(this, JDBC_DRIVER, getDialect().getJdbcDriver());
 
         for (UjoProperty tableProperty : database.readProperties()) {
 
@@ -145,14 +145,14 @@ public class OrmDatabase extends AbstractMetaModel {
     }
 
     /** Returns a SQL dialect for the current database. */
-    public SqlDialect getRenderer() {
-        if (renderer==null) try {
-            renderer = (SqlDialect) DIALECT.of(this).newInstance();
-            renderer.setHandler(ormHandler);
+    public SqlDialect getDialect() {
+        if (dialect==null) try {
+            dialect = (SqlDialect) DIALECT.of(this).newInstance();
+            dialect.setHandler(ormHandler);
         } catch (Exception e) {
-            throw new IllegalStateException("Can't create an instance of " + renderer, e);
+            throw new IllegalStateException("Can't create an instance of " + dialect, e);
         }
-        return renderer;
+        return dialect;
     }
 
 
@@ -260,7 +260,7 @@ public class OrmDatabase extends AbstractMetaModel {
             // 1. Create schemas:
             for (String schema : getSchemas()) {
                 out.setLength(0);
-                sql = getRenderer().printCreateSchema(schema, out).toString();
+                sql = getDialect().printCreateSchema(schema, out).toString();
                 if (isValid(sql)) {
                     stat.executeUpdate(sql);
                     LOGGER.info(sql);
@@ -271,7 +271,7 @@ public class OrmDatabase extends AbstractMetaModel {
             for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
                 if (table.isTable()) {
                     out.setLength(0);
-                    sql = getRenderer().printTable(table, out).toString();
+                    sql = getDialect().printTable(table, out).toString();
                     stat.executeUpdate(sql);
                     LOGGER.info(sql);
                 }
@@ -281,7 +281,7 @@ public class OrmDatabase extends AbstractMetaModel {
             for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
                 if (table.isTable()){
                     out.setLength(0);
-                    sql = getRenderer().printForeignKey(table, out).toString();
+                    sql = getDialect().printForeignKey(table, out).toString();
                     if (isValid(sql)) {
                         stat.executeUpdate(sql);
                         LOGGER.info(sql);
@@ -292,7 +292,7 @@ public class OrmDatabase extends AbstractMetaModel {
             // 4. Create Sequence;
             if (true) {
                 out.setLength(0);
-                sql = getRenderer().printCreateSequence(sequencer, out).toString();
+                sql = getDialect().printCreateSequence(sequencer, out).toString();
                 StringTokenizer st = new StringTokenizer(sql, ";");
                 while (st.hasMoreTokens()) {
                     sql = st.nextToken().trim();

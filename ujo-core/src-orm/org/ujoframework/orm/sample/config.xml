@@ -2,7 +2,7 @@
 <body>
     <database id="Database">
         <schema>db1</schema>
-        <renderer>org.ujoframework.orm.renderers.H2Renderer</renderer>
+        <dialect>org.ujoframework.orm.dialect.H2Dialect</dialect>
         <table id="ord_order">
             <name>ord_order</name>
             <alias>ord_order</alias>
