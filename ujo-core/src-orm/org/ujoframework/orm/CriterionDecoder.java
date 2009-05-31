@@ -35,12 +35,12 @@ import org.ujoframework.criterion.Operator;
 /**
  * SQL Criterion Decoder.
  * @author Pavel Ponec
- * @composed 1 - 1 SqlRenderer
+ * @composed 1 - 1 SqlDialect
  */
 public class CriterionDecoder {
 
     final private OrmHandler handler;
-    final private SqlRenderer renderer;
+    final private SqlDialect renderer;
 
     final private Criterion criterion;
     final private StringBuilder sql;

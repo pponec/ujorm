@@ -13,13 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujoframework.orm.renderers;
+package org.ujoframework.orm.dialect;
 
-import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.SqlDialect;
 
 /** H2 (http://www.h2database.com) */
 @SuppressWarnings("unchecked")
-public class H2Renderer extends SqlRenderer {
+public class H2Dialect extends SqlDialect {
 
     /** Returns a default JDBC Driver */
     public String getJdbcUrl() {

@@ -32,7 +32,7 @@ import org.ujoframework.criterion.Operator;
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
-abstract public class SqlRenderer {
+abstract public class SqlDialect {
 
     /** The table key for a common sequence emulator. */
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";

@@ -13,12 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujoframework.orm.renderers;
+package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmDatabase;
@@ -26,7 +26,7 @@ import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 
 /** Derby (http://db.apache.org/derby/) */
-public class DerbyRenderer extends SqlRenderer {
+public class DerbyDialect extends SqlDialect {
 
     /** Syntax: jdbc:derby:[subsubprotocol:][databaseName][;attribute=value]* */
     @Override

@@ -16,7 +16,7 @@
 
 package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
-import org.ujoframework.orm.SqlRenderer;
+import org.ujoframework.orm.SqlDialect;
 
 /** 
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
@@ -27,8 +27,8 @@ public @interface Db {
 
     /** Default name of table schema. If value is empty than a class name is used. */
     String schema() default "";
-    /** SQL renderer by a DB Vendor. */
-    Class<? extends SqlRenderer> renderer();
+    /** SQL dialect by a DB Vendor. */
+    Class<? extends SqlDialect> dialect();
     /** LDAP */
     String ldap() default "";
     /** JDBC Url */
