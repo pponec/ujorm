@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package org.ujoframework.implementation.registrar;
+package org.ujoframework.listener;
 
+import org.ujoframework.implementation.registrar.*;
 import org.ujoframework.UjoProperty;
 
 /**

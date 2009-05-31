@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.tools.beans;
+package org.ujoframework.listener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,9 +51,9 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
      * @param source The source object.
      * @param before The parameter can create a restriction for a listener type
      * <ul>
-     *   <li>TRUE - allows to register the listeners before writting value only<li>
-     *   <li>FALSE - allows to register the listeners after awritting value only<li>
-     *   <li>NULL - allows to register both type of listeners<li>
+     *   <li>TRUE - allows to register the listeners before writting value only</li>
+     *   <li>FALSE - allows to register the listeners after awritting value only</li>
+     *   <li>NULL - allows to register both type of listeners</li>
      * </ul>
      */
     public UjoPropertyChangeSupport(Ujo source, Boolean before) {

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.ujoframework.implementation.criterion;
+package org.ujoframework.criterion;
 
 import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapUjoExt;

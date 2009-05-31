@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.tools.beans;
+package org.ujoframework.listener;
 
 /**
  * A "PropertyChange" event gets fired whenever a bean changes a "bound" property.  

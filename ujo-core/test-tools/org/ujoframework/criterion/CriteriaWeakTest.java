@@ -5,18 +5,18 @@
  * Created on 3. June 2007, 23:00
  */
 
-package org.ujoframework.implementation.criterion;
+package org.ujoframework.criterion;
 
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.tools.criteria.CriteriaTool;
-import org.ujoframework.tools.criteria.Criterion;
-import org.ujoframework.tools.criteria.BinaryOperator;
-import org.ujoframework.tools.criteria.Operator;
-import static org.ujoframework.implementation.criterion.Person.*;
+import org.ujoframework.criterion.CriteriaTool;
+import org.ujoframework.criterion.Criterion;
+import org.ujoframework.criterion.BinaryOperator;
+import org.ujoframework.criterion.Operator;
+import static org.ujoframework.criterion.Person.*;
 
 /**
  * Criteria test

@@ -20,7 +20,7 @@
  * Release: $Revision: $
  */
 
-package org.ujoframework.tools.criteria;
+package org.ujoframework.criterion;
 
 import org.ujoframework.Ujo;
 

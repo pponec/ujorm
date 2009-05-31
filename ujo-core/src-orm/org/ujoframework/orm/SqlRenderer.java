@@ -24,8 +24,8 @@ import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
 import org.ujoframework.orm.metaModel.OrmView;
-import org.ujoframework.tools.criteria.ValueCriterion;
-import org.ujoframework.tools.criteria.Operator;
+import org.ujoframework.criterion.ValueCriterion;
+import org.ujoframework.criterion.Operator;
 
 /**
  * SQL renderer API
