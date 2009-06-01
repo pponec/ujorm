@@ -17,7 +17,6 @@
 package org.ujoframework.orm.sample;
 
 
-import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.TableUjo;
@@ -28,11 +27,11 @@ import org.ujoframework.orm.annot.View;
  * The column mapping to FROM view.
  * @hidden
  */
-@View(select="SELECT ord_order.id, count(*) AS itemCount"
-    + " FROM db1.ord_order ord_order, db1.ord_item ord_item"
-    + " WHERE ord_order.id = ord_item.fk_order"
-    + " GROUP BY ord_order.id"
-    + " ORDER BY ord_order.id")
+@View(select="SELECT ord_order_alias.id, count(*) AS itemCount"
+    + " FROM db1.ord_order ord_order_alias, db1.ord_item ord_item_alias"
+    + " WHERE ord_order_alias.id = ord_item_alias.fk_order"
+    + " GROUP BY ord_order_alias.id"
+    + " ORDER BY ord_order_alias.id")
 public class ViewOrder extends TableUjo<ViewOrder> {
 
     /** Unique key */

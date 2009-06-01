@@ -122,7 +122,9 @@ public class OrmTable extends AbstractMetaModel {
         }
         changeDefault(this, SCHEMA, OrmDatabase.SCHEMA.of(database));
         changeDefault(this, NAME, dbProperty.getName());
-        changeDefault(this, ALIAS, NAME.of(this));
+        String aliasPrefix = OrmParameters.TABLE_ALIAS_PREFIX.of(database.getParams());
+        String aliasSuffix = OrmParameters.TABLE_ALIAS_SUFFIX.of(database.getParams());
+        changeDefault(this, ALIAS, aliasPrefix+NAME.of(this)+aliasSuffix);
 
         // -----------------------------------------------
 

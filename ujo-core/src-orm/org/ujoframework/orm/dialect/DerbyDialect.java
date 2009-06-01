@@ -56,7 +56,7 @@ public class DerbyDialect extends SqlDialect {
         out.append(seqTable);
         out.append("\n\t( id VARCHAR(128) NOT NULL PRIMARY KEY");
         out.append("\n\t, seq BIGINT DEFAULT " + 0);
-        out.append("\n\t, step INT DEFAULT " + sequence.getInitIncrement());
+        out.append("\n\t, step INT DEFAULT " + sequence.getIncrement());
         out.append("\n\t);");
         println(out);
 
@@ -78,15 +78,34 @@ public class DerbyDialect extends SqlDialect {
         return out;
     }
 
+    /** Prinnt full sequence name */
+    @Override
+    protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append(sequence.getDatabasSchema());
+        out.append('.');
+        out.append(sequence.getSequenceName());
+        return out;
+    }
+
+    /** Print SQL ALTER SEQUENCE to modify an INCREMENT. */
+    @Override
+    public Appendable printAlterSequenceIncrement(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("UPDATE ");
+        printSequenceName(sequence, out);
+        out.append(" SET step=" + sequence.getIncrement());
+        out.append(" WHERE id='"+COMMON_SEQ_TABLE_KEY+"'");
+        return out;
+    }
+
+
     /** Print SQL NEXT SEQUENCE. */
     @Override
     public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
         OrmTable table = sequence.getTable();
         String tableKey = table!=null ? OrmTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
 
-        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
-        out.append("SELECT seq, seq+step FROM ");
-        out.append(seqTable);
+        out.append("SELECT seq+step FROM ");
+        printSequenceName(sequence, out);
         out.append(" WHERE id='"+tableKey+"'");
         return out;
     }
@@ -94,9 +113,8 @@ public class DerbyDialect extends SqlDialect {
     /** Print SQL NEXT SEQUENCE Update or return null. The method is intended for an emulator of the sequence. */
     @Override
     public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
-        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
         out.append("UPDATE ");
-        out.append(seqTable);
+        printSequenceName(sequence, out);
         out.append(" SET seq=seq+step");
         out.append(" WHERE id=?");
         return out;
@@ -142,6 +160,4 @@ public class DerbyDialect extends SqlDialect {
         //out.append("\n\tON DELETE CASCADE");
         return out;
     }
-
-
 }

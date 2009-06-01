@@ -25,6 +25,7 @@ import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.Operator;
+import org.ujoframework.orm.metaModel.OrmParameters;
 
 /**
  * SampleORM of usages: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE.
@@ -35,8 +36,16 @@ public class SampleORM {
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel() {
 
-        boolean yesICanLoadExternalConfig = false;
-        if (yesICanLoadExternalConfig) {
+
+        boolean yesIWantChangeDefaultParameters = true;
+        if (yesIWantChangeDefaultParameters) {
+            OrmParameters params = new OrmParameters();
+            OrmParameters.TABLE_ALIAS_SUFFIX.setValue(params, "_alias");
+            OrmHandler.getInstance().config(params);
+        }
+
+        boolean yesIWantLoadExternalConfig = false;
+        if (yesIWantLoadExternalConfig) {
 
             URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
             OrmHandler.getInstance().config(config, true);
