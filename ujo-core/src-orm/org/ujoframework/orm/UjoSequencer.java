@@ -7,6 +7,7 @@ package org.ujoframework.orm;
 
 import java.sql.ResultSet;
 import org.ujoframework.orm.metaModel.OrmDatabase;
+import org.ujoframework.orm.metaModel.OrmParameters;
 import org.ujoframework.orm.metaModel.OrmTable;
 
 /**
@@ -20,12 +21,13 @@ public class UjoSequencer {
 
     final private OrmDatabase database;
     final private OrmTable table;
+    final private int increment;
     private long sequence = 0;
     private long seqLimit = 0;
-    private int step = 20;
 
     public UjoSequencer(OrmDatabase database) {
         this.database = database;
+        this.increment = OrmParameters.SEQUENCE_INCREMENT.of(database.getParams());
         this.table = null;
     }
 
@@ -48,14 +50,14 @@ public class UjoSequencer {
                 statement = session.getStatement(database, sql);
                 res = statement.executeQuery();
                 res.next();
-                sequence = res.getLong(1) + 1; // Get the last assigned number + 1;
-                seqLimit = res.getLong(2);
+                seqLimit = res.getLong(1);
+                sequence = (seqLimit - increment) + 1; // Get the last assigned number + 1;
 
                 // update sequence:
                 out.setLength(0);
                 sql = database.getDialect().printSeqNextValueUpdate(this, out).toString();
                 if (sql.length()>0) {
-                    // TODO: update must be updated by a different DB connection !!!
+                    // TODO: sequence must be updated by a different DB connection !!!
                     String tableKey = table!=null ? OrmTable.NAME.of(table) : SqlDialect.COMMON_SEQ_TABLE_KEY ;
                     statement = session.getStatement(database, sql);
                     statement.getPreparedStatement().setString(1, tableKey);
@@ -71,7 +73,7 @@ public class UjoSequencer {
         }
     }
 
-    /** Returns sequence name */
+    /** Returns the sequence name */
     public String getSequenceName() {
         return "OrmUjoSequence";
     }
@@ -81,14 +83,9 @@ public class UjoSequencer {
         return OrmDatabase.SCHEMA.of(database);
     }
 
-    /** The init sequence value is zero by default */
-    public long getInitValue() {
-        return getInitIncrement();
-    }
-
     /** The UJO cache is the number of pre-allocated numbers inside the OrmUjo framework. */
-    public int getInitIncrement() {
-        return 32;
+    public int getIncrement() {
+        return increment;
     }
 
     /** The cache of a database sequence is zero by default. */

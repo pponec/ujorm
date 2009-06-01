@@ -289,7 +289,7 @@ public class OrmDatabase extends AbstractMetaModel {
                 }
             }
 
-            // 4. Create Sequence;
+            // 4. Create SEQUENCE;
             if (true) {
                 out.setLength(0);
                 sql = getDialect().printCreateSequence(sequencer, out).toString();
@@ -301,6 +301,12 @@ public class OrmDatabase extends AbstractMetaModel {
                         LOGGER.info(sql);
                     }
                 }
+            }
+            // 5. ALTER Sequence INCREMENT;
+            if (true) {
+                out.setLength(0);
+                sql = getDialect().printAlterSequenceIncrement(sequencer, out).toString();
+                stat.executeUpdate(sql);
             }
             conn.commit();
 
@@ -388,6 +394,11 @@ public class OrmDatabase extends AbstractMetaModel {
     /** OrmHandler */
     public OrmHandler getOrmHandler() {
         return ormHandler;
+    }
+
+    /** Return the OrmHandler parameters */
+    public OrmParameters getParams() {
+        return ormHandler.getParameters();
     }
 
 

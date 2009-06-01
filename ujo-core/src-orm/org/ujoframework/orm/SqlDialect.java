@@ -535,22 +535,33 @@ abstract public class SqlDialect {
         }
     }
 
+    /** Print full sequence name */
+    protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append(sequence.getSequenceName());
+        return out;
+    }
+
     /** Print SQL CREATE SEQUENCE. */
     public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
         out.append("CREATE SEQUENCE ");
-        out.append(sequence.getSequenceName());
-        out.append(" START WITH " + sequence.getInitValue());
-        out.append(" INCREMENT BY " + sequence.getInitIncrement());
+        printSequenceName(sequence, out);
+        out.append(" START WITH " + sequence.getIncrement());
         out.append(" CACHE " + sequence.getInitDbCache());
         return out;
     }
 
-    /** Print SQL NEXT SEQUENCE. */
+    /** Print SQL ALTER SEQUENCE to modify INCREMENT. */
+    public Appendable printAlterSequenceIncrement(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("ALTER SEQUENCE ");
+        printSequenceName(sequence, out);
+        out.append(" INCREMENT BY " + sequence.getIncrement());
+        return out;
+    }
+
+    /** Print the NEXT SQL SEQUENCE. */
     public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("SELECT CURRVAL('");
-        out.append(sequence.getSequenceName());
-        out.append("'), NEXTVAL('");
-        out.append(sequence.getSequenceName());
+        out.append("SELECT NEXTVAL('");
+        printSequenceName(sequence, out);
         out.append("')");
         return out;
     }

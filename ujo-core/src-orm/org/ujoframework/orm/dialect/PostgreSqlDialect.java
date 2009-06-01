@@ -41,42 +41,15 @@ public class PostgreSqlDialect extends SqlDialect {
         return out;
     }
 
-    /** Print SQL CREATE SEQUENCE. */
+    /** Prinnt full sequence name */
     @Override
-    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
-
-        String seqName
-            = sequence.getDatabasSchema()
-            + '.'
-            + sequence.getSequenceName()
-            ;
-        out.append("CREATE SEQUENCE ");
-        out.append(seqName);
-        out.append(" START WITH " + sequence.getInitValue());
-        out.append(" INCREMENT BY " + sequence.getInitIncrement());
-        out.append(" CACHE " + sequence.getInitDbCache());
-
-        // 
+    protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append(sequence.getDatabasSchema());
+        out.append('.');
+        out.append(sequence.getSequenceName());
         return out;
     }
 
-
-
-    /** Print SQL NEXT SEQUENCE. */
-    @Override
-    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        String seqName
-            = sequence.getDatabasSchema()
-            + '.'
-            + sequence.getSequenceName()
-            ;
-        out.append("SELECT CURRVAL('");
-        out.append(seqName);
-        out.append("'), NEXTVAL('");
-        out.append(seqName);
-        out.append("')");
-        return out;
-    }
 
 
 }
