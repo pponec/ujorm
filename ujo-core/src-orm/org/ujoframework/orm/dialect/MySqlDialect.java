@@ -23,12 +23,12 @@ public class MySqlDialect extends SqlDialect {
 
     @Override
     public String getJdbcUrl() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "jdbc:mysql://127.0.0.1:3306/db1";
     }
 
     @Override
     public String getJdbcDriver() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "com.mysql.jdbc.Driver";
     }
 
 }
