@@ -18,6 +18,7 @@ package org.ujoframework.orm;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.implementation.orm.TableUjo;
 
 /**
  * The OrmUjo is a basic interface of the persistent object in this ORM-UJO module.
@@ -40,7 +41,9 @@ public interface OrmUjo extends Ujo {
      */
     public UjoProperty[] readChangedProperties(boolean clear);
 
-    /** A special implementation, see a code in the TableUjo class for more information. */
+    /** A special implementation, see a source code of the TableUjo class for more information.
+     * @see TableUjo#readValue(org.ujoframework.UjoProperty) 
+     */
     @Override
     public Object readValue(final UjoProperty property);
 

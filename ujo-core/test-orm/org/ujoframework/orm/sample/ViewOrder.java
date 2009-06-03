@@ -17,14 +17,14 @@
 package org.ujoframework.orm.sample;
 
 import org.ujoframework.UjoProperty;
+import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.orm.OrmUjo;
 
 /**
  * Simple order for goods with a collection of Items (a sample).
  * @Table=bo_order
  */
-public class ViewOrder extends OrmUjo {
+public class ViewOrder extends TableUjo<ViewOrder> {
 
     /** Unique key */
     @Column(pk=true)
