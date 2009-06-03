@@ -36,8 +36,12 @@ public interface OrmUjo extends Ujo {
 
     /**
      * Returns changed properties.
-     * @param clear True value clears the property changes.
+     * @param clear True value clears all the property changes.
      */
     public UjoProperty[] readChangedProperties(boolean clear);
+
+    /** A special implementation, see a code in the TableUjo class for more information. */
+    @Override
+    public Object readValue(final UjoProperty property);
 
 }

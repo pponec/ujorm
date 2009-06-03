@@ -59,6 +59,7 @@ public class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
     /** Returns a next table row. */
     @Override
+    @SuppressWarnings("fallthrough")
     public T next() throws NoSuchElementException {
 
         if (!hasNext()) {
@@ -66,6 +67,7 @@ public class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
         }
         try {
             cursorReady = false; // switch off the cursor flag.
+            @SuppressWarnings("unchecked")
             T row = (T) query.getTableModel().createBO();
             int colCount = query.getColumns().size();
 
