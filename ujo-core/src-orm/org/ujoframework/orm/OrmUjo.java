@@ -20,10 +20,10 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * The OrmUjo is a basic interface of the persistent object in this framework.
- * A class that implements the interface must meet one more assumption: reference to a foreign destination
- * must be able to store any object internally. This feature is necessary for the proper
- * functioning of the lazy initialization.
+ * The OrmUjo is a basic interface of the persistent object in this ORM-UJO module.
+ * A class that implements the interface must have got a special feature: reference to a foreign BO
+ * must be able to store an object of any type by the method Ujo.writeProperty(...).
+ * This feature is necessary for the proper functioning of the lazy initialization.
  * @author Ponec
  */
 public interface OrmUjo extends Ujo {
