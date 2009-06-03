@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.UjoAction;
-import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmTable;
 
@@ -87,22 +86,22 @@ public class JdbcStatement {
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
-    public void assignValues(TableUjo table) throws SQLException {
-        final OrmTable dbTable = table.readSession().getHandler().findTableModel((Class) table.getClass());
+    public void assignValues(OrmUjo ormUjo) throws SQLException {
+        final OrmTable dbTable = ormUjo.readSession().getHandler().findTableModel((Class) ormUjo.getClass());
         final List<OrmColumn> columns = OrmTable.COLUMNS.getList(dbTable);
-        assignValues(table, columns);
+        assignValues(ormUjo, columns);
     }
 
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
-    public void assignValues(TableUjo table, List<OrmColumn> columns) throws SQLException {
+    public void assignValues(OrmUjo table, List<OrmColumn> columns) throws SQLException {
         for (OrmColumn column : columns) {
 
             if (column.isForeignKey()) {
                 UjoProperty property = column.getProperty();
                 Object value = table!=null ? property.of(table) : null ;
-                assignValues((TableUjo) value, column.getForeignColumns());
+                assignValues((OrmUjo) value, column.getForeignColumns());
             } else if (column.isColumn()) {
                 assignValue(table, column);
             }
@@ -118,10 +117,10 @@ public class JdbcStatement {
 
             if (column.isForeignKey()) {
                 List<OrmColumn> fc = column.getForeignColumns();
-                TableUjo table = (TableUjo) value;
+                OrmUjo ormUjo = (OrmUjo) value;
                 for (OrmColumn rColumn : fc) {
-                    Object rValue = rColumn.getValue(table);
-                    assignValue(rColumn, rValue, table);
+                    Object rValue = rColumn.getValue(ormUjo);
+                    assignValue(rColumn, rValue, ormUjo);
                 }                
             } else {
                assignValue(column, value, null);
@@ -132,7 +131,7 @@ public class JdbcStatement {
 
     /** Add a next value to a SQL prepared statement. */
     @SuppressWarnings("unchecked")
-    public void assignValue(final TableUjo table, final OrmColumn column) throws SQLException {
+    public void assignValue(final OrmUjo table, final OrmColumn column) throws SQLException {
 
         final UjoProperty property = column.getProperty();
         final Object value = table!=null ? property.of(table) : null ;
@@ -146,7 +145,7 @@ public class JdbcStatement {
     public void assignValue
         ( final OrmColumn column
         , final Object value
-        , final TableUjo table
+        , final OrmUjo ormUjo
         ) throws SQLException {
 
         ++parameterPointer;
@@ -154,8 +153,8 @@ public class JdbcStatement {
         UjoProperty property = column.getProperty();
         int sqlType = OrmColumn.DB_TYPE.of(column).getSqlType();
 
-        if (table!=null) {
-           logValue(table, property);
+        if (ormUjo!=null) {
+           logValue(ormUjo, property);
         } else if (logValues) {
            String textValue = UjoManager.getInstance().encodeValue(value, false);
            logValue(textValue, property);
@@ -182,10 +181,10 @@ public class JdbcStatement {
                     break;
             }
         } catch (Throwable e) {
-            String textValue = UjoManager.getInstance().getText(table, property, UjoAction.DUMMY);
+            String textValue = UjoManager.getInstance().getText(ormUjo, property, UjoAction.DUMMY);
             String msg = String.format
                 ( "table: %s, column %s, columnOffset: %d, value: %s"
-                , table.getClass().getSimpleName()
+                , ormUjo.getClass().getSimpleName()
                 , column
                 , parameterPointer
                 , textValue
@@ -195,9 +194,9 @@ public class JdbcStatement {
     }
 
     /** Log a value value into a text format. */
-    protected void logValue(final TableUjo table, final UjoProperty property) {
+    protected void logValue(final OrmUjo ormUjo, final UjoProperty property) {
         if (logValues) {
-            String textValue = UjoManager.getInstance().getText(table, property, UjoAction.DUMMY);
+            String textValue = UjoManager.getInstance().getText(ormUjo, property, UjoAction.DUMMY);
             logValue(textValue, property);
         }
     }

@@ -17,12 +17,10 @@
 package org.ujoframework.orm.metaModel;
 
 import java.util.ArrayList;
-import java.util.List;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.OrmUjo;
 
 /**
  * The table primary key.
@@ -74,42 +72,42 @@ public class OrmPKey extends AbstractMetaModel {
 
     /** Assign a PK from framework in case the PK generator is type of MEMO_SEQUENCE. */
     @SuppressWarnings("unchecked")
-    public boolean assignPrimaryKey(TableUjo table) {
+    public boolean assignPrimaryKey(OrmUjo ormUjo) {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
 
             OrmColumn column = COLUMNS.getItem(this, 0);
             UjoProperty property = column.getProperty();
-            if (property.of(table)!=null) {
+            if (property.of(ormUjo)!=null) {
                 return false;
             }
 
             switch (OrmColumn.PRIMARY_KEY_GEN.of(column)) {
                 case DB_SEQUENCE:
 
-                    final long value = database.getSequencer().nextValue(table.readSession());
+                    final long value = database.getSequencer().nextValue(ormUjo.readSession());
                     if (Long.class==property.getType()) {
-                        property.setValue(table, value);
+                        property.setValue(ormUjo, value);
                         return true;
                     }
                     if (Integer.class==property.getType()) {
-                        property.setValue(table, (int) value);
+                        property.setValue(ormUjo, (int) value);
                         return true;
                     }
                 case MEMO_SEQUENCE:
                     if (Long.class==property.getType()) {
-                        property.setValue(table, nextPrimaryKey());
+                        property.setValue(ormUjo, nextPrimaryKey());
                         return true;
                     }
                     if (Integer.class==property.getType()) {
-                        property.setValue(table, (int) nextPrimaryKey());
+                        property.setValue(ormUjo, (int) nextPrimaryKey());
                         return true;
                     }
                default:
                    return false;
             }
         }
-        throw new IllegalArgumentException("Table " + table + " must have defined only one primary key type of Long or Integer");
+        throw new IllegalArgumentException("Table " + ormUjo + " must have defined only one primary key type of Long or Integer");
     }
 
     /** Returns the first column. */

@@ -18,7 +18,7 @@ package org.ujoframework.orm.sample;
 
 import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.annot.Table;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.dialect.H2Dialect;
 
@@ -26,7 +26,7 @@ import org.ujoframework.orm.dialect.H2Dialect;
  * An table definition of the one database (a sample).
  */
 @Db( dialect=H2Dialect.class, user="sa", password="")
-public class MyDatabase extends TableUjo {
+public class MyDatabase extends OrmUjo {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */
     @Table(name="ORD_ORDER_NEW")

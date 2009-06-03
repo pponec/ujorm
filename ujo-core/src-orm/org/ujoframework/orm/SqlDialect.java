@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
@@ -163,7 +162,7 @@ abstract public class SqlDialect {
     /**
      *  Print a SQL to create column
      * @param column Database Column
-     * @param name The name parameter is not mandatory, in case a null value the column name is used.
+     * @param aName The name parameter is not mandatory, in case a null value the column name is used.
      * @throws java.io.IOException
      */
     public Appendable printColumnDeclaration(OrmColumn column, String aName, Appendable out) throws IOException {
@@ -204,7 +203,7 @@ abstract public class SqlDialect {
     }
 
     /** Print an SQL INSERT statement.  */
-    public Appendable printInsert(TableUjo ujo, Appendable out) throws IOException {
+    public Appendable printInsert(OrmUjo ujo, Appendable out) throws IOException {
 
         OrmTable table = ormHandler.findTableModel((Class) ujo.getClass());
         StringBuilder values = new StringBuilder();
@@ -304,8 +303,7 @@ abstract public class SqlDialect {
     /**
      * Print table columns
      * @param columns List of tablel columns
-     * @param printAlias Print columns include alias.
-     * @param columns List of tablel columns
+     * @param values Print columns include alias.
      * @param out Table columns output.
      * @throws java.io.IOException
      */

@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.DbType;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.orm.annot.GenerationType;
@@ -112,7 +112,7 @@ public class OrmColumn extends OrmRelation2Many {
     /** Is it a Foreign Key ? */
     @Override
     public boolean isForeignKey() {
-        final boolean result = getProperty().isTypeOf(TableUjo.class);
+        final boolean result = getProperty().isTypeOf(OrmUjo.class);
         return result;
     }
 
@@ -201,24 +201,24 @@ public class OrmColumn extends OrmRelation2Many {
 
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
-    public Object getValue(final TableUjo table) {
+    public Object getValue(final OrmUjo ormUjo) {
         final UjoProperty property = getProperty();
-        final Object result = property.of(table);
+        final Object result = property.of(ormUjo);
         return result;
     }
 
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
-    public void setValue(final TableUjo table, Object value) {
+    public void setValue(final OrmUjo ormUjo, Object value) {
         final UjoProperty property = getProperty();
 
         if (isForeignKey()
         &&   value !=null
-        && !(value instanceof TableUjo)) {
+        && !(value instanceof OrmUjo)) {
            value = new UniqueKey(value);
         }
 
-        property.setValue(table, value);
+        property.setValue(ormUjo, value);
     }
 
 

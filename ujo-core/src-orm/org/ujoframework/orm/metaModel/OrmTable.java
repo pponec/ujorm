@@ -26,7 +26,7 @@ import org.ujoframework.orm.annot.Table;
 import org.ujoframework.orm.annot.View;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.OrmUjo;
 
 
 /**
@@ -164,11 +164,11 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     /** Assign a PK from framework */
-    public void assignPrimaryKey(final TableUjo table) {
+    public void assignPrimaryKey(final OrmUjo ormUjo) {
         final Class type = DB_PROPERTY.of(this).getItemType();
-        if (type.isInstance(table)) {
+        if (type.isInstance(ormUjo)) {
             final OrmPKey pk = PK.of(this);
-            final boolean ok = pk.assignPrimaryKey(table);
+            final boolean ok = pk.assignPrimaryKey(ormUjo);
             if (!ok) {
                 throw new RuntimeException("DB SEQUENCE is not supported for " + type);
             }
@@ -178,10 +178,10 @@ public class OrmTable extends AbstractMetaModel {
     }
     
     /** Returns a new instance or the BO. */
-    public TableUjo createBO() throws InstantiationException, IllegalAccessException {
+    public OrmUjo createBO() throws InstantiationException, IllegalAccessException {
         Class type = DB_PROPERTY.of(this).getItemType();
         Object result = type.newInstance();
-        return (TableUjo) result;        
+        return (OrmUjo) result;
     }
 
     /** Returns the first PK */

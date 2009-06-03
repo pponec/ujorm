@@ -5,7 +5,7 @@
 
 package org.ujoframework.orm.ao;
 
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.metaModel.OrmPKey;
 
 /**
@@ -23,7 +23,7 @@ abstract public class CacheKey {
     /** Returns a PK on the selected index. PK must not be null. */
     abstract public Object getValue(int index);
 
-    /** TableUjo class */
+    /** OrmUjo class */
     abstract public Class getType();
 
 
@@ -59,8 +59,8 @@ abstract public class CacheKey {
 
     // --------------- FACTORY -----------------------
 
-    /** Constructor for the TableUjo */
-    public static CacheKey newInstance(TableUjo ujo, OrmPKey pkey) {
+    /** Constructor for the OrmUjo */
+    public static CacheKey newInstance(OrmUjo ujo, OrmPKey pkey) {
         return new UjoCacheKey(ujo, pkey);
     }
 

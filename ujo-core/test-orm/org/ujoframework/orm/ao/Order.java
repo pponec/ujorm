@@ -20,7 +20,7 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmUjo;
 import org.ujoframework.orm.annot.Table;
 
 /**
@@ -28,7 +28,7 @@ import org.ujoframework.orm.annot.Table;
  * Note, that the Order object has got an collection of Items.
  */
 @Table(name="bo_order_01")
-public class Order extends TableUjo<Order> {
+public class Order extends OrmUjo<Order> {
 
     /** Unique key */
     @Column(pk=true)

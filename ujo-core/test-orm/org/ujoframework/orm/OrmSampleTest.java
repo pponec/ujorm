@@ -18,7 +18,7 @@ package org.ujoframework.orm;
 
 import java.util.Date;
 import junit.framework.TestCase;
-import org.ujoframework.core.UjoIterator;
+import org.ujoframework.orm.UjoIterator;
 import org.ujoframework.orm.sample.Database;
 import org.ujoframework.orm.sample.Item;
 import org.ujoframework.orm.sample.Order;

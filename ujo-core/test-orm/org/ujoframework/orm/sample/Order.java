@@ -20,14 +20,14 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 
 /**
  * Simple order for goods with a collection of Items (a sample).
  * @Table=bo_order
  */
-public class Order extends TableUjo {
+public class Order extends OrmUjo {
 
     /** Unique key */
     @Column(pk=true)

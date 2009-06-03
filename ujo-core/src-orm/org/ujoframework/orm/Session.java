@@ -26,7 +26,6 @@ import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujoframework.implementation.orm.*;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.extensions.PathProperty;
@@ -65,14 +64,14 @@ public class Session {
     private Map<OrmDatabase, Connection> connections = new HashMap<OrmDatabase, Connection>(2);
 
     /** A session cache */
-    private Map<CacheKey, TableUjo> cache;
+    private Map<CacheKey, OrmUjo> cache;
     
     public Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
         this.cache = OrmParameters.CACHE_WEAK.of(params)
-            ? new WeakHashMap<CacheKey, TableUjo>()
-            : new HashMap<CacheKey, TableUjo>()
+            ? new WeakHashMap<CacheKey, OrmUjo>()
+            : new HashMap<CacheKey, OrmUjo>()
             ;
     }
 
@@ -120,12 +119,12 @@ public class Session {
         }
     }
 
-    public <UJO extends TableUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
+    public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
         return new Query<UJO>(aClass, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
-    public <UJO extends TableUjo> Query<UJO> createQuery(Criterion<UJO> criterion) {
+    public <UJO extends OrmUjo> Query<UJO> createQuery(Criterion<UJO> criterion) {
         OrmRelation2Many column = getBasicColumn(criterion);
         OrmTable table = OrmRelation2Many.TABLE.of(column);
         return new Query<UJO>(table, criterion, this);
@@ -151,7 +150,7 @@ public class Session {
     }
 
     /** Returns a Database instance */
-    public <DB extends TableUjo> DB getDatabase(Class<DB> dbType) {
+    public <DB extends OrmUjo> DB getDatabase(Class<DB> dbType) {
         try {
             DB result = dbType.newInstance();
             result.writeSession(this);
@@ -162,7 +161,7 @@ public class Session {
     }
 
     /** INSERT object into table. */
-    public void save(TableUjo ujo) throws IllegalStateException {
+    public void save(OrmUjo ujo) throws IllegalStateException {
         JdbcStatement statement = null;
         String sql = "";
 
@@ -186,7 +185,7 @@ public class Session {
     }
 
     /** UPDATE object into table. */
-    public int update(TableUjo ujo) throws IllegalStateException {
+    public int update(OrmUjo ujo) throws IllegalStateException {
         int result = 0;
         JdbcStatement statement = null;
 
@@ -221,11 +220,10 @@ public class Session {
     }
 
     /** Delete all object object form parameter.
-     * @param tableType Type of table to delete
      * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    public <UJO extends TableUjo> int delete(final Criterion<UJO> criterion) {
+    public <UJO extends OrmUjo> int delete(final Criterion<UJO> criterion) {
         final OrmRelation2Many column = getBasicColumn(criterion);
         final OrmTable table = OrmRelation2Many.TABLE.of(column);
         return delete(table, criterion);
@@ -237,7 +235,7 @@ public class Session {
      * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    public <UJO extends TableUjo> int delete(final Class<UJO> tableType, final Criterion<UJO> criterion) {
+    public <UJO extends OrmUjo> int delete(final Class<UJO> tableType, final Criterion<UJO> criterion) {
         final OrmTable table = handler.findTableModel(tableType);
         return delete(table, criterion);
     }
@@ -245,19 +243,19 @@ public class Session {
 
 
     /** Delete all object object form parameter.
-     * @param tableType Type of table to delete
+     * @param ormUjo Type of table to delete
      * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    protected <UJO extends TableUjo> int delete(final OrmTable ormTable, final Criterion<UJO> criterion) {
+    protected <UJO extends OrmUjo> int delete(final OrmTable ormUjo, final Criterion<UJO> criterion) {
         int result = 0;
         JdbcStatement statement = null;
         String sql = "";
 
         try {
-            final OrmDatabase db = OrmTable.DATABASE.of(ormTable);
-            final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
-            sql = db.getDialect().printDelete(ormTable, decoder, out(64)).toString();
+            final OrmDatabase db = OrmTable.DATABASE.of(ormUjo);
+            final CriterionDecoder decoder = new CriterionDecoder(criterion, ormUjo);
+            sql = db.getDialect().printDelete(ormUjo, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
 
@@ -290,14 +288,14 @@ public class Session {
     }
 
     /** Returns an criterion by a PrimaryKey */
-    protected Criterion createPkCriterion(TableUjo table) {
+    protected Criterion createPkCriterion(OrmUjo ormUjo) {
         Criterion result = null;
-        OrmTable ormTable = handler.findTableModel(table.getClass());
+        OrmTable ormTable = handler.findTableModel(ormUjo.getClass());
         OrmPKey ormKey = OrmTable.PK.of(ormTable);
         List<OrmColumn> keys = OrmPKey.COLUMNS.of(ormKey);
 
         for (OrmColumn ormColumn : keys) {
-            Criterion crn = Criterion.newInstance(ormColumn.getProperty(), ormColumn.getValue(table));
+            Criterion crn = Criterion.newInstance(ormColumn.getProperty(), ormColumn.getValue(ormUjo));
             result = result!=null
                 ? result.and(crn)
                 : crn
@@ -310,7 +308,7 @@ public class Session {
     }
 
     /** Returns a count of rows */
-    public <UJO extends TableUjo> long getRowCount(Query<UJO> query) {
+    public <UJO extends OrmUjo> long getRowCount(Query<UJO> query) {
         long result = -1;
         JdbcStatement statement = null;
         ResultSet rs = null;
@@ -338,7 +336,7 @@ public class Session {
     }
 
     /** Run SQL SELECT by query. */
-    public <UJO extends TableUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
+    public <UJO extends OrmUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
         JdbcStatement statement = null;
         String sql = "";
 
@@ -354,7 +352,7 @@ public class Session {
                 LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
             }
             ResultSet rs = statement.executeQuery(); // execute a select statement
-            UjoIterator<UJO> result = UjoIterator.getIntance(query, rs);
+            UjoIterator<UJO> result = UjoIterator.getInstance(query, rs);
             return result;
 
         } catch (Throwable e) {
@@ -362,7 +360,7 @@ public class Session {
         }
     }
 
-    public <UJO extends TableUjo> UJO single(Query query) {
+    public <UJO extends OrmUjo> UJO single(Query query) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -379,9 +377,9 @@ public class Session {
 
     /** Iterate property of values
      * @param property Table property
-     * @param value A value type of TableUjo
+     * @param value A value type of OrmUjo
      */
-    public <UJO extends TableUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, TableUjo value) {
+    public <UJO extends OrmUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, OrmUjo value) {
 
         final Class tableClass = property.getItemType();
         final OrmTable table   = handler.findTableModel(tableClass);
@@ -432,7 +430,7 @@ public class Session {
      * @param tableType Type of Ujo
      * @param id Value ID
      */
-    public <UJO extends TableUjo> UJO load
+    public <UJO extends OrmUjo> UJO load
         ( final Class<UJO> tableType
         , final Object id
         ) throws NoSuchElementException
@@ -462,7 +460,7 @@ public class Session {
      * @param id Valud ID
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */
-    public <UJO extends TableUjo> UJO loadInternal
+    public <UJO extends OrmUjo> UJO loadInternal
         ( final UjoProperty relatedProperty
         , final Object id
         , final boolean mandatory
@@ -479,7 +477,7 @@ public class Session {
         OrmTable tableModel = null;
         if (cache) {
             tableModel = OrmColumn.TABLE.of(columns.get(0));
-            TableUjo r = findCache(OrmTable.DB_PROPERTY.of(tableModel).getItemType(), id);
+            OrmUjo r = findCache(OrmTable.DB_PROPERTY.of(tableModel).getItemType(), id);
             if (r!=null) {
                 return (UJO) r;
             }
@@ -538,18 +536,18 @@ public class Session {
     }
 
     /** Add value into cache */
-    public void addCache(TableUjo ujo, OrmPKey pkey) {
+    public void addCache(OrmUjo ujo, OrmPKey pkey) {
         CacheKey key = CacheKey.newInstance(ujo, pkey);
         cache.put(key, ujo);
     }
 
 
-    public TableUjo findCache(Class type, Object value) {
+    public OrmUjo findCache(Class type, Object value) {
         CacheKey key = CacheKey.newInstance(type, value);
         return cache.get(key);
     }
 
-    public TableUjo findCache(Class type, Object... values) {
+    public OrmUjo findCache(Class type, Object... values) {
         CacheKey key = CacheKey.newInstance(type, values);
         return cache.get(key);
     }
