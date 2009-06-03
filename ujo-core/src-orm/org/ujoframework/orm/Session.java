@@ -42,7 +42,7 @@ import org.ujoframework.criterion.BinaryCriterion;
 import org.ujoframework.criterion.ValueCriterion;
 
 /**
- * ORM session.
+ * The ORM session.
  * <br />Methods of the session are not thread safe.
  * @author Pavel Ponec
  */
