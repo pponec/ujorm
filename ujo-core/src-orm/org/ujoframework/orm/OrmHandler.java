@@ -29,7 +29,6 @@ import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.OrmDatabase;
 import org.ujoframework.orm.metaModel.OrmRoot;
-import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmParameters;
@@ -139,7 +138,7 @@ public class OrmHandler {
     }
 
     /** LoadInternal a database model from paramater */
-    public <UJO extends TableUjo> OrmDatabase loadDatabase(Class<? extends UJO> databaseModel) {
+    public <UJO extends OrmUjo> OrmDatabase loadDatabase(Class<? extends UJO> databaseModel) {
 
         // Load a configuration parameters:
         Db annotDb = databaseModel.getAnnotation(Db.class);
@@ -159,7 +158,7 @@ public class OrmHandler {
     }
 
     /** LoadInternal a metada and create database */
-    public <UJO extends TableUjo> OrmDatabase createDatabase(Class<UJO> databaseModel) {
+    public <UJO extends OrmUjo> OrmDatabase createDatabase(Class<UJO> databaseModel) {
 
         OrmDatabase dbModel = loadDatabase(databaseModel);
         dbModel.create();
@@ -169,7 +168,7 @@ public class OrmHandler {
 
 
     /** Create an instance from the class */
-    private <UJO extends TableUjo> UJO getInstance(Class<UJO> databaseModel) {
+    private <UJO extends OrmUjo> UJO getInstance(Class<UJO> databaseModel) {
         try {
             return databaseModel.newInstance();
         } catch (Exception e) {
@@ -213,7 +212,7 @@ public class OrmHandler {
     }
 
     /** Find a table model by the dbClass. Returns null of table is not found. */
-    public OrmTable findTableModel(Class<? extends TableUjo> dbClass) {
+    public OrmTable findTableModel(Class<? extends OrmUjo> dbClass) {
         for (OrmDatabase db : OrmRoot.DATABASES.getList(databases)) {
             for (OrmTable table : OrmDatabase.TABLES.getList(db)) {
                 // Class has a unique instance in the same classloader:

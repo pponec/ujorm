@@ -7,7 +7,7 @@ package org.ujoframework.orm.ao;
 
 
 import java.util.List;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmPKey;
 import org.ujoframework.orm.metaModel.OrmTable;
@@ -19,34 +19,34 @@ import org.ujoframework.orm.metaModel.OrmTable;
 final class UjoCacheKey extends CacheKey {
 
     /** Value key */
-    final private TableUjo tableUjo;
+    final private OrmUjo ormUjo;
     /** Primary Keys */
     final List<OrmColumn> pk;
 
-    public UjoCacheKey(final TableUjo tableUjo) {
-        this(tableUjo, null);
+    public UjoCacheKey(final OrmUjo ormUjo) {
+        this(ormUjo, null);
     }
 
     /**
      * Constructor
-     * @param tableUjo BO
+     * @param ormUjo BO
      * @param pkey The parameter not mandatory but the one is used for a performance improvements.
      */
-    public UjoCacheKey(final TableUjo tableUjo, final OrmPKey pkey) {
-        this.tableUjo = tableUjo;
+    public UjoCacheKey(final OrmUjo ormUjo, final OrmPKey pkey) {
+        this.ormUjo = ormUjo;
         this.pk = pkey!=null ? OrmPKey.COLUMNS.of(pkey) : getPK() ;
     }
 
-    /** TableUjo class */
+    /** OrmUjo class */
     @Override
     public Class getType() {
-        return tableUjo.getClass();
+        return ormUjo.getClass();
     }
 
     /** Returns valueof PK */
     @Override
     public Object getValue(final int index) {
-        return pk.get(index).getValue(tableUjo);
+        return pk.get(index).getValue(ormUjo);
     }
 
     /** Returns a count of PK */
@@ -55,9 +55,9 @@ final class UjoCacheKey extends CacheKey {
         return pk.size();
     }
 
-    /** Returns PK of the tableUjo */
+    /** Returns PK of the OrmUjo */
     private List<OrmColumn> getPK() {
-        final OrmTable table = tableUjo.readSession().getHandler().findTableModel(tableUjo.getClass());
+        final OrmTable table = ormUjo.readSession().getHandler().findTableModel(ormUjo.getClass());
         final OrmPKey ormPKey = OrmTable.PK.of(table);
         final List<OrmColumn> columns = OrmPKey.COLUMNS.of(ormPKey);
         return columns;

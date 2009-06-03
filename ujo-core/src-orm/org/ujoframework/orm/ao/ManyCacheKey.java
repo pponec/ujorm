@@ -5,11 +5,6 @@
 
 package org.ujoframework.orm.ao;
 
-
-import org.ujoframework.implementation.orm.TableUjo;
-import org.ujoframework.orm.metaModel.OrmPKey;
-import org.ujoframework.orm.metaModel.OrmTable;
-
 /**
  * UJO CacheKey
  * @author pavel

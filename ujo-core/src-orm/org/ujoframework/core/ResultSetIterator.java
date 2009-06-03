@@ -7,7 +7,7 @@ package org.ujoframework.core;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.OrmColumn;
 
@@ -15,7 +15,7 @@ import org.ujoframework.orm.metaModel.OrmColumn;
  * ResultSet iterator. It is not a thread safe implementation.
  * @author Pavel Ponec
  */
-public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
+public class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
     final Query query;
     final ResultSet rs;
@@ -58,7 +58,6 @@ public class ResultSetIterator<T extends TableUjo> extends UjoIterator<T> {
     }
 
     /** Returns a next table row. */
-    @SuppressWarnings("unchecked")
     @Override
     public T next() throws NoSuchElementException {
 

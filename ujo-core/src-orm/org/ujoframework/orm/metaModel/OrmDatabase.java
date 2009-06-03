@@ -27,7 +27,6 @@ import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import java.util.HashSet;
@@ -35,6 +34,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
@@ -74,7 +74,7 @@ public class OrmDatabase extends AbstractMetaModel {
     public static final UjoProperty<OrmDatabase,String> PASSWORD = newProperty("password", "", propertyCount++);
     /** DB class root instance */
     @Transient
-    public static final UjoProperty<OrmDatabase,TableUjo> ROOT = newProperty("root", TableUjo.class, propertyCount++);
+    public static final UjoProperty<OrmDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class, propertyCount++);
     /** LDPA */
     public static final UjoProperty<OrmDatabase,String> LDAP = newProperty("ldap", "", propertyCount++);
 
@@ -87,7 +87,7 @@ public class OrmDatabase extends AbstractMetaModel {
     public OrmDatabase() {
     }
 
-    public OrmDatabase(OrmHandler ormHandler, TableUjo database, OrmDatabase param) {
+    public OrmDatabase(OrmHandler ormHandler, OrmUjo database, OrmDatabase param) {
         this.ormHandler = ormHandler;
         sequencer = new UjoSequencer(this);
         ROOT.setValue(this, database);
@@ -184,7 +184,7 @@ public class OrmDatabase extends AbstractMetaModel {
         else if (Date.class.isAssignableFrom(type)) {
             OrmColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
-        else if (TableUjo.class.isAssignableFrom(type)) {
+        else if (OrmUjo.class.isAssignableFrom(type)) {
             OrmColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }
@@ -241,7 +241,7 @@ public class OrmDatabase extends AbstractMetaModel {
         else if (Date.class.isAssignableFrom(type)) {
             OrmColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
-        else if (TableUjo.class.isAssignableFrom(type)) {
+        else if (OrmUjo.class.isAssignableFrom(type)) {
             OrmColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }

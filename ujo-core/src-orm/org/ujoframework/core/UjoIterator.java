@@ -22,7 +22,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 
 /**
@@ -32,7 +32,6 @@ import org.ujoframework.orm.Query;
  *    <li>iterator can be used in generic loop syntax for( : ) </li>
  *    <li>iterator can create a List object</li>
  * </ul>
-
  * @author Pavel Ponec
  */
 abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
@@ -95,12 +94,12 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     // --- STATIC FACTORY ---------
 
     @SuppressWarnings("unchecked")
-    final public static <T> UjoIteratorImpl<T> getIntance(final Enumeration<T> enumeration) {
+    final public static <T> UjoIteratorImpl<T> getInstance(final Enumeration<T> enumeration) {
         return new UjoIteratorImpl(enumeration);
     }
 
     @SuppressWarnings("unchecked")
-    final public static <T extends TableUjo> ResultSetIterator<T> getIntance(Query<T> query, ResultSet rs) {
+    final public static <T extends OrmUjo> ResultSetIterator<T> getInstance(Query<T> query, ResultSet rs) {
         return new ResultSetIterator(query, rs);
     }
 

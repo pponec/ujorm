@@ -20,13 +20,12 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.TableUjo;
 
 /**
  * Each Item have got a reference to a common Order (a sample).
  * @Table=bo_item
  */
-public class Item extends TableUjo {
+public class Item extends OrmUjo {
 
     /** Unique key */
     @Column(pk=true)

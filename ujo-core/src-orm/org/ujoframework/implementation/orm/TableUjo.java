@@ -21,10 +21,9 @@ import java.util.Set;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.ChangeRegister;
-import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.map.MapUjo;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.Session;
 
@@ -108,7 +107,7 @@ import org.ujoframework.orm.Session;
  * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
-public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements ChangeRegister {
+public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
     
     /** Orm session */
     private Session session;

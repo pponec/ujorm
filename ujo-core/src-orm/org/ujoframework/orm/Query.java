@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.implementation.orm.TableUjo;
 import org.ujoframework.orm.metaModel.OrmColumn;
 import org.ujoframework.orm.metaModel.OrmRelation2Many;
 import org.ujoframework.orm.metaModel.OrmTable;
@@ -32,7 +31,7 @@ import org.ujoframework.criterion.Criterion;
  * @composed 1 - 1 Session
  * @composed 1 - 1 CriterionDecoder
  */
-public class Query<UJO extends TableUjo> {
+public class Query<UJO extends OrmUjo> {
 
     final private OrmTable table;
     final private List<OrmColumn> columns;
