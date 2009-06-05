@@ -202,9 +202,10 @@ public class OrmHandler {
 
     /** Find a Relation/Column model of the paramemeter property.
      * @param property Parameter can be type of Property of PathProperty (direct or indirect);
+     * @return Related model or the null if model was not found.
      */
     public OrmRelation2Many findColumnModel(UjoProperty pathProperty) {
-        while (!pathProperty.isDirect()) {
+        if (pathProperty!=null) while (!pathProperty.isDirect()) {
             pathProperty = ((PathProperty)pathProperty).getLastProperty();
         }
         final OrmRelation2Many result = propertyMap.get(pathProperty);
