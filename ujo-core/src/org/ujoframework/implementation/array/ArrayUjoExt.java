@@ -24,11 +24,11 @@ import org.ujoframework.extensions.AbstractUjoExt;
  * This is an Groovy style implementation of a setter and getter methods for an easier access for developpers,
  * however the methods have got an weaker type control in compare to the MapUjo implementation.
  * <br>Sample of usage:
- *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
+ *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> ArrayUjoExt {
  *
- *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>, propertyCount++);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>, propertyCount++);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>, propertyCount++);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
