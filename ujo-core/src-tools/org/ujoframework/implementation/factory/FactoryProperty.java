@@ -84,4 +84,21 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
           + " must have got two parameters constructor type of Ujo and UjoProperty", e);
     }
 
+    // --------- STATIC METHODS -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> FactoryProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
+        return new FactoryProperty<UJO,VALUE>(name, type, index);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> FactoryProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
+        return newInstance(name, type, -1);
+    }
+
+
 }
