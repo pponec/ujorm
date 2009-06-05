@@ -26,9 +26,9 @@ import org.ujoframework.extensions.AbstractUjoExt;
  * <br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
  *
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String&gt; NAME  = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double&gt; CASH  = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);

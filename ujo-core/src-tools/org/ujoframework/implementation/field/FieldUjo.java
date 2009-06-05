@@ -33,11 +33,10 @@ import org.ujoframework.extensions.ValueAgent;
  *   <span class="keyword-directive">private</span> Long cash;
  *   <span class="keyword-directive">private</span> List&lt;Person&gt; childs;
  *   
- *   <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> FieldProperty&lt;Person,Long&gt; CASH 
- *     = newProperty(<span class="character">"</span><span class="character">CASH</span><span class="character">"</span>, Long.<span class="keyword-directive">class</span>
+ *   <span class="keyword-directive">public static</span> UjoProperty&lt;Person,Long&gt; CASH
+ *     = newProperty(<span class="character">"CASH"</span>, Long.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,Long&gt;() {
- *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(
- *         Person ujo, Long value) { 
+ *     <span class="keyword-directive">public void</span> writeValue(Person ujo, Long value) { 
  *            ujo.cash = value; 
  *         }
  *     <span class="keyword-directive">public</span> Long readValue (Person ujo) { 
@@ -45,10 +44,10 @@ import org.ujoframework.extensions.ValueAgent;
  *     }
  *   });    
  *   
- *   <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> FieldPropertyList&lt;Person,Person&gt; CHILDS 
- *     = newPropertyList(<span class="character">"</span><span class="character">CHILDS</span><span class="character">"</span>, Person.<span class="keyword-directive">class</span>
+ *   <span class="keyword-directive">public static</span> FieldPropertyList&lt;Person,Person&gt; CHILDS
+ *     = newPropertyList(<span class="character">"CHILDS"</span>, Person.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,List&lt;Person&gt;&gt;() {
- *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Person ujo, List&lt;Person&gt; value) {
+ *     <span class="keyword-directive">public void</span> writeValue(Person ujo, List&lt;Person&gt; value) {
  *         ujo.childs = value; 
  *     }
  *     <span class="keyword-directive">public</span> List&lt;Person&gt; readValue(Person ujo) {

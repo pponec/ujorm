@@ -31,9 +31,9 @@ import org.ujoframework.extensions.ValueAgent;
  * <span class="java-keywords">import</span> org.ujoframework.implementation.BEAN.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> BeanUjo {
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty &lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty &lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty &lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
  *
  *    <span class="java-block-comment">// ---- A STANDARD BEAN IMPLEMENTATION ----</span>
  *

@@ -33,9 +33,9 @@ import org.ujoframework.extensions.AbstractUjo;
  *
  *    <span class="java-keywords">protected</span> <span class="java-keywords">static</span> <span class="java-keywords">int</span> propertyCount = ArrayUjo.propertyCount;
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ArrayProperty &lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span> , propertyCount++);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ArrayProperty &lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>, propertyCount++);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ArrayProperty &lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>   , propertyCount++);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span> , propertyCount++);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>, propertyCount++);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>   , propertyCount++);
  *
  *    <span class="java-annotation">@</span>Override
  *    <span class="java-keywords">public</span> <span class="java-keywords">int</span> <span class="java-layer-method">readPropertyCount</span>() {
