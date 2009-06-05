@@ -263,6 +263,7 @@ abstract public class SqlDialect {
     }
 
     /** Returns an SQL criterion template. */
+    @SuppressWarnings("unchecked")
     public String getCriterionTemplate(ValueCriterion crit) {
 
         switch (crit.getOperator()) {
@@ -290,8 +291,8 @@ abstract public class SqlDialect {
                 return "{0} LIKE {1}";
             case X_FIXED:
                 return crit.evaluate(null)
-                    ? "1=1"
-                    : "1=0"
+                    ? "true"  // "1=1"
+                    : "false" // "1=0"
                     ;
             case REGEXP: 
             case NOT_REGEXP:

@@ -119,6 +119,12 @@ public class Session {
         }
     }
 
+    /** For all rows. */
+    public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass) {
+        final Criterion<UJO> criterion = Criterion.newInstance(true);
+        return createQuery(aClass, criterion);
+    }
+
     public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
         return new Query<UJO>(aClass, criterion, this);
     }

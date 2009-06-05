@@ -160,8 +160,8 @@ public class Query<UJO extends OrmUjo> {
         return this;
     }
 
-    /** Add a item to the end of order list. */
-    public Query<UJO> addOrderItem(UjoProperty property) {
+    /** Add an item to the end of order list. */
+    public Query<UJO> addOrder(UjoProperty property) {
         order.add(property);
         return this;
     }

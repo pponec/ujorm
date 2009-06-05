@@ -106,6 +106,18 @@ public class SampleORM {
         }
     }
 
+    /** Using SELECT by QUERY */
+    public void useSortOrders() {
+
+        Session session = OrmHandler.getInstance().getSession();
+        Query<Order> query = session.createQuery(Order.class);
+        query.getOrder().add(Order.DESCR);
+        query.getOrder().add(Order.DATE.descending());
+
+        UjoIterator<Order> orders = query.iterate();
+        System.out.println("VIEW-ORDER COUNT: " + orders.count());
+    }
+
     /** Using SELECT by VIEW QUERY */
     public void useSelectViewOrders() {
 
@@ -254,6 +266,7 @@ public class SampleORM {
             sample.loadMetaModel();
             sample.useInsert();
             sample.useSelectOrders();
+            sample.useSortOrders();
             sample.useSelectViewOrders();
             sample.useSelectItems_1();
             sample.useSelectItems_2();

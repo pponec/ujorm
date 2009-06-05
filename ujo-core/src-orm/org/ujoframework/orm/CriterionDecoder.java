@@ -80,6 +80,7 @@ public class CriterionDecoder {
     }
 
     /** Unpack criterion. */
+    @SuppressWarnings("fallthrough")
     private void unpackBinary(final BinaryCriterion eb) {
 
         boolean or = false;
