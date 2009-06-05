@@ -43,9 +43,9 @@ import org.ujoframework.extensions.AbstractUjo;
  * <span class="java-keywords">import</span> org.ujoframework.implementation.map.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapImplUjo {
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty &lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty &lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty &lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
  *
  * }
  * </pre>
