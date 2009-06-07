@@ -238,7 +238,17 @@ public class SampleORM {
     }
 
     /** Using DELETE SQL */
-    public void useDelete() {
+    public void useDelete_1() {
+        Session session = OrmHandler.getInstance().getSession();
+        Item item = session.createQuery(Item.class).iterate().toList().get(0);
+
+        session.delete(item);
+        session.commit();
+        System.out.println("There is DELETED object: " + item);
+    }
+
+    /** Using DELETE SQL */
+    public void useDelete_2() {
         Session session = OrmHandler.getInstance().getSession();
         Criterion<Item> crit = Criterion.newInstance(Item.ID, 1);
         int count = session.delete(crit);
@@ -276,7 +286,8 @@ public class SampleORM {
             sample.useIteratorSkip();
             sample.useRelation();
             sample.useUpdate();
-            sample.useDelete();
+            sample.useDelete_1();
+            sample.useDelete_2();
             sample.useMetadata();
 
         } catch (Throwable e) {

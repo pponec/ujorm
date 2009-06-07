@@ -132,7 +132,7 @@ public class OrmColumn extends OrmRelation2Many {
     /** Returns the db column precision.
      * @return If property is undefined then the method returns value -1.
      */
-    public int getPrecesion() {
+    public int getPrecision() {
         return PRECISION.of(this);
     }
 
