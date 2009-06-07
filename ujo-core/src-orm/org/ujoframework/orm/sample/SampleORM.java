@@ -250,11 +250,11 @@ public class SampleORM {
     public void useMetadata() {
         OrmColumn c = (OrmColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
 
-        System.out.println("** COLUMN METADATA:");
-        System.out.println("\t DB name: " + c.getFullName());
-        System.out.println("\t Length : " + c.getMaxLength());
-        System.out.println("\t NotNull: " + c.isMandatory());
-        System.out.println("\t PrimKey: " + c.isPrimaryKey());
+        System.err.println("** METADATA OF COLUMN: " + Order.DESCR);
+        System.err.println("\t DB name: " + c.getFullName());
+        System.err.println("\t Length : " + c.getMaxLength());
+        System.err.println("\t NotNull: " + c.isMandatory());
+        System.err.println("\t PrimKey: " + c.isPrimaryKey());
     }
 
 

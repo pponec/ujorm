@@ -49,8 +49,10 @@ import org.ujoframework.criterion.ValueCriterion;
 @SuppressWarnings(value = "unchecked")
 public class Session {
 
-    /** Commin title to print the SQL VALUES */
-    private static final String SQL_VALUES = "\n-- SQL VALUES: ";
+    /** Common title to print the SQL VALUES */
+    private static final String SQL_VALUES  = "\n-- SQL VALUES: ";
+    /** Exception SQL message prefix */
+    private static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
@@ -184,7 +186,7 @@ public class Session {
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
-            throw new IllegalStateException("ILLEGAL SQL INSERT", e);
+            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         } finally {
             OrmDatabase.close(null, statement, null, true);
         }
@@ -194,6 +196,7 @@ public class Session {
     public int update(OrmUjo ujo) throws IllegalStateException {
         int result = 0;
         JdbcStatement statement = null;
+        String sql = null;
 
         try {
             OrmTable table = handler.findTableModel((Class) ujo.getClass());
@@ -206,7 +209,7 @@ public class Session {
             final Criterion criterion = createPkCriterion(ujo);
             final OrmTable ormTable = handler.findTableModel(ujo.getClass());
             final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
-            String sql = db.getDialect().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
+            sql = db.getDialect().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(ujo, changedColumns);
             statement.assignValues(decoder);
@@ -218,7 +221,7 @@ public class Session {
             ujo.writeSession(this);
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
-            throw new IllegalStateException("ILLEGAL SQL INSERT", e);
+            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         } finally {
             OrmDatabase.close(null, statement, null, true);
         }
@@ -271,7 +274,7 @@ public class Session {
             result = statement.executeUpdate(); // execute delete statement
         } catch (Throwable e) {
             OrmDatabase.close(null, statement, null, false);
-            throw new IllegalStateException("ILLEGAL SQL UPDATE", e);
+            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         } finally {
             OrmDatabase.close(null, statement, null, true);
         }
@@ -334,7 +337,7 @@ public class Session {
             rs = statement.executeQuery(); // execute a select statement
             result = rs.next() ? rs.getLong(1) : 0 ;
         } catch (Exception e) {
-            throw new RuntimeException("Can't perform SQL statement: " + sql, e);
+            throw new RuntimeException(SQL_ILLEGAL + sql, e);
         } finally {
             OrmDatabase.close(null, statement, rs, false);
         }
@@ -362,7 +365,7 @@ public class Session {
             return result;
 
         } catch (Throwable e) {
-            throw new IllegalStateException("ILLEGAL SQL SELECT: " + sql, e);
+            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         }
     }
 

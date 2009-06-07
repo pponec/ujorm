@@ -247,7 +247,7 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print an SQL DELETE statement.  */
+    /** Print an SQL DELETE statement. */
     public Appendable printDelete
         ( OrmTable table
         , CriterionDecoder decoder
