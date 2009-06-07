@@ -125,7 +125,6 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
     /** Returns the value to which the specified key is mapped, the {@code null}
      * is not supported
      * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
-     * @return
      */
     @Override public Object get(Object key) {
         return data.get(key.toString());

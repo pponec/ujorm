@@ -20,10 +20,10 @@ import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
-import org.ujoframework.orm.metaModel.OrmColumn;
-import org.ujoframework.orm.metaModel.OrmDatabase;
-import org.ujoframework.orm.metaModel.OrmPKey;
-import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaDatabase;
+import org.ujoframework.orm.metaModel.MetaPKey;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /** Derby (http://db.apache.org/derby/) */
 public class DerbyDialect extends SqlDialect {
@@ -66,12 +66,12 @@ public class DerbyDialect extends SqlDialect {
         out.append(" (id) VALUES ('"+COMMON_SEQ_TABLE_KEY+"');");
         println(out);
 
-        for (OrmTable table : OrmDatabase.TABLES.getValue(sequence.getDatabase())) {
+        for (MetaTable table : MetaDatabase.TABLES.getValue(sequence.getDatabase())) {
             if (table.isTable()) {
                 // Insert common data:
                 out.append("INSERT INTO ");
                 out.append(seqTable);
-                out.append(" (id) VALUES ('"+OrmTable.NAME.of(table)+"');");
+                out.append(" (id) VALUES ('"+MetaTable.NAME.of(table)+"');");
                 println(out);
             }
         }
@@ -101,8 +101,8 @@ public class DerbyDialect extends SqlDialect {
     /** Print SQL NEXT SEQUENCE. */
     @Override
     public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        OrmTable table = sequence.getTable();
-        String tableKey = table!=null ? OrmTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
+        MetaTable table = sequence.getTable();
+        String tableKey = table!=null ? MetaTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
 
         out.append("SELECT seq+step FROM ");
         printSequenceName(sequence, out);
@@ -124,20 +124,20 @@ public class DerbyDialect extends SqlDialect {
     /** Print foreign key for the parameter column */
     @Override
     @SuppressWarnings("unchecked")
-    public Appendable printForeignKey(OrmColumn column, OrmTable table, Appendable out) throws IOException {
+    public Appendable printForeignKey(MetaColumn column, MetaTable table, Appendable out) throws IOException {
         final UjoProperty property = column.getProperty();
-        final OrmTable foreignTable = ormHandler.findTableModel(property.getType());
-        OrmPKey foreignKeys = OrmTable.PK.of(foreignTable);
+        final MetaTable foreignTable = ormHandler.findTableModel(property.getType());
+        MetaPKey foreignKeys = MetaTable.PK.of(foreignTable);
 
         out.append("ALTER TABLE ");
         printFullName(table, out);
         out.append("\n\tADD CONSTRAINT fk_");
-        out.append(OrmTable.NAME.of(table));
+        out.append(MetaTable.NAME.of(table));
         out.append('_');
-        out.append(OrmColumn.NAME.of(column));
+        out.append(MetaColumn.NAME.of(column));
         out.append(" FOREIGN KEY");
 
-        List<OrmColumn> columns = OrmPKey.COLUMNS.of(foreignKeys);
+        List<MetaColumn> columns = MetaPKey.COLUMNS.of(foreignKeys);
         int columnsSize = columns.size();
 
         for (int i=0; i<columnsSize; ++i) {
@@ -150,10 +150,10 @@ public class DerbyDialect extends SqlDialect {
         printFullName(foreignTable, out);
         String separator = "(";
 
-        for (OrmColumn fkColumn : OrmPKey.COLUMNS.of(foreignKeys)) {
+        for (MetaColumn fkColumn : MetaPKey.COLUMNS.of(foreignKeys)) {
             out.append(separator);
             separator = ", ";
-            out.append(OrmColumn.NAME.of(fkColumn));
+            out.append(MetaColumn.NAME.of(fkColumn));
         }
 
         out.append(")");

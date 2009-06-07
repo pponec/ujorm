@@ -25,26 +25,26 @@ import org.ujoframework.orm.OrmUjo;
 /**
  * The table primary key.
  * @author Pavel Ponec
- * @composed 1 - * OrmColumn
+ * @composed 1 - * MetaColumn
  */
-public class OrmPKey extends AbstractMetaModel {
+public class MetaPKey extends AbstractMetaModel {
 
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** DB columns */
-    public static final UjoProperty<OrmPKey,OrmTable> TABLE = newProperty("table", OrmTable.class, propertyCount++);
+    public static final UjoProperty<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class, propertyCount++);
 
     /** DB table */
-    public static final ListProperty<OrmPKey,OrmColumn> COLUMNS = newPropertyList("columns", OrmColumn.class, propertyCount++);
+    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newPropertyList("columns", MetaColumn.class, propertyCount++);
 
     /** Primary key counter. */
     private long primaryKeyCounter = 0;
-    final private OrmDatabase database;
+    final private MetaDatabase database;
 
-    public OrmPKey(OrmTable table) {
-        this.database = OrmTable.DATABASE.of(table);
-        COLUMNS.setValue(this, new ArrayList<OrmColumn>(0));
+    public MetaPKey(MetaTable table) {
+        this.database = MetaTable.DATABASE.of(table);
+        COLUMNS.setValue(this, new ArrayList<MetaColumn>(0));
     }
 
     /** Property Count */
@@ -57,7 +57,7 @@ public class OrmPKey extends AbstractMetaModel {
     public String toString() {
         StringBuilder sb = new StringBuilder(10);
 
-        for (OrmColumn column : COLUMNS.getList(this)) {
+        for (MetaColumn column : COLUMNS.getList(this)) {
             if (sb.length()>0) { sb.append(','); }
             sb.append(column.toString());
         }
@@ -72,51 +72,51 @@ public class OrmPKey extends AbstractMetaModel {
 
     /** Assign a PK from framework in case the PK generator is type of MEMO_SEQUENCE. */
     @SuppressWarnings("unchecked")
-    public boolean assignPrimaryKey(OrmUjo ormUjo) {
+    public boolean assignPrimaryKey(OrmUjo bo) {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
 
-            OrmColumn column = COLUMNS.getItem(this, 0);
+            MetaColumn column = COLUMNS.getItem(this, 0);
             UjoProperty property = column.getProperty();
-            if (property.of(ormUjo)!=null) {
+            if (property.of(bo)!=null) {
                 return false;
             }
 
-            switch (OrmColumn.PRIMARY_KEY_GEN.of(column)) {
+            switch (MetaColumn.PRIMARY_KEY_GEN.of(column)) {
                 case DB_SEQUENCE:
 
-                    final long value = database.getSequencer().nextValue(ormUjo.readSession());
+                    final long value = database.getSequencer().nextValue(bo.readSession());
                     if (Long.class==property.getType()) {
-                        property.setValue(ormUjo, value);
+                        property.setValue(bo, value);
                         return true;
                     }
                     if (Integer.class==property.getType()) {
-                        property.setValue(ormUjo, (int) value);
+                        property.setValue(bo, (int) value);
                         return true;
                     }
                 case MEMO_SEQUENCE:
                     if (Long.class==property.getType()) {
-                        property.setValue(ormUjo, nextPrimaryKey());
+                        property.setValue(bo, nextPrimaryKey());
                         return true;
                     }
                     if (Integer.class==property.getType()) {
-                        property.setValue(ormUjo, (int) nextPrimaryKey());
+                        property.setValue(bo, (int) nextPrimaryKey());
                         return true;
                     }
                default:
                    return false;
             }
         }
-        throw new IllegalArgumentException("Table " + ormUjo + " must have defined only one primary key type of Long or Integer");
+        throw new IllegalArgumentException("Table " + bo + " must have defined only one primary key type of Long or Integer");
     }
 
     /** Returns the first column. */
-    public OrmColumn getFirstColumn() {
+    public MetaColumn getFirstColumn() {
         return getColumn(0);
     }
 
     /** Returns column on the selected position. */
-    public OrmColumn getColumn(int i) {
+    public MetaColumn getColumn(int i) {
         return COLUMNS.of(this).get(i);
     }
 }

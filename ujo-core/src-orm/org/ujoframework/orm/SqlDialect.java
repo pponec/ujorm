@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.orm.metaModel.OrmColumn;
-import org.ujoframework.orm.metaModel.OrmPKey;
-import org.ujoframework.orm.metaModel.OrmTable;
-import org.ujoframework.orm.metaModel.OrmView;
+import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaPKey;
+import org.ujoframework.orm.metaModel.MetaTable;
+import org.ujoframework.orm.metaModel.MetaView;
 import org.ujoframework.criterion.ValueCriterion;
 import org.ujoframework.criterion.Operator;
 
@@ -65,9 +65,9 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL table name by sample: SCHEMA.TABLE  */
-    public void printFullName(final OrmTable table, final Appendable out) throws IOException {
-        final String tableSchema = OrmTable.SCHEMA.of(table);
-        final String tableName = OrmTable.NAME.of(table);
+    public void printFullName(final MetaTable table, final Appendable out) throws IOException {
+        final String tableSchema = MetaTable.SCHEMA.of(table);
+        final String tableName = MetaTable.NAME.of(table);
 
         if (isValid(tableSchema)) {
             out.append(tableSchema);
@@ -77,7 +77,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL table alias name by sample: SCHEMA.TABLE ALIAS */
-    public void printFullAliasName(final OrmTable table, final Appendable out) throws IOException {
+    public void printFullAliasName(final MetaTable table, final Appendable out) throws IOException {
         printFullName(table, out);
         out.append(' ');
         out.append(table.getAlias());
@@ -85,23 +85,23 @@ abstract public class SqlDialect {
 
 
     /** Print a full SQL column alias name by sample: TABLE_ALIAS.COLUMN */
-    public Appendable printFullName(final OrmColumn column, final Appendable out) throws IOException {
-        final OrmTable table = OrmColumn.TABLE.of(column);
+    public Appendable printFullName(final MetaColumn column, final Appendable out) throws IOException {
+        final MetaTable table = MetaColumn.TABLE.of(column);
 
         //printFullName(table, out);
         out.append(table.getAlias());
         out.append('.');
-        out.append(OrmColumn.NAME.of(column));
+        out.append(MetaColumn.NAME.of(column));
         
         return out;
     }
 
     /** Print a SQL sript to create table */
-    public Appendable printTable(OrmTable table, Appendable out) throws IOException {
+    public Appendable printTable(MetaTable table, Appendable out) throws IOException {
         out.append("CREATE TABLE ");
         printFullName(table, out);
         String separator = "\n\t( ";
-        for (OrmColumn column : OrmTable.COLUMNS.getList(table)) {
+        for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
             out.append(separator);
             separator = "\n\t, ";
 
@@ -116,8 +116,8 @@ abstract public class SqlDialect {
     }
 
     /** Print foreign key */
-    public Appendable printForeignKey(OrmTable table, Appendable out) throws IOException {
-        for (OrmColumn column : OrmTable.COLUMNS.getList(table)) {
+    public Appendable printForeignKey(MetaTable table, Appendable out) throws IOException {
+        for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
             if (column.isForeignKey()) {
                 printForeignKey(column, table, out);
             }
@@ -126,16 +126,16 @@ abstract public class SqlDialect {
     }
 
     /** Print foreign key for the parameter column */
-    public Appendable printForeignKey(OrmColumn column, OrmTable table, Appendable out) throws IOException {
+    public Appendable printForeignKey(MetaColumn column, MetaTable table, Appendable out) throws IOException {
         final UjoProperty property = column.getProperty();
-        final OrmTable foreignTable = ormHandler.findTableModel(property.getType());
-        OrmPKey foreignKeys = OrmTable.PK.of(foreignTable);
+        final MetaTable foreignTable = ormHandler.findTableModel(property.getType());
+        MetaPKey foreignKeys = MetaTable.PK.of(foreignTable);
 
         out.append("ALTER TABLE ");
         printFullName(table, out);
         out.append("\n\tADD FOREIGN KEY");
 
-        List<OrmColumn> columns = OrmPKey.COLUMNS.of(foreignKeys);
+        List<MetaColumn> columns = MetaPKey.COLUMNS.of(foreignKeys);
         int columnsSize = columns.size();
 
         for (int i=0; i<columnsSize; ++i) {
@@ -148,10 +148,10 @@ abstract public class SqlDialect {
         printFullName(foreignTable, out);
         String separator = "(";
 
-        for (OrmColumn fkColumn : OrmPKey.COLUMNS.of(foreignKeys)) {
+        for (MetaColumn fkColumn : MetaPKey.COLUMNS.of(foreignKeys)) {
             out.append(separator);
             separator = ", ";
-            out.append(OrmColumn.NAME.of(fkColumn));
+            out.append(MetaColumn.NAME.of(fkColumn));
         }
 
         out.append(")");
@@ -165,36 +165,36 @@ abstract public class SqlDialect {
      * @param aName The name parameter is not mandatory, in case a null value the column name is used.
      * @throws java.io.IOException
      */
-    public Appendable printColumnDeclaration(OrmColumn column, String aName, Appendable out) throws IOException {
+    public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
 
-        String name = aName!=null ? aName : OrmColumn.NAME.of(column);
+        String name = aName!=null ? aName : MetaColumn.NAME.of(column);
         out.append(name);
         out.append(' ');
-        out.append(OrmColumn.DB_TYPE.of(column).name());
+        out.append(MetaColumn.DB_TYPE.of(column).name());
 
-        if (!OrmColumn.MAX_LENGTH.isDefault(column)) {
-            out.append("(" + OrmColumn.MAX_LENGTH.of(column));
-            if (!OrmColumn.PRECISION.isDefault(column)) {
-                out.append(", " + OrmColumn.PRECISION.of(column));
+        if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
+            out.append("(" + MetaColumn.MAX_LENGTH.of(column));
+            if (!MetaColumn.PRECISION.isDefault(column)) {
+                out.append(", " + MetaColumn.PRECISION.of(column));
             }
             out.append(")");
         }
-        if (!OrmColumn.MANDATORY.isDefault(column)) {
+        if (!MetaColumn.MANDATORY.isDefault(column)) {
             out.append(" NOT NULL");
         }
-        if (OrmColumn.PRIMARY_KEY.of(column) && aName == null) {
+        if (MetaColumn.PRIMARY_KEY.of(column) && aName == null) {
             out.append(" PRIMARY KEY");
         }
         return out;
     }
 
     /** Print a SQL to create foreign keys. */
-    public Appendable printFKColumnsDeclaration(OrmColumn column, Appendable out) throws IOException {
+    public Appendable printFKColumnsDeclaration(MetaColumn column, Appendable out) throws IOException {
 
-        List<OrmColumn> columns = column.getForeignColumns();
+        List<MetaColumn> columns = column.getForeignColumns();
 
         for (int i=0; i<columns.size(); ++i) {
-            OrmColumn col = columns.get(i);
+            MetaColumn col = columns.get(i);
             out.append(i==0 ? "" : "\n\t, ");
             String name = column.getForeignColumnName(i);
             printColumnDeclaration(col, name, out);
@@ -203,16 +203,16 @@ abstract public class SqlDialect {
     }
 
     /** Print an SQL INSERT statement.  */
-    public Appendable printInsert(OrmUjo ujo, Appendable out) throws IOException {
+    public Appendable printInsert(OrmUjo bo, Appendable out) throws IOException {
 
-        OrmTable table = ormHandler.findTableModel((Class) ujo.getClass());
+        MetaTable table = ormHandler.findTableModel((Class) bo.getClass());
         StringBuilder values = new StringBuilder();
 
         out.append("INSERT INTO ");
         printFullName(table, out);
         out.append(" (");
 
-        printTableColumns(OrmTable.COLUMNS.getList(table), values, out);
+        printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
 
         out.append(") VALUES (");
         out.append(values);
@@ -223,8 +223,8 @@ abstract public class SqlDialect {
 
     /** Print an SQL UPDATE statement.  */
     public Appendable printUpdate
-        ( OrmTable table
-        , List<OrmColumn> changedColumns
+        ( MetaTable table
+        , List<MetaColumn> changedColumns
         , CriterionDecoder decoder
         , Appendable out
         ) throws IOException
@@ -234,12 +234,12 @@ abstract public class SqlDialect {
         out.append("\n\tSET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
-            OrmColumn ormColumn = changedColumns.get(i);
+            MetaColumn ormColumn = changedColumns.get(i);
             if (ormColumn.isPrimaryKey()) {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i==0 ? "" :  ", ");
-            out.append(OrmColumn.NAME.of(ormColumn));
+            out.append(MetaColumn.NAME.of(ormColumn));
             out.append("=? ");
         }
         out.append("\n\tWHERE ");
@@ -249,7 +249,7 @@ abstract public class SqlDialect {
 
     /** Print an SQL DELETE statement. */
     public Appendable printDelete
-        ( OrmTable table
+        ( MetaTable table
         , CriterionDecoder decoder
         , Appendable out
         ) throws IOException
@@ -308,15 +308,15 @@ abstract public class SqlDialect {
      * @param out Table columns output.
      * @throws java.io.IOException
      */
-    public void printTableColumns(List<OrmColumn> columns, Appendable values, Appendable out) throws IOException {
+    public void printTableColumns(List<MetaColumn> columns, Appendable values, Appendable out) throws IOException {
         String separator = "";
         boolean select = values==null; // SELECT
-        for (OrmColumn column : columns) {
+        for (MetaColumn column : columns) {
             if (column.isForeignKey()) {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
                     if (select) {
-                        out.append(OrmColumn.TABLE.of(column).getAlias());
+                        out.append(MetaColumn.TABLE.of(column).getAlias());
                         out.append('.');
                     }
                     out.append(column.getForeignColumnName(i));
@@ -331,7 +331,7 @@ abstract public class SqlDialect {
                 if (select) {
                     printFullName(column, out);
                 } else {
-                    out.append(OrmColumn.NAME.of(column));
+                    out.append(MetaColumn.NAME.of(column));
                 }
                 if (values != null) {
                     values.append(separator);
@@ -351,10 +351,10 @@ abstract public class SqlDialect {
         UjoProperty property = crit.getLeftNode();
         Object right = crit.getRightNode();
 
-        OrmColumn column = (OrmColumn) ormHandler.findColumnModel(property);
+        MetaColumn column = (MetaColumn) ormHandler.findColumnModel(property);
 
         if (right==null ) {
-            String columnName = OrmColumn.NAME.of(column);
+            String columnName = MetaColumn.NAME.of(column);
             switch (operator) {
                 case EQ:
                 case EQUALS_CASE_INSENSITIVE:
@@ -379,7 +379,7 @@ abstract public class SqlDialect {
             out.append( template );
         } else if (right instanceof UjoProperty) {
             final UjoProperty rightProperty = (UjoProperty) right;
-            final OrmColumn col2 = (OrmColumn) ormHandler.findColumnModel(rightProperty);
+            final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty);
 
             if (!rightProperty.isDirect()) {
                 throw new UnsupportedOperationException("Two tables is not supported yet");
@@ -407,7 +407,7 @@ abstract public class SqlDialect {
     /** Print all items of the foreign key */
     public void printForeignKey
         ( final ValueCriterion crit
-        , final OrmColumn column
+        , final MetaColumn column
         , final String template
         , final Appendable out
         ) throws IOException
@@ -430,7 +430,7 @@ abstract public class SqlDialect {
      * @param count only count of items is required;
      */
     public Appendable printSelect
-        ( final OrmTable table
+        ( final MetaTable table
         , final Query query
         , final boolean count
         , final Appendable out
@@ -447,23 +447,23 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    protected Appendable printSelectView(OrmTable table, Query query, boolean count, Appendable out) throws IOException {
-        OrmView select = OrmTable.SELECT_MODEL.of(table);
+    protected Appendable printSelectView(MetaTable table, Query query, boolean count, Appendable out) throws IOException {
+        MetaView select = MetaTable.SELECT_MODEL.of(table);
         String where = query.getDecoder().getWhere();
         List<UjoProperty> order = query.getOrder();
 
         for (UjoProperty p : select.readProperties()) {
             String value = (String) p.of(select);
 
-            if (p==OrmView.SELECT && count) {
+            if (p==MetaView.SELECT && count) {
                 out.append(p.toString());
                 out.append( "COUNT(*)" );
-            } else if (p==OrmView.WHERE && value.length()+where.length()>0) {
+            } else if (p==MetaView.WHERE && value.length()+where.length()>0) {
                 out.append(p.toString());
                 out.append( value );
                 out.append( value.isEmpty() || where.isEmpty() ? "" : " AND " );
                 out.append( where );
-            } else if (p==OrmView.ORDER && !order.isEmpty()){
+            } else if (p==MetaView.ORDER && !order.isEmpty()){
                 out.append(p.toString());
                 out.append( value );
                 out.append( value.isEmpty() || order.isEmpty() ? "" : " AND " );
@@ -493,10 +493,10 @@ abstract public class SqlDialect {
         if (query.getCriterion() != null) {
             CriterionDecoder ed = query.getDecoder();
 
-            OrmTable[] tables = ed.getTables(query.getTableModel());
+            MetaTable[] tables = ed.getTables(query.getTableModel());
 
             for (int i=0; i<tables.length; ++i) {
-                OrmTable table = tables[i];
+                MetaTable table = tables[i];
                 if (i>0) out.append(", ");
                 printFullAliasName(table, out);
             }
@@ -507,7 +507,7 @@ abstract public class SqlDialect {
                 out.append(ed.getWhere());
             }
         } else {
-            out.append(OrmTable.NAME.of(query.getTableModel()));
+            out.append(MetaTable.NAME.of(query.getTableModel()));
         }
         if (!count && !query.getOrder().isEmpty()) {
             printSelectOrder(query, out);
@@ -522,7 +522,7 @@ abstract public class SqlDialect {
         out.append(" ORDER BY ");
         final List<UjoProperty> props = query.getOrder();
         for (int i=0; i<props.size(); i++) {
-            OrmColumn column = query.readOrderColumn(i);
+            MetaColumn column = query.readOrderColumn(i);
             boolean ascending = props.get(i).isAscending();
             if (i>0) {
                 out.append(", ");

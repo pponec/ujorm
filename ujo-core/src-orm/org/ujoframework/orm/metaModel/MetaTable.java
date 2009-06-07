@@ -30,60 +30,60 @@ import org.ujoframework.orm.OrmUjo;
 
 
 /**
- * DB table medadata.
+ * DB table metamodel.
  * @author Pavel Ponec
- * @composed 1 - * OrmRelation2Many
- * @composed 1 - * OrmColumn
- * @composed 1 - 1 OrmPKey
+ * @composed 1 - * MetaRelation2Many
+ * @composed 1 - * MetaColumn
+ * @composed 1 - 1 MetaPKey
  */
-public class OrmTable extends AbstractMetaModel {
+public class MetaTable extends AbstractMetaModel {
 
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<OrmTable,String> ID = newProperty("id", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> ID = newProperty("id", "", propertyCount++);
     /** DB table name */
-    public static final UjoProperty<OrmTable,String> NAME = newProperty("name", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> NAME = newProperty("name", "", propertyCount++);
     /** The unique table/view name over all Databases in scope one OrmHandler */
-    public static final UjoProperty<OrmTable,String> ALIAS = newProperty("alias", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> ALIAS = newProperty("alias", "", propertyCount++);
     /** Name of table schema. */
     @Transient
-    public static final UjoProperty<OrmTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** Table Columns */
-    public static final ListProperty<OrmTable,OrmColumn> COLUMNS = newPropertyList("column", OrmColumn.class, propertyCount++);
+    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newPropertyList("column", MetaColumn.class, propertyCount++);
     /** Table relations to many */
-    public static final ListProperty<OrmTable,OrmRelation2Many> RELATIONS = newPropertyList("relation2m", OrmRelation2Many.class, propertyCount++);
+    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newPropertyList("relation2m", MetaRelation2Many.class, propertyCount++);
     /** Is it a model of a database view ? */
     @XmlAttribute
-    public static final UjoProperty<OrmTable,Boolean> VIEW = newProperty("view", false, propertyCount++);
+    public static final UjoProperty<MetaTable,Boolean> VIEW = newProperty("view", false, propertyCount++);
     /** SQL SELECT statement */
-    public static final UjoProperty<OrmTable,String> SELECT = newProperty("select", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> SELECT = newProperty("select", "", propertyCount++);
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
-    public static final UjoProperty<OrmTable,OrmView> SELECT_MODEL = newProperty("selectModel", OrmView.class, propertyCount++);
+    public static final UjoProperty<MetaTable,MetaView> SELECT_MODEL = newProperty("selectModel", MetaView.class, propertyCount++);
     /** Unique Primary Key */
     @Transient
-    public static final UjoProperty<OrmTable,OrmPKey> PK = newProperty("pk", OrmPKey.class, propertyCount++);
+    public static final UjoProperty<MetaTable,MetaPKey> PK = newProperty("pk", MetaPKey.class, propertyCount++);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<OrmTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class, propertyCount++);
+    public static final UjoProperty<MetaTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class, propertyCount++);
     /** Database */
     @Transient
-    public static final UjoProperty<OrmTable,OrmDatabase> DATABASE = newProperty("database", OrmDatabase.class, propertyCount++);
+    public static final UjoProperty<MetaTable,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class, propertyCount++);
 
     /** No parameter constructor. */
-    public OrmTable() {
+    public MetaTable() {
     }
 
     @SuppressWarnings("unchecked")
-    public OrmTable(OrmDatabase database, RelationToMany dbProperty, OrmTable parTable) {
+    public MetaTable(MetaDatabase database, RelationToMany dbProperty, MetaTable parTable) {
         ID.setValue(this, dbProperty.getName());
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
 
-        final Field field = UjoManager.getInstance().getPropertyField(OrmDatabase.ROOT.of(database), dbProperty);
+        final Field field = UjoManager.getInstance().getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
 
         View view1 = field.getAnnotation(View.class);
         View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
@@ -108,7 +108,7 @@ public class OrmTable extends AbstractMetaModel {
             if (view2!=null) changeDefault(this, SELECT, view2.select());
 
             if (!SELECT.isDefault(this)) {
-                SELECT_MODEL.setValue(this, new OrmView(SELECT.of(this)));
+                SELECT_MODEL.setValue(this, new MetaView(SELECT.of(this)));
             }
         } else {
             Table table1 = field.getAnnotation(Table.class);
@@ -120,15 +120,15 @@ public class OrmTable extends AbstractMetaModel {
             if (table2!=null) changeDefault(this, ALIAS , table2.alias());
             if (table2!=null) changeDefault(this, SCHEMA, table2.schema());
         }
-        changeDefault(this, SCHEMA, OrmDatabase.SCHEMA.of(database));
+        changeDefault(this, SCHEMA, MetaDatabase.SCHEMA.of(database));
         changeDefault(this, NAME, dbProperty.getName());
-        String aliasPrefix = OrmParameters.TABLE_ALIAS_PREFIX.of(database.getParams());
-        String aliasSuffix = OrmParameters.TABLE_ALIAS_SUFFIX.of(database.getParams());
+        String aliasPrefix = MetaParams.TABLE_ALIAS_PREFIX.of(database.getParams());
+        String aliasSuffix = MetaParams.TABLE_ALIAS_SUFFIX.of(database.getParams());
         changeDefault(this, ALIAS, aliasPrefix+NAME.of(this)+aliasSuffix);
 
         // -----------------------------------------------
 
-        OrmPKey dpk = new OrmPKey(this);
+        MetaPKey dpk = new MetaPKey(this);
         PK.setValue(this, dpk);
 
         OrmHandler dbHandler = database.getOrmHandler();
@@ -138,19 +138,19 @@ public class OrmTable extends AbstractMetaModel {
             if (!ujoManager.isTransientProperty(property)) {
 
                 if (property instanceof RelationToMany) {
-                    OrmRelation2Many param = parTable!=null ? parTable.findRelation(property.getName()) : null;
-                    OrmRelation2Many column = new OrmRelation2Many(this, property, param);
+                    MetaRelation2Many param = parTable!=null ? parTable.findRelation(property.getName()) : null;
+                    MetaRelation2Many column = new MetaRelation2Many(this, property, param);
                     RELATIONS.addItem(this, column);
                     dbHandler.addProperty(property, column);
 
                 } else {
-                    OrmColumn param  = parTable!=null ? parTable.findColumn(property.getName()) : null;
-                    OrmColumn column = new OrmColumn(this, property, param);
+                    MetaColumn param  = parTable!=null ? parTable.findColumn(property.getName()) : null;
+                    MetaColumn column = new MetaColumn(this, property, param);
                     COLUMNS.addItem(this, column);
                     dbHandler.addProperty(property, column);
 
-                    if (OrmColumn.PRIMARY_KEY.of(column)) {
-                        OrmPKey.COLUMNS.addItem(dpk, column);
+                    if (MetaColumn.PRIMARY_KEY.of(column)) {
+                        MetaPKey.COLUMNS.addItem(dpk, column);
                     }
                 }
             }
@@ -164,11 +164,11 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     /** Assign a PK from framework */
-    public void assignPrimaryKey(final OrmUjo ormUjo) {
+    public void assignPrimaryKey(final OrmUjo bo) {
         final Class type = DB_PROPERTY.of(this).getItemType();
-        if (type.isInstance(ormUjo)) {
-            final OrmPKey pk = PK.of(this);
-            final boolean ok = pk.assignPrimaryKey(ormUjo);
+        if (type.isInstance(bo)) {
+            final MetaPKey pk = PK.of(this);
+            final boolean ok = pk.assignPrimaryKey(bo);
             if (!ok) {
                 throw new RuntimeException("DB SEQUENCE is not supported for " + type);
             }
@@ -185,7 +185,7 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     /** Returns the first PK */
-    public OrmColumn getFirstPK() {
+    public MetaColumn getFirstPK() {
         return PK.of(this).getFirstColumn();
     }
 
@@ -220,7 +220,7 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     /** Returns the database */
-    final public OrmDatabase getDatabase() {
+    final public MetaDatabase getDatabase() {
         return DATABASE.of(this);
     }
 
@@ -231,10 +231,10 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     /** Finds the first column by ID or returns null. The method is for internal use only. */
-    OrmColumn findColumn(String id) {
+    MetaColumn findColumn(String id) {
 
-        if (isValid(id)) for (OrmColumn column : COLUMNS.of(this)) {
-            if (OrmColumn.ID.equals(column, id)) {
+        if (isValid(id)) for (MetaColumn column : COLUMNS.of(this)) {
+            if (MetaColumn.ID.equals(column, id)) {
                 return column;
             }
         }
@@ -242,10 +242,10 @@ public class OrmTable extends AbstractMetaModel {
     }
 
     /** Finds the first relation by ID or returns null. The method is for internal use only. */
-    OrmRelation2Many findRelation(String id) {
+    MetaRelation2Many findRelation(String id) {
 
-        if (isValid(id)) for (OrmRelation2Many relation : RELATIONS.of(this)) {
-            if (OrmRelation2Many.ID.equals(relation, id)) {
+        if (isValid(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
+            if (MetaRelation2Many.ID.equals(relation, id)) {
                 return relation;
             }
         }

@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.orm.metaModel.OrmColumn;
-import org.ujoframework.orm.metaModel.OrmRelation2Many;
-import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaRelation2Many;
+import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.criterion.Criterion;
 
 /**
@@ -33,8 +33,8 @@ import org.ujoframework.criterion.Criterion;
  */
 public class Query<UJO extends OrmUjo> {
 
-    final private OrmTable table;
-    final private List<OrmColumn> columns;
+    final private MetaTable table;
+    final private List<MetaColumn> columns;
     final private Criterion<UJO> criterion;
     final private CriterionDecoder decoder;
     final private Session session;
@@ -65,9 +65,9 @@ public class Query<UJO extends OrmUjo> {
      * @param criterion If criterion is null, then a TRUE constant criterion is used.
      * @param session Session
      */
-    public Query(OrmTable table, Criterion<UJO> criterion, Session session) {
+    public Query(MetaTable table, Criterion<UJO> criterion, Session session) {
         this.table = table;
-        this.columns = OrmTable.COLUMNS.getList(table);
+        this.columns = MetaTable.COLUMNS.getList(table);
         this.criterion = criterion;
         this.session = session;
         this.decoder = new CriterionDecoder(criterion, table);
@@ -121,17 +121,17 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** Table Type */
-    public OrmTable getTableModel() {
+    public MetaTable getTableModel() {
         return table;
     }
 
     /** Get Column List */
-    public List<OrmColumn> getColumns() {
+    public List<MetaColumn> getColumns() {
         return columns;
     }
 
     /** Get Column List */
-    public OrmColumn getColumn(int index) {
+    public MetaColumn getColumn(int index) {
         return columns.get(index);
     }
 
@@ -147,7 +147,7 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** Returns table model */
-    public OrmTable getTable() {
+    public MetaTable getTable() {
         return table;
     }
 
@@ -167,10 +167,10 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** Returns an order column. A method for an internal use only. */
-    public OrmColumn readOrderColumn(int i) {
+    public MetaColumn readOrderColumn(int i) {
         UjoProperty property = order.get(i);
-        OrmRelation2Many result = session.getHandler().findColumnModel(property);
-        return (OrmColumn) result;
+        MetaRelation2Many result = session.getHandler().findColumnModel(property);
+        return (MetaColumn) result;
     }
 
 }

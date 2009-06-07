@@ -43,12 +43,12 @@ import org.ujoframework.orm.annot.Db;
 /**
  * A logical database description.
  * @author Pavel Ponec
- * @composed 1 - * OrmTable
+ * @composed 1 - * MetaTable
  */
-public class OrmDatabase extends AbstractMetaModel {
+public class MetaDatabase extends AbstractMetaModel {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(OrmDatabase.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(MetaDatabase.class.toString());
     /** Add a DB relation into table models */
     private static final boolean ADD_DB_MODEL = true;
     /** Property count */
@@ -56,27 +56,27 @@ public class OrmDatabase extends AbstractMetaModel {
 
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<OrmDatabase,String> ID = newProperty("id", "", propertyCount++);
-    /** OrmDatabase default schema */
-    public static final UjoProperty<OrmDatabase,String> SCHEMA = newProperty("schema", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> ID = newProperty("id", "", propertyCount++);
+    /** MetaDatabase default schema */
+    public static final UjoProperty<MetaDatabase,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
-    public static final UjoProperty<OrmDatabase,Class> DIALECT = newProperty("dialect", Class.class, propertyCount++);
+    public static final UjoProperty<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class, propertyCount++);
     /** List of tables */
-    public static final ListProperty<OrmDatabase,OrmTable> TABLES = newPropertyList("table", OrmTable.class, propertyCount++);
+    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newPropertyList("table", MetaTable.class, propertyCount++);
     /** JDBC URL connection */
-    public static final UjoProperty<OrmDatabase,String> JDBC_URL = newProperty("jdbcUrl", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "", propertyCount++);
     /** JDBC Driver */
-    public static final UjoProperty<OrmDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "", propertyCount++);
     /** DB user */
-    public static final UjoProperty<OrmDatabase,String> USER = newProperty("user", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> USER = newProperty("user", "", propertyCount++);
     /** DB password */
     @Transient
-    public static final UjoProperty<OrmDatabase,String> PASSWORD = newProperty("password", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> PASSWORD = newProperty("password", "", propertyCount++);
     /** DB class root instance */
     @Transient
-    public static final UjoProperty<OrmDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class, propertyCount++);
+    public static final UjoProperty<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class, propertyCount++);
     /** LDPA */
-    public static final UjoProperty<OrmDatabase,String> LDAP = newProperty("ldap", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> LDAP = newProperty("ldap", "", propertyCount++);
 
     // --------------------
 
@@ -84,10 +84,10 @@ public class OrmDatabase extends AbstractMetaModel {
     private SqlDialect dialect;
     private UjoSequencer sequencer;
 
-    public OrmDatabase() {
+    public MetaDatabase() {
     }
 
-    public OrmDatabase(OrmHandler ormHandler, OrmUjo database, OrmDatabase param) {
+    public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param) {
         this.ormHandler = ormHandler;
         sequencer = new UjoSequencer(this);
         ROOT.setValue(this, database);
@@ -122,8 +122,8 @@ public class OrmDatabase extends AbstractMetaModel {
 
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;
-                OrmTable par   = param!=null ? param.findTable(tProperty.getName()) : null;
-                OrmTable table = new OrmTable(this, tProperty, par);
+                MetaTable par   = param!=null ? param.findTable(tProperty.getName()) : null;
+                MetaTable table = new MetaTable(this, tProperty, par);
                 TABLES.addItem(this, table);
             }
         }
@@ -131,7 +131,7 @@ public class OrmDatabase extends AbstractMetaModel {
             // Add database relations:
             @SuppressWarnings("unchecked")
             RelationToMany relation = new RelationToMany(SCHEMA.of(this), database.getClass());
-            OrmTable table = new OrmTable(this, relation, null);
+            MetaTable table = new MetaTable(this, relation, null);
             table.setNotPersistent();
             TABLES.addItem(this, table);
         }
@@ -158,48 +158,48 @@ public class OrmDatabase extends AbstractMetaModel {
 
 
     /** Change DbType by a Java property */
-    public void changeDbType(OrmColumn column) {
+    public void changeDbType(MetaColumn column) {
        UjoProperty property = column.getProperty();
 
        Class type = property.getType();
 
         if (String.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
+            MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
         else if (Integer.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
+            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
         }
         else if (Long.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
         }
         else if (BigInteger.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
         }
         else if (Double.class==type || BigDecimal.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
+            MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
         }
         else if (java.sql.Date.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.DATE);
+            MetaColumn.DB_TYPE.setValue(column, DbType.DATE);
         }
         else if (Date.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+            MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
         else if (OrmUjo.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
+            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }
 
     /** Change DbType by a Java property */
-    public void changeDbLength(OrmColumn column) {
+    public void changeDbLength(MetaColumn column) {
 
-        switch (OrmColumn.DB_TYPE.of(column)) {
+        switch (MetaColumn.DB_TYPE.of(column)) {
             case DECIMAL:
-                changeDefault(column, OrmColumn.MAX_LENGTH, 8);
-                changeDefault(column, OrmColumn.PRECISION, 2);
+                changeDefault(column, MetaColumn.MAX_LENGTH, 8);
+                changeDefault(column, MetaColumn.PRECISION, 2);
                 break;
             case VARCHAR:
             case VARCHAR_IGNORECASE:
-                changeDefault(column, OrmColumn.MAX_LENGTH, 128);
+                changeDefault(column, MetaColumn.MAX_LENGTH, 128);
                 break;
             default:
         }
@@ -210,39 +210,39 @@ public class OrmDatabase extends AbstractMetaModel {
        Class type = property.getType();
 
         if (String.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
-            changeDefault(column, OrmColumn.MAX_LENGTH, 128);
+            MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
+            changeDefault(column, MetaColumn.MAX_LENGTH, 128);
         }
         else if (Integer.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
-            //changeDefault(column, OrmColumn.MAX_LENGTH, 8);
+            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
+            //changeDefault(column, MetaColumn.MAX_LENGTH, 8);
         }
         else if (Long.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
-            //changeDefault(column, OrmColumn.MAX_LENGTH, 16);
+            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            //changeDefault(column, MetaColumn.MAX_LENGTH, 16);
         }
         else if (BigInteger.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.BIGINT);
-            changeDefault(column, OrmColumn.MAX_LENGTH, 16);
+            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            changeDefault(column, MetaColumn.MAX_LENGTH, 16);
         }
         else if (Double.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
-            changeDefault(column, OrmColumn.MAX_LENGTH, 8);
-            changeDefault(column, OrmColumn.PRECISION, 2);
+            MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
+            changeDefault(column, MetaColumn.MAX_LENGTH, 8);
+            changeDefault(column, MetaColumn.PRECISION, 2);
         }
         else if (BigDecimal.class==type) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
-            changeDefault(column, OrmColumn.MAX_LENGTH, 8);
-            changeDefault(column, OrmColumn.PRECISION, 2);
+            MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
+            changeDefault(column, MetaColumn.MAX_LENGTH, 8);
+            changeDefault(column, MetaColumn.PRECISION, 2);
         }
         else if (java.sql.Date.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.DATE);
+            MetaColumn.DB_TYPE.setValue(column, DbType.DATE);
         }
         else if (Date.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+            MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
         else if (OrmUjo.class.isAssignableFrom(type)) {
-            OrmColumn.DB_TYPE.setValue(column, DbType.INT);
+            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
         }
     }
 
@@ -268,7 +268,7 @@ public class OrmDatabase extends AbstractMetaModel {
             }
 
             // 2. Create tables:
-            for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
+            for (MetaTable table : MetaDatabase.TABLES.getList(this)) {
                 if (table.isTable()) {
                     out.setLength(0);
                     sql = getDialect().printTable(table, out).toString();
@@ -278,7 +278,7 @@ public class OrmDatabase extends AbstractMetaModel {
             }
 
             // 3. Create Foreign Keys:
-            for (OrmTable table : OrmDatabase.TABLES.getList(this)) {
+            for (MetaTable table : MetaDatabase.TABLES.getList(this)) {
                 if (table.isTable()){
                     out.setLength(0);
                     sql = getDialect().printForeignKey(table, out).toString();
@@ -397,13 +397,13 @@ public class OrmDatabase extends AbstractMetaModel {
     }
 
     /** Return the OrmHandler parameters */
-    public OrmParameters getParams() {
+    public MetaParams getParams() {
         return ormHandler.getParameters();
     }
 
 
 
-    /** Returns a SCHEMA of the OrmDatabase. */
+    /** Returns a SCHEMA of the MetaDatabase. */
     @Override
     public String toString() {
         return SCHEMA.of(this);
@@ -424,11 +424,11 @@ public class OrmDatabase extends AbstractMetaModel {
     /** Equals */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof OrmDatabase) {
-            OrmDatabase db = (OrmDatabase) obj;
+        if (obj instanceof MetaDatabase) {
+            MetaDatabase db = (MetaDatabase) obj;
 
-            final String name1 = OrmDatabase.SCHEMA.of(this);
-            final String name2 = OrmDatabase.SCHEMA.of(db);
+            final String name1 = MetaDatabase.SCHEMA.of(this);
+            final String name2 = MetaDatabase.SCHEMA.of(db);
 
             return name1.equals(name2);
         } else {
@@ -439,7 +439,7 @@ public class OrmDatabase extends AbstractMetaModel {
     /** Hash code */
     @Override
     public int hashCode() {
-        final String name = OrmDatabase.SCHEMA.of(this);
+        final String name = MetaDatabase.SCHEMA.of(this);
         return name.hashCode();
     }
 
@@ -452,9 +452,9 @@ public class OrmDatabase extends AbstractMetaModel {
     /** Get all table schemas. */
     public Set<String> getSchemas() {
         final Set<String> result = new HashSet<String>();
-        for (OrmTable table : TABLES.of(this)) {
+        for (MetaTable table : TABLES.of(this)) {
             if (table.isPersistent() && !table.isSelectModel()) {
-                result.add(OrmTable.SCHEMA.of(table).toLowerCase());
+                result.add(MetaTable.SCHEMA.of(table).toLowerCase());
             }
         }
         return result;
@@ -463,10 +463,10 @@ public class OrmDatabase extends AbstractMetaModel {
     /** Finds the first table by ID or returns null.
      * The method is for internal use only.
      */
-    OrmTable findTable(String id) {
+    MetaTable findTable(String id) {
 
-        if (isValid(id)) for (OrmTable table : TABLES.getList(this)) {
-            if (OrmTable.ID.equals(table, id)) {
+        if (isValid(id)) for (MetaTable table : TABLES.getList(this)) {
+            if (MetaTable.ID.equals(table, id)) {
                 return table;
             }
         }

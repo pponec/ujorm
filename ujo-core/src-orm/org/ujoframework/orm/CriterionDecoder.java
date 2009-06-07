@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Set;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.orm.metaModel.OrmColumn;
-import org.ujoframework.orm.metaModel.OrmDatabase;
-import org.ujoframework.orm.metaModel.OrmPKey;
-import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaDatabase;
+import org.ujoframework.orm.metaModel.MetaPKey;
+import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.BinaryCriterion;
 import org.ujoframework.criterion.ValueCriterion;
@@ -45,19 +45,19 @@ public class CriterionDecoder {
     final private Criterion criterion;
     final private StringBuilder sql;
     final private List<ValueCriterion> values;
-    final private Set<OrmTable> tables;
+    final private Set<MetaTable> tables;
 
-    public CriterionDecoder(Criterion e, OrmTable ormTable) {
+    public CriterionDecoder(Criterion e, MetaTable ormTable) {
         this(e, ormTable.getDatabase());
     }
 
-    public CriterionDecoder(Criterion criterion, OrmDatabase database) {
+    public CriterionDecoder(Criterion criterion, MetaDatabase database) {
         this.criterion = criterion;
         this.dialect = database.getDialect();
         this.handler  = database.getOrmHandler();
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ValueCriterion>();
-        this.tables = new HashSet<OrmTable>();
+        this.tables = new HashSet<MetaTable>();
 
         if (criterion!=null) {
             unpack(criterion);
@@ -108,9 +108,9 @@ public class CriterionDecoder {
     }
 
     /** Returns direct column */
-    public OrmColumn getColumn(int i) {
+    public MetaColumn getColumn(int i) {
         UjoProperty p = values.get(i).getLeftNode();
-        OrmColumn ormColumn = (OrmColumn) handler.findColumnModel(p);
+        MetaColumn ormColumn = (MetaColumn) handler.findColumnModel(p);
         return ormColumn;
     }
 
@@ -196,11 +196,11 @@ public class CriterionDecoder {
 
         boolean andOperator = false;
         for (UjoProperty property : relations) try {
-            OrmColumn fk1 = (OrmColumn) handler.findColumnModel(property);
-            OrmTable   t2 = handler.findTableModel(property.getType());
-            OrmPKey   pk2 = OrmTable.PK.of(t2);
+            MetaColumn fk1 = (MetaColumn) handler.findColumnModel(property);
+            MetaTable   t2 = handler.findTableModel(property.getType());
+            MetaPKey   pk2 = MetaTable.PK.of(t2);
             //
-            tables.add(OrmColumn.TABLE.of(fk1));
+            tables.add(MetaColumn.TABLE.of(fk1));
             tables.add(t2);
 
             for (int i=fk1.getForeignColumns().size()-1; i>=0; i--) {
@@ -249,9 +249,9 @@ public class CriterionDecoder {
     }
 
     /** Returns all participated tables include the parameter table. */
-    public OrmTable[] getTables(OrmTable baseTable) {
+    public MetaTable[] getTables(MetaTable baseTable) {
         tables.add(baseTable);
-        return tables.toArray(new OrmTable[tables.size()]);
+        return tables.toArray(new MetaTable[tables.size()]);
     }
 
 }
