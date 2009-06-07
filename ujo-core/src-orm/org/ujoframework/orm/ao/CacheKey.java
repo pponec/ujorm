@@ -60,8 +60,8 @@ abstract public class CacheKey {
     // --------------- FACTORY -----------------------
 
     /** Constructor for the OrmUjo */
-    public static CacheKey newInstance(OrmUjo ujo, OrmPKey pkey) {
-        return new UjoCacheKey(ujo, pkey);
+    public static CacheKey newInstance(OrmUjo bo, OrmPKey pkey) {
+        return new UjoCacheKey(bo, pkey);
     }
 
     /** Constructor for one keyk */

@@ -169,7 +169,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
 
     /** Getter based on UjoProperty implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
+    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
         final Object result = ((UjoProperty) property).of(this);
         return (VALUE) result;
     }
@@ -178,7 +178,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
      * The method was implemented by a pattern UjoExt.
      */
     @SuppressWarnings({"unchecked"})
-    public <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
+    public final <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
         ( final UjoProperty<UJO, VALUE> property
         , final VALUE value
         ) {

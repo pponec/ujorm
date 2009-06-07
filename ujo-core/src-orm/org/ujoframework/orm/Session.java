@@ -228,7 +228,9 @@ public class Session {
         return result;
     }
 
-    /** Delete all object object form parameter.
+    /** Delete all object object by the criterion from parameter.
+     * <br />Warning: method does not remove deleted object from internal cache,
+     *       however you can call method clearCache() to release all objects from the cache.
      * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
@@ -239,32 +241,56 @@ public class Session {
     }
 
 
-    /** Delete all object object form parameter.
+    /** Delete one object from the parameters.
+     * <br />Warning: method does not remove deleted object from internal cache,
+     *       however you can call method clearCache() to release all objects from the cache.
+     * @param criterion filter for deleting tables.
+     * @return Returns a number of the removing is OK.
+     */
+    public boolean delete(final OrmUjo bo) {
+        OrmTable table = getHandler().findTableModel(bo.getClass());
+        OrmColumn PK = table.getFirstPK();
+        Criterion crn = Criterion.newInstance(PK.getProperty(), PK.getValue(bo));
+        int result = delete(table, crn);
+
+        if (true) {
+            // Remove the bo from an internal cache:
+            removeCache(bo, OrmTable.PK.of(table));
+        }
+        return result>0;
+    }
+
+
+    /** Delete all object object by the criterion from parameter.
+     * <br />Warning: method does not remove deleted object from internal cache,
+     *       however you can call method clearCache() to release all objects from the cache.
      * @param tableType Type of table to delete
      * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    public <UJO extends OrmUjo> int delete(final Class<UJO> tableType, final Criterion<UJO> criterion) {
-        final OrmTable table = handler.findTableModel(tableType);
-        return delete(table, criterion);
+    public <UJO extends OrmUjo> int delete(final Class<UJO> tableClass, final Criterion<UJO> criterion) {
+        final OrmTable tableModel = handler.findTableModel(tableClass);
+        return delete(tableModel, criterion);
     }
 
 
 
-    /** Delete all object object form parameter.
-     * @param ormUjo Type of table to delete
+    /** Delete all objects object form parameter
+     * <br />Warning: method does not remove deleted object from internal cache,
+     *       however you can call method clearCache() to release all objects from the cache.
+     * @param tableModel Type of table to delete
      * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
-    protected <UJO extends OrmUjo> int delete(final OrmTable ormUjo, final Criterion<UJO> criterion) {
+    protected <UJO extends OrmUjo> int delete(final OrmTable tableModel, final Criterion<UJO> criterion) {
         int result = 0;
         JdbcStatement statement = null;
         String sql = "";
 
         try {
-            final OrmDatabase db = OrmTable.DATABASE.of(ormUjo);
-            final CriterionDecoder decoder = new CriterionDecoder(criterion, ormUjo);
-            sql = db.getDialect().printDelete(ormUjo, decoder, out(64)).toString();
+            final OrmDatabase db = OrmTable.DATABASE.of(tableModel);
+            final CriterionDecoder decoder = new CriterionDecoder(criterion, tableModel);
+            sql = db.getDialect().printDelete(tableModel, decoder, out(64)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(decoder);
 
@@ -345,7 +371,7 @@ public class Session {
     }
 
     /** Run SQL SELECT by query. */
-    public <UJO extends OrmUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
+    protected <UJO extends OrmUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
         JdbcStatement statement = null;
         String sql = "";
 
@@ -545,19 +571,28 @@ public class Session {
     }
 
     /** Add value into cache */
-    public void addCache(OrmUjo ujo, OrmPKey pkey) {
-        CacheKey key = CacheKey.newInstance(ujo, pkey);
-        cache.put(key, ujo);
+    private void addCache(OrmUjo bo, OrmPKey pkey) {
+        CacheKey key = CacheKey.newInstance(bo, pkey);
+        cache.put(key, bo);
+    }
+
+    /** Remove selected BO from from internal cache */
+    private boolean removeCache(OrmUjo bo, OrmPKey pkey) {
+        final CacheKey key = CacheKey.newInstance(bo, pkey);
+        final OrmUjo result = cache.remove(key);
+        return result!=null;
     }
 
 
-    public OrmUjo findCache(Class type, Object value) {
-        CacheKey key = CacheKey.newInstance(type, value);
+    /** Find object from internal cache */
+    public OrmUjo findCache(Class type, Object pkey) {
+        CacheKey key = CacheKey.newInstance(type, pkey);
         return cache.get(key);
     }
 
-    public OrmUjo findCache(Class type, Object... values) {
-        CacheKey key = CacheKey.newInstance(type, values);
+    /** Find object from internal cache */
+    public OrmUjo findCache(Class type, Object... pkeys) {
+        CacheKey key = CacheKey.newInstance(type, pkeys);
         return cache.get(key);
     }
 
