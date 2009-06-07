@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class CacheKeyTest extends TestCase {
     

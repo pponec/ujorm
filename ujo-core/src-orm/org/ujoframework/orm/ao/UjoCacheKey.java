@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright 2009 Paul Ponec
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package org.ujoframework.orm.ao;
@@ -8,23 +19,23 @@ package org.ujoframework.orm.ao;
 
 import java.util.List;
 import org.ujoframework.orm.OrmUjo;
-import org.ujoframework.orm.metaModel.OrmColumn;
-import org.ujoframework.orm.metaModel.OrmPKey;
-import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaPKey;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * UJO CacheKey
- * @author pavel
+ * @author Pavel Ponec
  */
 final class UjoCacheKey extends CacheKey {
 
     /** Value key */
-    final private OrmUjo ormUjo;
+    final private OrmUjo bo;
     /** Primary Keys */
-    final List<OrmColumn> pk;
+    final List<MetaColumn> pk;
 
-    public UjoCacheKey(final OrmUjo ormUjo) {
-        this(ormUjo, null);
+    public UjoCacheKey(final OrmUjo bo) {
+        this(bo, null);
     }
 
     /**
@@ -32,21 +43,21 @@ final class UjoCacheKey extends CacheKey {
      * @param ormUjo BO
      * @param pkey The parameter not mandatory but the one is used for a performance improvements.
      */
-    public UjoCacheKey(final OrmUjo ormUjo, final OrmPKey pkey) {
-        this.ormUjo = ormUjo;
-        this.pk = pkey!=null ? OrmPKey.COLUMNS.of(pkey) : getPK() ;
+    public UjoCacheKey(final OrmUjo bo, final MetaPKey pkey) {
+        this.bo = bo;
+        this.pk = pkey!=null ? MetaPKey.COLUMNS.of(pkey) : getPK() ;
     }
 
     /** OrmUjo class */
     @Override
     public Class getType() {
-        return ormUjo.getClass();
+        return bo.getClass();
     }
 
     /** Returns valueof PK */
     @Override
     public Object getValue(final int index) {
-        return pk.get(index).getValue(ormUjo);
+        return pk.get(index).getValue(bo);
     }
 
     /** Returns a count of PK */
@@ -56,10 +67,10 @@ final class UjoCacheKey extends CacheKey {
     }
 
     /** Returns PK of the OrmUjo */
-    private List<OrmColumn> getPK() {
-        final OrmTable table = ormUjo.readSession().getHandler().findTableModel(ormUjo.getClass());
-        final OrmPKey ormPKey = OrmTable.PK.of(table);
-        final List<OrmColumn> columns = OrmPKey.COLUMNS.of(ormPKey);
+    private List<MetaColumn> getPK() {
+        final MetaTable table = bo.readSession().getHandler().findTableModel(bo.getClass());
+        final MetaPKey ormPKey = MetaTable.PK.of(table);
+        final List<MetaColumn> columns = MetaPKey.COLUMNS.of(ormPKey);
         return columns;
     }
 

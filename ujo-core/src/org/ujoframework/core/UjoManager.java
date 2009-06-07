@@ -225,8 +225,8 @@ public class UjoManager implements Comparator<UjoProperty> {
     /**
      * Test if obj1 equalsUjo obj2. If obj1 object is Array, method call an equalsArray() method, else use en method equalsUjo().
      *
-     * @param obj1 First parameter
-     * @param obj2 Optional parameter
+     * @param u1 First parameter
+     * @param u2 Optional parameter
      * @return Returns true, if objects are the same.
      */
     public boolean equalsUjo(final Ujo u1, final Ujo u2)  {
@@ -236,8 +236,8 @@ public class UjoManager implements Comparator<UjoProperty> {
     /**
      * Test if obj1 equalsUjo obj2. If obj1 object is Array, method call an equalsArray() method, else use en method equalsUjo().
      *
-     * @param obj1 First parameter
-     * @param obj2 Optional parameter
+     * @param u1 First parameter
+     * @param u2 Optional parameter
      * @return Returns true, if objects are the same.
      */
     public boolean equalsUjo(final Ujo u1, final Ujo u2, UjoProperty... properties)  {

@@ -1,33 +1,44 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright 2009 Paul Ponec
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package org.ujoframework.orm;
 
 import java.sql.ResultSet;
-import org.ujoframework.orm.metaModel.OrmDatabase;
-import org.ujoframework.orm.metaModel.OrmParameters;
-import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.MetaDatabase;
+import org.ujoframework.orm.metaModel.MetaParams;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * Sequence provider
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UjoSequencer {
 
     //** Logger */
     //private static final java.util.logging.Logger.Logger LOGGER = java.util.logging.Logger.Logger.getLogger(UjoSequencer.class.toString());
 
-    final private OrmDatabase database;
-    final private OrmTable table;
+    final private MetaDatabase database;
+    final private MetaTable table;
     final private int increment;
     private long sequence = 0;
     private long seqLimit = 0;
 
-    public UjoSequencer(OrmDatabase database) {
+    public UjoSequencer(MetaDatabase database) {
         this.database = database;
-        this.increment = OrmParameters.SEQUENCE_INCREMENT.of(database.getParams());
+        this.increment = MetaParams.SEQUENCE_INCREMENT.of(database.getParams());
         this.table = null;
     }
 
@@ -58,7 +69,7 @@ public class UjoSequencer {
                 sql = database.getDialect().printSeqNextValueUpdate(this, out).toString();
                 if (sql.length()>0) {
                     // TODO: sequence must be updated by a different DB connection !!!
-                    String tableKey = table!=null ? OrmTable.NAME.of(table) : SqlDialect.COMMON_SEQ_TABLE_KEY ;
+                    String tableKey = table!=null ? MetaTable.NAME.of(table) : SqlDialect.COMMON_SEQ_TABLE_KEY ;
                     statement = session.getStatement(database, sql);
                     statement.getPreparedStatement().setString(1, tableKey);
                     statement.executeUpdate();
@@ -67,7 +78,7 @@ public class UjoSequencer {
             } catch (Throwable e) {
                 throw new IllegalStateException("ILLEGAL SQL: " + sql, e);
             } finally {
-                OrmDatabase.close(null, statement, res, true);
+                MetaDatabase.close(null, statement, res, true);
             }
             return sequence;
         }
@@ -80,7 +91,7 @@ public class UjoSequencer {
 
     /** Returns a database schema */
     public String getDatabasSchema() {
-        return OrmDatabase.SCHEMA.of(database);
+        return MetaDatabase.SCHEMA.of(database);
     }
 
     /** The UJO cache is the number of pre-allocated numbers inside the OrmUjo framework. */
@@ -94,12 +105,12 @@ public class UjoSequencer {
     }
 
     /** Returns model of the database */
-    public OrmDatabase getDatabase() {
+    public MetaDatabase getDatabase() {
         return database;
     }
 
-    /** Returns a related table or null if sequence is general for the all OrmDatabase space */
-    public OrmTable getTable() {
+    /** Returns a related table or null if sequence is general for the all MetaDatabase space */
+    public MetaTable getTable() {
         return table;
     }
 

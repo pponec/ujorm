@@ -27,18 +27,18 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.orm.metaModel.OrmDatabase;
-import org.ujoframework.orm.metaModel.OrmRoot;
+import org.ujoframework.orm.metaModel.MetaDatabase;
+import org.ujoframework.orm.metaModel.MetaRoot;
 import org.ujoframework.orm.annot.Db;
-import org.ujoframework.orm.metaModel.OrmColumn;
-import org.ujoframework.orm.metaModel.OrmParameters;
-import org.ujoframework.orm.metaModel.OrmRelation2Many;
-import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaParams;
+import org.ujoframework.orm.metaModel.MetaRelation2Many;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * The basic class for an ORM support.
  * @author Pavel Ponec
- * @composed 1 - 1 OrmRoot
+ * @composed 1 - 1 MetaRoot
  */
 public class OrmHandler {
 
@@ -47,13 +47,13 @@ public class OrmHandler {
     private static OrmHandler handler = new OrmHandler();
 
     /** List of databases */
-    private OrmRoot databases = new OrmRoot();
+    private MetaRoot databases = new MetaRoot();
     /** Temporary configuration */
-    private OrmRoot configuration = null;
+    private MetaRoot configuration = null;
     private Session session = new Session(this);
 
     /** Map a property to a database column model */
-    private HashMap<UjoProperty,OrmRelation2Many> propertyMap = new HashMap<UjoProperty,OrmRelation2Many> ();
+    private HashMap<UjoProperty,MetaRelation2Many> propertyMap = new HashMap<UjoProperty,MetaRelation2Many> ();
 
     /** The (Sigleton ?) constructor */
     public OrmHandler() {
@@ -87,18 +87,18 @@ public class OrmHandler {
     /** Save the ORM parameters.
      * The assigning must be finished before an ORM definition loading.
      */
-    public void config(OrmParameters params) throws IllegalArgumentException {
-        OrmRoot.PARAMETERS.setValue(databases, params);
+    public void config(MetaParams params) throws IllegalArgumentException {
+        MetaRoot.PARAMETERS.setValue(databases, params);
     }
 
     /** Save the ORM configuration include parameters (if the parameters are not null).
      * The assigning must be finished before an ORM definition loading.
      */
-    public void config(OrmRoot config) throws IllegalArgumentException {
+    public void config(MetaRoot config) throws IllegalArgumentException {
          this.configuration = config;
 
         // The parameters assigning:
-        OrmParameters params = OrmRoot.PARAMETERS.of(configuration);
+        MetaParams params = MetaRoot.PARAMETERS.of(configuration);
         if (params!=null) {
             config(params);
         }
@@ -109,9 +109,9 @@ public class OrmHandler {
      */
     public boolean config(URL url, boolean throwsException) throws IllegalArgumentException {
         try {
-            final OrmRoot conf = UjoManagerXML.getInstance().parseXML
+            final MetaRoot conf = UjoManagerXML.getInstance().parseXML
             ( new BufferedInputStream(url.openStream())
-            , OrmRoot.class
+            , MetaRoot.class
             , this
             );
 
@@ -138,16 +138,16 @@ public class OrmHandler {
     }
 
     /** LoadInternal a database model from paramater */
-    public <UJO extends OrmUjo> OrmDatabase loadDatabase(Class<? extends UJO> databaseModel) {
+    public <UJO extends OrmUjo> MetaDatabase loadDatabase(Class<? extends UJO> databaseModel) {
 
         // Load a configuration parameters:
         Db annotDb = databaseModel.getAnnotation(Db.class);
         String schemaDb = annotDb!=null ? annotDb.schema() : null;
-        OrmDatabase paramDb = configuration!=null ? configuration.removeDb(schemaDb) : null;
+        MetaDatabase paramDb = configuration!=null ? configuration.removeDb(schemaDb) : null;
 
         // Create the ORM DB model:
         UJO model = getInstance(databaseModel);
-        OrmDatabase dbModel  = new OrmDatabase(this, model, paramDb);
+        MetaDatabase dbModel  = new MetaDatabase(this, model, paramDb);
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {
@@ -158,9 +158,9 @@ public class OrmHandler {
     }
 
     /** LoadInternal a metada and create database */
-    public <UJO extends OrmUjo> OrmDatabase createDatabase(Class<UJO> databaseModel) {
+    public <UJO extends OrmUjo> MetaDatabase createDatabase(Class<UJO> databaseModel) {
 
-        OrmDatabase dbModel = loadDatabase(databaseModel);
+        MetaDatabase dbModel = loadDatabase(databaseModel);
         dbModel.create();
 
         return dbModel;
@@ -180,18 +180,18 @@ public class OrmHandler {
 
     /** Map a property to the table */
     @SuppressWarnings("unchecked")
-    public void addProperty(UjoProperty property, OrmRelation2Many newColumn) {
+    public void addProperty(UjoProperty property, MetaRelation2Many newColumn) {
 
-        OrmRelation2Many oldColumn = findColumnModel(property);
+        MetaRelation2Many oldColumn = findColumnModel(property);
 
         if (oldColumn == null) {
             propertyMap.put(property, newColumn);
         } else {
-            final OrmTable oldTable = OrmColumn.TABLE.of(oldColumn);
-            final OrmTable newTable = OrmColumn.TABLE.of(newColumn);
+            final MetaTable oldTable = MetaColumn.TABLE.of(oldColumn);
+            final MetaTable newTable = MetaColumn.TABLE.of(newColumn);
 
-            final Class oldType = OrmTable.DB_PROPERTY.of(oldTable).getItemType();
-            final Class newType = OrmTable.DB_PROPERTY.of(newTable).getItemType();
+            final Class oldType = MetaTable.DB_PROPERTY.of(oldTable).getItemType();
+            final Class newType = MetaTable.DB_PROPERTY.of(newTable).getItemType();
 
             if (newType.isAssignableFrom(oldType)) {
                 // Only a parent can be assigned:
@@ -201,23 +201,23 @@ public class OrmHandler {
     }
 
     /** Find a Relation/Column model of the paramemeter property.
-     * @param property Parameter can be type of Property of PathProperty (direct or indirect);
+     * @param pathProperty Parameter can be type of Property of PathProperty (direct or indirect);
      * @return Related model or the null if model was not found.
      */
-    public OrmRelation2Many findColumnModel(UjoProperty pathProperty) {
+    public MetaRelation2Many findColumnModel(UjoProperty pathProperty) {
         if (pathProperty!=null) while (!pathProperty.isDirect()) {
             pathProperty = ((PathProperty)pathProperty).getLastProperty();
         }
-        final OrmRelation2Many result = propertyMap.get(pathProperty);
+        final MetaRelation2Many result = propertyMap.get(pathProperty);
         return result;
     }
 
     /** Find a table model by the dbClass. Returns null of table is not found. */
-    public OrmTable findTableModel(Class<? extends OrmUjo> dbClass) {
-        for (OrmDatabase db : OrmRoot.DATABASES.getList(databases)) {
-            for (OrmTable table : OrmDatabase.TABLES.getList(db)) {
+    public MetaTable findTableModel(Class<? extends OrmUjo> dbClass) {
+        for (MetaDatabase db : MetaRoot.DATABASES.getList(databases)) {
+            for (MetaTable table : MetaDatabase.TABLES.getList(db)) {
                 // Class has a unique instance in the same classloader:
-                if (OrmTable.DB_PROPERTY.of(table).getItemType()==dbClass) {
+                if (MetaTable.DB_PROPERTY.of(table).getItemType()==dbClass) {
                     return table;
                 }
             }
@@ -226,8 +226,8 @@ public class OrmHandler {
     }
 
     /** Returns parameters */
-    public OrmParameters getParameters() {
-        return OrmRoot.PARAMETERS.of(databases);
+    public MetaParams getParameters() {
+        return MetaRoot.PARAMETERS.of(databases);
     }
 
 }

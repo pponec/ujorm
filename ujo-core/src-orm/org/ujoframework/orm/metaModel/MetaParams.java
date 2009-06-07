@@ -26,23 +26,23 @@ import org.ujoframework.orm.ao.CachePolicy;
  * The class is a root of database configuration.
  * @author Pavel Ponec
  */
-public class OrmParameters extends AbstractMetaModel {
+public class MetaParams extends AbstractMetaModel {
 
-    public static final Logger LOGGER = Logger.getLogger(OrmParameters.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
 
     /** Enable / disable a session cache */
-    public static final UjoProperty<OrmParameters,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE, propertyCount++);
+    public static final UjoProperty<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE, propertyCount++);
     /** Is the enabled cache implemented by WeakHashMap? The false value implements an HashMap instance. Default value is TRUE. */
-    public static final UjoProperty<OrmParameters,Boolean> CACHE_WEAK = newProperty("cacheWeak", true, propertyCount++);
+    public static final UjoProperty<MetaParams,Boolean> CACHE_WEAK = newProperty("cacheWeak", true, propertyCount++);
     /** Special prameter for an automatically assembled table alias prefix. */
-    public static final UjoProperty<OrmParameters,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "", propertyCount++);
+    public static final UjoProperty<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "", propertyCount++);
     /** Special prameter for an automatically assembled table alias prefix. */
-    public static final UjoProperty<OrmParameters,String> TABLE_ALIAS_SUFFIX = newProperty("tableAliasSuffix", "", propertyCount++);
+    public static final UjoProperty<MetaParams,String> TABLE_ALIAS_SUFFIX = newProperty("tableAliasSuffix", "", propertyCount++);
     /** Sequence increment. */
-    public static final UjoProperty<OrmParameters,Integer> SEQUENCE_INCREMENT = newProperty("sequsenceIncrement", 32, propertyCount++);
+    public static final UjoProperty<MetaParams,Integer> SEQUENCE_INCREMENT = newProperty("sequsenceIncrement", 32, propertyCount++);
 
     
 
@@ -54,7 +54,7 @@ public class OrmParameters extends AbstractMetaModel {
 
     /** Is the cache enabled? */
     public boolean isCacheEnabled() {
-        final boolean result = OrmParameters.CACHE_POLICY.of(this)!=CachePolicy.NONE;
+        final boolean result = MetaParams.CACHE_POLICY.of(this)!=CachePolicy.NONE;
         return result;
     }
     

@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright 2009 Paul Ponec
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package org.ujoframework.orm.metaModel;
@@ -14,21 +25,21 @@ import org.ujoframework.orm.AbstractMetaModel;
  * Contains a sql select for a UJO view SELECT.
  * @author Ponec
  */
-public class OrmView  extends AbstractMetaModel {
+public class MetaView  extends AbstractMetaModel {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(OrmView.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(MetaView.class.toString());
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    public static final UjoProperty<OrmView,String> SELECT = newProperty("SELECT "   , "", propertyCount++);
-    public static final UjoProperty<OrmView,String> FROM   = newProperty(" FROM "    , "", propertyCount++);
-    public static final UjoProperty<OrmView,String> WHERE  = newProperty(" WHERE "   , "", propertyCount++);
-    public static final UjoProperty<OrmView,String> GROUP  = newProperty(" GROUP BY ", "", propertyCount++);
-    public static final UjoProperty<OrmView,String> ORDER  = newProperty(" ORDER BY ", "", propertyCount++);
-    public static final UjoProperty<OrmView,String> LIMIT  = newProperty(" LIMIT "   , "", propertyCount++);
+    public static final UjoProperty<MetaView,String> SELECT = newProperty("SELECT "   , "", propertyCount++);
+    public static final UjoProperty<MetaView,String> FROM   = newProperty(" FROM "    , "", propertyCount++);
+    public static final UjoProperty<MetaView,String> WHERE  = newProperty(" WHERE "   , "", propertyCount++);
+    public static final UjoProperty<MetaView,String> GROUP  = newProperty(" GROUP BY ", "", propertyCount++);
+    public static final UjoProperty<MetaView,String> ORDER  = newProperty(" ORDER BY ", "", propertyCount++);
+    public static final UjoProperty<MetaView,String> LIMIT  = newProperty(" LIMIT "   , "", propertyCount++);
 
-    public static String END_CHAR = ";";
+    private static String END_CHAR = ";";
 
     /**
      * Constructor.
@@ -37,7 +48,7 @@ public class OrmView  extends AbstractMetaModel {
      *  WHERE ord.id=itm.orderId
      *  GROUP BY ord.id ;
      */
-    public OrmView(String select) {
+    public MetaView(String select) {
         parse(select);
     }
 

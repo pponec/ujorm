@@ -22,10 +22,10 @@ import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.Query;
-import org.ujoframework.orm.metaModel.OrmColumn;
+import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.Operator;
-import org.ujoframework.orm.metaModel.OrmParameters;
+import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
  * SampleORM of usages: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE.
@@ -39,8 +39,8 @@ public class SampleORM {
 
         boolean yesIWantChangeDefaultParameters = true;
         if (yesIWantChangeDefaultParameters) {
-            OrmParameters params = new OrmParameters();
-            OrmParameters.TABLE_ALIAS_SUFFIX.setValue(params, "_alias");
+            MetaParams params = new MetaParams();
+            MetaParams.TABLE_ALIAS_SUFFIX.setValue(params, "_alias");
             OrmHandler.getInstance().config(params);
         }
 
@@ -258,7 +258,7 @@ public class SampleORM {
 
     /** Using the column metadata */
     public void useMetadata() {
-        OrmColumn c = (OrmColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
+        MetaColumn c = (MetaColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
 
         System.err.println("** METADATA OF COLUMN: " + Order.DESCR);
         System.err.println("\t DB name: " + c.getFullName());

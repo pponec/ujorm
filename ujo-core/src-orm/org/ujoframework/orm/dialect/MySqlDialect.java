@@ -20,8 +20,8 @@ import java.io.IOException;
 import org.ujoframework.orm.CriterionDecoder;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
-import org.ujoframework.orm.metaModel.OrmDatabase;
-import org.ujoframework.orm.metaModel.OrmTable;
+import org.ujoframework.orm.metaModel.MetaDatabase;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /** MySQL release 5.1
  * <br><a href="http://dev.mysql.com/">http://dev.mysql.com/</a>
@@ -41,7 +41,7 @@ public class MySqlDialect extends SqlDialect {
     /** Print an SQL DELETE statement. */
     @Override
     public Appendable printDelete
-        ( OrmTable table
+        ( MetaTable table
         , CriterionDecoder decoder
         , Appendable out
         ) throws IOException
@@ -75,12 +75,12 @@ public class MySqlDialect extends SqlDialect {
         out.append(" (id) VALUES ('"+COMMON_SEQ_TABLE_KEY+"');");
         println(out);
 
-        for (OrmTable table : OrmDatabase.TABLES.getValue(sequence.getDatabase())) {
+        for (MetaTable table : MetaDatabase.TABLES.getValue(sequence.getDatabase())) {
             if (table.isTable()) {
                 // Insert common data:
                 out.append("INSERT INTO ");
                 out.append(seqTable);
-                out.append(" (id) VALUES ('"+OrmTable.NAME.of(table)+"');");
+                out.append(" (id) VALUES ('"+MetaTable.NAME.of(table)+"');");
                 println(out);
             }
         }
@@ -110,8 +110,8 @@ public class MySqlDialect extends SqlDialect {
     /** Print SQL NEXT SEQUENCE. */
     @Override
     public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        OrmTable table = sequence.getTable();
-        String tableKey = table!=null ? OrmTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
+        MetaTable table = sequence.getTable();
+        String tableKey = table!=null ? MetaTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
 
         out.append("SELECT seq+step FROM ");
         printSequenceName(sequence, out);

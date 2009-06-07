@@ -30,32 +30,32 @@ import org.ujoframework.orm.annot.Column;
  * The database/object relation to many.
  * @author Pavel Ponec
  */
-public class OrmRelation2Many extends AbstractMetaModel {
+public class MetaRelation2Many extends AbstractMetaModel {
 
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** The meta-model ID. */
     @XmlAttribute
-    public static final UjoProperty<OrmRelation2Many,String> ID = newProperty("id", "", propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,String> ID = newProperty("id", "", propertyCount++);
     /** The database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
-    public static final UjoProperty<OrmRelation2Many,String> NAME = newProperty("name", "", propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,String> NAME = newProperty("name", "", propertyCount++);
     /** Table property */
     @Transient
-    public static final UjoProperty<OrmRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class, propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class, propertyCount++);
     /** DB table */
     @Transient
-    public static final UjoProperty<OrmRelation2Many,OrmTable> TABLE = newProperty("table", OrmTable.class, propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,MetaTable> TABLE = newProperty("table", MetaTable.class, propertyCount++);
 
-    public OrmRelation2Many() {
+    public MetaRelation2Many() {
     }
     
-    public OrmRelation2Many(OrmTable table, UjoProperty tableProperty, OrmRelation2Many param) {
+    public MetaRelation2Many(MetaTable table, UjoProperty tableProperty, MetaRelation2Many param) {
         
-        Field field = UjoManager.getInstance().getPropertyField(OrmTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
+        Field field = UjoManager.getInstance().getPropertyField(MetaTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (true) {

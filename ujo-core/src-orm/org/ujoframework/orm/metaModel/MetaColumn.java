@@ -35,27 +35,27 @@ import org.ujoframework.orm.annot.GenerationType;
  * @author Pavel Ponec
  * @composed 1 - * DbType
  */
-public class OrmColumn extends OrmRelation2Many {
+public class MetaColumn extends MetaRelation2Many {
 
     /** Property count */
-    protected static int propertyCount = OrmRelation2Many.propertyCount;
+    protected static int propertyCount = MetaRelation2Many.propertyCount;
 
     /** DB primary key */
-    public static final UjoProperty<OrmColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false, propertyCount++);
+    public static final UjoProperty<MetaColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false, propertyCount++);
     /** Database Type */
-    public static final UjoProperty<OrmColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic, propertyCount++);
+    public static final UjoProperty<MetaColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic, propertyCount++);
     /** Column NOT-NULL */
-    public static final UjoProperty<OrmColumn,Boolean> MANDATORY = newProperty("mandatory", false, propertyCount++);
+    public static final UjoProperty<MetaColumn,Boolean> MANDATORY = newProperty("mandatory", false, propertyCount++);
     /** Column value length */
-    public static final UjoProperty<OrmColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1, propertyCount++);
+    public static final UjoProperty<MetaColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1, propertyCount++);
     /** Column value precision */
-    public static final UjoProperty<OrmColumn,Integer> PRECISION = newProperty("precision", -1, propertyCount++);
+    public static final UjoProperty<MetaColumn,Integer> PRECISION = newProperty("precision", -1, propertyCount++);
     /** DB Default value */
-    public static final UjoProperty<OrmColumn,String> DEFAULT_VALUE = newProperty("default", "", propertyCount++);
+    public static final UjoProperty<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "", propertyCount++);
     /** The column is included in the index of the name */
-    public static final UjoProperty<OrmColumn,String> INDEX_NAME = newProperty("indexName", "", propertyCount++);
+    public static final UjoProperty<MetaColumn,String> INDEX_NAME = newProperty("indexName", "", propertyCount++);
     /** DB primary key generator */
-    public static final UjoProperty<OrmColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.DB_SEQUENCE, propertyCount++);
+    public static final UjoProperty<MetaColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.DB_SEQUENCE, propertyCount++);
 
 
     /** Foreign column names. */
@@ -63,13 +63,13 @@ public class OrmColumn extends OrmRelation2Many {
     private static final String[] EMPTY_NAMES = new String[0];
 
 
-    public OrmColumn() {
+    public MetaColumn() {
     }
 
-    public OrmColumn(OrmTable table, UjoProperty tableProperty, OrmColumn param) {
+    public MetaColumn(MetaTable table, UjoProperty tableProperty, MetaColumn param) {
         super(table, tableProperty, param);
 
-        Field field = UjoManager.getInstance().getPropertyField(OrmTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
+        Field field = UjoManager.getInstance().getPropertyField(MetaTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (param!=null) {
@@ -90,10 +90,10 @@ public class OrmColumn extends OrmRelation2Many {
         }
 
         if (DB_TYPE.isDefault(this)) {
-            OrmTable.DATABASE.of(table).changeDbType(this);
+            MetaTable.DATABASE.of(table).changeDbType(this);
         }
         if (MAX_LENGTH.isDefault(this)) {
-            OrmTable.DATABASE.of(table).changeDbLength(this);
+            MetaTable.DATABASE.of(table).changeDbLength(this);
         }
     }
 
@@ -144,13 +144,13 @@ public class OrmColumn extends OrmRelation2Many {
 
     /** Returns an original foreign columns in case a foreign column. */
     @SuppressWarnings("unchecked")
-    public List<OrmColumn> getForeignColumns() {
-        List<OrmColumn> result;
+    public List<MetaColumn> getForeignColumns() {
+        List<MetaColumn> result;
         Class type = getProperty().getType();
-        OrmTable table = getHandler().findTableModel(type);
+        MetaTable table = getHandler().findTableModel(type);
         if (table!=null) {
-            OrmPKey pk = OrmTable.PK.of(table);
-            result = OrmPKey.COLUMNS.getList(pk);
+            MetaPKey pk = MetaTable.PK.of(table);
+            result = MetaPKey.COLUMNS.getList(pk);
         } else {
             result = Collections.emptyList();
         }
@@ -164,10 +164,10 @@ public class OrmColumn extends OrmRelation2Many {
     private String[] getForeignColumnNames() {
         if (foreignNames==null) {
             final Class type = getProperty().getType();
-            final OrmTable foreignTable = getHandler().findTableModel(type);
+            final MetaTable foreignTable = getHandler().findTableModel(type);
             if (foreignTable!=null && isForeignKey()) {
-                final OrmPKey pk = OrmTable.PK.of(foreignTable);
-                final List<OrmColumn> dbColumns = OrmPKey.COLUMNS.getList(pk);
+                final MetaPKey pk = MetaTable.PK.of(foreignTable);
+                final List<MetaColumn> dbColumns = MetaPKey.COLUMNS.getList(pk);
                 final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1 ? NAME.of(this) : "", ", ");
 
                 ArrayList<String> fNames = new ArrayList<String>(dbColumns.size());
@@ -177,10 +177,10 @@ public class OrmColumn extends OrmRelation2Many {
                         name = tokenizer.nextToken();
                     } else {
                         name = "fk_"
-                          // + OrmTable.NAME.of(foreignTable)
-                             + OrmColumn.NAME.of(this)
+                          // + MetaTable.NAME.of(foreignTable)
+                             + MetaColumn.NAME.of(this)
                              + "_"
-                             + OrmColumn.NAME.of(dbColumns.get(i))
+                             + MetaColumn.NAME.of(dbColumns.get(i))
                              ;
                     }
                     fNames.add(name);
@@ -201,15 +201,15 @@ public class OrmColumn extends OrmRelation2Many {
 
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
-    public Object getValue(final OrmUjo ormUjo) {
+    public Object getValue(final OrmUjo bo) {
         final UjoProperty property = getProperty();
-        final Object result = property.of(ormUjo);
+        final Object result = property.of(bo);
         return result;
     }
 
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
-    public void setValue(final OrmUjo ormUjo, Object value) {
+    public void setValue(final OrmUjo bo, Object value) {
         final UjoProperty property = getProperty();
 
         if (isForeignKey()
@@ -218,7 +218,7 @@ public class OrmColumn extends OrmRelation2Many {
            value = new UniqueKey(value);
         }
 
-        property.setValue(ormUjo, value);
+        property.setValue(bo, value);
     }
 
 
@@ -251,7 +251,7 @@ public class OrmColumn extends OrmRelation2Many {
 
     /** Print a full 'alias' name of foreign column by index */
     public void printForeignColumnFullName(int index, Appendable out) throws IOException {
-        OrmTable table = TABLE.of(this);
+        MetaTable table = TABLE.of(this);
         out.append(table.getAlias());
         out.append('.');
         out.append(getForeignColumnNames()[index]);

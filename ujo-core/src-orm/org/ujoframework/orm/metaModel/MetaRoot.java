@@ -30,23 +30,23 @@ import org.ujoframework.extensions.ListProperty;
  * A logical database description.
  * The class is a root of database configuration.
  * @author Pavel Ponec
- * @composed 1 - * OrmDatabase
- * @composed 1 - 1 OrmParameters
+ * @composed 1 - * MetaDatabase
+ * @composed 1 - 1 MetaParams
  */
-public class OrmRoot extends AbstractMetaModel {
+public class MetaRoot extends AbstractMetaModel {
 
-    public static final Logger LOGGER = Logger.getLogger(OrmRoot.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(MetaRoot.class.getName());
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** List of tables */
-    public static final ListProperty<OrmRoot,OrmDatabase> DATABASES = newPropertyList("database", OrmDatabase.class, propertyCount++);
+    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newPropertyList("database", MetaDatabase.class, propertyCount++);
     /** ORM parameters */
-    public static final UjoProperty<OrmRoot,OrmParameters> PARAMETERS = newProperty("parameters", OrmParameters.class, propertyCount++);
+    public static final UjoProperty<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters", MetaParams.class, propertyCount++);
 
-    public OrmRoot() {
+    public MetaRoot() {
         // A default instance:
-        PARAMETERS.setValue(this, new OrmParameters());
+        PARAMETERS.setValue(this, new MetaParams());
     }
 
     /** Property Count */
@@ -56,15 +56,15 @@ public class OrmRoot extends AbstractMetaModel {
     }
 
     /** Returns the first database or return null */
-    public OrmDatabase getDatabase() {
-        final OrmDatabase result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
+    public MetaDatabase getDatabase() {
+        final MetaDatabase result = DATABASES.getItemCount(this)>0 ? DATABASES.getItem(this, 0) : null;
         return result;
     }
 
     /** Returns the first database with required name or returns null; */
-    public OrmDatabase getDatabase(String name) {
-        for (OrmDatabase database : DATABASES.getList(this)) {
-            if (OrmDatabase.SCHEMA.equals(database, name)) {
+    public MetaDatabase getDatabase(String name) {
+        for (MetaDatabase database : DATABASES.getList(this)) {
+            if (MetaDatabase.SCHEMA.equals(database, name)) {
                 return database;
             }
         }
@@ -72,7 +72,7 @@ public class OrmRoot extends AbstractMetaModel {
     }
 
     /** Add a new database into repository. */
-    final public void add(OrmDatabase database) {
+    final public void add(MetaDatabase database) {
         DATABASES.addItem(this, database);
     }
 
@@ -99,12 +99,12 @@ public class OrmRoot extends AbstractMetaModel {
      * The method is for internal use only.
      * @param schemaName The identifier for looking the database
      */
-    public OrmDatabase removeDb(String schemaName) {
+    public MetaDatabase removeDb(String schemaName) {
         if (super.readOnly()) {
             throw new UnsupportedOperationException("The internal state is 'read only'");
         }
-        if (isValid(schemaName)) for (OrmDatabase db : DATABASES.getList(this)) {
-            if (OrmDatabase.ID.equals(db, schemaName)) {
+        if (isValid(schemaName)) for (MetaDatabase db : DATABASES.getList(this)) {
+            if (MetaDatabase.ID.equals(db, schemaName)) {
                 DATABASES.getList(this).remove(db);
                 return db;
             }
