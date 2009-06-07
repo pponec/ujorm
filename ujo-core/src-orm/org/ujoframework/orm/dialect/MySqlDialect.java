@@ -16,9 +16,16 @@
 
 package org.ujoframework.orm.dialect;
 
+import java.io.IOException;
+import org.ujoframework.orm.CriterionDecoder;
 import org.ujoframework.orm.SqlDialect;
+import org.ujoframework.orm.UjoSequencer;
+import org.ujoframework.orm.metaModel.OrmDatabase;
+import org.ujoframework.orm.metaModel.OrmTable;
 
-/** MySQL (http://dev.mysql.com/) - dialect is not supported yet */
+/** MySQL release 5.1
+ * <br><a href="http://dev.mysql.com/">http://dev.mysql.com/</a>
+ */
 public class MySqlDialect extends SqlDialect {
 
     @Override
@@ -30,5 +37,97 @@ public class MySqlDialect extends SqlDialect {
     public String getJdbcDriver() {
         return "com.mysql.jdbc.Driver";
     }
+
+    /** Print an SQL DELETE statement. */
+    @Override
+    public Appendable printDelete
+        ( OrmTable table
+        , CriterionDecoder decoder
+        , Appendable out
+        ) throws IOException
+    {
+        out.append("DELETE ");
+        out.append(table.getAlias());
+        out.append(" FROM ");
+        printFullAliasName(table, out);
+        out.append(" WHERE ");
+        out.append(decoder.getWhere());
+
+        return out;
+    }
+
+
+    /** Print SQL CREATE SEQUENCE. */
+    @Override
+    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
+        out.append("CREATE TABLE ");
+        out.append(seqTable);
+        out.append("\n\t( id VARCHAR(128) NOT NULL PRIMARY KEY");
+        out.append("\n\t, seq BIGINT DEFAULT " + 0);
+        out.append("\n\t, step INT DEFAULT " + sequence.getIncrement());
+        out.append("\n\t);");
+        println(out);
+
+        // Insert common data:
+        out.append("INSERT INTO ");
+        out.append(seqTable);
+        out.append(" (id) VALUES ('"+COMMON_SEQ_TABLE_KEY+"');");
+        println(out);
+
+        for (OrmTable table : OrmDatabase.TABLES.getValue(sequence.getDatabase())) {
+            if (table.isTable()) {
+                // Insert common data:
+                out.append("INSERT INTO ");
+                out.append(seqTable);
+                out.append(" (id) VALUES ('"+OrmTable.NAME.of(table)+"');");
+                println(out);
+            }
+        }
+        return out;
+    }
+
+    /** Prinnt full sequence name */
+    @Override
+    protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append(sequence.getDatabasSchema());
+        out.append('.');
+        out.append(sequence.getSequenceName());
+        return out;
+    }
+
+    /** Print SQL ALTER SEQUENCE to modify an INCREMENT. */
+    @Override
+    public Appendable printAlterSequenceIncrement(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("UPDATE ");
+        printSequenceName(sequence, out);
+        out.append(" SET step=" + sequence.getIncrement());
+        out.append(" WHERE id='"+COMMON_SEQ_TABLE_KEY+"'");
+        return out;
+    }
+
+
+    /** Print SQL NEXT SEQUENCE. */
+    @Override
+    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+        OrmTable table = sequence.getTable();
+        String tableKey = table!=null ? OrmTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
+
+        out.append("SELECT seq+step FROM ");
+        printSequenceName(sequence, out);
+        out.append(" WHERE id='"+tableKey+"'");
+        return out;
+    }
+
+    /** Print SQL NEXT SEQUENCE Update or return null. The method is intended for an emulator of the sequence. */
+    @Override
+    public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("UPDATE ");
+        printSequenceName(sequence, out);
+        out.append(" SET seq=seq+step");
+        out.append(" WHERE id=?");
+        return out;
+    }
+
 
 }
