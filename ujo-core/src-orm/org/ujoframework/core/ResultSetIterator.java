@@ -27,7 +27,7 @@ import org.ujoframework.orm.metaModel.MetaColumn;
  * ResultSet iterator. It is not a thread safe implementation.
  * @author Pavel Ponec
  */
-public class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
+class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
     final Query query;
     final ResultSet rs;
