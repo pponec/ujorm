@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
 
  * @author Pavel Ponec
  */
-public class UjoIteratorImpl<T> extends UjoIterator<T> {
+class UjoIteratorImpl<T> extends UjoIterator<T> {
 
     final private Enumeration<T> e;
     final private long count;
