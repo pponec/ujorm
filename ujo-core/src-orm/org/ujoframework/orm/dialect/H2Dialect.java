@@ -31,5 +31,48 @@ public class H2Dialect extends SqlDialect {
         return "org.h2.Driver";
     }
 
+    // --- SEQUENCE BEG ---
+
+//    /** Print full sequence name */
+//    protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
+//        out.append(sequence.getSequenceName());
+//        return out;
+//    }
+//
+//    /** Print SQL CREATE SEQUENCE. */
+//    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+//        out.append("CREATE SEQUENCE ");
+//        printSequenceName(sequence, out);
+//        out.append(" START WITH " + sequence.getIncrement());
+//        out.append(" CACHE " + sequence.getInitDbCache());
+//        return out;
+//    }
+//
+//    /** Print SQL ALTER SEQUENCE to modify INCREMENT. */
+//    public Appendable printAlterSequenceIncrement(final UjoSequencer sequence, final Appendable out) throws IOException {
+//        out.append("ALTER SEQUENCE ");
+//        printSequenceName(sequence, out);
+//        out.append(" INCREMENT BY " + sequence.getIncrement());
+//        return out;
+//    }
+//
+//    /** Print the NEXT SQL SEQUENCE. */
+//    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+//        out.append("SELECT NEXTVAL('");
+//        printSequenceName(sequence, out);
+//        out.append("')");
+//        return out;
+//    }
+//
+//    /** Print SQL NEXT SEQUENCE Update or print none. The method is intended for an emulator of the sequence. */
+//    public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
+//        return out;
+//    }
+
+    // --- SEQUENCE END ---
+
+
+
+
 }
 
