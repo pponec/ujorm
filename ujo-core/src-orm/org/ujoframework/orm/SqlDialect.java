@@ -25,6 +25,7 @@ import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.orm.metaModel.MetaView;
 import org.ujoframework.criterion.ValueCriterion;
 import org.ujoframework.criterion.Operator;
+import org.ujoframework.orm.metaModel.MetaDatabase;
 
 /**
  * SQL dialect API
@@ -290,8 +291,8 @@ abstract public class SqlDialect {
                 return "{0} LIKE {1}";
             case X_FIXED:
                 return crit.evaluate(null)
-                    ? "true"  // "1=1"
-                    : "false" // "1=0"
+                    ? "1=1" // "true"
+                    : "1=0" // "false"
                     ;
             case REGEXP: 
             case NOT_REGEXP:
@@ -533,39 +534,70 @@ abstract public class SqlDialect {
         }
     }
 
-    /** Print full sequence name */
+    /** Print SQL CREATE SEQUENCE. */
+    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
+        out.append("CREATE TABLE ");
+        out.append(seqTable);
+        out.append("\n\t( id VARCHAR(128) NOT NULL PRIMARY KEY");
+        out.append("\n\t, seq BIGINT DEFAULT " + 0);
+        out.append("\n\t, step INT DEFAULT " + sequence.getIncrement());
+        out.append("\n\t);");
+        println(out);
+
+        // Insert common data:
+        out.append("INSERT INTO ");
+        out.append(seqTable);
+        out.append(" (id) VALUES ('"+COMMON_SEQ_TABLE_KEY+"');");
+        println(out);
+
+        for (MetaTable table : MetaDatabase.TABLES.getValue(sequence.getDatabase())) {
+            if (table.isTable()) {
+                // Insert common data:
+                out.append("INSERT INTO ");
+                out.append(seqTable);
+                out.append(" (id) VALUES ('"+MetaTable.NAME.of(table)+"');");
+                println(out);
+            }
+        }
+        return out;
+    }
+
+    /** Prinnt full sequence name */
     protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append(sequence.getDatabasSchema());
+        out.append('.');
         out.append(sequence.getSequenceName());
         return out;
     }
 
-    /** Print SQL CREATE SEQUENCE. */
-    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("CREATE SEQUENCE ");
-        printSequenceName(sequence, out);
-        out.append(" START WITH " + sequence.getIncrement());
-        out.append(" CACHE " + sequence.getInitDbCache());
-        return out;
-    }
-
-    /** Print SQL ALTER SEQUENCE to modify INCREMENT. */
+    /** Print SQL ALTER SEQUENCE to modify an INCREMENT. */
     public Appendable printAlterSequenceIncrement(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("ALTER SEQUENCE ");
+        out.append("UPDATE ");
         printSequenceName(sequence, out);
-        out.append(" INCREMENT BY " + sequence.getIncrement());
+        out.append(" SET step=" + sequence.getIncrement());
+        out.append(" WHERE id='"+COMMON_SEQ_TABLE_KEY+"'");
         return out;
     }
 
-    /** Print the NEXT SQL SEQUENCE. */
+
+    /** Print SQL NEXT SEQUENCE. */
     public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("SELECT NEXTVAL('");
+        MetaTable table = sequence.getTable();
+        String tableKey = table!=null ? MetaTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
+
+        out.append("SELECT seq+step FROM ");
         printSequenceName(sequence, out);
-        out.append("')");
+        out.append(" WHERE id='"+tableKey+"'");
         return out;
     }
 
-    /** Print SQL NEXT SEQUENCE Update or print none. The method is intended for an emulator of the sequence. */
+    /** Print SQL NEXT SEQUENCE Update or return null. The method is intended for an emulator of the sequence. */
     public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("UPDATE ");
+        printSequenceName(sequence, out);
+        out.append(" SET seq=seq+step");
+        out.append(" WHERE id=?");
         return out;
     }
 
