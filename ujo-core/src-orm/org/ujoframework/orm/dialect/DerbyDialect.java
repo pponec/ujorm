@@ -130,7 +130,7 @@ public class DerbyDialect extends SqlDialect {
         MetaPKey foreignKeys = MetaTable.PK.of(foreignTable);
 
         out.append("ALTER TABLE ");
-        printFullName(table, out);
+        printFullTableName(table, out);
         out.append("\n\tADD CONSTRAINT fk_");
         out.append(MetaTable.NAME.of(table));
         out.append('_');
@@ -147,7 +147,7 @@ public class DerbyDialect extends SqlDialect {
         }
 
         out.append(")\n\tREFERENCES ");
-        printFullName(foreignTable, out);
+        printFullTableName(foreignTable, out);
         String separator = "(";
 
         for (MetaColumn fkColumn : MetaPKey.COLUMNS.of(foreignKeys)) {

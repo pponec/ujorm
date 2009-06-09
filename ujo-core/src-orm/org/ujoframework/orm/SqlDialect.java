@@ -65,7 +65,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL table name by sample: SCHEMA.TABLE  */
-    public void printFullName(final MetaTable table, final Appendable out) throws IOException {
+    public void printFullTableName(final MetaTable table, final Appendable out) throws IOException {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
@@ -76,9 +76,9 @@ abstract public class SqlDialect {
         out.append(tableName);
     }
 
-    /** Print a full SQL table alias name by sample: SCHEMA.TABLE ALIAS */
-    public void printTableAlias(final MetaTable table, final Appendable out) throws IOException {
-        printFullName(table, out);
+    /** Print a SQL database and table name and an alias definition - by sample: SCHEMA.TABLE ALIAS */
+    public void printTableAliasDefinition(final MetaTable table, final Appendable out) throws IOException {
+        printFullTableName(table, out);
         out.append(' ');
         out.append(table.getAlias());
     }
@@ -88,7 +88,6 @@ abstract public class SqlDialect {
     public Appendable printColumnAlias(final MetaColumn column, final Appendable out) throws IOException {
         final MetaTable table = MetaColumn.TABLE.of(column);
 
-        //printColumnAlias(table, out);
         out.append(table.getAlias());
         out.append('.');
         out.append(MetaColumn.NAME.of(column));
@@ -99,7 +98,7 @@ abstract public class SqlDialect {
     /** Print a SQL sript to create table */
     public Appendable printTable(MetaTable table, Appendable out) throws IOException {
         out.append("CREATE TABLE ");
-        printFullName(table, out);
+        printFullTableName(table, out);
         String separator = "\n\t( ";
         for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
             out.append(separator);
@@ -132,7 +131,7 @@ abstract public class SqlDialect {
         MetaPKey foreignKeys = MetaTable.PK.of(foreignTable);
 
         out.append("ALTER TABLE ");
-        printFullName(table, out);
+        printFullTableName(table, out);
         out.append("\n\tADD FOREIGN KEY");
 
         List<MetaColumn> columns = MetaPKey.COLUMNS.of(foreignKeys);
@@ -145,7 +144,7 @@ abstract public class SqlDialect {
         }
 
         out.append(")\n\tREFERENCES ");
-        printFullName(foreignTable, out);
+        printFullTableName(foreignTable, out);
         String separator = "(";
 
         for (MetaColumn fkColumn : MetaPKey.COLUMNS.of(foreignKeys)) {
@@ -209,7 +208,7 @@ abstract public class SqlDialect {
         StringBuilder values = new StringBuilder();
 
         out.append("INSERT INTO ");
-        printFullName(table, out);
+        printFullTableName(table, out);
         out.append(" (");
 
         printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
@@ -230,7 +229,7 @@ abstract public class SqlDialect {
         ) throws IOException
     {
         out.append("UPDATE ");
-        printTableAlias(table, out);
+        printTableAliasDefinition(table, out);
         out.append("\n\tSET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
@@ -255,7 +254,7 @@ abstract public class SqlDialect {
         ) throws IOException
     {
         out.append("DELETE FROM ");
-        printTableAlias(table, out);
+        printTableAliasDefinition(table, out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
 
@@ -498,7 +497,7 @@ abstract public class SqlDialect {
             for (int i=0; i<tables.length; ++i) {
                 MetaTable table = tables[i];
                 if (i>0) out.append(", ");
-                printTableAlias(table, out);
+                printTableAliasDefinition(table, out);
             }
 
             String sql = ed.getWhere();
