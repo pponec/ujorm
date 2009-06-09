@@ -77,7 +77,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL table alias name by sample: SCHEMA.TABLE ALIAS */
-    public void printFullAliasName(final MetaTable table, final Appendable out) throws IOException {
+    public void printTableAlias(final MetaTable table, final Appendable out) throws IOException {
         printFullName(table, out);
         out.append(' ');
         out.append(table.getAlias());
@@ -85,10 +85,10 @@ abstract public class SqlDialect {
 
 
     /** Print a full SQL column alias name by sample: TABLE_ALIAS.COLUMN */
-    public Appendable printFullName(final MetaColumn column, final Appendable out) throws IOException {
+    public Appendable printColumnAlias(final MetaColumn column, final Appendable out) throws IOException {
         final MetaTable table = MetaColumn.TABLE.of(column);
 
-        //printFullName(table, out);
+        //printColumnAlias(table, out);
         out.append(table.getAlias());
         out.append('.');
         out.append(MetaColumn.NAME.of(column));
@@ -230,7 +230,7 @@ abstract public class SqlDialect {
         ) throws IOException
     {
         out.append("UPDATE ");
-        printFullAliasName(table, out);
+        printTableAlias(table, out);
         out.append("\n\tSET ");
 
         for (int i=0; i<changedColumns.size(); i++) {
@@ -255,7 +255,7 @@ abstract public class SqlDialect {
         ) throws IOException
     {
         out.append("DELETE FROM ");
-        printFullAliasName(table, out);
+        printTableAlias(table, out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
 
@@ -329,7 +329,7 @@ abstract public class SqlDialect {
             } else if (column.isColumn()) {
                 out.append(separator);
                 if (select) {
-                    printFullName(column, out);
+                    printColumnAlias(column, out);
                 } else {
                     out.append(MetaColumn.NAME.of(column));
                 }
@@ -388,7 +388,7 @@ abstract public class SqlDialect {
                 throw new UnsupportedOperationException("Foreign key is not supported yet");
             }
             if (true) {
-                String f = String.format(template, column.getFullName(), col2.getFullName());
+                String f = String.format(template, column.getAliasName(), col2.getAliasName());
                 out.append(f);
             }
         } else if (column.isForeignKey()) {
@@ -397,7 +397,7 @@ abstract public class SqlDialect {
         } else if (right instanceof List) {
             throw new UnsupportedOperationException("List is not supported yet: " + operator);
         } else {
-            String f = MessageFormat.format(template, column.getFullName(), "?");
+            String f = MessageFormat.format(template, column.getAliasName(), "?");
             out.append(f);
             return crit;
         }
@@ -498,7 +498,7 @@ abstract public class SqlDialect {
             for (int i=0; i<tables.length; ++i) {
                 MetaTable table = tables[i];
                 if (i>0) out.append(", ");
-                printFullAliasName(table, out);
+                printTableAlias(table, out);
             }
 
             String sql = ed.getWhere();
@@ -527,7 +527,7 @@ abstract public class SqlDialect {
             if (i>0) {
                 out.append(", ");
             }
-            printFullName(column, out);
+            printColumnAlias(column, out);
             if (!ascending) {
                 out.append(" DESC");
             }
