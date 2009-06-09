@@ -49,7 +49,7 @@ public class MySqlDialect extends SqlDialect {
         out.append("DELETE ");
         out.append(table.getAlias());
         out.append(" FROM ");
-        printFullAliasName(table, out);
+        printTableAlias(table, out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
 

@@ -236,11 +236,26 @@ public class MetaColumn extends MetaRelation2Many {
 
     /** Returns a DB, TABLE and COLUMN name. */
     public String getFullName() {
+        final MetaTable table = TABLE.of(this);
+        final MetaDatabase db = MetaTable.DATABASE.of(table);
+        final StringBuilder result = new StringBuilder(32);
+
+        result.append(MetaDatabase.SCHEMA.of(db));
+        result.append('.');
+        result.append(MetaTable.NAME.of(table));
+        result.append('.');
+        result.append(MetaColumn.NAME.of(this));
+
+        return result.toString();
+    }
+
+    /** Returns an ALIAS of table and COLUMN name. */
+    public String getAliasName() {
         try {
             final String result = TABLE.of(this)
                 .getDatabase()
                 .getDialect()
-                .printFullName(this, new StringBuilder(32))
+                .printColumnAlias(this, new StringBuilder(32))
                 .toString()
                 ;
             return result;

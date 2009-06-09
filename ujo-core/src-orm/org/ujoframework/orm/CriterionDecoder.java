@@ -213,7 +213,7 @@ public class CriterionDecoder {
 
                 fk1.printForeignColumnFullName(i, sql);
                 sql.append(" = ");
-                dialect.printFullName(pk2.getColumn(i), sql);
+                dialect.printColumnAlias(pk2.getColumn(i), sql);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
