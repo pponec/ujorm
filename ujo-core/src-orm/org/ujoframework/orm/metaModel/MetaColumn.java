@@ -234,19 +234,20 @@ public class MetaColumn extends MetaRelation2Many {
         return getFullName();
     }
 
-    /** Returns a DB, TABLE and COLUMN name. */
+    /** Returns a DB, TABLE and COLUMN name */
     public String getFullName() {
-        final MetaTable table = TABLE.of(this);
-        final MetaDatabase db = MetaTable.DATABASE.of(table);
-        final StringBuilder result = new StringBuilder(32);
-
-        result.append(MetaDatabase.SCHEMA.of(db));
-        result.append('.');
-        result.append(MetaTable.NAME.of(table));
-        result.append('.');
-        result.append(MetaColumn.NAME.of(this));
-
-        return result.toString();
+        try {
+            StringBuilder out = new StringBuilder(32);
+            MetaTable table = TABLE.of(this);
+            table.getDatabase()
+                .getDialect()
+                .printFullTableName(table, out);
+            out.append('.');
+            out.append(MetaColumn.NAME.of(this));
+            return out.toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /** Returns an ALIAS of table and COLUMN name. */
