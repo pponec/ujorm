@@ -16,7 +16,11 @@
 
 package org.ujoframework.orm;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.metaModel.MetaTable;
@@ -27,53 +31,67 @@ import org.ujoframework.orm.metaModel.MetaTable;
  */
 public class UjoSequencer {
 
-    //** Logger */
-    //private static final java.util.logging.Logger.Logger LOGGER = java.util.logging.Logger.Logger.getLogger(UjoSequencer.class.toString());
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(UjoSequencer.class.toString());
 
-    final private MetaDatabase database;
     final private MetaTable table;
-    final private int increment;
     private long sequence = 0;
     private long seqLimit = 0;
 
-    public UjoSequencer(MetaDatabase database) {
-        this.database = database;
-        this.increment = MetaParams.SEQUENCE_INCREMENT.of(database.getParams());
-        this.table = null;
-    }
-
-    protected void loadBuffer() {
-
+    public UjoSequencer(MetaTable table) {
+        this.table = table;
     }
 
     /** Returns the <strong>next sequence value</strong> by a synchronized method. */
-    public synchronized long nextValue(final Session session) {
+    public synchronized long nextValue() {
 
         if (sequence<seqLimit) {
             return ++sequence;
         } else {
-            JdbcStatement statement = null;
+
+            final MetaDatabase db = MetaTable.DATABASE.of(table);
+            Connection connection;
             ResultSet res = null;
-            String sql = "";
+            String sql = null;
+            PreparedStatement statement = null;
             StringBuilder out = new StringBuilder(64);
             try {
-                sql = database.getDialect().printSeqNextValue(this, out).toString();
-                statement = session.getStatement(database, sql);
+                connection = db.createConnection();
+                String tableName = db.getDialect().printFullTableName(getTable(), out).toString();
+                out.setLength(0);
+
+                // UPDATE the next sequence:
+                out.setLength(0);
+                sql = db.getDialect().printSequenceNextValue(this, out).toString();
+                
+                if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
+                statement = connection.prepareStatement(sql);
+                statement.setString(1, tableName);
+                int i = statement.executeUpdate();
+
+                if (i==0) {
+                    // INSERT the new sequence:
+                    out.setLength(0);
+                    sql = db.getDialect().printSequenceInit(this, out).toString();
+                    if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
+                    statement = connection.prepareStatement(sql);
+                    statement.setString(1, tableName);
+                    statement.executeUpdate();
+                }
+
+                // SELECT UPDATE:
+                out.setLength(0);
+                sql = db.getDialect().printSequenceCurrentValue(this, out).toString();
+                if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
+                statement = connection.prepareStatement(sql);
+                statement.setString(1, tableName);
                 res = statement.executeQuery();
                 res.next();
                 seqLimit = res.getLong(1);
-                sequence = (seqLimit - increment) + 1; // Get the last assigned number + 1;
+                int step = res.getInt(2);
+                sequence = (seqLimit - step) + 1; // Get the last assigned number + 1;
+                connection.commit();
 
-                // update sequence:
-                out.setLength(0);
-                sql = database.getDialect().printSeqNextValueUpdate(this, out).toString();
-                if (sql.length()>0) {
-                    // TODO: sequence must be updated by a different DB connection !!!
-                    String tableKey = table!=null ? MetaTable.NAME.of(table) : SqlDialect.COMMON_SEQ_TABLE_KEY ;
-                    statement = session.getStatement(database, sql);
-                    statement.getPreparedStatement().setString(1, tableKey);
-                    statement.executeUpdate();
-                }
 
             } catch (Throwable e) {
                 throw new IllegalStateException("ILLEGAL SQL: " + sql, e);
@@ -89,14 +107,15 @@ public class UjoSequencer {
         return "OrmUjoSequence";
     }
 
-    /** Returns a database schema */
-    public String getDatabasSchema() {
-        return MetaDatabase.SCHEMA.of(database);
+    /** Returns the database schema */
+    public String getDatabaseSchema() {
+        return MetaDatabase.SCHEMA.of(getDatabase());
     }
 
     /** The UJO cache is the number of pre-allocated numbers inside the OrmUjo framework. */
     public int getIncrement() {
-        return increment;
+        final int result = MetaParams.SEQUENCE_INCREMENT.of(table.getDatabase().getParams());
+        return result;
     }
 
     /** The cache of a database sequence is zero by default. */
@@ -106,7 +125,7 @@ public class UjoSequencer {
 
     /** Returns model of the database */
     public MetaDatabase getDatabase() {
-        return database;
+        return MetaTable.DATABASE.of(table);
     }
 
     /** Returns a related table or null if sequence is general for the all MetaDatabase space */

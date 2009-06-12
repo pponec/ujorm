@@ -26,6 +26,7 @@ import org.ujoframework.orm.metaModel.MetaView;
 import org.ujoframework.criterion.ValueCriterion;
 import org.ujoframework.criterion.Operator;
 import org.ujoframework.orm.metaModel.MetaDatabase;
+import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
  * SQL dialect API
@@ -34,6 +35,8 @@ import org.ujoframework.orm.metaModel.MetaDatabase;
 @SuppressWarnings("unchecked")
 abstract public class SqlDialect {
 
+    /** The table key for a common sequence emulator. */
+    public static final String COMMON_SEQ_TABLE_NAME = "ormujo_pk_support";
     /** The table key for a common sequence emulator. */
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
 
@@ -66,7 +69,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL table name by sample: SCHEMA.TABLE  */
-    public void printFullTableName(final MetaTable table, final Appendable out) throws IOException {
+    public Appendable printFullTableName(final MetaTable table, final Appendable out) throws IOException {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
@@ -75,6 +78,7 @@ abstract public class SqlDialect {
             out.append('.');
         }
         out.append(tableName);
+        return out;
     }
 
     /** Print a SQL database and table name and an alias definition - by sample: SCHEMA.TABLE ALIAS */
@@ -534,69 +538,68 @@ abstract public class SqlDialect {
         }
     }
 
-    /** Print SQL CREATE SEQUENCE. */
-    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
-        String seqTable = sequence.getDatabasSchema()+'.'+sequence.getSequenceName();
-        out.append("CREATE TABLE ");
-        out.append(seqTable);
-        out.append("\n\t( id VARCHAR(128) NOT NULL PRIMARY KEY");
-        out.append("\n\t, seq BIGINT DEFAULT " + 0);
-        out.append("\n\t, step INT DEFAULT " + sequence.getIncrement());
-        out.append("\n\t);");
-        println(out);
-
-        // Insert common data:
-        out.append("INSERT INTO ");
-        out.append(seqTable);
-        out.append(" (id) VALUES ('"+COMMON_SEQ_TABLE_KEY+"');");
-        println(out);
-
-        for (MetaTable table : MetaDatabase.TABLES.getValue(sequence.getDatabase())) {
-            if (table.isTable()) {
-                // Insert common data:
-                out.append("INSERT INTO ");
-                out.append(seqTable);
-                out.append(" (id) VALUES ('"+MetaTable.NAME.of(table)+"');");
-                println(out);
-            }
-        }
-        return out;
-    }
-
-    /** Prinnt full sequence name */
+    /** Prinnt the full sequence name */
     protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append(sequence.getDatabasSchema());
-        out.append('.');
+        String schema = sequence.getDatabaseSchema();
+        if (isValid(schema)) {
+            out.append(schema);
+            out.append('.');
+        }
         out.append(sequence.getSequenceName());
         return out;
     }
 
-    /** Print SQL ALTER SEQUENCE to modify an INCREMENT. */
-    public Appendable printAlterSequenceIncrement(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("UPDATE ");
-        printSequenceName(sequence, out);
-        out.append(" SET step=" + sequence.getIncrement());
-        out.append(" WHERE id='"+COMMON_SEQ_TABLE_KEY+"'");
+    /** Prinnt the full sequence table */
+    protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
+        String schema = sequence.getDatabaseSchema();
+        if (isValid(schema)) {
+            out.append(schema);
+            out.append('.');
+        }
+        out.append(COMMON_SEQ_TABLE_NAME);
         return out;
     }
 
+    /** Print SQL CREATE SEQUENCE. No JDBC parameters. */
+    public Appendable printSequenceTable(final MetaDatabase db, final Appendable out) throws IOException {
+        String schema = MetaDatabase.SCHEMA.of(db);
+        Integer step = MetaParams.SEQUENCE_INCREMENT.of(db.getParams());
 
-    /** Print SQL NEXT SEQUENCE. */
-    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        MetaTable table = sequence.getTable();
-        String tableKey = table!=null ? MetaTable.NAME.of(table) : COMMON_SEQ_TABLE_KEY ;
-
-        out.append("SELECT seq+step FROM ");
-        printSequenceName(sequence, out);
-        out.append(" WHERE id='"+tableKey+"'");
+        out.append("CREATE TABLE ");
+        if (isValid(schema)) {
+            out.append(schema);
+            out.append('.');
+        }
+        out.append(COMMON_SEQ_TABLE_NAME);
+        out.append("\n\t( id VARCHAR(100) NOT NULL PRIMARY KEY");
+        out.append("\n\t, seq BIGINT DEFAULT " + step + " NOT NULL");
+        out.append("\n\t, step INT DEFAULT " + step + " NOT NULL");
+        out.append("\n\t)");
         return out;
     }
 
-    /** Print SQL NEXT SEQUENCE Update or return null. The method is intended for an emulator of the sequence. */
-    public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
+    /** Print SQL CREATE SEQUENCE (insert sequence row). No JDBC parameters. */
+    public Appendable printSequenceInit(final UjoSequencer sequence, final Appendable out) throws IOException {
+        Integer step = MetaParams.SEQUENCE_INCREMENT.of(sequence.getDatabase().getParams());
+        out.append("INSERT INTO ");
+        printSequenceTableName(sequence, out);
+        out.append(" (id,seq,step) VALUES (?,"+step+","+step+")");
+        return out;
+    }
+
+    /** Print SQL UPDATE NEXT SEQUENCE value. */
+    public Appendable printSequenceNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
         out.append("UPDATE ");
-        printSequenceName(sequence, out);
+        printSequenceTableName(sequence, out);
         out.append(" SET seq=seq+step");
+        out.append(" WHERE id=?");
+        return out;
+    }
+
+    /** Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the current step. */
+    public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("SELECT seq, step FROM ");
+        printSequenceTableName(sequence, out);
         out.append(" WHERE id=?");
         return out;
     }

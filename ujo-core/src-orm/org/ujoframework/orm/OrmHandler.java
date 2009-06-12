@@ -50,13 +50,15 @@ public class OrmHandler {
     private MetaRoot databases = new MetaRoot();
     /** Temporary configuration */
     private MetaRoot configuration = null;
-    private Session session = new Session(this);
+    /** The default ORM session */
+    private Session session;
 
     /** Map a property to a database column model */
     private HashMap<UjoProperty,MetaRelation2Many> propertyMap = new HashMap<UjoProperty,MetaRelation2Many> ();
 
     /** The (Sigleton ?) constructor */
     public OrmHandler() {
+        session = createSession();
     }
 
     /** A candidate to removing */
@@ -65,11 +67,18 @@ public class OrmHandler {
         return handler;
     }
 
-     /** Get Session 
+     /** Get Session
       * <br/>TODO: getDefaultSession from a map by key.
       */
     public Session getSession() {
         return session;
+    }
+
+    /** Create new session
+     * <br/>TODO: getDefaultSession from a map by key.
+     */
+    public Session createSession() {
+        return new Session(this);
     }
 
     /** Load parameters from an external XML file.
@@ -82,7 +91,6 @@ public class OrmHandler {
             throw new IllegalArgumentException("Configuration file is not valid " + url , e);
         }
     }
-
 
     /** Save the ORM parameters.
      * The assigning must be finished before an ORM definition loading.

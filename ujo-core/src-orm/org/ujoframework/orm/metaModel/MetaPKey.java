@@ -32,18 +32,18 @@ public class MetaPKey extends AbstractMetaModel {
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    /** DB columns */
+    /** DB table */
     public static final UjoProperty<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class, propertyCount++);
 
-    /** DB table */
+    /** DB columns */
     public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newPropertyList("columns", MetaColumn.class, propertyCount++);
 
-    /** Primary key counter. */
-    private long primaryKeyCounter = 0;
+    /** Database */
     final private MetaDatabase database;
 
     public MetaPKey(MetaTable table) {
         this.database = MetaTable.DATABASE.of(table);
+        TABLE.setValue(this, table);
         COLUMNS.setValue(this, new ArrayList<MetaColumn>(0));
     }
 
@@ -64,12 +64,6 @@ public class MetaPKey extends AbstractMetaModel {
         return sb.toString();
     }
 
-
-    /** Returns a next primary key by a synchronized method. The minimal value is 1. */
-    protected synchronized long nextPrimaryKey() {
-        return ++primaryKeyCounter;
-    }
-
     /** Assign a PK from framework in case the PK generator is type of MEMO_SEQUENCE. */
     @SuppressWarnings("unchecked")
     public boolean assignPrimaryKey(OrmUjo bo) {
@@ -82,32 +76,21 @@ public class MetaPKey extends AbstractMetaModel {
                 return false;
             }
 
-            switch (MetaColumn.PRIMARY_KEY_GEN.of(column)) {
-                case DB_SEQUENCE:
-
-                    final long value = database.getSequencer().nextValue(bo.readSession());
-                    if (Long.class==property.getType()) {
-                        property.setValue(bo, value);
-                        return true;
-                    }
-                    if (Integer.class==property.getType()) {
-                        property.setValue(bo, (int) value);
-                        return true;
-                    }
-                case MEMO_SEQUENCE:
-                    if (Long.class==property.getType()) {
-                        property.setValue(bo, nextPrimaryKey());
-                        return true;
-                    }
-                    if (Integer.class==property.getType()) {
-                        property.setValue(bo, (int) nextPrimaryKey());
-                        return true;
-                    }
-               default:
-                   return false;
+            final long value = TABLE.of(this).getSequencer().nextValue();
+            if (Long.class==property.getType()) {
+                property.setValue(bo, value);
+                return true;
             }
+            if (Integer.class==property.getType()) {
+                property.setValue(bo, (int) value);
+                return true;
+            }
+
+            return false;
+        } else {
+            String msg = "Table " + bo + " must have defined only one primary key type of Long or Integer";
+            throw new IllegalArgumentException(msg);
         }
-        throw new IllegalArgumentException("Table " + bo + " must have defined only one primary key type of Long or Integer");
     }
 
     /** Returns the first column. */
