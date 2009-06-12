@@ -67,8 +67,9 @@ public class Session {
 
     /** A session cache */
     private Map<CacheKey, OrmUjo> cache;
-    
-    public Session(OrmHandler handler) {
+
+    /** The default constructor */
+    Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
         this.cache = MetaParams.CACHE_WEAK.of(params)

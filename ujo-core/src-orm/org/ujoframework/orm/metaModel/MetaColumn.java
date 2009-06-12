@@ -28,7 +28,6 @@ import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.orm.annot.GenerationType;
 
 /**
  * Database column metadata
@@ -54,8 +53,6 @@ public class MetaColumn extends MetaRelation2Many {
     public static final UjoProperty<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "", propertyCount++);
     /** The column is included in the index of the name */
     public static final UjoProperty<MetaColumn,String> INDEX_NAME = newProperty("indexName", "", propertyCount++);
-    /** DB primary key generator */
-    public static final UjoProperty<MetaColumn,GenerationType> PRIMARY_KEY_GEN = newProperty("primaryKeyGenerator", GenerationType.DB_SEQUENCE, propertyCount++);
 
 
     /** Foreign column names. */

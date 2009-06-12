@@ -82,14 +82,12 @@ public class MetaDatabase extends AbstractMetaModel {
 
     private OrmHandler ormHandler;
     private SqlDialect dialect;
-    private UjoSequencer sequencer;
 
     public MetaDatabase() {
     }
 
     public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param) {
         this.ormHandler = ormHandler;
-        sequencer = new UjoSequencer(this);
         ROOT.setValue(this, database);
 
         if (param!=null) {
@@ -292,22 +290,11 @@ public class MetaDatabase extends AbstractMetaModel {
             // 4. Create SEQUENCE;
             if (true) {
                 out.setLength(0);
-                sql = getDialect().printCreateSequence(sequencer, out).toString();
-                StringTokenizer st = new StringTokenizer(sql, ";");
-                while (st.hasMoreTokens()) {
-                    sql = st.nextToken().trim();
-                    if (isValid(sql)) {
-                        stat.executeUpdate(sql);
-                        LOGGER.info(sql);
-                    }
-                }
-            }
-            // 5. ALTER Sequence INCREMENT;
-            if (true) {
-                out.setLength(0);
-                sql = getDialect().printAlterSequenceIncrement(sequencer, out).toString();
+                sql = getDialect().printSequenceTable(this, out).toString();
                 stat.executeUpdate(sql);
+                LOGGER.info(sql);
             }
+
             conn.commit();
 
         } catch (Throwable e) {
@@ -384,11 +371,6 @@ public class MetaDatabase extends AbstractMetaModel {
                 LOGGER.log(Level.SEVERE, msg, e);
             }
         }
-    }
-
-    /** Returns common sequencer. */
-    public UjoSequencer getSequencer() {
-        return sequencer;
     }
 
     /** OrmHandler */

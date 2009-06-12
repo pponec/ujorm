@@ -58,7 +58,7 @@ public class PostgreSqlDialect extends SqlDialect {
 //    }
 //
 //    /** Print SQL CREATE SEQUENCE. */
-//    public Appendable printCreateSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+//    public Appendable printSequenceTable(final UjoSequencer sequence, final Appendable out) throws IOException {
 //        out.append("CREATE SEQUENCE ");
 //        printSequenceName(sequence, out);
 //        out.append(" START WITH " + sequence.getIncrement());
@@ -67,7 +67,7 @@ public class PostgreSqlDialect extends SqlDialect {
 //    }
 //
 //    /** Print SQL ALTER SEQUENCE to modify INCREMENT. */
-//    public Appendable printAlterSequenceIncrement(final UjoSequencer sequence, final Appendable out) throws IOException {
+//    public Appendable printSequenceSetValue(final UjoSequencer sequence, final Appendable out) throws IOException {
 //        out.append("ALTER SEQUENCE ");
 //        printSequenceName(sequence, out);
 //        out.append(" INCREMENT BY " + sequence.getIncrement());
@@ -75,7 +75,7 @@ public class PostgreSqlDialect extends SqlDialect {
 //    }
 //
 //    /** Print the NEXT SQL SEQUENCE. */
-//    public Appendable printSeqNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
+//    public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
 //        out.append("SELECT NEXTVAL('");
 //        printSequenceName(sequence, out);
 //        out.append("')");
@@ -83,7 +83,7 @@ public class PostgreSqlDialect extends SqlDialect {
 //    }
 //
 //    /** Print SQL NEXT SEQUENCE Update or print none. The method is intended for an emulator of the sequence. */
-//    public Appendable printSeqNextValueUpdate(final UjoSequencer sequence, final Appendable out) throws IOException {
+//    public Appendable printSequenceNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
 //        return out;
 //    }
 

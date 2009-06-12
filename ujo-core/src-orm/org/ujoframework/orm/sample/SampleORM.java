@@ -41,6 +41,7 @@ public class SampleORM {
         if (yesIWantChangeDefaultParameters) {
             MetaParams params = new MetaParams();
             MetaParams.TABLE_ALIAS_SUFFIX.setValue(params, "_alias");
+            MetaParams.SEQUENCE_INCREMENT.setValue(params, 1);
             OrmHandler.getInstance().config(params);
         }
 

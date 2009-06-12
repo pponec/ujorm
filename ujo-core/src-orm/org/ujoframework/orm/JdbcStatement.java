@@ -75,7 +75,9 @@ public class JdbcStatement {
         ps.close();
     }
 
-    /** Run INSERT, UPDATE or DELETE. */
+    /** Run INSERT, UPDATE or DELETE. 
+     * @return The count of modified rows.
+     */
     public int executeUpdate() throws SQLException {
         return ps.executeUpdate();
     }

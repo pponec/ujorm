@@ -27,6 +27,7 @@ import org.ujoframework.orm.annot.View;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.UjoSequencer;
 
 
 /**
@@ -73,12 +74,18 @@ public class MetaTable extends AbstractMetaModel {
     @Transient
     public static final UjoProperty<MetaTable,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class, propertyCount++);
 
+
+    /** Ujo sequencer */
+    final private UjoSequencer sequencer;
+
     /** No parameter constructor. */
     public MetaTable() {
+        sequencer = null;
     }
 
     @SuppressWarnings("unchecked")
     public MetaTable(MetaDatabase database, RelationToMany dbProperty, MetaTable parTable) {
+        sequencer = new UjoSequencer(this);
         ID.setValue(this, dbProperty.getName());
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);
@@ -250,6 +257,11 @@ public class MetaTable extends AbstractMetaModel {
             }
         }
         return null;
+    }
+
+    /** UJO sequencer */
+    public UjoSequencer getSequencer() {
+        return sequencer;
     }
 
 }

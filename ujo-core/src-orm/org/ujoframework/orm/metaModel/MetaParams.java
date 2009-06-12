@@ -41,8 +41,8 @@ public class MetaParams extends AbstractMetaModel {
     public static final UjoProperty<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "", propertyCount++);
     /** Special prameter for an automatically assembled table alias prefix. */
     public static final UjoProperty<MetaParams,String> TABLE_ALIAS_SUFFIX = newProperty("tableAliasSuffix", "", propertyCount++);
-    /** Sequence increment. */
-    public static final UjoProperty<MetaParams,Integer> SEQUENCE_INCREMENT = newProperty("sequsenceIncrement", 32, propertyCount++);
+    /** Sequence increment, default values is 64 */
+    public static final UjoProperty<MetaParams,Integer> SEQUENCE_INCREMENT = newProperty("sequsenceIncrement", 64, propertyCount++);
 
     
 
