@@ -22,9 +22,15 @@ import org.ujoframework.implementation.orm.TableUjo;
 
 /**
  * The OrmUjo is a basic interface of the persistent object in this ORM-UJO module.
- * A class that implements the interface must have got a special feature: reference to a foreign BO
- * must be able to store an object of any type by the method Ujo.writeProperty(...).
- * This feature is necessary for the proper functioning of the lazy initialization.
+ * A class that implements the interface must have got a special features:
+ * <ul>
+ *   <li>exactly one UjoProperty must be identified as the primary key. </li>
+ *   <li>reference to a foreign BO must be able to store an object of any type by the method Ujo.writeProperty(...).
+ *       This feature is necessary for the proper functioning of the lazy initialization</li>
+ *   <li>relation many to one can be mapped by a RelationToMany property</li>
+ *   <li>each table OrmUjo must be registered in the Database by a property type of RelationToMany</li>
+ * </ul>
+ *
  * @author Ponec
  */
 public interface OrmUjo extends Ujo {
