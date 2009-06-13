@@ -25,7 +25,7 @@ import org.ujoframework.orm.SqlDialect;
 @Target(value=ElementType.TYPE)
 public @interface Db {
 
-    /** Default name of table schema. If value is empty than a class name is used. */
+    /** Default name of table schema is copied into table models if thay are empty. */
     String schema() default "";
     /** SQL dialect by a DB Vendor. */
     Class<? extends SqlDialect> dialect();

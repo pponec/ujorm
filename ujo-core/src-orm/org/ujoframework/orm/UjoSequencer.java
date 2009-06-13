@@ -114,7 +114,7 @@ public class UjoSequencer {
 
     /** The UJO cache is the number of pre-allocated numbers inside the OrmUjo framework. */
     public int getIncrement() {
-        final int result = MetaParams.SEQUENCE_INCREMENT.of(table.getDatabase().getParams());
+        final int result = MetaParams.SEQUENCE_CACHE.of(table.getDatabase().getParams());
         return result;
     }
 

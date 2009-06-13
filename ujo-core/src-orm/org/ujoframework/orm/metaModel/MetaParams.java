@@ -33,7 +33,7 @@ public class MetaParams extends AbstractMetaModel {
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
 
-    /** Enable / disable a session cache */
+    /** Enable / disable a session cache for the business objects. */
     public static final UjoProperty<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE, propertyCount++);
     /** Is the enabled cache implemented by WeakHashMap? The false value implements an HashMap instance. Default value is TRUE. */
     public static final UjoProperty<MetaParams,Boolean> CACHE_WEAK = newProperty("cacheWeak", true, propertyCount++);
@@ -41,10 +41,29 @@ public class MetaParams extends AbstractMetaModel {
     public static final UjoProperty<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "", propertyCount++);
     /** Special prameter for an automatically assembled table alias prefix. */
     public static final UjoProperty<MetaParams,String> TABLE_ALIAS_SUFFIX = newProperty("tableAliasSuffix", "", propertyCount++);
-    /** Sequence increment, default values is 64 */
-    public static final UjoProperty<MetaParams,Integer> SEQUENCE_INCREMENT = newProperty("sequsenceIncrement", 64, propertyCount++);
+    /** Sequential cache parameter saves the number of requests to the following sequence when a insert statement into DB.
+     * The value of the parameter is used only when creating a new DB, indivuální ORM changes for each table 
+     * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
+     * Default values is 64, the smallest possible value is 1. */
+    public static final UjoProperty<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 64, propertyCount++);
 
-    
+    @Override
+    public void writeValue(UjoProperty property, Object value) {
+
+        // Sequence validation:
+        if (SEQUENCE_CACHE==property) {
+            int val = (Integer) value;
+            if (val<1) {
+                value = 1;
+                LOGGER.warning("The smallest possible value of property '"+property+"' is 1, not " + val);
+            }
+        }
+
+        super.writeValue(property, value);
+    }
+
+
+
 
     /** Property Count */
     @Override

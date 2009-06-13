@@ -18,7 +18,7 @@
 package org.ujoframework.orm.ao;
 
 /**
- * CachePolicy is available inside a one session only. If you close the session then close database connection and clear cache.
+ * The BO cache policy is available inside a one session only. If you close the session then close database connection and clear cache.
  * @author Pavel Ponec
  */
 public enum CachePolicy {
