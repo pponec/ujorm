@@ -839,13 +839,20 @@ public class UjoManager implements Comparator<UjoProperty> {
         = p.getSpecificationTitle()
         + CR
         + "version "    
-        + p.getSpecificationVersion()
+        + projectVersion()
         + CR
         + URL    
         + CR    
         ;    
         return result;
     }
+
+    /** Regurns information about current library. */
+    public static String projectVersion() {
+        String result = Ujo.class.getPackage().getSpecificationVersion();
+        return result!=null ? result : "UNDEFINED" ;
+    }
+
 
     /** Show an information about the framework */
     public static void main(String[] args) {

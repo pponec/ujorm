@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- OrmUjo configuration file release UNDEFINED -->
 <body>
     <database id="Database">
         <schema>db1</schema>
         <dialect>org.ujoframework.orm.dialect.H2Dialect</dialect>
         <table id="ord_order">
             <name>ord_order</name>
-            <alias>ord_order</alias>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -32,7 +34,8 @@
         </table>
         <table id="ord_item">
             <name>ord_item</name>
-            <alias>ord_item</alias>
+            <alias>ord_item_alias</alias>
+            <schema>db1</schema>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -55,7 +58,8 @@
         </table>
         <table id="view_order" view="true">
             <name>ord_order</name>
-            <alias>ord_order</alias>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -66,11 +70,12 @@
                 <name>itemCount</name>
                 <dbType>INT</dbType>
             </column>
-            <select>SELECT ord_order.id, count(*) AS itemCount FROM db1.ord_order ord_order, db1.ord_item ord_item WHERE ord_order.id = ord_item.fk_order GROUP BY ord_order.id ORDER BY ord_order.id</select>
+            <select>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
         </table>
         <table id="db1" view="true">
             <name>ord_order</name>
-            <alias>ord_order</alias>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
             <relation2m id="ord_order">
                 <name>ord_order</name>
             </relation2m>
@@ -85,5 +90,8 @@
         <jdbcDriver>org.h2.Driver</jdbcDriver>
         <user>sa</user>
     </database>
-    <parameters></parameters>
+    <parameters>
+        <tableAliasSuffix>_alias</tableAliasSuffix>
+        <sequenceCache>1</sequenceCache>
+    </parameters>
 </body>

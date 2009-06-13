@@ -563,7 +563,7 @@ abstract public class SqlDialect {
     /** Print SQL CREATE SEQUENCE. No JDBC parameters. */
     public Appendable printSequenceTable(final MetaDatabase db, final Appendable out) throws IOException {
         String schema = MetaDatabase.SCHEMA.of(db);
-        Integer step = MetaParams.SEQUENCE_INCREMENT.of(db.getParams());
+        Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
 
         out.append("CREATE TABLE ");
         if (isValid(schema)) {
@@ -571,19 +571,19 @@ abstract public class SqlDialect {
             out.append('.');
         }
         out.append(COMMON_SEQ_TABLE_NAME);
-        out.append("\n\t( id VARCHAR(100) NOT NULL PRIMARY KEY");
-        out.append("\n\t, seq BIGINT DEFAULT " + step + " NOT NULL");
-        out.append("\n\t, step INT DEFAULT " + step + " NOT NULL");
+        out.append("\n\t( id VARCHAR(96) NOT NULL PRIMARY KEY");
+        out.append("\n\t, seq BIGINT DEFAULT " + cache + " NOT NULL");
+        out.append("\n\t, cache INT DEFAULT " + cache + " NOT NULL");
         out.append("\n\t)");
         return out;
     }
 
     /** Print SQL CREATE SEQUENCE (insert sequence row). No JDBC parameters. */
     public Appendable printSequenceInit(final UjoSequencer sequence, final Appendable out) throws IOException {
-        Integer step = MetaParams.SEQUENCE_INCREMENT.of(sequence.getDatabase().getParams());
+        Integer cache = MetaParams.SEQUENCE_CACHE.of(sequence.getDatabase().getParams());
         out.append("INSERT INTO ");
         printSequenceTableName(sequence, out);
-        out.append(" (id,seq,step) VALUES (?,"+step+","+step+")");
+        out.append(" (id,seq,cache) VALUES (?,"+cache+","+cache+")");
         return out;
     }
 
@@ -591,14 +591,14 @@ abstract public class SqlDialect {
     public Appendable printSequenceNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
         out.append("UPDATE ");
         printSequenceTableName(sequence, out);
-        out.append(" SET seq=seq+step");
+        out.append(" SET seq=seq+cache");
         out.append(" WHERE id=?");
         return out;
     }
 
-    /** Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the current step. */
+    /** Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the current cache. */
     public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("SELECT seq, step FROM ");
+        out.append("SELECT seq, cache FROM ");
         printSequenceTableName(sequence, out);
         out.append(" WHERE id=?");
         return out;

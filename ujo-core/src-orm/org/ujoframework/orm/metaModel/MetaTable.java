@@ -50,7 +50,6 @@ public class MetaTable extends AbstractMetaModel {
     /** The unique table/view name over all Databases in scope one OrmHandler */
     public static final UjoProperty<MetaTable,String> ALIAS = newProperty("alias", "", propertyCount++);
     /** Name of table schema. */
-    @Transient
     public static final UjoProperty<MetaTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** Table Columns */
     public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newPropertyList("column", MetaColumn.class, propertyCount++);

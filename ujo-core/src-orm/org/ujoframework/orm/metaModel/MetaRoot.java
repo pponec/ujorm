@@ -22,6 +22,7 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
@@ -91,7 +92,13 @@ public class MetaRoot extends AbstractMetaModel {
 
     /** Pring all model in a XML format */
     public void print(Writer writer) throws IOException {
-        final String defaultXmlHeader = null;
+        String defaultXmlHeader = new StringBuilder(128)
+          .append(UjoManagerXML.XML_HEADER)
+          .append("\n<!-- OrmUjo configuration file release ")
+          .append(UjoManager.projectVersion())
+          .append(" -->")
+          .toString()
+          ;
         UjoManagerXML.getInstance().saveXML(writer, this, defaultXmlHeader, getClass());
     }
 
