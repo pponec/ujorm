@@ -34,7 +34,7 @@ import org.ujoframework.orm.metaModel.MetaParams;
 public class SampleORM {
 
     /** Before the first use you must load a meta-model. */
-    public void loadMetaModel() {
+    public void loadMetaModel(boolean createDb) {
 
 
         boolean yesIWantChangeDefaultParameters = true;
@@ -52,7 +52,7 @@ public class SampleORM {
             OrmHandler.getInstance().config(config, true);
         }
 
-        if (true) {
+        if (createDb) {
             OrmHandler.getInstance().createDatabase(Database.class);
         } else {
             OrmHandler.getInstance().loadDatabase(Database.class);
@@ -274,7 +274,7 @@ public class SampleORM {
         try {
             SampleORM sample = new SampleORM();
 
-            sample.loadMetaModel();
+            sample.loadMetaModel(true);
             sample.useInsert();
             sample.useSelectOrders();
             sample.useSortOrders();

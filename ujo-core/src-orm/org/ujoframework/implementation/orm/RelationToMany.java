@@ -24,7 +24,7 @@ import org.ujoframework.implementation.map.MapProperty;
  * @author Pavel Ponec
  * @see org.ujoframework.core.UjoIterator
  */
-public class RelationToMany<UJO extends TableUjo, ITEM  extends TableUjo>
+public class RelationToMany<UJO extends OrmTable, ITEM  extends OrmTable>
     extends MapProperty<UJO, UjoIterator<ITEM>>
 {
 

@@ -34,13 +34,13 @@ public @interface Column {
     boolean pk() default false;
     /** Database column type */
     DbType type() default DbType.Automatic;
-    /** Database column lenght */
-    int maxLenght() default -1;
+    /** Database column maximal lenght */
+    int lenght() default -1;
     /** Database column presision */
     int precision() default -1;
     /** Not null value */
     boolean mandatory() default false;
-    /** The column is included in the index of the name. */
+    /** A name of the column database index. */
     String indexName() default "";
 
     

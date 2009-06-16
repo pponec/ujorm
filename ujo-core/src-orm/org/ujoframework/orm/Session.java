@@ -380,7 +380,7 @@ public class Session {
             MetaTable table = query.getTableModel();
             MetaDatabase db = MetaTable.DATABASE.of(table);
 
-            sql = db.getDialect().printSelect(table, query, false, out(128)).toString();
+            sql = db.getDialect().printSelect(table, query, false, out(360)).toString();
             statement = getStatement(db, sql);
             statement.assignValues(query.getDecoder());
 
@@ -496,6 +496,7 @@ public class Session {
      * @param id Valud ID
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */
+    @SuppressWarnings("unchecked")
     public <UJO extends OrmUjo> UJO loadInternal
         ( final UjoProperty relatedProperty
         , final Object id
@@ -511,7 +512,7 @@ public class Session {
         // FIND CACHE:
         boolean cache = params.isCacheEnabled();
         MetaTable tableModel = null;
-        if (cache) {
+        if (cache && id!=null) {
             tableModel = MetaColumn.TABLE.of(columns.get(0));
             OrmUjo r = findCache(MetaTable.DB_PROPERTY.of(tableModel).getItemType(), id);
             if (r!=null) {
@@ -533,7 +534,7 @@ public class Session {
             throw new RuntimeException("Ambiguous key " + id);
         }
         
-        if (cache) {
+        if (cache && id!=null) {
             addCache(result, MetaTable.PK.of(tableModel));
         }
         return result;

@@ -22,7 +22,7 @@ import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.annot.Table;
 
@@ -32,7 +32,7 @@ import org.ujoframework.orm.annot.Table;
  * @hidden
  */
 @Table(name="ord_order")
-public class Order extends TableUjo<Order> {
+public class Order extends OrmTable<Order> {
 
     /** Unique key */
     @Column(pk=true)
