@@ -39,7 +39,7 @@ import org.ujoframework.orm.Session;
  * </ul>
  * Some other features:
  * <ul>
- *    <li>all persistent objects are based on the Ujo interface, namely on a TableUjo implementation</li>
+ *    <li>all persistent objects are based on the Ujo interface, namely on a OrmTable implementation</li>
  *    <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
  *    <li>default ORM mapping is based on the UjoProperty names however there is possible overwrite the mapping by annotations and the annoatations can be owerwrited by a XML files </li>
  *    <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a hight security</li>
@@ -107,14 +107,14 @@ import org.ujoframework.orm.Session;
  * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
-public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
+public class OrmTable<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
     
     /** Orm session */
     private Session session;
     /** Set of changes */
     private Set<UjoProperty> changes = null;
 
-    public TableUjo() {
+    public OrmTable() {
     }
 
     /** A method for an internal use only. */
@@ -213,7 +213,7 @@ public class TableUjo<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
     /** A PropertyIterator Factory creates an new property and assign a next index.
      * @hidden
      */
-    protected static <UJO extends TableUjo, ITEM extends TableUjo> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
+    protected static <UJO extends OrmTable, ITEM extends OrmTable> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
         return new RelationToMany<UJO,ITEM> (name, type, _nextPropertyIndex());
     }
 

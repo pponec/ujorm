@@ -21,13 +21,13 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmTable;
 
 /**
  * Simple order for goods with a collection of Items (a sample).
  * @Table=bo_order
  */
-public class Order extends TableUjo<Order> {
+public class Order extends OrmTable<Order> {
 
     /** Unique key */
     @Column(pk=true)

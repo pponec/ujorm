@@ -71,7 +71,7 @@ public class MetaColumn extends MetaRelation2Many {
 
         if (param!=null) {
             changeDefault(this, PRIMARY_KEY, PRIMARY_KEY.of(param));
-            changeDefault(this, MANDATORY  , MANDATORY.of(param) || PRIMARY_KEY.of(param));
+            changeDefault(this, MANDATORY  , MANDATORY.of(param));
             changeDefault(this, MAX_LENGTH , MAX_LENGTH.of(param));
             changeDefault(this, PRECISION  , PRECISION.of(param));
             changeDefault(this, DB_TYPE    , DB_TYPE.of(param));
@@ -79,8 +79,8 @@ public class MetaColumn extends MetaRelation2Many {
         }
         if (column!=null) {
             changeDefault(this, PRIMARY_KEY, column.pk());
-            changeDefault(this, MANDATORY  , column.mandatory() || column.pk());
-            changeDefault(this, MAX_LENGTH , column.maxLenght());
+            changeDefault(this, MANDATORY  , column.mandatory());
+            changeDefault(this, MAX_LENGTH , column.lenght());
             changeDefault(this, PRECISION  , column.precision());
             changeDefault(this, DB_TYPE    , column.type());
             changeDefault(this, INDEX_NAME , column.indexName());

@@ -19,7 +19,7 @@ package org.ujoframework.orm.sample;
 
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.View;
 
 
@@ -32,7 +32,7 @@ import org.ujoframework.orm.annot.View;
     + " WHERE ord_order_alias.id = ord_item_alias.fk_order"
     + " GROUP BY ord_order_alias.id"
     + " ORDER BY ord_order_alias.id")
-public class ViewOrder extends TableUjo<ViewOrder> {
+public class ViewOrder extends OrmTable<ViewOrder> {
 
     /** Unique key */
     @Column(pk=true)

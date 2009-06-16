@@ -20,7 +20,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmTable;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
@@ -28,7 +28,7 @@ import org.ujoframework.implementation.orm.TableUjo;
  * @hidden
  * @Table=bo_item
  */
-public class Item extends TableUjo<Item> {
+public class Item extends OrmTable<Item> {
 
     /** Unique key */
     @Column(pk = true)

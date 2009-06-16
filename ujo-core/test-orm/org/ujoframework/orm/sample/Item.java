@@ -19,14 +19,14 @@ package org.ujoframework.orm.sample;
 import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.implementation.orm.TableUjo;
+import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.Column;
 
 /**
  * Each Item have got a reference to a common Order (a sample).
  * @Table=bo_item
  */
-public class Item extends TableUjo<Item> {
+public class Item extends OrmTable<Item> {
 
     /** Unique key */
     @Column(pk=true)

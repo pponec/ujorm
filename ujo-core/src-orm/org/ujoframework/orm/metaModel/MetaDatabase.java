@@ -167,6 +167,9 @@ public class MetaDatabase extends AbstractMetaModel {
         else if (Integer.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.INT);
         }
+        else if (Short.class==type) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
+        }
         else if (Long.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
         }
@@ -181,6 +184,12 @@ public class MetaDatabase extends AbstractMetaModel {
         }
         else if (Date.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+        }
+        else if (Character.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.CHAR);
+        }
+        else if (Boolean.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.BOOLEAN);
         }
         else if (OrmUjo.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.INT);
@@ -215,6 +224,10 @@ public class MetaDatabase extends AbstractMetaModel {
             MetaColumn.DB_TYPE.setValue(column, DbType.INT);
             //changeDefault(column, MetaColumn.MAX_LENGTH, 8);
         }
+        else if (Short.class==type) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
+            //changeDefault(column, MetaColumn.MAX_LENGTH, 8);
+        }
         else if (Long.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
             //changeDefault(column, MetaColumn.MAX_LENGTH, 16);
@@ -238,6 +251,12 @@ public class MetaDatabase extends AbstractMetaModel {
         }
         else if (Date.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+        }
+        else if (Character.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.CHAR);
+        }
+        else if (Boolean.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.BOOLEAN);
         }
         else if (OrmUjo.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.INT);
@@ -280,9 +299,13 @@ public class MetaDatabase extends AbstractMetaModel {
                 if (table.isTable()){
                     out.setLength(0);
                     sql = getDialect().printForeignKey(table, out).toString();
-                    if (isValid(sql)) {
-                        stat.executeUpdate(sql);
-                        LOGGER.info(sql);
+                    StringTokenizer st = new StringTokenizer(sql, ";");
+                    while(st.hasMoreTokens()) {
+                        sql = st.nextToken().trim();
+                        if (isValid(sql)) {
+                            stat.executeUpdate(sql);
+                            LOGGER.info(sql);
+                        }
                     }
                 }
             }

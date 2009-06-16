@@ -42,7 +42,7 @@ abstract public class CacheKey {
     @Override
     public boolean equals(Object obj) {
         final CacheKey cache = (CacheKey) obj;
-        if (this.getType()!=cache.getType()) {
+        if (cache==null || this.getType()!=cache.getType()) {
             return false;
         }
         for (int i=size()-1; i>=0; --i) {

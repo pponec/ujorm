@@ -29,7 +29,9 @@ import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
- * SQL dialect API
+ * SQL dialect abstract class. Methods of this class print a SQL statement(s) along a metamodel usually.
+ * You may create a subclass of any implementation to create another SQL statement, however just I can't
+ * exclude some small changes of this API in the next release.
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
@@ -42,7 +44,7 @@ abstract public class SqlDialect {
 
     protected OrmHandler ormHandler;
 
-    /** Set the OrmHandler - for internal use only. */
+    /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(OrmHandler ormHandler) {
         this.ormHandler = ormHandler;
     }
@@ -158,7 +160,7 @@ abstract public class SqlDialect {
             out.append(MetaColumn.NAME.of(fkColumn));
         }
 
-        out.append(")");
+        out.append(");");
         //out.append("\n\tON DELETE CASCADE");
         return out;
     }
@@ -179,7 +181,7 @@ abstract public class SqlDialect {
         if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
             out.append("(" + MetaColumn.MAX_LENGTH.of(column));
             if (!MetaColumn.PRECISION.isDefault(column)) {
-                out.append(", " + MetaColumn.PRECISION.of(column));
+                out.append("," + MetaColumn.PRECISION.of(column));
             }
             out.append(")");
         }
@@ -423,8 +425,13 @@ abstract public class SqlDialect {
                 out.append(crit.getOperator().name());
                 out.append(' ');
             }
-
-            String f = MessageFormat.format(template, column.getForeignColumnName(i), "?");
+            
+            String alias = MetaColumn.TABLE.of(column).getAlias();
+            String columnName = column.getForeignColumnName(i);
+            if (isValid(alias)) {
+                columnName = alias + '.' + columnName;
+            }
+            String f = MessageFormat.format(template, columnName, "?");
             out.append(f);
         }
     }
