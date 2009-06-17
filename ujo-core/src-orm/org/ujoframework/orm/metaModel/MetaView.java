@@ -28,7 +28,7 @@ import org.ujoframework.orm.AbstractMetaModel;
 public class MetaView  extends AbstractMetaModel {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(MetaView.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(MetaView.class.getName());
     /** Property count */
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 

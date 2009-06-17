@@ -37,7 +37,7 @@ import org.ujoframework.orm.metaModel.MetaTable;
 public class JdbcStatement {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(JdbcStatement.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(JdbcStatement.class.getName());
 
     /** Prepared Statement */
     private final PreparedStatement ps;

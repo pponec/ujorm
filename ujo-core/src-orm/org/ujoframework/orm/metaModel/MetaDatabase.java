@@ -48,7 +48,7 @@ import org.ujoframework.orm.annot.Db;
 public class MetaDatabase extends AbstractMetaModel {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(MetaDatabase.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(MetaDatabase.class.getName());
     /** Add a DB relation into table models */
     private static final boolean ADD_DB_MODEL = true;
     /** Property count */
