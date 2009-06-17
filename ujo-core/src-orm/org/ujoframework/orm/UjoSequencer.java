@@ -32,7 +32,7 @@ import org.ujoframework.orm.metaModel.MetaTable;
 public class UjoSequencer {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(UjoSequencer.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(UjoSequencer.class.getName());
 
     final private MetaTable table;
     private long sequence = 0;

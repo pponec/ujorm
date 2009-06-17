@@ -55,7 +55,7 @@ public class Session {
     private static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(Session.class.toString());
+    private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
 
     /** Handler. */
     final private OrmHandler handler;
@@ -512,7 +512,7 @@ public class Session {
         // FIND CACHE:
         boolean cache = params.isCacheEnabled();
         MetaTable tableModel = null;
-        if (cache && id!=null) {
+        if (cache) {
             tableModel = MetaColumn.TABLE.of(columns.get(0));
             OrmUjo r = findCache(MetaTable.DB_PROPERTY.of(tableModel).getItemType(), id);
             if (r!=null) {
@@ -534,7 +534,7 @@ public class Session {
             throw new RuntimeException("Ambiguous key " + id);
         }
         
-        if (cache && id!=null) {
+        if (cache) {
             addCache(result, MetaTable.PK.of(tableModel));
         }
         return result;

@@ -18,6 +18,9 @@ package org.ujoframework.orm.sample;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.ujoframework.Ujo;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.OrmHandler;
@@ -36,6 +39,7 @@ public class SampleORM {
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel(boolean createDb) {
 
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
 
         boolean yesIWantChangeDefaultParameters = true;
         if (yesIWantChangeDefaultParameters) {
@@ -261,11 +265,14 @@ public class SampleORM {
     public void useMetadata() {
         MetaColumn c = (MetaColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
 
-        System.err.println("** METADATA OF COLUMN: " + Order.DESCR);
-        System.err.println("\t DB name: " + c.getFullName());
-        System.err.println("\t Length : " + c.getMaxLength());
-        System.err.println("\t NotNull: " + c.isMandatory());
-        System.err.println("\t PrimKey: " + c.isPrimaryKey());
+        StringBuilder msg = new StringBuilder()
+            .append("** METADATA OF COLUMN: " + Order.DESCR)
+            .append("\n\t DB name: " + c.getFullName())
+            .append("\n\t Length : " + c.getMaxLength())
+            .append("\n\t NotNull: " + c.isMandatory())
+            .append("\n\t PrimKey: " + c.isPrimaryKey())
+            ;
+        System.out.println(msg);
     }
 
 
