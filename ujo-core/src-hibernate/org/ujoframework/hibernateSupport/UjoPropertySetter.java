@@ -23,6 +23,7 @@ import org.ujoframework.UjoProperty;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.property.Setter;
+import org.ujoframework.core.UjoManager;
 
 /**
  *
@@ -30,8 +31,8 @@ import org.hibernate.property.Setter;
  */
 public class UjoPropertySetter implements Setter {
 
+    final private String propertyName;
     private UjoProperty ujoProperty = null;
-    private String propertyName;
 
     public UjoPropertySetter(String propertyName) {
         this.propertyName = propertyName;
@@ -63,13 +64,6 @@ public class UjoPropertySetter implements Setter {
      *init the ujo property reference
      **/
     private void initProperty(Ujo target) {
-        for (UjoProperty ujoProp : target.readProperties()) {
-            if (ujoProp.getName().equals(propertyName)) {
-                ujoProperty = ujoProp;
-            }
-        }
-        if (ujoProperty == null) {
-            throw new RuntimeException("property with name " + propertyName + "not found in defined BO " + target);
-        }
+        ujoProperty = UjoManager.getInstance().findProperty(target, propertyName, true);
     }
 }
