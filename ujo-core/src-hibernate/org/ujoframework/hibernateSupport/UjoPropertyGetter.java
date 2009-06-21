@@ -26,6 +26,7 @@ import org.ujoframework.UjoProperty;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
+import org.ujoframework.core.UjoManager;
 
 
 /**
@@ -85,7 +86,7 @@ public class UjoPropertyGetter implements Getter {
     }
 
     /**
-     * TOOD : some better way to get property class in construction time of this
+     * TOOD : some better way to get property class in construction time of this (?)
      * 
      **/
     private void initPropertyClass(Class theClass) {
@@ -110,21 +111,11 @@ public class UjoPropertyGetter implements Getter {
     /**
      *
      * @param target BO
-     *
      * find UJOproperty in target and assign to this
-     *
      */
     private void initProperty(Ujo target) {
 
-        for (UjoProperty ujoProp : target.readProperties()) {
-            if (ujoProp.getName().equalsIgnoreCase(propertyName)) {
-                ujoProperty = ujoProp;
-                propertyClass = ujoProperty.getType();
-                break;
-            }
-        }
-        if (ujoProperty == null) {
-            throw new RuntimeException("property with name " + propertyName + "not found in defined BO " + target);
-        }
+        ujoProperty = UjoManager.getInstance().findProperty(target, propertyName, true);
+        propertyClass = ujoProperty.getType();
     }
 }
