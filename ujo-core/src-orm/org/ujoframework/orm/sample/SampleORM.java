@@ -39,7 +39,7 @@ public class SampleORM {
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel(boolean createDb) {
 
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
 
         boolean yesIWantChangeDefaultParameters = true;
         if (yesIWantChangeDefaultParameters) {
@@ -304,5 +304,4 @@ public class SampleORM {
            OrmHandler.getInstance().getSession().close();
         }
     }
-
 }
