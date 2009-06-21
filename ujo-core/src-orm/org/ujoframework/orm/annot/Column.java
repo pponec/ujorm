@@ -42,6 +42,8 @@ public @interface Column {
     boolean mandatory() default false;
     /** A name of the column database index. */
     String indexName() default "";
+    /** @deprecated not implemented yet */
+    boolean unique() default false;
 
     
 }
