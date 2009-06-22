@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Tomáš Hampl
+ *  Copyright 2009 Tomas Hampl
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,19 +38,21 @@ public class UjoPropertySetter implements Setter {
         this.propertyName = propertyName;
     }
 
-    public void set(Object target, Object value, SessionFactoryImplementor factory) throws HibernateException {
-        Ujo ut = (Ujo) target;
+    /**
+     * @param target Value must by type of Ujo
+     */
+    public final void set(final Object target, final Object value, final SessionFactoryImplementor factory) throws HibernateException {
         if (ujoProperty == null) {
-            initProperty(ut);
+            ujoProperty = UjoManager.getInstance().findProperty((Ujo) target, propertyName, true);
         }
-        ut.writeValue(ujoProperty, value);
+        ((Ujo) target).writeValue(ujoProperty, value);
     }
 
     /**
      * inspired from BackrefPropertyAccessor
      **/
     public String getMethodName() {
-        return null;
+        return propertyName;
     }
 
     /**
@@ -60,10 +62,4 @@ public class UjoPropertySetter implements Setter {
         return null;
     }
 
-    /**
-     *init the ujo property reference
-     **/
-    private void initProperty(Ujo target) {
-        ujoProperty = UjoManager.getInstance().findProperty(target, propertyName, true);
-    }
 }
