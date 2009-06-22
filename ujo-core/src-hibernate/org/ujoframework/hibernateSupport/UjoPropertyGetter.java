@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Tomáš Hampl
+ *  Copyright 2009 Tomas Hampl
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,28 +35,24 @@ import org.ujoframework.core.UjoManager;
  */
 public class UjoPropertyGetter implements Getter {
 
-    private UjoProperty ujoProperty = null;
-    private String propertyName;
-    private Class propertyClass;
+    final private UjoProperty ujoProperty;
 
     public UjoPropertyGetter(String propertyName, Class theClass) {
-        this.propertyName = propertyName;
-        initPropertyClass(theClass);
+        try {
+            Ujo instance = (Ujo) theClass.newInstance();
+            ujoProperty = UjoManager.getInstance().findProperty(instance, propertyName, true);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can't create an Ujo instance from the " + theClass, e);
+        }
     }
 
     /**
      * @param target BO
      * @return actual value of property
      * @throws org.hibernate.HibernateException
-     * TODO : what if target is not Ujo
      */
-    public Object get(Object target) throws HibernateException {
-        Ujo ut = (Ujo) target;
-
-        if (ujoProperty == null) {
-            initProperty(ut);
-        }
-        return ut.readValue(ujoProperty);
+    public final Object get(final Object target) throws HibernateException {
+        return ((Ujo) target).readValue(ujoProperty);
     }
 
     /**
@@ -67,14 +63,14 @@ public class UjoPropertyGetter implements Getter {
     }
 
     public Class getReturnType() {
-        return propertyClass;
+        return ujoProperty.getType();
     }
 
     /**
      * inspired from BackrefPropertyAccessor
      **/
     public String getMethodName() {
-        return null;
+        return ujoProperty.getName();
 
     }
 
@@ -85,37 +81,4 @@ public class UjoPropertyGetter implements Getter {
         return null;
     }
 
-    /**
-     * TOOD : some better way to get property class in construction time of this (?)
-     * 
-     **/
-    private void initPropertyClass(Class theClass) {
-        Ujo u = null;
-        try {
-            //create new temp instance of target BO
-            u = (Ujo) theClass.newInstance();
-            //call init property to find property and set property class
-            initProperty(u);
-            //set property to null ?? will this property be another instance ?
-            ujoProperty = null;
-            //set temp BO to null
-            u = null;
-
-        } catch (InstantiationException ex) {
-            Logger.getLogger(UjoPropertyGetter.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(UjoPropertyGetter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     *
-     * @param target BO
-     * find UJOproperty in target and assign to this
-     */
-    private void initProperty(Ujo target) {
-
-        ujoProperty = UjoManager.getInstance().findProperty(target, propertyName, true);
-        propertyClass = ujoProperty.getType();
-    }
 }
