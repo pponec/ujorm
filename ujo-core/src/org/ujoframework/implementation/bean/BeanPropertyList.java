@@ -20,7 +20,7 @@ import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.core.BeanManager;
 import org.ujoframework.extensions.ListProperty;
-import org.ujoframework.extensions.AbstractPropertyList;
+import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
@@ -29,7 +29,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @author Pavel Ponec  
  */
 public class BeanPropertyList<UJO extends Ujo, ITEM> 
-extends AbstractPropertyList<UJO, ITEM>
+extends ListPropertyImpl<UJO, ITEM>
 implements ValueAgent<Object,Object>, ListProperty<UJO, ITEM>
 {
 

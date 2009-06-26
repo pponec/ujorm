@@ -26,7 +26,7 @@ public class FieldTree extends FieldUjoImplChild {
 
     
     /** (List) */
-    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDS = newPropertyList("CHILDS", FieldTree.class, new ValueAgent<FieldTree,List<FieldTree>>() {
+    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDS = newListProperty("CHILDS", FieldTree.class, new ValueAgent<FieldTree,List<FieldTree>>() {
         public void writeValue(FieldTree ujo, List<FieldTree> value) {
             ujo.childs = value; 
         }

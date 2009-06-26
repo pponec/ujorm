@@ -17,7 +17,7 @@
 package org.ujoframework.implementation.orm;
 
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.extensions.AbstractProperty;
+import org.ujoframework.extensions.UjoPropertyImpl;
 
 /**
  * The relation 1:N to another UJO type items
@@ -25,7 +25,7 @@ import org.ujoframework.extensions.AbstractProperty;
  * @see org.ujoframework.core.UjoIterator
  */
 public class RelationToMany<UJO extends OrmTable, ITEM extends OrmTable>
-    extends AbstractProperty<UJO, UjoIterator<ITEM>>
+    extends UjoPropertyImpl<UJO, UjoIterator<ITEM>>
 {
 
     private final Class<ITEM> itemType;

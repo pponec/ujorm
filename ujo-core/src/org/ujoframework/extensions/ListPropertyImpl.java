@@ -30,15 +30,15 @@ import org.ujoframework.core.UjoComparator;
  * @see ArrayUjo
  * @author Paul Ponec
  */
-public class AbstractPropertyList<UJO extends Ujo, ITEM>
-    extends AbstractProperty<UJO,List<ITEM>>
+public class ListPropertyImpl<UJO extends Ujo, ITEM>
+    extends UjoPropertyImpl<UJO,List<ITEM>>
     implements ListProperty<UJO,ITEM> {
 
     /** Class of the list item. */
     final private Class<ITEM> itemType;
 
     /** Protected constructor */
-    protected AbstractPropertyList(Class<ITEM> itemType) {
+    protected ListPropertyImpl(Class<ITEM> itemType) {
         this.itemType = itemType;
     }
 
@@ -52,7 +52,7 @@ public class AbstractPropertyList<UJO extends Ujo, ITEM>
      * @return
      */
     @SuppressWarnings("unchecked")
-    final protected AbstractPropertyList<UJO,ITEM> initList
+    final protected ListPropertyImpl<UJO,ITEM> initList
     ( final String name
     , final int index
     , final Boolean lock
@@ -152,7 +152,7 @@ public class AbstractPropertyList<UJO extends Ujo, ITEM>
 
     // --------- STATIC METHODS -------------------
 
-    /** A PropertyList Factory
+    /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
@@ -163,12 +163,12 @@ public class AbstractPropertyList<UJO extends Ujo, ITEM>
     , final int index
     , final boolean lock
     ) {
-        final AbstractPropertyList<UJO,ITEM> result = new AbstractPropertyList<UJO,ITEM>(itemType);
+        final ListPropertyImpl<UJO,ITEM> result = new ListPropertyImpl<UJO,ITEM>(itemType);
         result.init(name, (Class) List.class, null, index, lock);
         return result;
     }
 
-    /** A PropertyList Factory
+    /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
@@ -181,7 +181,7 @@ public class AbstractPropertyList<UJO extends Ujo, ITEM>
     }
 
 
-    /** A PropertyList Factory
+    /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */

@@ -17,8 +17,8 @@ package org.ujoframework.implementation.map;
 
 import java.util.HashMap;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.AbstractProperty;
-import org.ujoframework.extensions.AbstractPropertyList;
+import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjoExt;
 import org.ujoframework.extensions.ListProperty;
 
@@ -95,7 +95,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * @hidden
      */
     public static <UJO extends MapUjoExt,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return AbstractProperty.newInstance(name, type);
+        return UjoPropertyImpl.newInstance(name, type);
     }
 
     /** A Property Factory
@@ -103,15 +103,15 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * @hidden
      */
     protected static <UJO extends MapUjoExt, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return AbstractProperty.newInstance(name, value);
+        return UjoPropertyImpl.newInstance(name, value);
     }
 
-    /** A PropertyList Factory
+    /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
     protected static <UJO extends MapUjoExt, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
-        return AbstractPropertyList.newListProperty(name, type);
+        return ListPropertyImpl.newListProperty(name, type);
     }
 
 }

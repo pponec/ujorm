@@ -20,11 +20,11 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * An AbstractProperty property implementation.
+ * An UjoPropertyImpl property implementation.
  * @see AbstractUjo
  * @author Pavel Ponec
  */
-public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
+public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** Property name */
     private String name;
@@ -58,7 +58,7 @@ public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,
      * @param type
      * @param index On order of the property.
      */
-    protected AbstractProperty(final String name, final Class<VALUE> type, final int index) {
+    protected UjoPropertyImpl(final String name, final Class<VALUE> type, final int index) {
         init(name, type, null, index, true);
     }
 
@@ -69,12 +69,12 @@ public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,
      * @param index On order of the property.
      */
     @SuppressWarnings("unchecked")
-    protected AbstractProperty(final String name, final VALUE value, final int index) {
+    protected UjoPropertyImpl(final String name, final VALUE value, final int index) {
         init(name, null, value, index, true);
     }
 
     /** Protected constructor */
-    protected AbstractProperty() {
+    protected UjoPropertyImpl() {
     }
 
     /**
@@ -87,7 +87,7 @@ public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,
      * @return
      */
     @SuppressWarnings("unchecked")
-    final protected AbstractProperty<UJO,VALUE> init
+    final protected UjoPropertyImpl<UJO,VALUE> init
     ( final String name
     , Class<VALUE> type
     , final VALUE defaultValue
@@ -184,7 +184,7 @@ public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,
      * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current property!
      */
     @SuppressWarnings("unchecked")
-    public <PROPERTY extends AbstractProperty> PROPERTY setDefault(VALUE value) {
+    public <PROPERTY extends UjoPropertyImpl> PROPERTY setDefault(VALUE value) {
         defaultValue = value;
         return (PROPERTY) this;
     }
@@ -296,7 +296,7 @@ public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, int index, boolean lock) {
-        return new AbstractProperty<UJO,VALUE>().init(name, type, value, index, lock);
+        return new UjoPropertyImpl<UJO,VALUE>().init(name, type, value, index, lock);
     }
 
 
@@ -305,7 +305,7 @@ public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
-        return new AbstractProperty<UJO,VALUE>().init(name, type, null, index, true);
+        return new UjoPropertyImpl<UJO,VALUE>().init(name, type, null, index, true);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -323,7 +323,7 @@ public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,
     public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
         @SuppressWarnings("unchecked")
         Class<VALUE> type = (Class) value.getClass();
-        return new AbstractProperty<UJO, VALUE>().init(name, type, value, index, true);
+        return new UjoPropertyImpl<UJO, VALUE>().init(name, type, value, index, true);
     }
 
     /** A Property Factory where a property type is related from from default value.

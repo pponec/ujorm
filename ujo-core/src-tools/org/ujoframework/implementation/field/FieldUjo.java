@@ -45,7 +45,7 @@ import org.ujoframework.extensions.ValueAgent;
  *   });    
  *   
  *   <span class="keyword-directive">public static</span> FieldPropertyList&lt;Person,Person&gt; CHILDS
- *     = newPropertyList(<span class="character">"CHILDS"</span>, Person.<span class="keyword-directive">class</span>
+ *     = newListProperty(<span class="character">"CHILDS"</span>, Person.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,List&lt;Person&gt;&gt;() {
  *     <span class="keyword-directive">public void</span> writeValue(Person ujo, List&lt;Person&gt; value) {
  *         ujo.childs = value; 
@@ -115,10 +115,10 @@ public abstract class FieldUjo extends AbstractUjo {
         return new FieldProperty<UJO, VALUE>(name, value, -1, agent);
     }
 
-    /** A PropertyList Factory for a <strong>FieldUjo</strong> object
+    /** A ListProperty Factory for a <strong>FieldUjo</strong> object
      * @hidden     
      */
-    protected static <UJO extends Ujo, ITEM> FieldPropertyList<UJO, ITEM> newPropertyList
+    protected static <UJO extends Ujo, ITEM> FieldPropertyList<UJO, ITEM> newListProperty
         ( String name
         , Class<ITEM> type
         , ValueAgent<UJO, List<ITEM>> agent

@@ -17,8 +17,8 @@
 package org.ujoframework.implementation.array;
 
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.AbstractProperty;
-import org.ujoframework.extensions.AbstractPropertyList;
+import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
 
@@ -116,7 +116,7 @@ public abstract class ArrayUjo extends AbstractUjo {
      * @hidden
      */
     public static <UJO extends ArrayUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
-        return AbstractProperty.newInstance(name, type, index);
+        return UjoPropertyImpl.newInstance(name, type, index);
     }
 
     /** A Property Factory
@@ -124,24 +124,24 @@ public abstract class ArrayUjo extends AbstractUjo {
      * @hidden
      */
     protected static <UJO extends ArrayUjo, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value, int index) {
-        return AbstractProperty.newInstance(name, value, index);
+        return UjoPropertyImpl.newInstance(name, value, index);
     }
 
-    /** A PropertyList Factory
+    /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
     protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
-        return AbstractPropertyList.newListProperty(name, type, index);
+        return ListPropertyImpl.newListProperty(name, type, index);
     }
 
-    /** A PropertyList Factory
+    /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      * @deprecated Use method newListProperty
      */
     protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList_(String name, Class<ITEM> type, int index) {
-        return AbstractPropertyList.newListProperty(name, type, index);
+        return ListPropertyImpl.newListProperty(name, type, index);
     }
 
     

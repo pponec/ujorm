@@ -114,11 +114,11 @@ public abstract class BeanUjo extends AbstractUjo {
         return new BeanProperty<UJO, VALUE>(name, value, -1);
     }
 
-    /** A PropertyList Factory for a <strong>BeanUjo</strong> object.
+    /** A ListProperty Factory for a <strong>BeanUjo</strong> object.
      * Method assigns a next property index.
      * @hidden     
      */
-    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
+    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newListProperty(String name, Class<ITEM> type) {
         return new BeanPropertyList<UJO,ITEM> (name, type, -1);
     }
     

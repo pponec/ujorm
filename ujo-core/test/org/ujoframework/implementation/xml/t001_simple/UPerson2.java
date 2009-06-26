@@ -14,7 +14,7 @@ import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.extensions.AbstractProperty;
+import org.ujoframework.extensions.UjoPropertyImpl;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.extensions.UjoTextable;
 
@@ -26,9 +26,9 @@ import org.ujoframework.extensions.UjoTextable;
 @SuppressWarnings("unchecked")
 public class UPerson2 implements Ujo, UjoTextable  {
 
-    public static final UjoProperty<UPerson2,String>  NAME = AbstractProperty.newInstance("Name", String.class );
-    public static final UjoProperty<UPerson2,Boolean> MALE = AbstractProperty.newInstance("Male", Boolean.class);
-    public static final UjoProperty<UPerson2,Date>   BIRTH = AbstractProperty.newInstance("Birth", Date.class  );
+    public static final UjoProperty<UPerson2,String>  NAME = UjoPropertyImpl.newInstance("Name", String.class );
+    public static final UjoProperty<UPerson2,Boolean> MALE = UjoPropertyImpl.newInstance("Male", Boolean.class);
+    public static final UjoProperty<UPerson2,Date>   BIRTH = UjoPropertyImpl.newInstance("Birth", Date.class  );
 
     private HashMap data = new HashMap();
 
