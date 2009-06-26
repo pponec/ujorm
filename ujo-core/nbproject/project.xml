@@ -6,7 +6,6 @@
             <name>UJO</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
-                <root id="src.src-hibernate.dir" name="Source Hibernate"/>
                 <root id="src.dir" name="Source Core"/>
                 <root id="src.src-tools.dir" name="Source Tools"/>
                 <root id="src.src-orm.dir" name="Source ORM"/>
