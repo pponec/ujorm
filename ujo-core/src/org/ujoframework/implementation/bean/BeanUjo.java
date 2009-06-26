@@ -103,7 +103,7 @@ public abstract class BeanUjo extends AbstractUjo {
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
+        return new BeanProperty<UJO,VALUE> (name, type, -1);
     }
     
     /** A Property Factory, a property type is related from the default value.
@@ -111,7 +111,7 @@ public abstract class BeanUjo extends AbstractUjo {
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value, _nextPropertyIndex());
+        return new BeanProperty<UJO, VALUE>(name, value, -1);
     }
 
     /** A PropertyList Factory for a <strong>BeanUjo</strong> object.
@@ -119,7 +119,7 @@ public abstract class BeanUjo extends AbstractUjo {
      * @hidden     
      */
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new BeanPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex());
+        return new BeanPropertyList<UJO,ITEM> (name, type, -1);
     }
     
 }

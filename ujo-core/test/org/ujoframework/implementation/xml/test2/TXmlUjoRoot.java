@@ -9,11 +9,8 @@
 
 package org.ujoframework.implementation.xml.test2;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.MapUjo;
-import org.ujoframework.implementation.map.MapPropertyList;
-import org.ujoframework.implementation.map.MapProperty;
 
 
 /**
@@ -22,7 +19,7 @@ import org.ujoframework.implementation.map.MapProperty;
  */
 public class TXmlUjoRoot extends MapUjo  {
 
-    //public static final MapProperty<TXmlUjoRoot,Object[]>   PRO_P4 = newProperty("ObjArray", Object[].class);
-    public static final MapPropertyList<TXmlUjoRoot, TXmlUjoItem> PRO_P5 = newPropertyList("List", TXmlUjoItem.class);
+    //public static final UjoProperty<TXmlUjoRoot,Object[]>   PRO_P4 = newProperty("ObjArray", Object[].class);
+    public static final ListProperty<TXmlUjoRoot, TXmlUjoItem> PRO_P5 = newListProperty("List", TXmlUjoItem.class);
     
 }

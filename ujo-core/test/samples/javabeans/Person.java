@@ -9,11 +9,12 @@
 
 package samples.javabeans;
 
+import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.*;
 public class Person extends MapUjo {
     
-    public static final MapProperty<Person, String>  NAME = newProperty("Name", String.class);
-    public static final MapProperty<Person, Integer> AGE  = newProperty("Age" , Integer.class);
+    public static final UjoProperty<Person, String>  NAME = newProperty("Name", String.class);
+    public static final UjoProperty<Person, Integer> AGE  = newProperty("Age" , Integer.class);
     
     public void setName(String name) {
         NAME.setValue(this, name);

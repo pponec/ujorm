@@ -19,11 +19,14 @@ package org.ujoframework.implementation.map;
 import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.AbstractProperty;
+import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.AbstractUjo;
+import org.ujoframework.extensions.ListProperty;
 
 /**
  * This is a simple abstract implementation of <code>Ujo</code>.<br>
- * Child implementation can use "public static final MapProperty" constants for its UjoProperties.
+ * Child implementation can use "public static final UjoProperty" constants for its UjoProperties.
  * The code syntax is Java 1.5 complied.<br>
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * <h3>Sample of usage</h3>
@@ -91,24 +94,24 @@ public abstract class MapUjo extends AbstractUjo {
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo,VALUE> MapProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return new MapProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
+    public static <UJO extends MapUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
+        return AbstractProperty.newInstance(name, type);
     }
     
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new MapProperty<UJO, VALUE>(name, value, _nextPropertyIndex());
+    protected static <UJO extends MapUjo, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value) {
+        return AbstractProperty.newInstance(name, value);
     }
     
     /** A PropertyList Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> MapPropertyList<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new MapPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex());
+    protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
+        return AbstractPropertyList.newListProperty(name, type);
     }
     
 }

@@ -5,8 +5,7 @@
 
 package org.ujoframework.extensions;
 
-import org.ujoframework.implementation.map.MapProperty;
-import org.ujoframework.implementation.map.MapPropertyList;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
@@ -15,8 +14,8 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class Person extends MapUjo {
     
-    public static final MapProperty<Person, Integer> ID = newProperty("id", Integer.class);
-    public static final MapPropertyList<Person, Person> PERS = newPropertyList("person", Person.class);
+    public static final UjoProperty<Person, Integer> ID = newProperty("id", Integer.class);
+    public static final ListProperty<Person, Person> PERS = newListProperty("person", Person.class);
     
     public Person(Integer id) {
         ID.setValue(this, id);

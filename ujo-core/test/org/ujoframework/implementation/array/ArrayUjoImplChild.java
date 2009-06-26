@@ -10,6 +10,7 @@
 package org.ujoframework.implementation.array;
 
 import java.util.Date;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 
 /**
@@ -21,11 +22,11 @@ public class ArrayUjoImplChild extends ArrayUjoImpl {
     /** Incrementator */
     protected static int propertyCount = ArrayUjoImpl.propertyCount;
 
-    public static final ArrayProperty <ArrayUjoImplChild, Long>    PRO_P5 = newProperty("P5", Long.class, propertyCount++);
-    public static final ArrayProperty <ArrayUjoImplChild, Integer> PRO_P6 = newProperty("P6", Integer.class, propertyCount++);
-    public static final ArrayProperty <ArrayUjoImplChild, String>  PRO_P7 = newProperty("P7", String.class, propertyCount++);
-    public static final ArrayProperty <ArrayUjoImplChild, Date>    PRO_P8 = newProperty("P8", Date.class, propertyCount++);
-    public static final ArrayProperty <ArrayUjoImplChild, Float>   PRO_P9 = newProperty("P9", Float.class, propertyCount++);
+    public static final UjoProperty <ArrayUjoImplChild, Long>    PRO_P5 = newProperty("P5", Long.class, propertyCount++);
+    public static final UjoProperty <ArrayUjoImplChild, Integer> PRO_P6 = newProperty("P6", Integer.class, propertyCount++);
+    public static final UjoProperty <ArrayUjoImplChild, String>  PRO_P7 = newProperty("P7", String.class, propertyCount++);
+    public static final UjoProperty <ArrayUjoImplChild, Date>    PRO_P8 = newProperty("P8", Date.class, propertyCount++);
+    public static final UjoProperty <ArrayUjoImplChild, Float>   PRO_P9 = newProperty("P9", Float.class, propertyCount++);
 
     // --- An optional property unique name test ---
     static { UjoManager.checkUniqueProperties(ArrayUjoImplChild.class); }

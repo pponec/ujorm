@@ -23,7 +23,7 @@ import static org.ujoframework.extensions.UjoAction.*;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>
- * For implementation define only a "public static final MapProperty" constants in a child class.
+ * For implementation define only a "public static final UjoProperty" constants in a child class.
  * The code syntax is Java 1.5 complied.<br>
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
 
@@ -31,19 +31,6 @@ import static org.ujoframework.extensions.UjoAction.*;
  */
 public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
-    /** A property order index. The field is used in a static method newProperty(..). 
-     * @see #_nextPropertyIndex()
-     */
-    protected static int _propertyIndex = 0;
-
-    /** Returns a next property index by a synchronized method.
-     * The UJO property indexed by this method may not be in continuous series
-     * however numbers have the <strong>upward direction</strong> always.
-     */
-    protected static final synchronized int _nextPropertyIndex() {
-        return _propertyIndex++;
-    }
-    
     /** Returns an UjoManager */
     protected UjoManager readUjoManager() {
         return UjoManager.getInstance();
@@ -145,5 +132,5 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
         final Object valueObj = readUjoManager().decodeValue(property, value, type);
         writeValue(property, valueObj);
     }
-    
+
 }

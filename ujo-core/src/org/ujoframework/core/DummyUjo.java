@@ -18,19 +18,18 @@ package org.ujoframework.core;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.AbstractProperty;
 import org.ujoframework.extensions.UjoAction;
-import org.ujoframework.implementation.map.MapProperty;
 
 /**
  * Data object abstract implementation.
  * Java 1.5 syntax complied.
  * @author Pavel Ponec
  */
-@SuppressWarnings("unchecked")
 final class DummyUjo implements Ujo {
     
-    public static final UjoProperty P0 = new MapProperty("A", Object.class);
-    public static final UjoProperty P1 = new MapProperty("B", Object.class);
+    public static final UjoProperty P0 = AbstractProperty.newInstance("A", Object.class);
+    public static final UjoProperty P1 = AbstractProperty.newInstance("B", Object.class);
     
     /** A dummy implementation. */
     public void writeValue(UjoProperty property, Object value) {}

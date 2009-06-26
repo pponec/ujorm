@@ -30,7 +30,7 @@ import org.ujoframework.implementation.bean.BeanProperty;
  * @author Pavel Ponec  
  */
 public class FieldPropertyList<UJO extends Ujo, ITEM> 
-    extends AbstractPropertyList<UJO, List<ITEM>, ITEM>
+    extends AbstractPropertyList<UJO, ITEM>
     implements ValueAgent<UJO,  List<ITEM>>, ListProperty<UJO, ITEM>
 {
     
@@ -40,7 +40,8 @@ public class FieldPropertyList<UJO extends Ujo, ITEM>
     /** Constructor */
     @SuppressWarnings("unchecked")
     public FieldPropertyList(String name, Class<ITEM> itemType, int index, ValueAgent<UJO, List<ITEM>> agent) {
-        super(name, (Class<List<ITEM>>) (Class) List.class, itemType, index);
+        super(itemType);
+        init(name, (Class) List.class, null, index, true);
         this.agent = agent;
     }
     

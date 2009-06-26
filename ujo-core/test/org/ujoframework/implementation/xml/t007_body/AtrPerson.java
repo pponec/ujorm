@@ -10,10 +10,10 @@
 package org.ujoframework.implementation.xml.t007_body;
 
 import java.util.Date;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.XmlElementBody;
+import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.MapUjo;
-import org.ujoframework.implementation.map.MapProperty;
-import org.ujoframework.implementation.map.MapPropertyList;
 
 
 /**
@@ -22,10 +22,10 @@ import org.ujoframework.implementation.map.MapPropertyList;
  */
 public class AtrPerson extends MapUjo  {
     
-    public static final MapProperty<AtrPerson, String>  NAME = newProperty("Name", String.class );
+    public static final UjoProperty<AtrPerson, String>  NAME = newProperty("Name", String.class );
     @XmlElementBody
-    public static final MapProperty<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final MapProperty<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
-    public static final MapPropertyList<AtrPerson, AtrPerson> CHILDS = newPropertyList("Child", AtrPerson.class);
+    public static final UjoProperty<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final UjoProperty<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
+    public static final ListProperty<AtrPerson, AtrPerson> CHILDS = newListProperty("Child", AtrPerson.class);
      
 }

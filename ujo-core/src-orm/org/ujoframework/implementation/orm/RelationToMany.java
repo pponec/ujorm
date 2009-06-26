@@ -17,15 +17,15 @@
 package org.ujoframework.implementation.orm;
 
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.implementation.map.MapProperty;
+import org.ujoframework.extensions.AbstractProperty;
 
 /**
  * The relation 1:N to another UJO type items
  * @author Pavel Ponec
  * @see org.ujoframework.core.UjoIterator
  */
-public class RelationToMany<UJO extends OrmTable, ITEM  extends OrmTable>
-    extends MapProperty<UJO, UjoIterator<ITEM>>
+public class RelationToMany<UJO extends OrmTable, ITEM extends OrmTable>
+    extends AbstractProperty<UJO, UjoIterator<ITEM>>
 {
 
     private final Class<ITEM> itemType;
@@ -33,7 +33,7 @@ public class RelationToMany<UJO extends OrmTable, ITEM  extends OrmTable>
     /** Constructor */
     @SuppressWarnings("unchecked")
     public RelationToMany(String name, Class<ITEM> itemType) {
-        super(name, (Class<UjoIterator<ITEM>>) (Class) UjoIterator.class );
+        init(name, (Class) UjoIterator.class, null, -1, false);
         this.itemType = itemType;
     }
 

@@ -56,7 +56,7 @@ public abstract class FactoryUjo extends AbstractUjo {
         ( String name
         , Class<VALUE> type
         ) {
-        return new FactoryProperty<UJO,VALUE> (name, type, _nextPropertyIndex());
+        return new FactoryProperty<UJO,VALUE> (name, type, -1);
     }
     
 }

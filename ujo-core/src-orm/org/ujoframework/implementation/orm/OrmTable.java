@@ -214,7 +214,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
      * @hidden
      */
     protected static <UJO extends OrmTable, ITEM extends OrmTable> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
-        return new RelationToMany<UJO,ITEM> (name, type, _nextPropertyIndex());
+        return new RelationToMany<UJO,ITEM> (name, type, -1);
     }
 
 }

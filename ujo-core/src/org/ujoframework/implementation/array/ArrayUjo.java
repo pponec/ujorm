@@ -16,9 +16,11 @@
 
 package org.ujoframework.implementation.array;
 
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.AbstractProperty;
+import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.AbstractUjo;
+import org.ujoframework.extensions.ListProperty;
 
 /**
  * This is a very fast abstract implementation of <code>Ujo</code>.
@@ -65,6 +67,10 @@ public abstract class ArrayUjo extends AbstractUjo {
     public ArrayUjo() {
         data = initData();
     }
+
+    public ArrayUjo(Object[] data) {
+        this.data = data;
+    }
     
     /** The method is called from top constructor. */
     protected Object[] initData() {
@@ -102,39 +108,41 @@ public abstract class ArrayUjo extends AbstractUjo {
         return result!=null ? result : property.getDefault() ;
     }
     
-    // --------- STATIC METHODS -------------------
     
-    /** A Property Factory creates new property and assigns a next property index.
-     * @hidden     
+    // --------- STATIC METHODS -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo,VALUE> ArrayProperty<UJO,VALUE> newProperty
-    ( String name
-    , Class<VALUE> type
-    , int index
-    ) {
-        return new ArrayProperty<UJO,VALUE> (name, type, index);
+    public static <UJO extends ArrayUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
+        return AbstractProperty.newInstance(name, type, index);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * @hidden     
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> ArrayProperty<UJO, VALUE> newProperty
-    ( String name
-    , VALUE value
-    , int index
-    ) {
-        return new ArrayProperty<UJO, VALUE>(name, value, index);
+    protected static <UJO extends ArrayUjo, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value, int index) {
+        return AbstractProperty.newInstance(name, value, index);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * @hidden     
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> ArrayPropertyList<UJO,ITEM> newPropertyList
-    ( String name
-    , Class<ITEM> type
-    , int index
-    ) {
-        return new ArrayPropertyList<UJO,ITEM> (name, type, index);
+    protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
+        return AbstractPropertyList.newListProperty(name, type, index);
     }
+
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
+     * @deprecated Use method newListProperty
+     */
+    protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList_(String name, Class<ITEM> type, int index) {
+        return AbstractPropertyList.newListProperty(name, type, index);
+    }
+
     
 }

@@ -12,8 +12,8 @@ package org.ujoframework.implementation.xml.t002_tech;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapUjo;
-import org.ujoframework.implementation.map.MapProperty;
 import static org.ujoframework.core.ZeroProvider.*;
 
 /**
@@ -22,20 +22,20 @@ import static org.ujoframework.core.ZeroProvider.*;
  */
 public class UTechnicalBean extends MapUjo  {
     
-    public static final MapProperty<UTechnicalBean,Boolean>    P0_BOOL     = newProperty("Boolean", ZERO_BOOL);
-    public static final MapProperty<UTechnicalBean,Byte>       P1_BYTE     = newProperty("Byte", ZERO_BYTE);
-    public static final MapProperty<UTechnicalBean,Character>  P2_CHAR     = newProperty("Character", ZERO_CHAR);
-    public static final MapProperty<UTechnicalBean,Short>      P3_SHORT    = newProperty("Short", ZERO_SHORT);
-    public static final MapProperty<UTechnicalBean,Integer>    P4_INTE     = newProperty("Integer", ZERO_INT);
-    public static final MapProperty<UTechnicalBean,Long>       P5_LONG     = newProperty("Long", ZERO_LONG);
-    public static final MapProperty<UTechnicalBean,Float>      P6_FLOAT    = newProperty("Float", 0f);
-    public static final MapProperty<UTechnicalBean,Double>     P7_DOUBLE   = newProperty("Double", 0d);
-    public static final MapProperty<UTechnicalBean,BigInteger> P8_BIG_INT  = newProperty("BigInteger", ZERO_BIG_INT);
-    public static final MapProperty<UTechnicalBean,BigDecimal> P9_BIG_DECI = newProperty("BigDecimal", ZERO_BIG_DECI);
-    public static final MapProperty<UTechnicalBean,Date>       PD_DATE     = newProperty("Date", Date.class);
+    public static final UjoProperty<UTechnicalBean,Boolean>    P0_BOOL     = newProperty("Boolean", ZERO_BOOL);
+    public static final UjoProperty<UTechnicalBean,Byte>       P1_BYTE     = newProperty("Byte", ZERO_BYTE);
+    public static final UjoProperty<UTechnicalBean,Character>  P2_CHAR     = newProperty("Character", ZERO_CHAR);
+    public static final UjoProperty<UTechnicalBean,Short>      P3_SHORT    = newProperty("Short", ZERO_SHORT);
+    public static final UjoProperty<UTechnicalBean,Integer>    P4_INTE     = newProperty("Integer", ZERO_INT);
+    public static final UjoProperty<UTechnicalBean,Long>       P5_LONG     = newProperty("Long", ZERO_LONG);
+    public static final UjoProperty<UTechnicalBean,Float>      P6_FLOAT    = newProperty("Float", 0f);
+    public static final UjoProperty<UTechnicalBean,Double>     P7_DOUBLE   = newProperty("Double", 0d);
+    public static final UjoProperty<UTechnicalBean,BigInteger> P8_BIG_INT  = newProperty("BigInteger", ZERO_BIG_INT);
+    public static final UjoProperty<UTechnicalBean,BigDecimal> P9_BIG_DECI = newProperty("BigDecimal", ZERO_BIG_DECI);
+    public static final UjoProperty<UTechnicalBean,Date>       PD_DATE     = newProperty("Date", Date.class);
     // Some Arrays
-    public static final MapProperty<UTechnicalBean,byte[]>     PA_BYTES    = newProperty("bytes", byte[].class);
-    public static final MapProperty<UTechnicalBean,char[]>     PB_CHARS    = newProperty("chars", char[].class);
+    public static final UjoProperty<UTechnicalBean,byte[]>     PA_BYTES    = newProperty("bytes", byte[].class);
+    public static final UjoProperty<UTechnicalBean,char[]>     PB_CHARS    = newProperty("chars", char[].class);
     
     
     // public static final Boolean    ZERO_BOOL     = Boolean.FALSE;

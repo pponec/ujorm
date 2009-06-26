@@ -10,7 +10,7 @@
 package org.ujoframework.implementation.xmlSpeed;
 
 import java.util.Date;
-import org.ujoframework.implementation.array.ArrayPropertyList;
+import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.array.ArrayUjoImplChild;
 
 /**
@@ -22,7 +22,7 @@ public class ArrayTree extends ArrayUjoImplChild {
     /** Incrementator */
     protected static int propertyCount = ArrayUjoImplChild.propertyCount;
     
-    public static final ArrayPropertyList<ArrayTree, ArrayTree> PRO_CHILDS = newPropertyList("CHILDS", ArrayTree.class, propertyCount++);
+    public static final ListProperty<ArrayTree, ArrayTree> PRO_CHILDS = newListProperty("CHILDS", ArrayTree.class, propertyCount++);
     
     /** Returns a count of properties. */
     @Override

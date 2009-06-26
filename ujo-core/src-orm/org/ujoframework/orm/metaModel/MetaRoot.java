@@ -41,7 +41,7 @@ public class MetaRoot extends AbstractMetaModel {
     protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** List of tables */
-    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newPropertyList("database", MetaDatabase.class, propertyCount++);
+    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class, propertyCount++);
     /** ORM parameters */
     public static final UjoProperty<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters", MetaParams.class, propertyCount++);
 

@@ -16,15 +16,17 @@
 package org.ujoframework.implementation.map;
 
 import java.util.HashMap;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.AbstractProperty;
+import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.AbstractUjoExt;
+import org.ujoframework.extensions.ListProperty;
 
 /**
  * This is an Groovy style implementation of a setter and getter methods for an easier access for developpers,
  * however the methods have got an weaker type control in compare to the MapUjo implementation.
  * <br>Sample of usage:
- *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
+ *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt&lt;Person&gt; {
  *
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String&gt; NAME  = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double&gt; CASH  = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
@@ -87,26 +89,29 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
     }
     
     // --------- STATIC METHODS -------------------
-    
+
     /** Returns a new instance of property where the default value is null.
-     * @hidden     
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
-        return new MapProperty<UJO, VALUE>(name, type, _nextPropertyIndex());
+    public static <UJO extends MapUjoExt,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
+        return AbstractProperty.newInstance(name, type);
     }
 
-    /** A Property Factory, a property type is related from the default value.
-     * @hidden     
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> MapProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new MapProperty<UJO, VALUE>(name, value, _nextPropertyIndex());
+    protected static <UJO extends MapUjoExt, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value) {
+        return AbstractProperty.newInstance(name, value);
     }
-    
+
     /** A PropertyList Factory
-     * @hidden     
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> MapPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new MapPropertyList<UJO, ITEM>(name, type, _nextPropertyIndex());
+    protected static <UJO extends MapUjoExt, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
+        return AbstractPropertyList.newListProperty(name, type);
     }
 
 }

@@ -104,7 +104,7 @@ abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoEx
         , Class<VALUE> type
         , ValueAgent<UJO, VALUE> agent
         ) {
-        return new FieldProperty<UJO,VALUE> (name, type, _nextPropertyIndex(), agent);
+        return new FieldProperty<UJO,VALUE> (name, type, -1, agent);
     }
     
     /** A Property Factory
@@ -115,7 +115,7 @@ abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoEx
         , VALUE value
         , ValueAgent<UJO, VALUE> agent
         ) {
-        return new FieldProperty<UJO, VALUE>(name, value, _nextPropertyIndex(), agent);
+        return new FieldProperty<UJO, VALUE>(name, value, -1, agent);
     }
 
     /** A PropertyList Factory for a <strong>FieldUjo</strong> object
@@ -126,7 +126,7 @@ abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoEx
         , Class<ITEM> type
         , ValueAgent<UJO, List<ITEM>> agent
         ) {
-        return new FieldPropertyList<UJO,ITEM> (name, type, _nextPropertyIndex(), agent);
+        return new FieldPropertyList<UJO,ITEM> (name, type, -1, agent);
     }
 
 }    

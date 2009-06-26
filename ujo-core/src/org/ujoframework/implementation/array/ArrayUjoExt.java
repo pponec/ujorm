@@ -15,16 +15,18 @@
  */
 package org.ujoframework.implementation.array;
 
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.AbstractProperty;
+import org.ujoframework.extensions.AbstractPropertyList;
 import org.ujoframework.extensions.AbstractUjoExt;
+import org.ujoframework.extensions.ListProperty;
 
 
 /**
  * This is an Groovy style implementation of a setter and getter methods for an easier access for developpers,
  * however the methods have got an weaker type control in compare to the MapUjo implementation.
  * <br>Sample of usage:
- *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> ArrayUjoExt {
+ *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> ArrayUjoExt&lt;Person&gt; {
  *
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>, propertyCount++);
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>, propertyCount++);
@@ -101,36 +103,30 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
     }
     
     // --------- STATIC METHODS -------------------
-    
+
     /** Returns a new instance of property where the default value is null.
-     * @hidden     
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo,VALUE> ArrayProperty<UJO,VALUE> newProperty
-    ( String name
-    , Class<VALUE> type
-    , int index
-    ) {
-        return new ArrayProperty<UJO,VALUE> (name, type, index);
+    public static <UJO extends ArrayUjoExt,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
+        return AbstractProperty.newInstance(name, type, index);
     }
 
-    /** Returns a new Property Factory. A property type is related from the default value.
-     * @hidden     
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> ArrayProperty<UJO, VALUE> newProperty
-    ( String name
-    , VALUE value
-    , int index
-    ) {
-        return new ArrayProperty<UJO, VALUE>(name, value, index);
+    protected static <UJO extends ArrayUjoExt, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value, int index) {
+        return AbstractProperty.newInstance(name, value, index);
     }
 
     /** A PropertyList Factory
-     * @hidden     
+     * Method assigns a next property index.
+     * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> ArrayPropertyList<UJO,ITEM> newPropertyList
-    ( String name
-    , Class<ITEM> type
-    , int index
-    ) {
-        return new ArrayPropertyList<UJO,ITEM> (name, type, index);
-    }}
+    protected static <UJO extends ArrayUjoExt, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
+        return AbstractPropertyList.newListProperty(name, type, index);
+    }
+
+
+}

@@ -30,25 +30,44 @@ import org.ujoframework.core.UjoComparator;
  * @see ArrayUjo
  * @author Paul Ponec
  */
-abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITEM>, ITEM>
-    extends AbstractProperty<UJO, LIST>
-    implements UjoPropertyList<UJO,LIST,ITEM> {
+public class AbstractPropertyList<UJO extends Ujo, ITEM>
+    extends AbstractProperty<UJO,List<ITEM>>
+    implements ListProperty<UJO,ITEM> {
 
     /** Class of the list item. */
-    private final Class<ITEM> itemType;
-    
-    /** Constructor */
-    public AbstractPropertyList(String name, Class<LIST> type, Class<ITEM> itemType, int index) {
-        super(name, type, index);
+    final private Class<ITEM> itemType;
+
+    /** Protected constructor */
+    protected AbstractPropertyList(Class<ITEM> itemType) {
         this.itemType = itemType;
     }
-    
+
+    /**
+     * List property initialization.
+     * @param name Replace the Name of property if the one is NULL.
+     * @param index Replace index allways, the value -1 invoke a next number from the internal sequencer.
+     * @param type Replace the Type of property if the one is NULL.
+     * @param defaultValue Replace the Optional default value if the one is NULL.
+     * @param lock Lock the property.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    final protected AbstractPropertyList<UJO,ITEM> initList
+    ( final String name
+    , final int index
+    , final Boolean lock
+    ) {
+       init(name, (Class) List.class, null, index, lock);
+       return this;
+    }
+
+
     /** Returns a count of Items. If a property value is null, method returns 0. */
     public int getItemCount(final UJO ujo) {
-        LIST list = getValue(ujo);
+        List<ITEM> list = getValue(ujo);
         return list!=null ? list.size() : 0 ;
     }
-    
+
     /** Return a Class of the Item. */
     public Class<ITEM> getItemType() {
         return itemType;
@@ -59,50 +78,50 @@ abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITE
     public boolean isItemTypeOf(final Class type) {
         return type.isAssignableFrom(itemType);
     }
-    
+
     /**
      * Returns a value of property. The result is the same, like Ujo#getValue(UjoPropertyList) .get(index) .
      */
     public ITEM getItem(final UJO ujo, final int index) {
         return getValue(ujo).get(index);
     }
-    
+
     /** Set a property item value. The action is the same, like Ujo#getValue(UjoPropertyList) .set(indexm, value).
      * @return the element previously at the specified position.
      */
     public ITEM setItem(final UJO ujo, final int index, final ITEM value) {
         return getValue(ujo).set(index, value);
     }
-    
-    /** Add Item Value. If List is null, the method creates an instance. 
+
+    /** Add Item Value. If List is null, the method creates an instance.
      * @return true (as per the general contract of Collection.add).
      */
     public boolean addItem(final UJO ujo, final ITEM value) {
-        LIST result = getList(ujo);
+        List<ITEM> result = getList(ujo);
         return result.add(value);
     }
-    
-    /** Removes the first occurrence in this list of the specified element. 
+
+    /** Removes the first occurrence in this list of the specified element.
      * @return true if this list is not null and contains the specified element, otherwise returns false.
      * @since 0.81
      */
     public boolean removeItem(UJO ujo, ITEM value) {
-        LIST list = getValue(ujo);
-        return list!=null && list.remove(value); 
+        List<ITEM> list = getValue(ujo);
+        return list!=null && list.remove(value);
     }
-    
+
     /**
      * Returns a not null List. If original list value is null, then a new List is created by a property type.
      * If the property type is an interface then the ArrayList instance is used.
      * @see #getItem(Ujo,int)
      */
     @SuppressWarnings("unchecked")
-    public LIST getList(final UJO ujo) {
-        LIST result = getValue(ujo);
+    public List<ITEM> getList(final UJO ujo) {
+        List<ITEM> result = getValue(ujo);
         if (result==null) {
             try {
                 result = getType().isInterface()
-                    ? (LIST) new ArrayList()
+                    ? (List<ITEM>) new ArrayList()
                     : getType().newInstance()
                     ;
                 setValue(ujo, result);
@@ -112,31 +131,67 @@ abstract public class AbstractPropertyList<UJO extends Ujo,LIST extends List<ITE
         }
         return result;
     }
-    
+
     /** Sort a list by its properties. */
     @SuppressWarnings("unchecked")
     public void sort(UJO ujo, UjoProperty ... properties) {
-        LIST list = getValue(ujo);
+        List<ITEM> list = getValue(ujo);
         if ( list!=null) {
             Comparator comp = new UjoComparator(properties);
             Collections.sort(list, comp);
         }
     }
 
-    /** The default list may have a <code>NULL</code> value only.
-     * @deprecated Method throws the UnsupportedOperationException
-     */
-    @Override
-    @Deprecated 
-    public <PROPERTY extends AbstractProperty> PROPERTY setDefault(LIST value) {
-        throw new UnsupportedOperationException("Property list can't have a non null value.");
-    }
 
     /** Indicates whether a list of items is null or empty. */
     @Override
     public boolean isDefault(UJO ujo) {
-        LIST list = getValue(ujo);
+        List<ITEM> list = getValue(ujo);
         return list==null || list.isEmpty();
     }
+
+    // --------- STATIC METHODS -------------------
+
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    ( final String name
+    , final Class<ITEM> itemType
+    , final int index
+    , final boolean lock
+    ) {
+        final AbstractPropertyList<UJO,ITEM> result = new AbstractPropertyList<UJO,ITEM>(itemType);
+        result.init(name, (Class) List.class, null, index, lock);
+        return result;
+    }
+
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    ( final String name
+    , final Class<ITEM> itemType
+    , final int index
+    ) {
+        return newListProperty(name, itemType, index, true);
+    }
+
+
+    /** A PropertyList Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    ( final String name
+    , final Class<ITEM> itemType
+    ) {
+        return newListProperty(name, itemType, -1);
+    }
+
+
     
 }
