@@ -29,17 +29,18 @@ import org.ujoframework.extensions.ValueAgent;
  * @author Pavel Ponec  
  */
 public class BeanPropertyList<UJO extends Ujo, ITEM> 
-    extends AbstractPropertyList<UJO, List<ITEM>, ITEM>
-    implements ValueAgent<Object,Object>, ListProperty<UJO, ITEM>
-    {
-    
+extends AbstractPropertyList<UJO, ITEM>
+implements ValueAgent<Object,Object>, ListProperty<UJO, ITEM>
+{
+
     /** Bean Manager instance */
     private final BeanManager<Object,Object> beanManager;
     
     /** Constructor */
     @SuppressWarnings("unchecked")
     public BeanPropertyList(String name, Class<ITEM> itemType, int index) {
-        super(name, (Class<List<ITEM>>) (Class) List.class, itemType, index);
+        super(itemType);
+        initList(name, index, true);
         beanManager = BeanManager.getInstance(this);
     }
     
@@ -57,16 +58,4 @@ public class BeanPropertyList<UJO extends Ujo, ITEM>
         return beanManager.readValue(bean);
     }
 
-    // --------- STATIC METHODS -------------------
-
-    /** A PropertyList Factory
-     * Method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo, ITEM> BeanPropertyList<UJO,ITEM> newInstance(String name, Class<ITEM> type, int index) {
-        return new BeanPropertyList<UJO,ITEM> (name, type, index);
-    }
-
-
-    
 }

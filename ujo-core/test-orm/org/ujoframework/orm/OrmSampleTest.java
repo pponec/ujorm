@@ -56,7 +56,7 @@ public class OrmSampleTest extends TestCase {
     /** Using INSERT */
     public void useCreateItem() {
 
-        OrmHandler.getInstance().createDatabase(Database.class);
+        OrmHandler.getInstance().loadDatabase(Database.class);
         Session session = OrmHandler.getInstance().getSession();
 
         Order order = new Order();

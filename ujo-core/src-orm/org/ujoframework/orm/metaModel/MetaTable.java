@@ -52,9 +52,9 @@ public class MetaTable extends AbstractMetaModel {
     /** Name of table schema. */
     public static final UjoProperty<MetaTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
     /** Table Columns */
-    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newPropertyList("column", MetaColumn.class, propertyCount++);
+    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class, propertyCount++);
     /** Table relations to many */
-    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newPropertyList("relation2m", MetaRelation2Many.class, propertyCount++);
+    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class, propertyCount++);
     /** Is it a model of a database view ? */
     @XmlAttribute
     public static final UjoProperty<MetaTable,Boolean> VIEW = newProperty("view", false, propertyCount++);

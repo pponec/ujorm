@@ -24,35 +24,106 @@ import org.ujoframework.UjoProperty;
  * @see AbstractUjo
  * @author Pavel Ponec
  */
-public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
-    
-    private final String name;
-    private final Class<VALUE> type;
-    private final int index;
+public class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
+
+    /** Property name */
+    private String name;
+    /** Property index */
+    private int index;
+    /** Property type (class) */
+    private Class<VALUE> type;
+    /** Property default value */
     private VALUE defaultValue;
-    
-    /**
-     * Property constructor.
-     * @param name Name of property
-     * @param type Type of property
+    /** Lock the property after initialization */
+    private boolean lock;
+
+
+    /** A property seqeuncer for an index attribute
+     * @see #_nextSequence()
      */
-    public AbstractProperty(String name, Class<VALUE> type) {
-        this(name, type, -1);
+    private static int _sequencer = 0;
+
+    /** Returns a next property index by a synchronized method.
+     * The UJO property indexed by this method may not be in continuous series
+     * however numbers have the <strong>upward direction</strong> always.
+     */
+    protected static final synchronized int _nextSequence() {
+        return _sequencer++;
+    }
+
+
+    /**
+     * Constructor with an property order
+     * @param name
+     * @param type
+     * @param index On order of the property.
+     */
+    protected AbstractProperty(final String name, final Class<VALUE> type, final int index) {
+        init(name, type, null, index, true);
     }
 
     /**
-     * Property constructor.
-     * @param name Name of property
-     * @param type Type of property
-     * @param index Default value is -1
+     * Constructor with an property order
+     * @param name
+     * @param type
+     * @param index On order of the property.
      */
-    public AbstractProperty(String name, Class<VALUE> type, int index) {
-        if (name==null) { throw new IllegalArgumentException("Name must not be null."); }
-        if (type==null) { throw new IllegalArgumentException("Type must not be null."); }
-        
-        this.name  = name;
-        this.type  = type;
-        this.index = index;
+    @SuppressWarnings("unchecked")
+    protected AbstractProperty(final String name, final VALUE value, final int index) {
+        init(name, null, value, index, true);
+    }
+
+    /** Protected constructor */
+    protected AbstractProperty() {
+    }
+
+    /**
+     * Property initialization.
+     * @param name Replace the Name of property if the one is NULL.
+     * @param index Replace index allways, the value -1 invoke a next number from the internal sequencer.
+     * @param type Replace the Type of property if the one is NULL.
+     * @param defaultValue Replace the Optional default value if the one is NULL.
+     * @param lock Lock the property.
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    final protected AbstractProperty<UJO,VALUE> init
+    ( final String name
+    , Class<VALUE> type
+    , final VALUE defaultValue
+    , final int index
+    , final Boolean lock
+    ) {
+        if (this.lock) {
+            throw new IllegalArgumentException("The property is already initialized: " + this);
+        }
+
+        if (defaultValue!=null) {
+             this.defaultValue = defaultValue;
+             if (type==null) {
+                type = (Class) defaultValue.getClass();
+             }
+        }
+        this.index = index==-1 ? _nextSequence() : index ;
+        if (type !=null) { this.type  = type ; }
+        if (name !=null) { this.name  = name ; }
+        if (lock !=null) { this.lock  = lock ; }
+
+        if (this.lock) {
+           checkAttribs();
+        }
+        return this;
+    }
+
+    /** Is the property Locked? */
+    final boolean isLock() {
+        return lock;
+    }
+
+    /** Check properties */
+    protected void checkAttribs() {
+        if (name==null) { throw new IllegalArgumentException("Name must not be null"); }
+        if (type==null) { throw new IllegalArgumentException("Type must not be null"); }
     }
       
     /** Name of Property */
@@ -96,8 +167,10 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
      * An alias for a method getValue(Ujo) .
      * @see #getValue(Ujo)
      */
+    @SuppressWarnings("unchecked")
     final public VALUE of(final UJO ujo) {
-        return getValue(ujo);
+        final Object result = ujo.readValue(this);
+        return (VALUE) result;
     }
     
     /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...). 
@@ -106,7 +179,7 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
     public VALUE getDefault() {
         return defaultValue;
     }
-    
+
     /** Assign a Default value.
      * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current property!
      */
@@ -115,8 +188,8 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
         defaultValue = value;
         return (PROPERTY) this;
     }
-
-    /** Assing the value from the default value. */
+    
+    /** Assing a value from the default value. */
     public void setValueFromDefault(UJO ujo) {
         setValue(ujo, defaultValue);
     }
@@ -184,6 +257,17 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
         return result;
     }
 
+    /** Compare to another ArrayProperty object by a index code. */
+    public int compareTo(final UjoProperty p) {
+        final int result
+        = index < p.getIndex() ? -1
+        : index > p.getIndex() ? +1
+        : 0
+        ;
+        return result;
+    }
+
+
     /** A char from Name */
     public char charAt(int index) {
         return name.charAt(index);
@@ -204,5 +288,54 @@ public abstract class AbstractProperty<UJO extends Ujo,VALUE> implements UjoProp
     public final String toString() {
         return name;
     }
+
+    // --------- STATIC METHODS -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, int index, boolean lock) {
+        return new AbstractProperty<UJO,VALUE>().init(name, type, value, index, lock);
+    }
+
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
+        return new AbstractProperty<UJO,VALUE>().init(name, type, null, index, true);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
+        return newInstance(name, type, -1);
+    }
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
+        @SuppressWarnings("unchecked")
+        Class<VALUE> type = (Class) value.getClass();
+        return new AbstractProperty<UJO, VALUE>().init(name, type, value, index, true);
+    }
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(String name, VALUE value) {
+         return newInstance(name, value, -1);
+    }
+
+
+
+
 
 }

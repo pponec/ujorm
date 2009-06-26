@@ -9,7 +9,7 @@
 
 package org.ujoframework.core.ujos;
 
-import org.ujoframework.implementation.map.MapProperty;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
@@ -18,9 +18,9 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class UjoCSV extends MapUjo{
 
-    public static final MapProperty<UjoCSV, String> P1 = newProperty("P1", String.class);
-    public static final MapProperty<UjoCSV, String> P2 = newProperty("P2", String.class);
-    public static final MapProperty<UjoCSV, String> P3 = newProperty("P3", String.class);
+    public static final UjoProperty<UjoCSV, String> P1 = newProperty("P1", String.class);
+    public static final UjoProperty<UjoCSV, String> P2 = newProperty("P2", String.class);
+    public static final UjoProperty<UjoCSV, String> P3 = newProperty("P3", String.class);
     
     // ---------------------------
     

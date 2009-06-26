@@ -36,7 +36,7 @@ public class MetaPKey extends AbstractMetaModel {
     public static final UjoProperty<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class, propertyCount++);
 
     /** DB columns */
-    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newPropertyList("columns", MetaColumn.class, propertyCount++);
+    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newListProperty("columns", MetaColumn.class, propertyCount++);
 
     /** Database */
     final private MetaDatabase database;

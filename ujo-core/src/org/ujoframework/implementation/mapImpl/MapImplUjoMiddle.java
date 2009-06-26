@@ -29,7 +29,7 @@ import org.ujoframework.extensions.UjoMiddle;
  *   <li>the map implementation is a proxy to an internal Map&lt;String,Object&gt; object</li>
  * </ul>
  * <br>Sample of usage:
- *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapImplUjoMiddle {
+ *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapImplUjoMiddle&lt;Person&gt; {
  *
  *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);

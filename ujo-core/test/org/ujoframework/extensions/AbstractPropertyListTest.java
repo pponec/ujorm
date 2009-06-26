@@ -43,7 +43,6 @@ public class AbstractPropertyListTest extends MyTestCase {
         Person p1 = new Person(1);
         Person px = new Person(2);
         Person p  = null;
-        
         assertEquals(0, Person.PERS.getItemCount(root));
         Person.PERS.addItem(root, p0);
         assertEquals(1, Person.PERS.getItemCount(root));

@@ -51,8 +51,8 @@ public class BeanProperty<UJO extends Ujo,VALUE>
      */
     @SuppressWarnings("unchecked")
     public BeanProperty(String name, VALUE defaultValue, final int index) {
-        this(name, (Class<VALUE>) (Object) defaultValue.getClass(), index);
-        setDefault(defaultValue);
+        super(name, defaultValue, index);
+        beanManager = BeanManager.getInstance(this);
     }
     
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
@@ -87,5 +87,4 @@ public class BeanProperty<UJO extends Ujo,VALUE>
     }
 
 
-    
 }

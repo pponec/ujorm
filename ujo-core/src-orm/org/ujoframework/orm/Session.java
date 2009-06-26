@@ -72,7 +72,7 @@ public class Session {
     Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
-        this.cache = MetaParams.CACHE_WEAK.of(params)
+        this.cache = MetaParams.CACHE_WEAK_MAP.of(params)
             ? new WeakHashMap<CacheKey, OrmUjo>()
             : new HashMap<CacheKey, OrmUjo>()
             ;

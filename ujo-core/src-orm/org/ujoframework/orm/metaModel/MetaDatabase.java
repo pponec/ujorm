@@ -62,7 +62,7 @@ public class MetaDatabase extends AbstractMetaModel {
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
     public static final UjoProperty<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class, propertyCount++);
     /** List of tables */
-    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newPropertyList("table", MetaTable.class, propertyCount++);
+    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class, propertyCount++);
     /** JDBC URL connection */
     public static final UjoProperty<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "", propertyCount++);
     /** JDBC Driver */

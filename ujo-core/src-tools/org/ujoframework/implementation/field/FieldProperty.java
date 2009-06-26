@@ -49,8 +49,8 @@ public class FieldProperty<UJO extends Ujo,VALUE>
      */
     @SuppressWarnings("unchecked")
     public FieldProperty(String name, VALUE defaultValue, int index, ValueAgent<UJO,VALUE> agent) {
-        this(name, (Class<VALUE>) (Object) defaultValue.getClass(), index, agent);
-        setDefault(defaultValue);
+        super(name, defaultValue, index);
+        this.agent = agent;
     }
     
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.

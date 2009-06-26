@@ -22,7 +22,6 @@ import org.ujoframework.core.UjoActionImpl;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.extensions.UjoTextable;
-import org.ujoframework.implementation.map.MapProperty;
 import org.ujoframework.implementation.map.MapUjoExt;
 
 /**
@@ -32,26 +31,26 @@ import org.ujoframework.implementation.map.MapUjoExt;
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
-public class UjoPropertyRow extends MapUjoExt {
+public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
     
     /** Index of property */
-    public static final MapProperty<UjoPropertyRow,Integer> P_INDEX    = new MapProperty("Index" , Integer.class);
+    public static final UjoProperty<UjoPropertyRow,Integer> P_INDEX    = newProperty("Index", Integer.class);
     /** Name of property */
-    public static final MapProperty<UjoPropertyRow,String> P_NAME      = new MapProperty("Name" , String.class);
+    public static final UjoProperty<UjoPropertyRow,String> P_NAME      = newProperty("Name" , String.class);
     /** Type of property */
-    public static final MapProperty<UjoPropertyRow,Class>  P_TYPE      = new MapProperty("Class", Class.class );
+    public static final UjoProperty<UjoPropertyRow,Class>  P_TYPE      = newProperty("Class", Class.class );
     /** Class name without packages */
-    public static final MapProperty<UjoPropertyRow,String> P_TYPENAME  = new MapProperty("Type" , String.class);
+    public static final UjoProperty<UjoPropertyRow,String> P_TYPENAME  = newProperty("Type" , String.class);
     /** Value */
-    public static final MapProperty<UjoPropertyRow,Object> P_VALUE     = new MapProperty("Value", Object.class);
+    public static final UjoProperty<UjoPropertyRow,Object> P_VALUE     = newProperty("Value", Object.class);
     /** Text Value */
-    public static final MapProperty<UjoPropertyRow,String> P_TEXT      = new MapProperty("Text" , String.class);
+    public static final UjoProperty<UjoPropertyRow,String> P_TEXT      = newProperty("Text" , String.class);
     /** Default Value */
-    public static final MapProperty<UjoPropertyRow,Object> P_DEFAULT   = new MapProperty("Default", Object.class);
+    public static final UjoProperty<UjoPropertyRow,Object> P_DEFAULT   = newProperty("Default", Object.class);
     /** A user column can be used in table renderer for any purpose */
-    public static final MapProperty<UjoPropertyRow,Object> P_USER1     = new MapProperty("User1", Object.class);
+    public static final UjoProperty<UjoPropertyRow,Object> P_USER1     = newProperty("User1", Object.class);
     /** A user column can be used in table renderer for any purpose */
-    public static final MapProperty<UjoPropertyRow,Object> P_USER2     = new MapProperty("User2", Object.class);
+    public static final UjoProperty<UjoPropertyRow,Object> P_USER2     = newProperty("User2", Object.class);
     
     final protected Ujo content;
     final protected UjoProperty property;

@@ -10,7 +10,7 @@
 package org.ujoframework.implementation.xmlSpeed;
 
 import java.util.Date;
-import org.ujoframework.implementation.map.MapPropertyList;
+import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.MapUjoImplChild;
 
 /**
@@ -19,7 +19,7 @@ import org.ujoframework.implementation.map.MapUjoImplChild;
  */
 public class MapTree extends MapUjoImplChild {
     
-    public static final MapPropertyList<MapTree, MapTree> PRO_CHILDS = newPropertyList("CHILDS", MapTree.class);
+    public static final ListProperty<MapTree, MapTree> PRO_CHILDS = newListProperty("CHILDS", MapTree.class);
     
     
     public int size() {

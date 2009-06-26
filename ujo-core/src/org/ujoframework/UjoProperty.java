@@ -24,7 +24,7 @@ package org.ujoframework;
  * @author Pavel Ponec
  * @see Ujo
  */
-public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence {
+public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Comparable<UjoProperty>*/ {
     
     /** Returns a name of Property. */
     public String getName();

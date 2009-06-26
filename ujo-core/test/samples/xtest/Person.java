@@ -19,15 +19,16 @@ import java.io.InputStream;
 import java.io.Writer;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ujoframework.Ujo;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.implementation.map.*;
 import org.xml.sax.SAXException;
 public class Person extends MapUjo {
     
-    public static final MapProperty<Person,String>  NAME   = newProperty("Name" , String.class);
-    public static final MapProperty<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
-    public static final MapProperty<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
+    public static final UjoProperty<Person,String>  NAME   = newProperty("Name" , String.class);
+    public static final UjoProperty<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
+    public static final UjoProperty<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
     
     
     public void testExport() throws IOException, ParserConfigurationException, SAXException {

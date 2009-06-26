@@ -19,9 +19,9 @@ import static org.ujoframework.extensions.UjoAction.*;
  */
 public class Person extends MapUjo {
     
-  public static final MapProperty<Person,String>  NAME   = newProperty("Name" , String.class);
-  public static final MapProperty<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
-  public static final MapProperty<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
+  public static final UjoProperty<Person,String>  NAME   = newProperty("Name" , String.class);
+  public static final UjoProperty<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
+  public static final UjoProperty<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
 
     @Override
   public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {

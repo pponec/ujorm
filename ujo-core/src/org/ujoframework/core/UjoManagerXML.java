@@ -26,11 +26,11 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.AbstractProperty;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.extensions.UjoPropertyList;
 import org.ujoframework.extensions.UjoTextable;
-import org.ujoframework.implementation.map.MapProperty;
 import org.xml.sax.SAXException;
 
 /**
@@ -146,7 +146,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         writer.write(xmlHeader!=null ? xmlHeader : XML_HEADER );
         
         @SuppressWarnings("unchecked")
-        MapProperty property = new MapProperty(rootElementName, ujo.getClass());
+        UjoProperty property = AbstractProperty.newInstance(rootElementName, ujo.getClass());
         printProperty(null, property, null, null, ujo, writer, false);
         
     }

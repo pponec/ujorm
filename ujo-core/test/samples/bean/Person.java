@@ -10,15 +10,15 @@
 package samples.bean;
 
 import org.ujoframework.Ujo;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.implementation.map.MapUjo;
-import org.ujoframework.implementation.map.MapProperty;
 
 public class Person extends MapUjo {
     
-    public static final MapProperty<Person, String>  NAME = newProperty("Name", String.class);
-    public static final MapProperty<Person, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final MapProperty<Person, Integer> AGE  = newProperty("Age" , Integer.class);
+    public static final UjoProperty<Person, String>  NAME = newProperty("Name", String.class);
+    public static final UjoProperty<Person, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final UjoProperty<Person, Integer> AGE  = newProperty("Age" , Integer.class);
 
     // ---- A STANDARD BEAN IMPLEMENTATION ----
     

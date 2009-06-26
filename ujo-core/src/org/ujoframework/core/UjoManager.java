@@ -135,7 +135,11 @@ public class UjoManager implements Comparator<UjoProperty> {
                 ){
                     UjoProperty ujoProp = (UjoProperty) field.get(null);
                     if (ujoProp.isDirect()) {
-                       propertyList.add( ujoProp);                     
+                       propertyList.add(ujoProp);
+                       
+                        if (ujoProp.getName()==null && ujoProp instanceof AbstractProperty) {
+                            PropertyModifier.setName(field.getName(), (AbstractProperty)ujoProp);
+                        }
                     }
                     
                     // set the transient cache:
@@ -163,6 +167,14 @@ public class UjoManager implements Comparator<UjoProperty> {
                 revertArray(result);
             }
             Arrays.sort(result, this);
+
+            // Asssign new indexes:
+            for (int i=0; i<result.length; i++) {
+                UjoProperty p = result[i];
+                if (p.getIndex()!=i && p instanceof AbstractProperty) {
+                    PropertyModifier.setIndex(i, (AbstractProperty)p);
+                }
+            }
         }        
         return result;
     }

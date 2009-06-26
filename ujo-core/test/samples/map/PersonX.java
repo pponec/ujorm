@@ -10,14 +10,14 @@
 package samples.map;
 
 import java.util.Date;
-import org.ujoframework.implementation.map.MapProperty;
+import org.ujoframework.UjoProperty;
 
 public class PersonX extends Person {
     
-    public static final MapProperty<PersonX,Date>    BIRTH  = newProperty("Birth" , Date.class);
-    public static final MapProperty<PersonX,String>  CITY   = newProperty("City"  , String.class);
-    public static final MapProperty<PersonX,String>  STREET = newProperty("Street", String.class);
-    public static final MapProperty<PersonX,Integer> ZIP    = newProperty("ZIP"   , Integer.class);
+    public static final UjoProperty<PersonX,Date>    BIRTH  = newProperty("Birth" , Date.class);
+    public static final UjoProperty<PersonX,String>  CITY   = newProperty("City"  , String.class);
+    public static final UjoProperty<PersonX,String>  STREET = newProperty("Street", String.class);
+    public static final UjoProperty<PersonX,Integer> ZIP    = newProperty("ZIP"   , Integer.class);
     
   /**
      * Creates a new instance of UsePerson

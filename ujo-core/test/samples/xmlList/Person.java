@@ -9,8 +9,10 @@
 
 package samples.xmlList;
 
+import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.map.*;
 public class Person extends MapUjo { 
-  public static final MapProperty    <Person, String> NAME = newProperty("Name", String.class);
-  public static final MapPropertyList<Person, Person> CHILDS = newPropertyList("Child", Person.class);
+  public static final UjoProperty    <Person, String> NAME = newProperty("Name", String.class);
+  public static final ListProperty<Person, Person> CHILDS = newListProperty("Child", Person.class);
 }
