@@ -22,8 +22,8 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.AbstractProperty;
-import org.ujoframework.extensions.AbstractPropertyList;
+import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
 
@@ -190,7 +190,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
      * @hidden
      */
     public static <UJO extends MapImplUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return AbstractProperty.newInstance(name, type);
+        return UjoPropertyImpl.newInstance(name, type);
     }
 
     /** A Property Factory
@@ -198,14 +198,14 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
      * @hidden
      */
     protected static <UJO extends MapImplUjo, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return AbstractProperty.newInstance(name, value);
+        return UjoPropertyImpl.newInstance(name, value);
     }
 
-    /** A PropertyList Factory
+    /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
     protected static <UJO extends MapImplUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
-        return AbstractPropertyList.newListProperty(name, type);
+        return ListPropertyImpl.newListProperty(name, type);
     }
 }

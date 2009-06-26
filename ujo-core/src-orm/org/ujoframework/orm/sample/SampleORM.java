@@ -56,11 +56,7 @@ public class SampleORM {
             OrmHandler.getInstance().config(config, true);
         }
 
-        if (createDb) {
-            OrmHandler.getInstance().createDatabase(Database.class);
-        } else {
-            OrmHandler.getInstance().loadDatabase(Database.class);
-        }
+        OrmHandler.getInstance().loadDatabase(Database.class);
     }
 
     /** Create database and using INSERT */

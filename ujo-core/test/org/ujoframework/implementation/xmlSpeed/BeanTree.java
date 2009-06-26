@@ -19,7 +19,7 @@ import org.ujoframework.implementation.bean.*;
  */
 public class BeanTree extends BeanUjoImplChild {
     
-    public static final BeanPropertyList<BeanTree, BeanTree> PRO_CHILDS = newPropertyList("Child", BeanTree.class);
+    public static final BeanPropertyList<BeanTree, BeanTree> PRO_CHILDS = newListProperty("Child", BeanTree.class);
     
     
     private List<PojoTree> childs;

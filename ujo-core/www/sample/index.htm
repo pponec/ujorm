@@ -49,7 +49,7 @@ Getting Started</h1>
   <strong>Language</strong>
   <ul class="ulm">
      <li><a href="index.htm">English</a></li>
-     <li><a href="index.htm">Èeština</a></li>
+     <li><a href="index.htm">ï¿½eï¿½tina</a></li>
   </ul>  -->
   <strong>Tutorials</strong>
   <ul class="ulm">
@@ -157,7 +157,7 @@ The Company object contains two properties only. Note how a company name is assi
 <span class="java-block-comment">/** Company BO */</span>
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Company <span class="java-keywords">extends</span> org.ujoframework.implementation.map.MapUjoExt&lt;Company&gt; {<br />
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Company,String&gt;     NAME = <span class="java-layer-method">newProperty</span>   (<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ListProperty&lt;Company,Person&gt; PERSONS = <span class="java-layer-method">newPropertyList</span>(<span class="java-string-literal">&quot;Person&quot;</span>, Person.<span class="java-keywords">class</span>);<br />
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ListProperty&lt;Company,Person&gt; PERSONS = <span class="java-layer-method">newListProperty</span>(<span class="java-string-literal">&quot;Person&quot;</span>, Person.<span class="java-keywords">class</span>);<br />
   <span class="java-keywords">public</span> <span class="java-layer-method">Company</span>() {
     <span class="java-layer-method">set</span>(NAME, <span class="java-string-literal">&quot;My Company&quot;</span>); <span class="java-block-comment">// assign a default company name</span>
   }

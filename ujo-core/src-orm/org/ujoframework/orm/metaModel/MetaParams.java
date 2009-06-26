@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.ao.CachePolicy;
+import org.ujoframework.orm.ao.Orm2ddlPolicy;
 
 /**
  * A logical database description.
@@ -35,8 +36,8 @@ public class MetaParams extends AbstractMetaModel {
 
     /** Enable / disable a session cache for the business objects. */
     public static final UjoProperty<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE, propertyCount++);
-    /** Is the enabled cache implemented by WeakHashMap? The false value implements an HashMap instance. Default value is TRUE. */
-    public static final UjoProperty<MetaParams,Boolean> CACHE_WEAK = newProperty("cacheWeak", true, propertyCount++);
+    /** The parameters enables the the cache implementation by WeakHashMap. The false value use a HashMap implementation. Default value is TRUE. */
+    public static final UjoProperty<MetaParams,Boolean> CACHE_WEAK_MAP = newProperty("cacheWeakMap", true, propertyCount++);
     /** Special prameter for an automatically assembled table alias prefix. */
     public static final UjoProperty<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "", propertyCount++);
     /** Special prameter for an automatically assembled table alias prefix. */
@@ -46,6 +47,10 @@ public class MetaParams extends AbstractMetaModel {
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 64, the smallest possible value is 1. */
     public static final UjoProperty<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 64, propertyCount++);
+    /** A policy to defining the database structure by a DDL. */
+    public static final UjoProperty<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_DDL, propertyCount++);
+
+
 
     @Override
     public void writeValue(UjoProperty property, Object value) {
@@ -61,7 +66,6 @@ public class MetaParams extends AbstractMetaModel {
 
         super.writeValue(property, value);
     }
-
 
 
 

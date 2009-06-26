@@ -30,6 +30,7 @@ import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaRoot;
 import org.ujoframework.orm.annot.Db;
+import org.ujoframework.orm.ao.Orm2ddlPolicy;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.metaModel.MetaRelation2Many;
@@ -42,8 +43,9 @@ import org.ujoframework.orm.metaModel.MetaTable;
  */
 public class OrmHandler {
 
-    public static final Logger LOGGER = Logger.getLogger(OrmHandler.class.getName());
-
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(OrmHandler.class.getName());
+    /** Default handler */
     private static OrmHandler handler = new OrmHandler();
 
     /** List of databases */
@@ -146,7 +148,7 @@ public class OrmHandler {
     }
 
     /** LoadInternal a database model from paramater */
-    public <UJO extends OrmUjo> MetaDatabase loadDatabase(Class<? extends UJO> databaseModel) {
+    private <UJO extends OrmUjo> MetaDatabase loadDatabaseInternal(Class<UJO> databaseModel) {
 
         // Load a configuration parameters:
         Db annotDb = databaseModel.getAnnotation(Db.class);
@@ -166,10 +168,15 @@ public class OrmHandler {
     }
 
     /** LoadInternal a metada and create database */
-    public <UJO extends OrmUjo> MetaDatabase createDatabase(Class<UJO> databaseModel) {
+    public <UJO extends OrmUjo> MetaDatabase loadDatabase(Class<UJO> databaseModel) {
 
-        MetaDatabase dbModel = loadDatabase(databaseModel);
-        dbModel.create();
+        MetaDatabase dbModel = loadDatabaseInternal(databaseModel);
+
+        switch (MetaParams.ORM2DLL_POLICY.of(session.getParameters())) {
+            case CREATE_DDL:
+                dbModel.create();
+                break;
+        }
 
         return dbModel;
     }

@@ -94,7 +94,7 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
         return new BeanProperty<UJO, VALUE>(name, value, -1);
     }
 
-    /** A PropertyList Factory for a <strong>BeanUjo</strong> object
+    /** A ListProperty Factory for a <strong>BeanUjo</strong> object
      * @hidden     
      */
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {

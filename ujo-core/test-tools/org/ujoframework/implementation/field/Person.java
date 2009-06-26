@@ -30,7 +30,7 @@ public class Person extends FieldUjo {
     });    
     
     public static FieldPropertyList<Person,Person> CHILDS 
-        = newPropertyList("CHILDS", Person.class
+        = newListProperty("CHILDS", Person.class
         , new ValueAgent<Person,List<Person>>() {
         public void writeValue(Person ujo, List<Person> value) {
             ujo.childs = value; 
