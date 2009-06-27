@@ -18,13 +18,14 @@ import org.ujoframework.UjoProperty;
  * @author Pavel Ponec
  */
 public class QuickUjoChildTest extends MyTestCase {
+    private final static Class CLASS = QuickUjoChildTest.class;
     
     public QuickUjoChildTest(String testName) {
         super(testName);
     }
     
     public static TestSuite suite() {
-        return new TestSuite(QuickUjoChildTest.class);
+        return new TestSuite(CLASS);
     }
     
     @Override
@@ -38,7 +39,6 @@ public class QuickUjoChildTest extends MyTestCase {
     /**
      * Test of readValue method, of class org.ujoframework.mapImlp.AUnifiedDataObject.
      */
-    @SuppressWarnings("static-access")
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
         
@@ -50,27 +50,27 @@ public class QuickUjoChildTest extends MyTestCase {
         
         QuickUjoImplChild ujb = new QuickUjoImplChild();
         
-        ujb.PRO_P0.setValue(ujb, o0);
-        ujb.PRO_P1.setValue(ujb, o1);
-        ujb.PRO_P2.setValue(ujb, o2);
-        ujb.PRO_P3.setValue(ujb, o3);
-        ujb.PRO_P4.setValue(ujb, o4);
-        ujb.PRO_P5.setValue(ujb, o0);
-        ujb.PRO_P6.setValue(ujb, o1);
-        ujb.PRO_P7.setValue(ujb, o2);
-        ujb.PRO_P8.setValue(ujb, o3);
-        ujb.PRO_P9.setValue(ujb, o4);
+        QuickUjoImplChild.PRO_P0.setValue(ujb, o0);
+        QuickUjoImplChild.PRO_P1.setValue(ujb, o1);
+        QuickUjoImplChild.PRO_P2.setValue(ujb, o2);
+        QuickUjoImplChild.PRO_P3.setValue(ujb, o3);
+        QuickUjoImplChild.PRO_P4.setValue(ujb, o4);
+        QuickUjoImplChild.PRO_P5.setValue(ujb, o0);
+        QuickUjoImplChild.PRO_P6.setValue(ujb, o1);
+        QuickUjoImplChild.PRO_P7.setValue(ujb, o2);
+        QuickUjoImplChild.PRO_P8.setValue(ujb, o3);
+        QuickUjoImplChild.PRO_P9.setValue(ujb, o4);
         
-        assertEquals(o0, ujb.PRO_P0.of(ujb));
-        assertEquals(o1, ujb.PRO_P1.of(ujb));
-        assertEquals(o2, ujb.PRO_P2.of(ujb));
-        assertEquals(o3, ujb.PRO_P3.of(ujb));
-        assertEquals(o4, ujb.PRO_P4.of(ujb));
-        assertEquals(o0, ujb.PRO_P5.of(ujb));
-        assertEquals(o1, ujb.PRO_P6.of(ujb));
-        assertEquals(o2, ujb.PRO_P7.of(ujb));
-        assertEquals(o3, ujb.PRO_P8.of(ujb));
-        assertEquals(o4, ujb.PRO_P9.of(ujb));
+        assertEquals(o0, QuickUjoImplChild.PRO_P0.of(ujb));
+        assertEquals(o1, QuickUjoImplChild.PRO_P1.of(ujb));
+        assertEquals(o2, QuickUjoImplChild.PRO_P2.of(ujb));
+        assertEquals(o3, QuickUjoImplChild.PRO_P3.of(ujb));
+        assertEquals(o4, QuickUjoImplChild.PRO_P4.of(ujb));
+        assertEquals(o0, QuickUjoImplChild.PRO_P5.of(ujb));
+        assertEquals(o1, QuickUjoImplChild.PRO_P6.of(ujb));
+        assertEquals(o2, QuickUjoImplChild.PRO_P7.of(ujb));
+        assertEquals(o3, QuickUjoImplChild.PRO_P8.of(ujb));
+        assertEquals(o4, QuickUjoImplChild.PRO_P9.of(ujb));
     }
     
     public void testSpeedTime() throws Throwable {
@@ -89,27 +89,27 @@ public class QuickUjoChildTest extends MyTestCase {
         for (int i=getTimeLoopCount()-1; i>=0; i--) {
             QuickUjoImplChild ujb = new QuickUjoImplChild();
             
-            ujb.PRO_P0.setValue(ujb, o0);
-            ujb.PRO_P1.setValue(ujb, o1);
-            ujb.PRO_P2.setValue(ujb, o2);
-            ujb.PRO_P3.setValue(ujb, o3);
-            ujb.PRO_P4.setValue(ujb, o4);
-            ujb.PRO_P5.setValue(ujb, o0);
-            ujb.PRO_P6.setValue(ujb, o1);
-            ujb.PRO_P7.setValue(ujb, o2);
-            ujb.PRO_P8.setValue(ujb, o3);
-            ujb.PRO_P9.setValue(ujb, o4);
+            QuickUjoImplChild.PRO_P0.setValue(ujb, o0);
+            QuickUjoImplChild.PRO_P1.setValue(ujb, o1);
+            QuickUjoImplChild.PRO_P2.setValue(ujb, o2);
+            QuickUjoImplChild.PRO_P3.setValue(ujb, o3);
+            QuickUjoImplChild.PRO_P4.setValue(ujb, o4);
+            QuickUjoImplChild.PRO_P5.setValue(ujb, o0);
+            QuickUjoImplChild.PRO_P6.setValue(ujb, o1);
+            QuickUjoImplChild.PRO_P7.setValue(ujb, o2);
+            QuickUjoImplChild.PRO_P8.setValue(ujb, o3);
+            QuickUjoImplChild.PRO_P9.setValue(ujb, o4);
             
-            assertEquals(o0, ujb.PRO_P0.of(ujb));
-            assertEquals(o1, ujb.PRO_P1.of(ujb));
-            assertEquals(o2, ujb.PRO_P2.of(ujb));
-            assertEquals(o3, ujb.PRO_P3.of(ujb));
-            assertEquals(o4, ujb.PRO_P4.of(ujb));
-            assertEquals(o0, ujb.PRO_P5.of(ujb));
-            assertEquals(o1, ujb.PRO_P6.of(ujb));
-            assertEquals(o2, ujb.PRO_P7.of(ujb));
-            assertEquals(o3, ujb.PRO_P8.of(ujb));
-            assertEquals(o4, ujb.PRO_P9.of(ujb));
+            assertEquals(o0, QuickUjoImplChild.PRO_P0.of(ujb));
+            assertEquals(o1, QuickUjoImplChild.PRO_P1.of(ujb));
+            assertEquals(o2, QuickUjoImplChild.PRO_P2.of(ujb));
+            assertEquals(o3, QuickUjoImplChild.PRO_P3.of(ujb));
+            assertEquals(o4, QuickUjoImplChild.PRO_P4.of(ujb));
+            assertEquals(o0, QuickUjoImplChild.PRO_P5.of(ujb));
+            assertEquals(o1, QuickUjoImplChild.PRO_P6.of(ujb));
+            assertEquals(o2, QuickUjoImplChild.PRO_P7.of(ujb));
+            assertEquals(o3, QuickUjoImplChild.PRO_P8.of(ujb));
+            assertEquals(o4, QuickUjoImplChild.PRO_P9.of(ujb));
             
         }
         
@@ -129,10 +129,10 @@ public class QuickUjoChildTest extends MyTestCase {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
         QuickUjoImplChild  ujb2 = new QuickUjoImplChild();
 
-        assertEquals( "PRO_P0", ujb1.PRO_P0.getName());
-        assertEquals( "PRO_P4", ujb2.PRO_P4.getName());
-        assertEquals( "PRO_P5", ujb2.PRO_P5.getName());
-        assertEquals( "PRO_P6", ujb2.PRO_P6.getName());
+        assertEquals( "PRO_P0", QuickUjoImplChild.PRO_P0.getName());
+        assertEquals( "PRO_P4", QuickUjoImplChild.PRO_P4.getName());
+        assertEquals( "PRO_P5", QuickUjoImplChild.PRO_P5.getName());
+        assertEquals( "PRO_P6", QuickUjoImplChild.PRO_P6.getName());
     }
 
 
@@ -142,11 +142,11 @@ public class QuickUjoChildTest extends MyTestCase {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
         UjoProperty[] props = ujb1.readProperties();
         
-        assertEquals(ujb1.PRO_P0, props[0]);
-        assertEquals(ujb1.PRO_P1, props[1]);
-        assertEquals(ujb1.PRO_P2, props[2]);
-        assertEquals(ujb1.PRO_P3, props[3]);
-        assertEquals(ujb1.PRO_P4, props[4]);
+        assertEquals(QuickUjoImplChild.PRO_P0, props[0]);
+        assertEquals(QuickUjoImplChild.PRO_P1, props[1]);
+        assertEquals(QuickUjoImplChild.PRO_P2, props[2]);
+        assertEquals(QuickUjoImplChild.PRO_P3, props[3]);
+        assertEquals(QuickUjoImplChild.PRO_P4, props[4]);
     }
     
     public static void main(java.lang.String[] argList) {

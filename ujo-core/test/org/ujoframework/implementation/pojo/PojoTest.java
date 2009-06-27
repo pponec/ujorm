@@ -26,10 +26,12 @@ public class PojoTest extends MyTestCase {
         TestSuite suite = new TestSuite(PojoTest.class);
         return suite;
     }
-    
+
+    @Override
     protected void setUp() throws Exception {
     }
     
+    @Override
     protected void tearDown() throws Exception {
     }
     

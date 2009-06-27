@@ -17,14 +17,15 @@ import org.ujoframework.UjoProperty;
  * TextCase
  * @author Pavel Ponec
  */
-public class QuickUjoTest extends MyTestCase {
+public class QuickUjoBaseTest extends MyTestCase {
+    private static final Class CLASS = QuickUjoBaseTest.class;
     
-    public QuickUjoTest(String testName) {
+    public QuickUjoBaseTest(String testName) {
         super(testName);
     }
     
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(QuickUjoTest.class);
+        TestSuite suite = new TestSuite(CLASS);
         return suite;
     }
     
@@ -50,17 +51,17 @@ public class QuickUjoTest extends MyTestCase {
         
         QuickUjoImpl ujb = new QuickUjoImpl();
         
-        ujb.PRO_P0.setValue(ujb, o0);
-        ujb.PRO_P1.setValue(ujb, o1);
-        ujb.PRO_P2.setValue(ujb, o2);
-        ujb.PRO_P3.setValue(ujb, o3);
-        ujb.PRO_P4.setValue(ujb, o4);
+        QuickUjoImpl.PRO_P0.setValue(ujb, o0);
+        QuickUjoImpl.PRO_P1.setValue(ujb, o1);
+        QuickUjoImpl.PRO_P2.setValue(ujb, o2);
+        QuickUjoImpl.PRO_P3.setValue(ujb, o3);
+        QuickUjoImpl.PRO_P4.setValue(ujb, o4);
         
-        assertEquals(o0, ujb.PRO_P0.of(ujb));
-        assertEquals(o1, ujb.PRO_P1.of(ujb));
-        assertEquals(o2, ujb.PRO_P2.of(ujb));
-        assertEquals(o3, ujb.PRO_P3.of(ujb));
-        assertEquals(o4, ujb.PRO_P4.of(ujb));
+        assertEquals(o0, QuickUjoImpl.PRO_P0.of(ujb));
+        assertEquals(o1, QuickUjoImpl.PRO_P1.of(ujb));
+        assertEquals(o2, QuickUjoImpl.PRO_P2.of(ujb));
+        assertEquals(o3, QuickUjoImpl.PRO_P3.of(ujb));
+        assertEquals(o4, QuickUjoImpl.PRO_P4.of(ujb));
     }
     
     public void testSpeedTime() throws Throwable {
@@ -154,11 +155,11 @@ public class QuickUjoTest extends MyTestCase {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
         UjoProperty[] props = ujb1.readProperties();
         
-        assertEquals(ujb1.PRO_P0, props[0]);
-        assertEquals(ujb1.PRO_P1, props[1]);
-        assertEquals(ujb1.PRO_P2, props[2]);
-        assertEquals(ujb1.PRO_P3, props[3]);
-        assertEquals(ujb1.PRO_P4, props[4]);
+        assertEquals(QuickUjoImpl.PRO_P0, props[0]);
+        assertEquals(QuickUjoImpl.PRO_P1, props[1]);
+        assertEquals(QuickUjoImpl.PRO_P2, props[2]);
+        assertEquals(QuickUjoImpl.PRO_P3, props[3]);
+        assertEquals(QuickUjoImpl.PRO_P4, props[4]);
     }
     
     

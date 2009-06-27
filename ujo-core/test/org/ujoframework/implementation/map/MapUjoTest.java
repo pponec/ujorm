@@ -40,7 +40,6 @@ public class MapUjoTest extends MyTestCase {
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
-        Object result;
         
         callGC();
         long time1 = System.currentTimeMillis();
@@ -84,7 +83,6 @@ public class MapUjoTest extends MyTestCase {
         String  o2 ="TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
-        Object result;
         
         callGC();
         long time1 = System.currentTimeMillis();

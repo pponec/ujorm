@@ -11,7 +11,6 @@ package org.ujoframework.implementation.array;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 
 /**
  * An UnifiedDataObject Imlpementation
