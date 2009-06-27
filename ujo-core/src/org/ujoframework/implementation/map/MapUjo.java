@@ -17,12 +17,10 @@
 package org.ujoframework.implementation.map;
 
 import java.util.HashMap;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjo;
-import org.ujoframework.extensions.ListProperty;
 
 /**
  * This is a simple abstract implementation of <code>Ujo</code>.<br>
@@ -94,31 +92,31 @@ public abstract class MapUjo extends AbstractUjo {
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends MapUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return UjoPropertyImpl.newInstance(name, type);
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
+        return Property.newInstance(name, type);
     }
 
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapUjo, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return UjoPropertyImpl.newInstance(name, value);
+    protected static <UJO extends MapUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
+        return Property.newInstance(name, value);
     }
     
     /** Returns a new instance of property where the default value is null.
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends MapUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(UjoProperty p, int index) {
-        return UjoPropertyImpl.newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(UjoProperty p, int index) {
+        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
     /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
+    protected static <UJO extends MapUjo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
         return ListPropertyImpl.newListProperty(name, type);
     }
 
@@ -127,7 +125,7 @@ public abstract class MapUjo extends AbstractUjo {
      * @deprecated Use newListProperty(...) instead of.
      * @hidden
      */
-    protected static final <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
+    protected static final <UJO extends MapUjo, ITEM> ListPropertyImpl<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
         return ListPropertyImpl.newListProperty(name, type);
     }
 

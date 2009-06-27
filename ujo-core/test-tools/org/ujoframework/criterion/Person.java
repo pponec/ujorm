@@ -4,9 +4,9 @@
  */
 package org.ujoframework.criterion;
 
-import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapUjoExt;
 import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.extensions.Property;
 
 /**
  *
@@ -14,10 +14,10 @@ import org.ujoframework.extensions.PathProperty;
  */
 public class Person extends MapUjoExt<Person> {
 
-    public static final UjoProperty<Person, String> NAME = newProperty("Name", String.class);
-    public static final UjoProperty<Person, Boolean> MALE = newProperty("Male", false);
-    public static final UjoProperty<Person, Double> CASH = newProperty("Cash", 0d);
-    public static final UjoProperty<Person, Person> MOTHER = newProperty("Mother", Person.class);
+    public static final Property<Person, String> NAME = newProperty("Name", String.class);
+    public static final Property<Person, Boolean> MALE = newProperty("Male", false);
+    public static final Property<Person, Double> CASH = newProperty("Cash", 0d);
+    public static final Property<Person, Person> MOTHER = newProperty("Mother", Person.class);
 
     public void init() {
         set(NAME, "Jack");

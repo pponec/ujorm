@@ -14,7 +14,7 @@ public class PropertyModifier {
 
     /** Write name into property if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setName(String name, UjoPropertyImpl property) {
+    public static void setName(String name, Property property) {
         boolean lock = property.isLock();
         if (!lock) {
             int index = property.getIndex();
@@ -24,7 +24,7 @@ public class PropertyModifier {
 
     /** Set the new index and lock the property if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setIndex(int anIndex, UjoPropertyImpl property) {
+    public static void setIndex(int anIndex, Property property) {
         boolean lock = property.isLock();
         int index = property.getIndex();
         if (!lock && index!=anIndex) {

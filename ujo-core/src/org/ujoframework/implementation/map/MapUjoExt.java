@@ -17,7 +17,7 @@ package org.ujoframework.implementation.map;
 
 import java.util.HashMap;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjoExt;
 import org.ujoframework.extensions.ListProperty;
@@ -94,23 +94,23 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends MapUjoExt,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return UjoPropertyImpl.newInstance(name, type);
+    public static <UJO extends MapUjoExt,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
+        return Property.newInstance(name, type);
     }
 
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapUjoExt, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return UjoPropertyImpl.newInstance(name, value);
+    protected static <UJO extends MapUjoExt, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
+        return Property.newInstance(name, value);
     }
 
     /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapUjoExt, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
+    protected static <UJO extends MapUjoExt, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
         return ListPropertyImpl.newListProperty(name, type);
     }
 
@@ -119,7 +119,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * @deprecated Use newListProperty(...) instead of.
      * @hidden
      */
-    protected static final <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
+    protected static final <UJO extends MapUjo, ITEM> ListPropertyImpl<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
         return ListPropertyImpl.newListProperty(name, type);
     }
 

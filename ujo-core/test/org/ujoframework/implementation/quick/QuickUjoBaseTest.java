@@ -7,7 +7,6 @@
 
 package org.ujoframework.implementation.quick;
 
-
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;

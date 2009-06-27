@@ -9,7 +9,7 @@
 
 package org.ujoframework.implementation.xml.test2;
 
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 
 
@@ -19,7 +19,7 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class TXmlUjoItem extends MapUjo  {
     
-    public static final UjoProperty<TXmlUjoItem,Integer> PRO_P1 = newProperty("P1", Integer.class);
-    public static final UjoProperty<TXmlUjoItem,Integer> PRO_P2 = newProperty("P2", Integer.class);
+    public static final Property<TXmlUjoItem,Integer> PRO_P1 = newProperty("P1", Integer.class);
+    public static final Property<TXmlUjoItem,Integer> PRO_P2 = newProperty("P2", Integer.class);
     
 }

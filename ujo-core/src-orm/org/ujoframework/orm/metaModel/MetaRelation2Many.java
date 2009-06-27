@@ -22,6 +22,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.annot.Column;
@@ -35,18 +36,18 @@ public class MetaRelation2Many extends AbstractMetaModel {
 
     /** The meta-model ID. */
     @XmlAttribute
-    public static final UjoProperty<MetaRelation2Many,String> ID = newProperty("id", "");
+    public static final Property<MetaRelation2Many,String> ID = newProperty("id", "");
     /** The database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
-    public static final UjoProperty<MetaRelation2Many,String> NAME = newProperty("name", "");
+    public static final Property<MetaRelation2Many,String> NAME = newProperty("name", "");
     /** Table property */
     @Transient
-    public static final UjoProperty<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
+    public static final Property<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
     /** DB table */
     @Transient
-    public static final UjoProperty<MetaRelation2Many,MetaTable> TABLE = newProperty("table", MetaTable.class);
+    public static final Property<MetaRelation2Many,MetaTable> TABLE = newProperty("table", MetaTable.class);
     /** The property initialization */
     static{init(CLASS);}
 

@@ -10,7 +10,7 @@
 package org.ujoframework.implementation.quick;
 
 import java.util.Date;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -18,11 +18,11 @@ import org.ujoframework.UjoProperty;
  */
 public class QuickUjoImpl extends QuickUjoMid<QuickUjoImpl> {
     
-    public static final UjoProperty<QuickUjoImpl,Long>    PRO_P0 = newProperty(Long.class);
-    public static final UjoProperty<QuickUjoImpl,Integer> PRO_P1 = newProperty(Integer.class);
-    public static final UjoProperty<QuickUjoImpl,String>  PRO_P2 = newProperty(String.class);
-    public static final UjoProperty<QuickUjoImpl,Date>    PRO_P3 = newProperty(Date.class);
-    public static final UjoProperty<QuickUjoImpl,Float>   PRO_P4 = newProperty(Float.class);
+    public static final Property<QuickUjoImpl,Long>    PRO_P0 = newProperty(Long.class);
+    public static final Property<QuickUjoImpl,Integer> PRO_P1 = newProperty(Integer.class);
+    public static final Property<QuickUjoImpl,String>  PRO_P2 = newProperty(String.class);
+    public static final Property<QuickUjoImpl,Date>    PRO_P3 = newProperty(Date.class);
+    public static final Property<QuickUjoImpl,Float>   PRO_P4 = newProperty(Float.class);
 
 
     // --- Mandatory initializaton ---

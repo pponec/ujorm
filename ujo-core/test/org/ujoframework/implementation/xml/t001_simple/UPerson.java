@@ -10,7 +10,7 @@
 package org.ujoframework.implementation.xml.t001_simple;
 
 import java.util.Date;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 
 
@@ -20,7 +20,7 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class UPerson extends MapUjo  {
 
-    public static final UjoProperty<UPerson,String>  NAME = newProperty("Name", String.class );
-    public static final UjoProperty<UPerson,Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final UjoProperty<UPerson,Date>   BIRTH = newProperty("Birth", Date.class  );
+    public static final Property<UPerson,String>  NAME = newProperty("Name", String.class );
+    public static final Property<UPerson,Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final Property<UPerson,Date>   BIRTH = newProperty("Birth", Date.class  );
 }

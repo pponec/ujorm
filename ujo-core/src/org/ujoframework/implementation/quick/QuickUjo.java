@@ -18,7 +18,7 @@ package org.ujoframework.implementation.quick;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
@@ -43,9 +43,9 @@ import org.ujoframework.extensions.ListProperty;
  *    }
  * }</pre>
  * 
- * @see UjoPropertyImpl
+ * @see Property
  * @author Pavel Ponec
- * @composed 1 - * UjoPropertyImpl
+ * @composed 1 - * Property
  */
 public abstract class QuickUjo extends AbstractUjo {
        
@@ -63,12 +63,12 @@ public abstract class QuickUjo extends AbstractUjo {
     }
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * <a href="UjoPropertyImpl.html#setValue(UJO,%20VALUE)">UjoPropertyImpl.setValue(Ujo,Object)</a>
+     * <a href="Property.html#setValue(UJO,%20VALUE)">Property.setValue(Ujo,Object)</a>
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
-     * @see UjoPropertyImpl#setValue(Ujo,Object)
+     * @see Property#setValue(Ujo,Object)
      */
 
     public void writeValue(final UjoProperty property, final Object value) {
@@ -78,12 +78,12 @@ public abstract class QuickUjo extends AbstractUjo {
     
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * <a href="UjoPropertyImpl.html#getValue(UJO)">UjoPropertyImpl.getValue(Ujo)</a>
+     * <a href="Property.html#getValue(UJO)">Property.getValue(Ujo)</a>
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
-     * @see UjoPropertyImpl#getValue(Ujo)
+     * @see Property#getValue(Ujo)
      */    
     public Object readValue(final UjoProperty property) {
         Object result = data[property.getIndex()];
@@ -96,14 +96,14 @@ public abstract class QuickUjo extends AbstractUjo {
     /** A Property Factory creates new property and assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newProperty
+    protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty
     ( String name
     , Class<VALUE> type
     , VALUE defaultValue
     , int index
     , boolean lock
     ) {
-        return UjoPropertyImpl.newInstance(name, type, defaultValue, index, lock);
+        return Property.newInstance(name, type, defaultValue, index, lock);
     }
 
     
@@ -111,7 +111,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
-    protected static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newProperty
+    protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty
     ( String name
     , Class<VALUE> type
     ) {
@@ -122,7 +122,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newProperty
+    protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty
     ( String name
     , VALUE value
     ) {
@@ -133,7 +133,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
-    protected static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newProperty
+    protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty
     ( Class<VALUE> type
     ) {
         return newProperty(null, type, null, -1, false);
@@ -143,7 +143,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
-    protected static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newProperty
+    protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty
     ( VALUE value
     ) {
         return newProperty(null, null, value, -1, false);
@@ -154,8 +154,8 @@ public abstract class QuickUjo extends AbstractUjo {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends QuickUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(UjoProperty p) {
-        return UjoPropertyImpl.newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+    public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newProperty(UjoProperty p) {
+        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
 
@@ -164,7 +164,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    protected static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
     ( String name
     , Class<ITEM> itemType
     ) {

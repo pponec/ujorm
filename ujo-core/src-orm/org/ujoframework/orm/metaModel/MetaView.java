@@ -19,6 +19,7 @@ package org.ujoframework.orm.metaModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.AbstractMetaModel;
 
 /**
@@ -32,12 +33,12 @@ public class MetaView  extends AbstractMetaModel {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(MetaView.class.getName());
 
-    public static final UjoProperty<MetaView,String> SELECT = newProperty("SELECT "   , "");
-    public static final UjoProperty<MetaView,String> FROM   = newProperty(" FROM "    , "");
-    public static final UjoProperty<MetaView,String> WHERE  = newProperty(" WHERE "   , "");
-    public static final UjoProperty<MetaView,String> GROUP  = newProperty(" GROUP BY ", "");
-    public static final UjoProperty<MetaView,String> ORDER  = newProperty(" ORDER BY ", "");
-    public static final UjoProperty<MetaView,String> LIMIT  = newProperty(" LIMIT "   , "");
+    public static final Property<MetaView,String> SELECT = newProperty("SELECT "   , "");
+    public static final Property<MetaView,String> FROM   = newProperty(" FROM "    , "");
+    public static final Property<MetaView,String> WHERE  = newProperty(" WHERE "   , "");
+    public static final Property<MetaView,String> GROUP  = newProperty(" GROUP BY ", "");
+    public static final Property<MetaView,String> ORDER  = newProperty(" ORDER BY ", "");
+    public static final Property<MetaView,String> LIMIT  = newProperty(" LIMIT "   , "");
     /** The property initialization */
     static{init(CLASS);}
 

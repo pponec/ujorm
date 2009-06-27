@@ -21,6 +21,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoActionImpl;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoTextable;
 import org.ujoframework.implementation.map.MapUjoExt;
 
@@ -34,23 +35,23 @@ import org.ujoframework.implementation.map.MapUjoExt;
 public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
     
     /** Index of property */
-    public static final UjoProperty<UjoPropertyRow,Integer> P_INDEX    = newProperty("Index", Integer.class);
+    public static final Property<UjoPropertyRow,Integer> P_INDEX   = newProperty("Index", Integer.class);
     /** Name of property */
-    public static final UjoProperty<UjoPropertyRow,String> P_NAME      = newProperty("Name" , String.class);
+    public static final Property<UjoPropertyRow,String> P_NAME     = newProperty("Name" , String.class);
     /** Type of property */
-    public static final UjoProperty<UjoPropertyRow,Class>  P_TYPE      = newProperty("Class", Class.class );
+    public static final Property<UjoPropertyRow,Class>  P_TYPE     = newProperty("Class", Class.class );
     /** Class name without packages */
-    public static final UjoProperty<UjoPropertyRow,String> P_TYPENAME  = newProperty("Type" , String.class);
+    public static final Property<UjoPropertyRow,String> P_TYPENAME = newProperty("Type" , String.class);
     /** Value */
-    public static final UjoProperty<UjoPropertyRow,Object> P_VALUE     = newProperty("Value", Object.class);
+    public static final Property<UjoPropertyRow,Object> P_VALUE    = newProperty("Value", Object.class);
     /** Text Value */
-    public static final UjoProperty<UjoPropertyRow,String> P_TEXT      = newProperty("Text" , String.class);
+    public static final Property<UjoPropertyRow,String> P_TEXT     = newProperty("Text" , String.class);
     /** Default Value */
-    public static final UjoProperty<UjoPropertyRow,Object> P_DEFAULT   = newProperty("Default", Object.class);
+    public static final Property<UjoPropertyRow,Object> P_DEFAULT  = newProperty("Default", Object.class);
     /** A user column can be used in table renderer for any purpose */
-    public static final UjoProperty<UjoPropertyRow,Object> P_USER1     = newProperty("User1", Object.class);
+    public static final Property<UjoPropertyRow,Object> P_USER1    = newProperty("User1", Object.class);
     /** A user column can be used in table renderer for any purpose */
-    public static final UjoProperty<UjoPropertyRow,Object> P_USER2     = newProperty("User2", Object.class);
+    public static final Property<UjoPropertyRow,Object> P_USER2    = newProperty("User2", Object.class);
     
     final protected Ujo content;
     final protected UjoProperty property;

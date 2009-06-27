@@ -26,7 +26,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.extensions.UjoPropertyList;
@@ -146,7 +146,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         writer.write(xmlHeader!=null ? xmlHeader : XML_HEADER );
         
         @SuppressWarnings("unchecked")
-        UjoProperty property = UjoPropertyImpl.newInstance(rootElementName, ujo.getClass());
+        UjoProperty property = Property.newInstance(rootElementName, ujo.getClass());
         printProperty(null, property, null, null, ujo, writer, false);
         
     }

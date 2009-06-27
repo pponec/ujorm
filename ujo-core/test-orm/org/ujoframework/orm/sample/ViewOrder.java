@@ -16,7 +16,7 @@
 
 package org.ujoframework.orm.sample;
 
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.Column;
 
@@ -28,10 +28,10 @@ public class ViewOrder extends OrmTable<ViewOrder> {
 
     /** Unique key */
     @Column(pk=true)
-    public static final UjoProperty<ViewOrder,Long> ID = newProperty("id", Long.class);
+    public static final Property<ViewOrder,Long> ID = newProperty("id", Long.class);
     /** User key */
-    public static final UjoProperty<ViewOrder,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final Property<ViewOrder,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** ItemCount */
-    public static final UjoProperty<ViewOrder,Integer> ITEM_COUNT = newProperty("usrId", 0);
+    public static final Property<ViewOrder,Integer> ITEM_COUNT = newProperty("usrId", 0);
 
 }

@@ -20,11 +20,11 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * An UjoPropertyImpl property implementation.
+ * The main implementation of the interface UjoProperty.
  * @see AbstractUjo
  * @author Pavel Ponec
  */
-public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
+public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** Property name */
     private String name;
@@ -58,7 +58,7 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * @param type
      * @param index On order of the property.
      */
-    protected UjoPropertyImpl(final String name, final Class<VALUE> type, final int index) {
+    protected Property(final String name, final Class<VALUE> type, final int index) {
         init(name, type, null, index, true);
     }
 
@@ -69,12 +69,12 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * @param index On order of the property.
      */
     @SuppressWarnings("unchecked")
-    protected UjoPropertyImpl(final String name, final VALUE value, final int index) {
+    protected Property(final String name, final VALUE value, final int index) {
         init(name, null, value, index, true);
     }
 
     /** Protected constructor */
-    protected UjoPropertyImpl() {
+    protected Property() {
     }
 
     /**
@@ -87,7 +87,7 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * @return
      */
     @SuppressWarnings("unchecked")
-    final protected UjoPropertyImpl<UJO,VALUE> init
+    final protected Property<UJO,VALUE> init
     ( final String name
     , Class<VALUE> type
     , final VALUE defaultValue
@@ -187,7 +187,7 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current property!
      */
     @SuppressWarnings("unchecked")
-    public <PROPERTY extends UjoPropertyImpl> PROPERTY setDefault(VALUE value) {
+    public <PROPERTY extends Property> PROPERTY setDefault(VALUE value) {
         defaultValue = value;
         if (lock) checkAttribs();
         return (PROPERTY) this;
@@ -299,8 +299,8 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * The method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, int index, boolean lock) {
-        return new UjoPropertyImpl<UJO,VALUE>().init(name, type, value, index, lock);
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, int index, boolean lock) {
+        return new Property<UJO,VALUE>().init(name, type, value, index, lock);
     }
 
 
@@ -308,15 +308,15 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * The method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
-        return new UjoPropertyImpl<UJO,VALUE>().init(name, type, null, index, true);
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
+        return new Property<UJO,VALUE>().init(name, type, null, index, true);
     }
 
     /** Returns a new instance of property where the default value is null.
      * The method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
         return newInstance(name, type, -1);
     }
 
@@ -324,17 +324,17 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(String name, VALUE value, int index) {
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value, int index) {
         @SuppressWarnings("unchecked")
         Class<VALUE> type = (Class) value.getClass();
-        return new UjoPropertyImpl<UJO, VALUE>().init(name, type, value, index, true);
+        return new Property<UJO, VALUE>().init(name, type, value, index, true);
     }
 
     /** A Property Factory where a property type is related from from default value.
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(String name, VALUE value) {
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value) {
          return newInstance(name, value, -1);
     }
 
@@ -344,7 +344,7 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(UjoProperty p, int index) {
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(UjoProperty p, int index) {
          return newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 

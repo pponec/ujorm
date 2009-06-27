@@ -19,7 +19,7 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class TXmlUjoRoot extends MapUjo  {
 
-    //public static final UjoProperty<TXmlUjoRoot,Object[]>   PRO_P4 = newProperty("ObjArray", Object[].class);
+    //public static final UjoPropertyImpl<TXmlUjoRoot,Object[]>   PRO_P4 = newProperty("ObjArray", Object[].class);
     public static final ListProperty<TXmlUjoRoot, TXmlUjoItem> PRO_P5 = newListProperty("List", TXmlUjoItem.class);
     
 }

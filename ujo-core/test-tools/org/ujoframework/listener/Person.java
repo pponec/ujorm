@@ -5,8 +5,8 @@
 
 package org.ujoframework.listener;
 
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.registrar.*;
-import org.ujoframework.UjoProperty;
 
 /**
  *
@@ -14,8 +14,8 @@ import org.ujoframework.UjoProperty;
  */
 public class Person extends RegistrarUjoExt<Person> {
     
-    public static final UjoProperty<Person,Integer> ID  = newProperty("id", 0);
-    public static final UjoProperty<Person,String> NAME = newProperty("name", "");
-    public static final UjoProperty<Person,Double> CASH = newProperty("cash", 0.0);
+    public static final Property<Person,Integer> ID  = newProperty("id", 0);
+    public static final Property<Person,String> NAME = newProperty("name", "");
+    public static final Property<Person,Double> CASH = newProperty("cash", 0.0);
 
 }

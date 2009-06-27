@@ -10,8 +10,8 @@
 package org.ujoframework.implementation.xml.t007_body;
 
 import java.util.Date;
-import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.XmlElementBody;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 
 
@@ -22,8 +22,8 @@ import org.ujoframework.implementation.map.MapUjo;
 public class AtrPerson2 extends MapUjo  {
     
     @XmlElementBody
-    public static final UjoProperty<AtrPerson2, String>  NAME = newProperty("Name", String.class );
-    public static final UjoProperty<AtrPerson2, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final UjoProperty<AtrPerson2, Date>   BIRTH = newProperty("Birth", Date.class  );
+    public static final Property<AtrPerson2, String>  NAME = newProperty("Name", String.class );
+    public static final Property<AtrPerson2, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final Property<AtrPerson2, Date>   BIRTH = newProperty("Birth", Date.class  );
      
 }

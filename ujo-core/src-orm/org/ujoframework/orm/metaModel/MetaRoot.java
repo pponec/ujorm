@@ -21,11 +21,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.Property;
 
 /**
  * A logical database description.
@@ -41,7 +41,7 @@ public class MetaRoot extends AbstractMetaModel {
     /** List of tables */
     public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class);
     /** ORM parameters */
-    public static final UjoProperty<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters", MetaParams.class);
+    public static final Property<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters", MetaParams.class);
     /** The property initialization */
     static{init(CLASS);}
 

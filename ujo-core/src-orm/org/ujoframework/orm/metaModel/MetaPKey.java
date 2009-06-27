@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmUjo;
 
 /**
@@ -31,7 +32,7 @@ public class MetaPKey extends AbstractMetaModel {
     private static final Class CLASS = MetaPKey.class;
 
     /** DB table */
-    public static final UjoProperty<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class);
+    public static final Property<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class);
 
     /** DB columns */
     public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newListProperty("columns", MetaColumn.class);
