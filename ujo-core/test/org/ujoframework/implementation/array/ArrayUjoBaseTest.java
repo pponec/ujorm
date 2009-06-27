@@ -17,20 +17,24 @@ import org.ujoframework.UjoProperty;
  * TextCase
  * @author Pavel Ponec
  */
-public class ArrayUjoTest extends MyTestCase {
+public class ArrayUjoBaseTest extends MyTestCase {
+    private static final Class CLASS = ArrayUjoBaseTest.class;
+
     
-    public ArrayUjoTest(String testName) {
+    public ArrayUjoBaseTest(String testName) {
         super(testName);
     }
     
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(ArrayUjoTest.class);
+        TestSuite suite = new TestSuite(CLASS);
         return suite;
     }
-    
+
+    @Override
     protected void setUp() throws Exception {
     }
     
+    @Override
     protected void tearDown() throws Exception {
     }
     
@@ -48,17 +52,17 @@ public class ArrayUjoTest extends MyTestCase {
         
         ArrayUjoImpl ujb = new ArrayUjoImpl();
         
-        ujb.PRO_P0.setValue(ujb, o0);
-        ujb.PRO_P1.setValue(ujb, o1);
-        ujb.PRO_P2.setValue(ujb, o2);
-        ujb.PRO_P3.setValue(ujb, o3);
-        ujb.PRO_P4.setValue(ujb, o4);
+        ArrayUjoImpl.PRO_P0.setValue(ujb, o0);
+        ArrayUjoImpl.PRO_P1.setValue(ujb, o1);
+        ArrayUjoImpl.PRO_P2.setValue(ujb, o2);
+        ArrayUjoImpl.PRO_P3.setValue(ujb, o3);
+        ArrayUjoImpl.PRO_P4.setValue(ujb, o4);
         
-        assertEquals(o0, ujb.PRO_P0.of(ujb));
-        assertEquals(o1, ujb.PRO_P1.of(ujb));
-        assertEquals(o2, ujb.PRO_P2.of(ujb));
-        assertEquals(o3, ujb.PRO_P3.of(ujb));
-        assertEquals(o4, ujb.PRO_P4.of(ujb));
+        assertEquals(o0, ArrayUjoImpl.PRO_P0.of(ujb));
+        assertEquals(o1, ArrayUjoImpl.PRO_P1.of(ujb));
+        assertEquals(o2, ArrayUjoImpl.PRO_P2.of(ujb));
+        assertEquals(o3, ArrayUjoImpl.PRO_P3.of(ujb));
+        assertEquals(o4, ArrayUjoImpl.PRO_P4.of(ujb));
     }
     
     public void testSpeedTime() throws Throwable {
@@ -98,9 +102,7 @@ public class ArrayUjoTest extends MyTestCase {
             assertEquals(o3, ArrayUjoImpl.PRO_P3.getValue(ujb));
             assertEquals(o4, ArrayUjoImpl.PRO_P4.getValue(ujb));
         }
-        long time2 = System.currentTimeMillis();
-        
-        System.out.println("A1:TIME: " + (time2-time1)/1000f + " [sec]");
+        printTime("A1:TIME: ", time1);
     }
     
     public void testSpeedTimeRecur() throws Throwable {
@@ -141,9 +143,8 @@ public class ArrayUjoTest extends MyTestCase {
             assertEquals(o3, ArrayUjoImplChild.PRO_P8.getValue(ujb));
             assertEquals(o4, ArrayUjoImplChild.PRO_P9.getValue(ujb));
         }
-        long time2 = System.currentTimeMillis();
         
-        System.out.println("A2:TIME: " + (time2-time1)/1000f + " [sec]");
+        printTime("A2:TIME: ", time1);
     }
         
     
@@ -152,11 +153,11 @@ public class ArrayUjoTest extends MyTestCase {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
         UjoProperty[] props = ujb1.readProperties();
         
-        assertEquals(ujb1.PRO_P0, props[0]);
-        assertEquals(ujb1.PRO_P1, props[1]);
-        assertEquals(ujb1.PRO_P2, props[2]);
-        assertEquals(ujb1.PRO_P3, props[3]);
-        assertEquals(ujb1.PRO_P4, props[4]);
+        assertEquals(ArrayUjoImpl.PRO_P0, props[0]);
+        assertEquals(ArrayUjoImpl.PRO_P1, props[1]);
+        assertEquals(ArrayUjoImpl.PRO_P2, props[2]);
+        assertEquals(ArrayUjoImpl.PRO_P3, props[3]);
+        assertEquals(ArrayUjoImpl.PRO_P4, props[4]);
     }
     
     

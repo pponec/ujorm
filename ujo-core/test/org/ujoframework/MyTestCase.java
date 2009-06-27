@@ -27,6 +27,12 @@ abstract public class MyTestCase extends TestCase {
         //return 5*1000*1000;
         return   5*1000;
     }
+
+    /** Print the time in seconds. */
+    final public void printTime(final String msg, final long time1) {
+        long duration = System.currentTimeMillis() - time1;
+        System.out.println(msg + duration/1000d + " [sec]");
+    }
     
     /** Modify a Test directory */
     public String getTestDir() {
