@@ -18,7 +18,7 @@ package org.ujoframework.core;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoAction;
 
 /**
@@ -28,8 +28,8 @@ import org.ujoframework.extensions.UjoAction;
  */
 final class DummyUjo implements Ujo {
     
-    public static final UjoProperty P0 = UjoPropertyImpl.newInstance("A", Object.class);
-    public static final UjoProperty P1 = UjoPropertyImpl.newInstance("B", Object.class);
+    public static final Property P0 = Property.newInstance("A", Object.class);
+    public static final Property P1 = Property.newInstance("B", Object.class);
     
     /** A dummy implementation. */
     public void writeValue(UjoProperty property, Object value) {}

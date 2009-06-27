@@ -12,7 +12,7 @@ package org.ujoframework.implementation.xml.t003_list;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 
 
@@ -22,20 +22,20 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class UItemBean extends MapUjo  {
     
-    public static final UjoProperty<UItemBean,Boolean>    P0_BOOL     = newProperty("Boolean", Boolean.class);
-    public static final UjoProperty<UItemBean,Byte>       P1_BYTE     = newProperty("Byte", Byte.class);
-    public static final UjoProperty<UItemBean,Character>  P2_CHAR     = newProperty("Character", Character.class);
-    public static final UjoProperty<UItemBean,Short>      P3_SHORT    = newProperty("Short", Short.class);
-    public static final UjoProperty<UItemBean,Integer>    P4_INTE     = newProperty("Integer", Integer.class);
-    public static final UjoProperty<UItemBean,Long>       P5_LONG     = newProperty("Long", Long.class);
-    public static final UjoProperty<UItemBean,Float>      P6_FLOAT    = newProperty("Float", Float.class);
-    public static final UjoProperty<UItemBean,Double>     P7_DOUBLE   = newProperty("Double", Double.class);
-    public static final UjoProperty<UItemBean,BigInteger> P8_BIG_INT  = newProperty("BigInteger", BigInteger.class);
-    public static final UjoProperty<UItemBean,BigDecimal> P9_BIG_DECI = newProperty("BigDecimal", BigDecimal.class);
-    public static final UjoProperty<UItemBean,Date>       PD_DATE     = newProperty("Date", Date.class);
+    public static final Property<UItemBean,Boolean>    P0_BOOL     = newProperty("Boolean", Boolean.class);
+    public static final Property<UItemBean,Byte>       P1_BYTE     = newProperty("Byte", Byte.class);
+    public static final Property<UItemBean,Character>  P2_CHAR     = newProperty("Character", Character.class);
+    public static final Property<UItemBean,Short>      P3_SHORT    = newProperty("Short", Short.class);
+    public static final Property<UItemBean,Integer>    P4_INTE     = newProperty("Integer", Integer.class);
+    public static final Property<UItemBean,Long>       P5_LONG     = newProperty("Long", Long.class);
+    public static final Property<UItemBean,Float>      P6_FLOAT    = newProperty("Float", Float.class);
+    public static final Property<UItemBean,Double>     P7_DOUBLE   = newProperty("Double", Double.class);
+    public static final Property<UItemBean,BigInteger> P8_BIG_INT  = newProperty("BigInteger", BigInteger.class);
+    public static final Property<UItemBean,BigDecimal> P9_BIG_DECI = newProperty("BigDecimal", BigDecimal.class);
+    public static final Property<UItemBean,Date>       PD_DATE     = newProperty("Date", Date.class);
     // Some Arrays
-    public static final UjoProperty<UItemBean,byte[]>     PA_BYTES    = newProperty("bytes", byte[].class);
-    public static final UjoProperty<UItemBean,char[]>     PB_CHARS    = newProperty("chars", char[].class);
+    public static final Property<UItemBean,byte[]>     PA_BYTES    = newProperty("bytes", byte[].class);
+    public static final Property<UItemBean,char[]>     PB_CHARS    = newProperty("chars", char[].class);
     
     
 }

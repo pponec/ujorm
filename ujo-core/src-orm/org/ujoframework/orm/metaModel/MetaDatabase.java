@@ -32,6 +32,7 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.OrmUjo;
@@ -54,27 +55,27 @@ public class MetaDatabase extends AbstractMetaModel {
 
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<MetaDatabase,String> ID = newProperty("id", "");
+    public static final Property<MetaDatabase,String> ID = newProperty("id", "");
     /** MetaDatabase default schema */
-    public static final UjoProperty<MetaDatabase,String> SCHEMA = newProperty("schema", "");
+    public static final Property<MetaDatabase,String> SCHEMA = newProperty("schema", "");
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
-    public static final UjoProperty<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class);
+    public static final Property<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class);
     /** List of tables */
     public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
     /** JDBC URL connection */
-    public static final UjoProperty<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
+    public static final Property<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
     /** JDBC Driver */
-    public static final UjoProperty<MetaDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "");
+    public static final Property<MetaDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "");
     /** DB user */
-    public static final UjoProperty<MetaDatabase,String> USER = newProperty("user", "");
+    public static final Property<MetaDatabase,String> USER = newProperty("user", "");
     /** DB password */
     @Transient
-    public static final UjoProperty<MetaDatabase,String> PASSWORD = newProperty("password", "");
+    public static final Property<MetaDatabase,String> PASSWORD = newProperty("password", "");
     /** DB class root instance */
     @Transient
-    public static final UjoProperty<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
+    public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
     /** LDPA */
-    public static final UjoProperty<MetaDatabase,String> LDAP = newProperty("ldap", "");
+    public static final Property<MetaDatabase,String> LDAP = newProperty("ldap", "");
     /** The property initialization */
     static{init(CLASS);}
 

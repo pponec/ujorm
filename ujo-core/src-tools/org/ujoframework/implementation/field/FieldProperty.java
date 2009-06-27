@@ -17,7 +17,7 @@
 package org.ujoframework.implementation.field;
 
 import org.ujoframework.Ujo;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
@@ -27,7 +27,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @author Pavel Ponec
  */
 public class FieldProperty<UJO extends Ujo,VALUE> 
-    extends UjoPropertyImpl<UJO,VALUE>
+    extends Property<UJO,VALUE>
     implements ValueAgent<UJO,VALUE> {
 
     /** Property Agent */

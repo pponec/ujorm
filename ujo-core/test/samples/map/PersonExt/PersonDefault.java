@@ -9,13 +9,13 @@
 
 package samples.map.PersonExt;
 
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.*;
 public class PersonDefault extends MapUjoExt<PersonDefault> {
     
-  public static final UjoProperty<PersonDefault, String > NAME = newProperty("Name", "");
-  public static final UjoProperty<PersonDefault, Boolean> MALE = newProperty("Male", true);
-  public static final UjoProperty<PersonDefault, Double > CASH = newProperty("Cash", 0d);
+  public static final Property<PersonDefault, String > NAME = newProperty("Name", "");
+  public static final Property<PersonDefault, Boolean> MALE = newProperty("Male", true);
+  public static final Property<PersonDefault, Double > CASH = newProperty("Cash", 0d);
     
   public void addCash(double cash) {
     //double newPrice2 = get(Person.CASH) + cash;

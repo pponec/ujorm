@@ -16,7 +16,7 @@
 package org.ujoframework.implementation.array;
 
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjoExt;
 import org.ujoframework.extensions.ListProperty;
@@ -108,23 +108,23 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends ArrayUjoExt,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
-        return UjoPropertyImpl.newInstance(name, type, index);
+    public static <UJO extends ArrayUjoExt,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
+        return Property.newInstance(name, type, index);
     }
 
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends ArrayUjoExt, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value, int index) {
-        return UjoPropertyImpl.newInstance(name, value, index);
+    protected static <UJO extends ArrayUjoExt, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value, int index) {
+        return Property.newInstance(name, value, index);
     }
 
     /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends ArrayUjoExt, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
+    protected static <UJO extends ArrayUjoExt, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
         return ListPropertyImpl.newListProperty(name, type, index);
     }
 

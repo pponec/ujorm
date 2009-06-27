@@ -7,15 +7,15 @@ package samples.map.personUjo;
 import java.util.HashMap;
 import org.ujoframework.*;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoAction;
 
 
 public class Person implements Ujo {
     
-  public static final UjoProperty<Person, String > NAME = UjoPropertyImpl.newInstance("Name", String.class);
-  public static final UjoProperty<Person, Boolean> MALE = UjoPropertyImpl.newInstance("Male", Boolean.class);
-  public static final UjoProperty<Person, Double > CASH = UjoPropertyImpl.newInstance("Cash", 0d);
+  public static final Property<Person, String > NAME = Property.newInstance("Name", String.class);
+  public static final Property<Person, Boolean> MALE = Property.newInstance("Male", Boolean.class);
+  public static final Property<Person, Double > CASH = Property.newInstance("Cash", 0d);
   
   // --- The begin of the Ujo implementation ---
   private HashMap map = new HashMap();

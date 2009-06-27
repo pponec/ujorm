@@ -25,6 +25,7 @@ import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.orm.annot.View;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.UjoSequencer;
@@ -43,34 +44,34 @@ public class MetaTable extends AbstractMetaModel {
 
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<MetaTable,String> ID = newProperty("id", "");
+    public static final Property<MetaTable,String> ID = newProperty("id", "");
     /** DB table name */
-    public static final UjoProperty<MetaTable,String> NAME = newProperty("name", "");
+    public static final Property<MetaTable,String> NAME = newProperty("name", "");
     /** The unique table/view name over all Databases in scope one OrmHandler */
-    public static final UjoProperty<MetaTable,String> ALIAS = newProperty("alias", "");
+    public static final Property<MetaTable,String> ALIAS = newProperty("alias", "");
     /** Name of table schema. */
-    public static final UjoProperty<MetaTable,String> SCHEMA = newProperty("schema", "");
+    public static final Property<MetaTable,String> SCHEMA = newProperty("schema", "");
     /** Table Columns */
     public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
     /** Table relations to many */
     public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class);
     /** Is it a model of a database view ? */
     @XmlAttribute
-    public static final UjoProperty<MetaTable,Boolean> VIEW = newProperty("view", false);
+    public static final Property<MetaTable,Boolean> VIEW = newProperty("view", false);
     /** SQL SELECT statement */
-    public static final UjoProperty<MetaTable,String> SELECT = newProperty("select", "");
+    public static final Property<MetaTable,String> SELECT = newProperty("select", "");
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
-    public static final UjoProperty<MetaTable,MetaView> SELECT_MODEL = newProperty("selectModel", MetaView.class);
+    public static final Property<MetaTable,MetaView> SELECT_MODEL = newProperty("selectModel", MetaView.class);
     /** Unique Primary Key */
     @Transient
-    public static final UjoProperty<MetaTable,MetaPKey> PK = newProperty("pk", MetaPKey.class);
+    public static final Property<MetaTable,MetaPKey> PK = newProperty("pk", MetaPKey.class);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<MetaTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
+    public static final Property<MetaTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
     /** Database */
     @Transient
-    public static final UjoProperty<MetaTable,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class);
+    public static final Property<MetaTable,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class);
     /** The property initialization */
     static{init(CLASS);}
 

@@ -14,7 +14,7 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class Person extends MapUjo {
     
-    public static final UjoProperty<Person, Integer> ID = newProperty("id", Integer.class);
+    public static final Property<Person, Integer> ID = newProperty("id", Integer.class);
     public static final ListProperty<Person, Person> PERS = newListProperty("person", Person.class);
     
     public Person(Integer id) {

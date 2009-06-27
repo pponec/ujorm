@@ -17,7 +17,7 @@
 package org.ujoframework.orm.sample;
 
 import java.util.Date;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.RelationToMany;
@@ -31,14 +31,14 @@ public class Order extends OrmTable<Order> {
 
     /** Unique key */
     @Column(pk=true)
-    public static final UjoProperty<Order,Long> ID = newProperty("id", Long.class);
+    public static final Property<Order,Long> ID = newProperty("id", Long.class);
     /** User key */
-    public static final UjoProperty<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final Property<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of the order */
     @Column(type=DbType.VARCHAR, name="DESCR")
-    public static final UjoProperty<Order,String> DESCR = newProperty("description", String.class);
+    public static final Property<Order,String> DESCR = newProperty("description", String.class);
     /** Date of creation */
-    public static final UjoProperty<Order,Date> DATE = newProperty("date", Date.class);
+    public static final Property<Order,Date> DATE = newProperty("date", Date.class);
     /** References to Itemsr */
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
 

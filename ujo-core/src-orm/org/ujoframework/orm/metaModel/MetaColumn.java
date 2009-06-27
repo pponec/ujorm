@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.UniqueKey;
@@ -39,19 +40,19 @@ public class MetaColumn extends MetaRelation2Many {
 
 
     /** DB primary key */
-    public static final UjoProperty<MetaColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
+    public static final Property<MetaColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
     /** Database Type */
-    public static final UjoProperty<MetaColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
+    public static final Property<MetaColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
     /** Column NOT-NULL */
-    public static final UjoProperty<MetaColumn,Boolean> MANDATORY = newProperty("mandatory", false);
+    public static final Property<MetaColumn,Boolean> MANDATORY = newProperty("mandatory", false);
     /** Column value length */
-    public static final UjoProperty<MetaColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
+    public static final Property<MetaColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
     /** Column value precision */
-    public static final UjoProperty<MetaColumn,Integer> PRECISION = newProperty("precision", -1);
+    public static final Property<MetaColumn,Integer> PRECISION = newProperty("precision", -1);
     /** DB Default value */
-    public static final UjoProperty<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "");
+    public static final Property<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "");
     /** The column is included in the index of the name */
-    public static final UjoProperty<MetaColumn,String> INDEX_NAME = newProperty("indexName", "");
+    public static final Property<MetaColumn,String> INDEX_NAME = newProperty("indexName", "");
     /** The property initialization */
     static{init(CLASS);}
 

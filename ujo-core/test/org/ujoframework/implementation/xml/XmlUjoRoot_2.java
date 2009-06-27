@@ -10,7 +10,7 @@
 package org.ujoframework.implementation.xml;
 
 import java.util.ArrayList;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
@@ -19,8 +19,8 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class XmlUjoRoot_2 extends MapUjo  {
     
-    public static final UjoProperty<XmlUjoRoot_2,Object[]>  PRO_P4 = newProperty("ARRAY_OBJ", Object[].class);
-    public static final UjoProperty<XmlUjoRoot_2,ArrayList> PRO_P5 = newProperty("LIST", ArrayList.class);
+    public static final Property<XmlUjoRoot_2,Object[]>  PRO_P4 = newProperty("ARRAY_OBJ", Object[].class);
+    public static final Property<XmlUjoRoot_2,ArrayList> PRO_P5 = newProperty("LIST", ArrayList.class);
     
     
 }

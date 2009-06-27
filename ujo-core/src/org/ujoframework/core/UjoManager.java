@@ -139,8 +139,8 @@ public class UjoManager implements Comparator<UjoProperty> {
                         if (ujoProp.isDirect()) {
                            propertyList.add(ujoProp);
 
-                            if (ujoProp.getName()==null && ujoProp instanceof UjoPropertyImpl) {
-                                PropertyModifier.setName(field.getName(), (UjoPropertyImpl)ujoProp);
+                            if (ujoProp.getName()==null && ujoProp instanceof Property) {
+                                PropertyModifier.setName(field.getName(), (Property)ujoProp);
                             }
                         }
 
@@ -173,8 +173,8 @@ public class UjoManager implements Comparator<UjoProperty> {
                 // Asssign new indexes:
                 for (int i=0; i<result.length; i++) {
                     UjoProperty p = result[i];
-                    if (p.getIndex()!=i && p instanceof UjoPropertyImpl) {
-                        PropertyModifier.setIndex(i, (UjoPropertyImpl)p);
+                    if (p.getIndex()!=i && p instanceof Property) {
+                        PropertyModifier.setIndex(i, (Property)p);
                     }
                 }
             }

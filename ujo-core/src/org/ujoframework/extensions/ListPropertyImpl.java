@@ -26,12 +26,12 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoComparator;
 
 /**
- * Abstract Property List implementation.
- * @see ArrayUjo
+ * The main implementation of the interface ListProperty.
+ * @see AbstractUjo
  * @author Paul Ponec
  */
 public class ListPropertyImpl<UJO extends Ujo, ITEM>
-    extends UjoPropertyImpl<UJO,List<ITEM>>
+    extends Property<UJO,List<ITEM>>
     implements ListProperty<UJO,ITEM> {
 
     /** Class of the list item. */
@@ -157,7 +157,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    public static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
     ( final String name
     , final Class<ITEM> itemType
     , final int index
@@ -172,7 +172,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    public static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
     ( final String name
     , final Class<ITEM> itemType
     , final int index
@@ -185,13 +185,11 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    public static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
     ( final String name
     , final Class<ITEM> itemType
     ) {
         return newListProperty(name, itemType, -1);
     }
-
-
     
 }

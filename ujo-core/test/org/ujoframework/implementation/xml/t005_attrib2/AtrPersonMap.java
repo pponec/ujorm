@@ -13,6 +13,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 import static org.ujoframework.extensions.UjoAction.*;
 
@@ -24,9 +25,9 @@ import static org.ujoframework.extensions.UjoAction.*;
 public class AtrPersonMap extends MapUjo  {
 
 
-    public static final UjoProperty<AtrPersonMap, String> NAME_ELEM = newProperty("name", String.class);
+    public static final Property<AtrPersonMap, String> NAME_ELEM = newProperty("name", String.class);
     @XmlAttribute
-    public static final UjoProperty<AtrPersonMap, String> NAME_ATTR = newProperty("name", String.class);
+    public static final Property<AtrPersonMap, String> NAME_ATTR = newProperty("name", String.class);
     public static final ListProperty<AtrPersonMap, AtrPersonMap> CHILDS = newListProperty("child", AtrPersonMap.class);
     
     

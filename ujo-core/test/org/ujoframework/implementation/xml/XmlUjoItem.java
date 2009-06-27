@@ -10,7 +10,7 @@
 package org.ujoframework.implementation.xml;
 
 import java.util.Date;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 
 /**
@@ -19,10 +19,10 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class XmlUjoItem extends MapUjo  {
     
-    public static final UjoProperty<XmlUjoItem,Long>    PRO_P0 = newProperty("P0", Long.class);
-    public static final UjoProperty<XmlUjoItem,Integer> PRO_P1 = newProperty("P1", Integer.class);
-    public static final UjoProperty<XmlUjoItem,String>  PRO_P2 = newProperty("P2", String.class);
-    public static final UjoProperty<XmlUjoItem,Date>    PRO_P3 = newProperty("P3", Date.class);
-    public static final UjoProperty<XmlUjoItem,Float>   PRO_P4 = newProperty("P4", Float.class);
+    public static final Property<XmlUjoItem,Long>    PRO_P0 = newProperty("P0", Long.class);
+    public static final Property<XmlUjoItem,Integer> PRO_P1 = newProperty("P1", Integer.class);
+    public static final Property<XmlUjoItem,String>  PRO_P2 = newProperty("P2", String.class);
+    public static final Property<XmlUjoItem,Date>    PRO_P3 = newProperty("P3", Date.class);
+    public static final Property<XmlUjoItem,Float>   PRO_P4 = newProperty("P4", Float.class);
     
 }

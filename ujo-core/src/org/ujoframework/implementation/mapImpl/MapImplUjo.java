@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
@@ -189,23 +189,23 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends MapImplUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return UjoPropertyImpl.newInstance(name, type);
+    public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
+        return Property.newInstance(name, type);
     }
 
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapImplUjo, VALUE> UjoProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return UjoPropertyImpl.newInstance(name, value);
+    protected static <UJO extends MapImplUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
+        return Property.newInstance(name, value);
     }
 
     /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapImplUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
+    protected static <UJO extends MapImplUjo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
         return ListPropertyImpl.newListProperty(name, type);
     }
 

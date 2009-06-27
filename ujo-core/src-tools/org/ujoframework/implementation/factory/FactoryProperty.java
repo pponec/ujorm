@@ -19,7 +19,7 @@ package org.ujoframework.implementation.factory;
 import java.lang.reflect.Constructor;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyImpl;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ValueAgent;
 
 /**
@@ -29,7 +29,7 @@ import org.ujoframework.extensions.ValueAgent;
  * @since ujo-tool
  */
 public class FactoryProperty<UJO extends Ujo,VALUE>
-    extends UjoPropertyImpl<UJO,VALUE>
+    extends Property<UJO,VALUE>
     implements ValueAgent<UJO, VALUE>
    {
     

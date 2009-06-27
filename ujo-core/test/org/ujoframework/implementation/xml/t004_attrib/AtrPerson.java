@@ -11,8 +11,8 @@ package org.ujoframework.implementation.xml.t004_attrib;
 
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAttribute;
-import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
 
 
@@ -23,10 +23,10 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class AtrPerson extends MapUjo  {
     
-    public static final UjoProperty<AtrPerson, String>  NAME = newProperty("Name", String.class );
+    public static final Property<AtrPerson, String>  NAME = newProperty("Name", String.class );
     @XmlAttribute
-    public static final UjoProperty<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final UjoProperty<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
+    public static final Property<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final Property<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
     public static final ListProperty<AtrPerson, AtrPerson> CHILDS = newListProperty("Child", AtrPerson.class);
      
 }
