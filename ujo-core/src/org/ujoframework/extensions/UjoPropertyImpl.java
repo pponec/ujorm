@@ -122,8 +122,11 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
 
     /** Check properties */
     protected void checkAttribs() {
-        if (name==null) { throw new IllegalArgumentException("Name must not be null"); }
-        if (type==null) { throw new IllegalArgumentException("Type must not be null"); }
+        if (name==null) { throw new IllegalArgumentException("Name must not be null in the " + this); }
+        if (type==null) { throw new IllegalArgumentException("Type must not be null in the " + this); }
+        if (defaultValue!=null && !type.isInstance(defaultValue)) {
+            throw new IllegalArgumentException("Default value have not properly type in the " + this);
+        }
     }
       
     /** Name of Property */
@@ -180,12 +183,13 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
         return defaultValue;
     }
 
-    /** Assign a Default value.
+    /** Assign a Default value. The default value may be modified after locking - at your own risk.
      * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current property!
      */
     @SuppressWarnings("unchecked")
     public <PROPERTY extends UjoPropertyImpl> PROPERTY setDefault(VALUE value) {
         defaultValue = value;
+        if (lock) checkAttribs();
         return (PROPERTY) this;
     }
     
@@ -335,7 +339,23 @@ public class UjoPropertyImpl<UJO extends Ujo,VALUE> implements UjoProperty<UJO,V
     }
 
 
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(UjoProperty p, int index) {
+         return newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
+    }
 
 
+    /** A Property Factory where a property type is related from from default value.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(UjoProperty p) {
+         return newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+    }
 
 }

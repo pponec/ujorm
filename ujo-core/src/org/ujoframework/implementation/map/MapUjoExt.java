@@ -114,4 +114,13 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
         return ListPropertyImpl.newListProperty(name, type);
     }
 
+    /** A ListProperty Factory
+     * Method assigns a next property index.
+     * @deprecated Use newListProperty(...) instead of.
+     * @hidden
+     */
+    protected static final <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
+        return ListPropertyImpl.newListProperty(name, type);
+    }
+
 }

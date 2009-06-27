@@ -18,7 +18,6 @@ package org.ujoframework.implementation.quick;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.UjoPropertyImpl;
 import org.ujoframework.extensions.ListPropertyImpl;
 import org.ujoframework.extensions.AbstractUjo;
@@ -62,20 +61,6 @@ public abstract class QuickUjo extends AbstractUjo {
     public QuickUjo(Object[] data) {
         this.data = data;
     }
-
-    /**
-     * Returns all direct properties (see an method UjoProperty.isDirect() for more information).
-     * @param type Ujo class
-     * @param sorted I want to sortd the result by a natural order.
-     * @return Array of Properties
-     */
-    @SuppressWarnings("unchecked")
-    protected static final void init(Class type) throws IllegalStateException {
-        synchronized(type) {
-            UjoManager.getInstance().readProperties(type);
-        }
-    }
-
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
      * <a href="UjoPropertyImpl.html#setValue(UJO,%20VALUE)">UjoPropertyImpl.setValue(Ujo,Object)</a>
@@ -123,6 +108,7 @@ public abstract class QuickUjo extends AbstractUjo {
 
     
     /** A Property Factory creates new property and assigns a next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newProperty
@@ -133,6 +119,7 @@ public abstract class QuickUjo extends AbstractUjo {
     }
 
     /** A Property Factory creates new property and assigns a next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newProperty
@@ -143,6 +130,7 @@ public abstract class QuickUjo extends AbstractUjo {
     }
 
     /** A Property Factory creates new property and assigns a next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> UjoProperty<UJO,VALUE> newProperty
@@ -152,6 +140,7 @@ public abstract class QuickUjo extends AbstractUjo {
     }
 
     /** A Property Factory creates new property and assigns a next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newProperty
@@ -160,14 +149,26 @@ public abstract class QuickUjo extends AbstractUjo {
         return newProperty(null, null, value, -1, false);
     }
 
+    /** Returns a new instance of property where the default value is null.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends QuickUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(UjoProperty p) {
+        return UjoPropertyImpl.newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+    }
+
+
+
     /** A Property Factory creates new property and assigns a next property index.
-     * @hidden     
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
      */
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
     ( String name
     , Class<ITEM> itemType
     ) {
-        return ListPropertyImpl.newListProperty(name, itemType);
+        return ListPropertyImpl.newListProperty(name, itemType, -1, false);
     }
     
 }

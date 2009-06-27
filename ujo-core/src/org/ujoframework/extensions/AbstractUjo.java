@@ -31,6 +31,34 @@ import static org.ujoframework.extensions.UjoAction.*;
  */
 public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
+
+    /**
+     * Initializa all properties. If the properties are unlocked than recalculate index
+     * and set an undefined property name by its static field.
+     * @param type Ujo class
+     * @return Array of Properties
+     */
+    @SuppressWarnings("unchecked")
+    protected static final void init(Class ujoClass) throws IllegalStateException {
+        init(ujoClass, false);
+    }
+
+
+    /**
+     * Initializa all properties. If the properties are unlocked than recalculate index
+     * and set an undefined property name by its static field.
+     * @param type Ujo class
+     * @param checkUniqueProperties Check unique properties
+     * @return Array of Properties
+     */
+    @SuppressWarnings("unchecked")
+    protected static final void init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
+       UjoManager.getInstance().readProperties(ujoClass);
+        if (checkUniqueProperties) {
+           UjoManager.getInstance().checkUniqueProperties(ujoClass);
+        }
+    }
+
     /** Returns an UjoManager */
     protected UjoManager readUjoManager() {
         return UjoManager.getInstance();

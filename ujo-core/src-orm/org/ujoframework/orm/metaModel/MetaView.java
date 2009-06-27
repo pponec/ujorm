@@ -26,18 +26,20 @@ import org.ujoframework.orm.AbstractMetaModel;
  * @author Ponec
  */
 public class MetaView  extends AbstractMetaModel {
+    private static final Class CLASS = MetaView.class;
+
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(MetaView.class.getName());
-    /** Property count */
-    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
-    public static final UjoProperty<MetaView,String> SELECT = newProperty("SELECT "   , "", propertyCount++);
-    public static final UjoProperty<MetaView,String> FROM   = newProperty(" FROM "    , "", propertyCount++);
-    public static final UjoProperty<MetaView,String> WHERE  = newProperty(" WHERE "   , "", propertyCount++);
-    public static final UjoProperty<MetaView,String> GROUP  = newProperty(" GROUP BY ", "", propertyCount++);
-    public static final UjoProperty<MetaView,String> ORDER  = newProperty(" ORDER BY ", "", propertyCount++);
-    public static final UjoProperty<MetaView,String> LIMIT  = newProperty(" LIMIT "   , "", propertyCount++);
+    public static final UjoProperty<MetaView,String> SELECT = newProperty("SELECT "   , "");
+    public static final UjoProperty<MetaView,String> FROM   = newProperty(" FROM "    , "");
+    public static final UjoProperty<MetaView,String> WHERE  = newProperty(" WHERE "   , "");
+    public static final UjoProperty<MetaView,String> GROUP  = newProperty(" GROUP BY ", "");
+    public static final UjoProperty<MetaView,String> ORDER  = newProperty(" ORDER BY ", "");
+    public static final UjoProperty<MetaView,String> LIMIT  = newProperty(" LIMIT "   , "");
+    /** The property initialization */
+    static{init(CLASS);}
 
     private static String END_CHAR = ";";
 
@@ -50,12 +52,6 @@ public class MetaView  extends AbstractMetaModel {
      */
     public MetaView(String select) {
         parse(select);
-    }
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     /** Parse the SQL SELECT. */

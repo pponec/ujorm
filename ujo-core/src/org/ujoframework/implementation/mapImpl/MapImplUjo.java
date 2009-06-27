@@ -208,4 +208,5 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
     protected static <UJO extends MapImplUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
         return ListPropertyImpl.newListProperty(name, type);
     }
+
 }

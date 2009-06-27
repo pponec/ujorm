@@ -35,25 +35,25 @@ import org.ujoframework.orm.annot.Column;
  * @composed 1 - * DbType
  */
 public class MetaColumn extends MetaRelation2Many {
+    private static final Class CLASS = MetaColumn.class;
 
-    /** Property count */
-    protected static int propertyCount = MetaRelation2Many.propertyCount;
 
     /** DB primary key */
-    public static final UjoProperty<MetaColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false, propertyCount++);
+    public static final UjoProperty<MetaColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
     /** Database Type */
-    public static final UjoProperty<MetaColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic, propertyCount++);
+    public static final UjoProperty<MetaColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
     /** Column NOT-NULL */
-    public static final UjoProperty<MetaColumn,Boolean> MANDATORY = newProperty("mandatory", false, propertyCount++);
+    public static final UjoProperty<MetaColumn,Boolean> MANDATORY = newProperty("mandatory", false);
     /** Column value length */
-    public static final UjoProperty<MetaColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1, propertyCount++);
+    public static final UjoProperty<MetaColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
     /** Column value precision */
-    public static final UjoProperty<MetaColumn,Integer> PRECISION = newProperty("precision", -1, propertyCount++);
+    public static final UjoProperty<MetaColumn,Integer> PRECISION = newProperty("precision", -1);
     /** DB Default value */
-    public static final UjoProperty<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "", propertyCount++);
+    public static final UjoProperty<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "");
     /** The column is included in the index of the name */
-    public static final UjoProperty<MetaColumn,String> INDEX_NAME = newProperty("indexName", "", propertyCount++);
-
+    public static final UjoProperty<MetaColumn,String> INDEX_NAME = newProperty("indexName", "");
+    /** The property initialization */
+    static{init(CLASS);}
 
     /** Foreign column names. */
     private String[] foreignNames = null;
@@ -92,12 +92,6 @@ public class MetaColumn extends MetaRelation2Many {
         if (MAX_LENGTH.isDefault(this)) {
             MetaTable.DATABASE.of(table).changeDbLength(this);
         }
-    }
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     /** It is a DB column (either a value of a foreign key) */

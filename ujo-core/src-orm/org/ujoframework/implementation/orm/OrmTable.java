@@ -22,7 +22,7 @@ import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.implementation.map.MapUjo;
+import org.ujoframework.implementation.quick.QuickUjo;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.Session;
@@ -107,7 +107,7 @@ import org.ujoframework.orm.Session;
  * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
-public class OrmTable<UJO_IMPL extends Ujo> extends MapUjo implements OrmUjo {
+public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
     
     /** Orm session */
     private Session session;

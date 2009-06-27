@@ -28,29 +28,27 @@ import org.ujoframework.orm.ao.Orm2ddlPolicy;
  * @author Pavel Ponec
  */
 public class MetaParams extends AbstractMetaModel {
-
+    private static final Class CLASS = MetaParams.class;
     public static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
-    /** Property count */
-    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
 
     /** Enable / disable a session cache for the business objects. */
-    public static final UjoProperty<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE, propertyCount++);
+    public static final UjoProperty<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE);
     /** The parameters enables the the cache implementation by WeakHashMap. The false value use a HashMap implementation. Default value is TRUE. */
-    public static final UjoProperty<MetaParams,Boolean> CACHE_WEAK_MAP = newProperty("cacheWeakMap", true, propertyCount++);
+    public static final UjoProperty<MetaParams,Boolean> CACHE_WEAK_MAP = newProperty("cacheWeakMap", true);
     /** Special prameter for an automatically assembled table alias prefix. */
-    public static final UjoProperty<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "", propertyCount++);
+    public static final UjoProperty<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "");
     /** Special prameter for an automatically assembled table alias prefix. */
-    public static final UjoProperty<MetaParams,String> TABLE_ALIAS_SUFFIX = newProperty("tableAliasSuffix", "", propertyCount++);
+    public static final UjoProperty<MetaParams,String> TABLE_ALIAS_SUFFIX = newProperty("tableAliasSuffix", "");
     /** Sequential cache parameter saves the number of requests to the following sequence when a insert statement into DB.
      * The value of the parameter is used only when creating a new DB, indivuální ORM changes for each table 
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 64, the smallest possible value is 1. */
-    public static final UjoProperty<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 64, propertyCount++);
+    public static final UjoProperty<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 64);
     /** A policy to defining the database structure by a DDL. */
-    public static final UjoProperty<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_DDL, propertyCount++);
-
-
+    public static final UjoProperty<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_DDL);
+    /** The property initialization */
+    static{init(CLASS);}
 
     @Override
     public void writeValue(UjoProperty property, Object value) {
@@ -65,14 +63,6 @@ public class MetaParams extends AbstractMetaModel {
         }
 
         super.writeValue(property, value);
-    }
-
-
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     /** Is the cache enabled? */

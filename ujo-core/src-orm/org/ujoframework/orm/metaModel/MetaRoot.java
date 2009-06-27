@@ -35,25 +35,19 @@ import org.ujoframework.extensions.ListProperty;
  * @composed 1 - 1 MetaParams
  */
 public class MetaRoot extends AbstractMetaModel {
-
+    private static final Class CLASS = MetaRoot.class;
     public static final Logger LOGGER = Logger.getLogger(MetaRoot.class.getName());
-    /** Property count */
-    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** List of tables */
-    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class, propertyCount++);
+    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class);
     /** ORM parameters */
-    public static final UjoProperty<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters", MetaParams.class, propertyCount++);
+    public static final UjoProperty<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters", MetaParams.class);
+    /** The property initialization */
+    static{init(CLASS);}
 
     public MetaRoot() {
         // A default instance:
         PARAMETERS.setValue(this, new MetaParams());
-    }
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     /** Returns the first database or return null */
