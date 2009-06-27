@@ -43,5 +43,7 @@ public class Database extends OrmTable<Database> {
     @View(name="ord_order")
     public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation("view_order", ViewOrder.class);
 
+    /** The property initialization */
+    static{init(Database.class);}
 
 }

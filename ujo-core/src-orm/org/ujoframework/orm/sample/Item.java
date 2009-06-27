@@ -41,6 +41,8 @@ public class Item extends OrmTable<Item> {
     public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);    
     /** A composed PATH property to an Date of Order (!) */
     public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.newInstance(Item.ORDER, Order.DATE);
+    /** The property initialization */
+    static{init(Item.class);}
 
 
     // --- An optional implementation of commonly used setters and getters ---
@@ -75,9 +77,6 @@ public class Item extends OrmTable<Item> {
         // An alternative solution for: getOrder().getDate();
         return get(ORDER_DATE);
     }
-
-    // --- An optional property unique name test ---
-    static { UjoManager.checkUniqueProperties(Item.class); }
 
 
 }

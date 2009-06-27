@@ -39,5 +39,7 @@ public class ViewOrder extends OrmTable<ViewOrder> {
     public static final UjoProperty<ViewOrder,Long> ID = newProperty("id", Long.class);
     /** ItemCount */
     public static final UjoProperty<ViewOrder,Integer> ITEM_COUNT = newProperty("itemCount", 0);
+    /** The property initialization */
+    static{init(ViewOrder.class);}
 
 }

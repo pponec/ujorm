@@ -97,7 +97,7 @@ public abstract class MapUjo extends AbstractUjo {
     public static <UJO extends MapUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
         return UjoPropertyImpl.newInstance(name, type);
     }
-    
+
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
@@ -106,6 +106,14 @@ public abstract class MapUjo extends AbstractUjo {
         return UjoPropertyImpl.newInstance(name, value);
     }
     
+    /** Returns a new instance of property where the default value is null.
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends MapUjo,VALUE> UjoProperty<UJO,VALUE> newProperty(UjoProperty p, int index) {
+        return UjoPropertyImpl.newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
+    }
+
     /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
@@ -113,5 +121,15 @@ public abstract class MapUjo extends AbstractUjo {
     protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
         return ListPropertyImpl.newListProperty(name, type);
     }
-    
+
+    /** A ListProperty Factory
+     * Method assigns a next property index.
+     * @deprecated Use newListProperty(...) instead of.
+     * @hidden
+     */
+    protected static final <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
+        return ListPropertyImpl.newListProperty(name, type);
+    }
+
+
 }

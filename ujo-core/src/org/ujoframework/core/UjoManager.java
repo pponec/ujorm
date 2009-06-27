@@ -123,59 +123,63 @@ public class UjoManager implements Comparator<UjoProperty> {
      */
     @SuppressWarnings("unchecked")
     public UjoProperty[] readPropertiesNocache(Class type, boolean sorted) throws IllegalStateException {
-        
+        UjoProperty[] result;
         ArrayList<UjoProperty> propertyList = new ArrayList<UjoProperty>(32);
         Field field = null;
-        try {
-            final Field[] fields = type.getFields();
-            for (int j=0; j<fields.length; j++) {
-                field = fields[j];
-                if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
-                &&  UjoProperty.class.isAssignableFrom(field.getType())
-                ){
-                    UjoProperty ujoProp = (UjoProperty) field.get(null);
-                    if (ujoProp.isDirect()) {
-                       propertyList.add(ujoProp);
-                       
-                        if (ujoProp.getName()==null && ujoProp instanceof UjoPropertyImpl) {
-                            PropertyModifier.setName(field.getName(), (UjoPropertyImpl)ujoProp);
-                        }
-                    }
-                    
-                    // set the transient cache:
-                    final Transient tr = field.getAnnotation(Transient.class);
-                    // set the xml attribute cache:
-                    final XmlAttribute xa = field.getAnnotation(XmlAttribute.class);
-                    // set the xml element body cache:
-                    final XmlElementBody xb = field.getAnnotation(XmlElementBody.class);
-                    
-                    if      (tr!=null) { cacheTransientAttribute(ujoProp)  ; }
-                    else if (xa!=null) { cacheXmlAttribute(ujoProp)        ; }
-                    else if (xb!=null) { cacheXmlElementBody(type, ujoProp); }
+        
+        synchronized(type) {
+            try {
+                final Field[] fields = type.getFields();
+                for (int j=0; j<fields.length; j++) {
+                    field = fields[j];
+                    if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
+                    &&  UjoProperty.class.isAssignableFrom(field.getType())
+                    ){
+                        UjoProperty ujoProp = (UjoProperty) field.get(null);
+                        if (ujoProp.isDirect()) {
+                           propertyList.add(ujoProp);
 
+                            if (ujoProp.getName()==null && ujoProp instanceof UjoPropertyImpl) {
+                                PropertyModifier.setName(field.getName(), (UjoPropertyImpl)ujoProp);
+                            }
+                        }
+
+                        // set the transient cache:
+                        final Transient tr = field.getAnnotation(Transient.class);
+                        // set the xml attribute cache:
+                        final XmlAttribute xa = field.getAnnotation(XmlAttribute.class);
+                        // set the xml element body cache:
+                        final XmlElementBody xb = field.getAnnotation(XmlElementBody.class);
+
+                        if      (tr!=null) { cacheTransientAttribute(ujoProp)  ; }
+                        else if (xa!=null) { cacheXmlAttribute(ujoProp)        ; }
+                        else if (xb!=null) { cacheXmlElementBody(type, ujoProp); }
+
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(String.valueOf(field), e);
+            }
+            
+            result = propertyList.toArray( new UjoProperty[propertyList.size()] );
+
+            if (sorted) {
+                // Reverse order:
+                if (isPropertiesReversed()) {
+                    revertArray(result);
+                }
+                Arrays.sort(result, this);
+
+                // Asssign new indexes:
+                for (int i=0; i<result.length; i++) {
+                    UjoProperty p = result[i];
+                    if (p.getIndex()!=i && p instanceof UjoPropertyImpl) {
+                        PropertyModifier.setIndex(i, (UjoPropertyImpl)p);
+                    }
                 }
             }
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(String.valueOf(field), e);
         }
         
-        UjoProperty[] result = propertyList.toArray( new UjoProperty[propertyList.size()] );
-        
-        if (sorted) {
-            // Reverse order:
-            if (isPropertiesReversed()) {
-                revertArray(result);
-            }
-            Arrays.sort(result, this);
-
-            // Asssign new indexes:
-            for (int i=0; i<result.length; i++) {
-                UjoProperty p = result[i];
-                if (p.getIndex()!=i && p instanceof UjoPropertyImpl) {
-                    PropertyModifier.setIndex(i, (UjoPropertyImpl)p);
-                }
-            }
-        }        
         return result;
     }
     
@@ -835,7 +839,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * The beneficial side effect is loading a property cache.
      * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
      */
-    public static void checkUniqueProperties(final Class<? extends Ujo> type) throws IllegalStateException {
+    public void checkUniqueProperties(final Class<? extends Ujo> type) throws IllegalStateException {
          getInstance().checkUniqueProperties(type, true);
     }
 

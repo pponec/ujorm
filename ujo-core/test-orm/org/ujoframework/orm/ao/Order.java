@@ -41,10 +41,8 @@ public class Order extends OrmTable<Order> {
     public static final UjoProperty<Order,Date> DATE = newProperty("date", Date.class);
     /** Description of the order */
     public static final UjoProperty<Order,String> DESCR = newProperty("description", String.class);
-    
-
-    // --- An optional property unique name test ---
-    static { UjoManager.checkUniqueProperties(Order.class); }
+    /** Verify unique constants */
+    static{init(Order.class,true);}
 
 
 }

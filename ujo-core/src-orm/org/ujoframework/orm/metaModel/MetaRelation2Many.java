@@ -31,24 +31,25 @@ import org.ujoframework.orm.annot.Column;
  * @author Pavel Ponec
  */
 public class MetaRelation2Many extends AbstractMetaModel {
-
-    /** Property count */
-    protected static int propertyCount = AbstractMetaModel.propertyCount;
+    private static final Class CLASS = MetaRelation2Many.class;
 
     /** The meta-model ID. */
     @XmlAttribute
-    public static final UjoProperty<MetaRelation2Many,String> ID = newProperty("id", "", propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,String> ID = newProperty("id", "");
     /** The database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
-    public static final UjoProperty<MetaRelation2Many,String> NAME = newProperty("name", "", propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,String> NAME = newProperty("name", "");
     /** Table property */
     @Transient
-    public static final UjoProperty<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class, propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
     /** DB table */
     @Transient
-    public static final UjoProperty<MetaRelation2Many,MetaTable> TABLE = newProperty("table", MetaTable.class, propertyCount++);
+    public static final UjoProperty<MetaRelation2Many,MetaTable> TABLE = newProperty("table", MetaTable.class);
+    /** The property initialization */
+    static{init(CLASS);}
+
 
     public MetaRelation2Many() {
     }
@@ -70,12 +71,6 @@ public class MetaRelation2Many extends AbstractMetaModel {
             NAME.setValue(this, column.name());
         }
         changeDefault(this, NAME, tableProperty.getName());
-    }
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     /** It is a DB column */

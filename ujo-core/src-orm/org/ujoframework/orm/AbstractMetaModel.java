@@ -20,14 +20,14 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.UjoAction;
-import org.ujoframework.implementation.array.ArrayUjo;
+import org.ujoframework.implementation.quick.QuickUjo;
 
 
 /**
  * Abstract Metamodel
  * @author Pavel Ponec
  */
-abstract public class AbstractMetaModel extends ArrayUjo {
+abstract public class AbstractMetaModel extends QuickUjo {
 
     /** Read-only state */
     private boolean readOnly = false;

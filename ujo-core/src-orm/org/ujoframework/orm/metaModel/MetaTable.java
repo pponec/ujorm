@@ -38,41 +38,41 @@ import org.ujoframework.orm.UjoSequencer;
  * @composed 1 - 1 MetaPKey
  */
 public class MetaTable extends AbstractMetaModel {
+    private static final Class CLASS = MetaTable.class;
 
-    /** Property count */
-    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<MetaTable,String> ID = newProperty("id", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> ID = newProperty("id", "");
     /** DB table name */
-    public static final UjoProperty<MetaTable,String> NAME = newProperty("name", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> NAME = newProperty("name", "");
     /** The unique table/view name over all Databases in scope one OrmHandler */
-    public static final UjoProperty<MetaTable,String> ALIAS = newProperty("alias", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> ALIAS = newProperty("alias", "");
     /** Name of table schema. */
-    public static final UjoProperty<MetaTable,String> SCHEMA = newProperty("schema", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> SCHEMA = newProperty("schema", "");
     /** Table Columns */
-    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class, propertyCount++);
+    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
     /** Table relations to many */
-    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class, propertyCount++);
+    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class);
     /** Is it a model of a database view ? */
     @XmlAttribute
-    public static final UjoProperty<MetaTable,Boolean> VIEW = newProperty("view", false, propertyCount++);
+    public static final UjoProperty<MetaTable,Boolean> VIEW = newProperty("view", false);
     /** SQL SELECT statement */
-    public static final UjoProperty<MetaTable,String> SELECT = newProperty("select", "", propertyCount++);
+    public static final UjoProperty<MetaTable,String> SELECT = newProperty("select", "");
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
-    public static final UjoProperty<MetaTable,MetaView> SELECT_MODEL = newProperty("selectModel", MetaView.class, propertyCount++);
+    public static final UjoProperty<MetaTable,MetaView> SELECT_MODEL = newProperty("selectModel", MetaView.class);
     /** Unique Primary Key */
     @Transient
-    public static final UjoProperty<MetaTable,MetaPKey> PK = newProperty("pk", MetaPKey.class, propertyCount++);
+    public static final UjoProperty<MetaTable,MetaPKey> PK = newProperty("pk", MetaPKey.class);
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<MetaTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class, propertyCount++);
+    public static final UjoProperty<MetaTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
     /** Database */
     @Transient
-    public static final UjoProperty<MetaTable,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class, propertyCount++);
-
+    public static final UjoProperty<MetaTable,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class);
+    /** The property initialization */
+    static{init(CLASS);}
 
     /** Ujo sequencer */
     final private UjoSequencer sequencer;
@@ -161,12 +161,6 @@ public class MetaTable extends AbstractMetaModel {
                 }
             }
         }
-    }
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     /** Assign a PK from framework */

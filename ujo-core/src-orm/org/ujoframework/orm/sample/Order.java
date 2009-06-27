@@ -46,6 +46,8 @@ public class Order extends OrmTable<Order> {
     public static final UjoProperty<Order,Date> DATE = newProperty("date", Date.class);
     /** References to Itemsr */
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
+    /** The property initialization */
+    static{init(Order.class);}
     
 
     // --- An optional implementation of commonly used setters and getters ---
@@ -78,8 +80,6 @@ public class Order extends OrmTable<Order> {
         return get(ITEMS);
     }
 
-    // --- An optional property unique name test ---
-    static { UjoManager.checkUniqueProperties(Order.class); }
 
 
 }

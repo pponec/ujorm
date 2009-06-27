@@ -37,7 +37,6 @@ import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
-import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
 
 /**
@@ -46,37 +45,38 @@ import org.ujoframework.orm.annot.Db;
  * @composed 1 - * MetaTable
  */
 public class MetaDatabase extends AbstractMetaModel {
+    private static final Class CLASS = MetaDatabase.class;
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(MetaDatabase.class.getName());
     /** Add a DB relation into table models */
     private static final boolean ADD_DB_MODEL = true;
-    /** Property count */
-    protected static int propertyCount = AbstractMetaModel.propertyCount;
 
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<MetaDatabase,String> ID = newProperty("id", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> ID = newProperty("id", "");
     /** MetaDatabase default schema */
-    public static final UjoProperty<MetaDatabase,String> SCHEMA = newProperty("schema", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> SCHEMA = newProperty("schema", "");
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
-    public static final UjoProperty<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class, propertyCount++);
+    public static final UjoProperty<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class);
     /** List of tables */
-    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class, propertyCount++);
+    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
     /** JDBC URL connection */
-    public static final UjoProperty<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
     /** JDBC Driver */
-    public static final UjoProperty<MetaDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "");
     /** DB user */
-    public static final UjoProperty<MetaDatabase,String> USER = newProperty("user", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> USER = newProperty("user", "");
     /** DB password */
     @Transient
-    public static final UjoProperty<MetaDatabase,String> PASSWORD = newProperty("password", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> PASSWORD = newProperty("password", "");
     /** DB class root instance */
     @Transient
-    public static final UjoProperty<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class, propertyCount++);
+    public static final UjoProperty<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
     /** LDPA */
-    public static final UjoProperty<MetaDatabase,String> LDAP = newProperty("ldap", "", propertyCount++);
+    public static final UjoProperty<MetaDatabase,String> LDAP = newProperty("ldap", "");
+    /** The property initialization */
+    static{init(CLASS);}
 
     // --------------------
 
@@ -133,13 +133,6 @@ public class MetaDatabase extends AbstractMetaModel {
             table.setNotPersistent();
             TABLES.addItem(this, table);
         }
-    }
-
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     /** Returns a SQL dialect for the current database. */

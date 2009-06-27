@@ -27,9 +27,8 @@ public class ArrayUjoImplChild extends ArrayUjoImpl {
     public static final UjoProperty <ArrayUjoImplChild, String>  PRO_P7 = newProperty("P7", String.class, propertyCount++);
     public static final UjoProperty <ArrayUjoImplChild, Date>    PRO_P8 = newProperty("P8", Date.class, propertyCount++);
     public static final UjoProperty <ArrayUjoImplChild, Float>   PRO_P9 = newProperty("P9", Float.class, propertyCount++);
-
-    // --- An optional property unique name test ---
-    static { UjoManager.checkUniqueProperties(ArrayUjoImplChild.class); }
+    /** Verify unique constants */
+    static{init(ArrayUjoImplChild.class,true);}
     
     /** Creates a new instance of UnifiedDataObjectImlp */
     public ArrayUjoImplChild() {

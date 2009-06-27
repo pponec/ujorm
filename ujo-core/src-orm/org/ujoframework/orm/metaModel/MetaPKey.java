@@ -28,15 +28,16 @@ import org.ujoframework.orm.OrmUjo;
  * @composed 1 - * MetaColumn
  */
 public class MetaPKey extends AbstractMetaModel {
-
-    /** Property count */
-    protected static int propertyCount = AbstractMetaModel.propertyCount;
+    private static final Class CLASS = MetaPKey.class;
 
     /** DB table */
-    public static final UjoProperty<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class, propertyCount++);
+    public static final UjoProperty<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class);
 
     /** DB columns */
-    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newListProperty("columns", MetaColumn.class, propertyCount++);
+    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newListProperty("columns", MetaColumn.class);
+
+    /** The property initialization */
+    static{init(CLASS);}
 
     /** Database */
     final private MetaDatabase database;
@@ -45,12 +46,6 @@ public class MetaPKey extends AbstractMetaModel {
         this.database = MetaTable.DATABASE.of(table);
         TABLE.setValue(this, table);
         COLUMNS.setValue(this, new ArrayList<MetaColumn>(0));
-    }
-
-    /** Property Count */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
     }
 
     @Override
