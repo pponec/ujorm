@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoPropertyList;
+import org.ujoframework.extensions.ListUjoProperty;
 import org.ujoframework.extensions.UjoTextable;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
@@ -142,7 +142,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 throw new IllegalStateException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
             }
             $elementType = $parentObj.isUjo()
-            ? ($property instanceof UjoPropertyList ? ((UjoPropertyList)$property).getItemType() : $property.getType())
+            ? ($property instanceof ListUjoProperty ? ((ListUjoProperty)$property).getItemType() : $property.getType())
             : ($parentObj.itemType)
             ;
         }
@@ -168,12 +168,12 @@ final class UjoHandlerXML extends DefaultHandler {
                 if ($parentObj.isUjo()) {
                     Ujo ujoParent = $parentObj.ujo;
 
-                    if ($property instanceof UjoPropertyList) {
+                    if ($property instanceof ListUjoProperty) {
                         List list = (List) ujoParent.readValue($property);
                         if (list==null) {
                             if ($listType==null 
                             ||  $listType.isInterface()) {
-                                list = ((UjoPropertyList)$property).getList(ujoParent);
+                                list = ((ListUjoProperty)$property).getList(ujoParent);
                             } else {
                                 list = (List) $listType.newInstance();
                                 ujoParent.writeValue($property, list);
