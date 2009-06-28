@@ -29,7 +29,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.UjoAction;
-import org.ujoframework.extensions.ListUjoProperty;
+import org.ujoframework.extensions.UjoPropertyList;
 import org.ujoframework.extensions.UjoTextable;
 import org.xml.sax.SAXException;
 
@@ -200,14 +200,14 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
             
             if (value instanceof List) {
-                final Class itemType = property instanceof ListUjoProperty ? ((ListUjoProperty)property).getItemType() : null ;
+                final Class itemType = property instanceof UjoPropertyList ? ((UjoPropertyList)property).getItemType() : null ;
                 final Class baseType = property instanceof ListProperty || property.getType()==value.getClass()
                     ? null
                     : value.getClass()
                     ;
 
-                if (property instanceof ListUjoProperty
-                && ((ListUjoProperty)property).isItemTypeOf(Ujo.class)) {
+                if (property instanceof UjoPropertyList
+                && ((UjoPropertyList)property).isItemTypeOf(Ujo.class)) {
                     for (Object item : (List) value) {
                         Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
                         printProperty( ujo, property, itemClass, baseType, item, writer, false );
