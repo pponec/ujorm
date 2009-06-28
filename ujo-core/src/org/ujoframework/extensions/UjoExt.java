@@ -77,44 +77,44 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
     // ------ LIST ----------
     
     /** Returns a count of Items. If the property is null, method returns 0. 
-     * <br>Inside is called a method ListUjoProperty.getItemCount() .
+     * <br>Inside is called a method UjoPropertyList.getItemCount() .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> int getItemCount
-        ( ListUjoProperty<UJO,LIST,ITEM> property);
+        ( UjoPropertyList<UJO,LIST,ITEM> property);
 
     
     /** Add Value, if the List is null then the list will be created.
-     * <br>Inside is called a method ListUjoProperty.addItem(...) .
+     * <br>Inside is called a method UjoPropertyList.addItem(...) .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> Ujo add
-        ( ListUjoProperty<UJO,LIST,ITEM> property
+        ( UjoPropertyList<UJO,LIST,ITEM> property
         , ITEM value);
 
     /** Add Value, if the List is null then the list will be created.
-     * <br>Inside is called a method ListUjoProperty.setItem(...) .
+     * <br>Inside is called a method UjoPropertyList.setItem(...) .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> Ujo set
-        ( ListUjoProperty<UJO,LIST,ITEM> property
+        ( UjoPropertyList<UJO,LIST,ITEM> property
         , int index
         , ITEM value);
     
     /** Get Value
-     * <br>Inside is called a method ListUjoProperty.getItem(...) .
+     * <br>Inside is called a method UjoPropertyList.getItem(...) .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM get
-        ( ListUjoProperty<UJO,LIST,ITEM> property
+        ( UjoPropertyList<UJO,LIST,ITEM> property
         , int index);
     
     /** Get Value */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM remove
-        ( ListUjoProperty<UJO,LIST,ITEM> property
+        ( UjoPropertyList<UJO,LIST,ITEM> property
         , int index);
 
     /** Returns a not null List. If original list value is empty, the new List is created.
-     * <br>Inside is called a method ListUjoProperty.getList() .
+     * <br>Inside is called a method UjoPropertyList.getList() .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( ListUjoProperty<UJO,LIST,ITEM> property
+        ( UjoPropertyList<UJO,LIST,ITEM> property
         );
 
 

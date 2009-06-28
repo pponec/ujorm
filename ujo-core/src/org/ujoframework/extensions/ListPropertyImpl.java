@@ -17,6 +17,7 @@
 package org.ujoframework.extensions;
 
 import java.util.ArrayList;
+import org.ujoframework.implementation.array.*;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

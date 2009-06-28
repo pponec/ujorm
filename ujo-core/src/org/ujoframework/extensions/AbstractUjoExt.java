@@ -98,21 +98,21 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     // ------ LIST ----------
     
     /** Returns a count of Items. If the property is null, method returns 0. 
-     * <br>Inside is called a method ListUjoProperty.getItemCount() internally.
+     * <br>Inside is called a method UjoPropertyList.getItemCount() internally.
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> int getItemCount
-        ( final ListUjoProperty<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         ) {
-        return ((ListUjoProperty)property).getItemCount(this);
+        return ((UjoPropertyList)property).getItemCount(this);
     }
     
     /** Add Value, if the List is null then the list will be created.
-     * <br>Inside is called a method ListUjoProperty.addItem(...) internally.
+     * <br>Inside is called a method UjoPropertyList.addItem(...) internally.
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> UJO_IMPL add
-        ( final ListUjoProperty<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         , final ITEM value
         ) {
         property.addItem((UJO) this, value);
@@ -120,11 +120,11 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     }
 
     /** Add Value, if the List is null then the list will be created.
-     * <br>Inside is called a method ListUjoProperty.setItem(...) internally.
+     * <br>Inside is called a method UjoPropertyList.setItem(...) internally.
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> UJO_IMPL set
-        ( final ListUjoProperty<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         , final int index
         , final ITEM value
         ) {
@@ -133,14 +133,14 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     }
     
     /** Get Value
-     * <br>Inside is called a method ListUjoProperty.getItem(...) internally.
+     * <br>Inside is called a method UjoPropertyList.getItem(...) internally.
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM get
-        ( final ListUjoProperty<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         , final int index
         ) {
-        return (ITEM) ((ListUjoProperty)property).getItem(this, index);
+        return (ITEM) ((UjoPropertyList)property).getItem(this, index);
     }
     
 
@@ -152,36 +152,36 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM remove
-        ( final ListUjoProperty<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         , final int index
         ) {
-        return (ITEM) ((ListUjoProperty)property).getList(this).remove(index);
+        return (ITEM) ((UjoPropertyList)property).getList(this).remove(index);
     }
 
     /**
      * Removes the first occurrence in this list of the specified element. 
-     * @param property ListUjoProperty
+     * @param property UjoPropertyList
      * @param item Item to remove
      * @return true if the list is not null and contains the specified element
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> boolean remove
-        ( final ListUjoProperty<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         , final ITEM item
         ) {
-        return ((ListUjoProperty)property).removeItem(this, item);
+        return ((UjoPropertyList)property).removeItem(this, item);
     }
 
     
 
     /** Returns a not null List. If original list value is empty, the new List is created.
-     * <br>Inside is called a method ListUjoProperty.getList() internally.
+     * <br>Inside is called a method UjoPropertyList.getList() internally.
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( final ListUjoProperty<UJO,LIST,ITEM> property
+        ( final UjoPropertyList<UJO,LIST,ITEM> property
         ) {
-        return (LIST) ((ListUjoProperty)property).getList(this);
+        return (LIST) ((UjoPropertyList)property).getList(this);
     }
     
     /** Indicates whether a parameter value "equal to" property default value. */

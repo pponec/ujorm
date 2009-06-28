@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.ListUjoProperty;
+import org.ujoframework.extensions.UjoPropertyList;
 
 /**
  * A tool for encoding an object to a text and a text back to the object.
@@ -140,10 +140,10 @@ public class UjoCoder {
      */
     @SuppressWarnings("unchecked")
     public Object decodeValue(final UjoProperty property, final String aValue, final Class type) throws IllegalArgumentException {
-        if (property instanceof ListUjoProperty) {
+        if (property instanceof UjoPropertyList) {
             if (aValue==null || aValue.length()==0) { return null; }
             List result = new ArrayList();
-            ListUjoProperty propertyList = (ListUjoProperty) property;
+            UjoPropertyList propertyList = (UjoPropertyList) property;
             String separator = String.valueOf(getSeparator());
             StringTokenizer st = new StringTokenizer(aValue, separator);
             while (st.hasMoreTokens()) {

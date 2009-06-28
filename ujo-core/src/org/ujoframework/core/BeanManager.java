@@ -8,7 +8,7 @@ package org.ujoframework.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.ListUjoProperty;
+import org.ujoframework.extensions.UjoPropertyList;
 
 /**
  * Manager of <code>BeanUjo</code>
@@ -66,7 +66,7 @@ public class BeanManager<UJO,VALUE> {
                 
                 result = getMethodPlain(ujoClass, type, methodName);
                 if (result==null) {
-                    if (ListUjoProperty.class.isInstance(property) && !methodName.endsWith("s")) {
+                    if (UjoPropertyList.class.isInstance(property) && !methodName.endsWith("s")) {
                         // TAG name is a singular:
                         result = getMethodPlain(ujoClass, type, methodName+'s');
                     } else if ((type=getPrimitive(type))!=null) {

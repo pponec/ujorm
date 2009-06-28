@@ -437,7 +437,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             UjoProperty property = properties[i];
             if (!ujo.readAuthorization(action, property, this)) { continue; }
 
-            boolean list = property instanceof ListUjoProperty;
+            boolean list = property instanceof UjoPropertyList;
             String textSeparator = "";
             
             String value;
@@ -446,7 +446,7 @@ public class UjoManager implements Comparator<UjoProperty> {
                 textSeparator = objVal instanceof CharSequence ? "\"" : "" ;
                 
                 value
-                = list ? ((ListUjoProperty)property).getItemCount(ujo) + "]"
+                = list ? ((UjoPropertyList)property).getItemCount(ujo) + "]"
                 : objVal instanceof Ujo ? "UJO:" + objVal.hashCode()
                 : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, action)
                 : coder.encodeValue(ujo, false)
