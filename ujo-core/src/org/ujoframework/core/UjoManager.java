@@ -544,7 +544,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     @SuppressWarnings("unchecked")
     private void cacheXmlAttribute(final UjoProperty attribute) {
         if (attribute.isTypeOf(Ujo.class)
-        ||  attribute instanceof ListProperty
+        ||  attribute instanceof UjoPropertyList
         ){
             return;
         }
@@ -559,7 +559,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     private void cacheXmlElementBody(final Class type, final UjoProperty property) {
 
         if (property.isTypeOf(Ujo.class)
-        ||  property instanceof ListProperty
+        ||  property instanceof UjoPropertyList
         ){
             return;
         }

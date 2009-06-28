@@ -26,13 +26,13 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoComparator;
 
 /**
- * The main implementation of the interface ListProperty.
+ * The main implementation of the interface ListUjoProperty.
  * @see AbstractUjo
  * @author Paul Ponec
  */
 public class ListPropertyImpl<UJO extends Ujo, ITEM>
     extends Property<UJO,List<ITEM>>
-    implements ListProperty<UJO,ITEM> {
+    implements ListUjoProperty<UJO,ITEM> {
 
     /** Class of the list item. */
     final private Class<ITEM> itemType;
@@ -152,7 +152,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
 
     // --------- STATIC METHODS -------------------
 
-    /** A ListProperty Factory
+    /** A ListUjoProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
@@ -168,7 +168,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
         return result;
     }
 
-    /** A ListProperty Factory
+    /** A ListUjoProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
@@ -181,7 +181,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
     }
 
 
-    /** A ListProperty Factory
+    /** A ListUjoProperty Factory
      * Method assigns a next property index.
      * @hidden
      */
