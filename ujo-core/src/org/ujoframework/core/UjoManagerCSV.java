@@ -226,7 +226,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     
     /** Print Text */
     protected void printValue(Writer out, String value) throws IOException {
-        if (UjoManager.isValid(value)
+        if (UjoManager.isUsable(value)
         && (value.indexOf(separator)>=0
         ||  value.indexOf(quotation)>=0)
         ){
