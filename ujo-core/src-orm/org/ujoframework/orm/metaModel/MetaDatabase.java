@@ -273,17 +273,18 @@ public class MetaDatabase extends AbstractMetaModel {
             UjoSequencer seq = findFirstSequencer();
             if (seq!=null) {
                 PreparedStatement ps = null;
+                ResultSet rs = null;
                 try {
                     sql = getDialect().printSequenceCurrentValue(seq, out).toString();
                     ps = conn.prepareStatement(sql);
                     ps.setString(1, "-");
-                    ps.executeUpdate(sql);
+                    rs = ps.executeQuery();
                     LOGGER.info("Database structure is loaded: " + toString());
                     return; //
                 } catch (SQLException e) {
                     LOGGER.info("Database structure is not loaded: " + toString());
                 } finally {
-                    if (ps!=null) ps.close();
+                    close(null, ps, rs, false);
                 }
             }
 
