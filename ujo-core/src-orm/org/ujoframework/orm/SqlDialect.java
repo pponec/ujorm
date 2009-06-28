@@ -581,6 +581,7 @@ abstract public class SqlDialect {
         out.append("\n\t( id VARCHAR(96) NOT NULL PRIMARY KEY");
         out.append("\n\t, seq BIGINT DEFAULT " + cache + " NOT NULL");
         out.append("\n\t, cache INT DEFAULT " + cache + " NOT NULL");
+        out.append("\n\t, maxvalue INT DEFAULT 0 NOT NULL");  // TODO: maxvalue is not implemented now
         out.append("\n\t)");
         return out;
     }
