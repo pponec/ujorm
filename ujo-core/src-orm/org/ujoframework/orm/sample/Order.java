@@ -19,7 +19,6 @@ package org.ujoframework.orm.sample;
 import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.core.UjoManager;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;

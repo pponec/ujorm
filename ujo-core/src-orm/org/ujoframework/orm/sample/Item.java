@@ -17,7 +17,6 @@ package org.ujoframework.orm.sample;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
