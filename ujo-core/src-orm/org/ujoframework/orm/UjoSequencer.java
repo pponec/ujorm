@@ -43,7 +43,7 @@ public class UjoSequencer {
     }
 
     /** Returns the <strong>next sequence value</strong> by a synchronized method. */
-    public synchronized long nextValue() {
+    public synchronized long nextValue(final Session session) {
 
         if (sequence<seqLimit) {
             return ++sequence;
@@ -56,7 +56,7 @@ public class UjoSequencer {
             PreparedStatement statement = null;
             StringBuilder out = new StringBuilder(64);
             try {
-                connection = db.createConnection();
+                connection = session.getSeqConnection(db);
                 String tableName = db.getDialect().printFullTableName(getTable(), out).toString();
                 out.setLength(0);
 
