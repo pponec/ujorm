@@ -74,7 +74,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
     , final UjoProperty<UJO, VALUE> property
     , final VALUE value
     ) {
-        if (property.isDefault(ujo) && isValid(value)) {
+        if (property.isDefault(ujo) && isUsable(value)) {
             property.setValue(ujo, value);
         }
     }
@@ -89,15 +89,15 @@ abstract public class AbstractMetaModel extends QuickUjo {
     }
 
     /** Returns true, if the argument text is not null and not empty. */
-    protected boolean isValid(final CharSequence text) {
+    protected boolean isUsable(final CharSequence text) {
         final boolean result = text!=null && text.length()>0;
         return result;
     }
 
     /** Returns true, if the argument text is not null and not empty. */
-    protected boolean isValid(final Object value) {
+    protected boolean isUsable(final Object value) {
         final boolean result = value instanceof CharSequence
-            ? isValid((CharSequence)value)
+            ? isUsable((CharSequence)value)
             : value!=null
             ;
         return result;

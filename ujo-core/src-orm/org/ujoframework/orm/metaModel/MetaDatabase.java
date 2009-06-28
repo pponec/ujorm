@@ -38,6 +38,7 @@ import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
+import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
 
 /**
@@ -268,11 +269,29 @@ public class MetaDatabase extends AbstractMetaModel {
             conn = createConnection();
             stat = conn.createStatement();
 
+            // 0. Test for the presence of a SEQUENCE table:
+            UjoSequencer seq = findFirstSequencer();
+            if (seq!=null) {
+                PreparedStatement ps = null;
+                try {
+                    sql = getDialect().printSequenceCurrentValue(seq, out).toString();
+                    ps = conn.prepareStatement(sql);
+                    ps.setString(1, "-");
+                    ps.executeUpdate(sql);
+                    LOGGER.info("Database structure is loaded: " + toString());
+                    return; //
+                } catch (SQLException e) {
+                    LOGGER.info("Database structure is not loaded: " + toString());
+                } finally {
+                    if (ps!=null) ps.close();
+                }
+            }
+
             // 1. Create schemas:
             for (String schema : getSchemas()) {
                 out.setLength(0);
                 sql = getDialect().printCreateSchema(schema, out).toString();
-                if (isValid(sql)) {
+                if (isUsable(sql)) {
                     stat.executeUpdate(sql);
                     LOGGER.info(sql);
                 }
@@ -296,7 +315,7 @@ public class MetaDatabase extends AbstractMetaModel {
                     StringTokenizer st = new StringTokenizer(sql, ";");
                     while(st.hasMoreTokens()) {
                         sql = st.nextToken().trim();
-                        if (isValid(sql)) {
+                        if (isUsable(sql)) {
                             stat.executeUpdate(sql);
                             LOGGER.info(sql);
                         }
@@ -464,9 +483,19 @@ public class MetaDatabase extends AbstractMetaModel {
      */
     MetaTable findTable(String id) {
 
-        if (isValid(id)) for (MetaTable table : TABLES.getList(this)) {
+        if (isUsable(id)) for (MetaTable table : TABLES.getList(this)) {
             if (MetaTable.ID.equals(table, id)) {
                 return table;
+            }
+        }
+        return null;
+    }
+
+    /** Find the first sequence of the database or returns null if no sequence was not found. */
+    private UjoSequencer findFirstSequencer() {
+        for (MetaTable table : TABLES.of(this)) {
+            if (table.isTable()) {
+                return table.getSequencer();
             }
         }
         return null;
