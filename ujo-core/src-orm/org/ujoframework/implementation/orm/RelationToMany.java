@@ -43,8 +43,8 @@ public class RelationToMany<UJO extends OrmTable, ITEM extends OrmTable>
      * @param index An property order
      */
     @SuppressWarnings("unchecked")
-    public RelationToMany(String name, Class<ITEM> itemType, int index) {
-        super(name, (Class<UjoIterator<ITEM>>) (Class) UjoIterator.class, index );
+    public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {
+        init(name, (Class) UjoIterator.class, null, index, lock);
         this.itemType = itemType;
     }
 

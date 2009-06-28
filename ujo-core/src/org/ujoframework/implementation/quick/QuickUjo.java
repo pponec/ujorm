@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Paul Ponec
+ *  Copyright 2009 Paul Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,11 +24,10 @@ import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
 
 /**
- * This is a very fast abstract implementation of <code>Ujo</code>.
+ * This is a fast implementation of the <code>Ujo</code>.
  * For implementation define only a "public static final UjoProperty" constants call a static method init() from the static block located after the latest property.
- * The code syntax is Java 1.5 complied.
  * <br>All properties must be objects (no primitive types) in the current version of UJO Framework.
- * <br>Features: very good performance, quick coding.
+ * <br>Features: good performance, simple code.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujoframework.implementation.quick.*;
