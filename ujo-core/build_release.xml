@@ -60,6 +60,10 @@ Specification-Vendor: Paul Ponec
 Implementation-Title: ${implementationTitle}
 Implementation-Version: ${version}
 Implementation-Vendor: "Paul Ponec"</echo>
+
+        <!-- delete sample -->
+        <delete dir="build/classes/org/ujoframework/orm/sample" />
+
     </target>    
 
 
