@@ -17,7 +17,6 @@
 package org.ujoframework.extensions;
 
 import java.util.ArrayList;
-import org.ujoframework.implementation.array.*;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +29,7 @@ import org.ujoframework.core.UjoComparator;
  * @see AbstractUjo
  * @author Paul Ponec
  */
-public class ListPropertyImpl<UJO extends Ujo, ITEM>
+public class ListProperty<UJO extends Ujo, ITEM>
     extends Property<UJO,List<ITEM>>
     implements ListUjoProperty<UJO,ITEM> {
 
@@ -38,7 +37,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
     final private Class<ITEM> itemType;
 
     /** Protected constructor */
-    protected ListPropertyImpl(Class<ITEM> itemType) {
+    protected ListProperty(Class<ITEM> itemType) {
         this.itemType = itemType;
     }
 
@@ -52,7 +51,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
      * @return
      */
     @SuppressWarnings("unchecked")
-    final protected ListPropertyImpl<UJO,ITEM> initList
+    final protected ListProperty<UJO,ITEM> initList
     ( final String name
     , final int index
     , final Boolean lock
@@ -157,13 +156,13 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
+    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
     ( final String name
     , final Class<ITEM> itemType
     , final int index
     , final boolean lock
     ) {
-        final ListPropertyImpl<UJO,ITEM> result = new ListPropertyImpl<UJO,ITEM>(itemType);
+        final ListProperty<UJO,ITEM> result = new ListProperty<UJO,ITEM>(itemType);
         result.init(name, (Class) List.class, null, index, lock);
         return result;
     }
@@ -172,7 +171,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
+    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
     ( final String name
     , final Class<ITEM> itemType
     , final int index
@@ -185,7 +184,7 @@ public class ListPropertyImpl<UJO extends Ujo, ITEM>
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
+    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
     ( final String name
     , final Class<ITEM> itemType
     ) {
