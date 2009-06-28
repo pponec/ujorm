@@ -72,7 +72,7 @@ public class MetaPKey extends AbstractMetaModel {
                 return false;
             }
 
-            final long value = TABLE.of(this).getSequencer().nextValue();
+            final long value = TABLE.of(this).getSequencer().nextValue(bo.readSession());
             if (Long.class==property.getType()) {
                 property.setValue(bo, value);
                 return true;

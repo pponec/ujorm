@@ -62,8 +62,11 @@ public class Session {
     /** Orm parameters. */
     final private MetaParams params;
 
-    /** Database connection */
-    private Map<MetaDatabase, Connection> connections = new HashMap<MetaDatabase, Connection>(2);
+    /** Database connections (common and sequence)  */
+    final private HashMap<MetaDatabase, Connection>[] connections = new HashMap[]
+    { new HashMap<MetaDatabase, Connection>(2) // common connections
+    , new HashMap<MetaDatabase, Connection>(2) // sequence connections
+    };
 
     /** A session cache */
     private Map<CacheKey, OrmUjo> cache;
@@ -93,7 +96,7 @@ public class Session {
         commit(false);
     }
 
-    /** Make commit/rollback for all databases.
+    /** Make commit/rollback for all 'production' databases.
      * @param commit if parameters is false than make a rollback.
      */
     protected void commit(boolean commit) {
@@ -101,9 +104,9 @@ public class Session {
         MetaDatabase database = null;
         String errMessage = "Can't make commit of DB ";
 
-        for (MetaDatabase db : connections.keySet()) {
+        for (MetaDatabase db : connections[0].keySet()) {
             try {
-                Connection conn = connections.get(db);
+                Connection conn = connections[0].get(db);
                 if (commit) {
                     conn.commit();
                 } else {
@@ -439,18 +442,28 @@ public class Session {
         return result;
     }
 
-    /** Get connection for a required database and set an autocommit na false. */
-    public Connection getConnection(MetaDatabase database) throws IllegalStateException {
-        Connection result = connections.get(database);
+    /** Get connection for a required database with an autocommit na false. */
+    private Connection getConnection_(final MetaDatabase database, final int index) throws IllegalStateException {
+        Connection result = connections[index].get(database);
         if (result == null) {
             try {
                 result = database.createConnection();
             } catch (Exception e) {
                 throw new IllegalStateException("Can't create an connection for " + database, e);
             }
-            connections.put(database, result);
+            connections[index].put(database, result);
         }
         return result;
+    }
+
+    /** Get connection for a required database with an autocommit na false. */
+    final public Connection getConnection(final MetaDatabase database) throws IllegalStateException {
+        return getConnection_(database, 0);
+    }
+
+    /** Get sequence connection for a required database with an autocommit na false. For internal use only. */
+    final Connection getSeqConnection(final MetaDatabase database) throws IllegalStateException {
+        return getConnection_(database, 1);
     }
 
     /** Create new statement */
@@ -543,6 +556,7 @@ public class Session {
     /** Close all DB connections.
      * @throws java.lang.IllegalStateException The exception contains a bug from Connection close;
      */
+    @SuppressWarnings("unchecked")
     public void close() throws IllegalStateException {
 
         cache = null;
@@ -550,15 +564,17 @@ public class Session {
         MetaDatabase database = null;
         String errMessage = "Can't close connection for DB ";
 
-        for (MetaDatabase db : connections.keySet()) {
-            try {
-                Connection conn = connections.get(db);
-                conn.close();
-            } catch (Throwable e) {
-                LOGGER.log(Level.SEVERE, errMessage + db, e);
-                if (exception == null) {
-                    exception = e;
-                    database = db;
+        for (HashMap<MetaDatabase,Connection> cons : connections) {
+            for (MetaDatabase db : cons.keySet()) {
+                try {
+                    Connection conn = cons.get(db);
+                    if (conn!=null) conn.close();
+                } catch (Throwable e) {
+                    LOGGER.log(Level.SEVERE, errMessage + db, e);
+                    if (exception == null) {
+                        exception = e;
+                        database = db;
+                    }
                 }
             }
         }
