@@ -27,7 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.ListUjoProperty;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.extensions.UjoPropertyList;
 import org.ujoframework.extensions.UjoTextable;
@@ -201,7 +201,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             
             if (value instanceof List) {
                 final Class itemType = property instanceof UjoPropertyList ? ((UjoPropertyList)property).getItemType() : null ;
-                final Class baseType = property instanceof ListProperty || property.getType()==value.getClass()
+                final Class baseType = property instanceof ListUjoProperty || property.getType()==value.getClass()
                     ? null
                     : value.getClass()
                     ;

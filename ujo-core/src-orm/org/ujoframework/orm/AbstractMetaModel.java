@@ -18,7 +18,7 @@ package org.ujoframework.orm;
 
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.ListProperty;
+import org.ujoframework.extensions.ListUjoProperty;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.implementation.quick.QuickUjo;
 
@@ -51,9 +51,9 @@ abstract public class AbstractMetaModel extends QuickUjo {
                 }
             }
 
-            else if (p instanceof ListProperty
-            && AbstractMetaModel.class.isAssignableFrom( ((ListProperty)p).getItemType())) {
-                for (AbstractMetaModel m : ((ListProperty<AbstractMetaModel,AbstractMetaModel>)p).getList(this) ) {
+            else if (p instanceof ListUjoProperty
+            && AbstractMetaModel.class.isAssignableFrom( ((ListUjoProperty)p).getItemType())) {
+                for (AbstractMetaModel m : ((ListUjoProperty<AbstractMetaModel,AbstractMetaModel>)p).getList(this) ) {
                     m.setReadOnly(recurse);
                 }
             }
