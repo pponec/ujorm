@@ -19,7 +19,7 @@ package org.ujoframework.implementation.quick;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.ListPropertyImpl;
+import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
 
@@ -164,11 +164,11 @@ public abstract class QuickUjo extends AbstractUjo {
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> ListPropertyImpl<UJO,ITEM> newListProperty
+    protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
     ( String name
     , Class<ITEM> itemType
     ) {
-        return ListPropertyImpl.newListProperty(name, itemType, -1, false);
+        return ListProperty.newListProperty(name, itemType, -1, false);
     }
     
 }
