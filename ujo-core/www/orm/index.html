@@ -62,11 +62,7 @@
         See how to create database and to how to INSERT an order with two items into database:
 
 <pre name="code" class="java">
-  if (true) {
-      OrmHandler.getInstance().createDatabase(Database.class);
-  } else {
-      OrmHandler.getInstance().loadDatabase(Database.class);
-  }
+  OrmHandler.getInstance().loadDatabase(Database.class);
 
   Order order = new Order();
   order.setDate(new Date());
