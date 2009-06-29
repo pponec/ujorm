@@ -2,7 +2,7 @@
 <html lang="en"><head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>package.html - UJO (en)</title>
 
-        <link rel="stylesheet" type="text/css" href="style.css" title="style">
+        <link rel="stylesheet" type="text/css" href="../style.css" title="style">
         <script type="text/javascript">
 function loadCSS (cssUrl) {
 var oLink = document.createElement("link")
@@ -16,28 +16,34 @@ document.body.appendChild(oLink);
     <body style="background-color: white;">
         The Hibernate support.<br>
         <br />
-        <h2 id="Hibernate">Content (TODO)</h2>
+        <h2 id="Hibernate">Content</h2>
           <ul>
-              <li><a href="#1">Prologue</a></li>
-              <li><a href="#2">Benefit</a></li>
-              <li><a href="#3">Samples</a></li>
+              <li><a href="#Prologue">Prologue</a></li>
+              <li><a href="#Benefit">Benefit</a></li>
+              <li><a href="#Samples">Samples</a></li>
           </ul>
 
 
-        <h2 id="1">Prologue (TODO)</h2>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Quisque ante neque, molestie sed pellentesque id, feugiat ut purus.
-Sed vestibulum magna id elit suscipit varius.
+        <h2 id="Prologue">Prologue</h2>
+TODO ...
 
-        <h2 id="2">Benefit (todo)</h2>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Quisque ante neque, molestie sed pellentesque id, feugiat ut purus.
-Sed vestibulum magna id elit suscipit varius.
+        <h2 id="Benefit">Benefit</h2>
+The UJO object can improve the performance of the Hibernate query language
+mainly the SELECT statement. In my tests, I measured a <strong>1.75 times</strong> increase of performance.
+The test was performed on the  <strong>Hibernate</strong> 3.3.1.GA with an EhCacheProvider
+and <strong>SpeedUjo</strong> object implementation.
 
-        <h2 id="3">Samples (todo)</h2>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Quisque ante neque, molestie sed pellentesque id, feugiat ut purus.
-Sed vestibulum magna id elit suscipit varius.
+
+        <h2 id="Samples">Samples</h2>
+There is possible to change a default Hibernate Accessor in HBM file by the next sample:
+<pre class="pre">
+&lt;hibernate-mapping
+  package="performance.test"
+  default-access="org.ujoframework.hibernateSupport.UjoPropertyAccessor"
+  &gt;
+  &lt;class name="MyClass" table="MY_CLASS" &gt;
+     ...
+</pre>
 
     </body>
 </html>

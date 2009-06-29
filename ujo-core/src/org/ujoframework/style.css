@@ -3,7 +3,7 @@
 h2 { color: #080071; }
 h3, h4 { color: #6981bf; }
 
-.pre {  margin: 20px; 
+.pre, .java {  margin: 20px;
         border: 1px blue solid; 
         padding: 5px; 
         background-color: #f6f7f9; 
@@ -12,7 +12,7 @@ h3, h4 { color: #6981bf; }
         -moz-border-radius-bottomleft:7px;
         -moz-border-radius-bottomright:7px;
         -moz-border-radius-topleft:7px;
-        -moz-border-radius-topright:7px;        
+        -moz-border-radius-topright:7px;
 }
 .java-block-comment {color: #737373}
 .java-string-literal {color: #99006b}
@@ -66,7 +66,8 @@ a.undecor img {
 
 /* --- NEW NETBEANS STYLE --- */
 
-body pre.pre {
+body pre.pre,
+body pre.java {
         color: #000000; 
         background-color: #ffffff; 
         font-family: Monospace;
