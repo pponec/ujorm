@@ -174,7 +174,7 @@ public class OrmHandler {
 
         switch (MetaParams.ORM2DLL_POLICY.of(session.getParameters())) {
             case CREATE_DDL:
-                dbModel.create();
+                dbModel.create(session);
                 break;
         }
 

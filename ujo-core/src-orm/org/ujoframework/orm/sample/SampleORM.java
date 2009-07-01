@@ -51,7 +51,6 @@ public class SampleORM {
 
         boolean yesIWantLoadExternalConfig = false;
         if (yesIWantLoadExternalConfig) {
-
             URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
             OrmHandler.getInstance().config(config, true);
         }

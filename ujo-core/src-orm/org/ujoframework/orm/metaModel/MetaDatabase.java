@@ -259,13 +259,12 @@ public class MetaDatabase extends AbstractMetaModel {
 
 
     /** Create DB */
-    public void create() {
-        Connection conn = null;
+    public void create(Session session) {
+        Connection conn = session.getConnection(this);
         Statement stat = null;
         StringBuilder out = new StringBuilder(256);
         String sql = "";
         try {
-            conn = createConnection();
             stat = conn.createStatement();
 
             // 0. Test for the presence of a SEQUENCE table:
@@ -278,12 +277,12 @@ public class MetaDatabase extends AbstractMetaModel {
                     ps = conn.prepareStatement(sql);
                     ps.setString(1, "-");
                     rs = ps.executeQuery();
-                    LOGGER.info("Database structure is loaded: " + toString());
+                    LOGGER.info("Database structure is loaded: " + getId());
                     return; //
                 } catch (SQLException e) {
-                    LOGGER.info("Database structure is not loaded: " + toString());
+                    LOGGER.info("Database structure is not loaded: " + getId());
+                    conn.rollback();
                 } finally {
-                    conn.commit();
                     close(null, ps, rs, false);
                 }
             }
@@ -335,20 +334,12 @@ public class MetaDatabase extends AbstractMetaModel {
             conn.commit();
 
         } catch (Throwable e) {
-            if (conn!=null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    LOGGER.log(Level.WARNING, "Can't rollback DB" + toString(), ex);
-                }
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                LOGGER.log(Level.WARNING, "Can't rollback DB" + getId(), ex);
             }
             throw new IllegalArgumentException(Session.SQL_ILLEGAL + sql, e);
-        } finally {
-            try {
-                close(conn, stat, null, true);
-            } catch (IllegalStateException ex) {
-                LOGGER.log(Level.WARNING, "Can't rollback DB" + toString(), ex);
-            }
         }
     }
 
@@ -422,10 +413,9 @@ public class MetaDatabase extends AbstractMetaModel {
 
 
 
-    /** Returns a SCHEMA of the MetaDatabase. */
-    @Override
-    public String toString() {
-        return SCHEMA.of(this);
+    /** Returns an ID of the MetaDatabase. */
+    public String getId() {
+        return ID.of(this);
     }
 
     /** Create connection with auto-commit false. */

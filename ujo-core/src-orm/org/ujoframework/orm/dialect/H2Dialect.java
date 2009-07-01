@@ -23,7 +23,7 @@ public class H2Dialect extends SqlDialect {
 
     /** Returns a default JDBC Driver */
     public String getJdbcUrl() {
-        return "jdbc:h2:mem:";
+        return "jdbc:h2:mem:db1";
     }
 
     /** Returns a JDBC Driver */
