@@ -623,7 +623,7 @@ abstract public class SqlDialect {
         out.append('\n');
     }
 
-    /** Print SQL 'CREATE SCHEMA' */
+    /** Print SQL 'COMMIT' */
     public Appendable printCommit(Appendable out) throws IOException {
         out.append("COMMIT");
         return out;
