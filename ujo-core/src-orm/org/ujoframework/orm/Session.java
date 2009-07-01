@@ -553,7 +553,7 @@ public class Session {
         return result;
     }
 
-    /** Close all DB connections.
+    /** Close and release all DB connections.
      * @throws java.lang.IllegalStateException The exception contains a bug from Connection close;
      */
     @SuppressWarnings("unchecked")
@@ -577,6 +577,7 @@ public class Session {
                     }
                 }
             }
+            cons.clear();
         }
         if (exception != null) {
             throw new IllegalStateException(errMessage + database, exception);
