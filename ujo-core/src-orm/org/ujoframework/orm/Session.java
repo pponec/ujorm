@@ -52,7 +52,7 @@ public class Session {
     /** Common title to print the SQL VALUES */
     private static final String SQL_VALUES  = "\n-- SQL VALUES: ";
     /** Exception SQL message prefix */
-    private static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
+    public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
@@ -397,10 +397,6 @@ public class Session {
         } catch (Throwable e) {
             throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         }
-    }
-
-    public <UJO extends OrmUjo> UJO single(Query query) {
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     /** Find column by a table type. */

@@ -19,7 +19,6 @@ package org.ujoframework.implementation.quick;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
 

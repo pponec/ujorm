@@ -15,24 +15,19 @@
  */
 package org.ujoframework.implementation.quick;
 
-import org.ujoframework.implementation.mapImpl.*;
-import org.ujoframework.implementation.map.*;
-import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.UjoMiddle;
 
 /**
- * This is an middle extended implementation of a setter and getter methods for an easier access for developpers.
- * <br />Notes:
- * <ul>
- *   <li>the NULL key is not supported in this implementation</li>
- *   <li>the map implementation is a proxy to an internal Map&lt;String,Object&gt; object</li>
- * </ul>
- * <br>Sample of usage:
+ * This is a fast implementation of the <code>UjoMiddle</code>.
+ * For implementation define only a "public static final UjoProperty" constants call a static method init() from the static block located after the latest property.
+ * <br>All properties must be objects (no primitive types) in the current version of UJO Framework.
+ * <br>Features: good performance, simple code.
+ * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujoframework.implementation.quick.*;
- * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjoMid&lt;Person&gt; {
+ * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjo {
  *
  *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(String.<span class="java-keywords">class</span>);
  *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(Boolean.<span class="java-keywords">class</span>);
@@ -42,10 +37,10 @@ import org.ujoframework.extensions.UjoMiddle;
  *        init(Person.<span class="java-keywords">class</span>);
  *    }
  * }</pre>
- * 
- * @see MapProperty
- * @author Paul Ponec
- * @since UJO release 0.90
+ *
+ * @see UjoMiddle
+ * @author Pavel Ponec
+ * @composed 1 - * Property
  */
 abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid>
     extends QuickUjo
