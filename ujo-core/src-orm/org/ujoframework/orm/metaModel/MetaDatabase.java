@@ -114,7 +114,6 @@ public class MetaDatabase extends AbstractMetaModel {
         }
 
         changeDefault(this, ID      , database.getClass().getSimpleName());
-        changeDefault(this, SCHEMA  , database.getClass().getSimpleName());
         changeDefault(this, JDBC_URL, getDialect().getJdbcUrl());
         changeDefault(this, JDBC_DRIVER, getDialect().getJdbcDriver());
 
@@ -469,12 +468,15 @@ public class MetaDatabase extends AbstractMetaModel {
         return ormHandler.getSession();
     }
 
-    /** Get all table schemas. */
+    /** Get all table schemas */
     public Set<String> getSchemas() {
         final Set<String> result = new HashSet<String>();
         for (MetaTable table : TABLES.of(this)) {
             if (table.isPersistent() && !table.isSelectModel()) {
-                result.add(MetaTable.SCHEMA.of(table).toLowerCase());
+                String schema = MetaTable.SCHEMA.of(table);
+                if (isUsable(schema)) {
+                   result.add(schema);
+                }
             }
         }
         return result;
