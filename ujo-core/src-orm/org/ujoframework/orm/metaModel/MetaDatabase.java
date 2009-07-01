@@ -261,9 +261,9 @@ public class MetaDatabase extends AbstractMetaModel {
 
     /** Create DB */
     public void create() {
-        Connection conn = ormHandler.getSession().getConnection(this);
+        Connection conn = null;
         Statement stat = null;
-        StringBuilder out = new StringBuilder(128);
+        StringBuilder out = new StringBuilder(256);
         String sql = "";
         try {
             conn = createConnection();
@@ -284,6 +284,7 @@ public class MetaDatabase extends AbstractMetaModel {
                 } catch (SQLException e) {
                     LOGGER.info("Database structure is not loaded: " + toString());
                 } finally {
+                    conn.commit();
                     close(null, ps, rs, false);
                 }
             }
@@ -342,7 +343,7 @@ public class MetaDatabase extends AbstractMetaModel {
                     LOGGER.log(Level.WARNING, "Can't rollback DB" + toString(), ex);
                 }
             }
-            throw new IllegalArgumentException("Statement error:\n" + sql, e);
+            throw new IllegalArgumentException(Session.SQL_ILLEGAL + sql, e);
         } finally {
             try {
                 close(conn, stat, null, true);

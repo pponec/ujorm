@@ -27,8 +27,8 @@ import org.ujoframework.orm.annot.View;
  * @hidden
  */
 @Db(schema="db1", dialect=org.ujoframework.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
-//@Db(schema="db1", dialect=org.ujoframework.orm.dialect.DerbyDialect.class, user="sa", password="", jdbcUrl="jdbc:derby:C:\\temp\\derby-sample;create=true")
 //@Db(schema="db1", dialect=org.ujoframework.orm.dialect.PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/db1")
+//@Db(schema="db1", dialect=org.ujoframework.orm.dialect.DerbyDialect.class, user="sa", password="", jdbcUrl="jdbc:derby:C:\\temp\\derby-sample;create=true")
 //@Db(schema="db1", dialect=org.ujoframework.orm.dialect.MySqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:mysql://127.0.0.1:3306/db1")
 public class Database extends OrmTable<Database> {
 
