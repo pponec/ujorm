@@ -24,7 +24,7 @@
     <tstamp/>
 
     <!-- Parrents, separated by "," character. -->
-    <property name="include" value="*.*,src/**,src-tools/**,nbproject/project*,test/**" />
+    <property name="include" value="*.*,src*/**,nbproject/project*,test*/**" />
 
     <!-- Parrents, separated by "," character. -->
     <property name="exclude" value=",**/.*,**/*.class*,**/*.rar,**/*.java~,*.log,build*.xml,**/*.svg,www/**,**/z_package*.html,junit*.properties" />
