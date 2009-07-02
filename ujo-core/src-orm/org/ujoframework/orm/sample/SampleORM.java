@@ -209,7 +209,7 @@ public class SampleORM {
         System.out.println("Next: " + isNext);
     }
 
-    /** Using SELECT by a object relations */
+    /** Using SELECT by an object relations */
     public void useRelation() {
         Session session = OrmHandler.getInstance().getSession();
         Database db = session.getDatabase(Database.class);
@@ -262,10 +262,10 @@ public class SampleORM {
 
         StringBuilder msg = new StringBuilder()
             .append("** METADATA OF COLUMN: " + Order.DESCR)
-            .append("\n\t DB name: " + c.getFullName())
             .append("\n\t Length : " + c.getMaxLength())
             .append("\n\t NotNull: " + c.isMandatory())
             .append("\n\t PrimKey: " + c.isPrimaryKey())
+            .append("\n\t DB name: " + c.getFullName())
             ;
         System.out.println(msg);
     }

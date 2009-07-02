@@ -77,7 +77,7 @@ public class OrmSampleTest extends TestCase {
         }
     }
 
-    /** Using SELECT by a object relations */
+    /** Using SELECT by an object relations */
     public void useRelation() {
         Session session = OrmHandler.getInstance().getSession();
         Database db = session.getDatabase(Database.class);
