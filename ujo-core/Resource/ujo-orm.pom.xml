@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>0.89.B1</version>
+    <version>0.89.B2</version>
     <name>UjoOrm</name>
     <contributors>
         <contributor>
@@ -64,6 +64,8 @@ UJO Frameworkprovides a non-traditional object architecture  different from Java
                 <configuration>
                     <archive>
                         <manifest>
+                            <mainClass  >org.ujoframework.core.UjoManager</mainClass>
+                            <packageName>org.ujoframework.core</packageName>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
