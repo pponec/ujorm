@@ -28,7 +28,8 @@ import org.ujoframework.core.UjoManager;
 
 
 /**
- *
+ * A support for the <a href="https://www.hibernate.org/" target="_top">Hibernate</a> framework.
+ * See the <a href="package-summary.html#Hibernate">description</a> for more information.
  * @author hampl
  */
 public class UjoPropertyGetter implements Getter {
