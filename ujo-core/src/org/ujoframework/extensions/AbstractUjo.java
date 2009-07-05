@@ -64,8 +64,11 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
         return UjoManager.getInstance();
     }
     
-    /** Read all defined properties. <br>
-     * An order of properties can be orderd by definition in code, but by a Java sepcification the feature is not guaranteed.
+    /** Returns all direct properties.
+     * <br>Note 1:An order of properties is sorted by a value of the index attribute.
+     * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
+     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
+     * @see UjoProperty#isDirect()
      */
     public UjoProperty[] readProperties() {
         final UjoProperty[] result = readUjoManager().readProperties(getClass());
