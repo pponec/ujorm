@@ -17,8 +17,12 @@
 package org.ujoframework.orm.metaModel;
 
 import java.io.CharArrayWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.core.UjoManager;
@@ -84,16 +88,29 @@ public class MetaRoot extends AbstractMetaModel {
         return out.toString();
     }
 
-    /** Pring all model in a XML format */
-    public void print(Writer writer) throws IOException {
-        String defaultXmlHeader = new StringBuilder(128)
+    /** Returns XML header */
+    private String getXmlHeader() {
+        final SimpleDateFormat dFormat = new SimpleDateFormat("yyyy/MM/dd mm:HH", Locale.ENGLISH);
+        final String result = new StringBuilder(128)
           .append(UjoManagerXML.XML_HEADER)
           .append("\n<!-- OrmUjo configuration file release ")
           .append(UjoManager.projectVersion())
+          .append(" was created ")
+          .append(dFormat.format(new Date()))
           .append(" -->")
           .toString()
           ;
-        UjoManagerXML.getInstance().saveXML(writer, this, defaultXmlHeader, getClass());
+        return result;
+    }
+
+    /** Pring all model in a XML format */
+    public void print(Writer writer) throws IOException {
+        UjoManagerXML.getInstance().saveXML(writer, this, getXmlHeader(), getClass());
+    }
+
+    /** Pring all model in a XML format */
+    public void print(File file) throws IOException {
+        UjoManagerXML.getInstance().saveXML(file, this, getXmlHeader(), getClass());
     }
 
     /** Returns the first database with the same schemaName - and remove it from the list.
