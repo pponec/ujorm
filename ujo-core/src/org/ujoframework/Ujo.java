@@ -84,8 +84,9 @@ public interface Ujo {
     public UjoProperty[] readProperties();
     
     /**
-     * Get an  authorization of the property for different actions.
+     * Get an authorization of the property for different actions.
      * <br>There is recommended to return a true value for all actions by a default.
+     * <br>Note: An implemetace may return the original property array so it is possible to change some original property in the array from an extefnal code.
      *
      * @param action Type of request. See constant(s) UjoAction.ACTION_* for more information. 
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY.
