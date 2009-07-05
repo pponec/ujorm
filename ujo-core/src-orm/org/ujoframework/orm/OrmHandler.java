@@ -17,6 +17,8 @@
 package org.ujoframework.orm;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -30,7 +32,6 @@ import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaRoot;
 import org.ujoframework.orm.annot.Db;
-import org.ujoframework.orm.ao.Orm2ddlPolicy;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.metaModel.MetaRelation2Many;
@@ -168,19 +169,34 @@ public class OrmHandler {
     }
 
     /** LoadInternal a metada and create database */
-    public <UJO extends OrmUjo> MetaDatabase loadDatabase(Class<UJO> databaseModel) {
-
-        MetaDatabase dbModel = loadDatabaseInternal(databaseModel);
-
-        switch (MetaParams.ORM2DLL_POLICY.of(session.getParameters())) {
-            case CREATE_DDL:
-                dbModel.create(session);
-                break;
-        }
-
-        return dbModel;
+    @SuppressWarnings("unchecked")
+    final public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
+        loadDatabase(new Class[] {databaseModel});
     }
 
+    /** LoadInternal a metada and create database */
+    public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModels) {
+
+        for (Class<UJO> databaseModel : databaseModels) {
+            MetaDatabase dbModel = loadDatabaseInternal(databaseModel);
+
+            switch (MetaParams.ORM2DLL_POLICY.of(session.getParameters())) {
+                case CREATE_DDL:
+                    dbModel.create(session);
+                    break;
+            }
+        }
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("DATABASE META-MODEL:\n" + databases.toString());
+        }
+
+        File outConfigFile = MetaParams.SAVE_CONFIG_TO_FILE.of(getParameters());
+        if (outConfigFile!=null) try {
+            databases.print(outConfigFile);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Can't create configuration " + outConfigFile);
+        }
+    }
 
     /** Create an instance from the class */
     private <UJO extends OrmUjo> UJO getInstance(Class<UJO> databaseModel) {

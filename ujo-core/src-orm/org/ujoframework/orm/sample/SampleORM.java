@@ -31,7 +31,8 @@ import org.ujoframework.criterion.Operator;
 import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
- * SampleORM of usages: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE.
+ * The ORM tutorial in the class.
+ * See how to create statements for CREATE TABLE, INSERT, SELECT, UPDATE and DELETE.
  * @author Pavel Ponec
  */
 public class SampleORM {

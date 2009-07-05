@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.io.File;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
@@ -48,6 +49,8 @@ public class MetaParams extends AbstractMetaModel {
     public static final Property<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 64);
     /** A policy to defining the database structure by a DDL. */
     public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_DDL);
+    /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
+    public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
     /** The property initialization */
     static{init(CLASS);}
 
