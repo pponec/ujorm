@@ -77,44 +77,44 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
     // ------ LIST ----------
     
     /** Returns a count of Items. If the property is null, method returns 0. 
-     * <br>Inside is called a method UjoPropertyList.getItemCount() .
+     * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() .
      */
-    public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> int getItemCount
-        ( UjoPropertyList<UJO,LIST,ITEM> property);
+    public <UJO extends UJO_IMPL, ITEM> int getItemCount
+        ( ListUjoProperty<UJO,ITEM> property);
 
     
     /** Add Value, if the List is null then the list will be created.
-     * <br>Inside is called a method UjoPropertyList.addItem(...) .
+     * <br>Inside is called a method ListUjoPropertyCommon.addItem(...) .
      */
-    public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> Ujo add
-        ( UjoPropertyList<UJO,LIST,ITEM> property
+    public <UJO extends UJO_IMPL, ITEM> Ujo add
+        ( ListUjoProperty<UJO,ITEM> property
         , ITEM value);
 
     /** Add Value, if the List is null then the list will be created.
-     * <br>Inside is called a method UjoPropertyList.setItem(...) .
+     * <br>Inside is called a method ListUjoPropertyCommon.setItem(...) .
      */
-    public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> Ujo set
-        ( UjoPropertyList<UJO,LIST,ITEM> property
+    public <UJO extends UJO_IMPL, ITEM> Ujo set
+        ( ListUjoProperty<UJO,ITEM> property
         , int index
         , ITEM value);
     
     /** Get Value
-     * <br>Inside is called a method UjoPropertyList.getItem(...) .
+     * <br>Inside is called a method ListUjoPropertyCommon.getItem(...) .
      */
-    public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM get
-        ( UjoPropertyList<UJO,LIST,ITEM> property
+    public <UJO extends UJO_IMPL, ITEM> ITEM get
+        ( ListUjoProperty<UJO,ITEM> property
         , int index);
     
     /** Get Value */
-    public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> ITEM remove
-        ( UjoPropertyList<UJO,LIST,ITEM> property
+    public <UJO extends UJO_IMPL, ITEM> ITEM remove
+        ( ListUjoProperty<UJO,ITEM> property
         , int index);
 
     /** Returns a not null List. If original list value is empty, the new List is created.
-     * <br>Inside is called a method UjoPropertyList.getList() .
+     * <br>Inside is called a method ListUjoPropertyCommon.getList() .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( UjoPropertyList<UJO,LIST,ITEM> property
+        ( ListUjoProperty<UJO,ITEM> property
         );
 
 

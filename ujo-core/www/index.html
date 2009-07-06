@@ -211,7 +211,7 @@ Released   : 20080129
   <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">writeValue</span>(UjoProperty property, Object value) {
     map.put(property, value);
   }
-  <span class="keyword-directive">public</span> UjoProperty[] <span class="java-layer-method">readProperties</span>() {
+  <span class="keyword-directive">public</span> UjoPropertyList <span class="java-layer-method">readProperties</span>() {
     <span class="keyword-directive">return</span> UjoManager.getInstance().readProperties(getClass());
   }
   <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, UjoProperty property, Object value) {

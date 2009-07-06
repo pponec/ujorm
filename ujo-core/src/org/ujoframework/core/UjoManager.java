@@ -436,7 +436,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             UjoProperty property = properties.get(i);
             if (!ujo.readAuthorization(action, property, this)) { continue; }
 
-            boolean list = property instanceof UjoPropertyList;
+            boolean list = property instanceof ListUjoProperty;
             String textSeparator = "";
             
             String value;
@@ -445,7 +445,7 @@ public class UjoManager implements Comparator<UjoProperty> {
                 textSeparator = objVal instanceof CharSequence ? "\"" : "" ;
                 
                 value
-                = list ? ((UjoPropertyList)property).getItemCount(ujo) + "]"
+                = list ? ((ListUjoProperty)property).getItemCount(ujo) + "]"
                 : objVal instanceof Ujo ? "UJO:" + objVal.hashCode()
                 : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, action)
                 : coder.encodeValue(ujo, false)
@@ -543,7 +543,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     @SuppressWarnings("unchecked")
     private void cacheXmlAttribute(final UjoProperty attribute) {
         if (attribute.isTypeOf(Ujo.class)
-        ||  attribute instanceof UjoPropertyList
+        ||  attribute instanceof ListUjoProperty
         ){
             return;
         }
@@ -558,7 +558,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     private void cacheXmlElementBody(final Class type, final UjoProperty property) {
 
         if (property.isTypeOf(Ujo.class)
-        ||  property instanceof UjoPropertyList
+        ||  property instanceof ListUjoProperty
         ){
             return;
         }
