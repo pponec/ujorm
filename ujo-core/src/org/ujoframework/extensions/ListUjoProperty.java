@@ -12,17 +12,57 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujoframework.extensions;
 
 import java.util.List;
 import org.ujoframework.Ujo;
+import org.ujoframework.UjoProperty;
 
 /**
- * Simplification version of the UjoPropertyList of type <strong>List</strong>.
+ * A property list metadata of Unified Data Object.
  * @author Pavel Ponec
  */
-public interface ListUjoProperty<UJO extends Ujo, ITEM> extends UjoPropertyList<UJO,List<ITEM>,ITEM> {
-    
+public interface ListUjoProperty<UJO extends Ujo, ITEM> extends UjoProperty<UJO,List<ITEM>> {
+
+    /** Returns a class of the property. */
+    public Class<ITEM> getItemType();
+
+    /** Returns a count of Items. If the property is null, method returns 0. */
+    public int getItemCount(UJO ujo);
+
+    /** Returns true if the item type is a type or subtype of the parameter class. */
+    public boolean isItemTypeOf(Class type);
+
+    /**
+     * Returns a value of property. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
+     */
+    public ITEM getItem(UJO ujo, int index);
+
+    /**
+     * Return a not null List. If original list value is empty, the new List is created.
+     * @see #getItem(Ujo, int)
+     */
+    public List<ITEM> getList(UJO ujo);
+
+    /** Set a property item value.
+     * @return the element previously at the specified position.
+     */
+    public ITEM setItem(UJO ujo, int index, ITEM value);
+
+    /** Add an Item Value. If List is null, the method create an instance of List (for exact behaviour see an implementation).
+     * @return true (as per the general contract of Collection.add).
+     */
+    public boolean addItem(UJO ujo, ITEM value);
+
+    /** Removes the first occurrence in this list of the specified element.
+     * @return true if this list is not null and contains the specified element, otherwise returns false.
+     * @since 0.81
+     */
+    public boolean removeItem(UJO ujo, ITEM value);
+
+    /** Indicates whether a list of items is null or empty. */
+    public boolean isDefault(UJO ujo);
+
 }

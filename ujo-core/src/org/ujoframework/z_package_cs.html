@@ -106,7 +106,7 @@ document.body.appendChild(oLink);
             <li>architektura umožňuje vytvořit odkaz
                 na atribut UJO
                 (nikoli jejich hodnot) a celý seznam atributů lze předat do nějaké
-                metody - například ve formátu  <a href="UjoProperty.html">UjoProperty[]</a>.
+                metody - například ve formátu  <a href="UjoProperty.html">UjoPropertyList</a>.
             Tuto vlastnost lze využít například pro definici sloupců tabulky, či pro označení sloupců pro řazení seznamu UJO objektů.</li>
             <li>defaultní implementace UJO objektů jsou součástí projektu.</li>
             <li>framework obsahuje připravenou implementaci UjoTableModel pro <strong>Swing</strong>. Pro jednoduchou vizualizaci UJO
@@ -381,7 +381,7 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
         <h2 id="how2">Jak na rozšíření?</h2>
         Pokud potřebujete vyrobit potomka třídy Person, stačí v potomkovi
         definovat pouze nové atributy. Při prvním volání metody
-        readProperties() se seznam <span style="font-style: italic;">UjoProperty[]</span>
+        readProperties() se seznam <span style="font-style: italic;">UjoPropertyList</span>
         získá pomocí Java reflexe, všechny ostatní hodnoty se už berou z cache.<br>
 <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> PersonExt <span class="java-keywords">extends</span> Person {<br>
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;PersonExt,Float&gt; WEIGHT = <span class="java-keywords">new</span> <span class="java-layer-method">MapProperty</span>(<span class="java-string-literal">"Weight"</span>, Float.<span class="java-keywords">class</span>);
