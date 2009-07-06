@@ -157,9 +157,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     ) throws IOException {
         
         // Write attributes:
-        UjoPropertySet properties = ujo.readProperties();
-        for (int i=0; i<properties.length; ++i) {
-            UjoProperty property = properties.get(i);
+        for (UjoProperty property : ujo.readProperties()) {
             Object value = ujo.readValue(property);  // it is always a direct property from readProperties()
             
             if (value!=null
@@ -184,11 +182,10 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     /** Write required properties to a XML writer. */
-    public void printProperties(Writer writer, UjoTextable ujo, UjoPropertySet properties) throws IOException {
+    public void printProperties(final Writer writer, UjoTextable ujo, final UjoPropertyList properties) throws IOException {
         UjoProperty bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
-        for (int i=0; i<properties.length; ++i) {
-            UjoProperty property = properties.get(i);
+        for (UjoProperty property : properties) {
             Object value = ujo.readValue(property); // Only direct property from readProperties()
             
             if (value==null

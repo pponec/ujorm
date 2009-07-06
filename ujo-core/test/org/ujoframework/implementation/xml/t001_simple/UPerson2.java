@@ -14,7 +14,7 @@ import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.core.UjoPropertySet;
+import org.ujoframework.core.UjoPropertyList;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.extensions.UjoTextable;
@@ -42,7 +42,7 @@ public class UPerson2 implements Ujo, UjoTextable  {
         data.put(property, value);
     }
 
-    public UjoPropertySet readProperties() {
+    public UjoPropertyList readProperties() {
         return UjoManager.getInstance().readProperties(getClass());
     }
 

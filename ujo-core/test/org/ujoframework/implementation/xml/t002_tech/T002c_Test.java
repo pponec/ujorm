@@ -13,7 +13,7 @@ import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.core.UjoPropertySet;
+import org.ujoframework.core.UjoPropertyList;
 
 /**
  *
@@ -61,7 +61,7 @@ public class T002c_Test extends MyTestCase {
     
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
-        UjoPropertySet props = result.readProperties();
+        UjoPropertyList props = result.readProperties();
         for (UjoProperty prop : props) {
             result.writeValue(prop, null);
         }
