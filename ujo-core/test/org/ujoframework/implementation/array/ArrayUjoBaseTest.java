@@ -11,7 +11,7 @@ package org.ujoframework.implementation.array;
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
-import org.ujoframework.core.UjoPropertySet;
+import org.ujoframework.core.UjoPropertyList;
 
 /**
  * TextCase
@@ -151,7 +151,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
     /** Test of properties */
     public void testGetProperties1() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
-        UjoPropertySet props = ujb1.readProperties();
+        UjoPropertyList props = ujb1.readProperties();
         
         assertEquals(ArrayUjoImpl.PRO_P0, props.get(0));
         assertEquals(ArrayUjoImpl.PRO_P1, props.get(1));

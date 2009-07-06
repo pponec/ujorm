@@ -38,14 +38,14 @@ final class DummyUjo implements Ujo {
     public Object readValue(UjoProperty property) { return null;  }
 
     /** Returns unsorted properties. */
-    public UjoPropertySet readProperties() {
+    public UjoPropertyList readProperties() {
         final UjoProperty[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
-        return new UjoPropertySet(ps);
+        return new UjoPropertyList(ps);
     }    
     
     /** Is an order of properties reversed? */
     public Boolean isPropertiesReversed() {
-        final UjoPropertySet props = readProperties();
+        final UjoPropertyList props = readProperties();
         final Boolean result = Boolean.valueOf(props.get(0)==P1);
         return result;
     }

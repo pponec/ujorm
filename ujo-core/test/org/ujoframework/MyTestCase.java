@@ -10,7 +10,7 @@ package org.ujoframework;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.*;
-import org.ujoframework.core.UjoPropertySet;
+import org.ujoframework.core.UjoPropertyList;
 import org.ujoframework.extensions.UjoTextable;
 
 /**
@@ -48,7 +48,7 @@ abstract public class MyTestCase extends TestCase {
         if (expected==actual) { return; }
         assertEquals(expected.getClass(), expected.getClass());
         
-        UjoPropertySet properties = expected.readProperties();
+        UjoPropertyList properties = expected.readProperties();
         
         if (expected instanceof UjoTextable) {
             for (int i=properties.length-1; i>=0; i--) {

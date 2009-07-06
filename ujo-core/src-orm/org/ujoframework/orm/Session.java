@@ -314,7 +314,7 @@ public class Session {
 
 
     /** Convert a property array to a column list. */
-    protected List<MetaColumn> getOrmColumns(UjoProperty... properties) {
+    protected List<MetaColumn> getOrmColumns(final UjoProperty... properties) {
         final List<MetaColumn> result = new ArrayList<MetaColumn>(properties.length);
 
         for (UjoProperty property : properties) {

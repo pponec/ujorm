@@ -49,7 +49,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     protected static UjoManager instance = new UjoManager();
     
     /** A properties cache. */
-    final private HashMap<Class, UjoPropertySet> propertiesCache;
+    final private HashMap<Class, UjoPropertyList> propertiesCache;
 
     /** A XML <strong>element body</strong> cache */
     private HashMap<Class, UjoProperty> xmlBodyCache;
@@ -67,7 +67,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** Constructor. */
     public UjoManager() {
-        this.propertiesCache = new HashMap<Class, UjoPropertySet>();
+        this.propertiesCache = new HashMap<Class, UjoPropertyList>();
         this.coder = new UjoCoder();
     }
     
@@ -100,10 +100,10 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Read all properties. The first result is cached. */
-    public UjoPropertySet readProperties(Class type) {
-        UjoPropertySet result = propertiesCache.get(type);
+    public UjoPropertyList readProperties(Class type) {
+        UjoPropertyList result = propertiesCache.get(type);
         if (result==null) {
-            result = new UjoPropertySet(readPropertiesNocache(type, true));
+            result = new UjoPropertyList(readPropertiesNocache(type, true));
             
             // Save the result into buffer:
             propertiesCache.put(type, result);
@@ -208,7 +208,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Calculate a Hash Code. */
-    public int getHash(Ujo ujo, UjoPropertySet properties) {
+    public int getHash(Ujo ujo, UjoPropertyList properties) {
         int result = 0;
         if (ujo!=null) for (UjoProperty prop : properties) {
             Object obj = getValue(ujo, prop);
@@ -253,7 +253,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * @param u2 Optional parameter
      * @return Returns true, if objects are the same.
      */
-    public boolean equalsUjo(final Ujo u1, final Ujo u2, UjoPropertySet properties)  {
+    public boolean equalsUjo(final Ujo u1, final Ujo u2, UjoPropertyList properties)  {
         if (u1==u2) {
             return true;
         }
@@ -398,9 +398,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         if (ujo==null) { return null; }
         int nameHash = name.hashCode();
 
-        UjoPropertySet props = ujo.readProperties();
-        for (int i=0; i<props.length; ++i) {
-            UjoProperty prop = props.get(i);
+        for (UjoProperty prop : ujo.readProperties()) {
             if (prop.getName().hashCode()==nameHash  // speed up
             &&  prop.getName().equals(name)
             && (action.getType()==UjoAction.ACTION_XML_ELEMENT
@@ -427,7 +425,7 @@ public class UjoManager implements Comparator<UjoProperty> {
 
     /** Print a String representation */
     @SuppressWarnings("unchecked")
-    public String toString(Ujo ujo, UjoPropertySet properties) {
+    public String toString(Ujo ujo, UjoPropertyList properties) {
         StringBuilder result = new StringBuilder(32);
         result.append(ujo.getClass().getSimpleName());
         UjoAction action = new UjoActionImpl(ACTION_TO_STRING, this);
@@ -638,7 +636,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Set a value to an Ujo object by a chain of properties. 
      * <br>Type of value is checked in the runtime.
      */
-    public Ujo setValue(Ujo ujo, UjoPropertySet props, Object value) throws IllegalArgumentException {
+    public Ujo setValue(Ujo ujo, UjoPropertyList props, Object value) throws IllegalArgumentException {
         final int last = props.length - 1;
         UjoProperty lastProp = props.get(last);
         assertAssign(lastProp, value);
@@ -730,10 +728,10 @@ public class UjoManager implements Comparator<UjoProperty> {
         }
     }
     
-    /** Create a list of UjoPropertySet */
+    /** Create a list of UjoPropertyList */
     @SuppressWarnings("unchecked")
     public List<UjoPropertyRow> createPropertyList(Ujo content, UjoAction action) {
-        UjoPropertySet props = content.readProperties();
+        UjoPropertyList props = content.readProperties();
         ArrayList<UjoPropertyRow> result = new ArrayList<UjoPropertyRow>(props.length);
         for (UjoProperty prop : props) {
             final Object  value   = content.readValue(prop);
