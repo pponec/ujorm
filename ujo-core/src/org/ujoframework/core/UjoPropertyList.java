@@ -27,9 +27,10 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.UjoAction;
 
 /**
- * The immutable set of UjoPropertySet.
- * The UjoProperty class is a subset of the methods from class List&lt;UjoProperty&gt;.
+ * The immutable list of UjoProperties.
+ * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
  * @author Pavel Ponec
+ * @composed 1 - N UjoProperty
  */
 final public class UjoPropertyList implements Iterable<UjoProperty> {
 

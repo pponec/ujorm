@@ -14,7 +14,7 @@
  *  limitations under the License.
  */   
 
-package org.ujoframework.core;
+package org.ujoframework.implementation.xml.t002_tech;
 
 import java.math.*;
 

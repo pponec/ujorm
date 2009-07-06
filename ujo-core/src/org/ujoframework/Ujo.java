@@ -44,7 +44,7 @@ import org.ujoframework.extensions.UjoAction;
  * 
  * @author Pavel Ponec
  * @see UjoProperty
- * @composed 1 - * UjoProperty
+ * @composed 1 - 1 UjoPropertyList
  */
 public interface Ujo {
     
