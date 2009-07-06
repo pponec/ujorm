@@ -36,6 +36,7 @@ final public class UjoPropertyList implements Iterable<UjoProperty> {
     /** An empty array of the UJO properties */
     final static public UjoProperty[] EMPTY = new UjoProperty[0];
     final private UjoProperty[] props;
+    /** Contains the total count of its properties */
     final public int length;
 
 
@@ -150,7 +151,7 @@ final public class UjoPropertyList implements Iterable<UjoProperty> {
         return props[index];
     }
 
-    /** Returns a size of properties */
+    /** Returns a total count of its properties */
     public int size() {
         return length;
     }
@@ -160,13 +161,15 @@ final public class UjoPropertyList implements Iterable<UjoProperty> {
         return length==0;
     }
 
-    public boolean contains(Object o) {
+    /** Returns true if list contains property from the parameter. */
+    public boolean contains(final UjoProperty o) {
         for (UjoProperty p : props) {
             if (p==o) return true;
         }
         return false;
     }
 
+    /** Create an interator for all properties. */
     @Override
     public Iterator<UjoProperty> iterator() {
         final Iterator<UjoProperty> result = new Iterator<UjoProperty>() {
