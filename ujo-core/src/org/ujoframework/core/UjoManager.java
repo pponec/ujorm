@@ -362,29 +362,31 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /**
-     * Find a property by property name from parameter.
-     *
+     * Find a property by property name from parameter. Use rather the UjoPropertyList.findPropety(...).
      * @param ujo An Ujo object
      * @param name A property name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @return .
+     * @deprecated Use UjoPropertyList.findPropety(...)
+     * @see UjoPropertyList#find(org.ujoframework.Ujo, java.lang.String, boolean)
+     *
      */
     public UjoProperty findProperty
-    ( Ujo ujo
-    , String name
-    , boolean throwException
+    ( final Ujo ujo
+    , final String name
+    , final boolean throwException
     ) throws IllegalArgumentException
     {
-        return findProperty(ujo, name, UjoAction.DUMMY, true, throwException);
+        return ujo.readProperties().find(ujo, name, UjoAction.DUMMY, true, throwException);
     }
     
     /**
-     * Find a property by property name from parameter.
+     * Find a property by property name from parameter. Use rather the UjoPropertyList.findPropety(...).
      * @param ujo An Ujo object
      * @param name A property name.
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @see UjoPropertyList#find(org.ujoframework.Ujo, java.lang.String, org.ujoframework.extensions.UjoAction, boolean, boolean)
      */
     @SuppressWarnings("deprecation")
     public UjoProperty findProperty
@@ -395,26 +397,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     , final boolean throwException
     ) throws IllegalArgumentException
     {
-        if (ujo==null) { return null; }
-        int nameHash = name.hashCode();
-
-        for (UjoProperty prop : ujo.readProperties()) {
-            if (prop.getName().hashCode()==nameHash  // speed up
-            &&  prop.getName().equals(name)
-            && (action.getType()==UjoAction.ACTION_XML_ELEMENT
-                ? !isXmlAttribute(prop)
-                : ujo.readAuthorization(action, prop, null)
-               )==result
-            ){
-                return prop;
-            }
-        }
-        
-        if (throwException) {
-            throw new IllegalArgumentException("A name \"" + name + "\" was not found in a " + ujo.getClass());
-        } else {
-            return null;
-        }
+        return ujo.readProperties().find(ujo, name, action, result, throwException);
     }
 
     /** Print a String representation */

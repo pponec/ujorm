@@ -23,7 +23,6 @@ import org.ujoframework.UjoProperty;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.property.Setter;
-import org.ujoframework.core.UjoManager;
 
 /**
  * A support for the <a href="https://www.hibernate.org/" target="_top">Hibernate</a> framework.
@@ -44,7 +43,7 @@ public class UjoPropertySetter implements Setter {
      */
     public final void set(final Object target, final Object value, final SessionFactoryImplementor factory) throws HibernateException {
         if (ujoProperty == null) {
-            ujoProperty = UjoManager.getInstance().findProperty((Ujo) target, propertyName, true);
+            ujoProperty = ((Ujo)target).readProperties().find(propertyName, true);
         }
         ((Ujo) target).writeValue(ujoProperty, value);
     }

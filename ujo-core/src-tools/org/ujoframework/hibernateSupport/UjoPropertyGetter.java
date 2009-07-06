@@ -24,7 +24,6 @@ import org.ujoframework.UjoProperty;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
-import org.ujoframework.core.UjoManager;
 
 
 /**
@@ -39,7 +38,7 @@ public class UjoPropertyGetter implements Getter {
     public UjoPropertyGetter(String propertyName, Class theClass) {
         try {
             Ujo instance = (Ujo) theClass.newInstance();
-            ujoProperty = UjoManager.getInstance().findProperty(instance, propertyName, true);
+            ujoProperty = instance.readProperties().find(propertyName, true);
         } catch (Exception e) {
             throw new IllegalArgumentException("Can't create an Ujo instance from the " + theClass, e);
         }
