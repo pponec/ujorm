@@ -22,7 +22,9 @@ package org.ujoframework.core;
 
 import java.util.Iterator;
 import java.util.List;
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.UjoAction;
 
 /**
  * The immutable set of UjoPropertySet.
@@ -59,7 +61,7 @@ final public class UjoPropertyList implements Iterable<UjoProperty> {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
-    public UjoProperty findProperty
+    public UjoProperty find
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException
@@ -75,6 +77,55 @@ final public class UjoPropertyList implements Iterable<UjoProperty> {
 
         if (throwException) {
             throw new IllegalArgumentException("A name \"" + name + "\" was not found");
+        } else {
+            return null;
+        }
+    }
+
+    final public UjoProperty find
+    ( final Ujo ujo
+    , final String name
+    , final boolean throwException
+    ) throws IllegalArgumentException
+    {
+        return find(ujo, name, UjoAction.DUMMY, true, throwException);
+    }
+
+    /**
+     * Find a property by property name from parameter.
+     * @param ujo An Ujo object
+     * @param name A property name.
+     * @param action Action type UjoAction.ACTION_* .
+     * @param result Required result of action.
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     */
+    @SuppressWarnings("deprecation")
+    public UjoProperty find
+    ( final Ujo ujo
+    , final String name
+    , final UjoAction action
+    , final boolean result
+    , final boolean throwException
+    ) throws IllegalArgumentException
+    {
+        if (ujo==null) { return null; }
+        int nameHash = name.hashCode();
+        UjoManager ujoManager = UjoManager.getInstance();
+
+        for (final UjoProperty prop : props) {
+            if (prop.getName().hashCode()==nameHash  // speed up
+            &&  prop.getName().equals(name)
+            && (action.getType()==UjoAction.ACTION_XML_ELEMENT
+                ? !ujoManager.isXmlAttribute(prop)
+                : ujo.readAuthorization(action, prop, null)
+               )==result
+            ){
+                return prop;
+            }
+        }
+
+        if (throwException) {
+            throw new IllegalArgumentException("A name \"" + name + "\" was not found in a " + ujo.getClass());
         } else {
             return null;
         }

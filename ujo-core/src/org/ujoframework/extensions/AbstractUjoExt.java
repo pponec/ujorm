@@ -232,9 +232,8 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      * @throws java.lang.IllegalArgumentException If property not found.
      */
     public UjoProperty findProperty(final String propertyName) throws IllegalArgumentException {
-        
         final boolean throwException = true;
-        return UjoManager.getInstance().findProperty(this, propertyName, throwException);
+        return readProperties().find(propertyName, throwException);
     }
         
     /** Create a list of UjoProperty. */

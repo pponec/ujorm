@@ -24,7 +24,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.LazyInitializationException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
-import org.ujoframework.core.UjoManager;
 
 /**
  * A support for the <a href="https://www.hibernate.org/" target="_top">Hibernate</a> framework.
@@ -38,7 +37,7 @@ public class UjoLazyPropertyGetter implements Getter {
     public UjoLazyPropertyGetter(String propertyName, Class theClass) {
         try {
             Ujo instance = (Ujo) theClass.newInstance();
-            ujoProperty = UjoManager.getInstance().findProperty(instance, propertyName, true);
+            ujoProperty = instance.readProperties().find(propertyName, true);
         } catch (Exception e) {
             throw new IllegalArgumentException("Can't create an Ujo instance from the " + theClass, e);
         }
