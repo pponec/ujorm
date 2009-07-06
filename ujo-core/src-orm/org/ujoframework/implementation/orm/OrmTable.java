@@ -21,7 +21,7 @@ import java.util.Set;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
+import org.ujoframework.core.UjoPropertySet;
 import org.ujoframework.implementation.quick.QuickUjo;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.UniqueKey;
@@ -158,7 +158,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
         final UjoProperty[] result
             = changes!=null
             ? changes.toArray(new UjoProperty[changes.size()])
-            : UjoManager.EMPTY_PROPERTIES
+            : UjoPropertySet.EMPTY
             ;
         if (clear) {
             changes = null;

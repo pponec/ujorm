@@ -12,9 +12,8 @@ import java.io.CharArrayWriter;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.core.ZeroProvider;
+import org.ujoframework.core.UjoPropertySet;
 
 /**
  *
@@ -62,7 +61,7 @@ public class T002c_Test extends MyTestCase {
     
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
-        UjoProperty[] props = result.readProperties();
+        UjoPropertySet props = result.readProperties();
         for (UjoProperty prop : props) {
             result.writeValue(prop, null);
         }
