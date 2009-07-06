@@ -420,7 +420,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         
         <h2 id="how2">What about the extensions?</h2>
         If you need to create a descendant of the Person class, define in the descendant just new attributes. 
-        The <i>UjoPropertyList</i> list will be procured during the first call the <i>readProperties()</i> method by the help of the 
+        The list <i>UjoPropertyList</i> will be procured during the first call the <i>readProperties()</i> method by the help of the 
         Java reflection, all another values are taken from the cache.
         <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {<br>
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;<span class="highlight">PersonExt</span>,Float&gt; WEIGHT = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Weight"</span>, Float.<span class="java-keywords">class</span>);
