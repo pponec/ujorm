@@ -16,6 +16,8 @@
 
 package org.ujoframework.orm;
 
+import java.util.Collections;
+import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.ListUjoProperty;
@@ -51,11 +53,14 @@ abstract public class AbstractMetaModel extends QuickUjo {
                 }
             }
 
-            else if (p instanceof ListUjoProperty
-            && AbstractMetaModel.class.isAssignableFrom( ((ListUjoProperty)p).getItemType())) {
-                for (AbstractMetaModel m : ((ListUjoProperty<AbstractMetaModel,AbstractMetaModel>)p).getList(this) ) {
-                    m.setReadOnly(recurse);
-                }
+            else if (p instanceof ListUjoProperty) {
+               if ( AbstractMetaModel.class.isAssignableFrom( ((ListUjoProperty)p).getItemType())) {
+                    for (AbstractMetaModel m : ((ListUjoProperty<AbstractMetaModel,AbstractMetaModel>)p).getList(this) ) {
+                        m.setReadOnly(recurse);
+                    }
+               }
+               final List list = (List) p.of(this);
+               p.setValue(this, Collections.unmodifiableList(list));
             }
         }
     }
