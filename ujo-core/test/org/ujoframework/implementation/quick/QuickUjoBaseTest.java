@@ -10,7 +10,7 @@ package org.ujoframework.implementation.quick;
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoPropertySet;
 
 /**
  * TextCase
@@ -152,13 +152,13 @@ public class QuickUjoBaseTest extends MyTestCase {
     /** Test of properties */
     public void testGetProperties1() throws Throwable {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
-        UjoProperty[] props = ujb1.readProperties();
+        UjoPropertySet props = ujb1.readProperties();
         
-        assertEquals(QuickUjoImpl.PRO_P0, props[0]);
-        assertEquals(QuickUjoImpl.PRO_P1, props[1]);
-        assertEquals(QuickUjoImpl.PRO_P2, props[2]);
-        assertEquals(QuickUjoImpl.PRO_P3, props[3]);
-        assertEquals(QuickUjoImpl.PRO_P4, props[4]);
+        assertEquals(QuickUjoImpl.PRO_P0, props.get(0));
+        assertEquals(QuickUjoImpl.PRO_P1, props.get(1));
+        assertEquals(QuickUjoImpl.PRO_P2, props.get(2));
+        assertEquals(QuickUjoImpl.PRO_P3, props.get(3));
+        assertEquals(QuickUjoImpl.PRO_P4, props.get(4));
     }
     
     

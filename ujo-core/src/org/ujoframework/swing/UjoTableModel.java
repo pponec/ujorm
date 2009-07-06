@@ -54,7 +54,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     
     /** Creates a new instance of UjoTableModel for all attributes. */
     public UjoTableModel(Class ujoType) {
-        this(UjoManager.getInstance().readProperties(ujoType));
+        this(UjoManager.getInstance().readProperties(ujoType).toArray());
     }
     
     /** An Initialization */

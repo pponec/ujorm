@@ -70,8 +70,8 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see UjoProperty#isDirect()
      */
-    public UjoProperty[] readProperties() {
-        final UjoProperty[] result = readUjoManager().readProperties(getClass());
+    public UjoPropertySet readProperties() {
+        final UjoPropertySet result = readUjoManager().readProperties(getClass());
         return result;
     }
     

@@ -28,8 +28,8 @@ import org.ujoframework.extensions.UjoAction;
  */
 final class DummyUjo implements Ujo {
     
-    public static final Property P0 = Property.newInstance("A", Object.class);
-    public static final Property P1 = Property.newInstance("B", Object.class);
+    public static final Property P0 = Property.newInstance("A", Object.class, -1);
+    public static final Property P1 = Property.newInstance("B", Object.class, -1);
     
     /** A dummy implementation. */
     public void writeValue(UjoProperty property, Object value) {}
@@ -38,14 +38,15 @@ final class DummyUjo implements Ujo {
     public Object readValue(UjoProperty property) { return null;  }
 
     /** Returns unsorted properties. */
-    public UjoProperty[] readProperties() {
-        return UjoManager.getInstance().readPropertiesNocache(getClass(), false);
+    public UjoPropertySet readProperties() {
+        final UjoProperty[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
+        return new UjoPropertySet(ps);
     }    
     
     /** Is an order of properties reversed? */
     public Boolean isPropertiesReversed() {
-        final UjoProperty[] props = readProperties();
-        final Boolean result = Boolean.valueOf(props[0]==P1);
+        final UjoPropertySet props = readProperties();
+        final Boolean result = Boolean.valueOf(props.get(0)==P1);
         return result;
     }
 

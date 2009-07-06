@@ -86,7 +86,7 @@ abstract public class UjoService<UJO extends Ujo> {
     /** Get required properties */
     public UjoProperty[] getProperties() {
         if (properties==null) {
-            properties = ujoManager.readProperties(getUjoClass());
+            properties = ujoManager.readProperties(getUjoClass()).toArray();
         }
         return properties;
     }

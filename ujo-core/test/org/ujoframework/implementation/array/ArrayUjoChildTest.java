@@ -11,7 +11,7 @@ package org.ujoframework.implementation.array;
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
-import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoPropertySet;
 
 /**
  *
@@ -126,13 +126,13 @@ public class ArrayUjoChildTest extends MyTestCase {
     /** */
     public void testGetProperties1() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
-        UjoProperty[] props = ujb1.readProperties();
+        UjoPropertySet props = ujb1.readProperties();
         
-        assertEquals(ArrayUjoImpl.PRO_P0, props[0]);
-        assertEquals(ArrayUjoImpl.PRO_P1, props[1]);
-        assertEquals(ArrayUjoImpl.PRO_P2, props[2]);
-        assertEquals(ArrayUjoImpl.PRO_P3, props[3]);
-        assertEquals(ArrayUjoImpl.PRO_P4, props[4]);
+        assertEquals(ArrayUjoImpl.PRO_P0, props.get(0));
+        assertEquals(ArrayUjoImpl.PRO_P1, props.get(1));
+        assertEquals(ArrayUjoImpl.PRO_P2, props.get(2));
+        assertEquals(ArrayUjoImpl.PRO_P3, props.get(3));
+        assertEquals(ArrayUjoImpl.PRO_P4, props.get(4));
     }
     
     public static void main(java.lang.String[] argList) {
