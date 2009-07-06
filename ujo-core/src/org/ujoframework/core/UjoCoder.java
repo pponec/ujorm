@@ -185,15 +185,15 @@ public class UjoCoder {
                 }
                 if (Long.class==type) {
                     final Long result = new Long(aValue);
-                    return 0L==result ? ZeroProvider.ZERO_LONG : result;
+                    return 0L==result ? 0L : result;
                 }
                 if (Float.class==type) {
                     final Float result = new Float(aValue);
-                    return 0f==result ? ZeroProvider.ZERO_FLOAT : result;
+                    return 0f==result ? 0F : result;
                 }
                 if (Double.class==type) {
                     final Double result = new Double(aValue);
-                    return 0d==result ? ZeroProvider.ZERO_DOUBLE : result;
+                    return 0d==result ? 0D : result;
                 }
                 if (BigDecimal.class==type) {
                     final BigDecimal result = new BigDecimal(aValue);

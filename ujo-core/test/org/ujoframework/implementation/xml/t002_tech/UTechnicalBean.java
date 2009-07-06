@@ -14,7 +14,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.MapUjo;
-import static org.ujoframework.core.ZeroProvider.*;
+import static org.ujoframework.implementation.xml.t002_tech.ZeroProvider.*;
 
 /**
  * An UnifiedDataObject Imlpementation
