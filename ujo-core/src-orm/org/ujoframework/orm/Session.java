@@ -422,7 +422,7 @@ public class Session {
 
         if (column==null) {
             MetaTable origTable = handler.findTableModel(value.getClass());
-            if (origTable.isPersistent()) {
+            if (origTable.isPersistent()) { // Is it not a DATABASE ?
                 String msg = "Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName();
                 throw new IllegalStateException(msg);
             }

@@ -163,9 +163,9 @@ public class SampleORM {
     /** Using SELECT by QUERY */
     public void useSelectItems_3() {
         Session session = OrmHandler.getInstance().getSession();
-        Order orderValue = session.load(Order.class, 1L);
+        Order order = session.load(Order.class, 1L);
 
-        for (Item item : orderValue.getItems()) {
+        for (Item item : order.getItems()) {
             Order order2 = item.getOrder();
             System.out.println("ITEM ROW: " + item + " ORDER: " + order2);
         }
