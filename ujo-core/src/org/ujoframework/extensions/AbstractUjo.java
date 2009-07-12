@@ -65,7 +65,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
     }
     
     /** Returns all direct properties.
-     * <br>Note 1:An order of properties is sorted by a value of the index attribute.
+     * <br>Note 1: An order of properties is sorted by a value of the index attribute.
      * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see UjoProperty#isDirect()
