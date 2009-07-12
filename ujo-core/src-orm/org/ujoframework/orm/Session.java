@@ -385,6 +385,7 @@ public class Session {
 
             sql = db.getDialect().printSelect(table, query, false, out(360)).toString();
             statement = getStatement(db, sql);
+            if (query.getMaxRow()!=0) statement.getPreparedStatement().setMaxRows(query.getMaxRow());
             statement.assignValues(query.getDecoder());
 
             if (LOGGER.isLoggable(Level.INFO)) {

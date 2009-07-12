@@ -45,6 +45,8 @@ public class Query<UJO extends OrmUjo> {
     private boolean countRequest = false;
     /** Result is a readOnly, default value is false */
     private boolean readOnly = false;
+    /** The max row for the resulset, default value 0 means an unlimited value */
+    private int maxRow = 0;
 
     /**
      * Create new ORM query.
@@ -171,6 +173,16 @@ public class Query<UJO extends OrmUjo> {
         UjoProperty property = order.get(i);
         MetaRelation2Many result = session.getHandler().findColumnModel(property);
         return (MetaColumn) result;
+    }
+
+    /** The max row for the resulset, default value 0 means an unlimited value */
+    public int getMaxRow() {
+        return maxRow;
+    }
+
+    /** The max row for the resulset, default value 0 means an unlimited value */
+    public void setMaxRow(int maxRow) {
+        this.maxRow = maxRow;
     }
 
 }
