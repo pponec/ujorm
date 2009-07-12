@@ -16,18 +16,26 @@
 
 package org.ujoframework.orm.dialect;
 
-/** Oracle (www.oracle.com/)  
- * @deprecated Oradle dialect is not finished yet */
-public class OracleDialect extends PostgreSqlDialect {
+import java.io.IOException;
 
-    @Override
-    public String getJdbcUrl() {
-        return "jdbc:oracle:thin:@myhost:1521:orcl";
-    }
+/**
+ * Hsqldb dialect (http://hsqldb.org)
+ * @author Paul Ponec
+ */
+public class HsqldbDialect extends H2Dialect {
 
     @Override
     public String getJdbcDriver() {
-        return "oracle.jdbc.driver.OracleDriver";
+        return "org.hsqldb.jdbcDriver";
+    }
+
+    /** Print SQL 'CREATE SCHEMA' */
+    @Override
+    public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
+        out.append("CREATE SCHEMA ");
+        out.append(schema);
+        out.append(" AUTHORIZATION DBA");
+        return out;
     }
 
 }
