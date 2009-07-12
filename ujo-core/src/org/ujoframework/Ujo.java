@@ -53,7 +53,8 @@ public interface Ujo {
      * <a href="UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a>
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
-     * <br>NOTE: A reaction on an incorrect property depends on the implementation.
+     * <br />NOTE 1: A null value is always replaced by a default property value.
+     * <br />NOTE 2: A reaction on an incorrect property depends on the implementation.
      *
      * @param property Property must be a direct type only!
      * @return Property value
