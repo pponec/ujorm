@@ -391,8 +391,7 @@ public class Session {
             if (LOGGER.isLoggable(Level.INFO)) {
                 LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
             }
-            ResultSet rs = statement.executeQuery(); // execute a select statement
-            UjoIterator<UJO> result = UjoIterator.getInstance(query, rs);
+            UjoIterator<UJO> result = UjoIterator.getInstance(query, statement.getPreparedStatement());
             return result;
 
         } catch (Throwable e) {

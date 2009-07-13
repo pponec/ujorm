@@ -63,5 +63,4 @@ class UjoIteratorImpl<T> extends UjoIterator<T> {
         return count;
     }
 
-
 }
