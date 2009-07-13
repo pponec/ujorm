@@ -16,6 +16,7 @@
 
 package org.ujoframework.core;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
@@ -31,6 +32,7 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
     final Query query;
     final ResultSet rs;
+    private PreparedStatement statement = null;
     /** Is the query a view? */
     final boolean view;
     /** A count of the item count, the negative value means the undefined value. */
@@ -43,10 +45,16 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
     /** Has a resultset a next row? */
     private boolean hasNext = true;
 
-    public ResultSetIterator(Query query, ResultSet rs) {
-        this.query = query;
-        this.rs   = rs;
-        this.view = query.getTable().isSelectModel();
+    public ResultSetIterator(Query query, PreparedStatement statement) throws IllegalStateException {
+        try {
+            this.query = query;
+            this.statement = statement;
+            this.rs = statement.executeQuery();
+            this.view = query.getTable().isSelectModel();
+        } catch (SQLException e) {
+            close();
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
@@ -60,13 +68,25 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             cursorReady = true;
             hasNext = rs.next();
             if (!hasNext) {
-                rs.close();
+                close();
             }
         } catch (SQLException e) {
             throw new IllegalStateException("A hasNext() reading exception", e);
         }
         return hasNext;
+    }
 
+    /** Close all resources.
+     * If the current iterator moves after the last entry then this method is called automatically.
+     */
+    @Override
+    public void close() {
+        if (statement!=null) try {
+            statement.close();
+            statement = null;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Can't close statement: " + statement, e);
+        }
     }
 
     /** Returns a next table row. */

@@ -16,7 +16,7 @@
 
 package org.ujoframework.core;
 
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -85,6 +85,12 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
         return result;
     }
 
+    /** Close all resources, if any.
+     * You may call this method if a data source was not read until the end.
+     */
+    public void close() {
+    }
+
     /** Returns a count of items. */
     @Override
     public String toString() {
@@ -99,8 +105,8 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     }
 
     @SuppressWarnings("unchecked")
-    final public static <T extends OrmUjo> ResultSetIterator<T> getInstance(Query<T> query, ResultSet rs) {
-        return new ResultSetIterator(query, rs);
+    final public static <T extends OrmUjo> ResultSetIterator<T> getInstance(Query<T> query, PreparedStatement statement) {
+        return new ResultSetIterator(query, statement);
     }
 
 
