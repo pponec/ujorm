@@ -16,6 +16,7 @@
 package org.ujoframework.orm;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -375,8 +376,8 @@ public class Session {
     }
 
     /** Run SQL SELECT by query. */
-    protected <UJO extends OrmUjo> UjoIterator<UJO> iterate(Query<UJO> query) {
-        JdbcStatement statement = null;
+    public JdbcStatement getStatement(Query query) {
+        JdbcStatement result = null;
         String sql = "";
 
         try {
@@ -384,14 +385,13 @@ public class Session {
             MetaDatabase db = MetaTable.DATABASE.of(table);
 
             sql = db.getDialect().printSelect(table, query, false, out(360)).toString();
-            statement = getStatement(db, sql);
-            if (query.getMaxRow()!=0) statement.getPreparedStatement().setMaxRows(query.getMaxRow());
-            statement.assignValues(query.getDecoder());
+            result = getStatement(db, sql);
+            if (query.getMaxRow()!=0) result.getPreparedStatement().setMaxRows(query.getMaxRow());
+            result.assignValues(query.getDecoder());
 
             if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(Level.INFO, sql + SQL_VALUES + result.getAssignedValues());
             }
-            UjoIterator<UJO> result = UjoIterator.getInstance(query, statement.getPreparedStatement());
             return result;
 
         } catch (Throwable e) {
@@ -433,7 +433,7 @@ public class Session {
             : Criterion.newInstanceTrue(table.getFirstPK().getProperty())
             ;
         Query query = createQuery(tableClass, crit);
-        UjoIterator result = iterate(query);
+        UjoIterator result = UjoIterator.getInstance(query);
 
         return result;
     }
@@ -486,7 +486,7 @@ public class Session {
 
         Criterion crn = Criterion.newInstance(column.getProperty(), id);
         Query query = createQuery(crn);
-        UjoIterator iterator = iterate(query);
+        UjoIterator iterator = UjoIterator.getInstance(query);
 
         final UJO result
             = (mandatory || iterator.hasNext())
@@ -532,7 +532,7 @@ public class Session {
         // SELECT DB
         Criterion crn = Criterion.newInstance(columns.get(0).getProperty(), id);
         Query query = createQuery(crn);
-        UjoIterator iterator = iterate(query);
+        UjoIterator iterator = UjoIterator.getInstance(query);
 
         final UJO result
             = (mandatory || iterator.hasNext())
