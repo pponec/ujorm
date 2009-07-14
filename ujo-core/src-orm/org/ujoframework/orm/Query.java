@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.UjoProperty;
@@ -139,7 +140,7 @@ public class Query<UJO extends OrmUjo> {
 
     /** Create a new iterator by the query. */
     public UjoIterator<UJO> iterate() {
-        final UjoIterator<UJO> result = session.iterate(this);
+        final UjoIterator<UJO> result = UjoIterator.getInstance(this);
         return result;
     }
 
@@ -183,6 +184,11 @@ public class Query<UJO extends OrmUjo> {
     /** The max row for the resulset, default value 0 means an unlimited value */
     public void setMaxRow(int maxRow) {
         this.maxRow = maxRow;
+    }
+
+    /** Create a PreparedStatement include assigned parameter values */
+    public PreparedStatement getStatement() {
+        return session.getStatement(this).getPreparedStatement();
     }
 
 }

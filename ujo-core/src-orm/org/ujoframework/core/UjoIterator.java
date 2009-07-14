@@ -112,8 +112,8 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     }
 
     @SuppressWarnings("unchecked")
-    final public static <T extends OrmUjo> UjoIterator<T> getInstance(Query<T> query, PreparedStatement statement) {
-        return new ResultSetIterator(query, statement);
+    final public static <T extends OrmUjo> UjoIterator<T> getInstance(Query<T> query) {
+        return new ResultSetIterator(query);
     }
 
 

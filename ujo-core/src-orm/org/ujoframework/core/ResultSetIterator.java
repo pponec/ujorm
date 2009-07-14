@@ -30,11 +30,12 @@ import org.ujoframework.orm.metaModel.MetaColumn;
  */
 class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
-    final Query query;
-    final ResultSet rs;
-    private PreparedStatement statement = null;
+    private final Query query;
+    private final ResultSet rs;
+    /** If the statemtnt is null then is a sign that it is closed. */
+    private PreparedStatement statement;
     /** Is the query a view? */
-    final boolean view;
+    private final boolean view;
     /** A count of the item count, the negative value means the undefined value. */
     private long count = -1L;
     /** A state before the first reading a BO. An auxiliary variable.*/
@@ -45,10 +46,10 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
     /** Has a resultset a next row? */
     private boolean hasNext = true;
 
-    public ResultSetIterator(Query query, PreparedStatement statement) throws IllegalStateException {
+    public ResultSetIterator(Query query) throws IllegalStateException {
         try {
             this.query = query;
-            this.statement = statement;
+            this.statement = query.getStatement();
             this.rs = statement.executeQuery();
             this.view = query.getTable().isSelectModel();
         } catch (SQLException e) {

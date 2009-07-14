@@ -108,7 +108,7 @@ public class OrmSampleTest extends TestCase {
         query.setCountRequest(true);  // need a count of iterator items, a default value is false
         query.setReadOnly(false);     // Read onlyl result;
 
-        for (Order o : session.iterate( query ) ) {
+        for (Order o : query.iterate() ) {
             Long id = Order.ID.of(o);
             String descr = Order.DESCR.of(o);
             System.out.println("Order id: " + id + " descr: " + descr);
