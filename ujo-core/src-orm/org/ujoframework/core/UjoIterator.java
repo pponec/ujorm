@@ -16,7 +16,6 @@
 
 package org.ujoframework.core;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -102,13 +101,13 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     // --- STATIC FACTORY ---------
 
     @SuppressWarnings("unchecked")
-    final public static <T> UjoIterator<T> getInstance(final Enumeration<T> enumeration) {
-        return new UjoIteratorImpl(enumeration);
+    final public static <T> UjoIterator<T> getInstance(final Iterator<T> iterator) {
+        return new UjoIteratorImpl(iterator);
     }
 
     @SuppressWarnings("unchecked")
     final public static <T> UjoIterator<T> getInstance(final Collection<T> collection) {
-        return new UjoIteratorImpl(Collections.enumeration(collection));
+        return new UjoIteratorImpl(collection.iterator(), collection.size());
     }
 
     @SuppressWarnings("unchecked")

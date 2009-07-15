@@ -41,6 +41,12 @@ public class ListProperty<UJO extends Ujo, ITEM>
         this.itemType = itemType;
     }
 
+    /** Protected constructor */
+    protected ListProperty(String name, Class<ITEM> itemType, int index) {
+        initList(name, index, true);
+        this.itemType = itemType;
+    }
+
     /**
      * List property initialization.
      * @param name Replace the Name of property if the one is NULL.
