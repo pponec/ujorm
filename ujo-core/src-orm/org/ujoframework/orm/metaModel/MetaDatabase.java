@@ -21,6 +21,8 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
@@ -32,6 +34,7 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+import javax.naming.InitialContext;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
@@ -75,8 +78,8 @@ public class MetaDatabase extends AbstractMetaModel {
     /** DB class root instance */
     @Transient
     public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
-    /** LDPA */
-    public static final Property<MetaDatabase,String> LDAP = newProperty("ldap", "");
+    /** JNDI (java naming and directory interface) connection string */
+    public static final Property<MetaDatabase,String> JNDI = newProperty("jndi", "");
     /** The property initialization */
     static{init(CLASS);}
 
@@ -84,6 +87,7 @@ public class MetaDatabase extends AbstractMetaModel {
 
     private OrmHandler ormHandler;
     private SqlDialect dialect;
+    private InitialContext initialContext;
 
     public MetaDatabase() {
     }
@@ -99,7 +103,7 @@ public class MetaDatabase extends AbstractMetaModel {
             changeDefault(this, JDBC_DRIVER, JDBC_DRIVER.of(param));
             changeDefault(this, USER    , USER.of(param));
             changeDefault(this, PASSWORD, PASSWORD.of(param));
-            changeDefault(this, LDAP    , LDAP.of(param));
+            changeDefault(this, JNDI    , JNDI.of(param));
         }
 
         Db annotDB = database.getClass().getAnnotation(Db.class);
@@ -110,7 +114,7 @@ public class MetaDatabase extends AbstractMetaModel {
             changeDefault(this, JDBC_DRIVER, annotDB.jdbcDriver());
             changeDefault(this, USER    , annotDB.user());
             changeDefault(this, PASSWORD, annotDB.password());
-            changeDefault(this, LDAP    , annotDB.ldap());
+            changeDefault(this, JNDI    , annotDB.jndi());
         }
 
         changeDefault(this, ID      , database.getClass().getSimpleName());
@@ -419,15 +423,32 @@ public class MetaDatabase extends AbstractMetaModel {
     }
 
     /** Create connection with auto-commit false. */
-    public Connection createConnection() throws ClassNotFoundException, SQLException {
+    public Connection createConnection() throws ClassNotFoundException, SQLException, NamingException {
         Class.forName(JDBC_DRIVER.of(this));
-        final Connection result = DriverManager.getConnection
+        Connection result;
+
+        String jndi = JNDI.of(this);
+        if (isUsable(jndi)) {
+            DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
+            result = dataSource.getConnection();
+        } else {
+            result = DriverManager.getConnection
             ( JDBC_URL.of(this)
             , USER.of(this)
             , PASSWORD.of(this)
             );
+        }
+
         result.setAutoCommit(false);
         return result;
+    }
+
+    /** Get or create an initial context */
+    private InitialContext getInitialContext() throws NamingException {
+        if (initialContext==null) {
+            initialContext = new InitialContext();
+        }
+        return initialContext;
     }
 
     /** Equals */

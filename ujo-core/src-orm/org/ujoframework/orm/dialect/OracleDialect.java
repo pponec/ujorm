@@ -16,6 +16,9 @@
 
 package org.ujoframework.orm.dialect;
 
+import java.io.IOException;
+import org.ujoframework.orm.DbType;
+
 /** Oracle (www.oracle.com/)  
  * @deprecated Oradle dialect is not finished yet */
 public class OracleDialect extends PostgreSqlDialect {
@@ -29,5 +32,18 @@ public class OracleDialect extends PostgreSqlDialect {
     public String getJdbcDriver() {
         return "oracle.jdbc.driver.OracleDriver";
     }
+
+    /** Print no schema */
+    @Override
+    public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
+        return out;
+    }
+
+    /** Returns a DB TYPE for the class java.lang.Long */
+    @Override
+    public String getLongType() {
+        return DbType.NUMBER.name();
+    }
+
 
 }

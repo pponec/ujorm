@@ -31,6 +31,8 @@ public enum DbType {
     TINYINT(Types.TINYINT),
     SMALLINT(Types.SMALLINT),
     BIGINT(Types.BIGINT),
+    /** Oracle support for replacing the BIGINT */
+    NUMBER(Types.BIGINT),
     DECIMAL(Types.DECIMAL),
     DOUBLE(Types.DOUBLE),
     REAL(Types.REAL),
@@ -53,7 +55,7 @@ public enum DbType {
         this.sqlType = sqlType;
     }
 
-    /** Returns an JDBC SQL type
+    /** Returns the JDBC SQL type
      * @see java.sql.Types
      */
     private final int sqlType;

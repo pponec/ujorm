@@ -41,6 +41,15 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * @param name The parameter MUST be a JavaBeans property name. The name will be used for building a Java reflection method name in a time of the first call.
      * @param type Type of a JavaBeans setter input method or getter output method.
      */
+    public FactoryProperty(String name, Class<VALUE> type) {
+        this(name, type, -1);
+    }
+
+    /**
+     * Constructor
+     * @param name The parameter MUST be a JavaBeans property name. The name will be used for building a Java reflection method name in a time of the first call.
+     * @param type Type of a JavaBeans setter input method or getter output method.
+     */
     public FactoryProperty(String name, Class<VALUE> type, int index) {
         super(name, type, index);
         Constructor<VALUE> c = null;
