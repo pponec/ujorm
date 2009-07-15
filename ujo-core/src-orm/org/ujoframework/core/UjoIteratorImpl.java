@@ -16,7 +16,7 @@
 
 package org.ujoframework.core;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -31,21 +31,21 @@ import java.util.NoSuchElementException;
  */
 class UjoIteratorImpl<T> extends UjoIterator<T> {
 
-    final private Enumeration<T> e;
+    final private Iterator<T> e;
     final private long count;
 
-    public UjoIteratorImpl(final Enumeration<T> enumeration, long count) {
-        this.e = enumeration;
+    public UjoIteratorImpl(final Iterator<T> iterator, long count) {
+        this.e = iterator;
         this.count = count;
     }
 
-    public UjoIteratorImpl(final Enumeration<T> enumeration) {
-        this(enumeration, -1);
+    public UjoIteratorImpl(final Iterator<T> iterator) {
+        this(iterator, -1);
     }
 
     /** Tests if this enumeration contains more elements. */
     public boolean hasNext() {
-        return e.hasMoreElements();
+        return e.hasNext();
     }
 
     /**
@@ -54,7 +54,7 @@ class UjoIteratorImpl<T> extends UjoIterator<T> {
      * @exception  NoSuchElementException no more elements exist.
      */
     public T next() throws NoSuchElementException {
-        return e.nextElement();
+        return e.next();
     }
 
     /** Returns a count of items or value -1 if the count is not defined. */
