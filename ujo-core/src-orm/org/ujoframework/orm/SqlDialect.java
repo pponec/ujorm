@@ -567,6 +567,11 @@ abstract public class SqlDialect {
         return out;
     }
 
+    /** Returns a DB TYPE for the type java.lang.Long */
+    public String getLongType() {
+        return DbType.BIGINT.name();
+    }
+
     /** Print SQL CREATE SEQUENCE. No JDBC parameters. */
     public Appendable printSequenceTable(final MetaDatabase db, final Appendable out) throws IOException {
         String schema = MetaDatabase.SCHEMA.of(db);
@@ -579,9 +584,9 @@ abstract public class SqlDialect {
         }
         out.append(COMMON_SEQ_TABLE_NAME);
         out.append("\n\t( id VARCHAR(96) NOT NULL PRIMARY KEY");
-        out.append("\n\t, seq BIGINT DEFAULT " + cache + " NOT NULL");
+        out.append("\n\t, seq "+getLongType()+" DEFAULT " + cache + " NOT NULL");
         out.append("\n\t, cache INT DEFAULT " + cache + " NOT NULL");
-        out.append("\n\t, maxvalue BIGINT DEFAULT 0 NOT NULL");  // TODO: maxvalue is not implemented yet
+        out.append("\n\t, maxvalue "+getLongType()+" DEFAULT 0 NOT NULL");  // TODO: maxvalue is not implemented yet
         out.append("\n\t)");
         return out;
     }

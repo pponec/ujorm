@@ -29,8 +29,8 @@ public @interface Db {
     String schema() default "";
     /** SQL dialect by a DB Vendor. */
     Class<? extends SqlDialect> dialect();
-    /** LDAP */
-    String ldap() default "";
+    /** JNDI (java naming and directory interface) connection string */
+    String jndi() default "";
     /** JDBC Url */
     String jdbcUrl() default "";
     /** JDBC Driver */
@@ -41,5 +41,4 @@ public @interface Db {
     String password() default "";
 
 
-    
 }
