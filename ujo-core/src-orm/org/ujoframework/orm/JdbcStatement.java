@@ -183,7 +183,10 @@ public class JdbcStatement {
                     break;
             }
         } catch (Throwable e) {
-            String textValue = UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY);
+            String textValue = bo!=null 
+                ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)
+                : UjoManager.getInstance().encodeValue(value, false)
+                ;
             String msg = String.format
                 ( "table: %s, column %s, columnOffset: %d, value: %s"
                 , bo.getClass().getSimpleName()
