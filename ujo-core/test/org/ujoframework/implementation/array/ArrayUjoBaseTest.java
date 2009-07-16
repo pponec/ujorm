@@ -11,7 +11,7 @@ package org.ujoframework.implementation.array;
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 
 /**
  * TextCase

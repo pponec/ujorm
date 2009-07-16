@@ -52,7 +52,7 @@ public abstract class QuickUjo extends AbstractUjo {
     
     /** Constructor */
     public QuickUjo() {
-        data = new Object[readUjoManager().readProperties(getClass()).length];
+        data = new Object[readUjoManager().readProperties(getClass()).size()];
     }
 
     /** Constructor */

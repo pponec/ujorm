@@ -7,7 +7,7 @@ package samples.map.personUjo;
 import java.util.HashMap;
 import org.ujoframework.*;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoAction;
 

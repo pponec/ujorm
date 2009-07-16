@@ -13,7 +13,7 @@ import junit.framework.*;
 import org.ujoframework.MyTestCase;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 
 /**
  *

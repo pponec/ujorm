@@ -19,7 +19,7 @@ package org.ujoframework.orm.metaModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.AbstractMetaModel;
 
@@ -68,7 +68,7 @@ public class MetaView  extends AbstractMetaModel {
         }
 
         UjoPropertyList props = readProperties();
-        for (int j=props.length-1; j>=0; --j) {
+        for (int j=props.size()-1; j>=0; --j) {
             UjoProperty p = props.get(j);
 
             i = select.lastIndexOf(p.getName());

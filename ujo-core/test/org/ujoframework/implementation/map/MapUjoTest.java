@@ -122,8 +122,8 @@ public class MapUjoTest extends MyTestCase {
         MapUjoImpl ujb1 = new MapUjoImpl();
         MapUjoImplChild  ujb2 = new MapUjoImplChild();
         
-        assertEquals( 5, ujb1.readProperties().length);
-        assertEquals(10, ujb2.readProperties().length);
+        assertEquals( 5, ujb1.readProperties().size());
+        assertEquals(10, ujb2.readProperties().size());
     }
     
     

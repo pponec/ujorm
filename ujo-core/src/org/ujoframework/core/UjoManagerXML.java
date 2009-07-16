@@ -16,6 +16,7 @@
 
 package org.ujoframework.core;
 
+import org.ujoframework.UjoPropertyList;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
