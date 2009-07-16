@@ -10,7 +10,7 @@ package org.ujoframework.implementation.quick;
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 
 /**
  * TextCase

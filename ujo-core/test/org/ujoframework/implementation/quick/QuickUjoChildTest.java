@@ -11,7 +11,7 @@ package org.ujoframework.implementation.quick;
 import java.util.Date;
 import junit.framework.*;
 import org.ujoframework.MyTestCase;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 
 /**
  *
@@ -121,8 +121,8 @@ public class QuickUjoChildTest extends MyTestCase {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
         QuickUjoImplChild  ujb2 = new QuickUjoImplChild();
         
-        assertEquals( 5, ujb1.readProperties().length);
-        assertEquals(10, ujb2.readProperties().length);
+        assertEquals( 5, ujb1.readProperties().size());
+        assertEquals(10, ujb2.readProperties().size());
     }
 
     public void testPropertyName() throws Throwable {

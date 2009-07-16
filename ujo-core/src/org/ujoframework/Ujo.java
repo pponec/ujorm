@@ -16,7 +16,7 @@
 
 package org.ujoframework;
 
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.UjoAction;
 
 /**

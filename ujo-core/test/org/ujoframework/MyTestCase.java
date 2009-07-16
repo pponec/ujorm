@@ -10,7 +10,7 @@ package org.ujoframework;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.*;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.UjoTextable;
 
 /**
@@ -51,7 +51,7 @@ abstract public class MyTestCase extends TestCase {
         UjoPropertyList properties = expected.readProperties();
         
         if (expected instanceof UjoTextable) {
-            for (int i=properties.length-1; i>=0; i--) {
+            for (int i=properties.size()-1; i>=0; i--) {
                 UjoProperty property = properties.get(i);
                 String o1 = String.valueOf(((UjoTextable)expected).readValueString(property, null));
                 String o2 = String.valueOf(((UjoTextable)actual  ).readValueString(property, null));
@@ -60,7 +60,7 @@ abstract public class MyTestCase extends TestCase {
         }
        
         
-        for (int i=properties.length-1; i>=0; i--) {
+        for (int i=properties.size()-1; i>=0; i--) {
             UjoProperty property = properties.get(i);
             Object o1 = expected.readValue(property);
             Object o2 = actual  .readValue(property);

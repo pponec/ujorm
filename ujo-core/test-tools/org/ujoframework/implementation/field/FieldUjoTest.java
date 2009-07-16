@@ -124,8 +124,8 @@ public class FieldUjoTest extends MyTestCase {
         FieldUjoImpl ujb1 = new FieldUjoImpl();
         FieldUjoImplChild  ujb2 = new FieldUjoImplChild();
         
-        assertEquals( 5, ujb1.readProperties().length);
-        assertEquals(10, ujb2.readProperties().length);
+        assertEquals( 5, ujb1.readProperties().size());
+        assertEquals(10, ujb2.readProperties().size());
     }
     
     

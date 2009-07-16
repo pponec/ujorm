@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.UjoAction;
 
 /**
@@ -32,7 +33,7 @@ import org.ujoframework.extensions.UjoAction;
  * @author Pavel Ponec
  * @composed 1 - N UjoProperty
  */
-final public class UjoPropertyList implements Iterable<UjoProperty> {
+final public class UjoPropertyListImpl implements UjoPropertyList {
 
     /** An empty array of the UJO properties */
     final static public UjoProperty[] EMPTY = new UjoProperty[0];
@@ -41,17 +42,17 @@ final public class UjoPropertyList implements Iterable<UjoProperty> {
     final public int length;
 
 
-    public UjoPropertyList(List<UjoProperty> props) {
+    public UjoPropertyListImpl(List<UjoProperty> props) {
         this(props.toArray(new UjoProperty[props.size()]));
     }
 
-    public UjoPropertyList(UjoProperty[] props) {
+    public UjoPropertyListImpl(UjoProperty[] props) {
         this.props = props;
         this.length = props.length;
     }
 
     /** Create the empty list */
-    public UjoPropertyList() {
+    public UjoPropertyListImpl() {
         this(EMPTY);
     }
 

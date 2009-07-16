@@ -16,6 +16,7 @@
 
 package org.ujoframework.core;
 
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
@@ -40,7 +41,7 @@ final class DummyUjo implements Ujo {
     /** Returns unsorted properties. */
     public UjoPropertyList readProperties() {
         final UjoProperty[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
-        return new UjoPropertyList(ps);
+        return new UjoPropertyListImpl(ps);
     }    
     
     /** Is an order of properties reversed? */

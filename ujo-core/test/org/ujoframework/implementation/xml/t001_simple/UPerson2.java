@@ -14,7 +14,7 @@ import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.core.UjoPropertyList;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoAction;
 import org.ujoframework.extensions.UjoTextable;

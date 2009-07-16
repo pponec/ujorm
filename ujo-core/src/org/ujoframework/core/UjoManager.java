@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.core.annot.XmlElementBody;
@@ -103,7 +104,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     public UjoPropertyList readProperties(Class type) {
         UjoPropertyList result = propertiesCache.get(type);
         if (result==null) {
-            result = new UjoPropertyList(readPropertiesNocache(type, true));
+            result = new UjoPropertyListImpl(readPropertiesNocache(type, true));
             
             // Save the result into buffer:
             propertiesCache.put(type, result);
@@ -261,7 +262,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             return false;
         }
         if (u1.getClass().equals(u2.getClass())) {
-            for (int i=properties.length-1; i>=0; i--) {
+            for (int i=properties.size()-1; i>=0; i--) {
                 UjoProperty property = properties.get(i);
                 final Object o1 = getValue(u1, property);
                 final Object o2 = getValue(u2, property);
@@ -413,7 +414,8 @@ public class UjoManager implements Comparator<UjoProperty> {
         result.append(ujo.getClass().getSimpleName());
         UjoAction action = new UjoActionImpl(ACTION_TO_STRING, this);
 
-        for(int i=0; i<properties.length; ++i) {
+        int length = properties.size();
+        for(int i=0; i<length; ++i) {
             UjoProperty property = properties.get(i);
             if (!ujo.readAuthorization(action, property, this)) { continue; }
 
@@ -442,7 +444,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             result.append(textSeparator);
         }
 
-        if (properties.length>0) {
+        if (properties.size()>0) {
             result.append("]");
         }
         return result.toString();
@@ -620,7 +622,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * <br>Type of value is checked in the runtime.
      */
     public Ujo setValue(Ujo ujo, UjoPropertyList props, Object value) throws IllegalArgumentException {
-        final int last = props.length - 1;
+        final int last = props.size() - 1;
         UjoProperty lastProp = props.get(last);
         assertAssign(lastProp, value);
         for (int i = 0; i<last; i++) {
@@ -715,7 +717,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     @SuppressWarnings("unchecked")
     public List<UjoPropertyRow> createPropertyList(Ujo content, UjoAction action) {
         UjoPropertyList props = content.readProperties();
-        ArrayList<UjoPropertyRow> result = new ArrayList<UjoPropertyRow>(props.length);
+        ArrayList<UjoPropertyRow> result = new ArrayList<UjoPropertyRow>(props.size());
         for (UjoProperty prop : props) {
             final Object  value   = content.readValue(prop);
             final boolean enabled = content.readAuthorization(action, prop, value);
