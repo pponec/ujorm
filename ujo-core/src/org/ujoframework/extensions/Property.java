@@ -65,7 +65,6 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /**
      * Constructor with an property order
      * @param name
-     * @param type
      * @param index On order of the property.
      */
     @SuppressWarnings("unchecked")
@@ -84,7 +83,6 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @param type Replace the Type of property if the one is NULL.
      * @param defaultValue Replace the Optional default value if the one is NULL.
      * @param lock Lock the property.
-     * @return
      */
     @SuppressWarnings("unchecked")
     final protected Property<UJO,VALUE> init

@@ -51,10 +51,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
      * List property initialization.
      * @param name Replace the Name of property if the one is NULL.
      * @param index Replace index allways, the value -1 invoke a next number from the internal sequencer.
-     * @param type Replace the Type of property if the one is NULL.
-     * @param defaultValue Replace the Optional default value if the one is NULL.
      * @param lock Lock the property.
-     * @return
      */
     @SuppressWarnings("unchecked")
     final protected ListProperty<UJO,ITEM> initList
