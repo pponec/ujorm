@@ -80,7 +80,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
-     * @see ArrayProperty#setValue(Ujo,Object)
+     * @see Property#setValue(Ujo,Object)
      */
 
     public void writeValue(final UjoProperty property, final Object value) {
@@ -95,7 +95,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
-     * @see ArrayProperty#getValue(Ujo)
+     * @see Property#getValue(Ujo)
      */    
     public Object readValue(final UjoProperty property) {
         Object result = data[property.getIndex()];

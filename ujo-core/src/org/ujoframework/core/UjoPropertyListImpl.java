@@ -59,7 +59,6 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     /**
      * Find a property by property name from parameter.
      *
-     * @param ujo An Ujo object
      * @param name A property name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .

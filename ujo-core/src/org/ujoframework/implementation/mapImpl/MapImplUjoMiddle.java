@@ -19,6 +19,7 @@ import org.ujoframework.implementation.map.*;
 import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.UjoMiddle;
 
 /**
@@ -41,7 +42,7 @@ import org.ujoframework.extensions.UjoMiddle;
  *  }
  *}</pre>
  * 
- * @see MapProperty
+ * @see Property
  * @author Paul Ponec
  * @since UJO release 0.85
  */

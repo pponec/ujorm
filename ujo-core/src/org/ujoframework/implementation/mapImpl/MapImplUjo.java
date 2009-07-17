@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.AbstractUjo;
 import org.ujoframework.extensions.ListProperty;
 
@@ -51,10 +50,10 @@ import org.ujoframework.extensions.ListProperty;
  * }
  * </pre>
  *
- * @see MapProperty
  * @author Pavel Ponec
+ * @see Property
  * @since UJO release 0.85
- * @composed 1 - * MapProperty
+ * @composed 1 - * Property
  */
 public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence,Object> {
     
@@ -73,12 +72,12 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
     
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * <a href="MapProperty.html#setValue(UJO,%20VALUE)">MapProperty.setValue(Ujo,Object)</a> 
+     * <a href="../../extensions/Property.html#setValue(UJO,%20VALUE)">Property.setValue(Ujo,Object)</a>
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: If property is an incorrect then no exception is throwed.
      *
-     * @see MapProperty#setValue(Ujo,Object)
+     * @see Property#setValue(Ujo,Object)
      */
     public void writeValue(final UjoProperty property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
@@ -87,12 +86,12 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
     
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * <a href="MapProperty.html#getValue(UJO)">MapProperty.getValue(Ujo)</a>
+     * <a href="../../extensions/Property.html#getValue(UJO)">Property.getValue(Ujo)</a>
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br>NOTE: If property is an incorrect then method returns a null value.
      *
-     * @see MapProperty#getValue(Ujo)
+     * @see Property#getValue(Ujo)
      */
     public Object readValue(final UjoProperty property) {
         Object result = get(property);
