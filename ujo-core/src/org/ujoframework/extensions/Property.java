@@ -259,7 +259,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return result;
     }
 
-    /** Compare to another ArrayProperty object by a index code. */
+    /** Compare to another UjoProperty object by a index code. */
     public int compareTo(final UjoProperty p) {
         final int result
         = index < p.getIndex() ? -1
