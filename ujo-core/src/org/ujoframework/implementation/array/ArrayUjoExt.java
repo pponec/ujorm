@@ -17,7 +17,6 @@ package org.ujoframework.implementation.array;
 
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.AbstractUjoExt;
 import org.ujoframework.extensions.ListProperty;
 
@@ -43,7 +42,7 @@ import org.ujoframework.extensions.ListProperty;
  *  }
  *}</pre>
  * 
- * @see ArrayProperty
+ * @see Property
  * @author Paul Ponec
  * @since UJO release 0.80 
  */
@@ -75,7 +74,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
     abstract public int readPropertyCount();
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * <a href="ArrayProperty.html#setValue(UJO,%20VALUE)">ArrayProperty.setValue(Ujo,Object)</a> 
+     * <a href="../../extensions/Property.html#setValue(UJO,%20VALUE)">Property.setValue(Ujo,Object)</a>
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
@@ -90,7 +89,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
     
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * <a href="ArrayProperty.html#getValue(UJO)">ArrayProperty.getValue(Ujo)</a>
+     * <a href="../../extensions/Property.html#getValue(UJO)">Property.getValue(Ujo)</a>
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
