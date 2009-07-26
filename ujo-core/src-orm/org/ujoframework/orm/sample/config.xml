@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- OrmUjo configuration file release UNDEFINED was created 2009/07/05 15:10 -->
+<!-- OrmUjo configuration file release 0.89.B3 was created 2009/07/26 09:18 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
