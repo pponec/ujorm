@@ -37,7 +37,7 @@ import org.ujoframework.orm.metaModel.MetaParams;
  */
 public class SampleORM {
 
-    /** Before the first use you must load a meta-model. */
+    /** Before the first use load a meta-model. */
     public void loadMetaModel(boolean createDb) {
 
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
@@ -59,7 +59,7 @@ public class SampleORM {
         OrmHandler.getInstance().loadDatabase(Database.class);
     }
 
-    /** Create database and using INSERT */
+    /** Create database and call INSERT */
     public void useInsert() {
 
         Order order = new Order();
