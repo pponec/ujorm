@@ -1,66 +1,113 @@
-<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Name       : Firming
+Description: A two-column, fixed-width design suitable for small websites and blogs.
+Version    : 1.0
+Released   : 20080129
+-->
 <html xmlns="http://www.w3.org/1999/xhtml">
- -->
-<html>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        <meta name="copyright" content="PPone(c)" />
-        <meta name="author" content="Pavel Ponec" />
-        <meta name="keywords" content="ORM, Java, database, JDBC, open source, performance" />
-        <title>ORM for UJO</title>
-        <style type="text/css" >
-            body { font-family: 'Arial CE', Arial, sans-serif; }
-            h1, h2  { color: #3937A6; }
-	    .statement { color: #3937A6; padding-left: 10px; }
-            .i { font-style: italic }
-        </style>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>ORM for UJO</title>
+    <link rel="shortcut icon" href="images/favicon2.ico" type="image/x-icon" />
+    <meta name="keywords" content="ORM, UJO, Java, database, JDBC, open source, performance" />
+    <meta name="description" content="Object-relation mapping for the Java language" />
+    <link href="../images/style.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="../images/style2.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <!-- syntaxhighlighter -->
+    <link type="text/css"  rel="stylesheet" href="SyntaxHighlighter/Styles/SyntaxHighlighter.css"/>
+    <script type="text/javascript" src="SyntaxHighlighter/Scripts/shCore.js"></script>
+    <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushXml.js"></script>
+
+    <script type="text/javascript">
+    window.onload = function () {
+        dp.SyntaxHighlighter.ClipboardSwf = 'SyntaxHighlighter/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+    </script>
 
 
-        <!-- syntaxhighlighter -->
-        <link type="text/css"  rel="stylesheet" href="SyntaxHighlighter/Styles/SyntaxHighlighter.css"/>
-        <script language="javascript" src="SyntaxHighlighter/Scripts/shCore.js"></script>
-        <script language="javascript" src="SyntaxHighlighter/Scripts/shBrushJava.js"></script>
-        <script language="javascript" src="SyntaxHighlighter/Scripts/shBrushXml.js"></script>
 
-        <script language="javascript">
-        window.onload = function () {
-            dp.SyntaxHighlighter.ClipboardSwf = 'SyntaxHighlighter/Scripts/clipboard.swf';
-            dp.SyntaxHighlighter.HighlightAll('code');
-        }
-        </script>
-
-    </head>
-    <body><div>
-        <div>
-        <img src="../images/ujo64.png" alt="logo" style="margin: 0px; top: 0; float: left" />
-        <h1  style="margin: 2px 0 1px 75px;"> ORM module of the UJO Framework</h1>
-        <div style="margin: 2px 0 25px 75px; font-style: italic; color: gray;">a new implementation of the object-relation mapping</div>
-        </div>
-
-        <!-- This is short description of a new ORM implementation. --> Why a new ORM mapping?
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="menu">
         <ul>
-           <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
-           <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
-           <li>no confusing proxy business objects</li>
-           <li>no list properties are supported but a special object called <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/core/UjoIterator.java?view=markup">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
-           <li>easy to configure the ORM model by java source code, optionaly by annotations or a XML file</li>
-           <li>great performance, e.g. SELECT is eight times faster in comparison with Hibernate.</li>
-           <li>very small framework without more library dependencies, the current size of the JAR file is around 160 kB</li>
+          <li><a href="../index.html#license">License</a></li>
+          <li><a href="../index.html">Homepage</a></li>
+          <li class="current_page_item"><a href="http://ujoframework.org/orm">ORM</a></li>
+          <li><a href="../index.html#reference">Reference</a></li>
+          <li><a href="../index.html#download">Download</a></li>
+          <li><a href="../index.html#author">Contact</a></li>
         </ul>
-        Some other features:
-        <ul>
-           <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
-           <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
-           <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
-           <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
-           <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
-           <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
-        </ul>
-        <strong>Note</strong>: the current release is an early BETA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements.
+      </div>
+      <div id="logo">
+        <h1><a href="http://ujoframework.org/">ORM for UJO</a></h1>
+        <h2>the revolutionary architecture</h2>
+        <h2><img src="../images/ujo80.png" width="80" height="80" alt="Logo" style="margin-left:50px;" /></h2>
+      </div>
+      <hr />
+      <div id="page">
+        <div id="content">
+
+          <div class="post">
+            <div class="entry">
+              The <strong>ORM</strong> module is an object-relation mapping implementation for the UJO objects.
+            </div><p class="meta">&nbsp;</p>
+          </div><!-- post -->
+
+          <div class="post" id="why">
+            <img src="../images/milky-31.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"><a href="#">Why a new ORM mapping?</a></h2>
+            <div class="entry">
+
+              <ul>
+               <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
+               <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
+               <li>no confusing proxy business objects</li>
+               <li>no list properties are supported but a special object called <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/core/UjoIterator.java?view=markup">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
+               <li>easy to configure the ORM model by java source code, optionally by annotations or a XML file</li>
+               <li>great performance, e.g. SELECT is eight times faster in comparison with Hibernate.</li>
+               <li>very small framework without more library dependencies, the current size of the JAR file is around 160 kB</li>
+              </ul>
+
+            </div>
+            <p class="meta"> <a href="http://ujoframework.org/dokuwiki/doku.php?id=orm" class="permalink">Read more</a> </p>
+          </div><!-- post -->
 
 
-        <h3>A sample of use</h3>
-        See how to create database and to how to INSERT an order with two items into database:
+
+          <div class="post" id="more">
+            <img src="../images/milky-60.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title"><a href="#">Some other features</a></h2>
+            <div class="entry">
+
+              <ul>
+               <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
+               <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
+               <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
+               <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
+               <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
+               <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
+              </ul>
+
+            </div>
+            <p class="meta"> <a href="http://ujoframework.org/dokuwiki/doku.php?id=orm" class="permalink">Read more</a> </p>
+          </div><!-- post -->
+
+
+
+          <div class="post">
+            <img src="../images/milky-10.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="sample"><a href="#">Sample of usage:</a></h2>
+            <div class="entry">
+                See how to create database and to how to INSERT an order with two items into database:
 
 <pre name="code" class="java">
   OrmHandler.getInstance().loadDatabase(Database.class);
@@ -106,7 +153,7 @@ The next source code calls a SELECT by an UJO object <strong>relation</strong>:
   Session session = OrmHandler.getInstance().getSession();
   Database db = session.getDatabase();
   UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
-  
+
   for (Order order : orders) {
       String descr = order.getDescr();
       System.out.println("Order: " + order + " // descr: " + descr);
@@ -118,54 +165,145 @@ The next source code calls a SELECT by an UJO object <strong>relation</strong>:
       }
   }
 </pre>
+<!-- -->
 
-        <h3 id="sources">More sources:</h3>
+            </div>
+            <p class="meta"> <a href="http://ujoframework.org/dokuwiki/doku.php?id=orm" class="permalink">Read more</a> </p>
+          </div><!-- post -->
+
+          <!--
+          <div class="post">
+            <h2 class="title"><a href="#">Xxx</a></h2>
+            <div class="entry">
+              ...
+            </div>
+            <p class="meta"> <a href="javadoc/org/ujoframework/package-summary.html#UJO" class="permalink">Read more</a> </p>
+          </div><!-.- post -.->
+          -->
+
+
+        </div><!-- end #content -->
+
+        <div id="sidebar">
           <ul>
+            <li id="search">
+              <h2>Search</h2>
+                <div>
+<form action="http://www.google.cz/cse" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-5317001675717556:njjc462bpai" />
+    <input type="hidden" name="ie" value="UTF-8" />
+    <input type="text" name="q" size="19" />
+    <input type="submit" name="sa" value="Search" />
+  </div>
+</form>
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+              </div>
+            </li>
+            <li>
+              <h2>What</h2>
+              <p>
+                Are you looking for a quick ORM solution?
+                Do you need a small footprint?
+                Are you developing a&nbsp;thin client?
+                <strong>Try&nbsp;the&nbsp;UJO-ORM&nbsp;!</strong><br />
+                <!--<a href="#">More&hellip;</a>-->
+                </p>
+            </li>
+            <li>
+              <h2>More links</h2>
+              <ul>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description of a metamodel</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?view=markup">Item</a> - Java source of the Item business object</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description of a meta-model</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/ViewOrder.java?view=markup">View</a> - Use of a native SQL query</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using, the code is ready for immediate launch inside the project.</li>
-              <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
+              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?view=markup">Sample</a> - short preview of the ORM using, the code is ready for immediate launch inside the project.</li>
+              <li><a href="http://sourceforge.net/scm/?type=svn&amp;group_id=207681">ORM</a> project sources</li>
               <li><a href="http://ujoframework.org/orm/config.html">XML configuration file</a> - sample</li>
               <li><a href="http://ujoframework.org/javadoc.beta/">JavaDoc</a> beta version</li>
-              <li><a href="http://ujoframework.org/presentation/">UJO quick start</a> (a slide show)</li>
+              <li><a href="http://ujoframework.org/presentation/#orm">UJO quick start</a> (a slide show)</li>
               <li><a href="http://ujoframework.org/dokuwiki/doku.php?id=orm">Future tutorial</a></li>
-              <li><a href="http://docs.google.com/present/view?id=ddcs2pg5_12d5zzmdfp&loop=true">Presentation</a> in Czech language</li>
+              <li><a href="http://docs.google.com/present/view?id=ddcs2pg5_12d5zzmdfp&amp;loop=true">Presentation</a> in Czech language</li>
+              </ul>
+            </li>
+
+            <li><h2>advertising </h2>
+              <ul><li>
+<script type="text/javascript"><!--
+google_ad_client = "pub-5317001675717556";
+/* UJO new desing */
+google_ad_slot = "4299553465";
+google_ad_width = 200;
+google_ad_height = 200;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+              </li>
+              <li>
+<script type="text/javascript"><!--
+google_ad_client = "pub-5317001675717556";
+/* UJO new desing */
+google_ad_slot = "4299553465";
+google_ad_width = 200;
+google_ad_height = 200;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+              </li>
+              </ul>
+            </li>
+
+            <li><h2 id="emblems">Emblems</h2>
+              <ul>
+
+              <li>
+<script type="text/javascript" src="http://www.ohloh.net/p/93634/widgets/project_thin_badge.js"></script>
+              </li>
+
+              <li><a href="http://www.java.net">
+<img height="25" width="90" style="border:0;" alt="java.net Member Button: 90px wide" src="../images/javanet_button_90.gif"/>
+</a>
+              </li>
+              <li>
+<a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+
+<div style="display: none;">
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+</div>
+
+<a href="http://navrcholu.cz/Statistika/111542/" style="text-decoration: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+              </li>
+
+
+              </ul>
+            </li>
           </ul>
-
-        <h3 id="license">License:</h3>
-          <ul>
-              <li><a href="http://www.apache.org/licenses/LICENSE-2.0.html">UJO Framework</a> has a license <a href="http://www.gnu.org/licenses/gpl-2.0.txt">Apache License, Version 2.0</a></li>
-              <li>no more dependences</li>
-          </ul>
-
-        <h3 id="author">About author:</h3>
-
-          <p>The author Pavel Ponec has experiences with the 4GL database query language for eight years .
-          Since 2000 he started to work on different projects primarily in the Java<sup style="font-size: 6px">TM</sup> language,
-          in the year 2008 he has got the certificate Sun Certified Programmer for the Java<sup style="font-size: 6px">TM</sup>&nbsp;2 SE&nbsp;5.0.
-          <br />
-          He likes Java<!--<sup style="font-size: 6px">TM</sup>-->
-          development and he believes that Java applications support
-          an extension of Linux so as to users can choose any application freely for their
-          operation system.
-          </p>
-
-        <hr />
-           <!--
-          <p>
-            <a href="http://validator.w3.org/check?uri=referer"><img
-                src="http://www.w3.org/Icons/valid-xhtml10-blue"
-                alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
-
-          </p>
-          -->
-          <div style="display: none;">
-          <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
-          </div>
+        </div>
+        <!-- end #sidebar -->
+      </div>
+      <!-- end #page -->
+      <div id="footer">
+        <p>(c) 2007-2009 <a href="http://ujoframework.org">UJO Framework</a> from Paul Ponec. Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>. Icons by <a href="http://min.frexy.com">Min Tran</a></p>
+      </div>
+    </div>
 
 
-    </div></body>
+<!-- google analytics beg -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9284194-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- google analytics end -->
+
+
+  </body>
 </html>
-
