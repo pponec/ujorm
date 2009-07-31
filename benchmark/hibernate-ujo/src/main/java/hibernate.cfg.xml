@@ -10,12 +10,12 @@
     <property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
     <!--
         <property name="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-        -->
-    <property name="hibernate.hbm2ddl.auto">create</property>
+     -->
     <property name="connection.pool_size">4</property>
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-    <property name="hbm2ddl.auto">create</property>
+    <property name="hbm2ddl.auto">update</property>
     <property name="show_sql">false</property>
+
     <mapping resource="benchmark/bo/PrfOrder.hbm.xml"/>
     <mapping resource="benchmark/bo/PrfOrderItem.hbm.xml"/>
     <mapping resource="benchmark/bo/PrfUser.hbm.xml"/>
