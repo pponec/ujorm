@@ -23,7 +23,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 
@@ -55,9 +55,9 @@ public class PrfOrder implements Serializable {
     private String orderType;
     @Column(name="language_code", length=2)
     private String language;
-    @OneToOne()
+    @ManyToOne
     private PrfOrder parent;
-    @OneToOne
+    @ManyToOne
     private PrfUser user;
 
     public Date getDateDeleted() {

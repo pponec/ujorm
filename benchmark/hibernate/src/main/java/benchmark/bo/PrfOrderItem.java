@@ -23,7 +23,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -46,11 +46,11 @@ public class PrfOrderItem implements Serializable {
     @Column(length=128)
     private boolean arrival = false;
     private String description;
-    @OneToOne
+    @ManyToOne
     private PrfUser user;
-    @OneToOne
+    @ManyToOne
     private PrfOrder order;
-    @OneToOne
+    @ManyToOne
     private PrfOrderItem parent;
 
     public boolean isArrival() {
