@@ -18,6 +18,7 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.Column;
@@ -42,5 +43,7 @@ public class PrfOrderItem extends OrmTable<PrfOrderItem> {
     public static final Property<PrfOrderItem,PrfOrder> order = newProperty("order_id", PrfOrder.class);
     public static final Property<PrfOrderItem,PrfOrderItem> parent = newProperty("parent_id", PrfOrderItem.class);
 
+    /** Indirect property: order.deleted */
+    public static final PathProperty<PrfOrderItem,Boolean> _orderDeleted = PathProperty.newInstance(PrfOrderItem.order, PrfOrder.deleted);
 
 }
