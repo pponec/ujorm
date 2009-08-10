@@ -26,6 +26,7 @@ document.body.appendChild(oLink);
               <li><a href="#javabean">How to create the JavaBean?</a></li>
               <li><a href="#xml">XML serialization</a></li>
               <li><a href="#tablemodel">Support of the JTable component</a></li>
+              <li><a href="#ORM">Support the object-relation mapping (ORM)</a></li>
               <li><a href="#how2">What about the extensions?</a></li>
               <li><a href="#performance">Performance</a></li>
               <li><a href="#possibilities">Other possibilities of usage?</a></li>
@@ -49,6 +50,7 @@ document.body.appendChild(oLink);
         <li>value type safe solution</li>
         <li>a transfer of the UJO object properties (not values) by a collection</li>
         <li>the core of the building has two interfaces for an easy implementation</li>
+        <li>the <a href="orm/package-summary.html#ORM">object-relation mapping</a> (ORM) support</li>
         </ul>
 
         These properties open up new possibilities for the use in the J2EE mainly in a production 
@@ -418,6 +420,19 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         A name of the column and corresponding class are taken straightly from the <i>UjoProperty</i> object, a column list inputs in constructor.
         
         
+        <h2 id="ORM">Object-relation mapping (ORM)</h2>
+        The <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">Object-relation mapping</a> (ORM) is a brighe between the object word
+        and the relation database. Some features:
+        
+        <ul>
+           <li>framework has a type safe query language which allows the java compiler find some syntax errors</li>
+           <li>no confusing proxy business objects</li>
+           <li>easy to configure the ORM model by java source code</li>
+           <li>great performance</li>
+        </ul>
+
+        See a special page for <a href="orm/package-summary.html#ORM">more information</a>.
+
         <h2 id="how2">What about the extensions?</h2>
         If you need to create a descendant of the Person class, define in the descendant just new attributes. 
         The <i>UjoPropertyList</i> will be procured during the first call the <i>readProperties()</i> method by the help of the 
