@@ -113,18 +113,59 @@ public class BenchmarkUjo {
 
         session.commit();
         printTime("INSERT", time1, System.currentTimeMillis());
-
     }
 
 
-    /** Create database and using SELECT */
-    public void useSelect() {
+    /** Test the single SELECT */
+    public void useSingleSelect() {
+
+        long time1 = System.currentTimeMillis();
+
+        Criterion<PrfOrderItem> crn1 = Criterion.newInstance(PrfOrderItem.deleted, false);
+        Criterion<PrfOrderItem> crn2 = Criterion.newInstance(PrfOrderItem._orderDeleted, false);
+
+        UjoIterator<PrfOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
+
+        int i = 0;
+        for (PrfOrderItem item : items) {
+        ++i;
+            Long id = item.get(PrfOrderItem.id);
+            BigDecimal price = item.get(PrfOrderItem.price);
+            if (false) {
+                System.out.println(">>> Item.id: " + id + " " + price);
+            }
+        }
+
+        session.commit();
+        printTime("SINGLE SELECT "+i, time1, System.currentTimeMillis());
+    }
+
+    /** Test the EMPTY SELECT */
+    public void useEmptySelect() {
+
+        long time1 = System.currentTimeMillis();
+
+
+        for (int i = -ORDER_COUNT; i<0 ; i++) {
+            Criterion<PrfOrder> crn1 = Criterion.newInstance(PrfOrder.id, new Long(i));
+            Criterion<PrfOrder> crn2 = Criterion.newInstance(PrfOrder.deleted, true);
+
+            UjoIterator<PrfOrder> orders = session.createQuery(crn1.and(crn2)).iterate();
+            orders.hasNext();
+        }
+        session.commit();
+        printTime("EMPTY SELECT "+ORDER_COUNT, time1, System.currentTimeMillis());
+    }
+
+    /** Test the multi SELECT */
+    public void useMultiSelect() {
 
         long time1 = System.currentTimeMillis();
 
         Criterion<PrfOrder> crn1 = Criterion.newInstance(PrfOrder.deleted, false);
         UjoIterator<PrfOrder> orders = session.createQuery(crn1).iterate();
 
+        int i = 0;
         for (PrfOrder order : orders) {
             String surename = order.get(PrfOrder.user).get(PrfUser.surename);
             if (false) System.out.println("Usr.surename: " + surename);
@@ -134,8 +175,9 @@ public class BenchmarkUjo {
             UjoIterator<PrfOrderItem> items = session.createQuery(crn2.and(crn3)).iterate();
 
             for (PrfOrderItem item : items) {
-                BigDecimal price1 = item.get(PrfOrderItem.price);
-                BigDecimal price2 = PrfOrderItem.price.of(item);
+                ++i;
+                BigDecimal price = item.get(PrfOrderItem.price);
+                BigDecimal charge = item.get(PrfOrderItem.charge);
                 if (true) {
                     String lang = item.get(PrfOrderItem.order).get(PrfOrder.language);
                     String name = item.get(PrfOrderItem.user).get(PrfUser.lastname);
@@ -145,10 +187,9 @@ public class BenchmarkUjo {
         }
 
         session.commit();
-        printTime("SELECT", time1, System.currentTimeMillis());
+        printTime("MULTI SELECT "+i, time1, System.currentTimeMillis());
 
     }
-
 
     /** Create database and using DELETE */
     public void useDelete() {
@@ -192,7 +233,9 @@ public class BenchmarkUjo {
 
             sample.loadMetaModel();
             sample.useInsert();
-            sample.useSelect();
+            sample.useSingleSelect();
+            sample.useEmptySelect();
+            sample.useMultiSelect();
             sample.useDelete();
             sample.useClose();
 

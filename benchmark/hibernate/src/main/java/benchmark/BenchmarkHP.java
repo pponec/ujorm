@@ -73,7 +73,6 @@ public class BenchmarkHP {
         user2.setPersonalId( "12345678");
         session.save(user2);
 
-
         for (int i=1; i<=ORDER_COUNT; i++) {
 
             PrfOrder order = new PrfOrder();
@@ -103,7 +102,6 @@ public class BenchmarkHP {
         }
 
         tr.commit();
-
         printTime("INSERT", time1, System.currentTimeMillis());
 
     }
@@ -111,7 +109,55 @@ public class BenchmarkHP {
 
     /** Create database and using SELECT */
     @SuppressWarnings("unchecked")
-    public void useSelect() {
+    public void useSingleSelect() {
+
+        long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
+
+        String hql = "from PrfOrderItem where deleted = :deleted and order.deleted = :deleted";
+        Query query = session.createQuery(hql);
+        query.setParameter("deleted", false);
+        List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
+
+        int i = 0;
+        for (PrfOrderItem item : items) {
+            ++i;
+            Long id = item.getId();
+            BigDecimal price = item.getPrice();
+            if (false) {
+                System.out.println(">>> Item.id: " + id + " " + price);
+            }
+        }
+
+        tr.commit();
+        printTime("SINGLE SELECT "+i, time1, System.currentTimeMillis());
+    }
+
+
+    /** Create database and using SELECT */
+    @SuppressWarnings("unchecked")
+    public void useEmptySelect() {
+
+        long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
+
+
+        for (int i = -ORDER_COUNT; i<0 ; i++) {
+            String hql = "from PrfOrder where id = :id and deleted = :deleted";
+            Query query = session.createQuery(hql);
+            query.setParameter("id", new Long(i));
+            query.setParameter("deleted", true);
+            List<PrfOrder> items = (List<PrfOrder>) query.list();
+        }
+
+        tr.commit();
+        printTime("EMPTY SELECT "+ORDER_COUNT, time1, System.currentTimeMillis());;
+    }
+
+
+    /** Create database and using SELECT */
+    @SuppressWarnings("unchecked")
+    public void useMultiSelect() {
 
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
@@ -121,6 +167,7 @@ public class BenchmarkHP {
         query.setParameter("deleted", false);
         List<PrfOrder> orders = (List<PrfOrder>) query.list();
 
+        int i = 0;
         for (PrfOrder order : orders) {
             String surename = order.getUser().getSurename();
             if (false) System.out.println("Usr.surename: " + surename);
@@ -132,8 +179,9 @@ public class BenchmarkHP {
             List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
 
             for (PrfOrderItem item : items) {
-                BigDecimal price1 = item.getPrice();
-                BigDecimal price2 = item.getCharge();
+                ++i;
+                BigDecimal price  = item.getPrice();
+                BigDecimal charge = item.getCharge();
                 if (true) {
                     String lang = item.getOrder().getLanguage();
                     String name = item.getUser().getLastname();
@@ -143,10 +191,8 @@ public class BenchmarkHP {
         }
 
         tr.commit();
-        printTime("SELECT", time1, System.currentTimeMillis());
-
+        printTime("MULTI SELECT "+i, time1, System.currentTimeMillis());
     }
-
 
     /** Create database and using DELETE */
     @SuppressWarnings("unchecked")
@@ -202,13 +248,17 @@ public class BenchmarkHP {
 
             sample.loadMetaModel();
             sample.useInsert();
-            sample.useSelect();
+            sample.useSingleSelect();
+            sample.useEmptySelect();
+            sample.useMultiSelect();
             sample.useDelete();
             sample.useClose();
 
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
+        
     }
 
 }

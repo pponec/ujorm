@@ -32,7 +32,7 @@ import benchmark.bo.*;
  * OrmUjo performance test
  * @author pavel
  */
-public class BenchmarrkHU {
+public class BenchmarkHU {
 
     public static final int ORDER_COUNT = 2000;
     public static final int ITEM_COUNT  = 7;
@@ -43,7 +43,7 @@ public class BenchmarrkHU {
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel() {
 
-        System.out.println("** HIBERNATE " + "3.3.1.GA" + " Ujo");
+        System.out.println("** HIBERNATE " + "3.3.1.GA" + " + UJO");
         Logger.getLogger("").setLevel(Level.SEVERE);
 
         long time1 = System.currentTimeMillis();
@@ -110,7 +110,56 @@ public class BenchmarrkHU {
 
     /** Create database and using SELECT */
     @SuppressWarnings("unchecked")
-    public void useSelect() {
+    public void useSingleSelect() {
+
+        long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
+
+        String hql = "from PrfOrderItem where deleted = :deleted and order.deleted = :deleted";
+        Query query = session.createQuery(hql);
+        query.setParameter("deleted", false);
+        List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
+
+        int i = 0;
+        for (PrfOrderItem item : items) {
+            ++i;
+            Long id = item.getId();
+            BigDecimal price = item.getPrice();
+            if (false) {
+                System.out.println(">>> Item.id: " + id + " " + price);
+            }
+        }
+
+        tr.commit();
+        printTime("SINGLE SELECT "+i, time1, System.currentTimeMillis());
+    }
+
+
+    /** Create database and using SELECT */
+    @SuppressWarnings("unchecked")
+    public void useEmptySelect() {
+
+        long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
+
+
+        for (int i = -ORDER_COUNT; i<0 ; i++) {
+            String hql = "from PrfOrder where id = :id and deleted = :deleted";
+            Query query = session.createQuery(hql);
+            query.setParameter("id", new Long(i));
+            query.setParameter("deleted", true);
+            List<PrfOrder> items = (List<PrfOrder>) query.list();
+        }
+
+        tr.commit();
+        printTime("EMPTY SELECT "+ORDER_COUNT, time1, System.currentTimeMillis());;
+
+    }
+
+
+    /** Create database and using SELECT */
+    @SuppressWarnings("unchecked")
+    public void useMultiSelect() {
 
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
@@ -120,6 +169,7 @@ public class BenchmarrkHU {
         query.setParameter("deleted", false);
         List<PrfOrder> orders = (List<PrfOrder>) query.list();
 
+        int i = 0;
         for (PrfOrder order : orders) {
             String surename = order.getUser().getSurename();
             if (false) System.out.println("Usr.surename: " + surename);
@@ -131,8 +181,9 @@ public class BenchmarrkHU {
             List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
 
             for (PrfOrderItem item : items) {
-                BigDecimal price1 = item.getPrice();
-                BigDecimal price2 = item.getCharge();
+                ++i;
+                BigDecimal price  = item.getPrice();
+                BigDecimal charge = item.getCharge();
                 if (true) {
                     String lang = item.getOrder().getLanguage();
                     String name = item.getUser().getLastname();
@@ -142,10 +193,8 @@ public class BenchmarrkHU {
         }
 
         tr.commit();
-        printTime("SELECT", time1, System.currentTimeMillis());
-
+        printTime("MULTI SELECT "+i, time1, System.currentTimeMillis());
     }
-
 
     /** Create database and using DELETE */
     @SuppressWarnings("unchecked")
@@ -169,6 +218,7 @@ public class BenchmarrkHU {
         }
 
         session.flush();
+
         hql = "delete from PrfUser";
         query = session.createQuery(hql);
         int rows = query.executeUpdate();
@@ -194,17 +244,21 @@ public class BenchmarrkHU {
     /** Test */
     public static void main(String[] args) {
         try {
-            BenchmarrkHU sample = new BenchmarrkHU();
+            BenchmarkHU sample = new BenchmarkHU();
 
             sample.loadMetaModel();
             sample.useInsert();
-            sample.useSelect();
+            sample.useSingleSelect();
+            sample.useEmptySelect();
+            sample.useMultiSelect();
             sample.useDelete();
             sample.useClose();
 
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
+
     }
 
 }
