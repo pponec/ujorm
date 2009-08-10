@@ -58,7 +58,7 @@ Released   : 20080129
 
           <div class="post">
             <div class="entry">
-              The <strong>ORM</strong> module is an object-relation mapping implementation for the UJO objects.
+              The <strong>ORM</strong> module is an open source object-relation mapping implementation for the UJO objects.
             </div><p class="meta">&nbsp;</p>
           </div><!-- post -->
 
@@ -68,12 +68,15 @@ Released   : 20080129
             <div class="entry">
 
               <ul>
-               <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
+               <li>framework has a type safe query language which allows the java compiler find a syntax error similar
+                   like a 4GL language</li>
                <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
                <li>no confusing proxy business objects</li>
-               <li>no list properties are supported but a special object called <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/core/UjoIterator.java?view=markup">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
+               <li>no list properties are supported but a special object called 
+                   <a href="http://ujoframework.org/javadoc.beta/org/ujoframework/core/UjoIterator.html">UjoIterator</a>
+                   is designed for a collection. The UjoIterator provides a toList() method for example</li>
                <li>easy to configure the ORM model by java source code, optionally by annotations or a XML file</li>
-               <li>great performance, e.g. SELECT is eight times faster in comparison with Hibernate.</li>
+               <li>great performance, e.g. SELECT is eight times faster in comparison to the Hibernate in a multi-select test</li>
                <li>very small framework without more library dependencies, the current size of the JAR file is around 160 kB</li>
               </ul>
 
