@@ -302,8 +302,10 @@ public class MetaDatabase extends AbstractMetaModel {
             }
 
             // 2. Create tables:
+            int tableCount = 0;
             for (MetaTable table : MetaDatabase.TABLES.getList(this)) {
                 if (table.isTable()) {
+                    tableCount++;
                     out.setLength(0);
                     sql = getDialect().printTable(table, out).toString();
                     stat.executeUpdate(sql);
@@ -328,7 +330,7 @@ public class MetaDatabase extends AbstractMetaModel {
             }
 
             // 4. Create SEQUENCE;
-            if (true) {
+            if (tableCount>0) {
                 out.setLength(0);
                 sql = getDialect().printSequenceTable(this, out).toString();
                 stat.executeUpdate(sql);
