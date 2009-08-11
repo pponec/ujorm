@@ -42,7 +42,7 @@ public class Item extends OrmTable<Item> {
     // ----------- PATH ------------
 
     /** A property to an Date of Order */
-    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.newInstance(ORDER, Order.DATE);
+    public static final UjoProperty<Item,Date> _ORDER_DATE = PathProperty.newInstance(ORDER, Order.DATE);
 
 
 }

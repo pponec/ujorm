@@ -38,11 +38,8 @@ public class Item extends OrmTable<Item> {
     public static final UjoProperty<Item,String> DESCR = newProperty("description", String.class);
     /** A reference to common Order */
     public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);    
-    /** A composed PATH property to an Date of Order (!) */
-    public static final UjoProperty<Item,Date> ORDER_DATE = PathProperty.newInstance(Item.ORDER, Order.DATE);
-    /** The property initialization */
-    static{init(Item.class);}
-
+    /** A composed/indirect PATH property to a "date" attribute of the Order */
+    public static final UjoProperty<Item,Date> _ORDER_DATE = PathProperty.newInstance(Item.ORDER, Order.DATE);
 
     // --- An optional implementation of commonly used setters and getters ---
 
@@ -74,7 +71,7 @@ public class Item extends OrmTable<Item> {
     /** Example of the composed PATH property */
     public Date getOrderDate() {
         // An alternative solution for: getOrder().getDate();
-        return get(ORDER_DATE);
+        return get(_ORDER_DATE);
     }
 
 
