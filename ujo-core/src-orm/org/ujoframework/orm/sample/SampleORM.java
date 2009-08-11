@@ -173,7 +173,7 @@ public class SampleORM {
 
     /** Using SELECT by QUERY */
     public void useSelectItems_4() {
-        Criterion<Item> crit = Criterion.newInstance(Item.ORDER_DATE, Operator.LE, new Date());
+        Criterion<Item> crit = Criterion.newInstance(Item._ORDER_DATE, Operator.LE, new Date());
         Session session = OrmHandler.getInstance().getSession();
         UjoIterator<Item> items = session.createQuery(crit).iterate();
 
