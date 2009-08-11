@@ -27,9 +27,8 @@ import org.ujoframework.orm.AbstractMetaModel;
  * Contains a sql select for a UJO view SELECT.
  * @author Ponec
  */
-public class MetaView  extends AbstractMetaModel {
+public class MetaView extends AbstractMetaModel {
     private static final Class CLASS = MetaView.class;
-
 
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(MetaView.class.getName());
@@ -40,6 +39,7 @@ public class MetaView  extends AbstractMetaModel {
     public static final Property<MetaView,String> GROUP  = newProperty(" GROUP BY ", "");
     public static final Property<MetaView,String> ORDER  = newProperty(" ORDER BY ", "");
     public static final Property<MetaView,String> LIMIT  = newProperty(" LIMIT "   , "");
+
     /** The property initialization */
     static{init(CLASS);}
 
