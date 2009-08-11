@@ -75,7 +75,7 @@ abstract public class SqlDialect {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
-        if (isValid(tableSchema)) {
+        if (isUsable(tableSchema)) {
             out.append(tableSchema);
             out.append('.');
         }
@@ -428,7 +428,7 @@ abstract public class SqlDialect {
             
             String alias = MetaColumn.TABLE.of(column).getAlias();
             String columnName = column.getForeignColumnName(i);
-            if (isValid(alias)) {
+            if (isUsable(alias)) {
                 columnName = alias + '.' + columnName;
             }
             String f = MessageFormat.format(template, columnName, "?");
@@ -548,7 +548,7 @@ abstract public class SqlDialect {
     /** Prinnt the full sequence name */
     protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
-        if (isValid(schema)) {
+        if (isUsable(schema)) {
             out.append(schema);
             out.append('.');
         }
@@ -559,7 +559,7 @@ abstract public class SqlDialect {
     /** Prinnt the full sequence table */
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
-        if (isValid(schema)) {
+        if (isUsable(schema)) {
             out.append(schema);
             out.append('.');
         }
@@ -578,7 +578,7 @@ abstract public class SqlDialect {
         Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
 
         out.append("CREATE TABLE ");
-        if (isValid(schema)) {
+        if (isUsable(schema)) {
             out.append(schema);
             out.append('.');
         }
@@ -618,7 +618,7 @@ abstract public class SqlDialect {
     }
 
     /** Returns true, if the argument text is not null and not empty. */
-    protected boolean isValid(final CharSequence text) {
+    protected boolean isUsable(final CharSequence text) {
         final boolean result = text!=null && text.length()>0;
         return result;
     }
