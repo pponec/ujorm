@@ -28,6 +28,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.Session;
 import org.ujoframework.orm.UjoSequencer;
 
 
@@ -165,11 +166,11 @@ public class MetaTable extends AbstractMetaModel {
     }
 
     /** Assign a PK from framework */
-    public void assignPrimaryKey(final OrmUjo bo) {
+    public void assignPrimaryKey(final OrmUjo bo, final Session session) {
         final Class type = DB_PROPERTY.of(this).getItemType();
         if (type.isInstance(bo)) {
             final MetaPKey pk = PK.of(this);
-            final boolean ok = pk.assignPrimaryKey(bo);
+            final boolean ok = pk.assignPrimaryKey(bo, session);
             if (!ok) {
                 throw new RuntimeException("DB SEQUENCE is not supported for " + type);
             }
