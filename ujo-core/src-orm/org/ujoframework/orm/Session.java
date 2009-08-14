@@ -180,8 +180,8 @@ public class Session {
 
         try {
             MetaTable table = handler.findTableModel((Class) bo.getClass());
-            bo.writeSession(this);
-            table.assignPrimaryKey(bo);
+            table.assignPrimaryKey(bo, this);
+            bo.writeSession(this); // Session must be assigned after assignPrimaryKey(). A bug was fixed thans to Pavel Slovacek
             MetaDatabase db = MetaTable.DATABASE.of(table);
             sql = db.getDialect().printInsert(bo, out(128)).toString();
             LOGGER.log(Level.INFO, sql);

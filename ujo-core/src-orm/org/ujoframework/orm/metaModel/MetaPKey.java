@@ -22,6 +22,7 @@ import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.Session;
 
 /**
  * The table primary key.
@@ -62,7 +63,7 @@ public class MetaPKey extends AbstractMetaModel {
 
     /** Assign a PK from framework in case the PK generator is type of MEMO_SEQUENCE. */
     @SuppressWarnings("unchecked")
-    public boolean assignPrimaryKey(OrmUjo bo) {
+    public boolean assignPrimaryKey(final OrmUjo bo, final Session session) {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
 
@@ -72,7 +73,7 @@ public class MetaPKey extends AbstractMetaModel {
                 return false;
             }
 
-            final long value = TABLE.of(this).getSequencer().nextValue(bo.readSession());
+            final long value = TABLE.of(this).getSequencer().nextValue(session);
             if (Long.class==property.getType()) {
                 property.setValue(bo, value);
                 return true;
