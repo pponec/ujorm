@@ -60,7 +60,7 @@ public class OrmSampleTest extends TestCase {
         Session session = OrmHandler.getInstance().getSession();
 
         Order order = new Order();
-        Order.DATE.setValue(order, new Date());
+        Order.CREATED.setValue(order, new Date());
         Order.DESCR.setValue(order, "test order");
 
         Item item = new Item();
@@ -101,7 +101,7 @@ public class OrmSampleTest extends TestCase {
         Session session = OrmHandler.getInstance().getSession();
 
         Criterion<Order> crn1 = Criterion.newInstance(Order.DESCR, "test order");
-        Criterion<Order> crn2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+        Criterion<Order> crn2 = Criterion.newInstance(Order.CREATED, Operator.LE, new Date());
         Criterion<Order> crit = crn1.and(crn2);
 
         Query<Order> query = session.createQuery(Order.class, crit);

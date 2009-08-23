@@ -108,4 +108,10 @@ abstract public class AbstractMetaModel extends QuickUjo {
         return result;
     }
 
+    /** Getter based on one UjoProperty */
+    @SuppressWarnings("unchecked")
+    public <UJO extends AbstractMetaModel, VALUE> VALUE get ( UjoProperty<UJO, VALUE> property) {
+        return property.of((UJO) this);
+    }
+
 }

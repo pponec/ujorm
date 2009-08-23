@@ -62,14 +62,14 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
     /** Getter based on one UjoProperty */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
-        return (VALUE) ((UjoProperty)property).of(this);
+        return property.of((UJO)this);
     }
 
     /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> Ujo set(final UjoProperty<UJO, VALUE> property, final VALUE value) {
         assert readUjoManager().assertDirectAssign(property, value);
-        ((UjoProperty)property).setValue(this, value);
+        property.setValue((UJO)this, value);
         return this;
     }
 

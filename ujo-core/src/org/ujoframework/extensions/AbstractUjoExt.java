@@ -37,8 +37,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     public <UJO extends UJO_IMPL, VALUE> VALUE get
         ( final UjoProperty<UJO, VALUE> property
         ) {
-        final Object result = ((UjoProperty) property).of(this);
-        return (VALUE) result;
+        return property.of((UJO)this);
     }
 
     /** Getter based on two properties */
@@ -68,7 +67,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         , final VALUE value
         ) {
         readUjoManager().assertAssign(property, value);
-        ((UjoProperty)property).setValue(this, value);
+        property.setValue((UJO)this, value);
         return (UJO_IMPL) this;
     }
 

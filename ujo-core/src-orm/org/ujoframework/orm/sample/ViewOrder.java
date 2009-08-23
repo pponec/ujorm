@@ -28,7 +28,8 @@ import org.ujoframework.orm.annot.View;
  * @hidden
  */
 @View(select="SELECT ord_order_alias.id, count(*) AS itemCount"
-    + " FROM db1.ord_order ord_order_alias, db1.ord_item ord_item_alias"
+    + " FROM db1.ord_order ord_order_alias"
+    +     ", db1.ord_item  ord_item_alias"
     + " WHERE ord_order_alias.id = ord_item_alias.fk_order"
     + " GROUP BY ord_order_alias.id"
     + " ORDER BY ord_order_alias.id")

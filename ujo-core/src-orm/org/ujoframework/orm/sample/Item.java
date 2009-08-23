@@ -39,7 +39,7 @@ public class Item extends OrmTable<Item> {
     /** A reference to common Order */
     public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);    
     /** A composed/indirect PATH property to a "date" attribute of the Order */
-    public static final UjoProperty<Item,Date> _ORDER_DATE = PathProperty.newInstance(Item.ORDER, Order.DATE);
+    public static final UjoProperty<Item,Date> _ORDER_DATE = PathProperty.newInstance(Item.ORDER, Order.CREATED);
 
     // --- An optional implementation of commonly used setters and getters ---
 
