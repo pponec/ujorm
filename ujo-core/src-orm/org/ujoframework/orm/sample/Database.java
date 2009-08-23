@@ -31,6 +31,7 @@ import org.ujoframework.orm.annot.View;
 //@Db(schema="db1", dialect=org.ujoframework.orm.dialect.DerbyDialect.class, user="sa", password="", jdbcUrl="jdbc:derby:C:\\temp\\derby-sample;create=true")
 //@Db(schema="db1", dialect=org.ujoframework.orm.dialect.MySqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:mysql://127.0.0.1:3306/db1")
 //@Db(schema="db1", dialect=org.ujoframework.orm.dialect.HsqlDialect.class, user="sa", password="", jdbcUrl="jdbc:hsqldb:mem:db1")
+//@Db(schema= ""  , dialect=org.ujoframework.orm.dialect.FirebirdDialect.class, user="sysdba", password="masterkey", jdbcUrl="jdbc:firebirdsql:localhost/3050:c:\\progra~1\\firebird\\db\\db1.fdb?lc_ctype=UTF8")
 //@Db(schema="db1", dialect=org.ujoframework.orm.dialect.OracleDialect.class, user="sa", password="", jdbcUrl="jdbc:oracle:thin:@myhost:1521:orcl")
 public class Database extends OrmTable<Database> {
 

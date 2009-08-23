@@ -42,7 +42,7 @@ public class Order extends OrmTable<Order> {
     @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
     public static final UjoProperty<Order,String> DESCR = newProperty("description", String.class);
     /** Date of creation */
-    public static final UjoProperty<Order,Date> DATE = newProperty("date", Date.class);
+    public static final UjoProperty<Order,Date> CREATED = newProperty("created", Date.class);
     /** References to Itemsr */
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
     
@@ -68,10 +68,10 @@ public class Order extends OrmTable<Order> {
         set(DESCR, descr);
     }
     public Date getDate() {
-        return get(DATE);
+        return get(CREATED);
     }
     public void setDate(Date date) {
-        set(DATE, date);
+        set(CREATED, date);
     }
     public UjoIterator<Item> getItems() {
         return get(ITEMS);
