@@ -38,7 +38,7 @@ public class Order extends OrmTable<Order> {
     @Column(type=DbType.VARCHAR, name="DESCR")
     public static final Property<Order,String> DESCR = newProperty("description", String.class);
     /** Date of creation */
-    public static final Property<Order,Date> DATE = newProperty("date", Date.class);
+    public static final Property<Order,Date> CREATED = newProperty("created", Date.class);
     /** References to Itemsr */
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
 

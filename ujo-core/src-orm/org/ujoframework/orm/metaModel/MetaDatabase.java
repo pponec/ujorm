@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -80,6 +81,10 @@ public class MetaDatabase extends AbstractMetaModel {
     public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
     /** JNDI (java naming and directory interface) connection string */
     public static final Property<MetaDatabase,String> JNDI = newProperty("jndi", "");
+    /** The sequencer class for tables of the current database.
+     * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
+     * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
+    public static final Property<MetaDatabase,Class> SEQUENCER = newProperty("sequencer", Class.class).setDefault(UjoSequencer.class);
     /** The property initialization */
     static{init(CLASS);}
 
@@ -104,6 +109,7 @@ public class MetaDatabase extends AbstractMetaModel {
             changeDefault(this, USER    , USER.of(param));
             changeDefault(this, PASSWORD, PASSWORD.of(param));
             changeDefault(this, JNDI    , JNDI.of(param));
+            changeDefault(this, SEQUENCER, SEQUENCER.of(param));
         }
 
         Db annotDB = database.getClass().getAnnotation(Db.class);
@@ -115,6 +121,7 @@ public class MetaDatabase extends AbstractMetaModel {
             changeDefault(this, USER    , annotDB.user());
             changeDefault(this, PASSWORD, annotDB.password());
             changeDefault(this, JNDI    , annotDB.jndi());
+            changeDefault(this, SEQUENCER, annotDB.sequencer());
         }
 
         changeDefault(this, ID      , database.getClass().getSimpleName());
@@ -517,4 +524,23 @@ public class MetaDatabase extends AbstractMetaModel {
         }
         return null;
     }
+
+    /** Create a new sequencer for selected table */
+    @SuppressWarnings("unchecked")
+    protected UjoSequencer createSequencer(MetaTable table) {
+        UjoSequencer result;
+        Class seqClass = SEQUENCER.of(this);
+        if (seqClass==UjoSequencer.class) {
+            result = new UjoSequencer(table);
+        } else try {
+            Constructor<UjoSequencer> constr = seqClass.getConstructor(MetaTable.class);
+            result = constr.newInstance(table);
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't create sequencer for " + seqClass, e);
+        }
+
+        return result;
+    }
+
+
 }

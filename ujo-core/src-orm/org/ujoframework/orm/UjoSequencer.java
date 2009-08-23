@@ -26,7 +26,8 @@ import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
- * Sequence provider
+ * The default sequence provider.
+ * A result value is recieved from a special database table.
  * @author Pavel Ponec
  */
 public class UjoSequencer {
@@ -34,9 +35,10 @@ public class UjoSequencer {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(UjoSequencer.class.getName());
 
-    final private MetaTable table;
-    private long sequence = 0;
-    private long seqLimit = 0;
+    /** Basic table. */
+    final protected MetaTable table;
+    protected long sequence = 0;
+    protected long seqLimit = 0;
 
     public UjoSequencer(MetaTable table) {
         this.table = table;
