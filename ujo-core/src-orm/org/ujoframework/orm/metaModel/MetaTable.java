@@ -86,7 +86,7 @@ public class MetaTable extends AbstractMetaModel {
 
     @SuppressWarnings("unchecked")
     public MetaTable(MetaDatabase database, RelationToMany dbProperty, MetaTable parTable) {
-        sequencer = new UjoSequencer(this);
+        sequencer = database.createSequencer(this);
         ID.setValue(this, dbProperty.getName());
         DATABASE.setValue(this, database);
         DB_PROPERTY.setValue(this, dbProperty);

@@ -39,6 +39,10 @@ public @interface Db {
     String user()     default "";
     /** Connection password */
     String password() default "";
+    /** The sequencer class for tables of the current database.
+     * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
+     * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
+    Class sequencer() default org.ujoframework.orm.UjoSequencer.class;
 
 
 }
