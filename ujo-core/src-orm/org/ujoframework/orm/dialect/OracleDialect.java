@@ -23,11 +23,18 @@ import org.ujoframework.orm.DbType;
  * @deprecated Oradle dialect is not finished yet */
 public class OracleDialect extends PostgreSqlDialect {
 
+
+	/* Returns a default JDBC URL
+	 * @see org.ujoframework.orm.SqlDialect#getJdbcUrl()
+	 */
     @Override
     public String getJdbcUrl() {
         return "jdbc:oracle:thin:@myhost:1521:orcl";
     }
 
+	/* Returns a JDBC Driver
+	 * @see org.ujoframework.orm.SqlDialect#getJdbcDriver()
+	 */
     @Override
     public String getJdbcDriver() {
         return "oracle.jdbc.driver.OracleDriver";

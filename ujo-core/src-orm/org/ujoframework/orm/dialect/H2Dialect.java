@@ -21,7 +21,7 @@ import org.ujoframework.orm.SqlDialect;
 @SuppressWarnings("unchecked")
 public class H2Dialect extends SqlDialect {
 
-    /** Returns a default JDBC Driver */
+    /** Returns a default JDBC URL */
     public String getJdbcUrl() {
         return "jdbc:h2:mem:db1";
     }

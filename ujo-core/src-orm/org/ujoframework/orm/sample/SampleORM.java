@@ -28,7 +28,9 @@ import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.Operator;
+import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaParams;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * The ORM tutorial in the class.
@@ -94,7 +96,7 @@ public class SampleORM {
     public void useSelectOrders() {
 
         Criterion<Order> crn1 = Criterion.newInstance(Order.DESCR, "John's order");
-        Criterion<Order> crn2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+        Criterion<Order> crn2 = Criterion.newInstance(Order.CREATED, Operator.LE, new Date());
         Criterion<Order> crit = crn1.and(crn2);
 
         Session session = OrmHandler.getInstance().getSession();
@@ -113,7 +115,7 @@ public class SampleORM {
         Session session = OrmHandler.getInstance().getSession();
         Query<Order> query = session.createQuery(Order.class);
         query.getOrder().add(Order.DESCR);
-        query.getOrder().add(Order.DATE.descending());
+        query.getOrder().add(Order.CREATED.descending());
 
         UjoIterator<Order> orders = query.iterate();
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
@@ -267,6 +269,7 @@ public class SampleORM {
             .append("\n\t NotNull: " + c.isMandatory())
             .append("\n\t PrimKey: " + c.isPrimaryKey())
             .append("\n\t DB name: " + c.getFullName())
+            .append("\n\t Dialect: " + c.get(MetaColumn.TABLE).getDatabase().get(MetaDatabase.DIALECT).getSimpleName())
             ;
         System.out.println(msg);
     }

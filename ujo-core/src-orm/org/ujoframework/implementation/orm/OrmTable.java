@@ -170,8 +170,8 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
     /** Getter based on UjoProperty implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
     public final <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
-        final Object result = ((UjoProperty) property).of(this);
-        return (VALUE) result;
+        final VALUE result = property.of((UJO)this);
+        return result;
     }
 
     /** Setter  based on UjoProperty. Type of value is checked in the runtime.
@@ -183,7 +183,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
         , final VALUE value
         ) {
         readUjoManager().assertAssign(property, value);
-        ((UjoProperty)property).setValue(this, value);
+        property.setValue((UJO)this, value);
         return (UJO_IMPL) this;
     }
 
