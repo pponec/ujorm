@@ -169,10 +169,11 @@ public class MetaTable extends AbstractMetaModel {
     public void assignPrimaryKey(final OrmUjo bo, final Session session) {
         final Class type = DB_PROPERTY.of(this).getItemType();
         if (type.isInstance(bo)) {
-            final MetaPKey pk = PK.of(this);
-            final boolean ok = pk.assignPrimaryKey(bo, session);
-            if (!ok) {
-                throw new RuntimeException("DB SEQUENCE is not supported for " + type);
+            try {
+               final MetaPKey pk = PK.of(this);
+               pk.assignPrimaryKey(bo, session);
+            } catch (Throwable e) {
+               throw new IllegalArgumentException("DB SEQUENCE is not supported for " + type, e);
             }
         } else {
             throw new IllegalArgumentException("Argument is not type of " + type);

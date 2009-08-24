@@ -61,9 +61,13 @@ public class MetaPKey extends AbstractMetaModel {
         return sb.toString();
     }
 
-    /** Assign a PK from framework in case the PK generator is type of MEMO_SEQUENCE. */
+    /** Assign a PK from framework in case the PK generator is type of MEMO_SEQUENCE.
+     * @return Value 'true' means, that primary key was assigned successfully
+     *         and 'false' means that a primary key was defined earlier.
+     * @throws java.lang.IllegalArgumentException The PK can't be assigned.
+     */
     @SuppressWarnings("unchecked")
-    public boolean assignPrimaryKey(final OrmUjo bo, final Session session) {
+    public boolean assignPrimaryKey(final OrmUjo bo, final Session session) throws IllegalArgumentException {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
 
