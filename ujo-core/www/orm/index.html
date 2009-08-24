@@ -14,7 +14,7 @@ Released   : 20080129
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>ORM for UJO</title>
     <link rel="shortcut icon" href="images/favicon2.ico" type="image/x-icon" />
-    <meta name="keywords" content="ORM, UJO, Java, database, JDBC, open source, performance, object-relation" />
+    <meta name="keywords" content="ORM, UJO, Java, database, JDBC, open source, performance, benchmark, object-relation" />
     <meta name="description" content="Object-relation mapping for the Java language" />
     <link href="../images/style.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="../images/style2.css" rel="stylesheet" type="text/css" media="screen" />
@@ -33,7 +33,6 @@ Released   : 20080129
     </script>
 
 
-
   </head>
   <body>
     <div id="wrapper">
@@ -48,8 +47,8 @@ Released   : 20080129
         </ul>
       </div>
       <div id="logo">
-        <h1><a href="http://ujoframework.org/">ORM for UJO</a></h1>
-        <h2>the revolutionary architecture</h2>
+        <h1><a href="http://ujoframework.org/">UJORM</a></h1>
+        <h2>the object-relation mapping for the UJO</h2>
         <h2><img src="../images/ujo80.png" width="80" height="80" alt="Logo" style="margin-left:50px;" /></h2>
       </div>
       <hr />
@@ -58,7 +57,9 @@ Released   : 20080129
 
           <div class="post">
             <div class="entry">
-              The <strong>ORM</strong> module is an open source object-relation mapping implementation for the UJO objects.
+              The <strong>ORM</strong> module is an open source
+              <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">object-relation mapping</a>
+              implementation for the UJO objects. See the features:
             </div><p class="meta">&nbsp;</p>
           </div><!-- post -->
 
@@ -76,8 +77,8 @@ Released   : 20080129
                    <a href="http://ujoframework.org/javadoc.beta/org/ujoframework/core/UjoIterator.html">UjoIterator</a>
                    is designed for a collection. The UjoIterator provides a toList() method for example</li>
                <li>easy to configure the ORM model by java source code, optionally by annotations or a XML file</li>
-               <li>great performance, e.g. SELECT is eight times faster in comparison to the Hibernate in a multi-select test</li>
-               <li>very small framework without more library dependencies, the current size of the JAR file is around 160 kB</li>
+               <li>great performance, e.g. multi SELECT is eight times faster in comparison with Hibernate</li>
+               <li>no library dependencies, the current size of the JAR file is approx. 160&nbsp;kB</li>
               </ul>
 
             </div>
@@ -137,9 +138,12 @@ Released   : 20080129
 
 The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
 <pre name="code" class="java">
-  Criterion&lt;Order&gt; criter1 = Criterion.newInstance(Order.DESCR, "John's order");
-  Criterion&lt;Order&gt; criter2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
-  Criterion&lt;Order&gt; criterion = criter1.and(criter2);
+
+  Criterion&lt;Order&gt; criter1, criter2, criterion;
+
+  criter1 = Criterion.newInstance(Order.DESCR, "John's order");
+  criter2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+  criterion = criter1.and(criter2);
 
   Session session = OrmHandler.getInstance().getSession();
   UjoIterator&lt;Order&gt; orders = session.createQuery(criterion).iterate();
@@ -151,24 +155,22 @@ The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
   }
 </pre>
 
-The next source code calls a SELECT by an UJO object <strong>relation</strong>:
+And how to get meta-data for a 'description' property of the Order?
 <pre name="code" class="java">
-  Session session = OrmHandler.getInstance().getSession();
-  Database db = session.getDatabase();
-  UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
+  OrmHandler hr = OrmHandler.getInstance();
 
-  for (Order order : orders) {
-      String descr = order.getDescr();
-      System.out.println("Order: " + order + " // descr: " + descr);
+  MetaColumn c = (MetaColumn)
+             hr.findColumnModel(Order.DESCR);
 
-      for (Item item : order.getItems()) {
-          Long itemId = item.getId();
-          String itemDescr = item.getDescr();
-          System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
-      }
-  }
-</pre>
-<!-- -->
+  StringBuilder msg = new StringBuilder()
+      .append("\n Length : " + c.getMaxLength())
+      .append("\n NotNull: " + c.isMandatory())
+      .append("\n PrimKey: " + c.isPrimaryKey())
+      .append("\n DB name: " + c.getFullName())
+      ;
+
+  System.out.println(msg);
+  </pre>
             </div>
             <p class="meta"> <a href="http://ujoframework.org/dokuwiki/" class="permalink">Read more</a> </p>
           </div><!-- post -->
@@ -207,14 +209,14 @@ The next source code calls a SELECT by an UJO object <strong>relation</strong>:
                 Are you looking for a quick ORM solution?
                 Do you need a small footprint?
                 Are you developing a&nbsp;thin client?
-                <strong>Try&nbsp;the&nbsp;UJO-ORM&nbsp;!</strong><br />
+                <strong>Try&nbsp;the&nbsp;UJORM&nbsp;!</strong><br />
                 <!--<a href="#">More&hellip;</a>-->
                 </p>
             </li>
             <li>
               <h2>More links</h2>
               <ul>
-              <li><a href="http://docs.google.com/present/view?id=ddcs2pg5_12d5zzmdfp&amp;loop=true">Presentation</a> in Czech language</li>
+              <li><a href="../presentation/index.htm#orm">Presentation</a> </li>
               <li><a href="http://ujoframework.org/dokuwiki/">Future tutorial</a></li>
               <li><a href="http://ujoframework.org/javadoc.beta/">JavaDoc</a> ORM version</li>
               <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?view=markup">Sample</a> - short preview of the ORM using, the code is ready for immediate launch inside the project.</li>
