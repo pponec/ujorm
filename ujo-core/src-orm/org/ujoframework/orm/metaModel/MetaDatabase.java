@@ -79,7 +79,9 @@ public class MetaDatabase extends AbstractMetaModel {
     /** DB class root instance */
     @Transient
     public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
-    /** JNDI (java naming and directory interface) connection string */
+    /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
+     * (java naming and directory interface) connection string
+     */
     public static final Property<MetaDatabase,String> JNDI = newProperty("jndi", "");
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
