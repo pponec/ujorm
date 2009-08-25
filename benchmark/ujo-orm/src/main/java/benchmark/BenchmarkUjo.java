@@ -45,7 +45,7 @@ public class BenchmarkUjo {
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel() {
 
-        System.out.println("** UJO-ORM " + UjoManager.projectVersion());
+        System.out.println("** Ujorm " + UjoManager.projectVersion());
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
 
         long time1 = System.currentTimeMillis();
@@ -128,7 +128,7 @@ public class BenchmarkUjo {
 
         int i = 0;
         for (PrfOrderItem item : items) {
-        ++i;
+            ++i;
             Long id = item.get(PrfOrderItem.id);
             BigDecimal price = item.get(PrfOrderItem.price);
             if (false) {
@@ -191,6 +191,27 @@ public class BenchmarkUjo {
 
     }
 
+    /** Update a charge of the order items */
+    public void useUpdate() {
+
+        long time1 = System.currentTimeMillis();
+
+        Criterion<PrfOrderItem> crn1 = Criterion.newInstance(PrfOrderItem.deleted, false);
+        Criterion<PrfOrderItem> crn2 = Criterion.newInstance(PrfOrderItem._orderDeleted, false);
+
+        UjoIterator<PrfOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
+
+        int i = 0;
+        for (PrfOrderItem item : items) {
+            ++i;
+            item.set(PrfOrderItem.charge, item.get(PrfOrderItem.charge).add(BigDecimal.ONE));
+            session.update(item);
+        }
+
+        session.commit();
+        printTime("UPDATE "+i, time1, System.currentTimeMillis());
+    }
+
     /** Create database and using DELETE */
     public void useDelete() {
 
@@ -236,6 +257,7 @@ public class BenchmarkUjo {
             sample.useSingleSelect();
             sample.useEmptySelect();
             sample.useMultiSelect();
+            sample.useUpdate();
             sample.useDelete();
             sample.useClose();
 
