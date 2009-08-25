@@ -16,6 +16,7 @@
 package org.ujoframework.orm;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.text.MessageFormat;
 import java.util.List;
 import org.ujoframework.UjoProperty;
@@ -42,6 +43,7 @@ abstract public class SqlDialect {
     /** The table key for a common sequence emulator. */
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
 
+    /** The ORM handler */
     protected OrmHandler ormHandler;
 
     /** Set the OrmHandler - the method is for internal call only. */
@@ -54,6 +56,11 @@ abstract public class SqlDialect {
 
     /** Returns a JDBC Driver */
     abstract public String getJdbcDriver();
+
+    /** Create a new database connection */
+    public Connection createConnection(final MetaDatabase db) throws Exception {
+        return null;
+    }
 
     /** Print SQL 'CREATE SCHEMA' */
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {

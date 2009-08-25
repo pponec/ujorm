@@ -434,22 +434,23 @@ public class MetaDatabase extends AbstractMetaModel {
     }
 
     /** Create connection with auto-commit false. */
-    public Connection createConnection() throws ClassNotFoundException, SQLException, NamingException {
-        Class.forName(JDBC_DRIVER.of(this));
-        Connection result;
-
-        String jndi = JNDI.of(this);
-        if (isUsable(jndi)) {
-            DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
-            result = dataSource.getConnection();
-        } else {
-            result = DriverManager.getConnection
-            ( JDBC_URL.of(this)
-            , USER.of(this)
-            , PASSWORD.of(this)
-            );
+    public Connection createConnection() throws Exception {
+        Connection result = dialect.createConnection(this);
+        
+        if (result==null) {
+            String jndi = JNDI.of(this);
+            if (isUsable(jndi)) {
+                DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
+                result = dataSource.getConnection();
+            } else {
+                Class.forName(JDBC_DRIVER.of(this));
+                result = DriverManager.getConnection
+                ( JDBC_URL.of(this)
+                , USER.of(this)
+                , PASSWORD.of(this)
+                );
+            }
         }
-
         result.setAutoCommit(false);
         return result;
     }
