@@ -208,7 +208,6 @@ public class OrmHandler {
     }
 
 
-
     /** Map a property to the table */
     @SuppressWarnings("unchecked")
     public void addProperty(UjoProperty property, MetaRelation2Many newColumn) {

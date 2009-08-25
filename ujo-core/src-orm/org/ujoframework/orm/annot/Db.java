@@ -29,7 +29,9 @@ public @interface Db {
     String schema() default "";
     /** SQL dialect by a DB Vendor. */
     Class<? extends SqlDialect> dialect();
-    /** JNDI (java naming and directory interface) connection string */
+    /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
+     * (java naming and directory interface) connection string
+     */
     String jndi() default "";
     /** JDBC Url */
     String jdbcUrl() default "";
