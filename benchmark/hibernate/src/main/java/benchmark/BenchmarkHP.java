@@ -194,6 +194,30 @@ public class BenchmarkHP {
         printTime("MULTI SELECT "+i, time1, System.currentTimeMillis());
     }
 
+
+    /** Update a charge of the order items */
+    @SuppressWarnings("unchecked")
+    public void useUpdate() {
+
+        long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
+
+        String hql = "from PrfOrderItem where deleted = :deleted and order.deleted = :deleted";
+        Query query = session.createQuery(hql);
+        query.setParameter("deleted", false);
+        List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
+
+        int i = 0;
+        for (PrfOrderItem item : items) {
+            ++i;
+            item.setCharge(item.getCharge().add(BigDecimal.ONE));
+            session.update(item);
+        }
+
+        tr.commit();
+        printTime("UPDATE "+i, time1, System.currentTimeMillis());
+    }
+
     /** Create database and using DELETE */
     @SuppressWarnings("unchecked")
     public void useDelete() {
@@ -225,7 +249,6 @@ public class BenchmarkHP {
         printTime("DELETE", time1, System.currentTimeMillis());
     }
 
-
     /** Close session */
     @SuppressWarnings("unchecked")
     public void useClose() {
@@ -251,6 +274,7 @@ public class BenchmarkHP {
             sample.useSingleSelect();
             sample.useEmptySelect();
             sample.useMultiSelect();
+            sample.useUpdate();
             sample.useDelete();
             sample.useClose();
 
