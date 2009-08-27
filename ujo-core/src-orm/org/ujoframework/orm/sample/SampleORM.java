@@ -124,7 +124,7 @@ public class SampleORM {
     /** Using SELECT by VIEW QUERY */
     public void useSelectViewOrders() {
 
-        Criterion<ViewOrder> crit = Criterion.newInstance(ViewOrder.ID, Operator.GE, 0);
+        Criterion<ViewOrder> crit = Criterion.newInstance(ViewOrder.ID, Operator.GE, 0L);
         Session session = OrmHandler.getInstance().getSession();
         UjoIterator<ViewOrder> orders = session.createQuery(crit).iterate();
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
@@ -253,7 +253,7 @@ public class SampleORM {
     /** Using DELETE SQL */
     public void useDelete_2() {
         Session session = OrmHandler.getInstance().getSession();
-        Criterion<Item> crit = Criterion.newInstance(Item.ID, 1);
+        Criterion<Item> crit = Criterion.newInstance(Item.ID, 1L);
         int count = session.delete(crit);
         session.commit();
         System.out.println("There are DELETED rows: " + count);

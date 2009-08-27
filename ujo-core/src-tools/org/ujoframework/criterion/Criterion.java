@@ -85,7 +85,6 @@ public abstract class Criterion<UJO extends Ujo> {
      * New criterion instance
      * @param property UjoProperty
      * @param operator Operator
-     * @param value Value or UjoProperty can be one type of
      * <ul>
      * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
@@ -97,9 +96,47 @@ public abstract class Criterion<UJO extends Ujo> {
     public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
         ( UjoProperty<UJO,TYPE> property
         , Operator operator
-        , Object value
+        , TYPE value
         ) {
         return new ValueCriterion<UJO>(property, operator, value);
+    }
+
+    /**
+     * New criterion instance
+     * @param property UjoProperty
+     * @param operator Operator
+     * <ul>
+     * <li>VALUE - the parameter value</li>
+     * <li>UjoProperty - reference to a related entity</li>
+     * <li>List&lt;TYPE&gt; - list of values (TODO)</li>
+     * <li>THE SAME property - the value will be assigned using the property later (TODO)</li>
+     * </ul>
+     * @return A new criterion
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
+        ( UjoProperty<UJO,TYPE> property
+        , Operator operator
+        , UjoProperty<?,TYPE> value
+        ) {
+        return new ValueCriterion<UJO>(property, operator, value);
+    }
+
+    /**
+     * New equals instance
+     * @param property UjoProperty
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>List&lt;TYPE&gt; - list of values</li>
+     * <li>UjoProperty - reference to a related entity</li>
+     * <li>THE SAME property - the value will be assigned using the property later</li>
+     * </ul>
+     * @return A the new Criterion
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
+        ( UjoProperty<UJO,TYPE> property
+        , TYPE value
+        ) {
+        return new ValueCriterion<UJO>(property, null, value);
     }
 
     /**
@@ -116,7 +153,7 @@ public abstract class Criterion<UJO extends Ujo> {
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
         ( UjoProperty<UJO,TYPE> property
-        , Object value
+        , UjoProperty<?,TYPE> value
         ) {
         return new ValueCriterion<UJO>(property, null, value);
     }
