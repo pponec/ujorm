@@ -19,8 +19,7 @@ package org.ujoframework.orm.dialect;
 import java.io.IOException;
 import org.ujoframework.orm.DbType;
 
-/** Oracle (www.oracle.com/)  
- * @deprecated Oradle dialect is not finished yet */
+/** Oracle (www.oracle.com/) */
 public class OracleDialect extends PostgreSqlDialect {
 
 

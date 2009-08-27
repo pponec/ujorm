@@ -44,6 +44,7 @@ import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
+import org.ujoframework.orm.dialect.OracleDialect;
 
 /**
  * A logical database description.
@@ -178,10 +179,18 @@ public class MetaDatabase extends AbstractMetaModel {
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
         }
         else if (Long.class==type) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
+              MetaColumn.DB_TYPE.setValue(column, DbType.NUMBER);
+            } else {
+              MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            }
         }
         else if (BigInteger.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
+               MetaColumn.DB_TYPE.setValue(column, DbType.NUMBER);
+            } else {
+                MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            }
         }
         else if (Double.class==type || BigDecimal.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
@@ -219,9 +228,7 @@ public class MetaDatabase extends AbstractMetaModel {
         }
 
 
-       UjoProperty property = column.getProperty();
-
-       Class type = property.getType();
+       Class type = column.getProperty().getType();
 
         if (String.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);

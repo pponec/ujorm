@@ -269,7 +269,7 @@ public class SampleORM {
             .append("\n\t NotNull: " + c.isMandatory())
             .append("\n\t PrimKey: " + c.isPrimaryKey())
             .append("\n\t DB name: " + c.getFullName())
-            .append("\n\t Dialect: " + c.get(MetaColumn.TABLE).getDatabase().get(MetaDatabase.DIALECT).getSimpleName())
+            .append("\n\t Dialect: " + c.getDialectClass().getSimpleName())
             ;
         System.out.println(msg);
     }

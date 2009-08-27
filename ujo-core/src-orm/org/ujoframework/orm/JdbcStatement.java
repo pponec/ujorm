@@ -153,7 +153,6 @@ public class JdbcStatement {
         ++parameterPointer;
 
         UjoProperty property = column.getProperty();
-        int sqlType = MetaColumn.DB_TYPE.of(column).getSqlType();
 
         if (bo!=null) {
            logValue(bo, property);
@@ -163,25 +162,7 @@ public class JdbcStatement {
         }
 
         try {
-            if (value==null) {
-                ps.setNull(parameterPointer, sqlType);
-            } else switch (sqlType) {
-                case Types.DATE:
-                    final java.sql.Date sqlDate = new java.sql.Date(((java.util.Date) value).getTime());
-                    ps.setDate(parameterPointer, sqlDate);
-                    break;
-                case Types.TIMESTAMP:
-                    final java.sql.Timestamp sqlStamp = new java.sql.Timestamp(((java.util.Date) value).getTime());
-                    ps.setTimestamp(parameterPointer, sqlStamp);
-                    break;
-                case Types.TIME:
-                    final java.sql.Time sqlTime = new java.sql.Time(((java.util.Date) value).getTime());
-                    ps.setTime(parameterPointer, sqlTime);
-                    break;
-                default:
-                    ps.setObject(parameterPointer, value, sqlType);
-                    break;
-            }
+            TypeBook.setValue(column, ps, value, parameterPointer);
         } catch (Throwable e) {
             String textValue = bo!=null 
                 ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)
