@@ -27,6 +27,8 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.SqlDialect;
+import org.ujoframework.orm.TypeBook;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.annot.Column;
 
@@ -59,6 +61,10 @@ public class MetaColumn extends MetaRelation2Many {
     /** Foreign column names. */
     private String[] foreignNames = null;
     private static final String[] EMPTY_NAMES = new String[0];
+    /** A TypeCode
+     * @see TypeBook
+     */
+    private char typeCode;
 
 
     public MetaColumn() {
@@ -93,6 +99,7 @@ public class MetaColumn extends MetaRelation2Many {
         if (MAX_LENGTH.isDefault(this)) {
             MetaTable.DATABASE.of(table).changeDbLength(this);
         }
+        typeCode = TypeBook.getTypeCode(tableProperty.getType());
     }
 
     /** It is a DB column (either a value of a foreign key) */
@@ -265,6 +272,16 @@ public class MetaColumn extends MetaRelation2Many {
         out.append(getForeignColumnNames()[index]);
     }
 
+    /** A TypeCode
+     * @see TypeBook
+     */
+    public char getTypeCode() {
+        return typeCode;
+    }
 
-
+    /** Returns a SQL dialect class */
+    public Class getDialectClass() {
+         final Class result = MetaColumn.TABLE.of(this).getDatabase().get(MetaDatabase.DIALECT);
+         return result;
+    }
 }
