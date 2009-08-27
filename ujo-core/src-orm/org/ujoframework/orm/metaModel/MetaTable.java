@@ -52,6 +52,9 @@ public class MetaTable extends AbstractMetaModel {
     public static final Property<MetaTable,String> ALIAS = newProperty("alias", "");
     /** Name of table schema. */
     public static final Property<MetaTable,String> SCHEMA = newProperty("schema", "");
+    /** Name of DB sequence. The value is not used by default,
+     * however a special implementation of the UjoSequencer can do it. */
+    public static final Property<MetaTable,String> SEQUENCE = newProperty("sequence", "");
     /** Table Columns */
     public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
     /** Table relations to many */
@@ -101,6 +104,7 @@ public class MetaTable extends AbstractMetaModel {
             changeDefault(this, NAME  , NAME.of(parTable));
             changeDefault(this, ALIAS , ALIAS.of(parTable));
             changeDefault(this, SCHEMA, SCHEMA.of(parTable));
+            changeDefault(this, SEQUENCE,SEQUENCE.of(parTable));
             changeDefault(this, SELECT, SELECT.of(parTable));
             changeDefault(this, VIEW  , VIEW.of(parTable));
         }
@@ -124,9 +128,11 @@ public class MetaTable extends AbstractMetaModel {
             if (table1!=null) changeDefault(this, NAME  , table1.name());
             if (table1!=null) changeDefault(this, ALIAS , table1.alias());
             if (table1!=null) changeDefault(this, SCHEMA, table1.schema());
+            if (table1!=null) changeDefault(this, SEQUENCE,table1.sequence());
             if (table2!=null) changeDefault(this, NAME  , table2.name());
             if (table2!=null) changeDefault(this, ALIAS , table2.alias());
             if (table2!=null) changeDefault(this, SCHEMA, table2.schema());
+            if (table2!=null) changeDefault(this, SEQUENCE,table2.sequence());
         }
         changeDefault(this, SCHEMA, MetaDatabase.SCHEMA.of(database));
         changeDefault(this, NAME, dbProperty.getName());

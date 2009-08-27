@@ -31,5 +31,8 @@ public @interface Table {
     String alias() default "";
     /** Name of schema. If the value is empty than a default database schema is used. */
     String schema() default "";
+    /** Name of DB sequence. The value is not used by default,
+     * however a special implementation of the UjoSequencer can do it. */
+    String sequence() default "";
     
 }
