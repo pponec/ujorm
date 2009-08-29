@@ -75,11 +75,17 @@ abstract public class AbstractMetaModel extends QuickUjo {
         }
     }
 
+    /** Test a read-only state */
+    public boolean testReadOnly(final boolean exception) throws UnsupportedOperationException {
+        if (readOnly && exception) {
+            throw new UnsupportedOperationException("Object have got a read-only state");
+        }
+        return readOnly;
+    }
+
     @Override
     public void writeValue(final UjoProperty property, final Object value) {
-        if (readOnly) {
-            throw new UnsupportedOperationException("Objec have got read-only state");
-        }
+        this.testReadOnly(true);
         super.writeValue(property, value);
     }
 
