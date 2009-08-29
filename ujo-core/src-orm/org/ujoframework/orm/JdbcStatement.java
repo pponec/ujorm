@@ -170,7 +170,7 @@ public class JdbcStatement {
                 ;
             String msg = String.format
                 ( "table: %s, column %s, columnOffset: %d, value: %s"
-                , bo.getClass().getSimpleName()
+                , bo!=null ? bo.getClass().getSimpleName() : "null"
                 , column
                 , parameterPointer
                 , textValue

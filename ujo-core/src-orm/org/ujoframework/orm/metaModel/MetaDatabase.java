@@ -208,7 +208,14 @@ public class MetaDatabase extends AbstractMetaModel {
             MetaColumn.DB_TYPE.setValue(column, DbType.BOOLEAN);
         }
         else if (OrmUjo.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
+            // TODO .... a later initialization !!!!
+            
+            if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
+               MetaColumn.DB_TYPE.setValue(column, DbType.NUMBER);
+            } else {
+                MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            }
+
         }
     }
 
@@ -227,54 +234,6 @@ public class MetaDatabase extends AbstractMetaModel {
             default:
         }
 
-
-       Class type = column.getProperty().getType();
-
-        if (String.class==type) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
-            changeDefault(column, MetaColumn.MAX_LENGTH, 128);
-        }
-        else if (Integer.class==type) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
-            //changeDefault(column, MetaColumn.MAX_LENGTH, 8);
-        }
-        else if (Short.class==type) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
-            //changeDefault(column, MetaColumn.MAX_LENGTH, 8);
-        }
-        else if (Long.class==type) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
-            //changeDefault(column, MetaColumn.MAX_LENGTH, 16);
-        }
-        else if (BigInteger.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
-            changeDefault(column, MetaColumn.MAX_LENGTH, 16);
-        }
-        else if (Double.class==type) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
-            changeDefault(column, MetaColumn.MAX_LENGTH, 8);
-            changeDefault(column, MetaColumn.PRECISION, 2);
-        }
-        else if (BigDecimal.class==type) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
-            changeDefault(column, MetaColumn.MAX_LENGTH, 8);
-            changeDefault(column, MetaColumn.PRECISION, 2);
-        }
-        else if (java.sql.Date.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.DATE);
-        }
-        else if (Date.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
-        }
-        else if (Character.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.CHAR);
-        }
-        else if (Boolean.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.BOOLEAN);
-        }
-        else if (OrmUjo.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.INT);
-        }
     }
 
 
