@@ -172,6 +172,12 @@ public class OrmHandler {
     @SuppressWarnings("unchecked")
     final public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
         loadDatabase(new Class[] {databaseModel});
+
+        for (MetaRelation2Many r : propertyMap.values()) {
+            if (r.isColumn()) {
+                ((MetaColumn)r).initTypeCode();
+            }
+        }
     }
 
     /** LoadInternal a metada and create database */
@@ -185,6 +191,7 @@ public class OrmHandler {
                     dbModel.create(session);
                     break;
             }
+            dbModel.setReadOnly(true); // Lock the model
         }
         if (LOGGER.isLoggable(Level.INFO)) {
             LOGGER.info("DATABASE META-MODEL:\n" + databases.toString());
@@ -193,7 +200,7 @@ public class OrmHandler {
         File outConfigFile = MetaParams.SAVE_CONFIG_TO_FILE.of(getParameters());
         if (outConfigFile!=null) try {
             databases.print(outConfigFile);
-        } catch (IOException ex) {
+        } catch (IOException e) {
             throw new IllegalStateException("Can't create configuration " + outConfigFile);
         }
     }

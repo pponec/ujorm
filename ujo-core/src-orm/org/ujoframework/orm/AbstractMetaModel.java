@@ -42,15 +42,27 @@ abstract public class AbstractMetaModel extends QuickUjo {
     /** Set a read-only state. */
     @SuppressWarnings("unchecked")
     public void setReadOnly(boolean recurse) {
-        this.readOnly = true;
+        if (readOnly) return;
+
+        for (UjoProperty p : readProperties()) {
+
+            if (p instanceof ListUjoProperty) {
+               final List list = (List) p.of(this);
+               p.setValue(this, list!=null
+                   ? Collections.unmodifiableList(list)
+                   : Collections.EMPTY_LIST
+               );
+            }
+        }
+
+        this.readOnly = true; // <<<<<< LOCK THE OBJECT !!!
+
+        
         if (recurse) for (UjoProperty p : readProperties()) {
 
             Object value = p.getValue(this);
             if (value instanceof AbstractMetaModel) {
-                AbstractMetaModel m = (AbstractMetaModel) value;
-                if (!m.readOnly()) {
-                    m.setReadOnly(recurse);
-                }
+                ((AbstractMetaModel) value).setReadOnly(recurse);
             }
 
             else if (p instanceof ListUjoProperty) {
@@ -59,8 +71,6 @@ abstract public class AbstractMetaModel extends QuickUjo {
                         m.setReadOnly(recurse);
                     }
                }
-               final List list = (List) p.of(this);
-               p.setValue(this, Collections.unmodifiableList(list));
             }
         }
     }
