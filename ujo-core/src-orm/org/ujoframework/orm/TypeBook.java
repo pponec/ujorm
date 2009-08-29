@@ -11,6 +11,7 @@ import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import org.ujoframework.orm.metaModel.MetaColumn;
 
 /**
@@ -21,26 +22,30 @@ final public class TypeBook {
 
     public static final char UNDEFINED = (char) -1;
     public static final char BOOLEAN = 0;
-    public static final char CHAR = 1;
-    public static final char SHORT = 2;
-    public static final char INT = 3;
-    public static final char LONG = 4;
-    public static final char FLOAT = 5;
-    public static final char DOUBLE = 6;
-    public static final char BIG_DECI = 7;
-    public static final char BIG_INTE = 8;
-    public static final char STRING = 9;
-    public static final char BYTES = 10;
-    public static final char DATE_UTIL = 11;
-    public static final char DATE_SQL = 12;
-    public static final char TIME_SQL = 13;
-    public static final char TIMESTAMP = 14;
-    public static final char BLOB = 15;
+    public static final char BYTE = 1;
+    public static final char CHAR = 2;
+    public static final char SHORT = 3;
+    public static final char INT = 4;
+    public static final char LONG = 5;
+    public static final char FLOAT = 6;
+    public static final char DOUBLE = 7;
+    public static final char BIG_DECI = 8;
+    public static final char BIG_INTE = 9;
+    public static final char STRING = 10;
+    public static final char BYTES = 11;
+    public static final char DATE_UTIL = 12;
+    public static final char DATE_SQL = 13;
+    public static final char TIME_SQL = 14;
+    public static final char TIMESTAMP = 15;
+    public static final char BLOB = 16;
 
-    public static char getTypeCode(final Class type) {
+    public static char getTypeCode(final MetaColumn column) {
+
+        final Class type = column.getType();
 
         if (type==String.class) return STRING;
         if (type==Boolean.class) return BOOLEAN;
+        if (type==Byte.class) return BYTE;
         if (type==Character.class) return CHAR;
         if (type==Short.class) return SHORT;
         if (type==Integer.class) return INT;
@@ -56,6 +61,12 @@ final public class TypeBook {
         if (type==java.sql.Timestamp.class) return TIMESTAMP;
         if (type==Blob.class) return BLOB;
 
+        if (column.isForeignKey()) {
+            List<MetaColumn> columns = column.getForeignColumns();
+            if (columns.size()==1) {
+                return getTypeCode(columns.get(0));
+            }
+        }
         return UNDEFINED;
     }
 
@@ -65,6 +76,7 @@ final public class TypeBook {
         String column = MetaColumn.NAME.of(mColumn);
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : return rs.getBoolean(column);
+            case BYTE     : return rs.getByte(column);
             case CHAR     : return (char) rs.getInt(column);
             case SHORT    : return rs.getShort(column);
             case INT      : return rs.getInt(column);
@@ -87,6 +99,7 @@ final public class TypeBook {
     public static Object getValue(final MetaColumn mColumn, final ResultSet rs, int column) throws SQLException {
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : return rs.getBoolean(column);
+            case BYTE     : return rs.getByte(column);
             case CHAR     : return (char) rs.getInt(column);
             case SHORT    : return rs.getShort(column);
             case INT      : return rs.getInt(column);
@@ -121,6 +134,7 @@ final public class TypeBook {
 
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : rs.setBoolean(i, (Boolean)value); break;
+            case BYTE     : rs.setByte(i, (Byte)value); break;
             case CHAR     : rs.setInt(i, ((Character)value).charValue()); break;
             case SHORT    : rs.setShort(i, (Short)value); break;
             case INT      : rs.setInt(i, (Integer)value); break;
