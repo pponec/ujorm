@@ -25,13 +25,13 @@ import org.ujoframework.orm.annot.Column;
  *
  * @author pavel
  */
-public class PrfUser extends OrmTable<PrfUser> {
+public class UjoUser extends OrmTable<UjoUser> {
 
     @Column(pk=true)
-    public static final Property<PrfUser,Long> id = newProperty("id", Long.class);
+    public static final Property<UjoUser,Long> id = newProperty("id", Long.class);
     @Column(lenght=8)
-    public static final Property<PrfUser,String> personalId = newProperty(String.class);
-    public static final Property<PrfUser,String> surename = newProperty(String.class);
-    public static final Property<PrfUser,String> lastname = newProperty(String.class);
+    public static final Property<UjoUser,String> personalId = newProperty(String.class);
+    public static final Property<UjoUser,String> surename = newProperty(String.class);
+    public static final Property<UjoUser,String> lastname = newProperty(String.class);
 
 }

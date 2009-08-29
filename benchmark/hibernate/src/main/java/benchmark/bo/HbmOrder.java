@@ -34,7 +34,7 @@ import javax.persistence.Temporal;
 
 //@org.hibernate.annotations.Entity(dynamicUpdate=true)
 @javax.persistence.Entity()
-public class PrfOrder implements Serializable {
+public class HbmOrder implements Serializable {
 
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
@@ -56,9 +56,9 @@ public class PrfOrder implements Serializable {
     @Column(name="language_code", length=2)
     private String language;
     @ManyToOne
-    private PrfOrder parent;
+    private HbmOrder parent;
     @ManyToOne
-    private PrfUser user;
+    private HbmUser user;
 
     public Date getDateDeleted() {
         return dateDeleted;
@@ -132,11 +132,11 @@ public class PrfOrder implements Serializable {
         this.paid = paid;
     }
 
-    public PrfOrder getParent() {
+    public HbmOrder getParent() {
         return parent;
     }
 
-    public void setParent(PrfOrder parent) {
+    public void setParent(HbmOrder parent) {
         this.parent = parent;
     }
 
@@ -156,11 +156,11 @@ public class PrfOrder implements Serializable {
         this.publicId = publicId;
     }
 
-    public PrfUser getUser() {
+    public HbmUser getUser() {
         return user;
     }
 
-    public void setUser(PrfUser user) {
+    public void setUser(HbmUser user) {
         this.user = user;
     }
 

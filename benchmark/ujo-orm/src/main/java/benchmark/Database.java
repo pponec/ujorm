@@ -26,18 +26,18 @@ import benchmark.bo.*;
  * An table mapping to a database (a sample of usage).
  * @hidden
  */
-@Db(schema="ujorm", dialect=org.ujoframework.orm.dialect.PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/benchmark")
+@Db(schema="bmk", dialect=org.ujoframework.orm.dialect.PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/benchmark")
 //@Db(schema="db1", dialect=org.ujoframework.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 public class Database extends OrmTable<Database> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */
-    public static final RelationToMany<Database,PrfOrder> Order = newRelation("PrfOrder", PrfOrder.class);
+    public static final RelationToMany<Database,UjoOrder> Order = newRelation("ujo_order", UjoOrder.class);
 
     /** Items of the Customer order */
-    public static final RelationToMany<Database,PrfOrderItem> OrderItem = newRelation("PrfOrderItem", PrfOrderItem.class);
+    public static final RelationToMany<Database,UjoOrderItem> OrderItem = newRelation("ujo_item", UjoOrderItem.class);
 
     /** View to aggregate data. */
-    public static final RelationToMany<Database,PrfUser> User = newRelation("PrfUser", PrfUser.class);
+    public static final RelationToMany<Database,UjoUser> User = newRelation("ujo_user", UjoUser.class);
 
 
 }

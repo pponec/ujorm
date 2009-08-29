@@ -31,8 +31,8 @@ import javax.persistence.Temporal;
  * @author ponec
  */
 @org.hibernate.annotations.Entity(dynamicUpdate=true)
-@javax.persistence.Entity()
-public class PrfOrderItem implements Serializable {
+@javax.persistence.Entity(name="")
+public class HbmOrderItem implements Serializable {
 
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
     protected Long id;
@@ -47,11 +47,11 @@ public class PrfOrderItem implements Serializable {
     private boolean arrival = false;
     private String description;
     @ManyToOne
-    private PrfUser user;
+    private HbmUser user;
     @ManyToOne
-    private PrfOrder order;
+    private HbmOrder order;
     @ManyToOne
-    private PrfOrderItem parent;
+    private HbmOrderItem parent;
 
     public boolean isArrival() {
         return arrival;
@@ -101,19 +101,19 @@ public class PrfOrderItem implements Serializable {
         this.id = id;
     }
 
-    public PrfOrder getOrder() {
+    public HbmOrder getOrder() {
         return order;
     }
 
-    public void setOrder(PrfOrder order) {
+    public void setOrder(HbmOrder order) {
         this.order = order;
     }
 
-    public PrfOrderItem getParent() {
+    public HbmOrderItem getParent() {
         return parent;
     }
 
-    public void setParent(PrfOrderItem parent) {
+    public void setParent(HbmOrderItem parent) {
         this.parent = parent;
     }
 
@@ -133,11 +133,11 @@ public class PrfOrderItem implements Serializable {
         this.publicId = publicId;
     }
 
-    public PrfUser getUser() {
+    public HbmUser getUser() {
         return user;
     }
 
-    public void setUser(PrfUser user) {
+    public void setUser(HbmUser user) {
         this.user = user;
     }
 

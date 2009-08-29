@@ -32,7 +32,7 @@ import benchmark.bo.*;
  * OrmUjo performance test
  * @author pavel
  */
-public class BenchmarkHU {
+public class BenchmarkHnU {
 
     public static final int ORDER_COUNT = 2000;
     public static final int ITEM_COUNT  = 7;
@@ -268,7 +268,7 @@ public class BenchmarkHU {
     /** Test */
     public static void main(String[] args) {
         try {
-            BenchmarkHU sample = new BenchmarkHU();
+            BenchmarkHnU sample = new BenchmarkHnU();
 
             sample.loadMetaModel();
             sample.useInsert();

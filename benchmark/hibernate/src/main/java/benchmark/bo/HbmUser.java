@@ -29,7 +29,7 @@ import javax.persistence.Id;
  */
 @org.hibernate.annotations.Entity(dynamicUpdate=true)
 @javax.persistence.Entity()
-public class PrfUser implements Serializable {
+public class HbmUser implements Serializable {
 
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
