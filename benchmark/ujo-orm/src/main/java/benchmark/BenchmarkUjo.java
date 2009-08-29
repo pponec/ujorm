@@ -70,43 +70,43 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        PrfUser user1 = new PrfUser();
-        user1.set(PrfUser.lastname, "Lorem ipsum dolor");
-        user1.set(PrfUser.surename, "Sit amet consectetur");
-        user1.set(PrfUser.personalId, "12345678");
+        UjoUser user1 = new UjoUser();
+        user1.set(UjoUser.lastname, "Lorem ipsum dolor");
+        user1.set(UjoUser.surename, "Sit amet consectetur");
+        user1.set(UjoUser.personalId, "12345678");
         session.save(user1);
 
-        PrfUser user2 = new PrfUser();
-        user2.set(PrfUser.lastname, "Lorem ipsum dolor");
-        user2.set(PrfUser.surename, "Sit amet consectetur");
-        user2.set(PrfUser.personalId, "12345678");
+        UjoUser user2 = new UjoUser();
+        user2.set(UjoUser.lastname, "Lorem ipsum dolor");
+        user2.set(UjoUser.surename, "Sit amet consectetur");
+        user2.set(UjoUser.personalId, "12345678");
         session.save(user2);
 
 
         for (int i=1; i<=ORDER_COUNT; i++) {
 
-            PrfOrder order = new PrfOrder();
-            order.set(PrfOrder.dateOfOrder, new Date());
-            order.set(PrfOrder.deletionReason, "NO");
-            order.set(PrfOrder.discount, new BigDecimal(100));
-            order.set(PrfOrder.language, "cs");
-            order.set(PrfOrder.orderType, "BX");
-            order.set(PrfOrder.paid, true);
-            order.set(PrfOrder.parent, null);
-            order.set(PrfOrder.paymentType, "C");
-            order.set(PrfOrder.publicId, "P"+String.valueOf(1001000+i));
-            order.set(PrfOrder.user, user1);
+            UjoOrder order = new UjoOrder();
+            order.set(UjoOrder.dateOfOrder, new Date());
+            order.set(UjoOrder.deletionReason, "NO");
+            order.set(UjoOrder.discount, new BigDecimal(100));
+            order.set(UjoOrder.language, "cs");
+            order.set(UjoOrder.orderType, "BX");
+            order.set(UjoOrder.paid, true);
+            order.set(UjoOrder.parent, null);
+            order.set(UjoOrder.paymentType, "C");
+            order.set(UjoOrder.publicId, "P"+String.valueOf(1001000+i));
+            order.set(UjoOrder.user, user1);
             session.save(order);
 
             for (int j=1; j<=ITEM_COUNT; j++) {
-               PrfOrderItem item = new PrfOrderItem();
-               item.set(PrfOrderItem.arrival, false);
-               item.set(PrfOrderItem.charge, new BigDecimal(1000-j));
-               item.set(PrfOrderItem.description, "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
-               item.set(PrfOrderItem.order, order);
-               item.set(PrfOrderItem.price, new BigDecimal(1000+j));
-               item.set(PrfOrderItem.publicId, "xxss-"+j);
-               item.set(PrfOrderItem.user, user2);
+               UjoOrderItem item = new UjoOrderItem();
+               item.set(UjoOrderItem.arrival, false);
+               item.set(UjoOrderItem.charge, new BigDecimal(1000-j));
+               item.set(UjoOrderItem.description, "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
+               item.set(UjoOrderItem.order, order);
+               item.set(UjoOrderItem.price, new BigDecimal(1000+j));
+               item.set(UjoOrderItem.publicId, "xxss-"+j);
+               item.set(UjoOrderItem.user, user2);
                session.save(item);
             }
         }
@@ -121,16 +121,16 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        Criterion<PrfOrderItem> crn1 = Criterion.newInstance(PrfOrderItem.deleted, false);
-        Criterion<PrfOrderItem> crn2 = Criterion.newInstance(PrfOrderItem._orderDeleted, false);
+        Criterion<UjoOrderItem> crn1 = Criterion.newInstance(UjoOrderItem.deleted, false);
+        Criterion<UjoOrderItem> crn2 = Criterion.newInstance(UjoOrderItem._orderDeleted, false);
 
-        UjoIterator<PrfOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
+        UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
 
         int i = 0;
-        for (PrfOrderItem item : items) {
+        for (UjoOrderItem item : items) {
             ++i;
-            Long id = item.get(PrfOrderItem.id);
-            BigDecimal price = item.get(PrfOrderItem.price);
+            Long id = item.get(UjoOrderItem.id);
+            BigDecimal price = item.get(UjoOrderItem.price);
             if (false) {
                 System.out.println(">>> Item.id: " + id + " " + price);
             }
@@ -147,10 +147,10 @@ public class BenchmarkUjo {
 
 
         for (int i = -ORDER_COUNT; i<0 ; i++) {
-            Criterion<PrfOrder> crn1 = Criterion.newInstance(PrfOrder.id, new Long(i));
-            Criterion<PrfOrder> crn2 = Criterion.newInstance(PrfOrder.deleted, true);
+            Criterion<UjoOrder> crn1 = Criterion.newInstance(UjoOrder.id, new Long(i));
+            Criterion<UjoOrder> crn2 = Criterion.newInstance(UjoOrder.deleted, true);
 
-            UjoIterator<PrfOrder> orders = session.createQuery(crn1.and(crn2)).iterate();
+            UjoIterator<UjoOrder> orders = session.createQuery(crn1.and(crn2)).iterate();
             orders.hasNext();
         }
         session.commit();
@@ -162,25 +162,25 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        Criterion<PrfOrder> crn1 = Criterion.newInstance(PrfOrder.deleted, false);
-        UjoIterator<PrfOrder> orders = session.createQuery(crn1).iterate();
+        Criterion<UjoOrder> crn1 = Criterion.newInstance(UjoOrder.deleted, false);
+        UjoIterator<UjoOrder> orders = session.createQuery(crn1).iterate();
 
         int i = 0;
-        for (PrfOrder order : orders) {
-            String surename = order.get(PrfOrder.user).get(PrfUser.surename);
+        for (UjoOrder order : orders) {
+            String surename = order.get(UjoOrder.user).get(UjoUser.surename);
             if (false) System.out.println("Usr.surename: " + surename);
 
-            Criterion<PrfOrderItem> crn2 = Criterion.newInstance(PrfOrderItem.deleted, false);
-            Criterion<PrfOrderItem> crn3 = Criterion.newInstance(PrfOrderItem.order, order);
-            UjoIterator<PrfOrderItem> items = session.createQuery(crn2.and(crn3)).iterate();
+            Criterion<UjoOrderItem> crn2 = Criterion.newInstance(UjoOrderItem.deleted, false);
+            Criterion<UjoOrderItem> crn3 = Criterion.newInstance(UjoOrderItem.order, order);
+            UjoIterator<UjoOrderItem> items = session.createQuery(crn2.and(crn3)).iterate();
 
-            for (PrfOrderItem item : items) {
+            for (UjoOrderItem item : items) {
                 ++i;
-                BigDecimal price = item.get(PrfOrderItem.price);
-                BigDecimal charge = item.get(PrfOrderItem.charge);
+                BigDecimal price = item.get(UjoOrderItem.price);
+                BigDecimal charge = item.get(UjoOrderItem.charge);
                 if (true) {
-                    String lang = item.get(PrfOrderItem.order).get(PrfOrder.language);
-                    String name = item.get(PrfOrderItem.user).get(PrfUser.lastname);
+                    String lang = item.get(UjoOrderItem.order).get(UjoOrder.language);
+                    String name = item.get(UjoOrderItem.user).get(UjoUser.lastname);
                     if (false) System.out.println(">>> Order.lang: " + lang + " User.lastname" + name);
                 }
             }
@@ -196,15 +196,15 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        Criterion<PrfOrderItem> crn1 = Criterion.newInstance(PrfOrderItem.deleted, false);
-        Criterion<PrfOrderItem> crn2 = Criterion.newInstance(PrfOrderItem._orderDeleted, false);
+        Criterion<UjoOrderItem> crn1 = Criterion.newInstance(UjoOrderItem.deleted, false);
+        Criterion<UjoOrderItem> crn2 = Criterion.newInstance(UjoOrderItem._orderDeleted, false);
 
-        UjoIterator<PrfOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
+        UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
 
         int i = 0;
-        for (PrfOrderItem item : items) {
+        for (UjoOrderItem item : items) {
             ++i;
-            item.set(PrfOrderItem.charge, item.get(PrfOrderItem.charge).add(BigDecimal.ONE));
+            item.set(UjoOrderItem.charge, item.get(UjoOrderItem.charge).add(BigDecimal.ONE));
             session.update(item);
         }
 
@@ -217,14 +217,14 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        UjoIterator<PrfOrder> orders = session.createQuery(PrfOrder.class).iterate();
-        for (PrfOrder order : orders) {
-            Criterion<PrfOrderItem> itemCrn = Criterion.newInstance(PrfOrderItem.order, order);
+        UjoIterator<UjoOrder> orders = session.createQuery(UjoOrder.class).iterate();
+        for (UjoOrder order : orders) {
+            Criterion<UjoOrderItem> itemCrn = Criterion.newInstance(UjoOrderItem.order, order);
             session.delete(itemCrn);
             session.delete(order);
         }
 
-        Criterion<PrfUser> userCrn = Criterion.newInstanceTrue(PrfUser.id);
+        Criterion<UjoUser> userCrn = Criterion.newInstanceTrue(UjoUser.id);
         session.delete(userCrn);
 
         session.commit();

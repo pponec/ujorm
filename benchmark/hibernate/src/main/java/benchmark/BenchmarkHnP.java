@@ -32,7 +32,7 @@ import benchmark.bo.*;
  * OrmUjo performance test
  * @author pavel
  */
-public class BenchmarkHP {
+public class BenchmarkHnP {
 
     public static final int ORDER_COUNT = 2000;
     public static final int ITEM_COUNT  = 7;
@@ -61,13 +61,13 @@ public class BenchmarkHP {
 
         Transaction tr = session.beginTransaction();
 
-        PrfUser user1 = new PrfUser();
+        HbmUser user1 = new HbmUser();
         user1.setLastname("Lorem ipsum dolor");
         user1.setSurename( "Sit amet consectetur");
         user1.setPersonalId( "12345678");
         session.save(user1);
 
-        PrfUser user2 = new PrfUser();
+        HbmUser user2 = new HbmUser();
         user2.setLastname( "Lorem ipsum dolor");
         user2.setSurename( "Sit amet consectetur");
         user2.setPersonalId( "12345678");
@@ -75,7 +75,7 @@ public class BenchmarkHP {
 
         for (int i=1; i<=ORDER_COUNT; i++) {
 
-            PrfOrder order = new PrfOrder();
+            HbmOrder order = new HbmOrder();
             order.setDateOfOrder( new Date());
             order.setDeletionReason("NO");
             order.setDiscount(new BigDecimal(100));
@@ -89,7 +89,7 @@ public class BenchmarkHP {
             session.save(order);
 
             for (int j=1; j<=ITEM_COUNT; j++) {
-               PrfOrderItem item = new PrfOrderItem();
+               HbmOrderItem item = new HbmOrderItem();
                item.setArrival(false);
                item.setCharge( new BigDecimal(1000-j));
                item.setDescription( "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
@@ -114,13 +114,13 @@ public class BenchmarkHP {
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
 
-        String hql = "from PrfOrderItem where deleted = :deleted and order.deleted = :deleted";
+        String hql = "from HbmOrderItem where deleted = :deleted and order.deleted = :deleted";
         Query query = session.createQuery(hql);
         query.setParameter("deleted", false);
-        List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
+        List<HbmOrderItem> items = (List<HbmOrderItem>) query.list();
 
         int i = 0;
-        for (PrfOrderItem item : items) {
+        for (HbmOrderItem item : items) {
             ++i;
             Long id = item.getId();
             BigDecimal price = item.getPrice();
@@ -143,11 +143,11 @@ public class BenchmarkHP {
 
 
         for (int i = -ORDER_COUNT; i<0 ; i++) {
-            String hql = "from PrfOrder where id = :id and deleted = :deleted";
+            String hql = "from HbmOrder where id = :id and deleted = :deleted";
             Query query = session.createQuery(hql);
             query.setParameter("id", new Long(i));
             query.setParameter("deleted", true);
-            List<PrfOrder> items = (List<PrfOrder>) query.list();
+            List<HbmOrder> items = (List<HbmOrder>) query.list();
         }
 
         tr.commit();
@@ -162,23 +162,23 @@ public class BenchmarkHP {
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
 
-        String hql = "from PrfOrder where deleted = :deleted";
+        String hql = "from HbmOrder where deleted = :deleted";
         Query query = session.createQuery(hql);
         query.setParameter("deleted", false);
-        List<PrfOrder> orders = (List<PrfOrder>) query.list();
+        List<HbmOrder> orders = (List<HbmOrder>) query.list();
 
         int i = 0;
-        for (PrfOrder order : orders) {
+        for (HbmOrder order : orders) {
             String surename = order.getUser().getSurename();
             if (false) System.out.println("Usr.surename: " + surename);
 
-            hql = "from PrfOrderItem where deleted = :deleted and order = :order";
+            hql = "from HbmOrderItem where deleted = :deleted and order = :order";
             query = session.createQuery(hql);
             query.setParameter("deleted", false);
             query.setParameter("order", order);
-            List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
+            List<HbmOrderItem> items = (List<HbmOrderItem>) query.list();
 
-            for (PrfOrderItem item : items) {
+            for (HbmOrderItem item : items) {
                 ++i;
                 BigDecimal price  = item.getPrice();
                 BigDecimal charge = item.getCharge();
@@ -202,13 +202,13 @@ public class BenchmarkHP {
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
 
-        String hql = "from PrfOrderItem where deleted = :deleted and order.deleted = :deleted";
+        String hql = "from HbmOrderItem where deleted = :deleted and order.deleted = :deleted";
         Query query = session.createQuery(hql);
         query.setParameter("deleted", false);
-        List<PrfOrderItem> items = (List<PrfOrderItem>) query.list();
+        List<HbmOrderItem> items = (List<HbmOrderItem>) query.list();
 
         int i = 0;
-        for (PrfOrderItem item : items) {
+        for (HbmOrderItem item : items) {
             ++i;
             item.setCharge(item.getCharge().add(BigDecimal.ONE));
             session.update(item);
@@ -225,13 +225,13 @@ public class BenchmarkHP {
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
 
-        String hql = "from PrfOrder";
+        String hql = "from HbmOrder";
         Query query = session.createQuery(hql);
-        List<PrfOrder> orders = (List<PrfOrder>) query.list();
+        List<HbmOrder> orders = (List<HbmOrder>) query.list();
 
-        for (PrfOrder order : orders) {
+        for (HbmOrder order : orders) {
 
-            hql = "delete from PrfOrderItem it where it.order = :order";
+            hql = "delete from HbmOrderItem it where it.order = :order";
             query = session.createQuery(hql);
             query.setParameter("order", order);
             int rows = query.executeUpdate();
@@ -241,7 +241,7 @@ public class BenchmarkHP {
 
         session.flush();
 
-        hql = "delete from PrfUser";
+        hql = "delete from HbmUser";
         query = session.createQuery(hql);
         int rows = query.executeUpdate();
 
@@ -267,7 +267,7 @@ public class BenchmarkHP {
     /** Test */
     public static void main(String[] args) {
         try {
-            BenchmarkHP sample = new BenchmarkHP();
+            BenchmarkHnP sample = new BenchmarkHnP();
 
             sample.loadMetaModel();
             sample.useInsert();
