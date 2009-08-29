@@ -1,9 +1,8 @@
 The UJO Framework release notes
 *******************************
 
-release 0.89.B3 (2009-07-17)
-+ ORM support - the BETA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statement
-+ supported databases are: PostgreSql, MySql, Derby, H2, HSQLDB
+release 0.90 (2009-08-29)
++ ORM support for databases: PostgreSql, MySql, Derby, H2, HSQLDB, Firebird and Oracle
 + new implementation QuickUjo can take the Ujo property name from a class field name
 + new factory methods of UjoProperty implementation
 
