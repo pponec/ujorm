@@ -34,7 +34,7 @@ public class UniqueKey {
 
     @Override
     public String toString() {
-        return String.valueOf(value) + '\u00b4';
+        return String.valueOf(value) + ' ' + (value !=null ? value.getClass().getSimpleName() : "");
     }
 
     @Override

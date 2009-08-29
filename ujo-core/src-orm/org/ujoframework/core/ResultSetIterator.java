@@ -115,17 +115,6 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
                     : TypeBook.getValue(column, rs, i+1)
                     ;
 
-                switch (MetaColumn.DB_TYPE.of(column)) {
-                    case DATE: {
-                        if (value==null
-                        ||  type==value.getClass()) {
-                            // OK
-                        } else if (java.util.Date.class==type){
-                            value = new java.util.Date( ((java.util.Date) value).getTime() );
-                        }
-                    }
-                    default:
-                }
                 column.setValue(row, value);
             }
             row.writeSession(query.getSession());
