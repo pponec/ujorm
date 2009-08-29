@@ -8,6 +8,7 @@ package org.ujoframework.orm;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,6 +39,7 @@ final public class TypeBook {
     public static final char TIME_SQL = 14;
     public static final char TIMESTAMP = 15;
     public static final char BLOB = 16;
+    public static final char CLOB = 17;
 
     /** The method returns a data type code include relation */
     public static char getTypeCode(final MetaColumn column) {
@@ -60,7 +62,8 @@ final public class TypeBook {
         if (type==java.sql.Date.class) return DATE_SQL;
         if (type==java.sql.Time.class) return TIME_SQL;
         if (type==java.sql.Timestamp.class) return TIMESTAMP;
-        if (type==Blob.class) return BLOB;
+        if (type==java.sql.Blob.class) return BLOB;
+        if (type==java.sql.Clob.class) return CLOB;
 
         if (column.isForeignKey()) {
             List<MetaColumn> columns = column.getForeignColumns();
@@ -85,13 +88,17 @@ final public class TypeBook {
             case FLOAT    : return rs.getFloat(column);
             case DOUBLE   : return rs.getDouble(column);
             case BIG_DECI : return rs.getBigDecimal(column);
-            case BIG_INTE : return rs.getBigDecimal(column).toBigInteger();
+            case BIG_INTE : BigDecimal d = rs.getBigDecimal(column);
+                            return d!=null ? d.toBigInteger() : null;
             case STRING   : return rs.getString(column);
             case BYTES    : return rs.getBytes(column);
-            case DATE_UTIL: return new java.util.Date(rs.getTimestamp(column).getTime());
+            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(column);
+                            return t!=null ? new java.util.Date(t.getTime()) : null;
             case DATE_SQL : return rs.getDate(column);
             case TIME_SQL : return rs.getTime(column);
             case TIMESTAMP: return rs.getTimestamp(column);
+            case BLOB     : return rs.getBlob(column);
+            case CLOB     : return rs.getClob(column);
             default       : return rs.getObject(column);
         }
     }
@@ -108,13 +115,17 @@ final public class TypeBook {
             case FLOAT    : return rs.getFloat(column);
             case DOUBLE   : return rs.getDouble(column);
             case BIG_DECI : return rs.getBigDecimal(column);
-            case BIG_INTE : return rs.getBigDecimal(column).toBigInteger();
+            case BIG_INTE : BigDecimal bd = rs.getBigDecimal(column);
+                            return bd!=null ? bd.toBigInteger() : null;
             case STRING   : return rs.getString(column);
             case BYTES    : return rs.getBytes(column);
-            case DATE_UTIL: return new java.util.Date(rs.getTimestamp(column).getTime());
+            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(column);
+                            return t!=null ? new java.util.Date(t.getTime()) : null;
             case DATE_SQL : return rs.getDate(column);
             case TIME_SQL : return rs.getTime(column);
             case TIMESTAMP: return rs.getTimestamp(column);
+            case BLOB     : return rs.getBlob(column);
+            case CLOB     : return rs.getClob(column);
             default       : return rs.getObject(column);
         }
     }
@@ -143,17 +154,17 @@ final public class TypeBook {
             case FLOAT    : rs.setFloat(i, (Float)value); break;
             case DOUBLE   : rs.setDouble(i, (Double)value); break;
             case BIG_DECI : rs.setBigDecimal(i, (BigDecimal) value); break;
-            case BIG_INTE : rs.setBigDecimal(i, new BigDecimal((BigInteger)value)); break;
+            case BIG_INTE : rs.setBigDecimal(i, new BigDecimal((BigInteger)value)) ; break;
             case STRING   : rs.setString(i, (String)value); break;
             case BYTES    : rs.setBytes(i, (byte[]) value); break;
-            case DATE_UTIL: rs.setTimestamp(i, new java.sql.Timestamp(((java.util.Date)value).getTime())); break;
+            case DATE_UTIL: rs.setDate(i, new java.sql.Date(((java.util.Date)value).getTime()) ); break;
             case DATE_SQL : rs.setDate(i, (java.sql.Date) value); break;
             case TIME_SQL : rs.setTime(i, (java.sql.Time)value); break;
             case TIMESTAMP: rs.setTimestamp(i, (java.sql.Timestamp)value); break;
+            case BLOB     : rs.setBlob(i, (Blob)value); break;
+            case CLOB     : rs.setClob(i, (Clob)value); break;
             default       : rs.setObject(i, value);  break;
         }
     }
-
-
 
 }
