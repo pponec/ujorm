@@ -52,7 +52,7 @@ public class MetaColumn extends MetaRelation2Many {
     public static final Property<MetaColumn,Integer> PRECISION = newProperty("precision", -1);
     /** DB Default value */
     public static final Property<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "");
-    /** The column is included in the index of the name */
+    /** The column is included in the index of the name (parameter is not implemented yet) */
     public static final Property<MetaColumn,String> INDEX_NAME = newProperty("indexName", "");
     /** The property initialization */
     static{init(CLASS);}
@@ -285,6 +285,18 @@ public class MetaColumn extends MetaRelation2Many {
 
     /** Initialize a type code - for an internal use only. */
     public void initTypeCode() {
+        // Test for a read-only state:
+        testReadOnly(true);
+
+        // Assign a type code:
         typeCode = TypeBook.getTypeCode(this);
+
+        // Modify a relation type:
+        if (isForeignKey()) {
+            List<MetaColumn> cols = getForeignColumns();
+            if (cols.size()>0) {
+                DB_TYPE.setValue(this, DB_TYPE.of(cols.get(0)));
+            }
+        }
     }
 }

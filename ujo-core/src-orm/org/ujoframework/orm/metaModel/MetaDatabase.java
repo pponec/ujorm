@@ -208,14 +208,7 @@ public class MetaDatabase extends AbstractMetaModel {
             MetaColumn.DB_TYPE.setValue(column, DbType.BOOLEAN);
         }
         else if (OrmUjo.class.isAssignableFrom(type)) {
-            // TODO .... a later initialization !!!!
-            
-            if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
-               MetaColumn.DB_TYPE.setValue(column, DbType.NUMBER);
-            } else {
-                MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
-            }
-
+            // A later initialization !!!
         }
     }
 

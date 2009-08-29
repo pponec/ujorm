@@ -168,19 +168,13 @@ public class OrmHandler {
         return dbModel;
     }
 
-    /** LoadInternal a metada and create database */
+    /** Load a meta-data and create database tables */
     @SuppressWarnings("unchecked")
     final public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
         loadDatabase(new Class[] {databaseModel});
-
-        for (MetaRelation2Many r : propertyMap.values()) {
-            if (r.isColumn()) {
-                ((MetaColumn)r).initTypeCode();
-            }
-        }
     }
 
-    /** LoadInternal a metada and create database */
+    /** Load a meta-data and create database tables */
     public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModels) {
 
         for (Class<UJO> databaseModel : databaseModels) {
@@ -191,8 +185,19 @@ public class OrmHandler {
                     dbModel.create(session);
                     break;
             }
-            dbModel.setReadOnly(true); // Lock the model
         }
+
+        // Initialize Column Type codes:
+        for (MetaRelation2Many r : propertyMap.values()) {
+            if (r.isColumn()) {
+                ((MetaColumn)r).initTypeCode();
+            }
+        }
+
+        // Lock the meta-model:
+        databases.setReadOnly(true);
+
+        // Print the meta-model:
         if (LOGGER.isLoggable(Level.INFO)) {
             LOGGER.info("DATABASE META-MODEL:\n" + databases.toString());
         }
@@ -201,7 +206,7 @@ public class OrmHandler {
         if (outConfigFile!=null) try {
             databases.print(outConfigFile);
         } catch (IOException e) {
-            throw new IllegalStateException("Can't create configuration " + outConfigFile);
+            throw new IllegalStateException("Can't create configuration " + outConfigFile, e);
         }
     }
 
