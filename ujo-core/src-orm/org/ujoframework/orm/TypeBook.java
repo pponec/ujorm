@@ -39,6 +39,7 @@ final public class TypeBook {
     public static final char TIMESTAMP = 15;
     public static final char BLOB = 16;
 
+    /** The method returns a data type code include relation */
     public static char getTypeCode(final MetaColumn column) {
 
         final Class type = column.getType();
