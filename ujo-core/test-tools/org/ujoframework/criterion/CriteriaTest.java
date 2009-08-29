@@ -123,7 +123,7 @@ public class CriteriaTest extends MyTestCase {
         persons.get(0).set(NAME, null);
         
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  exp = Criterion.newInstance(NAME, Operator.EQ, null);
+        Criterion<Person>  exp = Criterion.newInstance(NAME, Operator.EQ, (String) null);
         List<Person> result = uc.select(persons, exp);
         assertEquals(1, result.size());
         assertEquals(10.0, result.get(0).get(CASH) );
