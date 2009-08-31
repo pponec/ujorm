@@ -2,9 +2,10 @@ The UJO Framework release notes
 *******************************
 
 release 0.90 (2009-08-29)
-+ ORM support for databases: PostgreSql, MySql, Derby, H2, HSQLDB, Firebird and Oracle
++ new ORM implementation for databases: PostgreSql, MySql, Derby, H2, HSQLDB, Firebird and Oracle
 + new implementation QuickUjo can take the Ujo property name from a class field name
 + new factory methods of UjoProperty implementation
++ refactoring of the source code
 
 release 0.85 (2009-04-20)
 + new interface UjoMiddle extends the Ujo interface in four methods (set, get, setText, getText)
