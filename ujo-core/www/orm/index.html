@@ -76,7 +76,7 @@ Released   : 20080129
                <li>no list properties are supported but a special object called 
                    <a href="http://ujoframework.org/javadoc/org/ujoframework/core/UjoIterator.html">UjoIterator</a>
                    is designed for a collection. The UjoIterator provides a toList() method for example</li>
-               <li>easy to configure the ORM model by java source code, optionally by annotations or a XML file</li>
+               <li>easy to configure the ORM model by java source code, optionally by annotations and a XML file</li>
                <li>great performance, e.g. multi SELECT is eight times faster in comparison with Hibernate</li>
                <li>small size of JAR file and no more library dependencies</li>
               </ul>
@@ -93,12 +93,15 @@ Released   : 20080129
             <div class="entry">
 
               <ul>
-               <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
                <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
-               <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
                <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
+               <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
-               <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
+               <li>the API was inspired mainly by
+                    <a href="http://cayenne.apache.org/">Canyenne</a> and
+                    <a href="https://www.hibernate.org/">Hibernate</a> frameworks.
+                    I&nbsp;would like to thank the authors for good work.
+               </li>
               </ul>
 
             </div>

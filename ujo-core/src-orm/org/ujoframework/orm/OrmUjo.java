@@ -21,7 +21,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.orm.OrmTable;
 
 /**
- * The OrmUjo is a basic interface of the persistent object in this ORM-UJO module.
+ * The OrmUjo is a basic interface of the persistent object in the ORM support.
  * A class that implements the interface must have got a special features:
  * <ul>
  *   <li>exactly one UjoProperty must be identified as the primary key. </li>
