@@ -48,6 +48,8 @@ public class Query<UJO extends OrmUjo> {
     private boolean readOnly = false;
     /** The max row for the resulset, default value 0 means an unlimited value */
     private int maxRow = 0;
+    /** Pessimistic lock request */
+    private boolean lockRequest;
 
     /**
      * Create new ORM query.
@@ -190,5 +192,17 @@ public class Query<UJO extends OrmUjo> {
     public PreparedStatement getStatement() {
         return session.getStatement(this).getPreparedStatement();
     }
+
+    /** Pessimistic lock request */
+    public boolean isLockRequest() {
+        return lockRequest;
+    }
+
+    /** Pessimistic lock request */
+    public void setLockRequest(boolean lockRequest) {
+        this.lockRequest = lockRequest;
+    }
+
+
 
 }
