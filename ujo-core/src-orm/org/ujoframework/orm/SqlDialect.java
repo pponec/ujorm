@@ -527,8 +527,13 @@ abstract public class SqlDialect {
         } else {
             out.append(MetaTable.NAME.of(query.getTableModel()));
         }
-        if (!count && !query.getOrder().isEmpty()) {
-            printSelectOrder(query, out);
+        if (!count) {
+            if (!query.getOrder().isEmpty()) {
+               printSelectOrder(query, out);
+            }
+            if (query.isLockRequest()) {
+               out.append(" FOR UPDATE");
+            }
         }
         return out;
     }
