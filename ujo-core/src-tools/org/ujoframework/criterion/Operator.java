@@ -35,7 +35,7 @@ public enum Operator implements AbstractOperator {
     LE,
     /** Regular expression */
     REGEXP,
-    /** Not regular expression */
+    /** Negation of the regular expression */
     NOT_REGEXP,
     /** Only for a CharSequence subtypes (include String) */
     EQUALS_CASE_INSENSITIVE,
@@ -51,6 +51,18 @@ public enum Operator implements AbstractOperator {
     CONTAINS,
     /** Only for a CharSequence subtypes (include String) */
     CONTAINS_CASE_INSENSITIVE,
+    /** This operator can have their own SQL condition by a SqlDialect solution.
+     * @see org.ujoframework.orm.SqlDialect#getCriterionTemplate(org.ujoframework.criterion.ValueCriterion)
+     */
+    USER_1,
+    /** This operator can have their own SQL condition by a SqlDialect solution.
+     * @see org.ujoframework.orm.SqlDialect#getCriterionTemplate(org.ujoframework.criterion.ValueCriterion)
+     */
+    USER_2,
+    /** This operator can have their own SQL condition by a SqlDialect solution.
+     * @see org.ujoframework.orm.SqlDialect#getCriterionTemplate(org.ujoframework.criterion.ValueCriterion)
+     */
+    USER_3,
     /** Operator for an internal use only. The result is independent on a bean object */
     X_FIXED,
     ;
