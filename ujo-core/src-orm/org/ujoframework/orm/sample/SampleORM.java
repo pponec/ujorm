@@ -60,7 +60,7 @@ public class SampleORM {
         OrmHandler.getInstance().loadDatabase(Database.class);
     }
 
-    /** Method inserts one Order and two Items into database. */
+    /** Insert one Order and two Items into database. */
     public void useInsert() {
 
         Order order = new Order();
@@ -91,7 +91,7 @@ public class SampleORM {
         }
     }
 
-    /** How to select Orders from the database by the Criterion? */
+    /** Now, how to select Orders from the database by the Criterion? */
     public void useSelectOrders() {
 
         Criterion<Order> cn1 = Criterion.newInstance(Order.DESCR, "John's order");
@@ -108,9 +108,7 @@ public class SampleORM {
         }
     }
 
-    /** Order the result of a SELECT statement 
-     * by two properties DESCR and CREATED (descending). 
-     */
+    /** Sort orders by DESCR and CREATED (descending). */
     public void useSortOrders() {
 
         Session session = OrmHandler.getInstance().getSession();
@@ -122,8 +120,8 @@ public class SampleORM {
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
     }
 
-    /** Using a 'native query' where the query is created 
-     * by a special entity signed by a @View annotation.
+    /** Use a 'native query' where the query is created
+     * by a special entity signed by the @View annotation.
      */
     public void useSelectViewOrders() {
 
@@ -165,7 +163,7 @@ public class SampleORM {
     }
 
     /** Select an Order by ID and print its Items 
-     * - by a 'one to many' relation property
+     * by a 'one to many' relation property
      */
     public void useSelectItems_3() {
         Session session = OrmHandler.getInstance().getSession();
