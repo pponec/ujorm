@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.AbstractMetaModel;
@@ -23,6 +24,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
+import org.ujoframework.orm.TypeBook;
 
 /**
  * The table primary key.
@@ -66,28 +68,25 @@ public class MetaPKey extends AbstractMetaModel {
      *         and 'false' means that a primary key was defined earlier.
      * @throws java.lang.IllegalArgumentException The PK can't be assigned.
      */
-    @SuppressWarnings("unchecked")
     public boolean assignPrimaryKey(final OrmUjo bo, final Session session) throws IllegalArgumentException {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {
 
             MetaColumn column = COLUMNS.getItem(this, 0);
             UjoProperty property = column.getProperty();
-            if (property.of(bo)!=null) {
+            if (bo.readValue(property)!=null) {
                 return false;
             }
 
             final long value = TABLE.of(this).getSequencer().nextValue(session);
-            if (Long.class==property.getType()) {
-                property.setValue(bo, value);
-                return true;
-            }
-            if (Integer.class==property.getType()) {
-                property.setValue(bo, (int) value);
-                return true;
-            }
 
-            return false;
+            switch (column.getTypeCode()) {
+                case TypeBook.BIG_INTE: bo.writeValue(property, BigInteger.valueOf(value)); return true;
+                case TypeBook.LONG    : bo.writeValue(property, value); return true;
+                case TypeBook.INT     : bo.writeValue(property, (int  ) value); return true;
+                case TypeBook.SHORT   : bo.writeValue(property, (short) value); return true;
+                default: return false;
+            }
         } else {
             String msg = "Table " + bo + " must have defined only one primary key type of Long or Integer";
             throw new IllegalArgumentException(msg);
