@@ -142,18 +142,12 @@ public abstract class Criterion<UJO extends Ujo> {
     /**
      * New equals instance
      * @param property UjoProperty
-     * @param value Value or UjoProperty can be type of
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>List&lt;TYPE&gt; - list of values</li>
-     * <li>UjoProperty - reference to a related entity</li>
-     * <li>THE SAME property - the value will be assigned using the property later</li>
-     * </ul>
+     * @param value Value or UjoProperty can be type a direct of indirect (for a relation) property
      * @return A the new Criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
         ( UjoProperty<UJO,TYPE> property
-        , UjoProperty<?,TYPE> value
+        , UjoProperty<UJO,TYPE> value
         ) {
         return new ValueCriterion<UJO>(property, null, value);
     }
@@ -193,7 +187,7 @@ public abstract class Criterion<UJO extends Ujo> {
         return new ValueCriterion<UJO>(property, Operator.X_FIXED, false);
     }
 
-    /** Is a Binary criterion? */
+    /** Is the class a Binary criterion? */
     public boolean isBinary() {
         return false;
     }
