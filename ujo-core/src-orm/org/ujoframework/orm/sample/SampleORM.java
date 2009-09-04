@@ -26,9 +26,9 @@ import org.ujoframework.criterion.*;
 import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
- * The Ujorm tutorial in the class <br>
- * ------------------------------- <br>
- * Learn the basic skills in 10 minutes.
+ * The tutorial in the class for the Ujorm<br>
+ * ---------------------------------------<br>
+ * Learn the basic skills in 15 minutes.
  * The next several methods demonstrates the use of statements:
  *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE.
  *
@@ -286,7 +286,7 @@ public class SampleORM {
         OrmHandler.getInstance().getSession().close();
     }
 
-    /** Test */
+    /** Run the tutorial */
     public static void main(String[] args) {
         SampleORM sample = new SampleORM();
         
