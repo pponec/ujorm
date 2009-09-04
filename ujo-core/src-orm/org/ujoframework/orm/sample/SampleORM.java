@@ -245,7 +245,7 @@ public class SampleORM {
         session.commit();
     }
 
-    /** How to delete the one loaded object? */
+    /** How to DELETE the one loaded object? */
     public void useDelete_1() {
         Session session = OrmHandler.getInstance().getSession();
         Item item = session.createQuery(Item.class).iterate().toList().get(0);
@@ -264,7 +264,7 @@ public class SampleORM {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Print some meta-data of the propery Order.DESCR. */
+    /** Print some meta-data of the property Order.DESCR. */
     public void useMetadata() {
         MetaColumn c = (MetaColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
 
