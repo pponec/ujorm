@@ -590,14 +590,14 @@ public class UjoManager implements Comparator<UjoProperty> {
         final boolean result = value==null || property.getType().isInstance(value);
         if (!result) {
             final String msg
-            = "The property \"" 
-            + property
-            + "\" type of \""
-            + property.getType().getName()
-            + "\" can't contain value \""
+            = "The value \""
             + value
             + "\""
             + (value!=null ? " (" + value.getClass().getName() + ')' : "")
+            + " can't be assiged to property \""
+            + property
+            + "\" type of \""
+            + property.getType().getName()
             + "\"."
             ;
             throw new IllegalArgumentException(msg);

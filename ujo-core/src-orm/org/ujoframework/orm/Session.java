@@ -16,7 +16,6 @@
 package org.ujoframework.orm;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
+import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.ao.CacheKey;
@@ -484,6 +484,7 @@ public class Session {
         final MetaTable table = handler.findTableModel(tableType);
         final MetaColumn column = table.getFirstPK();
 
+        UjoManager.getInstance().assertAssign(MetaColumn.TABLE_PROPERTY.of(column), id);
         Criterion crn = Criterion.newInstance(column.getProperty(), id);
         Query query = createQuery(crn);
         UjoIterator iterator = UjoIterator.getInstance(query);
