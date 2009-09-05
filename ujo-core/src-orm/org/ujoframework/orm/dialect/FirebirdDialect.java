@@ -16,6 +16,7 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import org.ujoframework.orm.Query;
 
 public class FirebirdDialect extends org.ujoframework.orm.SqlDialect {
 
@@ -38,6 +39,17 @@ public class FirebirdDialect extends org.ujoframework.orm.SqlDialect {
     /** NO SCHEMA */
     @Override
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
+        return out;
+    }
+
+    /** Print a 'lock clausule' to the end of SQL SELECT statement to use a pessimistic lock.
+     * The current database does not support the feature, throw an exception UnsupportedOperationException.
+     * <br>The method prints a text "FOR UPDATE WITH LOCK".
+     * @param query The UJO query
+     */
+    @Override
+    protected Appendable printLockForSelect(final Query query, final Appendable out) throws IOException, UnsupportedOperationException {
+        out.append("FOR UPDATE WITH LOCK");
         return out;
     }
 	
