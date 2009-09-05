@@ -142,11 +142,11 @@ Released   : 20080129
 The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
 <pre name="code" class="java">
 
-  Criterion&lt;Order&gt; criter1, criter2, criterion;
+  Criterion&lt;Order&gt; cn1, cn2, criterion;
 
-  criter1 = Criterion.newInstance(Order.DESCR, "John's order");
-  criter2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
-  criterion = criter1.and(criter2);
+  cn1 = Criterion.newInstance(Order.DESCR, "John's order"); // equals to
+  cn2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+  criterion = cn1.and(cn2);
 
   Session session = OrmHandler.getInstance().getSession();
   UjoIterator&lt;Order&gt; orders = session.createQuery(criterion).iterate();
