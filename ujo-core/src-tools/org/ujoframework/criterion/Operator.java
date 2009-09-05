@@ -59,11 +59,7 @@ public enum Operator implements AbstractOperator {
      * @see org.ujoframework.orm.SqlDialect#getCriterionTemplate(org.ujoframework.criterion.ValueCriterion)
      */
     USER_2,
-    /** This operator can have their own SQL condition by a SqlDialect solution.
-     * @see org.ujoframework.orm.SqlDialect#getCriterionTemplate(org.ujoframework.criterion.ValueCriterion)
-     */
-    USER_3,
-    /** Operator for an internal use only. The result is independent on a bean object */
+    /** The operator for an internal use only where a result is <strong>independent</strong> on a value. */
     X_FIXED,
     ;
 
