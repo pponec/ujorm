@@ -81,14 +81,15 @@ public class MetaPKey extends AbstractMetaModel {
             final long value = TABLE.of(this).getSequencer().nextValue(session);
 
             switch (column.getTypeCode()) {
-                case TypeBook.BIG_INTE: bo.writeValue(property, BigInteger.valueOf(value)); return true;
-                case TypeBook.LONG    : bo.writeValue(property, value); return true;
+                case TypeBook.LONG    : bo.writeValue(property,         value); return true;
                 case TypeBook.INT     : bo.writeValue(property, (int  ) value); return true;
                 case TypeBook.SHORT   : bo.writeValue(property, (short) value); return true;
+                case TypeBook.BYTE    : bo.writeValue(property, (byte ) value); return true;
+                case TypeBook.BIG_INTE: bo.writeValue(property, BigInteger.valueOf(value)); return true;
                 default: return false;
             }
         } else {
-            String msg = "Table " + bo + " must have defined only one primary key type of Long or Integer";
+            String msg = "Table " + bo + " must have defined only one primary key type of: Long, Integer, Short, Byte or BigInteger";
             throw new IllegalArgumentException(msg);
         }
     }
