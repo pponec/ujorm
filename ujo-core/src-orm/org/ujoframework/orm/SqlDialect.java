@@ -532,12 +532,22 @@ abstract public class SqlDialect {
                printSelectOrder(query, out);
             }
             if (query.isLockRequest()) {
-               out.append(" FOR UPDATE");
+               out.append(' ');
+               printLockForSelect(query, out);
             }
         }
         return out;
     }
 
+    /** Print a 'lock clausule' to the end of SQL SELECT statement to use a pessimistic lock.
+     * The current database does not support the feature, throw an exception UnsupportedOperationException.
+     * <br>The method prints a text "FOR UPDATE".
+     * @param query The UJO query
+     */
+    protected Appendable printLockForSelect(final Query query, final Appendable out) throws IOException, UnsupportedOperationException {
+        out.append("FOR UPDATE");
+        return out;
+    }
 
     /** Print SQL ORDER BY */
     public void printSelectOrder(Query query, Appendable out) throws IOException {
