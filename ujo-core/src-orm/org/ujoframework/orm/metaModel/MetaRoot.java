@@ -93,7 +93,7 @@ public class MetaRoot extends AbstractMetaModel {
         final SimpleDateFormat dFormat = new SimpleDateFormat("yyyy/MM/dd mm:HH", Locale.ENGLISH);
         final String result = new StringBuilder(128)
           .append(UjoManagerXML.XML_HEADER)
-          .append("\n<!-- OrmUjo configuration file release ")
+          .append("\n<!-- The Ujorm configuration file release ")
           .append(UjoManager.projectVersion())
           .append(" was created ")
           .append(dFormat.format(new Date()))
