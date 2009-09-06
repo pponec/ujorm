@@ -178,19 +178,20 @@ public class MetaDatabase extends AbstractMetaModel {
         else if (Short.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
         }
-        else if (Long.class==type) {
-            if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
-              MetaColumn.DB_TYPE.setValue(column, DbType.NUMBER);
-            } else {
-              MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+        else if (Long.class==type
+        || BigInteger.class.isAssignableFrom(type)
+        ){
+            DbType dbType;
+            if (column.isPrimaryKey()) {
+               dbType = dialect.getPrimaryKeyType();
             }
-        }
-        else if (BigInteger.class.isAssignableFrom(type)) {
-            if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
-               MetaColumn.DB_TYPE.setValue(column, DbType.NUMBER);
-            } else {
-                MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
+            else if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
+               dbType = DbType.NUMBER;
             }
+            else {
+               dbType = DbType.BIGINT;
+            }
+            MetaColumn.DB_TYPE.setValue(column, dbType);
         }
         else if (Double.class==type || BigDecimal.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);

@@ -45,10 +45,12 @@ public class OracleDialect extends PostgreSqlDialect {
         return out;
     }
 
-    /** Returns a DB TYPE for the class java.lang.Long */
+    /** Returns a default primary key database type.
+     * The method is called from method 'SqlDialect.printSequenceTable()' and from 'MetaDatabase.changeDbType()'.
+     */
     @Override
-    public String getLongType() {
-        return DbType.NUMBER.name();
+    public DbType getPrimaryKeyType() {
+        return DbType.NUMBER;
     }
 
 
