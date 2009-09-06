@@ -551,7 +551,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         </table>
         
         <br />Conclusion: The XML serialization implemented in UJO Framework is approximately six times faster 
-        in comparison with the XML persistence implemented in JRE 6.0. 
+        in comparison with the XMLEncoder persistence implemented in JRE 6.0.
         The UJO speed of serialization is slightly smaller than the speed of the great JAXB framework,
         however all UJO implementations got a the <span style="color: red; font-weight:bold;">shortest time of deserialization</span>.
         
@@ -561,7 +561,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         
         <h3>Commons</h3>
         <ul>
-            <li><a href="tools/UjoCriteria.html">UjoCriteria</a> allows to search an Ujo objects from the list of Ujo objects.</li>
+            <li><a href="criterion/Criterion.html">UjoCriteria</a> allows to search an Ujo objects from the list of Ujo objects.</li>
             <li><a href="extensions/PathProperty.html">PathProperty</a> class is an composite of a UjoProperty objects. 
                 The PathProperty class can be used wherever is used UjoProperty - with a one important exception: 
                 do not send the PathProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...).</li>
@@ -658,7 +658,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
             </ul>
             
             <li>Q: Isn't the UJO work slow?</li>
-            <ul><li>A: Implementation is very quick, see the chapter <a href="package.html#performance">Performance</a>.</li>
+            <ul><li>A: Some implementations are very quick, see the chapter <a href="package.html#performance">Performance</a>.</li>
             </ul>
         </ul>
         
