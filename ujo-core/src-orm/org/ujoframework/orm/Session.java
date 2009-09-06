@@ -190,7 +190,6 @@ public class Session {
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
-            MetaDatabase.close(null, statement, null, false);
             throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, null, true);
