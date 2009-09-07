@@ -42,12 +42,8 @@ public class Query<UJO extends OrmUjo> {
 
     /** A list of properties to sorting */
     private List<UjoProperty> order;
-    /** There is required to know a count of selected items before reading a resultset */
-    private boolean countRequest = false;
-    /** Result is a readOnly, default value is false */
-    private boolean readOnly = false;
-    /** The max row for the resulset, default value 0 means an unlimited value */
-    private int maxRow = 0;
+    /** The max row count for the resultset, default value 0 means an unlimited value */
+    private int maxRows = 0;
     /** Pessimistic lock request */
     private boolean lockRequest;
 
@@ -88,26 +84,6 @@ public class Query<UJO extends OrmUjo> {
 
     public <ITEM> void setParameter(UjoProperty<UJO,ITEM> property, ITEM value) {
         throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    /** Result is a readOnly, default value is false */
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    /** Result is a readOnly, default value is false */
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-    /** There is required to know a count of selected items before reading a resultset */
-    public boolean isCountRequest() {
-        return countRequest;
-    }
-
-    /** There is required to know a count of selected items before reading a resultset */
-    public void setCountRequest(boolean countRequest) {
-        this.countRequest = countRequest;
     }
 
     /** Criterion */
@@ -179,13 +155,14 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** The max row for the resulset, default value 0 means an unlimited value */
-    public int getMaxRow() {
-        return maxRow;
+    public int getMaxRows() {
+        return maxRows;
     }
 
     /** The max row for the resulset, default value 0 means an unlimited value */
-    public void setMaxRow(int maxRow) {
-        this.maxRow = maxRow;
+    public Query<UJO> setMaxRows(int maxRows) {
+        this.maxRows = maxRows;
+        return this;
     }
 
     /** Create a PreparedStatement include assigned parameter values */
@@ -199,8 +176,9 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** Pessimistic lock request. The default value is false. */
-    public void setLockRequest(boolean lockRequest) {
+    public Query<UJO> setLockRequest(boolean lockRequest) {
         this.lockRequest = lockRequest;
+        return this;
     }
 
 
