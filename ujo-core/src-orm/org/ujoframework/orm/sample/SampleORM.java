@@ -26,8 +26,8 @@ import org.ujoframework.criterion.*;
 import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
- * The tutorial in the class for the Ujorm<br>
- * ---------------------------------------<br>
+ * The tutorial in the class for the Ujorm <br>
+ * --------------------------------------- <br>
  * Learn the basic skills in 15 minutes.
  * The next several methods demonstrates the use of statements:
  *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE.
@@ -91,7 +91,7 @@ public class SampleORM {
         }
     }
 
-    /** Now, how to select Orders from the database by the Criterion? */
+    /** Now, how to select Orders from the database by Criterions? */
     public void useSelectOrders() {
 
         Criterion<Order> cn1 = Criterion.newInstance(Order.DESCR, "John's order");
