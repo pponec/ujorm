@@ -175,12 +175,16 @@ public class Query<UJO extends OrmUjo> {
         return lockRequest;
     }
 
-    /** Pessimistic lock request. The default value is false. */
+    /** Pessimistic lock request. A default value is false. */
     public Query<UJO> setLockRequest(boolean lockRequest) {
         this.lockRequest = lockRequest;
         return this;
     }
 
+    /** Set pessimistic lock request. A default value is false. */
+    public Query<UJO> setLockRequest() {
+        return setLockRequest(true);
+    }
 
 
 }
