@@ -135,9 +135,19 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
     public Object readValue(final UjoProperty property) {
         Object result = super.readValue(property);
 
-        if (result instanceof UniqueKey) {
-            result = session.loadInternal(property, ((UniqueKey)result).getValue(), true);
-            super.writeValue(property, result);
+        if (property.isTypeOf(OrmUjo.class)) {
+            if (result instanceof UniqueKey) {
+                result = session.loadInternal(property, ((UniqueKey)result).getValue(), true);
+                super.writeValue(property, result);
+            }
+            else
+            if (result!=null
+            && session!=null
+            && session!=((OrmUjo)result).readSession()
+            ){
+                // Write the current session to a related object
+                ((OrmUjo)result).writeSession(session);
+            }
         }
         else
         if (property instanceof RelationToMany
