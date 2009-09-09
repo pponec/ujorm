@@ -29,7 +29,7 @@ import org.hibernate.property.Setter;
  * See the <a href="package-summary.html#Hibernate">description</a> for more information.
  * @author hampl
  */
-public class UjoPropertySetter implements Setter {
+final public class UjoPropertySetter implements Setter {
 
     final private String propertyName;
     private UjoProperty ujoProperty = null;

@@ -30,7 +30,7 @@ import org.hibernate.property.Getter;
  * See the <a href="package-summary.html#Hibernate">description</a> for more information.
  * @author hampl
  */
-public class UjoLazyPropertyGetter implements Getter {
+final public class UjoLazyPropertyGetter implements Getter {
 
     final private UjoProperty ujoProperty;
 

@@ -29,7 +29,6 @@ import org.hibernate.property.Setter;
 public class UjoLazyPropertyAccessor implements PropertyAccessor {
 
     public Getter getGetter(Class theClass, String propertyName) throws PropertyNotFoundException {
-
         return new UjoLazyPropertyGetter(propertyName,theClass);
 
     }

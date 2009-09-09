@@ -40,20 +40,25 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     final private UjoProperty[] props;
     /** Contains the total count of its properties */
     final public int length;
+    /** The Ujo type */
+    final private Class type;
 
 
-    public UjoPropertyListImpl(List<UjoProperty> props) {
-        this(props.toArray(new UjoProperty[props.size()]));
+    public UjoPropertyListImpl(Class type, List<UjoProperty> props) {
+        this(type, props.toArray(new UjoProperty[props.size()]));
     }
 
-    public UjoPropertyListImpl(UjoProperty[] props) {
+    public UjoPropertyListImpl(Class type, UjoProperty[] props) {
+        type.hashCode(); // The not null test
+
+        this.type  = type;
         this.props = props;
         this.length = props.length;
     }
 
     /** Create the empty list */
-    public UjoPropertyListImpl() {
-        this(EMPTY);
+    public UjoPropertyListImpl(Class type) {
+        this(type, EMPTY);
     }
 
     /**
@@ -78,7 +83,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
         }
 
         if (throwException) {
-            throw new IllegalArgumentException("A name \"" + name + "\" was not found");
+            throw new IllegalArgumentException("A property name \"" + name + "\" was not found in the " + type);
         } else {
             return null;
         }
@@ -145,6 +150,10 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
         return props[length-1];
     }
 
+    /** Returns a class of the related UJO */
+    public Class getType() {
+        return type;
+    }
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get property on requered index */

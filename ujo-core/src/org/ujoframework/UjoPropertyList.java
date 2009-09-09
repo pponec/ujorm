@@ -75,6 +75,9 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
     /** Get last property */
     public UjoProperty last();
 
+    /** Returns a class of the related UJO */
+    public Class getType();
+
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get property on requered index */
