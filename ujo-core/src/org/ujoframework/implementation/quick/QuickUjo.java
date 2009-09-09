@@ -157,7 +157,6 @@ public abstract class QuickUjo extends AbstractUjo {
     }
 
 
-
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
@@ -168,5 +167,16 @@ public abstract class QuickUjo extends AbstractUjo {
     ) {
         return ListProperty.newListProperty(name, itemType, -1, false);
     }
+
+    /** A Property Factory creates new property and assigns a name and next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
+     */
+    protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    ( Class<ITEM> itemType
+    ) {
+        return newListProperty(null, itemType);
+    }
+
     
 }
