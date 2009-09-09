@@ -29,9 +29,7 @@ import org.hibernate.property.Setter;
 public class UjoPropertyAccessor implements PropertyAccessor {
 
     public Getter getGetter(Class theClass, String propertyName) throws PropertyNotFoundException {
-
         return new UjoPropertyGetter(propertyName,theClass);
-
     }
 
     public Setter getSetter(Class theClass, String propertyName) throws PropertyNotFoundException {

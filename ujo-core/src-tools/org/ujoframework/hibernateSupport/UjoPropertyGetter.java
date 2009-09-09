@@ -24,6 +24,7 @@ import org.ujoframework.UjoProperty;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
+import org.ujoframework.core.UjoManager;
 
 
 /**
@@ -31,17 +32,17 @@ import org.hibernate.property.Getter;
  * See the <a href="package-summary.html#Hibernate">description</a> for more information.
  * @author hampl
  */
-public class UjoPropertyGetter implements Getter {
+final public class UjoPropertyGetter implements Getter {
 
     final private UjoProperty ujoProperty;
 
+    /**
+     * Create the new UjoPropertyGetter for an Ujo object.
+     * @param propertyName The name of UjoProperty.
+     * @param theClass Class type of Ujo.
+     */
     public UjoPropertyGetter(String propertyName, Class theClass) {
-        try {
-            Ujo instance = (Ujo) theClass.newInstance();
-            ujoProperty = instance.readProperties().find(propertyName, true);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Can't create an Ujo instance from the " + theClass, e);
-        }
+        ujoProperty = UjoManager.getInstance().readProperties(theClass).find(propertyName, true);
     }
 
     /**
@@ -69,7 +70,6 @@ public class UjoPropertyGetter implements Getter {
      **/
     public String getMethodName() {
         return ujoProperty.getName();
-
     }
 
     /**

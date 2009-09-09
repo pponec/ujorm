@@ -104,7 +104,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     public UjoPropertyList readProperties(Class type) {
         UjoPropertyList result = propertiesCache.get(type);
         if (result==null) {
-            result = new UjoPropertyListImpl(readPropertiesNocache(type, true));
+            result = new UjoPropertyListImpl(type, readPropertiesNocache(type, true));
             
             // Save the result into buffer:
             propertiesCache.put(type, result);
