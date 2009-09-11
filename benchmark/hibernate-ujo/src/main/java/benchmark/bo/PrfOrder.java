@@ -23,7 +23,7 @@ import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.quick.QuickUjoMid;
 
 /**
- * Objednávky
+ * Order
  * @author ponec
  */
 public class PrfOrder extends QuickUjoMid<PrfOrder> {
@@ -41,8 +41,7 @@ public class PrfOrder extends QuickUjoMid<PrfOrder> {
     public static final Property<PrfOrder,String> language = newProperty(String.class);
     public static final Property<PrfOrder,PrfOrder> parent = newProperty(PrfOrder.class);
     public static final UjoProperty <PrfOrder,PrfUser>user = newProperty(PrfUser.class);
-
-    // static { init(PrfOrder.class); } // Here it is not necessary.
+    // static { init(PrfOrder.class); } // Hibernate takes care of the initialization
 
     public Date getDateDeleted() {
         return dateDeleted.of(this);

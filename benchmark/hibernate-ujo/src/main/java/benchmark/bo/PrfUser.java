@@ -20,9 +20,8 @@ package benchmark.bo;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.quick.QuickUjoMid;
 
-
 /**
- *
+ * User
  * @author pavel
  */
 public class PrfUser extends QuickUjoMid<PrfUser> {
@@ -31,8 +30,7 @@ public class PrfUser extends QuickUjoMid<PrfUser> {
     public static final Property<PrfUser,String> personalId = newProperty(String.class);
     public static final Property<PrfUser,String> surename = newProperty(String.class);
     public static final Property<PrfUser,String> lastname = newProperty(String.class);
-
-    // static { init(PrfUser.class); } // Here it is not necessary.
+    // static { init(PrfOrder.class); } // Hibernate takes care of the initialization
 
     public Long getId() {
         return id.of(this);

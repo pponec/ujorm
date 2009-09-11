@@ -22,7 +22,7 @@ import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.quick.QuickUjoMid;
 
 /**
- * Rodič vešech objednávek
+ * Order item
  * @author ponec
  */
 public class PrfOrderItem extends QuickUjoMid<PrfOrderItem> {
@@ -38,8 +38,7 @@ public class PrfOrderItem extends QuickUjoMid<PrfOrderItem> {
     public static final Property<PrfOrderItem,PrfUser> user = newProperty(PrfUser.class);
     public static final Property<PrfOrderItem,PrfOrder> order = newProperty(PrfOrder.class);
     public static final Property<PrfOrderItem,PrfOrderItem> parent = newProperty(PrfOrderItem.class);
-
-    // static { init(PrfOrderItem.class); } // Here it is not necessary.
+    // static { init(PrfOrder.class); } // Hibernate takes care of the initialization
 
     public boolean isArrival() {
         return arrival.of(this);
