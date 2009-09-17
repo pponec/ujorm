@@ -47,12 +47,12 @@ import org.ujoframework.extensions.ListProperty;
  */
 public abstract class QuickUjo extends AbstractUjo {
        
-    /** Object data */
-    protected Object[] data;
+    /** Object data. Unauthorized writing is not allowed. */
+    final private Object[] data;
     
     /** Constructor */
     public QuickUjo() {
-        data = new Object[readUjoManager().readProperties(getClass()).size()];
+        data = new Object[readProperties().size()];
     }
 
     /** Constructor */

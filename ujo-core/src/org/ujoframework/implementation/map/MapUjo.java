@@ -45,8 +45,8 @@ import org.ujoframework.extensions.AbstractUjo;
   */
 public abstract class MapUjo extends AbstractUjo {
     
-    /** Object data */
-    final protected HashMap<UjoProperty,Object> data;
+    /** Object data. Unauthorized writing is not allowed. */
+    final private HashMap<UjoProperty,Object> data;
     
     /** Constructor */
     public MapUjo() {

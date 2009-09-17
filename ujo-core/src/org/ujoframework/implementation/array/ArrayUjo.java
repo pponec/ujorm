@@ -59,8 +59,8 @@ public abstract class ArrayUjo extends AbstractUjo {
      */
     protected static final int propertyCount = 0;
     
-    /** Object data */
-    protected Object[] data;
+    /** Object data. Unauthorized writing is not allowed. */
+    final private Object[] data;
     
     /** Constructor */
     public ArrayUjo() {
