@@ -57,8 +57,8 @@ import org.ujoframework.extensions.ListProperty;
  */
 public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence,Object> {
     
-    /** Object data */
-    final protected HashMap<String,Object> data;
+    /** Object data. Unauthorized writing is not allowed. */
+    final private HashMap<String,Object> data;
     
     /** Constructor */
     public MapImplUjo() {
