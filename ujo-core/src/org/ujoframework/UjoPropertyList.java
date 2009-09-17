@@ -78,6 +78,9 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
     /** Returns a class of the related UJO */
     public Class getType();
 
+    /** Returns a class name of the related UJO */
+    public String getTypeName();
+
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get property on requered index */

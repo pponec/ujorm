@@ -154,6 +154,12 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     public Class getType() {
         return type;
     }
+
+    /** Returns a class name of the related UJO */
+    public String getTypeName() {
+        return getClass().getName();
+    }
+
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get property on requered index */
