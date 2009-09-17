@@ -134,6 +134,15 @@ public class UjoManager implements Comparator<UjoProperty> {
                     &&  UjoProperty.class.isAssignableFrom(field.getType())
                     ){
                         UjoProperty ujoProp = (UjoProperty) field.get(null);
+                        if (ujoProp==null) {
+                            final String msg = "The field '"
+                                + field
+                                + "' of the '"
+                                + type
+                                + "' is not initialized properly yet. Try to call the current method later."
+                                ;
+                            throw new IllegalStateException(msg);
+                        }
                         if (ujoProp.isDirect()) {
                            propertyList.add(ujoProp);
 
