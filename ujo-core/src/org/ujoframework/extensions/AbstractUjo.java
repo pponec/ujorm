@@ -39,8 +39,8 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * @param ujoClass Ujo class
      */
     @SuppressWarnings("unchecked")
-    protected static final void init(Class ujoClass) throws IllegalStateException {
-        init(ujoClass, false);
+    protected static final UjoPropertyList init(Class ujoClass) throws IllegalStateException {
+        return init(ujoClass, false);
     }
 
 
@@ -51,11 +51,12 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * @param checkUniqueProperties Check unique properties
      */
     @SuppressWarnings("unchecked")
-    protected static final void init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
-       UjoManager.getInstance().readProperties(ujoClass);
+    protected static final UjoPropertyList init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
+        UjoPropertyList result = UjoManager.getInstance().readProperties(ujoClass);
         if (checkUniqueProperties) {
-           UjoManager.getInstance().checkUniqueProperties(ujoClass);
+            UjoManager.getInstance().checkUniqueProperties(ujoClass);
         }
+       return result;
     }
 
     /** Returns an UjoManager */
