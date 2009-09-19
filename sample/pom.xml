@@ -5,7 +5,7 @@
     <artifactId>Ujorm-Sample</artifactId>
     <packaging>jar</packaging>
     <version>1.00</version>
-    <name>Ujorm-Sample</name>
+    <name>Ujorm-sample</name>
     <url>http://maven.apache.org</url>
     <build>
         <plugins>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>0.90</version>
+            <version>0.91</version>
         </dependency>
 
         <dependency>

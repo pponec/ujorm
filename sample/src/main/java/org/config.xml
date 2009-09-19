@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OrmUjo configuration file release 0.89.B3 was created 2009/07/26 09:18 -->
+<body>
+    <database id="Database">
+        <schema>db1</schema>
+        <dialect>org.ujoframework.orm.dialect.H2Dialect</dialect>
+        <table id="ord_order">
+            <name>ord_order</name>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="usrId">
+                <name>usrId</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="description">
+                <name>DESCR</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="date">
+                <name>date</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+            <relation2m id="items">
+                <name>items</name>
+            </relation2m>
+        </table>
+        <table id="ord_item">
+            <name>ord_item</name>
+            <alias>ord_item_alias</alias>
+            <schema>db1</schema>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="usrId">
+                <name>usrId</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="description">
+                <name>description</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="fk_order">
+                <name>fk_order</name>
+                <dbType>INT</dbType>
+            </column>
+        </table>
+        <table id="view_order" view="true">
+            <name>ord_order</name>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="itemCount">
+                <name>itemCount</name>
+                <dbType>INT</dbType>
+            </column>
+            <select>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
+        </table>
+        <table id="db1" view="true">
+            <name>ord_order</name>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
+            <relation2m id="ord_order">
+                <name>ord_order</name>
+            </relation2m>
+            <relation2m id="ord_item">
+                <name>ord_item</name>
+            </relation2m>
+            <relation2m id="view_order">
+                <name>view_order</name>
+            </relation2m>
+        </table>
+        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
+        <user>sa</user>
+    </database>
+    <parameters>
+        <tableAliasSuffix>_alias</tableAliasSuffix>
+        <sequenceCache>1</sequenceCache>
+    </parameters>
+</body>
