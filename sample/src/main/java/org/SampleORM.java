@@ -16,31 +16,32 @@
 
 package org;
 
-import java.net.URL;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import org.bo.Item;
 import org.bo.Order;
 import org.bo.ViewOrder;
 import org.ujoframework.Ujo;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.orm.Session;
-import org.ujoframework.orm.OrmHandler;
-import org.ujoframework.orm.Query;
+import org.ujoframework.orm.*;
 import org.ujoframework.orm.metaModel.MetaColumn;
-import org.ujoframework.criterion.Criterion;
-import org.ujoframework.criterion.Operator;
+import org.ujoframework.criterion.*;
 import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
- * The ORM tutorial in the class.
- * See how to create statements for CREATE TABLE, INSERT, SELECT, UPDATE and DELETE.
- * @author Pavel Ponec
+ * The tutorial in the class for the Ujorm <br>
+ * --------------------------------------- <br>
+ * Learn the basic skills in 15 minutes.
+ * The next several methods demonstrates the use of statements:
+ *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE.
+ *
+ * Copyright 2009, Pavel Ponec
  */
 public class SampleORM {
 
-    /** Before the first use load a meta-model. */
+    /** Before the first use load a meta-model.
+     * Database tables will be created in the first time.
+     */
     public void loadMetaModel(boolean createDb) {
 
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
@@ -55,14 +56,14 @@ public class SampleORM {
 
         boolean yesIWantLoadExternalConfig = false;
         if (yesIWantLoadExternalConfig) {
-            URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
+            java.net.URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
             OrmHandler.getInstance().config(config, true);
         }
 
         OrmHandler.getInstance().loadDatabase(Database.class);
     }
 
-    /** Create database and call INSERT */
+    /** Insert one Order and two Items into database. */
     public void useInsert() {
 
         Order order = new Order();
@@ -93,12 +94,12 @@ public class SampleORM {
         }
     }
 
-    /** Using SELECT by QUERY */
+    /** Now, how to select Orders from the database by Criterions? */
     public void useSelectOrders() {
 
-        Criterion<Order> crn1 = Criterion.newInstance(Order.DESCR, "John's order");
-        Criterion<Order> crn2 = Criterion.newInstance(Order.CREATED, Operator.LE, new Date());
-        Criterion<Order> crit = crn1.and(crn2);
+        Criterion<Order> cn1 = Criterion.newInstance(Order.DESCR, "John's order");
+        Criterion<Order> cn2 = Criterion.newInstance(Order.CREATED, Operator.LE, new Date());
+        Criterion<Order> crit = cn1.and(cn2);
 
         Session session = OrmHandler.getInstance().getSession();
         UjoIterator<Order> orders = session.createQuery(crit).iterate();
@@ -110,7 +111,7 @@ public class SampleORM {
         }
     }
 
-    /** Using SELECT by QUERY */
+    /** Sort orders by DESCR and CREATED (descending). */
     public void useSortOrders() {
 
         Session session = OrmHandler.getInstance().getSession();
@@ -122,7 +123,9 @@ public class SampleORM {
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
     }
 
-    /** Using SELECT by VIEW QUERY */
+    /** Use a 'native query' where the query is created
+     * by a special entity signed by the @View annotation.
+     */
     public void useSelectViewOrders() {
 
         Criterion<ViewOrder> crit = Criterion.newInstance(ViewOrder.ID, Operator.GE, 0L);
@@ -135,8 +138,7 @@ public class SampleORM {
         }
     }
 
-
-    /** Using SELECT by QUERY */
+    /** Select all items with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
         Session session = OrmHandler.getInstance().getSession();
 
@@ -149,7 +151,7 @@ public class SampleORM {
         }
     }
 
-    /** Using SELECT by QUERY */
+    /** Select one Order by ID and print its Items by a criterion */
     public void useSelectItems_2() {
         Session session = OrmHandler.getInstance().getSession();
 
@@ -163,7 +165,9 @@ public class SampleORM {
         }
     }
 
-    /** Using SELECT by QUERY */
+    /** Select an Order by ID and print its Items 
+     * by a 'one to many' relation property
+     */
     public void useSelectItems_3() {
         Session session = OrmHandler.getInstance().getSession();
         Order order = session.load(Order.class, 1L);
@@ -174,7 +178,9 @@ public class SampleORM {
         }
     }
 
-    /** Using SELECT by QUERY */
+    /** Select items by a related order date property Item._ORDER_DATE.
+     * It is a sample of multi-table query.
+     */
     public void useSelectItems_4() {
         Criterion<Item> crit = Criterion.newInstance(Item._ORDER_DATE, Operator.LE, new Date());
         Session session = OrmHandler.getInstance().getSession();
@@ -185,8 +191,7 @@ public class SampleORM {
         }
     }
 
-
-    /** Using SELECT by QUERY */
+    /** How to count items ? */
     public void useSelectCount() {
         Session session = OrmHandler.getInstance().getSession();
         Criterion<Item> crit = Criterion.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
@@ -196,7 +201,7 @@ public class SampleORM {
         System.out.println("Count of the order items: " + count);
     }
 
-    /** Using SKIP on UjoIterator */
+    /** How to skip items? */
     public void useIteratorSkip() {
         Session session = OrmHandler.getInstance().getSession();
         Criterion<Item> crit = Criterion.newInstance(Item.DESCR, Operator.NOT_EQ, "XXXXX");
@@ -213,7 +218,9 @@ public class SampleORM {
         System.out.println("Next: " + isNext);
     }
 
-    /** Using SELECT by an object relations */
+    /** Sample for 'one to many' relation.
+     * 	Note that it is possible to use a Database configuration object too.
+     */
     public void useRelation() {
         Session session = OrmHandler.getInstance().getSession();
         Database db = session.getDatabase(Database.class);
@@ -231,7 +238,7 @@ public class SampleORM {
         }
     }
 
-    /** Using UPDATE */
+    /** Using the UPDATE */
     public void useUpdate() {
         Session session = OrmHandler.getInstance().getSession();
         Order order = session.load(Order.class, 1L);
@@ -241,7 +248,7 @@ public class SampleORM {
         session.commit();
     }
 
-    /** Using DELETE SQL */
+    /** How to DELETE the one loaded object? */
     public void useDelete_1() {
         Session session = OrmHandler.getInstance().getSession();
         Item item = session.createQuery(Item.class).iterate().toList().get(0);
@@ -251,7 +258,7 @@ public class SampleORM {
         System.out.println("There is DELETED object: " + item);
     }
 
-    /** Using DELETE SQL */
+    /** How to use a batch DELETE? */
     public void useDelete_2() {
         Session session = OrmHandler.getInstance().getSession();
         Criterion<Item> crit = Criterion.newInstance(Item.ID, 1L);
@@ -260,7 +267,7 @@ public class SampleORM {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Using the column metadata */
+    /** Print some meta-data of the property Order.DESCR. */
     public void useMetadata() {
         MetaColumn c = (MetaColumn) OrmHandler.getInstance().findColumnModel(Order.DESCR);
 
@@ -275,12 +282,18 @@ public class SampleORM {
         System.out.println(msg);
     }
 
+    /** Close Ujorm session to clear a session cache include 
+     * a database connection(s) 
+     */
+    public void useCloseSession() {
+        OrmHandler.getInstance().getSession().close();
+    }
 
-    /** Test */
+    /** Run the tutorial */
     public static void main(String[] args) {
+        SampleORM sample = new SampleORM();
+        
         try {
-            SampleORM sample = new SampleORM();
-
             sample.loadMetaModel(true);
             sample.useInsert();
             sample.useSelectOrders();
@@ -301,7 +314,7 @@ public class SampleORM {
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
-           OrmHandler.getInstance().getSession().close();
+            sample.useCloseSession();
         }
     }
 }
