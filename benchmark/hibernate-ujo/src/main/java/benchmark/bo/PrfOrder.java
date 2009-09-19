@@ -19,14 +19,15 @@ package benchmark.bo;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.quick.QuickUjoMid;
+import org.ujoframework.implementation.quick.QuickUjo;
 
 /**
  * Order
  * @author ponec
  */
-public class PrfOrder extends QuickUjoMid<PrfOrder> {
+public class PrfOrder extends QuickUjo {
 
     public static final Property<PrfOrder,Long> id = newProperty(Long.class);
     public static final Property<PrfOrder,Boolean> deleted = newProperty(false);
@@ -41,8 +42,13 @@ public class PrfOrder extends QuickUjoMid<PrfOrder> {
     public static final Property<PrfOrder,String> language = newProperty(String.class);
     public static final Property<PrfOrder,PrfOrder> parent = newProperty(PrfOrder.class);
     public static final UjoProperty <PrfOrder,PrfUser>user = newProperty(PrfUser.class);
-    // static { init(PrfOrder.class); } // Hibernate takes care of the initialization
 
+    // Optional code for better performance:
+    private static UjoPropertyList properties = init(PrfOrder.class);
+    @Override public UjoPropertyList readProperties() { return properties; }
+
+
+    // Setters and Getters:
     public Date getDateDeleted() {
         return dateDeleted.of(this);
     }

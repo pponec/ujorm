@@ -17,21 +17,27 @@
 
 package benchmark.bo;
 
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.quick.QuickUjoMid;
+import org.ujoframework.implementation.quick.QuickUjo;
 
 /**
  * User
  * @author pavel
  */
-public class PrfUser extends QuickUjoMid<PrfUser> {
+public class PrfUser extends QuickUjo {
 
     public static final Property<PrfUser,Long> id = newProperty(Long.class);
     public static final Property<PrfUser,String> personalId = newProperty(String.class);
     public static final Property<PrfUser,String> surename = newProperty(String.class);
     public static final Property<PrfUser,String> lastname = newProperty(String.class);
-    // static { init(PrfOrder.class); } // Hibernate takes care of the initialization
 
+    // Optional code for better performance:
+    private static UjoPropertyList properties = init(PrfUser.class);
+    @Override public UjoPropertyList readProperties() { return properties; }
+
+
+    // Setters and Getters:
     public Long getId() {
         return id.of(this);
     }

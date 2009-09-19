@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>0.90</version> <!-- if this release is not located in the Maven repositiry yet, then see the SourceForge -->
+            <version>0.91</version>
             <!-- <version>0.89.B3</version> - use the last beta from Maven repository for a quick preview only -->
         </dependency>
 

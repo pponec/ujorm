@@ -18,14 +18,15 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.quick.QuickUjoMid;
+import org.ujoframework.implementation.quick.QuickUjo;
 
 /**
  * Order item
  * @author ponec
  */
-public class PrfOrderItem extends QuickUjoMid<PrfOrderItem> {
+public class PrfOrderItem extends QuickUjo {
 
     public static final Property<PrfOrderItem,Long> id = newProperty(Long.class);
     public static final Property<PrfOrderItem,String> publicId = newProperty(String.class);
@@ -38,8 +39,13 @@ public class PrfOrderItem extends QuickUjoMid<PrfOrderItem> {
     public static final Property<PrfOrderItem,PrfUser> user = newProperty(PrfUser.class);
     public static final Property<PrfOrderItem,PrfOrder> order = newProperty(PrfOrder.class);
     public static final Property<PrfOrderItem,PrfOrderItem> parent = newProperty(PrfOrderItem.class);
-    // static { init(PrfOrder.class); } // Hibernate takes care of the initialization
 
+    // Optional code for better performance:
+    private static UjoPropertyList properties = init(PrfOrderItem.class);
+    @Override public UjoPropertyList readProperties() { return properties; }
+
+
+    // Setters and Getters:
     public boolean isArrival() {
         return arrival.of(this);
     }
