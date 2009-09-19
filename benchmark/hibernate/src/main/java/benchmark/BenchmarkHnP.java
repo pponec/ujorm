@@ -43,7 +43,7 @@ public class BenchmarkHnP {
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel() {
 
-        System.out.println("** HIBERNATE " + "3.3.1.GA");
+        System.out.println("** HIBERNATE " + "3.3.1.GA + POJO");
         Logger.getLogger("").setLevel(Level.SEVERE);
 
         long time1 = System.currentTimeMillis();
