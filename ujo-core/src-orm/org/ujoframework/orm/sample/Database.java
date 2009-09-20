@@ -24,7 +24,7 @@ import org.ujoframework.orm.annot.View;
 import org.ujoframework.orm.dialect.*;
 
 /**
- * An table mapping to a database (a sample of usage).
+ * A class mapping to a database (sample of usage)
  * @hidden
  */
 @Db(schema="db1", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
