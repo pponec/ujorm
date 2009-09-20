@@ -6,7 +6,7 @@ release 0.91 (2009-09-20)
 + two Criterion operators are done for a user customization in the SQL statement (Ujorm)
 + Hibernate support is fixed
 + new static method creates a ListProperty with the default property name
-+ JavaDoc improvements include 'Tutorial in the class'
++ JavaDoc improvements include 'Tutorial in the class' is done
 + peformance tuning + new benchmark values are released
 
 release 0.90 (2009-08-29)
