@@ -1,5 +1,13 @@
 The UJO Framework release notes
 *******************************
+release 0.91 (2009-09-20)
++ pesimistic lock implementation for Ujorm
++ internal Ujorm sequence supports now: Long, Integer, BigInteger, Short, Char
++ two Criterion operators are done for a user customization in the SQL statement (Ujorm)
++ Hibernate support is fixed
++ new static method creates a ListProperty with the default property name
++ JavaDoc improvements include 'Tutorial in the class'
++ peformance tuning + new benchmark values are released
 
 release 0.90 (2009-08-29)
 + new ORM implementation for databases: PostgreSql, MySql, Derby, H2, HSQLDB, Firebird and Oracle
