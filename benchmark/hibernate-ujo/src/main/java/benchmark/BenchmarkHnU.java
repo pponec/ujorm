@@ -255,6 +255,7 @@ public class BenchmarkHnU {
     @SuppressWarnings("unchecked")
     public void useClose() {
         session.close();
+        sessionFactory.close();
     }
 
 

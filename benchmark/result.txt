@@ -1,34 +1,42 @@
-** UJORM 0.90: AVERAGE-TIME [s]
-	META-DATA: 0.42
-	INSERT: 10.24
-	SINGLE SELECT 14000: 0.37
-	EMPTY SELECT 2000: 1.23
-	MULTI SELECT 14000: 21.32
-	UPDATE 14000:  7.95
-	DELETE: 81.98
-
-** HIBERNATE 3.3.1.GA: AVERAGE-TIME [s]
-	META-DATA: 1.54
-	INSERT: 12.04
-	SINGLE SELECT 14000: 0.82
-	EMPTY SELECT 2000: 155.86
-	MULTI SELECT 14000: 172.99
-	UPDATE 14000: 4.14
-	DELETE: 215.73
-
---
-
-Environment:
+ENVIRONMENT:
+ * date of performance: 2009/09/20
  * test through the 2000 orders and 14,000 items
  * against the database PostgreSQL 8.3 (on the same computer)
  * values are an average of 5 measurements
  * DB indexes was insignificant
- * Ujorm 0.90
+ * UJO Framework release 0.91
  * Hibernate 3.3.1.GA + EhCachProvider
- * Java 6
+ * Java 6, running with default parameters
  * Intel Dual Core, 1GB RAM
  * Windows XP + SP3
- * benchmark code is available on SourceForge  
- * Date of performance: 2009/08/29
+ * benchmark code is available on SourceForge
 
- --
+--
+
+RESULT DATA:
+** HIBERNATE 3.3.1.GA + POJO: AVERAGE-TIME [s]
+	META-DATA: 1.431
+	INSERT: 11.369
+	SINGLE SELECT 14000: 0.581
+	EMPTY SELECT 2000: 152.534
+	MULTI SELECT 14000: 169.518
+	UPDATE 14000: 3.694
+	DELETE: 210.144
+** HIBERNATE 3.3.1.GA + UJO: AVERAGE-TIME [s]
+	META-DATA: 1.462
+	INSERT: 12.109
+	SINGLE SELECT 14000: 0.519
+	EMPTY SELECT 2000: 94.853
+	MULTI SELECT 14000: 95.150
+	UPDATE 14000: 3.782
+	DELETE: 141.040
+** Ujorm 0.91: AVERAGE-TIME [s]
+	META-DATA: 0.212
+	INSERT: 9.878
+	SINGLE SELECT 14000: 0.356
+	EMPTY SELECT 2000: 1.203
+	MULTI SELECT 14000: 21.178
+	UPDATE 14000: 7.703
+	DELETE: 99.038
+--
+
