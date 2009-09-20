@@ -152,6 +152,7 @@ public class BenchmarkHnP {
 
         tr.commit();
         printTime("EMPTY SELECT "+ORDER_COUNT, time1, System.currentTimeMillis());;
+
     }
 
 
@@ -252,7 +253,9 @@ public class BenchmarkHnP {
     /** Close session */
     @SuppressWarnings("unchecked")
     public void useClose() {
+
         session.close();
+        sessionFactory.close();
     }
 
 

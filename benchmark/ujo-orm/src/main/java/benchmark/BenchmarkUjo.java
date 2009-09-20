@@ -50,15 +50,15 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
         boolean yesIWantChangeDefaultParameters = true;
+        handler = new OrmHandler();
         if (yesIWantChangeDefaultParameters) {
             MetaParams params = new MetaParams();
             MetaParams.TABLE_ALIAS_SUFFIX.setValue(params, "_");
             MetaParams.SEQUENCE_CACHE.setValue(params, 1000);
             //MetaParams.SEQUENCE_CACHE.setValue(params, 1);
-            OrmHandler.getInstance().config(params);
+            handler.config(params);
         }
 
-        handler = OrmHandler.getInstance();
         handler.loadDatabase(Database.class);
         session = handler.createSession();
         printTime("META-DATA", time1, System.currentTimeMillis());

@@ -19,6 +19,7 @@ package benchmark.bo;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.implementation.orm.RelationToMany;
@@ -51,5 +52,9 @@ public class UjoOrder extends OrmTable<UjoOrder> {
 
     public static final RelationToMany <UjoOrder,UjoOrderItem>items = newRelation("items", UjoOrderItem.class);
 
+
+    // Optional code for better performance:
+    private static UjoPropertyList properties = init(UjoOrder.class);
+    @Override public UjoPropertyList readProperties() { return properties; }
 
 }

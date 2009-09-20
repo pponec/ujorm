@@ -17,6 +17,7 @@
 
 package benchmark.bo;
 
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.Column;
@@ -34,4 +35,9 @@ public class UjoUser extends OrmTable<UjoUser> {
     public static final Property<UjoUser,String> surename = newProperty(String.class);
     public static final Property<UjoUser,String> lastname = newProperty(String.class);
 
+
+
+    // Optional code for better performance:
+    private static UjoPropertyList properties = init(UjoUser.class);
+    @Override public UjoPropertyList readProperties() { return properties; }
 }

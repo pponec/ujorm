@@ -18,6 +18,7 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.orm.OrmTable;
@@ -45,5 +46,10 @@ public class UjoOrderItem extends OrmTable<UjoOrderItem> {
 
     /** Indirect property: order.deleted */
     public static final PathProperty<UjoOrderItem,Boolean> _orderDeleted = PathProperty.newInstance(UjoOrderItem.order, UjoOrder.deleted);
+
+
+    // Optional code for better performance:
+    private static UjoPropertyList properties = init(UjoOrderItem.class);
+    @Override public UjoPropertyList readProperties() { return properties; }
 
 }
