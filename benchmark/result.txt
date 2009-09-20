@@ -10,6 +10,16 @@ ENVIRONMENT:
  * Intel Dual Core, 1GB RAM
  * Windows XP + SP3
  * benchmark code is available on SourceForge
+--
+
+ACTION DESCRIPTIONS:
+ * META-DATA: loading data from the ORM description, Hibernate also re-creates database model
+ * INSERT: insert 2000 orders, 14000 items and 1 user
+ * SINGLE SELECT: the one big select for all order items (with a condition) 
+ * EMPTY SELECTS: 2000 selects with the empty result - where a condition contains different parameter values
+ * MULTI SELECT: many different selects to emulate a server application or statements with no optimization
+ * UPDATE: modify and save a loaded BO
+ * DELETE: execution many statements to delete all table rows
 
 --
 
