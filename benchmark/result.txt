@@ -6,7 +6,7 @@ ENVIRONMENT:
  * DB indexes was insignificant
  * UJO Framework release 0.91
  * Hibernate 3.3.1.GA + EhCachProvider
- * Java 6, running with default parameters
+ * Java version "1.6.0_14", running with default parameters
  * Intel Dual Core, 1GB RAM
  * Windows XP + SP3
  * benchmark code is available on SourceForge
