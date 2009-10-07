@@ -29,8 +29,9 @@ import org.ujoframework.orm.metaModel.MetaParams;
  * The tutorial in the class for the Ujorm <br>
  * --------------------------------------- <br>
  * Learn the basic skills in 15 minutes by a live Java code.
- * The next several methods demonstrates the use of statements:
- *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE.
+ * The next several methods demonstrate the use of statements:
+ *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE 
+ * and show how to use a meta-model.
  *
  * Copyright 2009, Pavel Ponec
  */
