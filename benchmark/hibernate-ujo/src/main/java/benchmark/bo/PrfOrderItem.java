@@ -23,8 +23,8 @@ import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.quick.QuickUjo;
 
 /**
- * Order item
- * @author ponec
+ * The Order Item
+ * @author Ponec
  */
 public class PrfOrderItem extends QuickUjo {
 
@@ -40,7 +40,7 @@ public class PrfOrderItem extends QuickUjo {
     public static final Property<PrfOrderItem,PrfOrder> order = newProperty(PrfOrder.class);
     public static final Property<PrfOrderItem,PrfOrderItem> parent = newProperty(PrfOrderItem.class);
 
-    // Optional code for better performance:
+    // Optional code for better performance when creating instance:
     private static UjoPropertyList properties = init(PrfOrderItem.class);
     @Override public UjoPropertyList readProperties() { return properties; }
 
