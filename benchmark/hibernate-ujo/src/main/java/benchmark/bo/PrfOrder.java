@@ -24,8 +24,8 @@ import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.quick.QuickUjo;
 
 /**
- * Order
- * @author ponec
+ * The Order
+ * @author Ponec
  */
 public class PrfOrder extends QuickUjo {
 
@@ -43,14 +43,14 @@ public class PrfOrder extends QuickUjo {
     public static final Property<PrfOrder,PrfOrder> parent = newProperty(PrfOrder.class);
     public static final UjoProperty <PrfOrder,PrfUser>user = newProperty(PrfUser.class);
 
-    // Optional code for better performance:
+    // Optional code for better performance when creating instance:
     private static UjoPropertyList properties = init(PrfOrder.class);
     @Override public UjoPropertyList readProperties() { return properties; }
 
 
     // Setters and Getters:
     public Date getDateDeleted() {
-        return dateDeleted.of(this);
+        return dateDeleted.of(this); // Note: the of() method is an alias for getValue()
     }
 
     public void setDateDeleted(Date aDateDeleted) {
