@@ -161,16 +161,19 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
     
     /** Length of the Name */
+    @Override
     public int length() {
         return getName().length();
     }
 
     /** A char from Name */
+    @Override
     public char charAt(int index) {
         return getName().charAt(index);
     }
 
     /** Sub sequence from the Name */
+    @Override
     public CharSequence subSequence(int start, int end) {
         return getName().subSequence(start, end);
     }
@@ -179,6 +182,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      * Method returns a false because this is a property of the another UJO class.
      * The composite property is excluded from from function Ujo.readProperties() by default.
      */
+    @Override
     public final boolean isDirect() {
         return false;
     }
@@ -186,6 +190,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** A flag for an ascending direction of order. For the result is significant only the last property.
      * @see org.ujoframework.core.UjoComparator
      */
+    @Override
     public boolean isAscending() {
         return getLastProperty().isAscending();
     }
@@ -193,21 +198,37 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Create a new instance of the property with a descending direction of order.
      * @see org.ujoframework.core.UjoComparator
      */
+    @Override
     public UjoProperty<UJO,VALUE> descending() {
         return isAscending() ? new SortingProperty<UJO,VALUE>(this, false) : this ;
     }
 
-    /** Add all direct properties to the list form parameter. */
+    /** Export all <string>direct</strong> properties to the list from parameter. */
     @SuppressWarnings("unchecked")
-    public void addDirectProperties(List<UjoProperty> result) {
+    public void exportProperties(List<UjoProperty> result) {
         for (UjoProperty p : properties) {
             if (p.isDirect()) {
                 result.add(p);
             } else {
-                ((PathProperty)p).addDirectProperties(result);
+                ((PathProperty)p).exportProperties(result);
             }
         }
     }
+
+    /** Create new composite (indirect) instance.
+     * @since 0.92
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
+
+        UjoProperty[] props = new UjoProperty[properties.length+1];
+        System.arraycopy(properties, 0, props, 0, properties.length);
+        props[properties.length] = property;
+
+        return new PathProperty(props);
+    }
+
 
     // ================ STATIC ================
     

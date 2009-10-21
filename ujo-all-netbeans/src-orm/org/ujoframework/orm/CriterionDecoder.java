@@ -235,11 +235,11 @@ public class CriterionDecoder {
             Object      p2 = value.getRightNode();
 
             if (!p1.isDirect()) {
-                ((PathProperty) p1).addDirectProperties(dirs);
+                ((PathProperty) p1).exportProperties(dirs);
                 dirs.remove(dirs.size()-1); // remove the last direct property
             }
             if (p2 instanceof PathProperty) {
-                ((PathProperty) p2).addDirectProperties(dirs);
+                ((PathProperty) p2).exportProperties(dirs);
                 dirs.remove(dirs.size()-1); // remove the last direct property
             }
         }

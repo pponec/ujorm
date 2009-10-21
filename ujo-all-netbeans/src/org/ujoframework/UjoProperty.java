@@ -117,6 +117,12 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Co
      */
     public UjoProperty<UJO,VALUE> descending();
 
+
+    /** Create new composite (indirect) instance.
+     * @since 0.92
+     */
+    public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(UjoProperty<? extends VALUE, VALUE_PAR> property);
+
     /** Returns the name of Property. */
     @Override
     public String toString();
