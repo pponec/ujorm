@@ -128,16 +128,19 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
       
     /** Name of Property */
+    @Override
     final public String getName() {
         return name;
     }
     
     /** Type of Property */
+    @Override
     final public Class<VALUE> getType() {
         return type;
     }
 
     /** Index of Property */
+    @Override
     final public int getIndex() {
         return index;
     }
@@ -147,6 +150,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * <br>For the setting value is used internally a method <a href="MapUjo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">MapUjo.writeValue(UjoProperty, Object)</a>.
      * @see AbstractUjo#writeValue(UjoProperty,Object)
      */
+    @Override
     final public void setValue(final UJO ujo, final VALUE value) {
         ujo.writeValue(this, value);
     }
@@ -159,6 +163,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see AbstractUjo#readValue(UjoProperty)
      */
     @SuppressWarnings("unchecked")
+    @Override
     final public VALUE getValue(final UJO ujo) {
         final Object result = ujo.readValue(this);
         return (VALUE) result;
@@ -169,6 +174,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see #getValue(Ujo)
      */
     @SuppressWarnings("unchecked")
+    @Override
     final public VALUE of(final UJO ujo) {
         final Object result = ujo.readValue(this);
         return (VALUE) result;
@@ -177,6 +183,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...). 
      * If the default value is not modified, returns the <code>null<code>.
      */
+    @Override
     public VALUE getDefault() {
         return defaultValue;
     }
@@ -230,12 +237,24 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see #isAscending()
      * @see org.ujoframework.core.UjoComparator
      */
+    @Override
     public UjoProperty<UJO, VALUE> descending() {
         return new SortingProperty<UJO, VALUE>(this, false);
     }
 
+    /** Create new composite (indirect) instance.
+     * @since 0.92
+     */
+    @SuppressWarnings("unchecked")
+    public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
+        return new PathProperty(this, property);
+    }
+
+
+
     /** Returns true if the property type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
+    @Override
     public boolean isTypeOf(final Class type) {
         return type.isAssignableFrom(this.type);
     }
@@ -247,6 +266,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @param value Null value is supported.
      * @return Accordance
      */
+    @Override
     public boolean equals(final UJO ujo, final VALUE value) {
         Object myValue = ujo.readValue(this);
         if (myValue==value) { return true; }
@@ -271,16 +291,19 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
 
     /** A char from Name */
+    @Override
     public char charAt(int index) {
         return name.charAt(index);
     }
 
     /** Length of the Name */
+    @Override
     public int length() {
         return name.length();
     }
 
     /** Sub sequence from the Name */
+    @Override
     public CharSequence subSequence(int start, int end) {
         return name.subSequence(start, end);
     }
