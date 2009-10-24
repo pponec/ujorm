@@ -73,7 +73,7 @@ public class Query<UJO extends OrmUjo> {
         this.session = session;
         this.decoder = new CriterionDecoder(criterion, table);
 
-        setOrder(); // set an undefined ordering
+        orderBy(); // set an undefined ordering
     }
 
     /** Returns a count of the items */
@@ -133,7 +133,7 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** Set the order item list to an SQL ORDER BY phrase. */
-    public Query<UJO> setOrder(UjoProperty... order) {
+    public Query<UJO> orderBy(UjoProperty... order) {
         this.order = new ArrayList<UjoProperty>(Math.max(order.length, 4));
         for (final UjoProperty p : order) {
             this.order.add(p);
