@@ -141,7 +141,7 @@ public class SampleORM {
         Session session = OrmHandler.getInstance().getSession();
 
         Criterion<Item> crit = Criterion.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
-        UjoIterator<Item> items = session.createQuery(crit).setOrder(Item.ID.descending()).iterate();
+        UjoIterator<Item> items = session.createQuery(crit).orderBy(Item.ID.descending()).iterate();
 
         for (Item item : items) {
             Order order = item.getOrder();
