@@ -43,7 +43,7 @@ public class SampleORM {
     /** Before the first use load a meta-model.
      * Database tables will be created in the first time.
      */
-    public void loadMetaModel(boolean createDb) {
+    public void loadMetaModel() {
 
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
 
@@ -295,7 +295,7 @@ public class SampleORM {
         SampleORM sample = new SampleORM();
         
         try {
-            sample.loadMetaModel(true);
+            sample.loadMetaModel();
             sample.useInsert();
             sample.useSelectOrders();
             sample.useSortOrders();
