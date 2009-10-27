@@ -68,8 +68,11 @@ Released   : 20080129
             <h2 class="title"><a href="#">Why a new ORM mapping?</a></h2>
             <div class="entry">
 
-              <a href="Simplified_ClassModel_Ujorm.png"><img src="Simplified_ClassModel_Ujorm_thumb.png" width="150" height="100" alt="Simplified_ClassModel_Ujorm_thumb.png"
+              <a href="Simplified_ClassModel_Ujorm.png"><img src="Simplified_ClassModel_Ujorm_thumb.png" width="150"
+                 height="100" alt="Simplified_ClassModel_Ujorm_thumb.png"
                  style="float: right; margin-top: 15px;"
+                 title="Simplified Class Model of The Ujorm"
+                 alt  ="Simplified Class Model of The Ujorm"
               /></a>
 
               <ul>
@@ -98,7 +101,7 @@ Released   : 20080129
             <div class="entry">
 
               <ul>
-               <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
+               <li>resources for ORM mapping can be a database table, view or native SQL SELECT</li>
                <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
                <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
@@ -144,7 +147,7 @@ Released   : 20080129
   session.commit();
 </pre>
 
-The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
+The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
 <pre name="code" class="java">
 
   Criterion&lt;Order&gt; cn1, cn2, criterion;
@@ -193,8 +196,8 @@ And how to get meta-data for a 'description' property of the Order?
               <ul>
                 <li title="The SourceForge forum">Forum: <a href="http://sourceforge.net/forum/forum.php?forum_id=744237">discussion forums</a></li>
                 <li title="The Frequently Asked Questions">FAQ: <a href="http://ujoframework.org/dokuwiki/doku.php?id=orm_faq">http://ujoframework.org/dokuwiki/</a></li>
-                <li>Contact: ujoframework(at)gmail.com</li>
                 <li>Blog: <a href="http://ujoframework.blogspot.com/">http://ujoframework.blogspot.com/</a></li>
+                <li>Contact: ujoframework(at)gmail.com</li>
             </ul>
             </div>
             <p>&nbsp;</p>
