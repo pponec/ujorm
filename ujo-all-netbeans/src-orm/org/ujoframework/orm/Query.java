@@ -132,6 +132,14 @@ public class Query<UJO extends OrmUjo> {
         return table;
     }
 
+    /** Set the order item list to an SQL ORDER BY phrase.
+     * @deprecated Use the orderBy() method instead of
+     */
+    @Deprecated
+    public Query<UJO> setOrder(UjoProperty... order) {
+        return orderBy(order);
+    }
+
     /** Set the order item list to an SQL ORDER BY phrase. */
     public Query<UJO> orderBy(UjoProperty... order) {
         this.order = new ArrayList<UjoProperty>(Math.max(order.length, 4));
