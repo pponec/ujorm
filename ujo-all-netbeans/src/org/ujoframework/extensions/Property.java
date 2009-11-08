@@ -192,7 +192,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current property!
      */
     @SuppressWarnings("unchecked")
-    public <PROPERTY extends Property> PROPERTY setDefault(VALUE value) {
+    public <PROPERTY extends Property> PROPERTY writeDefault(VALUE value) {
         defaultValue = value;
         if (lock) checkAttribs();
         return (PROPERTY) this;

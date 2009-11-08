@@ -87,7 +87,7 @@ public class MetaDatabase extends AbstractMetaModel {
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
-    public static final Property<MetaDatabase,Class> SEQUENCER = newProperty("sequencer", Class.class).setDefault(UjoSequencer.class);
+    public static final Property<MetaDatabase,Class> SEQUENCER = newProperty("sequencer", Class.class).writeDefault(UjoSequencer.class);
     /** The property initialization */
     static{init(CLASS);}
 

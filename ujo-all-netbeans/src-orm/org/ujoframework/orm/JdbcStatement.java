@@ -162,7 +162,7 @@ public class JdbcStatement {
         }
 
         try {
-            TypeBook.setValue(column, ps, value, parameterPointer);
+            TypeService.setValue(column, ps, value, parameterPointer);
         } catch (Throwable e) {
             String textValue = bo!=null 
                 ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)
