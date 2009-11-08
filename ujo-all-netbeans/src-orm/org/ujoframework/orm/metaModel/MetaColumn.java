@@ -27,7 +27,7 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.OrmUjo;
-import org.ujoframework.orm.TypeBook;
+import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.annot.Column;
 
@@ -61,7 +61,7 @@ public class MetaColumn extends MetaRelation2Many {
     private String[] foreignNames = null;
     private static final String[] EMPTY_NAMES = new String[0];
     /** A TypeCode
-     * @see TypeBook
+     * @see TypeService
      */
     private char typeCode;
 
@@ -271,7 +271,7 @@ public class MetaColumn extends MetaRelation2Many {
     }
 
     /** A TypeCode
-     * @see TypeBook
+     * @see TypeService
      */
     public char getTypeCode() {
         return typeCode;
@@ -289,7 +289,7 @@ public class MetaColumn extends MetaRelation2Many {
         testReadOnly(true);
 
         // Assign a type code:
-        typeCode = TypeBook.getTypeCode(this);
+        typeCode = TypeService.getTypeCode(this);
 
         // Modify a relation type:
         if (isForeignKey()) {

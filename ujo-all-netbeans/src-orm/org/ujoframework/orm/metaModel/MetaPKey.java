@@ -24,7 +24,7 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
-import org.ujoframework.orm.TypeBook;
+import org.ujoframework.orm.TypeService;
 
 /**
  * The table primary key.
@@ -81,11 +81,11 @@ public class MetaPKey extends AbstractMetaModel {
             final long value = TABLE.of(this).getSequencer().nextValue(session);
 
             switch (column.getTypeCode()) {
-                case TypeBook.LONG    : bo.writeValue(property,         value); return true;
-                case TypeBook.INT     : bo.writeValue(property, (int  ) value); return true;
-                case TypeBook.SHORT   : bo.writeValue(property, (short) value); return true;
-                case TypeBook.BYTE    : bo.writeValue(property, (byte ) value); return true;
-                case TypeBook.BIG_INTE: bo.writeValue(property, BigInteger.valueOf(value)); return true;
+                case TypeService.LONG    : bo.writeValue(property,         value); return true;
+                case TypeService.INT     : bo.writeValue(property, (int  ) value); return true;
+                case TypeService.SHORT   : bo.writeValue(property, (short) value); return true;
+                case TypeService.BYTE    : bo.writeValue(property, (byte ) value); return true;
+                case TypeService.BIG_INTE: bo.writeValue(property, BigInteger.valueOf(value)); return true;
                 default: return false;
             }
         } else {

@@ -19,7 +19,7 @@ import org.ujoframework.orm.metaModel.MetaColumn;
  * A book of popular Java types.
  * @author pavel
  */
-final public class TypeBook {
+final public class TypeService {
 
     public static final char UNDEFINED = (char) -1;
     public static final char BOOLEAN = 0;

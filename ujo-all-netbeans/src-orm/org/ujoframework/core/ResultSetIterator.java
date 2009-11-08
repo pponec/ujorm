@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
-import org.ujoframework.orm.TypeBook;
+import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.metaModel.MetaColumn;
 
 /**
@@ -111,8 +111,8 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
                 Object value = view
                     // ? rs.getObject(MetaColumn.NAME.of(column))
                     // : rs.getObject(i+1)
-                    ? TypeBook.getValue(column, rs)
-                    : TypeBook.getValue(column, rs, i+1)
+                    ? TypeService.getValue(column, rs)
+                    : TypeService.getValue(column, rs, i+1)
                     ;
 
                 column.setValue(row, value);
