@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Scanner;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 
 /**
  * A Manager for CSV import / export.

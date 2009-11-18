@@ -18,7 +18,7 @@ package org.ujoframework.implementation.orm;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoPropertyListImpl;

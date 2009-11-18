@@ -82,8 +82,7 @@ public abstract class MapUjo extends AbstractUjo {
      * @see Property#getValue(Ujo)
      */
     public Object readValue(final UjoProperty property) {
-        Object result = data.get(property);
-        return result!=null ? result : property.getDefault() ;
+        return data.get(property);
     }
     
     // --------- STATIC METHODS -------------------

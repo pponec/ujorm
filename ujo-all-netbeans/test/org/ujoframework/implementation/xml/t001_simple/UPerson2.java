@@ -16,7 +16,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.extensions.UjoTextable;
 
 
@@ -34,8 +34,7 @@ public class UPerson2 implements Ujo, UjoTextable  {
     private HashMap data = new HashMap();
 
     public Object readValue(UjoProperty property) {
-        Object result = data.get(property);
-        return result!=null ? result : property.getDefault() ;
+        return data.get(property);
     }
 
     public void writeValue(UjoProperty property, Object value) {

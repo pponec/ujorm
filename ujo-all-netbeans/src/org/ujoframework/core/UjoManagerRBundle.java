@@ -25,7 +25,7 @@ import java.util.Enumeration;
 import java.util.PropertyResourceBundle;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 
 /**
  * A Manager for Java Property Resources Bundle.

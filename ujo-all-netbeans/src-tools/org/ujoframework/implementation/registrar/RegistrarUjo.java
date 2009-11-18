@@ -62,7 +62,8 @@ public class RegistrarUjo<UJO extends Ujo> extends MapUjo implements EventRegist
 
     @Override
     public void writeValue(UjoProperty property, Object value) {
-        Object oldValue = readValue(property);
+        @SuppressWarnings("unchecked")
+        Object oldValue = property.of(this);
         eventRegistrar.firePropertyChange(property, oldValue, value, true);
         super.writeValue(property, value);
         eventRegistrar.firePropertyChange(property, oldValue, value, false);

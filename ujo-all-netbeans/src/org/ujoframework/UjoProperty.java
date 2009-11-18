@@ -43,6 +43,7 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Co
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object. 
      * <br>The method calls a method <a href="Ujo.html#readValue(org.ujoframework.UjoProperty)">Ujo.readValue(UjoProperty)</a> allways.
+     * <br>Note: a <strong>null</strong> value is replaced by the property default value
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
      * @see Ujo#readValue(UjoProperty)

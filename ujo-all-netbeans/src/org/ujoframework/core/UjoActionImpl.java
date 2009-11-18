@@ -5,7 +5,7 @@
 
 package org.ujoframework.core;
 
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 
 /**
  * A default implementation of the UjoAction.

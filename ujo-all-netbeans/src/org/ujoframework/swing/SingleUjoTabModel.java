@@ -21,7 +21,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoActionImpl;
 import org.ujoframework.core.UjoCoder;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 
 /**
  * An implementation of TableModel for a Single Ujo object.

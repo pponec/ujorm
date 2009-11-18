@@ -21,7 +21,6 @@
 package org.ujoframework;
 
 import java.util.Iterator;
-import org.ujoframework.extensions.UjoAction;
 
 /**
  * The immutable list of UjoProperties.

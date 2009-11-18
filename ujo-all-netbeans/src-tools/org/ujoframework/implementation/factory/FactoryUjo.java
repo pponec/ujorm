@@ -43,8 +43,7 @@ public abstract class FactoryUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     public Object readValue(final UjoProperty property) {
-        Object result = ((FactoryProperty) property).readValue(this);
-        return result!=null ? result : property.getDefault() ;
+        return ((FactoryProperty) property).readValue(this);
     }
     
     // --------- STATIC METHODS -------------------

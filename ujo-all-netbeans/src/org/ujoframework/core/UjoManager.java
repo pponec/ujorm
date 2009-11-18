@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import org.ujoframework.Ujo;
+import org.ujoframework.UjoAction;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
 import org.ujoframework.core.annot.Transient;
@@ -34,7 +35,7 @@ import org.ujoframework.core.annot.XmlElementBody;
 import org.ujoframework.extensions.*;
 import org.ujoframework.implementation.array.ArrayUjo;
 import org.ujoframework.swing.UjoPropertyRow;
-import static org.ujoframework.extensions.UjoAction.*;
+import static org.ujoframework.UjoAction.*;
 
 /**
  * General Ujo Manager

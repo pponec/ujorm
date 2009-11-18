@@ -27,7 +27,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.extensions.UjoTextable;
 
 /**
