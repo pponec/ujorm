@@ -158,6 +158,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /**
      * It is a basic method for getting an appropriate type safe value from an MapUjo object. 
      * <br>For the getting value is used internally a method <a href="MapUjo.html#readValue(org.ujoframework.UjoProperty)">MapUjo.readValue(UjoProperty)</a>.
+     * <br>Note: a <strong>null</strong> value is replaced by the property default value
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
      * @see AbstractUjo#readValue(UjoProperty)
@@ -166,7 +167,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @Override
     final public VALUE getValue(final UJO ujo) {
         final Object result = ujo.readValue(this);
-        return (VALUE) result;
+        return result!=null ? (VALUE) result : defaultValue;
     }
     
     /**
@@ -177,7 +178,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @Override
     final public VALUE of(final UJO ujo) {
         final Object result = ujo.readValue(this);
-        return (VALUE) result;
+        return result!=null ? (VALUE) result : defaultValue;
     }
     
     /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...). 

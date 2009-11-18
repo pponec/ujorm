@@ -94,8 +94,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
      * @see Property#getValue(Ujo)
      */
     public Object readValue(final UjoProperty property) {
-        Object result = get(property);
-        return result!=null ? result : property.getDefault() ;
+        return get(property);
     }
     
     // --------- MAP IMPLEMENTATION -------------------

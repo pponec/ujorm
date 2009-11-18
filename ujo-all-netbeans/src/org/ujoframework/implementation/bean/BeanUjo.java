@@ -92,8 +92,7 @@ public abstract class BeanUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     public Object readValue(final UjoProperty property) {
-        Object result = ((ValueAgent) property).readValue(this);
-        return result!=null ? result : property.getDefault() ;
+        return ((ValueAgent) property).readValue(this);
     }
     
     // --------- STATIC METHODS -------------------

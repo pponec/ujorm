@@ -16,6 +16,7 @@
 
 package org.ujoframework.extensions;
 
+import org.ujoframework.UjoAction;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 

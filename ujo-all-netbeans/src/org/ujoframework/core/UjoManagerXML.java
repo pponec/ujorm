@@ -29,7 +29,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ListUjoProperty;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.extensions.UjoTextable;
 import org.xml.sax.SAXException;
 

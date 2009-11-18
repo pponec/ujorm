@@ -19,8 +19,9 @@ package org.ujoframework.extensions;
 import org.ujoframework.UjoPropertyList;
 import org.ujoframework.core.*;
 import org.ujoframework.Ujo;
+import org.ujoframework.UjoAction;
 import org.ujoframework.UjoProperty;
-import static org.ujoframework.extensions.UjoAction.*;
+import static org.ujoframework.UjoAction.*;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>

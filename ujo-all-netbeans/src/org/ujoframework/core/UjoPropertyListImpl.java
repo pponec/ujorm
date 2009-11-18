@@ -25,7 +25,7 @@ import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 
 /**
  * The immutable list of UjoProperties.

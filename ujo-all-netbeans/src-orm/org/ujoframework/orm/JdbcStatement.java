@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaTable;
 

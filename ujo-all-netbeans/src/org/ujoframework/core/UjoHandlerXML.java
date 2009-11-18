@@ -29,7 +29,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import org.ujoframework.Ujo;
 import org.ujoframework.extensions.ListUjoProperty;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 
 /** Use an subclass on your own risk.
  * <br>Use an API of UjoManagerXML insted of. */

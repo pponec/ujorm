@@ -84,8 +84,7 @@ public abstract class QuickUjo extends AbstractUjo {
      * @see Property#getValue(Ujo)
      */    
     public Object readValue(final UjoProperty property) {
-        Object result = data[property.getIndex()];
-        return result!=null ? result : property.getDefault() ;
+        return data[property.getIndex()];
     }
     
     // --------- STATIC METHODS -------------------

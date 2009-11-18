@@ -10,10 +10,10 @@
 package samples.xml;
 
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.implementation.map.*;
-import static org.ujoframework.extensions.UjoAction.*;
+import static org.ujoframework.UjoAction.*;
 
 /**
  * @author Pavel Ponec

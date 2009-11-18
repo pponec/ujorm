@@ -9,7 +9,7 @@ import org.ujoframework.*;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.UjoAction;
+import org.ujoframework.UjoAction;
 
 
 public class Person implements Ujo {
@@ -22,8 +22,7 @@ public class Person implements Ujo {
   private HashMap map = new HashMap();
 
   public Object readValue(UjoProperty property) {
-    Object result = map.get(property);
-    return result!=null ? result : property.getDefault();
+    return map.get(property);
   }
 
     @SuppressWarnings("unchecked")
