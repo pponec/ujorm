@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.ujo
+OpenIDE-Module-Layer: org/ujo/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/ujo/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
