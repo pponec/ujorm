@@ -102,8 +102,15 @@ Released   : 20080129
 
               <ul>
                <li>resources for ORM mapping can be a database table, view or native SQL SELECT</li>
-               <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
-               <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
+               <li>JDBC query parameters are passed by a question notation to the 
+                   <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/sql/PreparedStatement.html">PreparedStatement</a>
+                   for a high security
+               </li>
+               <li>all persistent objects are based on the interface
+                   <a href="../javadoc/org/ujoframework/orm/OrmUjo.html">OrmUjo</a>,
+                   namely on the implementation
+                   <a href="../javadoc/org/ujoframework/implementation/orm/OrmTable.html">OrmTable</a>
+               </li>
                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
                <li>the API was inspired mainly by
                     <a href="http://cayenne.apache.org/">Canyenne</a> and

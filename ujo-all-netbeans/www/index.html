@@ -84,12 +84,12 @@ Released   : 20080129
                 <strong>More characteristics:</strong>
                 <a href="images/UjoUmlFull.png"><img src="images/UjoUmlFull2-green.png" width="200" height="190" alt="UjoUml.png" style="float:right; margin: 15px 0 0 0px; vertical-align:text-top; border:0" /></a>
                 <ul>
-                  <li>some interesting features are evaluated in&nbsp;the <a href="orm/index.html">object-relation mapping</a> (ORM) implementation</li>
                   <li>very simple <a href="javadoc/org/ujoframework/Ujo.html#readProperties()">introspection</a></li>  
                   <li>serialization to / from formats 
                      <a href="http://en.wikipedia.org/wiki/XML">XML</a>,
                      <a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> and 
                      <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">Resource bundle</a></li>
+                  <li>the <a href="orm/index.html">object-relation mapping</a> (ORM) implementation</li>
                   <li>UJO object controls an access to its property for different actions</li>
                   <li><a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a> ready</li>
                   <li>it is easy to clone, copy, sort and compare</li>
@@ -207,8 +207,7 @@ Released   : 20080129
   <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the MapUjo implementation ---</span></span>
   <span class="keyword-directive">private</span> HashMap map = <span class="keyword-directive">new</span> HashMap();  
   <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(UjoProperty property) {
-    Object result = map.get(property);
-    <span class="keyword-directive">return</span> result!=<span class="keyword-directive">null</span> ? result : property.getDefault();
+    return map.get(property);
   }
   <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">writeValue</span>(UjoProperty property, Object value) {
     map.put(property, value);
