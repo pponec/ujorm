@@ -72,6 +72,9 @@ public class Session {
     /** A session cache */
     private Map<CacheKey, OrmUjo> cache;
 
+    /** The rollback is allowed only */
+    private boolean rollbackOnly = false;
+
     /** The default constructor */
     Session(OrmHandler handler) {
         this.handler = handler;
@@ -100,7 +103,12 @@ public class Session {
     /** Make commit/rollback for all 'production' databases.
      * @param commit if parameters is false than make a rollback.
      */
-    protected void commit(boolean commit) {
+    public void commit(boolean commit) {
+        if (commit && rollbackOnly) {
+            commit(false);
+            throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
+        }
+
         Throwable exception = null;
         MetaDatabase database = null;
         String errMessage = "Can't make commit of DB ";
@@ -124,6 +132,7 @@ public class Session {
         if (exception != null) {
             throw new IllegalStateException(errMessage + database, exception);
         }
+        rollbackOnly = false;
     }
 
     /** For all rows. */
@@ -173,6 +182,15 @@ public class Session {
         }
     }
 
+    /** INSERT or UPDATE object into table. */
+    public void saveOrUpdate(OrmUjo bo) throws IllegalStateException {
+        if (bo.readSession()==null) {
+            save(bo);
+        } else {
+            update(bo);
+        }
+    }
+
     /** INSERT object into table. */
     public void save(OrmUjo bo) throws IllegalStateException {
         JdbcStatement statement = null;
@@ -190,6 +208,7 @@ public class Session {
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
+            rollbackOnly = true;
             throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, null, true);
@@ -224,6 +243,7 @@ public class Session {
             result = statement.executeUpdate(); // execute update statement
             bo.writeSession(this);
         } catch (Throwable e) {
+            rollbackOnly = true;
             MetaDatabase.close(null, statement, null, false);
             throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         } finally {
@@ -303,6 +323,7 @@ public class Session {
             }
             result = statement.executeUpdate(); // execute delete statement
         } catch (Throwable e) {
+            rollbackOnly = true;
             MetaDatabase.close(null, statement, null, false);
             throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         } finally {
@@ -367,6 +388,7 @@ public class Session {
             rs = statement.executeQuery(); // execute a select statement
             result = rs.next() ? rs.getLong(1) : 0 ;
         } catch (Exception e) {
+            rollbackOnly = true;
             throw new RuntimeException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, rs, false);
@@ -394,6 +416,7 @@ public class Session {
             return result;
 
         } catch (Throwable e) {
+            rollbackOnly = true;
             throw new IllegalStateException(SQL_ILLEGAL + sql, e);
         }
     }
@@ -463,7 +486,7 @@ public class Session {
 
     /** Create new statement */
     public JdbcStatement getStatement(MetaDatabase database, CharSequence sql) throws SQLException {
-        final JdbcStatement result = new JdbcStatement(getConnection(database), sql);
+        final JdbcStatement result = new JdbcStatement(getConnection(database), sql, getHandler());
         return result;
     }
 
@@ -479,24 +502,15 @@ public class Session {
         , final Object id
         ) throws NoSuchElementException
     {
-        final boolean mandatory = false;
         final MetaTable table = handler.findTableModel(tableType);
         final MetaColumn column = table.getFirstPK();
 
         UjoManager.getInstance().assertAssign(MetaColumn.TABLE_PROPERTY.of(column), id);
         Criterion crn = Criterion.newInstance(column.getProperty(), id);
         Query query = createQuery(crn);
-        UjoIterator iterator = UjoIterator.getInstance(query);
 
-        final UJO result
-            = (mandatory || iterator.hasNext())
-            ? (UJO) iterator.next()
-            : null
-            ;
-        if (iterator.hasNext()) {
-            throw new RuntimeException("Ambiguous key " + id);
-        }
-        return result;
+        final OrmUjo result = query.uniqueResult();
+        return (UJO) result;
     }
 
     /**
@@ -523,7 +537,7 @@ public class Session {
         MetaTable tableModel = null;
         if (cache) {
             tableModel = MetaColumn.TABLE.of(columns.get(0));
-            OrmUjo r = findCache(MetaTable.DB_PROPERTY.of(tableModel).getItemType(), id);
+            OrmUjo r = findCache(tableModel.getType(), id);
             if (r!=null) {
                 return (UJO) r;
             }
@@ -621,6 +635,12 @@ public class Session {
     final public MetaParams getParameters() {
         return params;
     }
+
+    /** The rollback is allowed only */
+    public boolean isRollbackOnly() {
+        return rollbackOnly;
+    }
+
 
 }
 
