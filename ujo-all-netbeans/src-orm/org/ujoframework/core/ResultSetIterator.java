@@ -25,6 +25,7 @@ import org.ujoframework.orm.Query;
 import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.metaModel.MetaColumn;
 
+
 /**
  * ResultSet iterator. It is not a thread safe implementation.
  * @author Pavel Ponec
@@ -33,6 +34,7 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
     private final Query query;
     private final ResultSet rs;
+    private final TypeService typeService;
     /** If the statemtnt is null then is a sign that it is closed. */
     private PreparedStatement statement;
     /** Is the query a view? */
@@ -53,6 +55,7 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             this.statement = query.getStatement();
             this.rs = statement.executeQuery();
             this.view = query.getTable().isSelectModel();
+            this.typeService = query.getSession().getParameters().getTypeService();
         } catch (SQLException e) {
             close();
             throw new IllegalStateException(e);
@@ -107,14 +110,10 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
             for (int i=0; i<colCount; i++) {
                 final MetaColumn column = query.getColumn(i);
-                Class type = column.getType();
                 Object value = view
-                    // ? rs.getObject(MetaColumn.NAME.of(column))
-                    // : rs.getObject(i+1)
-                    ? TypeService.getValue(column, rs)
-                    : TypeService.getValue(column, rs, i+1)
+                    ? typeService.getValue(column, rs)
+                    : typeService.getValue(column, rs, i+1)
                     ;
-
                 column.setValue(row, value);
             }
             row.writeSession(query.getSession());
@@ -151,4 +150,25 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
         }
         return count==0;
     }
+
+//    /** This solution is unsupported for ResultSet FORWARD_ONLY by the JDBC specification! <br>
+//     * Skip some rows by the parameter without reading date from a ResultSet.
+//     * @param count A count of item to skip.
+//     * @return Returns a true value if the skip count was no limited.
+//     */
+//    @Override
+//    public boolean skip_UNSUPPORTED(int count) {
+//        if (!hasNext()) {
+//            return count==0;
+//        }
+//        try {
+//            cursorReady = true;
+//            hasNext = rs.relative(--count);
+//            return hasNext;
+//
+//        } catch (Throwable e) {
+//            throw new UnsupportedOperationException("Skip Query: " + query, e);
+//        }
+//    }
 }
+
