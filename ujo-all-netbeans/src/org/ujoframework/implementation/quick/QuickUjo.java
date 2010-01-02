@@ -16,6 +16,7 @@
 
 package org.ujoframework.implementation.quick;
 
+import java.io.Serializable;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
@@ -45,7 +46,10 @@ import org.ujoframework.extensions.ListProperty;
  * @author Pavel Ponec
  * @composed 1 - * Property
  */
-public abstract class QuickUjo extends AbstractUjo {
+public abstract class QuickUjo extends AbstractUjo implements Serializable {
+
+    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
+    private static final long serialVersionUID = 754967L;
        
     /** Object data. Unauthorized writing is not allowed. */
     final private Object[] data;

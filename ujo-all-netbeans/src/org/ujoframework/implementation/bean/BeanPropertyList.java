@@ -47,6 +47,7 @@ implements ValueAgent<Object,Object>, ListUjoProperty<UJO, ITEM>
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
+    @Override
     public void writeValue(Object bean, Object value) throws IllegalArgumentException {
         beanManager.writeValue(bean, value);
     }
@@ -54,6 +55,7 @@ implements ValueAgent<Object,Object>, ListUjoProperty<UJO, ITEM>
     /** WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
+    @Override
     public Object readValue(Object bean) {
         return beanManager.readValue(bean);
     }

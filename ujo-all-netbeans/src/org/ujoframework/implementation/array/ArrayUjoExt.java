@@ -15,6 +15,7 @@
  */
 package org.ujoframework.implementation.array;
 
+import java.io.Serializable;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.AbstractUjoExt;
@@ -46,8 +47,11 @@ import org.ujoframework.extensions.ListProperty;
  * @author Paul Ponec
  * @since UJO release 0.80 
  */
-abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoExt<UJO> {
-    
+abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoExt<UJO> implements Serializable {
+
+    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
+    private static final long serialVersionUID = 977568L;
+
     
     /** An Incrementator. Use a new counter for each subclass by sample:
      *<pre class="pre">
@@ -82,6 +86,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      * @see Property#setValue(Ujo,Object)
      */
 
+    @Override
     public void writeValue(final UjoProperty property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
         data[property.getIndex()] = value;
@@ -96,6 +101,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      *
      * @see Property#getValue(Ujo)
      */    
+    @Override
     public Object readValue(final UjoProperty property) {
         return data[property.getIndex()];
     }

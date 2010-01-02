@@ -34,6 +34,7 @@ import org.ujoframework.extensions.AbstractUjo;
 public abstract class FactoryUjo extends AbstractUjo {
 
     /** It is an unsupported function in this implementation. */
+    @Override
     public void writeValue(final UjoProperty property, final Object value) {
         throw new UnsupportedOperationException();
     }
@@ -42,6 +43,7 @@ public abstract class FactoryUjo extends AbstractUjo {
      * @see FactoryProperty#getValue(Ujo) FactoryProperty.getValue(Ujo)
      */
     @SuppressWarnings("unchecked")
+    @Override
     public Object readValue(final UjoProperty property) {
         return ((FactoryProperty) property).readValue(this);
     }

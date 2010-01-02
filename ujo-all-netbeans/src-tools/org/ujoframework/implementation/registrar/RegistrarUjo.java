@@ -58,7 +58,7 @@ import org.ujoframework.implementation.map.MapUjo;
  */
 public class RegistrarUjo<UJO extends Ujo> extends MapUjo implements EventRegistrar<UJO> {
     
-    final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
+    transient final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
 
     @Override
     public void writeValue(UjoProperty property, Object value) {
