@@ -79,7 +79,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /**
      * Property initialization.
      * @param name Replace the Name of property if the one is NULL.
-     * @param index Replace index allways, the value -1 invoke a next number from the internal sequencer.
+     * @param index Replace index always, the value -1 invoke a next number from the internal sequencer.
      * @param type Replace the Type of property if the one is NULL.
      * @param defaultValue Replace the Optional default value if the one is NULL.
      * @param lock Lock the property.
@@ -158,7 +158,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /**
      * It is a basic method for getting an appropriate type safe value from an MapUjo object. 
      * <br>For the getting value is used internally a method <a href="MapUjo.html#readValue(org.ujoframework.UjoProperty)">MapUjo.readValue(UjoProperty)</a>.
-     * <br>Note: a <strong>null</strong> value is replaced by the property default value
+     * <br>Note: this method replaces the value of <strong>null</strong> for default
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
      * @see AbstractUjo#readValue(UjoProperty)
@@ -167,7 +167,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @Override
     final public VALUE getValue(final UJO ujo) {
         final Object result = ujo.readValue(this);
-        return result!=null ? (VALUE) result : defaultValue;
+        return result!= null ? (VALUE) result : defaultValue;
     }
     
     /**
@@ -178,7 +178,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @Override
     final public VALUE of(final UJO ujo) {
         final Object result = ujo.readValue(this);
-        return result!=null ? (VALUE) result : defaultValue;
+        return result!= null ? (VALUE) result : defaultValue;
     }
     
     /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...). 
@@ -224,7 +224,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return true;
     }
 
-    /** A flag for a direction of sorting. This method returns true allways.
+    /** A flag for a direction of sorting. This method returns true always.
      * @since 0.85
      * @see org.ujoframework.core.UjoComparator
      */
@@ -247,6 +247,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @since 0.92
      */
     @SuppressWarnings("unchecked")
+    @Override
     public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
         return new PathProperty(this, property);
     }
