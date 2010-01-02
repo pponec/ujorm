@@ -10,7 +10,6 @@ package org.ujoframework;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.*;
-import org.ujoframework.UjoPropertyList;
 import org.ujoframework.extensions.UjoTextable;
 
 /**

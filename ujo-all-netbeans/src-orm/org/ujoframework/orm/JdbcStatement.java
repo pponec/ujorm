@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +40,7 @@ public class JdbcStatement {
 
     /** Prepared Statement */
     private final PreparedStatement ps;
+    private final TypeService typeService;
 
     /** Parameter pointer */
     private int parameterPointer = 0;
@@ -49,12 +49,13 @@ public class JdbcStatement {
 
     private boolean logValues;
 
-    public JdbcStatement(final Connection conn, final CharSequence sql) throws SQLException {
-        this(conn.prepareStatement(sql.toString()));
+    public JdbcStatement(final Connection conn, final CharSequence sql, final OrmHandler handler) throws SQLException {
+        this(conn.prepareStatement(sql.toString()), handler);
     }
 
-    public JdbcStatement(final PreparedStatement ps) {
+    public JdbcStatement(final PreparedStatement ps, final OrmHandler handler) {
         this.ps = ps;
+        this.typeService = handler.getParameters().getTypeService();
         logValues = LOGGER.isLoggable(Level.INFO);
         if (logValues) {
             values = new StringBuilder();
@@ -162,7 +163,7 @@ public class JdbcStatement {
         }
 
         try {
-            TypeService.setValue(column, ps, value, parameterPointer);
+            typeService.setValue(column, ps, value, parameterPointer);
         } catch (Throwable e) {
             String textValue = bo!=null 
                 ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)

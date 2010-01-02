@@ -145,7 +145,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      */
     @SuppressWarnings("unchecked")
     public String readValueString(final UjoProperty property, final UjoAction action) {
-        final Object value  = readValue(property);
+        final Object value  = property.of(this);
         final String result = readUjoManager().encodeValue(value, false);
         return result;
     }

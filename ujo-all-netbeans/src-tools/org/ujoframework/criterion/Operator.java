@@ -52,24 +52,25 @@ public enum Operator implements AbstractOperator {
     /** Only for a CharSequence subtypes (include String) */
     CONTAINS_CASE_INSENSITIVE,
     /** This operator can have their own SQL condition by a SqlDialect solution.
+     * <br>If you need to use more operators, I recommend to implement your own class 
+     * by the iterface AbstractOperator and adjust the appropriate SqlDialect.
      * @see org.ujoframework.orm.SqlDialect#getCriterionTemplate(org.ujoframework.criterion.ValueCriterion)
      */
-    USER_1,
-    /** This operator can have their own SQL condition by a SqlDialect solution.
-     * @see org.ujoframework.orm.SqlDialect#getCriterionTemplate(org.ujoframework.criterion.ValueCriterion)
-     */
-    USER_2,
-    /** The operator for an internal use only where a result is <strong>independent</strong> on a value. */
+    USER,
+    /** The operator for an internal use only where a result is
+     * <strong>not dependent</strong> on the value. */
     X_FIXED,
     ;
 
 
     /** The implementace is a VALUE type (not a binary one) */
+    @Override
     public final boolean isBinary() {
         return false;
     }
 
     /** Returns Enum */
+    @Override
     public final Enum getEnum() {
         return this;
     }

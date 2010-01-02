@@ -173,7 +173,7 @@ public class MetaTable extends AbstractMetaModel {
 
     /** Assign a PK from framework */
     public void assignPrimaryKey(final OrmUjo bo, final Session session) {
-        final Class type = DB_PROPERTY.of(this).getItemType();
+        final Class type = getType();
         if (type.isInstance(bo)) {
             try {
                final MetaPKey pk = PK.of(this);
@@ -188,9 +188,14 @@ public class MetaTable extends AbstractMetaModel {
     
     /** Returns a new instance or the BO. */
     public OrmUjo createBO() throws InstantiationException, IllegalAccessException {
-        Class type = DB_PROPERTY.of(this).getItemType();
-        Object result = type.newInstance();
-        return (OrmUjo) result;
+        final OrmUjo result = getType().newInstance();
+        return result;
+    }
+
+    /** Returns a base table class. */
+    @SuppressWarnings("unchecked")
+    final public Class<OrmUjo> getType() {
+        return DB_PROPERTY.of(this).getItemType();
     }
 
     /** Returns the first PK */

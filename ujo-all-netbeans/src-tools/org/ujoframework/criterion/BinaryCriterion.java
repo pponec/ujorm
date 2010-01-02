@@ -81,7 +81,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     @Override
     public String toString() {
-        return "{" + crn1 + ") " + operator.name() + " (" + crn2 + ")";
+        return "(" + crn1 + ") " + operator.name() + " (" + crn2 + ")";
     }
     
     

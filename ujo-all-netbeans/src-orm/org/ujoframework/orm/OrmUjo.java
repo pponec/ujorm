@@ -35,7 +35,7 @@ import org.ujoframework.implementation.orm.OrmTable;
  */
 public interface OrmUjo extends Ujo {
 
-    /** Read an ORM session */
+    /** Read an ORM session, session is an transient property. */
     public Session readSession();
 
     /** Write an ORM session */

@@ -36,6 +36,10 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     private final UjoProperty[] properties;
 
+    public PathProperty(List<UjoProperty> properties) {
+        this(properties.toArray(new UjoProperty[properties.size()]));
+    }
+
     public PathProperty(UjoProperty... properties) {
         this.properties = properties;
     }
@@ -91,11 +95,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      * If a value  (not getLastProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public VALUE getValue(UJO ujo) {
         Ujo u = getSemifinalValue(ujo);
-        return  u!=null ? (VALUE) getLastProperty().of(u) : null ;
+        return  u!=null ? getLastProperty().of(u) : null ;
     }
 
+    @Override
     public void setValue(UJO ujo, VALUE value) {
         final Ujo u = getSemifinalValue(ujo);
         getLastProperty().setValue(u, value);

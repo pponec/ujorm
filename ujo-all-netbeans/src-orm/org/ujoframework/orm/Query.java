@@ -19,6 +19,7 @@ package org.ujoframework.orm;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -116,14 +117,47 @@ public class Query<UJO extends OrmUjo> {
         return columns.get(index);
     }
 
-    /** Create a new iterator by the query. */
+    /** Create a new iterator by the query.
+     * @see #uniqueResult()
+     * @see #exists() 
+     */
     public UjoIterator<UJO> iterate() {
         final UjoIterator<UJO> result = UjoIterator.getInstance(this);
         return result;
     }
 
-    /** Get the order item list. The method returns a not null result allways. */
-    final public List<UjoProperty> getOrder() {
+    /** Returns a unique result or null if no result item (database row) was found.
+     * @throws NoSuchElementException Result is not unique.
+     * @see #iterate()
+     * @see #exists() 
+     */
+    public UJO uniqueResult() throws NoSuchElementException {
+        final UjoIterator<UJO> iterator = iterate();
+        if (!iterator.hasNext()) {
+            return null;
+        }
+        final UJO result = iterator.next();
+        if (iterator.hasNext()) {
+            iterator.close();
+            throw new NoSuchElementException("Result is not unique for: " + criterion);
+        }
+        return result;
+    }
+
+    /** The method performs a new database request and returns result of the function <code>UjoIterator.hasNext()</code>.
+     * The result TRUE means the query covers one item (database row) at least.
+     * @see #iterate()
+     * @see #uniqueResult()
+     */
+    public boolean exists() {
+        final UjoIterator<UJO> iterator = iterate();
+        final boolean result = iterator.hasNext();
+        iterator.close();
+        return result;
+    }
+
+    /** Get the order item list. The method returns a not null result always. */
+    final public List<UjoProperty> getOrderBy() {
         return order;
     }
 
@@ -140,11 +174,21 @@ public class Query<UJO extends OrmUjo> {
         return orderBy(order);
     }
 
-    /** Set the order item list to an SQL ORDER BY phrase. */
-    public Query<UJO> orderBy(UjoProperty... order) {
-        this.order = new ArrayList<UjoProperty>(Math.max(order.length, 4));
-        for (final UjoProperty p : order) {
+   /** Set the order items to an SQL ORDER BY phrase. */
+    public Query<UJO> orderBy(UjoProperty... orderItems) {
+        this.order = new ArrayList<UjoProperty>(Math.max(orderItems.length, 4));
+        for (final UjoProperty p : orderItems) {
             this.order.add(p);
+        }
+        return this;
+    }
+
+   /** Set the order items to an SQL ORDER BY phrase. */
+    public Query<UJO> orderBy(List<UjoProperty> orderItems) {
+        if (orderItems==null) {
+            return orderBy(); // clear the sorting
+        } else {
+            this.order = orderItems;
         }
         return this;
     }

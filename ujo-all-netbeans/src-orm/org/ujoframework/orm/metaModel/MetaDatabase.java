@@ -19,7 +19,6 @@ package org.ujoframework.orm.metaModel;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -44,7 +43,6 @@ import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
-import org.ujoframework.orm.dialect.OracleDialect;
 
 /**
  * A logical database description.
@@ -181,17 +179,8 @@ public class MetaDatabase extends AbstractMetaModel {
         else if (Long.class==type
         || BigInteger.class.isAssignableFrom(type)
         ){
-            DbType dbType;
-            if (column.isPrimaryKey()) {
-               dbType = dialect.getPrimaryKeyType();
-            }
-            else if (OracleDialect.class.isAssignableFrom(column.getDialectClass())) {
-               dbType = DbType.NUMBER;
-            }
-            else {
-               dbType = DbType.BIGINT;
-            }
-            MetaColumn.DB_TYPE.setValue(column, dbType);
+            // Oracle: DbType.NUMBER
+            MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
         }
         else if (Double.class==type || BigDecimal.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DECIMAL);
@@ -199,7 +188,7 @@ public class MetaDatabase extends AbstractMetaModel {
         else if (java.sql.Date.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.DATE);
         }
-        else if (Date.class.isAssignableFrom(type)) {
+        else if (java.util.Date.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
         }
         else if (Character.class.isAssignableFrom(type)) {
@@ -207,6 +196,9 @@ public class MetaDatabase extends AbstractMetaModel {
         }
         else if (Boolean.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.BOOLEAN);
+        }
+        else if (Enum.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
         }
         else if (OrmUjo.class.isAssignableFrom(type)) {
             // A later initialization !!!

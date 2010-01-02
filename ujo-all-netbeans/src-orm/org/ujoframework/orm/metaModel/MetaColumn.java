@@ -72,7 +72,7 @@ public class MetaColumn extends MetaRelation2Many {
     public MetaColumn(MetaTable table, UjoProperty tableProperty, MetaColumn param) {
         super(table, tableProperty, param);
 
-        Field field = UjoManager.getInstance().getPropertyField(MetaTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
+        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (param!=null) {
@@ -284,12 +284,12 @@ public class MetaColumn extends MetaRelation2Many {
     }
 
     /** Initialize a type code - for an internal use only. */
-    public void initTypeCode() {
+    public void initTypeCode(final MetaParams params) {
         // Test for a read-only state:
-        testReadOnly(true);
+        checkReadOnly(true);
 
         // Assign a type code:
-        typeCode = TypeService.getTypeCode(this);
+        typeCode = params.getTypeService().getTypeCode(this);
 
         // Modify a relation type:
         if (isForeignKey()) {

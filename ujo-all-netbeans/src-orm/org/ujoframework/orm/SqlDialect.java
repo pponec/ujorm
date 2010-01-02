@@ -138,7 +138,10 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print foreign key for the parameter column */
+    /**
+     * Print foreign key for the parameter column
+     * @return More statements separated by the ';' charactes are enabled
+     */
     public Appendable printForeignKey(MetaColumn column, MetaTable table, Appendable out) throws IOException {
         final UjoProperty property = column.getProperty();
         final MetaTable foreignTable = ormHandler.findTableModel(property.getType());
@@ -167,15 +170,15 @@ abstract public class SqlDialect {
             out.append(MetaColumn.NAME.of(fkColumn));
         }
 
-        out.append(");");
-        //out.append("\n\tON DELETE CASCADE");
+        out.append(");\n");
+        //out.append("\tON DELETE CASCADE;\n");
         return out;
     }
 
     /**
      *  Print a SQL to create column
      * @param column Database Column
-     * @param aName The name parameter is not mandatory, in case a null value the column name is used.
+     * @param aName The name parameter is not mandatory, the not null value means a foreign key.
      * @throws java.io.IOException
      */
     public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
@@ -183,7 +186,7 @@ abstract public class SqlDialect {
         String name = aName!=null ? aName : MetaColumn.NAME.of(column);
         out.append(name);
         out.append(' ');
-        out.append(MetaColumn.DB_TYPE.of(column).name());
+        out.append(getColumnType(column));
 
         if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
             out.append("(" + MetaColumn.MAX_LENGTH.of(column));
@@ -192,13 +195,18 @@ abstract public class SqlDialect {
             }
             out.append(")");
         }
-        if (!MetaColumn.MANDATORY.isDefault(column)) {
+        if (MetaColumn.MANDATORY.of(column) && aName == null) {
             out.append(" NOT NULL");
         }
         if (MetaColumn.PRIMARY_KEY.of(column) && aName == null) {
             out.append(" PRIMARY KEY");
         }
         return out;
+    }
+
+    /** Returns a database column type */
+    protected String getColumnType(final MetaColumn column) {
+        return MetaColumn.DB_TYPE.of(column).name();
     }
 
     /** Print a SQL to create foreign keys. */
@@ -211,6 +219,9 @@ abstract public class SqlDialect {
             out.append(i==0 ? "" : "\n\t, ");
             String name = column.getForeignColumnName(i);
             printColumnDeclaration(col, name, out);
+            if (MetaColumn.MANDATORY.of(column)) {
+                out.append(" NOT NULL");
+            }
         }
         return out;
     }
@@ -468,7 +479,7 @@ abstract public class SqlDialect {
     protected Appendable printSelectView(MetaTable table, Query query, boolean count, Appendable out) throws IOException {
         MetaView select = MetaTable.SELECT_MODEL.of(table);
         String where = query.getDecoder().getWhere();
-        List<UjoProperty> order = query.getOrder();
+        List<UjoProperty> order = query.getOrderBy();
 
         for (UjoProperty p : select.readProperties()) {
             String value = (String) p.of(select);
@@ -525,10 +536,10 @@ abstract public class SqlDialect {
                 out.append(ed.getWhere());
             }
         } else {
-            out.append(MetaTable.NAME.of(query.getTableModel()));
+            printTableAliasDefinition(query.getTableModel(), out);
         }
         if (!count) {
-            if (!query.getOrder().isEmpty()) {
+            if (!query.getOrderBy().isEmpty()) {
                printSelectOrder(query, out);
             }
             if (query.isLockRequest()) {
@@ -553,7 +564,7 @@ abstract public class SqlDialect {
     public void printSelectOrder(Query query, Appendable out) throws IOException {
         
         out.append(" ORDER BY ");
-        final List<UjoProperty> props = query.getOrder();
+        final List<UjoProperty> props = query.getOrderBy();
         for (int i=0; i<props.size(); i++) {
             MetaColumn column = query.readOrderColumn(i);
             boolean ascending = props.get(i).isAscending();
@@ -589,13 +600,6 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Returns a default primary key database type.
-     * The method is called from method 'SqlDialect.printSequenceTable()' and from 'MetaDatabase.changeDbType()'.
-     */
-    public DbType getPrimaryKeyType() {
-        return DbType.BIGINT;
-    }
-
     /** Print SQL CREATE SEQUENCE. No JDBC parameters. */
     public Appendable printSequenceTable(final MetaDatabase db, final Appendable out) throws IOException {
         String schema = MetaDatabase.SCHEMA.of(db);
@@ -606,11 +610,15 @@ abstract public class SqlDialect {
             out.append(schema);
             out.append('.');
         }
+
+        MetaColumn pkType = new MetaColumn();
+        MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
+
         out.append(COMMON_SEQ_TABLE_NAME);
         out.append("\n\t( id VARCHAR(96) NOT NULL PRIMARY KEY");
-        out.append("\n\t, seq "+getPrimaryKeyType().name()+" DEFAULT " + cache + " NOT NULL");
+        out.append("\n\t, seq "+getColumnType(pkType)+" DEFAULT " + cache + " NOT NULL");
         out.append("\n\t, cache INT DEFAULT " + cache + " NOT NULL");
-        out.append("\n\t, maxvalue "+getPrimaryKeyType().name()+" DEFAULT 0 NOT NULL");  // TODO: max-value is not implemented yet
+        out.append("\n\t, maxvalue "+getColumnType(pkType)+" DEFAULT 0 NOT NULL");  // TODO: max-value is not implemented yet
         out.append("\n\t)");
         return out;
     }
