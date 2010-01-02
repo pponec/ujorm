@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright 2009 Paul Ponec
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 package org.ujoframework.orm;
@@ -16,11 +27,12 @@ import java.util.List;
 import org.ujoframework.orm.metaModel.MetaColumn;
 
 /**
- * A book of popular Java types.
- * @author pavel
+ * A type service for popular Java types and more.
+ * @author Ponec
  */
-final public class TypeService {
+public class TypeService {
 
+    // Type book:
     public static final char UNDEFINED = (char) -1;
     public static final char BOOLEAN = 0;
     public static final char BYTE = 1;
@@ -40,9 +52,10 @@ final public class TypeService {
     public static final char TIMESTAMP = 15;
     public static final char BLOB = 16;
     public static final char CLOB = 17;
+    public static final char ENUM = 19;
 
     /** The method returns a data type code include relation */
-    public static char getTypeCode(final MetaColumn column) {
+    public char getTypeCode(final MetaColumn column) {
 
         final Class type = column.getType();
 
@@ -64,6 +77,7 @@ final public class TypeService {
         if (type==java.sql.Timestamp.class) return TIMESTAMP;
         if (type==java.sql.Blob.class) return BLOB;
         if (type==java.sql.Clob.class) return CLOB;
+        if (Enum.class.isAssignableFrom(type)) return ENUM;
 
         if (column.isForeignKey()) {
             List<MetaColumn> columns = column.getForeignColumns();
@@ -75,18 +89,18 @@ final public class TypeService {
     }
 
     /** GetValue from the result set by position */
-    public static Object getValue(final MetaColumn mColumn, final ResultSet rs) throws SQLException {
-
+    public Object getValue(final MetaColumn mColumn, final ResultSet rs) throws SQLException {
+        Object r;
         String column = MetaColumn.NAME.of(mColumn);
         switch (mColumn.getTypeCode()) {
-            case BOOLEAN  : return rs.getBoolean(column);
-            case BYTE     : return rs.getByte(column);
-            case CHAR     : return (char) rs.getInt(column);
-            case SHORT    : return rs.getShort(column);
-            case INT      : return rs.getInt(column);
-            case LONG     : return rs.getLong(column);
-            case FLOAT    : return rs.getFloat(column);
-            case DOUBLE   : return rs.getDouble(column);
+            case BOOLEAN  : r = rs.getBoolean(column); break;
+            case BYTE     : r = rs.getByte(column); break;
+            case CHAR     : r = (char) rs.getInt(column); break;
+            case SHORT    : r = rs.getShort(column); break;
+            case INT      : r = rs.getInt(column); break;
+            case LONG     : r = rs.getLong(column); break;
+            case FLOAT    : r = rs.getFloat(column); break;
+            case DOUBLE   : r = rs.getDouble(column); break;
             case BIG_DECI : return rs.getBigDecimal(column);
             case BIG_INTE : BigDecimal d = rs.getBigDecimal(column);
                             return d!=null ? d.toBigInteger() : null;
@@ -99,24 +113,31 @@ final public class TypeService {
             case TIMESTAMP: return rs.getTimestamp(column);
             case BLOB     : return rs.getBlob(column);
             case CLOB     : return rs.getClob(column);
+            case ENUM     : int i = rs.getInt(column);
+                            return i==0 && rs.wasNull()
+                            ? null
+                            : mColumn.getType().getEnumConstants()[i]
+                            ;
             default       : return rs.getObject(column);
         }
+        return rs.wasNull() ? null : r;
     }
 
     /** GetValue from the result set by position */
-    public static Object getValue(final MetaColumn mColumn, final ResultSet rs, int column) throws SQLException {
+    public Object getValue(final MetaColumn mColumn, final ResultSet rs, int column) throws SQLException {
+        Object r;
         switch (mColumn.getTypeCode()) {
-            case BOOLEAN  : return rs.getBoolean(column);
-            case BYTE     : return rs.getByte(column);
-            case CHAR     : return (char) rs.getInt(column);
-            case SHORT    : return rs.getShort(column);
-            case INT      : return rs.getInt(column);
-            case LONG     : return rs.getLong(column);
-            case FLOAT    : return rs.getFloat(column);
-            case DOUBLE   : return rs.getDouble(column);
+            case BOOLEAN  : r = rs.getBoolean(column); break;
+            case BYTE     : r = rs.getByte(column); break;
+            case CHAR     : r = (char) rs.getInt(column); break;
+            case SHORT    : r = rs.getShort(column); break;
+            case INT      : r = rs.getInt(column); break;
+            case LONG     : r = rs.getLong(column); break;
+            case FLOAT    : r = rs.getFloat(column); break;
+            case DOUBLE   : r = rs.getDouble(column); break;
             case BIG_DECI : return rs.getBigDecimal(column);
-            case BIG_INTE : BigDecimal bd = rs.getBigDecimal(column);
-                            return bd!=null ? bd.toBigInteger() : null;
+            case BIG_INTE : BigDecimal d = rs.getBigDecimal(column);
+                            return d!=null ? d.toBigInteger() : null;
             case STRING   : return rs.getString(column);
             case BYTES    : return rs.getBytes(column);
             case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(column);
@@ -126,12 +147,18 @@ final public class TypeService {
             case TIMESTAMP: return rs.getTimestamp(column);
             case BLOB     : return rs.getBlob(column);
             case CLOB     : return rs.getClob(column);
+            case ENUM     : int i = rs.getInt(column);
+                            return i==0 && rs.wasNull()
+                            ? null
+                            : mColumn.getType().getEnumConstants()[i]
+                            ;
             default       : return rs.getObject(column);
         }
+        return rs.wasNull() ? null : r;
     }
 
     /** GetValue from the result set by position */
-    public static void setValue
+    public void setValue
         ( final MetaColumn mColumn
         , final PreparedStatement rs
         , final Object value
@@ -157,12 +184,13 @@ final public class TypeService {
             case BIG_INTE : rs.setBigDecimal(i, new BigDecimal((BigInteger)value)) ; break;
             case STRING   : rs.setString(i, (String)value); break;
             case BYTES    : rs.setBytes(i, (byte[]) value); break;
-            case DATE_UTIL: rs.setDate(i, new java.sql.Date(((java.util.Date)value).getTime()) ); break;
+            case DATE_UTIL: rs.setTimestamp(i, new java.sql.Timestamp(((java.util.Date)value).getTime()) ); break;
             case DATE_SQL : rs.setDate(i, (java.sql.Date) value); break;
             case TIME_SQL : rs.setTime(i, (java.sql.Time)value); break;
             case TIMESTAMP: rs.setTimestamp(i, (java.sql.Timestamp)value); break;
             case BLOB     : rs.setBlob(i, (Blob)value); break;
             case CLOB     : rs.setClob(i, (Clob)value); break;
+            case ENUM     : rs.setInt(i, ((Enum)value).ordinal()); break;
             default       : rs.setObject(i, value);  break;
         }
     }
