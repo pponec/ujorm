@@ -14,8 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm.sample;
-
+package org.ujoframework.orm_tutorial.sample;
 
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
