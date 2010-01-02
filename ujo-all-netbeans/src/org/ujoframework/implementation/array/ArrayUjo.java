@@ -16,6 +16,7 @@
 
 package org.ujoframework.implementation.array;
 
+import java.io.Serializable;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.AbstractUjo;
@@ -49,8 +50,12 @@ import org.ujoframework.extensions.ListProperty;
  * @author Pavel Ponec
  * @composed 1 - * Property
  */
-public abstract class ArrayUjo extends AbstractUjo {
+public abstract class ArrayUjo extends AbstractUjo implements Serializable {
     
+
+    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
+    private static final long serialVersionUID = 977569L;
+
     /** An Incrementator. Use a new counter for each subclass by sample:
      *<pre class="pre">
      * <span class="java-block-comment">&#47&#42&#42 An Incrementator. Use a new counter for each subclass. &#42&#47</span>

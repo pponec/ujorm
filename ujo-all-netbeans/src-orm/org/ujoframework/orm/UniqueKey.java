@@ -16,11 +16,17 @@
 
 package org.ujoframework.orm;
 
+import java.io.Serializable;
+import org.ujoframework.core.NoCheck;
+
 /**
- * A Unique key of a table
+ * A Unique key of the entity OrmUjo
  * @author Pavel Ponec
  */
-public class UniqueKey {
+public class UniqueKey implements NoCheck, Serializable {
+
+    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
+    private static final long serialVersionUID = 464564L;
 
     private final Object value;
 

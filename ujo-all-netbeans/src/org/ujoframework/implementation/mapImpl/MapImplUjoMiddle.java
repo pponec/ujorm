@@ -15,7 +15,7 @@
  */
 package org.ujoframework.implementation.mapImpl;
 
-import org.ujoframework.implementation.map.*;
+import java.io.Serializable;
 import java.util.HashMap;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -48,8 +48,11 @@ import org.ujoframework.extensions.UjoMiddle;
  */
 abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
     extends MapImplUjo
-    implements UjoMiddle<UJO_IMPL>
+    implements UjoMiddle<UJO_IMPL>, Serializable
 {
+
+    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
+    private static final long serialVersionUID = 977565L;
 
     public MapImplUjoMiddle(HashMap<String,Object> aData) {
         super(aData);

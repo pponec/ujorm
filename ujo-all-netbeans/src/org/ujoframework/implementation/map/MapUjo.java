@@ -16,6 +16,7 @@
 
 package org.ujoframework.implementation.map;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
@@ -43,8 +44,11 @@ import org.ujoframework.extensions.AbstractUjo;
  * @author Pavel Ponec
  * @composed 1 - * Property
   */
-public abstract class MapUjo extends AbstractUjo {
+public abstract class MapUjo extends AbstractUjo implements Serializable {
     
+    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
+    private static final long serialVersionUID = 977567L;
+
     /** Object data. Unauthorized writing is not allowed. */
     final private HashMap<UjoProperty,Object> data;
     

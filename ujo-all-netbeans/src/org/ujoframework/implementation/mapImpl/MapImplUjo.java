@@ -16,6 +16,7 @@
 
 package org.ujoframework.implementation.mapImpl;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -55,8 +56,11 @@ import org.ujoframework.extensions.ListProperty;
  * @since UJO release 0.85
  * @composed 1 - * Property
  */
-public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence,Object> {
+public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence,Object>, Serializable {
     
+    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
+    private static final long serialVersionUID = 977565L;
+
     /** Object data. Unauthorized writing is not allowed. */
     final private HashMap<String,Object> data;
     

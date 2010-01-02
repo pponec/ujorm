@@ -91,6 +91,7 @@ public abstract class BeanUjo extends AbstractUjo {
      * @see BeanProperty#getValue(Ujo) BeanProperty.getValue(Ujo)
      */
     @SuppressWarnings("unchecked")
+    @Override
     public Object readValue(final UjoProperty property) {
         return ((ValueAgent) property).readValue(this);
     }
