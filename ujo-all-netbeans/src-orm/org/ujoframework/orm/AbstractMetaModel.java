@@ -56,7 +56,6 @@ abstract public class AbstractMetaModel extends QuickUjo {
         }
 
         this.readOnly = true; // <<<<<< LOCK THE OBJECT !!!
-
         
         if (recurse) for (UjoProperty p : readProperties()) {
 
@@ -76,7 +75,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
     }
 
     /** Test a read-only state */
-    public boolean testReadOnly(final boolean exception) throws UnsupportedOperationException {
+    public boolean checkReadOnly(final boolean exception) throws UnsupportedOperationException {
         if (readOnly && exception) {
             throw new UnsupportedOperationException("Object have got a read-only state");
         }
@@ -85,7 +84,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
 
     @Override
     public void writeValue(final UjoProperty property, final Object value) {
-        this.testReadOnly(true);
+        this.checkReadOnly(true);
         super.writeValue(property, value);
     }
 

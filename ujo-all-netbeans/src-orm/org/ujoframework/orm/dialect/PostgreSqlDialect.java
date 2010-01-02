@@ -18,6 +18,7 @@ package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
 import org.ujoframework.orm.SqlDialect;
+import org.ujoframework.orm.metaModel.MetaColumn;
 
 /** PostgreSQL (http://www.postgresql.org/) */
 public class PostgreSqlDialect extends SqlDialect {
@@ -39,5 +40,17 @@ public class PostgreSqlDialect extends SqlDialect {
         out.append(schema);
         return out;
     }
+
+    /** PostgreSql dialect uses a database type OID (instead of the BLBO). */
+    @Override
+    protected String getColumnType(final MetaColumn column) {
+        switch (MetaColumn.DB_TYPE.of(column)) {
+            case BLOB:
+                return "OID";
+            default:
+                return super.getColumnType(column);
+        }
+    }
+
 
 }
