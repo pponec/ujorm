@@ -1,5 +1,20 @@
 The UJO Framework release notes
 *******************************
+
+release 0.92 (2010-01-?)
++ IMPORTANT CHANGE: the method UjoProperty.getValue() replaces the value of null by default - instead of the original Ujo.readValue() in the previous implementation !
++ the base UJO objects support the 'java.io.Serializable' feature - include the OrmTable
++ code cleaning, extended JavaDoc, small bug fixing
++ orm: Enum support (only mapping to a number DB type in this version)
++ orm: a new method OrmHandler.findTableModel(...) for common use is done
++ orm: custom Java type mapping is supported by extending the class TypeService
++ orm: simplified SQL dialect implementations is done include the ORACLE support
++ orm: default value for parameter SEQUENCE_CACHE is 100
++ orm: a new feature available by method Sesssion.isRollbackOnly()
+- orm: reading a null value from ResultSet is fixed
+- orm: MySqlDialect if fixed, explicit use of  the engine 'InnoDB' was implemented
+- orm: the MySqlDialect if fixed, explicit use of  the engine 'InnoDB' was implemented
+
 release 0.91 (2009-09-20)
 + pesimistic lock implementation for Ujorm
 + internal Ujorm sequence supports now: Long, Integer, BigInteger, Short, Char
