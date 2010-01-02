@@ -7,7 +7,6 @@ package org.ujoframework.extensions;
 
 /**
  * Property Setter
- * <BR> TODO: Can I remove the class ?
  * @author Ponec
  */
 public class PropertyModifier {

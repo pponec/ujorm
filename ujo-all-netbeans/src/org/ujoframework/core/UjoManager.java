@@ -411,6 +411,32 @@ public class UjoManager implements Comparator<UjoProperty> {
         return ujo.readProperties().find(ujo, name, action, result, throwException);
     }
 
+    /** Find <strong>indirect</strong> property by the name */
+    @SuppressWarnings("unchecked")
+    public UjoProperty findIndirectProperty(Class ujoType, String names) {
+
+        int j, i = 0;
+        List<UjoProperty> props = new ArrayList<UjoProperty>(4);
+        names += ".";
+
+        while ((j = names.indexOf('.', i + 1)) >= 0) {
+            final String name = names.substring(i, j);
+            final UjoProperty p = readProperties(ujoType).find(name, true);
+            props.add(p);
+            ujoType = p.getType();
+            i = j + 1;
+        }
+        switch (props.size()) {
+            case 0:
+                throw new IllegalStateException("Invalid property name: " + names);
+            case 1:
+                return props.get(0);
+            default:
+                return new PathProperty(props);
+        }
+    }
+
+
     /** Print a String representation */
     @SuppressWarnings("unchecked")
     public String toString(Ujo ujo) {
@@ -434,7 +460,7 @@ public class UjoManager implements Comparator<UjoProperty> {
             
             String value;
             try {
-                Object objVal = ujo.readValue(property);
+                Object objVal = property.of(ujo);
                 textSeparator = objVal instanceof CharSequence ? "\"" : "" ;
                 
                 value
@@ -597,7 +623,11 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** An assignable test. */
     public boolean assertAssign(final UjoProperty property, final Object value) throws IllegalArgumentException {
-        final boolean result = value==null || property.getType().isInstance(value);
+        final boolean result 
+            =  value==null
+            || value instanceof NoCheck
+            || property.getType().isInstance(value)
+            ;
         if (!result) {
             final String msg
             = "The value \""
