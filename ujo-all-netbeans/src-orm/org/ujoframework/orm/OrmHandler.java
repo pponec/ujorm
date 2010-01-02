@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -59,10 +60,23 @@ public class OrmHandler {
     /** Map a property to a database column model */
     private HashMap<UjoProperty,MetaRelation2Many> propertyMap = new HashMap<UjoProperty,MetaRelation2Many> ();
 
-    /** The (Sigleton ?) constructor */
+    /** The constructor */
     public OrmHandler() {
         session = createSession();
     }
+
+    /** The constructor with a database metamodel initialization. */
+    public <UJO extends OrmUjo> OrmHandler(final Class<UJO> databaseModel) {
+        this();
+        loadDatabase(databaseModel);
+    }
+
+    /** The constructor with a database metamodel initialization. */
+    public <UJO extends OrmUjo> OrmHandler(final Class<UJO> ... databaseModels) {
+        this();
+        loadDatabase(databaseModels);
+    }
+
 
     /** A candidate to removing */
     // @Deprecated
@@ -70,16 +84,12 @@ public class OrmHandler {
         return handler;
     }
 
-     /** Get Session
-      * <br/>TODO: getDefaultSession from a map by key.
-      */
+     /** Get Session */
     public Session getSession() {
         return session;
     }
 
-    /** Create new session
-     * <br/>TODO: getDefaultSession from a map by key.
-     */
+    /** Create new session */
     public Session createSession() {
         return new Session(this);
     }
@@ -188,9 +198,10 @@ public class OrmHandler {
         }
 
         // Initialize Column Type codes:
+        MetaParams params = getParameters();
         for (MetaRelation2Many r : propertyMap.values()) {
             if (r.isColumn()) {
-                ((MetaColumn)r).initTypeCode();
+                ((MetaColumn)r).initTypeCode(params);
             }
         }
 
@@ -219,6 +230,13 @@ public class OrmHandler {
         }
     }
 
+    /** Do the handler have a read-only state? */
+    public boolean isReadOnly() {
+        List<MetaDatabase> dbs = getDatabases();
+        boolean result = dbs.size()>0 && dbs.get(0).readOnly();
+        return result;
+    }
+
 
     /** Map a property to the table */
     @SuppressWarnings("unchecked")
@@ -229,11 +247,8 @@ public class OrmHandler {
         if (oldColumn == null) {
             propertyMap.put(property, newColumn);
         } else {
-            final MetaTable oldTable = MetaColumn.TABLE.of(oldColumn);
-            final MetaTable newTable = MetaColumn.TABLE.of(newColumn);
-
-            final Class oldType = MetaTable.DB_PROPERTY.of(oldTable).getItemType();
-            final Class newType = MetaTable.DB_PROPERTY.of(newTable).getItemType();
+            final Class oldType = oldColumn.getTableClass();
+            final Class newType = newColumn.getTableClass();
 
             if (newType.isAssignableFrom(oldType)) {
                 // Only a parent can be assigned:
@@ -254,22 +269,50 @@ public class OrmHandler {
         return result;
     }
 
-    /** Find a table model by the dbClass. Returns null of table is not found. */
-    public MetaTable findTableModel(Class<? extends OrmUjo> dbClass) {
+    /** Find a table model by the dbClass. 
+     * If the table model is not found then the IllegalStateException is throwed.
+     */
+    public MetaTable findTableModel(Class<? extends OrmUjo> dbClass) throws IllegalStateException {
         for (MetaDatabase db : MetaRoot.DATABASES.getList(databases)) {
             for (MetaTable table : MetaDatabase.TABLES.getList(db)) {
                 // Class has a unique instance in the same classloader:
-                if (MetaTable.DB_PROPERTY.of(table).getItemType()==dbClass) {
+                if (table.getType()==dbClass) {
                     return table;
                 }
             }
         }
-        return null;
+        throw new IllegalStateException
+            ("An entity mapping bug: the " + dbClass + " is not mapped to the Database.")
+            ;
     }
 
     /** Returns parameters */
     public MetaParams getParameters() {
         return MetaRoot.PARAMETERS.of(databases);
+    }
+
+    /** Returns true, if a database meta-model is loaded. */
+    public boolean isDatabaseLoaded() {
+        int itemCount = MetaRoot.DATABASES.getItemCount(databases);
+        return itemCount>0;
+    }
+
+    /** Returns all database */
+    public List<MetaDatabase> getDatabases() {
+        return MetaRoot.DATABASES.of(databases);
+    }
+
+    /** Find all <strong>persistent<strong> properties with the required type or subtype.
+     * @param type The parameter value Object.clas returns all persistent properties.
+     */
+    public List<UjoProperty> findPropertiesByType(Class type) {
+        List<UjoProperty> result = new ArrayList<UjoProperty>();
+        for (UjoProperty p : propertyMap.keySet()) {
+            if (p.isTypeOf(type)) {
+                result.add(p);
+            }
+        }
+        return result;
     }
 
 }
