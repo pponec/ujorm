@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Paul Ponec
+ *  Copyright 2007-2010 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import org.ujoframework.extensions.ListProperty;
  *}</pre>
  * 
  * @see Property
- * @author Paul Ponec
+ * @author Pavel Ponec
  * @since UJO release 0.80 
  */
 abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJO> implements Serializable {

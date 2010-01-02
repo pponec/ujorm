@@ -27,7 +27,7 @@ public class PersonX extends Person {
         PersonX person = new PersonX();
         
         // Writing:
-        NAME.setValue(person, "Paul Ponec");
+        NAME.setValue(person, "Pavel Ponec");
         MALE.setValue(person, true);
         AGE.setValue(person, 31);        
         BIRTH.setValue(person, new Date() );

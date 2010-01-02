@@ -35,7 +35,7 @@ public class JPropertyTest extends TestCase {
 
         java.util.Properties props = new Properties();
         props.setProperty("id", "ABC789");
-        props.setProperty("firstname", "Paul");
+        props.setProperty("firstname", "Pavel");
         props.setProperty("lastname", "Ponec");
         props.put("test_01", " Very Long String ... ");
         props.put("test_02", "Úplně žluťoučný kůň = ŘÍP");

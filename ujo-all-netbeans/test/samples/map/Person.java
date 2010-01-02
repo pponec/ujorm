@@ -39,7 +39,7 @@ public class Person extends MapUjo {
         Person person = new Person();
         
         // Writing:
-        Person.NAME.setValue(person, "Paul Ponec");
+        Person.NAME.setValue(person, "Pavel Ponec");
         Person.MALE.setValue(person, true);
         Person.AGE.setValue(person, 31);
         
