@@ -170,7 +170,7 @@ document.body.appendChild(oLink);
 <pre class="pre"><span class="java-keywords">import static</span> org.Person.*;
 Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>();<br>
 <span class="java-block-comment">// Writing:</span>
-NAME.<span class="java-layer-method">setValue</span>(person, <span class="java-string-literal">"Paul Ponec"</span>);
+NAME.<span class="java-layer-method">setValue</span>(person, <span class="java-string-literal">"Pavel Ponec"</span>);
 MALE.<span class="java-layer-method">setValue</span>(person, <span class="java-keywords">true</span>);
 CASH.<span class="java-layer-method">setValue</span>(person, <span class="java-numeric-literals">34.5</span>);<br>
 <span class="java-block-comment">// Reading:</span>
@@ -186,7 +186,7 @@ String  name = NAME.<span class="java-layer-method">of</span>(person); <span cla
 <pre class="pre"><span class="java-keywords">import static</span> org.Person.*;
 Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>(); <span class="java-block-comment">// An extension of MapUjoExt</span><br>
 <span class="java-block-comment">// Writing:</span>
-person.<span class="java-layer-method">set</span>(NAME, <span class="java-string-literal">"Paul Ponec"</span>);
+person.<span class="java-layer-method">set</span>(NAME, <span class="java-string-literal">"Pavel Ponec"</span>);
 person.<span class="java-layer-method">set</span>(MALE, <span class="java-keywords">true</span>);
 person.<span class="java-layer-method">set</span>(CASH, <span class="java-numeric-literals">34.5</span>);<br>
 <span class="java-block-comment">// Reading:</span>
@@ -242,7 +242,7 @@ person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<spa
         Obsah vytvořeného XML vypadá takto:
 <pre class="pre"><span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version="1.0" encoding="UTF-8"</span><span class="xml-pi-start">?&gt;</span>
 <span class="xml-tag">&lt;body</span><span class="xml-tag">&gt;</span>
-  <span class="xml-tag">&lt;Name</span><span class="xml-tag">&gt;</span>Paul Ponec<span class="xml-tag">&lt;/Name</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;Name</span><span class="xml-tag">&gt;</span>Pavel Ponec<span class="xml-tag">&lt;/Name</span><span class="xml-tag">&gt;</span>
   <span class="xml-tag">&lt;Male</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/Male</span><span class="xml-tag">&gt;</span>
   <span class="xml-tag">&lt;Cash</span><span class="xml-tag">&gt;</span>34.5<span class="xml-tag">&lt;/Cash</span><span class="xml-tag">&gt;</span>
 <span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
@@ -548,7 +548,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         Kód byl uvolněn pod licencí <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br>
         <br>
         <div class="apache"><code>
-   Copyright 2007 Pavel Ponec
+   Copyright 2007-2010 Pavel Ponec
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

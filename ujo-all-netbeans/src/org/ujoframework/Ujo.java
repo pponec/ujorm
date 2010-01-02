@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Paul Ponec
+ *  Copyright 2007-2010 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 
 package org.ujoframework;
-
-import org.ujoframework.UjoPropertyList;
 
 /**
  * <a href="http://ujoframework.org/" class="undecor"><img style="width: 32px; height: 32px;" alt="UJO Icons" src="ujo32.png"> 

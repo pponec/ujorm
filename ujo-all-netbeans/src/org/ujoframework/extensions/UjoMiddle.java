@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007 Paul Ponec
+ *  Copyright 2007-2010 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.ujoframework.UjoProperty;
  *    <span class="java-keywords">double</span> cash = get(CHILD, CASH);
  *  }
  *}</pre>
- * @author Paul Ponec
+ * @author Pavel Ponec
  * @since UJO release 0.85
  */
 public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
