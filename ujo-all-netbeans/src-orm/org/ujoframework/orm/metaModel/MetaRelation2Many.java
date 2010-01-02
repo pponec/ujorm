@@ -25,6 +25,7 @@ import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.OrmHandler;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.annot.Column;
 
 /**
@@ -57,7 +58,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     
     public MetaRelation2Many(MetaTable table, UjoProperty tableProperty, MetaRelation2Many param) {
         
-        Field field = UjoManager.getInstance().getPropertyField(MetaTable.DB_PROPERTY.of(table).getItemType(), tableProperty);
+        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
 
         if (true) {
@@ -85,8 +86,14 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns a column property */
-    public final UjoProperty getProperty() {
+    final public UjoProperty getProperty() {
         return TABLE_PROPERTY.of(this);
+    }
+
+    /** Returns a class of column table. */
+    final public Class<OrmUjo> getTableClass() {
+        final Class<OrmUjo> result = TABLE.of(this).getType();
+        return result;
     }
 
     /** Get property value */
@@ -102,6 +109,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return result;
     }
 
+    /** Column name */
     @Override
     public String toString() {
         return NAME.of(this);

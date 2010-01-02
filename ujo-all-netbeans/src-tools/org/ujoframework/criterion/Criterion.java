@@ -88,8 +88,8 @@ public abstract class Criterion<UJO extends Ujo> {
      * <ul>
      * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
-     * <li>List&lt;TYPE&gt; - list of values (TODO)</li>
-     * <li>THE SAME property - the value will be assigned using the property later (TODO)</li>
+     * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
+     * <li>THE SAME property - the value will be assigned using the property later (TODO in future)</li>
      * </ul>
      * @return A new criterion
      */
@@ -108,8 +108,8 @@ public abstract class Criterion<UJO extends Ujo> {
      * <ul>
      * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
-     * <li>List&lt;TYPE&gt; - list of values (TODO)</li>
-     * <li>THE SAME property - the value will be assigned using the property later (TODO)</li>
+     * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
+     * <li>THE SAME property - the value will be assigned using the property later (TODO in future)</li>
      * </ul>
      * @return A new criterion
      */
@@ -177,12 +177,12 @@ public abstract class Criterion<UJO extends Ujo> {
             );
     }
 
-    /** This is a constant criterion independed on the property and the ujo entity. A result is the TRUE allways. */
+    /** This is a constant criterion independed on the property and the ujo entity. A result is the TRUE always. */
     public static <UJO extends Ujo> Criterion<UJO> newInstanceTrue(UjoProperty<UJO,?> property) {
         return new ValueCriterion<UJO>(property, Operator.X_FIXED, true);
     }
 
-    /** This is a constant criterion independed on the property and the ujo entity. A result is the FALSE allways. */
+    /** This is a constant criterion independed on the property and the ujo entity. A result is the FALSE always. */
     public static <UJO extends Ujo> Criterion<UJO> newInstanceFalse(UjoProperty<UJO,?> property) {
         return new ValueCriterion<UJO>(property, Operator.X_FIXED, false);
     }

@@ -31,7 +31,6 @@ import org.ujoframework.UjoAction;
  * The immutable list of UjoProperties.
  * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
  * @author Pavel Ponec
- * @composed 1 - N UjoProperty
  */
 final public class UjoPropertyListImpl implements UjoPropertyList {
 
@@ -89,6 +88,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
         }
     }
 
+    @Override
     final public UjoProperty find
     ( final Ujo ujo
     , final String name
@@ -107,6 +107,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      */
     @SuppressWarnings("deprecation")
+    @Override
     public UjoProperty find
     ( final Ujo ujo
     , final String name
@@ -139,6 +140,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     }
 
     /** Returns a copy of internal array */
+    @Override
     public UjoProperty[] toArray() {
         final UjoProperty[] result = new UjoProperty[length];
         System.arraycopy(props, 0, result, 0, length);
@@ -146,16 +148,33 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     }
 
     /** Get last property */
+    @Override
     public UjoProperty last() {
         return props[length-1];
     }
 
     /** Returns a class of the related UJO */
+    @Override
     public Class getType() {
         return type;
     }
 
+    /** Create new Instance */
+    @Override
+    public <UJO extends Ujo> UJO newInstance() throws IllegalStateException {
+        try {
+            @SuppressWarnings("unchecked")
+            UJO result = (UJO) type.newInstance();
+            return result;
+
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't create instance for " + type, e);
+        }
+    }
+
+
     /** Returns a class name of the related UJO */
+    @Override
     public String getTypeName() {
         return getClass().getName();
     }
@@ -163,21 +182,25 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get property on requered index */
+    @Override
     public UjoProperty get(final int index) {
         return props[index];
     }
 
     /** Returns a total count of its properties */
+    @Override
     public int size() {
         return length;
     }
 
     /** Is the collection empty? */
+    @Override
     public boolean isEmpty() {
         return length==0;
     }
 
     /** Returns true if list contains property from the parameter. */
+    @Override
     public boolean contains(final UjoProperty o) {
         for (UjoProperty p : props) {
             if (p==o) return true;
@@ -191,13 +214,13 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
         final Iterator<UjoProperty> result = new Iterator<UjoProperty>() {
             private int i = 0;
 
-            final public boolean hasNext() {
+            @Override final public boolean hasNext() {
                 return i<length;
             }
-            final public UjoProperty next() {
+            @Override final public UjoProperty next() {
                 return props[i++];
             }
-            public void remove() {
+            @Override public void remove() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };

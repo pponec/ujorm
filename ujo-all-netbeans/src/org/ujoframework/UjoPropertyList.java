@@ -26,7 +26,6 @@ import java.util.Iterator;
  * The immutable list of UjoProperties.
  * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
  * @author Pavel Ponec
- * @composed 1 - N UjoProperty
  */
 public interface UjoPropertyList extends Iterable<UjoProperty> {
 
@@ -76,6 +75,9 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
 
     /** Returns a class of the related UJO */
     public Class getType();
+
+    /** Create new Instance */
+    public <UJO extends Ujo> UJO newInstance() throws IllegalStateException;
 
     /** Returns a class name of the related UJO */
     public String getTypeName();

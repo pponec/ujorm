@@ -50,7 +50,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     /**
      * List property initialization.
      * @param name Replace the Name of property if the one is NULL.
-     * @param index Replace index allways, the value -1 invoke a next number from the internal sequencer.
+     * @param index Replace index always, the value -1 invoke a next number from the internal sequencer.
      * @param lock Lock the property.
      */
     @SuppressWarnings("unchecked")
@@ -65,18 +65,21 @@ public class ListProperty<UJO extends Ujo, ITEM>
 
 
     /** Returns a count of Items. If a property value is null, method returns 0. */
+    @Override
     public int getItemCount(final UJO ujo) {
         List<ITEM> list = getValue(ujo);
         return list!=null ? list.size() : 0 ;
     }
 
     /** Return a Class of the Item. */
+    @Override
     public Class<ITEM> getItemType() {
         return itemType;
     }
 
     /** Returns true if the item type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
+    @Override
     public boolean isItemTypeOf(final Class type) {
         return type.isAssignableFrom(itemType);
     }

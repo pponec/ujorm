@@ -18,8 +18,6 @@ package org.ujoframework.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,6 +37,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
 
 
     /** Tests if this enumeration contains more elements. */
+    @Override
     abstract public boolean hasNext();
 
     /**
@@ -46,6 +45,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
      * @return     the next element
      * @exception  NoSuchElementException no more elements exist.
      */
+    @Override
     abstract public T next() throws NoSuchElementException;
 
     /** Returns a count of items or value -1 if the count is not known. */
@@ -54,6 +54,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     }
 
     /** Returns the same instance */
+    @Override
     public Iterator<T> iterator() {
         return this;
     }
@@ -61,6 +62,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     /** An unsupported method.
      * @deprecated The method is not implemented.
      */
+    @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

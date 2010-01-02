@@ -18,6 +18,8 @@ package org.ujoframework.orm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -254,4 +256,27 @@ public class CriterionDecoder {
         return tables.toArray(new MetaTable[tables.size()]);
     }
 
+    /** Returns all participated tables include the parameter table. The 'baseTable' is on the first position always. */
+    public MetaTable[] getTablesSorted(final MetaTable baseTable) {
+        MetaTable[] result = getTables(baseTable);
+        if (result.length>1 && result[0]!=baseTable) {
+            Arrays.sort(result, new Comparator<MetaTable>() {
+                @Override public int compare(final MetaTable o1, final MetaTable o2) {                    
+                    return o1==baseTable ? -1 : o2==baseTable ? 1 : 0;
+                }
+            });
+        }
+        return result;
+    }
+
+    /** Returns handler */
+    public OrmHandler getHandler() {
+        return handler;
+    }
+
+    /** Returns the criterion */
+    @Override
+    public String toString() {
+        return criterion!=null ? criterion.toString() : null ;
+    }
 }

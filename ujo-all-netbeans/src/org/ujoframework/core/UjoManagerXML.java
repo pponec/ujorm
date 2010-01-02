@@ -221,7 +221,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                 final Class baseType = value.getClass()!=property.getType() ? value.getClass() : null ;
                 printProperty(ujo, property, baseType, value, writer, false);
 //          } else if (value instanceof Object[]) {
-//                // PoP:TODO
+//                // PoP:TODO - unsupported now
             }
         }
     }

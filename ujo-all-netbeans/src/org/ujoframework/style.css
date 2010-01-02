@@ -3,7 +3,7 @@
 h2 { color: #080071; }
 h3, h4 { color: #6981bf; }
 
-.pre, .java {  margin: 20px;
+.pre {  margin: 20px; 
         border: 1px blue solid; 
         padding: 5px; 
         background-color: #f6f7f9; 
@@ -66,8 +66,7 @@ a.undecor img {
 
 /* --- NEW NETBEANS STYLE --- */
 
-body pre.pre,
-body pre.java {
+body pre.pre {
         color: #000000; 
         background-color: #ffffff; 
         font-family: Monospace;
