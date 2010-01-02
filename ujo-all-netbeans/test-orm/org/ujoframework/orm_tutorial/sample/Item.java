@@ -13,11 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujoframework.orm.sample;
+package org.ujoframework.orm_tutorial.sample;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
 

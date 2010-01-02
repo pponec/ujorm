@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm.sample;
+package org.ujoframework.orm_tutorial.sample;
 
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.implementation.orm.OrmTable;

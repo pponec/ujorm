@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- OrmUjo configuration file release 0.89.B3 was created 2009/07/26 09:18 -->
+<!-- The Ujorm configuration file release UNDEFINED was created 2009/11/07 35:10 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
@@ -13,6 +13,10 @@
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
+            <column id="state">
+                <name>state</name>
+                <dbType>SMALLINT</dbType>
+            </column>
             <column id="usrId">
                 <name>usrId</name>
                 <dbType>INT</dbType>
@@ -23,8 +27,8 @@
                 <mandatory>true</mandatory>
                 <maxLength>128</maxLength>
             </column>
-            <column id="date">
-                <name>date</name>
+            <column id="created">
+                <name>created</name>
                 <dbType>TIMESTAMP</dbType>
             </column>
             <relation2m id="items">
@@ -51,7 +55,7 @@
             </column>
             <column id="fk_order">
                 <name>fk_order</name>
-                <dbType>INT</dbType>
+                <dbType>BIGINT</dbType>
             </column>
         </table>
         <table id="view_order" view="true">

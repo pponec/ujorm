@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm.sample;
+package org.ujoframework.orm_tutorial.sample;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
@@ -33,9 +33,16 @@ import org.ujoframework.orm.annot.Table;
 @Table(name="ord_order")
 public class Order extends OrmTable<Order> {
 
+    public enum State {
+        ACTIVE,
+        DELETED
+    }
+
     /** Unique key */
     @Column(pk=true)
     public static final UjoProperty<Order,Long> ID = newProperty("id", Long.class);
+    /** Order state, default is ACTIVE */
+    public static final UjoProperty<Order,State> STATE = newProperty("state", State.ACTIVE);
     /** User key */
     public static final UjoProperty<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of the order */
