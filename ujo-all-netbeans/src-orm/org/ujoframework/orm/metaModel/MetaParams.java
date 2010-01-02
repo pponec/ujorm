@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.AbstractMetaModel;
+import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.ao.CachePolicy;
 import org.ujoframework.orm.ao.Orm2ddlPolicy;
 
@@ -45,14 +46,19 @@ public class MetaParams extends AbstractMetaModel {
     /** Sequential cache parameter saves the number of requests to the following sequence when a insert statement into DB.
      * The value of the parameter is used only when creating a new DB, indivuální ORM changes for each table 
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
-     * Default values is 64, the smallest possible value is 1. */
-    public static final Property<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 64);
+     * Default values is 100, the smallest possible value is 1. */
+    public static final Property<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 100);
     /** A policy to defining the database structure by a DDL. */
     public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_DDL);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
+    /** Change a TypeService class by a subtype for user type customization. */
+    public static final Property<MetaParams,Class> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
     /** The property initialization */
-    static{init(CLASS);}
+    static{init(CLASS, true);}
+
+    /** TypeService */
+    private TypeService typeService;
 
     @Override
     public void writeValue(UjoProperty property, Object value) {
@@ -74,5 +80,18 @@ public class MetaParams extends AbstractMetaModel {
         final boolean result = MetaParams.CACHE_POLICY.of(this)!=CachePolicy.NONE;
         return result;
     }
+
+    /** Returns a type service instance */
+    public TypeService getTypeService() {
+        if (typeService==null) {
+            try {
+                typeService = (TypeService) TYPE_SERVICE.of(this).newInstance();
+            } catch (Exception e) {
+                throw new IllegalStateException("Can't create a type service for the " + TYPE_SERVICE.of(this), e);
+            }
+        }
+        return typeService;
+    }
+
     
 }
