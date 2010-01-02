@@ -17,7 +17,7 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
-import org.ujoframework.orm.DbType;
+import org.ujoframework.orm.metaModel.MetaColumn;
 
 /** Oracle (www.oracle.com/) */
 public class OracleDialect extends PostgreSqlDialect {
@@ -48,10 +48,22 @@ public class OracleDialect extends PostgreSqlDialect {
     /** Returns a default primary key database type.
      * The method is called from method 'SqlDialect.printSequenceTable()' and from 'MetaDatabase.changeDbType()'.
      */
+    //    @Override
+    //    public DbType getPrimaryKeyType() {
+    //        return DbType.NUMBER;
+    //    }
+
+    /** PostgreSql dialect uses a database type OID (instead of the BLBO). */
     @Override
-    public DbType getPrimaryKeyType() {
-        return DbType.NUMBER;
+    protected String getColumnType(final MetaColumn column) {
+        switch (MetaColumn.DB_TYPE.of(column)) {
+            case BIGINT:
+                return "NUMBER";
+            default:
+                return super.getColumnType(column);
+        }
     }
+
 
 
 }

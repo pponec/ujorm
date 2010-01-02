@@ -31,8 +31,8 @@ public enum DbType {
     TINYINT(Types.TINYINT),
     SMALLINT(Types.SMALLINT),
     BIGINT(Types.BIGINT),
-    /** Oracle support for replacing the BIGINT */
-    NUMBER(Types.BIGINT),
+    /* Oracle support for replacing the BIGINT */
+    //NUMBER(Types.BIGINT),
     DECIMAL(Types.DECIMAL),
     DOUBLE(Types.DOUBLE),
     REAL(Types.REAL),
@@ -45,8 +45,9 @@ public enum DbType {
     VARCHAR(Types.VARCHAR),
     VARCHAR_IGNORECASE(Types.VARCHAR),
     CHAR(Types.CHAR),
-    //BLOB(Types.BLOB),
-    //CLOB(Types.CLOB),
+    BLOB(Types.BLOB),
+    LONGBLOB(Types.LONGVARBINARY),
+    CLOB(Types.CLOB),
     //UUID(Types.UUID),
     //ARRAY(Types.ARRAY),
     ;
