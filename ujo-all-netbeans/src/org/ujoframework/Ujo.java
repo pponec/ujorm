@@ -91,7 +91,7 @@ public interface Ujo {
      * @param property A property of the Ujo
      * @param value A property value
      * @return Returns a TRUE value in case the property is authorized successfully.
-     * @see org.ujoframework.extensions.UjoAction
+     * @see UjoAction
      */
     public boolean readAuthorization(UjoAction action, UjoProperty property, Object value);
     

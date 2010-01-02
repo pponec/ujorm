@@ -397,7 +397,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @see UjoPropertyList#find(org.ujoframework.Ujo, java.lang.String, org.ujoframework.extensions.UjoAction, boolean, boolean)
+     * @see UjoPropertyList#find(java.lang.String, boolean) 
      */
     @SuppressWarnings("deprecation")
     public UjoProperty findProperty

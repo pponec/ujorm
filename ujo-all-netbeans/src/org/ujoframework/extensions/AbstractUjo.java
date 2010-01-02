@@ -86,7 +86,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * @param property A property of the Ujo
      * @param value A value
      * @return Returns TRUE, if property is authorized.
-     * @see org.ujoframework.extensions.UjoAction Action Constants
+     * @see UjoAction Action Constants
      */
     public boolean readAuthorization(final UjoAction action, final UjoProperty property, final Object value) {
         return true;
