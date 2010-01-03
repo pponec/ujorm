@@ -201,6 +201,11 @@ Implementation-Vendor: "Pavel Ponec"</echo>
                 <!-- Parameters: http://www.umlgraph.org/doc/cd-opt.html -->
                 <doclet name="org.umlgraph.doclet.UmlGraphDoc"
                        path="C:\Progra~1\UMLGraph-5.2\lib\UmlGraph.jar">
+                    <param name="-visibility" />
+                </doclet>
+                <!--
+                <doclet name="org.umlgraph.doclet.UmlGraphDoc"
+                       path="C:\Progra~1\UMLGraph-5.2\lib\UmlGraph.jar">
                     <param name="-attributes" />
                     <param name="-operations" />
                     <param name="-types" />
@@ -208,6 +213,7 @@ Implementation-Vendor: "Pavel Ponec"</echo>
                     <param name="-nodesep" value="0.03"/>
                     <param name="-ranksep" value="0.3"/>
                 </doclet>
+                -->
 	      </javadoc>
 		  <apply executable="dot" 
                  dest="${reports.dir}" 
