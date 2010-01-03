@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>0.91</version>
+    <version>0.92</version>
     <name>ujo-orm</name>
     <contributors>
         <contributor>
@@ -16,7 +16,7 @@
     <description>Quick ORM implementation based on the UJO objects.
 </description>
     <url>http://maven.apache.org</url>
-  
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -57,7 +57,7 @@
                     <filters></filters>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -78,7 +78,7 @@
         </plugins>
     </build>
     <dependencies>
-      
+
         <!-- HIBERNATE -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -102,3 +102,4 @@
         </dependency>
     </dependencies>
 </project>
+

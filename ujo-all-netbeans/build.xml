@@ -94,10 +94,10 @@
         <echo file="${manifest.file}">Main-Class: org.ujoframework.core.UjoManager
 Specification-Title: ${name}
 Specification-Version: ${version}
-Specification-Vendor: Paul Ponec
+Specification-Vendor: Pavel Ponec
 Implementation-Title: ${implementationTitle}
 Implementation-Version: ${version}
-Implementation-Vendor: "Paul Ponec"</echo>
+Implementation-Vendor: "Pavel Ponec"</echo>
     </target>    
 
     <target name="-javadoc-build" depends="init">
