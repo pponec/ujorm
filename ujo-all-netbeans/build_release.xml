@@ -35,7 +35,7 @@
     <property file="Resource/build.properties"/>
     <property name="manifest.file" value="dist/manifest.txt"/>    
     <import   file="build.xml"/>
-    <property name="dist.zip" value="dist/ujo.${version}.zip" />    
+    <property name="dist.zip" value="dist/ujo-all-${version}-netbeans.zip" />
     <property name="javadoc.preview" value="false" />
     <property name="jar.compress" value="true" />
     <property name="javac.debug" value="false"/>
@@ -56,10 +56,10 @@
         <echo file="${manifest.file}">Main-Class: org.ujoframework.core.UjoManager
 Specification-Title: ${name}
 Specification-Version: ${version}
-Specification-Vendor: Paul Ponec
+Specification-Vendor: Pavel Ponec
 Implementation-Title: ${implementationTitle}
 Implementation-Version: ${version}
-Implementation-Vendor: "Paul Ponec"</echo>
+Implementation-Vendor: "Pavel Ponec"</echo>
 
         <!-- delete sample -->
         <delete dir="build/classes/org/ujoframework/orm/sample" />
