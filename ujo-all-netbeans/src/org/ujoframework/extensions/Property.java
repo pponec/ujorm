@@ -147,8 +147,9 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     
     /**
      * It is a basic method for setting an appropriate type safe value to an MapUjo object. 
-     * <br>For the setting value is used internally a method <a href="MapUjo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">MapUjo.writeValue(UjoProperty, Object)</a>.
-     * @see AbstractUjo#writeValue(UjoProperty,Object)
+     * <br>For the setting value is used internally a method 
+     *     {@link AbstractUjo#writeValue(org.ujoframework.UjoProperty, java.lang.Object) }
+     * @see AbstractUjo#writeValue(org.ujoframework.UjoProperty, java.lang.Object)
      */
     @Override
     final public void setValue(final UJO ujo, final VALUE value) {
@@ -157,7 +158,9 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     
     /**
      * It is a basic method for getting an appropriate type safe value from an MapUjo object. 
-     * <br>For the getting value is used internally a method <a href="MapUjo.html#readValue(org.ujoframework.UjoProperty)">MapUjo.readValue(UjoProperty)</a>.
+     * <br>For the getting value is used internally a method 
+     *     {@link AbstractUjo#readValue(org.ujoframework.UjoProperty)}
+     * </a>.
      * <br>Note: this method replaces the value of <strong>null</strong> for default
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.

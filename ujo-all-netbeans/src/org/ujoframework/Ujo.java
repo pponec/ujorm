@@ -43,26 +43,28 @@ package org.ujoframework;
  * @see UjoProperty
  * @composed 1 - 1 UjoPropertyList
  * @assoc - - - UjoAction
+ * @opt attributes
+ * @opt operations
  */
 public interface Ujo {
     
     
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * <a href="UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a>
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
+     * {@link UjoProperty#getValue(org.ujoframework.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br />NOTE: A reaction on an incorrect property depends on the implementation.
      *
      * @param property Property must be a direct type only!
      * @return Property value
-     * @see UjoProperty#getValue(Ujo)
+     * @see UjoProperty#getValue(org.ujoframework.Ujo)
      * @see UjoProperty#isDirect()
      */
     public Object readValue(UjoProperty property);
     
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * <a href="UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo,Object)</a> 
+     * {@link UjoProperty#setValue(Ujo,Object)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: A reaction on an incorrect property depends on the implementation.

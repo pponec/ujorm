@@ -23,6 +23,8 @@ package org.ujoframework;
  * 
  * @author Pavel Ponec
  * @see Ujo
+ * @opt attributes
+ * @opt operations
  */
 public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Comparable<UjoProperty>*/ {
     
@@ -34,15 +36,19 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Co
     
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object. 
-     * <br>The method calls a method <a href="Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">Ujo.writeValue(UjoProperty, Object)</a> always.
-     * @see Ujo#writeValue(UjoProperty,Object)
+     * <br>The method calls a method 
+     * {@link Ujo#writeValue(org.ujoframework.UjoProperty, java.lang.Object)}
+     * always.
+     * @see Ujo#writeValue(org.ujoframework.UjoProperty, java.lang.Object)
      */
     public void setValue(UJO ujo, VALUE value);
 
     
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object. 
-     * <br>The method calls a method <a href="Ujo.html#readValue(org.ujoframework.UjoProperty)">Ujo.readValue(UjoProperty)</a> always.
+     * <br>The method calls a method
+     * {@link Ujo#writeValue(org.ujoframework.UjoProperty, java.lang.Object)}
+     * always.
      * <br>Note: this method replaces the value of <strong>null</strong> by default
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.

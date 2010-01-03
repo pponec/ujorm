@@ -66,7 +66,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
     }
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * <a href="../../extensions/Property.html#setValue(UJO,%20VALUE)">Property.setValue(Ujo,Object)</a>
+     * {@link Property#setValue(org.ujoframework.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: If property is an incorrect then no exception is throwed.
@@ -80,7 +80,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
     }
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * <a href="../../extensions/Property.html#getValue(UJO)">Property.getValue(Ujo)</a>
+     * {@link Property#getValue(org.ujoframework.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br>NOTE: If property is an incorrect then method returns a null value.
