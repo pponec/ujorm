@@ -42,6 +42,7 @@ import org.ujoframework.orm.metaModel.MetaTable;
  * The basic class for an ORM support.
  * @author Pavel Ponec
  * @composed 1 - 1 MetaRoot
+ * @assoc - - - AbstractMetaModel
  */
 public class OrmHandler {
 

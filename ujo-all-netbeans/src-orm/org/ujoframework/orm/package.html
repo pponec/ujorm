@@ -1,56 +1,57 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<html lang="en"><head>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+    <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>package.html - UJO (en)</title>
 
         <link rel="stylesheet" type="text/css" href="../style.css" title="style">
-<!--
+        <!--
         <script type="text/javascript">
-function loadCSS (cssUrl) {
-var oLink = document.createElement("link")
-oLink.href = cssUrl;
-oLink.rel = "stylesheet";
-oLink.type = "text/css";
-document.body.appendChild(oLink);
-        } </script>
--->
+        function loadCSS (cssUrl) {
+        var oLink = document.createElement("link")
+        oLink.href = cssUrl;
+        oLink.rel = "stylesheet";
+        oLink.type = "text/css";
+        document.body.appendChild(oLink);
+                } </script>
+        -->
     </head>
 
     <body>
-        The ORM support.<br/>
+        The ORM support.
 
-<div>
-        <div id="ORM">
-        <img style="width: 32px; height: 32px; margin-right: 10px;" alt="logo" src="../ujo32.png" style="margin: 0px; top: 0; float: left">
-        <h1  style="margin: 2px 0 1px 75px;"> ORM module of the UJO Framework</h1>
-        <div style="margin: 2px 0 25px 75px; font-style: italic; color: gray;">a new implementation of the object-relation mapping</div>
-        </div>
+        <div>
+            <div id="ORM">
+                <img style="width: 32px; height: 32px; margin-right: 10px;" alt="logo" src="../ujo32.png" style="margin: 0px; top: 0; float: left" />
+                <h1  style="margin: 2px 0 1px 75px;"> ORM module of the UJO Framework</h1>
+                <div style="margin: 2px 0 25px 75px; font-style: italic; color: gray;">am easy to use implementation of the object-relation mapping</div>
+            </div>
 
-        <!-- This is short description of a new ORM implementation. --> Why a new ORM mapping?
-        <ul>
-           <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
-           <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
-           <li>no confusing proxy business objects</li>
-           <li>no list properties are supported but a special object called <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/core/UjoIterator.java?view=markup">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
-           <li>easy to configure the ORM model by java source code, optionaly by annotations or a XML file</li>
-           <li>very small framework without more library dependencies, the current size of the JAR file is around 160 kB</li>
-           <li>great performance mainly for the SQL SELECT statement</li>
-        </ul>
-        Some other features:
-        <ul>
-           <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
-           <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
-           <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
-           <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
-           <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
-           <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
-        </ul>
-        <strong>Note</strong>: the current release is an early BETA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements.
+            <!-- This is short description of a new ORM implementation. --> Why a new ORM mapping?
+            <ul>
+                <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
+                <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
+                <li>no confusing proxy business objects</li>
+                <li>no list properties are supported but a special object called <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/core/UjoIterator.java?view=markup">UjoIterator</a> is designed for a collection. The UjoIterator provides a toList() method however</li>
+                <li>easy to configure the ORM model by java source code, optionaly by annotations or a XML file</li>
+                <li>very small framework without more library dependencies, the current size of the JAR file is around 160 kB</li>
+                <li>great performance mainly for the SQL SELECT statement</li>
+            </ul>
+            Some other features:
+            <ul>
+                <li>all persistent objects are based on the OrmUjo interface, namely on the OrmTable implementation</li>
+                <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
+                <li>default ORM mapping is described by UjoProperties however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
+                <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
+                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
+                <li>the API was inspired by a Cayenne and Hibernate ORM frameworks</li>
+            </ul>
+            <strong>Note</strong>: the current release is an early BETA release with the support of CREATE TABLE, INSERT, SELECT, UPDATE, DELETE statements.
 
 
-        <h3>A sample of use</h3>
-        See how to create database and to how to INSERT an order with two items into database:
+            <h3>A sample of use</h3>
+            See how to create database and to how to INSERT an order with two items into database:
 
-<pre name="code" class="java">
+            <pre name="code" class="java">
   OrmHandler.getInstance().loadDatabase(Database.class);
 
   Order order = new Order();
@@ -71,10 +72,10 @@ document.body.appendChild(oLink);
   session.save(item2);
 
   session.commit();
-</pre>
+            </pre>
 
-The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
-<pre name="code" class="java">
+            The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
+            <pre name="code" class="java">
   Criterion&lt;Order&gt; criter1 = Criterion.newInstance(Order.DESCR, "John's order");
   Criterion&lt;Order&gt; criter2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
   Criterion&lt;Order&gt; criterion = criter1.and(criter2);
@@ -87,10 +88,10 @@ The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
       String descr = order.getDescr();
       System.out.println("ORDER ROW: " + order + " // descr: " + descr);
   }
-</pre>
+            </pre>
 
-The next source code calls a SELECT by an UJO object <strong>relation</strong>:
-<pre name="code" class="java">
+            The next source code calls a SELECT by an UJO object <strong>relation</strong>:
+            <pre name="code" class="java">
   Session session = OrmHandler.getInstance().getSession();
   Database db = session.getDatabase();
   UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
@@ -105,41 +106,40 @@ The next source code calls a SELECT by an UJO object <strong>relation</strong>:
           System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
       }
   }
-</pre>
+            </pre>
 
-        <h3 id="sources">More sources:</h3>
-          <ul>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/Database.java?view=markup">Database</a> - Java source of a database description of a metamodel</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/ViewOrder.java?view=markup">View</a> - Use of a native SQL query</li>
-              <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/ujo-core/src-orm/org/ujoframework/orm/sample/SampleORM.java?&view=markup">Sample</a> - short preview of the ORM using, the code is ready for immediate launch inside the project.</li>
-              <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
-              <li><a href="config.html">XML configuration file</a> - sample</li>
-              <li><a href="http://ujoframework.org/javadoc/">JavaDoc</a> stable version</li>
-              <li><a href="http://ujoframework.org/presentation/">UJO quick start</a> (a slide show)</li>
-          </ul>
+            <h3 id="sources">More sources:</h3>
+            <ul>
+                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup">Tutorial</a> in the class</li>
+                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
+                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
+                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/Database.java?view=markup">Database</a> - Java source of a database description of a metamodel</li>
+                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/ViewOrder.java?view=markup">View</a> - Use of a native SQL query</li>
+                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/config.xml?view=markup">XML configuration file</a> - example</li>
+                <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
+                <li><a href="http://ujoframework.org/javadoc/">JavaDoc</a> stable version</li>
+                <li><a href="http://ujoframework.org/presentation/">UJO quick start</a> (a slide show)</li>
+            </ul>
 
-        <h3 id="license">License:</h3>
-          <ul>
-              <li><a href="http://www.apache.org/licenses/LICENSE-2.0.html">UJO Framework</a> has a license <a href="http://www.gnu.org/licenses/gpl-2.0.txt">Apache License, Version 2.0</a></li>
-              <li>no more dependences</li>
-          </ul>
+            <h3 id="license">License:</h3>
+            <ul>
+                <li><a href="http://www.apache.org/licenses/LICENSE-2.0.html">UJO Framework</a> has a license <a href="http://www.gnu.org/licenses/gpl-2.0.txt">Apache License, Version 2.0</a></li>
+                <li>no more dependences</li>
+            </ul>
 
-           <!--
-          <p>
-            <a href="http://validator.w3.org/check?uri=referer"><img
-                src="http://www.w3.org/Icons/valid-xhtml10-blue"
-                alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+            <!--
+           <p>
+             <a href="http://validator.w3.org/check?uri=referer"><img
+                 src="http://www.w3.org/Icons/valid-xhtml10-blue"
+                 alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
 
-          </p>
-          -->
-          <div style="display: none;">
-          <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
-          </div>
+           </p>
+            -->
+            <div style="display: none;">
+                <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+            </div>
 
 
-    </div>
-
+        </div>
     </body>
 </html>
