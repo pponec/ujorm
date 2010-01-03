@@ -17,7 +17,6 @@ package org.bo;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
 
@@ -37,9 +36,9 @@ public class Item extends OrmTable<Item> {
     /** Description of Item */
     public static final UjoProperty<Item,String> DESCR = newProperty("description", String.class);
     /** A reference to common Order */
-    public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);    
-    /** A composed/indirect PATH property to a 'created' attribute of the Order */
-    public static final UjoProperty<Item,Date> _ORDER_DATE = PathProperty.newInstance(Item.ORDER, Order.CREATED);
+    public static final UjoProperty<Item,Order> ORDER = newProperty("fk_order", Order.class);
+    /** A composed (indirect) property provides a 'created' attribute of the Order */
+    public static final UjoProperty<Item,Date> _ORDER_DATE   = Item.ORDER.add(Order.CREATED);
 
     // --- An optional implementation of commonly used setters and getters ---
 

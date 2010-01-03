@@ -33,9 +33,16 @@ import org.ujoframework.orm.annot.Table;
 @Table(name="ord_order")
 public class Order extends OrmTable<Order> {
 
+    public enum State {
+        ACTIVE,
+        DELETED
+    }
+
     /** Unique key */
     @Column(pk=true)
     public static final UjoProperty<Order,Long> ID = newProperty("id", Long.class);
+    /** Order state, default is ACTIVE */
+    public static final UjoProperty<Order,State> STATE = newProperty("state", State.ACTIVE);
     /** User key */
     public static final UjoProperty<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of the order */
@@ -45,7 +52,7 @@ public class Order extends OrmTable<Order> {
     public static final UjoProperty<Order,Date> CREATED = newProperty("created", Date.class);
     /** References to Itemsr */
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
-    
+
 
     // --- An optional implementation of commonly used setters and getters ---
 
