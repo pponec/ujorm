@@ -26,6 +26,7 @@ import java.util.Iterator;
  * The immutable list of UjoProperties.
  * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
  * @author Pavel Ponec
+ * @composed 1 - N UjoProperty
  */
 public interface UjoPropertyList extends Iterable<UjoProperty> {
 
@@ -56,6 +57,7 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @hidden 
      */
     @SuppressWarnings("deprecation")
     public UjoProperty find
