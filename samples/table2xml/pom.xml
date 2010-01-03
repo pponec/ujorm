@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>sample-table2xml</artifactId>
     <packaging>jar</packaging>
-    <version>0.91</version>
+    <version>0.92</version>
     <name>sample-table2xml</name>
     <url>http://maven.apache.org</url>
     <build>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>0.91</version>
+            <version>0.92</version>
         </dependency>
 
         <dependency>
@@ -42,8 +42,9 @@
             <scope>test</scope>
         </dependency>
 
-        
 
-        
+
+
     </dependencies>
 </project>
+
