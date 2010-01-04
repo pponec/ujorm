@@ -6,18 +6,12 @@
                 <goal>install</goal>
                 
             </goals>
-            <packagings>
-                <packaging>*</packaging>
-            </packagings>
             <properties>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </action>
         <action>
             <actionName>rebuild</actionName>
-            <packagings>
-                <packaging>*</packaging>
-            </packagings>
             <goals>
                 <goal>clean</goal>
                 <goal>install</goal>
@@ -59,6 +53,9 @@
                 <goal>repository:bundle-create</goal>
             </goals>
             <displayName>Create Release</displayName>
+            <properties>
+                <maven.compile.debug>false</maven.compile.debug>
+            </properties>
         </action>
         <action>
             <actionName>CUSTOM-Install</actionName>
@@ -69,9 +66,6 @@
         </action>
         <action>
             <actionName>run</actionName>
-            <packagings>
-                <packaging>jar</packaging>
-            </packagings>
             <goals>
                 <goal>process-classes</goal>
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.1:exec</goal>
