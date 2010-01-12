@@ -1,143 +1,119 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <head>
-        <title>config.xml</title>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <style type="text/css">
-            <!--
-            body {color: #000000; background-color: #ffffff; font-family: Monospaced}
-            table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
-            .xml-comment {color: #969696}
-            .xml-attribute {color: #009900}
-            .xml-value {color: #ce7b00}
-            .ST0 {color: #00007c; font-family: Monospaced; font-weight: bold}
-            .xml-tag {color: #0000e6}
-            -->
-        </style>
-    </head>
-    <body>
-        <table width="100%"><tr><td align="center">http:///config.xml</td></tr></table>
-        <pre>
+<head>
+<title>config.xml</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.xml-comment {color: #969696}
+.xml-attribute {color: #009900}
+.xml-value {color: #ce7b00}
+.ST0 {color: #00007c; font-family: Monospaced; font-weight: bold}
+.xml-tag {color: #0000e6}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">config.xml</td></tr></table>
+<pre>
 <span class="ST0">&lt;?</span><span class="ST0">xml</span> version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-
-<span class="xml-comment">&lt;!-- OrmUjo configuration file release 0.89.B3 was created 2009/07/26 09:18 --&gt;</span>
-<span class="xml-tag">&lt;body</span><span class="xml-tag">&gt;</span>
-    <span class="xml-tag">&lt;database</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;Database&quot;</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;schema</span><span class="xml-tag">&gt;</span>db1<span class="xml-tag">&lt;/schema</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;dialect</span><span class="xml-tag">&gt;</span>org.ujoframework.orm.dialect.H2Dialect<span class="xml-tag">&lt;/dialect</span><span class="xml-tag">&gt;</span>
-
-        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_order&quot;</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>ord_order<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;alias</span><span class="xml-tag">&gt;</span>ord_order_alias<span class="xml-tag">&lt;/alias</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;schema</span><span class="xml-tag">&gt;</span>db1<span class="xml-tag">&lt;/schema</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;id&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>id<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;primaryKey</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/primaryKey</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>BIGINT<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;usrId&quot;</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>usrId<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>INT<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;description&quot;</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>DESCR<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>VARCHAR<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;mandatory</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/mandatory</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;maxLength</span><span class="xml-tag">&gt;</span>128<span class="xml-tag">&lt;/maxLength</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;date&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>date<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>TIMESTAMP<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;items&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>items<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/relation2m</span><span class="xml-tag">&gt;</span>
-
-        <span class="xml-tag">&lt;/table</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_item&quot;</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>ord_item<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;alias</span><span class="xml-tag">&gt;</span>ord_item_alias<span class="xml-tag">&lt;/alias</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;schema</span><span class="xml-tag">&gt;</span>db1<span class="xml-tag">&lt;/schema</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;id&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>id<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;primaryKey</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/primaryKey</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>BIGINT<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;usrId&quot;</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>usrId<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>INT<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;description&quot;</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>description<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>VARCHAR<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;maxLength</span><span class="xml-tag">&gt;</span>128<span class="xml-tag">&lt;/maxLength</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;fk_order&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>fk_order<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>INT<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;/table</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;view_order&quot;</span> <span class="xml-attribute">view</span>=<span class="xml-value">&quot;true&quot;</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>ord_order<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;alias</span><span class="xml-tag">&gt;</span>ord_order_alias<span class="xml-tag">&lt;/alias</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;schema</span><span class="xml-tag">&gt;</span>db1<span class="xml-tag">&lt;/schema</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;id&quot;</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>id<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;primaryKey</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/primaryKey</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>BIGINT<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;itemCount&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>itemCount<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;dbType</span><span class="xml-tag">&gt;</span>INT<span class="xml-tag">&lt;/dbType</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;/column</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;select</span><span class="xml-tag">&gt;</span>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id<span class="xml-tag">&lt;/select</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;/table</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;db1&quot;</span> <span class="xml-attribute">view</span>=<span class="xml-value">&quot;true&quot;</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>ord_order<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;alias</span><span class="xml-tag">&gt;</span>ord_order_alias<span class="xml-tag">&lt;/alias</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;schema</span><span class="xml-tag">&gt;</span>db1<span class="xml-tag">&lt;/schema</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_order&quot;</span><span class="xml-tag">&gt;</span>
-
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>ord_order<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/relation2m</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_item&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>ord_item<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-
-            <span class="xml-tag">&lt;/relation2m</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;view_order&quot;</span><span class="xml-tag">&gt;</span>
-                <span class="xml-tag">&lt;name</span><span class="xml-tag">&gt;</span>view_order<span class="xml-tag">&lt;/name</span><span class="xml-tag">&gt;</span>
-            <span class="xml-tag">&lt;/relation2m</span><span class="xml-tag">&gt;</span>
-
-        <span class="xml-tag">&lt;/table</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;jdbcUrl</span><span class="xml-tag">&gt;</span>jdbc:h2:mem:db1<span class="xml-tag">&lt;/jdbcUrl</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;jdbcDriver</span><span class="xml-tag">&gt;</span>org.h2.Driver<span class="xml-tag">&lt;/jdbcDriver</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;user</span><span class="xml-tag">&gt;</span>sa<span class="xml-tag">&lt;/user</span><span class="xml-tag">&gt;</span>
-
-    <span class="xml-tag">&lt;/database</span><span class="xml-tag">&gt;</span>
-    <span class="xml-tag">&lt;parameters</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;tableAliasSuffix</span><span class="xml-tag">&gt;</span>_alias<span class="xml-tag">&lt;/tableAliasSuffix</span><span class="xml-tag">&gt;</span>
-        <span class="xml-tag">&lt;sequenceCache</span><span class="xml-tag">&gt;</span>1<span class="xml-tag">&lt;/sequenceCache</span><span class="xml-tag">&gt;</span>
-    <span class="xml-tag">&lt;/parameters</span><span class="xml-tag">&gt;</span>
-
-<span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
-
-
-    </pre></body>
+<span class="xml-comment">&lt;!-- The Ujorm configuration file release 0.92 was created 2010/01/12 08:19 --&gt;</span>
+<span class="xml-tag">&lt;body&gt;</span>
+    <span class="xml-tag">&lt;database</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;Database&quot;&gt;</span>
+        <span class="xml-tag">&lt;schema&gt;</span>db1<span class="xml-tag">&lt;/schema&gt;</span>
+        <span class="xml-tag">&lt;dialect&gt;</span>org.ujoframework.orm.dialect.H2Dialect<span class="xml-tag">&lt;/dialect&gt;</span>
+        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_order&quot;&gt;</span>
+            <span class="xml-tag">&lt;name&gt;</span>ord_order<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;alias&gt;</span>ord_order_alias<span class="xml-tag">&lt;/alias&gt;</span>
+            <span class="xml-tag">&lt;schema&gt;</span>db1<span class="xml-tag">&lt;/schema&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;id&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>id<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;primaryKey&gt;</span>true<span class="xml-tag">&lt;/primaryKey&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>BIGINT<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;state&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>state<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>SMALLINT<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;usrId</span><span class="xml-value">&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>usrId<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>INT<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;descriptio</span><span class="xml-value">n&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>DESCR<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>VARCHAR<span class="xml-tag">&lt;/dbType&gt;</span>
+                <span class="xml-tag">&lt;mandatory&gt;</span>true<span class="xml-tag">&lt;/mandatory&gt;</span>
+                <span class="xml-tag">&lt;maxLength&gt;</span>128<span class="xml-tag">&lt;/maxLength&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;created&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>created<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>TIMESTAMP<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;items&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>items<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;/relation2m&gt;</span>
+        <span class="xml-tag">&lt;/table&gt;</span>
+        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_item&quot;&gt;</span>
+            <span class="xml-tag">&lt;name&gt;</span>ord_item<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;alias&gt;</span>ord_item_alias<span class="xml-tag">&lt;/alias&gt;</span>
+            <span class="xml-tag">&lt;schema&gt;</span>db1<span class="xml-tag">&lt;/schema&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;id&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>id<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;primaryKey&gt;</span>true<span class="xml-tag">&lt;/primaryKey&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>BIGINT<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;usrId&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>usrId<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>INT<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;description&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>description<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>VARCHAR<span class="xml-tag">&lt;/dbType&gt;</span>
+                <span class="xml-tag">&lt;maxLength&gt;</span>128<span class="xml-tag">&lt;/maxLength&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;fk_order&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>fk_order<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+        <span class="xml-tag">&lt;/table&gt;</span>
+        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;view_order&quot;</span> <span class="xml-attribute">view</span>=<span class="xml-value">&quot;true&quot;&gt;</span>
+            <span class="xml-tag">&lt;name&gt;</span>ord_order<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;alias&gt;</span>ord_order_alias<span class="xml-tag">&lt;/alias&gt;</span>
+            <span class="xml-tag">&lt;schema&gt;</span>db1<span class="xml-tag">&lt;/schema&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;id&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>id<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;primaryKey&gt;</span>true<span class="xml-tag">&lt;/primaryKey&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>BIGINT<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;column</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;itemCount&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>itemCount<span class="xml-tag">&lt;/name&gt;</span>
+                <span class="xml-tag">&lt;dbType&gt;</span>INT<span class="xml-tag">&lt;/dbType&gt;</span>
+            <span class="xml-tag">&lt;/column&gt;</span>
+            <span class="xml-tag">&lt;select&gt;</span>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id<span class="xml-tag">&lt;/select&gt;</span>
+        <span class="xml-tag">&lt;/table&gt;</span>
+        <span class="xml-tag">&lt;table</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;db1&quot;</span> <span class="xml-attribute">view</span>=<span class="xml-value">&quot;true&quot;&gt;</span>
+            <span class="xml-tag">&lt;name&gt;</span>ord_order<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;alias&gt;</span>ord_order_alias<span class="xml-tag">&lt;/alias&gt;</span>
+            <span class="xml-tag">&lt;schema&gt;</span>db1<span class="xml-tag">&lt;/schema&gt;</span>
+            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_order&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>ord_order<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;/relation2m&gt;</span>
+            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">id</span>=<span class="xml-value">&quot;ord_item&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>ord_item<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;/relation2m&gt;</span>
+            <span class="xml-tag">&lt;relation2m</span> <span class="xml-attribute">i</span><span class="xml-attribute">d</span>=<span class="xml-value">&quot;view_order&quot;&gt;</span>
+                <span class="xml-tag">&lt;name&gt;</span>view_order<span class="xml-tag">&lt;/name&gt;</span>
+            <span class="xml-tag">&lt;/relation2m&gt;</span>
+        <span class="xml-tag">&lt;/table&gt;</span>
+        <span class="xml-tag">&lt;jdbcUrl&gt;</span>jdbc:h2:mem:db1<span class="xml-tag">&lt;/jdbcUrl&gt;</span>
+        <span class="xml-tag">&lt;jdbcDriver&gt;</span>org.h2.Driver<span class="xml-tag">&lt;/jdbcDriver&gt;</span>
+        <span class="xml-tag">&lt;user&gt;</span>sa<span class="xml-tag">&lt;/user&gt;</span>
+    <span class="xml-tag">&lt;/database&gt;</span>
+    <span class="xml-tag">&lt;parameters&gt;</span>
+        <span class="xml-tag">&lt;tableAliasSuffix&gt;</span>_alias<span class="xml-tag">&lt;/tableAliasSuffix&gt;</span>
+        <span class="xml-tag">&lt;sequenceCache&gt;</span>1<span class="xml-tag">&lt;/sequenceCache&gt;</span>
+    <span class="xml-tag">&lt;/parameters&gt;</span>
+<span class="xml-tag">&lt;/body&gt;</span>
+</pre></body>
 </html>

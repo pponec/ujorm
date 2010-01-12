@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release UNDEFINED was created 2009/11/07 35:10 -->
+<!-- The Ujorm configuration file release 0.92 was created 2010/01/12 08:19 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
@@ -55,7 +55,6 @@
             </column>
             <column id="fk_order">
                 <name>fk_order</name>
-                <dbType>BIGINT</dbType>
             </column>
         </table>
         <table id="view_order" view="true">
@@ -71,7 +70,7 @@
                 <name>itemCount</name>
                 <dbType>INT</dbType>
             </column>
-            <select>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
+            <select>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
         </table>
         <table id="db1" view="true">
             <name>ord_order</name>
