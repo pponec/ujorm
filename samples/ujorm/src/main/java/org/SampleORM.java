@@ -22,6 +22,7 @@ import org.bo.Item;
 import org.bo.Order;
 import org.bo.ViewOrder;
 import org.ujoframework.Ujo;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.*;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -184,11 +185,13 @@ public class SampleORM {
         }
     }
 
-    /** Select items by a related order date property Item._ORDER_DATE.
-     * It is a sample of multi-table query.
+    /** Select items by a composed property.
+     * It is a sample of a multi-table query.
+     * @see Item#_ORDER_DATE
      */
     public void useSelectItems_4() {
-        Criterion<Item> crit = Criterion.newInstance(Item._ORDER_DATE, Operator.LE, new Date());
+        UjoProperty<Item,Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item._ORDER_DATE
+        Criterion<Item> crit = Criterion.newInstance(ORDER_DATE, Operator.LE, new Date());
         Session session = handler.getSession();
         UjoIterator<Item> items = session.createQuery(crit).iterate();
 
