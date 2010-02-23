@@ -6,14 +6,12 @@
             <name>UJO</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
-                <root id="src.dir" name="Source Core"/>
-                <root id="src.src-tools.dir" name="Source Tools"/>
-                <root id="src.src-orm.dir" name="Source ORM"/>
+                <root id="src.java.dir" name="Source"/>
+                <root id="src.java2.dir" name="Source ORM"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir" name="Test Core"/>
-                <root id="test.test-tools.dir" name="Test Tools"/>
-                <root id="test.test-orm.dir" name="Test ORM"/>
+                <root id="test.java.dir" name="Test"/>
+                <root id="test.java2.dir" name="Test ORM"/>
             </test-roots>
         </data>
     </configuration>
