@@ -31,6 +31,7 @@
                 <includes>
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
+                    <include>**/*.txt</include>
                 </includes>
                 <directory>src/main/java</directory>
                 <filtering>true</filtering>
@@ -78,6 +79,14 @@
         </plugins>
     </build>
     <dependencies>
+
+        <!-- UJO Core -->
+        <dependency>
+            <groupId>org.ujoframework</groupId>
+            <artifactId>ujo-core</artifactId>
+            <version>0.92</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- HIBERNATE -->
         <dependency>
