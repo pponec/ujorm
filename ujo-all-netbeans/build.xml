@@ -103,8 +103,8 @@ Implementation-Vendor: "Pavel Ponec"</echo>
     <target name="-javadoc-build" depends="init">
         
         <!-- INIT before JAVADOC: -->
-        <copy file="${src.dir}/org/ujoframework/z_package_${jDocLang}.html" 
-              tofile="${src.dir}/org/ujoframework/package.html"
+        <copy file="${src.java.dir}/org/ujoframework/z_package_${jDocLang}.html"
+              tofile="${src.java.dir}/org/ujoframework/package.html"
               overwrite="true"
        />
         
@@ -130,25 +130,22 @@ Implementation-Vendor: "Pavel Ponec"</echo>
             <classpath>
                 <path path="${javac.classpath}"/>
             </classpath>
-            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+            <fileset dir="${src.java.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
-            <fileset dir="${src.src-tools.dir}" excludes="${excludes}" includes="${includes}">
-                <filename name="**/*.java"/>
-            </fileset>
-            <fileset dir="${src.src-orm.dir}" excludes="${excludes}" includes="${includes}">
+            <fileset dir="${src.java2.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
         </javadoc>
         
         <!-- Append CSS definition: -->
         <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-            <filelist dir="${src.dir}/org/ujoframework" files="style.css"/>
+            <filelist dir="${src.java.dir}/org/ujoframework" files="style.css"/>
         </concat>
         <!-- Copy Image(s): -->
-        <copy file="${src.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
         <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
         
     </target>    
@@ -156,12 +153,12 @@ Implementation-Vendor: "Pavel Ponec"</echo>
     
     <target name="javadocsUml"  depends="init" description="generates javadoc and also UML Diagram">
         
-        <echo message="src.dir: ${src.dir}"/>
+        <echo message="src.java.dir: ${src.java.dir}"/>
         <property name="reports.dir" value="${dist.javadoc.dir}/.." />    
         
         <!-- INIT before JAVADOC: -->
-        <copy file="${src.dir}/org/ujoframework/z_package_${jDocLang}.html" 
-              tofile="${src.dir}/org/ujoframework/package.html"
+        <copy file="${src.java.dir}/org/ujoframework/z_package_${jDocLang}.html"
+              tofile="${src.java.dir}/org/ujoframework/package.html"
               overwrite="true"
        />
        <mkdir dir="${dist.javadoc.dir}"/>
@@ -188,13 +185,10 @@ Implementation-Vendor: "Pavel Ponec"</echo>
                 <classpath>
                     <path path="${javac.classpath}"/>
                 </classpath>
-                <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
+                <fileset dir="${src.java.dir}" excludes="${excludes}" includes="${includes}">
                     <filename name="**/*.java"/>
                 </fileset>
-                <fileset dir="${src.src-tools.dir}" excludes="${excludes}" includes="${includes}">
-                    <filename name="**/*.java"/>
-                </fileset>
-                <fileset dir="${src.src-orm.dir}" excludes="${excludes}" includes="${includes}">
+                <fileset dir="${src.java2.dir}" excludes="${excludes}" includes="${includes}">
                     <filename name="**/*.java"/>
                 </fileset>
               
@@ -234,12 +228,12 @@ Implementation-Vendor: "Pavel Ponec"</echo>
           
         <!-- Append CSS definition: -->
         <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-            <filelist dir="${src.dir}/org/ujoframework" files="style.css"/>
+            <filelist dir="${src.java.dir}/org/ujoframework" files="style.css"/>
         </concat>
         <!-- Copy Image(s): -->
-        <copy file="${src.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
         <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
           
           
