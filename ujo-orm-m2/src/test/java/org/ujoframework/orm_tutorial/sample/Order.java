@@ -53,6 +53,8 @@ public class Order extends OrmTable<Order> {
     /** References to Itemsr */
     public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
     
+    /** Date of creation */
+    public static final UjoProperty<Order,String> NEXT_COLUMN = newProperty("next_column", String.class);
 
     // --- An optional implementation of commonly used setters and getters ---
 
