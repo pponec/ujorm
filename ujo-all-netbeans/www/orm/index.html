@@ -159,8 +159,8 @@ The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
 
   Criterion&lt;Order&gt; cn1, cn2, criterion;
 
-  cn1 = Criterion.newInstance(Order.DESCR, "John's order"); // equals to
-  cn2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+  cn1 = Criterion.where(Order.DESCR, "John's order"); // equals to
+  cn2 = Criterion.where(Order.DATE, Operator.LE, new Date());
   criterion = cn1.and(cn2);
 
   Session session = OrmHandler.getInstance().getSession();
