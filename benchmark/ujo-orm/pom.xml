@@ -5,7 +5,7 @@
     <artifactId>benchmark.ujorm</artifactId>
     <packaging>jar</packaging>
     <version>0.93</version>
-    <name>Benchmark-Ujorm</name>
+    <name>xBenchmark-Ujorm</name>
     <url>http://maven.apache.org</url>
     <build>
         <plugins>

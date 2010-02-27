@@ -35,10 +35,17 @@
     <modules>
         <module>ujo-core-m2</module>
         <module>ujo-orm-m2</module>
+
         <module>samples/parameters</module>
         <module>samples/table2xml</module>
         <module>samples/ujorm</module>
         <module>samples/binding</module>
+
+        <module>benchmark/hibernate</module>
+        <module>benchmark/hibernate-ujo</module>
+        <module>benchmark/ujo-orm</module>
+
+
     </modules>
 
 
