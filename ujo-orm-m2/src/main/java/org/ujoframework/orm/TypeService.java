@@ -124,7 +124,7 @@ public class TypeService {
     }
 
     /** GetValue from the result set by position */
-    public Object getValue(final MetaColumn mColumn, final ResultSet rs, int column) throws SQLException {
+    public Object getValue(final MetaColumn mColumn, final ResultSet rs, final int column) throws SQLException {
         Object r;
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : r = rs.getBoolean(column); break;

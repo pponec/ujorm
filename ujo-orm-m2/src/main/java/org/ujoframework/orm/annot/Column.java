@@ -25,25 +25,31 @@ import org.ujoframework.orm.DbType;
 @Target(value=ElementType.FIELD)
 public @interface Column {
 
-    /** The database column name.
+    /** A named parameter for the database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys, 
      * then the several names can be separated by a space or comma character.
      */
-    String name() default "";
+    String name() default Table.NULL;
+    /** A shortcut for the attribute "name" of Column.
+     * @see #name()
+     */
+    String value() default Table.NULL;
     /** The primary key */
     boolean pk() default false;
     /** Database column type */
     DbType type() default DbType.Automatic;
-    /** Database column maximal lenght */
-    int lenght() default -1;
+    /** Database column maximal length */
+    int length() default -1;
     /** Database column presision */
     int precision() default -1;
     /** Not null value */
     boolean mandatory() default false;
-    /** A name of the column database index. */
-    String indexName() default "";
-    /** @deprecated not implemented yet */
-    boolean unique() default false;
+    /** A name of the non-unique database index for the column, where the same index can contain more columns.
+     * If a single column of the index is marked as non-unique, than the entire index will be non-unique. */
+    String index() default Table.NULL;
+    /** A name of the unique database index for the column, where the same index can contain more columns.
+     * If a single column of the index is marked as non-unique, than the entire index will be non-unique. */
+    String uniqueIndex() default Table.NULL;
 
     
 }

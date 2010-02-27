@@ -40,14 +40,14 @@ public enum DbType {
     DATE(Types.DATE),
     TIMESTAMP(Types.TIMESTAMP),
     //IDENTITY(Types.IDENTITY),
-    //BINARY(Types.BINARY),
+    BINARY(Types.BINARY),
     //OTHER(Types.OTHER),
     VARCHAR(Types.VARCHAR),
     VARCHAR_IGNORECASE(Types.VARCHAR),
     CHAR(Types.CHAR),
     BLOB(Types.BLOB),
-    LONGBLOB(Types.LONGVARBINARY),
     CLOB(Types.CLOB),
+ 
     //UUID(Types.UUID),
     //ARRAY(Types.ARRAY),
     ;

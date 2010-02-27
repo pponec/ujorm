@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujoframework.orm_tutorial.sample;
+package org.ujoframework.orm.bo;
 
 import java.util.Date;
 import org.ujoframework.UjoProperty;
@@ -22,24 +22,24 @@ import org.ujoframework.implementation.orm.OrmTable;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
- * Note, that the Item object have got a reference to a Order object.
+ * Note, that the XItem object have got a reference to a XOrder object.
  * @hidden
  * @Table=bo_item
  */
-public class Item extends OrmTable<Item> {
+public class XItem extends OrmTable<XItem> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<Item,Long> ID = newProperty(Long.class);
+    public static final UjoProperty<XItem,Long> ID = newProperty(Long.class);
     /** User key */
-    public static final UjoProperty<Item,Integer> USER_ID = newProperty(Integer.class);
-    /** Description of Item */
-    public static final UjoProperty<Item,String> DESCR = newProperty(String.class);
-    /** A reference to common Order */
+    public static final UjoProperty<XItem,Integer> USER_ID = newProperty(Integer.class);
+    /** Description of XItem */
+    public static final UjoProperty<XItem,String> DESCR = newProperty(String.class);
+    /** A reference to common XOrder */
     @Column(name="fk_order")
-    public static final UjoProperty<Item,Order> ORDER = newProperty(Order.class);    
-    /** A composed (indirect) property provides a 'created' attribute of the Order */
-    public static final UjoProperty<Item,Date> $ORDER_DATE = Item.ORDER.add(Order.CREATED);
+    public static final UjoProperty<XItem,XOrder> ORDER = newProperty(XOrder.class);
+    /** A composed (indirect) property provides a 'created' attribute of the XOrder */
+    public static final UjoProperty<XItem,Date> $ORDER_DATE = XItem.ORDER.add(XOrder.CREATED);
 
     // --- An optional implementation of commonly used setters and getters ---
 
@@ -61,10 +61,10 @@ public class Item extends OrmTable<Item> {
     public void setDescr(String descr) {
         set(DESCR, descr);
     }
-    public Order getOrder() {
+    public XOrder getOrder() {
         return get(ORDER);
     }
-    public void setOrder(Order descr) {
+    public void setOrder(XOrder descr) {
         set(ORDER, descr);
     }
 

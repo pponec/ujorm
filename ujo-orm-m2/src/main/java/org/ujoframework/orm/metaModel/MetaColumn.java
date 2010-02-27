@@ -28,15 +28,16 @@ import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.TypeService;
-import org.ujoframework.orm.UniqueKey;
+import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.annot.Column;
+import org.ujoframework.orm.ao.UjoStatement;
 
 /**
  * Database column metadata
  * @author Pavel Ponec
  * @composed 1 - * DbType
  */
-public class MetaColumn extends MetaRelation2Many {
+final public class MetaColumn extends MetaRelation2Many {
     private static final Class CLASS = MetaColumn.class;
 
 
@@ -52,8 +53,12 @@ public class MetaColumn extends MetaRelation2Many {
     public static final Property<MetaColumn,Integer> PRECISION = newProperty("precision", -1);
     /** DB Default value */
     public static final Property<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "");
-    /** The column is included in the index of the name (parameter is not implemented yet) */
-    public static final Property<MetaColumn,String> INDEX_NAME = newProperty("indexName", "");
+    /** A name of the non-unique database index for the column, where the same index can contain more columns.
+     * If a single column of the index is marked as unique, so the entire index will be unique. */
+    public static final Property<MetaColumn,String> INDEX = newProperty("index", "");
+    /** A name of the unique database index for the column, where the same index can contain more columns.
+     * If a single column of the index is marked as unique, so the entire index will be unique. */
+    public static final Property<MetaColumn,String> UNIQUE_INDEX = newProperty("uniqueIndex", "");
     /** The property initialization */
     static{init(CLASS);}
 
@@ -64,6 +69,7 @@ public class MetaColumn extends MetaRelation2Many {
      * @see TypeService
      */
     private char typeCode;
+    private boolean foreignKey;
 
 
     public MetaColumn() {
@@ -71,6 +77,7 @@ public class MetaColumn extends MetaRelation2Many {
 
     public MetaColumn(MetaTable table, UjoProperty tableProperty, MetaColumn param) {
         super(table, tableProperty, param);
+        this.foreignKey = getProperty().isTypeOf(OrmUjo.class);
 
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
         Column column = field.getAnnotation(Column.class);
@@ -81,15 +88,17 @@ public class MetaColumn extends MetaRelation2Many {
             changeDefault(this, MAX_LENGTH , MAX_LENGTH.of(param));
             changeDefault(this, PRECISION  , PRECISION.of(param));
             changeDefault(this, DB_TYPE    , DB_TYPE.of(param));
-            changeDefault(this, INDEX_NAME , INDEX_NAME.of(param));
+            changeDefault(this, INDEX      , INDEX.of(param));
+            changeDefault(this, UNIQUE_INDEX,UNIQUE_INDEX.of(param));
         }
         if (column!=null) {
             changeDefault(this, PRIMARY_KEY, column.pk());
             changeDefault(this, MANDATORY  , column.mandatory());
-            changeDefault(this, MAX_LENGTH , column.lenght());
+            changeDefault(this, MAX_LENGTH , column.length());
             changeDefault(this, PRECISION  , column.precision());
             changeDefault(this, DB_TYPE    , column.type());
-            changeDefault(this, INDEX_NAME , column.indexName());
+            changeDefault(this, INDEX      , column.index());
+            changeDefault(this, UNIQUE_INDEX,column.uniqueIndex());
         }
 
         if (DB_TYPE.isDefault(this)) {
@@ -109,8 +118,7 @@ public class MetaColumn extends MetaRelation2Many {
     /** Is it a Foreign Key ? */
     @Override
     public boolean isForeignKey() {
-        final boolean result = getProperty().isTypeOf(OrmUjo.class);
-        return result;
+        return foreignKey;
     }
 
     /** Is it a Primary Key? */
@@ -143,8 +151,8 @@ public class MetaColumn extends MetaRelation2Many {
     @SuppressWarnings("unchecked")
     public List<MetaColumn> getForeignColumns() {
         List<MetaColumn> result;
-        Class type = getProperty().getType();
-        MetaTable table = getHandler().findTableModel(type);
+        final Class type = getProperty().getType();
+        final MetaTable table = getHandler().findTableModel(type);
         if (table!=null) {
             MetaPKey pk = MetaTable.PK.of(table);
             result = MetaPKey.COLUMNS.getList(pk);
@@ -212,7 +220,7 @@ public class MetaColumn extends MetaRelation2Many {
         if (isForeignKey()
         &&   value !=null
         && !(value instanceof OrmUjo)) {
-           value = new UniqueKey(value);
+           value = new ForeignKey(value);
         }
 
         property.setValue(bo, value);
@@ -275,6 +283,28 @@ public class MetaColumn extends MetaRelation2Many {
      */
     public char getTypeCode() {
         return typeCode;
+    }
+
+    /** Has the property a default value (not null) ?
+     * If the default value is an empty String than method returns false.
+     */
+    public boolean hasDefaultValue() {
+        final Object value = getProperty().getDefault();
+        boolean result = value instanceof String
+            ?  ((String)value).length()>0
+            : value!=null
+            ;
+        return result;
+    }
+
+    /** Returns a default value in a JDBC friendly type.
+     * The real result type depends in an implementatin a TypeService.
+     * For example a Java Enumerator default value can return either the Integer or String type too.
+     * @see TypeService
+     */
+    public Object getJdbcFriendlyDefaultValue() {
+        final Object result = new UjoStatement().getDefaultValue(this);
+        return result;
     }
 
     /** Returns a SQL dialect class from a related Database */

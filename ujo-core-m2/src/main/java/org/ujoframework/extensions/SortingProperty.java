@@ -24,7 +24,7 @@ final public class SortingProperty<UJO extends Ujo,VALUE> extends PathProperty<U
     /** A flag for a direction of sorting. This method returns a value by a constructor parameter */
     @Override
     public final boolean isAscending() {
-        return false;
+        return ascending;
     }
 
 

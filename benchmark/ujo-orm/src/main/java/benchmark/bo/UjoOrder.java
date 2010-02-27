@@ -35,17 +35,18 @@ public class UjoOrder extends OrmTable<UjoOrder> {
     public static final Property<UjoOrder,Long> id = newProperty(Long.class);
     public static final Property<UjoOrder,Boolean> deleted = newProperty(false);
     public static final Property<UjoOrder,Date> dateDeleted = newProperty(Date.class);
-    @Column(lenght=2)
+    @Column(length=2)
     public static final Property<UjoOrder,String> deletionReason = newProperty(String.class);
     public static final Property<UjoOrder,Boolean> paid = newProperty(Boolean.class);
-    @Column(lenght=8)
+    @Column(length=8)
     public static final Property<UjoOrder,String> publicId = newProperty(String.class);
     public static final Property<UjoOrder,Date> dateOfOrder = newProperty(Date.class);
-    @Column(lenght=2)
+    @Column(length=2)
     public static final Property<UjoOrder,String> paymentType = newProperty(String.class);
     public static final Property<UjoOrder,BigDecimal> discount = newProperty(BigDecimal.class);
-    @Column(lenght=2)
+    @Column(length=2)
     public static final Property<UjoOrder,String> orderType = newProperty(String.class);
+    @Column("language_code")
     public static final Property<UjoOrder,String> language = newProperty(String.class);
     public static final Property<UjoOrder,UjoOrder> parent = newProperty("parent_id", UjoOrder.class);
     public static final UjoProperty <UjoOrder,UjoUser>user = newProperty("user_id", UjoUser.class);

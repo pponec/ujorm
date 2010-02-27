@@ -58,6 +58,7 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
         return operator;
     }
 
+    @Override
     public boolean evaluate(UJO ujo) {
         boolean e1 = crn1.evaluate(ujo);
         switch (operator) {
@@ -81,7 +82,20 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     @Override
     public String toString() {
-        return "(" + crn1 + ") " + operator.name() + " (" + crn2 + ")";
+        StringBuilder result = new StringBuilder();
+        printNode(crn1, result);
+        result.append(' ').append(operator.name()).append(' ');
+        printNode(crn2, result);
+
+        return  result.toString();
+    }
+
+    /** Print simple node */
+    private void printNode(final Criterion cn, final StringBuilder out) {
+        boolean parentheses = cn.getOperator()!=BinaryOperator.AND;
+        if (parentheses) out.append('(');
+        out.append(cn);
+        if (parentheses) out.append(')');
     }
     
     

@@ -51,27 +51,21 @@ import org.ujoframework.criterion.ValueCriterion;
 public class Session {
 
     /** Common title to print the SQL VALUES */
-    private static final String SQL_VALUES  = "\n-- SQL VALUES: ";
+    private static final String SQL_VALUES = "\n-- SQL VALUES: ";
     /** Exception SQL message prefix */
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
-
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
-
     /** Handler. */
     final private OrmHandler handler;
     /** Orm parameters. */
     final private MetaParams params;
-
     /** Database connections (common and sequence)  */
-    final private HashMap<MetaDatabase, Connection>[] connections = new HashMap[]
-    { new HashMap<MetaDatabase, Connection>(2) // common connections
-    , new HashMap<MetaDatabase, Connection>(2) // sequence connections
+    final private HashMap<MetaDatabase, Connection>[] connections = new HashMap[]{new HashMap<MetaDatabase, Connection>(2) // common connections
+        , new HashMap<MetaDatabase, Connection>(2) // sequence connections
     };
-
     /** A session cache */
     private Map<CacheKey, OrmUjo> cache;
-
     /** The rollback is allowed only */
     private boolean rollbackOnly = false;
 
@@ -80,9 +74,8 @@ public class Session {
         this.handler = handler;
         this.params = handler.getParameters();
         this.cache = MetaParams.CACHE_WEAK_MAP.of(params)
-            ? new WeakHashMap<CacheKey, OrmUjo>()
-            : new HashMap<CacheKey, OrmUjo>()
-            ;
+                ? new WeakHashMap<CacheKey, OrmUjo>()
+                : new HashMap<CacheKey, OrmUjo>();
     }
 
     /** Returns a handler */
@@ -137,7 +130,7 @@ public class Session {
 
     /** For all rows. */
     public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass) {
-        final Criterion<UJO> criterion = Criterion.newInstance(true);
+        final Criterion<UJO> criterion = Criterion.where(true);
         return createQuery(aClass, criterion);
     }
 
@@ -159,7 +152,7 @@ public class Session {
         }
 
         ValueCriterion exprValue = (ValueCriterion) criterion;
-        if (exprValue.getLeftNode()==null) {
+        if (exprValue.getLeftNode() == null) {
             return null;
         }
         UjoProperty property = exprValue.getLeftNode();
@@ -171,10 +164,18 @@ public class Session {
         return result;
     }
 
-    /** Returns a Database instance */
+    /** Returns the first Database instance. */
+    final public <DB extends OrmUjo> DB getFirstDatabase() {
+        return (DB) getDatabase(null);
+    }
+
+    /** Returns a Database instance. If parameter is null, than method returns the first database. */
     public <DB extends OrmUjo> DB getDatabase(Class<DB> dbType) {
         try {
-            DB result = dbType.newInstance();
+            DB result = dbType!=null
+                    ? dbType.newInstance()
+                    : (DB) MetaDatabase.ROOT.of(getHandler().getDatabases().get(0))
+                    ;
             result.writeSession(this);
             return result;
         } catch (Exception e) {
@@ -184,7 +185,7 @@ public class Session {
 
     /** INSERT or UPDATE object into table. */
     public void saveOrUpdate(OrmUjo bo) throws IllegalStateException {
-        if (bo.readSession()==null) {
+        if (bo.readSession() == null) {
             save(bo);
         } else {
             update(bo);
@@ -225,7 +226,7 @@ public class Session {
             MetaTable table = handler.findTableModel((Class) bo.getClass());
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
-            if (changedColumns.size()==0) {
+            if (changedColumns.size() == 0) {
                 LOGGER.warning("No changes to update in the object: " + bo);
                 return result;
             }
@@ -264,7 +265,6 @@ public class Session {
         return delete(table, criterion);
     }
 
-
     /** Delete one object from the parameters.
      * <br />Warning: method does not remove deleted object from internal cache,
      *       however you can call method clearCache() to release all objects from the cache.
@@ -274,16 +274,15 @@ public class Session {
     public boolean delete(final OrmUjo bo) {
         MetaTable table = getHandler().findTableModel(bo.getClass());
         MetaColumn PK = table.getFirstPK();
-        Criterion crn = Criterion.newInstance(PK.getProperty(), PK.getValue(bo));
+        Criterion crn = Criterion.where(PK.getProperty(), PK.getValue(bo));
         int result = delete(table, crn);
 
         if (true) {
             // Remove the bo from an internal cache:
             removeCache(bo, MetaTable.PK.of(table));
         }
-        return result>0;
+        return result > 0;
     }
-
 
     /** Delete all object object by the criterion from parameter.
      * <br />Warning: method does not remove deleted object from internal cache,
@@ -296,8 +295,6 @@ public class Session {
         final MetaTable tableModel = handler.findTableModel(tableClass);
         return delete(tableModel, criterion);
     }
-
-
 
     /** Delete all objects object form parameter
      * <br />Warning: method does not remove deleted object from internal cache,
@@ -333,7 +330,6 @@ public class Session {
 
     }
 
-
     /** Convert a property array to a column list. */
     protected List<MetaColumn> getOrmColumns(final UjoProperty... properties) {
         final List<MetaColumn> result = new ArrayList<MetaColumn>(properties.length);
@@ -355,16 +351,14 @@ public class Session {
         List<MetaColumn> keys = MetaPKey.COLUMNS.of(ormKey);
 
         for (MetaColumn ormColumn : keys) {
-            Criterion crn = Criterion.newInstance(ormColumn.getProperty(), ormColumn.getValue(bo));
-            result = result!=null
-                ? result.and(crn)
-                : crn
-                ;
+            Criterion crn = Criterion.where(ormColumn.getProperty(), ormColumn.getValue(bo));
+            result = result != null
+                    ? result.and(crn)
+                    : crn;
         }
-        return result!=null
-            ? result
-            : Criterion.newInstance(false)
-            ;
+        return result != null
+                ? result
+                : Criterion.where(false);
     }
 
     /** Returns a count of rows */
@@ -386,13 +380,14 @@ public class Session {
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
             rs = statement.executeQuery(); // execute a select statement
-            result = rs.next() ? rs.getLong(1) : 0 ;
+            result = rs.next() ? rs.getLong(1) : 0;
         } catch (Exception e) {
             rollbackOnly = true;
             throw new RuntimeException(SQL_ILLEGAL + sql, e);
         } finally {
             MetaDatabase.close(null, statement, rs, false);
         }
+        
         return result;
     }
 
@@ -406,8 +401,14 @@ public class Session {
             MetaDatabase db = MetaTable.DATABASE.of(table);
 
             sql = db.getDialect().printSelect(table, query, false, out(360)).toString();
+            query.setStatementInfo(sql);
             result = getStatement(db, sql);
-            if (query.getMaxRows()!=0) result.getPreparedStatement().setMaxRows(query.getMaxRows());
+            if (query.getLimit()>=0) {
+                result.getPreparedStatement().setMaxRows(query.getLimit());
+            }
+            if (query.getFetchSize()>=0) {
+                result.getPreparedStatement().setFetchSize(query.getFetchSize());
+            }
             result.assignValues(query.getDecoder());
 
             if (LOGGER.isLoggable(Level.INFO)) {
@@ -439,10 +440,10 @@ public class Session {
     public <UJO extends OrmUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, OrmUjo value) {
 
         final Class tableClass = property.getItemType();
-        final MetaTable table   = handler.findTableModel(tableClass);
+        final MetaTable table = handler.findTableModel(tableClass);
         final MetaColumn column = findOrmColumn(table, value.getClass());
 
-        if (column==null) {
+        if (column == null) {
             MetaTable origTable = handler.findTableModel(value.getClass());
             if (origTable.isPersistent()) { // Is it not a DATABASE ?
                 String msg = "Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName();
@@ -450,10 +451,9 @@ public class Session {
             }
         }
 
-        Criterion crit = column!=null
-            ? Criterion.newInstance(column.getProperty(), value)
-            : Criterion.newInstanceTrue(table.getFirstPK().getProperty())
-            ;
+        Criterion crit = column != null
+                ? Criterion.where(column.getProperty(), value)
+                : Criterion.whereTrue(table.getFirstPK().getProperty());
         Query query = createQuery(tableClass, crit);
         UjoIterator result = UjoIterator.getInstance(query);
 
@@ -490,8 +490,6 @@ public class Session {
         return result;
     }
 
-
-
     /**
      * Load UJO by a unique id. If a result is not found then a null value is passed.
      * @param tableType Type of Ujo
@@ -500,13 +498,12 @@ public class Session {
     public <UJO extends OrmUjo> UJO load
         ( final Class<UJO> tableType
         , final Object id
-        ) throws NoSuchElementException
-    {
+        ) throws NoSuchElementException {
         final MetaTable table = handler.findTableModel(tableType);
         final MetaColumn column = table.getFirstPK();
 
         UjoManager.getInstance().assertAssign(MetaColumn.TABLE_PROPERTY.of(column), id);
-        Criterion crn = Criterion.newInstance(column.getProperty(), id);
+        Criterion crn = Criterion.where(column.getProperty(), id);
         Query query = createQuery(crn);
 
         final OrmUjo result = query.uniqueResult();
@@ -524,8 +521,7 @@ public class Session {
         ( final UjoProperty relatedProperty
         , final Object id
         , final boolean mandatory
-        ) throws NoSuchElementException
-    {
+        ) throws NoSuchElementException {
         MetaColumn column = (MetaColumn) handler.findColumnModel(relatedProperty);
         List<MetaColumn> columns = column.getForeignColumns();
         if (columns.size() != 1) {
@@ -538,25 +534,23 @@ public class Session {
         if (cache) {
             tableModel = MetaColumn.TABLE.of(columns.get(0));
             OrmUjo r = findCache(tableModel.getType(), id);
-            if (r!=null) {
+            if (r != null) {
                 return (UJO) r;
             }
         }
 
         // SELECT DB
-        Criterion crn = Criterion.newInstance(columns.get(0).getProperty(), id);
+        Criterion crn = Criterion.where(columns.get(0).getProperty(), id);
         Query query = createQuery(crn);
         UjoIterator iterator = UjoIterator.getInstance(query);
 
-        final UJO result
-            = (mandatory || iterator.hasNext())
-            ? (UJO) iterator.next()
-            : null
-            ;
+        final UJO result = (mandatory || iterator.hasNext())
+                ? (UJO) iterator.next()
+                : null;
         if (iterator.hasNext()) {
             throw new RuntimeException("Ambiguous key " + id);
         }
-        
+
         if (cache) {
             addCache(result, MetaTable.PK.of(tableModel));
         }
@@ -574,11 +568,14 @@ public class Session {
         MetaDatabase database = null;
         String errMessage = "Can't close connection for DB ";
 
-        for (HashMap<MetaDatabase,Connection> cons : connections) {
+        for (HashMap<MetaDatabase, Connection> cons : connections) {
             for (MetaDatabase db : cons.keySet()) {
                 try {
                     Connection conn = cons.get(db);
-                    if (conn!=null) conn.close();
+                    if (conn != null) {
+                        conn.rollback(); // TODO
+                        conn.close();
+                    }
                 } catch (Throwable e) {
                     LOGGER.log(Level.SEVERE, errMessage + db, e);
                     if (exception == null) {
@@ -609,9 +606,8 @@ public class Session {
     private boolean removeCache(OrmUjo bo, MetaPKey pkey) {
         final CacheKey key = CacheKey.newInstance(bo, pkey);
         final OrmUjo result = cache.remove(key);
-        return result!=null;
+        return result != null;
     }
-
 
     /** Find object from internal cache */
     public OrmUjo findCache(Class type, Object pkey) {
@@ -641,6 +637,23 @@ public class Session {
         return rollbackOnly;
     }
 
+    public void markForRolback() {
+        rollbackOnly = true;
+    }
+
+    /** Build new Forign key.
+     * @param property The property must be a relalation type of "many to one".
+     * @throws IllegalStateException If a parameter property is not a foreign key.
+     */
+    public ForeignKey readFK(final OrmUjo ujo, final UjoProperty<?, ? extends OrmUjo> property) throws IllegalStateException {
+        MetaColumn column = (MetaColumn) getHandler().findColumnModel(property);
+        if (column!=null && column.isForeignKey()) {
+            final Object result = column.getForeignColumns().get(0).getProperty().of(ujo);
+            return new ForeignKey(result);
+        } else {
+            throw new IllegalStateException("The property '" + property + "' is not a foreign key");
+        }
+    }
 
 }
 

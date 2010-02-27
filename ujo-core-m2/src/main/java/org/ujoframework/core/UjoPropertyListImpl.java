@@ -82,7 +82,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
         }
 
         if (throwException) {
-            throw new IllegalArgumentException("A property name \"" + name + "\" was not found in the " + type);
+            throw new IllegalArgumentException("A property called \"" + name + "\" was not found in the " + type);
         } else {
             return null;
         }

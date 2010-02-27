@@ -70,7 +70,7 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_01() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  ex1 = Criterion.newInstance(CASH, 10.0);
+        Criterion<Person>  ex1 = Criterion.where(CASH, 10.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -78,7 +78,7 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_02a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  ex1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
+        Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, 10.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(3, result.size());
         assertEquals("Marry", result.get(0).get(NAME) );
@@ -86,7 +86,7 @@ public class CriteriaTest extends MyTestCase {
 
     public void testInit_02b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  ex1 = Criterion.newInstance(CASH, Operator.LT, 20.0);
+        Criterion<Person>  ex1 = Criterion.where(CASH, Operator.LT, 20.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -95,14 +95,14 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_03a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.GT, 20.0);
+        Criterion<Person>  ex1 = Criterion.where(MOTHER_CASH, Operator.GT, 20.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(2, result.size());
     }
     
     public void testInit_03b() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.EQ, 20.0);
+        Criterion<Person>  ex1 = Criterion.where(MOTHER_CASH, Operator.EQ, 20.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -110,8 +110,8 @@ public class CriteriaTest extends MyTestCase {
     
     public void testInit_04a() {
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  ex1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
-        Criterion<Person>  ex2 = Criterion.newInstance(CASH, Operator.LT, 30.0);
+        Criterion<Person>  ex1 = Criterion.where(CASH, Operator.GT, 10.0);
+        Criterion<Person>  ex2 = Criterion.where(CASH, Operator.LT, 30.0);
         Criterion<Person>  exp = ex1.join(BinaryOperator.AND, ex2);
         List<Person> result = uc.select(persons, exp);
         assertEquals(1, result.size());
@@ -123,7 +123,7 @@ public class CriteriaTest extends MyTestCase {
         persons.get(0).set(NAME, null);
         
         CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        Criterion<Person>  exp = Criterion.newInstance(NAME, Operator.EQ, (String) null);
+        Criterion<Person>  exp = Criterion.where(NAME, Operator.EQ, (String) null);
         List<Person> result = uc.select(persons, exp);
         assertEquals(1, result.size());
         assertEquals(10.0, result.get(0).get(CASH) );

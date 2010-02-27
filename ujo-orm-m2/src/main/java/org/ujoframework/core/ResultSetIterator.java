@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
+import org.ujoframework.orm.Session;
 import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.metaModel.MetaColumn;
 
@@ -30,7 +31,7 @@ import org.ujoframework.orm.metaModel.MetaColumn;
  * ResultSet iterator. It is not a thread safe implementation.
  * @author Pavel Ponec
  */
-class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
+final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
     private final Query query;
     private final ResultSet rs;
@@ -58,7 +59,7 @@ class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             this.typeService = query.getSession().getParameters().getTypeService();
         } catch (SQLException e) {
             close();
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(Session.SQL_ILLEGAL + query, e);
         }
     }
 

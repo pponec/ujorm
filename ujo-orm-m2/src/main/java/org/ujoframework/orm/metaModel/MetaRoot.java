@@ -38,9 +38,9 @@ import org.ujoframework.extensions.Property;
  * @composed 1 - * MetaDatabase
  * @composed 1 - 1 MetaParams
  */
-public class MetaRoot extends AbstractMetaModel {
+final public class MetaRoot extends AbstractMetaModel {
     private static final Class CLASS = MetaRoot.class;
-    public static final Logger LOGGER = Logger.getLogger(MetaRoot.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MetaRoot.class.getName());
 
     /** List of tables */
     public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class);
@@ -60,10 +60,12 @@ public class MetaRoot extends AbstractMetaModel {
         return result;
     }
 
-    /** Returns the first database with required name or returns null; */
+    /** Returns the first database with required name or returns null.
+     * @param name If the parameter "name" is null than method returns a first database.
+     */
     public MetaDatabase getDatabase(String name) {
         for (MetaDatabase database : DATABASES.getList(this)) {
-            if (MetaDatabase.SCHEMA.equals(database, name)) {
+            if (name==null || MetaDatabase.SCHEMA.equals(database, name)) {
                 return database;
             }
         }

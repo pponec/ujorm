@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>0.92</version>
+    <version>0.93</version>
     <name>ujo-orm</name>
     <contributors>
         <contributor>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>0.92</version>
+            <version>0.93</version>
             <scope>compile</scope>
         </dependency>
 
@@ -96,10 +96,60 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Database H2 -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.1.115</version>
+            <version>1.2.128</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Database HSQLDB -->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.10</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Database MySql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>3.1.14</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Database PostgreSql -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>8.3-603.jdbc3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Oracle -.->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>10.1.0.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-.- EOOD -->
+
+        <!-- Derby -->
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.5.3.0_1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Jaybird (the JDBC driver for Firebird) -->
+        <dependency>
+            <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
+            <artifactId>jaybird</artifactId>
+            <version>2.1.6</version>
             <scope>test</scope>
         </dependency>
 

@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.UjoCoder;
 
 /**
  * The value criterion implementation.
@@ -96,7 +97,8 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     }
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "fallthrough"})
+    @Override
     public boolean evaluate(UJO ujo) {
         if (isConstant()) {
             return (Boolean) value;
@@ -222,12 +224,23 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     @Override
     public String toString() {
-        String result
-            = isConstant()
-            ? ""
-            : (property + " " + operator.name() + " ")
-            ;
-        return result + value;
+        StringBuilder out = new StringBuilder();
+        if (!isConstant()) {
+            out
+            .append(property)
+            .append(' ')
+            .append(operator.name())
+            .append(' ');
+        }
+
+        out.append(
+            value instanceof Number ||
+            value instanceof CharSequence
+            ? value.toString()
+            : new UjoCoder().encodeValue(value, false)
+        );
+        
+        return out.toString();
     }
 
 }

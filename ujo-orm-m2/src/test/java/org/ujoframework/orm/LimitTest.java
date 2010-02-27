@@ -13,28 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujoframework.orm;
 
 import java.util.Date;
 import junit.framework.TestCase;
-import org.ujoframework.core.UjoIterator;
-import org.ujoframework.criterion.Criterion;
-import org.ujoframework.criterion.Operator;
-import org.ujoframework.orm_tutorial.sample.Database;
-import org.ujoframework.orm_tutorial.sample.Item;
-import org.ujoframework.orm_tutorial.sample.Order;
+import org.ujoframework.criterion.*;
+import org.ujoframework.orm.bo.*;
+import static org.ujoframework.criterion.Operator.*;
 
 /**
- *
+ * The tests of the SQL LIMIT & OFFSET.
  * @author Pavel Ponec
  */
 public class LimitTest extends TestCase {
-    
+
+    static private OrmHandler handler;
+
     public LimitTest(String testName) {
         super(testName);
     }
-
 
     private static Class suite() {
         return LimitTest.class;
@@ -50,82 +47,182 @@ public class LimitTest extends TestCase {
         super.tearDown();
     }
 
-    // ----------------------------------------------------
+    // ---------- TOOLS -----------------------
 
+    static protected OrmHandler getHandler() {
+        if (handler == null) {
+            handler = new OrmHandler();
+            handler.loadDatabase(XDatabase.class);
+        }
+        return handler;
+    }
 
-    /** Using INSERT */
-    public void useCreateItem() {
+    @SuppressWarnings("unchecked")
+    protected void deleteAllOrders() {
 
-        OrmHandler.getInstance().loadDatabase(Database.class);
-        Session session = OrmHandler.getInstance().getSession();
+        Session session = getHandler().getSession();
+        Criterion crit;
+        int count;
+        //
+        crit = Criterion.whereTrue(XItem.ID);
+        count = session.delete(crit);
+        //
+        crit = Criterion.whereTrue(XOrder.ID);
+        count = session.delete(crit);
+        //
+        crit = Criterion.whereTrue(XCustomer.ID);
+        count = session.delete(crit);
+    }
 
-        Order order = new Order();
-        Order.CREATED.setValue(order, new Date());
-        Order.DESCR.setValue(order, "test order");
+    protected void createOrder(String name) {
 
-        Item item = new Item();
-        Item.DESCR.setValue(item, "yellow table");
-        Item.ORDER.setValue(item, order);
+        Session session = getHandler().getSession();
+
+        XOrder order = new XOrder();
+        XOrder.CREATED.setValue(order, new Date());
+        XOrder.DESCR.setValue(order, name);
+
+        XItem item1 = new XItem();
+        XItem.DESCR.setValue(item1, name + "-1");
+        XItem.ORDER.setValue(item1, order);
+
+        XItem item2 = new XItem();
+        XItem.DESCR.setValue(item2, name + "-2");
+        XItem.ORDER.setValue(item2, order);
+
+        XItem item3 = new XItem();
+        XItem.DESCR.setValue(item3, name + "-3");
+        XItem.ORDER.setValue(item3, order);
 
         session.save(order);
-        session.save(item);
+        session.save(item1);
+        session.save(item2);
+        session.save(item3);
 
-        if (true) {
-           session.commit();
-        } else {
-           session.rollback();
+        session.commit();
+    }
+
+    /** Remove all orders and create orders by parameter. */
+    protected void createOrders(long count) {
+        deleteAllOrders();
+        for (int i = 0; i < count; i++) {
+            createOrder(""+i);
         }
     }
 
-    /** Using SELECT by an object relations */
-    public void useRelation() {
-        Session session = OrmHandler.getInstance().getSession();
-        Database db = session.getDatabase(Database.class);
+    // ---------- TESTS -----------------------
 
-        UjoIterator<Order> orders  = Database.ORDERS.of(db);
-        for (Order order : orders) {
-            Long id = Order.ID.of(order);
-            String descr = Order.DESCR.of(order);
-            System.out.println("Order id: " + id + " descr: " + descr);
+    @SuppressWarnings("deprecation")
+    public void testLimit_1() {
+        long count = 10;
+        int limit = 3;
+        int offset = 6;
+        long expected;
 
-            for (Item item : Order.ITEMS.of(order)) {
-                Long itemId = Item.ID.of(item);
-                String itemDescr = Item.DESCR.of(item);
-                System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
-            }
+        createOrders(count);
+
+        Session session = getHandler().getSession();
+        Criterion<XOrder> crit = Criterion.where(XOrder.ID, GE, 0L);
+        Query<XOrder> query = session.createQuery(crit).orderBy(XOrder.DESCR);
+
+        // ------ BASE ------
+
+        expected = count;
+        long myCount = query.getLimitedCount();
+        assertEquals(expected, myCount);
+        //
+        myCount = 0L;
+        for (XOrder order : query.iterate()) {
+            order.getId();
+            ++myCount;
         }
-    }
+        assertEquals(expected, myCount);
 
-    /** Using SELECT by QUERY */
-    public void useSelection() {
-        Session session = OrmHandler.getInstance().getSession();
+        // ------ LIMIT ------
 
-        Criterion<Order> crn1 = Criterion.newInstance(Order.DESCR, "test order");
-        Criterion<Order> crn2 = Criterion.newInstance(Order.CREATED, Operator.LE, new Date());
-        Criterion<Order> crit = crn1.and(crn2);
-
-        Query<Order> query = session.createQuery(Order.class, crit);
-
-        for (Order o : query.iterate()) {
-            Long id = Order.ID.of(o);
-            String descr = Order.DESCR.of(o);
-            System.out.println("Order id: " + id + " descr: " + descr);
+        expected = limit;
+        query = session.createQuery(crit).setLimit(limit).orderBy(XOrder.DESCR);
+        myCount = query.getLimitedCount();
+        assertEquals(expected, myCount);
+        //
+        myCount = 0L;
+        for (XOrder order : query.iterate()) {
+            order.getId();
+            ++myCount;
         }
+        assertEquals(expected, myCount);
+
+
+        // ------ OFFSET ------
+
+        expected = count - offset;
+        query = session.createQuery(crit).setOffset(offset).orderBy(XOrder.DESCR);
+        myCount = query.getLimitedCount();
+        assertEquals(expected, myCount);
+        //
+        myCount = 0L;
+        for (XOrder order : query.iterate()) {
+            order.getId();
+            ++myCount;
+        }
+        assertEquals(expected, myCount);
+
+        // ------ LIMIT + OFFSET (1) ------
+
+        expected = limit;
+        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.DESCR);
+        myCount = query.getLimitedCount();
+        assertEquals(expected, myCount);
+        //
+        myCount = 0L;
+        for (XOrder order : query.iterate()) {
+            order.getId();
+            ++myCount;
+        }
+        assertEquals(expected, myCount);
+
+
+        // ------ LIMIT + OFFSET (2) ------
+
+        limit = 10;
+        expected = count-offset;
+        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.DESCR);
+        myCount = query.getLimitedCount();
+        assertEquals(expected, myCount);
+        //
+        myCount = 0L;
+        for (XOrder order : query.iterate()) {
+            order.getId();
+            ++myCount;
+        }
+        assertEquals(expected, myCount);
+
+
+        // ------ LIMIT + OFFSET (3) ------
+
+        offset = 20;
+        expected = 0;
+        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.DESCR);
+        myCount = query.getLimitedCount();
+        assertEquals(expected, myCount);
+        //
+        myCount = 0L;
+        for (XOrder order : query.iterate()) {
+            order.getId();
+            ++myCount;
+        }
+        assertEquals(expected, myCount);
+
+
+        // CLOSE
+        session.close();
+
     }
 
 
     // -----------------------------------------------------
 
-
-    /**
-     * Test of getItemCount method, of class AbstractPropertyList.
-     */
-    public void testGetItemCount() {
-    }
- 
-
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-
 }

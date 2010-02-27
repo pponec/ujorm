@@ -71,7 +71,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_01() {
         CriteriaTool uc  = CriteriaTool.newInstance();
-        Criterion  ex1 = Criterion.newInstance(CASH, 10.0);
+        Criterion  ex1 = Criterion.where(CASH, 10.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -80,7 +80,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_02a() {
         CriteriaTool ct  = CriteriaTool.newInstance();
-        Criterion crn1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
+        Criterion crn1 = Criterion.where(CASH, Operator.GT, 10.0);
         List<Person> result = ct.select(persons, crn1);
         assertEquals(3, result.size());
         assertEquals("Marry", result.get(0).get(NAME) );
@@ -90,8 +90,8 @@ public class CriteriaWeakTest extends MyTestCase {
     public void testDoc() {
         
         // Make a criterion:
-        Criterion<Person> crn1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
-        Criterion<Person> crn2 = Criterion.newInstance(CASH, Operator.LE, 20.0);
+        Criterion<Person> crn1 = Criterion.where(CASH, Operator.GT, 10.0);
+        Criterion<Person> crn2 = Criterion.where(CASH, Operator.LE, 20.0);
         Criterion<Person> criterion = crn1.and(crn2);
 
         // Use a criterion (1):
@@ -110,7 +110,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_02b() {
         CriteriaTool uc  = CriteriaTool.newInstance();
-        Criterion  ex1 = Criterion.newInstance(CASH, Operator.LT, 20.0);
+        Criterion  ex1 = Criterion.where(CASH, Operator.LT, 20.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -120,7 +120,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_03a() {
         CriteriaTool uc  = CriteriaTool.newInstance();
-        Criterion  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.GT, 20.0);
+        Criterion  ex1 = Criterion.where(MOTHER_CASH, Operator.GT, 20.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(2, result.size());
     }
@@ -128,7 +128,7 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_03b() {
         CriteriaTool uc  = CriteriaTool.newInstance();
-        Criterion  ex1 = Criterion.newInstance(MOTHER_CASH, Operator.EQ, 20.0);
+        Criterion  ex1 = Criterion.where(MOTHER_CASH, Operator.EQ, 20.0);
         List<Person> result = uc.select(persons, ex1);
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
@@ -137,8 +137,8 @@ public class CriteriaWeakTest extends MyTestCase {
     @SuppressWarnings("unchecked")
     public void testInit_04a() {
         CriteriaTool uc  = CriteriaTool.newInstance();
-        Criterion  ex1 = Criterion.newInstance(CASH, Operator.GT, 10.0);
-        Criterion  ex2 = Criterion.newInstance(CASH, Operator.LT, 30.0);
+        Criterion  ex1 = Criterion.where(CASH, Operator.GT, 10.0);
+        Criterion  ex2 = Criterion.where(CASH, Operator.LT, 30.0);
         Criterion  exp = ex1.join(BinaryOperator.AND, ex2);
         List<Person> result = uc.select(persons, exp);
         assertEquals(1, result.size());

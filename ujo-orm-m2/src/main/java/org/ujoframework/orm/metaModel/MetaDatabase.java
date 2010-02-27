@@ -31,9 +31,10 @@ import org.ujoframework.orm.DbType;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 import javax.naming.InitialContext;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmHandler;
@@ -49,7 +50,7 @@ import org.ujoframework.orm.annot.Db;
  * @author Pavel Ponec
  * @composed 1 - * MetaTable
  */
-public class MetaDatabase extends AbstractMetaModel {
+final public class MetaDatabase extends AbstractMetaModel {
     private static final Class CLASS = MetaDatabase.class;
 
     /** Logger */
@@ -75,7 +76,7 @@ public class MetaDatabase extends AbstractMetaModel {
     /** DB password */
     @Transient
     public static final Property<MetaDatabase,String> PASSWORD = newProperty("password", "");
-    /** DB class root instance */
+    /** An instance of the DB class. */
     @Transient
     public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
@@ -179,7 +180,6 @@ public class MetaDatabase extends AbstractMetaModel {
         else if (Long.class==type
         || BigInteger.class.isAssignableFrom(type)
         ){
-            // Oracle: DbType.NUMBER
             MetaColumn.DB_TYPE.setValue(column, DbType.BIGINT);
         }
         else if (Double.class==type || BigDecimal.class==type) {
@@ -200,8 +200,14 @@ public class MetaDatabase extends AbstractMetaModel {
         else if (Enum.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
         }
+        else if (Blob.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.BLOB);
+        }
+        else if (Clob.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.CLOB);
+        }
         else if (OrmUjo.class.isAssignableFrom(type)) {
-            // A later initialization !!!
+            // Make a later initialization!
         }
     }
 
@@ -219,9 +225,104 @@ public class MetaDatabase extends AbstractMetaModel {
                 break;
             default:
         }
-
     }
 
+    /** Returns a native database identifirer. */
+    private String dbIdentifier(final String name, final DatabaseMetaData dmd) throws SQLException {
+        if (dmd.storesUpperCaseIdentifiers()) {
+            return name.toUpperCase();
+        }
+        if (dmd.storesLowerCaseIdentifiers()) {
+            return name.toLowerCase();
+        }
+        return name;
+    }
+
+    /** Find database table or columns to modify.
+     * @param conn Database connection
+     * @param newTables Output parameter
+     * @param newColumns Output parameter
+     */
+    private boolean isModelChanged(Connection conn
+        , List<MetaTable>  newTables
+        , List<MetaColumn> newColumns
+        , List<MetaIndex>  newIndexes
+        ) throws SQLException {
+        newTables.clear();
+        newColumns.clear();
+        newIndexes.clear();
+
+        DatabaseMetaData dmd = conn.getMetaData();
+        final String column = null;
+
+        for (MetaTable table : TABLES.of(this)) {
+         if (table.isTable()) {
+
+               // ---------- CHECK TABLE COLUMNS ----------
+             
+                Set<String> items = new HashSet<String>(32);
+                ResultSet rs = dmd.getColumns
+                    ( dbIdentifier(MetaTable.SCHEMA.of(table),dmd)
+                    , null
+                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                    , column
+                    );
+                while(rs.next()) {
+                    items.add(rs.getString("COLUMN_NAME").toUpperCase());
+                }
+                rs.close();
+
+                boolean tableExists = items.size()>0;
+                if (tableExists) {
+                    // create columns:
+                    for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
+
+                        boolean exists = items.contains(MetaColumn.NAME.of(mc).toUpperCase());
+                        if (!exists) {
+                            LOGGER.log(Level.INFO, "New DB column: " + mc.getFullName());
+                            newColumns.add(mc);
+                        }
+                    }
+                } else {
+                    LOGGER.log(Level.INFO, "New DB table: " + MetaTable.NAME.of(table));
+                    newTables.add(table);
+                }
+
+                // ---------- CHECK INDEXES ----------
+
+                items.clear();
+                if (tableExists) {
+                    rs = dmd.getIndexInfo
+                    ( dbIdentifier(MetaTable.SCHEMA.of(table),dmd)
+                    , null
+                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                    , false // unique
+                    , false // approximate
+                    );
+                    while(rs.next()) {
+                        String name = rs.getString("INDEX_NAME");
+                        if (name!=null) {
+                           items.add(name.toUpperCase());
+                        }
+                    }
+                    rs.close();
+                }
+                for (MetaIndex index : table.getIndexCollection()) {
+                    boolean exists = items.contains(MetaIndex.NAME.of(index).toUpperCase());
+                    if (!exists) {
+                        LOGGER.log(Level.INFO, "New DB index: " + index);
+                        newIndexes.add(index);
+                    }
+                }
+            }
+        }
+
+        boolean result = !newTables.isEmpty()
+                      || !newColumns.isEmpty()
+                      || !newIndexes.isEmpty()
+                       ;
+        return result;
+    }
 
     /** Create DB */
     public void create(Session session) {
@@ -229,6 +330,12 @@ public class MetaDatabase extends AbstractMetaModel {
         Statement stat = null;
         StringBuilder out = new StringBuilder(256);
         String sql = "";
+        List<MetaTable> tables = new ArrayList<MetaTable>();
+        List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
+        List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
+        List<MetaIndex> indexes = new ArrayList<MetaIndex>();
+        boolean change = false;
+
         try {
             stat = conn.createStatement();
 
@@ -243,17 +350,51 @@ public class MetaDatabase extends AbstractMetaModel {
                     ps.setString(1, "-");
                     rs = ps.executeQuery();
                     LOGGER.info("Database structure is loaded: " + getId());
-                    return; //
+                    switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
+                        case CREATE_DDL:
+                            return;
+                        case CREATE_OR_UPDATE_DDL:
+                            change = isModelChanged(conn, tables, newColumns, indexes);
+                            if (!change) return;
+                    }
                 } catch (SQLException e) {
-                    LOGGER.info("Database structure is not loaded: " + getId());
+                    LOGGER.log(Level.INFO, "Database structure is not loaded: " + getId());
+                    conn.rollback();
+                } catch (Throwable e) {
+                    LOGGER.log(Level.INFO, "Error: Database structure is not loaded: " + getId(), e);
                     conn.rollback();
                 } finally {
                     close(null, ps, rs, false);
                 }
             }
+            if (!change) {
+                tables = TABLES.getList(this);
+                indexes = getIndexList();
+            }
 
-            // 1. Create schemas:
-            for (String schema : getSchemas()) {
+            // 1. CheckReport keywords:
+            switch (MetaParams.CHECK_KEYWORDS.of(getParams())) {
+                case WARNING:
+                case EXCEPTION:
+                    Set<String> keywords = getDialect().getKeywordSet(conn);
+                    for (MetaTable table : tables) {
+                        if (table.isTable()) {
+                            checkKeyWord(MetaTable.NAME.of(table), table, keywords);
+                            for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+                                checkKeyWord(MetaColumn.NAME.of(column), table, keywords);
+                            }
+                        }
+                    }
+                    for (MetaColumn column : newColumns) {
+                        checkKeyWord(MetaColumn.NAME.of(column), column.getTable(), keywords);
+                    }
+                    for (MetaIndex index : indexes) {
+                        checkKeyWord(MetaIndex.NAME.of(index), MetaIndex.TABLE.of(index), keywords);
+                    }
+            }
+
+            // 2. Create schemas:
+            if (!change) for (String schema : getSchemas(tables)) { // TODO
                 out.setLength(0);
                 sql = getDialect().printCreateSchema(schema, out).toString();
                 if (isUsable(sql)) {
@@ -262,36 +403,53 @@ public class MetaDatabase extends AbstractMetaModel {
                 }
             }
 
-            // 2. Create tables:
+            // 3. Create tables:
             int tableCount = 0;
-            for (MetaTable table : MetaDatabase.TABLES.getList(this)) {
+            for (MetaTable table : tables) {
                 if (table.isTable()) {
                     tableCount++;
                     out.setLength(0);
                     sql = getDialect().printTable(table, out).toString();
                     stat.executeUpdate(sql);
                     LOGGER.info(sql);
+                    foreignColumns.addAll(table.getForeignColumns());
                 }
             }
 
-            // 3. Create Foreign Keys:
-            for (MetaTable table : MetaDatabase.TABLES.getList(this)) {
-                if (table.isTable()){
+            // 4. Create new columns:
+            for (MetaColumn column : newColumns) {
+                out.setLength(0);
+                sql = getDialect().printAlterTable(column, out).toString();
+                stat.executeUpdate(sql);
+                LOGGER.info(sql);
+
+                // Pick up the foreignColumns:
+                if (column.isForeignKey()) {
+                    foreignColumns.add(column);
+                }
+            }
+
+            // 5. Create Foreign Keys:
+            for (MetaColumn column : foreignColumns) {
+                if (column.isForeignKey()) {
                     out.setLength(0);
-                    sql = getDialect().printForeignKey(table, out).toString();
-                    StringTokenizer st = new StringTokenizer(sql, ";");
-                    while(st.hasMoreTokens()) {
-                        sql = st.nextToken().trim();
-                        if (isUsable(sql)) {
-                            stat.executeUpdate(sql);
-                            LOGGER.info(sql);
-                        }
-                    }
+                    MetaTable table = MetaColumn.TABLE.of(column);
+                    sql = getDialect().printForeignKey(column, table, out).toString();
+                    stat.executeUpdate(sql);
+                    LOGGER.info(sql);
                 }
             }
 
-            // 4. Create SEQUENCE;
-            if (tableCount>0) {
+            // 6. Create Indexes:
+            for (MetaIndex index : indexes) {
+                out.setLength(0);
+                sql = getDialect().printIndex(index, out).toString();
+                stat.executeUpdate(sql);
+                LOGGER.info(sql);
+            }
+
+            // 7. Create SEQUENCE table;
+            if (tableCount>0 && !change) {
                 out.setLength(0);
                 sql = getDialect().printSequenceTable(this, out).toString();
                 stat.executeUpdate(sql);
@@ -335,6 +493,23 @@ public class MetaDatabase extends AbstractMetaModel {
                 throw new IllegalStateException(msg, e);
             } else {
                 LOGGER.log(Level.SEVERE, msg, e);
+            }
+        }
+    }
+
+    /** Check the keyword */
+    protected void checkKeyWord(String word, MetaTable table, Set<String> keywords) throws Exception {
+        if (keywords.contains(word.toUpperCase())) {
+            String msg = "The database table or column called '" + word
+                + "' is a SQL keyword. See the class: "
+                + table.getType().getName()
+                + ".\nNOTE: the keyword checking can be disabled by a parameter: " + MetaParams.CHECK_KEYWORDS
+                ;
+            switch (MetaParams.CHECK_KEYWORDS.of(getParams())) {
+                case EXCEPTION:
+                    throw new IllegalArgumentException(msg);
+                case WARNING:
+                    LOGGER.log(Level.WARNING, msg);
             }
         }
     }
@@ -438,19 +613,19 @@ public class MetaDatabase extends AbstractMetaModel {
     }
 
 
-    /** Returns a default handler session. */
+    /** Returns a default handler session. It is a session of the first database. */
     public Session getDefaultSession() {
         return ormHandler.getSession();
     }
 
     /** Get all table schemas */
-    public Set<String> getSchemas() {
+    private Set<String> getSchemas(List<MetaTable> tables) {
         final Set<String> result = new HashSet<String>();
-        for (MetaTable table : TABLES.of(this)) {
-            if (table.isPersistent() && !table.isSelectModel()) {
+        for (MetaTable table : tables) {
+            if (table.isTable()) {
                 String schema = MetaTable.SCHEMA.of(table);
                 if (isUsable(schema)) {
-                   result.add(schema);
+                    result.add(schema);
                 }
             }
         }
@@ -497,5 +672,24 @@ public class MetaDatabase extends AbstractMetaModel {
         return result;
     }
 
+    /** Returns all database indexes */
+    public List<MetaIndex> getIndexList() {
+        final List<MetaIndex> result = new ArrayList<MetaIndex>(32);
+        
+        for (MetaTable table : TABLES.of(this)) {
+            result.addAll(table.getIndexCollection());
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        final String msg = ID.of(this)
+            + '['
+            + MetaDatabase.TABLES.getItemCount(this)
+            + ']'
+            ;
+	     return msg;
+    }
 
 }

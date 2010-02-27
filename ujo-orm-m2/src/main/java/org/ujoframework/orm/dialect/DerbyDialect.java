@@ -18,12 +18,17 @@ package org.ujoframework.orm.dialect;
 import java.io.IOException;
 import java.util.List;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaPKey;
 import org.ujoframework.orm.metaModel.MetaTable;
 
-/** Derby (http://db.apache.org/derby/) */
+/** Derby (http://db.apache.org/derby/)
+ * <br/>NOTE: Dialect supports a LIMIT and OFFSET of the Derby release 10.5
+ * @see http://db.apache.org/derby/docs/10.5/ref/
+ *
+ */
 public class DerbyDialect extends SqlDialect {
 
     /** Syntax: jdbc:derby:[subsubprotocol:][databaseName][;attribute=value]* */
@@ -86,4 +91,14 @@ public class DerbyDialect extends SqlDialect {
         //out.append("\n\tON DELETE CASCADE");
         return out;
     }
+
+
+    @Override
+    public void printOffset(Query query, Appendable out) throws IOException {
+        out.append(" OFFSET " + query.getOffset());
+        out.append(" ROWS");
+
+    }
+
+
 }

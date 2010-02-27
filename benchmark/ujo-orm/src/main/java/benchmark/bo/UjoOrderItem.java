@@ -38,7 +38,7 @@ public class UjoOrderItem extends OrmTable<UjoOrderItem> {
     public static final Property<UjoOrderItem,BigDecimal> price = newProperty(BigDecimal.class);
     public static final Property<UjoOrderItem,BigDecimal> charge = newProperty(BigDecimal.class);
     public static final Property<UjoOrderItem,Boolean> arrival = newProperty(Boolean.class);
-    @Column(lenght=100)
+    @Column(length=100)
     public static final Property<UjoOrderItem,String> description = newProperty(String.class);
     public static final Property<UjoOrderItem,UjoUser> user = newProperty("user_id", UjoUser.class);
     public static final Property<UjoOrderItem,UjoOrder> order = newProperty("order_id", UjoOrder.class);

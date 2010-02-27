@@ -16,6 +16,11 @@
 package org.ujoframework.orm.metaModel;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.annot.Transient;
@@ -39,23 +44,23 @@ import org.ujoframework.orm.UjoSequencer;
  * @composed 1 - * MetaColumn
  * @composed 1 - 1 MetaPKey
  */
-public class MetaTable extends AbstractMetaModel {
+final public class MetaTable extends AbstractMetaModel {
     private static final Class CLASS = MetaTable.class;
 
 
     /** The meta-model id */
     @XmlAttribute
-    public static final Property<MetaTable,String> ID = newProperty("id", "");
+    public static final Property<MetaTable,String> ID = newProperty("id", Table.NULL);
     /** DB table name */
-    public static final Property<MetaTable,String> NAME = newProperty("name", "");
+    public static final Property<MetaTable,String> NAME = newProperty("name", Table.NULL);
     /** The unique table/view name over all Databases in scope one OrmHandler */
-    public static final Property<MetaTable,String> ALIAS = newProperty("alias", "");
+    public static final Property<MetaTable,String> ALIAS = newProperty("alias", Table.NULL);
     /** Name of table schema. */
-    public static final Property<MetaTable,String> SCHEMA = newProperty("schema", "");
+    public static final Property<MetaTable,String> SCHEMA = newProperty("schema", Table.NULL);
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
-    public static final Property<MetaTable,String> SEQUENCE = newProperty("sequence", "");
-    /** Table Columns */
+    public static final Property<MetaTable,String> SEQUENCE = newProperty("sequence", Table.NULL);
+    /** Table Columns (no relations) */
     public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
     /** Table relations to many */
     public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class);
@@ -111,10 +116,12 @@ public class MetaTable extends AbstractMetaModel {
 
         if (VIEW.of(this)) {
             if (view1!=null) changeDefault(this, NAME  , view1.name());
+            if (view1!=null) changeDefault(this, NAME  , view1.value());
             if (view1!=null) changeDefault(this, ALIAS , view1.alias());
             if (view1!=null) changeDefault(this, SCHEMA, view1.schema());
             if (view1!=null) changeDefault(this, SELECT, view1.select());
             if (view2!=null) changeDefault(this, NAME  , view2.name());
+            if (view2!=null) changeDefault(this, NAME  , view2.value());
             if (view2!=null) changeDefault(this, ALIAS , view2.alias());
             if (view2!=null) changeDefault(this, SCHEMA, view2.schema());
             if (view2!=null) changeDefault(this, SELECT, view2.select());
@@ -126,10 +133,12 @@ public class MetaTable extends AbstractMetaModel {
             Table table1 = field.getAnnotation(Table.class);
             Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
             if (table1!=null) changeDefault(this, NAME  , table1.name());
+            if (table1!=null) changeDefault(this, NAME  , table1.value());
             if (table1!=null) changeDefault(this, ALIAS , table1.alias());
             if (table1!=null) changeDefault(this, SCHEMA, table1.schema());
             if (table1!=null) changeDefault(this, SEQUENCE,table1.sequence());
             if (table2!=null) changeDefault(this, NAME  , table2.name());
+            if (table2!=null) changeDefault(this, NAME  , table2.value());
             if (table2!=null) changeDefault(this, ALIAS , table2.alias());
             if (table2!=null) changeDefault(this, SCHEMA, table2.schema());
             if (table2!=null) changeDefault(this, SEQUENCE,table2.sequence());
@@ -266,9 +275,47 @@ public class MetaTable extends AbstractMetaModel {
         return null;
     }
 
+    /** Get all foreign columns */
+    public List<MetaColumn> getForeignColumns() {
+        final List<MetaColumn> result = new ArrayList<MetaColumn>();
+        for (MetaColumn column : COLUMNS.getList(this)) {
+            if (column.isForeignKey()) {
+                result.add(column);
+            }
+        }
+        return result;
+    }
+
     /** UJO sequencer */
     public UjoSequencer getSequencer() {
         return sequencer;
+    }
+
+    /** Get a collection of the table indexes. */
+    public Collection<MetaIndex> getIndexCollection() {
+        Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
+
+        for (MetaColumn column : COLUMNS.getList(this)) {
+            String[] idxs = {MetaColumn.INDEX.of(column), MetaColumn.UNIQUE_INDEX.of(column)};
+
+            for (int i=0; i<2; ++i) {
+                if (idxs[i].length()>0) {
+                    String upperIdx = idxs[i].toUpperCase();
+                    MetaIndex mIndex = mapIndex.get(upperIdx);
+                    if (mIndex==null) {
+                        mIndex = new MetaIndex(idxs[i], this);
+                        mapIndex.put(upperIdx, mIndex);
+                    }
+                    if (i==0) {
+                        MetaIndex.UNIQUE.setValue(mIndex, false);
+                    } else if (upperIdx.equalsIgnoreCase(idxs[0])) {
+                        break; // Ignore the same column in the index.
+                    }
+                    MetaIndex.COLUMNS.addItem(mIndex, column);
+                }
+            }
+        }
+        return mapIndex.values();
     }
 
 }
