@@ -31,7 +31,7 @@ import org.ujoframework.orm.TypeService;
  * @author Pavel Ponec
  * @composed 1 - * MetaColumn
  */
-public class MetaPKey extends AbstractMetaModel {
+final public class MetaPKey extends AbstractMetaModel {
     private static final Class CLASS = MetaPKey.class;
 
     /** DB table */

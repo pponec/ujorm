@@ -78,7 +78,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
 
     /** Get a semifinal value from an Ujo object by a chain of properties.
-     * If a value  (not getLastProperty) is null, then the result is null.
+     * If any value (not getLastProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     public Ujo getSemifinalValue(UJO ujo) {
@@ -107,13 +107,15 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         getLastProperty().setValue(u, value);
     }
 
+    @Override
     final public int getIndex() {
         return -1;
     }
 
     /** Returns a default value */
+    @Override
     public VALUE getDefault() {
-        return (VALUE) getLastProperty().getDefault();
+        return getLastProperty().getDefault();
     }
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
@@ -128,8 +130,17 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return result;
     }
 
+    /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
+    @Override
+    public void copy(final UJO from, final UJO to) {
+        final Ujo from2 = getSemifinalValue(from);
+        final Ujo to2 = getSemifinalValue(to);
+        getLastProperty().copy(from2, to2);
+    }
+
     /** Returns true if the property type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
+    @Override
     public boolean isTypeOf(final Class type) {
         return type.isAssignableFrom(getType());
     }
@@ -141,6 +152,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      * @param value Null value is supported.
      * @return Accordance
      */
+    @Override
     public boolean equals(final UJO ujo, final VALUE value) {
         Object myValue = getValue(ujo);
         if (myValue==value) { return true; }
@@ -154,9 +166,10 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
 
     /**
-     * An alias for a method getValue(Ujo) .
+     * A shortcut for the method getValue(Ujo) .
      * @see #getValue(Ujo)
      */
+    @Override
     final public VALUE of(final UJO ujo) {
         return getValue(ujo);
     }

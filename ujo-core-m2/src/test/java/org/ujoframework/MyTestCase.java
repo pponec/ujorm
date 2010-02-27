@@ -124,7 +124,6 @@ abstract public class MyTestCase extends TestCase {
         try {
             Thread.sleep(millis);
         } catch (Throwable e) {
-            ;
         }
     }
 }

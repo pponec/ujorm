@@ -17,9 +17,11 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaIndex;
 
-/** Oracle (www.oracle.com/) */
+/** Oracle (www.oracle.com/) release 9.0 */
 public class OracleDialect extends PostgreSqlDialect {
 
 
@@ -45,13 +47,30 @@ public class OracleDialect extends PostgreSqlDialect {
         return out;
     }
 
-    /** Returns a default primary key database type.
-     * The method is called from method 'SqlDialect.printSequenceTable()' and from 'MetaDatabase.changeDbType()'.
+    /** Print SQL database SELECT
+     * @param query The UJO query
+     * @param count only count of items is required;
      */
-    //    @Override
-    //    public DbType getPrimaryKeyType() {
-    //        return DbType.NUMBER;
-    //    }
+    @Override
+    protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
+        if (!count && query.isOffset()) {
+            out.append("SELECT * FROM (SELECT ujorm__.*, ROWNUM AS ujorm_rownum FROM (\n");
+            super.printSelectTable(query, count, out);
+            out.append("\n) ujorm__) WHERE ujorm_rownum > " + query.getOffset());
+            if (query.getLimit()>0) {
+                final long to = query.getOffset() + query.getLimit();
+                out.append(" AND ujorm_rownum <= " + to);
+            }
+        } else {
+            super.printSelectTable(query, count, out);
+        }
+        return out;
+    }
+
+    @Override
+    public void printOffset(Query query, Appendable out) throws IOException {
+        // ORACLE has a special implementation of the LIMIT & OFFSET.
+    }
 
     /** PostgreSql dialect uses a database type OID (instead of the BLBO). */
     @Override
@@ -60,10 +79,71 @@ public class OracleDialect extends PostgreSqlDialect {
             case BIGINT:
                 return "NUMBER";
             default:
-                return super.getColumnType(column);
+                // Don't call the super.getColumnType(..)
+                return MetaColumn.DB_TYPE.of(column).name();
         }
     }
 
+    /** Print a SQL sript to add a new column to the table 
+     * <br>Sample: ALTER TABLE sa_myphone.ord_order ADD (NEW_COLUMN INT DEFAULT 777 NOT NULL);
+     */
+    @Override
+    public Appendable printAlterTable(MetaColumn column, Appendable out) throws IOException {
+        out.append("ALTER TABLE ");
+        printFullTableName(column.getTable(), out);
+        out.append(" ADD (");
 
+        if (column.isForeignKey()) {
+            printFKColumnsDeclaration(column, out);
+        } else {
+            printColumnDeclaration_2(column, null, out);
+        }
+        out.append(" )");
+
+        return out;
+    }
+
+
+
+    /**
+     *  Print a SQL to create column
+     * @param column Database Column
+     * @param aName The name parameter is not mandatory, the not null value means a foreign key.
+     * @throws java.io.IOException
+     */
+    public Appendable printColumnDeclaration_2(MetaColumn column, String aName, Appendable out) throws IOException {
+
+        String name = aName!=null ? aName : MetaColumn.NAME.of(column);
+        out.append(name);
+        out.append(' ');
+        out.append(getColumnType(column));
+
+        if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
+            out.append("(" + MetaColumn.MAX_LENGTH.of(column));
+            if (!MetaColumn.PRECISION.isDefault(column)) {
+                out.append("," + MetaColumn.PRECISION.of(column));
+            }
+            out.append(")");
+        }
+        if (column.hasDefaultValue()) {
+            printDefaultValue(column, out);
+        }
+        if (MetaColumn.MANDATORY.of(column) && aName == null) {
+            out.append(" NOT NULL");
+        }
+        if (MetaColumn.PRIMARY_KEY.of(column) && aName == null) {
+            out.append(" PRIMARY KEY");
+        }
+        return out;
+    }
+
+
+    /**
+     * No PARTIAL INDEX is supported.
+     */
+    @Override
+    public Appendable printIndexCondition(final MetaIndex index, final Appendable out) throws IOException {
+        return out;
+    }
 
 }

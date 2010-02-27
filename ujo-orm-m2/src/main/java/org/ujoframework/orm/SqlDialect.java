@@ -15,10 +15,18 @@
  */
 package org.ujoframework.orm;
 
+import java.io.BufferedReader;
+import java.io.CharArrayReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaPKey;
@@ -27,6 +35,7 @@ import org.ujoframework.orm.metaModel.MetaView;
 import org.ujoframework.criterion.ValueCriterion;
 import org.ujoframework.criterion.Operator;
 import org.ujoframework.orm.metaModel.MetaDatabase;
+import org.ujoframework.orm.metaModel.MetaIndex;
 import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
@@ -38,8 +47,14 @@ import org.ujoframework.orm.metaModel.MetaParams;
 @SuppressWarnings("unchecked")
 abstract public class SqlDialect {
 
-    /** The table key for a common sequence emulator. */
-    public static final String COMMON_SEQ_TABLE_NAME = "ormujo_pk_support";
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(SqlDialect.class.getName());
+
+    /** The table key for a common sequence emulator. 
+     * <br/>The SQL script for migration to the Ujorm 0.93:
+     * <pre>ALTER TABLE ormujo_pk_support RENAME TO ujorm_pk_support;</pre>
+     */
+    public static final String COMMON_SEQ_TABLE_NAME = "ujorm_pk_support";
     /** The table key for a common sequence emulator. */
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
 
@@ -128,15 +143,43 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print foreign key */
-    public Appendable printForeignKey(MetaTable table, Appendable out) throws IOException {
-        for (MetaColumn column : MetaTable.COLUMNS.getList(table)) {
-            if (column.isForeignKey()) {
-                printForeignKey(column, table, out);
-            }
+    /** Print a SQL sript to add a new column to the table */
+    public Appendable printAlterTable(MetaColumn column, Appendable out) throws IOException {
+        out.append("ALTER TABLE ");
+        printFullTableName(column.getTable(), out);
+        out.append(" ADD COLUMN ");
+
+        if (column.isForeignKey()) {
+            printFKColumnsDeclaration(column, out);
+        } else {
+            printColumnDeclaration(column, null, out);
+        }
+        if (column.hasDefaultValue()) {
+            printDefaultValue(column, out);
+        }
+
+        return out;
+    }
+
+    /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
+    public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
+        Object value = column.getJdbcFriendlyDefaultValue();
+        boolean isDefault = value!=null;
+        String quotMark = "";
+        if (value instanceof String) {
+            isDefault = ((String) value).length() > 0;
+            quotMark = "'";
+        }
+        if (isDefault) {
+            out.append(" DEFAULT ");
+            out.append(quotMark);
+            out.append(value.toString());
+            out.append(quotMark);
         }
         return out;
     }
+
+
 
     /**
      * Print foreign key for the parameter column
@@ -170,10 +213,36 @@ abstract public class SqlDialect {
             out.append(MetaColumn.NAME.of(fkColumn));
         }
 
-        out.append(");\n");
-        //out.append("\tON DELETE CASCADE;\n");
+        out.append(")");
+        //out.append("\tON DELETE CASCADE");
         return out;
     }
+
+    /**
+     * Print an INDEX for the parameter column.
+     * @return More statements separated by the ';' charactes are enabled
+     */
+    public Appendable printIndex(final MetaIndex index, final Appendable out) throws IOException {
+
+        out.append("CREATE ");
+        if (MetaIndex.UNIQUE.of(index)) {
+            out.append("UNIQUE ");
+        }
+        out.append("INDEX ");
+        out.append(MetaIndex.NAME.of(index));
+        out.append(" ON ");
+        printFullTableName(MetaIndex.TABLE.of(index), out);
+        String separator = " (";
+
+        for (MetaColumn column : MetaIndex.COLUMNS.of(index)) {
+            out.append(separator);
+            out.append(MetaColumn.NAME.of(column));
+            separator = ", ";
+        }
+        out.append(')');
+        return out;
+    }
+
 
     /**
      *  Print a SQL to create column
@@ -227,7 +296,7 @@ abstract public class SqlDialect {
     }
 
     /** Print an SQL INSERT statement.  */
-    public Appendable printInsert(OrmUjo bo, Appendable out) throws IOException {
+    public Appendable printInsert(final OrmUjo bo, final Appendable out) throws IOException {
 
         MetaTable table = ormHandler.findTableModel((Class) bo.getClass());
         StringBuilder values = new StringBuilder();
@@ -238,9 +307,10 @@ abstract public class SqlDialect {
 
         printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
 
-        out.append(") VALUES (");
-        out.append(values);
-        out.append(")");
+        out.append(") VALUES (")
+           .append(values)
+           .append(")")
+           ;
 
         return out;
     }
@@ -542,6 +612,9 @@ abstract public class SqlDialect {
             if (!query.getOrderBy().isEmpty()) {
                printSelectOrder(query, out);
             }
+            if (query.isOffset()) {
+                printOffset(query, out);
+            }
             if (query.isLockRequest()) {
                out.append(' ');
                printLockForSelect(query, out);
@@ -576,6 +649,16 @@ abstract public class SqlDialect {
                 out.append(" DESC");
             }
         }
+    }
+
+    /** Print an OFFSET of the statement SELECT. */
+    public void printOffset(Query query, Appendable out) throws IOException {
+        int limit = query.getLimit()>0
+            ? query.getLimit()
+            : Integer.MAX_VALUE
+            ;
+        out.append(" LIMIT " + limit);
+        out.append(" OFFSET " + query.getOffset());
     }
 
     /** Prinnt the full sequence name */
@@ -666,5 +749,43 @@ abstract public class SqlDialect {
         return out;
     }
 
+    /** Return database SQL keyword set in the upper case. */
+    public Set<String> getKeywordSet(Connection conn) {
+        Set<String> result = new HashSet<String>(128);
+        Reader reader = null;
+        try {
+            // Get keywords from a JDBC meta-data object:
+            reader = new CharArrayReader(conn.getMetaData().getSQLKeywords().concat(",").toCharArray());
+            assignKeywords(result, reader);
 
+            // Get keywords from a text file:
+            reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/org/ujoframework/orm/sql-keywords.txt"), "UTF8"));
+            assignKeywords(result, reader);
+
+        } catch (Throwable e) {
+            LOGGER.log(Level.WARNING, "Can't read SQL keywords", e);
+        } finally {
+            if (reader!=null) try {
+                reader.close();
+            } catch (IOException e) {
+                LOGGER.log(Level.WARNING, "Can't close reader", e);
+            }
+        }
+        result.remove("");
+        return result;
+    }
+
+    /** Assign keywords from reader to a set */
+    private void assignKeywords(Set<String> result, Reader reader) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        int c;
+        while ((c=reader.read())!=-1) {
+            if (c==',') {
+                result.add(builder.toString().trim().toUpperCase());
+                builder.setLength(0);
+            } else {
+                builder.append((char)c);
+            }
+        }
+    }
 }

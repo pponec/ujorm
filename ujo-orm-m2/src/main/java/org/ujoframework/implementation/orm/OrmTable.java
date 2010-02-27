@@ -23,8 +23,8 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoPropertyListImpl;
 import org.ujoframework.implementation.quick.QuickUjo;
+import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.OrmUjo;
-import org.ujoframework.orm.UniqueKey;
 import org.ujoframework.orm.Session;
 
 /**
@@ -65,6 +65,18 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
     public OrmTable() {
     }
 
+    /** Read a session */
+    @Override
+    public Session readSession() {
+        return session;
+    }
+
+    /** Write a session */
+    @Override
+    public void writeSession(Session session) {
+        this.session = session;
+    }
+
     /** A method for an internal use only. */
     @Override
     public void writeValue(UjoProperty property, Object value) {
@@ -84,8 +96,8 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
         Object result = super.readValue(property);
 
         if (property.isTypeOf(OrmUjo.class)) {
-            if (result instanceof UniqueKey) {
-                result = session.loadInternal(property, ((UniqueKey)result).getValue(), true);
+            if (result instanceof ForeignKey) {
+                result = session.loadInternal(property, ((ForeignKey)result).getValue(), true);
                 super.writeValue(property, result);
             }
             else
@@ -93,11 +105,10 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
             && session!=null
             && session!=((OrmUjo)result).readSession()
             ){
-                // Write the current session to a related object
+                // Write the current session to a related object:
                 ((OrmUjo)result).writeSession(session);
             }
-        }
-        else
+        } else
         if (property instanceof RelationToMany
         &&  session!=null
         &&  session.getHandler().isPersistent(property)
@@ -145,16 +156,6 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
         return (UJO_IMPL) this;
     }
 
-    /** Read a session */
-    public Session readSession() {
-        return session;
-    }
-
-    /** Write a session */
-    public void writeSession(Session session) {
-        this.session = session;
-    }
-
     /** Test an authorization of the action. */
     @Override
     public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
@@ -164,6 +165,24 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
             default:
                 return super.readAuthorization(action, property, value);
         }
+    }
+
+    /** Read the foreign key.
+     * This is useful to obtain the foreign key value without (lazy) loading the entire object.
+     * If the lazy object is loaded, the method will need the Session to build the ForeignKey instance.
+     * <br>NOTE: The method is designed for developers only, the Ujorm doesn't call it newer.
+     * @return If no related object is available, then the result has the NULL value.
+     * @throws IllegalStateException Method throws an exception for a wrong property type.
+     * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
+     */
+    public <UJO extends UJO_IMPL> ForeignKey readFK(UjoProperty<UJO, ? extends OrmUjo> property) throws IllegalStateException {
+        Object value = super.readValue(property);
+        if (value==null || value instanceof ForeignKey) {
+            return (ForeignKey) value;
+        } else if (session!=null) {
+            return session.readFK(this, property);
+        }
+        throw new NullPointerException("Can't get FK form the property '"+property+"' due the missing Session");
     }
 
     // --------- STATIC METHODS -------------------

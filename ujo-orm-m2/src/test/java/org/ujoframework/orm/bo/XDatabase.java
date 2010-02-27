@@ -14,13 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm_tutorial.sample;
+package org.ujoframework.orm.bo;
 
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.annot.Db;
-import org.ujoframework.orm.annot.View;
 import org.ujoframework.orm.dialect.*;
 
 /**
@@ -34,21 +33,17 @@ import org.ujoframework.orm.dialect.*;
 //@Db(schema="db1", dialect=HsqldbDialect.class, user="sa", password="", jdbcUrl="jdbc:hsqldb:mem:db1")
 //@Db(schema= ""  , dialect=FirebirdDialect.class, user="sysdba", password="masterkey", jdbcUrl="jdbc:firebirdsql:localhost/3050:c:\\progra~1\\firebird\\db\\db1.fdb?lc_ctype=UTF8")
 //@Db(schema="db1", dialect=OracleDialect.class, user="sa", password="", jdbcUrl="jdbc:oracle:thin:@myhost:1521:orcl")
-public class Database extends OrmTable<Database> {
+public class XDatabase extends OrmTable<XDatabase> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */
-    @Table("ord_order")
-    public static final RelationToMany<Database,Order> ORDERS = newRelation(Order.class);
+    @Table("x_ord_order")
+    public static final RelationToMany<XDatabase,XOrder> ORDERS = newRelation(XOrder.class);
 
     /** Items of the Customer order */
-    @Table("ord_item")
-    public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation(Item.class);
-
-    /** View to aggregate data. */
-    @View("ord_order")
-    public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation(ViewOrder.class);
+    @Table("x_ord_item")
+    public static final RelationToMany<XDatabase,XItem> ORDER_ITEMS = newRelation(XItem.class);
 
     /** Customer */
-    // @Table("ord_customer") public static final RelationToMany<Database,Customer> CUSTOMER = newRelation(Customer.class);
+    @Table("x_ord_customer") public static final RelationToMany<XDatabase,XCustomer> CUSTOMER = newRelation(XCustomer.class);
 
 }

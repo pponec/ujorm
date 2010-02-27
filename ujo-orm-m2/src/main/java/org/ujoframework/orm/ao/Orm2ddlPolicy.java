@@ -27,6 +27,8 @@ public enum Orm2ddlPolicy {
     DO_NOTHING,
     /** Create full DDL structure in condition that the the database structure was not found. */
     CREATE_DDL,
+    /** Create or update full DDL structure. It is the default value. */
+    CREATE_OR_UPDATE_DDL,
     ;
 
 }

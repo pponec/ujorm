@@ -37,9 +37,9 @@ import org.ujoframework.core.UjoComparator;
  *
  * List&lt;Person&gt; persons = Arrays.asList(child, mother, father);
  *
- * Criterion&lt;Person&gt; exp = Criterion.newInstance(NAME, <span class="character">&quot;</span><span class="character">John</span><span class="character">&quot;</span>);
+ * Criterion&lt;Person&gt; exp = Criterion.where(NAME, <span class="character">&quot;</span><span class="character">John</span><span class="character">&quot;</span>);
  * UjoComparator&lt;Person&gt; sort = UjoComparator.create(HIGH, NAME);
- * List&lt;Person&gt; <strong style="color:blue;">result</strong> = CriteriaTool.newInstance().select(persons, exp, sort);
+ * List&lt;Person&gt; <strong style="color:blue;">result</strong> = CriteriaTool.where().select(persons, exp, sort);
 </pre>
  * 
  * @author Pavel Ponec

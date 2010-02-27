@@ -25,6 +25,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
 import junit.framework.TestCase;
+import org.ujoframework.orm.bo.XOrder;
 
 /**
  *
@@ -41,9 +42,9 @@ public class SerializatonTest extends TestCase {
      */
     public void testKeySerialization() throws Exception {
         System.out.println("testKeySerialization");
-        UniqueKey expResult = new UniqueKey(123L);
+        ForeignKey expResult = new ForeignKey(123L);
 
-        UniqueKey result = serialize(expResult);
+        ForeignKey result = serialize(expResult);
         assertEquals(expResult, result);
     }
 
@@ -51,17 +52,17 @@ public class SerializatonTest extends TestCase {
      * Test of getValue method, of class UniqueKey.
      */
     public void testOrmTableSerialization() throws Exception {
-//        System.out.println("testOrmTableSerialization");
-//        OrderSample expResult = new OrderSample();
-//        expResult.setId(33L);
-//        expResult.setDate(new Date());
-//        expResult.setState(OrderSample.State.DELETED);
-//        //
-//        OrderSample result = serialize(expResult);
-//        assertEquals(expResult.getId(), result.getId());
-//        assertEquals(expResult.getDate(), result.getDate());
-//        assertSame(expResult.getState(), result.getState());
-//        assertSame(expResult.getDescr(), result.getDescr());
+        System.out.println("testOrmTableSerialization");
+        XOrder expResult = new XOrder();
+        expResult.setId(33L);
+        expResult.setDate(new Date());
+        expResult.setState(XOrder.State.DELETED);
+        //
+        XOrder result = serialize(expResult);
+        assertEquals(expResult.getId(), result.getId());
+        assertEquals(expResult.getDate(), result.getDate());
+        assertSame(expResult.getState(), result.getState());
+        assertSame(expResult.getDescr(), result.getDescr());
     }
 
 

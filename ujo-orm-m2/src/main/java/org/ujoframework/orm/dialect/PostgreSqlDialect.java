@@ -17,8 +17,10 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaIndex;
 
 /** PostgreSQL (http://www.postgresql.org/) */
 public class PostgreSqlDialect extends SqlDialect {
@@ -46,11 +48,51 @@ public class PostgreSqlDialect extends SqlDialect {
     protected String getColumnType(final MetaColumn column) {
         switch (MetaColumn.DB_TYPE.of(column)) {
             case BLOB:
-                return "OID";
+            case CLOB:
+            case BINARY:
+                return "BYTEA"; // The 'bytea' data type allows storage of binary strings.
             default:
                 return super.getColumnType(column);
         }
     }
 
+    /**
+     * Print an INDEX for the parameter column.
+     * @return More statements separated by the ';' charactes are enabled
+     */
+    @Override
+    public Appendable printIndex(final MetaIndex index, final Appendable out) throws IOException {
+        super.printIndex(index,out);
+        if (MetaIndex.UNIQUE.of(index)) {
+            printIndexCondition(index, out);
+        }
+        return out;
+    }
+
+    /**
+     * Create an PARTIAL INDEX for exclude NULL values.
+     * The behaviour is similar like the PostgreSQL or ORACLE databases.
+     * <br>NOTE: you can disable the feature by the overwriting current method by an empty body.
+     */
+    public Appendable printIndexCondition(final MetaIndex index, final Appendable out) throws IOException {
+        String prefix = " WHERE ";
+        for (MetaColumn column : MetaIndex.COLUMNS.of(index)) {
+            if (!column.hasDefaultValue()) {
+                out.append(prefix);
+                out.append(MetaColumn.NAME.of(column));
+                out.append(" IS NOT NULL");
+                prefix = " AND ";
+            }
+        }
+        return out;
+    }
+
+    /** Print an OFFSET of the statement SELECT. */
+    @Override
+    public void printOffset(Query query, Appendable out) throws IOException {
+        if (query.isOffset()) {
+            out.append(" OFFSET " + query.getOffset());
+        }
+    }
 
 }

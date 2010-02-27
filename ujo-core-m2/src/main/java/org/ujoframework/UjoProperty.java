@@ -58,7 +58,7 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Co
     
     
     /**
-     * An alias for a method getValue(Ujo) .
+     * A shortcut for the method getValue(Ujo) .
      * @see #getValue(Ujo)
      */
     public VALUE of(UJO ujo);
@@ -129,6 +129,9 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Co
      * @since 0.92
      */
     public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(UjoProperty<? extends VALUE, VALUE_PAR> property);
+
+    /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
+    public void copy(UJO from, UJO to);
 
     /** Returns the name of Property. */
     @Override

@@ -66,11 +66,12 @@ public class MetaRelation2Many extends AbstractMetaModel {
             TABLE.setValue(this, table);
             TABLE_PROPERTY.setValue(this, tableProperty);
         }
+        if (column!=null) {
+            changeDefault(this, NAME, column.name());
+            changeDefault(this, NAME, column.value());
+        }
         if (param!=null) {
             changeDefault(this, NAME, NAME.of(param));
-        }
-        if (column!=null) {
-            NAME.setValue(this, column.name());
         }
         changeDefault(this, NAME, tableProperty.getName());
     }
@@ -88,6 +89,10 @@ public class MetaRelation2Many extends AbstractMetaModel {
     /** Returns a column property */
     final public UjoProperty getProperty() {
         return TABLE_PROPERTY.of(this);
+    }
+
+    final public MetaTable getTable() {
+        return TABLE.of(this);
     }
 
     /** Returns a class of column table. */

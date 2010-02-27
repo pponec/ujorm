@@ -17,6 +17,7 @@ package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
 import org.ujoframework.orm.Query;
+import org.ujoframework.orm.metaModel.MetaColumn;
 
 public class FirebirdDialect extends org.ujoframework.orm.SqlDialect {
 
@@ -52,5 +53,40 @@ public class FirebirdDialect extends org.ujoframework.orm.SqlDialect {
         out.append("FOR UPDATE WITH LOCK");
         return out;
     }
-	
+
+    /** Print a SQL sript to add a new column to the table 
+     * <BR> The DDL statement does not contains a word COLUMN.
+     */
+    @Override
+    public Appendable printAlterTable(MetaColumn column, Appendable out) throws IOException {
+        out.append("ALTER TABLE ");
+        printFullTableName(column.getTable(), out);
+        out.append(" ADD ");
+
+        if (column.isForeignKey()) {
+            printFKColumnsDeclaration(column, out);
+        } else {
+            printColumnDeclaration(column, null, out);
+        }
+
+        if (column.hasDefaultValue()) {
+            final String notNull = " NOT NULL";
+            if (column.isMandatory()) {
+                int i = out.toString().indexOf(notNull);
+                if (i>=0 && out instanceof StringBuilder) {
+                   ((StringBuilder) out).delete(i, i+notNull.length());
+                }
+            }
+
+            printDefaultValue(column, out);
+
+            if (column.isMandatory()) {
+                out.append(notNull);
+            }
+        }
+
+        return out;
+    }
+
+
 }

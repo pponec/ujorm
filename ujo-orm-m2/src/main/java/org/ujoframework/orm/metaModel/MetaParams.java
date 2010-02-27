@@ -20,9 +20,11 @@ import java.io.File;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.Property;
+import org.ujoframework.extensions.ValueTextable;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.ao.CachePolicy;
+import org.ujoframework.orm.ao.CheckReport;
 import org.ujoframework.orm.ao.Orm2ddlPolicy;
 
 /**
@@ -30,10 +32,10 @@ import org.ujoframework.orm.ao.Orm2ddlPolicy;
  * The class is a root of database configuration.
  * @author Pavel Ponec
  */
-public class MetaParams extends AbstractMetaModel {
+final public class MetaParams extends AbstractMetaModel {
     private static final Class CLASS = MetaParams.class;
-    public static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
-
+    private static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
+    
 
     /** Enable / disable a session cache for the business objects. */
     public static final Property<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE);
@@ -49,11 +51,16 @@ public class MetaParams extends AbstractMetaModel {
      * Default values is 100, the smallest possible value is 1. */
     public static final Property<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 100);
     /** A policy to defining the database structure by a DDL. */
-    public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_DDL);
+    public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
     /** Change a TypeService class by a subtype for user type customization. */
     public static final Property<MetaParams,Class> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
+    /** CheckReport a keyword in the database table or colum name inside the meta-model. */
+    public static final Property<MetaParams,CheckReport> CHECK_KEYWORDS = newProperty("checkKeywords", CheckReport.EXCEPTION);
+    /** An application context for initializaton of the customer componets of the meta-model.
+     * @see org.ujoframework.extensions.ValueTextable ValueTextable */
+    public static final Property<MetaParams,ValueTextable> APPL_CONTEXT = newProperty("applContext", ValueTextable.class);
     /** The property initialization */
     static{init(CLASS, true);}
 
@@ -93,5 +100,4 @@ public class MetaParams extends AbstractMetaModel {
         return typeService;
     }
 
-    
 }

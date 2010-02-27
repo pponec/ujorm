@@ -25,14 +25,21 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Table {
 
-    /** A table name. Default value is taken from a relation property name. */
-    String name() default "";
+    /** A String for the NULL value. */
+    public static final String NULL = ""; // TODO: try to use: "<NULL>"
+
+    /** A named parameter for the table name. Default value is taken from a relation property name. */
+    String name() default NULL;
+    /** A shortcut for the attribute "name" of Table.
+     * @see #name()
+     */
+    String value() default NULL;
     /** Table alias name. The default value is taken from a name. */
-    String alias() default "";
+    String alias() default NULL;
     /** Name of schema. If the value is empty than a default database schema is used. */
-    String schema() default "";
+    String schema() default NULL;
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
-    String sequence() default "";
+    String sequence() default NULL;
     
 }

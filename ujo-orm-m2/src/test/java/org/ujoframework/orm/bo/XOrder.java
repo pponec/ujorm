@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujoframework.orm_tutorial.sample;
+package org.ujoframework.orm.bo;
 
 import java.sql.Blob;
 import java.sql.Clob;
@@ -30,11 +30,11 @@ import org.ujoframework.orm.utility.OrmTools;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
- * Note, that the Order object has got an collection of Items.
+ * Note, that the XOrder object has got an collection of Items.
  * @hidden
  */
 @Table(name = "ord_order")
-public class Order extends OrmTable<Order> {
+public class XOrder extends OrmTable<XOrder> {
 
     public enum State {
         ACTIVE,
@@ -43,27 +43,28 @@ public class Order extends OrmTable<Order> {
     
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<Order, Long> ID = newProperty(Long.class);
-    /** Order state, default is ACTIVE */
-    public static final UjoProperty<Order, State> STATE = newProperty(State.ACTIVE);
+    public static final UjoProperty<XOrder, Long> ID = newProperty(Long.class);
+    /** XOrder state, default is ACTIVE */
+    public static final UjoProperty<XOrder, State> STATE = newProperty(State.ACTIVE);
     /** User key */
-    public static final UjoProperty<Order, Integer> USER_ID = newProperty(Integer.class);
+    public static final UjoProperty<XOrder, Integer> USER_ID = newProperty(Integer.class);
     /** Description of the order */
-    @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true)
-    public static final UjoProperty<Order, String> DESCR = newProperty(String.class);
+    @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true, index="idx_description") //
+    public static final UjoProperty<XOrder, String> DESCR = newProperty(String.class);
     /** Date of creation */
-    public static final UjoProperty<Order, Date> CREATED = newProperty(Date.class);
+    public static final UjoProperty<XOrder, Date> CREATED = newProperty(Date.class);
     /** Text file */
     @Transient
-    public static final UjoProperty<Order, Clob> TEXT_FILE = newProperty(Clob.class);
+    public static final UjoProperty<XOrder, Clob> TEXT_FILE = newProperty(Clob.class);
     /** Binary file */
     @Transient
-    public static final UjoProperty<Order, Blob> BINARY_FILE = newProperty(Blob.class);
+    public static final UjoProperty<XOrder, Blob> BINARY_FILE = newProperty(Blob.class);
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> ITEMS = newRelation(Item.class);
+    public static final RelationToMany<XOrder, XItem> ITEMS = newRelation(XItem.class);
     /** Customer */
-    // @Column(name="fk_customer") public static final UjoProperty<Order, Customer> CUSTOMER = newProperty(Customer.class);
-    // @Column(mandatory=true) public static final UjoProperty<Order, Integer> NEW_COLUMN = newProperty(777);
+    @Column(name="fk_customer") 
+    public static final UjoProperty<XOrder, XCustomer> CUSTOMER = newProperty(XCustomer.class);
+    //@Column(mandatory=true) public static final UjoProperty<XOrder, Integer> NEW_COLUMN = newProperty(777);
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {
@@ -98,7 +99,6 @@ public class Order extends OrmTable<Order> {
         set(CREATED, date);
     }
 
-
     public State getState() {
         return get(STATE);
     }
@@ -123,7 +123,7 @@ public class Order extends OrmTable<Order> {
         set(BINARY_FILE, OrmTools.createBlob(binaryFile));
     }
 
-    public UjoIterator<Item> getItems() {
+    public UjoIterator<XItem> getItems() {
         return get(ITEMS);
     }
 }

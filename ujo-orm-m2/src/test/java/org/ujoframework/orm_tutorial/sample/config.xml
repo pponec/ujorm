@@ -1,89 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 0.92 was created 2010/01/12 08:19 -->
+<!-- The Ujorm configuration file release UNDEFINED was created 2010/02/09 19:19 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
         <dialect>org.ujoframework.orm.dialect.H2Dialect</dialect>
-        <table id="ord_order">
+        <table id="ORDERS">
             <name>ord_order</name>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
-            <column id="id">
-                <name>id</name>
+            <column id="ID">
+                <name>ID</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
-            <column id="state">
-                <name>state</name>
+            <column id="STATE">
+                <name>STATE</name>
                 <dbType>SMALLINT</dbType>
             </column>
-            <column id="usrId">
-                <name>usrId</name>
+            <column id="USER_ID">
+                <name>USER_ID</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="description">
+            <column id="DESCR">
                 <name>DESCR</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>128</maxLength>
             </column>
-            <column id="created">
-                <name>created</name>
+            <column id="CREATED">
+                <name>CREATED</name>
                 <dbType>TIMESTAMP</dbType>
             </column>
-            <relation2m id="items">
-                <name>items</name>
+            <column id="TEXT_FILE">
+                <name>TEXT_FILE</name>
+                <dbType>CLOB</dbType>
+            </column>
+            <column id="BINARY_FILE">
+                <name>BINARY_FILE</name>
+                <dbType>BLOB</dbType>
+            </column>
+            <relation2m id="ITEMS">
+                <name>ITEMS</name>
             </relation2m>
         </table>
-        <table id="ord_item">
+        <table id="ORDER_ITEMS">
             <name>ord_item</name>
             <alias>ord_item_alias</alias>
             <schema>db1</schema>
-            <column id="id">
-                <name>id</name>
+            <column id="ID">
+                <name>ID</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
-            <column id="usrId">
-                <name>usrId</name>
+            <column id="USER_ID">
+                <name>USER_ID</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="description">
-                <name>description</name>
+            <column id="DESCR">
+                <name>DESCR</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>128</maxLength>
             </column>
-            <column id="fk_order">
+            <column id="ORDER">
                 <name>fk_order</name>
+                <dbType>BIGINT</dbType>
             </column>
         </table>
-        <table id="view_order" view="true">
+        <table id="VIEW_ORDERS" view="true">
             <name>ord_order</name>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
-            <column id="id">
-                <name>id</name>
+            <column id="ID">
+                <name>ID</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
-            <column id="itemCount">
-                <name>itemCount</name>
+            <column id="ITEM_COUNT">
+                <name>ITEM_COUNT</name>
                 <dbType>INT</dbType>
             </column>
-            <select>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
+            <select>SELECT ord_order_alias.id, count(*) AS item_count FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
         </table>
         <table id="db1" view="true">
             <name>ord_order</name>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
-            <relation2m id="ord_order">
-                <name>ord_order</name>
+            <relation2m id="ORDERS">
+                <name>ORDERS</name>
             </relation2m>
-            <relation2m id="ord_item">
-                <name>ord_item</name>
+            <relation2m id="ORDER_ITEMS">
+                <name>ORDER_ITEMS</name>
             </relation2m>
-            <relation2m id="view_order">
-                <name>view_order</name>
+            <relation2m id="VIEW_ORDERS">
+                <name>VIEW_ORDERS</name>
             </relation2m>
         </table>
         <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>

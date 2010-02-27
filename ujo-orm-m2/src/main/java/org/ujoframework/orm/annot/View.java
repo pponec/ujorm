@@ -25,13 +25,17 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface View {
 
-    /** A view name. Default value is taken from a relation property name. */
-    String name() default "";
+    /** A named parameter for the view name. Default value is taken from a relation property name. */
+    String name() default Table.NULL;
+    /** A shortcut for the attribute "name" of View.
+     * @see #name()
+     */
+    String value() default Table.NULL;
     /** View alias name. The default value is taken from a name. */
-    String alias() default "";
+    String alias() default Table.NULL;
     /** Mapping a VIEW to the SQL SELECT. */
-    String  select() default "";
+    String  select() default Table.NULL;
     /** Name of schema. If the value is empty than a default database schema is used. */
-    String schema() default "";
+    String schema() default Table.NULL;
     
 }

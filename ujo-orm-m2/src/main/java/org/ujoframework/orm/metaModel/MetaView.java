@@ -27,7 +27,7 @@ import org.ujoframework.orm.AbstractMetaModel;
  * Contains a sql select for a UJO view SELECT.
  * @author Ponec
  */
-public class MetaView extends AbstractMetaModel {
+final public class MetaView extends AbstractMetaModel {
     private static final Class CLASS = MetaView.class;
 
     /** Logger */

@@ -114,7 +114,8 @@ public class JdbcStatement {
 
     /** Assign values into the prepared statement */
     public void assignValues(CriterionDecoder decoder) throws SQLException {
-        for (int i=0; i<decoder.getColumnCount(); ++i) {
+        int columnCount = decoder.getColumnCount();
+        for (int i=0; i<columnCount; ++i) {
             final MetaColumn column = decoder.getColumn(i);
             final Object value = decoder.getValueExtended(i);
 

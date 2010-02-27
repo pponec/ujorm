@@ -63,7 +63,6 @@ public class OrmHandler {
 
     /** The constructor */
     public OrmHandler() {
-        session = createSession();
     }
 
     /** The constructor with a database metamodel initialization. */
@@ -85,8 +84,14 @@ public class OrmHandler {
         return handler;
     }
 
-     /** Get Session */
+     /** Get a <strong>default</strong> Session of the OrmHandler.
+      * On a multi-thread application use a method {@link #createSession()} rather.
+      * @see #createSession()
+      */
     public Session getSession() {
+        if (session==null) {
+            session = createSession();
+        }
         return session;
     }
 
@@ -168,12 +173,12 @@ public class OrmHandler {
         MetaDatabase paramDb = configuration!=null ? configuration.removeDb(schemaDb) : null;
 
         // Create the ORM DB model:
-        UJO model = getInstance(databaseModel);
-        MetaDatabase dbModel  = new MetaDatabase(this, model, paramDb);
+        UJO root = getInstance(databaseModel);
+        MetaDatabase dbModel = new MetaDatabase(this, root, paramDb);
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.info("DATABASE META-MODEL:\n"+databases.toString());
+            LOGGER.info("DATABASE META-MODEL:\n"+getConfig());
         }
         
         return dbModel;
@@ -186,16 +191,11 @@ public class OrmHandler {
     }
 
     /** Load a meta-data and create database tables */
-    public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModels) {
+    public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
 
-        for (Class<UJO> databaseModel : databaseModels) {
-            MetaDatabase dbModel = loadDatabaseInternal(databaseModel);
-
-            switch (MetaParams.ORM2DLL_POLICY.of(session.getParameters())) {
-                case CREATE_DDL:
-                    dbModel.create(session);
-                    break;
-            }
+        // Load meta-model:
+        for (Class<UJO> db : databaseModel) {
+            loadDatabaseInternal(db);
         }
 
         // Initialize Column Type codes:
@@ -209,17 +209,28 @@ public class OrmHandler {
         // Lock the meta-model:
         databases.setReadOnly(true);
 
-        // Print the meta-model:
+        // Log the meta-model:
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.info("DATABASE META-MODEL:\n" + databases.toString());
+            LOGGER.info("DATABASE META-MODEL:\n" + getConfig());
         }
 
+        // Export the meta-model into a XML file:
         File outConfigFile = MetaParams.SAVE_CONFIG_TO_FILE.of(getParameters());
         if (outConfigFile!=null) try {
             databases.print(outConfigFile);
         } catch (IOException e) {
             throw new IllegalStateException("Can't create configuration " + outConfigFile, e);
         }
+
+        // Create DDL:
+        switch (MetaParams.ORM2DLL_POLICY.of(getParameters())) {
+            case CREATE_DDL:
+            case CREATE_OR_UPDATE_DDL:
+                for (MetaDatabase dbModel : getDatabases()) {
+                    dbModel.create(getSession());
+                }
+        }
+
     }
 
     /** Create an instance from the class */
@@ -282,9 +293,8 @@ public class OrmHandler {
                 }
             }
         }
-        throw new IllegalStateException
-            ("An entity mapping bug: the " + dbClass + " is not mapped to the Database.")
-            ;
+        final String msg = "An entity mapping bug: the " + dbClass + " is not mapped to the Database.";
+        throw new IllegalStateException(msg);
     }
 
     /** Returns parameters */
@@ -316,4 +326,10 @@ public class OrmHandler {
         return result;
     }
 
+
+    /** Returns a final meta-model in the XML format */
+    public String getConfig() {
+        return databases.toString();
+    }
+    
 }

@@ -45,18 +45,23 @@ public class CriterionDecoder {
     final private SqlDialect dialect;
 
     final private Criterion criterion;
+    final private List<UjoProperty> orderBy;
     final private StringBuilder sql;
     final private List<ValueCriterion> values;
     final private Set<MetaTable> tables;
 
     public CriterionDecoder(Criterion e, MetaTable ormTable) {
-        this(e, ormTable.getDatabase());
+        this(e, ormTable.getDatabase(), null);
     }
 
-    public CriterionDecoder(Criterion criterion, MetaDatabase database) {
+    /**
+     * @param orderBy The order item list is not mandatory (can be null).
+     */
+    public CriterionDecoder(Criterion criterion, MetaDatabase database, List<UjoProperty> orderByItems) {
         this.criterion = criterion;
         this.dialect = database.getDialect();
-        this.handler  = database.getOrmHandler();
+        this.orderBy = orderByItems;
+        this.handler = database.getOrmHandler();
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ValueCriterion>();
         this.tables = new HashSet<MetaTable>();
@@ -99,7 +104,7 @@ public class CriterionDecoder {
                 if (or) sql.append(") ");
                 break;
             default:
-                String message = "Opearator is not supported in SQL statement: " + eb.getOperator();
+                String message = "Operator is not supported in the SQL statement: " + eb.getOperator();
                 throw new UnsupportedOperationException(message);
         }
     }
@@ -243,6 +248,16 @@ public class CriterionDecoder {
             if (p2 instanceof PathProperty) {
                 ((PathProperty) p2).exportProperties(dirs);
                 dirs.remove(dirs.size()-1); // remove the last direct property
+            }
+        }
+
+        // Get relations from the 'order by':
+        if (orderBy!=null) {
+            for (UjoProperty p1 : orderBy) {
+                if (!p1.isDirect()) {
+                    ((PathProperty) p1).exportProperties(dirs);
+                    dirs.remove(dirs.size()-1); // remove the last direct property
+                }
             }
         }
 

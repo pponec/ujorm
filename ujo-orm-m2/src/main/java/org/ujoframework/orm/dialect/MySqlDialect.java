@@ -92,6 +92,14 @@ public class MySqlDialect extends SqlDialect {
         switch (MetaColumn.DB_TYPE.of(column)) {
             case TIMESTAMP:
                 return "DATETIME";
+            case CLOB:
+                //mysql dont have clob but text
+                //http://dev.mysql.com/doc/refman/5.0/en/blob.html
+               //http://www.htmlite.com/mysql003.php
+                return "LONGTEXT";
+            case BLOB:
+                return "LONGBLOB";
+                
             default:
                 return super.getColumnType(column);
         }

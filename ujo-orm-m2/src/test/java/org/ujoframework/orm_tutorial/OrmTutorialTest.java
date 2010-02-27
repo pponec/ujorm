@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm_tutorial;
 
+import java.sql.Connection;
 import junit.framework.TestCase;
 import org.ujoframework.orm_tutorial.sample.SampleORM;
 
@@ -26,7 +27,9 @@ import org.ujoframework.orm_tutorial.sample.SampleORM;
  */
 public class OrmTutorialTest extends TestCase {
 
+    private static Connection conn = null;
     private static boolean noRunned = true;
+    private static boolean noRunnedX = true;
     
     public OrmTutorialTest(String testName) {
         super(testName);
@@ -38,6 +41,23 @@ public class OrmTutorialTest extends TestCase {
 
     // ----------------------------------------------------
 
+//    /**
+//     * Test of getItemCount method, of class AbstractPropertyList.
+//     */
+//    public void testInit() throws Exception {
+//
+//        if (conn==null) {
+//            Class.forName(new H2Dialect().getJdbcDriver());
+//            conn = java.sql.DriverManager.getConnection
+//                ( "jdbc:h2:mem:db1"
+//                , "sa"
+//                , ""
+//                );
+//            assertNotNull(conn);
+//        }
+//    }
+
+
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
@@ -45,15 +65,23 @@ public class OrmTutorialTest extends TestCase {
 
         if (noRunned) {
             noRunned = true;
-            String[] params = new String[] {};
-            SampleORM.main(params);
+            SampleORM.main(new String[]{});
         }
-
     }
- 
+
+    /**
+     * Test of getItemCount method, of class AbstractPropertyList.
+     */
+//    public void testTutorialExtended() {
+//
+//        if (noRunnedX) {
+//            noRunnedX = true;
+//            org.ujoframework.orm_tutorial.xtended.XSampleORM.main(new String[]{});
+//        }
+//    }
+
 
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-
 }
