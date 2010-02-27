@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>benchmark.ujorm</artifactId>
     <packaging>jar</packaging>
-    <version>0.91</version>
+    <version>0.93</version>
     <name>Benchmark-Ujorm</name>
     <url>http://maven.apache.org</url>
     <build>
@@ -56,8 +56,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>0.91</version>
-            <!-- <version>0.89.B3</version> - use the last beta from Maven repository for a quick preview only -->
+            <version>0.93</version>
         </dependency>
 
         <!-- Postgresql -->
