@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <properties>
+        <ujo.version>0.93</ujo.version>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.5</maven.compiler.target>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.ujoframework</groupId>
+    <artifactId>ujo</artifactId>
+    <version>0.93</version>
+    <name>Main UJO</name>
+    <packaging>pom</packaging>
+    <description>UJO Framework common project</description>
+
+    <!-- SUB PROJECTS -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <modules>
+        <module>ujo-core-m2</module>
+        <module>ujo-orm-m2</module>
+        <module>samples/parameters</module>
+        <module>samples/table2xml</module>
+        <module>samples/ujorm</module>
+        <module>samples/binding</module>
+    </modules>
+
+
+    <!-- DEPENDENCES -->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+</project>
+
+
+
+
