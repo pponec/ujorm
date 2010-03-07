@@ -130,7 +130,7 @@ public class SampleORM {
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
     }
 
-    /** Sort items by a <strong>composite</strong> propertry */
+    /** Sort items by a <strong>composite</strong> property */
     public void useSortOrderItems() {
 
         Session session = handler.getSession();

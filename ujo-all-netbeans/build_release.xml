@@ -35,7 +35,7 @@
     <property file="Resource/build.properties"/>
     <property name="manifest.file" value="dist/manifest.txt"/>    
     <import   file="build.xml"/>
-    <property name="dist.zip" value="dist/ujo-all-${version}-netbeans.zip" />
+    <property name="dist.zip" value="dist/read-me-${version}.zip" />
     <property name="javadoc.preview" value="false" />
     <property name="jar.compress" value="true" />
     <property name="javac.debug" value="false"/>
@@ -94,13 +94,14 @@ Implementation-Vendor: "Pavel Ponec"</echo>
                        byline="true" />
 
         <zip destfile="${dist.zip}" whenempty="create" compress="true" comment="UJO ${version}"> 
+           <!--
            <zipfileset 
               dir="${root}" 
               prefix="src"
               includes="${include}"
               excludes="${exclude}"
               casesensitive="no"
-           />            
+           /> -->
            
            <zipfileset 
               dir="dist" 
