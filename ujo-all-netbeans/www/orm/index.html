@@ -14,7 +14,7 @@ Released   : 20080129
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>The Ujorm</title>
     <link rel="shortcut icon" href="images/favicon2.ico" type="image/x-icon" />
-    <meta name="keywords" content="ORM, UJO, Ujorm, Java, database, JDBC, open source, performance, benchmark, object relation mapping" />
+    <meta name="keywords" content="ORM, UJO, Ujorm, Java, database, JDBC, open source, performance, benchmark, object relation mapping, type safe query, " />
     <meta name="description" content="Object-relation mapping for the Java language" />
     <link href="../images/style.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="../images/style2.css" rel="stylesheet" type="text/css" media="screen" />
@@ -59,7 +59,7 @@ Released   : 20080129
             <div class="entry">
               Are you looking for an easy to use, quick
               <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">object-relation mapping</a>
-              (ORM) solution with a small footprint? Try the Ujorm.
+              solution with&nbsp;a&nbsp;small footprint? Try the Ujorm !
             </div><p class="meta">&nbsp;</p>
           </div><!-- post -->
 
@@ -77,7 +77,7 @@ Released   : 20080129
 
               <ul>
                <li>framework has a type safe query language which allows the java compiler find a syntax error similar
-                   like a 4GL database language</li>
+                   like 4GL database languages</li>
                <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
                <li>no confusing proxy business objects</li>
                <li>no list properties are supported but a special object called 
@@ -86,7 +86,7 @@ Released   : 20080129
                <li>easy to configure the ORM model by java source code, optionally by annotations and a XML file</li>
                <li>great <a href="http://ujoframework.blogspot.com/2009/08/ujorm-new-high-performance-orm-for-java.html">performance</a>,
                    some types of SELECT query are very fast in comparison to its competitors</li>
-               <li>small size of JAR file and no more library dependencies</li>
+               <li>very light framework with no more library dependencies</li>
               </ul>
 
             </div>
@@ -101,11 +101,14 @@ Released   : 20080129
             <div class="entry">
 
               <ul>
+               <li>incremental database update by meta-model using DDL statements</li>
+               <li>database indexes are created by the meta-model, added support for unique, non-unique indexes including the composed one</li>
                <li>resources for ORM mapping can be a database table, view or native SQL SELECT</li>
                <li>JDBC query parameters are passed by a question notation to the 
                    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/sql/PreparedStatement.html">PreparedStatement</a>
                    for a high security
                </li>
+               <li>LIMIT and OFFSET are supported</li>
                <li>all persistent objects are based on the interface
                    <a href="../javadoc/org/ujoframework/orm/OrmUjo.html">OrmUjo</a>,
                    namely on the implementation
@@ -195,6 +198,23 @@ And how to get meta-data for a 'description' property of the Order?
 
 
 
+          <div class="post">
+            <img src="../images/milky-27.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
+            <h2 class="title" id="similar"><a href="#">Similar frameworks:</a></h2>
+            <div class="entry">
+                There are some links to similar open-source frameworks with a type-safe queries:
+                <ul>
+                <li><a href="http://www.simpleorm.org/">SimpleORM</a> - object relational mapping system that avoids exotic technologies such as byte code generation, where queries can be specified in terms of Java objects, object identity is aligned with database keys.</li>
+                <li><a href="http://incubator.apache.org/empire-db/">Empire-db</a> - relational data persistence component which allows database vendor independent dynamic query definition with a special focus on compile-time safety, reduced redundancies and improved developer productivity.</li>
+                <li><a href="http://source.mysema.com/display/querydsl/Querydsl">Querydsl</a> - a framework which enables the construction of statically typed SQL-like queries</li>
+                </ul>
+            </div>
+
+            <p class="meta">&nbsp;</p>
+
+          </div><!-- post -->
+
+
 
           <div class="post">
             <img src="../images/milky-06.png" width="48" height="48" alt="support" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
@@ -259,8 +279,9 @@ And how to get meta-data for a 'description' property of the Order?
               <li><a href="http://sourceforge.net/scm/?type=svn&amp;group_id=207681">Sources</a> in SVN repository</li>
               <li><a href="../javadoc/changes.txt">Release Notes</a></li>
               <li><a href="http://ujoframework.blogspot.com/">Blog</a></li>
+              <li><a href="#similar">Similar frameworks</a></li>
+              <li><a href="../index.html#license">License</a></li>
               <li><a href="#support">Support</a></li>
-              <li><a href="../index.html#license">License</a></li>              
               </ul>
             </li>
             <li><h2>advertising </h2>
