@@ -27,6 +27,7 @@ import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.*;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.*;
+import org.ujoframework.orm.ao.CheckReport;
 import org.ujoframework.orm.metaModel.MetaParams;
 
 /**
@@ -55,6 +56,7 @@ public class SampleORM {
             MetaParams params = new MetaParams();
             MetaParams.TABLE_ALIAS_SUFFIX.setValue(params, "_alias");
             MetaParams.SEQUENCE_CACHE.setValue(params, 1);
+            MetaParams.CHECK_KEYWORDS.setValue(params, CheckReport.EXCEPTION);
             handler.config(params);
         }
 
@@ -103,9 +105,9 @@ public class SampleORM {
 
         Criterion<Order> cn1, cn2, cn3, crit;
 
-        cn1 = Criterion.newInstance(Order.DESCR, "John's order");
-        cn2 = Criterion.newInstance(Order.CREATED, Operator.LE, new Date());
-        cn3 = Criterion.newInstance(Order.STATE, Order.State.ACTIVE);
+        cn1 = Criterion.where(Order.DESCR, "John's order");
+        cn2 = Criterion.where(Order.CREATED, Operator.LE, new Date());
+        cn3 = Criterion.where(Order.STATE, Order.State.ACTIVE);
         crit = cn1.and(cn2).and(cn3);
 
         Session session = handler.getSession();
@@ -118,7 +120,7 @@ public class SampleORM {
         }
     }
 
-    /** Sort orders by DESCR and CREATED (descending). */
+    /** Sort orders by two properties: DESCR and CREATED descending. */
     public void useSortOrders() {
 
         Session session = handler.getSession();
@@ -130,12 +132,24 @@ public class SampleORM {
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
     }
 
+    /** Sort items by a <strong>composite</strong> property */
+    public void useSortOrderItems() {
+
+        Session session = handler.getSession();
+        Query<Item> query = session.createQuery(Item.class);
+        query.orderBy( Item.ORDER.add(Order.CREATED)  );
+
+        for (Item item : query.iterate()) {
+            System.out.println(item.get(Item.ORDER).get(Order.CREATED) + " " + item);
+        }
+    }
+
     /** Use a 'native query' where the query is created
      * by a special entity signed by the @View annotation.
      */
     public void useSelectViewOrders() {
 
-        Criterion<ViewOrder> crit = Criterion.newInstance(ViewOrder.ID, Operator.GE, 0L);
+        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, Operator.GE, 0L);
         Session session = handler.getSession();
         UjoIterator<ViewOrder> orders = session.createQuery(crit).iterate();
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
@@ -149,7 +163,7 @@ public class SampleORM {
     public void useSelectItems_1() {
         Session session = handler.getSession();
 
-        Criterion<Item> crit = Criterion.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         UjoIterator<Item> items = session.createQuery(crit).orderBy(Item.ID.descending()).iterate();
 
         for (Item item : items) {
@@ -163,7 +177,7 @@ public class SampleORM {
         Session session = handler.getSession();
 
         Order orderValue = session.load(Order.class, 1L);
-        Criterion<Item> crit = Criterion.newInstance(Item.ORDER, orderValue);
+        Criterion<Item> crit = Criterion.where(Item.ORDER, orderValue);
         UjoIterator<Item> items = session.createQuery(crit).iterate();
 
         for (Item item : items) {
@@ -187,11 +201,11 @@ public class SampleORM {
 
     /** Select items by a composed property.
      * It is a sample of a multi-table query.
-     * @see Item#_ORDER_DATE
+     * @see Item#$ORDER_DATE
      */
     public void useSelectItems_4() {
-        UjoProperty<Item,Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item._ORDER_DATE
-        Criterion<Item> crit = Criterion.newInstance(ORDER_DATE, Operator.LE, new Date());
+        UjoProperty<Item,Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_DATE
+        Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
         Session session = handler.getSession();
         UjoIterator<Item> items = session.createQuery(crit).iterate();
 
@@ -203,17 +217,29 @@ public class SampleORM {
     /** How to count items ? */
     public void useSelectCount() {
         Session session = handler.getSession();
-        Criterion<Item> crit = Criterion.newInstance(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(crit);
 
         long count = query.getCount();
         System.out.println("Count of the order items: " + count);
     }
 
+    /** How to get a Foreign Key without lazy loading */
+    public void useForeignKey() {
+        Database db = handler.getSession().getFirstDatabase();
+        for (Item item : db.get(Database.ORDER_ITEMS)) {
+            ForeignKey fk1 = item.readFK(Item.ORDER);   // before lazy loading
+            item.get(Item.ORDER);                       // the lazy loading
+            ForeignKey fk2 = item.readFK(Item.ORDER);   // after lazy loading
+            System.out.println("FK: " + fk1 + " " + fk1.equals(fk2));
+        }
+    }
+
+
     /** How to skip items? */
     public void useIteratorSkip() {
         Session session = handler.getSession();
-        Criterion<Item> crit = Criterion.newInstance(Item.DESCR, Operator.NOT_EQ, "XXXXX");
+        Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.NOT_EQ, "XXXXX");
         UjoIterator<Item> iterator = session.createQuery(crit).iterate();
 
         boolean skip = iterator.skip(1);
@@ -270,7 +296,7 @@ public class SampleORM {
     /** How to use a batch DELETE? */
     public void useDelete_2() {
         Session session = handler.getSession();
-        Criterion<Item> crit = Criterion.newInstance(Item.ID, 1L);
+        Criterion<Item> crit = Criterion.where(Item.ID, 1L);
         int count = session.delete(crit);
         session.commit();
         System.out.println("There are DELETED rows: " + count);
@@ -307,12 +333,14 @@ public class SampleORM {
             sample.useInsert();
             sample.useSelectOrders();
             sample.useSortOrders();
+            sample.useSortOrderItems();
             sample.useSelectViewOrders();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
             sample.useSelectItems_4();
             sample.useSelectCount();
+            sample.useForeignKey();
             sample.useIteratorSkip();
             sample.useRelation();
             sample.useUpdate();
