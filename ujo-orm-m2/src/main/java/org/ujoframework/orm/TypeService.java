@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm;
 
+import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
@@ -24,6 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.ujoframework.extensions.ValueExportable;
 import org.ujoframework.orm.metaModel.MetaColumn;
 
 /**
@@ -52,13 +54,21 @@ public class TypeService {
     public static final char TIMESTAMP = 15;
     public static final char BLOB = 16;
     public static final char CLOB = 17;
-    public static final char ENUM = 19;
+    public static final char EXPORTABLE  = 18;
+    public static final char EXPORT_ENUM = 19;
+    public static final char ENUM = 20;
+
+    /** Constructor argument type */
+    private static final Class[] ARGS = new Class[] {String.class};
 
     /** The method returns a data type code include relation */
     public char getTypeCode(final MetaColumn column) {
 
         final Class type = column.getType();
 
+        if (ValueExportable.class.isAssignableFrom(type)) return type.isEnum()
+                ? EXPORT_ENUM
+                : EXPORTABLE;
         if (type==String.class) return STRING;
         if (type==Boolean.class) return BOOLEAN;
         if (type==Byte.class) return BYTE;
@@ -77,7 +87,7 @@ public class TypeService {
         if (type==java.sql.Timestamp.class) return TIMESTAMP;
         if (type==java.sql.Blob.class) return BLOB;
         if (type==java.sql.Clob.class) return CLOB;
-        if (Enum.class.isAssignableFrom(type)) return ENUM;
+        if (type.isEnum()) return ENUM;
 
         if (column.isForeignKey()) {
             List<MetaColumn> columns = column.getForeignColumns();
@@ -116,8 +126,9 @@ public class TypeService {
             case ENUM     : int i = rs.getInt(column);
                             return i==0 && rs.wasNull()
                             ? null
-                            : mColumn.getType().getEnumConstants()[i]
-                            ;
+                            : mColumn.getType().getEnumConstants()[i] ;
+            case EXPORTABLE : return getValue(rs.getString(column), mColumn);
+            case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -150,8 +161,9 @@ public class TypeService {
             case ENUM     : int i = rs.getInt(column);
                             return i==0 && rs.wasNull()
                             ? null
-                            : mColumn.getType().getEnumConstants()[i]
-                            ;
+                            : mColumn.getType().getEnumConstants()[i] ;
+            case EXPORTABLE : return getValue(rs.getString(column), mColumn);
+            case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -191,8 +203,40 @@ public class TypeService {
             case BLOB     : rs.setBlob(i, (Blob)value); break;
             case CLOB     : rs.setClob(i, (Clob)value); break;
             case ENUM     : rs.setInt(i, ((Enum)value).ordinal()); break;
+            case EXPORTABLE :
+            case EXPORT_ENUM: rs.setString(i, value!=null ? ((ValueExportable)value).exportAsString() : null ); break;
             default       : rs.setObject(i, value);  break;
         }
     }
+
+    /** Find enum by KEY. */
+    private Object findEnum(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
+        if (key==null || key.length()==0) {
+            return null;
+        }
+        for (Object o : mColumn.getType().getEnumConstants()) {
+            if (key.equals(((ValueExportable)o).exportAsString())) {
+                return o;
+            }
+        }
+        throw new IllegalArgumentException("No enum key " + mColumn.getType() + "." + key);
+    }
+
+    /** Create a value by KEY. */
+    @SuppressWarnings("unchecked")
+    private Object getValue(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
+        if (key==null || key.length()==0) {
+            return null;
+        }
+        try {
+            final Object result = mColumn.getType().getConstructor(ARGS).newInstance(key);
+            return result;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Bad value export " + mColumn.getType() + "." + key, e);
+        }
+        
+    }
+
+
 
 }

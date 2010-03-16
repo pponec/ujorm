@@ -21,6 +21,7 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.annot.Transient;
+import org.ujoframework.extensions.ValueExportable;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
@@ -36,9 +37,14 @@ import org.ujoframework.orm.utility.OrmTools;
 @Table(name = "ord_order")
 public class Order extends OrmTable<Order> {
 
-    public enum State {
+    /** Store the value like VARCHAR. */
+    public enum State implements ValueExportable {
         ACTIVE,
-        DELETED
+        DELETED;
+
+        public String exportAsString() {
+            return name().substring(0, 1);
+        }
     }
     
     /** Unique key */

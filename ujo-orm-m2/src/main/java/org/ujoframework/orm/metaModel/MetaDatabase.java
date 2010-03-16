@@ -37,11 +37,13 @@ import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
 import org.ujoframework.extensions.Property;
+import org.ujoframework.extensions.ValueExportable;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
+import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
 
@@ -168,7 +170,10 @@ final public class MetaDatabase extends AbstractMetaModel {
 
        Class type = property.getType();
 
-        if (String.class==type) {
+        if (ValueExportable.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
+        }
+        else if (String.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
         else if (Integer.class==type) {
@@ -221,7 +226,8 @@ final public class MetaDatabase extends AbstractMetaModel {
                 break;
             case VARCHAR:
             case VARCHAR_IGNORECASE:
-                changeDefault(column, MetaColumn.MAX_LENGTH, 128);
+                boolean isEnum = column.getType().isEnum();
+                changeDefault(column, MetaColumn.MAX_LENGTH, isEnum ? 2 : 128);
                 break;
             default:
         }
