@@ -110,7 +110,6 @@ public class SampleORM {
 
         Session session = handler.getSession();
         UjoIterator<Order> orders = session.createQuery(crit).iterate();
-        System.out.println("ORDER COUNT: " + orders.count());
 
         for (Order order : orders) {
             String descr = order.getDescr();
@@ -130,15 +129,17 @@ public class SampleORM {
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
     }
 
-    /** Sort items by a <strong>composite</strong> property */
+    /** Sort items by a <strong>composite</strong> property.
+     * Notice how the compsite property can be used for reading values too.
+     */
     public void useSortOrderItems() {
 
         Session session = handler.getSession();
         Query<Item> query = session.createQuery(Item.class);
-        query.orderBy( Item.ORDER.add(Order.CREATED)  );
+        query.orderBy( Item.ORDER.add(Order.CREATED) );
 
         for (Item item : query.iterate()) {
-            System.out.println(item.get(Item.ORDER).get(Order.CREATED) + " " + item);
+            System.out.println(item.get( Item.ORDER.add(Order.CREATED) ) + " " + item);
         }
     }
 
@@ -210,6 +211,18 @@ public class SampleORM {
         for (Item item : items) {
             System.out.println("Item: " + item);
         }
+    }
+
+    /** How to get the latest order by the LIMIT attribute? */
+    public void useLimitAndOffset() {
+        Session session = handler.getSession();
+        Order order = session.createQuery(Order.class)
+                .setLimit(1)
+                .setOffset(0) // The default value can't be specified
+                .orderBy(Order.CREATED.descending())
+                .uniqueResult()
+                ;
+        System.out.println("The latest Order: " + order);
     }
 
     /** How to count items ? */
@@ -337,6 +350,7 @@ public class SampleORM {
             sample.useSelectItems_2();
             sample.useSelectItems_3();
             sample.useSelectItems_4();
+            sample.useLimitAndOffset();
             sample.useSelectCount();
             sample.useForeignKey();
             sample.useIteratorSkip();
