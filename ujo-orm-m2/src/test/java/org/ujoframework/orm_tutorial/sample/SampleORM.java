@@ -130,7 +130,7 @@ public class SampleORM {
     }
 
     /** Sort items by a <strong>composite</strong> property.
-     * Notice how the compsite property can be used for reading values too.
+     * Notice how a composite property can be used for reading values too.
      */
     public void useSortOrderItems() {
 
