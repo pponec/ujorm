@@ -109,7 +109,7 @@ public class SampleORM {
         crit = cn1.and(cn2).and(cn3);
 
         Session session = handler.getSession();
-        UjoIterator<Order> orders = session.createQuery(crit).iterate();
+        UjoIterator<Order> orders = session.createQuery(crit).iterator();
 
         for (Order order : orders) {
             String descr = order.getDescr();
@@ -125,7 +125,7 @@ public class SampleORM {
         query.orderBy( Order.DESCR
                      , Order.CREATED.descending() );
 
-        UjoIterator<Order> orders = query.iterate();
+        UjoIterator<Order> orders = query.iterator();
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
     }
 
@@ -138,7 +138,7 @@ public class SampleORM {
         Query<Item> query = session.createQuery(Item.class);
         query.orderBy( Item.ORDER.add(Order.CREATED) );
 
-        for (Item item : query.iterate()) {
+        for (Item item : query) {
             System.out.println(item.get( Item.ORDER.add(Order.CREATED) ) + " " + item);
         }
     }
@@ -150,7 +150,7 @@ public class SampleORM {
 
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, Operator.GE, 0L);
         Session session = handler.getSession();
-        UjoIterator<ViewOrder> orders = session.createQuery(crit).iterate();
+        UjoIterator<ViewOrder> orders = session.createQuery(crit).iterator();
         System.out.println("VIEW-ORDER COUNT: " + orders.count());
 
         for (ViewOrder order : orders) {
@@ -163,7 +163,7 @@ public class SampleORM {
         Session session = handler.getSession();
 
         Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
-        UjoIterator<Item> items = session.createQuery(crit).orderBy(Item.ID.descending()).iterate();
+        UjoIterator<Item> items = session.createQuery(crit).orderBy(Item.ID.descending()).iterator();
 
         for (Item item : items) {
             Order order = item.getOrder();
@@ -177,7 +177,7 @@ public class SampleORM {
 
         Order orderValue = session.load(Order.class, 1L);
         Criterion<Item> crit = Criterion.where(Item.ORDER, orderValue);
-        UjoIterator<Item> items = session.createQuery(crit).iterate();
+        UjoIterator<Item> items = session.createQuery(crit).iterator();
 
         for (Item item : items) {
             Order order2 = item.getOrder();
@@ -206,7 +206,7 @@ public class SampleORM {
         UjoProperty<Item,Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_DATE
         Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
         Session session = handler.getSession();
-        UjoIterator<Item> items = session.createQuery(crit).iterate();
+        UjoIterator<Item> items = session.createQuery(crit).iterator();
 
         for (Item item : items) {
             System.out.println("Item: " + item);
@@ -251,7 +251,7 @@ public class SampleORM {
     public void useIteratorSkip() {
         Session session = handler.getSession();
         Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.NOT_EQ, "XXXXX");
-        UjoIterator<Item> iterator = session.createQuery(crit).iterate();
+        UjoIterator<Item> iterator = session.createQuery(crit).iterator();
         
         boolean skip = iterator.skip(1);
         if (iterator.hasNext()) {
@@ -297,7 +297,7 @@ public class SampleORM {
     /** How to DELETE the one loaded object? */
     public void useDelete_1() {
         Session session = handler.getSession();
-        Item item = session.createQuery(Item.class).iterate().toList().get(0);
+        Item item = session.createQuery(Item.class).iterator().toList().get(0);
 
         session.delete(item);
         session.commit();

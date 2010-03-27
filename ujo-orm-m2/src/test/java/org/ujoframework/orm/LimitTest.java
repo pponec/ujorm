@@ -132,7 +132,7 @@ public class LimitTest extends TestCase {
         assertEquals(expected, myCount);
         //
         myCount = 0L;
-        for (XOrder order : query.iterate()) {
+        for (XOrder order : query) {
             order.getId();
             ++myCount;
         }
@@ -146,7 +146,7 @@ public class LimitTest extends TestCase {
         assertEquals(expected, myCount);
         //
         myCount = 0L;
-        for (XOrder order : query.iterate()) {
+        for (XOrder order : query) {
             order.getId();
             ++myCount;
         }
@@ -161,7 +161,7 @@ public class LimitTest extends TestCase {
         assertEquals(expected, myCount);
         //
         myCount = 0L;
-        for (XOrder order : query.iterate()) {
+        for (XOrder order : query) {
             order.getId();
             ++myCount;
         }
@@ -175,7 +175,7 @@ public class LimitTest extends TestCase {
         assertEquals(expected, myCount);
         //
         myCount = 0L;
-        for (XOrder order : query.iterate()) {
+        for (XOrder order : query) {
             order.getId();
             ++myCount;
         }
@@ -191,7 +191,7 @@ public class LimitTest extends TestCase {
         assertEquals(expected, myCount);
         //
         myCount = 0L;
-        for (XOrder order : query.iterate()) {
+        for (XOrder order : query) {
             order.getId();
             ++myCount;
         }
@@ -207,7 +207,7 @@ public class LimitTest extends TestCase {
         assertEquals(expected, myCount);
         //
         myCount = 0L;
-        for (XOrder order : query.iterate()) {
+        for (XOrder order : query) {
             order.getId();
             ++myCount;
         }

@@ -167,8 +167,8 @@ The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
   criterion = cn1.and(cn2);
 
   Session session = OrmHandler.getInstance().getSession();
-  UjoIterator&lt;Order&gt; orders = session.createQuery(criterion).iterate();
-  System.out.println("ORDER COUNT: " + orders.count()); // method calls SQL SELECT COUNT(*) in case the iterator can provide first item!
+  Query&lt;Order&gt; orders = session.createQuery(criterion);
+  System.out.println("ORDER COUNT: " + orders.getCount());
 
   for (Order order : orders) {
       String descr = order.getDescr();

@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>0.93</version>
+    <version>0.94</version>
     <name>ujo-orm</name>
     <contributors>
         <contributor>
