@@ -33,7 +33,7 @@ import org.ujoframework.criterion.Criterion;
  * @composed 1 - 1 Session
  * @composed 1 - 1 CriterionDecoder
  */
-public class Query<UJO extends OrmUjo> {
+public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     final private MetaTable table;
     final private List<MetaColumn> columns;
@@ -83,7 +83,7 @@ public class Query<UJO extends OrmUjo> {
 
 
     /** Returns a database row count along a current limit and offset attribues.
-     * @see #getCount() 
+     * @see #getCount()
      */
     public long getLimitedCount() {
         long result = getCount();
@@ -104,8 +104,8 @@ public class Query<UJO extends OrmUjo> {
         return result;
     }
 
-    /** Returns a count of the items 
-     * @see #getLimitedCount() 
+    /** Returns a count of the items
+     * @see #getLimitedCount()
      */
     public long getCount() {
         final long result = session.getRowCount(this);
@@ -128,7 +128,7 @@ public class Query<UJO extends OrmUjo> {
         return criterion;
     }
 
-    /** Method builds and retuns a criterion decoder. 
+    /** Method builds and retuns a criterion decoder.
      * The new decoder is cached to a next order by change.
      */
     @SuppressWarnings("unchecked")
@@ -169,34 +169,43 @@ public class Query<UJO extends OrmUjo> {
      *  in the Java statement <code>for(...)</code> directly.
      * <br>NOTE: The items can be iterated inside a database transaction only,
      * in other case call the next expression:
-     * <pre>iterate().toList()</pre>
+     * <pre>iterator().toList()</pre>
      * @see #uniqueResult()
-     * @see #exists() 
+     * @see #exists()
      */
-    public UjoIterator<UJO> iterate() {
+    //@Override
+    public UjoIterator<UJO> iterator() {
         final UjoIterator<UJO> result = UjoIterator.getInstance(this);
         return result;
     }
 
+    /** Create a new iterator by the query.
+     * @deprecated Use {@link #iterator()} instead of.
+     * @see #iterator()
+     */
+    //@Deprecated
+    final public UjoIterator<UJO> iterate() {
+        return iterator();
+    }
 
-    /** There is strongly recommended to use the method {@link #iterate()} rather.
+    /** There is strongly recommended to use the method {@link #iterator()} rather.
      * If you really need a result in the List type than call the next expression:
-     * <pre>iterate().toList()</pre>
-     * @see #iterate() 
+     * <pre>iterator().toList()</pre>
+     * @see #iterator()
      * @deprecated
      */
     @Deprecated
     public List<UJO> list() {
-        return iterate().toList();
+        return iterator().toList();
     }
 
     /** Returns a unique result or null if no result item (database row) was found.
      * @throws NoSuchElementException Result is not unique.
-     * @see #iterate()
-     * @see #exists() 
+     * @see #iterator()
+     * @see #exists()
      */
     public UJO uniqueResult() throws NoSuchElementException {
-        final UjoIterator<UJO> iterator = iterate();
+        final UjoIterator<UJO> iterator = iterator();
         if (!iterator.hasNext()) {
             return null;
         }
@@ -210,13 +219,16 @@ public class Query<UJO extends OrmUjo> {
 
     /** The method performs a new database request and returns result of the function <code>UjoIterator.hasNext()</code>.
      * The result TRUE means the query covers one item (database row) at least.
-     * @see #iterate()
+     * @see #iterator()
      * @see #uniqueResult()
      */
     public boolean exists() {
-        final UjoIterator<UJO> iterator = iterate();
+        int $limit = limit;
+        limit = 1;
+        final UjoIterator<UJO> iterator = iterator();
         final boolean result = iterator.hasNext();
         iterator.close();
+        limit = $limit;
         return result;
     }
 
@@ -315,8 +327,8 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** Get the first row to retrieve (offset). Default value is 0.
-     * @see #setLimit(int, int) 
-     */    
+     * @see #setLimit(int, int)
+     */
     public Query<UJO> setOffset(int offset) {
         this.offset = offset;
         return this;
@@ -341,7 +353,7 @@ public class Query<UJO extends OrmUjo> {
      * Set a limit and offset.
      * @param maxRows The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
      * @param firstRow Get the first row to retrieve (offset). Default value is 0.
-     * @see #setLimit(int) 
+     * @see #setLimit(int)
      * @see #setOffset(int)
      */
     public Query<UJO> setLimit(int limit, int offset) {
@@ -351,7 +363,7 @@ public class Query<UJO extends OrmUjo> {
     }
 
     /** Use the method {@link #setLimit(int)} rather.
-     * @see #setLimit(int) 
+     * @see #setLimit(int)
      */
     @Deprecated
     final public Query<UJO> setMaxRows(int limit) {
@@ -360,7 +372,7 @@ public class Query<UJO extends OrmUjo> {
 
     /**
      * Gives the JDBC driver a hint as to the number of rows that should be fetched from the database when more rows are needed.
-     * @see java.sql.Statement#getFetchSize() 
+     * @see java.sql.Statement#getFetchSize()
      */
     public int getFetchSize() {
         return fetchSize;

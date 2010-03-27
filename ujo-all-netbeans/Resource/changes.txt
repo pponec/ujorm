@@ -1,6 +1,9 @@
 The UJO Framework release notes
 *******************************
 
+release 0.94 (2010-XX-XX)
++ the class Query implements the interface Iterable thanks to idea of Jiri Pejchal
+
 release 0.93 (2010-03-07)
 + orm: the incremental database update by meta-model using DDL statements
 + orm: the LIMIT and OFFSET are supported by attributes of the Query
