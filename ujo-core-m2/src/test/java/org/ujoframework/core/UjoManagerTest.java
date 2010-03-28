@@ -10,13 +10,10 @@ package org.ujoframework.core;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Locale;
 import org.ujoframework.MyTestCase;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.core.ujos.UjoCSV;
 
 /**
  *

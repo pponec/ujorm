@@ -258,7 +258,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     @Override
     public void copy(final UJO from, final UJO to) {
-        to.writeValue(this, to.readValue(this));
+        to.writeValue(this, from.readValue(this));
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
