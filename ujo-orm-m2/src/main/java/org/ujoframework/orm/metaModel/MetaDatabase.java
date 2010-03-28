@@ -43,7 +43,6 @@ import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
-import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
 

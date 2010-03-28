@@ -5,7 +5,6 @@
 
 package org.ujoframework.extensions;
 
-import org.ujoframework.UjoProperty;
 import org.ujoframework.implementation.map.MapUjoExt;
 
 /**
