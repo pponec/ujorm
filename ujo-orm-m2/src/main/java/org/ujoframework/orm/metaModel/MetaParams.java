@@ -100,4 +100,11 @@ final public class MetaParams extends AbstractMetaModel {
         return typeService;
     }
 
+    /** Set a parameter value */
+    @SuppressWarnings("unchecked")
+    public <UJO extends MetaParams, VALUE> MetaParams set(UjoProperty<UJO, VALUE> property, VALUE value) {
+        property.setValue((UJO) this,value);
+        return this;
+    }
+
 }

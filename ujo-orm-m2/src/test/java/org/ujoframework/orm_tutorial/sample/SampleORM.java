@@ -26,6 +26,7 @@ import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.*;
 import org.ujoframework.orm.ao.CheckReport;
 import org.ujoframework.orm.metaModel.MetaParams;
+import org.ujoframework.orm.utility.OrmTools;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -35,11 +36,49 @@ import org.ujoframework.orm.metaModel.MetaParams;
  *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE 
  * and show how to use a meta-model.
  *
- * Copyright 2009, Pavel Ponec
+ * Copyright 2010, Pavel Ponec
  */
 public class SampleORM {
 
-    private OrmHandler handler = new OrmHandler();
+    // ------- TUTORIAL MENU: -------
+
+    public static void main(String[] args) {
+        SampleORM sample = new SampleORM();
+        try {
+            sample.loadMetaModel();
+            sample.useInsert();
+            sample.useSelectOrders();
+            sample.useSortOrders();
+            sample.useSortOrderItems();
+            sample.useSelectViewOrders();
+            sample.useSelectItems_1();
+            sample.useSelectItems_2();
+            sample.useSelectItems_3();
+            sample.useSelectItems_4();
+            sample.useReloading();
+            sample.useLimitAndOffset();
+            sample.useSelectCount();
+            sample.useForeignKey();
+            sample.useIteratorSkip();
+            sample.useRelation();
+          //sample.useStoredProcedure(); // create db procedure first
+            sample.useUpdate();
+            sample.useDelete_1();
+            sample.useDelete_2();
+            sample.useMetadata();
+        } finally {
+            sample.useCloseSession();
+        }
+    }
+
+    // ------- CHAPTERS: -------
+
+    /** The handler contains the one or more database meta-models,
+     * the one applicatin can have more OrmHandler instances. */
+    private OrmHandler handler;
+
+    /** The session contains a cache and database connections. */
+    private Session session;
 
     /** Before the first use load a meta-model.
      * Database tables will be created in the first time.
@@ -47,23 +86,25 @@ public class SampleORM {
     public void loadMetaModel() {
 
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
+        handler = new OrmHandler();
 
-        boolean yesIWantChangeDefaultParameters = true;
-        if (yesIWantChangeDefaultParameters) {
+        boolean yesIWantToChangeDefaultParameters = true;
+        if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
-            MetaParams.TABLE_ALIAS_SUFFIX.setValue(params, "_alias");
-            MetaParams.SEQUENCE_CACHE.setValue(params, 1);
-            MetaParams.CHECK_KEYWORDS.setValue(params, CheckReport.EXCEPTION);
+            params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
+            params.set(MetaParams.SEQUENCE_CACHE, 1);
+            params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
             handler.config(params);
         }
 
-        boolean yesIWantLoadExternalConfig = false;
-        if (yesIWantLoadExternalConfig) {
+        boolean yesIWantToLoadExternalConfig = false;
+        if (yesIWantToLoadExternalConfig) {
             java.net.URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
             handler.config(config, true);
         }
 
         handler.loadDatabase(Database.class);
+        session = handler.createSession();
     }
 
     /** Insert one Order and two Items into database. */
@@ -86,7 +127,6 @@ public class SampleORM {
         System.out.println("item1: " + item1);
         System.out.println("item2: " + item2);
 
-        Session session = handler.getSession();
         session.save(order);
         session.save(item1);
         session.save(item2);
@@ -108,8 +148,7 @@ public class SampleORM {
         cn3 = Criterion.where(Order.STATE, Order.State.ACTIVE);
         crit = cn1.and(cn2).and(cn3);
 
-        Session session = handler.getSession();
-        UjoIterator<Order> orders = session.createQuery(crit).iterator();
+        Query<Order> orders = session.createQuery(crit);
 
         for (Order order : orders) {
             String descr = order.getDescr();
@@ -120,25 +159,24 @@ public class SampleORM {
     /** Sort orders by two properties: DESCR and CREATED descending. */
     public void useSortOrders() {
 
-        Session session = handler.getSession();
-        Query<Order> query = session.createQuery(Order.class);
-        query.orderBy( Order.DESCR
-                     , Order.CREATED.descending() );
+        Query<Order> orders = session.createQuery(Order.class);
+        orders.orderBy( Order.DESCR
+                      , Order.CREATED.descending() );
 
-        UjoIterator<Order> orders = query.iterator();
-        System.out.println("VIEW-ORDER COUNT: " + orders.count());
+        System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
     }
 
-    /** Sort items by a <strong>composite</strong> property.
-     * Notice how a composite property can be used for reading values too.
+    /** Sort items by a <strong>composite</strong> propertry. <br>
+     * Note 1: see how a composite property can be used for reading values too. <br>
+     * Note 2: the metod loadLazyValues(..) is able to load all lazy properties for the Item and its related Order<br>
      */
     public void useSortOrderItems() {
 
-        Session session = handler.getSession();
-        Query<Item> query = session.createQuery(Item.class);
-        query.orderBy( Item.ORDER.add(Order.CREATED) );
+        Query<Item> items = session.createQuery(Item.class);
+        items.orderBy( Item.ORDER.add(Order.CREATED) );
 
-        for (Item item : query) {
+        for (Item item : items) {
+            OrmTools.loadLazyValues(item, 2);
             System.out.println(item.get( Item.ORDER.add(Order.CREATED) ) + " " + item);
         }
     }
@@ -149,9 +187,8 @@ public class SampleORM {
     public void useSelectViewOrders() {
 
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, Operator.GE, 0L);
-        Session session = handler.getSession();
-        UjoIterator<ViewOrder> orders = session.createQuery(crit).iterator();
-        System.out.println("VIEW-ORDER COUNT: " + orders.count());
+        Query<ViewOrder> orders = session.createQuery(crit);
+        System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
 
         for (ViewOrder order : orders) {
             System.out.println("ORDER ROW: " + order);
@@ -160,10 +197,9 @@ public class SampleORM {
 
     /** Select all items with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
-        Session session = handler.getSession();
 
         Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
-        UjoIterator<Item> items = session.createQuery(crit).orderBy(Item.ID.descending()).iterator();
+        Query<Item> items = session.createQuery(crit).orderBy(Item.ID.descending());
 
         for (Item item : items) {
             Order order = item.getOrder();
@@ -173,11 +209,10 @@ public class SampleORM {
 
     /** Select one Order by ID and print its Items by a criterion */
     public void useSelectItems_2() {
-        Session session = handler.getSession();
 
         Order orderValue = session.load(Order.class, 1L);
         Criterion<Item> crit = Criterion.where(Item.ORDER, orderValue);
-        UjoIterator<Item> items = session.createQuery(crit).iterator();
+        Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
             Order order2 = item.getOrder();
@@ -189,7 +224,6 @@ public class SampleORM {
      * by a 'one to many' relation property
      */
     public void useSelectItems_3() {
-        Session session = handler.getSession();
         Order order = session.load(Order.class, 1L);
 
         for (Item item : order.getItems()) {
@@ -205,17 +239,24 @@ public class SampleORM {
     public void useSelectItems_4() {
         UjoProperty<Item,Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_DATE
         Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
-        Session session = handler.getSession();
-        UjoIterator<Item> items = session.createQuery(crit).iterator();
+        Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
             System.out.println("Item: " + item);
         }
     }
 
+    /** How to reload the object property values from the database ? */
+    public void useReloading() {
+        Order order = new Order();
+        order.setId(1L);
+
+        boolean result = session.reload(order);
+        System.out.println("Reloading result: " + result + " for Order: " + order);
+    }
+
     /** How to get the latest order by the LIMIT attribute? */
     public void useLimitAndOffset() {
-        Session session = handler.getSession();
         Order order = session.createQuery(Order.class)
                 .setLimit(1)
                 .setOffset(0) // The default value can't be specified
@@ -227,7 +268,6 @@ public class SampleORM {
 
     /** How to count items ? */
     public void useSelectCount() {
-        Session session = handler.getSession();
         Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(crit);
 
@@ -237,7 +277,7 @@ public class SampleORM {
 
     /** How to get a Foreign Key without lazy loading */
     public void useForeignKey() {
-        Database db = handler.getSession().getFirstDatabase();
+        Database db = session.getFirstDatabase();
         for (Item item : db.get(Database.ORDER_ITEMS)) {
             ForeignKey fk1 = item.readFK(Item.ORDER);   // before lazy loading
             item.get(Item.ORDER);                       // the lazy loading
@@ -249,18 +289,17 @@ public class SampleORM {
 
     /** How to skip items? */
     public void useIteratorSkip() {
-        Session session = handler.getSession();
         Criterion<Item> crit = Criterion.where(Item.DESCR, Operator.NOT_EQ, "XXXXX");
-        UjoIterator<Item> iterator = session.createQuery(crit).iterator();
+        UjoIterator<Item> items = session.createQuery(crit).iterator();
         
-        boolean skip = iterator.skip(1);
-        if (iterator.hasNext()) {
-            Item item = iterator.next();
+        boolean skip = items.skip(1);
+        if (items.hasNext()) {
+            Item item = items.next();
             System.out.println("Item : " + item);
         }
 
-        skip = iterator.skip(1);
-        boolean isNext =  iterator.hasNext();
+        skip = items.skip(1);
+        boolean isNext =  items.hasNext();
         System.out.println("Next: " + isNext);
     }
 
@@ -268,7 +307,6 @@ public class SampleORM {
      * 	Note that it is possible to use a Database configuration object too.
      */
     public void useRelation() {
-        Session session = handler.getSession();
         Database db = session.getDatabase(Database.class);
 
         UjoIterator<Order> orders = db.get(Database.ORDERS);
@@ -284,9 +322,36 @@ public class SampleORM {
         }
     }
 
+    /** Call a database stored procedure:
+     * <code>
+     * CREATE OR REPLACE FUNCTION db1.ujorm_test(integer, boolean) RETURNS integer
+     *    AS 'select $1 + $1;'
+     *    LANGUAGE SQL
+     *    IMMUTABLE
+     *    RETURNS NULL ON NULL INPUT;
+     * </code>
+     * Note: the source code is an aarly implementation prototype.
+     */
+    public void useStoredProcedure() {
+        MyProcedure procedure = new MyProcedure();
+        // MyProcedure procedure2 = session.newProcedure(MyProcedure.class);
+
+        // Assign input parameters:
+        procedure.set(MyProcedure.RESULT, null); // The result can't be initialized.
+        procedure.set(MyProcedure.PARAM_CODE, 5);
+        procedure.set(MyProcedure.PARAM_ENABLED, true);
+
+        Integer result = procedure.call(session);
+        System.out.println("The stored procedure result #1: " + result);
+
+        // See how to reuse input parameters of the object 'procedure':
+        procedure.set(MyProcedure.PARAM_CODE, 24);
+        result = procedure.call(session, MyProcedure.RESULT); // Take the result of any (output) parameter
+        System.out.println("The stored procedure result #2: " + result);
+    }
+
     /** Using the UPDATE */
     public void useUpdate() {
-        Session session = handler.getSession();
         Order order = session.load(Order.class, 1L);
         order.setDate(new Date());
 
@@ -296,8 +361,7 @@ public class SampleORM {
 
     /** How to DELETE the one loaded object? */
     public void useDelete_1() {
-        Session session = handler.getSession();
-        Item item = session.createQuery(Item.class).iterator().toList().get(0);
+        Item item = session.createQuery(Item.class).setLimit(1).uniqueResult();
 
         session.delete(item);
         session.commit();
@@ -306,7 +370,6 @@ public class SampleORM {
 
     /** How to use a batch DELETE? */
     public void useDelete_2() {
-        Session session = handler.getSession();
         Criterion<Item> crit = Criterion.where(Item.ID, 1L);
         int count = session.delete(crit);
         session.commit();
@@ -328,40 +391,13 @@ public class SampleORM {
         System.out.println(msg);
     }
 
-    /** Close Ujorm session to clear a session cache include 
-     * a database connection(s) 
+    /** Close Ujorm session to clear a session cache 
+     * and database connection(s).
      */
     public void useCloseSession() {
-        handler.getSession().close();
-    }
-
-    /** Run the tutorial */
-    public static void main(String[] args) {
-        SampleORM sample = new SampleORM();
-        
-        try {
-            sample.loadMetaModel();
-            sample.useInsert();
-            sample.useSelectOrders();
-            sample.useSortOrders();
-            sample.useSortOrderItems();
-            sample.useSelectViewOrders();
-            sample.useSelectItems_1();
-            sample.useSelectItems_2();
-            sample.useSelectItems_3();
-            sample.useSelectItems_4();
-            sample.useLimitAndOffset();
-            sample.useSelectCount();
-            sample.useForeignKey();
-            sample.useIteratorSkip();
-            sample.useRelation();
-            sample.useUpdate();
-            sample.useDelete_1();
-            sample.useDelete_2();
-            sample.useMetadata();
-
-        } finally {
-            sample.useCloseSession();
+        if (session!=null) {
+            session.close();
         }
     }
+
 }

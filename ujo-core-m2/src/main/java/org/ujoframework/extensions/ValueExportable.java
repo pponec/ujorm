@@ -18,7 +18,7 @@
 package org.ujoframework.extensions;
 
 /**
- * The method {@link #exportAsString()} replaces the original {@link ValueTextable#toString()}.
+ * The method {@link #exportToString()} replaces the original {@link ValueTextable#toString()}.
  * @author Ponec
  * @see ValueTextable#toString()
  */
@@ -27,6 +27,6 @@ public interface ValueExportable extends ValueTextable {
     /** Export the value as String.
      * The method replaces the original {@link ValueTextable#toString().
      */
-    public String exportAsString();
+    public String exportToString();
 
 }

@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,10 +24,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.UjoAction;
 import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaProcedure;
 import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
@@ -74,6 +77,11 @@ public class JdbcStatement {
 
     public void close() throws SQLException {
         ps.close();
+    }
+
+    /** Call the procedure. */
+    public void execute() throws SQLException {
+        ps.execute();
     }
 
     /** Run INSERT, UPDATE or DELETE. 
@@ -181,8 +189,73 @@ public class JdbcStatement {
         }
     }
 
+    /** Assign procedure parameters */
+    @SuppressWarnings("unchecked")
+    public void assignValues(DbProcedure bo) {
+
+        CallableStatement ps = (CallableStatement) this.ps;
+        MetaProcedure procedure = bo.metaProcedure();
+        Object value = null;
+
+        for (MetaColumn metaColumn : MetaProcedure.COLUMNS.getList(procedure)) {
+            UjoProperty property = metaColumn.getProperty();
+
+            if (!property.isTypeOf(Void.class)) try {
+                
+                ++parameterPointer;
+                int sqlType = MetaColumn.DB_TYPE.of(metaColumn).getSqlType();
+
+                if (procedure.isInput(metaColumn)) {
+                    value = property.of(bo);
+                    typeService.setValue(metaColumn, ps, value, parameterPointer);
+
+                    if (logValues) {
+                        String textValue = UjoManager.getInstance().encodeValue(value, false);
+                        logValue(textValue, property);
+                    }
+
+                }
+                if (procedure.isOutput(metaColumn)) {
+                    ps.registerOutParameter(parameterPointer, sqlType);
+                }
+
+            } catch (Throwable e) {
+                String textValue = bo != null
+                    ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)
+                    : UjoManager.getInstance().encodeValue(value, false);
+                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", bo != null ? bo.getClass().getSimpleName() : "null", property, parameterPointer, textValue);
+                throw new IllegalStateException(msg, e);
+            }
+        }
+    }
+
+    /** Assign procedure parameters */
+    @SuppressWarnings("unchecked")
+    public void loadValues(DbProcedure bo) {
+
+        CallableStatement ps = (CallableStatement) this.ps;
+        MetaProcedure procedure = bo.metaProcedure();
+        int i = 0;
+
+        // Load data from CallableStatement:
+        try {
+            for (MetaColumn c : MetaProcedure.COLUMNS.getList(procedure)) {
+                if (procedure.isOutput(c)) {
+                    final Object value = typeService.getValue(c, ps, ++i);
+                    c.setValue(bo, value);
+                } 
+                else if (procedure.isInput(c)) {
+                    ++i;
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Procedure: " + bo, e);
+        }
+    }
+
+
     /** Log a value value into a text format. */
-    protected void logValue(final OrmUjo bo, final UjoProperty property) {
+    protected void logValue(final Ujo bo, final UjoProperty property) {
         if (logValues) {
             String textValue = UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY);
             logValue(textValue, property);

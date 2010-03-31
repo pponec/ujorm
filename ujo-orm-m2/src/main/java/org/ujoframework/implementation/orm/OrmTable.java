@@ -23,6 +23,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoPropertyListImpl;
 import org.ujoframework.implementation.quick.QuickUjo;
+import org.ujoframework.orm.ExtendedOrmUjo;
 import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
@@ -55,7 +56,7 @@ import org.ujoframework.orm.Session;
  * @see org.ujoframework.implementation.orm.RelationToMany
  * @see org.ujoframework.core.UjoIterator
  */
-public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
+public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
 
     /** Orm session */
     transient private Session session;
@@ -175,6 +176,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements OrmUjo {
      * @throws IllegalStateException Method throws an exception for a wrong property type.
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
      */
+    @Override
     public <UJO extends UJO_IMPL> ForeignKey readFK(UjoProperty<UJO, ? extends OrmUjo> property) throws IllegalStateException {
         Object value = super.readValue(property);
         if (value==null || value instanceof ForeignKey) {

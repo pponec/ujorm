@@ -59,7 +59,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     public MetaRelation2Many(MetaTable table, UjoProperty tableProperty, MetaRelation2Many param) {
         
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
-        Column column = field.getAnnotation(Column.class);
+        Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
         if (true) {
             ID.setValue(this, tableProperty.getName());
@@ -76,7 +76,9 @@ public class MetaRelation2Many extends AbstractMetaModel {
         changeDefault(this, NAME, tableProperty.getName());
     }
 
-    /** It is a DB column */
+    /** It is a DB column (either a value of a foreign key), 
+     * not a relation to many.
+     */
     public boolean isColumn() {
         return false;
     }
@@ -114,7 +116,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return result;
     }
 
-    /** Column name */
+    /** Column name. */
     @Override
     public String toString() {
         return NAME.of(this);
