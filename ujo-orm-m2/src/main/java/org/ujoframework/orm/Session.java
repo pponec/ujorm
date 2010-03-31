@@ -41,6 +41,7 @@ import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.BinaryCriterion;
 import org.ujoframework.criterion.ValueCriterion;
+import org.ujoframework.orm.metaModel.MetaProcedure;
 
 /**
  * The ORM session.
@@ -327,7 +328,32 @@ public class Session {
             MetaDatabase.close(null, statement, null, true);
         }
         return result;
+    }
 
+    /** Call the stored procedure */
+    protected void call(final DbProcedure procedure) {
+        JdbcStatement statement = null;
+        String sql = "";
+        MetaDatabase db = procedure.metaProcedure.getDatabase();
+        MetaProcedure mProcedure = procedure.metaProcedure();
+
+        try {
+            sql = db.getDialect().printCall(mProcedure, out(64)).toString();
+            statement = getStatementCallable(db, sql);
+            statement.assignValues(procedure);
+
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+            }
+            statement.execute(); // execute call statement
+            statement.loadValues(procedure);
+        } catch (Throwable e) {
+            rollbackOnly = true;
+            MetaDatabase.close(null, statement, null, false);
+            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+        } finally {
+            MetaDatabase.close(null, statement, null, true);
+        }
     }
 
     /** Convert a property array to a column list. */
@@ -387,7 +413,7 @@ public class Session {
         } finally {
             MetaDatabase.close(null, statement, rs, false);
         }
-        
+
         return result;
     }
 
@@ -464,6 +490,7 @@ public class Session {
     private Connection getConnection_(final MetaDatabase database, final int index) throws IllegalStateException {
         Connection result = connections[index].get(database);
         if (result == null) {
+            assertOpenSession();
             try {
                 result = database.createConnection();
             } catch (Exception e) {
@@ -487,6 +514,12 @@ public class Session {
     /** Create new statement */
     public JdbcStatement getStatement(MetaDatabase database, CharSequence sql) throws SQLException {
         final JdbcStatement result = new JdbcStatement(getConnection(database), sql, getHandler());
+        return result;
+    }
+
+    /** Create new statement */
+    public JdbcStatement getStatementCallable(MetaDatabase database, String sql) throws SQLException {
+        final JdbcStatement result = new JdbcStatement(getConnection(database).prepareCall(sql), getHandler());
         return result;
     }
 
@@ -591,6 +624,18 @@ public class Session {
         }
     }
 
+    /** Is the session closed? */
+    public boolean isClosed() {
+        return cache == null;
+    }
+
+    /** Assert the current session os open. */
+    private final void assertOpenSession() throws IllegalStateException {
+        if (cache == null) {
+            throw new IllegalStateException("The session is closed");
+        }
+    }
+
     /** Create new StringBuilder instance */
     private StringBuilder out(int capacity) {
         return new StringBuilder(capacity);
@@ -611,13 +656,15 @@ public class Session {
 
     /** Find object from internal cache */
     public OrmUjo findCache(Class type, Object pkey) {
-        CacheKey key = CacheKey.newInstance(type, pkey);
+        assertOpenSession();
+        final CacheKey key = CacheKey.newInstance(type, pkey);
         return cache.get(key);
     }
 
     /** Find object from internal cache */
     public OrmUjo findCache(Class type, Object... pkeys) {
-        CacheKey key = CacheKey.newInstance(type, pkeys);
+        assertOpenSession();
+        final CacheKey key = CacheKey.newInstance(type, pkeys);
         return cache.get(key);
     }
 
@@ -655,5 +702,51 @@ public class Session {
         }
     }
 
-}
+    /** Reload values of the persistent object. <br>
+     * Note: If the object has implemented the interface
+     * {@link ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded 
+     * else a lazy initialization is loaded - for the first property depth.
+     * @param ujo The persistent object to relading values.
+     * @return The FALSE value means that the object is missing in the database.
+     */
+    @SuppressWarnings("unchecked")
+    public boolean reload(final OrmUjo ujo) {
+        if (ujo==null) {
+            return false;
+        }
+        ujo.writeSession(this);
+        
+        final MetaTable metaTable = handler.findTableModel(ujo.getClass());
+        final MetaPKey pkeys = MetaTable.PK.getValue(metaTable);
+        boolean fk = ujo instanceof ExtendedOrmUjo;
 
+        Criterion<OrmUjo> criterion = null;
+        for (MetaColumn c : MetaPKey.COLUMNS.of(pkeys)) {
+            Criterion<OrmUjo> crn = Criterion.where(c.getProperty(), c.getValue(ujo));
+            criterion = criterion!=null
+                ? criterion.and(crn)
+                : crn
+                ;
+        }
+
+        OrmUjo result = createQuery(criterion).uniqueResult();
+        if (result==null) {
+            return false;
+        }
+
+        // Copy all properties to the original object
+        for (MetaColumn c : MetaTable.COLUMNS.of(metaTable)) {
+
+            if (fk && c.isForeignKey()) {
+                // Copy the foreign key only (the workaround of lazy loading):
+                UjoProperty p = c.getProperty();
+                ujo.writeValue(p, ((ExtendedOrmUjo)result).readFK(p));
+            } else if (c.isColumn()) {
+                c.getProperty().copy(result, ujo);
+            }
+        }
+
+        return true;
+    }
+
+}

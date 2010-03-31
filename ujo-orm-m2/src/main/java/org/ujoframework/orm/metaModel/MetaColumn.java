@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.Property;
@@ -80,7 +81,7 @@ final public class MetaColumn extends MetaRelation2Many {
         this.foreignKey = getProperty().isTypeOf(OrmUjo.class);
 
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
-        Column column = field.getAnnotation(Column.class);
+        Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
         if (param!=null) {
             changeDefault(this, PRIMARY_KEY, PRIMARY_KEY.of(param));
@@ -109,7 +110,9 @@ final public class MetaColumn extends MetaRelation2Many {
         }
     }
 
-    /** It is a DB column (either a value of a foreign key) */
+    /** It is a DB column (either a value of a foreign key), 
+     * not a relation to many.
+     */
     @Override
     public boolean isColumn() {
         return true;
@@ -214,7 +217,7 @@ final public class MetaColumn extends MetaRelation2Many {
 
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
-    public void setValue(final OrmUjo bo, Object value) {
+    public void setValue(final Ujo bo, Object value) {
         final UjoProperty property = getProperty();
 
         if (isForeignKey()
@@ -328,5 +331,10 @@ final public class MetaColumn extends MetaRelation2Many {
                 DB_TYPE.setValue(this, DB_TYPE.of(cols.get(0)));
             }
         }
+    }
+
+    /** Is the related property type void? */
+    public boolean isVoid() {
+        return getProperty().isTypeOf(Void.class);
     }
 }

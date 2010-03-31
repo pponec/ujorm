@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010 Ponec.
+ *  Copyright 2010 Pavel Ponec.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,12 +23,22 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
+import org.ujoframework.UjoProperty;
+import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.Session;
 
 /**
- * BLOB/CLOB useful methods.
- * @author Ponec
+ * Many useful methods for 
+ *  <ul>
+ *  <li>BLOB/CLOB</li>
+ *  <li>lazy loading</li>
+ *  <li>reloading</li>
+ *  <ul>
+ * @author Pavel Ponec
  */
 final public class OrmTools {
 
@@ -181,5 +191,67 @@ final public class OrmTools {
         return clob!=null ? getClobString(clob).toCharArray() : null;
     }
 
+    /** Load all lazy values for the current parameter. */
+    public static void loadLazyValues(OrmUjo ujo) {
+        loadLazyValues(ujo, 1);
+    }
+
+    /** Load all lazy values for the current parameter recursively until optional depth.
+     * @param ujo The object must not be null.
+     * @param depth The object depth.
+     */
+    @SuppressWarnings("unchecked")
+    public static void loadLazyValues(final OrmUjo ujo, int depth) {
+        if (--depth<0) {
+            return;
+        }
+
+        for (UjoProperty p : ujo.readProperties()) {
+            if (p.isTypeOf(OrmUjo.class)) {
+                Object value = p.getValue(ujo);
+                if (value!=null && depth>0) {
+                    loadLazyValues((OrmUjo) value, depth);
+                }
+            }
+        }
+    }
+
+    /** Load all lazy values for the current parameter recursively until optional depth.
+     * @param ujos The parameter can be the
+     *        {@link org.ujoframework.orm.Query Query},
+     *        {@link org.ujoframework.core.UjoIterator UjoIterator} and some
+     *         List for example.
+     * @param depth The object resursion depth.
+     * @return Returns a list of items or the parameter ujos.
+     *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
+     */
+    public static <UJO extends OrmUjo> List<UJO> loadLazyValues(final Iterable<UJO> ujos, int depth) {
+
+        List<UJO> result = ujos instanceof List
+            ? null
+            : new ArrayList<UJO>(64)
+            ;
+        for (UJO ujo : ujos) {
+            loadLazyValues(ujo, depth);
+            if (result!=null) {
+                result.add(ujo);
+            }
+        }
+        if (result==null) {
+            result = (List<UJO>) ujos;
+        }        
+        return result;
+    }
+
+    /** Reload values of the persistent object. <br>
+     * Note: If the object has implemented the interface
+     * {@link org.ujoframework.orm.ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded, else a lazy initialization for first depth is done.
+     * @param ujo The persistent object to relading values.
+     * @return The FALSE value means that the object is missing in the database.
+     * @see Session#reload(org.ujoframework.orm.OrmUjo) 
+     */
+    public boolean reload(final OrmUjo ujo, final Session session) {
+        return session.reload(ujo);
+    }
 
 }

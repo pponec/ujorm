@@ -37,6 +37,7 @@ import org.ujoframework.criterion.Operator;
 import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaIndex;
 import org.ujoframework.orm.metaModel.MetaParams;
+import org.ujoframework.orm.metaModel.MetaProcedure;
 
 /**
  * SQL dialect abstract class. Methods of this class print a SQL statement(s) along a metamodel usually.
@@ -650,6 +651,33 @@ abstract public class SqlDialect {
             }
         }
     }
+
+    /** Print the call of a stored procedure by template: <br>
+     * {? = call procedure_when(?,?)}
+     */
+    public Appendable printCall(MetaProcedure procedure, Appendable out) throws IOException {
+
+        List<MetaColumn> propList = MetaProcedure.COLUMNS.of(procedure);
+
+        out.append('{').append(' ');
+        if (!propList.get(0).isVoid()) {
+           out.append("? =");
+        }
+        out.append(" call ");
+        out.append(procedure.getProcedureName());
+
+        // Print all parameters:
+        if (propList.size()>1) {
+            for (int i=1; i<propList.size(); i++) {
+                out.append(i==1 ? "(?" : ",?");
+            }
+            out.append(')');
+        }
+        out.append(' ').append('}');
+        return out;
+    }
+
+
 
     /** Print an OFFSET of the statement SELECT. */
     public void printOffset(Query query, Appendable out) throws IOException {

@@ -16,10 +16,10 @@
 
 package org.ujoframework.orm;
 
-import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
+import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,28 +35,28 @@ import org.ujoframework.orm.metaModel.MetaColumn;
 public class TypeService {
 
     // Type book:
-    public static final char UNDEFINED = (char) -1;
-    public static final char BOOLEAN = 0;
-    public static final char BYTE = 1;
-    public static final char CHAR = 2;
-    public static final char SHORT = 3;
-    public static final char INT = 4;
-    public static final char LONG = 5;
-    public static final char FLOAT = 6;
-    public static final char DOUBLE = 7;
-    public static final char BIG_DECI = 8;
-    public static final char BIG_INTE = 9;
-    public static final char STRING = 10;
-    public static final char BYTES = 11;
-    public static final char DATE_UTIL = 12;
-    public static final char DATE_SQL = 13;
-    public static final char TIME_SQL = 14;
-    public static final char TIMESTAMP = 15;
-    public static final char BLOB = 16;
-    public static final char CLOB = 17;
-    public static final char EXPORTABLE  = 18;
-    public static final char EXPORT_ENUM = 19;
-    public static final char ENUM = 20;
+    public static final char UNDEFINED = (char) 0;
+    public static final char BOOLEAN = 1;
+    public static final char BYTE = 2;
+    public static final char CHAR = 3;
+    public static final char SHORT = 4;
+    public static final char INT = 5;
+    public static final char LONG = 6;
+    public static final char FLOAT = 7;
+    public static final char DOUBLE = 8;
+    public static final char BIG_DECI = 9;
+    public static final char BIG_INTE = 10;
+    public static final char STRING = 11;
+    public static final char BYTES = 12;
+    public static final char DATE_UTIL = 13;
+    public static final char DATE_SQL = 14;
+    public static final char TIME_SQL = 15;
+    public static final char TIMESTAMP = 16;
+    public static final char BLOB = 17;
+    public static final char CLOB = 18;
+    public static final char EXPORTABLE  = 19;
+    public static final char EXPORT_ENUM = 20;
+    public static final char ENUM = 21;
 
     /** Constructor argument type */
     private static final Class[] ARGS = new Class[] {String.class};
@@ -169,6 +169,41 @@ public class TypeService {
         return rs.wasNull() ? null : r;
     }
 
+    /** GetValue from the stored precedure by position */
+    public Object getValue(final MetaColumn mColumn, final CallableStatement rs, final int column) throws SQLException {
+        Object r;
+        switch (mColumn.getTypeCode()) {
+            case BOOLEAN  : r = rs.getBoolean(column); break;
+            case BYTE     : r = rs.getByte(column); break;
+            case CHAR     : r = (char) rs.getInt(column); break;
+            case SHORT    : r = rs.getShort(column); break;
+            case INT      : r = rs.getInt(column); break;
+            case LONG     : r = rs.getLong(column); break;
+            case FLOAT    : r = rs.getFloat(column); break;
+            case DOUBLE   : r = rs.getDouble(column); break;
+            case BIG_DECI : return rs.getBigDecimal(column);
+            case BIG_INTE : BigDecimal d = rs.getBigDecimal(column);
+                            return d!=null ? d.toBigInteger() : null;
+            case STRING   : return rs.getString(column);
+            case BYTES    : return rs.getBytes(column);
+            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(column);
+                            return t!=null ? new java.util.Date(t.getTime()) : null;
+            case DATE_SQL : return rs.getDate(column);
+            case TIME_SQL : return rs.getTime(column);
+            case TIMESTAMP: return rs.getTimestamp(column);
+            case BLOB     : return rs.getBlob(column);
+            case CLOB     : return rs.getClob(column);
+            case ENUM     : int i = rs.getInt(column);
+                            return i==0 && rs.wasNull()
+                            ? null
+                            : mColumn.getType().getEnumConstants()[i] ;
+            case EXPORTABLE : return getValue(rs.getString(column), mColumn);
+            case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
+            default       : return rs.getObject(column);
+        }
+        return rs.wasNull() ? null : r;
+    }
+
     /** GetValue from the result set by position */
     public void setValue
         ( final MetaColumn mColumn
@@ -204,7 +239,7 @@ public class TypeService {
             case CLOB     : rs.setClob(i, (Clob)value); break;
             case ENUM     : rs.setInt(i, ((Enum)value).ordinal()); break;
             case EXPORTABLE :
-            case EXPORT_ENUM: rs.setString(i, value!=null ? ((ValueExportable)value).exportAsString() : null ); break;
+            case EXPORT_ENUM: rs.setString(i, value!=null ? ((ValueExportable)value).exportToString() : null ); break;
             default       : rs.setObject(i, value);  break;
         }
     }
@@ -215,7 +250,7 @@ public class TypeService {
             return null;
         }
         for (Object o : mColumn.getType().getEnumConstants()) {
-            if (key.equals(((ValueExportable)o).exportAsString())) {
+            if (key.equals(((ValueExportable)o).exportToString())) {
                 return o;
             }
         }
@@ -236,7 +271,5 @@ public class TypeService {
         }
         
     }
-
-
 
 }

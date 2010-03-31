@@ -42,7 +42,7 @@ public class Order extends OrmTable<Order> {
         ACTIVE,
         DELETED;
 
-        public String exportAsString() {
+        @Override public String exportToString() {
             return name().substring(0, 1);
         }
     }

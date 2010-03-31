@@ -49,7 +49,7 @@ public class SerializatonTest extends TestCase {
     }
 
     /**
-     * Test of getValue method, of class ForeignKey.
+     * Test of getValue method, of class UniqueKey.
      */
     public void testOrmTableSerialization() throws Exception {
         System.out.println("testOrmTableSerialization");
