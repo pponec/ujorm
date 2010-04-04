@@ -16,15 +16,12 @@
 package org;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.logging.*;
 import org.bo.Employee;
 import org.bo.User;
 import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.*;
-import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.*;
 import static org.bo.Employee.*;
 

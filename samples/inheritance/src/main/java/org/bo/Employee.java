@@ -27,10 +27,7 @@ import org.ujoframework.orm.annot.Table;
 public class Employee extends OrmTable<Employee> implements IUser {
 
     /** Primary key */
-    @Column(pk = true)
-    public static final UjoProperty<Employee, Long> id = newProperty(Long.class);
-    /** User */
-    @Column("user_id")
+    @Column(value="user_id", pk = true)
     public static final UjoProperty<Employee, User> user = newProperty(User.class);
     /** Company */
     public static final UjoProperty<Employee, String> company = newProperty(String.class);
@@ -43,17 +40,17 @@ public class Employee extends OrmTable<Employee> implements IUser {
 
     @Override
     public String getLogin() {
-        return getUser().getLogin();
+        return get(user).getLogin();
     }
 
     @Override
     public void setLogin(String login) {
-        getUser().setLogin(login);
+        get(user).setLogin(login);
     }
 
     @Override
     public String getName() {
-        return getUser().getName();
+        return get(user).getName();
     }
 
     @Override
