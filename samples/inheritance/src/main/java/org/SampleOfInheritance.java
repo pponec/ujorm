@@ -46,17 +46,17 @@ public class SampleOfInheritance {
     /** Insert one User and two Items into database. */
     public void useInsert() {
 
-        Customer employee = Customer.newInstance();
+        Customer customer = Customer.newInstance();
         //
-        employee.setLogin("ponec");
-        employee.setPassword("xxx");
-        employee.setName("Pavel Ponec");
-        employee.set(company, "ABC");
-        employee.set(discount, 10);
+        customer.setLogin("ponec");
+        customer.setPassword("xxx");
+        customer.setName("Pavel Ponec");
+        customer.set(company, "ABC");
+        customer.set(discount, 10);
         //
         Session session = handler.getSession();
-        session.save(employee.getUser());
-        session.save(employee);
+        session.save(customer.getUser());
+        session.save(customer);
         session.commit();
     }
 
@@ -70,10 +70,10 @@ public class SampleOfInheritance {
         crit = cn1.and(cn2);
 
         Session session = handler.getSession();
-        UjoIterator<Customer> employees = session.createQuery(crit).iterate();
+        UjoIterator<Customer> customers = session.createQuery(crit).iterate();
 
-        for (Customer employee : employees) {
-            System.out.println("Employee: " + employee);
+        for (Customer customer : customers) {
+            System.out.println("Customer: " + customer);
         }
     }
 

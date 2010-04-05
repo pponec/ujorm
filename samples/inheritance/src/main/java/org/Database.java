@@ -39,7 +39,7 @@ public class Database extends OrmTable<Database> {
     /** User */
     public static final RelationToMany<Database,User> users = newRelation(User.class);
 
-    /** Employee extends User */
+    /** Customer extends User */
     public static final RelationToMany<Database,Customer> customers = newRelation(Customer.class);
 
 }
