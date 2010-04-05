@@ -16,16 +16,13 @@
 
 package org.bo;
 
+
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.Table;
 
-/**
- * The column mapping to DB table ORDER (a sample of usage).
- * Note, that the User object has got an collection of Items.
- * @hidden
- */
+/** User implementation */
 @Table(name="usr_user")
 public class User extends OrmTable<User> {
 
@@ -73,7 +70,5 @@ public class User extends OrmTable<User> {
     public void setPassword(String _password) {
         set(password, _password);
     }
-
-
 
 }

@@ -39,6 +39,7 @@
         <module>samples/parameters</module>
         <module>samples/table2xml</module>
         <module>samples/ujorm</module>
+        <module>samples/inheritance</module>
         <module>samples/binding</module>
 
         <module>benchmark/hibernate</module>

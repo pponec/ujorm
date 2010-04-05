@@ -16,7 +16,7 @@
 
 package org;
 
-import org.bo.Employee;
+import org.bo.Customer;
 import org.bo.User;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.implementation.orm.RelationToMany;
@@ -40,6 +40,6 @@ public class Database extends OrmTable<Database> {
     public static final RelationToMany<Database,User> users = newRelation(User.class);
 
     /** Employee extends User */
-    public static final RelationToMany<Database,Employee> employees = newRelation(Employee.class);
+    public static final RelationToMany<Database,Customer> customers = newRelation(Customer.class);
 
 }
