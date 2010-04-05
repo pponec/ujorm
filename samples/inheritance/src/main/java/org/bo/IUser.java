@@ -16,11 +16,8 @@
 
 package org.bo;
 
-/**
- * The column mapping to DB table ORDER (a sample of usage).
- * Note, that the User object has got an collection of Items.
- * @hidden
- */
+
+/** The User interface */
 public interface IUser {
 
     public String getLogin();
@@ -34,7 +31,5 @@ public interface IUser {
     public String getPassword();
 
     public void setPassword(String password);
-
-
 
 }

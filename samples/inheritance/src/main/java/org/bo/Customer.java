@@ -15,24 +15,24 @@
  */
 package org.bo;
 
-import java.math.BigDecimal;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.Table;
 
-
-/** Employee */
-@Table(name="usr_employee")
-public class Employee extends OrmTable<Employee> implements IUser {
+/** Customer implementation */
+@Table(name="usr_customer")
+public class Customer extends OrmTable<Customer> implements ICustomer {
 
     /** Primary key */
-    @Column(value="user_id", pk = true)
-    public static final UjoProperty<Employee, User> user = newProperty(User.class);
+    @Column(pk=true, name="id")
+    public static final UjoProperty<Customer, User> user = newProperty(User.class);
     /** Company */
-    public static final UjoProperty<Employee, String> company = newProperty(String.class);
-    /** Salary */
-    public static final UjoProperty<Employee, BigDecimal> salary = newProperty(BigDecimal.ZERO);
+    public static final UjoProperty<Customer, String> company = newProperty(String.class);
+    /** Discount [%] */
+    public static final UjoProperty<Customer, Integer> discount = newProperty(0);
+
+    // -------- Setters and getters ---------
 
     public User getUser() {
         return get(user);
@@ -40,17 +40,17 @@ public class Employee extends OrmTable<Employee> implements IUser {
 
     @Override
     public String getLogin() {
-        return get(user).getLogin();
+        return getUser().getLogin();
     }
 
     @Override
     public void setLogin(String login) {
-        get(user).setLogin(login);
+        getUser().setLogin(login);
     }
 
     @Override
     public String getName() {
-        return get(user).getName();
+        return getUser().getName();
     }
 
     @Override
@@ -68,10 +68,33 @@ public class Employee extends OrmTable<Employee> implements IUser {
         getUser().setPassword(password);
     }
 
+    @Override
+    public String getCompany() {
+        return get(company);
+    }
+
+    @Override
+    public void setCompany(String _company) {
+        set(company, _company);
+    }
+
+    @Override
+    public int getDiscount() {
+        return get(discount);
+    }
+
+    @Override
+    public void setDiscount(int _discount) {
+        set(discount, _discount);
+    }
+
+    // -------- Static methods ---------
+
     /** Factory method */
-    public static Employee newInstance() {
-        Employee result = new Employee();
+    public static Customer newInstance() {
+        Customer result = new Customer();
         result.set(user, new User());
         return result;
     }
+
 }

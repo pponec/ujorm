@@ -17,13 +17,13 @@ package org;
 
 import java.math.BigDecimal;
 import java.util.logging.*;
-import org.bo.Employee;
+import org.bo.Customer;
 import org.bo.User;
 import org.ujoframework.Ujo;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.*;
 import org.ujoframework.criterion.*;
-import static org.bo.Employee.*;
+import static org.bo.Customer.*;
 
 /**
  * Sample of inheritance for the persistent objects.
@@ -46,13 +46,13 @@ public class SampleOfInheritance {
     /** Insert one User and two Items into database. */
     public void useInsert() {
 
-        Employee employee = Employee.newInstance();
+        Customer employee = Customer.newInstance();
         //
         employee.setLogin("ponec");
         employee.setPassword("xxx");
         employee.setName("Pavel Ponec");
         employee.set(company, "ABC");
-        employee.set(salary, new BigDecimal(500));
+        employee.set(discount, 10);
         //
         Session session = handler.getSession();
         session.save(employee.getUser());
@@ -63,16 +63,16 @@ public class SampleOfInheritance {
     /** Now, how to select Orders from the database by Criterions? */
     public void useSelect() {
 
-        Criterion<Employee> cn1, cn2, crit;
+        Criterion<Customer> cn1, cn2, crit;
 
-        cn1 = Criterion.where(Employee.user.add(User.login), "ponec");
-        cn2 = Criterion.where(Employee.company, "ABC");
+        cn1 = Criterion.where(Customer.user.add(User.login), "ponec");
+        cn2 = Criterion.where(Customer.company, "ABC");
         crit = cn1.and(cn2);
 
         Session session = handler.getSession();
-        UjoIterator<Employee> employees = session.createQuery(crit).iterate();
+        UjoIterator<Customer> employees = session.createQuery(crit).iterate();
 
-        for (Employee employee : employees) {
+        for (Customer employee : employees) {
             System.out.println("Employee: " + employee);
         }
     }
