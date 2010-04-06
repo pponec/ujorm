@@ -15,15 +15,11 @@
  */
 package org;
 
-import java.math.BigDecimal;
 import java.util.logging.*;
-import org.bo.Customer;
-import org.bo.User;
+import org.bo.*;
 import org.ujoframework.Ujo;
-import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.*;
 import org.ujoframework.criterion.*;
-import static org.bo.Customer.*;
 
 /**
  * Sample of inheritance for the persistent objects.
@@ -51,16 +47,19 @@ public class SampleOfInheritance {
         customer.setLogin("ponec");
         customer.setPassword("xxx");
         customer.setName("Pavel Ponec");
-        customer.set(company, "ABC");
-        customer.set(discount, 10);
+        customer.setCompany("ABC");
+        customer.setDiscount(10);
         //
         Session session = handler.getSession();
         session.save(customer.getUser());
         session.save(customer);
         session.commit();
+
+        IUser user = customer; // A test of the INHERITANCE
+        System.out.println("User: " + user);
     }
 
-    /** Now, how to select Orders from the database by Criterions? */
+    /** Now, how to select Customers? */
     public void useSelect() {
 
         Criterion<Customer> cn1, cn2, crit;
@@ -70,10 +69,10 @@ public class SampleOfInheritance {
         crit = cn1.and(cn2);
 
         Session session = handler.getSession();
-        UjoIterator<Customer> customers = session.createQuery(crit).iterate();
+        Query<Customer> customers = session.createQuery(crit);
 
-        for (Customer customer : customers) {
-            System.out.println("Customer: " + customer);
+        for (IUser user : customers.iterate()) {
+            System.out.println("User: " + user);
         }
     }
 
