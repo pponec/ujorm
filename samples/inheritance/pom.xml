@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>sample-inheritance</artifactId>
     <packaging>jar</packaging>
-    <version>0.93</version>
+    <version>0.94</version>
     <url>http://maven.apache.org</url>
     <build>
         <plugins>
