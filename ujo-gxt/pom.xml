@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.ujoframework</groupId>
+    <artifactId>ujo-gxt</artifactId>
+    <packaging>jar</packaging>
+    <version>0.94</version>
+    <name>Ujo 4 GXT</name>
+
+    <description>Support for GWT - client UJO objects.
+    </description>
+    <url>http://maven.apache.org</url>
+
+    <licenses>
+        <license>
+            <name>GNU/GPL v3</name>
+            <url>http://www.gnu.org/licenses/gpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>If you need a commercial license, please contact support@ujorm.com</name>
+            <url>mailto:support@ujorm.com</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <ujorm.version>0.94</ujorm.version>
+        <gwt.version>1.7.0</gwt.version>
+        <gxt.version>2.1.0</gxt.version>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <contributors>
+        <contributor>
+            <name>Pavel Ponec</name>
+            <url>http://ponec.net/</url>
+            <timezone>+1</timezone>
+        </contributor>
+    </contributors>
+
+    <build>
+        <resources>
+            <resource>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.java</include>
+                    <include>**/*.gwt.xml</include>
+                </includes>
+                <directory>src/main/java</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <filters></filters>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+    <dependencies>
+
+        <dependency>
+            <groupId>org.ujoframework</groupId>
+            <artifactId>ujo-orm</artifactId>
+            <version>0.94</version>
+       <!-- <scope>compile</scope> -->
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+     <!--   <scope>provided</scope> -->
+        </dependency>
+        <dependency>
+            
+            <groupId>com.extjs</groupId>
+            <artifactId>gxt</artifactId>
+            <version>${gxt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gwtincubator</groupId>
+            <artifactId>gwt-incubator-security</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+    </dependencies>
+</project>
+
+
+
