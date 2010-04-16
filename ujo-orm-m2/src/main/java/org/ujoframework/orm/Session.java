@@ -57,6 +57,7 @@ public class Session {
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
+
     /** Handler. */
     final private OrmHandler handler;
     /** Orm parameters. */
@@ -747,6 +748,13 @@ public class Session {
         }
 
         return true;
+    }
+
+    /** Create the closed session */
+    public static Session newClosedSession(OrmHandler handler) {
+        Session result = new Session(handler);
+        result.close();
+        return result;
     }
 
 }
