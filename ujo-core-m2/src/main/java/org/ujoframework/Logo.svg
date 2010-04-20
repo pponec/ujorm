@@ -17,7 +17,7 @@
    inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="C:\u\Pavel\Java\ProjectUJO\src\org\ujoframework"
-   sodipodi:docname="Logo_AA.svg"
+   sodipodi:docname="Logo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="C:\temp\UjoIcons2.png"
    inkscape:export-xdpi="588.39001"
@@ -159,7 +159,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.7383469"
-     inkscape:cx="92.741487"
+     inkscape:cx="55.15803"
      inkscape:cy="92.821778"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -188,29 +188,19 @@
         </dc:creator>
         <dc:rights>
           <cc:Agent>
-            <dc:title>GPL</dc:title>
+            <dc:title>GNU/GPL v3</dc:title>
           </cc:Agent>
         </dc:rights>
         <dc:source>http://ujoframework.org/</dc:source>
         <dc:coverage>UJO Framework logo</dc:coverage>
         <cc:license
-           rdf:resource="http://creativecommons.org/licenses/GPL/2.0/" />
+           rdf:resource="http://www.gnu.org/licenses/gpl.html" />
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Pavel Ponec</dc:title>
+          </cc:Agent>
+        </dc:publisher>
       </cc:Work>
-      <cc:License
-         rdf:about="http://creativecommons.org/licenses/GPL/2.0/">
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/Reproduction" />
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/Distribution" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/Notice" />
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/ShareAlike" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/SourceCode" />
-      </cc:License>
     </rdf:RDF>
   </metadata>
   <g
@@ -292,7 +282,7 @@
     <path
        transform="matrix(0.9694251,-0.2453876,0.1768313,0.9842412,0,0)"
        style="opacity:0.16597511;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:19.12400055;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:0.21176471"
-       d="M 727.9306,707.6106 L 876.96497,708.4538 L 879.47454,729.23105 L 756.01471,733.4051 L 727.9306,707.6106 z"
+       d="M 727.9306,707.6106 L 876.96497,708.4538 L 879.94873,726.63146 L 748.18534,727.91996 L 727.9306,707.6106 z"
        id="rect3198"
        sodipodi:nodetypes="ccccc" />
     <path
