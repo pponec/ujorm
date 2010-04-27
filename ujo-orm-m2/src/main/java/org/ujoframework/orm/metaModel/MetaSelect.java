@@ -27,18 +27,18 @@ import org.ujoframework.orm.AbstractMetaModel;
  * Contains a sql select for a UJO view SELECT.
  * @author Ponec
  */
-final public class MetaView extends AbstractMetaModel {
-    private static final Class CLASS = MetaView.class;
+final public class MetaSelect extends AbstractMetaModel {
+    private static final Class CLASS = MetaSelect.class;
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(MetaView.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MetaSelect.class.getName());
 
-    public static final Property<MetaView,String> SELECT = newProperty("SELECT "   , "");
-    public static final Property<MetaView,String> FROM   = newProperty(" FROM "    , "");
-    public static final Property<MetaView,String> WHERE  = newProperty(" WHERE "   , "");
-    public static final Property<MetaView,String> GROUP  = newProperty(" GROUP BY ", "");
-    public static final Property<MetaView,String> ORDER  = newProperty(" ORDER BY ", "");
-    public static final Property<MetaView,String> LIMIT  = newProperty(" LIMIT "   , "");
+    public static final Property<MetaSelect,String> SELECT = newProperty("SELECT "   , "");
+    public static final Property<MetaSelect,String> FROM   = newProperty(" FROM "    , "");
+    public static final Property<MetaSelect,String> WHERE  = newProperty(" WHERE "   , "");
+    public static final Property<MetaSelect,String> GROUP  = newProperty(" GROUP BY ", "");
+    public static final Property<MetaSelect,String> ORDER  = newProperty(" ORDER BY ", "");
+    public static final Property<MetaSelect,String> LIMIT  = newProperty(" LIMIT "   , "");
 
     /** The property initialization */
     static{init(CLASS);}
@@ -52,7 +52,7 @@ final public class MetaView extends AbstractMetaModel {
      *  WHERE ord.id=itm.orderId
      *  GROUP BY ord.id ;
      */
-    public MetaView(String select) {
+    public MetaSelect(String select) {
         parse(select);
     }
 

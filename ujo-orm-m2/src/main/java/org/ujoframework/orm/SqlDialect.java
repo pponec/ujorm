@@ -31,7 +31,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaPKey;
 import org.ujoframework.orm.metaModel.MetaTable;
-import org.ujoframework.orm.metaModel.MetaView;
+import org.ujoframework.orm.metaModel.MetaSelect;
 import org.ujoframework.criterion.ValueCriterion;
 import org.ujoframework.criterion.Operator;
 import org.ujoframework.orm.metaModel.MetaDatabase;
@@ -548,22 +548,22 @@ abstract public class SqlDialect {
      * @param count only count of items is required;
      */
     protected Appendable printSelectView(MetaTable table, Query query, boolean count, Appendable out) throws IOException {
-        MetaView select = MetaTable.SELECT_MODEL.of(table);
+        MetaSelect select = MetaTable.SELECT_MODEL.of(table);
         String where = query.getDecoder().getWhere();
         List<UjoProperty> order = query.getOrderBy();
 
         for (UjoProperty p : select.readProperties()) {
             String value = (String) p.of(select);
 
-            if (p==MetaView.SELECT && count) {
+            if (p==MetaSelect.SELECT && count) {
                 out.append(p.toString());
                 out.append( "COUNT(*)" );
-            } else if (p==MetaView.WHERE && value.length()+where.length()>0) {
+            } else if (p==MetaSelect.WHERE && value.length()+where.length()>0) {
                 out.append(p.toString());
                 out.append( value );
                 out.append( value.isEmpty() || where.isEmpty() ? "" : " AND " );
                 out.append( where );
-            } else if (p==MetaView.ORDER && !order.isEmpty()){
+            } else if (p==MetaSelect.ORDER && !order.isEmpty()){
                 out.append(p.toString());
                 out.append( value );
                 out.append( value.isEmpty() || order.isEmpty() ? "" : " AND " );

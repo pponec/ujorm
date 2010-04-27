@@ -51,7 +51,7 @@ final public class MetaParams extends AbstractMetaModel {
      * Default values is 100, the smallest possible value is 1. */
     public static final Property<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 100);
     /** A policy to defining the database structure by a DDL. */
-    public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("Orm2ddlPolicy", Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
+    public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
     /** Change a TypeService class by a subtype for user type customization. */

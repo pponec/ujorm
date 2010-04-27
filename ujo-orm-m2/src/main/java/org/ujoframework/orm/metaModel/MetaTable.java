@@ -71,7 +71,7 @@ final public class MetaTable extends AbstractMetaModel {
     public static final Property<MetaTable,String> SELECT = newProperty("select", "");
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
-    public static final Property<MetaTable,MetaView> SELECT_MODEL = newProperty("selectModel", MetaView.class);
+    public static final Property<MetaTable,MetaSelect> SELECT_MODEL = newProperty("selectModel", MetaSelect.class);
     /** Unique Primary Key */
     @Transient
     public static final Property<MetaTable,MetaPKey> PK = newProperty("pk", MetaPKey.class);
@@ -127,7 +127,7 @@ final public class MetaTable extends AbstractMetaModel {
             if (view2!=null) changeDefault(this, SELECT, view2.select());
 
             if (!SELECT.isDefault(this)) {
-                SELECT_MODEL.setValue(this, new MetaView(SELECT.of(this)));
+                SELECT_MODEL.setValue(this, new MetaSelect(SELECT.of(this)));
             }
         } else {
             Table table1 = field.getAnnotation(Table.class);
