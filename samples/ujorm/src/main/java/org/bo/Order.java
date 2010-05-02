@@ -19,6 +19,7 @@ package org.bo;
 import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
+import org.ujoframework.extensions.ValueExportable;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
@@ -26,64 +27,82 @@ import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.annot.Table;
 
 /**
- * The column mapping to DB table ORDER (a sample of usage).
+ * The column mapping to DB table order (a sample of usage).
  * Note, that the Order object has got an collection of Items.
  * @hidden
  */
 @Table(name="ord_order")
 public class Order extends OrmTable<Order> {
 
-    public enum State {
+    /** Store the value like VARCHAR. */
+    public enum State implements ValueExportable {
         ACTIVE,
-        DELETED
+        DELETED;
+
+        @Override public String exportToString() {
+            return name().substring(0, 1);
+        }
     }
 
-    /** Unique key */
-    @Column(pk=true)
-    public static final UjoProperty<Order,Long> ID = newProperty("id", Long.class);
+    /** The Unique Key */
+    @Column(pk = true)
+    public static final UjoProperty<Order, Long> id = newProperty(Long.class);
     /** Order state, default is ACTIVE */
-    public static final UjoProperty<Order,State> STATE = newProperty("state", State.ACTIVE);
+    public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
     /** User key */
-    public static final UjoProperty<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
     /** Description of the order */
-    @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
-    public static final UjoProperty<Order,String> DESCR = newProperty("description", String.class);
+    @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true)
+    public static final UjoProperty<Order, String> descr = newProperty(String.class);
     /** Date of creation */
-    public static final UjoProperty<Order,Date> CREATED = newProperty("created", Date.class);
-    /** References to Itemsr */
-    public static final RelationToMany<Order,Item> ITEMS = newRelation("items", Item.class);
+    public static final UjoProperty<Order, Date> created = newProperty(Date.class);
+    /** Reference to Items */
+    public static final RelationToMany<Order, Item> items = newRelation(Item.class);
 
+    // -----------------------------------------------------------------------
 
     // --- An optional implementation of commonly used setters and getters ---
-
     public Long getId() {
-        return get(ID);
+        return get(id);
     }
-    public void setId(Long id) {
-        set(ID, id);
+
+    public void setId(Long _id) {
+        set(id, _id);
     }
+
     public Integer getUsrId() {
-        return get(USER_ID);
+        return get(userId);
     }
-    public void setUsrId(Integer usrId) {
-        set(USER_ID, usrId);
+
+    public void setUsrId(Integer _usrId) {
+        set(userId, _usrId);
     }
+
     public String getDescr() {
-        return get(DESCR);
+        return get(descr);
     }
-    public void setDescr(String descr) {
-        set(DESCR, descr);
+
+    public void setDescr(String _descr) {
+        set(descr, _descr);
     }
+
     public Date getDate() {
-        return get(CREATED);
+        return get(created);
     }
-    public void setDate(Date date) {
-        set(CREATED, date);
+
+    public void setDate(Date _date) {
+        set(created, _date);
     }
+
+    public State getState() {
+        return get(state);
+    }
+
+    public void setState(State _state) {
+        set(state, _state);
+    }
+
     public UjoIterator<Item> getItems() {
-        return get(ITEMS);
+        return get(items);
     }
-
-
-
 }

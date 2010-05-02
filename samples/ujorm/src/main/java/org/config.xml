@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 0.92 was created 2010/01/03 10:13 -->
+<!-- The Ujorm configuration file release 0.94 was created 2010/05/02 14:20 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
         <dialect>org.ujoframework.orm.dialect.H2Dialect</dialect>
-        <table id="ord_order">
+        <table id="ORDERS">
             <name>ord_order</name>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
@@ -15,13 +15,14 @@
             </column>
             <column id="state">
                 <name>state</name>
-                <dbType>SMALLINT</dbType>
+                <dbType>VARCHAR</dbType>
+                <maxLength>2</maxLength>
             </column>
-            <column id="usrId">
-                <name>usrId</name>
+            <column id="userId">
+                <name>userId</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="description">
+            <column id="descr">
                 <name>DESCR</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
@@ -35,7 +36,7 @@
                 <name>items</name>
             </relation2m>
         </table>
-        <table id="ord_item">
+        <table id="ORDER_ITEMS">
             <name>ord_item</name>
             <alias>ord_item_alias</alias>
             <schema>db1</schema>
@@ -44,49 +45,67 @@
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
-            <column id="usrId">
-                <name>usrId</name>
+            <column id="userId">
+                <name>userId</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="description">
-                <name>description</name>
+            <column id="descr">
+                <name>descr</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>128</maxLength>
             </column>
-            <column id="fk_order">
+            <column id="order">
                 <name>fk_order</name>
-                <dbType>BIGINT</dbType>
             </column>
         </table>
-        <table id="view_order" view="true">
+        <table id="VIEW_ORDERS" view="true">
             <name>ord_order</name>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
-            <column id="id">
-                <name>id</name>
+            <column id="ID">
+                <name>ID</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
-            <column id="itemCount">
-                <name>itemCount</name>
+            <column id="ITEM_COUNT">
+                <name>ITEM_COUNT</name>
                 <dbType>INT</dbType>
             </column>
-            <select>SELECT ord_order_alias.id, count(*) AS itemCount FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
+            <select>SELECT ord_order_alias.id, count(*) AS item_count FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
         </table>
-        <table id="db1" view="true">
-            <name>ord_order</name>
-            <alias>ord_order_alias</alias>
+        <table id="db1">
+            <name>db1</name>
+            <alias>db1_alias</alias>
             <schema>db1</schema>
-            <relation2m id="ord_order">
-                <name>ord_order</name>
+            <column id="myProcedure">
+                <name>myProcedure</name>
+            </column>
+            <relation2m id="ORDERS">
+                <name>ORDERS</name>
             </relation2m>
-            <relation2m id="ord_item">
-                <name>ord_item</name>
+            <relation2m id="ORDER_ITEMS">
+                <name>ORDER_ITEMS</name>
             </relation2m>
-            <relation2m id="view_order">
-                <name>view_order</name>
+            <relation2m id="VIEW_ORDERS">
+                <name>VIEW_ORDERS</name>
             </relation2m>
         </table>
+        <procedure id="myProcedure">
+            <name>ujorm_test</name>
+            <schema>db1</schema>
+            <parameter id="result">
+                <name>result</name>
+                <dbType>INT</dbType>
+            </parameter>
+            <parameter id="paramCode">
+                <name>paramCode</name>
+                <dbType>INT</dbType>
+            </parameter>
+            <parameter id="paramEnabled">
+                <name>paramEnabled</name>
+                <dbType>BOOLEAN</dbType>
+            </parameter>
+        </procedure>
         <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
         <jdbcDriver>org.h2.Driver</jdbcDriver>
         <user>sa</user>
