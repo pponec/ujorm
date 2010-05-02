@@ -38,7 +38,7 @@ import org.ujoframework.orm.UjoSequencer;
 
 
 /**
- * DB table metamodel.
+ * DB table or view meta-model.
  * @author Pavel Ponec
  * @composed 1 - * MetaRelation2Many
  * @composed 1 - * MetaColumn
@@ -64,7 +64,7 @@ final public class MetaTable extends AbstractMetaModel {
     public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
     /** Table relations to many */
     public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class);
-    /** Is it a model of a database view ? */
+    /** Is it a model of a database view or table ? */
     @XmlAttribute
     public static final Property<MetaTable,Boolean> VIEW = newProperty("view", false);
     /** SQL SELECT statement */
@@ -92,6 +92,13 @@ final public class MetaTable extends AbstractMetaModel {
         sequencer = null;
     }
 
+    /**
+     * Create new MetaTable.
+     * @param database Database for the table
+     * @param dbProperty Configuration property
+     * @param parTable Configuration data from a XML file
+
+     */
     @SuppressWarnings("unchecked")
     public MetaTable(MetaDatabase database, RelationToMany dbProperty, MetaTable parTable) {
         sequencer = database.createSequencer(this);
@@ -164,13 +171,13 @@ final public class MetaTable extends AbstractMetaModel {
                     MetaRelation2Many param = parTable!=null ? parTable.findRelation(property.getName()) : null;
                     MetaRelation2Many column = new MetaRelation2Many(this, property, param);
                     RELATIONS.addItem(this, column);
-                    dbHandler.addProperty(property, column);
+                    dbHandler.addColumnModel(column);
 
                 } else {
                     MetaColumn param  = parTable!=null ? parTable.findColumn(property.getName()) : null;
                     MetaColumn column = new MetaColumn(this, property, param);
                     COLUMNS.addItem(this, column);
-                    dbHandler.addProperty(property, column);
+                    dbHandler.addColumnModel(column);
 
                     if (MetaColumn.PRIMARY_KEY.of(column)) {
                         MetaPKey.COLUMNS.addItem(dpk, column);
@@ -249,6 +256,7 @@ final public class MetaTable extends AbstractMetaModel {
 
     /** Compare object by the same instance. */
     @Override
+    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object obj) {
         return this==obj;
     }

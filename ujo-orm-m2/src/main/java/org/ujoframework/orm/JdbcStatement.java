@@ -197,17 +197,17 @@ public class JdbcStatement {
         MetaProcedure procedure = bo.metaProcedure();
         Object value = null;
 
-        for (MetaColumn metaColumn : MetaProcedure.COLUMNS.getList(procedure)) {
-            UjoProperty property = metaColumn.getProperty();
+        for (MetaColumn metaParam : MetaProcedure.PARAMETERS.getList(procedure)) {
+            UjoProperty property = metaParam.getProperty();
 
             if (!property.isTypeOf(Void.class)) try {
                 
                 ++parameterPointer;
-                int sqlType = MetaColumn.DB_TYPE.of(metaColumn).getSqlType();
+                int sqlType = MetaColumn.DB_TYPE.of(metaParam).getSqlType();
 
-                if (procedure.isInput(metaColumn)) {
+                if (procedure.isInput(metaParam)) {
                     value = property.of(bo);
-                    typeService.setValue(metaColumn, ps, value, parameterPointer);
+                    typeService.setValue(metaParam, ps, value, parameterPointer);
 
                     if (logValues) {
                         String textValue = UjoManager.getInstance().encodeValue(value, false);
@@ -215,7 +215,7 @@ public class JdbcStatement {
                     }
 
                 }
-                if (procedure.isOutput(metaColumn)) {
+                if (procedure.isOutput(metaParam)) {
                     ps.registerOutParameter(parameterPointer, sqlType);
                 }
 
@@ -239,7 +239,7 @@ public class JdbcStatement {
 
         // Load data from CallableStatement:
         try {
-            for (MetaColumn c : MetaProcedure.COLUMNS.getList(procedure)) {
+            for (MetaColumn c : MetaProcedure.PARAMETERS.getList(procedure)) {
                 if (procedure.isOutput(c)) {
                     final Object value = typeService.getValue(c, ps, ++i);
                     c.setValue(bo, value);

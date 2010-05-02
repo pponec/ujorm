@@ -43,11 +43,7 @@ final public class MetaPKey extends AbstractMetaModel {
     /** The property initialization */
     static{init(CLASS);}
 
-    /** Database */
-    final private MetaDatabase database;
-
     public MetaPKey(MetaTable table) {
-        this.database = MetaTable.DATABASE.of(table);
         TABLE.setValue(this, table);
         COLUMNS.setValue(this, new ArrayList<MetaColumn>(0));
     }

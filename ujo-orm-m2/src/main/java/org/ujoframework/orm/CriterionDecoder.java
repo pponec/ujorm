@@ -27,7 +27,6 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaDatabase;
-import org.ujoframework.orm.metaModel.MetaPKey;
 import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.BinaryCriterion;
@@ -204,11 +203,11 @@ public class CriterionDecoder {
         boolean andOperator = false;
         for (UjoProperty property : relations) try {
             MetaColumn fk1 = (MetaColumn) handler.findColumnModel(property);
-            MetaTable   t2 = handler.findTableModel(property.getType());
-            MetaPKey   pk2 = MetaTable.PK.of(t2);
+            List<MetaColumn> pk2 = fk1.getForeignColumns();
+            MetaTable tab2 =pk2.get(0).getTable();
             //
             tables.add(MetaColumn.TABLE.of(fk1));
-            tables.add(t2);
+            tables.add(tab2);
 
             for (int i=fk1.getForeignColumns().size()-1; i>=0; i--) {
 
@@ -220,7 +219,7 @@ public class CriterionDecoder {
 
                 fk1.printForeignColumnFullName(i, sql);
                 sql.append(" = ");
-                dialect.printColumnAlias(pk2.getColumn(i), sql);
+                dialect.printColumnAlias(pk2.get(i), sql);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

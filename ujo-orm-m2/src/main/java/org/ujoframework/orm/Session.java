@@ -57,7 +57,6 @@ public class Session {
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
-
     /** Handler. */
     final private OrmHandler handler;
     /** Orm parameters. */
@@ -453,7 +452,8 @@ public class Session {
     private MetaColumn findOrmColumn(MetaTable table, Class tableType) {
         for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
             if (column.isForeignKey()
-            &&  column.getProperty().getType()==tableType) {
+            &&  column.getProperty().getType()==tableType) {     // 1
+            //  column.getForeignTable().getType()==tableType) { // 2
                 return column;
             }
         }
@@ -461,16 +461,16 @@ public class Session {
     }
 
     /** Iterate property of values
-     * @param property Table property
+     * @param property Table property type of the RelationToMany.
      * @param value A value type of OrmUjo
      */
     public <UJO extends OrmUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, OrmUjo value) {
 
         final Class tableClass = property.getItemType();
         final MetaTable table = handler.findTableModel(tableClass);
-        final MetaColumn column = findOrmColumn(table, value.getClass());
+        final MetaColumn fColumn = findOrmColumn(table, value.getClass());
 
-        if (column == null) {
+        if (fColumn == null) {
             MetaTable origTable = handler.findTableModel(value.getClass());
             if (origTable.isPersistent()) { // Is it not a DATABASE ?
                 String msg = "Can't find a foreign key of " + table + " to a " + value.getClass().getSimpleName();
@@ -478,10 +478,10 @@ public class Session {
             }
         }
 
-        Criterion crit = column != null
-                ? Criterion.where(column.getProperty(), value)
-                : Criterion.whereTrue(table.getFirstPK().getProperty());
-        Query query = createQuery(tableClass, crit);
+        Criterion crit = fColumn != null
+                ? Criterion.where(fColumn.getProperty(), value)
+                : Criterion.constant(table.getFirstPK().getProperty(), true);
+        Query query = createQuery(table.getType(), crit);
         UjoIterator result = UjoIterator.getInstance(query);
 
         return result;
@@ -633,7 +633,7 @@ public class Session {
     /** Assert the current session os open. */
     private final void assertOpenSession() throws IllegalStateException {
         if (cache == null) {
-            throw new IllegalStateException("The session is closed");
+            throw new IllegalStateException("The session is closed ("+hashCode()+")");
         }
     }
 
@@ -715,8 +715,7 @@ public class Session {
         if (ujo==null) {
             return false;
         }
-        ujo.writeSession(this);
-        
+
         final MetaTable metaTable = handler.findTableModel(ujo.getClass());
         final MetaPKey pkeys = MetaTable.PK.getValue(metaTable);
         boolean fk = ujo instanceof ExtendedOrmUjo;
@@ -736,6 +735,7 @@ public class Session {
         }
 
         // Copy all properties to the original object
+        ujo.writeSession(null);
         for (MetaColumn c : MetaTable.COLUMNS.of(metaTable)) {
 
             if (fk && c.isForeignKey()) {
@@ -746,10 +746,12 @@ public class Session {
                 c.getProperty().copy(result, ujo);
             }
         }
+        ujo.writeSession(this);
+        ujo.readChangedProperties(true);
 
         return true;
     }
-
+    
     /** Create the closed session */
     public static Session newClosedSession(OrmHandler handler) {
         Session result = new Session(handler);

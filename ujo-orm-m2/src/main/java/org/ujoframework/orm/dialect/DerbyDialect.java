@@ -17,11 +17,9 @@ package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
-import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.metaModel.MetaColumn;
-import org.ujoframework.orm.metaModel.MetaPKey;
 import org.ujoframework.orm.metaModel.MetaTable;
 
 /** Derby (http://db.apache.org/derby/)
@@ -56,9 +54,10 @@ public class DerbyDialect extends SqlDialect {
     @Override
     @SuppressWarnings("unchecked")
     public Appendable printForeignKey(MetaColumn column, MetaTable table, Appendable out) throws IOException {
-        final UjoProperty property = column.getProperty();
-        final MetaTable foreignTable = ormHandler.findTableModel(property.getType());
-        MetaPKey foreignKeys = MetaTable.PK.of(foreignTable);
+
+        List<MetaColumn> fColumns = column.getForeignColumns();
+        MetaTable foreignTable = fColumns.get(0).getTable();
+        int columnsSize = fColumns.size();
 
         out.append("ALTER TABLE ");
         printFullTableName(table, out);
@@ -67,9 +66,6 @@ public class DerbyDialect extends SqlDialect {
         out.append('_');
         out.append(MetaColumn.NAME.of(column));
         out.append(" FOREIGN KEY");
-
-        List<MetaColumn> columns = MetaPKey.COLUMNS.of(foreignKeys);
-        int columnsSize = columns.size();
 
         for (int i=0; i<columnsSize; ++i) {
             out.append(i==0 ? "(" : ", ");
@@ -81,14 +77,14 @@ public class DerbyDialect extends SqlDialect {
         printFullTableName(foreignTable, out);
         String separator = "(";
 
-        for (MetaColumn fkColumn : MetaPKey.COLUMNS.of(foreignKeys)) {
+        for (MetaColumn fColumn : fColumns) {
             out.append(separator);
             separator = ", ";
-            out.append(MetaColumn.NAME.of(fkColumn));
+            out.append(MetaColumn.NAME.of(fColumn));
         }
 
         out.append(")");
-        //out.append("\n\tON DELETE CASCADE");
+        //out.append("\tON DELETE CASCADE");
         return out;
     }
 

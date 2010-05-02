@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.metaModel.MetaColumn;
-import org.ujoframework.orm.metaModel.MetaPKey;
 import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.orm.metaModel.MetaSelect;
 import org.ujoframework.criterion.ValueCriterion;
@@ -75,7 +74,7 @@ abstract public class SqlDialect {
 
     /** Create a new database connection */
     public Connection createConnection(final MetaDatabase db) throws Exception {
-        return null;
+        return db.createInternalConnection();
     }
 
     /** Print SQL 'CREATE SCHEMA' */
@@ -187,16 +186,14 @@ abstract public class SqlDialect {
      * @return More statements separated by the ';' charactes are enabled
      */
     public Appendable printForeignKey(MetaColumn column, MetaTable table, Appendable out) throws IOException {
-        final UjoProperty property = column.getProperty();
-        final MetaTable foreignTable = ormHandler.findTableModel(property.getType());
-        MetaPKey foreignKeys = MetaTable.PK.of(foreignTable);
+
+        List<MetaColumn> fColumns = column.getForeignColumns();
+        MetaTable foreignTable = fColumns.get(0).getTable();
+        int columnsSize = fColumns.size();
 
         out.append("ALTER TABLE ");
         printFullTableName(table, out);
         out.append("\n\tADD FOREIGN KEY");
-
-        List<MetaColumn> columns = MetaPKey.COLUMNS.of(foreignKeys);
-        int columnsSize = columns.size();
 
         for (int i=0; i<columnsSize; ++i) {
             out.append(i==0 ? "(" : ", ");
@@ -208,10 +205,10 @@ abstract public class SqlDialect {
         printFullTableName(foreignTable, out);
         String separator = "(";
 
-        for (MetaColumn fkColumn : MetaPKey.COLUMNS.of(foreignKeys)) {
+        for (MetaColumn fColumn : fColumns) {
             out.append(separator);
             separator = ", ";
-            out.append(MetaColumn.NAME.of(fkColumn));
+            out.append(MetaColumn.NAME.of(fColumn));
         }
 
         out.append(")");
@@ -335,7 +332,7 @@ abstract public class SqlDialect {
             }
             out.append(i==0 ? "" :  ", ");
             out.append(MetaColumn.NAME.of(ormColumn));
-            out.append("=? ");
+            out.append("=?");
         }
         out.append("\n\tWHERE ");
         out.append(decoder.getWhere());
@@ -657,7 +654,7 @@ abstract public class SqlDialect {
      */
     public Appendable printCall(MetaProcedure procedure, Appendable out) throws IOException {
 
-        List<MetaColumn> propList = MetaProcedure.COLUMNS.of(procedure);
+        List<MetaColumn> propList = MetaProcedure.PARAMETERS.of(procedure);
 
         out.append('{').append(' ');
         if (!propList.get(0).isVoid()) {
@@ -689,17 +686,6 @@ abstract public class SqlDialect {
         out.append(" OFFSET " + query.getOffset());
     }
 
-    /** Prinnt the full sequence name */
-    protected Appendable printSequenceName(final UjoSequencer sequence, final Appendable out) throws IOException {
-        String schema = sequence.getDatabaseSchema();
-        if (isUsable(schema)) {
-            out.append(schema);
-            out.append('.');
-        }
-        out.append(sequence.getSequenceName());
-        return out;
-    }
-
     /** Prinnt the full sequence table */
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
@@ -729,7 +715,7 @@ abstract public class SqlDialect {
         out.append("\n\t( id VARCHAR(96) NOT NULL PRIMARY KEY");
         out.append("\n\t, seq "+getColumnType(pkType)+" DEFAULT " + cache + " NOT NULL");
         out.append("\n\t, cache INT DEFAULT " + cache + " NOT NULL");
-        out.append("\n\t, maxvalue "+getColumnType(pkType)+" DEFAULT 0 NOT NULL");  // TODO: max-value is not implemented yet
+        out.append("\n\t, maxvalue "+getColumnType(pkType)+" DEFAULT 0 NOT NULL");
         out.append("\n\t)");
         return out;
     }
@@ -752,9 +738,19 @@ abstract public class SqlDialect {
         return out;
     }
 
+    /** Set sequence to the max value. */
+    public Appendable printSetMaxSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("UPDATE ");
+        printSequenceTableName(sequence, out);
+        out.append(" SET seq=maxValue");
+        out.append(" WHERE id=?");
+        return out;
+    }
+
+
     /** Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the current cache. */
     public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("SELECT seq, cache FROM ");
+        out.append("SELECT seq, cache, maxValue FROM ");
         printSequenceTableName(sequence, out);
         out.append(" WHERE id=?");
         return out;

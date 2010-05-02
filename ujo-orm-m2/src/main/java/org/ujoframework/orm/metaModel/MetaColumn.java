@@ -26,6 +26,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.Property;
+import org.ujoframework.implementation.orm.RelationToOne;
 import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.TypeService;
@@ -63,6 +64,8 @@ final public class MetaColumn extends MetaRelation2Many {
     /** The property initialization */
     static{init(CLASS);}
 
+    /** If current column is a foreign key than related model is a related table column (primarky key by default). */
+    private List<MetaColumn> relatedModel;
     /** Foreign column names. */
     private String[] foreignNames = null;
     private static final String[] EMPTY_NAMES = new String[0];
@@ -149,20 +152,43 @@ final public class MetaColumn extends MetaRelation2Many {
         return MANDATORY.of(this);
     }
 
+    /** Returns an original foreign columns in case a foreign column. */
+    public MetaTable getForeignTable() {
+        return getForeignColumns().get(0).getTable();
+    }
 
     /** Returns an original foreign columns in case a foreign column. */
     @SuppressWarnings("unchecked")
     public List<MetaColumn> getForeignColumns() {
+        if (relatedModel==null) {
+            assignForeignColumns();
+        }
+        return relatedModel;
+    }
+
+
+    /** Returns an original foreign columns in case a foreign column. */
+    @SuppressWarnings("unchecked")
+    private void assignForeignColumns() {
         List<MetaColumn> result;
         final Class type = getProperty().getType();
-        final MetaTable table = getHandler().findTableModel(type);
-        if (table!=null) {
-            MetaPKey pk = MetaTable.PK.of(table);
-            result = MetaPKey.COLUMNS.getList(pk);
+
+        MetaTable table;
+        if (TABLE_PROPERTY.of(this) instanceof RelationToOne) {
+            RelationToOne rto = (RelationToOne) TABLE_PROPERTY.of(this);
+            MetaColumn mc = (MetaColumn) getHandler().findColumnModel(rto.getRelatedKey());
+            result = new ArrayList<MetaColumn>(1);
+            result.add(mc);
         } else {
-            result = Collections.emptyList();
+            table = getHandler().findTableModel(type);
+            if (table!=null) {
+                MetaPKey pk = MetaTable.PK.of(table);
+                result = MetaPKey.COLUMNS.getList(pk);
+            } else {
+                result = Collections.emptyList();
+            }
         }
-        return result;
+        relatedModel = result;
     }
 
     /** Returns names of foreign columns.
@@ -171,15 +197,12 @@ final public class MetaColumn extends MetaRelation2Many {
     @SuppressWarnings("unchecked")
     private String[] getForeignColumnNames() {
         if (foreignNames==null) {
-            final Class type = getProperty().getType();
-            final MetaTable foreignTable = getHandler().findTableModel(type);
-            if (foreignTable!=null && isForeignKey()) {
-                final MetaPKey pk = MetaTable.PK.of(foreignTable);
-                final List<MetaColumn> dbColumns = MetaPKey.COLUMNS.getList(pk);
+            if (isForeignKey()) {
+                List<MetaColumn> dbColumns = getForeignColumns();
                 final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1 ? NAME.of(this) : "", ", ");
 
                 ArrayList<String> fNames = new ArrayList<String>(dbColumns.size());
-                for (int i=0; i<dbColumns.size(); i++) {
+                for (MetaColumn dbColumn : dbColumns) {
                     String name;
                     if (tokenizer.hasMoreTokens()) {
                         name = tokenizer.nextToken();
@@ -188,7 +211,7 @@ final public class MetaColumn extends MetaRelation2Many {
                           // + MetaTable.NAME.of(foreignTable)
                              + MetaColumn.NAME.of(this)
                              + "_"
-                             + MetaColumn.NAME.of(dbColumns.get(i))
+                             + MetaColumn.NAME.of(dbColumn)
                              ;
                     }
                     fNames.add(name);

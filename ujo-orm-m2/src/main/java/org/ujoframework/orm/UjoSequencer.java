@@ -19,6 +19,7 @@ package org.ujoframework.orm;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujoframework.orm.metaModel.MetaDatabase;
@@ -37,8 +38,12 @@ public class UjoSequencer {
 
     /** Basic table. */
     final protected MetaTable table;
+    /** Current sequence value */
     protected long sequence = 0;
+    /** Buffer limit */
     protected long seqLimit = 0;
+    /** Total limit, zero means no restriction */
+    protected long maxValue = 0;
 
     public UjoSequencer(MetaTable table) {
         this.table = table;
@@ -52,7 +57,7 @@ public class UjoSequencer {
         } else {
 
             final MetaDatabase db = MetaTable.DATABASE.of(table);
-            Connection connection;
+            Connection connection = null;
             ResultSet res = null;
             String sql = null;
             PreparedStatement statement = null;
@@ -91,22 +96,54 @@ public class UjoSequencer {
                 res.next();
                 seqLimit = res.getLong(1);
                 int step = res.getInt(2);
+                maxValue = res.getLong(3);
                 sequence = (seqLimit - step) + 1; // Get the last assigned number + 1;
+
+                if (maxValue!=0L) {
+                    if (seqLimit>maxValue) {
+                        seqLimit=maxValue;
+                        if (sequence>maxValue) {
+                            String msg = "The sequence '" + tableName + "' needs to raise the maximum value: " + maxValue;
+                            throw new IllegalStateException(msg);
+                        }
+                        statement.close();
+                        sql = db.getDialect().printSetMaxSequence(this, out).toString();
+                        if (LOGGER.isLoggable(Level.INFO)) {
+                            LOGGER.log(Level.INFO, sql + "; [" + tableName + ']');
+                        }
+                        statement = connection.prepareStatement(sql);
+                        statement.setString(1, tableName);
+                        statement.execute();
+                    }
+                    if (maxValue>Long.MAX_VALUE-step) {
+                        String msg = "The sequence attribute '"
+                            + tableName
+                            + ".maxValue' is too hight,"
+                            + " the recommended maximal value is: "
+                            +   (Long.MAX_VALUE-step)
+                            + " (Long.MAX_VALUE-step)"
+                            ;
+                        LOGGER.log(Level.WARNING, msg);
+                    }
+                }
                 connection.commit();
 
-
             } catch (Throwable e) {
-                throw new IllegalStateException("ILLEGAL SQL: " + sql, e);
+                if (connection!=null) try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    LOGGER.log(Level.WARNING, "Rollback fails");
+                }
+                IllegalStateException exception = e instanceof IllegalStateException
+                    ? (IllegalStateException) e
+                    : new IllegalStateException("ILLEGAL SQL: " + sql, e)
+                    ;
+                throw exception;
             } finally {
                 MetaDatabase.close(null, statement, res, true);
             }
             return sequence;
         }
-    }
-
-    /** Returns the sequence name */
-    public String getSequenceName() {
-        return "OrmUjoSequence";
     }
 
     /** Returns the database schema */

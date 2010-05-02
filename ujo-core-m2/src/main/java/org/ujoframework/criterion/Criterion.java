@@ -177,17 +177,19 @@ public abstract class Criterion<UJO extends Ujo> {
     }
 
     /**
-     * New equals instance
+     * Criterion where property equals to NULL.
      * @param property UjoProperty
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>List&lt;TYPE&gt; - list of values</li>
-     * <li>UjoProperty - reference to a related entity</li>
-     * <li>THE SAME property - the value will be assigned using the property later</li>
-     * </ul>
      */
-    public static <UJO extends Ujo, TYPE> Criterion<UJO> where(UjoProperty<UJO,TYPE> property) {
-        return new ValueCriterion<UJO>(property, Operator.EQ, property);
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNull(UjoProperty<UJO,TYPE> property) {
+        return new ValueCriterion<UJO>(property, Operator.EQ, (TYPE)null);
+    }
+
+    /**
+     * Criterion where property not equals to NULL.
+     * @param property UjoProperty
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotNull(UjoProperty<UJO,TYPE> property) {
+        return new ValueCriterion<UJO>(property, Operator.NOT_EQ, (TYPE)null);
     }
 
     /** This is an constane criterion independed on an entity.
@@ -201,14 +203,11 @@ public abstract class Criterion<UJO extends Ujo> {
             );
     }
 
-    /** This is a constant criterion independed on the property and the ujo entity. A result is the TRUE always. */
-    public static <UJO extends Ujo> Criterion<UJO> whereTrue(UjoProperty<UJO,?> property) {
-        return new ValueCriterion<UJO>(property, Operator.X_FIXED, true);
-    }
-
-    /** This is a constant criterion independed on the property and the ujo entity. A result is the FALSE always. */
-    public static <UJO extends Ujo> Criterion<UJO> whereFalse(UjoProperty<UJO,?> property) {
-        return new ValueCriterion<UJO>(property, Operator.X_FIXED, false);
+    /** This is a constant criterion independed on the property and the ujo entity. A result the same like the constant allways.
+     * @see Operator#X_FIXED
+     */
+    public static <UJO extends Ujo> Criterion<UJO> constant(UjoProperty<UJO,?> property, boolean constant) {
+        return new ValueCriterion<UJO>(property, Operator.X_FIXED, constant);
     }
 
     // ----------------------- DEPRECATED -----------------------
@@ -293,22 +292,6 @@ public abstract class Criterion<UJO extends Ujo> {
         return where(property, value);
     }
 
-    /**
-     * New equals instance
-     * @param property UjoProperty
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>List&lt;TYPE&gt; - list of values</li>
-     * <li>UjoProperty - reference to a related entity</li>
-     * <li>THE SAME property - the value will be assigned using the property later</li>
-     * </ul>
-     * @deprecated See the {@link Criterion#where(org.ujoframework.UjoProperty, org.ujoframework.criterion.Operator, java.lang.Object) where(...) } method.
-     */
-    @Deprecated
-    public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance(UjoProperty<UJO,TYPE> property) {
-        return where(property);
-    }
-
     /** This is an constane criterion independed on an entity.
      * It is recommended not to use this solution in ORM.
      * @deprecated See the {@link Criterion#where(org.ujoframework.UjoProperty, org.ujoframework.criterion.Operator, java.lang.Object) where(...) } method.
@@ -319,15 +302,15 @@ public abstract class Criterion<UJO extends Ujo> {
         return where(value);
     }
 
-    /** This is a constant criterion independed on the property and the ujo entity. A result is the TRUE always.
+    /** This is a constant criterion independed on the property and the ujo entity. A result is the constantTrue always.
      * @deprecated See the {@link Criterion#where(org.ujoframework.UjoProperty, org.ujoframework.criterion.Operator, java.lang.Object) where(...) } method.
          */
     @Deprecated
     public static <UJO extends Ujo> Criterion<UJO> newInstanceTrue(UjoProperty<UJO,?> property) {
-        return whereTrue(property);
+        return constant(property, true);
     }
 
-    /** This is a constant criterion independed on the property and the ujo entity. A result is the FALSE always.
+    /** This is a constant criterion independed on the property and the ujo entity. A result is the constantFalse always.
      * @param <UJO>
      * @param property
      * @return
@@ -335,7 +318,7 @@ public abstract class Criterion<UJO extends Ujo> {
      */
     @Deprecated
     public static <UJO extends Ujo> Criterion<UJO> newInstanceFalse(UjoProperty<UJO,?> property) {
-        return whereFalse(property);
+        return constant(property, false);
     }
 
 
