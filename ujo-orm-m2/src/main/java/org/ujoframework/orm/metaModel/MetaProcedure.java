@@ -35,7 +35,8 @@ import org.ujoframework.orm.annot.Procedure;
 /**
  * DB procudure or function meta-model.
  * @author Pavel Ponec
- */
+ * @composed 1 - * MetaColumn
+  */
 final public class MetaProcedure extends AbstractMetaModel {
     private static final Class CLASS = MetaProcedure.class;
 

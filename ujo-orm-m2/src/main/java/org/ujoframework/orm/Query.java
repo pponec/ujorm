@@ -337,7 +337,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
-     * @see java.sql.Statement.html#getLimit()
+     * @see java.sql.Statement#getLimit()
      */
     final public int getLimit() {
         return limit;
@@ -353,8 +353,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /**
      * Set a limit and offset.
-     * @param maxRows The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
-     * @param firstRow Get the first row to retrieve (offset). Default value is 0.
+     * @param limit The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
+     * @param offset Get the first row to retrieve (offset). Default value is 0.
      * @see #setLimit(int) 
      * @see #setOffset(int)
      */
