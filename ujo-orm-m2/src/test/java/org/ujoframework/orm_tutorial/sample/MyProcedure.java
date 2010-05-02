@@ -35,21 +35,21 @@ import org.ujoframework.orm.annot.Procedure;
  * </code>
  * @author Pavel Ponec
  */
-@Procedure(schema="db1", name="ujorm_test")
+@Procedure(name="ujorm_test")
 public class MyProcedure extends DbProcedure<MyProcedure> {
 
     /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
-    public static final Property<MyProcedure,Integer> RESULT = newProperty(Integer.class);
+    public static final Property<MyProcedure,Integer> result = newProperty(Integer.class);
     /** INPUT parameter */
     @Parameter(input=true)
-    public static final Property<MyProcedure,Integer> PARAM_CODE = newProperty(0);
+    public static final Property<MyProcedure,Integer> paramCode = newProperty(0);
     /** INPUT parameter */
-    public static final Property<MyProcedure,Boolean> PARAM_ENABLED = newProperty(false);
+    public static final Property<MyProcedure,Boolean> paramEnabled = newProperty(false);
 
     @Override
     @SuppressWarnings("unchecked")
     public Integer call(Session session) {
-        return call(session, RESULT);
+        return call(session, result);
     }
 
 }

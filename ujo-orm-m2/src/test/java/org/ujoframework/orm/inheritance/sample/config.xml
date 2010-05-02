@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release UNDEFINED was created 2010/04/05 27:21 -->
+<body>
+    <database id="Database">
+        <schema>db1</schema>
+        <dialect>org.ujoframework.orm.dialect.H2Dialect</dialect>
+        <table id="users">
+            <name>usr_user</name>
+            <alias>usr_user</alias>
+            <schema>db1</schema>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="login">
+                <name>login</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+                <uniqueIndex>idx_login</uniqueIndex>
+            </column>
+            <column id="password">
+                <name>password</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="name">
+                <name>name</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+        </table>
+        <table id="customers">
+            <name>usr_customer</name>
+            <alias>usr_customer</alias>
+            <schema>db1</schema>
+            <column id="user">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="company">
+                <name>company</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="discount">
+                <name>discount</name>
+                <dbType>INT</dbType>
+            </column>
+        </table>
+        <table id="db1">
+            <name>db1</name>
+            <alias>db1</alias>
+            <schema>db1</schema>
+            <relation2m id="users">
+                <name>users</name>
+            </relation2m>
+            <relation2m id="customers">
+                <name>customers</name>
+            </relation2m>
+        </table>
+        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
+        <user>sa</user>
+    </database>
+    <parameters></parameters>
+</body>

@@ -14,10 +14,11 @@
  *  limitations under the License.
  */
 
-package org.ujoframework.orm_tutorial.sample;
+package org.ujoframework.orm.relation_M2One;
 
 import java.util.Date;
 import java.util.logging.*;
+import junit.framework.TestCase;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
@@ -27,6 +28,8 @@ import org.ujoframework.criterion.*;
 import org.ujoframework.orm.ao.CheckReport;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.utility.OrmTools;
+import org.ujoframework.orm_tutorial.sample.MyProcedure;
+import org.ujoframework.orm_tutorial.sample.ViewOrder;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -38,19 +41,31 @@ import org.ujoframework.orm.utility.OrmTools;
  *
  * Copyright 2010, Pavel Ponec
  */
-public class SampleORM {
+public class Orm2Test extends TestCase {
+
+    public Orm2Test(String testName) {
+        super(testName);
+    }
+
+    private static Class suite() {
+        return Orm2Test.class;
+    }
+
+    public static void main(java.lang.String[] argList) {
+        junit.textui.TestRunner.run(suite());
+    }
 
     // ------- TUTORIAL MENU: -------
 
-    public static void main(String[] args) {
-        SampleORM sample = new SampleORM();
+    public void testMain() {
+        Orm2Test sample = this;
         try {
             sample.loadMetaModel();
             sample.useInsert();
             sample.useSelectOrders();
             sample.useSortOrders();
             sample.useSortOrderItems();
-            sample.useSelectViewOrders();
+          //  sample.useSelectViewOrders();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -113,7 +128,6 @@ public class SampleORM {
         Order order = new Order();
         order.setDate(new Date());
         order.setDescr("John's order");
-        //order.setBinaryFile("binary".getBytes());
 
         Item item1 = new Item();
         item1.setOrder(order);
