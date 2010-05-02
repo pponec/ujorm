@@ -1,8 +1,20 @@
 The UJO Framework release notes
 *******************************
 
-release 0.94 (2010-XX-XX)
+release 0.94 (2010-05-02)
++ stored database procedures and functions are supported
 + the class Query implements the interface Iterable thanks to idea of Jiri Pejchal
++ mapping the Enum to VARCHAR - by interface ValueExportable
++ mapping any user object to VARCHAR - by interface ValueExportable
++ new method OrmTools.loadLazyValues(...) to load lazy values to required depth
++ new method session.reload(ujo) to reload properties from database
++ new method Criterion.whereNull(..) to simple comparison to the NULL literal
++ MetaParams supports the "set(..)" value to change values
++ checking an open Session is done
++ assembling the meta-model is synchronized now
++ parameter name 'Orm2ddlPolicy' is renamed to 'orm2ddlPolicy'
++ class MetaView is renamed to MetaSelect
++ JavaDoc and Tutorial in the class are improved
 
 release 0.93 (2010-03-07)
 + orm: the incremental database update by meta-model using DDL statements
