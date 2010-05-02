@@ -1,0 +1,1088 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html class="pageview">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Language" content="cs" />
+
+<base target="_top">
+<style type="text/css">
+  
+
+/* default css */
+
+table {
+  font-size: 1em;
+  line-height: inherit;
+  border-collapse: collapse;
+}
+
+
+tr {
+  
+  text-align: left;
+  
+}
+
+
+div, address, ol, ul, li, option, select {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+p {
+  margin: 0px;
+}
+
+
+pre {
+  font-family: Courier New;
+  white-space: pre-wrap;
+  margin:0;
+}
+
+body {
+  margin: 6px;
+  padding: 0px;
+  font-family: Verdana, sans-serif;
+  font-size: 10pt;
+  background-color: #ffffff;
+  color: #000;
+}
+
+
+img {
+  -moz-force-broken-image-icon: 1;
+}
+
+@media screen {
+  html.pageview {
+    background-color: #f3f3f3 !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  
+
+  body {
+    min-height: 1100px;
+    
+    counter-reset: __goog_page__;
+  }
+  
+  * html body {
+    height: 1100px;
+  }
+  /* Prevent repaint errors when scrolling in Safari. This "Star-7" css hack
+     targets Safari 3.1, but not WebKit nightlies and presumably Safari 4.
+     That's OK because this bug is fixed in WebKit nightlies/Safari 4 :-). */
+  html*#wys_frame::before {
+    content: '\A0';
+    position: fixed;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+  }
+  
+  .pageview body {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 2px solid #bbb;
+    border-bottom: 2px solid #bbb;
+    width: 648px !important;
+    margin: 15px auto 25px;
+    padding: 40px 50px;
+  }
+  /* IE6 */
+  * html {
+    overflow-y: scroll;
+  }
+  * html.pageview body {
+    overflow-x: auto;
+  }
+  
+
+  
+    
+    .writely-callout-data {
+      display: none;
+    }
+    
+
+    .writely-footnote-marker {
+      background-image: url('MISSING');
+      background-color: transparent;
+      background-repeat: no-repeat;
+      width: 7px;
+      overflow: hidden;
+      height: 16px;
+      vertical-align: top;
+
+      
+      -moz-user-select: none;
+    }
+    .editor .writely-footnote-marker {
+      cursor: move;
+    }
+    .writely-footnote-marker-highlight {
+      background-position: -15px 0;
+      -moz-user-select: text;
+    }
+    .writely-footnote-hide-selection ::-moz-selection, .writely-footnote-hide-selection::-moz-selection {
+      background: transparent;
+    }
+    .writely-footnote-hide-selection ::selection, .writely-footnote-hide-selection::selection {
+      background: transparent;
+    }
+    .writely-footnote-hide-selection {
+      cursor: move;
+    }
+
+    /* Comments */
+    .writely-comment-yellow {
+      background-color: #ffffd7;
+    }
+    .writely-comment-orange {
+      background-color: #ffe3c0;
+    }
+    .writely-comment-pink {
+      background-color: #ffd7ff;
+    }
+    .writely-comment-green {
+      background-color: #d7ffd7;
+    }
+    .writely-comment-blue {
+      background-color: #d7ffff;
+    }
+    .writely-comment-purple {
+      background-color: #eed7ff;
+    }
+
+  
+
+
+  
+  .br_fix span+br:not(:-moz-last-node) {
+    
+    position:relative;
+    
+    left: -1ex
+    
+  }
+
+  
+  #cb-p-tgt {
+    font-size: 8pt;
+    padding: .4em;
+    background-color: #ddd;
+    color: #333;
+  }
+  #cb-p-tgt-can {
+    text-decoration: underline;
+    color: #36c;
+    font-weight: bold;
+    margin-left: 2em;
+  }
+  #cb-p-tgt .spin {
+    width: 16px;
+    height: 16px;
+    background: url(//ssl.gstatic.com/docs/clipboard/spin_16o.gif) no-repeat;
+  }
+}
+
+h6 { font-size: 8pt }
+h5 { font-size: 8pt }
+h4 { font-size: 10pt }
+h3 { font-size: 12pt }
+h2 { font-size: 14pt }
+h1 { font-size: 18pt }
+
+blockquote {padding: 10px; border: 1px #DDD dashed }
+
+.webkit-indent-blockquote { border: none; }
+
+a img {border: 0}
+
+.pb {
+  border-width: 0;
+  page-break-after: always;
+  /* We don't want this to be resizeable, so enforce a width and height
+     using !important */
+  height: 1px !important;
+  width: 100% !important;
+}
+
+.editor .pb {
+  border-top: 1px dashed #C0C0C0;
+  border-bottom: 1px dashed #C0C0C0;
+}
+
+div.google_header, div.google_footer {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+
+/* Table of contents */
+.editor div.writely-toc {
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+}
+.writely-toc > ol {
+  padding-left: 3em;
+  font-weight: bold;
+}
+ol.writely-toc-subheading {
+  padding-left: 1em;
+  font-weight: normal;
+}
+/* IE6 only */
+* html writely-toc ol {
+  list-style-position: inside;
+}
+.writely-toc-none {
+  list-style-type: none;
+}
+.writely-toc-decimal {
+  list-style-type: decimal;
+}
+.writely-toc-upper-alpha {
+  list-style-type: upper-alpha;
+}
+.writely-toc-lower-alpha {
+  list-style-type: lower-alpha;
+}
+.writely-toc-upper-roman {
+  list-style-type: upper-roman;
+}
+.writely-toc-lower-roman {
+  list-style-type: lower-roman;
+}
+.writely-toc-disc {
+  list-style-type: disc;
+}
+
+/* Ordered lists converted to numbered lists can preserve ordered types, and
+   vice versa. This is confusing, so disallow it */
+ul[type="i"], ul[type="I"], ul[type="1"], ul[type="a"], ul[type="A"] {
+  list-style-type: disc;
+}
+
+ol[type="disc"], ol[type="circle"], ol[type="square"] {
+  list-style-type: decimal;
+}
+
+/* end default css */
+
+
+  /* default print css */
+  @media print {
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    div.google_header, div.google_footer {
+      display: block;
+      min-height: 0;
+      border: none;
+    }
+
+    div.google_header {
+      flow: static(header);
+    }
+
+    /* used to insert page numbers */
+    div.google_header::before, div.google_footer::before {
+      position: absolute;
+      top: 0;
+    }
+
+    div.google_footer {
+      flow: static(footer);
+    }
+
+    /* always consider this element at the start of the doc */
+    div#google_footer {
+      flow: static(footer, start);
+    }
+
+    span.google_pagenumber {
+      content: counter(page);
+    }
+
+    span.google_pagecount {
+      content: counter(pages);
+    }
+
+    .endnotes {
+      page: endnote;
+    }
+
+    /* MLA specifies that endnotes title should be 1" margin from the top of the page. */
+    @page endnote {
+      margin-top: 1in;
+    }
+
+    callout.google_footnote {
+      
+      display: prince-footnote;
+      footnote-style-position: inside;
+      /* These styles keep the footnote from taking on the style of the text
+         surrounding the footnote marker. They can be overridden in the
+         document CSS. */
+      color: #000;
+      font-family: Verdana;
+      font-size: 10.0pt;
+      font-weight: normal;
+    }
+
+    /* Table of contents */
+    #WritelyTableOfContents a::after {
+      content: leader('.') target-counter(attr(href), page);
+    }
+
+    #WritelyTableOfContents a {
+      text-decoration: none;
+      color: black;
+    }
+
+    /* Comments */
+    .writely-comment-yellow {
+      background-color: #ffffd7;
+    }
+    .writely-comment-orange {
+      background-color: #ffe3c0;
+    }
+    .writely-comment-pink {
+      background-color: #ffd7ff;
+    }
+    .writely-comment-green {
+      background-color: #d7ffd7;
+    }
+    .writely-comment-blue {
+      background-color: #d7ffff;
+    }
+    .writely-comment-purple {
+      background-color: #eed7ff;
+    }
+  }
+
+  @page {
+    @top {
+      content: flow(header);
+    }
+    @bottom {
+      content: flow(footer);
+    }
+    @footnotes {
+      border-top: solid black thin;
+      padding-top: 8pt;
+    }
+  }
+  /* end default print css */
+
+
+/* custom css */
+
+
+/* end custom css */
+
+/* ui edited css */
+
+body {
+  font-family: Verdana;
+  
+  font-size: 10.0pt;
+  line-height: normal;
+  background-color: #ffffff;
+}
+/* end ui edited css */
+
+
+/* editor CSS */
+.editor a:visited {color: #551A8B}
+.editor table.zeroBorder {border: 1px dotted gray}
+.editor table.zeroBorder td {border: 1px dotted gray}
+.editor table.zeroBorder th {border: 1px dotted gray}
+
+
+.editor div.google_header, .editor div.google_footer {
+  border: 2px #DDDDDD dashed;
+  position: static;
+  width: 100%;
+  min-height: 2em;
+}
+
+.editor .misspell {background-color: yellow}
+
+.editor .writely-comment {
+  font-size: 9pt;
+  line-height: 1.4;
+  padding: 1px;
+  border: 1px dashed #C0C0C0
+}
+
+
+/* end editor CSS */
+
+</style>
+
+  
+  <title>Ujorm dokumentace</title>
+
+</head>
+
+<body 
+    
+    >
+    
+    
+    
+<h1 style="color: #4646a6;">
+  Ujorm tutorial&nbsp;<img height=65 id=syq1 src="images/ddcs2pg5_136gwrcjzf3_b.png" style=FLOAT:right;MARGIN-LEFT:40pt;MARGIN-RIGHT:1em width=65>
+</h1>
+Licence dokumentu:&nbsp;<a href=http://creativecommons.org/licenses/by-nd/3.0/cz/ rel=license>Creative Commons BY-ND</a> <a href=http://creativecommons.org/licenses/by-nd/3.0/cz/ rel=license><img alt="Creative Commons License" height=14 src="images/EXTERN_0000.png" style=BORDER-WIDTH:0pt width=41></a>,<br>
+Autor: Pavel Ponec, ponec@ujorm.com<br>
+Verze: Ujorm 0.94 (květen, 2010)<br>
+Odkaz: tento <a href="http://ujoframework.org/orm//tutorial-cs/">dokument</a> a homepage <a href="http:/ujorm.com">Ujorm</a><br>
+Děkuji za Vaše připomínky i náměty.</i><br>
+<br>
+
+<h2>Obsah:</h2>
+<div class=writely-toc id=WritelyTableOfContents toctype=decimal+decimal>
+  <ol class=writely-toc-decimal>
+    <ol class="writely-toc-decimal writely-toc-subheading" style=MARGIN-LEFT:0pt>
+      <li>
+        <a href=#Quick_start_9913036752823979_3 target=_self>Quick start</a>
+      </li>
+      <li>
+        <a href=#Stavy_perzistentn_ho_objektu_4 target=_self>Stavy perzistentního objektu</a>
+      </li>
+      <li>
+        <a href=#Mapov_n_datov_ch_typ_842554545 target=_self>Mapování datových typů</a>
+      </li>
+      <li>
+        <a href=#Lazy_loading_5479859842235448_ target=_self>Lazy loading</a>
+      </li>
+      <li>
+        <a href=#Session_cache_5212961387999433 target=_self>Session cache</a>
+      </li>
+      <li>
+        <a href=#DDL_support_36207173943347537_ target=_self>DDL support</a>
+      </li>
+      <li>
+        <a href=#D_di_nost_entit_73677236305517 target=_self>Dědičnost entit</a>
+      </li>
+      <li>
+        <a href=#Primary_key_auto_increment_655 target=_self>Primary key auto increment:</a>
+      </li>
+      <li>
+        <a href=#Datab_zov_procedury_6024463592 target=_self>Databázové procedury</a>
+      </li>
+      <li>
+        <a href=#Pro_n_zvy_Property_maj_mal_p_s target=_self>Proč názvy Property mají malá písmena?</a>
+      </li>
+      <li>
+        <a href=#Vlastnosti_Ujo_objekt_00514393 target=_self>Vlastnosti Ujo objektů</a>
+      </li>
+      <li>
+        <a href=#Best_practices_575722570079474 target=_self>Best practices</a>
+      </li>
+      <li>
+        <a href=#Meta_model_11271129394580981_6 target=_self>Meta-model</a>
+      </li>
+      <li>
+        <a href=#Pod_kov_n_10110858237945497_33 target=_self>Poděkování</a>
+      </li>
+    </ol>
+  </ol>
+</div>
+<br>
+<h2>
+  <a id=Quick_start_9913036752823979_3 name=Quick_start_9913036752823979_3></a>Quick start:
+</h2>
+<a href=http://ujorm.com/ id=xrje title=Ujorm>Ujorm</a> je lightweight ORM framework umožňující <b>efektivní </b>vývoj Java aplikací nad relační databází. Pro rychlé získání základních dovedností doporučuji prostudovat krátký <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=fxed title=tutorialu>tutorial</a> postavený na komentovaném zdrojovém kódu. V tutoriálu se objevují entity z následujícího class diagramu:<br>
+<br>
+<div id=qbdt style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
+  <img height=202 src="images/ddcs2pg5_118gspsjpdx_b.png" width=367>
+</div>
+<br>
+<div>
+  <i>Poznámka: UjoProperties jsou v diagramech popsány formálně pomocí atributů entity.</i><br>
+  <br>
+  Při použití Ujorm knihovny (JAR) z Maven repositioy (repo1) doporučuji připojit si ve vašem IDE také JavaDoc, protože knihovna (JAR) je zkompilovaná bez ladicích informací a obsahuje například zkrácené názvy parametrů metod.<br>
+  <br>
+  <h2>
+    <a id=Stavy_perzistentn_ho_objektu_4 name=Stavy_perzistentn_ho_objektu_4></a>Stavy perzistentního objektu
+  </h2>
+  Perzistentní třídu lze získat buď rozšířením abstraktní třídy <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/OrmTable.html id=f0kd title=OrmTable>OrmTable</a>, nebo implementací interface <a href=http://ujoframework.org/javadoc/index.html?org/ujoframework/orm/OrmHandler.html id=k8ng title=OrmUjo>OrmUjo</a>. Perzistentní objekt obsahuje kromě vlastních hodnot ještě dvě stavové informace:<br>
+  <ul>
+    <li>
+      Session, která je potřebná pro získání DB connection při pozdním volání hodnot (lazy-loading)<br>
+    </li>
+    <li>
+      UjoProperty[] - obsahuje seznam properties <b>zapsaných </b>v době přiřazené Sesssion. Tento seznam umožňuje efektivnější aktualizaci databáze příkazem UPDATE, protože příkaz se sestavuje pouze pro modifikované hodnoty Properties. Ostatní hodnoty se při UPDATE ignorují. Pokud objekt nemá přiřazenou Session, tak se zápis nových hodnot <b>neregistruje</b>.<br>
+    </li>
+  </ul>
+  <br>
+  Oba tyto stavy se při Java <b>serializaci </b>ignorují, to znamená že po obnovení ze serializace jsou logicky prázdné.<br>
+  <br>
+  Pokud je <b>atributem </b>perzistentního objektu jiný perzistentní objekt, tak při každém volání se propaguje Session z volajícího objektu na volaný.<br>
+  <br>
+  OrmUjo objekty neobsahují žádná další (stavová) omezení a proto je možné například:<br>
+  <ul>
+    <li>
+      objekt získaný pomocí Update lze použít (po změně ID) pro insert
+    </li>
+    <li>
+      objektu lze přiřadit kdykoli novou Session bez dalších závislostí
+    </li>
+    <li>
+      objektu lze přiřadit <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=wgku title="Cizí klíč">Cizí klíč</a> pro vynucení LazyLoading (pomocí metody Ujo.writeValue).
+    </li>
+  </ul>
+  Poslání OrmUjo objektu se tak více blíží pouhým "přepravkám dat".<br>
+  <br>
+  <br>
+  <h2>
+    <a id=Mapov_n_datov_ch_typ_842554545 name=Mapov_n_datov_ch_typ_842554545></a>Mapování datových typů:
+  </h2>
+  Mapování datových typů se rozumí přiřazení typu JDBC typu pro perzistentní Ujo property. Podle vlastností Java třídy lze mapování rozdělit na skupony<br>
+  <br>
+  <b>Mapování hodnot, </b>kde hodnota je třída neimplementující rozhraní OrmUjo (může být i vlastní třída)<br>
+</div>
+<ul>
+  <li>
+    <b>defaultní </b>mapování je implementované pro objety: String, Boolean, Byte, Character, Short, Integer, Long, Float, Double, BigDecimal, BigInteger, byte[], java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.sql.Blob, java.sql.Clob, Enum<br>
+  </li>
+  <li>
+    <b>explicitní </b>mapování se uvádí v anotaci @Table nebo @View, případně i pomocí konfigurační XML souboru<br>
+  </li>
+  <li>
+    pomocí <b>interface</b>: libovolný objekt implementující rozhraní ValueExportable je automaticky mapovaný na VARCHAR. Uvedené rozhraní může implementovat také Enum.<br>
+  </li>
+  <li>
+    specifické požadavky na mapování lze implementovat překrytím třídy <b>TypeService</b><br>
+  </li>
+</ul>
+<div>
+  <b>Mapování relace M:1<br>
+  </b>
+  <ul>
+    <li>
+      na primární klíč: pro mapování se používá standardní property, pouze v názvu třídy se objeví třída jiného persistentníh objektu (implementujícího OrmUjo). Jako relační sloupec se použije automaticky primární klíč relační tabulky.<br>
+    </li>
+    <li>
+      explicitní mapování: hodí se v případě, že referencovaný sloupec není primární klíč. V tomto případě lze využít třídu <font face="Courier New">RelationToOne</font> která umožní vložit relační sloupec pomocí druhého parametru podle následujícího vzoru:
+    </li>
+  </ul>
+  <div style=MARGIN-LEFT:80px>
+    <font face="Courier New">ordProperty = RelationToOne.newInstance(Order.class,<b>Order.sid</b>)<br>
+    </font>
+  </div>
+  <div style=MARGIN-LEFT:40px>
+    Doporučuji referencovaný sloupec označit unikátním <b>indexem </b>pro rychlé hledání i integritu dat, navíc některé databáze index přímo vyžadují.<br>
+  </div>
+  <b>Mapování relace 1:M</b><br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  Tento typ mapování nabízí (z pohledu zápisu kódu) snadný přístup k výsledků databázového dotazu. Každé další volání hodnoty generuje znovu databázový dotaz. Nento typ property nemá vliv na databázový model. Ukázka použití:<br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <div style=MARGIN-LEFT:40px>
+    <font face="courier new">items = newRelation(Item.class)</font><br>
+  </div>
+</div>
+<b>Mapování relace 1:1</b><br>
+<div style=MARGIN-LEFT:40px>
+  Ve frameworku je to zvláštní případ relace M:1, kde počet řádů M je možné omezit vhodným unikátním indexem. Alternativním řešením může být použití relační tabulky jako primárního klíče (viz ukázka dále).<br>
+</div>
+<b>Mapování relace M:N</b><br>
+<div style=MARGIN-LEFT:40px>
+  Vazba se realizuje pomocí dvou relací M:1 &amp; 1:N, které se mapují na další (tzv. vazební) tabulku.<br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <br>
+  <br>
+</div>
+<h2>
+  <a id=Lazy_loading_5479859842235448_ name=Lazy_loading_5479859842235448_></a>Lazy loading:
+</h2>
+Pozdní načtení objektů je proces, který umožňuje zpravidla efektivnější přenost dat mezi databází a klientem. Pozdní načtení je implementováno pro každý atribut obsahující další Entitu, která je v databázovém modelu je mapována cizím klíčem.<br>
+<br>
+Při pozdnám načtení objektu spouští Ujorm nový databázový dotaz, který využívá databázové spojení uložené v <b>otevřené Session</b>. Protože však entita si uzavřenou session <b>nesmí </b>otevřít sama, tak LazyLoading na uzavřené Session vyhodí run-time výjimku:<br>
+<div style=MARGIN-LEFT:40px>
+  new IllegalStateException("The session is closed")<br>
+</div>
+<br>
+<div>
+  Takové výjimce lze předejít výběrem vhodného řešení:<br>
+</div>
+<ul>
+  <li>
+    před voláním lazy přiřadit objektu otevřenou session:
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  OrmUjo.writeSession(session)<br>
+</div>
+<ul>
+  <li>
+    před voláním lazy aktualizovat atributy objektu podle databáze:<br>
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  Session.reload(ujo)<br>
+</div>
+<ul>
+  <li>
+    načíst požadované lazy property hned po získání objektu provoláním metody dle vzoru:
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  item.getOrder();<br>
+</div>
+<ul>
+  <li>
+    načíst všechny lazy property do požadované hloubky metodou:
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  OrmTools.loadLazyValue(OrmUjo, depth)<br>
+</div>
+<ul>
+  <li>
+    někdy není nutné dotahovat celou entitu, stačí pouze její <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=atiw title="cizí klíč">cizí klíč</a>, pro který není potřeba mít otevřenou Session. Tento klíč lze získat metodou OrmTable.readFK(property) .<br>
+  </li>
+</ul>
+<br>
+<div>
+  Občas je třeba získat lazy atribut(y) jediným SQL dotazem s pomocí JOIN pro vyšší optimalizaci databázového dotazu. Pro tento případ je třeba možné využít:<br>
+  <ul>
+    <li>
+      uživatelský dotaz zvaný "Ujorm native query" mapovaný na novou entitu, nebo<br>
+    </li>
+    <li>
+      databázové VIEW - mapované na novou entitu<br>
+    </li>
+  </ul>
+  <br>
+  <h2>
+    <a id=Session_cache_5212961387999433 name=Session_cache_5212961387999433></a><b><b><b><b><b><b>Session cache:</b></b></b></b></b></b>
+  </h2>
+  Ujorm používá cachování objektů v session ve snaze omezit duplicitní databázové dotazy. Pro chování cache platí jednoduchá pravidla:<br>
+  <ul>
+    <li>
+      živostnost cache má rozsah (scope) databázové transakce. Po provední commit/rollback bude cache uvolněna
+    </li>
+    <li>
+      do cache se dostanou jen objekty cizího klíče při líném čtení (lazy loading), v ostatních případech se objekty čtou vždy z databáze
+    </li>
+    <li>
+      při UPDATE objektu se neprovádí synchronizace cache a tak pro elimilaci případných konflitků lze vyprázdnit cache metodou <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#cacheClear%28%29 id=id5r title=clearCache()>clearCache()</a><br>
+    </li>
+    <li>
+      cache má ochranu proti paměťovému přetížení, v praxi to znamená, že garbage collector může část cache kdykoli uvolnit
+    </li>
+  </ul>
+  <br>
+  Z pohledu cache: Ujorm nemusí mít výhradní přístup do databáze, při zápisu bude třeba pouze sjednotit přidělování primárních klíčů. Pomocí parametru <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> lze pro celý meta-model cache zakázat, alternativně je možné zakázat uvolňování cache pomocí garbage collectoru.<br>
+  <br>
+  Pro optimalizaci performance je doporučeno udržovat cache logických celků (například článek) na úrovni aplikační logiky.<br>
+  <br>
+  <h2>
+    <a id=DDL_support_36207173943347537_ name=DDL_support_36207173943347537_></a><b>DDL support:</b>
+  </h2>
+  Ujorm umí upravovat databázové schema pomocí DDL aktualizací podle svého meta-modelu. Meta-model obsahuje popis struktury reálné databáze, který se sestavuje z názvů tříd, názvů UjoProperties a jejich anotací a případně podle konfiguračního XML souboru. Po načtení do paměti je meta-model uzamčen tak, že žádné pozdější úpravy nejsou možné. Aktualizace databáze se řídí následujícími pravidly:<br>
+  <br>
+  <ul>
+    <li>
+      aktualizace se provádí podle meta-modelu ihned po jeho sestavení v objektu OrmHandler<br>
+    </li>
+    <li>
+      aktualizace se provádí pouze pro <b>databázové položky</b>:
+    </li>
+    <ul>
+      <li>
+        nové tabulky
+      </li>
+      <li>
+        nové sloupce
+      </li>
+      <li>
+        nové indexy
+      </li>
+      <li>
+        db schema se založí jen při první aktualizaci<br>
+      </li>
+    </ul>
+    <li>
+      položku (sloupec, index) jednou vytvořenou v databázi framework dále nemění a tak bude třeba si ve <b>vlastní režii</b> ošetřit migrace například pro:<br>
+    </li>
+    <ul>
+      <li>
+        změnu sloupce NULL na NOT-NULL (či zpět)<br>
+      </li>
+      <li>
+        změna indexu UNIQUE na NON-UNIQUE (či zpět)
+      </li>
+      <li>
+        změna primárního klíče tabulky, atd.<br>
+      </li>
+    </ul>
+    <li>
+      databázová tabulka musí obsahovat alespoň primární klíč
+    </li>
+    <li>
+      nemapované databázové objekty (tabulky, sloupce, indexy) Ujorm ignoruje
+    </li>
+  </ul>
+  <br>
+  Parametrem <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#ORM2DLL_POLICY id=hj1l title=ORM2DLL_POLICY>ORM2DLL_POLICY</a> lze chování aktualizace změnit na některý z následujících <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ao/Orm2ddlPolicy.html id=xifg title=přístupů>přístupů</a>:<br>
+  <ul>
+    <li>
+      zákaz aktualizace<br>
+    </li>
+    <li>
+      povolit pouze první sestavení db modelu
+    </li>
+    <li>
+      povolit přírůstkové změny (default)
+    </li>
+  </ul>
+</div>
+<div>
+  Obecné použití parametrů Ujorm je popsané v <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=mqa3 title="tomto dokumentu">tutoriálu</a>.<br>
+</div>
+<br>
+<h2>
+  <a id=D_di_nost_entit_73677236305517 name=D_di_nost_entit_73677236305517></a>Dědičnost entit
+</h2>
+Ujorm nepodporuje dědičnost entit v pojetí JPA a není to ani v plánu. Hlavním důvodem je, že implemetace dědičnosti do stávající architektury Ujorm jednoduše nezapadá.<br>
+<br>
+Snadná dostupost dědičnosti v ORM občas svádí k bezstarostnému používání, které může být vykoupené později výkonnostními problémy na produkčních datech. V případě nutnosti je však možné dědičnost <b>napodobit </b>pomocí návrhového vzoru <b>agregace </b>s využitím <b>rozhraní </b>(Interface).<br>
+<br>
+V návrhu řešení dědičnosti se používají entity:<br>
+<ul>
+  <li>
+    User[id, login, password, name]
+  </li>
+  <li>
+    Customer[user, company, discount]
+  </li>
+</ul>
+<br>
+Navržené řešení je postaveno na rozhraní IUser, které objekty User i Customer implementují. Obě entity User i Customer sdílí stejná ID. Výhody dědičnosti lze začít využívat, protože instanci typu <b>ICustomer </b>můžeme zapsat do datového typu <b>IUser</b>. Popisy <b>setters</b> byly v diagramu pro zjednodušení vynechány.<br>
+<br>
+<div id=oxni style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
+  <div id=rnr0 style=TEXT-ALIGN:left>
+    <img height=220 src="images/ddcs2pg5_124d34jc7df_b.png" width=234>
+  </div>
+  <br>
+</div>
+<br>
+Všimněte si, že Customer obsahuje <b>primární klíč</b> typu <b>User</b> a tak sdílí stejnou hodnotu ID:<br>
+<br style="FONT-FAMILY:Courier New">
+<div style=MARGIN-LEFT:40px>
+  <font face="courier new">public class Customer extends OrmTable&lt;Employee&gt; implements IUser {</font><br style="FONT-FAMILY:Courier New">
+</div>
+<div style=MARGIN-LEFT:80px>
+  <font face="courier new">@Column(<b>pk=true</b>, <font face="courier new">value="id"</font>)</font><br style="FONT-FAMILY:Courier New">
+  <font face="courier new">public static final UjoProperty&lt;Customer, User&gt; <b>user </b></font><br>
+</div>
+<div style=MARGIN-LEFT:160px>
+  <div style=MARGIN-LEFT:40px>
+    <font face="courier new">= newProperty(User.class);</font><br style="FONT-FAMILY:Courier New">
+  </div>
+</div>
+<div style=MARGIN-LEFT:80px>
+  <font face="courier new">...</font><br style="FONT-FAMILY:Courier New">
+</div>
+<div style=MARGIN-LEFT:40px>
+  <font face="courier new">}</font><br>
+</div>
+<br>
+Implementace metody <b>Customer.getLogin()</b> může vypadat takto:<br>
+<br>
+<div style="FONT-FAMILY:Courier New;MARGIN-LEFT:40px">
+  @Override<br>
+  public String getLogin() {<br>
+</div>
+<div style="FONT-FAMILY:Courier New;MARGIN-LEFT:40px">
+  <div style=MARGIN-LEFT:40px>
+    return get(user).getLogin();<br>
+  </div>
+</div>
+<div style="FONT-FAMILY:Courier New;MARGIN-LEFT:40px">
+  }<br>
+  <br>
+</div>
+Při operacích typu INSERT a UPDATE je však třeba se postarat o každou entitu zvlášť. Viz ukázka kódu pro uložení Customer:<br>
+<br>
+<div style="FONT-FAMILY:Courier New;MARGIN-LEFT:40px">
+  Session session = handler.getSession();<br>
+  session.save(customer.getUser());<br>
+  session.save(customer);<br>
+  session.commit();<br>
+</div>
+<br>
+Ukázka úplné implementace dědičnosti třídy Customer je ke shlédnutí <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/bo/Customer.java?view=markup id=jrji title=tady>tady</a> a jeho použití je <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/SampleOfInheritance.java?view=markup id=gj3w title=tady>zde</a>.<br>
+<br>
+<br>
+<h2>
+  <a id=Primary_key_auto_increment_655 name=Primary_key_auto_increment_655></a>Primary key auto increment:
+</h2>
+Ujorm podporuje automatické generování primárního klíče pomocí třídy <b>UjoSequencer</b>. Řešení bylo ovlivněno především požadavky na vysokou <b>spolehlivost </b>a bezproblémovou <b>přenositelnost </b>implementace mezi databázemi různých poskytovatelů. Přidělování primárních klíčů se řídí následujícími pravidly:<br>
+<br>
+<ul>
+  <li>
+    primární klíč (PK) bude přiřazen automaticky pouze v případě, že hodnota UjoProperty je NULL. Je tedy možné přiřazovat operativně vlastní hodnoty PK bez nutnosti změny nějaké konfigurace<br>
+  </li>
+  <li>
+    každá tabulka má svoji vlastní řadu primárních klíčů o kterou se stará její vlastní instance třídy UjoSequencer. Třída UjoSequencer si udržuje hodnoty primárního klíče v pomocné databázové tabulce <b>ujorm_pk_support</b>, tady je popis sloupců:<br>
+  </li>
+  <ul>
+    <li>
+      <b>id</b> (VARCHAR) - název tabulky včetně schematu ve formátu<br>
+    </li>
+    <li>
+      <b>seq </b>- hodnota poslední přiřazené sequence
+    </li>
+    <li>
+      <b>cache </b>- UjoSequencer si umí alokovat řadu po sobě jdoucích čísel, která pak přiděluje z paměti pro zvýšení performance. Zapnutá cache však může způsobit:<br>
+    </li>
+    <ul>
+      <li>
+        nespojitou řadu klíčů v případě restartu Ujorm a také<br>
+      </li>
+      <li>
+        porušení časové vzestupnosti v případě použití více Ujorm klientů<br>
+      </li>
+    </ul>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  Uvedené chování lze eliminovat vypnutím cache pomocí hodnoty 1. Hodnotu cache lze měnit korektně i za běhu aplikace (SQL příkazem).<br>
+</div>
+<ul>
+  <ul>
+    <li>
+      <b>maxvalue </b>- pokud sloupec seq překročí maximální hodnotu, Ujorm vyhodí výjimku<br>
+    </li>
+  </ul>
+  <li>
+    pro alokaci primárního klíče Ujorm používá nezávislou DB connection tak, aby případný rollback transakce nezpůsobil návrat již přiřazených primárních klíčů
+  </li>
+</ul>
+<br>
+Častá otázka zní, jak využít nativní podporu databázové sequence? Řešení spočívá ve vytvoření vlastní implementace (potomka) třídy UjoSequencer. Třídu tohoto potomka je třeba zaregistrovat v parametrech Ujorm před sestavením meta-modelu. Jediná podmínka řešení je, že získání nového primárního klíče (například pomocí JDBC) musí proběhnout ještě před zavoláním příkazu INSERT. Odstranění této podmínky je v plánu rozvoje Ujorm.<br>
+<br>
+<h2>
+  <a id=Datab_zov_procedury_6024463592 name=Datab_zov_procedury_6024463592></a><b><b>Databázové procedury:</b></b>
+</h2>
+Ujorm podporuje od verze 0.94 volání databázových uložených <b>procedur</b> a <b>funkcí</b> (dále jen procedura). Každá procedura&nbsp; je popsána třídou rozšiřující abstraktní třídu DbProcedure, která implementuje Ujo. Významné je pořadí UjoProperties ve třídě, které musí odpovídat pořadí parametrů v proceduře. Pokud procedura <b>nemá návratový typ</b>, tak první konstanta UjoProperty v pořadí bude typu <b>Void.class</b>. První UjoProperty je typu OUTPUT, ostatní jsou defaultně typu INPUT. Defaultní typy properties je možné překrýt anotací <i>@Parameter(input=true, output=true)</i>. Databázové procedury je nutné <b>registrovat</b> ve třídě databases podobně jako databázové tabulky:<br>
+<br>
+<div style=MARGIN-LEFT:40px>
+  <font face="courier new">public static final Property&lt;Database,MyProcedure&gt; procedure<br>
+  </font>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <div style=MARGIN-LEFT:40px>
+    <font face="courier new">= newInstance(MyProcedure.class);</font><br>
+  </div>
+</div>
+<br>
+Při použití vytvoříme instanci procedury, naplníme její parametry typu INPUT a zavoláme metodu call s parametrem otevřené session:<br>
+<br>
+<div style=MARGIN-LEFT:40px>
+  MyProcedure procedure = new MyProcedure().<br>
+  procedure.set(MyProcedure.DATE, new Date());<br>
+  <font face="courier new">String result = procedure.call(session);</font><br>
+  <br>
+</div>
+Úplnou ukázku najdete na odkazu <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorialu>tutorial</a>. Instance procedury není spojena s konkrétní session a tak lze takovou instanci použít opakovaně s různými parametry (pouze jedno-vláknový přístup).&nbsp; Ujorm v současné verzi nepodporuje návratový typ parametru ResultSet.<br>
+<br>
+<h2>
+  <a id=Pro_n_zvy_Property_maj_mal_p_s name=Pro_n_zvy_Property_maj_mal_p_s></a>Proč názvy Property mají malá písmena?
+</h2>
+V ukázkách uvedených v této dokumentaci jsou názvy statických fieldů UjoProperties uváděné často malými písmeny - v rozporu se standardem. Důvodem je jednak snaha o zkrácení kódu při tvorbě UjoProperty ale zdá se být také užitečné, že malá písmena korespondují s instančními proměnnými (fields). Malá písmena se osvědčila lépe, nicméně použití velkých písmen ve vašem projektu nepředstavuje technický problém.<br>
+<br>
+Úplnou specifikaci UjoProperty lze sestavit explicitně včetně <b>názvu </b>dle následujícího vzoru:<br>
+&nbsp;&nbsp; public static final Property&lt;BO, Long&gt; <b>id</b> = newProperty("<b>id</b>", Long.class);<br>
+<br>
+Při zkráceném zápisu se název Property přebírá z názvu fieldu, ukázka použití je tady:<br>
+&nbsp;&nbsp; public static final Property&lt;BO, Long&gt; <b>id</b> = newProperty(Long, class);<br>
+<br>
+Krátké připomenutí pojmů UJO Frameworku:<br>
+<ul>
+  <li>
+    <b>field </b>UjoProperty - je název statické konstanty UjoProperty v implementaci Ujo<br>
+  </li>
+  <li>
+    <b>jméno </b>UjoProperty - je logické označení, které vrací metoda UjoProperty.getName() jako String
+  </li>
+</ul>
+<br>
+<h2>
+  <a id=Vlastnosti_Ujo_objekt_00514393 name=Vlastnosti_Ujo_objekt_00514393></a><b><b>Vlastnosti Ujo objektů:</b></b>
+</h2>
+Aby Ujorm fungoval k plné spokojenosti, je vhodné mít na paměti některé vlastností UJO, se kterými se u běžných JavaBeans nesetkáte:<br>
+<ul>
+  <li>
+    každý <b>atribut entity</b> musí mít svoji unikátní instanci UjoProperty, není možné sdílet jednu instanci UjoProperty pro více atributů
+  </li>
+  <li>
+    pro čtení a zápis hodnot se používají typové metody:<br>
+  </li>
+  <ul>
+    <li>
+      UjoProperty.getValue(..)<br>
+    </li>
+    <li>
+      UjoProperty.setValue(..)&nbsp;
+    </li>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:40px>
+  a nebo nějaké jiné metody, které je interně volají, například:<br>
+</div>
+<ul>
+  <ul>
+    <li>
+      UjoMiddle.get(..)
+    </li>
+    <li>
+      UjoMiddle.set(..)
+    </li>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:40px>
+  případně komfortní <b>setters </b>a <b>getters</b>, které volají (interně) některou z metodu výše uvedených<br>
+</div>
+<ul>
+  <li>
+    metoda UjoProperty.getValue() <b>zaměňuje </b>hodnoty NULL za defaultní hodnotu UjoProperty (která je NULL pokud ji nenastavíte jinak). Pozor, metoda Ujo.readValue() žádnou záměnu defaultních hodnot neprovádí.
+  </li>
+  <li>
+    pro zápis a čtení hodnoty <b>není doporučeno</b> volat <b>netypové </b>metody<br>
+  </li>
+  <ul>
+    <li>
+      Ujo.readValue()<br>
+    </li>
+    <li>
+      Ujo.writeValue() ,<br>
+    </li>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:40px>
+  nicméně tyto dvě metody jsou vhodné pro <b>překrývání </b>za účelem implementace různých konverzí, validací a jiných požadavků.<br>
+</div>
+<ul>
+  <li>
+    pro defaultní hodonotu UjoProperty je vhodný pouze <b>neměnný objekt</b> (immutable object)
+  </li>
+  <li>
+    Ujo objekty lze obecně dědit, nicméně dědičnost objektů OrmUjo podporovaná není.<br>
+  </li>
+  <li>
+    více informací k Ujo Core lze najít <a href=http://ujoframework.org/javadoc/org/ujoframework/package-summary.html#UJO id=d6tt title=zde>zde</a>.<br>
+  </li>
+</ul>
+<br>
+<br>
+<h2>
+  <a id=Best_practices_575722570079474 name=Best_practices_575722570079474></a><b><b>Best practices:</b></b>
+</h2>
+<ul>
+  <li>
+    společný předek vašich doménových objektů může usnadnit změnu chování všech potomků. Příkladem může být generická implementace metod toString() , nebo implementace metod equals(..), hashCode() a podobně<br>
+  </li>
+  <li>
+    služba pro zpracování dat z DB do Query může snadno doplňovat další Criterion. Příkladem využití může být implementace omezeného přístupu k datům podle kontextu (role) přihlášeného uživatele
+  </li>
+  <li>
+    pro přístup k hodnotám Ujo objektu se nejvíce osvědčilo použití metod:
+  </li>
+  <ul>
+    <li>
+      UjoMiddle.get(property)
+    </li>
+    <li>
+      UjoMiddle.set(property, value)
+    </li>
+  </ul>
+</ul>
+<br>
+<h2>
+  <a id=Meta_model_11271129394580981_6 name=Meta_model_11271129394580981_6></a>Meta-model:
+</h2>
+Meta-model se sestavuje podle obsahu Ujo properties třídy Database a jejích tabulek. Názvy tabulek, view, procedur se odvozují z názvů Ujo property. Většinu vlastností modelu lze překrývat anotacemi umístěnými přímo u property a nebo u názvu třídy. Vlastnosti nastavené anotacemi lze dále překrývat konfiguračním XML souborem, který může modifikovat voliteně jen vybrané části meta-modelu.<br>
+<br>
+Po sestavení meta-modelu v paměti se model uzamkne a není možné do něj dále zapisovat, za běhu programu však lze získávat z něj užitečné informace. Mírně zjednodušený class diagram meta je na následujícím obrázku:<br>
+<br>
+<div style=MARGIN-LEFT:40px>
+  <br>
+</div>
+<div id=fp8j style=MARGIN-LEFT:80px;TEXT-ALIGN:left>
+  <img height=508 src="images/ddcs2pg5_130g4jxhz6h_b.png" width=425>
+</div>
+<br>
+<br>
+<p>
+  <b>Popis entit:</b>
+</p>
+<ul>
+  <li>
+    OrmHandler je třída poskytující meta-model, v rámci aplikace je doporučeno držet pouze jednu instanci této třídy. Třída nabízí několik metod zpřístupňujících efektivně vybrané části meta-modelu. OrmHandler je jediná entita v diagramu, která není potomkem abstraktní třídy AbstractMetaModel (implementující rozhraní Ujo).<br>
+  </li>
+  <li>
+    MetaRoot tvoří kořen meta-modelu a umožňuje tak čtení nebo tisk konfiguračního XML souboru
+  </li>
+  <li>
+    MetaParams obsahuje obecné parametry Ujorm, které se dají také modifikovat konfiguračním XML souborem<br>
+  </li>
+  <li>
+    MetaDatabase obsahuje databázová připojení, seznam tabulek (případně views) a seznam databázových procedur. Obsahuje také defaultní schema.<br>
+  </li>
+  <li>
+    MetaTable zastupuje databázovou tabulku, která přebírá schema z MetaDatabase, nicméně lze nastavit (anotacemi) i schema odlišné. Logický přízak 'view' odlišuje view od tabulek (do view nelze například zapisovat a také nemají vliv na aktualizaci DB).<br>
+  </li>
+  <li>
+    MetaPKey - taždá tabulka obsahuje jeden primární klíč
+  </li>
+  <li>
+    MetaRelation2Many - zastupuje relaci typu 1:M
+  </li>
+  <li>
+    MetaColumn - třída reprezentuje databázové sloupce, případně parametry uložené procedury.<br>
+  </li>
+</ul>
+<br>
+<br>
+<h2>
+  <a id=Pod_kov_n_10110858237945497_33 name=Pod_kov_n_10110858237945497_33></a>Poděkování
+</h2>
+Děkuji vývojovému týmu firmy&nbsp;<a href=http://www.effectiva.cz/ id=orok title="Effectiva Solutions">Effectiva Solutions</a> za cenné odborné připomínky k obsahu tohoto dokumentu.<br>
+<br>
+<br>
+
+              <div>
+<div style="display: none;">
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+</div>
+
+<a href="http://navrcholu.cz/Statistika/111542/" style="text-decoration: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+              </div>
+
+
+</body>
+</html>
