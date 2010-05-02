@@ -64,13 +64,13 @@ public class LimitTest extends TestCase {
         Criterion crit;
         int count;
         //
-        crit = Criterion.whereTrue(XItem.ID);
+        crit = Criterion.constant(XItem.ID, true);
         count = session.delete(crit);
         //
-        crit = Criterion.whereTrue(XOrder.ID);
+        crit = Criterion.constant(XOrder.ID, true);
         count = session.delete(crit);
         //
-        crit = Criterion.whereTrue(XCustomer.ID);
+        crit = Criterion.constant(XCustomer.ID, true);
         count = session.delete(crit);
     }
 

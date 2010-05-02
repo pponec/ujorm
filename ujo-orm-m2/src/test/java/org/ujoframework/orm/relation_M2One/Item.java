@@ -13,9 +13,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujoframework.orm_tutorial.sample;
+package org.ujoframework.orm.relation_M2One;
 
-import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
@@ -38,9 +37,8 @@ public class Item extends OrmTable<Item> {
     public static final UjoProperty<Item,String> descr = newProperty(String.class);
     /** A reference to common Order */
     @Column(name="fk_order")
-    public static final UjoProperty<Item,Order> order = newProperty(Order.class);
-    /** A composed (indirect) property provides a 'created' attribute of the Order */
-    public static final UjoProperty<Item,Date> $orderDate = Item.order.add(Order.created);
+    //public static final UjoProperty<Item,Order> order = newProperty(Order.class);
+    public static final UjoProperty<Item,Order> order= RelationToOne.newInstance(Order.class, Order.sid);
 
     // --- An optional implementation of commonly used setters and getters ---
 
@@ -69,11 +67,6 @@ public class Item extends OrmTable<Item> {
         set(order, _descr);
     }
 
-    /** Example of the composed PATH property */
-    public Date getOrderDate() {
-        // An alternative solution for: getOrder().getCreated();
-        return get($orderDate);
-    }
 
 
 }
