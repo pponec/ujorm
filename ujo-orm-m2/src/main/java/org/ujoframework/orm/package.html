@@ -49,7 +49,7 @@
             <h3>A sample of use</h3>
             See how to create database and to how to INSERT an order with two items into database:
 
-            <pre name="code" class="java">
+            <pre class="pre">
   OrmHandler.getInstance().loadDatabase(Database.class);
 
   Order order = new Order();
@@ -73,7 +73,7 @@
             </pre>
 
             The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
-            <pre name="code" class="java">
+            <pre class="pre">
   Criterion&lt;Order&gt; criter1 = Criterion.newInstance(Order.DESCR, "John's order");
   Criterion&lt;Order&gt; criter2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
   Criterion&lt;Order&gt; criterion = criter1.and(criter2);
@@ -89,7 +89,7 @@
             </pre>
 
             The next source code calls a SELECT by an UJO object <strong>relation</strong>:
-            <pre name="code" class="java">
+            <pre class="pre">
   Session session = OrmHandler.getInstance().getSession();
   Database db = session.getDatabase();
   UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
@@ -108,15 +108,8 @@
 
             <h3 id="sources">More sources:</h3>
             <ul>
-                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup">Tutorial</a> in the class</li>
-                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/Order.java?view=markup">Order</a> - Java source of the Order business object</li>
-                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/Item.java?&view=markup">Item</a> - Java source of the Item business object</li>
-                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/Database.java?view=markup">Database</a> - Java source of a database description of a metamodel</li>
-                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/bo/ViewOrder.java?view=markup">View</a> - Use of a native SQL query</li>
-                <li><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/config.xml?view=markup">XML configuration file</a> - example</li>
-                <li><a href="http://sourceforge.net/scm/?type=svn&group_id=207681">ORM</a> project sources</li>
-                <li><a href="http://ujoframework.org/javadoc/">JavaDoc</a> stable version</li>
-                <li><a href="http://ujoframework.org/presentation/">UJO quick start</a> (a slide show)</li>
+                <li><a href="http://ujorm.com/">Home page</a></li>
+                <li><a href="http://ujoframework.org/dokuwiki/doku.php?id=orm_links">Wiki tutorial</a></li>
             </ul>
 
             <h3 id="license">License:</h3>
