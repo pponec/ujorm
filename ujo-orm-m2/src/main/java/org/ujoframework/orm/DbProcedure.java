@@ -17,7 +17,11 @@
 
 package org.ujoframework.orm;
 
+import java.util.concurrent.Callable;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.annot.Transient;
+import org.ujoframework.implementation.orm.OrmTable;
+import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.implementation.quick.QuickUjoMid;
 import org.ujoframework.orm.metaModel.MetaProcedure;
 
@@ -26,7 +30,8 @@ import org.ujoframework.orm.metaModel.MetaProcedure;
  * @author Ponec
  */
 abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<UJO> {
-    
+
+    @Transient
     protected MetaProcedure metaProcedure = null;
 
     /** Clear all parameters */
@@ -38,17 +43,20 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<U
         return this;
     }
 
-    /** Call the procedure and return a value of the first Property */
+    /** Call the procedure and return a type-safe value of the required Property */
     @SuppressWarnings("unchecked")
     public <T> T call(final Session session, final UjoProperty<UJO,T> result) {
         if (metaProcedure==null) {
-            metaProcedure = new MetaProcedure(this, session.getHandler().getDatabases().get(0));
+            metaProcedure = session.getHandler().findProcedureModel(getClass());
         }
         session.call(this);
         return result.of((UJO)this);
     }
 
-    /** Call the procedure and return a value of the first Property */
+    /** Call the procedure and return a value of the first Property. <br>
+     * WARNING: The result is NOT type-save value, use rather {@link #call(org.ujoframework.orm.Session, org.ujoframework.UjoProperty)}.
+     * @see #call(org.ujoframework.orm.Session, org.ujoframework.UjoProperty)
+     */
     @SuppressWarnings("unchecked")
     public <T> T call(final Session session) {
         return (T) call(session, readProperties().get(0));
@@ -58,5 +66,20 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<U
     public MetaProcedure metaProcedure() {
         return metaProcedure;
     }
+
+    /** A PropertyIterator Factory creates an new property and assign a next index.
+     * @hidden
+     */
+    protected static <UJO extends OrmTable, ITEM extends OrmTable> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
+        return new RelationToMany<UJO,ITEM> (name, type, -1, false);
+    }
+
+    /** A PropertyIterator Factory creates an new property and assign a next index.
+     * @hidden
+     */
+    protected static <UJO extends OrmTable, ITEM extends OrmTable> RelationToMany<UJO,ITEM> newRelation(Class<ITEM> type) {
+        return newRelation(null, type);
+    }
+
 
 }

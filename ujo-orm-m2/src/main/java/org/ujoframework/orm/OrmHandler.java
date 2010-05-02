@@ -35,6 +35,7 @@ import org.ujoframework.orm.metaModel.MetaRoot;
 import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaParams;
+import org.ujoframework.orm.metaModel.MetaProcedure;
 import org.ujoframework.orm.metaModel.MetaRelation2Many;
 import org.ujoframework.orm.metaModel.MetaTable;
 
@@ -59,7 +60,11 @@ public class OrmHandler {
     private Session session;
 
     /** Map a property to a database column model */
-    private HashMap<UjoProperty,MetaRelation2Many> propertyMap = new HashMap<UjoProperty,MetaRelation2Many> ();
+    private final HashMap<UjoProperty,MetaRelation2Many> propertyMap = new HashMap<UjoProperty,MetaRelation2Many> ();
+    /** Map a Java class to a database table model */
+    private final HashMap<Class,MetaTable> entityMap = new HashMap<Class,MetaTable> ();
+    /** Map a Java class to a procedure model */
+    private final HashMap<Class,MetaProcedure> procedureMap = new HashMap<Class,MetaProcedure> ();
 
     /** The constructor */
     public OrmHandler() {
@@ -191,7 +196,7 @@ public class OrmHandler {
     }
 
     /** Load a meta-data and create database tables */
-    public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
+    public synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
 
         // Load meta-model:
         for (Class<UJO> db : databaseModel) {
@@ -249,29 +254,40 @@ public class OrmHandler {
         return result;
     }
 
+    /** Map a property to the table */
+    @SuppressWarnings("unchecked")
+    public void addProcedureModel(MetaProcedure metaProcedure) {
+        procedureMap.put(MetaProcedure.DB_PROPERTY.of(metaProcedure).getType(), metaProcedure);
+    }
 
     /** Map a property to the table */
     @SuppressWarnings("unchecked")
-    public void addProperty(UjoProperty property, MetaRelation2Many newColumn) {
+    public void addTableModel(MetaTable metaTable) {
+        entityMap.put(metaTable.getType(), metaTable);
+    }
 
+    /** Map a property to the table */
+    @SuppressWarnings("unchecked")
+    public void addColumnModel(MetaRelation2Many column) {
+        UjoProperty property = column.getProperty();
         MetaRelation2Many oldColumn = findColumnModel(property);
 
         if (oldColumn == null) {
-            propertyMap.put(property, newColumn);
+            propertyMap.put(property, column);
         } else {
             final Class oldType = oldColumn.getTableClass();
-            final Class newType = newColumn.getTableClass();
+            final Class newType = column.getTableClass();
 
             if (newType.isAssignableFrom(oldType)) {
                 // Only a parent can be assigned:
-                propertyMap.put(property, newColumn);
+                propertyMap.put(property, column);
             }
         }
     }
 
     /** Find a Relation/Column model of the paramemeter property.
      * @param pathProperty Parameter can be type of Property of PathProperty (direct or indirect);
-     * @return Related model or the null if model was not found.
+     * @return Returns a related model or the NULL if no model was found.
      */
     public MetaRelation2Many findColumnModel(UjoProperty pathProperty) {
         if (pathProperty!=null) while (!pathProperty.isDirect()) {
@@ -281,20 +297,28 @@ public class OrmHandler {
         return result;
     }
 
-    /** Find a table model by the dbClass. 
+    /** Find a table model by the dbClass.
      * If the table model is not found then the IllegalStateException is throwed.
      */
     public MetaTable findTableModel(Class<? extends OrmUjo> dbClass) throws IllegalStateException {
-        for (MetaDatabase db : MetaRoot.DATABASES.getList(databases)) {
-            for (MetaTable table : MetaDatabase.TABLES.getList(db)) {
-                // Class has a unique instance in the same classloader:
-                if (table.getType()==dbClass) {
-                    return table;
-                }
-            }
+        MetaTable result = entityMap.get(dbClass);
+        if (result==null) {
+            final String msg = "An entity mapping bug: the " + dbClass + " is not mapped to the Database.";
+            throw new IllegalStateException(msg);
         }
-        final String msg = "An entity mapping bug: the " + dbClass + " is not mapped to the Database.";
-        throw new IllegalStateException(msg);
+        return result;
+    }
+
+    /** Find a procedure model by the procedureClass.
+     * If the procedure model is not found then the IllegalStateException is throwed.
+     */
+    public MetaProcedure findProcedureModel(Class<? extends DbProcedure> procedureClass) throws IllegalStateException {
+        MetaProcedure result = procedureMap.get(procedureClass);
+        if (result==null) {
+            final String msg = "An procedure mapping bug: the " + procedureClass + " is not mapped to the Database.";
+            throw new IllegalStateException(msg);
+        }
+        return result;
     }
 
     /** Returns parameters */

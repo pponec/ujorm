@@ -24,7 +24,7 @@ import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.AbstractMetaModel;
 
 /**
- * Contains a sql select for a UJO view SELECT.
+ * Contains a SQL statement for a UJO view user SELECT.
  * @author Ponec
  */
 final public class MetaSelect extends AbstractMetaModel {

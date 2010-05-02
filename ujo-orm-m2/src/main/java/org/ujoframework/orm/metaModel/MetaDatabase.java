@@ -38,6 +38,7 @@ import java.util.Set;
 import javax.naming.InitialContext;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ValueExportable;
+import org.ujoframework.orm.DbProcedure;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.JdbcStatement;
 import org.ujoframework.orm.OrmUjo;
@@ -68,6 +69,8 @@ final public class MetaDatabase extends AbstractMetaModel {
     public static final Property<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class);
     /** List of tables */
     public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
+    /** List of procedures */
+    public static final ListProperty<MetaDatabase,MetaProcedure> PROCEDURES = newListProperty("procedure", MetaProcedure.class);
     /** JDBC URL connection */
     public static final Property<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
     /** JDBC Driver */
@@ -100,6 +103,12 @@ final public class MetaDatabase extends AbstractMetaModel {
     public MetaDatabase() {
     }
 
+    /**
+     * Create a new Database.
+     * @param ormHandler ORM handler
+     * @param database Database instance
+     * @param param Configuration data from a XML file
+     */
     public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param) {
         this.ormHandler = ormHandler;
         ROOT.setValue(this, database);
@@ -112,7 +121,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             changeDefault(this, USER    , USER.of(param));
             changeDefault(this, PASSWORD, PASSWORD.of(param));
             changeDefault(this, JNDI    , JNDI.of(param));
-            changeDefault(this, SEQUENCER, SEQUENCER.of(param));
+            changeDefault(this, SEQUENCER,SEQUENCER.of(param));
         }
 
         Db annotDB = database.getClass().getAnnotation(Db.class);
@@ -138,6 +147,14 @@ final public class MetaDatabase extends AbstractMetaModel {
                 MetaTable par   = param!=null ? param.findTable(tProperty.getName()) : null;
                 MetaTable table = new MetaTable(this, tProperty, par);
                 TABLES.addItem(this, table);
+                ormHandler.addTableModel(table);
+            }
+            else if (tableProperty.isTypeOf(DbProcedure.class)) {
+                UjoProperty tProcedure = tableProperty;
+                MetaProcedure par = param!=null ? param.findProcedure(tProcedure.getName()) : null;
+                MetaProcedure procedure = new MetaProcedure(this, tProcedure, par);
+                PROCEDURES.addItem(this, procedure);
+                ormHandler.addProcedureModel(procedure);
             }
         }
         if (ADD_DB_MODEL) {
@@ -147,6 +164,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             MetaTable table = new MetaTable(this, relation, null);
             table.setNotPersistent();
             TABLES.addItem(this, table);
+            ormHandler.addTableModel(table);
         }
     }
 
@@ -434,7 +452,15 @@ final public class MetaDatabase extends AbstractMetaModel {
                 }
             }
 
-            // 5. Create Foreign Keys:
+            // 5. Create Indexes:
+            for (MetaIndex index : indexes) {
+                out.setLength(0);
+                sql = getDialect().printIndex(index, out).toString();
+                stat.executeUpdate(sql);
+                LOGGER.info(sql);
+            }
+            
+            // 6. Create Foreign Keys:
             for (MetaColumn column : foreignColumns) {
                 if (column.isForeignKey()) {
                     out.setLength(0);
@@ -445,13 +471,6 @@ final public class MetaDatabase extends AbstractMetaModel {
                 }
             }
 
-            // 6. Create Indexes:
-            for (MetaIndex index : indexes) {
-                out.setLength(0);
-                sql = getDialect().printIndex(index, out).toString();
-                stat.executeUpdate(sql);
-                LOGGER.info(sql);
-            }
 
             // 7. Create SEQUENCE table;
             if (tableCount>0 && !change) {
@@ -567,25 +586,28 @@ final public class MetaDatabase extends AbstractMetaModel {
 
     /** Create connection with auto-commit false. */
     public Connection createConnection() throws Exception {
-        Connection result = dialect.createConnection(this);
-        
-        if (result==null) {
-            String jndi = JNDI.of(this);
-            if (isUsable(jndi)) {
-                DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
-                result = dataSource.getConnection();
-            } else {
-                Class.forName(JDBC_DRIVER.of(this));
-                result = DriverManager.getConnection
-                ( JDBC_URL.of(this)
-                , USER.of(this)
-                , PASSWORD.of(this)
-                );
-            }
+        final Connection result = dialect.createConnection(this);
+        return result;
+    }
+
+    /** Call the method from SqlDialect only. Connection is set to autocommit to false. */
+    public Connection createInternalConnection() throws Exception {
+        Connection result;
+
+        String jndi = JNDI.of(this);
+        if (isUsable(jndi)) {
+            DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
+            result = dataSource.getConnection();
+        } else {
+            Class.forName(JDBC_DRIVER.of(this));
+            result = DriverManager.getConnection(JDBC_URL.of(this), USER.of(this), PASSWORD.of(this));
         }
+
         result.setAutoCommit(false);
         return result;
     }
+
+
 
     /** Get or create an initial context */
     private InitialContext getInitialContext() throws NamingException {
@@ -645,6 +667,19 @@ final public class MetaDatabase extends AbstractMetaModel {
         if (isUsable(id)) for (MetaTable table : TABLES.getList(this)) {
             if (MetaTable.ID.equals(table, id)) {
                 return table;
+            }
+        }
+        return null;
+    }
+
+    /** Finds the first procedure by ID or returns null.
+     * The method is for internal use only.
+     */
+    MetaProcedure findProcedure(String id) {
+
+        if (isUsable(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
+            if (MetaProcedure.ID.equals(procedure, id)) {
+                return procedure;
             }
         }
         return null;
