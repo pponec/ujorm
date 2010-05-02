@@ -51,6 +51,7 @@ import org.ujoframework.orm.annot.Db;
  * A logical database description.
  * @author Pavel Ponec
  * @composed 1 - * MetaTable
+ * @composed 1 - * MetaProcedure
  */
 final public class MetaDatabase extends AbstractMetaModel {
     private static final Class CLASS = MetaDatabase.class;
