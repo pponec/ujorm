@@ -561,7 +561,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
     <b>defaultní </b>mapování je implementované pro objety: String, Boolean, Byte, Character, Short, Integer, Long, Float, Double, BigDecimal, BigInteger, byte[], java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.sql.Blob, java.sql.Clob, Enum<br>
   </li>
   <li>
-    <b>explicitní </b>mapování se uvádí v anotaci @Table nebo @View, případně i pomocí konfigurační XML souboru<br>
+    <b>explicitní </b>mapování se uvádí v anotací @Column, případně pomocí konfiguračního XML souboru<br>
   </li>
   <li>
     pomocí <b>interface</b>: libovolný objekt implementující rozhraní ValueExportable je automaticky mapovaný na VARCHAR. Uvedené rozhraní může implementovat také Enum.<br>
@@ -618,7 +618,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
 </h2>
 Pozdní načtení objektů je proces, který umožňuje zpravidla efektivnější přenost dat mezi databází a klientem. Pozdní načtení je implementováno pro každý atribut obsahující další Entitu, která je v databázovém modelu je mapována cizím klíčem.<br>
 <br>
-Při pozdnám načtení objektu spouští Ujorm nový databázový dotaz, který využívá databázové spojení uložené v <b>otevřené Session</b>. Protože však entita si uzavřenou session <b>nesmí </b>otevřít sama, tak LazyLoading na uzavřené Session vyhodí run-time výjimku:<br>
+Při pozdním načtení objektu spouští Ujorm nový databázový dotaz, který využívá databázové spojení uložené v <b>otevřené Session</b>. Protože však entita si uzavřenou session <b>nesmí </b>otevřít sama, tak LazyLoading na uzavřené Session vyhodí run-time výjimku:<br>
 <div style=MARGIN-LEFT:40px>
   new IllegalStateException("The session is closed")<br>
 </div>
@@ -681,7 +681,7 @@ Při pozdnám načtení objektu spouští Ujorm nový databázový dotaz, který
   Ujorm používá cachování objektů v session ve snaze omezit duplicitní databázové dotazy. Pro chování cache platí jednoduchá pravidla:<br>
   <ul>
     <li>
-      živostnost cache má rozsah (scope) databázové transakce. Po provední commit/rollback bude cache uvolněna
+      životnost cache má rozsah (scope) databázové transakce. Po provední commit/rollback bude cache uvolněna
     </li>
     <li>
       do cache se dostanou jen objekty cizího klíče při líném čtení (lazy loading), v ostatních případech se objekty čtou vždy z databáze
