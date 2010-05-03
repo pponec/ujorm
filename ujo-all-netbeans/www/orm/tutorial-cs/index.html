@@ -546,7 +546,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
       objektu lze přiřadit <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=wgku title="Cizí klíč">Cizí klíč</a> pro vynucení LazyLoading (pomocí metody Ujo.writeValue).
     </li>
   </ul>
-  Poslání OrmUjo objektu se tak více blíží pouhým "přepravkám dat".<br>
+  Poslání OrmUjo objektu se tak blíží pouhým "přepravkám dat".<br>
   <br>
   <br>
   <h2>
@@ -561,10 +561,10 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
     <b>defaultní </b>mapování je implementované pro objety: String, Boolean, Byte, Character, Short, Integer, Long, Float, Double, BigDecimal, BigInteger, byte[], java.util.Date, java.sql.Date, java.sql.Time, java.sql.Timestamp, java.sql.Blob, java.sql.Clob, Enum<br>
   </li>
   <li>
-    <b>explicitní </b>mapování se uvádí v anotací @Column, případně pomocí konfiguračního XML souboru<br>
+    <b>explicitní </b>mapování se uvádí v anotaci @Column, případně pomocí konfiguračního XML souboru<br>
   </li>
   <li>
-    pomocí <b>interface</b>: libovolný objekt implementující rozhraní ValueExportable je automaticky mapovaný na VARCHAR. Uvedené rozhraní může implementovat také Enum.<br>
+    pomocí <b>interface</b>: libovolný objekt implementující rozhraní <a href="http://ujoframework.org/javadoc/org/ujoframework/extensions/ValueExportable.html">ValueExportable</a> je automaticky mapovaný na VARCHAR. Uvedené rozhraní může implementovat také Enum.<br>
   </li>
   <li>
     specifické požadavky na mapování lze implementovat překrytím třídy <b>TypeService</b><br>
@@ -1025,7 +1025,7 @@ Aby Ujorm fungoval k plné spokojenosti, je vhodné mít na paměti některé vl
 <h2>
   <a id=Meta_model_11271129394580981_6 name=Meta_model_11271129394580981_6></a>Meta-model:
 </h2>
-Meta-model se sestavuje podle obsahu Ujo properties třídy Database a jejích tabulek. Názvy tabulek, view, procedur se odvozují z názvů Ujo property. Většinu vlastností modelu lze překrývat anotacemi umístěnými přímo u property a nebo u názvu třídy. Vlastnosti nastavené anotacemi lze dále překrývat konfiguračním XML souborem, který může modifikovat voliteně jen vybrané části meta-modelu.<br>
+Meta-model se sestavuje podle obsahu Ujo properties třídy Database a jejích tabulek. Názvy tabulek, view, procedur se odvozují z názvů Ujo property. Většinu vlastností modelu lze překrývat anotacemi umístěnými přímo u property a nebo u názvu třídy. Vlastnosti nastavené anotacemi lze dále překrývat konfiguračním XML souborem, který může modifikovat volitelně jen vybrané části meta-modelu.<br>
 <br>
 Po sestavení meta-modelu v paměti se model uzamkne a není možné do něj dále zapisovat, za běhu programu však lze získávat z něj užitečné informace. Mírně zjednodušený class diagram meta je na následujícím obrázku:<br>
 <br>
