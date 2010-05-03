@@ -353,37 +353,6 @@ public class SampleORM {
         System.out.println("The stored procedure result #2: " + result);
     }
 
-    /** Call a database stored procedure:
-     * <code>
-     * CREATE OR REPLACE FUNCTION db1.ujorm_test2(integer)
-     * RETURNS refcursor AS 'DECLARE mycurs refcursor;
-     * BEGIN
-     *    OPEN mycurs FOR SELECT 11, 12;
-     *    RETURN mycurs;
-     * END;'
-     * LANGUAGE plpgsql
-     * </code>
-     * Note: the source code is an aarly implementation prototype. <br>
-     * Note: test was running on the PostgreSQL release 8.4
-     */
-    public void useStoredProcedure_2() {
-        MyProcedure procedure = new MyProcedure();
-        // MyProcedure procedure2 = session.newProcedure(MyProcedure.class);
-
-        // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The result can't be initialized.
-        procedure.set(MyProcedure.paramCode, 5);
-        procedure.set(MyProcedure.paramEnabled, true);
-
-        Integer result = procedure.call(session);
-        System.out.println("The stored procedure result #1: " + result);
-
-        // See how to reuse input parameters of the object 'procedure':
-        procedure.set(MyProcedure.paramCode, 24);
-        result = procedure.call(session, MyProcedure.result); // Take the result of any (output) parameter
-        System.out.println("The stored procedure result #2: " + result);
-    }
-
     /** Using the UPDATE */
     public void useUpdate() {
         Order order = session.load(Order.class, 1L);
