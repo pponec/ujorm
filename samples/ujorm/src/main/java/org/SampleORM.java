@@ -65,7 +65,7 @@ public class SampleORM {
             sample.useForeignKey();
             sample.useIteratorSkip();
             sample.useRelation();
-          //sample.useStoredProcedure(); // create db procedure first
+            sample.useStoredProcedure();
             sample.useUpdate();
             sample.useDelete_1();
             sample.useDelete_2();
@@ -337,6 +337,9 @@ public class SampleORM {
      * Note: test was running on the PostgreSQL release 8.4
      */
     public void useStoredProcedure() {
+        boolean isProcedureCreated = false; // create the database procedure first
+        if ( ! isProcedureCreated ) return;
+
         MyProcedure procedure = new MyProcedure();
 
         // Assign input parameters:
