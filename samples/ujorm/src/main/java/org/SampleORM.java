@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Paul Ponec
+ *  Copyright 2009 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import org.ujoframework.orm.utility.OrmTools;
  */
 public class SampleORM {
 
-    // ------- TUTORIAL MENU: -------
+    // ------- MENU: -------
 
     public static void main(String[] args) {
         SampleORM sample = new SampleORM();
@@ -75,7 +75,7 @@ public class SampleORM {
         }
     }
 
-    // ------- CHAPTERS: -------
+    // ------- FIELDS: -------
 
     /** The handler contains the one or more database meta-models,
      * the one applicatin can have more OrmHandler instances. */
@@ -83,6 +83,8 @@ public class SampleORM {
 
     /** The session contains a cache and database connections. */
     private Session session;
+
+    // ------- CHAPTERS: -------
 
     /** Before the first use load a meta-model.
      * Database tables will be created in the first time.
@@ -288,7 +290,6 @@ public class SampleORM {
             System.out.println("FK: " + fk1 + " " + fk1.equals(fk2));
         }
     }
-
 
     /** How to skip items? */
     public void useIteratorSkip() {
