@@ -116,7 +116,8 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
     /** Returns <tt>true</tt> if this map contains a mapping for the specified key.
      * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
      */
-    @Override public boolean containsKey(Object key) {
+    @Override 
+    public boolean containsKey(Object key) {
         return data.containsKey(key.toString());
     }
 

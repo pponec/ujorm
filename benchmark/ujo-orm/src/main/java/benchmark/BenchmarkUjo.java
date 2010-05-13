@@ -121,8 +121,8 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        Criterion<UjoOrderItem> crn1 = Criterion.newInstance(UjoOrderItem.deleted, false);
-        Criterion<UjoOrderItem> crn2 = Criterion.newInstance(UjoOrderItem._orderDeleted, false);
+        Criterion<UjoOrderItem> crn1 = Criterion.where(UjoOrderItem.deleted, false);
+        Criterion<UjoOrderItem> crn2 = Criterion.where(UjoOrderItem._orderDeleted, false);
 
         UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
 
@@ -147,8 +147,8 @@ public class BenchmarkUjo {
 
 
         for (int i = -ORDER_COUNT; i<0 ; i++) {
-            Criterion<UjoOrder> crn1 = Criterion.newInstance(UjoOrder.id, new Long(i));
-            Criterion<UjoOrder> crn2 = Criterion.newInstance(UjoOrder.deleted, true);
+            Criterion<UjoOrder> crn1 = Criterion.where(UjoOrder.id, new Long(i));
+            Criterion<UjoOrder> crn2 = Criterion.where(UjoOrder.deleted, true);
 
             UjoIterator<UjoOrder> orders = session.createQuery(crn1.and(crn2)).iterate();
             orders.hasNext();
@@ -162,7 +162,7 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        Criterion<UjoOrder> crn1 = Criterion.newInstance(UjoOrder.deleted, false);
+        Criterion<UjoOrder> crn1 = Criterion.where(UjoOrder.deleted, false);
         UjoIterator<UjoOrder> orders = session.createQuery(crn1).iterate();
 
         int i = 0;
@@ -170,8 +170,8 @@ public class BenchmarkUjo {
             String surename = order.get(UjoOrder.user).get(UjoUser.surename);
             if (false) System.out.println("Usr.surename: " + surename);
 
-            Criterion<UjoOrderItem> crn2 = Criterion.newInstance(UjoOrderItem.deleted, false);
-            Criterion<UjoOrderItem> crn3 = Criterion.newInstance(UjoOrderItem.order, order);
+            Criterion<UjoOrderItem> crn2 = Criterion.where(UjoOrderItem.deleted, false);
+            Criterion<UjoOrderItem> crn3 = Criterion.where(UjoOrderItem.order, order);
             UjoIterator<UjoOrderItem> items = session.createQuery(crn2.and(crn3)).iterate();
 
             for (UjoOrderItem item : items) {
@@ -196,8 +196,8 @@ public class BenchmarkUjo {
 
         long time1 = System.currentTimeMillis();
 
-        Criterion<UjoOrderItem> crn1 = Criterion.newInstance(UjoOrderItem.deleted, false);
-        Criterion<UjoOrderItem> crn2 = Criterion.newInstance(UjoOrderItem._orderDeleted, false);
+        Criterion<UjoOrderItem> crn1 = Criterion.where(UjoOrderItem.deleted, false);
+        Criterion<UjoOrderItem> crn2 = Criterion.where(UjoOrderItem._orderDeleted, false);
 
         UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
 
@@ -219,12 +219,12 @@ public class BenchmarkUjo {
 
         UjoIterator<UjoOrder> orders = session.createQuery(UjoOrder.class).iterate();
         for (UjoOrder order : orders) {
-            Criterion<UjoOrderItem> itemCrn = Criterion.newInstance(UjoOrderItem.order, order);
+            Criterion<UjoOrderItem> itemCrn = Criterion.where(UjoOrderItem.order, order);
             session.delete(itemCrn);
             session.delete(order);
         }
 
-        Criterion<UjoUser> userCrn = Criterion.newInstanceTrue(UjoUser.id);
+        Criterion<UjoUser> userCrn = Criterion.where(UjoUser.id);
         session.delete(userCrn);
 
         session.commit();
@@ -233,7 +233,6 @@ public class BenchmarkUjo {
     }
 
     /** Close session */
-    @SuppressWarnings("unchecked")
     public void useClose() {
         session.close();
     }
