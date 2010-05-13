@@ -71,7 +71,7 @@ public class SampleOfInheritance {
         Session session = handler.getSession();
         Query<Customer> customers = session.createQuery(crit);
 
-        for (IUser user : customers.iterate()) {
+        for (IUser user : customers) {
             System.out.println("User: " + user);
         }
     }

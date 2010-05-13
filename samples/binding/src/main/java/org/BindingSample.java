@@ -56,7 +56,8 @@ public class BindingSample {
     }
 
     /** Load data to a GUI panel */
-    public void initForm(Person person) {
+    @SuppressWarnings("unchecked")
+	public void initForm(Person person) {
         for (UjoProperty p : binding.keySet()) {
             UIComponent component = binding.get(p);
             component.setValue(p.getValue(person));
@@ -64,7 +65,8 @@ public class BindingSample {
     }
 
     /** Load data from GUI panel to the Person instance */
-    public void loadInputValues(Ujo person) {
+    @SuppressWarnings("unchecked")
+	public void loadInputValues(Ujo person) {
         for (UjoProperty p : binding.keySet()) {
             UIComponent component = binding.get(p);
             p.setValue(person, component.getValue());
@@ -90,7 +92,8 @@ public class BindingSample {
     }
 
     /** Type safe <build>component binding</build> */
-    public <T> UIComponent<T> component(UjoProperty<?, T> property) {
+    @SuppressWarnings("unchecked")
+	public <T> UIComponent<T> component(UjoProperty<?, T> property) {
         return binding.get(property);
     }
 }
