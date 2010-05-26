@@ -17,6 +17,7 @@
 package org.ujoframework.orm_tutorial.sample;
 
 import java.util.Date;
+import java.util.List;
 import java.util.logging.*;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
@@ -24,6 +25,7 @@ import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.*;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.*;
+import org.ujoframework.orm.ao.CachePolicy;
 import org.ujoframework.orm.ao.CheckReport;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.utility.OrmTools;
@@ -55,6 +57,7 @@ public class SampleORM {
             sample.useSelectItems_2();
             sample.useSelectItems_3();
             sample.useSelectItems_4();
+            sample.useSelectItems_5();
             sample.useReloading();
             sample.useLimitAndOffset();
             sample.useSelectCount();
@@ -88,12 +91,14 @@ public class SampleORM {
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
         handler = new OrmHandler();
 
+        // There are prefered default properties for a production environment:
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.SEQUENCE_CACHE, 1);
             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
+            params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
             handler.config(params);
         }
 
@@ -179,6 +184,9 @@ public class SampleORM {
             OrmTools.loadLazyValues(item, 2);
             System.out.println(item.get( Item.order.add(Order.created) ) + " " + item);
         }
+        // Another way to avoid the lazy loading by a bulk property loading:
+        // List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
+        // System.out.println("itemList: " + itemList);
     }
 
     /** Use a 'native query' where the query is created
@@ -239,6 +247,16 @@ public class SampleORM {
     public void useSelectItems_4() {
         UjoProperty<Item,Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
         Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
+        Query<Item> items = session.createQuery(crit);
+
+        for (Item item : items) {
+            System.out.println("Item: " + item);
+        }
+    }
+
+    /** Select using operator IN */
+    public void useSelectItems_5() {
+        Criterion<Item> crit = Criterion.whereIn(Item.id, 1L,2L,3L,4L,5L);
         Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
