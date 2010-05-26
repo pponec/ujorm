@@ -55,7 +55,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             this.query = query;
             this.statement = query.getStatement();
             this.rs = statement.executeQuery();
-            this.view = query.getTable().isSelectModel();
+            this.view = query.getTableModel().isSelectModel();
             this.typeService = query.getSession().getParameters().getTypeService();
         } catch (SQLException e) {
             close();

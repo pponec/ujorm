@@ -588,6 +588,8 @@ final public class MetaDatabase extends AbstractMetaModel {
     /** Create connection with auto-commit false. */
     public Connection createConnection() throws Exception {
         final Connection result = dialect.createConnection(this);
+        result.setAutoCommit(false);
+        
         return result;
     }
 
@@ -604,7 +606,6 @@ final public class MetaDatabase extends AbstractMetaModel {
             result = DriverManager.getConnection(JDBC_URL.of(this), USER.of(this), PASSWORD.of(this));
         }
 
-        result.setAutoCommit(false);
         return result;
     }
 

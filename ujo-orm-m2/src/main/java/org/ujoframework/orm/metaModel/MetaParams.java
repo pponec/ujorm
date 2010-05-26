@@ -18,9 +18,10 @@ package org.ujoframework.orm.metaModel;
 
 import java.io.File;
 import java.util.logging.Logger;
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.core.annot.Transient;
 import org.ujoframework.extensions.Property;
-import org.ujoframework.extensions.ValueTextable;
 import org.ujoframework.orm.AbstractMetaModel;
 import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.ao.CachePolicy;
@@ -37,10 +38,8 @@ final public class MetaParams extends AbstractMetaModel {
     private static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
     
 
-    /** Enable / disable a session cache for the business objects. */
-    public static final Property<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.MANY_TO_ONE);
-    /** The parameters enables the the cache implementation by WeakHashMap. The false value use a HashMap implementation. Default value is TRUE. */
-    public static final Property<MetaParams,Boolean> CACHE_WEAK_MAP = newProperty("cacheWeakMap", true);
+    /** Session cache policy. */
+    public static final Property<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.PROTECTED_CACHE);
     /** Special prameter for an automatically assembled table alias prefix. */
     public static final Property<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "");
     /** Special prameter for an automatically assembled table alias prefix. */
@@ -58,9 +57,9 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Property<MetaParams,Class> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model. */
     public static final Property<MetaParams,CheckReport> CHECK_KEYWORDS = newProperty("checkKeywords", CheckReport.EXCEPTION);
-    /** An application context for initializaton of the customer componets of the meta-model.
-     * @see org.ujoframework.extensions.ValueTextable ValueTextable */
-    public static final Property<MetaParams,ValueTextable> APPL_CONTEXT = newProperty("applContext", ValueTextable.class);
+    /** An application context for initializaton of the customer componets of the meta-model. */
+    @Transient
+    public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
     /** The property initialization */
     static{init(CLASS, true);}
 
@@ -78,14 +77,7 @@ final public class MetaParams extends AbstractMetaModel {
                 LOGGER.warning("The smallest possible value of property '"+property+"' is 1, not " + val);
             }
         }
-
         super.writeValue(property, value);
-    }
-
-    /** Is the cache enabled? */
-    public boolean isCacheEnabled() {
-        final boolean result = MetaParams.CACHE_POLICY.of(this)!=CachePolicy.NONE;
-        return result;
     }
 
     /** Returns a type service instance */
@@ -104,6 +96,12 @@ final public class MetaParams extends AbstractMetaModel {
     @SuppressWarnings("unchecked")
     public <UJO extends MetaParams, VALUE> MetaParams set(UjoProperty<UJO, VALUE> property, VALUE value) {
         property.setValue((UJO) this,value);
+        return this;
+    }
+
+    /** Set application context. */
+    public MetaParams setApplContext(Object applContext) {
+        APPL_CONTEXT.setValue(this, applContext);
         return this;
     }
 

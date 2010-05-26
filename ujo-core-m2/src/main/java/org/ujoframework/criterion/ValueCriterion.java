@@ -71,6 +71,10 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
                  makeCharSequenceTest(property);
                  makeCharSequenceTest(value);
                  break;
+            case IN:
+            case NOT_IN:
+                 makeArrayTest(value);
+                 break;
         }
 
         this.property = property;
@@ -159,6 +163,15 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
                          throw new IllegalStateException("State:" + operator);
                 }
             }
+            case NOT_IN:
+                 caseInsensitve = false; // match result
+            case IN:
+                for(Object o : (Object[]) value2) {
+                    if (property.equals(ujo, o)) {
+                        return caseInsensitve;
+                    }
+                }
+                return !caseInsensitve;
         }
         
         Comparable val2 = (Comparable) value2;
@@ -177,8 +190,8 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
         throw new IllegalArgumentException("Illegal operator: " + operator);
     }
 
-    /** Test a value is instance of CharSequence or a type UjoProperty is type of CharSequence.
-     * If property is not valid than throw Exception.
+    /** Test a value is an instance of CharSequence or a type UjoProperty is type of CharSequence.
+     * If parameter is not valid than method throws Exception.
      */
     protected void makeCharSequenceTest(Object value) throws IllegalArgumentException {
         if (value instanceof CharSequence
@@ -191,6 +204,17 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             throw new IllegalArgumentException(msg);
         }
     }
+
+    /** Test a value is an instance of Iterable.
+     * If parameter is not valid than method throws Exception.
+     */
+    protected void makeArrayTest(Object value) throws IllegalArgumentException {
+        if (!(value instanceof Object[])) {
+            final String msg = "Value must be an Array type only";
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
 
     /** Compare two object */
     @SuppressWarnings("unchecked")

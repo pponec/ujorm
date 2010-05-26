@@ -33,6 +33,10 @@ public enum Operator implements AbstractOperator {
     LT,
     /** Less or equals the value */
     LE,
+    /** Operator to compare a property to collection */
+    IN,
+    /** Negation operator to compare a property to collection */
+    NOT_IN,
     /** Regular expression */
     REGEXP,
     /** Negation of the regular expression */
