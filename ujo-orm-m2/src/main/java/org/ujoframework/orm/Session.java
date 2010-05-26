@@ -41,6 +41,7 @@ import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.BinaryCriterion;
 import org.ujoframework.criterion.ValueCriterion;
+import org.ujoframework.orm.ao.CachePolicy;
 import org.ujoframework.orm.metaModel.MetaProcedure;
 
 /**
@@ -69,14 +70,14 @@ public class Session {
     private Map<CacheKey, OrmUjo> cache;
     /** The rollback is allowed only */
     private boolean rollbackOnly = false;
+    /** Closed session */
+    private boolean closed = false;
 
     /** The default constructor */
     Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
-        this.cache = MetaParams.CACHE_WEAK_MAP.of(params)
-                ? new WeakHashMap<CacheKey, OrmUjo>()
-                : new HashMap<CacheKey, OrmUjo>();
+        clearCache(MetaParams.CACHE_POLICY.of(params));
     }
 
     /** Returns a handler */
@@ -136,7 +137,8 @@ public class Session {
     }
 
     public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
-        return new Query<UJO>(aClass, criterion, this);
+        MetaTable metaTable = handler.findTableModel(aClass);
+        return new Query<UJO>(metaTable, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
@@ -556,16 +558,16 @@ public class Session {
         , final Object id
         , final boolean mandatory
         ) throws NoSuchElementException {
+        assertOpenSession();
         MetaColumn column = (MetaColumn) handler.findColumnModel(relatedProperty);
         List<MetaColumn> columns = column.getForeignColumns();
         if (columns.size() != 1) {
-            throw new UnsupportedOperationException("There is supported only a one-column foreign key now: " + column);
+            throw new UnsupportedOperationException("There is supported only a one-column foreign key: " + column);
         }
 
         // FIND CACHE:
-        boolean cache = params.isCacheEnabled();
         MetaTable tableModel = null;
-        if (cache) {
+        if (cache!=null) {
             tableModel = MetaColumn.TABLE.of(columns.get(0));
             OrmUjo r = findCache(tableModel.getType(), id);
             if (r != null) {
@@ -573,19 +575,14 @@ public class Session {
             }
         }
 
-        // SELECT DB
-        Criterion crn = Criterion.where(columns.get(0).getProperty(), id);
-        Query query = createQuery(crn);
-        UjoIterator iterator = UjoIterator.getInstance(query);
-
-        final UJO result = (mandatory || iterator.hasNext())
-                ? (UJO) iterator.next()
-                : null;
-        if (iterator.hasNext()) {
-            throw new RuntimeException("Ambiguous key " + id);
+        // SELECT DB row:
+        Criterion<UJO> crn = Criterion.where(columns.get(0).getProperty(), id);
+        UJO result = createQuery(crn).uniqueResult();
+        if (mandatory && result==null) {
+            throw new RuntimeException("Deleted object for key " + id);
         }
 
-        if (cache) {
+        if (cache!=null) {
             addCache(result, MetaTable.PK.of(tableModel));
         }
         return result;
@@ -597,6 +594,7 @@ public class Session {
     @SuppressWarnings("unchecked")
     public void close() throws IllegalStateException {
 
+        closed = true;
         cache = null;
         Throwable exception = null;
         MetaDatabase database = null;
@@ -627,12 +625,12 @@ public class Session {
 
     /** Is the session closed? */
     public boolean isClosed() {
-        return cache == null;
+        return closed;
     }
 
     /** Assert the current session os open. */
     private final void assertOpenSession() throws IllegalStateException {
-        if (cache == null) {
+        if (closed) {
             throw new IllegalStateException("The session is closed ("+hashCode()+")");
         }
     }
@@ -670,9 +668,28 @@ public class Session {
     }
 
     /** Clear the cache. */
-    public void cacheClear() {
-        new HashMap().clear();
-        cache.clear();
+    public void clearCache() {
+        if (cache!=null) {
+           cache.clear();
+        }
+    }
+
+    /** Clear cache and change its policy. */
+    public void clearCache(final CachePolicy policy) {
+        assertOpenSession();
+        switch (policy) {
+            case PROTECTED_CACHE:
+                cache = new WeakHashMap<CacheKey, OrmUjo>();
+                break;
+            case SOLID_CACHE:
+                cache = new HashMap<CacheKey, OrmUjo>();
+                break;
+            case NO_CACHE:
+                cache = null;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported cache policy: " + policy);
+        }
     }
 
     /** Returns parameters */

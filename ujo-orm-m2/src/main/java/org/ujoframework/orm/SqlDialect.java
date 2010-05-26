@@ -66,10 +66,10 @@ abstract public class SqlDialect {
         this.ormHandler = ormHandler;
     }
 
-    /** Returns a default JDBC Driver */
+    /** Returns a default JDBC URL */
     abstract public String getJdbcUrl();
 
-    /** Returns a JDBC Driver */
+    /** Returns a JDBC driver class name. */
     abstract public String getJdbcDriver();
 
     /** Create a new database connection */
@@ -381,6 +381,10 @@ abstract public class SqlDialect {
             case ENDS:
             case CONTAINS:
                 return "{0} LIKE {1}";
+            case IN:
+                return "{0} IN ({1})";
+            case NOT_IN:
+                return "NOT {0} IN ({1})";
             case X_FIXED:
                 return crit.evaluate(null)
                     ? "1=1" // "true"
@@ -486,8 +490,14 @@ abstract public class SqlDialect {
         } else if (column.isForeignKey()) {
            printForeignKey(crit, column, template, out);
            return crit;
-        } else if (right instanceof List) {
-            throw new UnsupportedOperationException("List is not supported yet: " + operator);
+        } else if (right instanceof Object[]) {
+            StringBuilder sb = new StringBuilder(64);
+            for (Object o : (Object[]) right) {
+                sb.append(sb.length()>0 ? ",?" : "?");
+            }
+            String f = MessageFormat.format(template, column.getAliasName(), sb.toString());
+            out.append(f);
+            return crit;
         } else {
             String f = MessageFormat.format(template, column.getAliasName(), "?");
             out.append(f);

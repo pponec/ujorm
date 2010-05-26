@@ -23,10 +23,12 @@ package org.ujoframework.orm.ao;
  */
 public enum CachePolicy {
 
-    /** No chage is inabled */
-    NONE,
-    /** CachePolicy is onable on relation many-to-one only. */
-    MANY_TO_ONE,
+    /** Overload protection cache based on WeakHasMap for relations many-to-one. It is the default cache. */
+    PROTECTED_CACHE,
+    /** Solid change based on HashMap for relations many-to-one only. */
+    SOLID_CACHE,
+    /** No cache is enabled */
+    NO_CACHE,
     ;
 
 }

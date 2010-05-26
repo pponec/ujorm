@@ -16,11 +16,12 @@
    
 package org.ujoframework.criterion;
 
+import java.util.Collection;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * An abstract criterion provides a basic interface and static factory methods. You can use it:
+ * An abstract immutable criterion provides a basic interface and static factory methods. You can use it:
  * <ul>
  *    <li>like a generic UJO object validator (2)</li>
  *    <li>to create a query on the UJO list (1)</li>
@@ -113,7 +114,6 @@ public abstract class Criterion<UJO extends Ujo> {
      * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
      * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
-     * <li>THE SAME property - the value will be assigned using the property later (TODO in future)</li>
      * </ul>
      * @return A new criterion
      */
@@ -133,7 +133,6 @@ public abstract class Criterion<UJO extends Ujo> {
      * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
      * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
-     * <li>THE SAME property - the value will be assigned using the property later (TODO in future)</li>
      * </ul>
      * @return A new criterion
      */
@@ -152,9 +151,8 @@ public abstract class Criterion<UJO extends Ujo> {
      * <li>TYPE - parameter value</li>
      * <li>List&lt;TYPE&gt; - list of values</li>
      * <li>UjoProperty - reference to a related entity</li>
-     * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
-     * @return A the new Criterion
+     * @return A the new immutable Criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> where
         ( UjoProperty<UJO,TYPE> property
@@ -164,10 +162,75 @@ public abstract class Criterion<UJO extends Ujo> {
     }
 
     /**
+     * Create new Criterion for operator IN to compare value to a list of constants
+     * @param property UjoProperty
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>UjoProperty - reference to a related entity</li>
+     * </ul>
+     * @return A the new immutable Criterion
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereIn
+        ( UjoProperty<UJO,TYPE> property
+        , Collection<TYPE> value
+        ) {
+        return new ValueCriterion<UJO>(property, Operator.IN, value.toArray());
+    }
+
+    /**
+     * Create new Criterion for operator NOT IN to compare value to a list of constants
+     * @param property UjoProperty
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>UjoProperty - reference to a related entity</li>
+     * </ul>
+     * @return A the new immutable Criterion
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotIn
+        ( UjoProperty<UJO,TYPE> property
+        , Collection<TYPE> value
+        ) {
+        return new ValueCriterion<UJO>(property, Operator.NOT_IN, value.toArray());
+    }
+
+    /**
+     * Create new Criterion for operator IN to compare value to a list of constants
+     * @param property UjoProperty
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>UjoProperty - reference to a related entity</li>
+     * </ul>
+     * @return A the new immutable Criterion
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereIn
+        ( UjoProperty<UJO,TYPE> property
+        , TYPE... value
+        ) {
+        return new ValueCriterion<UJO>(property, Operator.IN, value);
+    }
+
+    /**
+     * Create new Criterion for operator NOT IN to compare value to a list of constants
+     * @param property UjoProperty
+     * <ul>
+     * <li>TYPE - parameter value</li>
+     * <li>UjoProperty - reference to a related entity</li>
+     * </ul>
+     * @return A the new immutable Criterion
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotIn
+        ( UjoProperty<UJO,TYPE> property
+        , TYPE... value
+        ) {
+        return new ValueCriterion<UJO>(property, Operator.NOT_IN, value);
+    }
+
+
+    /**
      * New equals instance
      * @param property UjoProperty
      * @param value Value or UjoProperty can be type a direct of indirect (for a relation) property
-     * @return A the new Criterion
+     * @return A the new immutable Criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> where
         ( UjoProperty<UJO,TYPE> property
@@ -221,7 +284,6 @@ public abstract class Criterion<UJO extends Ujo> {
      * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
      * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
-     * <li>THE SAME property - the value will be assigned using the property later (TODO in future)</li>
      * </ul>
      * @return A new criterion
      * @deprecated See the {@link Criterion#where(org.ujoframework.UjoProperty, org.ujoframework.criterion.Operator, java.lang.Object) where(...) } method.
@@ -243,7 +305,6 @@ public abstract class Criterion<UJO extends Ujo> {
      * <li>VALUE - the parameter value</li>
      * <li>UjoProperty - reference to a related entity</li>
      * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
-     * <li>THE SAME property - the value will be assigned using the property later (TODO in future)</li>
      * </ul>
      * @return A new criterion
      * @deprecated See the {@link Criterion#where(org.ujoframework.UjoProperty, org.ujoframework.criterion.Operator, java.lang.Object) where(...) } method.
@@ -264,9 +325,8 @@ public abstract class Criterion<UJO extends Ujo> {
      * <li>TYPE - parameter value</li>
      * <li>List&lt;TYPE&gt; - list of values</li>
      * <li>UjoProperty - reference to a related entity</li>
-     * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
-     * @return A the new Criterion
+     * @return A the new immutable Criterion
      * @deprecated See the {@link Criterion#where(org.ujoframework.UjoProperty, org.ujoframework.criterion.Operator, java.lang.Object) where(...) } method.
      */
     @Deprecated
@@ -281,7 +341,7 @@ public abstract class Criterion<UJO extends Ujo> {
      * New equals instance
      * @param property UjoProperty
      * @param value Value or UjoProperty can be type a direct of indirect (for a relation) property
-     * @return A the new Criterion
+     * @return A the new immutable Criterion
      * @deprecated See the {@link Criterion#where(org.ujoframework.UjoProperty, org.ujoframework.criterion.Operator, java.lang.Object) where(...) } method.
      */
     @Deprecated

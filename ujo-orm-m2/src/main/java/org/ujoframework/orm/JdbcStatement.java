@@ -160,7 +160,6 @@ public class JdbcStatement {
         , final OrmUjo bo
         ) throws SQLException {
 
-        ++parameterPointer;
 
         UjoProperty property = column.getProperty();
 
@@ -172,7 +171,13 @@ public class JdbcStatement {
         }
 
         try {
-            typeService.setValue(column, ps, value, parameterPointer);
+            if (value instanceof Object[]) for (Object v : (Object[]) value) {
+                ++parameterPointer;
+                typeService.setValue(column, ps, v, parameterPointer);
+            } else {
+                ++parameterPointer;
+                typeService.setValue(column, ps, value, parameterPointer);
+            }
         } catch (Throwable e) {
             String textValue = bo!=null 
                 ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)

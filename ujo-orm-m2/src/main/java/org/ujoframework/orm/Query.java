@@ -38,7 +38,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     final private MetaTable table;
     final private List<MetaColumn> columns;
-    final private Session session;
+    private Session session;
     private Criterion<UJO> criterion;
     private CriterionDecoder decoder;
     private String statementInfo;
@@ -56,24 +56,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /**
      * Create new ORM query.
-     * @param tableClass Table can be null if the criterion parameter is not null and contains a table Property.
-     * @param criterion If criterion is null, then a TRUE constant criterion is used.
-     * @param session Session
-     */
-    public Query(Class<UJO> tableClass, Criterion<UJO> criterion, Session session) {
-        this( session.getHandler().findTableModel(tableClass)
-            , criterion
-            , session
-            );
-    }
-
-    /**
-     * Create new ORM query.
      * @param table Table model
      * @param criterion If criterion is null, then a TRUE constant criterion is used.
      * @param session Session
      */
-    public Query(MetaTable table, Criterion<UJO> criterion, Session session) {
+    public Query(final MetaTable table, final Criterion<UJO> criterion, final Session session) {
         this.table = table;
         this.columns = MetaTable.COLUMNS.getList(table);
         this.criterion = criterion;
@@ -82,6 +69,23 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         orderByMany(); // set an undefined ordering
     }
 
+    /**
+     * Create new ORM query without a session.
+     * An open session must be {@see #setSession(org.ujoframework.orm.Session) assigned} before executing a database request.
+     * @param table Table model
+     * @param criterion If criterion is null, then a TRUE constant criterion is used.
+     * @see #setSession(org.ujoframework.orm.Session)
+     */
+    public Query(final MetaTable table, final Criterion<UJO> criterion) {
+        this(table, criterion, null);
+    }
+
+
+    /** An open session must be assigned before executing a database request. */
+    public Query<UJO> setSession(Session session) {
+        this.session = session;
+        return this;
+    }
 
     /** Returns a database row count along a current limit and offset attribues.
      * @see #getCount() 
@@ -174,7 +178,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #uniqueResult()
      * @see #exists()
      */
-    //@Override
+    @Override
     public UjoIterator<UJO> iterator() {
         final UjoIterator<UJO> result = UjoIterator.getInstance(this);
         return result;
@@ -232,11 +236,6 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         iterator.close();
         limit = $limit;
         return result;
-    }
-
-    /** Returns table model */
-    public MetaTable getTable() {
-        return table;
     }
 
     /** Get the order item list. The method returns a not null result always. */
@@ -388,8 +387,6 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         this.fetchSize = fetchSize;
         return this;
     }
-
-
 
     /** Create a PreparedStatement include assigned parameter values */
     public PreparedStatement getStatement() {
