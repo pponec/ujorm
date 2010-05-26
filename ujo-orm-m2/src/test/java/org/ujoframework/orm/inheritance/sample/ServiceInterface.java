@@ -9,7 +9,7 @@ import org.ujoframework.orm.inheritance.sample.bo.User;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class ServiceInterface {
 

@@ -29,7 +29,7 @@ import org.ujoframework.orm.bo.XOrder;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class SerializatonTest extends TestCase {
     
