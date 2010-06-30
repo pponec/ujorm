@@ -169,7 +169,7 @@ final class UjoHandlerXML extends DefaultHandler {
                     Ujo ujoParent = $parentObj.ujo;
 
                     if ($property instanceof ListUjoProperty) {
-                        List list = (List) ujoParent.readValue($property);
+                        List list = (List) $property.of(ujoParent);
                         if (list==null) {
                             if ($listType==null 
                             ||  $listType.isInterface()) {

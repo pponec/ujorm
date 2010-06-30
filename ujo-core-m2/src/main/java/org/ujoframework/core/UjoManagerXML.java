@@ -159,7 +159,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         
         // Write attributes:
         for (UjoProperty property : ujo.readProperties()) {
-            Object value = ujo.readValue(property);  // it is always a direct property from readProperties()
+            Object value = property.of(ujo);
             
             if (value!=null
             && !Ujo.class.isAssignableFrom(property.getType())
@@ -187,7 +187,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         UjoProperty bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
         for (UjoProperty property : properties) {
-            Object value = ujo.readValue(property); // Only direct property from readProperties()
+            Object value = property.of(ujo);
             
             if (value==null
             || !ujo.readAuthorization(actionExport , property, value)

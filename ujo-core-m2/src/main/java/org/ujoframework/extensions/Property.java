@@ -277,7 +277,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @Override
     public boolean equals(final UJO ujo, final VALUE value) {
-        Object myValue = ujo.readValue(this);
+        Object myValue = of(ujo);
         if (myValue==value) { return true; }
         
         final boolean result
