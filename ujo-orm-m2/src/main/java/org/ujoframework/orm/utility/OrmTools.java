@@ -24,12 +24,21 @@ import java.io.Reader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.criterion.Criterion;
+import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.orm.ExtendedOrmUjo;
+import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.Session;
+import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * Many useful methods for 
@@ -252,6 +261,67 @@ final public class OrmTools {
      */
     public boolean reload(final OrmUjo ujo, final Session session) {
         return session.reload(ujo);
+    }
+
+    /** Load lazy value for all items and required property by the one SQL statement.
+     * @param ujos The parameter can be the
+     *        {@link org.ujoframework.orm.Query Query},
+     *        {@link org.ujoframework.core.UjoIterator UjoIterator} and some
+     *         List for example.
+     * @return Returns a list of items or the parameter ujos.
+     *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, UjoProperty<UJO,? extends OrmUjo> property) {
+        List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List)ujos).size() : 128);
+        Map<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
+        while (!property.isDirect()) { 
+            property = ((PathProperty)property).getProperty(0);
+        }
+        for (UJO u : ujos) {
+            result.add(u);
+            ForeignKey fk = u.readFK(property);
+            if (fk!=null) {
+                map.put(fk.getValue(), null);
+            }
+        }
+        if (result.isEmpty()) {
+            return result;
+        }
+        Session session = result.get(0).readSession();
+        MetaColumn column = (MetaColumn) session.getHandler().findColumnModel(property);
+        MetaColumn pkColumn = column.getForeignColumns().get(0);
+        Criterion crn = Criterion.whereIn(pkColumn.getProperty(), map.keySet());
+        Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType(), crn);
+
+        for(OrmUjo u : query) {
+            map.put(pkColumn.getValue(u), u);
+        }
+        for(UJO u : result) {
+            ForeignKey fk = u.readFK(property);
+            if (fk!=null) {
+                final Object pk = fk.getValue();
+                u.writeValue(property, map.get(pk));
+            }
+        }
+        return result;
+    }
+
+    /** Load lazy value for all items and all relation properties by the rule: a one SQL statement per relation property.
+     * @param query
+     * @return Returns a list of items or the parameter ujos.
+     *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Query<UJO> query) {
+        List<UJO> result = query.iterator().toList();
+        List<MetaColumn> columns = MetaTable.COLUMNS.getList(query.getTableModel());
+        for(MetaColumn col : columns) {
+            if (col.isForeignKey()) {
+                loadLazyValuesAsBatch(result, col.getProperty());
+            }
+        }
+        return result;
     }
 
 }
