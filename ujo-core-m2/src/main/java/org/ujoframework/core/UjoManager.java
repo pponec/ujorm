@@ -679,11 +679,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      */
     @SuppressWarnings("unchecked")
     public static Object getValue(final Ujo ujo, final UjoProperty prop) {
-        final Object result = prop.isDirect()
-        ? ujo.readValue(prop)
-        : prop.getValue(ujo)
-        ;
-        return result;
+        return prop.of(ujo);
     }    
 
     
@@ -759,7 +755,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         UjoPropertyList props = content.readProperties();
         ArrayList<UjoPropertyRow> result = new ArrayList<UjoPropertyRow>(props.size());
         for (UjoProperty prop : props) {
-            final Object  value   = content.readValue(prop);
+            final Object  value   = prop.of(content);
             final boolean enabled = content.readAuthorization(action, prop, value);
             if (enabled) {
                 final UjoPropertyRow ujoContentRow = new UjoPropertyRow(content, prop);

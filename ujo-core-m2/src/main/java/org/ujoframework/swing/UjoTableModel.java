@@ -155,7 +155,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     
     /** Returns a value from the cell. */
     public Object getValueAt(int rowIndex, UjoProperty column) {
-        return rows.get(rowIndex).readValue(column);
+        return column.of(rows.get(rowIndex));
     }
     
     /** Set a value to a cell of table model. */

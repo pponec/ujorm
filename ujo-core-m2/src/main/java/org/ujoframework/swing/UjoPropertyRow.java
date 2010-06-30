@@ -113,7 +113,7 @@ public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
     /** Property name + value */
     @Override
     public String toString() {
-       final String result = property.getName() + ":" + content.readValue(property);
+       final String result = property.getName() + ":" + property.of(content);
        return result;
     }
 
