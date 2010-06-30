@@ -5,7 +5,6 @@
  *          If you need a commercial license, please contact support@ujorm.com.
  * Support: support@ujorm.com - for both technical or business information
  */
-
 package org.ujoframework.gxt.client.cquery;
 
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
@@ -28,6 +27,7 @@ public class CQuery<UJO extends Cujo> implements Serializable {
     //
     transient private Class type;
     transient private ColumnModel columnModel;
+    private String autoExpandColumn;
     private String typeName;
     transient private List<CujoProperty<UJO, ?>> orderBy = new ArrayList<CujoProperty<UJO, ?>>(1);
     private List<String> orderByName = new ArrayList<String>(1);
@@ -224,6 +224,14 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         columnOrderSize = 0;
     }
 
+    public String getAutoExpandColumn() {
+        return autoExpandColumn;
+    }
+
+    public void setAutoExpandColumn(String autoExpandColumn) {
+        this.autoExpandColumn = autoExpandColumn;
+    }
+
     public void addColumOrder(CujoProperty cujo) {
 
         int actualPIndex = getColumnModel().findColumnIndex(cujo.getName());
@@ -263,8 +271,5 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         }
 
         columnOrderSize++;
-
-
-
     }
 }

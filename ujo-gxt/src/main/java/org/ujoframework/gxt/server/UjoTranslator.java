@@ -5,7 +5,6 @@
  *          If you need a commercial license, please contact support@ujorm.com.
  * Support: support@ujorm.com - for both technical or business information
  */
-
 package org.ujoframework.gxt.server;
 
 import org.ujoframework.gxt.client.CEnum;
@@ -18,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
@@ -46,6 +46,7 @@ public class UjoTranslator<CUJO extends Cujo> {
         this(clientObject.readProperties(),
                 UjoManager.getInstance().readProperties(serverClassConfig.getServerClass(clientObject.getClass().getName())),
                 relations,
+                null,
                 serverClassConfig);
     }
 
@@ -53,21 +54,39 @@ public class UjoTranslator<CUJO extends Cujo> {
         this(clientType.newInstance().readProperties(),
                 UjoManager.getInstance().readProperties(serverType),
                 relations,
+                null,
                 serverClassConfig);
     }
 
-    @SuppressWarnings("unchecked")
+    public UjoTranslator(Class<CUJO> clientType, Class<Ujo> serverType, int relations, IServerClassConfig serverClassConfig) throws Exception {
+        this(clientType.newInstance().readProperties(),
+                UjoManager.getInstance().readProperties(serverType),
+                relations,
+                null,
+                serverClassConfig);
+    }
+
     public UjoTranslator(CujoPropertyList cujoPropertyList,
             UjoPropertyList ujoPropertyList,
-            IServerClassConfig serverClassConfig
-            ) {
-        this(cujoPropertyList, ujoPropertyList, true, serverClassConfig);
+            boolean relations,
+            Set<UjoProperty> myPropertySet,
+            IServerClassConfig serverClassConfig)
+            throws NoSuchElementException {
+        this(cujoPropertyList, ujoPropertyList, relations ? 1 : 0, myPropertySet, serverClassConfig);
     }
 
     @SuppressWarnings("unchecked")
     public UjoTranslator(CujoPropertyList cujoPropertyList,
             UjoPropertyList ujoPropertyList,
-            boolean relations,
+            IServerClassConfig serverClassConfig) {
+        this(cujoPropertyList, ujoPropertyList, true, null, serverClassConfig);
+    }
+
+    @SuppressWarnings("unchecked")
+    UjoTranslator(CujoPropertyList cujoPropertyList,
+            UjoPropertyList ujoPropertyList,
+            int relations,
+            Set<UjoProperty> myPropertySet,
             IServerClassConfig serverClassConfig)
             throws NoSuchElementException {
 
@@ -75,38 +94,39 @@ public class UjoTranslator<CUJO extends Cujo> {
         this.properties = new ArrayList<PropContainer>(ujoPropertyList.size());
         this.serverClassConfig = serverClassConfig;
         this.dummySession = Session.newClosedSession(serverClassConfig.getHandler());
-        if (relations) {
+        if (relations > 0) {
             relationMap = new HashMap<UjoProperty, UjoTranslator>();
         }
 
         for (UjoProperty p1 : ujoPropertyList) {
+            if (myPropertySet == null || myPropertySet.contains(p1)) {
+                for (CujoProperty p2 : cujoPropertyList) {
+                    if (p1.getName().equals(p2.getName())) {
+                        boolean pk = isPrimaryKey(p1);
 
-            for (CujoProperty p2 : cujoPropertyList) {
-                if (p1.getName().equals(p2.getName())) {
-                    boolean pk = isPrimaryKey(p1);
-
-                    if (p2.getType().isAssignableFrom(p1.getType())) {
-                        properties.add(new PropContainer(p1, p2, pk));
-                        break;
-                    }
-                    if (isRelations() && p1.isTypeOf(Ujo.class) && Cujo.class.isAssignableFrom(p2.getType())) {
-                        try {
-                            properties.add(new PropContainer(p1, p2, pk));
-                            UjoTranslator ut = new UjoTranslator(p2.getType(), p1.getType(), false, serverClassConfig);
-                            relationMap.put(p1, ut);
-                            break;
-                        } catch (Exception e) {
-                            throw new IllegalStateException(e);
-                        }
-                    }
-                    if (Enum.class.isAssignableFrom(p1.getType())) {
-                        if (p2.isTypeOf(String.class)) {
+                        if (p2.getType().isAssignableFrom(p1.getType())) {
                             properties.add(new PropContainer(p1, p2, pk));
                             break;
                         }
-                        if (p2.isTypeOf(CEnum.class)) {
-                            properties.add(new PropContainer(p1, p2, pk));
-                            break;
+                        if (isRelations() && p1.isTypeOf(Ujo.class) && Cujo.class.isAssignableFrom(p2.getType())) {
+                            try {
+                                properties.add(new PropContainer(p1, p2, pk));
+                                UjoTranslator ut = new UjoTranslator(p2.getType(), p1.getType(), false, serverClassConfig);
+                                relationMap.put(p1, ut);
+                                break;
+                            } catch (Exception e) {
+                                throw new IllegalStateException(e);
+                            }
+                        }
+                        if (Enum.class.isAssignableFrom(p1.getType())) {
+                            if (p2.isTypeOf(String.class)) {
+                                properties.add(new PropContainer(p1, p2, pk));
+                                break;
+                            }
+                            if (p2.isTypeOf(CEnum.class)) {
+                                properties.add(new PropContainer(p1, p2, pk));
+                                break;
+                            }
                         }
                     }
                 }
@@ -200,7 +220,7 @@ public class UjoTranslator<CUJO extends Cujo> {
 
         for (PropContainer pc : properties) {
 
-            final boolean hasSession = result.readSession()!=null;
+            final boolean hasSession = result.readSession() != null;
             if (pc.pk == hasSession) {
                 result.writeSession(pc.pk ? null : dummySession);
             }
@@ -230,7 +250,7 @@ public class UjoTranslator<CUJO extends Cujo> {
             }
             result.writeValue(pc.p1, value);
         }
-        
+
         result.writeSession(null);
         return (T) result;
     }
@@ -273,8 +293,7 @@ public class UjoTranslator<CUJO extends Cujo> {
             CQuery clientQuery,
             Class serverClass,
             boolean relations,
-            IServerClassConfig serverClassConfig
-            ) {
+            IServerClassConfig serverClassConfig) {
         try {
             Class clientType = Class.forName(clientQuery.getTypeName());
             return new UjoTranslator<CUJO>(clientType, (Class<Ujo>) serverClass, relations, serverClassConfig);
@@ -292,6 +311,20 @@ public class UjoTranslator<CUJO extends Cujo> {
             IServerClassConfig serverClassConfig) {
         try {
             return new UjoTranslator<CUJO>(clientClass, (Class<Ujo>) serverClass, relations, serverClassConfig);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <CUJO extends Cujo> UjoTranslator<CUJO> newInstance(
+            String aTargetType,
+            Class<? extends Ujo> sourceType,
+            int relations,
+            IServerClassConfig serverClassConfig) {
+        try {
+            Class targetType = Class.forName(aTargetType);
+            return new UjoTranslator<CUJO>((Class<CUJO>) targetType, (Class<Ujo>) sourceType, relations, serverClassConfig);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
