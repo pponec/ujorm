@@ -80,6 +80,11 @@ public abstract class CCriterion<UJO extends Cujo> implements Serializable {
     /** Initialization after deserialization. */
     abstract public void restore(Class<UJO> ujoType);
 
+    /** Is the class a Binary criterion? */
+    public boolean isBinary() {
+        return false;
+    }
+
     // ------ STATIC FACTORY --------
     /**
      * New criterion instance
@@ -92,7 +97,7 @@ public abstract class CCriterion<UJO extends Cujo> implements Serializable {
      * </ul>
      * @return A new criterion
      */
-    public static <UJO extends Cujo, TYPE> CCriterion<UJO> newInstance(CujoProperty<UJO, TYPE> property, COperator operator, TYPE value) {
+    public static <UJO extends Cujo, TYPE> CCriterion<UJO> where(CujoProperty<UJO, TYPE> property, COperator operator, TYPE value) {
         return new CValueCriterion<UJO>(property, operator, value);
     }
 
@@ -107,7 +112,7 @@ public abstract class CCriterion<UJO extends Cujo> implements Serializable {
      * </ul>
      * @return A new criterion
      */
-    public static <UJO extends Cujo, TYPE> CCriterion<UJO> newInstance(CujoProperty<UJO, TYPE> property, COperator operator, CujoProperty<?, TYPE> value) {
+    public static <UJO extends Cujo, TYPE> CCriterion<UJO> where(CujoProperty<UJO, TYPE> property, COperator operator, CujoProperty<?, TYPE> value) {
         return new CValueCriterion<UJO>(property, operator, value);
     }
 
@@ -122,7 +127,7 @@ public abstract class CCriterion<UJO extends Cujo> implements Serializable {
      * </ul>
      * @return A the new CCriterion
      */
-    public static <UJO extends Cujo, TYPE> CCriterion<UJO> newInstance(CujoProperty<UJO, TYPE> property, TYPE value) {
+    public static <UJO extends Cujo, TYPE> CCriterion<UJO> where(CujoProperty<UJO, TYPE> property, TYPE value) {
         return new CValueCriterion<UJO>(property, null, value);
     }
 
@@ -132,7 +137,7 @@ public abstract class CCriterion<UJO extends Cujo> implements Serializable {
      * @param value Value or CujoProperty can be type a direct of indirect (for a relation) property
      * @return A the new CCriterion
      */
-    public static <UJO extends Cujo, TYPE> CCriterion<UJO> newInstance(CujoProperty<UJO, TYPE> property, CujoProperty<UJO, TYPE> value) {
+    public static <UJO extends Cujo, TYPE> CCriterion<UJO> where(CujoProperty<UJO, TYPE> property, CujoProperty<UJO, TYPE> value) {
         return new CValueCriterion<UJO>(property, null, value);
     }
 
@@ -146,32 +151,18 @@ public abstract class CCriterion<UJO extends Cujo> implements Serializable {
      * <li>THE SAME property - the value will be assigned using the property later</li>
      * </ul>
      */
-    public static <UJO extends Cujo, TYPE> CCriterion<UJO> newInstance(CujoProperty<UJO, TYPE> property) {
+    public static <UJO extends Cujo, TYPE> CCriterion<UJO> where(CujoProperty<UJO, TYPE> property) {
         return new CValueCriterion<UJO>(property, COperator.EQ, property);
     }
 
-    /** This is an constane criterion independed on an entity.
-     * It is recommended not to use this solution in ORM.
-     */
-    @SuppressWarnings("unchecked")
-    public static <UJO extends Cujo> CCriterion<UJO> newInstance(boolean value) {
-        return (CCriterion<UJO>) (value
-            ? CValueCriterion.TRUE
-            : CValueCriterion.FALSE);
-    }
-
     /** This is a constant criterion independed on the property and the ujo entity. A result is the TRUE allways. */
-    public static <UJO extends Cujo> CCriterion<UJO> newInstanceTrue(CujoProperty<UJO, ?> property) {
+    public static <UJO extends Cujo> CCriterion<UJO> constantTrue(CujoProperty<UJO, ?> property) {
         return new CValueCriterion<UJO>(property, COperator.X_FIXED, true);
     }
 
     /** This is a constant criterion independed on the property and the ujo entity. A result is the FALSE allways. */
-    public static <UJO extends Cujo> CCriterion<UJO> newInstanceFalse(CujoProperty<UJO, ?> property) {
+    public static <UJO extends Cujo> CCriterion<UJO> constantFalse(CujoProperty<UJO, ?> property) {
         return new CValueCriterion<UJO>(property, COperator.X_FIXED, false);
     }
 
-    /** Is the class a Binary criterion? */
-    public boolean isBinary() {
-        return false;
-    }
 }
