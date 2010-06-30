@@ -50,17 +50,20 @@ final public class UjoPropertyGetter implements Getter {
      * @return actual value of property
      * @throws org.hibernate.HibernateException
      */
+    @Override
     public final Object get(final Object target) throws HibernateException {
-        return ((Ujo) target).readValue(ujoProperty);
+        return ujoProperty.of((Ujo) target);
     }
 
     /**
      * inspired from BasicPropertyAccessor
      **/
+    @Override
     public Object getForInsert(Object owner, Map mergeMap, SessionImplementor session) throws HibernateException {
         return get(owner);
     }
 
+    @Override
     public Class getReturnType() {
         return ujoProperty.getType();
     }
@@ -68,6 +71,7 @@ final public class UjoPropertyGetter implements Getter {
     /**
      * inspired from BackrefPropertyAccessor
      **/
+    @Override
     public String getMethodName() {
         return ujoProperty.getName();
     }
@@ -75,6 +79,7 @@ final public class UjoPropertyGetter implements Getter {
     /**
      * inspired from BackrefPropertyAccessor
      **/
+    @Override
     public Method getMethod() {
         return null;
     }

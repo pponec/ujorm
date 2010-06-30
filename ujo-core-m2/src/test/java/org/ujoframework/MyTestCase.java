@@ -61,8 +61,8 @@ abstract public class MyTestCase extends TestCase {
         
         for (int i=properties.size()-1; i>=0; i--) {
             UjoProperty property = properties.get(i);
-            Object o1 = expected.readValue(property);
-            Object o2 = actual  .readValue(property);
+            Object o1 = property.of(expected);
+            Object o2 = property.of(actual);
             
             String item = "Property \"" + property.getName() + "\"";
             if (byte[].class.equals(property.getType())) {

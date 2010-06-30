@@ -93,6 +93,7 @@ public abstract class ArrayUjo extends AbstractUjo implements Serializable {
      * @see Property#setValue(Ujo,Object)
      */
 
+    @Override
     public void writeValue(final UjoProperty property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
         data[property.getIndex()] = value;
@@ -107,6 +108,7 @@ public abstract class ArrayUjo extends AbstractUjo implements Serializable {
      *
      * @see Property#getValue(Ujo)
      */    
+    @Override
     public Object readValue(final UjoProperty property) {
         return data[property.getIndex()];
     }
