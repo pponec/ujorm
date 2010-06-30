@@ -21,24 +21,26 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.criterion.BinaryOperator;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.Operator;
+import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.Session;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * Query translator
  * @author Pavel Ponec
  */
 public class QueryTranslator<UJO extends OrmUjo> {
-
+    /** Base type */
     private final Class<? extends UJO> type;
     private final CQuery cquery;
     private final UjoManager manager = UjoManager.getInstance();
-    private final Session session;
+    private final OrmHandler handler;
     private final IServerClassConfig config;
 
     @SuppressWarnings("unchecked")
-    public QueryTranslator(CQuery cquery, Session session, IServerClassConfig config) {
+    public QueryTranslator(CQuery cquery, OrmHandler handler, IServerClassConfig config) {
         if (!cquery.isRestored()) {
             try {
                 cquery.restore(Class.forName(cquery.getTypeName()));
@@ -50,7 +52,7 @@ public class QueryTranslator<UJO extends OrmUjo> {
 
         this.cquery = cquery;
         this.type = (Class<UJO>) config.getServerClass(cquery.getTypeName());
-        this.session = session;
+        this.handler = handler;
         this.config = config;
 
         if (type == null) {
@@ -58,13 +60,22 @@ public class QueryTranslator<UJO extends OrmUjo> {
         }
     }
 
+    /** The query is translated without Session. Assign an open Session before excuting a database query. */
     @SuppressWarnings({"unchecked"})
     public Query<UJO> translate() {
         Criterion cn = getCriterion();
-        Query<UJO> result = session.createQuery(type, cn);
+        MetaTable metaTable = handler.findTableModel(type);
+        Query<UJO> result = new Query(metaTable, cn);
         result.orderBy(orderBy(cquery.getOrderBy()));
         return result;
     }
+
+    public Query<UJO> translate(Session session) {
+        Query<UJO> result = translate();
+        result.setSession(session);
+        return result;
+    }
+
 
     public Criterion getCriterion() {
         return getCriterion(cquery.getCriterion());
@@ -109,7 +120,7 @@ public class QueryTranslator<UJO extends OrmUjo> {
             } else if (c2 instanceof Cujo) {
                 UjoTranslator translator = new UjoTranslator(
                         ((Cujo) c2).readProperties(),
-                        UjoManager.getInstance().readProperties(type),
+                        UjoManager.getInstance().readProperties(p1.getType()),
                         config);
                 p2 = translator.translateToServer((Cujo) c2);
             } else {
@@ -121,8 +132,8 @@ public class QueryTranslator<UJO extends OrmUjo> {
         }
     }
 
-    public static <UJO extends OrmUjo> QueryTranslator<UJO> newInstance(CQuery cquery, Session session, IServerClassConfig config) {
-        return new QueryTranslator<UJO>(cquery, session, config);
+    public static <UJO extends OrmUjo> QueryTranslator<UJO> newInstance(CQuery cquery, OrmHandler handler, IServerClassConfig config) {
+        return new QueryTranslator<UJO>(cquery, handler, config);
     }
 
     /** Convert from Cujo.orderBy to Ujo.orderBy */

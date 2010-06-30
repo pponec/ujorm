@@ -8,10 +8,15 @@
 
 package org.ujoframework.gxt.server;
 
+import com.extjs.gxt.ui.client.data.PagingLoadConfig;
 import java.util.List;
+import org.ujoframework.UjoProperty;
 import org.ujoframework.gxt.client.Cujo;
+import org.ujoframework.gxt.client.cquery.CQuery;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.Query;
+import org.ujoframework.orm.Session;
 
 /**
  * Inicialization the CUJO objects + mapping to BO
@@ -34,5 +39,11 @@ public interface IServerClassConfig {
 
     /** Return all client object type instances */
     public List<Cujo> getClientObjectList() throws IllegalStateException;
+
+    /** Translate client query to the server query. */
+    public Query translate(CQuery cquery);
+
+    /** Translate client query to the server query. */
+    public Query translate(CQuery cquery, UjoProperty orderBy, PagingLoadConfig cfg);
 
 }
