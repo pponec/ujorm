@@ -77,6 +77,7 @@ public abstract class BeanUjo extends AbstractUjo {
      * @see BeanProperty#setValue(Ujo,Object) BeanProperty.setValue(Ujo,Object)
      */
     @SuppressWarnings("unchecked")
+    @Override
     public void writeValue(final UjoProperty property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
         ((ValueAgent) property).writeValue(this, value);

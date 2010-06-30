@@ -70,7 +70,7 @@ final public class MetaPKey extends AbstractMetaModel {
 
             MetaColumn column = COLUMNS.getItem(this, 0);
             UjoProperty property = column.getProperty();
-            if (bo.readValue(property)!=null) {
+            if (property.of(bo)!=null) {
                 return false;
             }
 

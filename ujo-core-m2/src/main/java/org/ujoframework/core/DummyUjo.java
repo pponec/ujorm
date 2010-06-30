@@ -33,12 +33,15 @@ final class DummyUjo implements Ujo {
     public static final Property P1 = Property.newInstance("B", Object.class, -1);
     
     /** A dummy implementation. */
+    @Override
     public void writeValue(UjoProperty property, Object value) {}
 
     /** A dummy implementation. */
+    @Override
     public Object readValue(UjoProperty property) { return null;  }
 
     /** Returns unsorted properties. */
+    @Override
     public UjoPropertyList readProperties() {
         final UjoProperty[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
         return new UjoPropertyListImpl(DummyUjo.class, ps);

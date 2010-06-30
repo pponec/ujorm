@@ -274,8 +274,8 @@ public class UjoManager implements Comparator<UjoProperty> {
         if (u1.getClass().equals(u2.getClass())) {
             for (int i=properties.size()-1; i>=0; i--) {
                 UjoProperty property = properties.get(i);
-                final Object o1 = getValue(u1, property);
-                final Object o2 = getValue(u2, property);
+                final Object o1 = property.of(u1);
+                final Object o2 = property.of(u2);
                 if (! equals(o1, o2)) {
                     return false;
                 }
@@ -678,10 +678,10 @@ public class UjoManager implements Comparator<UjoProperty> {
      * If a not getLastProperty value is null, then is throwded a NullPointe exception.
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public static Object getValue(final Ujo ujo, final UjoProperty prop) {
         return prop.of(ujo);
-    }    
-
+    } 
     
     /** Get a value from an Ujo object by a chain of properties. 
      * If a not getLastProperty value is null, then is throwded a NullPointe exception.

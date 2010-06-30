@@ -35,6 +35,7 @@
     <modules>
         <module>ujo-core-m2</module>
         <module>ujo-orm-m2</module>
+        <module>ujo-spring-m2</module>
 
         <module>samples/parameters</module>
         <module>samples/table2xml</module>
@@ -45,8 +46,6 @@
         <module>benchmark/hibernate</module>
         <module>benchmark/hibernate-ujo</module>
         <module>benchmark/ujo-orm</module>
-
-
     </modules>
 
 

@@ -25,8 +25,8 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import org.ujoframework.UjoProperty;
@@ -38,6 +38,7 @@ import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
@@ -85,7 +86,7 @@ final public class OrmTools {
             try {
                 inputStream.close();
             } catch (IOException e) {
-            throw new IllegalStateException("Reding error", e);
+                throw new IllegalStateException("Reding error", e);
             }
         }
     }
@@ -122,10 +123,7 @@ final public class OrmTools {
         }
     }
 
-
     // --------------
-
-
     /**
      * Create a new Clob.
      * @param text The null value is supported.
@@ -237,9 +235,8 @@ final public class OrmTools {
     public static <UJO extends OrmUjo> List<UJO> loadLazyValues(final Iterable<UJO> ujos, int depth) {
 
         List<UJO> result = ujos instanceof List
-            ? null
-            : new ArrayList<UJO>(64)
-            ;
+                ? null
+                : new ArrayList<UJO>(64);
         for (UJO ujo : ujos) {
             loadLazyValues(ujo, depth);
             if (result!=null) {
@@ -248,7 +245,7 @@ final public class OrmTools {
         }
         if (result==null) {
             result = (List<UJO>) ujos;
-        }        
+        }
         return result;
     }
 
@@ -271,11 +268,11 @@ final public class OrmTools {
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
-    @SuppressWarnings("unchecked")
-    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, UjoProperty<UJO,? extends OrmUjo> property) {
-        List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List)ujos).size() : 128);
-        Map<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
-        while (!property.isDirect()) { 
+    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, UjoProperty<UJO, ? extends OrmUjo> property) {
+
+        List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
+        HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
+        while (!property.isDirect()) {
             property = ((PathProperty)property).getProperty(0);
         }
         for (UJO u : ujos) {
@@ -291,17 +288,27 @@ final public class OrmTools {
         Session session = result.get(0).readSession();
         MetaColumn column = (MetaColumn) session.getHandler().findColumnModel(property);
         MetaColumn pkColumn = column.getForeignColumns().get(0);
-        Criterion crn = Criterion.whereIn(pkColumn.getProperty(), map.keySet());
-        Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType(), crn);
+        Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType());
+        int limit = session.getParameters().get(MetaParams.MAX_ITEM_COUNT_4_IN);
+        int count = map.size();
+        List<Object> idList = new ArrayList(Math.min(limit, count));
+        Iterator<Object> keys = map.keySet().iterator();
 
-        for(OrmUjo u : query) {
-            map.put(pkColumn.getValue(u), u);
+        for (int i = 1; i <= count; i++) {
+            idList.add(keys.next());
+
+            if (i % limit == 0 || i == count) {
+                query.setCriterion(Criterion.whereIn(pkColumn.getProperty(), idList));
+                for (OrmUjo u : query) {
+                    map.put(pkColumn.getValue(u), u);
+                }
+                idList.clear();
+            }
         }
-        for(UJO u : result) {
+        for (UJO u : result) {
             ForeignKey fk = u.readFK(property);
             if (fk!=null) {
-                final Object pk = fk.getValue();
-                u.writeValue(property, map.get(pk));
+                u.writeValue(property, map.get(fk.getValue()));
             }
         }
         return result;
@@ -312,16 +319,14 @@ final public class OrmTools {
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
-    @SuppressWarnings("unchecked")
     public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Query<UJO> query) {
         List<UJO> result = query.iterator().toList();
         List<MetaColumn> columns = MetaTable.COLUMNS.getList(query.getTableModel());
-        for(MetaColumn col : columns) {
+        for (MetaColumn col : columns) {
             if (col.isForeignKey()) {
                 loadLazyValuesAsBatch(result, col.getProperty());
             }
         }
         return result;
     }
-
 }

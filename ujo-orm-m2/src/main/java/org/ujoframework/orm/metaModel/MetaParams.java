@@ -18,7 +18,6 @@ package org.ujoframework.orm.metaModel;
 
 import java.io.File;
 import java.util.logging.Logger;
-import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.extensions.Property;
@@ -27,6 +26,7 @@ import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.ao.CachePolicy;
 import org.ujoframework.orm.ao.CheckReport;
 import org.ujoframework.orm.ao.Orm2ddlPolicy;
+import org.ujoframework.orm.utility.OrmTools;
 
 /**
  * A logical database description.
@@ -57,6 +57,11 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Property<MetaParams,Class> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model. */
     public static final Property<MetaParams,CheckReport> CHECK_KEYWORDS = newProperty("checkKeywords", CheckReport.EXCEPTION);
+    /** The maximal count of items for the SQL IN operator, default value is 500 items
+     * The limit is used inside the method {@link OrmTools#loadLazyValuesAsBatch(java.lang.Iterable, org.ujoframework.UjoProperty) loadLazyValuesAsBatch(..)}.
+     @see OrmTools#loadLazyValuesAsBatch(java.lang.Iterable, org.ujoframework.UjoProperty)
+     */
+    public static final Property<MetaParams,Integer> MAX_ITEM_COUNT_4_IN = newProperty("maxItemCountForIN", 500);
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
     public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
