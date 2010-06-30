@@ -16,8 +16,8 @@
 
 package org.ujoframework.implementation.factory;
 
+import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
 
 
 /**
@@ -34,7 +34,7 @@ abstract public class FactoryUjoExt<UJO_IMPL extends FactoryUjoExt> extends Fact
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get
         ( UjoProperty<UJO, VALUE> property) {
-        return (VALUE) UjoManager.getValue(this, property);
+        return property.of((UJO) this);
     }
 
 }    

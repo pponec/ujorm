@@ -52,8 +52,8 @@ public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have a gen
     public int compare(Ujo u1, Ujo u2) {
         for (UjoProperty property : properties) {
 
-            Comparable c1 = (Comparable) UjoManager.getValue(u1, property);
-            Comparable c2 = (Comparable) UjoManager.getValue(u2, property);
+            Comparable c1 = (Comparable) property.of(u1);
+            Comparable c2 = (Comparable) property.of(u2);
             
             if (c1==c2  ) { continue;  }
             if (c1==null) { return +1; }

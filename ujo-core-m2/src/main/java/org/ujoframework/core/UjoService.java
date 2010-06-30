@@ -95,7 +95,7 @@ abstract public class UjoService<UJO extends Ujo> {
     public String getText(final UJO ujo, final UjoProperty prop, final Object value, final UjoAction action) {
         final String result = textable
         ? ((UjoTextable)ujo).readValueString(prop, action)
-        : ujoManager.encodeValue(value!=UNDEFINED ? value : UjoManager.getValue(ujo, prop), false)
+        : ujoManager.encodeValue(value!=UNDEFINED ? value : prop.of(ujo), false)
         ;
         return result;
     }

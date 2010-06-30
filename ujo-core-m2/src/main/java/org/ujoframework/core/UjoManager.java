@@ -222,7 +222,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     public int getHash(Ujo ujo, UjoPropertyList properties) {
         int result = 0;
         if (ujo!=null) for (UjoProperty prop : properties) {
-            Object obj = getValue(ujo, prop);
+            Object obj = prop.of(ujo);
             if (obj!=null) {
                 result = (result>>>3) + obj.hashCode();
             }
@@ -667,7 +667,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         assertAssign(lastProp, value);
         for (int i = 0; i<last; i++) {
             UjoProperty p = props.get(i);
-            ujo = (Ujo) getValue(ujo,p);
+            ujo = (Ujo) p.of(ujo);
         }
         setValue(ujo, lastProp, value);
         return ujo;
@@ -676,8 +676,8 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** Get a value from an Ujo object by a selected property.
      * If a not getLastProperty value is null, then is throwded a NullPointe exception.
+     * @deprecated Use a expression <code>prop.of(ujo)</code> rather.
      */
-    @SuppressWarnings("unchecked")
     @Deprecated
     public static Object getValue(final Ujo ujo, final UjoProperty prop) {
         return prop.of(ujo);
@@ -690,7 +690,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     public <VALUE> VALUE getValue(Ujo ujo, UjoProperty... props) {
         Object result = ujo;
         for (UjoProperty p : props) {
-            result = getValue((Ujo)result, p);
+            result = p.of((Ujo) result);
         }
         return (VALUE) result;
     }    
@@ -713,7 +713,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         if (property.isDirect()) {
             final String result = (ujo instanceof UjoTextable)
                 ? ((UjoTextable) ujo).readValueString(property, action)
-                : encodeValue(getValue(ujo, property), false);
+                : encodeValue(property.of(ujo), false);
             return result;
         } else {
             final PathProperty pathProperty = (PathProperty) property;

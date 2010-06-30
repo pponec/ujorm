@@ -76,7 +76,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_EXPORT, context);
         for (UjoProperty prop : getProperties()) {
 
-            final Object valueObj = UjoManager.getValue(ujo, prop);
+            final Object valueObj = prop.of(ujo);
             final String valueStr = getText(ujo, prop, valueObj, action);
             
             final boolean authorized 
