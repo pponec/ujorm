@@ -185,8 +185,8 @@ public class SampleORM {
             System.out.println(item.get( Item.order.add(Order.created) ) + " " + item);
         }
         // Another way to avoid the lazy loading by a bulk property loading:
-        // List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
-        // System.out.println("itemList: " + itemList);
+        List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
+        System.out.println("itemList: " + itemList);
     }
 
     /** Use a 'native query' where the query is created
@@ -254,7 +254,10 @@ public class SampleORM {
         }
     }
 
-    /** Select using operator IN */
+    /** Select items by a composed property.
+     * It is a sample of a multi-table query.
+     * @see Item#$orderDate
+     */
     public void useSelectItems_5() {
         Criterion<Item> crit = Criterion.whereIn(Item.id, 1L,2L,3L,4L,5L);
         Query<Item> items = session.createQuery(crit);
