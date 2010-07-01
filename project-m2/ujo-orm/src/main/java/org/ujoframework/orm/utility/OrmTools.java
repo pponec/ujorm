@@ -268,6 +268,7 @@ final public class OrmTools {
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
+    @SuppressWarnings("unchecked")
     public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, UjoProperty<UJO, ? extends OrmUjo> property) {
 
         List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
@@ -319,6 +320,7 @@ final public class OrmTools {
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
+    @SuppressWarnings("unchecked")
     public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Query<UJO> query) {
         List<UJO> result = query.iterator().toList();
         List<MetaColumn> columns = MetaTable.COLUMNS.getList(query.getTableModel());

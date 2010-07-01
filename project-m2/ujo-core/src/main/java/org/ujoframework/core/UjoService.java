@@ -92,7 +92,7 @@ abstract public class UjoService<UJO extends Ujo> {
     }
     
     /** Returns TEXT */
-    public String getText(final UJO ujo, final UjoProperty prop, final Object value, final UjoAction action) {
+    public String getText(final UJO ujo, final UjoProperty<? super Ujo,?> prop, final Object value, final UjoAction action) {
         final String result = textable
         ? ((UjoTextable)ujo).readValueString(prop, action)
         : ujoManager.encodeValue(value!=UNDEFINED ? value : prop.of(ujo), false)

@@ -33,20 +33,10 @@
     </build>
 
     <modules>
-        <module>project-m2/ujo-core</module>
-        <module>project-m2/ujo-orm</module>
-        <module>project-m2/ujo-spring</module>
-        <module>project-m2/ujo-gxt</module>
-
-        <module>samples/parameters</module>
-        <module>samples/table2xml</module>
-        <module>samples/ujorm</module>
-        <module>samples/inheritance</module>
-        <module>samples/binding</module>
-
-        <module>benchmark/hibernate</module>
-        <module>benchmark/hibernate-ujo</module>
-        <module>benchmark/ujo-orm</module>
+        <module>ujo-core</module>
+        <module>ujo-orm</module>
+        <module>ujo-spring</module>
+        <module>ujo-gxt</module>
     </modules>
 
 

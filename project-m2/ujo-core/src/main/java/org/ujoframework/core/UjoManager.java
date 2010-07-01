@@ -219,6 +219,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Calculate a Hash Code. */
+    @SuppressWarnings("unchecked")
     public int getHash(Ujo ujo, UjoPropertyList properties) {
         int result = 0;
         if (ujo!=null) for (UjoProperty prop : properties) {
@@ -264,6 +265,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * @param u2 Optional parameter
      * @return Returns true, if objects are the same.
      */
+    @SuppressWarnings("unchecked")
     public boolean equalsUjo(final Ujo u1, final Ujo u2, UjoPropertyList properties)  {
         if (u1==u2) {
             return true;
@@ -661,6 +663,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Set a value to an Ujo object by a chain of properties. 
      * <br>Type of value is checked in the runtime.
      */
+    @SuppressWarnings("unchecked")
     public Ujo setValue(Ujo ujo, UjoPropertyList props, Object value) throws IllegalArgumentException {
         final int last = props.size() - 1;
         UjoProperty lastProp = props.get(last);
@@ -678,7 +681,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * If a not getLastProperty value is null, then is throwded a NullPointe exception.
      * @deprecated Use a expression <code>prop.of(ujo)</code> rather.
      */
-    @Deprecated
+    @Deprecated  @SuppressWarnings("unchecked")
     public static Object getValue(final Ujo ujo, final UjoProperty prop) {
         return prop.of(ujo);
     } 

@@ -5,7 +5,7 @@
     <artifactId>ujo-gxt</artifactId>
     <packaging>jar</packaging>
     <version>0.94.5</version>
-    <name>Ujo 4 GXT</name>
+    <name>ujo-gxt</name>
 
     <description>Support for GWT - client UJO objects.
     </description>
@@ -101,7 +101,7 @@
      <!--   <scope>provided</scope> -->
         </dependency>
         <dependency>
-            
+
             <groupId>com.extjs</groupId>
             <artifactId>gxt</artifactId>
             <version>${gxt.version}</version>

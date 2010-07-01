@@ -98,6 +98,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     }
     
     /** Save Ujo into CSV format */
+    @SuppressWarnings("unchecked")
     public void saveCSV(Writer out, List<UJO> ujoList, Object context) throws IOException, InstantiationException, IllegalAccessException {
         if (printHeader) {
             UJO ujo = ujoList.size()>0 ? ujoList.get(0) : getUjoClass().newInstance();

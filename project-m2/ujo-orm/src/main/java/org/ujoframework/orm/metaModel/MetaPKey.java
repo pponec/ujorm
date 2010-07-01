@@ -64,6 +64,7 @@ final public class MetaPKey extends AbstractMetaModel {
      *         and 'false' means that a primary key was defined earlier.
      * @throws java.lang.IllegalArgumentException The PK can't be assigned.
      */
+    @SuppressWarnings("unchecked")
     public boolean assignPrimaryKey(final OrmUjo bo, final Session session) throws IllegalArgumentException {
         int count = COLUMNS.getItemCount(this);
         if (count==1) {

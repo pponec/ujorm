@@ -152,6 +152,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     /** Print attributes of the tag */
+    @SuppressWarnings("unchecked")
     protected void printAttributes
     ( final UjoTextable ujo
     , final Writer writer
@@ -183,6 +184,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     /** Write required properties to a XML writer. */
+    @SuppressWarnings("unchecked")
     public void printProperties(final Writer writer, UjoTextable ujo, final UjoPropertyList properties) throws IOException {
         UjoProperty bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 

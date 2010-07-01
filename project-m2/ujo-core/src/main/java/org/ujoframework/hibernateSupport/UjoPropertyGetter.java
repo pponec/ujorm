@@ -50,7 +50,7 @@ final public class UjoPropertyGetter implements Getter {
      * @return actual value of property
      * @throws org.hibernate.HibernateException
      */
-    @Override
+    @Override  @SuppressWarnings("unchecked")
     public final Object get(final Object target) throws HibernateException {
         return ujoProperty.of((Ujo) target);
     }
