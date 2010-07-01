@@ -154,6 +154,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     }
     
     /** Returns a value from the cell. */
+    @SuppressWarnings("unchecked")
     public Object getValueAt(int rowIndex, UjoProperty column) {
         return column.of(rows.get(rowIndex));
     }

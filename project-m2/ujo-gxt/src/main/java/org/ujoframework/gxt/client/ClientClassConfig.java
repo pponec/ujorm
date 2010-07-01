@@ -85,7 +85,7 @@ public class ClientClassConfig {
 
             for (CujoProperty p : cujo.readProperties()) {
                 pList.add(p);
-                CCriterion c2 = CCriterion.newInstance(p, COperator.EQ, (Object)null);
+                CCriterion c2 = CCriterion.where(p, COperator.EQ, (Object)null);
                 if (cc == null) {
                     cc = c2;
                 } else {
