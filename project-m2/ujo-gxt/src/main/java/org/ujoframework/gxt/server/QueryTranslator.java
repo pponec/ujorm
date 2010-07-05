@@ -21,6 +21,7 @@ import org.ujoframework.core.UjoManager;
 import org.ujoframework.criterion.BinaryOperator;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.Operator;
+import org.ujoframework.extensions.Property;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
@@ -110,8 +111,7 @@ public class QueryTranslator<UJO extends OrmUjo> {
             try {
                 p1 = manager.findIndirectProperty(type, c1.getName());
             } catch (IllegalArgumentException e) {
-                return null;
-
+                p1 = Property.newInstance("["+c1.getName()+"]\u0020", Object.class);
             }
             Object p2;
 
