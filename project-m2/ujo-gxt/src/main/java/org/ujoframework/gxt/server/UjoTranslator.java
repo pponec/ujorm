@@ -208,7 +208,9 @@ public class UjoTranslator<CUJO extends Cujo> {
         return cujo;
     }
 
-    /** Returns an instance of the related server class. Ujo properties are ignored. */
+    /** Returns an instance of the related server class. Ujo properties are ignored. <>
+     * If the primary key is not NULL than the result object has got an dummy session assigned.
+     */
     @SuppressWarnings({"unchecked"})
     public <T extends OrmUjo> T translateToServer(CUJO cujo) {
 
@@ -217,15 +219,20 @@ public class UjoTranslator<CUJO extends Cujo> {
         }
 
         OrmUjo result = serverClassConfig.newServerObject(cujo.getClass().getName());
+        boolean insert = true;
 
         for (PropContainer pc : properties) {
 
+            // Set a session to control a modified properties.
             final boolean hasSession = result.readSession() != null;
             if (pc.pk == hasSession) {
                 result.writeSession(pc.pk ? null : dummySession);
             }
 
             Object value = cujo.get(pc.p2);
+            if (pc.pk) {
+                insert = value==null;
+            }
 
             if (value != null && pc.p1.isTypeOf(Enum.class)) {
                 // Copy ENUM:
@@ -251,7 +258,9 @@ public class UjoTranslator<CUJO extends Cujo> {
             result.writeValue(pc.p1, value);
         }
 
-        result.writeSession(null);
+        if (insert) {
+            result.writeSession(null);
+        }
         return (T) result;
     }
 
