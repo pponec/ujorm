@@ -98,6 +98,9 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
         else if (CEnum.class.equals(aType)) {
             result = this.getClass().equals(CPropertyEnum.class);
         }
+        else if (java.util.Date.class.equals(aType)) {
+            result = java.sql.Date.class.equals(type);
+        }
         return result;
     }
 
