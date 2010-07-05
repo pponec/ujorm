@@ -35,6 +35,12 @@ public class CujoModel extends ColumnModel {
         : null
         ;
 
+    public static final DateTimeFormat DEFAULT_DAY_FORMAT = GWT.isClient()
+        ? DateTimeFormat.getFormat("yyyy-MM-dd")
+        : null
+        ;
+
+
     private final Map<CujoProperty, ColumnConfig> map = new HashMap<CujoProperty, ColumnConfig>();
     private final CujoPropertyList propertyList;
 
@@ -71,9 +77,11 @@ public class CujoModel extends ColumnModel {
                 : HorizontalAlignment.LEFT);
             config.setSortable(true);
 
-            if (p.isTypeOf(java.util.Date.class) ||
-                p.isTypeOf(java.sql.Date.class)) {
+            if (p.isTypeOf(java.util.Date.class)) {
                 config.setDateTimeFormat(DEFAULT_DATE_FORMAT);
+            }
+            if (p.isTypeOf(java.sql.Date.class)) {
+                config.setDateTimeFormat(DEFAULT_DAY_FORMAT);
             }
             if (p.isTypeOf(Boolean.class)) {
                 config.setAlignment(HorizontalAlignment.CENTER);
