@@ -171,7 +171,7 @@ public class UjoTranslator<CUJO extends Cujo> {
         return result;
     }
 
-    /** Translate a server object to a client object. */
+    /** Translate a one server object to a client object. */
     @SuppressWarnings("unchecked")
     public CUJO translateToClient(Ujo ujo) {
         CUJO cujo = (CUJO) newCujo(cujoPropertyList);
@@ -204,11 +204,11 @@ public class UjoTranslator<CUJO extends Cujo> {
 
         }
 
-        copy(ujo, cujo);
+        copyToClient(ujo, cujo);
         return cujo;
     }
 
-    /** Returns an instance of the related server class. Ujo properties are ignored. <>
+    /** Returns an instance of the related server class. Ujo properties of the related clasec are ignored. <>
      * If the primary key is not NULL than the result object has got an dummy session assigned.
      */
     @SuppressWarnings({"unchecked"})
@@ -218,7 +218,7 @@ public class UjoTranslator<CUJO extends Cujo> {
             return null;
         }
 
-        OrmUjo result = serverClassConfig.newServerObject(cujo.getClass().getName());
+        T result = (T) serverClassConfig.newServerObject(cujo.getClass().getName());
         boolean insert = true;
 
         for (PropContainer pc : properties) {
@@ -244,19 +244,23 @@ public class UjoTranslator<CUJO extends Cujo> {
             }
             if (value != null && pc.p1.isTypeOf(OrmUjo.class)) {
                 // Copy a foreign key:
-                final String pkPropertyName = "id";
+                final String pkPropertyName = "id"; // TODO: find id by a meta-model
                 try {
                     Object idValue = ((Cujo) value).get(pkPropertyName);
                     OrmUjo ormValue = (OrmUjo) pc.p1.getType().newInstance();
                     UjoProperty p = ormValue.readProperties().find(pkPropertyName, true);
                     p.setValue(ormValue, idValue);
                     value = ormValue;
+                    copyToServer((Cujo) value, ormValue);
                 } catch (Exception e) {
                     throw new IllegalStateException("Can't create instance for " + pc.p1.getType(), e);
                 }
             }
             result.writeValue(pc.p1, value);
+
         }
+
+        copyToServer(cujo, result);
 
         if (insert) {
             result.writeSession(null);
@@ -265,12 +269,17 @@ public class UjoTranslator<CUJO extends Cujo> {
     }
 
     /** Copy Ujo to CUJO. Overwrite the method by your special idea. */
-    protected void copy(Ujo ujo, CUJO cujo) {
+    protected void copyToClient(Ujo ujo, CUJO cujo) {
         if (callBacks != null) {
             for (UjoTranslatorCallback<CUJO> cb : callBacks) {
                 cb.copy(ujo, cujo);
             }
         }
+    }
+
+    /** Copy Ujo to CUJO. Overwrite the method by your special idea. */
+    protected void copyToServer(Cujo cujo, Ujo ujo) {
+        // Overwrite it
     }
 
     public <CUJO extends Cujo> CUJO newCujo(CujoPropertyList propertyList) {
