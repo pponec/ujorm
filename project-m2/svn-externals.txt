@@ -6,8 +6,9 @@ Set the subversion property 'svn:externals' to value:
 on your local Project directory and call statement: 
    svn update
    
-More information: 
+Use the Subversion release 1.1 or newer. More information:
    http://svnbook.red-bean.com/en/1.0/ch07s03.html
 
+   
 --
 2010-07-04 PPonec

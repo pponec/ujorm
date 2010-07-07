@@ -7,6 +7,7 @@
  */
 package org.ujoframework.gxt.server;
 
+import java.util.Date;
 import org.ujoframework.gxt.client.CEnum;
 import org.ujoframework.gxt.client.Cujo;
 import org.ujoframework.gxt.client.CujoProperty;
@@ -234,7 +235,20 @@ public class UjoTranslator<CUJO extends Cujo> {
                 insert = value==null;
             }
 
-            if (value != null && pc.p1.isTypeOf(Enum.class)) {
+            if (value == null) {
+                // OK ;
+            }
+            else if (pc.p1.isTypeOf(java.sql.Date.class)) {
+                // A workaround for the feature: http://code.google.com/p/google-web-toolkit/issues/detail?id=87 :
+                if (value ==null || value instanceof java.sql.Date) {
+                    // OK
+                } else if (value instanceof Date) {
+                    value = new java.sql.Date(((Date)value).getTime());
+                } else {
+                    throw new IllegalArgumentException("Value: " + value);
+                }
+            }
+            else if (pc.p1.isTypeOf(Enum.class)) {
                 // Copy ENUM:
                 if (value instanceof CEnum) {
                     value = Enum.valueOf(pc.p1.getType(), ((CEnum) value).getName());
@@ -242,7 +256,7 @@ public class UjoTranslator<CUJO extends Cujo> {
                     value = Enum.valueOf(pc.p1.getType(), (String) value);
                 }
             }
-            if (value != null && pc.p1.isTypeOf(OrmUjo.class)) {
+            else if (pc.p1.isTypeOf(OrmUjo.class)) {
                 // Copy a foreign key:
                 final String pkPropertyName = "id"; // TODO: find id by a meta-model
                 try {
@@ -250,8 +264,8 @@ public class UjoTranslator<CUJO extends Cujo> {
                     OrmUjo ormValue = (OrmUjo) pc.p1.getType().newInstance();
                     UjoProperty p = ormValue.readProperties().find(pkPropertyName, true);
                     p.setValue(ormValue, idValue);
-                    value = ormValue;
                     copyToServer((Cujo) value, ormValue);
+                    value = ormValue;
                 } catch (Exception e) {
                     throw new IllegalStateException("Can't create instance for " + pc.p1.getType(), e);
                 }
