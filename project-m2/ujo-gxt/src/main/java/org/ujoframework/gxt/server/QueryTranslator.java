@@ -15,6 +15,7 @@ import org.ujoframework.gxt.client.cquery.CCriterion;
 import org.ujoframework.gxt.client.cquery.CQuery;
 import org.ujoframework.gxt.client.cquery.CValueCriterion;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
@@ -22,6 +23,7 @@ import org.ujoframework.criterion.BinaryOperator;
 import org.ujoframework.criterion.Criterion;
 import org.ujoframework.criterion.Operator;
 import org.ujoframework.extensions.Property;
+import org.ujoframework.gxt.client.CEnum;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
@@ -123,6 +125,8 @@ public class QueryTranslator<UJO extends OrmUjo> {
                         UjoManager.getInstance().readProperties(p1.getType()),
                         config);
                 p2 = translator.translateToServer((Cujo) c2);
+            } else if (c2 instanceof Date && p1.isTypeOf(java.sql.Date.class)) {
+                p2 = new java.sql.Date(((Date) c2).getTime());
             } else {
                 p2 = c2;
             }
