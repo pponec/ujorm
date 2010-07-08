@@ -135,6 +135,14 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
         return getLastProperty().isTypeOf(type);
     }
 
+    /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
+    @Override
+    public void copy(final UJO from, final UJO to) {
+        final Cujo from2 = getSemifinalValue(from);
+        final Cujo to2 = getSemifinalValue(to);
+        getLastProperty().copy(from2, to2);
+    }
+
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
      * 
@@ -142,6 +150,7 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
      * @param value Null value is supported.
      * @return Accordance
      */
+    @Override
     public boolean equals(final UJO ujo, final VALUE value) {
         Object myValue = getValue(ujo);
         if (myValue == value) {

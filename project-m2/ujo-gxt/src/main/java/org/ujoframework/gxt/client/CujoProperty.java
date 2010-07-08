@@ -32,6 +32,9 @@ public interface CujoProperty<UJO extends Cujo, VALUE> {
 
     public Class getType();
 
+    /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
+    public void copy(final UJO from, final UJO to);
+
     /** Returns a short type name. */
     public String getShortTypeName();
 

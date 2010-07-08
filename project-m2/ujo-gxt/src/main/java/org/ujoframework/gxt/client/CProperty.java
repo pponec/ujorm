@@ -67,6 +67,12 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
         return type;
     }
 
+    /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
+    @Override
+    public void copy(final UJO from, final UJO to) {
+        to.set(name, from.get(name));
+    }
+
     /** Returns a short type name. */
     @Override
     public String getShortTypeName() {
