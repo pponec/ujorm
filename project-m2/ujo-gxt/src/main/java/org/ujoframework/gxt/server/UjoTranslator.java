@@ -271,10 +271,7 @@ public class UjoTranslator<CUJO extends Cujo> {
                 }
             }
             result.writeValue(pc.p1, value);
-
         }
-
-        copyToServer(cujo, result);
 
         if (insert) {
             result.writeSession(null);
