@@ -16,6 +16,7 @@
 
 package org.ujoframework.swing;
 
+import java.util.Iterator;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoActionImpl;
@@ -28,7 +29,7 @@ import org.ujoframework.UjoAction;
  * 
  * @author Pavel Ponec
  */
-public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> {
+public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements Iterable<UjoPropertyRow> {
     
     /** Property row */
     public static final UjoPropertyRow ROWS = null;
@@ -90,6 +91,11 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> {
     /** Returns an UjoCoder */
     protected UjoCoder getCoder() {
         return UjoManager.getInstance().getCoder();
-    }    
+    }
+
+    /** Returns an interator */
+    public Iterator<UjoPropertyRow> iterator() {
+        return rows.iterator();
+    }
     
 }
