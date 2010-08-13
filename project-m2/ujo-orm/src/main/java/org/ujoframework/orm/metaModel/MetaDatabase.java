@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ValueExportable;
@@ -599,8 +600,24 @@ final public class MetaDatabase extends AbstractMetaModel {
 
         String jndi = JNDI.of(this);
         if (isUsable(jndi)) {
-            DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
-            result = dataSource.getConnection();
+
+
+            LOGGER.log(Level.SEVERE, "--------------------------- JNDI: {0}", jndi);
+
+//            Context intC = getInitialContext();
+//            Context c = (Context )intC.lookup("java:comp/env");
+//            DataSource ds = (DataSource)c.lookup("jworksheet");
+//            result = ds.getConnection();
+
+
+            //DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
+            //result = dataSource.getConnection();
+
+            Context init_con = new InitialContext();
+            Context cntx = (Context) init_con.lookup("java:comp/env");
+            DataSource ds = (DataSource) cntx.lookup("jdbc/jworksheet");
+            result = ds.getConnection();
+
         } else {
             Class.forName(JDBC_DRIVER.of(this));
             result = DriverManager.getConnection(JDBC_URL.of(this), USER.of(this), PASSWORD.of(this));
