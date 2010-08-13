@@ -25,6 +25,7 @@ import org.ujoframework.UjoPropertyList;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.orm.OrmUjo;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaRelation2Many;
@@ -142,33 +143,39 @@ public class UjoTranslator<CUJO extends Cujo> {
     /** Get List of CUJOs */
     @SuppressWarnings({"unchecked"})
     public ListExt<CUJO> translate(UjoIterator<? extends Ujo> bos) {
-        return translate(bos, 0, Integer.MAX_VALUE);
+        return translate(bos, 0, Integer.MAX_VALUE, null);
     }
 
-    /** Get List of CUJOs */
+    /** Get List of CUJOs
+     * @param bos Business object
+     * @param offset Offset is used for optimization only, it does not restrict the BOS count.
+     * @param limit Limit is used for optimization only, it does not restrict the BOS count.
+     * @param query If query is NULL than the Total Line Count is calculatd from bos.size() .
+     * @return
+     */
     @SuppressWarnings({"unchecked"})
-    public ListExt<CUJO> translate(UjoIterator<? extends Ujo> bos, int offset, int limit) {
+    public ListExt<CUJO> translate(UjoIterator<? extends Ujo> bos, int offset, int limit, Query query) {
 
         ListExt<CUJO> result = new ListExt<CUJO>();
-
 
         if (bos == null) {
             return result;
         }
 
-        result.setTotalCount((int) bos.count());
-        bos.skip(offset);
-
+        int count = 0;
         for (Ujo ujo : bos) {
-            if (limit-- <= 0) {
-                bos.close();
-                break;
-            }
-
-            CUJO cujo = translateToClient(ujo);
+            ++count;
+            final CUJO cujo = translateToClient(ujo);
             result.add(cujo);
-
         }
+
+        if (offset<=0 && count<limit || query==null) {
+            result.setTotalCount(count);
+        } else {
+            // Call a new database request:
+            result.setTotalCount((int) query.getCount());
+        }
+
         return result;
     }
 
