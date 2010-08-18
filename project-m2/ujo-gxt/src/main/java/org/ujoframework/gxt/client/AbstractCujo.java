@@ -24,7 +24,8 @@ abstract public class AbstractCujo extends BaseModelData implements Cujo, Serial
     @Override
     @SuppressWarnings("unchecked")
     public <UJO extends Cujo,VALUE> VALUE get(CujoProperty<UJO,VALUE> property) {
-        return (VALUE) super.get(property.getName());
+        Object result = super.get(property.getName());
+        return result!=null ? (VALUE) result : property.getDefault();
     }
 
     @Override
