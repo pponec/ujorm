@@ -121,7 +121,16 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /** Criterion */
+    /** Add a new Criterion */
+    public void addCriterion(Criterion<UJO> criterion) {
+        this.criterion = this.criterion!=null
+            ? this.criterion.and(criterion)
+            : criterion
+            ;
+        clearDecoder();
+    }
+
+    /** Set a new Criterion */
     public Query<UJO> setCriterion(Criterion<UJO> criterion) {
         this.criterion = criterion;
         clearDecoder();
