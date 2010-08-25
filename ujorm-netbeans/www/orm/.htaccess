@@ -8,7 +8,7 @@ Options Indexes
 RewriteEngine on
 Options +FollowSymlinks
 
-RewriteCond %{HTTP_HOST} ^pekiline.pponec.net
+RewriteCond %{HTTP_HOST} ^pekiline.ponec.net
 RewriteRule (.*) http://pekiline.ponec.net/$1 [R=301,QSA,L]
 
 
@@ -16,6 +16,6 @@ RewriteRule (.*) http://pekiline.ponec.net/$1 [R=301,QSA,L]
 # RewriteEngine on
 # Options +FollowSymlinks
 # RewriteCond %{HTTP_HOST} ^ponec.net
-# RewriteRule (.*) http://pponec.net/$1 [R=301,QSA,L]
+# RewriteRule (.*) http://ponec.net/$1 [R=301,QSA,L]
 
 AddType application/x-java-jnlp-file jnlp

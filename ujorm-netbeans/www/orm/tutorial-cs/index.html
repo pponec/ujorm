@@ -552,7 +552,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
   <h2>
     <a id=Mapov_n_datov_ch_typ_842554545 name=Mapov_n_datov_ch_typ_842554545></a>Mapování datových typů:
   </h2>
-  Mapování datových typů se rozumí přiřazení typu JDBC typu pro perzistentní Ujo property. Podle vlastností Java třídy lze mapování rozdělit na skupony<br>
+  Mapování datových typů se rozumí přiřazení typu JDBC typu pro perzistentní Ujo property. Podle vlastností Java třídy lze mapování rozdělit na skupiny<br>
   <br>
   <b>Mapování hodnot, </b>kde hodnota je třída neimplementující rozhraní OrmUjo (může být i vlastní třída)<br>
 </div>
@@ -575,7 +575,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
   </b>
   <ul>
     <li>
-      na primární klíč: pro mapování se používá standardní property, pouze v názvu třídy se objeví třída jiného persistentníh objektu (implementujícího OrmUjo). Jako relační sloupec se použije automaticky primární klíč relační tabulky.<br>
+      na primární klíč: pro mapování se používá standardní property, pouze v názvu třídy se objeví třída jiného perzistentního objektu (implementujícího OrmUjo). Jako relační sloupec se použije automaticky primární klíč relační tabulky.<br>
     </li>
     <li>
       explicitní mapování: hodí se v případě, že referencovaný sloupec není primární klíč. V tomto případě lze využít třídu <font face="Courier New">RelationToOne</font> která umožní vložit relační sloupec pomocí druhého parametru podle následujícího vzoru:
@@ -934,13 +934,13 @@ Krátké připomenutí pojmů UJO Frameworku:<br>
 <h2>
   <a id=Vlastnosti_Ujo_objekt_00514393 name=Vlastnosti_Ujo_objekt_00514393></a><b><b>Vlastnosti Ujo objektů:</b></b>
 </h2>
-Aby Ujorm fungoval k plné spokojenosti, je vhodné mít na paměti některé vlastností UJO, se kterými se u běžných JavaBeans nesetkáte:<br>
+Doporučuji mít na paměti následujcí vlastnosti UJO, které mají vliv na správné chování objektu:<br>
 <ul>
   <li>
-    každý <b>atribut entity</b> musí mít svoji unikátní instanci UjoProperty, není možné sdílet jednu instanci UjoProperty pro více atributů
+    Je třeba, aby každý <b>atribut entity</b> měl svoji unikátní instanci UjoProperty
   </li>
   <li>
-    pro čtení a zápis hodnot se používají typové metody:<br>
+    pro čtení a zápis hodnot se používají metody:<br>
   </li>
   <ul>
     <li>
@@ -952,7 +952,7 @@ Aby Ujorm fungoval k plné spokojenosti, je vhodné mít na paměti některé vl
   </ul>
 </ul>
 <div style=MARGIN-LEFT:40px>
-  a nebo nějaké jiné metody, které je interně volají, například:<br>
+  a nebo jiné metody, které je interně volají, například:<br>
 </div>
 <ul>
   <ul>
