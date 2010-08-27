@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 public class CEnum extends AbstractCujo implements Serializable {
 
-    private static CujoPropertyList pl = list(CEnum.class);
+    private static final CujoPropertyList pl = list(CEnum.class);
     /** Primary Key */
     public static final CujoProperty<CEnum, Integer> id = pl.newProperty("id", Integer.class);
     /** UID */

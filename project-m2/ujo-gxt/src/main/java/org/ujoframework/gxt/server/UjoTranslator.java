@@ -154,7 +154,7 @@ public class UjoTranslator<CUJO extends Cujo> {
      * @return
      */
     @SuppressWarnings({"unchecked"})
-    public ListExt<CUJO> translate(UjoIterator<? extends Ujo> bos, int offset, int limit, Query query) {
+    public ListExt<CUJO> translate(Iterable<? extends Ujo> bos, int offset, int limit, Query query) {
 
         ListExt<CUJO> result = new ListExt<CUJO>();
 

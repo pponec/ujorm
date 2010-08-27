@@ -601,8 +601,8 @@ final public class MetaDatabase extends AbstractMetaModel {
         String jndi = JNDI.of(this);
         if (isUsable(jndi)) {
 
-
-            LOGGER.log(Level.SEVERE, "--------------------------- JNDI: {0}", jndi);
+            // TODO
+            LOGGER.log(Level.SEVERE, "----------- TODO ---------------- JNDI: {0}", jndi);
 
 //            Context intC = getInitialContext();
 //            Context c = (Context )intC.lookup("java:comp/env");

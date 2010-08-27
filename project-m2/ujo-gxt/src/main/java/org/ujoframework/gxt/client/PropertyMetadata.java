@@ -28,14 +28,22 @@ public class PropertyMetadata implements Serializable {
     protected PropertyMetadata() {
     }
 
-    public PropertyMetadata(boolean primaryKey, boolean mandatory, int maxLength, int precision, String columnLabel, String sideLabel, String description) {
+    public PropertyMetadata
+        ( boolean primaryKey
+        , boolean mandatory
+        , int maxLength
+        , int precision
+        , String columnLabel
+        , String sideLabel
+        , String description
+        ){
         this.primaryKey = primaryKey;
         this.mandatory = mandatory;
         this.maxLength = maxLength;
         this.precision = precision;
         this.columnLabel = columnLabel;
         this.sideLabel = sideLabel;
-        this.description = description;
+        this.description = isValid(description) ? description : null;
     }
 
     /** Default constructor. */
@@ -46,9 +54,12 @@ public class PropertyMetadata implements Serializable {
         this.precision = 0;
         this.columnLabel = property.getCammelName();
         this.sideLabel = columnLabel;
-        this.description = columnLabel;
+        this.description = isValid(columnLabel) ? columnLabel : null;
     }
 
+    static private boolean isValid(CharSequence text) {
+        return text!=null && text.length()>0;
+    }
 
     public String getColumnLabel() {
         return columnLabel;
