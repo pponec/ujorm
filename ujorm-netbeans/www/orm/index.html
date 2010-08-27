@@ -157,31 +157,36 @@ Released   : 20080129
   item2.setOrder(order);
   item2.setDescr("Green window");
 
-  Session session = OrmHandler.getInstance().getSession();
+  Session session = OrmHandler.getInstance()
+                    .createSession();
   session.save(order);
   session.save(item1);
   session.save(item2);
 
   session.commit();
+  session.close();
 </pre>
 
 The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
 <pre name="code" class="java">
 
-  Criterion&lt;Order&gt; cn1, cn2, criterion;
+  Criterion&lt;Item&gt; cn1, cn2, criterion;
 
-  cn1 = Criterion.where(Order.DESCR, "John's order"); // equals to
-  cn2 = Criterion.where(Order.DATE, Operator.LE, new Date());
+  cn1 = Criterion.where( Item.ID, Operator.GE, 1L );
+  cn2 = Criterion.where( Item.ORDER.add(Order.DESCR)
+                       , "John's order" ); // equals to
   criterion = cn1.and(cn2);
 
-  Session session = OrmHandler.getInstance().getSession();
-  Query&lt;Order&gt; orders = session.createQuery(criterion);
-  System.out.println("ORDER COUNT: " + orders.getCount());
+  Session session = OrmHandler.getInstance()
+                    .createSession();
+  Query&lt;Item&gt; items = session.createQuery(criterion);
+  System.out.println( "ROW COUNT: " + items.getCount() );
 
-  for (Order order : orders) {
-      String descr = order.getDescr();
-      System.out.println("ORDER ROW: " + order + " // descr: " + descr);
+  for (Item item : items) {
+      String descr = item.getDescr();
+      System.out.println( "Description: " + descr );
   }
+  session.close();
 </pre>
 
 And how to get meta-data for a 'description' property of the Order?
