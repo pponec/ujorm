@@ -27,7 +27,7 @@ import org.ujoframework.orm.Session;
  */
 public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFactoryAOP, UjoSessionFactoryFilter {
 
-    private static Logger LOGGER = Logger.getLogger(UjoSessionFactoryImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UjoSessionFactoryImpl.class.getName());
     final private ThreadLocal<UjoSessionFactoryThreadImpl> holder = new ThreadLocal<UjoSessionFactoryThreadImpl>();
     
     private OrmHandler handler;
@@ -68,14 +68,14 @@ public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFacto
         getThreadImpl().closeSession();
     }
 
-    private UjoSessionFactoryThreadImpl getThreadImpl() {
-
+private UjoSessionFactoryThreadImpl getThreadImpl() {
         if (holder.get() == null) {
+            if (handler == null) {
+                throw new NullPointerException("OrmHandler is null! Please set it using setHandler(OrmHandler handler) method");
+            }
             holder.set(new UjoSessionFactoryThreadImpl(handler));
         }
-
         return holder.get();
-
     }
 
     public void setHandler(OrmHandler handler) {
