@@ -198,10 +198,10 @@ And how to get meta-data for a 'description' property of the Order?
              hr.findColumnModel(Order.DESCR);
 
   StringBuilder msg = new StringBuilder()
-      .append("\n Length : " + c.getMaxLength())
-      .append("\n NotNull: " + c.isMandatory())
-      .append("\n PrimKey: " + c.isPrimaryKey())
-      .append("\n DB name: " + c.getFullName())
+      .append("Length : " + c.getMaxLength() + '\n')
+      .append("NotNull: " + c.isMandatory()  + '\n')
+      .append("PrimKey: " + c.isPrimaryKey() + '\n')
+      .append("DB name: " + c.getFullName()  + '\n')
       ;
 
   System.out.println(msg);
