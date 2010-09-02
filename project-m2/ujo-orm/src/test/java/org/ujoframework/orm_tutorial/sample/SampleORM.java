@@ -433,15 +433,16 @@ public class SampleORM {
 
     /** Print some meta-data of the property Order.descr. */
     public void useMetadata() {
-        MetaColumn c = (MetaColumn) handler.findColumnModel(Order.descr);
+        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.descr);
 
         StringBuilder msg = new StringBuilder()
-            .append("** METADATA OF COLUMN: " + Order.descr)
-            .append("\n\t Length : " + c.getMaxLength())
-            .append("\n\t NotNull: " + c.isMandatory())
-            .append("\n\t PrimKey: " + c.isPrimaryKey())
-            .append("\n\t DB name: " + c.getFullName())
-            .append("\n\t Dialect: " + c.getDialectClass().getSimpleName())
+            .append("** METADATA OF COLUMN: ")
+            .append(Order.descr.toString() + '\n')
+            .append("Length : " + col.getMaxLength() + '\n')
+            .append("NotNull: " + col.isMandatory()  + '\n')
+            .append("PrimKey: " + col.isPrimaryKey() + '\n')
+            .append("DB name: " + col.getFullName()  + '\n')
+            .append("Dialect: " + col.getDialectClass().getSimpleName())
             ;
         System.out.println(msg);
     }
