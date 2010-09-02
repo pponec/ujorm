@@ -194,14 +194,14 @@ And how to get meta-data for a 'description' property of the Order?
 <pre name="code" class="java">
   OrmHandler hr = OrmHandler.getInstance();
 
-  MetaColumn c = (MetaColumn)
+  MetaColumn col = (MetaColumn)
              hr.findColumnModel(Order.DESCR);
 
   StringBuilder msg = new StringBuilder()
-      .append("Length : " + c.getMaxLength() + '\n')
-      .append("NotNull: " + c.isMandatory()  + '\n')
-      .append("PrimKey: " + c.isPrimaryKey() + '\n')
-      .append("DB name: " + c.getFullName()  + '\n')
+      .append("Length : " + col.getMaxLength() + '\n')
+      .append("NotNull: " + col.isMandatory()  + '\n')
+      .append("PrimKey: " + col.isPrimaryKey() + '\n')
+      .append("DB name: " + col.getFullName()  + '\n')
       ;
 
   System.out.println(msg);
