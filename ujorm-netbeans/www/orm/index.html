@@ -174,7 +174,7 @@ The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
 
   cn1 = Criterion.where( Item.ID, Operator.GE, 1L );
   cn2 = Criterion.where( Item.ORDER.add(Order.DESCR)
-                       , "John's order" ); // equals to
+                       , "John's order" ); // Equals to
   criterion = cn1.and(cn2);
 
   Session session = OrmHandler.getInstance()
@@ -184,7 +184,8 @@ The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
 
   for (Item item : items) {
       String descr = item.getDescr();
-      System.out.println( "Description: " + descr );
+      Date created = item.getOrder().getDate();
+      System.out.println( created + " : " + descr );
   }
   session.close();
 </pre>
