@@ -63,7 +63,7 @@ public enum Operator implements AbstractOperator {
     USER,
     /** The operator for an internal use only where a result is
      * <strong>not dependent</strong> on the value. */
-    X_FIXED,
+    XFIXED,
     ;
 
 

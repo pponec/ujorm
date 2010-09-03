@@ -354,7 +354,19 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Returns an SQL criterion template. */
+    /** Returns an SQL criterion template. The result is a tempate by the next sample: "{0}={1}" . 
+     * <br>See an example of the implementation:
+     * <pre class="pre">
+     * switch (crit.getOperator()) {
+     *      case EQ:
+     *         return "{0}={1}";
+     *      case NOT_EQ:
+     *         return "{0}<>{1}";
+     *      case GT:
+     *         return "{0}>{1}";
+     * ...
+     * </pre>
+     */
     @SuppressWarnings("unchecked")
     public String getCriterionTemplate(ValueCriterion crit) {
 
@@ -385,7 +397,7 @@ abstract public class SqlDialect {
                 return "{0} IN ({1})";
             case NOT_IN:
                 return "NOT {0} IN ({1})";
-            case X_FIXED:
+            case XFIXED:
                 return crit.evaluate(null)
                     ? "1=1" // "true"
                     : "1=0" // "false"

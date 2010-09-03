@@ -270,7 +270,7 @@ public abstract class Criterion<UJO extends Ujo> {
      * @see Operator#X_FIXED
      */
     public static <UJO extends Ujo> Criterion<UJO> constant(UjoProperty<UJO,?> property, boolean constant) {
-        return new ValueCriterion<UJO>(property, Operator.X_FIXED, constant);
+        return new ValueCriterion<UJO>(property, Operator.XFIXED, constant);
     }
 
     // ----------------------- DEPRECATED -----------------------
