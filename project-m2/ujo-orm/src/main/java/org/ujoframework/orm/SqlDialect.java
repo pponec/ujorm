@@ -358,13 +358,13 @@ abstract public class SqlDialect {
      * <br>See an example of the implementation:
      * <pre class="pre">
      * switch (crit.getOperator()) {
-     *      case EQ:
+     *     case EQ:
      *         return "{0}={1}";
-     *      case NOT_EQ:
+     *     case NOT_EQ:
      *         return "{0}<>{1}";
-     *      case GT:
+     *     case GT:
      *         return "{0}>{1}";
-     * ...
+     *     ...
      * </pre>
      */
     @SuppressWarnings("unchecked")
