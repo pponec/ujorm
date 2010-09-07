@@ -50,7 +50,7 @@ public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFacto
 
     @Override
     public void setHasBeenrollbacked(boolean b) {
-        getThreadImpl().setAutoTransaction(b);
+        getThreadImpl().setHasBeenrollbacked(b);
     }
 
     @Override
