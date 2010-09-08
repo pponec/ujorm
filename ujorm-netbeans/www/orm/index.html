@@ -181,7 +181,7 @@ The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
                     .createSession();
   Query&lt;Item&gt; items = session.createQuery(criterion)
            .orderBy ( Item.ORDER.add(Order.CREATED)
-                    , Item.ID );
+                    , Item.ID.descending() );
   System.out.println( "Row count: " + items.getCount());
 
   for (Item item : items) {
