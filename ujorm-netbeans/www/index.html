@@ -94,10 +94,10 @@ Released   : 20080129
                   <li><a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a> ready</li>
                   <li>it is easy to clone, copy, sort and compare</li>
                   <li>direct support for the <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a><!-- component--></li>
-                  <li>reduction of UJO source code for an easier maintainance</li>
                   <li>way for an implementation a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
                     to only one <a href="javadoc/org/ujoframework/Ujo.html#writeValue(org.ujoframework.UjoProperty,%20java.lang.Object)">place</a>
                     for each properties include children</li>
+                  <li>unlike some <a href="#similar">competing projects</a> the immutable UjoProperty never contains value and the encapsulation is supported</li>
                   <li>most features are checked by unit tests</li>
                   <li>tiny framework without further dependencies</li>
                 </ul>        					
@@ -341,6 +341,7 @@ However the more properties gives significantly the better effect in favour of t
             <div class="entry">
                 Here are links to some other Java projects with similar concerns:
                 <ul>
+                <li><a href="http://joda-beans.sourceforge.net/">Joda-Beans</a> - is a framework that radically enhances working with beans. The aim is to add type-safety, refactorability and compiler-checking to properties on beans.</li>
                 <li><a href="https://bean-properties.dev.java.net/">Bean-properties</a> - project using Java 5 syntax and object oriented features in order to provide property support that leapfrogs the properties available in Delphi/VB and other languages. The properties implemented in bean-properties use Java's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
                 <li><a href="http://commons.apache.org/attributes/">Commom Attributes</a> - an attribute and metadata solution for the Java 1.4 or earlier enables Java programmers to use C#/.Net-style attributes in their code</li>
                 <li><a href="http://jcp.org/en/jsr/detail?id=175">JSR-175</a> - a metadata facility for the JavaTM Programming Language</li>
