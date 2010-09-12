@@ -29,7 +29,7 @@
       <data key="d3">
         <y:UMLClassNode>
           <y:Geometry height="133.3091783567134" width="157.47807615230465" x="581.2896993987977" y="143.43464838508916"/>
-          <y:Fill color="#FFDE5C" transparent="false"/>
+          <y:Fill color="#CBC6FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="84.1240234375" x="36.677026357402326" y="26.701171875">UjoProperty</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="interface" use3DEffect="true">
@@ -88,7 +88,7 @@ getName : String
       <data key="d3">
         <y:UMLClassNode>
           <y:Geometry height="120.80569138276547" width="217.32949317438303" x="290.4079701282908" y="144.551689133252"/>
-          <y:Fill color="#FFDE5C" transparent="false"/>
+          <y:Fill color="#CBC6FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="26.5517578125" x="95.38886768094152" y="26.701171875">Ujo</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="interface" use3DEffect="true">
@@ -149,7 +149,7 @@ getName : String
       <data key="d3">
         <y:UMLClassNode>
           <y:Geometry height="120.35038076152296" width="217.6271743486975" x="290.63923265334097" y="296.0085118384913"/>
-          <y:Fill color="#FFDE5C" transparent="false"/>
+          <y:Fill color="#CBC6FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="55.337890625" x="81.14464186184875" y="26.701171875">OrmUjo</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="interface" use3DEffect="true">
@@ -427,7 +427,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="-24.71463988550885" sy="-9.9655711422771" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="stail" preferredPlacement="target_right" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-32.13320014785222" y="14.580153953343142">0..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="target_right" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-23.926649322677406" y="3.269723072224224">0..*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -442,7 +442,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="stail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-32.13881850859508" y="12.571176060828066">0..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-23.42023904006362" y="7.460284648240645">0..*</y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
@@ -457,25 +457,12 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="stail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-32.13238242597845" y="2.123059455681755">0..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-24.0585362721323" y="2.123059455681755">0..*</y:EdgeLabel>
           <y:BendStyle smoothed="true"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e8" source="n20" target="n19">
-      <data key="d5"/>
-      <data key="d6"><![CDATA[UMLreferences]]></data>
-      <data key="d7">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="white_diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-16.33302143741963" y="0.34273065340903486"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e9" source="n20" target="n21">
+    <edge id="e8" source="n20" target="n21">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLhas]]></data>
       <data key="d7">
@@ -483,12 +470,12 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="23.33343808768701" sy="-20.688923150872466" tx="-47.37109790176997" ty="-33.118597194366316"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="diamond" target="none"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-24.185714867164393" y="4.2261170485315915">0..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-23.246212769262343" y="10.332880684895258">0..*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e10" source="n21" target="n20">
+    <edge id="e9" source="n21" target="n20">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLreferences]]></data>
       <data key="d7">
@@ -496,12 +483,12 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="9.31027472472448" sy="-23.642671268440267" tx="79.63497527753367" ty="-27.13611511418942"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="white_diamond" target="none"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="stail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="32.013671875" x="2.0856843182478997" y="-22.95711049053091">order</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="32.013671875" x="5.3566548223039945" y="-18.916499867873426">order</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e11" source="n18" target="n8">
+    <edge id="e10" source="n18" target="n8">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLinherits]]></data>
       <data key="d7">
@@ -514,7 +501,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e12" source="n19" target="n8">
+    <edge id="e11" source="n19" target="n8">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLinherits]]></data>
       <data key="d7">
@@ -527,7 +514,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e13" source="n20" target="n8">
+    <edge id="e12" source="n20" target="n8">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLinherits]]></data>
       <data key="d7">
@@ -540,7 +527,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e14" source="n21" target="n8">
+    <edge id="e13" source="n21" target="n8">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLinherits]]></data>
       <data key="d7">
@@ -555,7 +542,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e15" source="n14" target="n18">
+    <edge id="e14" source="n14" target="n18">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLhas]]></data>
       <data key="d7">
@@ -563,7 +550,20 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="19.95551803126104" sy="52.77222673266948" tx="14.828887347343283" ty="-35.25438015632017"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="diamond" target="none"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="25.013671875" x="-32.130611847592206" y="148.9224789251317">1..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="25.013671875" x="-32.130611847592206" y="156.26233906499192">1..*</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e15" source="n20" target="n19">
+      <data key="d5"/>
+      <data key="d6"><![CDATA[UMLreferences]]></data>
+      <data key="d7">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="white_diamond" target="none"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-16.33302143741963" y="0.34273065340903486"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
