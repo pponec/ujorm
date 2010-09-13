@@ -28,16 +28,17 @@
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="133.3091783567134" width="157.47807615230465" x="581.2896993987977" y="143.43464838508916"/>
+          <y:Geometry height="146.43717023488597" width="172.90772894418296" x="581.2896993987977" y="143.43464838508916"/>
           <y:Fill color="#CBC6FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="84.1240234375" x="36.677026357402326" y="26.701171875">UjoProperty</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="84.1240234375" x="44.39185275334148" y="26.701171875">UjoProperty</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="interface" use3DEffect="true">
             <y:AttributeLabel/>
             <y:MethodLabel>getValue : VALUE
 setValue ( VALUE )
 getType  : Class&lt;VALUE&gt; 
 getName : String
+add(UjoProperty) : UjoProperty
 
 </y:MethodLabel>
           </y:UML>
@@ -71,7 +72,7 @@ getName : String
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="54.9515030060121" width="163.22909819639267" x="582.3800801603209" y="315.7463794255172"/>
+          <y:Geometry height="53.587555797890275" width="163.22909819639267" x="583.6587806679352" y="331.6022657199335"/>
           <y:Fill color="#FFDE5C" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="61.572265625" x="50.828416285696335" y="3.0">Property</y:NodeLabel>
@@ -103,7 +104,7 @@ getName : String
     <node id="n6">
       <data key="d3">
         <y:ShapeNode>
-          <y:Geometry height="17.0" width="78.24897795591187" x="677.9560359465371" y="304.35080160320604"/>
+          <y:Geometry height="17.0" width="78.24897795591187" x="678.8937496521207" y="319.0132340905157"/>
           <y:Fill color="#FFFFFF" color2="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.47607421875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="40.072265625" x="19.088356165455934" y="-0.238037109375">VALUE</y:NodeLabel>
@@ -362,7 +363,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="1.5603732771299974" y="-29.85944329577194"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="1.8596263617574778" y="-22.58518395770284"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -372,10 +373,10 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
       <data key="d6"><![CDATA[UMLinherits]]></data>
       <data key="d7">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="2.4276107545039167" sy="-0.9829002788117066" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="1.4783572828611113" y="-21.511854924152658"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="2.006939841802591" y="-22.867816228483207"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -385,10 +386,10 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
       <data key="d6"><![CDATA[UMLreferences]]></data>
       <data key="d7">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="87.70016077739535" ty="5.134702738811114"/>
+          <y:Path sx="-16.12605624211296" sy="-5.619548046483959" tx="87.70016077739535" ty="5.134702738811114"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="75.3671875" x="-74.48068134457674" y="-20.701167709991637">  properties  *</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="75.3671875" x="-74.47903339535799" y="-21.12788005328963">  properties  *</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -550,7 +551,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="19.95551803126104" sy="52.77222673266948" tx="14.828887347343283" ty="-35.25438015632017"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="diamond" target="none"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="25.013671875" x="-32.130611847592206" y="156.26233906499192">1..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="25.013671875" x="-32.130611847592235" y="156.26233906499192">1..*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
