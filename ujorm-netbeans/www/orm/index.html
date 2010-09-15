@@ -123,12 +123,12 @@ Released   : 20080129
                    <a href="../javadoc/org/ujoframework/implementation/orm/OrmTable.html">OrmTable</a>
                </li>
                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
-               <li>some parts of the API was inspired by
-                    <a href="http://cayenne.apache.org/">Canyenne</a> and
-                    <a href="https://www.hibernate.org/">Hibernate</a> frameworks.
-                    I&nbsp;would like to thank the authors for great work.
-               </li>
               </ul>
+                
+               Some parts of the API was inspired by
+               <a href="http://cayenne.apache.org/">Canyenne</a> and
+               <a href="https://www.hibernate.org/">Hibernate</a> frameworks.
+               I&nbsp;would like to thank the authors for great work.
 
             </div>
             <p class="meta"> <a href="http://ujoframework.org/dokuwiki/" class="permalink">Read more</a> </p>
@@ -205,7 +205,6 @@ And how to get meta-data for a 'description' property of the Order?
       .append("PrimKey: " + col.isPrimaryKey() + '\n')
       .append("DB name: " + col.getFullName()  + '\n')
       ;
-
   System.out.println(msg);
   </pre>
             </div>
