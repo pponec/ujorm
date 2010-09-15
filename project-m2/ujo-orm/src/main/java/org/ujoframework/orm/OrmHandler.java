@@ -231,6 +231,7 @@ public class OrmHandler {
         switch (MetaParams.ORM2DLL_POLICY.of(getParameters())) {
             case CREATE_DDL:
             case CREATE_OR_UPDATE_DDL:
+            case VALIDATE:
                 for (MetaDatabase dbModel : getDatabases()) {
                     dbModel.create(getSession());
                 }

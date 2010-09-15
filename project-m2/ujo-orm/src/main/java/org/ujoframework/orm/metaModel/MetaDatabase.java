@@ -111,6 +111,7 @@ final public class MetaDatabase extends AbstractMetaModel {
      * @param database Database instance
      * @param param Configuration data from a XML file
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param) {
         this.ormHandler = ormHandler;
         ROOT.setValue(this, database);
@@ -379,6 +380,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                         case CREATE_DDL:
                             return;
                         case CREATE_OR_UPDATE_DDL:
+                        case VALIDATE:
                             change = isModelChanged(conn, tables, newColumns, indexes);
                             if (!change) return;
                     }
@@ -423,8 +425,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 out.setLength(0);
                 sql = getDialect().printCreateSchema(schema, out).toString();
                 if (isUsable(sql)) {
-                    stat.executeUpdate(sql);
-                    LOGGER.info(sql);
+                    executeUpdate(sql, stat);
                 }
             }
 
@@ -435,8 +436,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                     tableCount++;
                     out.setLength(0);
                     sql = getDialect().printTable(table, out).toString();
-                    stat.executeUpdate(sql);
-                    LOGGER.info(sql);
+                    executeUpdate(sql, stat);
                     foreignColumns.addAll(table.getForeignColumns());
                 }
             }
@@ -445,8 +445,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             for (MetaColumn column : newColumns) {
                 out.setLength(0);
                 sql = getDialect().printAlterTable(column, out).toString();
-                stat.executeUpdate(sql);
-                LOGGER.info(sql);
+                executeUpdate(sql, stat);
 
                 // Pick up the foreignColumns:
                 if (column.isForeignKey()) {
@@ -458,8 +457,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             for (MetaIndex index : indexes) {
                 out.setLength(0);
                 sql = getDialect().printIndex(index, out).toString();
-                stat.executeUpdate(sql);
-                LOGGER.info(sql);
+                executeUpdate(sql, stat);
             }
             
             // 6. Create Foreign Keys:
@@ -468,8 +466,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                     out.setLength(0);
                     MetaTable table = MetaColumn.TABLE.of(column);
                     sql = getDialect().printForeignKey(column, table, out).toString();
-                    stat.executeUpdate(sql);
-                    LOGGER.info(sql);
+                    executeUpdate(sql, stat);
                 }
             }
 
@@ -478,8 +475,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             if (tableCount>0 && !change) {
                 out.setLength(0);
                 sql = getDialect().printSequenceTable(this, out).toString();
-                stat.executeUpdate(sql);
-                LOGGER.info(sql);
+                executeUpdate(sql, stat);
             }
 
             conn.commit();
@@ -492,6 +488,24 @@ final public class MetaDatabase extends AbstractMetaModel {
             }
             throw new IllegalArgumentException(Session.SQL_ILLEGAL + sql, e);
         }
+    }
+
+    /** Check missing database table, index, or column */
+    private void executeUpdate(final String sql, final Statement stat) throws IllegalStateException, SQLException {
+
+       switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
+           case VALIDATE:
+               String msg = "A database validation (caused by the parameter "
+                          + MetaParams.ORM2DLL_POLICY
+                          + ") have found an inconsistency. "
+                          + "There is required a database change: "
+                          + sql
+                          ;
+               throw new IllegalArgumentException(msg);
+           default:
+               stat.executeUpdate(sql);
+               LOGGER.info(sql);
+       }
     }
 
     /** Close a connection, statement and a result set. */
