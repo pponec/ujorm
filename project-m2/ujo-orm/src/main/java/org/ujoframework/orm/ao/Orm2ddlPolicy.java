@@ -29,7 +29,7 @@ public enum Orm2ddlPolicy {
     CREATE_DDL,
     /** Create or update full DDL structure. It is the default value. */
     CREATE_OR_UPDATE_DDL,
-    /** Throw the IllegalStateException in case missing  table, index, or column in the connected database. */
+    /** Throw the IllegalStateException in case missing a table, index, or column in the connected database. */
     VALIDATE,
     ;
 
