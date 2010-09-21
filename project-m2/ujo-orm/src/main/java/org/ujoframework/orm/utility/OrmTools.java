@@ -70,7 +70,7 @@ final public class OrmTools {
      * @param inputStream
      * @return
      */
-    public static final SerialBlob createBlob(InputStream inputStream) {
+    public static SerialBlob createBlob(InputStream inputStream) {
         try {
             byte[] buffer = new byte[1024];
             ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.length);
@@ -309,7 +309,9 @@ final public class OrmTools {
         for (UJO u : result) {
             ForeignKey fk = u.readFK(property);
             if (fk!=null) {
+                u.writeSession(null); // switch off the change management
                 u.writeValue(property, map.get(fk.getValue()));
+                u.writeSession(session);
             }
         }
         return result;
