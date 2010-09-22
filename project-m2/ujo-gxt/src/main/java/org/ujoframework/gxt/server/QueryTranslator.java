@@ -70,6 +70,9 @@ public class QueryTranslator<UJO extends OrmUjo> {
         MetaTable metaTable = handler.findTableModel(type);
         Query<UJO> result = new Query(metaTable, cn);
         result.orderBy(orderBy(cquery.getOrderBy()));
+        result.setFetchSize(cquery.getFetchSize());
+        result.setLimit(cquery.getLimit());
+        result.setOffset(cquery.getOffset());
         return result;
     }
 

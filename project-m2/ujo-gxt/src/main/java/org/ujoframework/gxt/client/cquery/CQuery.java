@@ -36,6 +36,9 @@ public class CQuery<UJO extends Cujo> implements Serializable {
     /** Load relations */
     private boolean relations = true;
     private int columnOrderSize = 0;
+    private int offset = 0;
+    private int limit = -1;
+    private int fetchSize = -1;
 
     protected CQuery() {
     }
@@ -230,6 +233,30 @@ public class CQuery<UJO extends Cujo> implements Serializable {
 
     public void setAutoExpandColumn(String autoExpandColumn) {
         this.autoExpandColumn = autoExpandColumn;
+    }
+
+    public int getFetchSize() {
+        return fetchSize;
+    }
+
+    public void setFetchSize(int fetchSize) {
+        this.fetchSize = fetchSize;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     public void addColumOrder(CujoProperty cujo) {
