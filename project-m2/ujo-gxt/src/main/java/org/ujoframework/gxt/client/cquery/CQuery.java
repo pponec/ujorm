@@ -299,4 +299,14 @@ public class CQuery<UJO extends Cujo> implements Serializable {
 
         columnOrderSize++;
     }
+
+    /** Add a new Criterion */
+    public void addCriterion(CCriterion<UJO> criterion) {
+        this.criterion = this.criterion!=null
+            ? this.criterion.and(criterion)
+            : criterion
+            ;
+    }
+
+
 }
