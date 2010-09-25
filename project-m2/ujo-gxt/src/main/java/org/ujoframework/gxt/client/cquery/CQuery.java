@@ -215,10 +215,12 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         return result;
     }
 
+    /** Request to load all object relations */
     public boolean isRelations() {
         return relations;
     }
 
+    /** Request to load all object relations */
     public void setRelations(boolean relations) {
         this.relations = relations;
     }
