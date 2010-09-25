@@ -543,7 +543,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             String msg = "The database table or column called '" + word
                 + "' is a SQL keyword. See the class: "
                 + table.getType().getName()
-                + ".\nNOTE: the keyword checking can be disabled by a parameter: " + MetaParams.CHECK_KEYWORDS
+                + ".\nNOTE: the keyword checking can be disabled by the Ujorm parameter: " + MetaParams.CHECK_KEYWORDS
                 ;
             switch (MetaParams.CHECK_KEYWORDS.of(getParams())) {
                 case EXCEPTION:
