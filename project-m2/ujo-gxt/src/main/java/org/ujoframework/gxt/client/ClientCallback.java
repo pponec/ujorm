@@ -19,25 +19,25 @@ import com.gwtincubator.security.exception.ApplicationSecurityException;
  */
 public abstract class ClientCallback<T> extends SecuredAsyncCallback<T> {
 
-    private Boolean callEnd = new Boolean(false);
+    private boolean callEnd = false;
 
     @Override
     protected void onSecurityException(ApplicationSecurityException exception) {
         Window.alert("security exeption :" + exception.toString());
-        callEnd = new Boolean(true);
+        callEnd = true;
     }
 
     @Override
     protected void onOtherException(Throwable exception) {
         Window.alert("other exeption :" + exception.toString());
-        callEnd = new Boolean(true);
+        callEnd = true;
     }
 
     public Boolean isCallEnd() {
         return callEnd;
     }
     public void setCallEnd(boolean b) {
-        callEnd = new Boolean(b);
+        callEnd = b;
     }
 
 }
