@@ -43,6 +43,7 @@ import org.ujoframework.orm.UjoSequencer;
  * @composed 1 - * MetaRelation2Many
  * @composed 1 - * MetaColumn
  * @composed 1 - 1 MetaPKey
+ * @composed 1 - * MetaIndex
  */
 final public class MetaTable extends AbstractMetaModel {
     private static final Class CLASS = MetaTable.class;
@@ -99,7 +100,7 @@ final public class MetaTable extends AbstractMetaModel {
      * @param parTable Configuration data from a XML file
 
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "LeakingThisInConstructor"})
     public MetaTable(MetaDatabase database, RelationToMany dbProperty, MetaTable parTable) {
         sequencer = database.createSequencer(this);
         ID.setValue(this, dbProperty.getName());
@@ -299,7 +300,7 @@ final public class MetaTable extends AbstractMetaModel {
         return sequencer;
     }
 
-    /** Get a collection of the table indexes. */
+    /** Create a collection of the table indexes. */
     public Collection<MetaIndex> getIndexCollection() {
         Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
 
