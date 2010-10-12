@@ -355,6 +355,54 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n23">
+      <data key="d2"/>
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="15.431472081218317" width="17.512690355329937" x="247.20658680203042" y="672.5625551269036"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="11.22998046875" x="3.1413549432899686" y="-2.2473987250158416">1</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n24">
+      <data key="d2"/>
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="15.431472081218317" width="17.512690355329937" x="248.24629928934007" y="716.0682087309647"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="11.22998046875" x="3.1413549432899686" y="-2.2473987250158416">1</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n25">
+      <data key="d2"/>
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="15.431472081218317" width="17.512690355329937" x="248.9326879187816" y="767.5555183756348"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="11.22998046875" x="3.1413549432899686" y="-2.2473987250158416">1</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n26">
+      <data key="d2"/>
+      <data key="d3">
+        <y:ShapeNode>
+          <y:Geometry height="15.431472081218317" width="17.512690355329937" x="144.41824974619283" y="511.8248056852792"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="11.22998046875" x="3.1413549432899686" y="-2.2473987250158416">1</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="e0" source="n7" target="n4">
       <data key="d5"/>
       <data key="d6"><![CDATA[UMLinherits]]></data>
@@ -471,7 +519,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="23.33343808768701" sy="-20.688923150872466" tx="-47.37109790176997" ty="-33.118597194366316"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="diamond" target="none"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-23.246212769262343" y="10.332880684895258">0..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="22.01171875" x="-23.246212769262343" y="10.332880684895258">1..*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -551,7 +599,7 @@ findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           <y:Path sx="19.95551803126104" sy="52.77222673266948" tx="14.828887347343283" ty="-35.25438015632017"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="diamond" target="none"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="25.013671875" x="-32.130611847592235" y="156.26233906499192">1..*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="free" modelPosition="anywhere" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="25.013671875" x="-32.13061184759229" y="156.26233906499192">1..*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
