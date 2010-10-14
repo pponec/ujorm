@@ -22,6 +22,7 @@ import org.ujoframework.orm.metaModel.MetaPKey;
 /**
  * UJO CacheKey
  * @author Pavel Ponec
+ * @see org.ujoframework.orm.metaModel.MetaParams
  */
 abstract public class CacheKey {
 

@@ -19,13 +19,14 @@ package org.ujoframework.orm.ao;
 /**
  * How to use the report of any check message?
  * @author Ponec
+ * @see org.ujoframework.orm.metaModel.MetaParams
  */
 public enum CheckReport {
 
     /** Skip the check test. */
     SKIP,
-    /** Log a WARNING with a bug message. */
+    /** Log a WARNING with the conflict message. */
     WARNING,
-    /** Throw an EXCEPTION with a bug message. */
+    /** Throw an EXCEPTION with the conflict message. */
     EXCEPTION;
 }

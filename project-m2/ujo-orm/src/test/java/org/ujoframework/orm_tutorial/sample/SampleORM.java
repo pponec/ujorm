@@ -256,6 +256,7 @@ public class SampleORM {
 
     /** Select items by a composed property.
      * It is a sample of a multi-table query.
+     * See used Criterion with the whereIn method. The value list can be empty and the result returns FALSE always in this case.
      * @see Item#$orderDate
      */
     public void useSelectItems_5() {

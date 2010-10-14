@@ -20,6 +20,7 @@ package org.ujoframework.orm.ao;
 /**
  * The BO cache policy is available inside a one session only. If you close the session then close database connection and clear cache.
  * @author Pavel Ponec
+ * @see org.ujoframework.orm.metaModel.MetaParams
  */
 public enum CachePolicy {
 

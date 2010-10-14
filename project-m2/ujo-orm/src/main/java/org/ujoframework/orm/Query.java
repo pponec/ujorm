@@ -197,19 +197,18 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @deprecated Use {@link #iterator()} instead of.
      * @see #iterator()
      */
-    //@Deprecated
+    @Deprecated
     final public UjoIterator<UJO> iterate() {
         return iterator();
     }
 
-    /** There is strongly recommended to use the method {@link #iterator()} rather.
-     * If you really need a result in the List type than call the next expression:
+    /** There is recommended to use the method {@link #iterator()} rather.
+     * The method calls internally the next statement:
      * <pre>iterator().toList()</pre>
      * @see #iterator()
      * @see OrmTools#loadLazyValues(java.lang.Iterable, int) 
-     * @deprecated
+     * @see OrmTools#loadLazyValuesAsBatch(org.ujoframework.orm.Query) 
      */
-    @Deprecated
     public List<UJO> list() {
         return iterator().toList();
     }
