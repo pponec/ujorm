@@ -38,7 +38,9 @@ final public class MetaParams extends AbstractMetaModel {
     private static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
     
 
-    /** Session cache policy. */
+    /** Session cache policy.
+     * @see CachePolicy Parameter values
+     */
     public static final Property<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.PROTECTED_CACHE);
     /** Special prameter for an automatically assembled table alias prefix. */
     public static final Property<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "");
@@ -49,13 +51,17 @@ final public class MetaParams extends AbstractMetaModel {
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 100, the smallest possible value is 1. */
     public static final Property<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 100);
-    /** A policy to defining the database structure by a DDL. */
+    /** A policy to defining the database structure by a DDL. 
+     * @see Orm2ddlPolicy Parameter values
+     */
     public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
     /** Change a TypeService class by a subtype for user type customization. */
     public static final Property<MetaParams,Class> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
-    /** CheckReport a keyword in the database table or colum name inside the meta-model. */
+    /** CheckReport a keyword in the database table or colum name inside the meta-model. 
+     * @see CheckReport Parameter values
+     */
     public static final Property<MetaParams,CheckReport> CHECK_KEYWORDS = newProperty("checkKeywords", CheckReport.EXCEPTION);
     /** The maximal count of items for the SQL IN operator, default value is 500 items
      * The limit is used inside the method {@link OrmTools#loadLazyValuesAsBatch(java.lang.Iterable, org.ujoframework.UjoProperty) loadLazyValuesAsBatch(..)}.

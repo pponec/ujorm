@@ -20,6 +20,7 @@ package org.ujoframework.orm.ao;
 /**
  * Possible values to create the DLL (Data Definition Language) for for defining data structures.
  * @author Pavel Ponec
+ * @see org.ujoframework.orm.metaModel.MetaParams
  */
 public enum Orm2ddlPolicy {
 

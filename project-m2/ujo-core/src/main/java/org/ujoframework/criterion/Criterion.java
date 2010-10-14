@@ -162,67 +162,60 @@ public abstract class Criterion<UJO extends Ujo> {
     }
 
     /**
+     * Create new Criterion for operator IN to compare value to a list of constants.
+     * @param property A direct or indeirect Ujo property
+     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @return A the new immutable Criterion.
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereIn
+        ( UjoProperty<UJO,TYPE> property
+        , Collection<TYPE> list
+        ) {
+
+        if (list.isEmpty()) {
+            return Criterion.constant(property, false);
+        } else {
+            return new ValueCriterion<UJO>(property, Operator.IN, list.toArray());
+        }
+    }
+
+    /**
+     * Create new Criterion for operator IN to compare value to a list of constants.
+     * @param property A direct or indeirect Ujo property
+     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
+     * @return A the new immutable Criterion.
+     */
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotIn
+        ( UjoProperty<UJO,TYPE> property
+        , Collection<TYPE> list
+        ) {
+        return new ValueCriterion<UJO>(property, Operator.NOT_IN, list.toArray());
+    }
+
+    /**
      * Create new Criterion for operator IN to compare value to a list of constants
-     * @param property UjoProperty
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>UjoProperty - reference to a related entity</li>
-     * </ul>
+     * @param property A reference to a related entity
+     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereIn
         ( UjoProperty<UJO,TYPE> property
-        , Collection<TYPE> value
+        , TYPE... list
         ) {
-        return new ValueCriterion<UJO>(property, Operator.IN, value.toArray());
+        return new ValueCriterion<UJO>(property, Operator.IN, list);
     }
 
     /**
-     * Create new Criterion for operator NOT IN to compare value to a list of constants
-     * @param property UjoProperty
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>UjoProperty - reference to a related entity</li>
-     * </ul>
-     * @return A the new immutable Criterion
+     * Create new Criterion for operator IN to compare value to a list of constants.
+     * @param A property direct or indeirect Ujo property
+     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
+     * @return A the new immutable Criterion.
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotIn
         ( UjoProperty<UJO,TYPE> property
-        , Collection<TYPE> value
+        , TYPE... list
         ) {
-        return new ValueCriterion<UJO>(property, Operator.NOT_IN, value.toArray());
-    }
-
-    /**
-     * Create new Criterion for operator IN to compare value to a list of constants
-     * @param property UjoProperty
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>UjoProperty - reference to a related entity</li>
-     * </ul>
-     * @return A the new immutable Criterion
-     */
-    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereIn
-        ( UjoProperty<UJO,TYPE> property
-        , TYPE... value
-        ) {
-        return new ValueCriterion<UJO>(property, Operator.IN, value);
-    }
-
-    /**
-     * Create new Criterion for operator NOT IN to compare value to a list of constants
-     * @param property UjoProperty
-     * <ul>
-     * <li>TYPE - parameter value</li>
-     * <li>UjoProperty - reference to a related entity</li>
-     * </ul>
-     * @return A the new immutable Criterion
-     */
-    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotIn
-        ( UjoProperty<UJO,TYPE> property
-        , TYPE... value
-        ) {
-        return new ValueCriterion<UJO>(property, Operator.NOT_IN, value);
+        return new ValueCriterion<UJO>(property, Operator.NOT_IN, list);
     }
 
 

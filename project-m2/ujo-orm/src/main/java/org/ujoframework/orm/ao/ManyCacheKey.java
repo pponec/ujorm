@@ -19,6 +19,7 @@ package org.ujoframework.orm.ao;
 /**
  * UJO CacheKey
  * @author Pavel Ponec
+ * @see org.ujoframework.orm.metaModel.MetaParams
  */
 final class ManyCacheKey extends CacheKey {
 
