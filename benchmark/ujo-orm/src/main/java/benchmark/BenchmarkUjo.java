@@ -224,7 +224,7 @@ public class BenchmarkUjo {
             session.delete(order);
         }
 
-        Criterion<UjoUser> userCrn = Criterion.where(UjoUser.id);
+        Criterion<UjoUser> userCrn = Criterion.constant(UjoUser.id, true);
         session.delete(userCrn);
 
         session.commit();

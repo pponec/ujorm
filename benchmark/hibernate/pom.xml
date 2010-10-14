@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>benchmark.hibernate.pojo</artifactId>
     <packaging>jar</packaging>
-    <version>0.94.5</version>
+    <version>1.00</version>
     <name>xBenchmark-HibernatePojo</name>
     <url>http://maven.apache.org</url>
     <build>

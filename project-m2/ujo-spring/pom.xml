@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm-spring</artifactId>
     <packaging>jar</packaging>
-    <version>0.94.5</version>
+    <version>1.00</version>
 
     <contributors>
         <contributor>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>0.94.5</version>
+            <version>1.00</version>
             <scope>compile</scope>
         </dependency>
 

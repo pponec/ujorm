@@ -259,7 +259,7 @@ public abstract class Criterion<UJO extends Ujo> {
             );
     }
 
-    /** This is a constant criterion independed on the property and the ujo entity. A result the same like the constant allways.
+    /** This is a special constant criterion independed on the property or the ujo entity. A result is the same like the parameter constant allways.
      * @see Operator#X_FIXED
      */
     public static <UJO extends Ujo> Criterion<UJO> constant(UjoProperty<UJO,?> property, boolean constant) {

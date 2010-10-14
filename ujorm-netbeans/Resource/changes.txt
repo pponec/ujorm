@@ -1,6 +1,14 @@
 The UJO Framework release notes
 *******************************
 
+release 1.00 (2010-10-XX)
++ the Ujorm User Guide is completed
++ new effective method for bulk loading of lazy attributes: OrmTools.loadLazyValuesAsBatch()
++ support for the Spring Framework to manage an ORM Session and Transactions
++ Criterion have got a native support for IN operator
++ UjoProperty default value reading is fixed in some cases
++ JavaDoc is improved
+
 release 0.94 (2010-05-02)
 + stored database procedures and functions are supported
 + the class Query implements the interface Iterable thanks to idea of Jiri Pejchal
