@@ -18,7 +18,7 @@
         <property name="hibernate.default_schema">bmk</property>
         <property name="connection.pool_size">4</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="hbm2ddl.auto">create</property> <!-- <property name="hbm2ddl.auto">update</property> -->
+        <property name="hbm2ddl.auto">update</property>
         <property name="show_sql">false</property>
 
         <mapping class="benchmark.bo.HbmOrder" />
