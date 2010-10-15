@@ -137,9 +137,9 @@ public class SampleORM {
         session.save(item2);
 
         if (true) {
-           session.commit();
+            session.commit();
         } else {
-           session.rollback();
+            session.rollback();
         }
     }
 
@@ -178,11 +178,11 @@ public class SampleORM {
     public void useSortOrderItems() {
 
         Query<Item> items = session.createQuery(Item.class);
-        items.orderBy( Item.order.add(Order.created) );
+        items.orderBy(Item.order.add(Order.created));
 
         for (Item item : items) {
             OrmTools.loadLazyValues(item, 2);
-            System.out.println(item.get( Item.order.add(Order.created) ) + " " + item);
+            System.out.println(item.get(Item.order.add(Order.created)) + " " + item);
         }
         // Another way to avoid the lazy loading by a bulk property loading:
         List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
@@ -245,7 +245,7 @@ public class SampleORM {
      * @see Item#$orderDate
      */
     public void useSelectItems_4() {
-        UjoProperty<Item,Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
+        UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
         Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
         Query<Item> items = session.createQuery(crit);
 
@@ -308,12 +308,11 @@ public class SampleORM {
         }
     }
 
-
     /** How to skip items? */
     public void useIteratorSkip() {
         Criterion<Item> crit = Criterion.where(Item.descr, Operator.NOT_EQ, "XXXXX");
         UjoIterator<Item> items = session.createQuery(crit).iterator();
-        
+
         boolean skip = items.skip(1);
         if (items.hasNext()) {
             Item item = items.next();
@@ -321,7 +320,7 @@ public class SampleORM {
         }
 
         skip = items.skip(1);
-        boolean isNext =  items.hasNext();
+        boolean isNext = items.hasNext();
         System.out.println("Next: " + isNext);
     }
 
@@ -452,9 +451,8 @@ public class SampleORM {
      * and database connection(s).
      */
     public void useCloseSession() {
-        if (session!=null) {
+        if (session != null) {
             session.close();
         }
     }
-
 }
