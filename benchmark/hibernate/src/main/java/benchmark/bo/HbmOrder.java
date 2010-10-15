@@ -33,7 +33,8 @@ import javax.persistence.Temporal;
  */
 
 //@org.hibernate.annotations.Entity(dynamicUpdate=true)
-@javax.persistence.Entity()
+@javax.persistence.Entity
+@javax.persistence.Table(name="hbm_order")
 public class HbmOrder implements Serializable {
 
     @Id @GeneratedValue(strategy=GenerationType.AUTO)

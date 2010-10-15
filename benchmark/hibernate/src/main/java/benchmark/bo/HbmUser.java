@@ -28,7 +28,8 @@ import javax.persistence.Id;
  * @author pavel
  */
 @org.hibernate.annotations.Entity(dynamicUpdate=true)
-@javax.persistence.Entity()
+@javax.persistence.Entity
+@javax.persistence.Table(name="hbm_user")
 public class HbmUser implements Serializable {
 
     @Id @GeneratedValue(strategy=GenerationType.AUTO)

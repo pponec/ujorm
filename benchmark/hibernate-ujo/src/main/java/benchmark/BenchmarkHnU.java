@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package benchmark;
 
 import java.math.BigDecimal;
@@ -35,8 +34,7 @@ import benchmark.bo.*;
 public class BenchmarkHnU {
 
     public static final int ORDER_COUNT = 2000;
-    public static final int ITEM_COUNT  = 7;
-
+    public static final int ITEM_COUNT = 7;
     SessionFactory sessionFactory;
     Session session;
 
@@ -63,21 +61,21 @@ public class BenchmarkHnU {
 
         PrfUser user1 = new PrfUser();
         user1.setLastname("Lorem ipsum dolor");
-        user1.setSurename( "Sit amet consectetur");
-        user1.setPersonalId( "12345678");
+        user1.setSurename("Sit amet consectetur");
+        user1.setPersonalId("12345678");
         session.save(user1);
 
         PrfUser user2 = new PrfUser();
-        user2.setLastname( "Lorem ipsum dolor");
-        user2.setSurename( "Sit amet consectetur");
-        user2.setPersonalId( "12345678");
+        user2.setLastname("Lorem ipsum dolor");
+        user2.setSurename("Sit amet consectetur");
+        user2.setPersonalId("12345678");
         session.save(user2);
 
 
-        for (int i=1; i<=ORDER_COUNT; i++) {
+        for (int i = 1; i <= ORDER_COUNT; i++) {
 
             PrfOrder order = new PrfOrder();
-            order.setDateOfOrder( new Date());
+            order.setDateOfOrder(new Date());
             order.setDeletionReason("NO");
             order.setDiscount(new BigDecimal(100));
             order.setLanguage("cs");
@@ -85,20 +83,20 @@ public class BenchmarkHnU {
             order.setPaid(true);
             order.setParent(null);
             order.setPaymentType("C");
-            order.setPublicId( "P"+String.valueOf(1001000+i));
+            order.setPublicId("P" + String.valueOf(1001000 + i));
             order.setUser(user1);
             session.save(order);
 
-            for (int j=1; j<=ITEM_COUNT; j++) {
-               PrfOrderItem item = new PrfOrderItem();
-               item.setArrival(false);
-               item.setCharge( new BigDecimal(1000-j));
-               item.setDescription( "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
-               item.setOrder( order);
-               item.setPrice( new BigDecimal(1000+j));
-               item.setPublicId( "xxss-"+j);
-               item.setUser( user2);
-               session.save(item);
+            for (int j = 1; j <= ITEM_COUNT; j++) {
+                PrfOrderItem item = new PrfOrderItem();
+                item.setArrival(false);
+                item.setCharge(new BigDecimal(1000 - j));
+                item.setDescription("Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
+                item.setOrder(order);
+                item.setPrice(new BigDecimal(1000 + j));
+                item.setPublicId("xxss-" + j);
+                item.setUser(user2);
+                session.save(item);
             }
         }
 
@@ -106,7 +104,6 @@ public class BenchmarkHnU {
         printTime("INSERT", time1, System.currentTimeMillis());
 
     }
-
 
     /** Create database and using SELECT */
     @SuppressWarnings("unchecked")
@@ -131,9 +128,8 @@ public class BenchmarkHnU {
         }
 
         tr.commit();
-        printTime("SINGLE SELECT "+i, time1, System.currentTimeMillis());
+        printTime("SINGLE SELECT " + i, time1, System.currentTimeMillis());
     }
-
 
     /** Create database and using SELECT */
     @SuppressWarnings("unchecked")
@@ -143,7 +139,7 @@ public class BenchmarkHnU {
         Transaction tr = session.beginTransaction();
 
 
-        for (int i = -ORDER_COUNT; i<0 ; i++) {
+        for (int i = -ORDER_COUNT; i < 0; i++) {
             String hql = "from PrfOrder where id = :id and deleted = :deleted";
             Query query = session.createQuery(hql);
             query.setParameter("id", new Long(i));
@@ -152,10 +148,10 @@ public class BenchmarkHnU {
         }
 
         tr.commit();
-        printTime("EMPTY SELECT "+ORDER_COUNT, time1, System.currentTimeMillis());;
+        printTime("EMPTY SELECT " + ORDER_COUNT, time1, System.currentTimeMillis());
+        ;
 
     }
-
 
     /** Create database and using SELECT */
     @SuppressWarnings("unchecked")
@@ -172,7 +168,7 @@ public class BenchmarkHnU {
         int i = 0;
         for (PrfOrder order : orders) {
             String surename = order.getUser().getSurename();
-            if (false) System.out.println("Usr.surename: " + surename);
+            if (false) { System.out.println("Usr.surename: " + surename); }
 
             hql = "from PrfOrderItem where deleted = :deleted and order = :order";
             query = session.createQuery(hql);
@@ -182,20 +178,19 @@ public class BenchmarkHnU {
 
             for (PrfOrderItem item : items) {
                 ++i;
-                BigDecimal price  = item.getPrice();
+                BigDecimal price = item.getPrice();
                 BigDecimal charge = item.getCharge();
                 if (true) {
                     String lang = item.getOrder().getLanguage();
                     String name = item.getUser().getLastname();
-                    if (false) System.out.println(">>> Order.lang: " + lang + " User.lastname" + name);
+                    if (false) { System.out.println(">>> Order.lang: " + lang + " User.lastname" + name); }
                 }
             }
         }
 
         tr.commit();
-        printTime("MULTI SELECT "+i, time1, System.currentTimeMillis());
+        printTime("MULTI SELECT " + i, time1, System.currentTimeMillis());
     }
-
 
     /** Update a charge of the order items */
     @SuppressWarnings("unchecked")
@@ -217,7 +212,7 @@ public class BenchmarkHnU {
         }
 
         tr.commit();
-        printTime("UPDATE "+i, time1, System.currentTimeMillis());
+        printTime("UPDATE " + i, time1, System.currentTimeMillis());
     }
 
     /** Create database and using DELETE */
@@ -257,12 +252,11 @@ public class BenchmarkHnU {
         sessionFactory.close();
     }
 
-
     /** Print time message. */
     protected void printTime(String msg, long time1, long time2) {
-        long time = time2-time1;
-        double result = time/1000d;
-        System.out.println("TIME - "+msg + ": "+result);
+        long time = time2 - time1;
+        double result = time / 1000d;
+        System.out.println("TIME - " + msg + ": " + result);
     }
 
     /** Test */
@@ -283,7 +277,5 @@ public class BenchmarkHnU {
             e.printStackTrace();
         }
 
-
     }
-
 }
