@@ -612,26 +612,14 @@ final public class MetaDatabase extends AbstractMetaModel {
     public Connection createInternalConnection() throws Exception {
         Connection result;
 
-        String jndi = JNDI.of(this);
+        final String jndi = JNDI.of(this);
         if (isUsable(jndi)) {
-
-            // TODO
-            LOGGER.log(Level.SEVERE, "----------- TODO ---------------- JNDI: {0}", jndi);
-
-//            Context intC = getInitialContext();
-//            Context c = (Context )intC.lookup("java:comp/env");
-//            DataSource ds = (DataSource)c.lookup("jworksheet");
-//            result = ds.getConnection();
-
-
-            //DataSource dataSource = (DataSource) getInitialContext().lookup(jndi);
-            //result = dataSource.getConnection();
-
-            Context init_con = new InitialContext();
-            Context cntx = (Context) init_con.lookup("java:comp/env");
-            DataSource ds = (DataSource) cntx.lookup("jdbc/jworksheet");
-            result = ds.getConnection();
-
+            LOGGER.log(Level.FINE, "JNDI: {0}", jndi);
+            DataSource dataSource = (DataSource ) getInitialContext().lookup(jndi);
+            if (dataSource==null) {
+                throw new IllegalStateException("JNDI problem: database connection was not found for the: " + jndi);
+            }
+            result = dataSource.getConnection();
         } else {
             Class.forName(JDBC_DRIVER.of(this));
             result = DriverManager.getConnection(JDBC_URL.of(this), USER.of(this), PASSWORD.of(this));
