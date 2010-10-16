@@ -1,0 +1,1802 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html class="pageview">
+
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<base target="_top">
+<style type="text/css">
+  
+
+/* default css */
+
+table {
+  font-size: 1em;
+  line-height: inherit;
+  border-collapse: collapse;
+}
+
+
+tr {
+  
+  text-align: left;
+  
+}
+
+
+div, address, ol, ul, li, option, select {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+p {
+  margin: 0px;
+}
+
+
+pre {
+  font-family: Courier New;
+  white-space: pre-wrap;
+  margin:0;
+}
+
+body {
+  margin: 6px;
+  padding: 0px;
+  font-family: Verdana, sans-serif;
+  font-size: 10pt;
+  background-color: #ffffff;
+  color: #000;
+}
+
+
+img {
+  -moz-force-broken-image-icon: 1;
+}
+
+@media screen {
+  html.pageview {
+    background-color: #f3f3f3 !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  
+
+  body {
+    min-height: 1100px;
+    
+    counter-reset: __goog_page__;
+  }
+  
+  * html body {
+    height: 1100px;
+  }
+  /* Prevent repaint errors when scrolling in Safari. This "Star-7" css hack
+     targets Safari 3.1, but not WebKit nightlies and presumably Safari 4.
+     That's OK because this bug is fixed in WebKit nightlies/Safari 4 :-). */
+  html*#wys_frame::before {
+    content: '\A0';
+    position: fixed;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+  }
+  
+  .pageview body {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 2px solid #bbb;
+    border-bottom: 2px solid #bbb;
+    width: 648px !important;
+    margin: 15px auto 25px;
+    padding: 40px 50px;
+  }
+  /* IE6 */
+  * html {
+    overflow-y: scroll;
+  }
+  * html.pageview body {
+    overflow-x: auto;
+  }
+  
+
+  
+    
+    .writely-callout-data {
+      display: none;
+    }
+    
+
+    .writely-footnote-marker {
+      background-image: url('MISSING');
+      background-color: transparent;
+      background-repeat: no-repeat;
+      width: 7px;
+      overflow: hidden;
+      height: 16px;
+      vertical-align: top;
+
+      
+      -moz-user-select: none;
+    }
+    .editor .writely-footnote-marker {
+      cursor: move;
+    }
+    .writely-footnote-marker-highlight {
+      background-position: -15px 0;
+      -moz-user-select: text;
+    }
+    .writely-footnote-hide-selection ::-moz-selection, .writely-footnote-hide-selection::-moz-selection {
+      background: transparent;
+    }
+    .writely-footnote-hide-selection ::selection, .writely-footnote-hide-selection::selection {
+      background: transparent;
+    }
+    .writely-footnote-hide-selection {
+      cursor: move;
+    }
+
+    /* Comments */
+    .writely-comment-yellow {
+      background-color: #ffffd7;
+    }
+    .writely-comment-orange {
+      background-color: #ffe3c0;
+    }
+    .writely-comment-pink {
+      background-color: #ffd7ff;
+    }
+    .writely-comment-green {
+      background-color: #d7ffd7;
+    }
+    .writely-comment-blue {
+      background-color: #d7ffff;
+    }
+    .writely-comment-purple {
+      background-color: #eed7ff;
+    }
+
+  
+
+
+  
+  .br_fix span+br:not(:-moz-last-node) {
+    
+    position:relative;
+    
+    left: -1ex
+    
+  }
+
+  
+  #cb-p-tgt {
+    font-size: 8pt;
+    padding: .4em;
+    background-color: #ddd;
+    color: #333;
+  }
+  #cb-p-tgt-can {
+    text-decoration: underline;
+    color: #36c;
+    font-weight: bold;
+    margin-left: 2em;
+  }
+  #cb-p-tgt .spin {
+    width: 16px;
+    height: 16px;
+    background: url(//ssl.gstatic.com/docs/clipboard/spin_16o.gif) no-repeat;
+  }
+}
+
+h6 { font-size: 8pt }
+h5 { font-size: 8pt }
+h4 { font-size: 10pt }
+h3 { font-size: 12pt }
+h2 { font-size: 14pt }
+h1 { font-size: 18pt }
+
+blockquote {padding: 10px; border: 1px #DDD dashed }
+
+.webkit-indent-blockquote { border: none; }
+
+a img {border: 0}
+
+.pb {
+  border-width: 0;
+  page-break-after: always;
+  /* We don't want this to be resizeable, so enforce a width and height
+     using !important */
+  height: 1px !important;
+  width: 100% !important;
+}
+
+.editor .pb {
+  border-top: 1px dashed #C0C0C0;
+  border-bottom: 1px dashed #C0C0C0;
+}
+
+div.google_header, div.google_footer {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+
+/* Table of contents */
+.editor div.writely-toc {
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+}
+.writely-toc > ol {
+  padding-left: 3em;
+  font-weight: bold;
+}
+ol.writely-toc-subheading {
+  padding-left: 1em;
+  font-weight: normal;
+}
+/* IE6 only */
+* html writely-toc ol {
+  list-style-position: inside;
+}
+.writely-toc-none {
+  list-style-type: none;
+}
+.writely-toc-decimal {
+  list-style-type: decimal;
+}
+.writely-toc-upper-alpha {
+  list-style-type: upper-alpha;
+}
+.writely-toc-lower-alpha {
+  list-style-type: lower-alpha;
+}
+.writely-toc-upper-roman {
+  list-style-type: upper-roman;
+}
+.writely-toc-lower-roman {
+  list-style-type: lower-roman;
+}
+.writely-toc-disc {
+  list-style-type: disc;
+}
+
+/* Ordered lists converted to numbered lists can preserve ordered types, and
+   vice versa. This is confusing, so disallow it */
+ul[type="i"], ul[type="I"], ul[type="1"], ul[type="a"], ul[type="A"] {
+  list-style-type: disc;
+}
+
+ol[type="disc"], ol[type="circle"], ol[type="square"] {
+  list-style-type: decimal;
+}
+
+/* end default css */
+
+
+  /* default print css */
+  @media print {
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    div.google_header, div.google_footer {
+      display: block;
+      min-height: 0;
+      border: none;
+    }
+
+    div.google_header {
+      flow: static(header);
+    }
+
+    /* used to insert page numbers */
+    div.google_header::before, div.google_footer::before {
+      position: absolute;
+      top: 0;
+    }
+
+    div.google_footer {
+      flow: static(footer);
+    }
+
+    /* always consider this element at the start of the doc */
+    div#google_footer {
+      flow: static(footer, start);
+    }
+
+    span.google_pagenumber {
+      content: counter(page);
+    }
+
+    span.google_pagecount {
+      content: counter(pages);
+    }
+
+    .endnotes {
+      page: endnote;
+    }
+
+    /* MLA specifies that endnotes title should be 1" margin from the top of the page. */
+    @page endnote {
+      margin-top: 1in;
+    }
+
+    callout.google_footnote {
+      
+      display: prince-footnote;
+      footnote-style-position: inside;
+      /* These styles keep the footnote from taking on the style of the text
+         surrounding the footnote marker. They can be overridden in the
+         document CSS. */
+      color: #000;
+      font-family: Verdana;
+      font-size: 10.0pt;
+      font-weight: normal;
+    }
+
+    /* Table of contents */
+    #WritelyTableOfContents a::after {
+      content: leader('.') target-counter(attr(href), page);
+    }
+
+    #WritelyTableOfContents a {
+      text-decoration: none;
+      color: black;
+    }
+
+    /* Comments */
+    .writely-comment-yellow {
+      background-color: #ffffd7;
+    }
+    .writely-comment-orange {
+      background-color: #ffe3c0;
+    }
+    .writely-comment-pink {
+      background-color: #ffd7ff;
+    }
+    .writely-comment-green {
+      background-color: #d7ffd7;
+    }
+    .writely-comment-blue {
+      background-color: #d7ffff;
+    }
+    .writely-comment-purple {
+      background-color: #eed7ff;
+    }
+  }
+
+  @page {
+    @top {
+      content: flow(header);
+    }
+    @bottom {
+      content: flow(footer);
+    }
+    @footnotes {
+      border-top: solid black thin;
+      padding-top: 8pt;
+    }
+  }
+  /* end default print css */
+
+
+/* custom css */
+
+
+/* end custom css */
+
+/* ui edited css */
+
+body {
+  font-family: Verdana;
+  
+  font-size: 10.0pt;
+  line-height: normal;
+  background-color: #ffffff;
+}
+/* end ui edited css */
+
+
+/* editor CSS */
+.editor a:visited {color: #551A8B}
+.editor table.zeroBorder {border: 1px dotted gray}
+.editor table.zeroBorder td {border: 1px dotted gray}
+.editor table.zeroBorder th {border: 1px dotted gray}
+
+
+.editor div.google_header, .editor div.google_footer {
+  border: 2px #DDDDDD dashed;
+  position: static;
+  width: 100%;
+  min-height: 2em;
+}
+
+.editor .misspell {background-color: yellow}
+
+.editor .writely-comment {
+  font-size: 9pt;
+  line-height: 1.4;
+  padding: 1px;
+  border: 1px dashed #C0C0C0
+}
+
+
+/* end editor CSS */
+
+</style>
+
+  
+  <title>Ujorm tutorial - EN</title>
+
+</head>
+
+<body 
+    
+    >
+    
+    
+    
+<h1>
+  <a id=Ujorm_User_Guide_1070508786431_7537999166615287 name=Ujorm_User_Guide_1070508786431_7537999166615287></a>Ujorm User Guide<img height=65 id=syq1 src="images/ddcs2pg5_136gwrcjzf3_b.png" style=FLOAT:right;MARGIN-LEFT:40pt;MARGIN-RIGHT:1em width=65>
+</h1>
+<i>License Document: <a href=http://creativecommons.org/licenses/by-nd/3.0/ rel=license title="Creative Commons BY-ND">Creative Commons BY-ND</a> ,<br>
+Author: Pavel Ponec, ponec@ujorm.com<br>
+</i>
+<div style=MARGIN-LEFT:40px>
+  <i>&nbsp;&nbsp; Spring Integration by Tomas Hampl</i><br>
+</div>
+<i>Version: Ujorm 1.00 (October, 2010)<br>
+PDF format:</i> <a href=http://ujoframework.org/orm/tutorial/UjormUserGuide-1.00.pdf title=Print><img src="images/ddcs2pg5_190djqbwxd2_b.png" style=HEIGHT:16px;WIDTH:16px></a><i><br>
+Thank you for your comments and suggestions.</i><br>
+<br>
+<br>
+<div class=writely-toc id=WritelyTableOfContents toctype=decimal+decimal>
+  <ol class=writely-toc-decimal>
+    <li>
+      <a href=#Ujorm_User_Guide_1070508786431_7537999166615287 target=_self>Ujorm User Guide</a>
+    </li>
+    <ol class="writely-toc-decimal writely-toc-subheading" style=MARGIN-LEFT:0pt>
+      <li>
+        <a href=#Quick_start_7150330208115204_1_9413102179838487 target=_self>Quick Start</a>
+      </li>
+      <li>
+        <a href=#Architektura_5616677272949514__6526977241652242 target=_self>Architecture</a>
+      </li>
+      <li>
+        <a href=#Uk_zka_pou_it_k_du_56902763478_33721473739774754 target=_self>Example of application the code</a>
+      </li>
+      <li>
+        <a href=#Stavy_perzistentn_ho_objektu_1_11435701080026217 target=_self>States of persistent object</a>
+      </li>
+      <li>
+        <a href=#Mapping_of_data_types_93554489_3582069873034679 target=_self>Mapping of data types</a>
+      </li>
+      <li>
+        <a href=#Lazy_loading_5479859842235448__9916114632075778 target=_self>Lazy loading</a>
+      </li>
+      <li>
+        <a href=#Session_cache_5212961387999433_8061162109753274 target=_self>Session cache</a>
+      </li>
+      <li>
+        <a href=#DDL_support_36207173943347537__3572938224007377 target=_self>DDL support</a>
+      </li>
+      <li>
+        <a href=#D_di_nost_entit_73677236305517_680275106197594 target=_self>Entity inheritance</a>
+      </li>
+      <li>
+        <a href=#Primary_key_auto_increment_655_2466001743384887 target=_self>Primary key auto increment</a>
+      </li>
+      <li>
+        <a href=#Datab_zov_procedury_6024463592_19404107712316188 target=_self>Database procedures</a>
+      </li>
+      <li>
+        <a href=#_zen_transakc_9768201514295931_8964216588204373 target=_self>Transaction control</a>
+      </li>
+      <li>
+        <a href=#_zen_transakc_9768201514295931 target=_self>API extention</a>
+      </li>
+      <li>
+        <a href=#Integrace_Spring_frameworku_38_7139831402643929 target=_self>Supported databases</a>
+      </li>
+      <li>
+        <a href=#Pro_konstanty_UjoProperty_maj_ target=_self>Why UjoProperty constants have lowercase letters?</a>
+      </li>
+      <li>
+        <a href=#Vlastnosti_Ujo_objekt_00514393_38282973299276835 target=_self>Use of UJO objects</a>
+      </li>
+      <li>
+        <a href=#Best_practices_940649839801627_3667249912409811 target=_self>Best Practices</a>
+      </li>
+      <li>
+        <a href=#Meta_model_11271129394580981_6_7813846301057804 target=_self>Meta-Model</a>
+      </li>
+      <li>
+        <a href=#Integrace_Spring_frameworku_38 target=_self>Integrating Spring Framework</a>
+      </li>
+      <li>
+        <a href=#Useful_links_1408664647419664__8952925994190774 target=_self>Performance</a>
+      </li>
+      <li>
+        <a href=#Useful_links_1408664647419664_ target=_self>More information</a>
+      </li>
+      <li>
+        <a href=#Pod_kov_n_10800762392117524_40_780879409271422 target=_self>Acknowledgements</a>
+      </li>
+    </ol>
+  </ol>
+</div>
+<br>
+<br>
+<h2>
+  <a id=Quick_start_7150330208115204_1_9413102179838487 name=Quick_start_7150330208115204_1_9413102179838487></a> Quick Start
+</h2>
+<a href=http://ujorm.com/ title=Ujorm>Ujorm</a> is a lightweight ORM framework for <b>effective</b> development of Java applications on a relational database. Some key features are:<br>
+<br>
+<ul>
+  <li>
+    type safe database queries
+  </li>
+  <li>
+    relation mapping the Java code rather
+  </li>
+  <li>
+    internal cache with a protection against overload storage<br>
+  </li>
+  <li>
+    no entity states
+  </li>
+  <li>
+    incremental database update using DDL statements
+  </li>
+  <li>
+    lazy initialization is supported
+  </li>
+  <li>
+    internal cache with protection against overload storage
+  </li>
+  <li>
+    simple and reliable implementation solution
+  </li>
+  <li>
+    integration support for the Spring Framework<br>
+  </li>
+</ul>
+<br>
+<br>
+For fast acquisition recommend reading a <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup title=tutorial>tutorial</a> built on the annotated source code. In tutorial you can found entities from following class diagram:<br>
+<div style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
+  <br>
+</div>
+<div style=TEXT-ALIGN:center>
+  <div id=qnxx style=TEXT-ALIGN:center>
+    <img height=225 src="images/ddcs2pg5_175fw3mw8gr_b.png" width=444>
+  </div>
+</div>
+<i>Note: UjoProperties are in diagrams formally described using the attributes of entity.</i><br>
+<br>
+Because Ujorm connected from Maven repository (repo1) is compiled without debugging information, I suggest to you to join the Ujorm JavaDoc to your project, so that you get full names of method parameters and more useful information from API.<br>
+<br>
+When you use the Maven POM file, take the following dependency:<br>
+<br>
+<table border=1 cellpadding=3 cellspacing=0 id=m9h- style=MARGIN-LEFT:auto;MARGIN-RIGHT:auto;TEXT-ALIGN:left>
+  <tbody>
+  <tr>
+    <td width=100%>
+      <font face="courier new">&nbsp; &lt;dependency&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;</font><b style="FONT-FAMILY:Courier New">org.ujoframework</b><font face="courier new">&lt;/groupId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><br clear=none style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;</font><b style="FONT-FAMILY:Courier New">ujo-orm</b><font face="courier new">&lt;/artifactId&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;</font><b style="FONT-FAMILY:Courier New">1.00</b><font face="courier new">&lt;/version&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp; &lt;/dependency&gt;</font><br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<h2>
+  <a id=Architektura_5616677272949514__6526977241652242 name=Architektura_5616677272949514__6526977241652242></a> Architecture
+</h2>
+The following class diagram clarifies relation between single classes Ujorm domain framework and application classes. The diagram is simplified and slightly modified to show only the relevant entities. A more detailed descriptions can be found, if necessary, in the <a href=http://ujoframework.org/javadoc/ id=e3-s title="JavaDoc Project">Ujorm JavaDoc</a> .<br>
+<div id=le08 style=TEXT-ALIGN:left>
+  <div id=saxt style=TEXT-ALIGN:left>
+    <br>
+    <div id=p-sj style=TEXT-ALIGN:left>
+      <div id=kvbb style=TEXT-ALIGN:center>
+        <div id=yn7u style=TEXT-ALIGN:center>
+          <img height=568 src="images/ddcs2pg5_180frd98khh_b.png" width=543>
+        </div>
+        <br>
+      </div>
+      <div style=TEXT-ALIGN:center>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
+Notes to graph:<br>
+UjoProperty attributes described in the domain objects are always <b>static constants,</b> which provide methods for writing and reading values to the Ujo object. Only this diagram is hinted for better illustration the implementation of UjoProperties in domain objects, in other diagrams of this document is used the same formal registration as for a regular POJO attributes.<br>
+<br>
+Entity Description:<br>
+<ul>
+  <li>
+    Ujo - interface of an object containing the values. The object provides a list of their properties. A kind of data storage determines the implementation, for example OrmTable uses internally an array of objects.<br>
+  </li>
+  <li>
+    UjoProperty - immutable object containing meta-data of the property, which provides two methods for reading and writing values to Ujo object. Two UjoProperties could be joined using the method add(), the result is stored in a new immutable instance.
+  </li>
+  <li>
+    Property - default implementation of UjoProperty<br>
+  </li>
+  <li>
+    RelationToMany - extended default implementation of UjoProperty designed for the data type: UjoIterator&lt;item&gt;<br>
+  </li>
+  <li>
+    OrmUjo - an interface designed for persistent application domain objects. Each object contains the session and provides a list of modified properties, more informations are available later in this document<br>
+  </li>
+  <li>
+    OrmTable - default implementation of OrmUjo interface<br>
+  </li>
+  <li>
+    OrmHandler - owner of the meta-model, which provides an efficient methods to search for specific parts of the meta-model. Meta-model is locked after initialization and can't be changed later.<br>
+  </li>
+  <li>
+    Database - the class of an application package containing a description of the persistent domain classes and stored procedures. For different DB connections, you can define multiple classes of type Database<br>
+  </li>
+  <li>
+    Criterion - the fundamental condition for the evaluation database Query. Criterion objects can be joined into a tree by operators <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#and%28org.ujoframework.criterion.Criterion%29 id=qghe title="and ()">and ()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#or%28org.ujoframework.criterion.Criterion%29 id=zrqu title="or ()">or ()</a> .<br>
+  </li>
+  <li>
+    User, Order, Item - example of using application domain objects, Please notice that in object can be used RelatinToMany property like in class Database. This RelatinToMany always returns UjoIterator as a result of a new database query.<br>
+  </li>
+</ul>
+<br>
+<h2>
+  <a id=Uk_zka_pou_it_k_du_56902763478_33721473739774754 name=Uk_zka_pou_it_k_du_56902763478_33721473739774754></a> Example of application the code
+</h2>
+The following code example obtains instances of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=ev92 title=OrmHandler>OrmHandler</a> class and its configuration using the Database class, the instance is retained for. It creates an instance of Order class Items and stores in a database. The save() and commit() operations can throw an runtime exception so there is necessary to catch the exception and close the used Session.<br>
+<br>
+<table border=1 cellpadding=3 cellspacing=0 height=376 id=cytz style=MARGIN-LEFT:40px width=397>
+  <tbody>
+  <tr>
+    <td width=100%>
+      <font face="courier new" size=2><font size=2>&nbsp;OrmHandler</font><span class=pygments-n> handler</span> <span class=pygments-o>=</span> <b><span class=pygments-k><font color=#741b47>new</font></span> </b><span class=pygments-n>OrmHandler</span><span class=pygments-o>();</span>&nbsp;<br>
+      &nbsp;handler.<span class=pygments-na>loadDatabase</span><span class=pygments-o>(</span><span class=pygments-n>Database</span><span class=pygments-o>.</span><b style=COLOR:#741b47><span class=pygments-na>class</span></b><span class=pygments-o>);</span><br>
+      <br>
+      &nbsp;Order order = </font><font color=#741b47 face="courier new" size=2><b>new</b> </font><font face="courier new" size=2>Order();<br>
+      &nbsp;order.setDate(</font><b><font color=#741b47 face="courier new" size=2>new </font></b><font face="courier new" size=2>Date());<br>
+      &nbsp;order.setDescr("John's order");<br>
+      <br>
+      &nbsp;Item item1 = </font><font color=#741b47 face="courier new" size=2>new </font><font face="courier new" size=2>Item();<br>
+      &nbsp;item1.setOrder(order);<br>
+      &nbsp;item1.setDescr(</font><b><font color=#0b5394 face="courier new" size=2>"Yellow table"</font></b><font face="courier new" size=2>);<br>
+      <br>
+      &nbsp;Item item2 = </font><font color=#741b47 face="courier new" size=2>new </font><font face="courier new" size=2>Item();<br>
+      &nbsp;item2.setOrder(order);<br>
+      &nbsp;item2.setDescr(</font><b><font color=#0b5394 face="courier new" size=2>"Green window"</font></b><font face="courier new" size=2>);<br>
+      <br>
+      &nbsp;Session session = OrmHandler.getInstance() &nbsp; &nbsp;&nbsp;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .createSession(); &nbsp;<br>
+      &nbsp;session.save(order); &nbsp;<br>
+      &nbsp;session.save(item1); &nbsp;<br>
+      &nbsp;session.save(item2); &nbsp;<br>
+      <br>
+      &nbsp;session.commit(); &nbsp;<br>
+      &nbsp;session.close();&nbsp; </font><br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<br>
+The second example contains usage a query using the Criterion joined by two elementary conditions. Missing operator is replaced by the EQUALS' one. Notice how is created composite 'UjoProperty'. The composite 'property' can be stored as an additional static constants of domain object. Prepared query is contained in the 'Query' object a can be simply used in 'for-each' command. In the end we have to close database 'session' again.<br>
+<div style=MARGIN-LEFT:40px>
+  <br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <table border=1 cellpadding=3 cellspacing=0 id=g8j1>
+    <tbody>
+    <tr>
+      <td width=100%>
+        &nbsp; <font face="courier new">Criterion&lt;Item&gt; cn1, cn2, criterion; &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        &nbsp; &nbsp;<br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;cn1 = Criterion.where( Item.ID, Operator.GE, </font><b><font color=#0b5394 face="courier new">1L</font></b><font face="courier new"> ); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;cn2 = Criterion.where( Item.ORDER.add(Order.DESCR) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; , </font><b><font color=#0b5394 face="courier new">"John's order"</font></b><font face="courier new"> ); <font color=#cccccc>// Equals to</font> &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;criterion = cn1.and(cn2); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;Session session = handler</font><font face="courier new">.createSession(); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;Query&lt;Item&gt; items = session.createQuery(criterion) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .orderBy ( Item.ORDER.add(Order.CREATED) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; , Item.ID.descending() ); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;System.out.println(</font><font color=#0b5394 face="courier new"> <b>"Row count: "</b></font><font face="courier new"> + items.getCount()); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;for (Item item : items) { &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; String descr = item.getDescr(); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; Date created = item.getOrder().getDate(); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; System.out.println( created + </font><b><font color=#0b5394 face="courier new">" : "</font></b><font face="courier new"> + descr ); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;} &nbsp;</font><br style="FONT-FAMILY:Courier New">
+        <font face="courier new">&nbsp;session.close();</font><br>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<br>
+<div style=MARGIN-LEFT:40px>
+  <br>
+</div>
+In the last example is used information from meta-model, which may contain useful information such as validation of the object.<br>
+<div style=MARGIN-LEFT:80px>
+  <br>
+</div>
+<table border=1 cellpadding=3 cellspacing=0 height=192 id=e8tr style=MARGIN-LEFT:40px width=463>
+  <tbody>
+  <tr>
+    <td width=100%>
+      <font face="courier new">MetaColumn col = (MetaColumn) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; handler.findColumnModel(Order.DESCR); &nbsp;</font><br style="FONT-FAMILY:Courier New">
+      &nbsp;<br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;StringBuilder msg = new StringBuilder() &nbsp;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; .append(</font><b><font color=#0b5394 face="courier new">"Length : "</font></b><font face="courier new"> + col.getMaxLength() + </font><b><font color=#0b5394 face="courier new">'\n'</font></b><font face="courier new">) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; .append(</font><b><font color=#0b5394 face="courier new">"NotNull: "</font></b><font face="courier new"> + col.isMandatory()&nbsp; + </font><b><font color=#0b5394 face="courier new">'\n'</font></b><font face="courier new">) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; .append(</font><b><font color=#0b5394 face="courier new">"PrimKey: "</font></b><font face="courier new"> + col.isPrimaryKey() + </font><b><font color=#0b5394 face="courier new">'\n'</font></b><font face="courier new">) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; .append(</font><b><font color=#0b5394 face="courier new">"DB name: "</font></b><font face="courier new"> + col.getFullName()&nbsp; + </font><b><font color=#0b5394 face="courier new">'\n'</font></b><font face="courier new">) &nbsp;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp; </font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;System.out.println(msg);</font><br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+Further examples of solved tasks can be found at this <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=xgyt title=link>link</a> .<br>
+<br>
+<h2>
+  <a id=Stavy_perzistentn_ho_objektu_1_11435701080026217 name=Stavy_perzistentn_ho_objektu_1_11435701080026217></a>States of persistent object
+</h2>
+Persistent class is obtained by extending the abstract class <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/OrmTable.html id=f0kd title=OrmTable>OrmTable</a> or implementation of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmUjo.html id=k8ng title=OrmUjo>OrmUjo</a> interface. Persistent object <b>doesn't</b> contain invasive states known from specifications of 'JPA/Hibernate', but each persistent object of OrmUjo type contains two other attributes:<br>
+<br>
+<ul>
+  <li>
+    Session - is needed to obtain a 'DB connection' in late values approach, the process is called 'lazy-loading'. If an <b>attribute of</b> the persistent object is another persistent object, then in each session reading is 'session' propagated from the reference to the relational object. For this reason, if you restore the 'session', there is sufficient to setup only the first object of the relational hierarchy to the current Session.<br>
+  </li>
+  <li>
+    U<font color=#000000>joProperty[] - contains a list of 'Properties' </font><b style=COLOR:#000000>registered</b><font color=#000000> during the assigned session. This list provides more efficient updating of the database by 'UPDATE' command, because the command is compiled only for the modified value of the 'Properties'. Other values are ignored while updating. Note that if a session isn't assigned to the object, there is registered no value changes</font><font color=#000000>. </font><br style=COLOR:#00ff00>
+  </li>
+</ul>
+<br>
+Function of OrmUjo object is just "data transporter", without any restrictions you can do activities such as:<br>
+<ul>
+  <li>
+    object obtained using the 'update' can be used (after changing ID) for insert
+  </li>
+  <li>
+    a new session can be assigned to object anytime (no other dependency)
+  </li>
+  <li>
+    object can be assigned with <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=wgku title="Foreign key">foreign key</a> to force LazyLoading - using 'Ujo.writeValue()'
+  </li>
+  <li style=BACKGROUND-COLOR:#ffffff>
+    <font color=#000000>to change the session of ManyToOne type (update of foreign key) is sufficient to assign a new instance of an object containing an real Primary Key</font>
+  </li>
+  <li>
+    <font color=#000000>when using</font> Criterion, the value of the filter (parameter) can be a new instance of OrmUjo object that contains the required Primary Key
+  </li>
+</ul>
+<br>
+Note: both of these attributes aren't transferred by Java <b>serialization,</b> which means that after the restoration from serialization, they will be logically empty.<br>
+<br>
+<br>
+<h2>
+  <a id=Mapping_of_data_types_93554489_3582069873034679 name=Mapping_of_data_types_93554489_3582069873034679></a>Mapping of data types
+</h2>
+Mapping of data types means adding JDBC type and element name to persistent Ujo property. Depending on the parameter mapping can be divided into two major groups:<br>
+<ul>
+  <li>
+    mapping of session - mapping to another persistent object of <b>OrmUjo </b>type<br>
+  </li>
+  <li>
+    mapping of value - other assignments of selected object types
+  </li>
+</ul>
+More detailed description is here:<br>
+<br>
+<font color=#351c75><b>Mapping of values</b></font><br>
+<ul>
+  <li>
+    <b>default</b> mapping is implemented for objects of these types: String, Boolean, Byte, Character, Short, Integer, Long, Float, Double, BigDecimal, BigInteger, byte [], java.util.Date, java.sql.Date, java.sql. Time, java.sql.Timestamp, java.sql.Blob, java.sql.Clob, Enum<br>
+  </li>
+  <li>
+    <b>explicit</b> mapping is given in '@Column' annotation or via an XML configuration file<br>
+  </li>
+  <li>
+    via <b>interface:</b> any object that implements the interface 'ValueExportable' is automatically mapped to 'VARCHAR'. That interface can also implement the 'Enum' type.<br>
+  </li>
+  <li>
+    specific requirements for mapping can be implemented by overlay <b>TypeService </b>class<b><br>
+    </b>
+  </li>
+</ul>
+<br>
+<div>
+  <b><font color=#351c75>Mapping of session M:1</font><br>
+  </b>
+  <ul>
+    <li>
+      mapping on primary key: for mapping is used standard property, only in class name appears another persistent class of object (implementing OrmUjo). As a relational column will be automatically used the primary key of a relational table.<br>
+    </li>
+    <li>
+      explicit mapping: used if the referenced column is not the primary key. In this case, you can use a 'RelationToOne' class that lets you put relational column with a second parameter in the following format:
+    </li>
+  </ul>
+  <div style=MARGIN-LEFT:80px>
+    ordProperty = RelationToOne.newInstance (Order.class, <b>Order.sid)</b><br>
+  </div>
+  <div style=MARGIN-LEFT:40px>
+    I recommend referenced column mark with a unique <b>index</b> for fast searching and data integrity, some databases require an index explicitly.<br>
+    <br>
+  </div>
+  <b style=COLOR:#351c75>Mapping of session 1:M</b><br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  This type of mapping offers (in way of writing code), easy access to the database query results. Any other value invoking generates a new database query. This type of property doesn't affect the creation or modification of database structure. Example of use:<br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <div style=MARGIN-LEFT:40px>
+    items = newRelation (Item.class)<br>
+    <br>
+  </div>
+</div>
+<b style=COLOR:#351c75>Mapping of session 1:1</b><br>
+<div style=MARGIN-LEFT:40px>
+  <font color=#000000>From the perspective of a solution</font> this is a special case of session M: 1, where degree number M can be limited by appropriate unique index. An alternative solution can be using a relational table as primary key (see example below).<br>
+  <br>
+</div>
+<b style=COLOR:#351c75>Mapping of relation M:N</b><br>
+<div style=MARGIN-LEFT:40px>
+  <font color=#000000>The binding is implemented using two relations M:1 &amp; 1:N, which are mapped on the other (relation) table</font><font color=#000000>. </font><br>
+</div>
+<br>
+<br>
+<h2>
+  <a id=Lazy_loading_5479859842235448__9916114632075778 name=Lazy_loading_5479859842235448__9916114632075778></a> Lazy loading
+</h2>
+Late loading of objects is a process that generally allows more efficient transfer of data between the database and the client. Late loading is implemented for each attribute that contains other entity, which is, in the database model, mapped by a foreign key.<br>
+<br>
+In late loading of an object Ujorm starts new database query that uses a database connection stored in <b>opened session.</b> However, because the entity <b>can't </b>open the closed session is itself, so LazyLoading on closed session <font color=#000000>shows</font> a run-time exception:<br>
+<div style=MARGIN-LEFT:40px>
+  new IllegalStateException ("The session is closed")<br>
+</div>
+<br>
+<div>
+  Such exemption can be avoided by choosing a suitable solution:<br>
+</div>
+<ul>
+  <li>
+    before invoking lazy to assign a open session to object:
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  OrmUjo.writeSession(session)<br>
+</div>
+<ul>
+  <li>
+    before invoking lazy to update the attributes of an object from database:<br>
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  Session.reload (ujo)<br>
+</div>
+<ul>
+  <li>
+    load the required lazy property right after obtaining the object using method according to the model:
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  item.getOrder();<br>
+</div>
+<ul>
+  <li>
+    retrieve all the lazy property to the desired depth by method:
+  </li>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  OrmTools.loadLazyValuesAsBatch(...)<br>
+</div>
+<ul>
+  <li>
+    sometimes it is not necessary to load the entire entity, just a <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=atiw title="Foreign Key">foreign key</a>, for which there is no need to have an opened session. This key can be obtained by command:<br>
+  </li>
+</ul>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; OrmTable.readFK (property)<br>
+<br>
+Note: Ujorm core doesn't use this method and isn't included in OrmUjo interface. The method is available in the default implementation of OrmTable.<br>
+<br>
+<div>
+  Sometimes you need to get lazy attribute(s) with a single SQL query using JOIN for more database query optimization, or to use some specific operators in your database. In this case, you can use:<br>
+  <ul>
+    <li>
+      user's query called "Ujorm native query" mapped to a new entity, or<br>
+    </li>
+    <li>
+      database VIEW - mapped to the new entity<br>
+    </li>
+  </ul>
+  <br>
+  <h2>
+    <a id=Session_cache_5212961387999433_8061162109753274 name=Session_cache_5212961387999433_8061162109753274></a> <b>Session cache</b>
+  </h2>
+  Ujorm uses caching objects in session in order to limit duplicate database queries. Cache behavior has a simple rule:<br>
+  <ul>
+    <li>
+      lifetime of cache has range (SCOPE) of database transactions. After executing a commit / rollback the cache will be released
+    </li>
+    <li>
+      in cache would get only objects of foreign key when loading lazy (lazy loading), in other cases the object is always loaded from the database
+    </li>
+    <li>
+      while updating the object, cache doesn't sync and so for elimination of potential conflicts you can empty the cache by <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#cacheClear%28%29 id=id5r title="clearCache ()">clearCache ()</a><br>
+    </li>
+    <li>
+      cache storage is protected against memory overload, it means that the garbage collector can release part of the cache at any time
+    </li>
+  </ul>
+  <br style=COLOR:#000000>
+  <font color=#000000><font color=#000000>From cache side</font>: Ujorm doesn't have exclusive access to the database, the registration will only need to align the allocation of p</font>rimary keys. With parameter <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> you can disable the cache for whole meta-model or you can disable releasing the cache with the garbage collector.<br>
+  <br>
+  To optimize performance rather recommend to keep the cache of<b> logic units</b> at the level of application logic (eg, Articles) than maintaining a cache of database rows.<br>
+  <br>
+  <h2>
+    <a id=DDL_support_36207173943347537__3572938224007377 name=DDL_support_36207173943347537__3572938224007377></a> <b>DDL support</b>
+  </h2>
+  Ujorm can edit the database schema using DDL updates of its meta-model. Meta-model contains a description of the database's real structure, which is compiled from class names, UjoProperties names, their annotations and eventually via the XML configuration file. When loaded into memory, meta-model is locked so any future modifications aren't possible. Updating the database is following these rules:<br>
+  <br>
+  <ul>
+    <li>
+      updates are carried out according to a meta-model right after its compilating in the OrmHandler object<br>
+    </li>
+    <li>
+      update is done only for <b>database items:</b>
+    </li>
+    <ul>
+      <li>
+        new table
+      </li>
+      <li>
+        new columns
+      </li>
+      <li>
+        new indexes
+      </li>
+      <li>
+        db schema is created only in the first update<br>
+      </li>
+    </ul>
+    <li>
+      item (column, index) created in the database framework is no longer changed, so you will have to be handle migrations on <b>your own</b>, for example:<br>
+    </li>
+    <ul>
+      <li>
+        change the column NULL to NOT NULL (or back)<br>
+      </li>
+      <li>
+        change in the index UNIQUE to NON-UNIQUE (or back)
+      </li>
+      <li>
+        change the primary key of table, etc.<br>
+      </li>
+    </ul>
+    <li>
+      database table must contain at least the primary key
+    </li>
+    <li>
+      Ujorm ignores non-mapped database objects (tables, columns, indexes)
+    </li>
+  </ul>
+  <br>
+  Parameter <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#ORM2DLL_POLICY id=hj1l title=ORM2DLL_POLICY>ORM2DLL_POLICY</a> can change behavior of update to one of the following <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ao/Orm2ddlPolicy.html id=xifg title=approaches>approaches</a>:<br>
+  <ul>
+    <li>
+      update ban<br>
+    </li>
+    <li>
+      allow only the first creation of the db model
+    </li>
+    <li>
+      allow incremental changes (default)
+    </li>
+  </ul>
+</div>
+<div>
+  General use of Ujorm parameters is described in the <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=mqa3 title="This document">tutorial</a>.<br>
+</div>
+<br>
+<h2>
+  <a id=D_di_nost_entit_73677236305517_680275106197594 name=D_di_nost_entit_73677236305517_680275106197594></a> Entity inheritance
+</h2>
+Ujorm doesn't support the concept of inheritance in the JPA. The main reason is that implementation of inheritance into the existing Ujorm architecture simply doesn't fit.<br>
+<br>
+Easy availability of inheritance in ORM tempting to light-headed use, which can cause performance problems on production data, so I recommend rather avoid the inheritance. However, if required, Ujorm allows <b>to emulate</b> inheritance - using design pattern of <b>aggregation and interface</b> (interface).<br>
+<br>
+&nbsp; In draft of solution the inheritance are used entities:<br>
+<ul>
+  <li>
+    User [id, login, password, name]
+  </li>
+  <li>
+    Customer [user, company, discount]
+  </li>
+</ul>
+<br>
+The proposed solution is based on IUser interface, that implements User and Customer objects. Both entities, User and Customer, shares the same ID. We can start using the advantages of inheritance, becaues instance of type <b>ICustomer</b> can be written to the data type <b>IUser.</b> Descriptions of <b>setters</b> have been skipped to simplify the diagram.<br>
+<div id=vtt7 style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
+  <div id=rnr0 style=TEXT-ALIGN:left>
+    <br>
+  </div>
+</div>
+<div id=n3r9 style=TEXT-ALIGN:center>
+  <div id=jva8>
+    <img height=238 src="images/ddcs2pg5_165qzhptzct_b.png" width=335>
+  </div>
+</div>
+<br>
+Notice that the 'Customer' has a <b>primary key</b> of <b>User </b>type and shares the same ID value:<br>
+<div style=MARGIN-LEFT:40px>
+  <br style="FONT-FAMILY:Courier New">
+</div>
+<div style=MARGIN-LEFT:40px>
+  <table border=1 cellpadding=3 cellspacing=0 id=e-sn>
+    <tbody>
+    <tr>
+      <td width=100%>
+        <font face="courier new">public class Customer extends OrmTable&lt;Employee&gt; implements IUser {</font><br style="FONT-FAMILY:Courier New">
+        <div style="FONT-FAMILY:Courier New;MARGIN-LEFT:40px">
+          @Column(<b>pk=true</b>, value=<font color=#0b5394>"id"</font>)<br>
+          public static final UjoProperty&lt;Customer, User&gt; <b>user </b><br>
+        </div>
+        <div style="FONT-FAMILY:Courier New;MARGIN-LEFT:120px">
+          <div style=MARGIN-LEFT:40px>
+            = newProperty(User.<b><font color=#741b47>class</font></b>);<br>
+          </div>
+        </div>
+        <div style="FONT-FAMILY:Courier New;MARGIN-LEFT:40px">
+          ...<br>
+        </div>
+        <font face="courier new">}</font><br>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<br>
+Implementation of the method <b>Customer.getLogin ()</b> might look like this:<br>
+<br>
+<div style=MARGIN-LEFT:40px>
+  <table border=1 cellpadding=3 cellspacing=0 id=s28y>
+    <tbody>
+    <tr>
+      <td width=100%>
+        <div style="FONT-FAMILY:Courier New">
+          <font size=2>@Override<br style="FONT-FAMILY:Courier New">
+          <font face="courier new"> public String getLogin() {</font><br style="FONT-FAMILY:Courier New">
+          </font>
+        </div>
+        <div style="FONT-FAMILY:Courier New">
+          <div style=MARGIN-LEFT:40px>
+            <font size=2> return get(user).getLogin();<br>
+            </font>
+          </div>
+        </div>
+        <font size=2><font face="courier new"> }</font></font><br>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <br>
+</div>
+<div style="FONT-FAMILY:Courier New;MARGIN-LEFT:80px">
+  <br>
+</div>
+In operations such as INSERT and UPDATE, we have to take care of each entity separately. See the example of coding to save the 'Customer':<br>
+<div style=MARGIN-LEFT:40px>
+  <br>
+</div>
+<div style="FONT-FAMILY:Courier New">
+  <table border=1 cellpadding=3 cellspacing=0 id=tioa style=MARGIN-LEFT:40px>
+    <tbody>
+    <tr>
+      <td width=100%>
+        &nbsp;Session session = handler.getSession();<br>
+        &nbsp;session.save(customer.getUser());<br>
+        &nbsp;session.save(customer);<br>
+        &nbsp;session.commit();<br>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <br>
+</div>
+<br>
+Example of a full implementing the inheritance of the 'Customer' class can be found <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/bo/Customer.java?view=markup id=jrji title=here>here</a> and its use <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/SampleOfInheritance.java?view=markup id=gj3w title=here>here</a>.<br>
+<br>
+<h2>
+  <a id=Primary_key_auto_increment_655_2466001743384887 name=Primary_key_auto_increment_655_2466001743384887></a> Primary key auto increment
+</h2>
+Ujorm supports automatic generation of primary key using <b>UjoSequencer </b>class. The solution was influenced primarily by requirements for high <b>reliability</b> and smooth <b>portability </b>of implementation between database of different providers. Allocation of primary keys is following these rules:<br>
+<br>
+<ul>
+  <li>
+    Primary key (PK) will be assigned automatically only if the value of 'UjoProperty' is NULL. It is possible to assign own values of PK without changing any configuration.<br>
+  </li>
+  <li>
+    Each table has its own set of primary keys, about which take care its own instance of the&nbsp; UjoSequencer class. Class UjoSequencer contains primary key values in an auxiliary database table <b>ujorm_pk_support,</b> here is a description of columns:<br>
+  </li>
+  <ul>
+    <li>
+      <b>id</b> (db type VARCHAR) - table name including schema format<br>
+    </li>
+    <li>
+      <b>seq</b> - the value last assigned sequence
+    </li>
+    <li>
+      <b>cache</b> - UjoSequencer can allocate a number of consecutive numbers, which then allocates from memory to increase performance. Enabled cache may cause:<br>
+    </li>
+    <ul>
+      <li>
+        discontinuous series of keys in case of restart Ujorm<br>
+      </li>
+      <li>
+        violation of time ascendance in the case of multiple Ujorm clients<br>
+      </li>
+    </ul>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:80px>
+  This behavior can be eliminated by disabling the cache using value 1. Value of cache can be modified correctly also in application program (SQL command).<br>
+</div>
+<ul>
+  <ul>
+    <li>
+      <b>maxvalue</b> - if a column 'seq' exceeds the maximum value, Ujorm shows an exception<br>
+    </li>
+  </ul>
+  <li>
+    allocating the primary key of Ujorm is used independent DB connection, so that any rollback of transaction wouldn't cause the return already assigned primary keys
+  </li>
+</ul>
+<br>
+A common question is how to use native support of database sequence? The solution lies in creating own implementation (child) of UjoSequencer class. Class of this child must be registered in the parameters Ujorm before creating a meta-model. The only requirement of solution is that the acquisition of a new primary key (e.g. using JDBC) must be completed before INSERT command. Removing this condition is in the development plan of Ujorm.<br>
+<br>
+<h2>
+  <a id=Datab_zov_procedury_6024463592_19404107712316188 name=Datab_zov_procedury_6024463592_19404107712316188></a> <b>Database procedures</b>
+</h2>
+Ujorm supports since version 0.94 invoking database stored <b>procedures</b> and <b>functions</b> (the procedure). Each procedure is described by class extending an abstract DbProcedure class, which implements the Ujo. Important is an order of UjoProperties in the class, which must match the order of parameters in the procedure. If the procedure <b>have no return type,</b> the first constant UjoProperty in order will be <b>Void.class </b>type<b>.</b> The first UjoProperty is OUTPUT type, others are INPUT type. The default type of properties you can override by annotation <i>@Parameter (input = true, output = true).</i> Database procedures need to be <b>registered</b> in the class of databases like the database table:<br>
+<br>
+<div style=MARGIN-LEFT:40px>
+  public static final Property &lt;Database,MyProcedure&gt; procedure<br>
+</div>
+<div style=MARGIN-LEFT:40px>
+  <div style=MARGIN-LEFT:40px>
+    = NewInstance (MyProcedure.class);<br>
+  </div>
+</div>
+<br>
+We create an instance of the procedure, fill the INPUT type parameters and invoke with 'call' method with <font color=#000000>parameter of opened session</font>:<br>
+<br>
+<div style=MARGIN-LEFT:40px>
+  MyProcedure procedure MyProcedure = new ().<br style="FONT-FAMILY:Courier New">
+  procedure.set (MyProcedure.DATE, new Date ());<br style="FONT-FAMILY:Courier New">
+  String result = procedure.call (session);<br>
+  <br>
+</div>
+Complete example you can find in <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorial>tutorial</a>. Instances of the procedure isn't connected with a particular session and such instance can be used can frequently with different parameters (only one-thread access). Ujorm version 1.00 does not support the return type of parameter ResultSet.<br>
+<br>
+<h2>
+  <a id=_zen_transakc_9768201514295931_8964216588204373 name=_zen_transakc_9768201514295931_8964216588204373></a> <b>Transaction control</b>
+</h2>
+<p>
+  All database DML statements CAN BE seen as temporary until They are committed. Ujorm Supports Commitment With The Ujorm Session.commit (). Method Session.rollback () is Used to remove Operations performed December the previous commit or rollback. Use this method When an exception occurs or When the program detects Some error condition or error in the data.<br>
+  <br>
+  For and parallel transaction and use next session.<br>
+  <br>
+  See and JDBC 2.0 documentation for more information.<br>
+</p>
+<p>
+  <br>
+</p>
+<h2>
+  <a id=_zen_transakc_9768201514295931 name=_zen_transakc_9768201514295931></a> <b>API extention</b>
+</h2>
+In development, after time we can meet the requirement of implementation of specific function or features of SQL language. For this type of requirement can be created "own child" of <a href=http://ujorm.com/javadoc/org/ujoframework/orm/SqlDialect.html id=m2mt title=SqlDialect><b>SqlDialect</b></a> class (or some of its implementation), because this class provides several important activities:<br>
+<br>
+<ul>
+  <li>
+    creates a specific SQL queries for different CRUD type databases
+  </li>
+  <li>
+    defines the syntax of each type of operator in the WHERE phrase<br>
+  </li>
+  <li>
+    creates DDL commands according to a meta-model
+  </li>
+  <li>
+    provides DB connection (or other parameters for DB connection)<br>
+  </li>
+  <li>
+    provides a list of SQL keywords
+  </li>
+</ul>
+<br>
+Any of the attributes above can be easily modified by creating a 'child', new class is registred by annotation in the Database class type. Overlapping the SqlDialect class can solve one of the following requirements:<br>
+<ul>
+  <li>
+    expansion and optimization of SQL queries
+  </li>
+  <li>
+    mapping of specific data type of SQL language<br>
+  </li>
+  <li>
+    completion of own operators for Criterion class has two steps:
+  </li>
+  <ol>
+    <li>
+      create a child of <a href=http://ujorm.com/javadoc/org/ujoframework/criterion/ValueCriterion.html id=sekh title=ValueCriterion>ValueCriterion</a> class, extended with specification of a custom type
+    </li>
+    <li>
+      overlay metodu <a href=http://ujorm.com/javadoc/org/ujoframework/orm/SqlDialect.html#getCriterionTemplate%28org.ujoframework.criterion.ValueCriterion%29 id=s7m9 title="SqlDialect.getCriterionTemplate ()">SqlDialect.getCriterionTemplate ()</a> implementing the extended operator
+    </li>
+  </ol>
+  <li>
+    creating own DB connection or a its modification (adding parameters)
+  </li>
+  <li>
+    add or remove a reserved SQL keywords
+  </li>
+</ul>
+<br>
+<br>
+<b>TypeService</b><br>
+class provides a mapping of application values to the JDBC API. Methods of class can be overlaied with their own implementations. Registration is done by annotation in the 'Database' type class.<br>
+<br>
+<b>UjoSequencer</b><br>
+As stated earlier, this class allows the implementation of your own algorithm for assigning a unique ID to INSERT command. Registration is done by annotation in the 'Database' type class.<br>
+<br>
+<h2>
+  <a id=Integrace_Spring_frameworku_38_7139831402643929 name=Integrace_Spring_frameworku_38_7139831402643929></a> <b>Supported databases</b>
+</h2>
+Ujorm framework offers prepared dialects for the following databases:<br>
+<br>
+<ul style=MARGIN-LEFT:1.5em>
+  <li>
+    PostgreSQL (8.3)
+  </li>
+  <li>
+    MySQL (5.0)
+  </li>
+  <li>
+    Derby (10.5)
+  </li>
+  <li>
+    Oracle (8.0)
+  </li>
+  <li>
+    H2 (1.2.x)
+  </li>
+  <li>
+    HSQLDB (1.8.x)
+  </li>
+  <li>
+    Firebird (jaybird 2.1.6)
+  </li>
+</ul>
+<br>
+As mentioned in the previous chapter, support for other databases can be implemented by overwriting the <a href=http://ujorm.com/javadoc/org/ujoframework/orm/SqlDialect.html id=hgr8 title=SqlDialect><b>SqlDialect</b></a> class or one of its 'childs'. The new class has to be registred in application class of the 'Database' type.<br>
+<br>
+<br>
+<h2>
+  <a id=Pro_konstanty_UjoProperty_maj_ name=Pro_konstanty_UjoProperty_maj_></a> <b>Why UjoProperty constants have lowercase letters?</b>
+</h2>
+In the examples mentioned in this document are the names of the static field of UjoProperties often written in lower case - contrary to normal convention. The reason is to shorten the code when creating UjoProperty, but also seems to be useful when small letters more correspond to&nbsp; instance variables (fields). Lowercase letters are proven to be better, but the using the capital letters in your project won't create a technical problem.<br>
+<br>
+Full specification of UjoProperty can be set explicitly, including a <b>name</b>, by this pattern:<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;public static final Property &lt;BO, Long&gt;&nbsp; <b style="FONT-FAMILY:Courier New">id</b> = <font face="courier new">newProperty</font><b style="FONT-FAMILY:Courier New">('id',</b> Long.class);<br>
+<br>
+In short writing is name of 'Property' taken from name of field:<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;public static final Property &lt;BO, Long&gt; <b style="FONT-FAMILY:Courier New">id</b> = newProperty (Long, class);<br>
+<br>
+Terms used in UJO Framework:<br>
+<ul>
+  <li>
+    <b>field</b> UjoProperty - the name of the static constants of UjoProperty in the implementation of Ujo<br>
+  </li>
+  <li>
+    <b>name</b> UjoProperty - a logical indication that returns 'UjoProperty.getName()' as 'String'
+  </li>
+</ul>
+<br>
+<h2>
+  <a id=Vlastnosti_Ujo_objekt_00514393_38282973299276835 name=Vlastnosti_Ujo_objekt_00514393_38282973299276835></a> <b>Use of UJO<b><b><b> objects</b></b></b></b>
+</h2>
+This chapter describes the important features of the UJO object, which have an effect on the correct behavior:<br>
+<br>
+<ul>
+  <li>
+    each <b>attribute</b> <b>of entity</b> has its own unique UjoProperty instance<br>
+  </li>
+  <li>
+    for reading and writing values are used these methods:<br>
+  </li>
+  <ul>
+    <li>
+      UjoProperty.getValue (..)<br>
+    </li>
+    <li>
+      UjoProperty.setValue (..)
+    </li>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:40px>
+  or other methods that invoke tham internally, for example:<br>
+</div>
+<ul>
+  <ul>
+    <li>
+      UjoMiddle.get (..)
+    </li>
+    <li>
+      UjoMiddle.set (..)
+    </li>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:40px>
+  or more comfortable <b>getters</b> and <b>setters,</b> that invoke (internally) one of the methods above<br>
+</div>
+<ul>
+  <li>
+    method 'UjoProperty.getValue()' <b>changes</b> values NULL to the default value UjoProperty (which is NULL if it isn't set otherwise). Beware, the method 'Ujo.readValue()' doesn't do any replacement of default values.
+  </li>
+  <li>
+    for reading and writing values <b>is not recommended</b> to invoke <b>untyped</b> methods<br>
+  </li>
+  <ul>
+    <li>
+      Ujo.readValue ()<br>
+    </li>
+    <li>
+      Ujo.writeValue ()<br>
+    </li>
+  </ul>
+</ul>
+<div style=MARGIN-LEFT:40px>
+  However, these two methods are suitable for the <b>overlaying</b> in prepose to implement the various conversions, validations and other requirements.<br>
+</div>
+<ul>
+  <li>
+    for default value of 'UjoProperty' is suitable only <b>steady object</b> (immutable object)
+  </li>
+  <li>
+    Ujo objects <font color=#000000>can be generally inherited</font>, inheritance of OrmUjo objects isn't supported directly<br>
+  </li>
+  <li>
+    more information about Ujo Core can be found <a href=http://ujoframework.org/javadoc/org/ujoframework/package-summary.html#UJO id=d6tt title=here>here</a> .<br>
+  </li>
+</ul>
+<br>
+<h2>
+  <a id=Best_practices_940649839801627_3667249912409811 name=Best_practices_940649839801627_3667249912409811></a> <b>Best Practices</b>
+</h2>
+<ul>
+  <li>
+    common ancestor of your domain objects can simplify behavior changes of all children. An example might be a generic implementation of method 'toString ()', or implementation of methods 'equals (..)', 'hashCode ()', etc.<br>
+  </li>
+  <li>
+    service for processing data from DB to Query can easily complement other Criterion. An example of use might be implementation of limited access to data based on context (role) of logged user
+  </li>
+  <li>
+    for access to the values of UJO objects proved using the methods:
+  </li>
+  <ul>
+    <li>
+      UjoMiddle.get (property)
+    </li>
+    <li>
+      UjoMiddle.set (property, value)
+    </li>
+  </ul>
+</ul>
+<br>
+<h2>
+  <a id=Meta_model_11271129394580981_6_7813846301057804 name=Meta_model_11271129394580981_6_7813846301057804></a> Meta-Model
+</h2>
+Meta-model is created according to the content of Ujo properties of Database class and its tables. The names of tables, view and procedure are derived from names of Ujo property. Most features of the model can be overlayed by annotations placed directly in property or in name of the class. Freatures set by annotation can be also overlayed by configuration XML file, which can optionally modify only selection of a meta-model.<br>
+<br>
+After creating a meta-model in memory, the model is locked and you can't write into meta-model anymore, at runtime, however, you can obtain useful information from it. Slightly simplified class diagram meta is in the following picture:<br>
+<br>
+<div id=wa5- style=TEXT-ALIGN:center>
+  <div id=m.te style=TEXT-ALIGN:center>
+    <div id=ij75 style=TEXT-ALIGN:center>
+      <img height=452 src="images/ddcs2pg5_178cxdznkct_b.png" width=431>
+    </div>
+    <br>
+  </div>
+</div>
+<br>
+<p>
+  <b>Entity Description:</b>
+</p>
+<ul>
+  <li>
+    OrmHandler is a class providing meta-model, in the application is recommended to keep only one instance of this class. Class offers several methods to effectively assistive selected parts of meta-model. OrmHandler is the only entity in the diagram, which isn't a child of an abstract AbstractMetaModel class (implementing the interface of Ujo).<br>
+  </li>
+  <li>
+    MetaRoot creates the base of meta-model and allows you to read an XML configuration file
+  </li>
+  <li>
+    MetaParams contains general Ujorm parameters that can be also modify by the XML configuration file<br>
+  </li>
+  <li>
+    MetaDatabase contains a database connection, a list of tables (or views) and the list of database procedures. It also includes a default schema.<br>
+  </li>
+  <li>
+    MetaTable represents the database table that takes the schema from 'MetaDatabase', but you can configure (with annotations) also a different scheme. Logical attribute 'view' differs view from the tables (you can't white into 'view' and it doesn't affect the updating of the DB).<br>
+  </li>
+  <li>
+    MetaPKey - each table contains one primary key
+  </li>
+  <li>
+    MetaRelation2Many - represents a 1: M type database session<br>
+  </li>
+  <li>
+    MetaColumn - class represents the database column, or stored procedure parameters.<br>
+  </li>
+</ul>
+<br>
+<br>
+<h2>
+  <a id=Integrace_Spring_frameworku_38 name=Integrace_Spring_frameworku_38></a> <b>Integrating Spring Framework</b>
+</h2>
+<p style=MARGIN-LEFT:0px;MARGIN-RIGHT:0px>
+  The Spring Framework can automate the creation and release Ujorm session and manage a transaction management using a special module called 'orm-spring'. In a Maven project use the next dependency in your POM file:<i><br>
+  <br>
+  </i>
+</p>
+<table border=1 cellpadding=3 cellspacing=0 id=j3vz style=MARGIN-LEFT:auto;MARGIN-RIGHT:auto;TEXT-ALIGN:left>
+  <tbody>
+  <tr>
+    <td width=100%>
+      <i>&nbsp;&nbsp; &lt;dependency&gt;<br clear=none>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;<b>org.ujoframework</b>&lt;/groupId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br clear=none>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;<b>ujo-spring</b>&lt;/artifactId&gt;<br clear=none>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;<b>1.00</b>&lt;/version&gt;<br clear=none>
+      &nbsp;&nbsp; &lt;/dependency&gt;<br>
+      </i>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<p>
+</p>
+<p id=qv1m>
+  <br>
+</p>
+<p id=xy2r>
+  <a id=Z_sk_n_session_210368364331412 name=Z_sk_n_session_210368364331412></a> How to get a Ujorm Session? The procedure for obtaining the session will vary according to the code that calls the session:<br>
+</p>
+<ul>
+  <li>
+    aroundSessionAOP - calls from jobu or other internally
+  </li>
+  <li>
+    Open Session in View - using HTTP Request
+  </li>
+</ul>
+<br>
+<p>
+  AroundSessionAOP is currently defined in the current spring-beans.xml poincut <i><b><br>
+  </b></i>
+</p>
+<p style=MARGIN-LEFT:40px>
+  <i><font face="courier new">org.application.administration.jobs ..*(..)</font><br>
+  </i>
+</p>
+<p>
+  <i><br>
+  </i>
+</p>
+<p>
+  Open Session in View is defined in the <b>web.xml</b> .
+</p>
+<p>
+  <i><br>
+  </i>
+</p>
+<p>
+  <a id=Ru_n_zen_session_pomoc_session name=Ru_n_zen_session_pomoc_session></a> How to use the session Manualy?
+</p>
+<table border=1 bordercolor=#999999 cellpadding=3 cellspacing=0 id=zzvi>
+  <tbody>
+  <tr>
+    <td width=100%>
+      <font face="courier new"><font color=#666666>&nbsp;&nbsp; UjoSessionFactoryFilter ujoSessionFactoryFilter<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = (UjoSessionFactoryFilter)wac.getBean("ujoSessionFactory");<br>
+      &nbsp;&nbsp; ujoSessionFactoryFilter.openSession(); </font></font><br style="COLOR:#666666;FONT-FAMILY:Courier New">
+      <font face="courier new"><font color=#666666>&nbsp;&nbsp; ...<br>
+      &nbsp;&nbsp; ujoSessionFactoryFilter.closeSession();</font></font><br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<p>
+  How to use a Manual control session and transaction - using ORM handle?
+</p>
+<table border=1 bordercolor=#999999 cellpadding=3 cellspacing=0 id=wgnx>
+  <tbody>
+  <tr>
+    <td width=100%>
+      &nbsp;<font face="courier new">&nbsp; OrmHandler handler = (OrmHandler) wac.getBean("ormHandler"); </font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp; Session s = handler.createSession() ;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp; ...</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp; s.commit(); </font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp; s.close();</font><br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<br>
+See the official <a href=http://www.springsource.org/documentation id=isjx title="Spring documentation">Spring documentation</a> for more information.<i><br>
+</i><br>
+<br>
+<h2>
+  <a id=Useful_links_1408664647419664__8952925994190774 name=Useful_links_1408664647419664__8952925994190774></a>Performance
+</h2>
+Ujorm is very fast in comparison to its competitors, see the benchmark table to detail information. I hope that you will not be angry if I compare Ujorm performance with the popular Hibernate ORM framework. The result of the benchmark is listed in the next table. Each action represents an database operation without any optimization.<br>
+<br>
+<table border=1 bordercolor=#999999 cellpadding=3 cellspacing=0 id=wm26>
+  <tbody>
+  <tr>
+    <td width=25%>
+      <b style=COLOR:#674ea7>Action</b><br>
+    </td>
+    <td style=TEXT-ALIGN:center width=25%>
+      <b style=COLOR:#674ea7>Ujorm 1.00</b><br>
+      <font color=#674ea7>[sec]</font><br>
+    </td>
+    <td style=TEXT-ALIGN:center width=25%>
+      <b><font color=#674ea7>Hibernate 3.3.1<br>
+      </font></b><font color=#674ea7>[sec]</font><br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      <b><font color=#674ea7>Ratio</font></b><br>
+    </td>
+  </tr>
+  <tr>
+    <td valign=top>
+      <b>meta data</b><br>
+    </td>
+    <td style=TEXT-ALIGN:right valign=top>
+      0.33<br>
+    </td>
+    <td style=TEXT-ALIGN:right valign=top>
+      1.53<br>
+    </td>
+    <td style=TEXT-ALIGN:right valign=top>
+      4.65<br>
+    </td>
+  </tr>
+  <tr>
+    <td width=25%>
+      <b>single select</b><br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      0.35<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      0.58<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      1.67<br>
+    </td>
+  </tr>
+  <tr>
+    <td width=25%>
+      <b>empty select</b><br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      1.24<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      151.17<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      121.85<br>
+    </td>
+  </tr>
+  <tr>
+    <td width=25%>
+      <b>multi select</b><br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      21.78<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      168.01<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      7.71<br>
+    </td>
+  </tr>
+  <tr>
+    <td width=25%>
+      <b>insert</b><br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      11.12<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      12.30<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      1.11<br>
+    </td>
+  </tr>
+  <tr>
+    <td width=25%>
+      <b>delete</b><br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      101.18<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      208.28<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      2.06<br>
+    </td>
+  </tr>
+  <tr>
+    <td width=25%>
+      <b>update</b><br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      8.04<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      3.90<br>
+    </td>
+    <td style=TEXT-ALIGN:right width=25%>
+      0.49<br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+&nbsp;<br>
+<br>
+Action description:<br>
+<ul>
+  <li>
+    meta data - time to loading meta-model and to verify database model (auto-update option is enabled)<br>
+  </li>
+  <li>
+    single select - the one big select for all order items (with a condition)
+  </li>
+  <li>
+    empty selects - 2000 selects with the empty result - where a condition contains different parameter values<br>
+  </li>
+  <li>
+    multi select - many different selects to emulate a server application or statements with no optimization<br>
+  </li>
+  <li>
+    insert - insert 2000 orders, 14000 items and 1 user
+  </li>
+  <li>
+    delete - execution many statements to delete all table rows<br>
+  </li>
+  <li>
+    update - modify and save a loaded BO
+  </li>
+</ul>
+<br>
+Environment description:<br>
+<ul>
+  <li>
+    date of performance: 2010-10-15
+  </li>
+  <li>
+    test through the 2000 orders and 14,000 items
+  </li>
+  <li>
+    against the database PostgreSQL 8.3 (on the same computer)
+  </li>
+  <li>
+    values are an average of 5 measurements
+  </li>
+  <li>
+    DB indexes was insignificant
+  </li>
+  <li>
+    UJO Framework release 1.00
+  </li>
+  <li>
+    Hibernate 3.3.1.GA + EhCachProvider
+  </li>
+  <li>
+    Java version "1.6.0_14", running with default parameters
+  </li>
+  <li>
+    default Java parameters<br>
+  </li>
+  <li>
+    Intel Dual Core, 2GB RAM
+  </li>
+  <li>
+    Windows XP + SP3<br>
+  </li>
+  <li>
+    benchmark code is available on the SourceForge
+  </li>
+</ul>
+<br>
+<h2>
+  <a id=Useful_links_1408664647419664_ name=Useful_links_1408664647419664_></a>More information
+</h2>
+<ul>
+  <li>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/package-summary.html id=dqu4 title=JavaDoc>JavaDoc</a> the detail API descriptions with some examples of use<br>
+  </li>
+  <li>
+    <a href=http://ujorm.com/ id=bbaa title="Home Page">Home Page</a>
+  </li>
+  <li>
+    <a href=http://ujoframework.org/presentation/index.htm#orm>Presentation</a> (intro slide show), includes inter alia<br>
+  </li>
+  <ul>
+    <li>
+      short motivation
+    </li>
+    <li>
+      Key Features<br>
+    </li>
+    <li>
+      Compared with competitors (Hibernate iBatis)<br>
+    </li>
+  </ul>
+  <li>
+    Examples of using <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=sqm9 title="Source Code">the source code</a><br>
+  </li>
+  <li>
+    <a href=http://ujoframework.blogspot.com/ id=pdbl title=Blog>Blog</a>
+  </li>
+  <li>
+    <a href=http://ujoframework.org/dokuwiki/doku.php id=n1ei title=Wiki>Wiki</a>
+  </li>
+  <li>
+    <a href=http://ujoframework.org/dokuwiki/doku.php?id=orm_faq id=fzmq title=FAQ>FAQ</a><br>
+  </li>
+</ul>
+<br>
+<h2>
+  <a id=Pod_kov_n_10800762392117524_40_780879409271422 name=Pod_kov_n_10800762392117524_40_780879409271422></a> Acknowledgements
+</h2>
+<br>
+Thanks to developer team at <a href=http://www.effectiva.cz/ id=orok title="Effectiva Solutions">Effectiva Solutions</a> for their valuable comments on the technical content of this document.<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br></body>
+</html>
