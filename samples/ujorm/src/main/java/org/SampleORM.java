@@ -17,6 +17,7 @@
 package org;
 
 import java.util.Date;
+import java.util.List;
 import java.util.logging.*;
 import org.bo.Item;
 import org.bo.MyProcedure;
@@ -44,7 +45,7 @@ import org.ujoframework.orm.utility.OrmTools;
  */
 public class SampleORM {
 
-    // ------- MENU: -------
+    // ------- TUTORIAL MENU: -------
 
     public static void main(String[] args) {
         SampleORM sample = new SampleORM();
@@ -59,6 +60,7 @@ public class SampleORM {
             sample.useSelectItems_2();
             sample.useSelectItems_3();
             sample.useSelectItems_4();
+            sample.useSelectItems_5();
             sample.useReloading();
             sample.useLimitAndOffset();
             sample.useSelectCount();
@@ -75,7 +77,7 @@ public class SampleORM {
         }
     }
 
-    // ------- FIELDS: -------
+    // ------- CHAPTERS: -------
 
     /** The handler contains the one or more database meta-models,
      * the one applicatin can have more OrmHandler instances. */
@@ -83,8 +85,6 @@ public class SampleORM {
 
     /** The session contains a cache and database connections. */
     private Session session;
-
-    // ------- CHAPTERS: -------
 
     /** Before the first use load a meta-model.
      * Database tables will be created in the first time.
@@ -94,6 +94,7 @@ public class SampleORM {
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
         handler = new OrmHandler();
 
+        // There are prefered default properties for a production environment:
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
@@ -137,9 +138,9 @@ public class SampleORM {
         session.save(item2);
 
         if (true) {
-           session.commit();
+            session.commit();
         } else {
-           session.rollback();
+            session.rollback();
         }
     }
 
@@ -178,12 +179,16 @@ public class SampleORM {
     public void useSortOrderItems() {
 
         Query<Item> items = session.createQuery(Item.class);
-        items.orderBy( Item.order.add(Order.created) );
+        items.orderBy(Item.order.add(Order.created));
 
         for (Item item : items) {
             OrmTools.loadLazyValues(item, 2);
-            System.out.println(item.get( Item.order.add(Order.created) ) + " " + item);
+            System.out.println(item.get(Item.order.add(Order.created)) + " " + item);
         }
+        
+        // Another way to avoid the lazy loading by a bulk property loading:
+        List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
+        System.out.println("itemList: " + itemList);
     }
 
     /** Use a 'native query' where the query is created
@@ -242,8 +247,23 @@ public class SampleORM {
      * @see Item#$orderDate
      */
     public void useSelectItems_4() {
-        UjoProperty<Item,Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
+        UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
         Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
+        Query<Item> items = session.createQuery(crit);
+
+        for (Item item : items) {
+            System.out.println("Item: " + item);
+        }
+    }
+
+    /** Select items by a composed property.
+     * It is a sample of a multi-table query.
+     * See used Criterion with the <strong>whereIn</string> method.
+     * The value list can be empty and the result returns FALSE always in this case.
+     * @see Item#$orderDate
+     */
+    public void useSelectItems_5() {
+        Criterion<Item> crit = Criterion.whereIn(Item.id, 1L,2L,3L,4L,5L);
         Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
@@ -303,7 +323,7 @@ public class SampleORM {
         }
 
         skip = items.skip(1);
-        boolean isNext =  items.hasNext();
+        boolean isNext = items.hasNext();
         System.out.println("Next: " + isNext);
     }
 
@@ -357,6 +377,37 @@ public class SampleORM {
         System.out.println("The stored procedure result #2: " + result);
     }
 
+    /** Call a database stored procedure:
+     * <code>
+     * CREATE OR REPLACE FUNCTION db1.ujorm_test2(integer)
+     * RETURNS refcursor AS 'DECLARE mycurs refcursor;
+     * BEGIN
+     *    OPEN mycurs FOR SELECT 11, 12;
+     *    RETURN mycurs;
+     * END;'
+     * LANGUAGE plpgsql
+     * </code>
+     * Note: the source code is an aarly implementation prototype. <br>
+     * Note: test was running on the PostgreSQL release 8.4
+     */
+    public void useStoredProcedure_2() {
+        MyProcedure procedure = new MyProcedure();
+        // MyProcedure procedure2 = session.newProcedure(MyProcedure.class);
+
+        // Assign input parameters:
+        procedure.set(MyProcedure.result, null); // The result can't be initialized.
+        procedure.set(MyProcedure.paramCode, 5);
+        procedure.set(MyProcedure.paramEnabled, true);
+
+        Integer result = procedure.call(session);
+        System.out.println("The stored procedure result #1: " + result);
+
+        // See how to reuse input parameters of the object 'procedure':
+        procedure.set(MyProcedure.paramCode, 24);
+        result = procedure.call(session, MyProcedure.result); // Take the result of any (output) parameter
+        System.out.println("The stored procedure result #2: " + result);
+    }
+
     /** Using the UPDATE */
     public void useUpdate() {
         Order order = session.load(Order.class, 1L);
@@ -385,15 +436,16 @@ public class SampleORM {
 
     /** Print some meta-data of the property Order.descr. */
     public void useMetadata() {
-        MetaColumn c = (MetaColumn) handler.findColumnModel(Order.descr);
+        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.descr);
 
         StringBuilder msg = new StringBuilder()
-            .append("** METADATA OF COLUMN: " + Order.descr)
-            .append("\n\t Length : " + c.getMaxLength())
-            .append("\n\t NotNull: " + c.isMandatory())
-            .append("\n\t PrimKey: " + c.isPrimaryKey())
-            .append("\n\t DB name: " + c.getFullName())
-            .append("\n\t Dialect: " + c.getDialectClass().getSimpleName())
+            .append("** METADATA OF COLUMN: ")
+            .append(Order.descr.toString() + '\n')
+            .append("Length : " + col.getMaxLength() + '\n')
+            .append("NotNull: " + col.isMandatory()  + '\n')
+            .append("PrimKey: " + col.isPrimaryKey() + '\n')
+            .append("DB name: " + col.getFullName()  + '\n')
+            .append("Dialect: " + col.getDialectClass().getSimpleName())
             ;
         System.out.println(msg);
     }
@@ -402,9 +454,8 @@ public class SampleORM {
      * and database connection(s).
      */
     public void useCloseSession() {
-        if (session!=null) {
+        if (session != null) {
             session.close();
         }
     }
-
 }
