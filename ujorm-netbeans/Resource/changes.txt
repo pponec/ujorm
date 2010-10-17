@@ -1,7 +1,7 @@
 The UJO Framework release notes
 *******************************
 
-release 1.00 (2010-10-XX)
+release 1.00 (2010-10-17)
 + the Ujorm User Guide is completed
 + new effective method for bulk loading of lazy attributes: OrmTools.loadLazyValuesAsBatch()
 + support for the Spring Framework to manage an ORM Session and Transactions
