@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaTable;
@@ -75,6 +77,11 @@ abstract public class SqlDialect {
     /** Create a new database connection */
     public Connection createConnection(final MetaDatabase db) throws Exception {
         return db.createInternalConnection();
+    }
+
+    /** Get or create an Initial Context for the JNDI lookup. */
+    public InitialContext createJndiInitialContext(final MetaDatabase db) throws NamingException {
+          return new InitialContext();
     }
 
     /** Print SQL 'CREATE SCHEMA' */

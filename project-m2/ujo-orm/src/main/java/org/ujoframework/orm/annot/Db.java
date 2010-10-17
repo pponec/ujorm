@@ -30,9 +30,10 @@ public @interface Db {
     /** SQL dialect by a DB Vendor. */
     Class<? extends SqlDialect> dialect();
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
-     * (java naming and directory interface) connection string
+     * (java naming and directory interface) connection string.
+     * A typical use on the Tomcat:<br> jndi = {"java:comp/env","jdbc/EmployeeDB"}
      */
-    String jndi() default "";
+    String[] jndi() default {};
     /** JDBC Url */
     String jdbcUrl() default "";
     /** JDBC Driver */

@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
@@ -32,10 +31,10 @@ import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import org.ujoframework.extensions.Property;
 import org.ujoframework.extensions.ValueExportable;
@@ -88,7 +87,7 @@ final public class MetaDatabase extends AbstractMetaModel {
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string
      */
-    public static final Property<MetaDatabase,String> JNDI = newProperty("jndi", "");
+    public static final ListProperty<MetaDatabase,String> JNDI = newListProperty("jndi", String.class);
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
@@ -100,7 +99,6 @@ final public class MetaDatabase extends AbstractMetaModel {
 
     private OrmHandler ormHandler;
     private SqlDialect dialect;
-    private InitialContext initialContext;
 
     public MetaDatabase() {
     }
@@ -135,7 +133,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             changeDefault(this, JDBC_DRIVER, annotDB.jdbcDriver());
             changeDefault(this, USER    , annotDB.user());
             changeDefault(this, PASSWORD, annotDB.password());
-            changeDefault(this, JNDI    , annotDB.jndi());
+            changeDefault(this, JNDI    , Arrays.asList(annotDB.jndi()));
             changeDefault(this, SEQUENCER, annotDB.sequencer());
         }
 
@@ -612,10 +610,20 @@ final public class MetaDatabase extends AbstractMetaModel {
     public Connection createInternalConnection() throws Exception {
         Connection result;
 
-        final String jndi = JNDI.of(this);
-        if (isUsable(jndi)) {
+        final List<String> jndi = JNDI.of(this);
+        if (!jndi.isEmpty()) {
+
             LOGGER.log(Level.FINE, "JNDI: {0}", jndi);
-            DataSource dataSource = (DataSource ) getInitialContext().lookup(jndi);
+
+            InitialContext initContext = dialect.createJndiInitialContext(this);
+            final int lastItem = jndi.size()-1;
+            for (int i=0; i<lastItem; i++) {
+                initContext = (InitialContext) initContext.lookup(jndi.get(i));
+                if (initContext==null) {
+                    throw new IllegalStateException("JNDI problem: InitialContext was not found for the: " + jndi.get(i));
+                }
+            }
+            DataSource dataSource = (DataSource) initContext.lookup(jndi.get(lastItem));
             if (dataSource==null) {
                 throw new IllegalStateException("JNDI problem: database connection was not found for the: " + jndi);
             }
@@ -626,16 +634,6 @@ final public class MetaDatabase extends AbstractMetaModel {
         }
 
         return result;
-    }
-
-
-
-    /** Get or create an initial context */
-    private InitialContext getInitialContext() throws NamingException {
-        if (initialContext==null) {
-            initialContext = new InitialContext();
-        }
-        return initialContext;
     }
 
     /** Equals */
