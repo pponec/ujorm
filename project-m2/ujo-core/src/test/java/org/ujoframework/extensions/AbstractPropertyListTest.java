@@ -133,7 +133,7 @@ public class AbstractPropertyListTest extends MyTestCase {
         assertEquals(p1, root.get(PERS, 1));
         //
         int i = 1;
-        p = root.list(PERS).set(i, px);
+        p = root.get(PERS).set(i, px);
         assertEquals(p1, p);
         assertEquals(px, root.get(PERS, i));
         //
