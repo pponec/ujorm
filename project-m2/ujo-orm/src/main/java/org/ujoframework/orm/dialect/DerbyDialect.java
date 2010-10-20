@@ -93,8 +93,12 @@ public class DerbyDialect extends SqlDialect {
     public void printOffset(Query query, Appendable out) throws IOException {
         out.append(" OFFSET " + query.getOffset());
         out.append(" ROWS");
-
     }
 
+    /** COMMENT is not supported in HSQLDB database */
+    @Override
+    public Appendable printComment(MetaTable table, Appendable out) throws IOException {
+        return out;
+    }
 
 }

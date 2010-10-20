@@ -49,9 +49,8 @@ public class UjoOrder extends OrmTable<UjoOrder> {
     @Column("language_code")
     public static final Property<UjoOrder,String> language = newProperty(String.class);
     public static final Property<UjoOrder,UjoOrder> parent = newProperty("parent_id", UjoOrder.class);
-    public static final UjoProperty <UjoOrder,UjoUser>user = newProperty("user_id", UjoUser.class);
-
-    public static final RelationToMany <UjoOrder,UjoOrderItem>items = newRelation("items", UjoOrderItem.class);
+    public static final UjoProperty<UjoOrder,UjoUser> user = newProperty("user_id", UjoUser.class);
+    public static final RelationToMany<UjoOrder,UjoOrderItem> items = newRelation("items", UjoOrderItem.class);
 
 
     // Optional code for better performance:

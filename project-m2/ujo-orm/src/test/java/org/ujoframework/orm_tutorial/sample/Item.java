@@ -19,7 +19,7 @@ import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.implementation.orm.RelationToOne;
+import org.ujoframework.orm.annot.Comment;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
@@ -27,6 +27,7 @@ import org.ujoframework.implementation.orm.RelationToOne;
  * @hidden
  * @Table=bo_item
  */
+@Comment("Order item")
 public class Item extends OrmTable<Item> {
 
     /** Unique key */

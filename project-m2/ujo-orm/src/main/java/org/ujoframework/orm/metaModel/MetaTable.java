@@ -35,6 +35,7 @@ import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.UjoSequencer;
+import org.ujoframework.orm.annot.Comment;
 
 
 /**
@@ -70,6 +71,8 @@ final public class MetaTable extends AbstractMetaModel {
     public static final Property<MetaTable,Boolean> VIEW = newProperty("view", false);
     /** SQL SELECT statement */
     public static final Property<MetaTable,String> SELECT = newProperty("select", "");
+    /** Comment of the database table */
+    public static final Property<MetaTable,String> COMMENT = newProperty("comment", Comment.NULL);
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
     public static final Property<MetaTable,MetaSelect> SELECT_MODEL = newProperty("selectModel", MetaSelect.class);
@@ -113,6 +116,11 @@ final public class MetaTable extends AbstractMetaModel {
         View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
         VIEW.setValue(this, view1!=null || view2!=null);
 
+        Comment comment1 = field.getAnnotation(Comment.class);
+        Comment comment2 = (Comment) dbProperty.getItemType().getAnnotation(Comment.class);
+        if (comment1!=null) changeDefault(this, COMMENT  , comment1.value());
+        if (comment2!=null) changeDefault(this, COMMENT  , comment2.value());
+
         if (parTable!=null) {
             changeDefault(this, NAME  , NAME.of(parTable));
             changeDefault(this, ALIAS , ALIAS.of(parTable));
@@ -120,6 +128,7 @@ final public class MetaTable extends AbstractMetaModel {
             changeDefault(this, SEQUENCE,SEQUENCE.of(parTable));
             changeDefault(this, SELECT, SELECT.of(parTable));
             changeDefault(this, VIEW  , VIEW.of(parTable));
+            changeDefault(this, COMMENT, COMMENT.of(parTable));
         }
 
         if (VIEW.of(this)) {
@@ -234,6 +243,13 @@ final public class MetaTable extends AbstractMetaModel {
     public boolean isTable() {
         return isPersistent() && !isView();
     }
+
+    /** Is the instance a database persistent table? A false value neans that the object is a relation model or view. */
+    public boolean isComment() {
+        return !COMMENT.isDefault(this);
+    }
+
+
 
     /** Is the query from a SQL select model ? */
     public boolean isSelectModel() {
