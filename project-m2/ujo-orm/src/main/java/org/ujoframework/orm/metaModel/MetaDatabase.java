@@ -32,6 +32,7 @@ import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -373,7 +374,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                     ps = conn.prepareStatement(sql);
                     ps.setString(1, "-");
                     rs = ps.executeQuery();
-                    LOGGER.info("Database structure is loaded: " + getId());
+                    LOGGER.log(Level.INFO, "Database structure is loaded: {0}", getId());
                     switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
                         case CREATE_DDL:
                             return;
@@ -383,7 +384,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                             if (!change) return;
                     }
                 } catch (SQLException e) {
-                    LOGGER.log(Level.INFO, "Database structure is not loaded: " + getId());
+                    LOGGER.log(Level.INFO, "Database structure is not loaded: {0}", getId());
                     conn.rollback();
                 } catch (Throwable e) {
                     LOGGER.log(Level.INFO, "Error: Database structure is not loaded: " + getId(), e);
