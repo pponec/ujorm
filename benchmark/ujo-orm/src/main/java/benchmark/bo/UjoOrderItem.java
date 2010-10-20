@@ -25,7 +25,7 @@ import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.orm.annot.Column;
 
 /**
- * Rodič vešech objednávek
+ * Order item
  * @author ponec
  */
 public class UjoOrderItem extends OrmTable<UjoOrderItem> {

@@ -212,7 +212,7 @@ public class BenchmarkUjo {
         printTime("UPDATE "+i, time1, System.currentTimeMillis());
     }
 
-    /** Create database and using DELETE */
+    /** How to use DELETE */
     public void useDelete() {
 
         long time1 = System.currentTimeMillis();

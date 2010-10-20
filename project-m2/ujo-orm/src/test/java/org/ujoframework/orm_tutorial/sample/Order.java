@@ -26,6 +26,7 @@ import org.ujoframework.orm.DbType;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.implementation.orm.OrmTable;
 import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujoframework.orm.annot.Comment;
 import org.ujoframework.orm.annot.Table;
 import org.ujoframework.orm.utility.OrmTools;
 
@@ -34,6 +35,7 @@ import org.ujoframework.orm.utility.OrmTools;
  * Note, that the Order object has got an collection of Items.
  * @hidden
  */
+@Comment("Order table for registering the 'order items'")
 @Table(name = "ord_order")
 public class Order extends OrmTable<Order> {
 

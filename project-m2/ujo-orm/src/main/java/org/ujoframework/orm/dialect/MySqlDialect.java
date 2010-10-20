@@ -105,4 +105,15 @@ public class MySqlDialect extends SqlDialect {
         }
     }
 
+    /** Print a Comment on the table */
+    @Override
+    public Appendable printComment(MetaTable table, Appendable out) throws IOException {
+        out.append("ALTER TABLE ");
+        printFullTableName(table, out);
+        out.append(" COMMENT = '");
+        escape(MetaTable.COMMENT.of(table), out);
+        out.append("'");
+        return out;
+    }
+
 }

@@ -17,6 +17,7 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * Hsqldb dialect (http://hsqldb.org)
@@ -35,6 +36,12 @@ public class HsqldbDialect extends H2Dialect {
         out.append("CREATE SCHEMA ");
         out.append(schema);
         out.append(" AUTHORIZATION DBA");
+        return out;
+    }
+
+    /** COMMENT is not supported in HSQLDB database */
+    @Override
+    public Appendable printComment(MetaTable table, Appendable out) throws IOException {
         return out;
     }
 

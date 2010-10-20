@@ -802,6 +802,16 @@ abstract public class SqlDialect {
         return out;
     }
 
+    /** Print a Comment on the table */
+    public Appendable printComment(MetaTable table, Appendable out) throws IOException {
+        out.append("COMMENT ON TABLE ");
+        printFullTableName(table, out);
+        out.append(" IS '");
+        escape(MetaTable.COMMENT.of(table), out);
+        out.append("'");
+        return out;
+    }
+
     /** Return database SQL keyword set in the upper case. */
     public Set<String> getKeywordSet(Connection conn) {
         Set<String> result = new HashSet<String>(128);
@@ -841,4 +851,16 @@ abstract public class SqlDialect {
             }
         }
     }
+
+    /** Escape the special character: "'" */
+    final protected void escape(final CharSequence text, final Appendable out) throws IOException {
+        for (int i=0; i<text.length(); i++) {
+            final char c = text.charAt(i);
+            switch(c) {
+                case '\'': out.append("''"); break;
+                default  : out.append(c);
+            }
+        }
+    }
+
 }

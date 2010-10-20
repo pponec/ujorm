@@ -457,7 +457,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 sql = getDialect().printIndex(index, out).toString();
                 executeUpdate(sql, stat);
             }
-            
+
             // 6. Create Foreign Keys:
             for (MetaColumn column : foreignColumns) {
                 if (column.isForeignKey()) {
@@ -468,12 +468,36 @@ final public class MetaDatabase extends AbstractMetaModel {
                 }
             }
 
-
             // 7. Create SEQUENCE table;
             if (tableCount>0 && !change) {
                 out.setLength(0);
                 sql = getDialect().printSequenceTable(this, out).toString();
                 executeUpdate(sql, stat);
+            }
+
+            // 8. Create table comment for the all tables:
+            List<MetaTable> cTables = null;
+            switch (MetaParams.COMMENT_POLICY.of(ormHandler.getParameters())) {
+                case FOR_NEW_OBJECT:
+                    cTables = tables;
+                    break;
+                case ON_ANY_CHANGE:
+                    cTables = TABLES.getList(this);
+                    break;
+                case NEVER:
+                    cTables = Collections.EMPTY_LIST;
+                    break;
+                default:
+                    throw new IllegalStateException("Unsupported parameter");
+            }
+            for (MetaTable table : cTables) {
+                if (table.isTable() && table.isComment()) {
+                    out.setLength(0);
+                    sql = getDialect().printComment(table, out).toString();
+                    if (sql.length()>0) {
+                        executeUpdate(sql, stat);
+                    }
+                }
             }
 
             conn.commit();
