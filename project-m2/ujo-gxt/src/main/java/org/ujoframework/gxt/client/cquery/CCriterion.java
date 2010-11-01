@@ -25,8 +25,8 @@ import java.io.Serializable;
  *
  * <h3>Example of use</h3>
  * <pre class="pre"><span class="comment">// Make a criterion:</span>
- * CCriterion&lt;Person&gt; crn1 = CCriterion.newInstance(CASH, COperator.GT, 10.0);
- * CCriterion&lt;Person&gt; crn2 = CCriterion.newInstance(CASH, COperator.LE, 20.0);
+ * CCriterion&lt;Person&gt; crn1 = CCriterion.where(CASH, COperator.GT, 10.0);
+ * CCriterion&lt;Person&gt; crn2 = CCriterion.where(CASH, COperator.LE, 20.0);
  * CCriterion&lt;Person&gt; criterion = crn1.and(crn2);
  *
  * <span class="comment">// Use a criterion (1):</span>

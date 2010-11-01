@@ -87,8 +87,8 @@
 
 The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
 <pre name="code" class="java">
-  Criterion&lt;Order&gt; criter1 = Criterion.newInstance(Order.DESCR, "John's order");
-  Criterion&lt;Order&gt; criter2 = Criterion.newInstance(Order.DATE, Operator.LE, new Date());
+  Criterion&lt;Order&gt; criter1 = Criterion.where(Order.DESCR, "John's order");
+  Criterion&lt;Order&gt; criter2 = Criterion.where(Order.DATE, Operator.LE, new Date());
   Criterion&lt;Order&gt; criterion = criter1.and(criter2);
 
   Session session = OrmHandler.getInstance().getSession();
