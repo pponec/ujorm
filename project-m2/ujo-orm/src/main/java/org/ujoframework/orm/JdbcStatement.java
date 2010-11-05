@@ -129,13 +129,29 @@ public class JdbcStatement {
 
             if (column.isForeignKey()) {
                 List<MetaColumn> fc = column.getForeignColumns();
-                OrmUjo bo = (OrmUjo) value;
-                for (MetaColumn rColumn : fc) {
-                    Object rValue = rColumn.getValue(bo);
-                    assignValue(rColumn, rValue, bo);
-                }                
+
+                if (value instanceof OrmUjo[]) {
+                    final OrmUjo[] ujoValues = (OrmUjo[]) value;
+                    final Object[] rValues = new Object[ujoValues.length];
+                    final MetaColumn rColumn = fc.get(0); // only one PK is supported
+
+                    for (int j=0; j<ujoValues.length; j++) {
+                        final OrmUjo bo = ujoValues[j];
+                        final Object rValue = rColumn.getValue(bo);
+                        rValues[j] = rValue;
+                    }
+                    assignValue(rColumn, rValues, null);
+
+                } else {
+                    OrmUjo bo = (OrmUjo) value;
+                    for (MetaColumn rColumn : fc) {
+                        Object rValue = rColumn.getValue(bo);
+                        assignValue(rColumn, rValue, bo);
+                    }
+                }
+
             } else {
-               assignValue(column, value, null);
+                assignValue(column, value, null);
             }
         }
     }
