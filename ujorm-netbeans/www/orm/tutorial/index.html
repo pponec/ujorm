@@ -109,8 +109,13 @@ img {
 
   
     
+    
     .writely-callout-data {
-      display: none;
+      display: inline-block;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      margin-left: -1px;
     }
     
 
@@ -448,7 +453,7 @@ body {
 <h1>
   <a id=Ujorm_User_Guide_1070508786431_7537999166615287 name=Ujorm_User_Guide_1070508786431_7537999166615287></a><font color=#674ea7>Ujorm User Guide</font><img height=65 id=syq1 src="images/ddcs2pg5_136gwrcjzf3_b.png" style=FLOAT:right;MARGIN-LEFT:40pt;MARGIN-RIGHT:1em width=65>
 </h1>
-<i>License Document: <a href=http://creativecommons.org/licenses/by-nd/3.0/ rel=license title="Creative Commons BY-ND">Creative Commons BY-ND</a> ,<br>
+<i>Document License: <a href=http://creativecommons.org/licenses/by-nd/3.0/ rel=license title="Creative Commons BY-ND">Creative Commons BY-ND</a> ,<br>
 Author: Pavel Ponec, ponec@ujorm.com<br>
 </i>
 <div style=MARGIN-LEFT:40px>
@@ -561,9 +566,6 @@ Thank you for your comments and suggestions.</i><br>
     lazy initialization is supported
   </li>
   <li>
-    internal cache with protection against overload storage
-  </li>
-  <li>
     simple and reliable implementation solution
   </li>
   <li>
@@ -572,7 +574,7 @@ Thank you for your comments and suggestions.</i><br>
 </ul>
 <br>
 <br>
-For fast acquisition recommend reading a <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup title=tutorial>tutorial</a> based on the annotated source code. In tutorial you can found entities from following class diagram:<br>
+For fast acquisition recommend reading a <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup title=tutorial>tutorial</a> built on the annotated source code. In tutorial you can found entities from following class diagram:<br>
 <div style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
   <br>
 </div>
@@ -605,7 +607,7 @@ When you use the Maven POM file, take the following dependency:<br>
 <h2>
   <a id=Architektura_5616677272949514__6526977241652242 name=Architektura_5616677272949514__6526977241652242></a> Architecture
 </h2>
-The following class diagram clarifies relation between single classes Ujorm domain framework and application classes. The diagram is simplified and slightly modified to show only the relevant entities. A more detailed descriptions can be found, if necessary, in the <a href=http://ujoframework.org/javadoc/ id=e3-s title="JavaDoc Project">Ujorm JavaDoc</a> .<br>
+The following class diagram clarifies relation between Ujorm framework classes and application domain classes. The diagram is simplified and slightly modified to show only the relevant entities. A more detailed descriptions can be found, if necessary, in the <a href=http://ujoframework.org/javadoc/ id=e3-s title="JavaDoc Project">Ujorm JavaDoc</a> .<br>
 <div id=le08 style=TEXT-ALIGN:left>
   <div id=saxt style=TEXT-ALIGN:left>
     <br>
@@ -1320,10 +1322,10 @@ In short writing is name of 'Property' taken from name of field:<br>
 Terms used in UJO Framework:<br>
 <ul>
   <li>
-    <b>field</b> UjoProperty - the name of the static constants of UjoProperty in the implementation of Ujo<br>
+    UjoProperty&nbsp;<b>field</b>&nbsp;- the name of the static constants of UjoProperty in the implementation of Ujo<br>
   </li>
   <li>
-    <b>name</b> UjoProperty - a logical indication that returns 'UjoProperty.getName()' as 'String'
+    UjoProperty&nbsp;<b>name</b>&nbsp;- a logical indication that returns 'UjoProperty.getName()' as the String type
   </li>
 </ul>
 <br>
@@ -1801,10 +1803,9 @@ Thanks to developer team at <a href=http://www.effectiva.cz/ id=orok title="Effe
 <br>
 <br>
 <br>
-
-<div style="display: none;">
-<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+<br>
+<div>
+  <a href=http://navrcholu.cz/><img alt=NAVRCHOLU.cz height=1 src="images/EXTERN_0000.gif" style="BORDER:medium none" width=1></a>
 </div>
-
-</body>
+<br></body>
 </html>
