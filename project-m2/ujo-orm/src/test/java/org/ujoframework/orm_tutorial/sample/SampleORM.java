@@ -58,6 +58,7 @@ public class SampleORM {
             sample.useSelectItems_3();
             sample.useSelectItems_4();
             sample.useSelectItems_5();
+            sample.useSelectItems_5b();
             sample.useReloading();
             sample.useLimitAndOffset();
             sample.useSelectCount();
@@ -262,6 +263,23 @@ public class SampleORM {
     public void useSelectItems_5() {
         Criterion<Item> crit = Criterion.whereIn(Item.id, 1L,2L,3L,4L,5L);
         Query<Item> items = session.createQuery(crit);
+
+        for (Item item : items) {
+            System.out.println("Item: " + item);
+        }
+    }
+
+    /** Select using the IN operator with persistent objects. */
+    public void useSelectItems_5b() {
+        Order order_1 = new Order();
+        order_1.setId(1L);
+        Order order_2 = new Order();
+        order_2.setId(2L);
+
+        Criterion<Item> crit = Criterion.whereIn(Item.order, order_1, order_2);
+        Query<Item> items = session.createQuery(crit);
+
+        Object oo = items.iterator();
 
         for (Item item : items) {
             System.out.println("Item: " + item);

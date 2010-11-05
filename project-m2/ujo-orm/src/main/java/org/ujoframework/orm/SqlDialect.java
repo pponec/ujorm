@@ -506,16 +506,17 @@ abstract public class SqlDialect {
                 String f = String.format(template, column.getAliasName(), col2.getAliasName());
                 out.append(f);
             }
-        } else if (column.isForeignKey()) {
-           printForeignKey(crit, column, template, out);
-           return crit;
         } else if (right instanceof Object[]) {
-            StringBuilder sb = new StringBuilder(64);
-            for (Object o : (Object[]) right) {
+            final Object[] os = (Object[]) right;
+            final StringBuilder sb = new StringBuilder(2*os.length);
+            for (Object o : os) {
                 sb.append(sb.length()>0 ? ",?" : "?");
             }
             String f = MessageFormat.format(template, column.getAliasName(), sb.toString());
             out.append(f);
+            return crit;
+        } else if (column.isForeignKey()) {
+            printForeignKey(crit, column, template, out);
             return crit;
         } else {
             String f = MessageFormat.format(template, column.getAliasName(), "?");
