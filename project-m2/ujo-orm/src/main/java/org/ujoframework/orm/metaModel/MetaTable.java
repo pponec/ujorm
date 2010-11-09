@@ -234,6 +234,17 @@ final public class MetaTable extends AbstractMetaModel {
         return DATABASE.of(this)!=null;
     }
 
+    /** Has this table assigned the database default database schema ? */
+    public boolean isDefaultSchema() {
+        final String tableSchema = SCHEMA.of(this);
+        final String defaultSchema = MetaDatabase.SCHEMA.of(getDatabase());
+        // return tableSchema.equals(defaultSchema);
+
+        // TODO: Remove the statement:
+        return false;
+
+    }
+
     /** Is the instance a database relation model? */
     public boolean isView() {
         return VIEW.of(this);

@@ -64,7 +64,7 @@ public class UjoSequencer {
             StringBuilder out = new StringBuilder(64);
             try {
                 connection = session.getSeqConnection(db);
-                String tableName = db.getDialect().printFullTableName(getTable(), out).toString();
+                String tableName = db.getDialect().printFullTableName(getTable(), true, out).toString();
                 out.setLength(0);
 
                 // UPDATE the next sequence:
