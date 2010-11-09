@@ -59,6 +59,8 @@ abstract public class SqlDialect {
     public static final String COMMON_SEQ_TABLE_NAME = "ujorm_pk_support";
     /** The table key for a common sequence emulator. */
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
+    /** The default schema symbol */
+    public static final String DEFAULT_SCHEMA_SYMBOL = "~";
 
     /** The ORM handler */
     protected OrmHandler ormHandler;
@@ -100,12 +102,24 @@ abstract public class SqlDialect {
     }
 
     /** Print a full SQL table name by sample: SCHEMA.TABLE  */
-    public Appendable printFullTableName(final MetaTable table, final Appendable out) throws IOException {
+    final public Appendable printFullTableName(final MetaTable table, final Appendable out) throws IOException {
+        return printFullTableName(table, false, out);
+    }
+
+    /** Print a extended SQL table name by sample: SCHEMA.TABLE
+     * @param printSymbolSchema True parameter replaces a <string>default schema</string> name for the symbol "~" by the example: ~.TABLE
+     * @throws IOException
+     */
+    public Appendable printFullTableName(final MetaTable table, final boolean printSymbolSchema, final Appendable out) throws IOException {
+
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
         if (isUsable(tableSchema)) {
-            out.append(tableSchema);
+            out.append( (printSymbolSchema && table.isDefaultSchema())
+                    ? DEFAULT_SCHEMA_SYMBOL
+                    : tableSchema
+                    );
             out.append('.');
         }
         out.append(tableName);

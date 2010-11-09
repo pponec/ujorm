@@ -351,7 +351,7 @@ public class Orm2Test extends TestCase {
         MyProcedure procedure = new MyProcedure();
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The result can't be initialized.
+        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
         procedure.set(MyProcedure.paramCode, 5);
         procedure.set(MyProcedure.paramEnabled, true);
 
@@ -382,7 +382,7 @@ public class Orm2Test extends TestCase {
         // MyProcedure procedure2 = session.newProcedure(MyProcedure.class);
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The result can't be initialized.
+        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
         procedure.set(MyProcedure.paramCode, 5);
         procedure.set(MyProcedure.paramEnabled, true);
 
