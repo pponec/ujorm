@@ -28,10 +28,20 @@ import org.ujoframework.extensions.ListUjoProperty;
  */
 public class UjoCoder {
 
-    /** Date formatter / parser */
-    private /*public*/ final SimpleDateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    /** Date formatter / parser */
-    private /*public*/ final SimpleDateFormat FORMAT_DAY  = new SimpleDateFormat("yyyy-MM-dd");
+    /** Date formater and parser with second precision.
+     * @see http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html Performacce tip
+     */
+    public static final ThreadLocal<SimpleDateFormat> FORMAT_DATE = new ThreadLocal<SimpleDateFormat>() {
+       @Override protected SimpleDateFormat initialValue() { return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH); }
+    };
+
+    /** Date formater and parser with daily accuracy.
+     * @see http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html Performacce tip
+     */
+    public static final ThreadLocal<SimpleDateFormat> FORMAT_DAY = new ThreadLocal<SimpleDateFormat>() {
+       @Override protected SimpleDateFormat initialValue() { return new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH); }
+    };
+
     /** Typ konstruktoru */
     public static final Class[] CONSTRUCTOR_TYPE = new Class[]{String.class};
 
@@ -75,11 +85,10 @@ public class UjoCoder {
             }
             result = sb.toString();
         } else if (value instanceof Date) {
-            if (value instanceof java.sql.Date) synchronized (FORMAT_DAY) {
-               result = FORMAT_DAY.format((java.sql.Date) value);
-            } else synchronized (FORMAT_DATE) {
-               result = FORMAT_DATE.format((Date) value);
-            }
+            result = value instanceof java.sql.Date
+                    ? FORMAT_DAY.get().format((java.sql.Date) value)
+                    : FORMAT_DATE.get().format((Date) value)
+                    ;
         } else if (value instanceof Color) {
             result = Integer.toHexString(((Color) value).getRGB() & 0xffffff | 0x1000000).substring(1).toUpperCase();
         } else if (value instanceof File) {
@@ -126,8 +135,8 @@ public class UjoCoder {
             if (regenerationTest) {
                 try { // Testing of a regeneration:
                     Constructor c = value.getClass().getConstructor(CONSTRUCTOR_TYPE);
-                } catch (Throwable ex) {
-                    throw new IllegalArgumentException("Unsupported type: " + value.getClass().getName());
+                } catch (Throwable e) {
+                    throw new IllegalArgumentException("Unsupported type: " + value.getClass().getName(), e);
                 }
             }
             result = String.valueOf(value);
@@ -255,15 +264,13 @@ public class UjoCoder {
             }
             if (Date.class.isAssignableFrom(type)) {
                 try {
-                    Date result;
-                    if (java.sql.Date.class.isAssignableFrom(type)) synchronized (FORMAT_DAY) {
-                       result = new java.sql.Date(FORMAT_DAY.parse(aValue).getTime());
-                    } else synchronized (FORMAT_DATE) {
-                       result = FORMAT_DATE.parse(aValue);
-                    }
+                    Date result = java.sql.Date.class.isAssignableFrom(type)
+                            ?  new java.sql.Date(FORMAT_DAY.get().parse(aValue).getTime())
+                            :  FORMAT_DATE.get().parse(aValue)
+                            ;
                     return result;
                 } catch (ParseException ex) {
-                    new IllegalArgumentException("\"" + aValue + "\" " + type, ex);
+                    throw new IllegalArgumentException("\"" + aValue + "\" " + type, ex);
                 }
             }
             if (Color.class.isAssignableFrom(type)) {
