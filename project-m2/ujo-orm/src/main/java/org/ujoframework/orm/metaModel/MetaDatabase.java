@@ -486,7 +486,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                     cTables = TABLES.getList(this);
                     break;
                 case NEVER:
-                    cTables = Collections.EMPTY_LIST;
+                    cTables = Collections.emptyList();
                     break;
                 default:
                     throw new IllegalStateException("Unsupported parameter");

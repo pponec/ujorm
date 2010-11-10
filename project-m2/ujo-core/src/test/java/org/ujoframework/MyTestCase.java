@@ -60,7 +60,7 @@ abstract public class MyTestCase extends TestCase {
        
         
         for (int i=properties.size()-1; i>=0; i--) {
-            UjoProperty property = properties.get(i);
+            UjoProperty<? super Ujo,?> property = properties.get(i);
             Object o1 = property.of(expected);
             Object o2 = property.of(actual);
             
