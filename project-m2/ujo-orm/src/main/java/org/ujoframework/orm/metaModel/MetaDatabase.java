@@ -252,6 +252,20 @@ final public class MetaDatabase extends AbstractMetaModel {
         }
     }
 
+    /** Create table comment */
+    private void createTableComments(List<MetaTable> cTables, Statement stat, StringBuilder out) throws Exception {
+
+        for (MetaTable table : cTables) {
+            if (table.isTable() && table.isComment()) {
+                out.setLength(0);
+                Appendable sql = getDialect().printComment(table, out);
+                if (sql.toString().length() > 0) {
+                    executeUpdate(sql, stat);
+                }
+            }
+        }
+    }
+
     /** Returns a native database identifirer. */
     private String dbIdentifier(final String name, final DatabaseMetaData dmd) throws SQLException {
         if (dmd.storesUpperCaseIdentifiers()) {
@@ -354,7 +368,7 @@ final public class MetaDatabase extends AbstractMetaModel {
         Connection conn = session.getConnection(this);
         Statement stat = null;
         StringBuilder out = new StringBuilder(256);
-        String sql = "";
+        Appendable sql = out;
         List<MetaTable> tables = new ArrayList<MetaTable>();
         List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
         List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
@@ -370,8 +384,8 @@ final public class MetaDatabase extends AbstractMetaModel {
                 PreparedStatement ps = null;
                 ResultSet rs = null;
                 try {
-                    sql = getDialect().printSequenceCurrentValue(seq, out).toString();
-                    ps = conn.prepareStatement(sql);
+                    sql = getDialect().printSequenceCurrentValue(seq, out);
+                    ps = conn.prepareStatement(sql.toString());
                     ps.setString(1, "-");
                     rs = ps.executeQuery();
                     LOGGER.log(Level.INFO, "Database structure is loaded: {0}", getId());
@@ -381,7 +395,15 @@ final public class MetaDatabase extends AbstractMetaModel {
                         case CREATE_OR_UPDATE_DDL:
                         case VALIDATE:
                             change = isModelChanged(conn, tables, newColumns, indexes);
-                            if (!change) return;
+                            if (!change) {
+                                switch (MetaParams.COMMENT_POLICY.of(ormHandler.getParameters())) {
+                                    case ALWAYS:
+                                        // Create table comment for the all tables:
+                                        createTableComments(TABLES.getList(this), ps, out);
+                                        break;
+                                }
+                                return;
+                            }
                     }
                 } catch (SQLException e) {
                     LOGGER.log(Level.INFO, "Database structure is not loaded: {0}", getId());
@@ -422,7 +444,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             // 2. Create schemas:
             if (!change) for (String schema : getSchemas(tables)) { // TODO
                 out.setLength(0);
-                sql = getDialect().printCreateSchema(schema, out).toString();
+                sql = getDialect().printCreateSchema(schema, out);
                 if (isUsable(sql)) {
                     executeUpdate(sql, stat);
                 }
@@ -434,7 +456,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 if (table.isTable()) {
                     tableCount++;
                     out.setLength(0);
-                    sql = getDialect().printTable(table, out).toString();
+                    sql = getDialect().printTable(table, out);
                     executeUpdate(sql, stat);
                     foreignColumns.addAll(table.getForeignColumns());
                 }
@@ -443,7 +465,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             // 4. Create new columns:
             for (MetaColumn column : newColumns) {
                 out.setLength(0);
-                sql = getDialect().printAlterTable(column, out).toString();
+                sql = getDialect().printAlterTable(column, out);
                 executeUpdate(sql, stat);
 
                 // Pick up the foreignColumns:
@@ -455,7 +477,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             // 5. Create Indexes:
             for (MetaIndex index : indexes) {
                 out.setLength(0);
-                sql = getDialect().printIndex(index, out).toString();
+                sql = getDialect().printIndex(index, out);
                 executeUpdate(sql, stat);
             }
 
@@ -464,7 +486,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 if (column.isForeignKey()) {
                     out.setLength(0);
                     MetaTable table = MetaColumn.TABLE.of(column);
-                    sql = getDialect().printForeignKey(column, table, out).toString();
+                    sql = getDialect().printForeignKey(column, table, out);
                     executeUpdate(sql, stat);
                 }
             }
@@ -472,7 +494,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             // 7. Create SEQUENCE table;
             if (tableCount>0 && !change) {
                 out.setLength(0);
-                sql = getDialect().printSequenceTable(this, out).toString();
+                sql = getDialect().printSequenceTable(this, out);
                 executeUpdate(sql, stat);
             }
 
@@ -482,6 +504,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 case FOR_NEW_OBJECT:
                     cTables = tables;
                     break;
+                case ALWAYS:
                 case ON_ANY_CHANGE:
                     cTables = TABLES.getList(this);
                     break;
@@ -491,15 +514,8 @@ final public class MetaDatabase extends AbstractMetaModel {
                 default:
                     throw new IllegalStateException("Unsupported parameter");
             }
-            for (MetaTable table : cTables) {
-                if (table.isTable() && table.isComment()) {
-                    out.setLength(0);
-                    sql = getDialect().printComment(table, out).toString();
-                    if (sql.length()>0) {
-                        executeUpdate(sql, stat);
-                    }
-                }
-            }
+            sql = out;
+            createTableComments(cTables, stat, out);
 
             conn.commit();
 
@@ -514,7 +530,7 @@ final public class MetaDatabase extends AbstractMetaModel {
     }
 
     /** Check missing database table, index, or column */
-    private void executeUpdate(final String sql, final Statement stat) throws IllegalStateException, SQLException {
+    private void executeUpdate(final Appendable sql, final Statement stat) throws IllegalStateException, SQLException {
 
        switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
            case VALIDATE:
@@ -526,8 +542,8 @@ final public class MetaDatabase extends AbstractMetaModel {
                           ;
                throw new IllegalArgumentException(msg);
            default:
-               stat.executeUpdate(sql);
-               LOGGER.info(sql);
+               stat.executeUpdate(sql.toString());
+               LOGGER.info(sql.toString());
        }
     }
 
