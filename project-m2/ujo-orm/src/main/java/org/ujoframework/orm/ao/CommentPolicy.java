@@ -22,6 +22,7 @@ import org.ujoframework.orm.annot.Comment;
 /**
  * Policy for assigning a comment form {@link Comment} annotation to database.
  * @see Comment
+ * @see org.ujoframework.orm.dialect.MySqlDialect#printComment(org.ujoframework.orm.metaModel.MetaColumn, java.lang.Appendable) MySqlDialect column implementation
  * @author Pavel Ponec
  */
 @Comment

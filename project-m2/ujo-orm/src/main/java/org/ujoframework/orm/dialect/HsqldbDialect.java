@@ -17,6 +17,7 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
@@ -44,5 +45,12 @@ public class HsqldbDialect extends H2Dialect {
     public Appendable printComment(MetaTable table, Appendable out) throws IOException {
         return out;
     }
+
+    /** COMMENT is not supported in HSQLDB database */
+    @Override
+    public Appendable printComment(MetaColumn column, Appendable out) throws IOException {
+        return out;
+    }
+
 
 }

@@ -256,11 +256,22 @@ final public class MetaDatabase extends AbstractMetaModel {
     private void createTableComments(List<MetaTable> cTables, Statement stat, StringBuilder out) throws Exception {
 
         for (MetaTable table : cTables) {
-            if (table.isTable() && table.isComment()) {
-                out.setLength(0);
-                Appendable sql = getDialect().printComment(table, out);
-                if (sql.toString().length() > 0) {
-                    executeUpdate(sql, stat);
+            if (table.isTable()) {
+                if (table.isCommented()) {
+                    out.setLength(0);
+                    Appendable sql = getDialect().printComment(table, out);
+                    if (sql.toString().length() > 0) {
+                        executeUpdate(sql, stat);
+                    }
+                }
+                for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+                    if (column.isCommented()) {
+                        out.setLength(0);
+                        Appendable sql = getDialect().printComment(column, out);
+                        if (sql.toString().length() > 0) {
+                            executeUpdate(sql, stat);
+                        }
+                    }
                 }
             }
         }
@@ -399,7 +410,8 @@ final public class MetaDatabase extends AbstractMetaModel {
                                 switch (MetaParams.COMMENT_POLICY.of(ormHandler.getParameters())) {
                                     case ALWAYS:
                                         // Create table comment for the all tables:
-                                        createTableComments(TABLES.getList(this), ps, out);
+                                        createTableComments(TABLES.getList(this), stat, out);
+                                        conn.commit();
                                         break;
                                 }
                                 return;
@@ -514,9 +526,10 @@ final public class MetaDatabase extends AbstractMetaModel {
                 default:
                     throw new IllegalStateException("Unsupported parameter");
             }
-            sql = out;
-            createTableComments(cTables, stat, out);
-
+            if (!cTables.isEmpty()) {
+                sql = out;
+                createTableComments(cTables, stat, out);
+            }
             conn.commit();
 
         } catch (Throwable e) {

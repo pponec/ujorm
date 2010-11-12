@@ -27,6 +27,7 @@ import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.*;
 import org.ujoframework.orm.ao.CachePolicy;
 import org.ujoframework.orm.ao.CheckReport;
+import org.ujoframework.orm.ao.CommentPolicy;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.utility.OrmTools;
 
@@ -100,6 +101,7 @@ public class SampleORM {
             params.set(MetaParams.SEQUENCE_CACHE, 1);
             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
             params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
+            params.set(MetaParams.COMMENT_POLICY, CommentPolicy.ALWAYS);
             handler.config(params);
         }
 

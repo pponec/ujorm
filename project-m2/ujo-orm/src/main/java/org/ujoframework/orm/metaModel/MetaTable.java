@@ -116,11 +116,6 @@ final public class MetaTable extends AbstractMetaModel {
         View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
         VIEW.setValue(this, view1!=null || view2!=null);
 
-        Comment comment1 = field.getAnnotation(Comment.class);
-        Comment comment2 = (Comment) dbProperty.getItemType().getAnnotation(Comment.class);
-        if (comment1!=null) changeDefault(this, COMMENT  , comment1.value());
-        if (comment2!=null) changeDefault(this, COMMENT  , comment2.value());
-
         if (parTable!=null) {
             changeDefault(this, NAME  , NAME.of(parTable));
             changeDefault(this, ALIAS , ALIAS.of(parTable));
@@ -160,11 +155,18 @@ final public class MetaTable extends AbstractMetaModel {
             if (table2!=null) changeDefault(this, SCHEMA, table2.schema());
             if (table2!=null) changeDefault(this, SEQUENCE,table2.sequence());
         }
+
         changeDefault(this, SCHEMA, MetaDatabase.SCHEMA.of(database));
         changeDefault(this, NAME, dbProperty.getName());
         String aliasPrefix = MetaParams.TABLE_ALIAS_PREFIX.of(database.getParams());
         String aliasSuffix = MetaParams.TABLE_ALIAS_SUFFIX.of(database.getParams());
         changeDefault(this, ALIAS, aliasPrefix+NAME.of(this)+aliasSuffix);
+
+        // Assign Comments:
+        Comment comment1 = field.getAnnotation(Comment.class);
+        Comment comment2 = (Comment) dbProperty.getItemType().getAnnotation(Comment.class);
+        if (comment1!=null) changeDefault(this, COMMENT  , comment1.value());
+        if (comment2!=null) changeDefault(this, COMMENT  , comment2.value());
 
         // -----------------------------------------------
 
@@ -255,12 +257,10 @@ final public class MetaTable extends AbstractMetaModel {
         return isPersistent() && !isView();
     }
 
-    /** Is the instance a database persistent table? A false value neans that the object is a relation model or view. */
-    public boolean isComment() {
+    /** Has the instance assigned a non empty comment? */
+    public boolean isCommented() {
         return !COMMENT.isDefault(this);
     }
-
-
 
     /** Is the query from a SQL select model ? */
     public boolean isSelectModel() {

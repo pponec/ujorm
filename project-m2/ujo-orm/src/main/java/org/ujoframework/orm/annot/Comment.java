@@ -18,8 +18,9 @@ package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
 
 /** 
- * Use the annotation to comment a database table
- * @see View
+ * Use the annotation to comment a database table or column.<br>
+ * In case you are using the database MySQL, please see more information about the column {@link org.ujoframework.orm.dialect.MySqlDialect#printComment(org.ujoframework.orm.metaModel.MetaColumn, java.lang.Appendable) implementation }
+ * @see org.ujoframework.orm.dialect.MySqlDialect#printComment(org.ujoframework.orm.metaModel.MetaColumn, java.lang.Appendable) MySqlDialect column implementation
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})

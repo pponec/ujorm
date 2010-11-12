@@ -48,11 +48,13 @@ public class Order extends OrmTable<Order> {
             return name().substring(0, 1);
         }
     }
-    
-    /** The Unique Key */
+
+    /** The Primary Key */
+    @Comment("The Primary Key")
     @Column(pk = true)
     public static final UjoProperty<Order, Long> id = newProperty(Long.class);
     /** Order state, default is ACTIVE */
+    @Comment("Order state, default value is ACTIVE")
     public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
     /** User key */
     public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
