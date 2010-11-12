@@ -46,7 +46,7 @@
                     <source>1.5</source>
                     <target>1.5</target>
                     <encoding>UTF-8</encoding>
-                    <debug>false</debug>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
 
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.2.128</version>
+            <version>1.2.145</version>
             <scope>test</scope>
         </dependency>
 

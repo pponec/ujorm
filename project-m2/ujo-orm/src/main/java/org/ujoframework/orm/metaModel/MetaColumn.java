@@ -32,6 +32,7 @@ import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.annot.Column;
+import org.ujoframework.orm.annot.Comment;
 import org.ujoframework.orm.ao.UjoStatement;
 
 /**
@@ -41,7 +42,6 @@ import org.ujoframework.orm.ao.UjoStatement;
  */
 final public class MetaColumn extends MetaRelation2Many {
     private static final Class CLASS = MetaColumn.class;
-
 
     /** DB primary key */
     public static final Property<MetaColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
@@ -61,6 +61,8 @@ final public class MetaColumn extends MetaRelation2Many {
     /** A name of the unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
     public static final Property<MetaColumn,String> UNIQUE_INDEX = newProperty("uniqueIndex", "");
+    /** Comment of the database column */
+    public static final Property<MetaColumn,String> COMMENT = newProperty("comment", Comment.NULL);
     /** The property initialization */
     static{init(CLASS);}
 
@@ -94,6 +96,7 @@ final public class MetaColumn extends MetaRelation2Many {
             changeDefault(this, DB_TYPE    , DB_TYPE.of(param));
             changeDefault(this, INDEX      , INDEX.of(param));
             changeDefault(this, UNIQUE_INDEX,UNIQUE_INDEX.of(param));
+            changeDefault(this, COMMENT    , COMMENT.of(param));
         }
         if (column!=null) {
             changeDefault(this, PRIMARY_KEY, column.pk());
@@ -110,6 +113,12 @@ final public class MetaColumn extends MetaRelation2Many {
         }
         if (MAX_LENGTH.isDefault(this)) {
             MetaTable.DATABASE.of(table).changeDbLength(this);
+        }
+
+        // Assign Comments:
+        if (field!=null) {
+            Comment comment = field.getAnnotation(Comment.class);
+            if (comment!=null) changeDefault(this, COMMENT  , comment.value());
         }
     }
 
@@ -131,6 +140,11 @@ final public class MetaColumn extends MetaRelation2Many {
     public boolean isPrimaryKey() {
         final boolean result = PRIMARY_KEY.of(this);
         return result;
+    }
+
+    /** Has the instance assigned a non empty comment? */
+    public boolean isCommented() {
+        return !COMMENT.isDefault(this);
     }
 
     /** Returns a maximal db column length in the database.

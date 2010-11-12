@@ -817,12 +817,24 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print a Comment on the table */
+    /** Print a Comment to a database Table */
     public Appendable printComment(MetaTable table, Appendable out) throws IOException {
         out.append("COMMENT ON TABLE ");
         printFullTableName(table, out);
         out.append(" IS '");
         escape(MetaTable.COMMENT.of(table), out);
+        out.append("'");
+        return out;
+    }
+
+    /** Print a Comment to a database Column */
+    public Appendable printComment(MetaColumn column, Appendable out) throws IOException {
+        out.append("COMMENT ON COLUMN ");
+        printFullTableName(MetaColumn.TABLE.of(column), out);
+        out.append('.');
+        out.append(MetaColumn.NAME.of(column));
+        out.append(" IS '");
+        escape(MetaColumn.COMMENT.of(column), out);
         out.append("'");
         return out;
     }

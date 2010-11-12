@@ -15,7 +15,9 @@
  */
 package org.ujoframework.orm.dialect;
 
+import java.io.IOException;
 import org.ujoframework.orm.SqlDialect;
+import org.ujoframework.orm.metaModel.MetaColumn;
 
 /** H2 (http://www.h2database.com) */
 @SuppressWarnings("unchecked")
@@ -30,6 +32,15 @@ public class H2Dialect extends SqlDialect {
     public String getJdbcDriver() {
         return "org.h2.Driver";
     }
+
+    /** Why the SQL statement does not work? */
+    @Override
+    public Appendable printComment(MetaColumn column, Appendable out) throws IOException {
+        // return super.printComment(column, out); // Why the solution does not work ?
+        return out;
+    }
+
+
 
     // --- SEQUENCE BEG ---
 

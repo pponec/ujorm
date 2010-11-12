@@ -116,4 +116,30 @@ public class MySqlDialect extends SqlDialect {
         return out;
     }
 
+    /** Important note for MySQL: the change of column modifies all another column attributes so the comment update can revert some hand-made changes different from meta-model.<br>
+     * See the official MySQL <a href="http://dev.mysql.com/doc/refman/5.1/en/alter-table.html">documentation</a> for more information.
+     * The column comments can be suppresed by the overwritting the method with an empty body.
+     */
+    @Override
+    public Appendable printComment(MetaColumn column, Appendable out) throws IOException {
+        out.append("ALTER TABLE ");
+        printFullTableName(column.getTable(), out);
+        out.append(" MODIFY COLUMN ");
+
+        if (column.isPrimaryKey()) {
+            String pk = " PRIMARY KEY"; // Due:  Multiple primary key defined.
+            String statement = printColumnDeclaration(column, null, new StringBuilder()).toString();
+            out.append(statement.replaceAll(pk, " "));
+        } else if(column.isForeignKey()) {
+            printFKColumnsDeclaration(column, out); 
+        } else {
+            printColumnDeclaration(column, null, out);
+        }
+
+        out.append(" COMMENT '");
+        escape(MetaColumn.COMMENT.of(column), out);
+        out.append("'");
+        return out;
+    }
+
 }

@@ -38,6 +38,7 @@ public class Item extends OrmTable<Item> {
     /** Description of Item */
     public static final UjoProperty<Item,String> descr = newProperty(String.class);
     /** A reference to common Order */
+    @Comment("A reference to the Order")
     @Column(name="fk_order")
     public static final UjoProperty<Item,Order> order = newProperty(Order.class);
     /** A composed (indirect) property provides a 'created' attribute of the Order */
