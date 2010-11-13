@@ -252,28 +252,31 @@ final public class MetaDatabase extends AbstractMetaModel {
         }
     }
 
-    /** Create table comment */
-    private void createTableComments(List<MetaTable> cTables, Statement stat, StringBuilder out) throws Exception {
-
-        for (MetaTable table : cTables) {
-            if (table.isTable()) {
-                if (table.isCommented()) {
-                    out.setLength(0);
-                    Appendable sql = getDialect().printComment(table, out);
-                    if (sql.toString().length() > 0) {
-                        executeUpdate(sql, stat);
-                    }
-                }
-                for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
-                    if (column.isCommented()) {
+    /** Create table and column comments. An error in this method does not affect the rest of all transaction.  */
+    private void createTableComments(List<MetaTable> cTables, Statement stat, StringBuilder out) {
+        try {
+            for (MetaTable table : cTables) {
+                if (table.isTable()) {
+                    if (table.isCommented()) {
                         out.setLength(0);
-                        Appendable sql = getDialect().printComment(column, out);
+                        Appendable sql = getDialect().printComment(table, out);
                         if (sql.toString().length() > 0) {
                             executeUpdate(sql, stat);
                         }
                     }
+                    for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+                        if (column.isCommented()) {
+                            out.setLength(0);
+                            Appendable sql = getDialect().printComment(column, out);
+                            if (sql.toString().length() > 0) {
+                                executeUpdate(sql, stat);
+                            }
+                        }
+                    }
                 }
             }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error on table comment: {0}", out);
         }
     }
 
@@ -293,6 +296,7 @@ final public class MetaDatabase extends AbstractMetaModel {
      * @param newTables Output parameter
      * @param newColumns Output parameter
      */
+    @SuppressWarnings("LoggerStringConcat")
     private boolean isModelChanged(Connection conn
         , List<MetaTable>  newTables
         , List<MetaColumn> newColumns
