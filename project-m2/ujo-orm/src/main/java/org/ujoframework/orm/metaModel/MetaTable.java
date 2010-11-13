@@ -262,6 +262,13 @@ final public class MetaTable extends AbstractMetaModel {
         return !COMMENT.isDefault(this);
     }
 
+    /** Get a Comment from meta-model annotation.
+     * @see org.ujoframework.orm.annot.Comment
+     */
+    public String getComment() {
+        return COMMENT.of(this);
+    }
+
     /** Is the query from a SQL select model ? */
     public boolean isSelectModel() {
         return SELECT_MODEL.of(this)!=null;
