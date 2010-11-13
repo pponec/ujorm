@@ -461,6 +461,7 @@ public class SampleORM {
             .append("Length : " + col.getMaxLength() + '\n')
             .append("NotNull: " + col.isMandatory()  + '\n')
             .append("PrimKey: " + col.isPrimaryKey() + '\n')
+            .append("Comment: " + col.getComment()   + '\n')
             .append("DB name: " + col.getFullName()  + '\n')
             .append("Dialect: " + col.getDialectClass().getSimpleName())
             ;

@@ -147,6 +147,13 @@ final public class MetaColumn extends MetaRelation2Many {
         return !COMMENT.isDefault(this);
     }
 
+    /** Get a Comment from meta-model annotation.
+     * @see org.ujoframework.orm.annot.Comment
+     */
+    public String getComment() {
+        return COMMENT.of(this);
+    }
+
     /** Returns a maximal db column length in the database.
      * @return If property is undefined then the method returns value -1.
      */
