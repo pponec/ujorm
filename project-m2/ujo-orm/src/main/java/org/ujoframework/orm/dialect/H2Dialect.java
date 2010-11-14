@@ -33,10 +33,13 @@ public class H2Dialect extends SqlDialect {
         return "org.h2.Driver";
     }
 
-    /** Why the SQL statement does not work? */
+    /** Column COMMENT is probably <a href="http://groups.google.com/group/h2-database/browse_thread/thread/693603e4ca55f5fe">
+     *    incorrectly implemented</a> on in-memory mode of the H2.
+     * @see http://groups.google.com/group/h2-database/browse_thread/thread/693603e4ca55f5fe H2 Database Formum
+     */
     @Override
     public Appendable printComment(MetaColumn column, Appendable out) throws IOException {
-        // return super.printComment(column, out); // Why the solution does not work ?
+        // return super.printComment(column, out); // The solution does not work.
         return out;
     }
 
