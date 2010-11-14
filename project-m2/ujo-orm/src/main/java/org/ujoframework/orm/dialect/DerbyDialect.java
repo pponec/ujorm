@@ -101,4 +101,11 @@ public class DerbyDialect extends SqlDialect {
         return out;
     }
 
+    /** COMMENT is not supported in HSQLDB database */
+    @Override
+    public Appendable printComment(MetaColumn table, Appendable out) throws IOException {
+        return out;
+    }
+
+
 }
