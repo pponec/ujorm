@@ -91,6 +91,9 @@ final public class MetaTable extends AbstractMetaModel {
     /** Ujo sequencer */
     final private UjoSequencer sequencer;
 
+    /** Cache of the parameter. */
+    private Boolean sequenceSchemaSymbol;
+
     /** No parameter constructor. */
     public MetaTable() {
         sequencer = null;
@@ -238,13 +241,16 @@ final public class MetaTable extends AbstractMetaModel {
 
     /** Has this table assigned the database default database schema ? */
     public boolean isDefaultSchema() {
-        final String tableSchema = SCHEMA.of(this);
-        final String defaultSchema = MetaDatabase.SCHEMA.of(getDatabase());
-        // return tableSchema.equals(defaultSchema);
-
-        // TODO: Remove the statement:
-        return false;
-
+        if (sequenceSchemaSymbol==null) {
+            sequenceSchemaSymbol = getDatabase().getParams().get(MetaParams.SEQUENCE_SCHEMA_SYMBOL);
+        }
+        if (sequenceSchemaSymbol) {
+            final String tableSchema = SCHEMA.of(this);
+            final String defaultSchema = MetaDatabase.SCHEMA.of(getDatabase());
+            return tableSchema.equals(defaultSchema);
+        } else {
+            return false;
+        }
     }
 
     /** Is the instance a database relation model? */

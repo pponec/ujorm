@@ -71,6 +71,13 @@ final public class MetaParams extends AbstractMetaModel {
      @see OrmTools#loadLazyValuesAsBatch(java.lang.Iterable, org.ujoframework.UjoProperty)
      */
     public static final Property<MetaParams,Integer> MAX_ITEM_COUNT_4_IN = newProperty("maxItemCountForIN", 500);
+
+    /** The experimental parameter affects to a Sequence key name in the internal sequsence generator.
+     * Value TRUE use a special character "~" instead of default database schema in the sequence table.
+     */
+    public static final Property<MetaParams,Boolean> SEQUENCE_SCHEMA_SYMBOL = newProperty("sequenceSchemaSymbol", false);
+
+
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
     public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
