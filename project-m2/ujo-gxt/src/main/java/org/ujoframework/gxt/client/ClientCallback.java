@@ -9,6 +9,7 @@
 
 package org.ujoframework.gxt.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.gwtincubator.security.client.SecuredAsyncCallback;
 import com.gwtincubator.security.exception.ApplicationSecurityException;
@@ -23,13 +24,15 @@ public abstract class ClientCallback<T> extends SecuredAsyncCallback<T> {
 
     @Override
     protected void onSecurityException(ApplicationSecurityException exception) {
-        Window.alert("security exeption :" + exception.toString());
+        GWT.log("security exception :", exception);
+        Window.alert("security exception :" + exception.toString());
         callEnd = true;
     }
 
     @Override
     protected void onOtherException(Throwable exception) {
-        Window.alert("other exeption :" + exception.toString());
+        GWT.log("other exception :", exception);
+        Window.alert("other exception :" + exception.toString());
         callEnd = true;
     }
 
