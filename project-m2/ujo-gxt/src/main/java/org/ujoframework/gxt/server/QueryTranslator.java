@@ -122,6 +122,8 @@ public class QueryTranslator<UJO extends OrmUjo> {
 
             if (c2 instanceof CujoProperty) {
                 p2 = manager.findIndirectProperty(type, ((CujoProperty) c2).getName());
+            } else if (c2 instanceof  CEnum) {
+                p2 = Enum.valueOf(p1.getType(), ((CEnum) c2).getName());
             } else if (c2 instanceof Cujo) {
                 UjoTranslator translator = new UjoTranslator(
                         ((Cujo) c2).readProperties(),
