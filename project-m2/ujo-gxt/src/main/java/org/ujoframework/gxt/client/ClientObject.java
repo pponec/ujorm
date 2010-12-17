@@ -93,6 +93,9 @@ public class ClientObject implements Serializable {
         if (Boolean.class.getName().equals(type)) {
             return "true".equals(value);
         }
+        if (CEnum.class.getName().equals(type)) {
+            return new CEnum(0 /* not used */, value);
+        }
         
         String msg = "Unsupported serialization object: '" + value + "' type of class " + type;
         throw new RuntimeException(msg);
