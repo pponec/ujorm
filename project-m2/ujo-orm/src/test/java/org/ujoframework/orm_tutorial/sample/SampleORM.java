@@ -51,6 +51,7 @@ public class SampleORM {
             sample.loadMetaModel();
             sample.useInsert();
             sample.useSelectOrders();
+            sample.useCriterions();
             sample.useSortOrders();
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
@@ -162,6 +163,38 @@ public class SampleORM {
             String descr = order.getDescr();
             System.out.println("ORDER ROW: " + order + " // descr: " + descr);
         }
+    }
+
+    /** Lern how to use the Criterion as an simple object validator only. */
+    public void useCriterions() {
+
+        final Order order = new Order();
+        order.setId(100L);
+        order.setDescr("my order");
+        order.setDate(new Date());
+
+        Criterion<Order> crnId = Criterion.where(Order.id, 100L);
+        Criterion<Order> crnDescr = Criterion.where(Order.descr, "another");
+        Criterion<Order> crnCreated = Criterion.where(Order.created, Operator.LE, new Date()) ;
+        Criterion<Order> crn = null;
+
+        // Condition: Order.id=100
+        crn = crnId;
+        assert crn.evaluate(order);
+
+        // Compound condition: Order.id=100 or Order.descr='another text'
+        crn = crnId.or(crnDescr);
+        assert crn.evaluate(order);
+
+        // Compound condition with parentheses: Order.created<=today() and (Order.descr='another' or iOrder.d=100)
+        crn = crnCreated.and(crnDescr.or(crnId));
+        assert crn.evaluate(order);
+
+        // Another condition: (Order.created<=today() or (Order.descr='another') and iOrder.d=100)
+        crn = (crnCreated.or(crnDescr)).and(crnId);
+        // ... or simple by a native priority:
+        crn =  crnCreated.or(crnDescr).and(crnId);
+        assert crn.evaluate(order);
     }
 
     /** Sort orders by two properties: descr and created descending. */
