@@ -109,13 +109,8 @@ img {
 
   
     
-    
     .writely-callout-data {
-      display: inline-block;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      margin-left: -1px;
+      display: none;
     }
     
 
@@ -758,6 +753,74 @@ In the last example is used information from meta-model, which may contain usefu
   </tr>
   </tbody>
 </table>
+<br>
+<br>
+<font size=3>How to use the Criterion ?</font><br>
+The criterion is a base element to build an condition. <span class=hps title="Kliknutím zobrazíte alternativní překlady">The Criterion</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">has</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">an interesting</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">feature</span>: it can <span class=hps title="Kliknutím zobrazíte alternativní překlady">be</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">used</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">immediately for the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">evaluation of</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">an object -</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">such</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">as the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">validator</span>.<br>
+<br>
+For next examples create some Criterions:<br>
+<div style=MARGIN-LEFT:80px>
+  <br>
+</div>
+<table border=1 cellpadding=3 cellspacing=0 height=63 id=gv1k style=MARGIN-LEFT:40px width=463>
+  <tbody>
+  <tr>
+    <td width=100%>
+      <font face="courier new">final Order order = <b style=COLOR:#741b47>new </b>Order();</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">order.setId(<b style=COLOR:#0b5394>100L</b>);</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">order.setDescr("<b style=COLOR:#0b5394>my order</b>");</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">order.setDate(new Date());</font><br>
+      <br>
+      <font face="courier new">Criterion&lt;Order&gt; crnId<br>
+      &nbsp;&nbsp; = Criterion.where(Order.id, <b style=COLOR:#0b5394>100L</b>);</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">Criterion&lt;Order&gt; crnDescr<br>
+      &nbsp;&nbsp; = Criterion.where(Order.descr, "<b style=COLOR:#0b5394>another</b>");</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">Criterion&lt;Order&gt; crnCreated<br>
+      &nbsp;&nbsp; = Criterion.where(Order.created<br>
+      &nbsp;&nbsp; , Operator.LE<br>
+      &nbsp;&nbsp; , new Date());</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">Criterion&lt;Order&gt; crn = <b style=COLOR:#741b47>null</b>;</font><br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<br>
+The samples of the use:<br>
+<div style=MARGIN-LEFT:80px>
+  <br>
+</div>
+<table border=1 cellpadding=3 cellspacing=0 height=192 id=d-20 style=MARGIN-LEFT:40px width=463>
+  <tbody>
+  <tr>
+    <td width=100%>
+      <b style=COLOR:#999999><i><font face="courier new">// Simple condition: Order.id=100</font></i></b><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">crn = crnId;</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">assert crn.evaluate(order);</font><br style="FONT-FAMILY:Courier New">
+      <br style="FONT-FAMILY:Courier New">
+      <b style=COLOR:#999999><i><font face="courier new">// Compound condition:<br>
+      // Order.id=100 or Order.descr='another'</font></i></b><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">crn = crnId.or(crnDescr);</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">assert crn.evaluate(order);</font><br style="FONT-FAMILY:Courier New">
+      <br style="FONT-FAMILY:Courier New">
+      <b style=COLOR:#999999><font face="courier new">// Compound condition with parentheses:<br>
+      // Order.created&lt;=today()<br>
+      // and (Order.descr='another' or <font face="courier new">Order</font><font face="courier new">.</font>id=100)</font></b><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">crn = crnCreated.and(crnDescr.or(crnId));</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">assert crn.evaluate(order);</font><br style="FONT-FAMILY:Courier New">
+      <br style="FONT-FAMILY:Courier New">
+      <i><b style=COLOR:#999999><font face="courier new">// Another condition:<br>
+      // (Order.created&lt;=today() or Order.descr='another')<br>
+      //&nbsp; and <font face="courier new">Order.</font>id=100</font></b></i><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">crn = (crnCreated.or(crnDescr)).and(crnId);</font><br style="FONT-FAMILY:Courier New">
+      <i style=COLOR:#999999><b><font face="courier new">// ... or simple by a native priority:</font></b></i><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">crn =&nbsp; crnCreated.or(crnDescr).and(crnId);</font><br style="FONT-FAMILY:Courier New">
+      <font face="courier new">assert crn.evaluate(order);</font><br>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
 <br>
 Further examples of solved tasks can be found at this <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=xgyt title=link>link</a> .<br>
 <br>
