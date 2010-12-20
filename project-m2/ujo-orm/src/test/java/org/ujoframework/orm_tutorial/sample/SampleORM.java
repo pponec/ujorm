@@ -178,19 +178,19 @@ public class SampleORM {
         Criterion<Order> crnCreated = Criterion.where(Order.created, Operator.LE, new Date()) ;
         Criterion<Order> crn = null;
 
-        // Condition: Order.id=100
+        // Simple condition: Order.id=100
         crn = crnId;
         assert crn.evaluate(order);
 
-        // Compound condition: Order.id=100 or Order.descr='another text'
+        // Compound condition: Order.id=100 or Order.descr='another'
         crn = crnId.or(crnDescr);
         assert crn.evaluate(order);
 
-        // Compound condition with parentheses: Order.created<=today() and (Order.descr='another' or iOrder.d=100)
+        // Compound condition with parentheses: Order.created<=today() and (Order.descr='another' or Order.id=100)
         crn = crnCreated.and(crnDescr.or(crnId));
         assert crn.evaluate(order);
 
-        // Another condition: (Order.created<=today() or (Order.descr='another') and iOrder.d=100)
+        // Another condition: (Order.created<=today() or Order.descr='another') and Order.id=100
         crn = (crnCreated.or(crnDescr)).and(crnId);
         // ... or simple by a native priority:
         crn =  crnCreated.or(crnDescr).and(crnId);
