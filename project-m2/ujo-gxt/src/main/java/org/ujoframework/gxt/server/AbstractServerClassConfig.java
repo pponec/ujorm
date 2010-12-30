@@ -9,7 +9,6 @@ import com.extjs.gxt.ui.client.data.PagingLoadConfig;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.gxt.client.cquery.CQuery;
 import org.ujoframework.orm.Query;
-import org.ujoframework.orm.Session;
 
 /**
  * Inicialization the CUJO objects + mapping to BO.

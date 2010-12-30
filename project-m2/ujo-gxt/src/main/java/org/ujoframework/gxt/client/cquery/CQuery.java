@@ -33,8 +33,8 @@ public class CQuery<UJO extends Cujo> implements Serializable {
     private List<String> orderByName = new ArrayList<String>(1);
     private List<String> orderByDirect = new ArrayList<String>(1);
     private CCriterion<UJO> criterion;
-    /** Load relations */
-    private boolean relations = true;
+    /** Depth to Load relations. Value 0 means no relations, value 1 means load the first level of relations. */
+    private int relations = 1;
     private int columnOrderSize = 0;
     private int offset = 0;
     private int limit = -1;
@@ -215,13 +215,13 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         return result;
     }
 
-    /** Request to load all object relations */
-    public boolean isRelations() {
+    /** Request to load relatins to requered depth. Value 0 means no relations, value 1 means load the first level of relations. */
+    public int getRelations() {
         return relations;
     }
 
-    /** Request to load all object relations */
-    public void setRelations(boolean relations) {
+    /** Request to load relatins to requered depth. Value 0 means no relations, value 1 means load the first level of relations. */
+    public void setRelations(int relations) {
         this.relations = relations;
     }
 
