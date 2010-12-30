@@ -44,7 +44,7 @@ public class UjoTranslator<CUJO extends Cujo> {
     private List<Ujo> ujos = null;
     private Session dummySession;
 
-    public UjoTranslator(CUJO clientObject, boolean relations, IServerClassConfig serverClassConfig) {
+    public UjoTranslator(CUJO clientObject, int relations, IServerClassConfig serverClassConfig) {
         this(clientObject.readProperties(),
                 UjoManager.getInstance().readProperties(serverClassConfig.getServerClass(clientObject.getClass().getName())),
                 relations,
@@ -52,38 +52,32 @@ public class UjoTranslator<CUJO extends Cujo> {
                 serverClassConfig);
     }
 
-    public UjoTranslator(Class<CUJO> clientType, Class<Ujo> serverType, boolean relations, IServerClassConfig serverClassConfig) throws Exception {
-        this(clientType.newInstance().readProperties(),
-                UjoManager.getInstance().readProperties(serverType),
-                relations,
-                null,
-                serverClassConfig);
-    }
-
-    public UjoTranslator(Class<CUJO> clientType, Class<Ujo> serverType, int relations, IServerClassConfig serverClassConfig) throws Exception {
-        this(clientType.newInstance().readProperties(),
-                UjoManager.getInstance().readProperties(serverType),
-                relations,
-                null,
-                serverClassConfig);
-    }
-
-    public UjoTranslator(CujoPropertyList cujoPropertyList,
-            UjoPropertyList ujoPropertyList,
-            boolean relations,
-            Set<UjoProperty> myPropertySet,
+    public UjoTranslator(Class<CUJO> clientType,
+            Class<Ujo> serverType,
+            int relations,
             IServerClassConfig serverClassConfig)
-            throws NoSuchElementException {
-        this(cujoPropertyList, ujoPropertyList, relations ? 1 : 0, myPropertySet, serverClassConfig);
+            throws Exception {
+        this(clientType.newInstance().readProperties(),
+                UjoManager.getInstance().readProperties(serverType),
+                relations,
+                null,
+                serverClassConfig);
     }
 
+    /***
+     * Create instance with a first level of relations request.
+     */
     @SuppressWarnings("unchecked")
     public UjoTranslator(CujoPropertyList cujoPropertyList,
             UjoPropertyList ujoPropertyList,
             IServerClassConfig serverClassConfig) {
-        this(cujoPropertyList, ujoPropertyList, true, null, serverClassConfig);
+        this(cujoPropertyList, ujoPropertyList, 1, null, serverClassConfig);
     }
 
+    /**
+     * Constructor
+     * @param relations The depth o relations, the value 0 means no relation is converted.
+     */
     @SuppressWarnings("unchecked")
     UjoTranslator(CujoPropertyList cujoPropertyList,
             UjoPropertyList ujoPropertyList,
@@ -113,7 +107,7 @@ public class UjoTranslator<CUJO extends Cujo> {
                         if (isRelations() && p1.isTypeOf(Ujo.class) && Cujo.class.isAssignableFrom(p2.getType())) {
                             try {
                                 properties.add(new PropContainer(p1, p2, pk));
-                                UjoTranslator ut = new UjoTranslator(p2.getType(), p1.getType(), false, serverClassConfig);
+                                UjoTranslator ut = new UjoTranslator(p2.getType(), p1.getType(), 0, serverClassConfig);
                                 relationMap.put(p1, ut);
                                 break;
                             } catch (Exception e) {
@@ -324,11 +318,16 @@ public class UjoTranslator<CUJO extends Cujo> {
     }
 
     // ------------------ STATIC METHODS --------------------------
+
+    /**
+     * Create new instance
+     * @param relations The depth o relations, the value 0 means no relation is converted.
+     */
     @SuppressWarnings("unchecked")
     public static <CUJO extends Cujo> UjoTranslator<CUJO> newInstance(
             CQuery clientQuery,
             Class serverClass,
-            boolean relations,
+            int relations,
             IServerClassConfig serverClassConfig) {
         try {
             Class clientType = Class.forName(clientQuery.getTypeName());
@@ -339,11 +338,15 @@ public class UjoTranslator<CUJO extends Cujo> {
 
     }
 
+    /**
+     * Create new instance
+     * @param relations The depth o relations, the value 0 means no relation is converted.
+     */
     @SuppressWarnings("unchecked")
     public static <CUJO extends Cujo> UjoTranslator<CUJO> newInstance(
             Class clientClass,
             Class serverClass,
-            boolean relations,
+            int relations,
             IServerClassConfig serverClassConfig) {
         try {
             return new UjoTranslator<CUJO>(clientClass, (Class<Ujo>) serverClass, relations, serverClassConfig);

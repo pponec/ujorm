@@ -16,7 +16,6 @@ import org.ujoframework.gxt.client.cquery.CQuery;
 import org.ujoframework.orm.OrmHandler;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
-import org.ujoframework.orm.Session;
 
 /**
  * Inicialization the CUJO objects + mapping to BO
@@ -33,7 +32,7 @@ public interface IServerClassConfig {
     /** Convert CType to UjoClass */
     public OrmUjo newServerObject(String ctype) throws IllegalStateException;
 
-    public UjoTranslator getTranslator(Class ctype, boolean relations);
+    public UjoTranslator getTranslator(Class ctype, int relations);
 
     public OrmHandler getHandler();
 
