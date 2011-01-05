@@ -74,9 +74,9 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** The experimental parameter affects to a Sequence key name in the internal sequsence generator.
      * Value TRUE use a special character "~" instead of default database schema in the sequence table.
+     * In case of change of the parameter value is necessary to convert values in the database column 'ujorm_pk_support.id' by hand.
      */
     public static final Property<MetaParams,Boolean> SEQUENCE_SCHEMA_SYMBOL = newProperty("sequenceSchemaSymbol", false);
-
 
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient

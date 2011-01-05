@@ -178,9 +178,9 @@ The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
 
   Session session = OrmHandler.getInstance()
                     .createSession();
-  Query&lt;Item&gt; items = session.createQuery(criterion)
-           .orderBy ( Item.ORDER.add(Order.CREATED)
-                    , Item.ID.descending() );
+  Query&lt;Item&gt; items = session.createQuery(criterion);
+  items.orderBy( Item.ORDER.add(Order.CREATED)
+               , Item.ID.descending() );
   System.out.println( "Row count: " + items.getCount());
 
   for (Item item : items) {
@@ -203,6 +203,7 @@ And how to get meta-data for a 'description' property of the Order?
       .append("NotNull: " + col.isMandatory()  + '\n')
       .append("PrimKey: " + col.isPrimaryKey() + '\n')
       .append("DB name: " + col.getFullName()  + '\n')
+      .append("Comment: " + col.getComment     + '\n')
       ;
   System.out.println(msg);
   </pre>

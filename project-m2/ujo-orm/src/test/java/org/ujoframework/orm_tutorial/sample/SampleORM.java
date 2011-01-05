@@ -173,24 +173,23 @@ public class SampleORM {
         order.setDescr("my order");
         order.setDate(new Date());
 
-        Criterion<Order> crnId = Criterion.where(Order.id, 100L);
+        Criterion<Order> crnId = Criterion.where(Order.id, Operator.GT, 99L);
         Criterion<Order> crnDescr = Criterion.where(Order.descr, "another");
         Criterion<Order> crnCreated = Criterion.where(Order.created, Operator.LE, new Date()) ;
         Criterion<Order> crn = null;
 
-        // Simple condition: Order.id=100
-        crn = crnId;
-        assert crn.evaluate(order);
+        // Simple condition: Order.id>99
+        assert crnId.evaluate(order);
 
-        // Compound condition: Order.id=100 or Order.descr='another'
+        // Compound condition: Order.id>99 or Order.descr='another'
         crn = crnId.or(crnDescr);
         assert crn.evaluate(order);
 
-        // Compound condition with parentheses: Order.created<=today() and (Order.descr='another' or Order.id=100)
+        // Compound condition with parentheses: Order.created<=now() and (Order.descr='another' or Order.id>99)
         crn = crnCreated.and(crnDescr.or(crnId));
         assert crn.evaluate(order);
 
-        // Another condition: (Order.created<=today() or Order.descr='another') and Order.id=100
+        // Another condition: (Order.created<=now() or Order.descr='another') and Order.id>99
         crn = (crnCreated.or(crnDescr)).and(crnId);
         // ... or simple by a native priority:
         crn =  crnCreated.or(crnDescr).and(crnId);
