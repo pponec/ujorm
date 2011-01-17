@@ -172,4 +172,10 @@ public class UjoSequencer {
         return table;
     }
 
+    /** Method returns true because the internal table 'ujorm_pk_support' is required to get a next sequence value.
+     * In case you have a different imlementation, there is possible overwrite this method and return an another value. */
+    public boolean isSequenceTableRequired() {
+        return true;
+    }
+
 }

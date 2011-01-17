@@ -258,7 +258,9 @@ final public class MetaTable extends AbstractMetaModel {
         return VIEW.of(this);
     }
 
-    /** Is the instance a database persistent table? A false value neans that the object is a relation model or view. */
+    /** Is the instance a database persistent table? 
+     * The false value means that the object is a relation model or a view.
+     */
     public boolean isTable() {
         return isPersistent() && !isView();
     }
