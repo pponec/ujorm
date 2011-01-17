@@ -772,6 +772,18 @@ final public class MetaDatabase extends AbstractMetaModel {
         return null;
     }
 
+    /** Method returns true in case any table requires the internal table 'ujorm_pk_support' to get a next sequence value. */
+    public boolean isSequenceTableRequired() {
+        for (MetaTable table : TABLES.of(this)) {
+            if (table.isTable()
+            &&  table.getSequencer().isSequenceTableRequired()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /** Create a new sequencer for selected table */
     @SuppressWarnings("unchecked")
     protected UjoSequencer createSequencer(MetaTable table) {
