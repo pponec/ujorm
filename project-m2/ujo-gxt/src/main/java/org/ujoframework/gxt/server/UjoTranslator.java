@@ -107,7 +107,7 @@ public class UjoTranslator<CUJO extends Cujo> {
                         if (isRelations() && p1.isTypeOf(Ujo.class) && Cujo.class.isAssignableFrom(p2.getType())) {
                             try {
                                 properties.add(new PropContainer(p1, p2, pk));
-                                UjoTranslator ut = new UjoTranslator(p2.getType(), p1.getType(), 0, serverClassConfig);
+                                UjoTranslator ut = new UjoTranslator(p2.getType(), p1.getType(), relations-1, serverClassConfig);
                                 relationMap.put(p1, ut);
                                 break;
                             } catch (Exception e) {
