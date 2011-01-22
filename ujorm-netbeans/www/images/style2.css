@@ -76,3 +76,11 @@ table.top td {
 .character, .java-string-literal {color: #ce7b00; }
 .keyword-directive {color: #0000e6; }
 
+/* ----- Tools -------- */
+
+.subTitle {
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    color: #2B4E15;
+}
