@@ -517,7 +517,9 @@ abstract public class SqlDialect {
                 throw new UnsupportedOperationException("Foreign key is not supported yet");
             }
             if (true) {
-                String f = String.format(template, column.getAliasName(), col2.getAliasName());
+                // Better performance:
+                String f = MessageFormat.format(template, column.getAliasName(), col2.getAliasName());
+                //String f=String.format(template, column.getAliasName(), col2.getAliasName());
                 out.append(f);
             }
         } else if (right instanceof Object[]) {
