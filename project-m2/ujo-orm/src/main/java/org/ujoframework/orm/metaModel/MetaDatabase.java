@@ -30,6 +30,7 @@ import org.ujoframework.orm.DbType;
 import org.ujoframework.extensions.ListProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -291,6 +292,17 @@ final public class MetaDatabase extends AbstractMetaModel {
         return name;
     }
 
+    /** Returns a full count of the database tables (views are excluded) */
+    private int getTableTotalCount() {
+        int tableCount = 0;
+        for (MetaTable metaTable : TABLES.getList(this)) {
+            if (metaTable.isTable()) {
+                ++tableCount;
+            }
+        }
+        return tableCount;
+    }
+
     /** Find database table or columns to modify.
      * @param conn Database connection
      * @param newTables Output parameter
@@ -310,9 +322,9 @@ final public class MetaDatabase extends AbstractMetaModel {
         final String column = null;
 
         for (MetaTable table : TABLES.of(this)) {
-         if (table.isTable()) {
+            if (table.isTable()) {
 
-               // ---------- CHECK TABLE COLUMNS ----------
+                // ---------- CHECK TABLE COLUMNS ----------
              
                 Set<String> items = new HashSet<String>(32);
                 ResultSet rs = dmd.getColumns
@@ -388,53 +400,72 @@ final public class MetaDatabase extends AbstractMetaModel {
         List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
         List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
         List<MetaIndex> indexes = new ArrayList<MetaIndex>();
-        boolean change = false;
+        boolean createSequenceTable = false;
+        int tableTotalCount = getTableTotalCount();
 
         try {
             stat = conn.createStatement();
 
-            // 0. Test for the presence of a SEQUENCE table:
-            UjoSequencer seq = findFirstSequencer();
-            if (seq!=null) {
+            if (isSequenceTableRequired()) {
                 PreparedStatement ps = null;
                 ResultSet rs = null;
+                Throwable exception = null;
+                String logMsg = "";
+
                 try {
-                    sql = getDialect().printSequenceCurrentValue(seq, out);
+                    sql = getDialect().printSequenceCurrentValue(findFirstSequencer(), out);
                     ps = conn.prepareStatement(sql.toString());
                     ps.setString(1, "-");
                     rs = ps.executeQuery();
-                    LOGGER.log(Level.INFO, "Database structure is loaded: {0}", getId());
-                    switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
-                        case CREATE_DDL:
-                            return;
-                        case CREATE_OR_UPDATE_DDL:
-                        case VALIDATE:
-                            change = isModelChanged(conn, tables, newColumns, indexes);
-                            if (!change) {
-                                switch (MetaParams.COMMENT_POLICY.of(ormHandler.getParameters())) {
-                                    case ALWAYS:
-                                        // Create table comment for the all tables:
-                                        createTableComments(TABLES.getList(this), stat, out);
-                                        conn.commit();
-                                        break;
-                                }
-                                return;
-                            }
-                    }
-                } catch (SQLException e) {
-                    LOGGER.log(Level.INFO, "Database structure is not loaded: {0}", getId());
-                    conn.rollback();
                 } catch (Throwable e) {
-                    LOGGER.log(Level.INFO, "Error: Database structure is not loaded: " + getId(), e);
-                    conn.rollback();
+                    exception = e;
+                }
+
+                if (exception!=null) {
+                    switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
+                        case VALIDATE:
+                            throw new IllegalStateException(logMsg, exception);
+                        case CREATE_DDL:
+                        case CREATE_OR_UPDATE_DDL:
+                            createSequenceTable = true;
+                    }
+                }
+
+                if (LOGGER.isLoggable(Level.INFO)) {
+                    logMsg = "Table '" + SqlDialect.COMMON_SEQ_TABLE_NAME + "' {0} available on the database '{1}'.";
+                    logMsg = MessageFormat.format(logMsg, exception!=null ? "is not" : "is", getId());
+                    LOGGER.log(Level.INFO, logMsg);
+                }
+
+                try {
+                    if (exception!=null) {
+                        conn.rollback();
+                    }
                 } finally {
-                    close(null, ps, rs, false);
+                   close(null, ps, rs, false);
                 }
             }
-            if (!change) {
-                tables = TABLES.getList(this);
-                indexes = getIndexList();
+
+            boolean ddlOnly = false;
+            switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
+                case CREATE_DDL:
+                    ddlOnly = true;
+                case CREATE_OR_UPDATE_DDL:
+                case VALIDATE:
+                    boolean change = isModelChanged(conn, tables, newColumns, indexes);
+                    if (change && ddlOnly) {
+                        if (tables.size()<tableTotalCount) {
+                            // This is a case of the PARTIAL DDL
+                            return;
+                        }
+                    }
+                    break;
+                case DO_NOTHING:
+                default:
+                    return;
             }
+
+            // ================================================
 
             // 1. CheckReport keywords:
             switch (MetaParams.CHECK_KEYWORDS.of(getParams())) {
@@ -458,11 +489,16 @@ final public class MetaDatabase extends AbstractMetaModel {
             }
 
             // 2. Create schemas:
-            if (!change) for (String schema : getSchemas(tables)) { // TODO
+            if (tableTotalCount==tables.size()) for (String schema : getSchemas(tables)) { // TODO
                 out.setLength(0);
                 sql = getDialect().printCreateSchema(schema, out);
                 if (isUsable(sql)) {
-                    executeUpdate(sql, stat);
+                    try {
+                       stat.executeUpdate(sql.toString());
+                    } catch (SQLException e) {
+                       LOGGER.log(Level.INFO, "{0}: {1}; {2}", new Object[]{e.getClass().getName(), sql.toString(), e.getMessage()});
+                       conn.rollback();
+                    }
                 }
             }
 
@@ -508,7 +544,7 @@ final public class MetaDatabase extends AbstractMetaModel {
             }
 
             // 7. Create SEQUENCE table;
-            if (tableCount>0 && !change) {
+            if (createSequenceTable) {
                 out.setLength(0);
                 sql = getDialect().printSequenceTable(this, out);
                 executeUpdate(sql, stat);
@@ -557,7 +593,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                           + "There is required a database change: "
                           + sql
                           ;
-               throw new IllegalArgumentException(msg);
+               throw new IllegalStateException(msg);
            default:
                stat.executeUpdate(sql.toString());
                LOGGER.info(sql.toString());
