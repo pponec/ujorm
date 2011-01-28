@@ -57,7 +57,7 @@ Released   : 20080129
 
           <div class="post">
               <div class="entry" style="font-style:italic;">
-              Are you looking for an easy-to-use <a title="object-relation mapping" href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a> famework?
+              Are you looking for another <a title="object-relation mapping" href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a> famework?
               The Ujorm is designed for rapid Java development
               with&nbsp;great performance and a small footprint. The key features are type safe queries,
               relation mapping by Java code, no entity states, and a memory overloading protection cache.
@@ -84,15 +84,10 @@ Released   : 20080129
                <li>easy to configure the ORM model by java source code, optionally by annotations and a XML file</li>
                <li>great <a href="http://ujoframework.blogspot.com/2009/08/ujorm-new-high-performance-orm-for-java.html">performance</a>,
                    some types of SELECT query are very fast in comparison to its competitors</li>
-               <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
-               <li>no confusing proxy business objects</li>
-               <li>result of a database query is a special object called
-                   <a href="http://ujoframework.org/javadoc/org/ujoframework/core/UjoIterator.html">UjoIterator</a>. 
-                   with useful methods
-                   <a href="http://ujoframework.org/javadoc/org/ujoframework/core/UjoIterator.html#toList%28%29">toList()</a> or
-                   <a href="http://ujoframework.org/javadoc/org/ujoframework/core/UjoIterator.html#count%28%29">count()</a>
-                   for example</li>
-               <li>very lightweight framework with no more library dependencies</li>
+               <li>lazy initialization is supported</li>
+               <li>database incremental update (according to the model meta-model) is supported by DDL commands</li>
+               <li>no confusing proxy or binary modified business objects</li>
+               <li>very lightweight framework with no library dependencies</li>
               </ul>
 
             </div>
@@ -107,14 +102,12 @@ Released   : 20080129
             <div class="entry">
 
               <ul>
-               <li>incremental database update by meta-model using DDL statements</li>
-               <li>database indexes are created by the meta-model, added support for unique, non-unique indexes including the composed one</li>
                <li>resources for ORM mapping can be a database table, view or native SQL SELECT</li>
+               <li>LIMIT and OFFSET are supported</li>
                <li>JDBC query parameters are passed by a 'question mark' notation to the
                    <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/sql/PreparedStatement.html">PreparedStatement</a>
                    for a high security
                </li>
-               <li>LIMIT and OFFSET are supported</li>
                <li>stored database procedures and functions are supported</li>
                <li>all persistent objects are based on the interface
                    <a href="../javadoc/org/ujoframework/orm/OrmUjo.html">OrmUjo</a>,
@@ -122,6 +115,7 @@ Released   : 20080129
                    <a href="../javadoc/org/ujoframework/implementation/orm/OrmTable.html">OrmTable</a>
                </li>
                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
+               <li>database indexes are created by the meta-model, added support for unique, non-unique indexes including the composed one</li>
               </ul>
                 
                Some parts of the API was inspired by
@@ -313,6 +307,7 @@ And how to get meta-data for a 'description' property of the Order?
               <li><a href="http://sourceforge.net/scm/?type=svn&amp;group_id=207681">Sources</a> in SVN repository</li>
               <li><a href="../javadoc/changes.txt">Release Notes</a></li>
               <li><a href="#reference">Reference projects</a></li>
+              <li title="Help improve this article, please"><a href="http://en.wikipedia.org/wiki/Wikipedia_talk:Articles_for_creation/Ujorm">Ujorm on Wikipedia</a> (declined article)</li>
               <li><a href="#similar">Similar frameworks</a></li>
               <li><a href="../index.html#license">License</a></li>
               <li><a href="#support">Support</a></li>
