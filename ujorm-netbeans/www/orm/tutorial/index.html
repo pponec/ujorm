@@ -455,8 +455,8 @@ Author: Pavel Ponec, ponec@ujorm.com<br>
   <i>&nbsp;&nbsp; Spring Integration by Tomas Hampl</i><br>
 </div>
 <i>Version: Ujorm 1.10 (February, 2011)<br>
-PDF format:</i> <a href=http://ujoframework.org/orm/tutorial/UjormUserGuide-1.10.pdf title=Print><img src="images/ddcs2pg5_190djqbwxd2_b.png" style=HEIGHT:16px;WIDTH:16px>http://ujoframework.org/orm/tutorial/UjormUserGuide-1.10.pdf</a><i><br>
-Thank you for your comments and suggestions.</i><br>
+PDF format:</i> <a href=http://ujoframework.org/orm/tutorial/UjormUserGuide-1.10.pdf title=Print><img src="images/ddcs2pg5_190djqbwxd2_b.png" style=HEIGHT:16px;WIDTH:16px></a><i><br>
+Thank you for your comments or suggestions.</i><br>
 <br>
 <br>
 <div class=writely-toc id=WritelyTableOfContents toctype=decimal+decimal>
@@ -601,7 +601,7 @@ The main vision is:<br>
 <br>
 <ul>
   <li>
-    50% developer time saving for a persistent layer and
+    50% developer time saving for a persistent layer
   </li>
   <li>
     great performance compared with competitors
@@ -618,8 +618,7 @@ The main vision is:<br>
 <h2>
   <a id=Quick_Start_024257222361389164_933564015103693 name=Quick_Start_024257222361389164_933564015103693></a>Quick Start
 </h2>
-<br>
-For fast acquisition recommend reading a <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup title=tutorial>tutorial</a> built on the annotated source code. In tutorial you can found entities from following class diagram:<br>
+There is recommended to read first of all this <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup title=tutorial>class tutorial</a> based on an annotated source code for <span class=short_text id=d41o><span class=hps title="Kliknutím zobrazíte alternativní překlady">quick</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">introduction</span></span>. In the tutorial you can found entities from following class diagram:<br>
 <div style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
   <br>
 </div>
@@ -630,7 +629,7 @@ For fast acquisition recommend reading a <a href=http://ujoframework.svn.sourcef
 </div>
 <i>Note: UjoProperties are in diagrams formally described using the attributes of entity.</i><br>
 <br>
-Because Ujorm connected from Maven repository (repo1) is compiled without debugging information, I suggest to you to join the Ujorm JavaDoc to your project, so that you get full names of method parameters and more useful information from API.<br>
+Because the Ujorm connected from Maven repository (repo1) is compiled without debugging information, I suggest to you to join the Ujorm JavaDoc to your project, so that you get full names of method parameters and more useful information from API.<br>
 <br>
 When you use the Maven POM file, take the following dependency:<br>
 <br>
@@ -652,7 +651,7 @@ When you use the Maven POM file, take the following dependency:<br>
 <h2>
   <a id=Architecture_924643946159931_7397459137475292 name=Architecture_924643946159931_7397459137475292></a>Architecture
 </h2>
-The following class diagram clarifies relation between Ujorm framework classes and application domain classes. The diagram is simplified and slightly modified to show only the relevant entities. A more detailed descriptions can be found, if necessary, in the <a href=http://ujoframework.org/javadoc/ id=e3-s title="JavaDoc Project">Ujorm JavaDoc</a> .<br>
+The next class diagram clarifies relation between Ujorm framework classes and application domain classes. The diagram is simplified and slightly modified to show only the relevant entities. A more detailed descriptions can be found, if necessary, in the <a href=http://ujoframework.org/javadoc/ id=e3-s title="JavaDoc Project">Ujorm JavaDoc</a> .<br>
 <div id=le08 style=TEXT-ALIGN:left>
   <div id=saxt style=TEXT-ALIGN:left>
     <br>
@@ -670,46 +669,46 @@ The following class diagram clarifies relation between Ujorm framework classes a
   </div>
 </div>
 Notes to graph:<br>
-UjoProperty attributes described in the domain objects are always <b>static constants,</b> which provide methods for writing and reading values to the Ujo object. Only this diagram is hinted for better illustration the implementation of UjoProperties in domain objects, in other diagrams of this document is used the same formal registration as for a regular POJO attributes.<br>
+<a href=http://ujoframework.org/javadoc/org/ujoframework/UjoProperty.html id=si4c title=UjoProperty>UjoProperty</a> attributes described in the domain objects are always <b>immutable static constants,</b> which provide methods for writing and reading values to (from) the Ujo object. Only this diagram is hinted for better illustration the implementation of UjoProperties in domain objects, in other diagrams of this document is used the same formal registration as for a regular POJO attributes.<br>
 <br>
 Entity Description:<br>
 <ul>
   <li>
-    Ujo - interface of an object containing the values. The object provides a list of their properties. A kind of data storage determines the implementation, for example OrmTable uses internally an array of objects.<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/Ujo.html id=xqd8 title=Ujo>Ujo</a> - interface of an object containing the values. The object provides a list of their properties. A kind of data storage determines the implementation, for example OrmTable uses internally an array of objects.<br>
   </li>
   <li>
-    UjoProperty - immutable object containing meta-data of the property, which provides two methods for reading and writing values to Ujo object. Two UjoProperties could be joined using the method add(), the result is stored in a new immutable instance.
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/UjoProperty.html id=w.:k title=UjoProperty>UjoProperty</a> - immutable object containing meta-data of the property, which provides two methods for reading and writing values to Ujo object. Two related UjoProperties could be joined using the method add(), the result is stored in a new immutable instance of the UjoProperty interface.
   </li>
   <li>
-    Property - default implementation of UjoProperty<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/extensions/Property.html id=je:b title=Property>Property</a> - the default implementation of UjoProperty<br>
   </li>
   <li>
-    RelationToMany - extended default implementation of UjoProperty designed for the data type: UjoIterator&lt;item&gt;<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/RelationToMany.html id=mbhx title=RelationToMany>RelationToMany</a> - extended default implementation of UjoProperty designed for the data type: UjoIterator&lt;item&gt;<br>
   </li>
   <li>
-    OrmUjo - an interface designed for persistent application domain objects. Each object contains the session and provides a list of modified properties, more informations are available later in this document<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmUjo.html id=aijk title=OrmUjo>OrmUjo</a> - an interface designed for persistent application domain objects. Each object contains the session and provides a list of modified properties, more informations are available later in this document<br>
   </li>
   <li>
-    OrmTable - default implementation of OrmUjo interface<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/OrmTable.html id=cxp6 title=OrmTable>OrmTable</a> - default implementation of OrmUjo interface<br>
   </li>
   <li>
-    OrmHandler - owner of the meta-model, which provides an efficient methods to search for specific parts of the meta-model. Meta-model is locked after initialization and can't be changed later.<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=c1tj title=OrmHandler>OrmHandler</a> - owner of the meta-model, which provides an efficient methods to search for specific parts of the meta-model. Meta-model is locked after initialization and can't be changed later.<br>
   </li>
   <li>
-    Database - the class of an application package containing a description of the persistent domain classes and stored procedures. For different DB connections, you can define multiple classes of type Database<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=mra2 title=Criterion>Criterion</a> - the fundamental condition for the evaluation database Query. Criterion objects can be joined into a tree by operators <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#and%28org.ujoframework.criterion.Criterion%29 id=qghe title="and ()">and()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#or%28org.ujoframework.criterion.Criterion%29 id=zrqu title="or ()">or()</a> .<br>
   </li>
   <li>
-    Criterion - the fundamental condition for the evaluation database Query. Criterion objects can be joined into a tree by operators <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#and%28org.ujoframework.criterion.Criterion%29 id=qghe title="and ()">and ()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#or%28org.ujoframework.criterion.Criterion%29 id=zrqu title="or ()">or ()</a> .<br>
+    Database - the class fom an application package containing a description of the persistent domain classes and stored procedures. For different DB connections, you can define multiple classes type of Database<br>
   </li>
   <li>
-    User, Order, Item - example of using application domain objects, Please notice that in object can be used RelatinToMany property like in class Database. This RelatinToMany always returns UjoIterator as a result of a new database query.<br>
+    User, Order, Item - example of using application domain objects, Please notice that in object can be used RelatinToMany property like in class Database. This RelatinToMany always returns UjoIterator as a result of a new database query.
   </li>
 </ul>
 <br>
 <h2>
   <a id=Example_of_application_the_cod_9492354062873307 name=Example_of_application_the_cod_9492354062873307></a>Example of application the code
 </h2>
-The following code example obtains instances of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=ev92 title=OrmHandler>OrmHandler</a> class and its configuration using the Database class, the instance is retained for. It creates an instance of Order class Items and stores in a database. The save() and commit() operations can throw an runtime exception so there is necessary to catch the exception and close the used Session.<br>
+The following code example obtains instances of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=ev92 title=OrmHandler>OrmHandler</a> class and its configuration using the Database class, the instance is retained for. It creates an instance of Order class Items and stores in a database. The <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#save%28org.ujoframework.orm.OrmUjo%29 id=hkp7 title=save()>save()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#commit%28%29 id=tort title=commit()>commit()</a> operations can throw an runtime exception so there is necessary to catch the exception and close the used <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html id=c1jz title=Session>Session</a>.<br>
 <br>
 <table border=1 cellpadding=3 cellspacing=0 height=376 id=cytz style=MARGIN-LEFT:40px width=397>
   <tbody>
@@ -744,7 +743,7 @@ The following code example obtains instances of <a href=http://ujoframework.org/
 </table>
 <br>
 <br>
-The second example contains usage a query using the Criterion joined by two elementary conditions. Missing operator is replaced by the EQUALS' one. Notice how is created composite 'UjoProperty'. The composite 'property' can be stored as an additional static constants of domain object. Prepared query is contained in the 'Query' object a can be simply used in 'for-each' command. In the end we have to close database 'session' again.<br>
+The second example contains usage a query using the <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=pcyw title=Criterion>Criterion</a> joined by two elementary conditions. Missing operator is replaced by the EQUALS' one. Notice how is created composite 'UjoProperty'. The composite 'property' can be stored as an additional static constants of domain object. Prepared query is contained in the 'Query' object a can be simply used in 'for-each' command. In the end we have to close database 'session' again. More information about the Crtiterion use can be found <a href=#How_to_use_the_Criterion_33739 id=ofxo target=_self title=later>later</a> in this document.<br>
 <div style=MARGIN-LEFT:40px>
   <br>
 </div>
@@ -880,14 +879,14 @@ OK, for better comfort for developers we can optionally add getters and setters,
 <br>
 <br>
 Note, that the relation to the Items can't have got the setter. A new Items can be assigned by the method Session.save(...) to database only.<br>
+<br>
 <h2>
   <a id=Comment_by_annotations_3525065 name=Comment_by_annotations_3525065></a>Comment by annotations
 </h2>
-Since Ujorm release 1.10 is allowed to describe persistent objects or its properties by special annotation called <b>Comment</b>.<br>
-<br>
+Since Ujorm release 1.10 is allowed to describe persistent objects or its properties by special annotation called <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/annot/Comment.html id=j1_t title=Comment.>Comment.</a><br>
 In case that a DDL auto-update is enabled than Ujorm write the text to relation database meta-model loading time, if the feature is supported<br>
 <br>
-The assigned policy can be affected by parameter COMMENT_POLICY with options:<br>
+The assigned policy can be affected by parameter <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#COMMENT_POLICY id=zxtw title=COMMENT_POLICY>COMMENT_POLICY</a> with options:<br>
 <ul>
   <li>
     ON_ANY_CHANGE - Assign all available comments from annotations to database on a new database object event,exactly on new table, column or index. It is a <b>default </b>option.
@@ -932,7 +931,7 @@ Sample of the use:<br>
 <h2>
   <a id=How_to_use_the_Criterion_33739 name=How_to_use_the_Criterion_33739></a>How to use the Criterion?
 </h2>
-The Criterion is a base element to restrict a database <b>query</b>, however criterions have got one next <span class=hps title="Kliknutím zobrazíte alternativní překlady">feature</span>: they can <span class=hps title="Kliknutím zobrazíte alternativní překlady">be</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">used</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">immediately for the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">evaluation of</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">an object -</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">as a</span> <b><span class=hps title="Kliknutím zobrazíte alternativní překlady">validator</span></b>.<br>
+The <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=qbvw title=Criterion>Criterion</a> is a base element to restrict a database <b>query</b>, however criterions have got one next <span class=hps title="Kliknutím zobrazíte alternativní překlady">feature</span>: they can <span class=hps title="Kliknutím zobrazíte alternativní překlady">be</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">used</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">immediately for the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">evaluation of</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">an object -</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">as a</span> <b><span class=hps title="Kliknutím zobrazíte alternativní překlady">validator</span></b>.<br>
 Each Criterion can be builted to the binary tree by to operators: <b>and</b>(), <b>or</b>().<br>
 <br>
 For example let's create an instance of the Order entity:<br>
@@ -1042,10 +1041,10 @@ Persistent class is obtained by extending the abstract class <a href=http://ujof
 <br>
 <ul>
   <li>
-    Session - is needed to obtain a 'DB connection' in late values approach, the process is called 'lazy-loading'. If an <b>attribute of</b> the persistent object is another persistent object, then in each session reading is 'session' propagated from the reference to the relational object. For this reason, if you restore the 'session', there is sufficient to setup only the first object of the relational hierarchy to the current Session.<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html id=nsu. title=Session>Session</a> - is needed to obtain a 'DB connection' in late values approach, the process is called 'lazy-loading'. If an <b>attribute of</b> the persistent object is another persistent object, then in each session reading is 'session' propagated from the reference to the relational object. For this reason, if you restore the 'session', there is sufficient to setup only the first object of the relational hierarchy to the current Session.<br>
   </li>
   <li>
-    U<font color=#000000>joProperty[] - contains a list of 'Properties' </font><b style=COLOR:#000000>registered</b><font color=#000000> during the assigned session. This list provides more efficient updating of the database by 'UPDATE' command, because the command is compiled only for the modified value of the 'Properties'. Other values are ignored while updating. Note that if a session isn't assigned to the object, there is registered no value changes</font><font color=#000000>. </font><br style=COLOR:#00ff00>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/UjoProperty.html id=fzbr title=UjoProperty>UjoProperty</a><font color=#000000>[] - contains a list of 'Properties' </font><b style=COLOR:#000000>registered</b><font color=#000000> during the assigned session. This list provides more efficient updating of the database by 'UPDATE' command, because the command is compiled only for the modified value of the 'Properties'. Other values are ignored while updating. Note that if a session isn't assigned to the object, there is registered no value changes</font><font color=#000000>. </font><br style=COLOR:#00ff00>
   </li>
 </ul>
 <br>
@@ -2087,18 +2086,9 @@ Environment description:<br>
 <h2>
   <a id=Acknowledgements_7557169868300 name=Acknowledgements_7557169868300></a> Acknowledgements
 </h2>
-<br>
 Thanks to developer team at <a href=http://www.effectiva.cz/ id=orok title="Effectiva Solutions">Effectiva Solutions</a> for their valuable comments on the technical content of this document.<br>
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div>
-  <a href=http://navrcholu.cz/><img alt=NAVRCHOLU.cz height=1 src="images/EXTERN_0000.gif" style="BORDER:medium none" width=1></a>
-</div>
 <br>
 <br></body>
 </html>
