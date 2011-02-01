@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>1.10.B02</version>
+    <version>1.10.B03</version>
     <name>ujo-orm</name>
     <contributors>
         <contributor>
@@ -14,7 +14,7 @@
         </contributor>
     </contributors>
     <description>Quick ORM implementation based on the UJO objects.
-</description>
+    </description>
     <url>http://maven.apache.org</url>
 
     <licenses>
@@ -127,6 +127,16 @@
             <version>8.4-701.jdbc3</version>
             <scope>test</scope>
         </dependency>
+
+
+        <!-- microsoft -.->
+        <dependency>
+            <groupId>ms</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>4</version>
+        </dependency>
+
+        <!-.- end microsoft -->
 
         <!-- Oracle -.->
         <dependency>

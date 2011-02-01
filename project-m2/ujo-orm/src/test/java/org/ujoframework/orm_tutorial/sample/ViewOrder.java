@@ -26,13 +26,23 @@ import org.ujoframework.orm.annot.View;
  * The column mapping to FROM view.
  * @hidden
  */
+
 @View(select="SELECT ord_order_alias.id, count(*) AS item_count"
     + " FROM db1.ord_order ord_order_alias"
     +     ", db1.ord_item  ord_item_alias"
     + " WHERE ord_order_alias.id = ord_item_alias.fk_order"
     + " GROUP BY ord_order_alias.id"
     + " ORDER BY ord_order_alias.id")
-public class ViewOrder extends OrmTable<ViewOrder> {
+  
+    /* MSSQL query*/
+/*    @View(select="SELECT ord_order_alias.id, count(*) AS item_count"
+    + " FROM db1.dbo.ord_order ord_order_alias"
+    +     ", db1.dbo.ord_item  ord_item_alias"
+    + " WHERE ord_order_alias.id = ord_item_alias.fk_order"
+    + " GROUP BY ord_order_alias.id"
+    + " ORDER BY ord_order_alias.id")
+*/
+ public class ViewOrder extends OrmTable<ViewOrder> {
 
     /** Unique key */
     @Column(pk=true)
