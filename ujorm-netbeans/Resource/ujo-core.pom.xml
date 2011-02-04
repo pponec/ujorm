@@ -4,7 +4,7 @@
   <groupId>org.ujoframework</groupId>
   <artifactId>ujo-core</artifactId>
   <packaging>jar</packaging>
-  <version>0.85.00</version>
+  <version>1.10</version>
   <name>UjoCore</name>
   <contributors>
     <contributor>

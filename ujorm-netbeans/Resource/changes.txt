@@ -2,6 +2,7 @@ The UJO Framework release notes
 *******************************
 
 release 1.10 (2010-02-??)
++ SQL dialect for database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
 + new annotation @Comment can be used to describe database tables and columns
 + correction the behavior Ujorm release 0.90 where the missing table 'ujorm_pk_support' was a sign to creating all the DB structure
 + there is possible to suppress the formation table 'ujorm_pk_support' by the overriding the mehod UjoSequencer.isSequenceTableRequired() in case a different implementation of the ID generator is used
