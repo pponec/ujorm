@@ -29,7 +29,8 @@ import org.ujoframework.orm.metaModel.MetaTable;
 /** Dialect for the MSSQL tested on SQL Server 2008 R2 with Microsoft SQL Server JDBC Driver 3.0
  *  from <a href="http://msdn.microsoft.com/data/jdbc">http://msdn.microsoft.com/data/jdbc</a>
  * <br><a href="http://www.microsoft.com/sqlserver/">http://www.microsoft.com/sqlserver/</a>
- *
+ * <br>Note: This dialect the is an early release 1.10.beta.
+ * @since 1.10
  */
 public class MSSqlDialect extends SqlDialect {
 
