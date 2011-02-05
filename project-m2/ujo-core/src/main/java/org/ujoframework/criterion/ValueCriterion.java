@@ -75,6 +75,13 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             case NOT_IN:
                  makeArrayTest(value);
                  break;
+            case XSQL:
+                 String val;
+                 if (value==null || (val=value.toString().trim()).length()==0) {
+                    throw new IllegalArgumentException("Value must not be empty");
+                 }
+                 value = val;
+                 break;
         }
 
         this.property = property;
@@ -104,7 +111,11 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     @SuppressWarnings({"unchecked", "fallthrough"})
     @Override
     public boolean evaluate(UJO ujo) {
-        if (isConstant()) {
+        if (operator==Operator.XSQL) {
+            throw new UnsupportedOperationException("The operator " + operator + " can't be evaluated (" + value + ")");
+        }
+
+        if (operator==Operator.XFIXED) {
             return (Boolean) value;
         }
         Object value2 = value instanceof UjoProperty
@@ -193,7 +204,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** Test a value is an instance of CharSequence or a type UjoProperty is type of CharSequence.
      * If parameter is not valid than method throws Exception.
      */
-    protected void makeCharSequenceTest(Object value) throws IllegalArgumentException {
+    protected final void makeCharSequenceTest(Object value) throws IllegalArgumentException {
         if (value instanceof CharSequence
         ||  value instanceof UjoProperty
         && ((UjoProperty)value).isTypeOf(CharSequence.class)
@@ -208,7 +219,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** Test a value is an instance of Iterable.
      * If parameter is not valid than method throws Exception.
      */
-    protected void makeArrayTest(Object value) throws IllegalArgumentException {
+    protected final void makeArrayTest(Object value) throws IllegalArgumentException {
         if (!(value instanceof Object[])) {
             final String msg = "Value must be an Array type only";
             throw new IllegalArgumentException(msg);
@@ -241,15 +252,20 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
         }
     }
     
-    /** Is the criterion result independent on the bean object? */
+    /** Is the operator have got value XFIXED or XSQL ? */
     public final boolean isConstant() {
-        return operator==Operator.XFIXED;
+        return operator==Operator.XFIXED || operator==Operator.XSQL;
     }
 
     @Override
     public String toString() {
+
+        if (operator==Operator.XSQL) {
+            return value.toString();
+        }
+
         StringBuilder out = new StringBuilder();
-        if (!isConstant()) {
+        if (operator!=Operator.XFIXED) {
             out
             .append(property)
             .append(' ')

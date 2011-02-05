@@ -61,6 +61,7 @@ public class SampleORM {
             sample.useSelectItems_4();
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
+            sample.useNativeCriterion();
             sample.useReloading();
             sample.useLimitAndOffset();
             sample.useSelectCount();
@@ -319,6 +320,20 @@ public class SampleORM {
             System.out.println("Item: " + item);
         }
     }
+
+    /** Select all items with a description with the 'table' insensitive text. */
+    public void useNativeCriterion() {
+
+        Criterion<Order> crn1 = Criterion.forSql(Order.state, "ord_order_alias.id>0");
+        Criterion<Order> crn2 = Criterion.where(Order.created, Operator.LE, new Date());
+        Query<Order> orders = session.createQuery(crn1.and(crn2));
+
+        for (Order order : orders) {
+            System.out.println("ORDER: " + order);
+        }
+    }
+
+
 
     /** How to reload the object property values from the database ? */
     public void useReloading() {
