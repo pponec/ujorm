@@ -260,6 +260,7 @@ public abstract class Criterion<UJO extends Ujo> {
     }
 
     /** This is a special constant criterion independed on the property or the ujo entity. A result is the same like the parameter constant allways.
+     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @see Operator#XFIXED
      */
     public static <UJO extends Ujo> Criterion<UJO> constant(UjoProperty<UJO,?> property, boolean constant) {
