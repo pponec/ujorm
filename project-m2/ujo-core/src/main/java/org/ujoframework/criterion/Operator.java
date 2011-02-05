@@ -64,6 +64,11 @@ public enum Operator implements AbstractOperator {
     /** The operator for an internal use only where a result is
      * <strong>not dependent</strong> on the value. */
     XFIXED,
+    /** The operator for an indication of the SQL condition in a text format
+     * Parameters of the SQL condition are not supported by the Ujorm.
+     * @see Criterion#forSql(org.ujoframework.UjoProperty, java.lang.String) 
+     */
+    XSQL,
     ;
 
 

@@ -260,10 +260,28 @@ public abstract class Criterion<UJO extends Ujo> {
     }
 
     /** This is a special constant criterion independed on the property or the ujo entity. A result is the same like the parameter constant allways.
-     * @see Operator#X_FIXED
+     * @see Operator#XFIXED
      */
     public static <UJO extends Ujo> Criterion<UJO> constant(UjoProperty<UJO,?> property, boolean constant) {
         return new ValueCriterion<UJO>(property, Operator.XFIXED, constant);
+    }
+
+    /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
+     * Special features:
+     * <ul>
+     *   <li>parameters of the SQL_condition are not supported by the Ujorm</li>
+     *   <li>your own implementation of SQL the parameters can increase
+     *       a risk of the <a href="http://en.wikipedia.org/wiki/SQL_injection">SQL injection</a> attacks</li>
+     *   <li>method {@link #evaluate(org.ujoframework.Ujo)} is not supported and throws UnsupportedOperationException in the run-time</li>
+     *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
+     *       of target application to ensure database compatibility</li>
+     * </ul>
+     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted
+     * @see Operator#XSQL
+     */
+    public static <UJO extends Ujo> Criterion<UJO> forSql(UjoProperty<UJO,?> property, String sqlCondition) {
+        return new ValueCriterion<UJO>(property, Operator.XSQL, sqlCondition);
     }
 
     // ----------------------- DEPRECATED -----------------------

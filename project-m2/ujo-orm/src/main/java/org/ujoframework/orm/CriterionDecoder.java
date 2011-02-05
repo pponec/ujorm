@@ -72,7 +72,7 @@ public class CriterionDecoder {
     }
 
     /** Unpack criterion. */
-    protected void unpack(final Criterion c) {
+    protected final void unpack(final Criterion c) {
         if (c.isBinary()) {
             unpackBinary((BinaryCriterion)c);
         } else try {
@@ -192,7 +192,7 @@ public class CriterionDecoder {
 
     /** Writer a relation conditions: */
     @SuppressWarnings("unchecked")
-    protected void writeRelations() {
+    protected final void writeRelations() {
         UjoProperty[] relations = getPropertyRelations();
 
         boolean parenthesis = sql.length()>0 && relations.length>0;
