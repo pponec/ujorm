@@ -424,7 +424,7 @@ abstract public class SqlDialect {
                     : "1=0" // "false"
                     ;
             case XSQL:
-                return crit.getRightNode().toString();
+                return "(" + crit.getRightNode() + ')' ;
             case REGEXP: 
             case NOT_REGEXP:
             default:
