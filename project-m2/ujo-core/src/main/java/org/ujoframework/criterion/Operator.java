@@ -62,7 +62,9 @@ public enum Operator implements AbstractOperator {
      */
     USER,
     /** The operator for an internal use only where a result is
-     * <strong>not dependent</strong> on the value. */
+     * <strong>not dependent</strong> on the value.
+     * @see Criterion#constant(org.ujoframework.UjoProperty, boolean) 
+     */
     XFIXED,
     /** The operator for an indication of the SQL condition in a text format
      * Parameters of the SQL condition are not supported by the Ujorm.
