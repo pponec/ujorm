@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Create Release</actionName>
+            <displayName>Create Release</displayName>
+            <goals>
+                <goal>source:jar</goal>
+                <goal>javadoc:jar</goal>
+                <goal>repository:bundle-create</goal>
+            </goals>
+            <properties>
+                <maven.compile.debug>false</maven.compile.debug>
+            </properties>
+        </action>
+    </actions>
