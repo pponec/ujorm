@@ -2,23 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <properties>
-        <ujo.version>1.10-SNAPSHOT</ujo.version>
+        <ujo.version>1.10</ujo.version>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.5</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <scm>
+    <!--<scm>
         <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</connection>
         <developerConnection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</developerConnection>
-    </scm>
+    </scm>-->
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.10</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>UJO Framework common project</description>
