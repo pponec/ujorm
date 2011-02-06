@@ -9,6 +9,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <scm>
+        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2</url>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2</connection>
+    </scm>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujoframework</groupId>

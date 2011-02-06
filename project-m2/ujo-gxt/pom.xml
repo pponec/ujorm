@@ -11,6 +11,11 @@
     </description>
     <url>http://maven.apache.org</url>
 
+    <scm>
+        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-gxt</url>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-gxt</connection>
+    </scm>
+
     <licenses>
         <license>
             <name>GNU/GPL v3</name>
