@@ -2,7 +2,7 @@ The UJO Framework release notes
 *******************************
 
 release 1.10 (2010-02-06)
-+ dialect for database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
++ dialect for the database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
 + new native Criterion is implemented with an SQL expression to use on Ujorm query
 + new annotation @Comment can be used to describe database tables or columns
 + correction the behavior Ujorm release 0.90 where the missing table 'ujorm_pk_support' was a sign to creating all the DB structure
