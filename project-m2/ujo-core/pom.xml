@@ -16,6 +16,11 @@
     <description>UJO Framework is an open source small Java library providing non-traditional object architecture different from JavaBeans, where each property has its own static object.</description>
     <url>http://maven.apache.org</url>
 
+    <scm>
+        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</url>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
+    </scm>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
