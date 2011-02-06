@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Pavel Ponec
+ *  Copyright 2009-2011 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ public class SampleORM {
             sample.loadMetaModel();
             sample.useInsert();
             sample.useSelectOrders();
+            sample.useCriterions();
             sample.useSortOrders();
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
@@ -61,6 +62,8 @@ public class SampleORM {
             sample.useSelectItems_3();
             sample.useSelectItems_4();
             sample.useSelectItems_5();
+            sample.useSelectItems_5b();
+            sample.useNativeCriterion();
             sample.useReloading();
             sample.useLimitAndOffset();
             sample.useSelectCount();
@@ -162,6 +165,37 @@ public class SampleORM {
         }
     }
 
+    /** Lern how to use the Criterion as an simple object validator only. */
+    public void useCriterions() {
+
+        final Order order = new Order();
+        order.setId(100L);
+        order.setDescr("my order");
+        order.setDate(new Date());
+
+        Criterion<Order> crnId = Criterion.where(Order.id, Operator.GT, 99L);
+        Criterion<Order> crnDescr = Criterion.where(Order.descr, "another");
+        Criterion<Order> crnCreated = Criterion.where(Order.created, Operator.LE, new Date());
+        Criterion<Order> crn = null;
+
+        // Simple condition: Order.id>99
+        assert crnId.evaluate(order);
+
+        // Compound condition: Order.id>99 or Order.descr='another'
+        crn = crnId.or(crnDescr);
+        assert crn.evaluate(order);
+
+        // Compound condition with parentheses: Order.created<=now() and (Order.descr='another' or Order.id>99)
+        crn = crnCreated.and(crnDescr.or(crnId));
+        assert crn.evaluate(order);
+
+        // Another condition: (Order.created<=now() or Order.descr='another') and Order.id>99
+        crn = (crnCreated.or(crnDescr)).and(crnId);
+        // ... or simple by a native priority:
+        crn = crnCreated.or(crnDescr).and(crnId);
+        assert crn.evaluate(order);
+    }
+
     /** Sort orders by two properties: descr and created descending. */
     public void useSortOrders() {
 
@@ -185,7 +219,7 @@ public class SampleORM {
             OrmTools.loadLazyValues(item, 2);
             System.out.println(item.get(Item.order.add(Order.created)) + " " + item);
         }
-        
+
         // Another way to avoid the lazy loading by a bulk property loading:
         List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
         System.out.println("itemList: " + itemList);
@@ -268,6 +302,35 @@ public class SampleORM {
 
         for (Item item : items) {
             System.out.println("Item: " + item);
+        }
+    }
+
+    /** Select using the IN operator with persistent objects. */
+    public void useSelectItems_5b() {
+        Order order_1 = new Order();
+        order_1.setId(1L);
+        Order order_2 = new Order();
+        order_2.setId(2L);
+
+        Criterion<Item> crit = Criterion.whereIn(Item.order, order_1, order_2);
+        Query<Item> items = session.createQuery(crit);
+
+        Object oo = items.iterator();
+
+        for (Item item : items) {
+            System.out.println("Item: " + item);
+        }
+    }
+
+    /** Select all items with a description with the 'table' insensitive text. */
+    public void useNativeCriterion() {
+
+        Criterion<Order> crn1 = Criterion.forSql(Order.state, "ord_order_alias.id>0");
+        Criterion<Order> crn2 = Criterion.where(Order.created, Operator.LE, new Date());
+        Query<Order> orders = session.createQuery(crn1.and(crn2));
+
+        for (Order order : orders) {
+            System.out.println("ORDER: " + order);
         }
     }
 
@@ -364,7 +427,7 @@ public class SampleORM {
         MyProcedure procedure = new MyProcedure();
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The result can't be initialized.
+        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
         procedure.set(MyProcedure.paramCode, 5);
         procedure.set(MyProcedure.paramEnabled, true);
 
@@ -395,7 +458,7 @@ public class SampleORM {
         // MyProcedure procedure2 = session.newProcedure(MyProcedure.class);
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The result can't be initialized.
+        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
         procedure.set(MyProcedure.paramCode, 5);
         procedure.set(MyProcedure.paramEnabled, true);
 
