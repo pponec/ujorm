@@ -99,8 +99,8 @@
         <h2 id="classmodel">Structure (class model):</h2>
         The model contains two classes:
 	<ul>
-	    <li>MyMap - a simple map that maps keys to values</li>
-	    <li>Property - a representative of a map key</li>
+	    <li>MyMap - a class of data store</li>
+	    <li>Property - an immutable class is a key of the map which provides a type-safe public methods for reading and writting of values</li>
 	</ul>
 	
 	<img src="ClassDiagram.png" width="333" height="333" alt="Class Diagram" style="margin: 10px;" />
@@ -160,8 +160,8 @@ System.out.<span class="java-layer-method">println</span>(name + <span class="ja
     
     <div class="chapter">
         <h2 id="usage">Usage:</h2>
-The pattern design can be used in place of conventional POJO object. It's meaningful in case there is to need to refer a <strong>method</strong> (set/get), 
-no its value. Here are three samples of usage in a Java language
+The pattern design can be used like a special delegate of the POJO object. It's useful in case there is to need to refer a set of get <strong>method</strong>
+and to avoid a non-type value access by reflection API. Here are some samples of usage in a Java language
 <ul>
     <li>The sort method takes a list of items and its properties (e.g. NAME, AGE) for the ordering. A GenericSorter implementation builds an appropriate comparator oneself .
 <pre class="pre" style="margin-left: 0;">
@@ -174,21 +174,23 @@ no its value. Here are three samples of usage in a Java language
 <span class="java-keywords">interface</span> GenericTableModel&lt;MyMap&gt; <span class="java-keywords">extends</span> TableModel {
     <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setColumns</span>(Property ... columns);
 }</pre>
-<li>There is obvious, that all values are saved by a <strong>single method</strong>  writeProperty() only. 
-    In case the MyMap class becomes a <strong>parrent of more classes</strong> (they are written in the same pattern desing), 
+<li>Because all values of the class MyMap are saved by a <strong>single method</strong> called writeValue(), it is possible to implement
+    one validation check for all values. In case the MyMap class becomes a <strong>parrent of more classes</strong> (they are written in the same pattern desing),
     so the method writeProperty() will become a <strong>central writing point</strong> for all hierarchy of classes.
-    The point is a true place for inserting common <strong>validations, conversions and listeners</strong>.        
-<br />Next method <strong>readProperty()</strong> replaces all NULL values by a value for all Integer types. 
-    In the example a class Property returns a value type by a new method getType().
-<pre  class="pre" style="margin-left: 0;"><span class="java-keywords">protected</span> Object <span class="java-layer-method">readValue</span>(Property key) {
-    Object result = <span class="java-keywords">super</span>.<span class="java-layer-method">readValue</span>(key);<br />
-    <span class="java-keywords">if</span> (result==<span class="java-keywords">null</span>
-    &amp;&amp;  key.<span class="java-layer-method">getType</span>()==Integer.<span class="java-keywords">class</span> ){
-        <span class="java-keywords">return</span> <span class="java-numeric-literals">0</span>;
-    } <span class="java-keywords">else</span> {
-        <span class="java-keywords">return</span> result;
+    The point is a true place for inserting common <strong>validations, conversions or listeners</strong>.
+<br />Next method <strong>writeValue()</strong> can check NULL value and throws an exception in this case.
+<pre  class="pre" style="margin-left: 0;"><span class="java-keywords">protected</span> Object <span class="java-layer-method">writeValue</span>(Property key, Object value) {
+    <span class="java-keywords">if</span> (value==<span class="java-keywords">null</span>) {
+        <span class="java-keywords">throw new</span> IllegalArgumentExeption();
     }
+    <span class="java-keywords">super</span>.<span class="java-layer-method">writeValue</span>(key, value);<br />
 }</pre>       
+</li>
+<li>Type safe <strong>factory</strong> can be implemented by removing the method writeValue()  and by different implementation of the original method readValue().
+    Sample of the use:
+<pre  class="pre" style="margin-left: 0;"><br/>DomainObject do = MyMap.DOMAIN_KEY.newInstance(map); // renamed method getValue()
+
+</pre>
 </li>
     
 </ul>        
@@ -218,7 +220,7 @@ under an open license since 2007-10-24.
     <hr style="clear:both;" />
     
     <p style="text-align:center"><span class="PPonec">PP</span><span class="ppONEC">one</span><span class="PPonec">(</span><span
-            class="ppONEC">c</span><span class="PPonec">) 2007</span>
+            class="ppONEC">c</span><span class="PPonec">) 2007-2011</span>
     </p>
     
     <div class="chapter" style="text-align: center;">
