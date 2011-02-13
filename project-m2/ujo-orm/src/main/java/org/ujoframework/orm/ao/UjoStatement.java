@@ -39,8 +39,10 @@ import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.metaModel.MetaColumn;
+import org.ujoframework.orm.metaModel.MetaTable;
 
 /**
  * Special UJO PreparedStatement to get an assigned value.
@@ -65,8 +67,15 @@ public class UjoStatement extends UnsupportedOperationException implements Prepa
      */
     public Object getDefaultValue(MetaColumn column) {
         try {
+            Object defaultValue = column.getProperty().getDefault();
+            if (defaultValue instanceof OrmUjo) {
+                final OrmUjo tableValue = (OrmUjo) defaultValue;
+                final MetaTable mt = column.getHandler().findTableModel(tableValue.getClass());
+                defaultValue = mt.getFirstPK().getProperty().getValue(tableValue);
+            }
+
             TypeService typeService = column.getHandler().getParameters().getTypeService();
-            typeService.setValue(column, this, column.getProperty().getDefault(), 1);
+            typeService.setValue(column, this, defaultValue, 1);
             return v;
         } catch (SQLException e) {
             throw this;
