@@ -31,7 +31,7 @@ public enum CommentPolicy {
     /** Assign all available comments from annotations to database on a new database object event,
      * exactly on new table, column or index. It is a default value. */
     ON_ANY_CHANGE,
-    /** Assign the comment for a new table only. */
+    /** Assign the comment for a new table or new column. */
     FOR_NEW_OBJECT,
     /** No comments are assigned */
     NEVER,
