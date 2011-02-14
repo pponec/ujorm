@@ -26,12 +26,13 @@ import org.bo.ViewOrder;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
-import org.ujoframework.orm.*;
-import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.criterion.*;
+import org.ujoframework.orm.*;
 import org.ujoframework.orm.ao.CheckReport;
+import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.utility.OrmTools;
+import static org.ujoframework.criterion.Operator.*;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -153,7 +154,7 @@ public class SampleORM {
         Criterion<Order> cn1, cn2, cn3, crit;
 
         cn1 = Criterion.where(Order.descr, "John's order");
-        cn2 = Criterion.where(Order.created, Operator.LE, new Date());
+        cn2 = Criterion.where(Order.created, LE, new Date());
         cn3 = Criterion.where(Order.state, Order.State.ACTIVE);
         crit = cn1.and(cn2).and(cn3);
 
@@ -173,9 +174,9 @@ public class SampleORM {
         order.setDescr("my order");
         order.setDate(new Date());
 
-        Criterion<Order> crnId = Criterion.where(Order.id, Operator.GT, 99L);
+        Criterion<Order> crnId = Criterion.where(Order.id, GT, 99L);
         Criterion<Order> crnDescr = Criterion.where(Order.descr, "another");
-        Criterion<Order> crnCreated = Criterion.where(Order.created, Operator.LE, new Date());
+        Criterion<Order> crnCreated = Criterion.where(Order.created, LE, new Date());
         Criterion<Order> crn = null;
 
         // Simple condition: Order.id>99
@@ -230,7 +231,7 @@ public class SampleORM {
      */
     public void useSelectViewOrders() {
 
-        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, Operator.GE, 0L);
+        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, GE, 0L);
         Query<ViewOrder> orders = session.createQuery(crit);
         System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
 
@@ -242,7 +243,7 @@ public class SampleORM {
     /** Select all items with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
 
-        Criterion<Item> crit = Criterion.where(Item.descr, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.descr, CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> items = session.createQuery(crit).orderBy(Item.id.descending());
 
         for (Item item : items) {
@@ -282,7 +283,7 @@ public class SampleORM {
      */
     public void useSelectItems_4() {
         UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
-        Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
+        Criterion<Item> crit = Criterion.where(ORDER_DATE, LE, new Date());
         Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
@@ -326,7 +327,7 @@ public class SampleORM {
     public void useNativeCriterion() {
 
         Criterion<Order> crn1 = Criterion.forSql(Order.state, "ord_order_alias.id>0");
-        Criterion<Order> crn2 = Criterion.where(Order.created, Operator.LE, new Date());
+        Criterion<Order> crn2 = Criterion.where(Order.created, LE, new Date());
         Query<Order> orders = session.createQuery(crn1.and(crn2));
 
         for (Order order : orders) {
@@ -356,7 +357,7 @@ public class SampleORM {
 
     /** How to count items ? */
     public void useSelectCount() {
-        Criterion<Item> crit = Criterion.where(Item.descr, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.descr, CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(crit);
 
         long count = query.getCount();
@@ -376,7 +377,7 @@ public class SampleORM {
 
     /** How to skip items? */
     public void useIteratorSkip() {
-        Criterion<Item> crit = Criterion.where(Item.descr, Operator.NOT_EQ, "XXXXX");
+        Criterion<Item> crit = Criterion.where(Item.descr, NOT_EQ, "XXXXX");
         UjoIterator<Item> items = session.createQuery(crit).iterator();
 
         boolean skip = items.skip(1);
