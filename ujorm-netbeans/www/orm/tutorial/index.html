@@ -704,7 +704,7 @@ Entity Description:<br>
     <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=c1tj title=OrmHandler>OrmHandler</a> - owner of the meta-model, which provides an efficient methods to search for specific parts of the meta-model. Meta-model is locked after initialization and can't be changed later.<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=mra2 title=Criterion>Criterion</a> - the fundamental condition for the evaluation database Query. Criterion objects can be joined into a tree by operators <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#and%28org.ujoframework.criterion.Criterion%29 id=qghe title="and ()">and()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#or%28org.ujoframework.criterion.Criterion%29 id=zrqu title="or ()">or()</a> .<br>
+    <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=mra2 title=Criterion>Criterion</a> - the fundamental condition for the evaluation database Query. Criterion objects can be joined into a binary tree by operators <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#and%28org.ujoframework.criterion.Criterion%29 id=qghe title="and ()">and()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#or%28org.ujoframework.criterion.Criterion%29 id=zrqu title="or ()">or()</a> .<br>
   </li>
   <li>
     Database - the class form an application package containing a description of the persistent domain classes and stored procedures. For different DB connections, you can define multiple classes type of Database<br>
@@ -720,7 +720,7 @@ Entity Description:<br>
 The following code example obtains instances of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=ev92 title=OrmHandler>OrmHandler</a> class and its configuration using the Database class, the instance is retained for. It creates an instance of Order class Items and stores in a database. The <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#save%28org.ujoframework.orm.OrmUjo%29 id=hkp7 title=save()>save()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#commit%28%29 id=tort title=commit()>commit()</a> operations can throw an run-time exception so there is necessary to catch the exception and close the used <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html id=c1jz title=Session>Session</a>.<br>
 <br>
 <div style=MARGIN-LEFT:40px>
-  <table border=1 cellpadding=3 cellspacing=0 id=azp2>
+  <table border=1 cellpadding=3 cellspacing=0 height=360 id=azp2 width=396>
     <tbody>
     <tr>
       <td width=100%>
@@ -739,8 +739,7 @@ The following code example obtains instances of <a href=http://ujoframework.org/
         &nbsp;item2.setOrder(order);<br>
         &nbsp;item2.setDescr(</font><b><font color=#0b5394 face="courier new" size=2>"Green window"</font></b><font face="courier new" size=2>);<br>
         <br>
-        &nbsp;Session session = OrmHandler.getInstance() &nbsp; &nbsp;&nbsp;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .createSession(); &nbsp;<br>
+        &nbsp;Session session =&nbsp;<font face="courier new" size=2><span class=pygments-n>handler</span></font>.createSession(); &nbsp;<br>
         &nbsp;session.save(order); &nbsp;<br>
         &nbsp;session.save(item1); &nbsp;<br>
         &nbsp;session.save(item2); &nbsp;<br>
@@ -851,7 +850,7 @@ Ujorm framework can use to persistence any object which implements the OrmUjo in
       &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Long&gt; id<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = newProperty(Long.<b style=COLOR:#741b47>class</b>);<br>
       <br>
-      &nbsp;&amp;nbsp;&nbsp; public static final UjoProperty&lt;Order, Date&gt; created<br>
+      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Date&gt; created<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = newProperty(Date.<b style=COLOR:#741b47>class</b>);<br>
       <br>
       &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, User&gt; user<br>
@@ -1503,7 +1502,7 @@ Notice that the 'Customer' has a <b>primary key</b> of <b>User </b>type and shar
 Implementation of the method <b>Customer.getLogin ()</b> might look like this:<br>
 <br>
 <div style=MARGIN-LEFT:40px>
-  <table border=1 cellpadding=3 cellspacing=0 id=s28y>
+  <table border=1 cellpadding=3 cellspacing=0 height=72 id=s28y width=327>
     <tbody>
     <tr>
       <td width=100%>
@@ -1626,7 +1625,7 @@ We create an instance of the procedure, fill the INPUT type parameters and invok
   String result = procedure.call (session);<br>
   <br>
 </div>
-Complete example you can find in <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorial>tutorial</a>. Instances of the procedure isn't connected with a particular session and such instance can be used can frequently with different parameters (only one-thread access). Ujorm version 1.10 does not support the return type of parameter ResultSet.<br>
+Complete example you can find in <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorial>tutorial</a>. Instances of the procedure isn't connected with a particular session and such instance can be used can frequently with different parameters (only one-thread access). Ujorm version 1.00 does not support the return type of parameter ResultSet.<br>
 <br>
 <h2>
   <a id=Transaction_control_0930804139_6528190389441351 name=Transaction_control_0930804139_6528190389441351></a> Transaction control
