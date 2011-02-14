@@ -91,7 +91,7 @@ Released   : 20080129
               </ul>
 
             </div>
-            <p class="meta"> <a href="http://ujoframework.org/dokuwiki/" class="permalink">Read more</a> </p>
+            <p class="meta"> <a href="http://ujoframework.org/orm/tutorial/" class="permalink">Read more</a> </p>
           </div><!-- post -->
 
 
@@ -140,63 +140,59 @@ Released   : 20080129
 
   Order order = new Order();
   order.setDate(new Date());
-  order.setDescr("John's order");
+  order.setDescr("My order");
 
-  Item item1 = new Item();
-  item1.setOrder(order);
-  item1.setDescr("Yellow table");
+  Item item = new Item();
+  item.setOrder(order);
+  item.setDescr("Yellow table");
 
-  Item item2 = new Item();
-  item2.setOrder(order);
-  item2.setDescr("Green window");
-
-  Session session = OrmHandler.getInstance()
-                    .createSession();
+  Session session = ormHandler.createSession();
   session.save(order);
-  session.save(item1);
-  session.save(item2);
+  session.save(item);
 
   session.commit();
   session.close();
 </pre>
 
-The next source code calls a SELECT by the <strong>UJO Criterion</strong>:
+The next example selects data from database:
 <pre name="code" class="java">
 
-  Criterion&lt;Item&gt; cn1, cn2, criterion;
+  Session session = ormHandler.createSession();
+  Criterion&lt;Item&gt; crn1, crn2, criterion;
 
-  cn1 = Criterion.where( Item.ID, Operator.GE, 1L );
-  cn2 = Criterion.where( Item.ORDER.add(Order.DESCR)
-                       , "John's order" ); // Equals to
-  criterion = cn1.and(cn2);
+  crn1 = Criterion.where( Item.ID, GE, 1L );
+  crn2 = Criterion.where( Item.ORDER.add(Order.DESCR)
+                        , "My order" ); // Equals to
+  criterion = crn1.and(crn2);
 
-  Session session = OrmHandler.getInstance()
-                    .createSession();
-  Query&lt;Item&gt; items = session.createQuery(criterion);
-  items.orderBy( Item.ORDER.add(Order.CREATED)
-               , Item.ID.descending() );
-  System.out.println( "Row count: " + items.getCount());
-
-  for (Item item : items) {
-      String descr = item.getDescr();
+  for (Item item : session.createQuery(criterion)) {
       Date created = item.getOrder().getDate();
-      System.out.println( created + " : " + descr );
+      System.out.println( item + " : " + created );
   }
   session.close();
 </pre>
 
-And how to get meta-data for a 'description' property of the Order?
+      using the similar generated SQL command:
 <pre name="code" class="java">
-  OrmHandler hr = OrmHandler.getInstance();
+
+ SELECT * FROM item
+ JOIN order ON order.id = item.id_order
+ WHERE item.id >=1
+ AND order.descr = 'My order'
+ ;
+</pre>
+    where both parameters are passed by a 'question mark' notation for a better security.
+    And how to get meta-data for a 'description' property of the Order?
+<pre name="code" class="java">
 
   MetaColumn col = (MetaColumn)
-             hr.findColumnModel(Order.DESCR);
+       ormHandler.findColumnModel( Order.DESCR );
 
   StringBuilder msg = new StringBuilder()
       .append("Length : " + col.getMaxLength() + '\n')
       .append("NotNull: " + col.isMandatory()  + '\n')
       .append("PrimKey: " + col.isPrimaryKey() + '\n')
-      .append("DB name: " + col.getFullName()  + '\n')
+      .append("DB-Name: " + col.getFullName()  + '\n')
       .append("Comment: " + col.getComment     + '\n')
       ;
   System.out.println(msg);

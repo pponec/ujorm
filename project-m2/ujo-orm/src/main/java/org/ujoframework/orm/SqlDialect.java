@@ -474,7 +474,7 @@ abstract public class SqlDialect {
     }
 
 
-    /** Print a conditon phrase by the criterion.
+    /** Print a <strong>conditon phrase</strong> from the criterion.
      * @return A value criterion to assign into the SQL query.
      */
     public ValueCriterion printCriterion(ValueCriterion crit, Appendable out) throws IOException {
