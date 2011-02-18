@@ -122,7 +122,7 @@ public class SampleORM {
     public void useInsert() {
 
         Order order = new Order();
-        order.setDate(new Date());
+        order.setCreated(new Date());
         order.setDescr("John's order");
 
         Item item1 = new Item();
@@ -172,7 +172,7 @@ public class SampleORM {
         final Order order = new Order();
         order.setId(100L);
         order.setDescr("my order");
-        order.setDate(new Date());
+        order.setCreated(new Date());
 
         Criterion<Order> crnId = Criterion.where(Order.id, GT, 99L);
         Criterion<Order> crnDescr = Criterion.where(Order.descr, "another");
@@ -475,7 +475,7 @@ public class SampleORM {
     /** Using the UPDATE */
     public void useUpdate() {
         Order order = session.load(Order.class, 1L);
-        order.setDate(new Date());
+        order.setCreated(new Date());
 
         session.update(order);
         session.commit();

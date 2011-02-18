@@ -49,61 +49,64 @@ abstract public class _Order extends OrmTable<_Order> {
     @Comment("Reference to Items")
     public static final RelationToMany<Order, Item> items = newRelation(Item.class);
 
+    /** The child type */
+    final private Order _this = (Order) this;
+
     // --- Getters / Setters ---
 
     /** The Unique Key */
     public Long getId() {
-        return id.getValue((Order) this);
+        return id.getValue(_this);
     }
 
     /** The Unique Key */
     public void setId(Long _id) {
-        id.setValue((Order) this,_id);
+        id.setValue(_this,_id);
     }
 
     /** User key */
     public Integer getUsrId() {
-        return userId.getValue((Order) this);
+        return userId.getValue(_this);
     }
 
     /** User key */
     public void setUsrId(Integer _usrId) {
-        userId.setValue((Order) this,_usrId);
+        userId.setValue(_this,_usrId);
     }
 
     /** Description of the order */
     public String getDescr() {
-        return descr.getValue((Order) this);
+        return descr.getValue(_this);
     }
 
     /** Description of the order */
     public void setDescr(String _descr) {
-        descr.setValue((Order) this,_descr);
+        descr.setValue(_this,_descr);
     }
 
     /** Date of creation */
     public Date getCreated() {
-        return created.getValue((Order) this);
+        return created.getValue(_this);
     }
 
     /** Date of creation */
     public void setCreated(Date _date) {
-        created.setValue((Order) this,_date);
+        created.setValue(_this,_date);
     }
 
     /** Order state, default is ACTIVE */
     public State getState() {
-        return state.getValue((Order) this);
+        return state.getValue(_this);
     }
 
     /** Order state, default is ACTIVE */
     public void setState(State _state) {
-        state.setValue((Order) this,_state);
+        state.setValue(_this,_state);
     }
 
     /** Reference to Items */
     public UjoIterator<Item> getItems() {
-        return items.getValue((Order) this);
+        return items.getValue(_this);
 
     }
 }

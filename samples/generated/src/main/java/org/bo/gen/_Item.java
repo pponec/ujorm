@@ -31,36 +31,48 @@ abstract public class _Item extends OrmTable<Item> {
     @Column(name = "fk_order")
     public static final UjoProperty<Item, Order> order = newProperty(Order.class);
 
+    /** The child type */
+    final private Item _this = (Item) this;
+
     // --- Getters / Setters ---
+
+    /** Unique key */
     public Long getId() {
-        return id.getValue((Item) this);
+        return id.getValue(_this);
     }
 
+    /** Unique key */
     public void setId(Long _id) {
-        id.setValue((Item) this, _id);
+        id.setValue(_this, _id);
     }
 
+    /** User key */
     public Integer getUsrId() {
-        return userId.getValue((Item) this);
+        return userId.getValue(_this);
     }
 
+    /** User key */
     public void setUsrId(Integer _id) {
-        userId.setValue((Item) this, _id);
+        userId.setValue(_this, _id);
     }
 
+    /** Description of Item */
     public String getDescr() {
-        return descr.getValue((Item) this);
+        return descr.getValue(_this);
     }
 
+    /** Description of Item */
     public void setDescr(String _descr) {
-        descr.setValue((Item) this, _descr);
+        descr.setValue(_this, _descr);
     }
 
+    /** A reference to common Order */
     public Order getOrder() {
-        return order.getValue((Item) this);
+        return order.getValue(_this);
     }
-
+    
+    /** A reference to common Order */
     public void setOrder(Order _order) {
-        order.setValue((Item) this, _order);
+        order.setValue(_this, _order);
     }
 }
