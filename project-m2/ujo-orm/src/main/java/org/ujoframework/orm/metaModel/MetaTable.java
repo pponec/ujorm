@@ -369,4 +369,16 @@ final public class MetaTable extends AbstractMetaModel {
         return mapIndex.values();
     }
 
+    /** Returns a parrent of the parameter or the null if no parent was not found.<br/>
+     * The method provides a parent in case of emulated inheritance.
+     */
+    public OrmUjo getParent(final OrmUjo bo) {
+
+        final MetaColumn metaColumn = getFirstPK();
+        if (metaColumn.isForeignKey()) {
+            return (OrmUjo) metaColumn.getValue(bo);
+        } else {
+            return null;
+        }
+    }
 }
