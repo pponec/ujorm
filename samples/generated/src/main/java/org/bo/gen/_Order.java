@@ -18,7 +18,7 @@ import org.ujoframework.orm.annot.Comment;
 import org.ujoframework.orm.annot.Table;
 
 @Table(name = "ord_order")
-abstract public class _Order extends OrmTable<_Order> {
+abstract public class _Order extends OrmTable<Order> {
 
     /** Store the value like VARCHAR. */
     public enum State implements ValueExportable {
