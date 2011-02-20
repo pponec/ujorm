@@ -191,12 +191,13 @@ public class MSSqlDialect extends SqlDialect {
         MetaColumn pkType = new MetaColumn();
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
-        out.append(COMMON_SEQ_TABLE_NAME);
-        out.append("\n\t( id VARCHAR(96) NOT NULL PRIMARY KEY");
-        out.append("\n\t, seq " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL");
-        out.append("\n\t, cache INT DEFAULT " + cache + " NOT NULL");
-        out.append("\n\t, maxvalue " + getColumnType(pkType) + " DEFAULT 0 NOT NULL");
-        out.append("\n\t)");
+        out.append(getSeqTableModel().getTableName()
+        + "\n\t( " + getSeqTableModel().getId() + " VARCHAR(96) NOT NULL PRIMARY KEY"
+        + "\n\t, " + getSeqTableModel().getSequence() + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+        + "\n\t, " + getSeqTableModel().getCache() + " INT DEFAULT " + cache + " NOT NULL"
+        + "\n\t, " + getSeqTableModel().getMaxValue() + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+        + "\n\t)"
+        );
         return out;
     }
 
@@ -208,7 +209,7 @@ public class MSSqlDialect extends SqlDialect {
             out.append('.');
         }
         out.append("dbo.");
-        out.append(COMMON_SEQ_TABLE_NAME);
+        out.append(getSeqTableModel().getTableName());
         return out;
     }
 

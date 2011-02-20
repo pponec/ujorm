@@ -52,11 +52,9 @@ abstract public class SqlDialect {
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(SqlDialect.class.getName());
 
-    /** The table key for a common sequence emulator. 
-     * <br/>The SQL script for migration to the Ujorm 0.93:
-     * <pre>ALTER TABLE ormujo_pk_support RENAME TO ujorm_pk_support;</pre>
-     */
-    public static final String COMMON_SEQ_TABLE_NAME = "ujorm_pk_support";
+    /** The table model for an internal sequence tabable support */
+    final private SeqTableModel pkTableModel = new SeqTableModel();
+
     /** The table key for a common sequence emulator. */
     public static final String COMMON_SEQ_TABLE_KEY = "<ALL>";
     /** The default schema symbol */
@@ -741,7 +739,7 @@ abstract public class SqlDialect {
             out.append(schema);
             out.append('.');
         }
-        out.append(COMMON_SEQ_TABLE_NAME);
+        out.append(getSeqTableModel().getTableName());
         return out;
     }
 
@@ -759,12 +757,12 @@ abstract public class SqlDialect {
         MetaColumn pkType = new MetaColumn();
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
-        out.append(COMMON_SEQ_TABLE_NAME);
-        out.append("\n\t( id VARCHAR(96) NOT NULL PRIMARY KEY");
-        out.append("\n\t, seq "+getColumnType(pkType)+" DEFAULT " + cache + " NOT NULL");
-        out.append("\n\t, cache INT DEFAULT " + cache + " NOT NULL");
-        out.append("\n\t, maxvalue "+getColumnType(pkType)+" DEFAULT 0 NOT NULL");
-        out.append("\n\t)");
+        out.append(getSeqTableModel().getTableName()
+        + "\n\t( " + getSeqTableModel().getId() + " VARCHAR(96) NOT NULL PRIMARY KEY"
+        + "\n\t, " + getSeqTableModel().getSequence() + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+        + "\n\t, " + getSeqTableModel().getCache() + " INT DEFAULT " + cache + " NOT NULL"
+        + "\n\t, " + getSeqTableModel().getMaxValue() + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+        + "\n\t)");
         return out;
     }
 
@@ -790,17 +788,30 @@ abstract public class SqlDialect {
     public Appendable printSetMaxSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
         out.append("UPDATE ");
         printSequenceTableName(sequence, out);
-        out.append(" SET seq=maxValue");
-        out.append(" WHERE id=?");
+        out.append(" SET ");
+        out.append(getSeqTableModel().getSequence());
+        out.append("=");
+        out.append(getSeqTableModel().getMaxValue());
+        out.append(" WHERE " 
+                   + getSeqTableModel().getId()
+                   + "=?");
         return out;
     }
 
-
     /** Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the current cache. */
     public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("SELECT seq, cache, maxValue FROM ");
+        final SeqTableModel tm = getSeqTableModel();
+
+        out.append("SELECT ");
+        out.append(tm.getSequence());
+        out.append(", ");
+        out.append(tm.getCache());
+        out.append(", ");
+        out.append(tm.getMaxValue());
+        out.append(" FROM ");
+
         printSequenceTableName(sequence, out);
-        out.append(" WHERE id=?");
+        out.append(" WHERE " + tm.getId() + "=?");
         return out;
     }
 
@@ -892,6 +903,11 @@ abstract public class SqlDialect {
                 default  : out.append(c);
             }
         }
+    }
+
+    /** The table model for an internal sequence tabable support */
+    public SeqTableModel getSeqTableModel() {
+        return pkTableModel;
     }
 
 }
