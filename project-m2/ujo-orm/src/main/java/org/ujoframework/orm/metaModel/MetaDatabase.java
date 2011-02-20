@@ -432,7 +432,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 }
 
                 if (LOGGER.isLoggable(Level.INFO)) {
-                    logMsg = "Table '" + SqlDialect.COMMON_SEQ_TABLE_NAME + "' {0} available on the database '{1}'.";
+                    logMsg = "Table '" + getDialect().getSeqTableModel().getTableName() + "' {0} available on the database '{1}'.";
                     logMsg = MessageFormat.format(logMsg, exception!=null ? "is not" : "is", getId());
                     LOGGER.log(Level.INFO, logMsg);
                 }
