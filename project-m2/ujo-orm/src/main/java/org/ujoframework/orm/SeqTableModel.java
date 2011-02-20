@@ -29,7 +29,7 @@ final public class SeqTableModel {
 
     /** Default Constructor */
     public SeqTableModel() {
-        this("ujorm_pk_support", "id", "seq", "cache", "maxvalue"); // TODO: "max_value"
+        this("ujorm_pk_support", "id", "seq", "cache", "max_value");
     }
 
     public SeqTableModel
