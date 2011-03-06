@@ -39,6 +39,8 @@ public class CQuery<UJO extends Cujo> implements Serializable {
     private int offset = 0;
     private int limit = -1;
     private int fetchSize = -1;
+    /** The attribute for a common use. */
+    private String context;
 
     protected CQuery() {
     }
@@ -259,6 +261,16 @@ public class CQuery<UJO extends Cujo> implements Serializable {
 
     public void setOffset(int offset) {
         this.offset = offset;
+    }
+
+    /** The attribute for a common use. */
+    public String getContext() {
+        return context;
+    }
+
+    /** The attribute for a common use. */
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public void addColumOrder(CujoProperty cujo) {
