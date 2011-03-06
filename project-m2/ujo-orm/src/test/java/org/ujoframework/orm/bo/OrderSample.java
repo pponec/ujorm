@@ -44,7 +44,7 @@ public class OrderSample extends OrmTable<OrderSample> implements Serializable {
     public static final UjoProperty<OrderSample,State> STATE = newProperty("state", State.ACTIVE);
     /** User key */
     public static final UjoProperty<OrderSample,Integer> USER_ID = newProperty("usrId", Integer.class);
-    /** Description of the order */
+    /** Description of the Order */
     @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
     public static final UjoProperty<OrderSample,String> DESCR = newProperty("description", String.class);
     /** Date of creation */

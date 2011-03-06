@@ -24,6 +24,7 @@ Released   : 20080129
     <script type="text/javascript" src="SyntaxHighlighter/Scripts/shCore.js"></script>
     <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushJava.js"></script>
     <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushXml.js"></script>
+    <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushTxt.js"></script>
 
     <script type="text/javascript">
     window.onload = function () {
@@ -182,19 +183,28 @@ The next example selects data from database:
     where both parameters are passed by a 'question mark' notation for a better security.
     And how to get meta-data for a 'description' property of the Order?
 <pre name="code" class="java">
-
   MetaColumn col = (MetaColumn)
        ormHandler.findColumnModel( Order.DESCR );
 
-  StringBuilder msg = new StringBuilder()
-      .append("Length : " + col.getMaxLength() + '\n')
-      .append("NotNull: " + col.isMandatory()  + '\n')
-      .append("PrimKey: " + col.isPrimaryKey() + '\n')
-      .append("DB-Name: " + col.getFullName()  + '\n')
-      .append("Comment: " + col.getComment     + '\n')
+  String msg
+      = "DB name: " + col.getFullName()  + '\n'
+      + "Comment: " + col.getComment()   + '\n'
+      + "Length : " + col.getMaxLength() + '\n'
+      + "NotNull: " + col.isMandatory()  + '\n'
+      + "Primary: " + col.isPrimaryKey() + '\n'
+      + "Dialect: " + col.getDialectName()
       ;
   System.out.println(msg);
-  </pre>
+</pre>
+Prints the text report on a console output:
+<pre name="code" class="txt">
+ DB name: db1.ord_order.DESCR
+ Comment: Description of the Order
+ Length : 128
+ NotNull: true
+ Primary: false
+ Dialect: H2Dialect
+</pre>
             </div>
             <p class="meta"> <a href="http://ujoframework.org/orm/tutorial/" class="permalink">Read more</a> </p>
           </div><!-- post -->

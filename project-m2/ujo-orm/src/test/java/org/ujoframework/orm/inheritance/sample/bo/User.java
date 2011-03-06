@@ -35,7 +35,7 @@ public class User extends OrmTable<User> {
     /** Login */
     @Column(uniqueIndex="idx_login")
     public static final UjoProperty<User,String> login = newProperty(String.class);
-    /** Description of the order */
+    /** Description of the Order */
     public static final UjoProperty<User,String> password = newProperty(String.class);
     /** Full name */
     public static final UjoProperty<User,String> name = newProperty(String.class);
