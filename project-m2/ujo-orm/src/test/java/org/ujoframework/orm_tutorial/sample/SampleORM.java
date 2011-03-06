@@ -503,15 +503,13 @@ public class SampleORM {
     public void useMetadata() {
         MetaColumn col = (MetaColumn) handler.findColumnModel(Order.descr);
 
-        StringBuilder msg = new StringBuilder()
-            .append("** METADATA OF COLUMN: ")
-            .append(Order.descr.toString() + '\n')
-            .append("Length : " + col.getMaxLength() + '\n')
-            .append("NotNull: " + col.isMandatory()  + '\n')
-            .append("PrimKey: " + col.isPrimaryKey() + '\n')
-            .append("Comment: " + col.getComment()   + '\n')
-            .append("DB name: " + col.getFullName()  + '\n')
-            .append("Dialect: " + col.getDialectClass().getSimpleName())
+        String msg = "** METADATA OF COLUMN: " + Order.descr.toString() + '\n'
+            + "DB name: " + col.getFullName()  + '\n'
+            + "Comment: " + col.getComment()   + '\n'
+            + "Length : " + col.getMaxLength() + '\n'
+            + "NotNull: " + col.isMandatory()  + '\n'
+            + "Primary: " + col.isPrimaryKey() + '\n'
+            + "Dialect: " + col.getDialectName()
             ;
         System.out.println(msg);
     }

@@ -38,7 +38,7 @@ public class Order extends OrmTable<Order> {
     /** Date of creation */
     @Column(pk=true)
     public static final Property<Order,Date> DATE = newProperty("date", Date.class);
-    /** Description of the order */
+    /** Description of the Order */
     public static final Property<Order,String> DESCR = newProperty("description", String.class);
     /** Verify unique constants */
     static{init(Order.class,true);}

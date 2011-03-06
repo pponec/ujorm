@@ -360,6 +360,11 @@ final public class MetaColumn extends MetaRelation2Many {
          return result;
     }
 
+    /** Returns a SQL dialect class from a related Database */
+    public String getDialectName() {
+         return getDialectClass().getSimpleName();
+    }
+
     /** Initialize a type code - for an internal use only. */
     public void initTypeCode(final MetaParams params) {
         // Test for a read-only state:

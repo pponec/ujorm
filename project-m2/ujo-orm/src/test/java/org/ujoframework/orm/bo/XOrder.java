@@ -48,7 +48,7 @@ public class XOrder extends OrmTable<XOrder> {
     public static final UjoProperty<XOrder, State> STATE = newProperty(State.ACTIVE);
     /** User key */
     public static final UjoProperty<XOrder, Integer> USER_ID = newProperty(Integer.class);
-    /** Description of the order */
+    /** Description of the Order */
     @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true, index="idx_description") //
     public static final UjoProperty<XOrder, String> DESCR = newProperty(String.class);
     /** Date of creation */
