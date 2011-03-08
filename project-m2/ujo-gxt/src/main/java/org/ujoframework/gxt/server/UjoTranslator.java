@@ -24,6 +24,7 @@ import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
+import org.ujoframework.extensions.ValueExportable;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.Session;
@@ -124,6 +125,12 @@ public class UjoTranslator<CUJO extends Cujo> {
                                 break;
                             }
                         }
+                        if (ValueExportable.class.isAssignableFrom(p1.getType())) {
+                            if (p2.isTypeOf(String.class)) {
+                                properties.add(new PropContainer(p1, p2, pk));
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -192,7 +199,11 @@ public class UjoTranslator<CUJO extends Cujo> {
                     value = enumValue.name();
                 }
             }
-            if (value != null && isRelations() && pc.p1.isTypeOf(Ujo.class)) {
+            else if (value != null && pc.p1.isTypeOf(ValueExportable.class)) {
+                final ValueExportable exportableValue = (ValueExportable) value;
+                value = exportableValue.exportToString();
+            }
+            else if (value != null && isRelations() && pc.p1.isTypeOf(Ujo.class)) {
                 if (ujos == null) {
                     ujos = new ArrayList<Ujo>(1);
                 } else {
@@ -255,6 +266,14 @@ public class UjoTranslator<CUJO extends Cujo> {
                     value = Enum.valueOf(pc.p1.getType(), ((CEnum) value).getName());
                 } else {
                     value = Enum.valueOf(pc.p1.getType(), (String) value);
+                }
+            }
+            else if (pc.p1.isTypeOf(ValueExportable.class)) {
+                try {
+                    // Copy ValueExportable:
+                    value = pc.p1.getType().getConstructor(String.class).newInstance((String)value);
+                } catch (Exception e) {
+                    throw new IllegalStateException("Can't create instance of the " + pc.p1.getType() + " for value " + value);
                 }
             }
             else if (pc.p1.isTypeOf(OrmUjo.class)) {
