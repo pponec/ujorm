@@ -39,7 +39,16 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
         return type;
     }
 
+    /** Find a property by the name. If property was not found than method throws an exception. */
     public CujoProperty findProperty(String name) {
+        return findProperty(name, true);
+    }
+
+    /** Find a property by the name
+     * @param name Property name
+     * @param throwsException In case property found the TRUE value trhow an exeption or return a NULL value.
+     */
+    public CujoProperty findProperty(String name, boolean throwsException) {
         int hash = name.hashCode();
         for (CujoProperty p : properties) {
             if (p.getName().hashCode() == hash &&
@@ -47,7 +56,11 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
                 return p;
             }
         }
-        throw new NoSuchElementException("No property " + name + " was found in the " + type);
+        if (throwsException) {
+            throw new NoSuchElementException("No property " + name + " was found in the " + type);
+        } else {
+            return null;
+        }
     }
 
     @Override
