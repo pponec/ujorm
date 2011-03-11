@@ -45,6 +45,24 @@ public class CQuery<UJO extends Cujo> implements Serializable {
     protected CQuery() {
     }
 
+    /** Clone the parameter query */
+    public CQuery(CQuery template) {
+        this.type = template.type;
+        this.columnModel = template.columnModel;
+        this.autoExpandColumn = template.autoExpandColumn;
+        this.typeName = template.typeName;
+        this.orderBy = new ArrayList(template.orderBy);
+        this.orderByName = new ArrayList(template.orderByName);
+        this.orderByDirect = new ArrayList(template.orderByDirect);
+        this.criterion = template.criterion;
+        this.relations = template.relations;
+        this.columnOrderSize = template.columnOrderSize;
+        this.offset = template.offset;
+        this.limit = template.limit;
+        this.fetchSize = template.fetchSize;
+        this.context = template.context;
+    }
+
     /** Constructor creates a default ColumnModel */
     public CQuery(Class<? extends UJO> type) {
         this(type, CujoManager.find(type).createColumnModel());

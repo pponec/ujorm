@@ -90,8 +90,7 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
         if (result) {
             return result;
         }
-
-        if (Number.class.equals(aType)) {
+        else if(Number.class.equals(aType)) {
             result = Short.class.equals(type) ||
                 Integer.class.equals(type) ||
                 Long.class.equals(type) ||
