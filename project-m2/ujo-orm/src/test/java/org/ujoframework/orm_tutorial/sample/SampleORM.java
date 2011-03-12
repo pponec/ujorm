@@ -123,16 +123,16 @@ public class SampleORM {
 
         Order order = new Order();
         order.setDate(new Date());
-        order.setDescr("John's order");
+        order.setNote("John's order");
         //order.setBinaryFile("binary".getBytes());
 
         Item item1 = new Item();
         item1.setOrder(order);
-        item1.setDescr("Yellow table");
+        item1.setNote("Yellow table");
 
         Item item2 = new Item();
         item2.setOrder(order);
-        item2.setDescr("Green window");
+        item2.setNote("Green window");
 
         System.out.println("order: " + order);
         System.out.println("item1: " + item1);
@@ -154,7 +154,7 @@ public class SampleORM {
 
         Criterion<Order> cn1, cn2, cn3, crit;
 
-        cn1 = Criterion.where(Order.descr, "John's order");
+        cn1 = Criterion.where(Order.note, "John's order");
         cn2 = Criterion.where(Order.created, LE, new Date());
         cn3 = Criterion.where(Order.state, Order.State.ACTIVE);
         crit = cn1.and(cn2).and(cn3);
@@ -162,8 +162,8 @@ public class SampleORM {
         Query<Order> orders = session.createQuery(crit);
 
         for (Order order : orders) {
-            String descr = order.getDescr();
-            System.out.println("ORDER ROW: " + order + " // descr: " + descr);
+            String note = order.getNote();
+            System.out.println("ORDER ROW: " + order + " // note: " + note);
         }
     }
 
@@ -172,37 +172,37 @@ public class SampleORM {
 
         final Order order = new Order();
         order.setId(100L);
-        order.setDescr("my order");
+        order.setNote("my order");
         order.setDate(new Date());
 
         Criterion<Order> crnId = Criterion.where(Order.id, GT, 99L);
-        Criterion<Order> crnDescr = Criterion.where(Order.descr, "another");
+        Criterion<Order> crnNote = Criterion.where(Order.note, "another");
         Criterion<Order> crnCreated = Criterion.where(Order.created, LE, new Date()) ;
         Criterion<Order> crn = null;
 
         // Simple condition: Order.id>99
         assert crnId.evaluate(order);
 
-        // Compound condition: Order.id>99 or Order.descr='another'
-        crn = crnId.or(crnDescr);
+        // Compound condition: Order.id>99 or Order.note='another'
+        crn = crnId.or(crnNote);
         assert crn.evaluate(order);
 
-        // Compound condition with parentheses: Order.created<=now() and (Order.descr='another' or Order.id>99)
-        crn = crnCreated.and(crnDescr.or(crnId));
+        // Compound condition with parentheses: Order.created<=now() and (Order.note='another' or Order.id>99)
+        crn = crnCreated.and(crnNote.or(crnId));
         assert crn.evaluate(order);
 
-        // Another condition: (Order.created<=now() or Order.descr='another') and Order.id>99
-        crn = (crnCreated.or(crnDescr)).and(crnId);
+        // Another condition: (Order.created<=now() or Order.note='another') and Order.id>99
+        crn = (crnCreated.or(crnNote)).and(crnId);
         // ... or simple by a native priority:
-        crn =  crnCreated.or(crnDescr).and(crnId);
+        crn =  crnCreated.or(crnNote).and(crnId);
         assert crn.evaluate(order);
     }
 
-    /** Sort orders by two properties: descr and created descending. */
+    /** Sort orders by two properties: note and created descending. */
     public void useSortOrders() {
 
         Query<Order> orders = session.createQuery(Order.class);
-        orders.orderBy( Order.descr
+        orders.orderBy( Order.note
                       , Order.created.descending() );
 
         System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
@@ -243,7 +243,7 @@ public class SampleORM {
     /** Select all items with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
 
-        Criterion<Item> crit = Criterion.where(Item.descr, CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.note, CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> items = session.createQuery(crit).orderBy(Item.id.descending());
 
         for (Item item : items) {
@@ -358,7 +358,7 @@ public class SampleORM {
 
     /** How to count items ? */
     public void useSelectCount() {
-        Criterion<Item> crit = Criterion.where(Item.descr, CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.note, CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(crit);
 
         long count = query.getCount();
@@ -378,7 +378,7 @@ public class SampleORM {
 
     /** How to skip items? */
     public void useIteratorSkip() {
-        Criterion<Item> crit = Criterion.where(Item.descr, NOT_EQ, "XXXXX");
+        Criterion<Item> crit = Criterion.where(Item.note, NOT_EQ, "XXXXX");
         UjoIterator<Item> items = session.createQuery(crit).iterator();
 
         boolean skip = items.skip(1);
@@ -400,13 +400,13 @@ public class SampleORM {
 
         UjoIterator<Order> orders = db.get(Database.ORDERS);
         for (Order order : orders) {
-            String descr = order.getDescr();
-            System.out.println("Order: " + order + " // descr: " + descr);
+            String note = order.getNote();
+            System.out.println("Order: " + order + " // note: " + note);
 
             for (Item item : order.getItems()) {
                 Long itemId = item.getId();
-                String itemDescr = item.getDescr();
-                System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
+                String itemDescr = item.getNote();
+                System.out.println(" Item id: " + itemId + " note: " + itemDescr);
             }
         }
     }
@@ -499,11 +499,11 @@ public class SampleORM {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Print some meta-data of the property Order.descr. */
+    /** Print some meta-data of the property Order.note. */
     public void useMetadata() {
-        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.descr);
+        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.note);
 
-        String msg = "** METADATA OF COLUMN: " + Order.descr.toString() + '\n'
+        String msg = "** METADATA OF COLUMN: " + Order.note.toString() + '\n'
             + "DB name: " + col.getFullName()  + '\n'
             + "Comment: " + col.getComment()   + '\n'
             + "Length : " + col.getMaxLength() + '\n'

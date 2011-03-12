@@ -83,15 +83,15 @@ public class LimitTest extends TestCase {
         XOrder.DESCR.setValue(order, name);
 
         XItem item1 = new XItem();
-        XItem.DESCR.setValue(item1, name + "-1");
+        XItem.NOTE.setValue(item1, name + "-1");
         XItem.ORDER.setValue(item1, order);
 
         XItem item2 = new XItem();
-        XItem.DESCR.setValue(item2, name + "-2");
+        XItem.NOTE.setValue(item2, name + "-2");
         XItem.ORDER.setValue(item2, order);
 
         XItem item3 = new XItem();
-        XItem.DESCR.setValue(item3, name + "-3");
+        XItem.NOTE.setValue(item3, name + "-3");
         XItem.ORDER.setValue(item3, order);
 
         session.save(order);

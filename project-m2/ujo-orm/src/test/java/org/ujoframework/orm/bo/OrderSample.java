@@ -46,7 +46,7 @@ public class OrderSample extends OrmTable<OrderSample> implements Serializable {
     public static final UjoProperty<OrderSample,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of the Order */
     @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
-    public static final UjoProperty<OrderSample,String> DESCR = newProperty("description", String.class);
+    public static final UjoProperty<OrderSample,String> NOTE = newProperty("description", String.class);
     /** Date of creation */
     public static final UjoProperty<OrderSample,Date> CREATED = newProperty("created", Date.class);
     
@@ -65,11 +65,11 @@ public class OrderSample extends OrmTable<OrderSample> implements Serializable {
     public void setUsrId(Integer usrId) {
         set(USER_ID, usrId);
     }
-    public String getDescr() {
-        return get(DESCR);
+    public String getNote() {
+        return get(NOTE);
     }
-    public void setDescr(String descr) {
-        set(DESCR, descr);
+    public void setNote(String note) {
+        set(NOTE, note);
     }
     public Date getDate() {
         return get(CREATED);

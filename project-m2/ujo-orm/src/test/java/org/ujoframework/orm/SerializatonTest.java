@@ -62,7 +62,7 @@ public class SerializatonTest extends TestCase {
         assertEquals(expResult.getId(), result.getId());
         assertEquals(expResult.getDate(), result.getDate());
         assertSame(expResult.getState(), result.getState());
-        assertSame(expResult.getDescr(), result.getDescr());
+        assertSame(expResult.getNote(), result.getNote());
     }
 
 

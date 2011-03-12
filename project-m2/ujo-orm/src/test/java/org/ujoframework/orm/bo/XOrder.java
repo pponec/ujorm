@@ -83,12 +83,12 @@ public class XOrder extends OrmTable<XOrder> {
         set(USER_ID, usrId);
     }
 
-    public String getDescr() {
+    public String getNote() {
         return get(DESCR);
     }
 
-    public void setDescr(String descr) {
-        set(DESCR, descr);
+    public void setNote(String note) {
+        set(DESCR, note);
     }
 
     public Date getDate() {
