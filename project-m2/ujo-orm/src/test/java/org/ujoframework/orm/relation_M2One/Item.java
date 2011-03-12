@@ -33,8 +33,8 @@ public class Item extends OrmTable<Item> {
     public static final UjoProperty<Item,Long> id = newProperty(Long.class);
     /** User key */
     public static final UjoProperty<Item,Integer> userId = newProperty(Integer.class);
-    /** Description of Item */
-    public static final UjoProperty<Item,String> descr = newProperty(String.class);
+    /** Description of the Item */
+    public static final UjoProperty<Item,String> note = newProperty(String.class);
     /** A reference to common Order */
     @Column(name="fk_order")
     //public static final UjoProperty<Item,Order> order = newProperty(Order.class);
@@ -54,11 +54,11 @@ public class Item extends OrmTable<Item> {
     public void setUsrId(Integer _id) {
         set(userId, _id);
     }
-    public String getDescr() {
-        return get(descr);
+    public String getNote() {
+        return get(note);
     }
-    public void setDescr(String _descr) {
-        set(descr, _descr);
+    public void setNote(String _note) {
+        set(note, _note);
     }
     public Order getOrder() {
         return get(order);

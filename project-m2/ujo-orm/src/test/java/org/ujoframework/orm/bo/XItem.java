@@ -34,7 +34,7 @@ public class XItem extends OrmTable<XItem> {
     /** User key */
     public static final UjoProperty<XItem,Integer> USER_ID = newProperty(Integer.class);
     /** Description of XItem */
-    public static final UjoProperty<XItem,String> DESCR = newProperty(String.class);
+    public static final UjoProperty<XItem,String> NOTE = newProperty(String.class);
     /** A reference to common XOrder */
     @Column(name="fk_order")
     public static final UjoProperty<XItem,XOrder> ORDER = newProperty(XOrder.class);
@@ -55,17 +55,17 @@ public class XItem extends OrmTable<XItem> {
     public void setUsrId(Integer usrId) {
         set(USER_ID, usrId);
     }
-    public String getDescr() {
-        return get(DESCR);
+    public String getNote() {
+        return get(NOTE);
     }
-    public void setDescr(String descr) {
-        set(DESCR, descr);
+    public void setNote(String note) {
+        set(NOTE, note);
     }
     public XOrder getOrder() {
         return get(ORDER);
     }
-    public void setOrder(XOrder descr) {
-        set(ORDER, descr);
+    public void setOrder(XOrder order) {
+        set(ORDER, order);
     }
 
     /** Example of the composed PATH property */

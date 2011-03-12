@@ -56,8 +56,8 @@ public class Order extends OrmTable<Order> {
     /** User key */
     public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
     /** Description of the Order */
-    @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true)
-    public static final UjoProperty<Order, String> descr = newProperty(String.class);
+    @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
+    public static final UjoProperty<Order, String> note = newProperty(String.class);
     /** Reference to Items */
     public static final RelationToMany<Order, Item> items = newRelation(Item.class);
 
@@ -96,12 +96,12 @@ public class Order extends OrmTable<Order> {
         set(userId, _usrId);
     }
 
-    public String getDescr() {
-        return get(descr);
+    public String getNote() {
+        return get(note);
     }
 
-    public void setDescr(String _descr) {
-        set(descr, _descr);
+    public void setNote(String _note) {
+        set(note, _note);
     }
 
     public State getState() {

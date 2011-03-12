@@ -61,7 +61,7 @@ public class Order extends OrmTable<Order> {
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true)
-    public static final UjoProperty<Order, String> descr = newProperty(String.class);
+    public static final UjoProperty<Order, String> note = newProperty(String.class);
     /** Date of creation */
     public static final UjoProperty<Order, Date> created = newProperty(Date.class);
     /** Text file */
@@ -95,12 +95,12 @@ public class Order extends OrmTable<Order> {
         set(userId, _usrId);
     }
 
-    public String getDescr() {
-        return get(descr);
+    public String getNote() {
+        return get(note);
     }
 
-    public void setDescr(String _descr) {
-        set(descr, _descr);
+    public void setNote(String _note) {
+        set(note, _note);
     }
 
     public Date getDate() {

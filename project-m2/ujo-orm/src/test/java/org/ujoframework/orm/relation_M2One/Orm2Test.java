@@ -127,15 +127,15 @@ public class Orm2Test extends TestCase {
 
         Order order = new Order();
         order.setDate(new Date());
-        order.setDescr("John's order");
+        order.setNote("John's order");
 
         Item item1 = new Item();
         item1.setOrder(order);
-        item1.setDescr("Yellow table");
+        item1.setNote("Yellow table");
 
         Item item2 = new Item();
         item2.setOrder(order);
-        item2.setDescr("Green window");
+        item2.setNote("Green window");
 
         System.out.println("order: " + order);
         System.out.println("item1: " + item1);
@@ -157,7 +157,7 @@ public class Orm2Test extends TestCase {
 
         Criterion<Order> cn1, cn2, cn3, crit;
 
-        cn1 = Criterion.where(Order.descr, "John's order");
+        cn1 = Criterion.where(Order.note, "John's order");
         cn2 = Criterion.where(Order.created, Operator.LE, new Date());
         cn3 = Criterion.where(Order.state, Order.State.ACTIVE);
         crit = cn1.and(cn2).and(cn3);
@@ -165,16 +165,16 @@ public class Orm2Test extends TestCase {
         Query<Order> orders = session.createQuery(crit);
 
         for (Order order : orders) {
-            String descr = order.getDescr();
-            System.out.println("ORDER ROW: " + order + " // descr: " + descr);
+            String note = order.getNote();
+            System.out.println("ORDER ROW: " + order + " // note: " + note);
         }
     }
 
-    /** Sort orders by two properties: descr and created descending. */
+    /** Sort orders by two properties: note and created descending. */
     public void useSortOrders() {
 
         Query<Order> orders = session.createQuery(Order.class);
-        orders.orderBy( Order.descr
+        orders.orderBy( Order.note
                       , Order.created.descending() );
 
         System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
@@ -212,7 +212,7 @@ public class Orm2Test extends TestCase {
     /** Select all items with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
 
-        Criterion<Item> crit = Criterion.where(Item.descr, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.note, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> items = session.createQuery(crit).orderBy(Item.id.descending());
 
         for (Item item : items) {
@@ -282,7 +282,7 @@ public class Orm2Test extends TestCase {
 
     /** How to count items ? */
     public void useSelectCount() {
-        Criterion<Item> crit = Criterion.where(Item.descr, Operator.CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.note, Operator.CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(crit);
 
         long count = query.getCount();
@@ -303,7 +303,7 @@ public class Orm2Test extends TestCase {
 
     /** How to skip items? */
     public void useIteratorSkip() {
-        Criterion<Item> crit = Criterion.where(Item.descr, Operator.NOT_EQ, "XXXXX");
+        Criterion<Item> crit = Criterion.where(Item.note, Operator.NOT_EQ, "XXXXX");
         UjoIterator<Item> items = session.createQuery(crit).iterator();
         
         boolean skip = items.skip(1);
@@ -325,13 +325,13 @@ public class Orm2Test extends TestCase {
 
         UjoIterator<Order> orders = db.get(Database.ORDERS);
         for (Order order : orders) {
-            String descr = order.getDescr();
-            System.out.println("Order: " + order + " // descr: " + descr);
+            String note = order.getNote();
+            System.out.println("Order: " + order + " // note: " + note);
 
             for (Item item : order.getItems()) {
                 Long itemId = item.getId();
-                String itemDescr = item.getDescr();
-                System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
+                String itemNote = item.getNote();
+                System.out.println(" Item id: " + itemId + " note: " + itemNote);
             }
         }
     }
@@ -421,12 +421,12 @@ public class Orm2Test extends TestCase {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Print some meta-data of the property Order.descr. */
+    /** Print some meta-data of the property Order.note. */
     public void useMetadata() {
-        MetaColumn c = (MetaColumn) handler.findColumnModel(Order.descr);
+        MetaColumn c = (MetaColumn) handler.findColumnModel(Order.note);
 
         StringBuilder msg = new StringBuilder()
-            .append("** METADATA OF COLUMN: " + Order.descr)
+            .append("** METADATA OF COLUMN: " + Order.note)
             .append("\n\t Length : " + c.getMaxLength())
             .append("\n\t NotNull: " + c.isMandatory())
             .append("\n\t PrimKey: " + c.isPrimaryKey())
