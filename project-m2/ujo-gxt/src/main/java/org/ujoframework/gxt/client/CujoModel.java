@@ -49,7 +49,7 @@ public class CujoModel extends ColumnModel {
     }
 
     public CujoModel(CujoPropertyList propertyList, CujoProperty... properties) {
-        super(createPropertyList(propertyList));
+        super(createPropertyList(properties));
         this.propertyList = propertyList;
 
         for (ColumnConfig config : super.getColumns()) {
@@ -58,11 +58,11 @@ public class CujoModel extends ColumnModel {
         }
     }
 
-    private static List<ColumnConfig> createPropertyList(CujoPropertyList propertyList) {
+    private static List<ColumnConfig> createPropertyList(CujoProperty ... propertyArray) {
         List<ColumnConfig> result = new ArrayList<ColumnConfig>();
         PropertyMetadataProvider metadataProvider = ClientClassConfig.getInstance().getPropertyMedatata();
 
-        for (CujoProperty p : propertyList.getProperties()) {
+        for (CujoProperty p : propertyArray) {
             PropertyMetadata metadata = metadataProvider != null
                 ? metadataProvider.getAlways(p)
                 : new PropertyMetadata(p);
