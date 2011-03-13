@@ -24,7 +24,6 @@ Released   : 20080129
     <script type="text/javascript" src="SyntaxHighlighter/Scripts/shCore.js"></script>
     <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushJava.js"></script>
     <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushXml.js"></script>
-    <script type="text/javascript" src="SyntaxHighlighter/Scripts/shBrushTxt.js"></script>
 
     <script type="text/javascript">
     window.onload = function () {
@@ -139,11 +138,11 @@ Released   : 20080129
 <pre name="code" class="java">
   Order order = new Order();
   order.setDate(new Date());
-  order.setDescr("My order");
+  order.setNote("My order");
 
   Item item = new Item();
   item.setOrder(order);
-  item.setDescr("Yellow table");
+  item.setNote("Yellow table");
 
   Session session = ormHandler.createSession();
   session.save(order);
@@ -160,7 +159,7 @@ The next example selects data from database:
   Criterion&lt;Item&gt; crn1, crn2, criterion;
 
   crn1 = Criterion.where( Item.ID, GE, 1L );
-  crn2 = Criterion.where( Item.ORDER.add(Order.DESCR)
+  crn2 = Criterion.where( Item.ORDER.add(Order.NOTE)
                         , "My order" ); // Equals to
   criterion = crn1.and(crn2);
 
@@ -196,8 +195,8 @@ The next example selects data from database:
       ;
   System.out.println(msg);
 </pre>
-Prints the text report on a console output:
-<pre name="code" class="txt">
+Prints the text report on the console output:
+<pre style="border: 1px #CCCCCC solid; margin-left: 40px;">
  DB name: db1.ord_order.DESCR
  Comment: Description of the Order
  Length : 128
