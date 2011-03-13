@@ -18,6 +18,7 @@ package org.ujoframework.orm;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.ujoframework.UjoProperty;
@@ -306,13 +307,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #addOrderBy(org.ujoframework.UjoProperty)
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> orderBy(List<UjoProperty> orderItems) {
+    public Query<UJO> orderBy(Collection<UjoProperty> orderItems) {
         clearDecoder();
         if (orderItems==null) {
             return orderByMany(); // empty sorting
         } else {
             this.orderBy.clear();
-            this.orderBy.addAll( (List)orderItems );
+            this.orderBy.addAll( (Collection)orderItems );
         }
         return this;
     }
