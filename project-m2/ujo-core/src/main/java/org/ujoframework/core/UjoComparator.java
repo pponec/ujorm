@@ -47,6 +47,8 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
     }
 
     /** Creates a new instance of UjoComparator
+     * @param locale Locale for a String coparation
+     * @param collatorStrength Cllator Strength for String comparations
      * @param properties sorting criteria are ordered by importance to down.
      *        A direction of the sorting is used by a method UjoProperty#isAscending().
      * @see UjoProperty#isAscending()
@@ -85,7 +87,6 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
         this.collator = collator;
     }
 
-    
     /**
      * Compare two Ujo objects.
      *
@@ -147,9 +148,27 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
     
     // ------------ STATIC ------------
     
-    /** Create new comparator */
+    /** Creates a new instance of UjoComparator. The String are compared as Collator.IDENTICAL by English locale by default.
+     * @param properties sorting criteria are ordered by importance to down.
+     *        A direction of the sorting is used by a method UjoProperty#isAscending().
+     * @see UjoProperty#isAscending()
+     * @see UjoProperty#descending()
+     */
     public static UjoComparator newInstance(UjoProperty ... properties) {
         return new UjoComparator(properties);
     }
+
+    /** Creates a new instance of UjoComparator
+     * @param locale Locale for a String coparation
+     * @param collatorStrength Cllator Strength for String comparations
+     * @param properties sorting criteria are ordered by importance to down.
+     *        A direction of the sorting is used by a method UjoProperty#isAscending().
+     * @see UjoProperty#isAscending()
+     * @see UjoProperty#descending()
+     */
+    public static UjoComparator newInstance(Locale locale, int collatorStrength, final UjoProperty ... properties) {
+        return new UjoComparator(properties);
+    }
+
     
 }
