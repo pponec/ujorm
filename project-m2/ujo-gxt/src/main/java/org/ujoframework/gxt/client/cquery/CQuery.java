@@ -146,7 +146,8 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         if (orderItems == null) {
             return orderByMany(); // empty sorting
         } else {
-            this.orderBy = (List) orderItems;
+            this.orderBy.clear();
+            this.orderBy.addAll((List) orderItems);
         }
         prepareSerialization();
         return this;
