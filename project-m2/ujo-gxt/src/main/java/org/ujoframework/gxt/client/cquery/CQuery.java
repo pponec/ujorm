@@ -218,6 +218,12 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         return new CQuery<T>(type);
     }
 
+    /** Factory creates a clienta query with required properties */
+    public static <T extends Cujo> CQuery<T> newInstance(Class<? extends T> type, CujoProperty<T,?> ... properties) {
+        return new CQuery<T>(type, new CujoModel(properties));
+    }
+
+    /** Factory creates a clienta query with a required ColumnModel */
     public static <T extends Cujo> CQuery<T> newInstance(Class<? extends T> type, ColumnModel columnModel) {
         return new CQuery<T>(type, columnModel);
     }
