@@ -15,6 +15,7 @@ import org.ujoframework.gxt.client.CujoModel;
 import org.ujoframework.gxt.client.CujoProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -142,12 +143,12 @@ public class CQuery<UJO extends Cujo> implements Serializable {
      * @see #addOrderBy(org.ujoframework.CujoProperty)
      */
     @SuppressWarnings("unchecked")
-    public CQuery<UJO> orderBy(List<CujoProperty> orderItems) {
+    public CQuery<UJO> orderBy(Collection<CujoProperty> orderItems) {
         if (orderItems == null) {
             return orderByMany(); // empty sorting
         } else {
             this.orderBy.clear();
-            this.orderBy.addAll((List) orderItems);
+            this.orderBy.addAll((Collection) orderItems);
         }
         prepareSerialization();
         return this;
