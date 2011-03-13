@@ -20,6 +20,7 @@ import com.extjs.gxt.ui.client.widget.grid.GridCellRenderer;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,20 +42,25 @@ public class CujoModel extends ColumnModel {
         ;
 
 
-    private final Map<CujoProperty, ColumnConfig> map = new HashMap<CujoProperty, ColumnConfig>();
-    private final CujoPropertyList propertyList;
+    private final Map<String, ColumnConfig> map = new HashMap<String, ColumnConfig>();
+    private final List<CujoProperty> propertyList;
 
     public CujoModel(CujoPropertyList propertyList) {
-        this(propertyList, propertyList.getProperties());
+        this(propertyList.getProperties());
     }
 
-    public CujoModel(CujoPropertyList propertyList, CujoProperty... properties) {
+    public CujoModel(CujoProperty... properties) {
         super(createPropertyList(properties));
-        this.propertyList = propertyList;
+        this.propertyList = Arrays.asList(properties);
 
-        for (ColumnConfig config : super.getColumns()) {
-            CujoProperty property = propertyList.findProperty(config.getId());
-            map.put(property, config);
+        for (CujoProperty property : properties) {
+            String propertyName = property.getName();
+            for (ColumnConfig config : super.getColumns()) {
+                if (config.getId().equals(propertyName)) {
+                    map.put(property.getName(), config);
+                    break;
+                }
+            }
         }
     }
 
@@ -108,11 +114,11 @@ public class CujoModel extends ColumnModel {
 
     /** Returns config by property  */
     public ColumnConfig getConfig(CujoProperty property) {
-        return map.get(property);
+        return map.get(property.getName());
     }
 
     /** Returns the UjoPropertylist */
-    public CujoPropertyList getPropertyList() {
+    public List<CujoProperty> getPropertyList() {
         return propertyList;
     }
 }

@@ -42,6 +42,18 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
     , final boolean throwException
     ) throws IllegalArgumentException;
 
+    /**
+     * Find direct or indirect property by property name from parameter.
+     *
+     * @param name A property name.
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @return .
+     */
+    public UjoProperty findIndirect
+    ( final String name
+    , final boolean throwException
+    ) throws IllegalArgumentException;
+
     
     /** Find UjoProperty by name */
     public UjoProperty find

@@ -139,6 +139,18 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
         }
     }
 
+    /**
+     * Find direct or indirect property by property name from parameter.
+     *
+     * @param name A property name by sample "user.address.street".
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @return .
+     */
+    public UjoProperty findIndirect(String name, boolean throwException) throws IllegalArgumentException {
+        final UjoProperty result = UjoManager.getInstance().findIndirectProperty(type, name, throwException);
+        return result;
+    }
+
     /** Returns a copy of internal array */
     @Override
     public UjoProperty[] toArray() {

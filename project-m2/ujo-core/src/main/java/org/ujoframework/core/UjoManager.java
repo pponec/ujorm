@@ -416,6 +416,12 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Find <strong>indirect</strong> property by the name */
     @SuppressWarnings("unchecked")
     public UjoProperty findIndirectProperty(Class ujoType, String names) {
+        return findIndirectProperty(ujoType, names, true);
+    }
+
+    /** Find <strong>indirect</strong> property by the name. Empty result can trhow NULL value if parameter throwException==false. */
+    @SuppressWarnings("unchecked")
+    public UjoProperty findIndirectProperty(Class ujoType, String names, boolean throwException) {
 
         int j, i = 0;
         List<UjoProperty> props = new ArrayList<UjoProperty>(4);
@@ -430,7 +436,11 @@ public class UjoManager implements Comparator<UjoProperty> {
         }
         switch (props.size()) {
             case 0:
-                throw new IllegalStateException("Invalid property name: " + names);
+                if (throwException) {
+                   throw new IllegalStateException("Invalid property name: " + names);
+                } else {
+                    return null;
+                }
             case 1:
                 return props.get(0);
             default:

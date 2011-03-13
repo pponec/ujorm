@@ -306,7 +306,7 @@ public class CQuery<UJO extends Cujo> implements Serializable {
 
         //change also in cujo model ?
 
-        CujoProperty[] cpl = getCujoModel().getPropertyList().getProperties();
+        CujoProperty[] cpl = getCujoModel().getPropertyList().toArray(new CujoProperty[0]);
         CujoProperty tmp = cpl[actualPIndex];
         cpl[actualPIndex] = cpl[columnOrderSize];
         cpl[columnOrderSize] = tmp;
