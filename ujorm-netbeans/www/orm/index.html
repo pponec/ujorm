@@ -176,14 +176,14 @@ The next example selects data from database:
  SELECT * FROM item
  JOIN order ON order.id = item.id_order
  WHERE item.id >=1
- AND order.descr = 'My order'
+ AND order.note = 'My order'
  ;
 </pre>
     where both parameters are passed by a 'question mark' notation for a better security.
     And how to get meta-data for a 'description' property of the Order?
 <pre name="code" class="java">
   MetaColumn col = (MetaColumn)
-       ormHandler.findColumnModel( Order.DESCR );
+       ormHandler.findColumnModel( Order.NOTE );
 
   String msg
       = "DB name: " + col.getFullName()  + '\n'
@@ -197,7 +197,7 @@ The next example selects data from database:
 </pre>
 Prints the text report on the console output:
 <pre style="border: 1px #CCCCCC solid; margin-left: 40px;">
- DB name: db1.ord_order.DESCR
+ DB name: db1.ord_order.NOTE
  Comment: Description of the Order
  Length : 128
  NotNull: true
