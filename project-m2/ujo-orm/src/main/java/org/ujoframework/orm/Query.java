@@ -251,6 +251,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return orderBy;
     }
 
+    /** Get the order item array. The method returns a not null result always. */
+    final public UjoProperty<UJO,?>[] getOrderAsArray() {
+        return orderBy.toArray(new UjoProperty[orderBy.size()]);
+    }
+
     /** Set an order of the rows by a SQL ORDER BY phrase.
      * @deprecated Use the {@link #orderByMany(org.ujoframework.UjoProperty[])} method instead of
      * @see #orderByMany(org.ujoframework.UjoProperty[])
@@ -306,7 +311,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (orderItems==null) {
             return orderByMany(); // empty sorting
         } else {
-            this.orderBy = (List) orderItems;
+            this.orderBy.clear();
+            this.orderBy.addAll( (List)orderItems );
         }
         return this;
     }
