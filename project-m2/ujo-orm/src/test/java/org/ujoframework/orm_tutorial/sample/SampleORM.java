@@ -40,7 +40,15 @@ import static org.ujoframework.criterion.Operator.*;
  *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE 
  * and show how to use a meta-model.
  *
+ * Entities: <pre>
+ *  - Order [id, note, created, ...]
+ *  - Item [id, order, note, ...]
+ * </pre>
+
  * Copyright 2010, Pavel Ponec
+ * 
+ * @see Order
+ * @see Item
  */
 public class SampleORM {
 
