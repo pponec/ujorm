@@ -60,7 +60,7 @@ public class Order extends OrmTable<Order> {
     public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
     /** Description of the Order */
     @Comment("Description of the Order")
-    @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true)
+    @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
     public static final UjoProperty<Order, String> note = newProperty(String.class);
     /** Date of creation */
     public static final UjoProperty<Order, Date> created = newProperty(Date.class);
