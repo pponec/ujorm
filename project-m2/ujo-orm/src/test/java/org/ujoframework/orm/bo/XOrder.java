@@ -15,6 +15,7 @@
  */
 package org.ujoframework.orm.bo;
 
+import java.awt.Color;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Date;
@@ -51,6 +52,8 @@ public class XOrder extends OrmTable<XOrder> {
     /** Description of the Order */
     @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true, index="idx_description") //
     public static final UjoProperty<XOrder, String> DESCR = newProperty(String.class);
+    /** Favorite Color */
+    public static final UjoProperty<XOrder, Color> COLOR = newProperty(Color.WHITE);
     /** Date of creation */
     public static final UjoProperty<XOrder, Date> CREATED = newProperty(Date.class);
     /** Text file */
@@ -91,12 +94,20 @@ public class XOrder extends OrmTable<XOrder> {
         set(DESCR, note);
     }
 
-    public Date getDate() {
+    public Date getCreated() {
         return get(CREATED);
     }
 
-    public void setDate(Date date) {
+    public void setCreated(Date date) {
         set(CREATED, date);
+    }
+
+    public Color getColor() {
+        return get(COLOR);
+    }
+
+    public void setColor(Color color) {
+        set(COLOR, color);
     }
 
     public State getState() {

@@ -55,12 +55,12 @@ public class SerializatonTest extends TestCase {
         System.out.println("testOrmTableSerialization");
         XOrder expResult = new XOrder();
         expResult.setId(33L);
-        expResult.setDate(new Date());
+        expResult.setCreated(new Date());
         expResult.setState(XOrder.State.DELETED);
         //
         XOrder result = serialize(expResult);
         assertEquals(expResult.getId(), result.getId());
-        assertEquals(expResult.getDate(), result.getDate());
+        assertEquals(expResult.getCreated(), result.getCreated());
         assertSame(expResult.getState(), result.getState());
         assertSame(expResult.getNote(), result.getNote());
     }

@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.metaModel;
 
+import java.awt.Color;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -196,7 +197,7 @@ final public class MetaDatabase extends AbstractMetaModel {
         else if (String.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
-        else if (Integer.class==type) {
+        else if (Integer.class==type || Color.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.INT);
         }
         else if (Short.class==type) {

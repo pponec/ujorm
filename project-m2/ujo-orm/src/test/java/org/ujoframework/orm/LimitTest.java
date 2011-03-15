@@ -15,6 +15,7 @@
  */
 package org.ujoframework.orm;
 
+import java.awt.Color;
 import java.util.Date;
 import junit.framework.TestCase;
 import org.ujoframework.criterion.*;
@@ -81,6 +82,7 @@ public class LimitTest extends TestCase {
         XOrder order = new XOrder();
         XOrder.CREATED.setValue(order, new Date());
         XOrder.DESCR.setValue(order, name);
+        XOrder.COLOR.setValue(order, Color.BLUE);
 
         XItem item1 = new XItem();
         XItem.NOTE.setValue(item1, name + "-1");
@@ -134,6 +136,7 @@ public class LimitTest extends TestCase {
         myCount = 0L;
         for (XOrder order : query) {
             order.getId();
+            order.getColor();
             ++myCount;
         }
         assertEquals(expected, myCount);
