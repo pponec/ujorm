@@ -7,6 +7,7 @@
  */
 package org.ujoframework.gxt.server;
 
+import java.awt.Color;
 import java.util.Date;
 import org.ujoframework.gxt.client.CEnum;
 import org.ujoframework.gxt.client.Cujo;
@@ -22,9 +23,11 @@ import java.util.Set;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
+import org.ujoframework.core.UjoCoder;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.ValueExportable;
+import org.ujoframework.gxt.client.tools.ColorGxt;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.Session;
@@ -35,7 +38,7 @@ import org.ujoframework.orm.metaModel.MetaRelation2Many;
  * Translate an iterator of Ujo to the ListStore&lt;CUJO&gt;.
  * @author Pavel Ponec
  */
-public class UjoTranslator<CUJO extends Cujo> {
+public final class UjoTranslator<CUJO extends Cujo> {
 
     private IServerClassConfig serverClassConfig;
     private List<PropContainer> properties;
@@ -44,6 +47,7 @@ public class UjoTranslator<CUJO extends Cujo> {
     private Map<UjoProperty, UjoTranslator> relationMap;
     private List<Ujo> ujos = null;
     private Session dummySession;
+    private UjoCoder ujoCoder;
 
     public UjoTranslator(CUJO clientObject, int relations, IServerClassConfig serverClassConfig) {
         this(clientObject.readProperties(),
@@ -125,6 +129,16 @@ public class UjoTranslator<CUJO extends Cujo> {
                                 break;
                             }
                         }
+                        if (Color.class.isAssignableFrom(p1.getType())) {
+                            if (p2.isTypeOf(String.class)) {
+                                properties.add(new PropContainer(p1, p2, pk));
+                                break;
+                            }
+                            if (p2.isTypeOf(ColorGxt.class)) {
+                                properties.add(new PropContainer(p1, p2, pk));
+                                break;
+                            }
+                        }
                         if (ValueExportable.class.isAssignableFrom(p1.getType())) {
                             if (p2.isTypeOf(String.class)) {
                                 properties.add(new PropContainer(p1, p2, pk));
@@ -191,7 +205,6 @@ public class UjoTranslator<CUJO extends Cujo> {
             }
             Object value = pc.p1.getValue(ujo);
 
-
             if (value == null) {
                 // No conversion
             } else if (pc.p1.isTypeOf(Enum.class)) {
@@ -213,9 +226,15 @@ public class UjoTranslator<CUJO extends Cujo> {
                 ujos.add((Ujo) value);
                 UjoTranslator ut = relationMap.get(pc.p1);
                 value = ut.translate(UjoIterator.getInstance(ujos)).list().get(0);
+            } else if (pc.p1.isTypeOf(Color.class)) {
+                Color colorValue = (Color) value;
+                if (pc.p2.isTypeOf(ColorGxt.class)) {
+                    value = new ColorGxt(getUjoCoder().encodeValue(colorValue, false));
+                } else {
+                    value = getUjoCoder().encodeValue(colorValue, false);
+                }
             }
             cujo.set(pc.p1.getName(), value);
-
         }
 
         copyToClient(ujo, cujo);
@@ -253,7 +272,7 @@ public class UjoTranslator<CUJO extends Cujo> {
             }
             else if (pc.p1.isTypeOf(java.sql.Date.class)) {
                 // A workaround for the feature: http://code.google.com/p/google-web-toolkit/issues/detail?id=87 :
-                if (value ==null || value instanceof java.sql.Date) {
+                if (value instanceof java.sql.Date) {
                     // OK
                 } else if (value instanceof Date) {
                     value = new java.sql.Date(((Date)value).getTime());
@@ -276,6 +295,10 @@ public class UjoTranslator<CUJO extends Cujo> {
                 } catch (Exception e) {
                     throw new IllegalStateException("Can't create instance of the " + pc.p1.getType() + " for value " + value);
                 }
+            }
+            else if (pc.p1.isTypeOf(Color.class)) {
+                // Copy Color:
+                value = getUjoCoder().decodeValue(pc.p1, value.toString(), null);
             }
             else if (pc.p1.isTypeOf(OrmUjo.class)) {
                 // Copy a foreign key:
@@ -410,5 +433,13 @@ public class UjoTranslator<CUJO extends Cujo> {
             this.p2 = cProperty;
             this.pk = pk;
         }
+    }
+
+    /** Provide the UjoCoder instance */
+    protected UjoCoder getUjoCoder() {
+        if (ujoCoder==null) {
+            ujoCoder = UjoManager.getInstance().getCoder();
+        }
+        return ujoCoder;
     }
 }
