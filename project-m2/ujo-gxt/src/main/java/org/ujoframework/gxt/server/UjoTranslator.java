@@ -191,19 +191,20 @@ public class UjoTranslator<CUJO extends Cujo> {
             }
             Object value = pc.p1.getValue(ujo);
 
-            if (value != null && pc.p1.isTypeOf(Enum.class)) {
+
+            if (value == null) {
+                // No conversion
+            } else if (pc.p1.isTypeOf(Enum.class)) {
                 Enum enumValue = (Enum) value;
                 if (pc.p2.isTypeOf(CEnum.class)) {
                     value = new CEnum(enumValue.ordinal(), enumValue.name());
                 } else {
                     value = enumValue.name();
                 }
-            }
-            else if (value != null && pc.p1.isTypeOf(ValueExportable.class)) {
+            } else if (pc.p1.isTypeOf(ValueExportable.class)) {
                 final ValueExportable exportableValue = (ValueExportable) value;
                 value = exportableValue.exportToString();
-            }
-            else if (value != null && isRelations() && pc.p1.isTypeOf(Ujo.class)) {
+            } else if (isRelations() && pc.p1.isTypeOf(Ujo.class)) {
                 if (ujos == null) {
                     ujos = new ArrayList<Ujo>(1);
                 } else {
