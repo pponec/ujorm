@@ -13,6 +13,7 @@ import java.util.List;
 import org.ujoframework.gxt.client.InitItems;
 import org.ujoframework.gxt.client.PropertyMetadata;
 import org.ujoframework.gxt.client.cquery.CQuery;
+import org.ujoframework.gxt.client.tools.ClientSerializableEnvelope;
 
 /**
  *
@@ -23,5 +24,7 @@ public interface MetaModelController {
     public void getMetaModel(List<CQuery> properties, AsyncCallback<List<PropertyMetadata>> callback);
 
     public void getEnums(AsyncCallback<InitItems> callback);
+
+    public void getClientSerializableEnvelope(ClientSerializableEnvelope o, AsyncCallback<ClientSerializableEnvelope> envelop);
     
 }
