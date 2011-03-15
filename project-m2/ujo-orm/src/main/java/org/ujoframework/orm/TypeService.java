@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm;
 
+import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
@@ -57,6 +58,7 @@ public class TypeService {
     public static final char EXPORTABLE  = 19;
     public static final char EXPORT_ENUM = 20;
     public static final char ENUM = 21;
+    public static final char COLOR = 22;
 
     /** Constructor argument type */
     private static final Class[] ARGS = new Class[] {String.class};
@@ -88,6 +90,7 @@ public class TypeService {
         if (type==java.sql.Blob.class) return BLOB;
         if (type==java.sql.Clob.class) return CLOB;
         if (type.isEnum()) return ENUM;
+        if (type==Color.class) return COLOR;
 
         if (column.isForeignKey()) {
             List<MetaColumn> columns = column.getForeignColumns();
@@ -127,6 +130,10 @@ public class TypeService {
                             return i==0 && rs.wasNull()
                             ? null
                             : mColumn.getType().getEnumConstants()[i] ;
+            case COLOR    : int c = rs.getInt(column);
+                            return c==0 && rs.wasNull()
+                            ? null
+                            : new Color(c);
             case EXPORTABLE : return getValue(rs.getString(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
             default       : return rs.getObject(column);
@@ -162,6 +169,10 @@ public class TypeService {
                             return i==0 && rs.wasNull()
                             ? null
                             : mColumn.getType().getEnumConstants()[i] ;
+            case COLOR    : int c = rs.getInt(column);
+                            return c==0 && rs.wasNull()
+                            ? null
+                            : new Color(c);
             case EXPORTABLE : return getValue(rs.getString(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
             default       : return rs.getObject(column);
@@ -197,6 +208,10 @@ public class TypeService {
                             return i==0 && rs.wasNull()
                             ? null
                             : mColumn.getType().getEnumConstants()[i] ;
+            case COLOR    : int c = rs.getInt(column);
+                            return c==0 && rs.wasNull()
+                            ? null
+                            : new Color(c);
             case EXPORTABLE : return getValue(rs.getString(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
             default       : return rs.getObject(column);
@@ -238,7 +253,8 @@ public class TypeService {
             case BLOB     : rs.setBlob(i, (Blob)value); break;
             case CLOB     : rs.setClob(i, (Clob)value); break;
             case ENUM     : rs.setInt(i, ((Enum)value).ordinal()); break;
-            case EXPORTABLE :
+            case COLOR    : rs.setInt(i, ((Color)value).getRGB()); break;
+            case EXPORTABLE:
             case EXPORT_ENUM: rs.setString(i, value!=null ? ((ValueExportable)value).exportToString() : null ); break;
             default       : rs.setObject(i, value);  break;
         }
