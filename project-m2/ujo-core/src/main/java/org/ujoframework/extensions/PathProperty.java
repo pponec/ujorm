@@ -96,13 +96,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      */
     @SuppressWarnings("unchecked")
     @Override
-    public VALUE getValue(UJO ujo) {
-        Ujo u = getSemifinalValue(ujo);
+    public VALUE getValue(final UJO ujo) {
+        final Ujo u = getSemifinalValue(ujo);
         return  u!=null ? getLastProperty().of(u) : null ;
     }
 
     @Override
-    public void setValue(UJO ujo, VALUE value) {
+    public void setValue(final UJO ujo, final VALUE value) {
         final Ujo u = getSemifinalValue(ujo);
         getLastProperty().setValue(u, value);
     }
