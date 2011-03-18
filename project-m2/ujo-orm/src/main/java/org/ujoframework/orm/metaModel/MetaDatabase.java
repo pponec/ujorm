@@ -403,6 +403,7 @@ final public class MetaDatabase extends AbstractMetaModel {
         List<MetaIndex> indexes = new ArrayList<MetaIndex>();
         boolean createSequenceTable = false;
         int tableTotalCount = getTableTotalCount();
+        boolean anyChange = false;
 
         try {
             stat = conn.createStatement();
@@ -512,6 +513,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                     sql = getDialect().printTable(table, out);
                     executeUpdate(sql, stat);
                     foreignColumns.addAll(table.getForeignColumns());
+                    anyChange = true;
                 }
             }
 
@@ -520,6 +522,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 out.setLength(0);
                 sql = getDialect().printAlterTable(column, out);
                 executeUpdate(sql, stat);
+                anyChange = true;
 
                 // Pick up the foreignColumns:
                 if (column.isForeignKey()) {
@@ -532,6 +535,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                 out.setLength(0);
                 sql = getDialect().printIndex(index, out);
                 executeUpdate(sql, stat);
+                anyChange = true;
             }
 
             // 6. Create Foreign Keys:
@@ -541,6 +545,7 @@ final public class MetaDatabase extends AbstractMetaModel {
                     MetaTable table = MetaColumn.TABLE.of(column);
                     sql = getDialect().printForeignKey(column, table, out);
                     executeUpdate(sql, stat);
+                    anyChange = true;
                 }
             }
 
@@ -558,8 +563,10 @@ final public class MetaDatabase extends AbstractMetaModel {
                     cTables = tables;
                     break;
                 case ALWAYS:
-                case ON_ANY_CHANGE:
                     cTables = TABLES.getList(this);
+                    break;
+                case ON_ANY_CHANGE:
+                    cTables = anyChange ? TABLES.getList(this) : (List)Collections.emptyList();
                     break;
                 case NEVER:
                     cTables = Collections.emptyList();
