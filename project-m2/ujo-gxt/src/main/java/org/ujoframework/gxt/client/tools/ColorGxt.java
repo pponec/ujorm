@@ -42,10 +42,10 @@ final public class ColorGxt implements Serializable, Comparable<ColorGxt> {
         int b = Integer.parseInt(color.substring(4,6), 16);
 
         // Alpha 50% with the WHITE color
-        int max = 256, col=0;
-        col = col * max + ((r+max)>>1);
-        col = col * max + ((g+max)>>1);
-        col = col * max + ((b+max)>>1);
+        int max = 256, col = 0;
+        col = col * max + ((r + max) >> 1);
+        col = col * max + ((g + max) >> 1);
+        col = col * max + ((b + max) >> 1);
 
         String result = Integer.toHexString(col & 0xffffff | 0x1000000).substring(1).toUpperCase();
         return result;
