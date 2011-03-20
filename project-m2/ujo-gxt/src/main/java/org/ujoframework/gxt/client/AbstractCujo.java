@@ -42,6 +42,11 @@ abstract public class AbstractCujo extends BaseModelData implements Cujo, Serial
     @Override
     @SuppressWarnings("unchecked")
     public String toString() {
+         return toStringRaw();
+    }
+
+    /** Final toString method */
+    final public String toStringRaw() {
         StringBuilder result = new StringBuilder(128);
         int i=0;
         for (CujoProperty p : readProperties()) {
