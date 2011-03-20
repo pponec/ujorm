@@ -148,5 +148,15 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
         return result;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this.name.equals(obj.toString())
+            && this.type.equals(((CujoProperty)obj).getType())
+            ;
+    }
 
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
