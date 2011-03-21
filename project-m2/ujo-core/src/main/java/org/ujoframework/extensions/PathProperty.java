@@ -35,6 +35,7 @@ import org.ujoframework.UjoProperty;
 public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VALUE> {
 
     private final UjoProperty[] properties;
+    private String name;
 
     public PathProperty(List<UjoProperty> properties) {
         this(properties.toArray(new UjoProperty[properties.size()]));
@@ -61,18 +62,22 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
 
     /** Full property name */
-    public String getName() {
-        StringBuilder result = new StringBuilder(32);
-        for (UjoProperty p : properties) {
-            if (result.length() > 0) {
-                result.append('.');
+    final public String getName() {
+        if (name==null) {
+            StringBuilder result = new StringBuilder(32);
+            for (UjoProperty p : properties) {
+                if (result.length() > 0) {
+                    result.append('.');
+                }
+                result.append(p.getName());
             }
-            result.append(p.getName());
+            name = result.toString();
         }
-        return result.toString();
+        return name;
     }
 
     /** Property type */
+    @Override
     public Class<VALUE> getType() {
         return getLastProperty().getType();
     }
@@ -163,6 +168,25 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         && myValue.equals(value)
         ;
         return result;
+    }
+
+    /**
+     * Returns true, if the property value equals to a parameter value. The property value can be null.
+     *
+     * @param property A basic CujoProperty.
+     * @param value Null value is supported.
+     * @return Accordance
+     */
+    @Override
+    public boolean equals(Object property) {
+        final String t1 = this.getName();
+        final String t2 = property.toString();
+        return t1.equals(t2) && getType().equals(((UjoProperty)property).getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
     }
 
     /**

@@ -28,6 +28,7 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
 
     private final List<CujoProperty> properties;
     private final Boolean ascending;
+    private String name;
 
     public CPathProperty(Boolean ascending, List<CujoProperty> properties) {
         this.ascending = ascending;
@@ -63,19 +64,24 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     }
 
     /** Full property name */
+    @Override
     public String getName() {
-        StringBuilder result = new StringBuilder(32);
-        for (CujoProperty p : properties) {
-            if (result.length() > 0) {
-                result.append('.');
+        if (name == null) {
+            StringBuilder result = new StringBuilder(32);
+            for (CujoProperty p : properties) {
+                if (result.length() > 0) {
+                    result.append('.');
+                }
+                result.append(p.getName());
             }
-            result.append(p.getName());
+            name = result.toString();
         }
-        return result.toString();
+        return name;
     }
 
     /** Property type */
     @SuppressWarnings("unchecked")
+    @Override
     public Class<VALUE> getType() {
         return getLastProperty().getType();
     }
@@ -159,6 +165,25 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
 
         final boolean result = myValue != null && value != null && myValue.equals(value);
         return result;
+    }
+
+    /**
+     * Returns true, if the property value equals to a parameter value. The property value can be null.
+     *
+     * @param property A basic CujoProperty.
+     * @param value Null value is supported.
+     * @return Accordance
+     */
+    @Override
+    public boolean equals(Object property) {
+        final String t1 = this.getName();
+        final String t2 = property.toString();
+        return t1.equals(t2) && getType().equals(((CujoProperty)property).getType());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
     }
 
     @Override
