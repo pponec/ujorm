@@ -87,7 +87,7 @@ final public class MetaPKey extends AbstractMetaModel {
                 default: return false;
             }
         } else {
-            String msg = "Table " + bo + " must have defined one primary key type of Long, Integer, Short, Byte, BigInteger or String  only for an auto-increment support";
+            String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
             throw new IllegalArgumentException(msg);
         }
     }
