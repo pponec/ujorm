@@ -83,10 +83,11 @@ final public class MetaPKey extends AbstractMetaModel {
                 case TypeService.SHORT   : bo.writeValue(property, (short) value); return true;
                 case TypeService.BYTE    : bo.writeValue(property, (byte ) value); return true;
                 case TypeService.BIG_INTE: bo.writeValue(property, BigInteger.valueOf(value)); return true;
+                case TypeService.STRING  : bo.writeValue(property, String.valueOf(value)); return true;
                 default: return false;
             }
         } else {
-            String msg = "Table " + bo + " must have defined only one primary key type of: Long, Integer, Short, Byte or BigInteger";
+            String msg = "Table " + bo + " must have defined one primary key type of Long, Integer, Short, Byte, BigInteger or String  only for an auto-increment support";
             throw new IllegalArgumentException(msg);
         }
     }
