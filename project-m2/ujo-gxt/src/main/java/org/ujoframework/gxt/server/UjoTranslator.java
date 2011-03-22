@@ -9,11 +9,6 @@ package org.ujoframework.gxt.server;
 
 import java.awt.Color;
 import java.util.Date;
-import org.ujoframework.gxt.client.CEnum;
-import org.ujoframework.gxt.client.Cujo;
-import org.ujoframework.gxt.client.CujoProperty;
-import org.ujoframework.gxt.client.CujoPropertyList;
-import org.ujoframework.gxt.client.cquery.CQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +22,11 @@ import org.ujoframework.core.UjoCoder;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.ValueExportable;
+import org.ujoframework.gxt.client.CEnum;
+import org.ujoframework.gxt.client.Cujo;
+import org.ujoframework.gxt.client.CujoProperty;
+import org.ujoframework.gxt.client.CujoPropertyList;
+import org.ujoframework.gxt.client.cquery.CQuery;
 import org.ujoframework.gxt.client.tools.ColorGxt;
 import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
@@ -57,25 +57,39 @@ public final class UjoTranslator<CUJO extends Cujo> {
                 serverClassConfig);
     }
 
+    /**
+     * Create new Translator
+     * @throws RuntimeException Any erorr due create new instance.
+     */
     public UjoTranslator(Class<CUJO> clientType,
             Class<Ujo> serverType,
             int relations,
             IServerClassConfig serverClassConfig)
-            throws Exception {
-        this(clientType.newInstance().readProperties(),
-                UjoManager.getInstance().readProperties(serverType),
-                relations,
-                null,
-                serverClassConfig);
+            throws RuntimeException {
+        this( createInstance(clientType).readProperties()
+            , UjoManager.getInstance().readProperties(serverType)
+            , relations
+            , null
+            , serverClassConfig
+            );
+    }
+
+    /** Create new instance. */
+    private static <T extends Cujo> T createInstance(Class clientType) throws IllegalStateException {
+        try {
+            return (T) clientType.newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't create instance for " + clientType, e);
+        }
     }
 
     /***
      * Create instance with a first level of relations request.
      */
     @SuppressWarnings("unchecked")
-    public UjoTranslator(CujoPropertyList cujoPropertyList,
-            UjoPropertyList ujoPropertyList,
-            IServerClassConfig serverClassConfig) {
+    public UjoTranslator(CujoPropertyList cujoPropertyList
+         , UjoPropertyList ujoPropertyList
+         , IServerClassConfig serverClassConfig) {
         this(cujoPropertyList, ujoPropertyList, 1, null, serverClassConfig);
     }
 
@@ -84,12 +98,12 @@ public final class UjoTranslator<CUJO extends Cujo> {
      * @param relations The depth o relations, the value 0 means no relation is converted.
      */
     @SuppressWarnings("unchecked")
-    UjoTranslator(CujoPropertyList cujoPropertyList,
-            UjoPropertyList ujoPropertyList,
-            int relations,
-            Set<UjoProperty> myPropertySet,
-            IServerClassConfig serverClassConfig)
-            throws NoSuchElementException {
+    UjoTranslator(CujoPropertyList cujoPropertyList
+          , UjoPropertyList ujoPropertyList
+          , int relations
+          , Set<UjoProperty> myPropertySet
+          , IServerClassConfig serverClassConfig)
+          throws RuntimeException {
 
         this.cujoPropertyList = cujoPropertyList;
         this.properties = new ArrayList<PropContainer>(ujoPropertyList.size());
