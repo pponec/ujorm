@@ -131,7 +131,7 @@ public class SampleORM {
     public void useInsert() {
 
         Order order = new Order();
-        order.setDate(new Date());
+        order.setCreated(new Date());
         order.setNote("John's order");
         //order.setBinaryFile("binary".getBytes());
 
@@ -182,7 +182,7 @@ public class SampleORM {
         final Order order = new Order();
         order.setId(100L);
         order.setNote("my order");
-        order.setDate(new Date());
+        order.setCreated(new Date());
 
         Criterion<Order> crnId = Criterion.where(Order.id, GT, 99L);
         Criterion<Order> crnNote = Criterion.where(Order.note, "another");
@@ -485,7 +485,7 @@ public class SampleORM {
     /** Using the database UPDATE */
     public void useUpdate() {
         Order order = session.load(Order.class, 1L);
-        order.setDate(new Date());
+        order.setCreated(new Date());
 
         session.update(order);
         session.commit();
@@ -495,7 +495,7 @@ public class SampleORM {
     public void useBatchUpdate() {
         Order order = new Order();
         order.writeSession(session); // Activate the Change column management
-        order.setDate(new Date());
+        order.setCreated(new Date());
 
         Criterion<Order> criterion  = Criterion.where(Order.id, GE, 0L);
         session.update(order, criterion);
