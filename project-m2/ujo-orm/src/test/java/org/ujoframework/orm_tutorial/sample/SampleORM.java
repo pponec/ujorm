@@ -288,10 +288,10 @@ public class SampleORM {
 
     /** Select items by a composed property.
      * It is a sample of a multi-table query.
-     * @see Item#$orderDate
+     * @see Item#$orderCreated
      */
     public void useSelectItems_4() {
-        UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
+        UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderCreated
         Criterion<Item> crit = Criterion.where(ORDER_DATE, LE, new Date());
         Query<Item> items = session.createQuery(crit);
 
@@ -303,7 +303,7 @@ public class SampleORM {
     /** Select items by a composed property.
      * It is a sample of a multi-table query.
      * See used Criterion with the whereIn method. The value list can be empty and the result returns FALSE always in this case.
-     * @see Item#$orderDate
+     * @see Item#$orderCreated
      */
     public void useSelectItems_5() {
         Criterion<Item> crit = Criterion.whereIn(Item.id, 1L,2L,3L,4L,5L);
