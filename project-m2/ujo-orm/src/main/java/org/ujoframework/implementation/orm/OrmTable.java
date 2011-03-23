@@ -126,9 +126,9 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     @Override
     public UjoProperty[] readChangedProperties(boolean clear) {
         final UjoProperty[] result
-            = changes!=null
-            ? changes.toArray(new UjoProperty[changes.size()])
-            : UjoPropertyListImpl.EMPTY
+            = changes==null || changes.isEmpty()
+            ? UjoPropertyListImpl.EMPTY
+            : changes.toArray(new UjoProperty[changes.size()])
             ;
         if (clear) {
             changes = null;
