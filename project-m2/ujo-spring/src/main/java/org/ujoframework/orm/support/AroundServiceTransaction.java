@@ -69,7 +69,6 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
             }
         } else {//this is not las aop call
             return doReturn(ex, result);
-
         }
     }
 
@@ -77,12 +76,8 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
 
         if (call.getArgs() != null) {
             return call.proceed(call.getArgs());
-
-
         } else {
             return call.proceed();
-
-
         }
     }
 
@@ -94,18 +89,13 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
         if (deepHolder.get() == null) {
             deepHolder.set(new AtomicInteger(1));
 
-
             return true;
-
 
         } else {
             AtomicInteger deep = deepHolder.get();
             deep.incrementAndGet();
 
-
             return false;
-
-
         }
     }
 
@@ -117,27 +107,17 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
     private boolean decCalling() {
         AtomicInteger deep = deepHolder.get();
 
-
         if (deep.decrementAndGet() == 0) {
             deepHolder.set(null);
-
-
             return true;
-
-
         } else {
             return false;
-
-
         }
     }
 
     private void rollback() {
         getSession().rollback();
         ujoSessionFactory.setHasBeenrollbacked(true);
-
-
-
     }
 
     private void commit() {
