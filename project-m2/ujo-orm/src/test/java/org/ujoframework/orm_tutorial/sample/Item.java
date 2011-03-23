@@ -41,8 +41,8 @@ public class Item extends OrmTable<Item> {
     @Comment("A reference to the Order")
     @Column(name="fk_order")
     public static final UjoProperty<Item,Order> order = newProperty(Order.class);
-    /** A composed (indirect) property provides a 'created' attribute of the Order */
-    public static final UjoProperty<Item,Date> $orderDate = Item.order.add(Order.created);
+    /** A composed (or indirect) property provides a 'created' attribute of the Order */
+    public static final UjoProperty<Item,Date> $orderCreated = Item.order.add(Order.created);
 
     // --- An optional implementation of commonly used setters and getters ---
 
@@ -71,10 +71,10 @@ public class Item extends OrmTable<Item> {
         set(order, _descr);
     }
 
-    /** Example of the composed PATH property */
-    public Date getOrderDate() {
+    /** Example of the composed property */
+    public Date getOrderCreated() {
         // An alternative solution for: getOrder().getCreated();
-        return get($orderDate);
+        return get($orderCreated);
     }
 
 
