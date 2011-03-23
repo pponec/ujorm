@@ -76,9 +76,8 @@ public class Order extends OrmTable<Order> {
     @Column(name="fk_customer") public static final UjoProperty<Order, Customer> customer = newProperty(Customer.class);
     @Column(mandatory=true) public static final UjoProperty<Order, Integer> newColumn = newProperty(777);
 
-    // -----------------------------------------------------------------------
-
     // --- An optional implementation of commonly used setters and getters ---
+
     public Long getId() {
         return get(id);
     }
@@ -103,12 +102,12 @@ public class Order extends OrmTable<Order> {
         set(note, _note);
     }
 
-    public Date getDate() {
+    public Date getCreated() {
         return get(created);
     }
 
-    public void setDate(Date _date) {
-        set(created, _date);
+    public void setCreated(Date _created) {
+        set(created, _created);
     }
 
     public State getState() {
