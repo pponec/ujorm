@@ -229,7 +229,7 @@ public class Session {
             MetaTable table = handler.findTableModel((Class) bo.getClass());
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
-            if (changedColumns.size() == 0) {
+            if (changedColumns.isEmpty()) {
                 LOGGER.warning("No changes to update in the object: " + bo);
                 return result;
             }
