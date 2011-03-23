@@ -79,8 +79,9 @@ public class SampleORM {
             sample.useRelation();
             sample.useStoredProcedure();
             sample.useUpdate();
-            sample.useDelete_1();
-            sample.useDelete_2();
+            sample.useBatchUpdate();
+            sample.useDelete();
+            sample.useBatchDelete();
             sample.useMetadata();
         } finally {
             sample.useCloseSession();
@@ -481,7 +482,7 @@ public class SampleORM {
         System.out.println("The stored procedure result #2: " + result);
     }
 
-    /** Using the UPDATE */
+    /** Using the database UPDATE */
     public void useUpdate() {
         Order order = session.load(Order.class, 1L);
         order.setDate(new Date());
@@ -490,8 +491,20 @@ public class SampleORM {
         session.commit();
     }
 
+    /** Batch UPDATE of modified columns for selected items. */
+    public void useBatchUpdate() {
+        Order order = new Order();
+        order.writeSession(session); // Activate the Change column management
+        order.setDate(new Date());
+
+        Criterion<Order> criterion  = Criterion.where(Order.id, GE, 0L);
+        session.update(order, criterion);
+        session.commit();
+    }
+
+
     /** How to DELETE the one loaded object? */
-    public void useDelete_1() {
+    public void useDelete() {
         Item item = session.createQuery(Item.class).setLimit(1).uniqueResult();
 
         session.delete(item);
@@ -500,7 +513,7 @@ public class SampleORM {
     }
 
     /** How to use a batch DELETE? */
-    public void useDelete_2() {
+    public void useBatchDelete() {
         Criterion<Item> crit = Criterion.where(Item.id, 1L);
         int count = session.delete(crit);
         session.commit();

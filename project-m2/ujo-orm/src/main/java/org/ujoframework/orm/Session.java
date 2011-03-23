@@ -219,8 +219,19 @@ public class Session {
         }
     }
 
-    /** UPDATE object into table. */
+    /** Database UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} for the selected object.
+     * @see OrmUjo#readChangedProperties(boolean)
+     * @return The row count.
+     */
     public int update(OrmUjo bo) throws IllegalStateException {
+        return update(bo, createPkCriterion(bo));
+    }
+
+    /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
+     * @see OrmUjo#readChangedProperties(boolean)
+     * @return The row count.
+     */
+    public int update(OrmUjo bo, Criterion criterion) {
         int result = 0;
         JdbcStatement statement = null;
         String sql = null;
@@ -233,7 +244,6 @@ public class Session {
                 LOGGER.warning("No changes to update in the object: " + bo);
                 return result;
             }
-            final Criterion criterion = createPkCriterion(bo);
             final MetaTable ormTable = handler.findTableModel(bo.getClass());
             final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
             sql = db.getDialect().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();

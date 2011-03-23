@@ -85,7 +85,7 @@ public class JdbcStatement {
     }
 
     /** Run INSERT, UPDATE or DELETE. 
-     * @return The count of modified rows.
+     * @return The row count for SQL Data Manipulation Language (DML) statements
      */
     public int executeUpdate() throws SQLException {
         return ps.executeUpdate();
