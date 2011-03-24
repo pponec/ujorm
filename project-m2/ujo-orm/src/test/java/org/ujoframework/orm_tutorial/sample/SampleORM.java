@@ -438,9 +438,9 @@ public class SampleORM {
         MyProcedure procedure = new MyProcedure();
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
         procedure.set(MyProcedure.paramCode, 5);
         procedure.set(MyProcedure.paramEnabled, true);
+        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
 
         Integer result = procedure.call(session);
         System.out.println("The stored procedure result #1: " + result);
