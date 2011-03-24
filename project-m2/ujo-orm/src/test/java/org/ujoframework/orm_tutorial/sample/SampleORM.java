@@ -440,14 +440,14 @@ public class SampleORM {
         // Assign input parameters:
         procedure.set(MyProcedure.paramCode, 5);
         procedure.set(MyProcedure.paramEnabled, true);
-        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
-
-        Integer result = procedure.call(session);
+        Integer result = procedure.call(session); // Take the result from the first parameter
         System.out.println("The stored procedure result #1: " + result);
 
-        // See how to reuse input parameters of the object 'procedure':
+        // Another way how to get the output parameter:
         procedure.set(MyProcedure.paramCode, 24);
-        result = procedure.call(session, MyProcedure.result); // Take the result of any (output) parameter
+        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
+        procedure.call(session);
+        result = procedure.get(MyProcedure.result); // Take the result from any output parameter
         System.out.println("The stored procedure result #2: " + result);
     }
 
