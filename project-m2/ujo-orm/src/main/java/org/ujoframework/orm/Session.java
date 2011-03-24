@@ -196,7 +196,7 @@ public class Session {
     }
 
     /**
-     * If parameter MetaParams.INHERITANCE_MODE is TRUE so modify all parrents.
+     * If parameter {@link MetaParams#INHERITANCE_MODE INHERITANCE_MODE} is TRUE so modify all parrents.
      * @param bo Object to an action
      * @param saveActio Value TRUE means SAVE, value FALSE means UPDATE.
      * @return Returns Table model for the parameter object.
@@ -315,7 +315,7 @@ public class Session {
      * @param bo Business object to delete
      * @return Returns a number of the removing is OK.
      */
-    public boolean delete(final OrmUjo bo) {
+    public int delete(final OrmUjo bo) {
         MetaTable table = getHandler().findTableModel(bo.getClass());
         MetaColumn PK = table.getFirstPK();
         Criterion crn = Criterion.where(PK.getProperty(), PK.getValue(bo));
@@ -334,7 +334,7 @@ public class Session {
             }
         }
 
-        return result > 0;
+        return result;
     }
 
     /** Delete all object object by the criterion from parameter.
