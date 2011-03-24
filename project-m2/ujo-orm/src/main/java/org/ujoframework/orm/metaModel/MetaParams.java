@@ -78,6 +78,16 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Property<MetaParams,Boolean> SEQUENCE_SCHEMA_SYMBOL = newProperty("sequenceSchemaSymbol", false);
 
+    /** Any action type or CREATE, UPDATE, DELETE on inheritance objects calls the same action to its 'parrent' object.
+     * If the mode is off than you must take care of all its parents in the code handy. <br />
+     * Note: the parameter does not affect the opearations
+     * {@link org.ujoframework.orm.Session#update(org.ujoframework.orm.OrmUjo, org.ujoframework.criterion.Criterion) batch update} or
+     * {@link org.ujoframework.orm.Session#delete(org.ujoframework.criterion.Criterion) batch delete} due direct modification of database.
+     *
+     * @see MetaTable#getParent(org.ujoframework.orm.OrmUjo) MetaTable.getParent(..)
+     */
+    public static final Property<MetaParams,Boolean> INHERITANCE_MODE = newProperty("inheritanceMode", true);
+
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
     public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
