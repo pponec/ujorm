@@ -491,13 +491,15 @@ public class SampleORM {
         session.commit();
     }
 
-    /** Batch UPDATE of modified columns for selected items. */
+    /** The batch UPDATE of selected columns for required database rows. <br />
+     * The exsample updates one database column (created) to the current date for all Orders where id>=1 .
+     */
     public void useBatchUpdate() {
         Order order = new Order();
         order.writeSession(session); // Activate the Change column management
         order.setCreated(new Date());
 
-        Criterion<Order> criterion  = Criterion.where(Order.id, GE, 0L);
+        Criterion<Order> criterion  = Criterion.where(Order.id, GE, 1L);
         session.update(order, criterion);
         session.commit();
     }
