@@ -38,7 +38,8 @@ import org.ujoframework.orm.annot.Procedure;
 @Procedure(name="ujorm_test")
 public class MyProcedure extends DbProcedure<MyProcedure> {
 
-    /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
+    /** The first parameter is the OUTPUT allways. <br/>
+     * If the stored procedure has no return parameter, set the first property type to: java.lang.Void */
     public static final Property<MyProcedure,Integer> result = newProperty(Integer.class);
     /** INPUT parameter */
     @Parameter(input=true)
@@ -46,10 +47,5 @@ public class MyProcedure extends DbProcedure<MyProcedure> {
     /** INPUT parameter */
     public static final Property<MyProcedure,Boolean> paramEnabled = newProperty(false);
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Integer call(Session session) {
-        return call(session, result);
-    }
 
 }
