@@ -187,7 +187,7 @@ public class Session {
     }
 
     /** INSERT or UPDATE object into table. */
-    public void saveOrUpdate(OrmUjo bo) throws IllegalStateException {
+    public void saveOrUpdate(final OrmUjo bo) throws IllegalStateException {
         if (bo.readSession() == null) {
             save(bo);
         } else {
@@ -195,13 +195,30 @@ public class Session {
         }
     }
 
+    /**
+     * If parameter MetaParams.INHERITANCE_MODE is TRUE so modify all parrents.
+     * @param bo Object to an action
+     * @param saveActio Value TRUE means SAVE, value FALSE means UPDATE.
+     * @return Returns Table model for the parameter object.
+     */
+    private MetaTable modifyParent(final OrmUjo bo) {
+        final MetaTable table = handler.findTableModel(bo.getClass());
+        if (MetaParams.INHERITANCE_MODE.of(params)) {
+            final OrmUjo parent = table.getParent(bo);
+            if (parent != null) {
+                saveOrUpdate(parent);
+            }
+        }
+        return table;
+    }
+
     /** INSERT object into table. */
-    public void save(OrmUjo bo) throws IllegalStateException {
+    public void save(final OrmUjo bo) throws IllegalStateException {
         JdbcStatement statement = null;
         String sql = "";
 
         try {
-            MetaTable table = handler.findTableModel((Class) bo.getClass());
+            final MetaTable table = modifyParent(bo);
             table.assignPrimaryKey(bo, this);
             bo.writeSession(this); // Session must be assigned after assignPrimaryKey(). A bug was fixed thans to Pavel Slovacek
             MetaDatabase db = MetaTable.DATABASE.of(table);
@@ -224,20 +241,33 @@ public class Session {
      * @return The row count.
      */
     public int update(OrmUjo bo) throws IllegalStateException {
-        return update(bo, createPkCriterion(bo));
+        return update(bo, createPkCriterion(bo), true);
+    }
+
+    /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
+     * <br />Warning: method does affect to parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
+     * @see OrmUjo#readChangedProperties(boolean)
+     * @return The row count.
+     */
+    public int update(OrmUjo bo, Criterion criterion) {
+        return update(bo, criterion, false);
     }
 
     /** Database Batch UPDATE of the {@link OrmUjo#readChangedProperties(boolean) modified columns} along a criterion.
      * @see OrmUjo#readChangedProperties(boolean)
      * @return The row count.
      */
-    public int update(OrmUjo bo, Criterion criterion) {
+    private int update(OrmUjo bo, Criterion criterion, boolean singleObject) {
+
         int result = 0;
         JdbcStatement statement = null;
         String sql = null;
 
         try {
-            MetaTable table = handler.findTableModel((Class) bo.getClass());
+            MetaTable table = singleObject
+                ? modifyParent(bo)
+                : handler.findTableModel((Class) bo.getClass())
+                ;
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
@@ -267,8 +297,9 @@ public class Session {
     }
 
     /** Delete all object object by the criterion from parameter.
-     * <br />Warning: method does not remove deleted object from internal cache,
+     * <br />Warning 1: method does not remove deleted object from internal cache,
      *       however you can call method clearCache() to release all objects from the cache.
+     * <br />Warning 2: method does not delete parent objects, see the {@link MetaParams#INHERITANCE_MODE} for more information.
      * @param criterion filter for deleting tables.
      * @return Returns a number of the realy deleted objects.
      */
@@ -294,6 +325,15 @@ public class Session {
             // Remove the bo from an internal cache:
             removeCache(bo, MetaTable.PK.of(table));
         }
+
+        // Delete parrent
+        if (MetaParams.INHERITANCE_MODE.of(params)) {
+            OrmUjo parent = table.getParent(bo);
+            if (parent != null) {
+                delete(parent);
+            }
+        }
+
         return result > 0;
     }
 

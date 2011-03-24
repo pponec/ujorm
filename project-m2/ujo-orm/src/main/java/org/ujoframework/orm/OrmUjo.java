@@ -47,7 +47,9 @@ public interface OrmUjo extends Ujo {
      */
     public UjoProperty[] readChangedProperties(boolean clear);
 
-    /** A special implementation, see a source code of the OrmTable class for more information.
+    /** A special implementation, see a source code of the {@link OrmTable#readValue(org.ujoframework.UjoProperty) OrmTable} class for more information.<br />
+     * Note: In case the parameter Property is type of persistent relation and the current Session is not null then this metod copy
+     * the current session to the related value due a lazy loading.
      * @see OrmTable#readValue(org.ujoframework.UjoProperty)
      */
     @Override

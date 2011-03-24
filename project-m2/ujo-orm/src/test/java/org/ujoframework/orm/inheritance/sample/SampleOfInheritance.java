@@ -53,7 +53,7 @@ public class SampleOfInheritance {
         customer.setDiscount(10);
         //
         Session session = handler.getSession();
-        session.save(customer.getUser());
+        // session.save(customer.getUser()); // Since Ujorm 1.20 the statement is not necessary.
         session.save(customer);
         session.commit();
 
