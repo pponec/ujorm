@@ -23,57 +23,79 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
 /**
- * Example
- * @author Ponec
+ * Example of a binding the UJO object to an UI component(s).
+ * @author Pavel Ponec
  */
 public class BindingSample {
 
-    private Map<UjoProperty, UIComponent> binding = new HashMap<UjoProperty, UIComponent>();
+    protected Map<UjoProperty, UIComponent> binding = new HashMap<UjoProperty, UIComponent>();
 
-    /** Map an UICOmponent to the Person properties.
-     * Note the type safe binding!
-     */
-    public void simpleMapping() {
+     /** Plain mapping any UIComponent to UJO Property. 
+      * The type unsafe solution.
+      */
+    public void plainMapping() {
+        binding.put(Person.FIRSTNAME, new UIComponentString());
+        binding.put(Person.CASH, new UIComponentString()); // A type inconsistency!
+    }
+
+    /** Better solution where each Property must have the same type like the UI coponent. */
+    public void userMapping() {
         bind(Person.FIRSTNAME, new UIComponentString());
         bind(Person.SURNAME, new UIComponentString());
         bind(Person.AGE, new UIComponentInt());
         bind(Person.MALE, new UIComponentBoolean());
         bind(Person.CASH, new UIComponentDouble());
+
+        /* The compiler detects a type inconsistency: */
+        //bind(Person.CASH, new UIComponentString());
     }
 
-    /** PFor further simplification is possible to use the auto-mapping. */
-    public void autoMapping() {
+    /** Create new UICOmponent by a Property type and bind it */
+    public void simpleMapping() {
         bind(Person.FIRSTNAME);
         bind(Person.SURNAME);
         bind(Person.AGE);
         bind(Person.MALE);
         bind(Person.CASH);
-
-        // How to set some attributes?
-        component(Person.FIRSTNAME).setStyle("width", "100px");
-        component(Person.SURNAME).setStyle("width", "100px");
-        component(Person.CASH).setStyle("color", "red");
     }
+
+    /** Create an edit form for all Properties of the Person. */
+    public void defaultMapping(Person person) {
+        bind(person);
+    }
+
+    /** How to set some attributes? */
+    public void modifyComponentAttributes() {
+        getComponent(Person.FIRSTNAME).setStyle("width", "100px");
+        getComponent(Person.SURNAME).setStyle("width", "100px");
+        getComponent(Person.CASH).setStyle("color", "red");
+    }
+
+    // === GENERIC METHODS TO MOVE TO A PARENT CLASS ===
 
     /** Load data to a GUI panel */
     @SuppressWarnings("unchecked")
-	public void initForm(Person person) {
+	public void initForm(Ujo ujo) {
         for (UjoProperty p : binding.keySet()) {
             UIComponent component = binding.get(p);
-            component.setValue(p.getValue(person));
+            component.setValue(p.getValue(ujo));
         }
     }
 
-    /** Load data from GUI panel to the Person instance */
+    /** Load data from GUI panel to a Person instance. */
     @SuppressWarnings("unchecked")
-	public void loadInputValues(Ujo person) {
+	public void copyFormValues(Ujo ujo) {
         for (UjoProperty p : binding.keySet()) {
             UIComponent component = binding.get(p);
-            p.setValue(person, component.getValue());
+            if (component.isValid()) {
+               p.setValue(ujo, component.getValue());
+            } else {
+                throw new IllegalStateException("Invalid input for: " + p);
+            }
         }
     }
 
-    /** Type safe <build>component binding</build> */
+    /** Type safe <build>getComponent binding</build> */
     public <T> void bind(UjoProperty<?, T> property, UIComponent<T> component) {
         binding.put(property, component);
     }
@@ -91,9 +113,16 @@ public class BindingSample {
         }
     }
 
-    /** Type safe <build>component binding</build> */
+    /** Create UICOmponents for all properties from the Person. */
+    public void bind(Ujo ujo) {
+        for (UjoProperty p : ujo.readProperties()) {
+            bind(p);
+        }
+    }
+
+    /** Type safe <build>getComponent binding</build> */
     @SuppressWarnings("unchecked")
-	public <T> UIComponent<T> component(UjoProperty<?, T> property) {
+	public <T> UIComponent<T> getComponent(UjoProperty<?, T> property) {
         return binding.get(property);
     }
 }

@@ -31,5 +31,7 @@ public interface UIComponent<T> {
     /** Set HTML stype */
     public void setStyle(String attr, String value);
 
+    /** Is the input value valid? */
+    public boolean isValid();
 
 }
