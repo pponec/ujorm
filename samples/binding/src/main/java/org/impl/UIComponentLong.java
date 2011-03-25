@@ -40,4 +40,10 @@ public class UIComponentLong implements UIComponent<Long> {
     public void setStyle(String attr, String value) {
         // map.put(attr, value);
     }
+
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
 }

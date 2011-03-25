@@ -41,5 +41,9 @@ public class UIComponentString implements UIComponent<String> {
         // map.put(attr, value);
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
 
 }

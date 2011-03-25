@@ -41,5 +41,9 @@ public class UIComponentBoolean implements UIComponent<Boolean> {
         // map.put(attr, value);
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
 
 }

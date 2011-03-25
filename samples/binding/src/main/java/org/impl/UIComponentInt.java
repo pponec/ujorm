@@ -41,4 +41,9 @@ public class UIComponentInt implements UIComponent<Integer> {
         // map.put(attr, value);
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
 }
