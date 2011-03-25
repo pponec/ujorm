@@ -218,9 +218,17 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         return new CQuery<T>(type);
     }
 
-    /** Factory creates a clienta query with required properties */
+    /**
+     * Factory creates a clienta query with required properties
+     * @param type The base query class
+     * @param properties An array of table columns. The null or empty array means show all Properties of the base class.
+     * @return Client Query.
+     */
     public static <T extends Cujo> CQuery<T> newInstance(Class<? extends T> type, CujoProperty<T,?> ... properties) {
-        return new CQuery<T>(type, new CujoModel(properties));
+        return properties==null || properties.length==0
+          ? new CQuery<T>(type)
+          : new CQuery<T>(type, new CujoModel(properties))
+          ;
     }
 
     /** Factory creates a clienta query with a required ColumnModel */
