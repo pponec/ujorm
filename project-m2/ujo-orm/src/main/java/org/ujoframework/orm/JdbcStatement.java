@@ -289,7 +289,7 @@ public class JdbcStatement {
         if (logValues) {
             String textSeparator = property.isTypeOf(CharSequence.class) ? "\"" : "";
 
-            values.append(parameterPointer==1 ? "[" : ", " );
+            values.append(parameterPointer==0 ? "[" : ", " );
             values.append(textSeparator);
             values.append(textValue);
             values.append(textSeparator);
