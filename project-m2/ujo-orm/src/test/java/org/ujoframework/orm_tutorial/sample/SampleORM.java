@@ -176,7 +176,7 @@ public class SampleORM {
         Criterion<Item> crn1, crn2, crn3, crit;
 
         crn1 = Criterion.where( Item.id, GE, 1L );
-        crn2 = Criterion.where( Item.note, CONTAINS, "e" );
+        crn2 = Criterion.where( Item.note, CONTAINS, "table" );
         crn3 = Criterion.where( Item.order.add(Order.note), "My order" );
         crit = crn1.and(crn2).and(crn3);
 
