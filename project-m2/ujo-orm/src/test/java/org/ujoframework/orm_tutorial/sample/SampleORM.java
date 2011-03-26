@@ -59,7 +59,7 @@ public class SampleORM {
         try {
             sample.loadMetaModel();
             sample.useInsert();
-            sample.useSelectOrders();
+            sample.useSelect();
             sample.useCriterions();
             sample.useSortOrders();
             sample.useSortOrderItems();
@@ -102,6 +102,7 @@ public class SampleORM {
      */
     public void loadMetaModel() {
 
+        // Set the log level specifying which message levels will be logged by Ujorm:
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
         handler = new OrmHandler();
 
@@ -158,21 +159,30 @@ public class SampleORM {
         }
     }
 
-    /** Now, how to select Orders from the database by Criterions? */
-    public void useSelectOrders() {
+    /** Now, how to select Orders from a database by Criterions? <br/>
+     * The generated SQL code from this example
+     * will be similar like the next statement:
+     * <pre>
+     * SELECT * FROM item
+     * JOIN order ON order.id = item.id_order
+     * WHERE item.id >= 1
+     *   AND item.note LIKE '%table%'
+     *   AND order.note = 'My order';
+     * </pre>
+     * where both parameters are passed by a 'question mark' notation
+     * for a better security.
+     */
+    public void useSelect() {
+        Criterion<Item> crn1, crn2, crn3, crit;
 
-        Criterion<Order> cn1, cn2, cn3, crit;
+        crn1 = Criterion.where( Item.id, GE, 1L );
+        crn2 = Criterion.where( Item.note, CONTAINS, "e" );
+        crn3 = Criterion.where( Item.order.add(Order.note), "My order" );
+        crit = crn1.and(crn2).and(crn3);
 
-        cn1 = Criterion.where(Order.note, "John's order");
-        cn2 = Criterion.where(Order.created, LE, new Date());
-        cn3 = Criterion.where(Order.state, Order.State.ACTIVE);
-        crit = cn1.and(cn2).and(cn3);
-
-        Query<Order> orders = session.createQuery(crit);
-
-        for (Order order : orders) {
-            String note = order.getNote();
-            System.out.println("ORDER ROW: " + order + " // note: " + note);
+        for (Item item : session.createQuery(crit)) {
+            Date created = item.getOrder().getCreated(); // Lazy loading
+            System.out.println("Item: " + item + " // created: " + created);
         }
     }
 
