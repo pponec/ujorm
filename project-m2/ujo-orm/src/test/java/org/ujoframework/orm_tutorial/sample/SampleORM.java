@@ -133,7 +133,7 @@ public class SampleORM {
 
         Order order = new Order();
         order.setCreated(new Date());
-        order.setNote("John's order");
+        order.setNote("My order");
         //order.setBinaryFile("binary".getBytes());
 
         Item item1 = new Item();
