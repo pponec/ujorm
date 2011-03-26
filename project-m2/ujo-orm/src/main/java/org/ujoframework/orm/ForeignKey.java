@@ -30,8 +30,8 @@ public class ForeignKey implements NoCheck, Serializable {
 
     private final Object value;
 
-    public ForeignKey(Object value) {
-        this.value = value;
+    public ForeignKey(Object fk) {
+        this.value = fk;
     }
 
     public Object getValue() {
