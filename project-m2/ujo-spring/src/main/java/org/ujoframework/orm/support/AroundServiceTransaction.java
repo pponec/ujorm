@@ -28,7 +28,7 @@ import org.ujoframework.orm.Session;
 //TODO : multithread testing
 public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
 
-    private static Logger LOGGER = Logger.getLogger(AroundServiceTransaction.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AroundServiceTransaction.class.getName());
     final private UjoSessionFactory ujoSessionFactory;
     final private ThreadLocal<AtomicInteger> deepHolder = new ThreadLocal<AtomicInteger>();
 

@@ -29,8 +29,10 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  */
 public class UjormTransactionManager extends AbstractPlatformTransactionManager {
 
-    private static Logger LOGGER = Logger.getLogger(UjormTransactionManager.class.getName());
-    //UjoSessionFactory is thread safe so we do not need to use transaction Objects
+    private static final Logger LOGGER = Logger.getLogger(UjormTransactionManager.class.getName());
+    /** UjoSessionFactory is thread safe
+     * so we do not need to use transaction Objects
+     */
     private UjoSessionFactory ujoSessionFactory;
 
     @Override
