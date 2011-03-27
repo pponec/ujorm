@@ -30,7 +30,7 @@ import org.ujoframework.orm.Session;
  */
 public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessionFactoryAOP, UjoSessionFactoryFilter {
 
-    private static Logger LOGGER = Logger.getLogger(UjoSessionFactoryThreadImpl.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UjoSessionFactoryThreadImpl.class.getName());
     final private OrmHandler handler;
     private AtomicInteger deep;
     private Session session;
