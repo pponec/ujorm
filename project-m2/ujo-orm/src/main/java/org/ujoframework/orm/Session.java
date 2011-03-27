@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +63,9 @@ public class Session {
     final private OrmHandler handler;
     /** Orm parameters. */
     final private MetaParams params;
-    /** Database connections (common and sequence)  */
-    final private HashMap<MetaDatabase, Connection>[] connections = new HashMap[]{new HashMap<MetaDatabase, Connection>(2) // common connections
+    /** Two database connections set (common and sequence)  */
+    final private HashMap<MetaDatabase, Connection>[] connections = new HashMap[]
+        { new HashMap<MetaDatabase, Connection>(2) // common connections
         , new HashMap<MetaDatabase, Connection>(2) // sequence connections
     };
     /** A session cache */
@@ -108,23 +110,29 @@ public class Session {
         MetaDatabase database = null;
         String errMessage = "Can't make commit of DB ";
 
-        for (MetaDatabase db : connections[0].keySet()) {
-            try {
-                Connection conn = connections[0].get(db);
+        try {
+            MetaDatabase[] databases = connections[0].keySet().toArray(new MetaDatabase[connections[0].size()]);
+            if (databases.length>1) {
+                // Sort databases by a definition order:
+                Arrays.sort(databases);
+            }
+            for (int i=0; i<databases.length; ++i) {
+                database = databases[i];
+                final Connection conn = connections[0].get(database);
                 if (commit) {
                     conn.commit();
+                    if (LOGGER.isLoggable(Level.FINE)) {
+                        LOGGER.log(Level.FINE, "Commit of the {0}", database.getId());
+                    }
                 } else {
                     conn.rollback();
-                }
-            } catch (Throwable e) {
-                LOGGER.log(Level.SEVERE, errMessage + db, e);
-                if (exception == null) {
-                    exception = e;
-                    database = db;
+                    if (LOGGER.isLoggable(Level.FINE)) {
+                        LOGGER.log(Level.FINE, "Rolback of the {0}", database.getId());
+                    }
                 }
             }
-        }
-        if (exception != null) {
+        } catch (Throwable e) {
+            LOGGER.log(Level.SEVERE, errMessage + database, e);
             throw new IllegalStateException(errMessage + database, exception);
         }
         rollbackOnly = false;
@@ -177,7 +185,7 @@ public class Session {
         try {
             DB result = dbType!=null
                     ? dbType.newInstance()
-                    : (DB) MetaDatabase.ROOT.of(getHandler().getDatabases().get(0))
+                    : (DB) MetaDatabase.ROOT.of(handler.getDatabases().get(0))
                     ;
             result.writeSession(this);
             return result;
@@ -316,7 +324,7 @@ public class Session {
      * @return Returns a number of the removing is OK.
      */
     public int delete(final OrmUjo bo) {
-        MetaTable table = getHandler().findTableModel(bo.getClass());
+        MetaTable table = handler.findTableModel(bo.getClass());
         MetaColumn PK = table.getFirstPK();
         Criterion crn = Criterion.where(PK.getProperty(), PK.getValue(bo));
         int result = delete(table, crn);
@@ -566,13 +574,13 @@ public class Session {
 
     /** Create new statement */
     public JdbcStatement getStatement(MetaDatabase database, CharSequence sql) throws SQLException {
-        final JdbcStatement result = new JdbcStatement(getConnection(database), sql, getHandler());
+        final JdbcStatement result = new JdbcStatement(getConnection(database), sql, handler);
         return result;
     }
 
     /** Create new statement */
     public JdbcStatement getStatementCallable(MetaDatabase database, String sql) throws SQLException {
-        final JdbcStatement result = new JdbcStatement(getConnection(database).prepareCall(sql), getHandler());
+        final JdbcStatement result = new JdbcStatement(getConnection(database).prepareCall(sql), handler);
         return result;
     }
 
@@ -725,7 +733,7 @@ public class Session {
     }
 
     /** Clear cache and change its policy. */
-    public void clearCache(final CachePolicy policy) {
+    public final void clearCache(final CachePolicy policy) {
         assertOpenSession();
         switch (policy) {
             case PROTECTED_CACHE:
@@ -761,7 +769,7 @@ public class Session {
      * @throws IllegalStateException If a parameter property is not a foreign key.
      */
     public ForeignKey readFK(final OrmUjo ujo, final UjoProperty<?, ? extends OrmUjo> property) throws IllegalStateException {
-        MetaColumn column = (MetaColumn) getHandler().findColumnModel(property);
+        MetaColumn column = (MetaColumn) handler.findColumnModel(property);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getProperty().of(ujo);
             return new ForeignKey(result);

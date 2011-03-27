@@ -56,7 +56,7 @@ import org.ujoframework.orm.annot.Db;
  * @composed 1 - * MetaTable
  * @composed 1 - * MetaProcedure
  */
-final public class MetaDatabase extends AbstractMetaModel {
+final public class MetaDatabase extends AbstractMetaModel implements Comparable<MetaDatabase> {
     private static final Class CLASS = MetaDatabase.class;
 
     /** Logger */
@@ -84,6 +84,9 @@ final public class MetaDatabase extends AbstractMetaModel {
     /** DB password */
     @Transient
     public static final Property<MetaDatabase,String> PASSWORD = newProperty("password", "");
+    /** Database order number */
+    @Transient
+    public static final Property<MetaDatabase,Integer> ORDER = newProperty("order", 0);
     /** An instance of the DB class. */
     @Transient
     public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
@@ -113,9 +116,10 @@ final public class MetaDatabase extends AbstractMetaModel {
      * @param param Configuration data from a XML file
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param) {
+    public MetaDatabase(OrmHandler ormHandler, OrmUjo database, MetaDatabase param, Integer order) {
         this.ormHandler = ormHandler;
         ROOT.setValue(this, database);
+        ORDER.setValue(this, order);
 
         if (param!=null) {
             changeDefault(this, SCHEMA  , SCHEMA.of(param));
@@ -863,6 +867,13 @@ final public class MetaDatabase extends AbstractMetaModel {
             + ']'
             ;
 	     return msg;
+    }
+
+    /** Compare the object by ORDER. */
+    public int compareTo(MetaDatabase o) {
+        final Integer i1 = ORDER.of(this);
+        final Integer i2 = ORDER.of(o);
+        return i1.compareTo(i2);
     }
 
 }
