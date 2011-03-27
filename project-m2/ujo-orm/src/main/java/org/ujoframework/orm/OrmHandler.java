@@ -179,7 +179,7 @@ public class OrmHandler {
 
         // Create the ORM DB model:
         UJO root = getInstance(databaseModel);
-        MetaDatabase dbModel = new MetaDatabase(this, root, paramDb);
+        MetaDatabase dbModel = new MetaDatabase(this, root, paramDb, databases.getDatabaseCount());
         databases.add(dbModel);
 
         if (LOGGER.isLoggable(Level.INFO)) {

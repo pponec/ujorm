@@ -72,6 +72,11 @@ final public class MetaRoot extends AbstractMetaModel {
         return null;
     }
 
+    /** Returns the total count of databases. */
+    public int getDatabaseCount() {
+        return DATABASES.getItemCount(this);
+    }
+
     /** Add a new database into repository. */
     final public void add(MetaDatabase database) {
         DATABASES.addItem(this, database);
