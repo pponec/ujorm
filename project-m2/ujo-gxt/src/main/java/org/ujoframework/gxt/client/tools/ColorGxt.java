@@ -36,16 +36,32 @@ final public class ColorGxt implements Serializable, Comparable<ColorGxt> {
     }
 
     /** Alpha 50% with the WHITE color */
-    public String getColorAlpha50() {
+    public String getWhiteAlpha50() {
         int r = Integer.parseInt(color.substring(0,2), 16);
         int g = Integer.parseInt(color.substring(2,4), 16);
         int b = Integer.parseInt(color.substring(4,6), 16);
 
         // Alpha 50% with the WHITE color
-        int max = 256, col = 0;
+        int col = 0, max = 256;
         col = col * max + ((r + max) >> 1);
         col = col * max + ((g + max) >> 1);
         col = col * max + ((b + max) >> 1);
+
+        String result = Integer.toHexString(col & 0xffffff | 0x1000000).substring(1).toUpperCase();
+        return result;
+    }
+
+    /** Alpha 50% with the BLACK color */
+    public String getBlackAlpha50() {
+        int r = Integer.parseInt(color.substring(0,2), 16);
+        int g = Integer.parseInt(color.substring(2,4), 16);
+        int b = Integer.parseInt(color.substring(4,6), 16);
+
+        // Alpha 50% with the BLACK color
+        int col = 0, max = 256;
+        col = col * max + (r >> 1);
+        col = col * max + (g >> 1);
+        col = col * max + (b >> 1);
 
         String result = Integer.toHexString(col & 0xffffff | 0x1000000).substring(1).toUpperCase();
         return result;
