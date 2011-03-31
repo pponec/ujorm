@@ -32,7 +32,7 @@ public class CujoManager {
     }
 
     static public CujoPropertyList find(Class type) {
-        if (map.size()==0) {
+        if (map.isEmpty()) {
             ClientClassConfig.getInstance(); // reinitialization
         }
 

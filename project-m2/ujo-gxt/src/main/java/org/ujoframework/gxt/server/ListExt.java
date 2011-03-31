@@ -38,7 +38,7 @@ final public class ListExt<T> {
 
     @Override
     public String toString() {
-        String item = list.size()==0 ? "item" : list.get(0).getClass().getSimpleName();
+        String item = list.isEmpty() ? "item" : list.get(0).getClass().getSimpleName();
         return item + "[" + list.size() + "]";
     }
 
