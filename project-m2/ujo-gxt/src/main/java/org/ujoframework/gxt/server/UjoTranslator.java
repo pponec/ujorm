@@ -170,6 +170,12 @@ public final class UjoTranslator<CUJO extends Cujo> {
 
     /** Get List of CUJOs */
     @SuppressWarnings({"unchecked"})
+    public ListExt<CUJO> translate(Iterable<? extends Ujo> bos) {
+        return translate(bos.iterator());
+    }
+
+    /** Get List of CUJOs */
+    @SuppressWarnings({"unchecked"})
     public ListExt<CUJO> translate(Iterator<? extends Ujo> bos) {
         return translate(bos, 0, Integer.MAX_VALUE, null);
     }
