@@ -12,10 +12,8 @@ import org.ujoframework.gxt.client.controller.MetaModelController;
 import com.google.gwt.core.client.GWT;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import org.ujoframework.gxt.client.cquery.CCriterion;
 import org.ujoframework.gxt.client.cquery.COperator;
 import org.ujoframework.gxt.client.cquery.CQuery;
@@ -28,8 +26,7 @@ public class ClientClassConfig {
 
     private static ClientClassConfig instance;
 
-    private Set<String> bos = new HashSet<String>();
-    private Set<Cujo> _bosType = new HashSet<Cujo>();
+    private HashMap<String, Cujo> bosMap = new HashMap<String, Cujo>();
     private EnumItems enums;
     private PropertyMetadataProvider medatata;
     private MetaModelController service;
@@ -66,7 +63,7 @@ public class ClientClassConfig {
     @SuppressWarnings("unchecked")
     private void initMetadata(List<Cujo> cujos) {
 
-        if (!GWT.isClient() || _bosType == null) {
+        if (!GWT.isClient() || bosMap == null) {
             return;
         }
 
@@ -76,7 +73,7 @@ public class ClientClassConfig {
 
         final ArrayList<CQuery> qList = new ArrayList<CQuery>();
         final ArrayList<CujoProperty> pList = new ArrayList<CujoProperty>();
-        Iterator<Cujo> it = _bosType.iterator();
+        Iterator<Cujo> it = bosMap.values().iterator();
 
         while (it.hasNext()) {
             Cujo cujo = it.next();
@@ -116,8 +113,7 @@ public class ClientClassConfig {
 
     public void initCujo(Cujo cujo) {
         cujo.readProperties().getType(); // initialization test
-        bos.add(cujo.getClass().getName());
-        _bosType.add(cujo);
+        bosMap.put(cujo.getClass().getName(), cujo);
     }
 
     /** Initialization */
@@ -135,7 +131,7 @@ public class ClientClassConfig {
 
     /** Is the type a cujo object? */
     public static boolean isCujoType(Class type) {
-        return getInstance().bos.contains(type.getName());
+        return getInstance().bosMap.containsKey(type.getName());
     }
 
     /** Get all items for enumerator name */
@@ -150,14 +146,13 @@ public class ClientClassConfig {
         return t.enums.getItems(enumName);
     }
 
-    /** Get CUJO object by class. */
-    public Cujo getCujo(Class cujoType) {
-        for (Cujo cujo : _bosType) {
-            if (cujo.getClass().getName().equals(cujoType.getName())) {
-                return cujo;
-            }
+    /** Create CUJO object by a class. If the class was not registered then the method returns NULL. */
+    public Cujo createCujo(Class cujoType) {
+        Cujo result = bosMap.get(cujoType.getName());
+        if (result!=null) {
+            result = result.createInstance();
         }
-        return null;
+        return result;
     }
 
     /** Get all items for enumerator name */
