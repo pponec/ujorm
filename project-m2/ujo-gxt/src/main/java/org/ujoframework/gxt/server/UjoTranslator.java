@@ -163,7 +163,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
             }
         }
 
-        if (properties.size() == 0) {
+        if (properties.isEmpty()) {
             throw new NoSuchElementException("No matching properties of the " + ujoPropertyList.getType());
         }
     }
