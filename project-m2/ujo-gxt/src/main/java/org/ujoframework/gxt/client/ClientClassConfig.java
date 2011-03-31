@@ -6,7 +6,6 @@
  * Support: support@ujorm.com - for both technical or business information
  */
 
-
 package org.ujoframework.gxt.client;
 
 import org.ujoframework.gxt.client.controller.MetaModelController;
@@ -67,7 +66,7 @@ public class ClientClassConfig {
     @SuppressWarnings("unchecked")
     private void initMetadata(List<Cujo> cujos) {
 
-        if (!GWT.isClient() || _bosType==null) {
+        if (!GWT.isClient() || _bosType == null) {
             return;
         }
 
@@ -85,7 +84,7 @@ public class ClientClassConfig {
 
             for (CujoProperty p : cujo.readProperties()) {
                 pList.add(p);
-                CCriterion c2 = CCriterion.where(p, COperator.EQ, (Object)null);
+                CCriterion c2 = CCriterion.where(p, COperator.EQ, (Object) null);
                 if (cc == null) {
                     cc = c2;
                 } else {
@@ -149,6 +148,16 @@ public class ClientClassConfig {
         }
         */
         return t.enums.getItems(enumName);
+    }
+
+    /** Get CUJO object by class. */
+    public Cujo getCujo(Class cujoType) {
+        for (Cujo cujo : _bosType) {
+            if (cujo.getClass().getName().equals(cujoType.getName())) {
+                return cujo;
+            }
+        }
+        return null;
     }
 
     /** Get all items for enumerator name */

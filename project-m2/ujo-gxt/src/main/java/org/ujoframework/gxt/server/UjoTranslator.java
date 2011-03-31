@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -19,7 +20,6 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
 import org.ujoframework.core.UjoCoder;
-import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.ValueExportable;
 import org.ujoframework.gxt.client.CEnum;
@@ -45,7 +45,6 @@ public final class UjoTranslator<CUJO extends Cujo> {
     private CujoPropertyList cujoPropertyList;
     private UjoTranslatorCallback<CUJO>[] callBacks;
     private Map<UjoProperty, UjoTranslator> relationMap;
-    private List<Ujo> ujos = null;
     private Session dummySession;
     private UjoCoder ujoCoder;
 
@@ -171,7 +170,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
 
     /** Get List of CUJOs */
     @SuppressWarnings({"unchecked"})
-    public ListExt<CUJO> translate(Iterable<? extends Ujo> bos) {
+    public ListExt<CUJO> translate(Iterator<? extends Ujo> bos) {
         return translate(bos, 0, Integer.MAX_VALUE, null);
     }
 
@@ -183,7 +182,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
      * @return
      */
     @SuppressWarnings({"unchecked"})
-    public ListExt<CUJO> translate(Iterable<? extends Ujo> bos, int offset, int limit, Query query) {
+    public ListExt<CUJO> translate(Iterator<? extends Ujo> bos, int offset, int limit, Query query) {
 
         ListExt<CUJO> result = new ListExt<CUJO>();
 
@@ -192,8 +191,9 @@ public final class UjoTranslator<CUJO extends Cujo> {
         }
 
         int count = 0;
-        for (Ujo ujo : bos) {
+         while (bos.hasNext()) {
             ++count;
+            Ujo ujo = bos.next();
             final CUJO cujo = translateToClient(ujo);
             result.add(cujo);
         }
@@ -232,14 +232,8 @@ public final class UjoTranslator<CUJO extends Cujo> {
                 final ValueExportable exportableValue = (ValueExportable) value;
                 value = exportableValue.exportToString();
             } else if (isRelations() && pc.p1.isTypeOf(Ujo.class)) {
-                if (ujos == null) {
-                    ujos = new ArrayList<Ujo>(1);
-                } else {
-                    ujos.clear();
-                }
-                ujos.add((Ujo) value);
                 UjoTranslator ut = relationMap.get(pc.p1);
-                value = ut.translate(UjoIterator.getInstance(ujos)).list().get(0);
+                value = ut.translateToClient((Ujo) value);
             } else if (pc.p1.isTypeOf(Color.class)) {
                 Color colorValue = (Color) value;
                 if (pc.p2.isTypeOf(ColorGxt.class)) {
@@ -313,6 +307,10 @@ public final class UjoTranslator<CUJO extends Cujo> {
             else if (pc.p1.isTypeOf(Color.class)) {
                 // Copy Color:
                 value = getUjoCoder().decodeValue(pc.p1, value.toString(), null);
+            }
+            else if (isRelations() && relationMap.containsKey(pc.p1)) {
+                UjoTranslator ut = relationMap.get(pc.p1);
+                value = ut.translateToServer((Cujo) value);
             }
             else if (pc.p1.isTypeOf(OrmUjo.class)) {
                 // Copy a foreign key:
