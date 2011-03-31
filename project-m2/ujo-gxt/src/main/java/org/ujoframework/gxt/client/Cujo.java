@@ -23,4 +23,7 @@ public interface Cujo extends ModelData {
 
     public <UJO extends Cujo,VALUE> void set(CujoProperty<UJO,VALUE> property, VALUE value);
 
+    /** Create new instance from the object */
+    public <T extends Cujo> T createInstance();
+
 }

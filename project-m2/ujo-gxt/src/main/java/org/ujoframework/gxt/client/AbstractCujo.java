@@ -58,4 +58,9 @@ abstract public class AbstractCujo extends BaseModelData implements Cujo, Serial
         return result.toString();
     }
 
+    /** Create new instance */
+    @Override
+    public <T extends Cujo> T createInstance() {
+        throw new UnsupportedOperationException("You must implement the method in a child " + getClass());
+    }
 }
