@@ -6,7 +6,6 @@
 package org.ujoframework.gxt.client.tools;
 
 import java.io.Serializable;
-import org.ujoframework.gxt.client.CEnum;
 
 /**
  * ClientSerializableEnvelope (workaround for the GXT serialization)
