@@ -25,6 +25,6 @@ public interface MetaModelController {
 
     public void getEnums(AsyncCallback<InitItems> callback);
 
-    public void getClientSerializableEnvelope(ClientSerializableEnvelope o, AsyncCallback<ClientSerializableEnvelope> envelop);
+    public void typeWorkaround(ClientSerializableEnvelope o, AsyncCallback<ClientSerializableEnvelope> envelop);
     
 }
