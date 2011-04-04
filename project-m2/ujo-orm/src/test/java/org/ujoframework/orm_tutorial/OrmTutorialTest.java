@@ -18,6 +18,7 @@ package org.ujoframework.orm_tutorial;
 
 import java.sql.Connection;
 import junit.framework.TestCase;
+import org.ujoframework.orm_tutorial.core.SampleCORE;
 import org.ujoframework.orm_tutorial.sample.SampleORM;
 
 
@@ -66,6 +67,7 @@ public class OrmTutorialTest extends TestCase {
         if (noRunned) {
             noRunned = true;
             SampleORM.main(new String[]{});
+            SampleCORE.main(new String[]{});
         }
     }
 
