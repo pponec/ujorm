@@ -159,4 +159,9 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
     public int hashCode() {
         return name.hashCode();
     }
+
+    @Override
+    public int compareTo(CujoProperty o) {
+        return getName().compareTo(o.getName());
+    }
 }
