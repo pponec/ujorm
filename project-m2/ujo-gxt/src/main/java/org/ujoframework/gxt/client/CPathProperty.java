@@ -294,4 +294,10 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     public String getCammelName() {
         return getLastProperty().getCammelName();
     }
+    
+    @Override
+    public int compareTo(CujoProperty o) {
+        return getName().compareTo(o.getName());
+    }
+
 }

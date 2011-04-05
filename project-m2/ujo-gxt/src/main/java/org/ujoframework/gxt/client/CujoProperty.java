@@ -15,7 +15,7 @@ package org.ujoframework.gxt.client;
  * The object is not serializable.
  * @author Pavel Ponec
  */
-public interface CujoProperty<UJO extends Cujo, VALUE> {
+public interface CujoProperty<UJO extends Cujo, VALUE> extends Comparable<CujoProperty> {
 
     public VALUE getValue(UJO ujo);
 
@@ -51,6 +51,10 @@ public interface CujoProperty<UJO extends Cujo, VALUE> {
     public <VALUE_PAR> CujoProperty<UJO, VALUE_PAR> add(CujoProperty<? extends VALUE, VALUE_PAR> property);
 
     public boolean equals(UJO ujo, VALUE value);
+
+    /** Compare names of properties */
+    @Override
+    public int compareTo(CujoProperty o);
 
     @Override
     public String toString();
