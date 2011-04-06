@@ -24,16 +24,28 @@ public abstract class ClientCallback<T> extends SecuredAsyncCallback<T> {
 
     @Override
     protected void onSecurityException(ApplicationSecurityException exception) {
-        GWT.log("security exception :", exception);
-        Window.alert("security exception :" + exception.toString());
+        String msg = getSimpleName(exception) + ": " + exception.getMessage();
+        GWT.log(msg, exception);
+        Window.alert(msg);
         callEnd = true;
     }
 
     @Override
     protected void onOtherException(Throwable exception) {
-        GWT.log("other exception :", exception);
-        Window.alert("other exception :" + exception.toString());
+        String msg = getSimpleName(exception) + ": " + exception.getMessage();
+        GWT.log(msg, exception);
+        Window.alert(msg);
         callEnd = true;
+    }
+
+    private String getSimpleName(Throwable exception) {
+        String className = exception.getClass().getName();
+        int i = className.indexOf('.');
+        if (i>0) {
+            return className.substring(0, i);
+        } else {
+            return className;
+        }
     }
 
     public Boolean isCallEnd() {

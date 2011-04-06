@@ -57,7 +57,7 @@ public class SampleORM {
     public static void main(String[] args) {
         SampleORM sample = new SampleORM();
         try {
-            sample.loadMetaModel();
+            sample.createMetaModel();
             sample.useInsert();
             sample.useSelect();
             sample.useCriterions();
@@ -97,10 +97,10 @@ public class SampleORM {
     /** The session contains a cache and database connections. */
     private Session session;
 
-    /** Before the first use load a meta-model.
+    /** Before the first use create a meta-model.
      * Database tables will be created in the first time.
      */
-    public void loadMetaModel() {
+    public void createMetaModel() {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
