@@ -191,7 +191,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         return result;
     }
     
-    /** Compare Ujo properties. An undefined property indexes (-1 are sorted to the end. */
+    /** Compare Ujo properties by index. An undefined property indexes (-1 are sorted to the end. */
     public int compare(final UjoProperty p1, final UjoProperty p2) {
         int i1 = p1.getIndex()>=0 ? p1.getIndex() : Integer.MAX_VALUE;
         int i2 = p2.getIndex()>=0 ? p2.getIndex() : Integer.MAX_VALUE;
@@ -206,7 +206,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     protected void sortProperties(final Class type, final UjoProperty[] properties) {
         if (properties.length>0) {
             if (ArrayUjo.class.isAssignableFrom(type)) {
-                Arrays.sort(properties);
+                Arrays.sort(properties, this);
             } else if(isPropertiesReversed()) {
                 revertArray(properties);
             }
