@@ -26,7 +26,7 @@ package org.ujoframework;
  * @opt attributes
  * @opt operations
  */
-public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Comparable<UjoProperty>*/ {
+public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Comparable<UjoProperty> {
     
     /** Returns a name of Property. */
     public String getName();
@@ -132,6 +132,12 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence /*, Co
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(UJO from, UJO to);
+
+    /** Compare to another UjoProperty object by the index and name of the property.
+     * @since 1.20
+     */
+    @Override
+    public int compareTo(UjoProperty p);
 
     /** Returns the name of Property. */
     @Override

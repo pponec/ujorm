@@ -288,16 +288,15 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return result;
     }
 
-    /** Compare to another UjoProperty object by a index code. */
+    /** Compare to another UjoProperty object by the index and name of the property.
+     * @since 1.20
+     */
     public int compareTo(final UjoProperty p) {
-        final int result
-        = index < p.getIndex() ? -1
-        : index > p.getIndex() ? +1
-        : 0
-        ;
-        return result;
+        return index<p.getIndex() ? -1
+             : index>p.getIndex() ?  1
+             : name.compareTo(p.getName()) 
+             ;
     }
-
 
     /** A char from Name */
     @Override

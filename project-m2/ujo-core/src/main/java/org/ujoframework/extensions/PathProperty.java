@@ -272,6 +272,15 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
         return new PathProperty(props);
     }
 
+    /** Compare to another UjoProperty object by the index and name of the property.
+     * @since 1.20
+     */
+    public int compareTo(final UjoProperty p) {
+        return getIndex()<p.getIndex() ? -1
+             : getIndex()>p.getIndex() ?  1
+             : getName().compareTo(p.getName())
+             ;
+    }
 
     // ================ STATIC ================
     
