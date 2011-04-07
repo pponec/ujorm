@@ -161,7 +161,10 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
     }
 
     @Override
-    public int compareTo(CujoProperty o) {
-        return getName().compareTo(o.getName());
+    public int compareTo(CujoProperty p) {
+        return index < p.getIndex() ? -1
+             : index > p.getIndex() ?  1   
+             : name.compareTo(p.getName())
+             ;
     }
 }

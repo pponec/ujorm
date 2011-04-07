@@ -296,8 +296,11 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     }
     
     @Override
-    public int compareTo(CujoProperty o) {
-        return getName().compareTo(o.getName());
+    public int compareTo(CujoProperty p) {
+        return getIndex() < p.getIndex() ? -1
+             : getIndex() > p.getIndex() ?  1
+             : getName().compareTo(p.getName())
+             ;
     }
 
 }
