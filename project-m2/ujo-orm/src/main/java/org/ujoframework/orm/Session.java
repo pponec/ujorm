@@ -822,7 +822,7 @@ public class Session {
             }
         }
         ujo.writeSession(this);
-        ujo.readChangedProperties(true);
+        ujo.readChangedProperties(true); // Clear changed properties
 
         return true;
     }
