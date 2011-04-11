@@ -5,6 +5,7 @@
 
 package org.ujoframework.gxt.client.tools;
 
+import com.extjs.gxt.ui.client.widget.ColorPalette;
 import java.io.Serializable;
 
 /**
@@ -100,4 +101,10 @@ final public class ColorGxt implements Serializable, Comparable<ColorGxt> {
         return new ColorGxt("000000");
     }
 
+    /** Returns random color */
+    public static String getRandomColor() {
+        String[] colors = new ColorPalette().getColors();
+        int i = com.google.gwt.user.client.Random.nextInt(colors.length);
+        return colors[i];
+    }
 }
