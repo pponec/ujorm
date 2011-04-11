@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujoframework.orm.support;
 
 import java.util.logging.Logger;
@@ -29,7 +28,6 @@ public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFacto
 
     private static final Logger LOGGER = Logger.getLogger(UjoSessionFactoryImpl.class.getName());
     final private ThreadLocal<UjoSessionFactoryThreadImpl> holder = new ThreadLocal<UjoSessionFactoryThreadImpl>();
-    
     private OrmHandler handler;
 
     @Override
@@ -55,7 +53,11 @@ public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFacto
 
     @Override
     public Object aroundSession(ProceedingJoinPoint call) throws Throwable {
-        return getThreadImpl().aroundSession(call);
+        Object result = getThreadImpl().aroundSession(call);
+        if (getThreadImpl().isSessionClosed()) {
+            removeThreadImpl();
+        }
+        return result;
     }
 
     @Override
@@ -66,9 +68,10 @@ public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFacto
     @Override
     public void closeSession() {
         getThreadImpl().closeSession();
+        removeThreadImpl();
     }
 
-private UjoSessionFactoryThreadImpl getThreadImpl() {
+    private UjoSessionFactoryThreadImpl getThreadImpl() {
         if (holder.get() == null) {
             if (handler == null) {
                 throw new NullPointerException("OrmHandler is null! Please set it using setHandler(OrmHandler handler) method");
@@ -78,10 +81,11 @@ private UjoSessionFactoryThreadImpl getThreadImpl() {
         return holder.get();
     }
 
+    private void removeThreadImpl() {
+        holder.remove();
+    }
+
     public void setHandler(OrmHandler handler) {
         this.handler = handler;
     }
-
-
-
 }
