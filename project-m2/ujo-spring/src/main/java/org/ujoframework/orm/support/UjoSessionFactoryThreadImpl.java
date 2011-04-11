@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujoframework.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -125,7 +124,7 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
     }
 
     public boolean getAutoTransaction() {
-            return autoTransactionHolder;
+        return autoTransactionHolder;
 
     }
 
@@ -152,5 +151,14 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
     public void setHasBeenrollbacked(boolean b) {
         rolbackedHolder = b;
     }
-}
 
+    boolean isSessionClosed() {
+        if (session == null) {
+            return true;
+        }
+        if (session.isClosed()) {
+            return true;
+        }
+        return false;
+    }
+}
