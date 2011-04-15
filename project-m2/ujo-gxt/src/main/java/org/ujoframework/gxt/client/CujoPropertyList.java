@@ -63,6 +63,20 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
         }
     }
 
+    /**
+     * Find direct or indirect property by property name from parameter.
+     *
+     * @param name A property name by sample "user.address.street".
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @return .
+     */
+    public CujoProperty findIndirect(String name, boolean throwException) throws IllegalArgumentException {
+        final CujoProperty result = CujoManager.findIndirectProperty(type, name, throwException);
+        return result;
+    }
+
+
+
     @Override
     public Iterator<CujoProperty> iterator() {
         return properties.iterator();

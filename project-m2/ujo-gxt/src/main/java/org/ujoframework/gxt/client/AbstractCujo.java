@@ -38,6 +38,11 @@ abstract public class AbstractCujo extends BaseModelData implements Cujo, Serial
     protected static CujoPropertyList list(Class<? extends Cujo> type) {
         return new CujoPropertyList(type);
     }
+    
+    /** Returns ID value */
+    public <T> T getId() {
+        return (T) get("id");
+    }
 
     @Override
     @SuppressWarnings("unchecked")
