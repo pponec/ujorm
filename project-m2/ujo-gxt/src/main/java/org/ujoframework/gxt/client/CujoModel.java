@@ -64,7 +64,7 @@ public class CujoModel extends ColumnModel {
         }
     }
 
-    private static List<ColumnConfig> createPropertyList(CujoProperty ... propertyArray) {
+    public static List<ColumnConfig> createPropertyList(CujoProperty ... propertyArray) {
         List<ColumnConfig> result = new ArrayList<ColumnConfig>();
         PropertyMetadataProvider metadataProvider = ClientClassConfig.getInstance().getPropertyMedatata();
 
