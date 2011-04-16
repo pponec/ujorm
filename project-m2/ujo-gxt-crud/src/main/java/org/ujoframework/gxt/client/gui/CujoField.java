@@ -38,11 +38,11 @@ public class CujoField extends AdapterField {
         }
 
         private static String getTableBody() {
-            String result =
-                "<table cellspacing='0' style='width:300px;'><tr class='x-form-text'>" +
-                "<td class='cujo-field' style='width:" + fieldWidth + ";'></td>" +
-                "<td class='cujo-btn'></td>" +
-                "</tr></table>";
+            String result
+                    = "<table cellspacing='0' style='width:300px;'><tr class='x-form-text'>"
+                    + "<td class='cujo-field' style='width:" + fieldWidth + ";'></td>"
+                    + "<td class='cujo-btn'></td>"
+                    + "</tr></table>";
             return result;
         }
     }
@@ -59,9 +59,11 @@ public class CujoField extends AdapterField {
         textField.setEmptyText(" ");
         textField.setWidth("100%");
 
-        final TableListDialog selectionDialog = new TableListDialog(tablePanel, (Field)this);
+        final TableListDialog selectionDialog = new TableListDialog(tablePanel, (Field) this);
         button.setWidth("100%");
-        if (false) button.setIcon(Icons.Pool.selectionDialog()); // toodo: how to center the icon?
+        if (false) {
+            button.setIcon(Icons.Pool.selectionDialog()); // toodo: how to center the icon?
+        }
         button.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent ce) {
@@ -82,8 +84,20 @@ public class CujoField extends AdapterField {
     }
 
     @Override
-    public boolean isValid() {
-        return textField.isValid();
+    public boolean isValid(boolean preventMark) {
+        if (isEnabled()) {
+            boolean valid = getAllowBlank()
+                ? true
+                : (value!=null)
+                ;
+            if (!valid && !preventMark) {
+                String msg = getMessages().getInvalidText();
+                textField.markInvalid(msg!=null ? msg : "The field is mandatory");
+            }
+            return valid;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -109,7 +123,6 @@ public class CujoField extends AdapterField {
         this.displayField = property.getName();
     }
 
-
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -125,4 +138,22 @@ public class CujoField extends AdapterField {
     public void setIcon(AbstractImagePrototype icon) {
         button.setIcon(icon);
     }
+
+    /**
+     * Sets whether a field is valid when its value length = 0 (default to true).
+     *
+     * @param allowBlank true to allow blanks, false otherwise
+     */
+    public void setAllowBlank(boolean allowBlank) {
+        textField.setAllowBlank(allowBlank);
+    }
+
+    /**
+     * Gets whether a field is valid when its value length = 0 (default to true).
+     * @param allowBlank true to allow blanks, false otherwise
+     */
+    public boolean getAllowBlank() {
+        return textField.getAllowBlank();
+    }
+
 }

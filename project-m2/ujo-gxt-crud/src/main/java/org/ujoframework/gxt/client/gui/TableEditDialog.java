@@ -32,6 +32,7 @@ import org.ujoframework.gxt.client.CujoProperty;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import org.ujoframework.gxt.client.ClientCallback;
 import org.ujoframework.gxt.client.commons.Icons;
 import org.ujoframework.gxt.client.controller.TableControllerAsync;
@@ -88,7 +89,6 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
         return (T) this;
     }
 
-
     @Override
     protected void onDetach() {
         super.onDetach();
@@ -132,13 +132,18 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
                 }
             });
         } else {
-            copyValuesToComponent();
+            // WorkAround for the Component.select();
+            TableControllerAsync.Util.getInstance().pink(new ClientCallback() {
+                @Override
+                public void onSuccess(Object result) {
+                    copyValuesToComponent();
+                }
+            });
         }
     }
 
     /** Create Widgets - overwrite the method */
     abstract protected void onCreateWidgets(Element parent, int pos);
-
 
     /** Bind a Field to CujoProperty  */
     protected void bind(CujoProperty property, Field field) {
@@ -233,6 +238,9 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
                 ((TextArea) widget).setAllowBlank(!metadata.isMandatory());
                 ((TextArea) widget).setMaxLength(metadata.getMaxLengthExt());
             }
+            if (widget.getClass().equals(CujoField.class)) {
+                ((CujoField) widget).setAllowBlank(!metadata.isMandatory());
+            }
             widget.clearInvalid();
 
             panel.add(widget);
@@ -264,7 +272,7 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
                     ? CujoModel.DEFAULT_DAY_FORMAT
                     : CujoModel.DEFAULT_DATE_FORMAT;
             dateField.getPropertyEditor().setFormat(dtFormat);
-
+            dateField.setAllowBlank(!metadata.isMandatory());
 
             panel.add(dateField);
             bind(p, dateField);
@@ -319,23 +327,30 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
      */
     @SuppressWarnings("unchecked")
     protected boolean copyValuesFromComponent() {
-
+        boolean result = true;
         for (CujoProperty p : binding.keySet()) {
             Field w = binding.get(p);
             if (!w.isValid()) {
-                return false;
+                result = false;
+                continue;
             }
             if (newState || w.isDirty()) {
-                copyValueFromComponent(p, w.getValue());
+                try {
+                    copyValueFromComponent(p, w.getValue());
+                } catch (Throwable e) {
+                    result = false;
+                    setFieldErrorMessage(p, w, e);
+                }
             }
         }
-
-        GWT.log("Cujo from component: " + cujo, null);
-        return true;
+        if (result) {
+            GWT.log("Cujo from component: " + cujo + " is assigned", null);
+        }
+        return result;
     }
 
     /** Copy the one value per one component */
-    protected void copyValueFromComponent(CujoProperty p, Object value) throws NumberFormatException {
+    protected void copyValueFromComponent(CujoProperty p, Object value) throws Exception {
 
         if (p.isTypeOf(Long.class)) {
             value = Long.parseLong((String) value);
@@ -349,6 +364,15 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
             }
         }
         cujo.set(p, value);
+    }
+
+    /** Set field error message: */
+    protected void setFieldErrorMessage(CujoProperty p, Field w, Throwable e) {
+        if (e!=null && e.getMessage()!=null) {
+            w.markInvalid("Invalid value: " + e.getMessage());
+        } else {
+            w.markInvalid("Invalid value");
+        }
     }
 
     /** Copy values from components to a protected field called <code>cujo<code>
@@ -373,11 +397,11 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
     /** Copy the one value per one component. */
     protected void copyValueToComponent(Field w, CujoProperty p, Object value) throws NumberFormatException {
         if (p.isTypeOf(String.class)) {
-            w.setValue(value != null ? value.toString() : "");
+            w.setRawValue(value != null ? value.toString() : null);
         } else {
             w.setValue(value);
+            w.clearInvalid();
         }
-        w.clearInvalid();
     }
 
     /** If a text maximal length (from meta-model) is great than constant TEXT_AREA_LIMIT,
@@ -429,4 +453,8 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
         return (T) binding.get(p);
     }
 
+    /** Have got the dialog a NEW STATE? */
+    public boolean isNewState() {
+        return newState;
+    }
 }

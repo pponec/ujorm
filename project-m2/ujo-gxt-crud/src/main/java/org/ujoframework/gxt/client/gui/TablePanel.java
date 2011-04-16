@@ -782,7 +782,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
 
     /** Test to modify permission */
     public boolean isModifyAllowed(EnumSet roles) {
-        return displayPermission==null ? true : displayPermission.isAllowed(roles);
+        return modifyPermission==null ? true : modifyPermission.isAllowed(roles);
     }
 
     public Permissions getModifyPermission() {
