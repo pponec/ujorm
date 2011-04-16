@@ -16,6 +16,10 @@ public class ValidationException extends RuntimeException {
 
     private final ValidationMessage validationMessage;
 
+    public ValidationException(String message) {
+        this(new ValidationMessage(null, message));
+    }
+
     public ValidationException(ValidationMessage validationMessage) {
         this.validationMessage = validationMessage;
     }

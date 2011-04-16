@@ -56,4 +56,7 @@ public interface TableController extends RemoteService {
     /* An workaround for the GXT serialization */
     public ClientSerializableEnvelope typeWorkaround(ClientSerializableEnvelope o);
 
+    /** Pink the server */
+    public void pink();
+
 }

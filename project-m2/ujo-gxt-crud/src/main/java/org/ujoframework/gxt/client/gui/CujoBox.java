@@ -18,8 +18,10 @@ import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import com.extjs.gxt.ui.client.event.SelectionChangedListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import java.util.List;
 import org.ujoframework.gxt.client.Cujo;
 import org.ujoframework.gxt.client.CujoProperty;
 import org.ujoframework.gxt.client.controller.TableControllerAsync;
@@ -42,38 +44,19 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
     public CujoBox(CujoProperty<? super CUJO,?> displayProperty) {
         setDisplayProperty(displayProperty);
         setEditable(false);
-
-        RpcProxy<PagingLoadResult<Cujo>> proxy = new RpcProxy<PagingLoadResult<Cujo>>() {
-
-            @Override
-            public void load(final Object loadConfig, final AsyncCallback<PagingLoadResult<Cujo>> callback) {
-
-                TableControllerAsync.Util.getInstance().getDbRows(
-                        getCQuery(),
-                        new BasePagingLoadConfig(),
-                        callback);
-            }
-        };
-
-        final PagingLoader<PagingLoadResult<CUJO>> loader = new BasePagingLoader<PagingLoadResult<CUJO>>(proxy);
-        loader.setSortDir(SortDir.ASC);
-        loader.setRemoteSort(true);
-        store = new ListStore<CUJO>(loader);
-    }
-
-    public final void setDisplayProperty(CujoProperty<? super CUJO,?> displayProperty) {
-        setDisplayField( displayProperty!=null
-                       ? displayProperty.getName()
-                       : "name"
-                       );
+        this.displayProperty = displayProperty;
     }
 
     @Override
     protected void onRender(Element parent, int index) {
+        // Combo Box needs the Store:
+        final PagingLoader<PagingLoadResult<CUJO>> loader = createLoader();
+        loader.setSortDir(SortDir.ASC);
+        loader.setRemoteSort(true);
+        store = new ListStore<CUJO>(loader);
         super.onRender(parent, index);
 
         addSelectionChangedListener(new SelectionChangedListener<CUJO>() {
-
             @Override
             public void selectionChanged(SelectionChangedEvent<CUJO> se) {
                 onChange(se.getSelectedItem());
@@ -81,6 +64,45 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
         });
 
         setEmptyText("Select value...");
+    }
+
+        /** Create a Loader for a Store. */
+    protected PagingLoader<PagingLoadResult<CUJO>> createLoader() {
+        RpcProxy<PagingLoadResult<Cujo>> proxy = new RpcProxy<PagingLoadResult<Cujo>>() {
+            @Override
+            public void load(final Object loadConfig, final AsyncCallback<PagingLoadResult<Cujo>> callback) {
+                final AsyncCallback<PagingLoadResult<Cujo>> callback2 = new AsyncCallback<PagingLoadResult<Cujo>>() {
+                    @Override
+                    public void onFailure(final Throwable caught) {
+                        callback.onFailure(caught);
+                        GWT.log("Error CujoBox loading", caught);
+                    }
+                    @Override
+                    public void onSuccess(final PagingLoadResult<Cujo> result) {
+                        onDataLoadSuccess(((PagingLoadResult<CUJO>) result).getData());
+                        callback.onSuccess(result);
+                    }
+                };
+                TableControllerAsync.Util.getInstance().getDbRows(getCQuery(), new BasePagingLoadConfig(), callback2);
+            }
+        };
+
+        final PagingLoader<PagingLoadResult<CUJO>> loader = new BasePagingLoader<PagingLoadResult<CUJO>>(proxy);
+        loader.setSortDir(SortDir.ASC);
+        loader.setRemoteSort(true);
+        return loader;
+    }
+
+    /** Overwrite this method. */
+    protected void onDataLoadSuccess(List<CUJO> data) {
+    }
+
+    public final void setDisplayProperty(CujoProperty<? super CUJO,?> displayProperty) {
+        this.displayProperty = displayProperty;
+        setDisplayField( displayProperty!=null
+                       ? displayProperty.getName()
+                       : "name"
+                       );
     }
 
     public CCriterion<CUJO> getAditionalCriterion() {
