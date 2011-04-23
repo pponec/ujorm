@@ -180,7 +180,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     @Override
     public boolean equals(Object property) {
         final String t1 = this.getName();
-        final String t2 = property.toString();
+        final String t2 = property!=null ? property.toString() : null;
         return t1.equals(t2) && getType().equals(((UjoProperty)property).getType());
     }
 
