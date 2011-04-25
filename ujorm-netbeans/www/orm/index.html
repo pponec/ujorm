@@ -171,13 +171,11 @@ The next example selects data from database:
 </pre>
 
       using the similar generated SQL command:
-<pre name="code" class="java">
-
+<pre style="border: 1px #CCCCCC solid; margin-left: 40px;">
  SELECT * FROM item
  JOIN order ON order.id = item.id_order
- WHERE item.id >=1
- AND order.note = 'My order'
- ;
+ WHERE item.id >= 1
+ AND order.note = 'My order' ;
 </pre>
     where both parameters are passed by a 'question mark' notation for a better security.
     And how to get meta-data for a 'description' property of the Order?
