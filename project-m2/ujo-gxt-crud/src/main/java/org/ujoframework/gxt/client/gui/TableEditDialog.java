@@ -21,6 +21,7 @@ import com.extjs.gxt.ui.client.widget.layout.FillLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
+import java.util.LinkedHashMap;
 import org.ujoframework.gxt.client.CEnum;
 import org.ujoframework.gxt.client.PropertyMetadata;
 import org.ujoframework.gxt.client.PropertyMetadataProvider;
@@ -29,10 +30,8 @@ import org.ujoframework.gxt.client.CPropertyEnum;
 import org.ujoframework.gxt.client.Cujo;
 import org.ujoframework.gxt.client.CujoModel;
 import org.ujoframework.gxt.client.CujoProperty;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import org.ujoframework.gxt.client.ClientCallback;
 import org.ujoframework.gxt.client.commons.Icons;
 import org.ujoframework.gxt.client.controller.TableControllerAsync;
@@ -53,7 +52,7 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
     protected boolean newState;
     /** Is dialog data loaded? */
     private boolean dataLoaded;
-    protected Map<CujoProperty, Field> binding = new HashMap<CujoProperty, Field>();
+    protected Map<CujoProperty, Field> binding = new LinkedHashMap<CujoProperty, Field>();
     /** The client business object to edit. */
     protected CUJO cujo;
     /** A result of a BO saving. */
