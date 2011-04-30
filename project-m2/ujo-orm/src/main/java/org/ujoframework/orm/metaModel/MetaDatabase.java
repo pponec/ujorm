@@ -71,10 +71,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public static final Property<MetaDatabase,String> SCHEMA = newProperty("schema", "");
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
     public static final Property<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class);
-    /** List of tables */
-    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
-    /** List of procedures */
-    public static final ListProperty<MetaDatabase,MetaProcedure> PROCEDURES = newListProperty("procedure", MetaProcedure.class);
     /** JDBC URL connection */
     public static final Property<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
     /** JDBC Driver */
@@ -98,6 +94,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
     public static final Property<MetaDatabase,Class> SEQUENCER = newProperty("sequencer", Class.class).writeDefault(UjoSequencer.class);
+    /** List of tables */
+    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
+    /** List of procedures */
+    public static final ListProperty<MetaDatabase,MetaProcedure> PROCEDURES = newListProperty("procedure", MetaProcedure.class);
+
     /** The property initialization */
     static{init(CLASS);}
 

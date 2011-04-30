@@ -55,7 +55,7 @@ public class OrmHandler {
     /** List of databases */
     private MetaRoot databases = new MetaRoot();
     /** Temporary configuration */
-    private MetaRoot configuration = null;
+    private MetaRoot configuration;
     /** The default ORM session */
     private Session session;
 
@@ -123,7 +123,7 @@ public class OrmHandler {
         MetaRoot.PARAMETERS.setValue(databases, params);
     }
 
-    /** Save the ORM configuration include parameters (if the parameters are not null).
+    /** Save the alternative ORM configuration include parameters (if the parameters are not null).
      * The assigning must be finished before an ORM definition loading.
      */
     public void config(MetaRoot config) throws IllegalArgumentException {
@@ -173,9 +173,8 @@ public class OrmHandler {
     private <UJO extends OrmUjo> MetaDatabase loadDatabaseInternal(Class<UJO> databaseModel) {
 
         // Load a configuration parameters:
-        Db annotDb = databaseModel.getAnnotation(Db.class);
-        String schemaDb = annotDb!=null ? annotDb.schema() : null;
-        MetaDatabase paramDb = configuration!=null ? configuration.removeDb(schemaDb) : null;
+        String databaseId = databaseModel.getSimpleName();
+        MetaDatabase paramDb = configuration!=null ? configuration.removeDb(databaseId) : null;
 
         // Create the ORM DB model:
         UJO root = getInstance(databaseModel);
