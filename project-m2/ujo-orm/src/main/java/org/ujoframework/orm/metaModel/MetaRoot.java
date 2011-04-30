@@ -122,14 +122,14 @@ final public class MetaRoot extends AbstractMetaModel {
 
     /** Returns the first database with the same schemaName - and remove it from the list.
      * The method is for internal use only.
-     * @param schemaName The identifier for looking the database
+     * @param databaseId The identifier for looking the database
      */
-    public MetaDatabase removeDb(String schemaName) {
+    public MetaDatabase removeDb(String databaseId) {
         if (super.readOnly()) {
             throw new UnsupportedOperationException("The internal state is 'read only'");
         }
-        if (isUsable(schemaName)) for (MetaDatabase db : DATABASES.getList(this)) {
-            if (MetaDatabase.ID.equals(db, schemaName)) {
+        if (isUsable(databaseId)) for (MetaDatabase db : DATABASES.getList(this)) { MetaDatabase.ID.getValue(db);
+            if (MetaDatabase.ID.equals(db, databaseId)) {
                 DATABASES.getList(this).remove(db);
                 return db;
             }
