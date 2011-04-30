@@ -107,10 +107,22 @@ public class OrmHandler {
 
     /** Load parameters from an external XML file.
      * The initialization must be finished before an ORM definition loading.
+     * <br/>Note: in case the parameter starts by the character tilde '~' than the symbol is replaced by a local home directory.
+     * See some valid parameter examples:
+     * <ul>
+     *    <li>http://myproject.org/dbconfig.xml</li>
+     *    <li>file:///C:/Documents%20and%20Settings/my/app/dbconfig.xml</li>
+     *    <li>~/app/dbconfig.xml</li>
+     * </ul>
      */
     public boolean config(String url) throws IllegalArgumentException {
         try {
-            return config(new URL(url), true);
+            if (url.startsWith("~")) {
+                final String file = System.getProperty("user.home") + url.substring(1);
+                return config(new File(file).toURI().toURL(), true);
+            } else {
+                return config(new URL(url), true);
+            }
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Configuration file is not valid " + url , e);
         }
