@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
+import org.ujoframework.UjoAction;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
@@ -77,15 +78,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public static final Property<MetaDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "");
     /** DB user */
     public static final Property<MetaDatabase,String> USER = newProperty("user", "");
-    /** DB password */
-    @Transient
+    /** DB password of the user */
     public static final Property<MetaDatabase,String> PASSWORD = newProperty("password", "");
-    /** Database order number */
-    @Transient
-    public static final Property<MetaDatabase,Integer> ORDER = newProperty("order", 0);
-    /** An instance of the DB class. */
-    @Transient
-    public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string
      */
@@ -98,6 +92,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
     /** List of procedures */
     public static final ListProperty<MetaDatabase,MetaProcedure> PROCEDURES = newListProperty("procedure", MetaProcedure.class);
+    /** Database order number */
+    @Transient
+    public static final Property<MetaDatabase,Integer> ORDER = newProperty("order", 0);
+    /** An instance of the DB class. */
+    @Transient
+    public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
 
     /** The property initialization */
     static{init(CLASS);}
@@ -875,6 +875,17 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         final Integer i1 = ORDER.of(this);
         final Integer i2 = ORDER.of(o);
         return i1.compareTo(i2);
+    }
+
+    /** The PASSWORD property is not exported to XML for a better security. */
+    @Override
+    public boolean readAuthorization(final UjoAction action, final UjoProperty property, final Object value) {
+        switch (action.getType()) {
+            case UjoAction.ACTION_XML_EXPORT:
+                return property != PASSWORD;
+            default:
+                return super.readAuthorization(action, property, value);
+        }
     }
 
 }
