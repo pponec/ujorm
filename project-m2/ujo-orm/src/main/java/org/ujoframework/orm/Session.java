@@ -562,7 +562,24 @@ public class Session {
         return result;
     }
 
-    /** Get connection for a required database with an autocommit na false. */
+    /**
+     * Get the first Connection where an autocommit is set to false.
+     * @param databaseIndex The first database have got the index value: 0 .
+     */
+    final public Connection getFirstConnection(int databaseIndex) throws IllegalStateException {
+        return getConnection(0);
+    }
+
+    /**
+     * Get a Connection for a required databse by a database order number (index).
+     * The autocommit is set to false.
+     * @param databaseIndex The first database have got the index value: 0 .
+     */
+    final public Connection getConnection(int databaseIndex) throws IllegalStateException {
+        return getConnection_(handler.getDatabases().get(databaseIndex), 0);
+    }
+
+    /** Get a Connection for a required database with an autocommit na false. */
     final public Connection getConnection(final MetaDatabase database) throws IllegalStateException {
         return getConnection_(database, 0);
     }
@@ -687,7 +704,7 @@ public class Session {
     }
 
     /** Assert the current session os open. */
-    private final void assertOpenSession() throws IllegalStateException {
+    private void assertOpenSession() throws IllegalStateException {
         if (closed) {
             throw new IllegalStateException("The session is closed ("+hashCode()+")");
         }
