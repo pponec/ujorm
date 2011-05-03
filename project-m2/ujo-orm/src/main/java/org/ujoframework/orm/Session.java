@@ -566,7 +566,7 @@ public class Session {
      * Get the first Connection where an autocommit is set to false.
      * @param databaseIndex The first database have got the index value: 0 .
      */
-    final public Connection getFirstConnection(int databaseIndex) throws IllegalStateException {
+    final public Connection getFirstConnection() throws IllegalStateException {
         return getConnection(0);
     }
 
