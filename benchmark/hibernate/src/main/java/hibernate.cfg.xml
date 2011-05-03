@@ -6,7 +6,7 @@
 <!-- Description:http://docs.jboss.org/hibernate/stable/core/reference/en/html/configuration-optional.html -->
 <hibernate-configuration>
     <session-factory>
-        <!--
+        <!-- -->
         <property name="hibernate.connection.username">sa</property>
         <property name="hibernate.connection.password">sa</property>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
