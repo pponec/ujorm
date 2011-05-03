@@ -1,6 +1,27 @@
 The UJO Framework release notes
 *******************************
 
+release 1.20 (2010-05-?)
++ the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL. 
+  See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
+  Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;  
++ the 'Sequence Table Model' is implemented to customize of the 'ujorm_pk_support' table.
++ persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement include its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
++ the batch UPDATE is supoorted now, see documentation for more information 
++ core class UjoComparator supports the Collator for comparation of the String items.
++ composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
++ auto increment is supported for data type String now
++ the documentation Ujorm User Guide is extended
++ database commits are executed by order of assigning database models now
++ API of the class Criterion is extended for two methods: forAll() and forNone()
++ many Ujorm source code cleanings are finished
+- Ujorm configuration loading from XML file is fixed
+- the DDL update fixed in case a default value is any implementatione of the interface OrmUjo
+- Spring integration is fixed for annotations @Transactional in some cases
+- the core method PathProperty.equals(parameter) is fixed for the case the parameter have got the null value
+- implementation CommentPolicy.ON_ANY_CHANGE is fixed
+- logging of the SQL values is fixed
+
 release 1.10 (2010-02-06)
 + dialect for the database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
 + new native Criterion is implemented with an SQL expression to use on Ujorm query
