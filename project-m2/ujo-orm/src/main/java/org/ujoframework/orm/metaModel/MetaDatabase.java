@@ -699,7 +699,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
 
-
     /** Returns an ID of the MetaDatabase. */
     public String getId() {
         return ID.of(this);
@@ -749,10 +748,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (obj instanceof MetaDatabase) {
             MetaDatabase db = (MetaDatabase) obj;
 
-            final String name1 = MetaDatabase.SCHEMA.of(this);
-            final String name2 = MetaDatabase.SCHEMA.of(db);
+            final Integer i1 = MetaDatabase.ORDER.of(this);
+            final Integer i2 = MetaDatabase.ORDER.of(db);
 
-            return name1.equals(name2);
+            return i1.equals(i2);
         } else {
             return false;
         }
@@ -761,8 +760,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Hash code */
     @Override
     public int hashCode() {
-        final String name = MetaDatabase.SCHEMA.of(this);
-        return name.hashCode();
+        final Integer ir = MetaDatabase.ORDER.of(this);
+        return ir.hashCode();
     }
 
 

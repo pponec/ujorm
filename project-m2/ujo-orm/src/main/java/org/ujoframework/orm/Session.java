@@ -106,9 +106,8 @@ public class Session {
             throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
         }
 
-        Throwable exception = null;
+        final String errMessage = "Can't make commit of DB ";
         MetaDatabase database = null;
-        String errMessage = "Can't make commit of DB ";
 
         try {
             MetaDatabase[] databases = connections[0].keySet().toArray(new MetaDatabase[connections[0].size()]);
@@ -133,7 +132,7 @@ public class Session {
             }
         } catch (Throwable e) {
             LOGGER.log(Level.SEVERE, errMessage + database, e);
-            throw new IllegalStateException(errMessage + database, exception);
+            throw new IllegalStateException(errMessage + database, e);
         }
         rollbackOnly = false;
     }
