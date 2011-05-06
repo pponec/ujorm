@@ -23,10 +23,11 @@ public class TableListDialog<CUJO extends Cujo> extends DataWindow<CUJO> {
 
     protected FormPanel panel;
     protected Field<CUJO> selectedItem;
-
+    protected TablePanel<CUJO> tablePanel;
 
     @SuppressWarnings("unchecked")
     public TableListDialog(TablePanel<CUJO> tablePanel, Field<CUJO> selectedItem) {
+        this.tablePanel = tablePanel;
         this.selectedItem = selectedItem;
         if (selectedItem != null) {
             tablePanel.setSelectMode(selectedItem, this);
@@ -48,12 +49,11 @@ public class TableListDialog<CUJO extends Cujo> extends DataWindow<CUJO> {
     }
 
     @Override
-    protected void onShow() {
+    public void show() {
+        if (selectedItem != null) {
+            tablePanel.setSelectMode(selectedItem, this);
+        }
         super.onShow();
-        //tablePanel.setSelectMode(selectedItem, this);
     }
-
-   
-
 
 }
