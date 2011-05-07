@@ -483,15 +483,14 @@ abstract public class SqlDialect {
         MetaColumn column = (MetaColumn) ormHandler.findColumnModel(property);
 
         if (right==null ) {
-            String columnName = MetaColumn.NAME.of(column);
             switch (operator) {
                 case EQ:
                 case EQUALS_CASE_INSENSITIVE:
-                    out.append(columnName);
+                    printColumnAlias(column, out);
                     out.append(" IS NULL");
                     return null;
                 case NOT_EQ:
-                    out.append(columnName);
+                    printColumnAlias(column, out);
                     out.append(" IS NOT NULL");
                     return null;
                 default:
