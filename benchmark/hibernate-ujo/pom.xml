@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>benchmark.hibernate.ujo</artifactId>
     <packaging>jar</packaging>
-    <version>1.19.01-SNAPSHOT</version>
+    <version>1.19.02-SNAPSHOT</version>
     <name>xBenchmark-HibernateUjo</name>
     <url>http://maven.apache.org</url>
     <build>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.19.01-SNAPSHOT</version>
+            <version>1.19.02-SNAPSHOT</version>
         </dependency>
 
         <!-- HIBERNATE -->
