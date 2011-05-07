@@ -359,12 +359,15 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
             int index = grid.getStore().indexOf(selectedItem);
             selectedItemIndex = index == -1 ? 0 : index;
         }
-        grid.getSelectionModel().select(selectedItemIndex, false);
-        grid.getView().focusRow(selectedItemIndex);
+        if (grid.getStore().getCount()>0) {
+            grid.getSelectionModel().select(selectedItemIndex, false);
+            grid.getView().focusRow(selectedItemIndex);
+        }
     }
 
     private void findModelById() {
-        if (selectedId != null) {
+        if (selectedItem != null) {
+            Long selectedId = selectedItem.get("id");
             for (CUJO cujo : grid.getStore().getModels()) {
                 Long id = cujo.get("id");
                 if (id.equals(selectedId)) {
@@ -375,11 +378,13 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
         }
     }
 
+    /** Selected Item from an Update */
     @Override
     public void setUpdateValue(CUJO cujo) {
         this.selectedItem = cujo;
     }
 
+    /** Selected Item from an Update */
     @Override
     public void setUpdateValue(Long cujoId) {
         this.selectedId = cujoId;
