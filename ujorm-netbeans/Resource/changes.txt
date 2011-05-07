@@ -16,11 +16,12 @@ release 1.20 (2010-05-?)
 + API of the class Criterion is extended for two methods: forAll() and forNone()
 + many Ujorm source code cleanings are finished
 - Ujorm configuration loading from XML file is fixed
+- SqlDialect is fixed for the null relation case by sample: Criterion.whereNull(Item.order)
 - the DDL update fixed in case a default value is any implementatione of the interface OrmUjo
 - Spring integration is fixed for annotations @Transactional in some cases
 - the core method PathProperty.equals(parameter) is fixed for the case the parameter have got the null value
 - implementation CommentPolicy.ON_ANY_CHANGE is fixed
-- logging of the SQL values is fixed
+- log message for SQL values is fixed
 
 release 1.10 (2010-02-06)
 + dialect for the database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
