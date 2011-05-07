@@ -19,8 +19,10 @@ public interface TablePanelOperations<CUJO extends Cujo> {
     /** Select row and give focus to row by index */
     public void selectRow();
 
+    /** Selected Item from an Update */
     public void setUpdateValue(CUJO cujo);
 
+    /** Selected Item from an Update */
     public void setUpdateValue(Long cujoId);
 
 }

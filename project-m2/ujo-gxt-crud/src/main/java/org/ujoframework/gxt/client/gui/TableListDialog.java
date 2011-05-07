@@ -53,7 +53,7 @@ public class TableListDialog<CUJO extends Cujo> extends DataWindow<CUJO> {
         if (selectedItem != null) {
             tablePanel.setSelectMode(selectedItem, this);
         }
-        super.onShow();
+        super.show();
     }
 
 }
