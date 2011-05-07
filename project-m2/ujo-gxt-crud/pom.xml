@@ -24,7 +24,7 @@
     </licenses>
 
     <properties>
-        <ujorm.version>1.19.01-SNAPSHOT</ujorm.version>
+        <ujorm.version>1.19.02-SNAPSHOT</ujorm.version>
         <gwt.version>1.7.0</gwt.version>
         <gxt.version>2.1.0</gxt.version>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -123,7 +123,7 @@
             <version>1.0.1</version>
         </dependency>
     </dependencies>
-    <version>1.19.01-SNAPSHOT</version>
+    <version>1.19.02-SNAPSHOT</version>
 </project>
 
 
