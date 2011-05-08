@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2010 Pavel Ponec
+ *  Copyright 2009-2011 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,9 +29,13 @@ public @interface Db {
     String schema() default "";
     /** SQL dialect by a DB Vendor. */
     Class<? extends SqlDialect> dialect();
-    /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
+    /** The <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string.
-     * A typical use on the Tomcat:<br> jndi = {"java:comp/env","jdbc/EmployeeDB"}
+     * <br>A typical use on the Tomcat can be:<br> jndi = {"java:comp/env/jdbc/TestDB"}
+     * <br>See the 
+     * <a href="http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html" target="_blank">link</a> or
+     * <a href="http://www.mkyong.com/tomcat/how-to-configure-mysql-datasource-in-tomcat-6/" target="_blank">link</a>
+     * for more information about JNDI on the Tomcat.
      */
     String[] jndi() default {};
     /** JDBC Url */
