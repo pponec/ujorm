@@ -4,8 +4,9 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.19.02-SNAPSHOT</version>
+    <version>1.19.03-SNAPSHOT</version>
     <name>ujo-core</name>
+
     <contributors>
         <contributor>
             <name>Pavel Ponec</name>
