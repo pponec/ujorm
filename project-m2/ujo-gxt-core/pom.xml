@@ -2,14 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujoframework</groupId>
-    <artifactId>ujo-gxt-crud</artifactId>
+    <artifactId>ujo-gxt-core</artifactId>
     <packaging>jar</packaging>
-    <name>ujo-gxt-crud</name>
     <version>1.19.03-SNAPSHOT</version>
+    <name>ujo-gxt-core</name>
 
-    <description>Support for GWT (Create,Read,Update,Delete) - client UJO objects.
+    <description>Support for GWT - client UJO objects.
     </description>
     <url>http://maven.apache.org</url>
+
+    <scm>
+        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-gxt</url>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-gxt</connection>
+    </scm>
 
     <licenses>
         <license>
@@ -46,7 +51,6 @@
     <build>
         <resources>
             <resource>
-                <filtering>true</filtering>
                 <includes>
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
@@ -55,10 +59,7 @@
                     <include>**/*.gwt.xml</include>
                 </includes>
                 <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <filtering>false</filtering>
-                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
             </resource>
         </resources>
 
@@ -87,9 +88,9 @@
 
         <dependency>
             <groupId>org.ujoframework</groupId>
-            <artifactId>ujo-gxt-core</artifactId>
-            <version>${ujorm.version}</version>
-            <scope>compile</scope>
+            <artifactId>ujo-orm</artifactId>
+            <version>1.19.03-SNAPSHOT</version>
+       <!-- <scope>compile</scope> -->
         </dependency>
 
         <dependency>
@@ -123,6 +124,7 @@
             <artifactId>gwt-incubator-security</artifactId>
             <version>1.0.1</version>
         </dependency>
+
     </dependencies>
 </project>
 
