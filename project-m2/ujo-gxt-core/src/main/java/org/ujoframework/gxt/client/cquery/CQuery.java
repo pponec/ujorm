@@ -251,12 +251,16 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         return result;
     }
 
-    /** Request to load relatins to requered depth. Value 0 means no relations, value 1 means load the first level of relations. */
+    /** Request to load relatins to requered depth. 
+     * Value 0 means no relations, value 1 means load the first level of relations.
+     */
     public int getRelations() {
         return relations;
     }
 
-    /** Request to load relatins to requered depth. Value 0 means no relations, value 1 means load the first level of relations. */
+    /** Request to load relatins to requered depth. 
+     * Value 0 means no relations, value 1 means load the first level of relations.
+     */
     public void setRelations(int relations) {
         this.relations = relations;
     }
