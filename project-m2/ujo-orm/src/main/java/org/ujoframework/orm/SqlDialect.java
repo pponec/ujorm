@@ -188,6 +188,9 @@ abstract public class SqlDialect {
         if (value instanceof String) {
             isDefault = ((String) value).length() > 0;
             quotMark = "'";
+        } else if (value instanceof java.sql.Date) {
+            isDefault = true;
+            quotMark = "'";
         }
         if (isDefault) {
             out.append(" DEFAULT ");
