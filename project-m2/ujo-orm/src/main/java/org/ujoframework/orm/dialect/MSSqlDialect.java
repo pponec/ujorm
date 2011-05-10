@@ -98,7 +98,8 @@ public class MSSqlDialect extends SqlDialect {
             //because the timestamp value changes every time the row is modified.
             case TIMESTAMP:
                 return "DATETIME";
-
+            case BOOLEAN:
+                return "TINYINT";
             default:
                 return super.getColumnType(column);
         }
@@ -230,4 +231,31 @@ public class MSSqlDialect extends SqlDialect {
         }
         return out;
     }
+    
+    /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
+    @Override
+    public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
+        Object value = column.getJdbcFriendlyDefaultValue();
+        boolean isDefault = value!=null;
+        String quotMark = "";
+        if (value instanceof String) {
+            isDefault = ((String) value).length() > 0;
+            quotMark = "'";
+        } else if (value instanceof java.sql.Date) {
+            isDefault = true;
+            quotMark = "'";
+        }
+        if (isDefault) {
+            out.append(" DEFAULT ");
+            out.append(quotMark);
+            if (value instanceof Boolean) {
+                out.append((Boolean)value ? '1' : '0'); // << MS-SQL change
+            } else {
+                out.append(value.toString());
+            }
+            out.append(quotMark);
+        }
+        return out;
+    }
+
 }
