@@ -122,8 +122,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /** Add a new Criterion
+    /** Add a new Criterion.
      * @param criterion Parameter is mandatory and must not be NULL.
+     * @see Session#createQuery(org.ujoframework.criterion.Criterion) createQuery(Criteron)
+     * @see #setCriterion(org.ujoframework.criterion.Criterion) setCriteion(..)
      */
     public void addCriterion(Criterion<UJO> criterion) throws IllegalArgumentException {
         if (criterion==null) {
@@ -136,7 +138,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         clearDecoder();
     }
 
-    /** Set a new Criterion */
+    /** Set a new Criterion. There is recommended
+     * @see Session#createQuery(org.ujoframework.criterion.Criterion) createQuery(Criteron)
+     * @see #addCriterion(org.ujoframework.criterion.Criterion) addCriterion(..)
+     **/
     public Query<UJO> setCriterion(Criterion<UJO> criterion) {
         this.criterion = criterion;
         clearDecoder();
