@@ -249,7 +249,11 @@ public abstract class Criterion<UJO extends Ujo> {
     }
 
     /** This is an constane criterion independed on an entity.
-     * It is recommended not to use this solution in ORM.
+     * The method is <strong>deprecated</strong> in the ORM, use rather a one method from
+     * {@see #forAll(org.ujoframework.UjoProperty) forAll} or
+     * {@see #forNone(org.ujoframework.UjoProperty) forNone} .
+     * @see #forAll(org.ujoframework.UjoProperty)
+     * @see #forNone(org.ujoframework.UjoProperty)
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> Criterion<UJO> where(boolean value) {
