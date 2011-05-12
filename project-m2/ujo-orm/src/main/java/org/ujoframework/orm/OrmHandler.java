@@ -32,7 +32,6 @@ import org.ujoframework.core.UjoManagerXML;
 import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaRoot;
-import org.ujoframework.orm.annot.Db;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.metaModel.MetaProcedure;

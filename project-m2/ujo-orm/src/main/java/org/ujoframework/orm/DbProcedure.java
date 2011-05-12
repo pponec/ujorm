@@ -17,7 +17,6 @@
 
 package org.ujoframework.orm;
 
-import java.util.concurrent.Callable;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.implementation.orm.OrmTable;
