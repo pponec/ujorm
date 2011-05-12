@@ -124,8 +124,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Add a new Criterion.
      * @param criterion Parameter is mandatory and must not be NULL.
-     * @see Session#createQuery(org.ujoframework.criterion.Criterion) createQuery(Criteron)
-     * @see #setCriterion(org.ujoframework.criterion.Criterion) setCriteion(..)
+     * @see Session#createQuery(org.ujoframework.criterion.Criterion) createQuery(Criterion)
+     * @see #setCriterion(org.ujoframework.criterion.Criterion) setCriterion(..)
      */
     public void addCriterion(Criterion<UJO> criterion) throws IllegalArgumentException {
         if (criterion==null) {
