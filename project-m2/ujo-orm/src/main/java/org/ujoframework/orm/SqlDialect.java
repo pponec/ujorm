@@ -45,6 +45,7 @@ import org.ujoframework.orm.metaModel.MetaProcedure;
  * You may create a subclass of any implementation to create another SQL statement, however just I can't
  * exclude some small changes of this API in the next release.
  * @author Pavel Ponec
+ * @composed - - 1 SeqTableModel
  */
 @SuppressWarnings("unchecked")
 abstract public class SqlDialect {
@@ -65,6 +66,9 @@ abstract public class SqlDialect {
 
     /** Set the OrmHandler - the method is for internal call only. */
     public void setHandler(OrmHandler ormHandler) {
+        if (this.ormHandler!=null) {
+            throw new IllegalStateException("The OrmHandler is assigned yet.");
+        }
         this.ormHandler = ormHandler;
     }
 
