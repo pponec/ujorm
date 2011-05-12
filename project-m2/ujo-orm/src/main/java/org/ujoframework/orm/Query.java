@@ -122,8 +122,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /** Add a new Criterion */
-    public void addCriterion(Criterion<UJO> criterion) {
+    /** Add a new Criterion
+     * @param criterion Parameter is mandatory and must not be NULL.
+     */
+    public void addCriterion(Criterion<UJO> criterion) throws IllegalArgumentException {
+        if (criterion==null) {
+            throw new IllegalArgumentException("Argument must not be null");
+        }
         this.criterion = this.criterion!=null
             ? this.criterion.and(criterion)
             : criterion
