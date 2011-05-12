@@ -49,6 +49,7 @@ import org.ujoframework.orm.metaModel.MetaProcedure;
  * The ORM session.
  * <br />Methods of the session are not thread safe.
  * @author Pavel Ponec
+ * @composed * - 1 OrmHandler
  */
 @SuppressWarnings(value = "unchecked")
 public class Session {
