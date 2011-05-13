@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import org.ujoframework.orm.CriterionDecoder;
 import org.ujoframework.orm.DbType;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -258,13 +259,9 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
-    /** Multi row INSERT is not implemented in this dialect yet.
-     * <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29#Multirow_inserts">Multirow inserts</a> ?
-     * @see #printInsert(java.lang.Class, java.util.List, int, int, java.lang.Appendable)
-     */
     @Override
-    public boolean isMultiRowInsertSupported() {
-        return false;
+    public Appendable printInsert(List<? extends OrmUjo> bo, int idxFrom, int idxTo, Appendable out) throws IOException {
+        return printInsertBySelect(bo, idxFrom, idxTo, "", out);
     }
 
 }
