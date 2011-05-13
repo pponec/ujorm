@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm_tutorial.sample;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
@@ -60,6 +61,7 @@ public class SampleORM {
             sample.createMetaModel();
             sample.useInsert();
             sample.useSelect();
+            sample.useBatchInsert();
             sample.useCriterions();
             sample.useSortOrders();
             sample.useSortOrderItems();
@@ -157,6 +159,22 @@ public class SampleORM {
         } else {
             session.rollback();
         }
+    }
+
+    /** Batch insert by a multi row insert statement. */
+    public void useBatchInsert() {
+
+        Order order = session.createQuery(Order.class).setLimit(1).uniqueResult();
+        List<Item> items = new ArrayList<Item>();
+
+        for (int i = 0; i < 10; i++) {
+            Item item = new Item();
+            item.setOrder(order);
+            item.setNote("Item number #i");
+            items.add(item);
+        }
+        session.save(items, 10);
+        session.commit();
     }
 
     /** Now, how to select Orders from a database by Criterions? <br/>
