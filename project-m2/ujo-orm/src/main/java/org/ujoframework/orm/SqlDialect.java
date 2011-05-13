@@ -339,6 +339,38 @@ abstract public class SqlDialect {
         return out;
     }
 
+    /** Print an SQL INSERT statement. 
+     * @see #isMultiRowInsertSupported() 
+     */
+    public Appendable printInsert(final List<? extends OrmUjo> bo, final int idxFrom, final int idxTo, final Appendable out) throws IOException {
+
+        MetaTable table = ormHandler.findTableModel(bo.get(idxFrom).getClass());
+        StringBuilder values = new StringBuilder();
+
+        out.append("INSERT INTO ");
+        printFullTableName(table, out);
+        out.append(" (");
+
+        printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
+
+        for (int i=idxFrom; i<idxTo; ++i) {
+            out.append(i==idxFrom ? ") VALUES \n(" : "),\n(")
+               .append(values);
+        }
+        out.append(")");
+        return out;
+    }
+
+
+    /** Is supported the
+     * <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29#Multirow_inserts">Multirow inserts</a> ?
+     * Default value is true
+     * @see #printInsert(java.lang.Class, java.util.List, int, int, java.lang.Appendable)
+     */
+    public boolean isMultiRowInsertSupported() {
+        return true;
+    }
+
     /** Print an SQL UPDATE statement.  */
     public Appendable printUpdate
         ( MetaTable table

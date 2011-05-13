@@ -123,12 +123,12 @@ public class Session {
                 if (commit) {
                     conn.commit();
                     if (LOGGER.isLoggable(Level.FINE)) {
-                        LOGGER.log(Level.FINE, "Commit of the {0}", database.getId());
+                        LOGGER.log(Level.FINE, "Commit of the " + database.getId());
                     }
                 } else {
                     conn.rollback();
                     if (LOGGER.isLoggable(Level.FINE)) {
-                        LOGGER.log(Level.FINE, "Rolback of the {0}", database.getId());
+                        LOGGER.log(Level.FINE, "Rolback of the " + database.getId());
                     }
                 }
             }
@@ -221,15 +221,106 @@ public class Session {
         return table;
     }
 
+    /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
+     * @param bos List of the business object of the same class. If the list must not contain object of different types
+     * @param multiLimit Row limit for the one insert. I the value will be out of range <1,bos.size()> than the value will be corrected
+     * @throws IllegalStateException
+     */
+    public void save(final List<? extends OrmUjo> bos, int multiLimit) throws IllegalStateException {
+
+        // ---------------- VALIDATIONS -----------------------------------
+
+        if (bos==null || bos.isEmpty()) {
+            LOGGER.log(Level.INFO, "The multi insert list is empty");
+            return;
+        }
+        final MetaTable table = handler.findTableModel(bos.get(0).getClass());
+        final MetaDatabase db = MetaTable.DATABASE.of(table);
+
+        if (!db.getDialect().isMultiRowInsertSupported()) {
+            for (OrmUjo bo : bos) {
+                save(bo);
+            }
+            return;
+        }
+
+        // ---------------- PREPARE -------------------------------------
+
+        final boolean ihneritanceMode = MetaParams.INHERITANCE_MODE.of(params);
+        for (OrmUjo bo : bos) {
+
+            // 1. Update parent
+            if (ihneritanceMode) {
+                final OrmUjo parent = table.getParent(bo);
+                if (parent != null) {
+                    saveOrUpdate(parent);
+                }
+            }
+
+            // 2. Assign primary key
+            table.assignPrimaryKey(bo, this); 
+            // 3. Session must be assigned after assignPrimaryKey()
+            bo.writeSession(this); // 
+        }
+
+        // --------------- PERFORMANCE -------------------------------------
+
+        int bosCount = bos.size();
+        multiLimit = between(multiLimit, 1, bosCount); // Multi Limit corrction;
+        int idxFrom = 0;
+        int idxTo = multiLimit;
+
+        JdbcStatement statement = null;
+        String sql = "";
+        StringBuilder out = new StringBuilder(256);
+
+        try {
+            while (idxFrom < idxTo) {
+                out.setLength(0);
+                sql = db.getDialect().printInsert(bos, idxFrom, idxTo, out).toString();
+                LOGGER.log(Level.INFO, sql);
+                statement = getStatement(db, sql);
+                statement.assignValues(bos, idxFrom, idxTo);
+                LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
+                statement.executeUpdate(); // execute insert statement
+                MetaDatabase.close(null, statement, null, true);
+                statement = null;
+                //
+                idxFrom = idxTo;
+                idxTo = between(idxFrom + multiLimit, idxFrom, bosCount);
+            }
+
+        } catch (Throwable e) {
+            rollbackOnly = true;
+            throw new IllegalStateException(SQL_ILLEGAL + sql, e);
+        } finally {
+            MetaDatabase.close(null, statement, null, true);
+        }
+    }
+
+    /** Set value inside range */
+    private int between(int value, final int min, final int max) {
+        if (value < min) {
+            value = min;
+        } else if (value > max) {
+            value = max;
+        }
+        return value;
+    }
+
+
     /** INSERT object into table. */
     public void save(final OrmUjo bo) throws IllegalStateException {
         JdbcStatement statement = null;
         String sql = "";
 
         try {
+            // 1. Update parent
             final MetaTable table = modifyParent(bo);
+            // 2. Assigh Primary Key
             table.assignPrimaryKey(bo, this);
-            bo.writeSession(this); // Session must be assigned after assignPrimaryKey(). A bug was fixed thans to Pavel Slovacek
+            // 3. Session must be assigned after assignPrimaryKey(). A bug was fixed thans to Pavel Slovacek
+            bo.writeSession(this); 
             MetaDatabase db = MetaTable.DATABASE.of(table);
             sql = db.getDialect().printInsert(bo, out(128)).toString();
             LOGGER.log(Level.INFO, sql);

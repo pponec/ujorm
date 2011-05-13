@@ -103,6 +103,17 @@ public class JdbcStatement {
         assignValues(bo, columns);
     }
 
+    /** Assign values into the prepared statement */
+    @SuppressWarnings("unchecked")
+    public void assignValues(List<? extends OrmUjo> bos, int idxFrom, int idxTo) throws SQLException {
+        final OrmUjo bo = bos.get(idxFrom);
+        final MetaTable dbTable = bo.readSession().getHandler().findTableModel((Class) bo.getClass());
+        final List<MetaColumn> columns = MetaTable.COLUMNS.getList(dbTable);
+
+        for (int i = idxFrom; i < idxTo; i++) {
+            assignValues(bos.get(i), columns);
+        }
+    }
 
     /** Assign values into the prepared statement */
     @SuppressWarnings("unchecked")
