@@ -7,6 +7,7 @@ release 1.20 (2010-05-?)
   Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;  
 + the 'Sequence Table Model' is implemented to customize of the 'ujorm_pk_support' table.
 + persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement include its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
++ the batch INSERT for list of items usding a multi row SQL INSERT is implemented 
 + the batch UPDATE is supoorted now, see documentation for more information 
 + core class UjoComparator supports the Collator for comparation of the String items.
 + composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
