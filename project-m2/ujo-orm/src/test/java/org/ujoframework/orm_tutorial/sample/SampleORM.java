@@ -165,15 +165,15 @@ public class SampleORM {
     public void useBatchInsert() {
 
         Order order = session.createQuery(Order.class).orderBy(Order.id.descending()).setLimit(1).uniqueResult();
-        List<Item> items = new ArrayList<Item>();
+        List<Item> itemList = new ArrayList<Item>();
 
         for (int i = 0; i < 3; i++) {
             Item item = new Item();
             item.setOrder(order);
             item.setNote("Item number #i");
-            items.add(item);
+            itemList.add(item);
         }
-        session.save(items);
+        session.save(itemList);
         session.commit();
     }
 
@@ -524,7 +524,9 @@ public class SampleORM {
      */
     public void useBatchUpdate() {
         Order order = new Order();
-        order.writeSession(session); // Activate the Change column management
+        // Activate the Change column management:
+        order.writeSession(session);
+        // Set a value(s) to the change:
         order.setCreated(new Date());
 
         Criterion<Order> criterion  = Criterion.where(Order.id, GE, 1L);
@@ -542,7 +544,9 @@ public class SampleORM {
         System.out.println("There is DELETED object: " + item);
     }
 
-    /** How to use a batch DELETE? */
+    /** How to use a batch DELETE? <br/>
+     *  The next example deletes all Items where Item.id = 1
+     */
     public void useBatchDelete() {
         Criterion<Item> crit = Criterion.where(Item.id, 1L);
         int count = session.delete(crit);
