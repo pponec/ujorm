@@ -222,8 +222,22 @@ public class Session {
     }
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
+     * @param multiLimit Row limit for the one insert.
+     *        If the value will be out of range <1,bos.size()> than the value will be corrected.
+     *        If the list item count is greather than multi limit so insert will be separated by more multirow inserts.
+     * @throws IllegalStateException
+     * @see MetaParams#INSERT_MULTIROW_ITEM_LIMIT
+     */
+    public void save(final List<? extends OrmUjo> bos) throws IllegalStateException {
+        final int multiLimit = params.get(MetaParams.INSERT_MULTIROW_ITEM_LIMIT);
+        save(bos, multiLimit);
+    }
+
+    /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
      * @param bos List of the business object of the same class. If the list must not contain object of different types
-     * @param multiLimit Row limit for the one insert. I the value will be out of range <1,bos.size()> than the value will be corrected
+     * @param multiLimit Row limit for the one insert. 
+     *        If the value will be out of range <1,bos.size()> than the value will be corrected.
+     *        If the list item count is greather than multi limit so insert will be separated by more multirow inserts.
      * @throws IllegalStateException
      */
     public void save(final List<? extends OrmUjo> bos, int multiLimit) throws IllegalStateException {
@@ -236,6 +250,7 @@ public class Session {
         }
         final MetaTable table = handler.findTableModel(bos.get(0).getClass());
         final MetaDatabase db = MetaTable.DATABASE.of(table);
+        final int bosCount = bos.size();
 
         if (!db.getDialect().isMultiRowInsertSupported()) {
             for (OrmUjo bo : bos) {
@@ -265,7 +280,6 @@ public class Session {
 
         // --------------- PERFORMANCE -------------------------------------
 
-        int bosCount = bos.size();
         multiLimit = between(multiLimit, 1, bosCount); // Multi Limit corrction;
         int idxFrom = 0;
         int idxTo = multiLimit;
@@ -281,7 +295,7 @@ public class Session {
                 LOGGER.log(Level.INFO, sql);
                 statement = getStatement(db, sql);
                 statement.assignValues(bos, idxFrom, idxTo);
-                LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(Level.FINE, SQL_VALUES + statement.getAssignedValues());
                 statement.executeUpdate(); // execute insert statement
                 MetaDatabase.close(null, statement, null, true);
                 statement = null;

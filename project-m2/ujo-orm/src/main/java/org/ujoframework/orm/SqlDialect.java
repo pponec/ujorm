@@ -340,12 +340,15 @@ abstract public class SqlDialect {
     }
 
     /** Print an SQL INSERT statement. 
+     * @param bos Business object list
+     * @param idxFrom Start index from list
+     * @param idxTo Finished index from list (excluded)
      * @see #isMultiRowInsertSupported() 
      */
-    public Appendable printInsert(final List<? extends OrmUjo> bo, final int idxFrom, final int idxTo, final Appendable out) throws IOException {
+    public Appendable printInsert(final List<? extends OrmUjo> bos, final int idxFrom, final int idxTo, final Appendable out) throws IOException {
 
-        MetaTable table = ormHandler.findTableModel(bo.get(idxFrom).getClass());
-        StringBuilder values = new StringBuilder();
+        MetaTable table = ormHandler.findTableModel(bos.get(idxFrom).getClass());
+        StringBuilder values = new StringBuilder(32);
 
         out.append("INSERT INTO ");
         printFullTableName(table, out);
@@ -358,6 +361,34 @@ abstract public class SqlDialect {
                .append(values);
         }
         out.append(")");
+        return out;
+    }
+
+    /** Print an batch SQL INSERT statement unsing SELECT UNION statejemnt.
+     * @param bos Business object list
+     * @param idxFrom Start index from list
+     * @param idxTo Finished index from list (excluded)
+     * @param fromPhrase For example the Oracla syntax: SELECT 1,2,3 FROM DUAL;
+     * @see #isMultiRowInsertSupported()
+     */
+    public Appendable printInsertBySelect(final List<? extends OrmUjo> bos, final int idxFrom, final int idxTo, final String fromPhrase, final Appendable out) throws IOException {
+
+        MetaTable table = ormHandler.findTableModel(bos.get(idxFrom).getClass());
+        StringBuilder values = new StringBuilder(32);
+
+        out.append("INSERT INTO ");
+        printFullTableName(table, out);
+        out.append(" (");
+
+        printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
+
+        for (int i=idxFrom; i<idxTo; ++i) {
+            out.append(i==idxFrom ? ")\nSELECT " : " UNION ALL\nSELECT ")
+               .append(values);
+            if (isUsable(fromPhrase)) {
+                out.append(" ").append(fromPhrase);
+            }
+        }
         return out;
     }
 

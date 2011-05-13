@@ -52,10 +52,7 @@ public class HsqldbDialect extends H2Dialect {
         return out;
     }
 
-    /** Multi row INSERT is not implemented in this dialect yet.
-     * <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29#Multirow_inserts">Multirow inserts</a> ?
-     * @see #printInsert(java.lang.Class, java.util.List, int, int, java.lang.Appendable)
-     */
+    /** Database HSQLDB does not supports the MultiRow INSERT. */
     @Override
     public boolean isMultiRowInsertSupported() {
         return false;

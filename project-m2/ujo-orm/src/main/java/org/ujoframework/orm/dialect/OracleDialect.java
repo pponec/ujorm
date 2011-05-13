@@ -17,6 +17,8 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import java.util.List;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaIndex;
@@ -103,8 +105,6 @@ public class OracleDialect extends PostgreSqlDialect {
         return out;
     }
 
-
-
     /**
      *  Print a SQL to create column
      * @param column Database Column
@@ -144,6 +144,11 @@ public class OracleDialect extends PostgreSqlDialect {
     @Override
     public Appendable printIndexCondition(final MetaIndex index, final Appendable out) throws IOException {
         return out;
+    }
+
+    @Override
+    public Appendable printInsert(List<? extends OrmUjo> bo, int idxFrom, int idxTo, Appendable out) throws IOException {
+        return printInsertBySelect(bo, idxFrom, idxTo, "FROM DUAL", out);
     }
 
 }

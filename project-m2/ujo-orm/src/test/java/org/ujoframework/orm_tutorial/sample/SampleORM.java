@@ -105,7 +105,7 @@ public class SampleORM {
     public void createMetaModel() {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.FINE);
         handler = new OrmHandler();
 
         // There are prefered default properties for a production environment:
@@ -164,16 +164,16 @@ public class SampleORM {
     /** Batch insert by a multi row insert statement. */
     public void useBatchInsert() {
 
-        Order order = session.createQuery(Order.class).setLimit(1).uniqueResult();
+        Order order = session.createQuery(Order.class).orderBy(Order.id.descending()).setLimit(1).uniqueResult();
         List<Item> items = new ArrayList<Item>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             Item item = new Item();
             item.setOrder(order);
             item.setNote("Item number #i");
             items.add(item);
         }
-        session.save(items, 10);
+        session.save(items);
         session.commit();
     }
 

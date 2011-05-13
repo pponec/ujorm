@@ -16,6 +16,8 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import java.util.List;
+import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.MetaColumn;
 
@@ -88,13 +90,21 @@ public class FirebirdDialect extends org.ujoframework.orm.SqlDialect {
         return out;
     }
 
-    /** Multi row INSERT is not implemented in this dialect yet.
-     * <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29#Multirow_inserts">Multirow inserts</a> ?
-     * @see #printInsert(java.lang.Class, java.util.List, int, int, java.lang.Appendable)
+    /** Multi row INSERT is not implemented in this dialect yet due:<br/>
+     * Caused by: org.firebirdsql.jdbc.FBSQLException: GDS Exception. 335544436. SQL error code = -804
      */
     @Override
     public boolean isMultiRowInsertSupported() {
         return false;
+    }
+
+    /**
+     * Implementation is not working
+     * @see #isMultiRowInsertSupported()
+     */
+    @Override
+    public Appendable printInsert(List<? extends OrmUjo> bo, int idxFrom, int idxTo, Appendable out) throws IOException {
+        return printInsertBySelect(bo, idxFrom, idxTo, "FROM RDB$DATABASE", out);
     }
 
 

@@ -88,9 +88,15 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Property<MetaParams,Boolean> INHERITANCE_MODE = newProperty("inheritanceMode", true);
 
+    /** The parameter is used to limit of the insert sttatemtn in case the "sql multirow insert".
+     * @see org.ujoframework.orm.Session#save(java.util.List, int) save(List)
+     */
+    public static final Property<MetaParams,Integer> INSERT_MULTIROW_ITEM_LIMIT = newProperty("insertMultirowItemLimit", 100);
+
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
     public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
+
     /** The property initialization */
     static{init(CLASS, true);}
 
