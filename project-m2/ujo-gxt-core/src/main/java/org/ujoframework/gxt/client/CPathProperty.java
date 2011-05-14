@@ -49,8 +49,28 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
 
     /** Get the last property of the current object. The result may not be the direct property. */
     @SuppressWarnings("unchecked")
-    final public <UJO_IMPL extends Cujo> CujoProperty<UJO_IMPL, VALUE> getLastProperty() {
+    public final <UJO_IMPL extends Cujo> CujoProperty<UJO_IMPL, VALUE> getLastPartialProperty() {
         return properties.get(properties.size() - 1);
+    }
+
+    /** Get the first property of the current object. The result is direct property always. */
+    @SuppressWarnings("unchecked")
+    final public <UJO_IMPL extends Cujo> CujoProperty<UJO_IMPL, VALUE> getLastProperty() {
+        CujoProperty result = properties.get(properties.size() - 1);
+        return result.isDirect()
+            ? result
+            : ((CPathProperty)result).getLastProperty()
+            ;
+    }
+
+    /** Get the first property of the current object. The result is direct property always. */
+    @SuppressWarnings("unchecked")
+    final public <UJO_IMPL extends Cujo> CujoProperty<UJO_IMPL, VALUE> getFirstProperty() {
+        CujoProperty result = properties.get(0);
+        return result.isDirect()
+            ? result
+            : ((CPathProperty)result).getFirstProperty()
+            ;
     }
 
     /** Get a property from selected positon.. The result may not be the direct property. */
@@ -83,16 +103,16 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     @SuppressWarnings("unchecked")
     @Override
     public Class<VALUE> getType() {
-        return getLastProperty().getType();
+        return getLastPartialProperty().getType();
     }
 
     @Override
     public String getShortTypeName() {
-        return getLastProperty().getShortTypeName();
+        return getLastPartialProperty().getShortTypeName();
     }
 
     /** Get a semifinal value from an Ujo object by a chain of properties.
-     * If a value  (not getLastProperty) is null, then the result is null.
+     * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     public Cujo getSemifinalValue(Cujo ujo) {
@@ -108,19 +128,19 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     }
 
     /** Get a value from an Ujo object by a chain of properties.
-     * If a value  (not getLastProperty) is null, then the result is null.
+     * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     @Override
     public VALUE getValue(UJO ujo) {
         Cujo u = getSemifinalValue(ujo);
-        return u != null ? getLastProperty().getValue(u) : null;
+        return u != null ? getLastPartialProperty().getValue(u) : null;
     }
 
     @Override
     public void setValue(UJO ujo, VALUE value) {
         final Cujo u = getSemifinalValue(ujo);
-        getLastProperty().setValue(u, value);
+        getLastPartialProperty().setValue(u, value);
     }
 
     @Override
@@ -131,14 +151,14 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     /** Returns a default value */
     @Override
     public VALUE getDefault() {
-        return getLastProperty().getDefault();
+        return getLastPartialProperty().getDefault();
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     @Override
     public boolean isTypeOf(final Class type) {
-        return getLastProperty().isTypeOf(type);
+        return getLastPartialProperty().isTypeOf(type);
     }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
@@ -146,7 +166,7 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     public void copy(final UJO from, final UJO to) {
         final Cujo from2 = getSemifinalValue(from);
         final Cujo to2 = getSemifinalValue(to);
-        getLastProperty().copy(from2, to2);
+        getLastPartialProperty().copy(from2, to2);
     }
 
     /**
@@ -205,7 +225,7 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
      */
     @Override
     public boolean isAscending() {
-        return ascending!=null ? ascending : getLastProperty().isAscending();
+        return ascending!=null ? ascending : getLastPartialProperty().isAscending();
     }
 
     /** Create a new instance of the property with a descending direction of order.
@@ -292,7 +312,7 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
 
     @Override
     public String getCammelName() {
-        return getLastProperty().getCammelName();
+        return getLastPartialProperty().getCammelName();
     }
     
     @Override

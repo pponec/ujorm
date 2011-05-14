@@ -301,7 +301,7 @@ public class OrmHandler {
      * @return Returns a related model or the NULL if no model was found.
      */
     public MetaRelation2Many findColumnModel(UjoProperty pathProperty) {
-        if (pathProperty!=null) while (!pathProperty.isDirect()) {
+        if (pathProperty!=null && !pathProperty.isDirect()) {
             pathProperty = ((PathProperty)pathProperty).getLastProperty();
         }
         final MetaRelation2Many result = propertyMap.get(pathProperty);
