@@ -72,6 +72,7 @@ public class SampleORM {
             sample.useSelectItems_4();
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
+            sample.useOptimizedSelect();
             sample.useNativeCriterion();
             sample.useReloading();
             sample.useLimitAndOffset();
@@ -253,7 +254,6 @@ public class SampleORM {
 
         Query<Item> items = session.createQuery(Item.class);
         items.orderBy(Item.order.add(Order.created));
-        items.setColumns(Item.order); // Select the one column 'order' only
 
         for (Item item : items) {
             OrmTools.loadLazyValues(item, 2);
@@ -351,12 +351,24 @@ public class SampleORM {
         order_2.setId(2L);
 
         Criterion<Item> crit = Criterion.whereIn(Item.order, order_1, order_2);
-        Query<Item> items = session.createQuery(crit);
 
-        Object oo = items.iterator();
-
-        for (Item item : items) {
+        for (Item item : session.createQuery(crit)) {
             System.out.println("Item: " + item);
+        }
+    }
+
+    /** Create a SELECT for the one column only for a better performance. */
+    public void useOptimizedSelect() {
+        Criterion<Item> crit = Criterion.where(Item.id, NOT_EQ, 0L);
+        Query<Item> items = session.createQuery(crit)
+                .setColumn(Item.note) // Select the one column
+                ;
+        for (Item item : items) {
+            System.out.println("Note: " + item.getNote());
+
+            // Other columns have got the default value always:
+            assert item.getId() == Item.id.getDefault();
+            assert item.getOrder() == Item.order.getDefault();
         }
     }
 
@@ -371,7 +383,6 @@ public class SampleORM {
             System.out.println("ORDER: " + order);
         }
     }
-
 
 
     /** How to reload the object property values from the database ? */
