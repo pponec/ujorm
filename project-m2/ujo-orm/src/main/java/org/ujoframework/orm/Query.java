@@ -38,7 +38,7 @@ import org.ujoframework.orm.utility.OrmTools;
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     final private MetaTable table;
-    final private List<MetaColumn> columns;
+    private List<MetaColumn> columns;
     private Session session;
     private Criterion<UJO> criterion;
     private CriterionDecoder decoder;
@@ -56,8 +56,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private boolean lockRequest;
 
     /**
-     * Create new ORM query.
-     * @param table Table model
+     * Create new ORM query. A one from argument is mandatory.
+     * @param table Table model is mandatory
      * @param criterion If criterion is null, then a TRUE constant criterion is used.
      * @param session Session
      */
@@ -81,6 +81,19 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         this(table, criterion, null);
     }
 
+    /** Get Handler */
+    private OrmHandler getHandler() {
+        OrmHandler handler = null;
+        if (table != null) {
+            handler = table.getDatabase().getOrmHandler();
+        } else if (session != null) {
+            handler = session.getHandler();
+        }
+        if (handler == null) {
+            throw new IllegalStateException("The base class must be assigned first!");
+        }
+        return handler;
+    }
 
     /** An open session must be assigned before executing a database request. */
     public Query<UJO> setSession(Session session) {
@@ -302,11 +315,47 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * <br/>WARNING: the parameters are not type checked.
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> orderByMany(UjoProperty... orderItems) {
+    public final Query<UJO> orderByMany(UjoProperty... orderItems) {
         clearDecoder();
         this.orderBy = new ArrayList(Math.max(orderItems.length, 4));
         for (final UjoProperty p : orderItems) {
             this.orderBy.add(p);
+        }
+        return this;
+    }
+
+   /** Add text table column to column list to select */
+    public Query<UJO> addColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
+        final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(column);
+        if (mc==null) {
+            throw new IllegalArgumentException("Column " + column + " was not foud in the meta-model");
+        }
+        if (!columns.contains(mc)) {
+           columns.add(mc);
+        }
+        return this;
+    }
+
+   /** Set text table column to column list to select */
+    public Query<UJO> setColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
+        this.columns = new ArrayList<MetaColumn>();
+        return addColumn(column);
+    }
+
+   /** Set an list of required table columns
+    * <br/>WARNING: the parameters are not type checked.
+    */
+    @SuppressWarnings("unchecked")
+    public final Query<UJO> setColumns(UjoProperty... columns)  throws IllegalArgumentException {
+        this.columns = new ArrayList<MetaColumn>();
+        final OrmHandler handler = getHandler();
+        for (UjoProperty column : columns) {
+            final MetaColumn mc = (MetaColumn) handler.findColumnModel(column);
+            if (mc.getTable()!=table) {
+                throw new IllegalArgumentException("Base class doesn't contains the column: " + column);
+            } else {
+                this.columns.add(mc);
+            }
         }
         return this;
     }
