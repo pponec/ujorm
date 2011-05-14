@@ -13,7 +13,7 @@ release 1.20 (2010-05-?)
 + core class UjoComparator supports the Collator for comparation of the String items.
 + composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
 + auto increment is supported for data type String now
-+ the documentation Ujorm User Guide is extended
++ the documentation Ujorm User Guide is extended and new samples are done
 + database commits are executed by order of assigning database models now
 + API of the class Criterion is extended for two methods: forAll() and forNone()
 + many Ujorm source code cleanings are finished
