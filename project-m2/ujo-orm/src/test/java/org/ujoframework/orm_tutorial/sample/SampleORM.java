@@ -65,7 +65,7 @@ public class SampleORM {
             sample.useCriterions();
             sample.useSortOrders();
             sample.useSortOrderItems();
-            sample.useSelectViewOrders();
+         // sample.useSelectViewOrders();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -253,6 +253,7 @@ public class SampleORM {
 
         Query<Item> items = session.createQuery(Item.class);
         items.orderBy(Item.order.add(Order.created));
+        items.setColumns(Item.order); // Select the one column 'order' only
 
         for (Item item : items) {
             OrmTools.loadLazyValues(item, 2);

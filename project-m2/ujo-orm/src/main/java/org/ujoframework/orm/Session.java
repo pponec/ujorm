@@ -139,12 +139,13 @@ public class Session {
         rollbackOnly = false;
     }
 
-    /** For all rows. */
+    /** Create query for all rows. */
     public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass) {
         final Criterion<UJO> criterion = Criterion.where(true);
         return createQuery(aClass, criterion);
     }
 
+    /** Create query. */
     public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
         MetaTable metaTable = handler.findTableModel(aClass);
         return new Query<UJO>(metaTable, criterion, this);
