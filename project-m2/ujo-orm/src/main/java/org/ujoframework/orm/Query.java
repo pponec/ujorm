@@ -347,7 +347,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     */
     @SuppressWarnings("unchecked")
     public final Query<UJO> setColumns(UjoProperty... columns)  throws IllegalArgumentException {
-        this.columns = new ArrayList<MetaColumn>();
+        this.columns = new ArrayList<MetaColumn>(columns.length);
         final OrmHandler handler = getHandler();
         for (UjoProperty column : columns) {
             final MetaColumn mc = (MetaColumn) handler.findColumnModel(column);
