@@ -47,11 +47,31 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Get the last property of the current object. The result may not be the direct property. */
     @SuppressWarnings("unchecked")
-    final public<UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastProperty() {
+    public final <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastPartialProperty() {
         return properties[properties.length - 1];
     }
 
-    /** Get a property from selected positon.. The result may not be the direct property. */
+    /** Get the first property of the current object. The result is direct property always. */
+    @SuppressWarnings("unchecked")
+    final public <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastProperty() {
+        UjoProperty result = properties[properties.length - 1];
+        return result.isDirect()
+            ? result
+            : ((PathProperty)result).getLastProperty()
+            ;
+    }
+
+    /** Get the first property of the current object. The result is direct property always. */
+    @SuppressWarnings("unchecked")
+    final public <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getFirstProperty() {
+        UjoProperty result = properties[0];
+        return result.isDirect()
+            ? result
+            : ((PathProperty)result).getFirstProperty()
+            ;
+    }
+
+    /** Get a property from selected positon.. The result may not be the direct property only. */
     final public UjoProperty getProperty(final int index) {
         return properties[index];
     }
@@ -79,11 +99,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Property type */
     @Override
     public Class<VALUE> getType() {
-        return getLastProperty().getType();
+        return getLastPartialProperty().getType();
     }
 
     /** Get a semifinal value from an Ujo object by a chain of properties.
-     * If any value (not getLastProperty) is null, then the result is null.
+     * If any value (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     public Ujo getSemifinalValue(UJO ujo) {
@@ -97,19 +117,19 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     }
 
     /** Get a value from an Ujo object by a chain of properties.
-     * If a value  (not getLastProperty) is null, then the result is null.
+     * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     @Override
     public VALUE getValue(final UJO ujo) {
         final Ujo u = getSemifinalValue(ujo);
-        return  u!=null ? getLastProperty().of(u) : null ;
+        return  u!=null ? getLastPartialProperty().of(u) : null ;
     }
 
     @Override
     public void setValue(final UJO ujo, final VALUE value) {
         final Ujo u = getSemifinalValue(ujo);
-        getLastProperty().setValue(u, value);
+        getLastPartialProperty().setValue(u, value);
     }
 
     @Override
@@ -120,7 +140,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Returns a default value */
     @Override
     public VALUE getDefault() {
-        return getLastProperty().getDefault();
+        return getLastPartialProperty().getDefault();
     }
 
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
@@ -140,7 +160,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     public void copy(final UJO from, final UJO to) {
         final Ujo from2 = getSemifinalValue(from);
         final Ujo to2 = getSemifinalValue(to);
-        getLastProperty().copy(from2, to2);
+        getLastPartialProperty().copy(from2, to2);
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
@@ -235,7 +255,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      */
     @Override
     public boolean isAscending() {
-        return getLastProperty().isAscending();
+        return getLastPartialProperty().isAscending();
     }
 
     /** Create a new instance of the property with a descending direction of order.

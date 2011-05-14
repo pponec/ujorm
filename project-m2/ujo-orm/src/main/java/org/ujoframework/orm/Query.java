@@ -21,12 +21,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaRelation2Many;
 import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.criterion.Criterion;
+import org.ujoframework.extensions.PathProperty;
 import org.ujoframework.orm.utility.OrmTools;
 
 /**
@@ -36,6 +39,9 @@ import org.ujoframework.orm.utility.OrmTools;
  * @composed 1 - 1 CriterionDecoder
  */
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
+
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(Query.class.getName());
 
     final private MetaTable table;
     private List<MetaColumn> columns;
@@ -324,9 +330,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-   /** Add text table column to column list to select */
+   /** Add text table column to column list to select
+    * Other columns will return its default value without any run-time exception.
+    * @param column A direct property is supported only.
+    */
     public Query<UJO> addColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
-        final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(column);
+        final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(getDirectProperty(column));
         if (mc==null) {
             throw new IllegalArgumentException("Column " + column + " was not foud in the meta-model");
         }
@@ -336,21 +345,26 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-   /** Set text table column to column list to select */
+   /** Set text table column to column list to select
+    * Other columns will return its default value without any run-time exception.
+    * @param column A direct property is supported only.
+    */
     public Query<UJO> setColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
         this.columns = new ArrayList<MetaColumn>();
-        return addColumn(column);
+        return addColumn(getDirectProperty(column));
     }
 
-   /** Set an list of required table columns
-    * <br/>WARNING: the parameters are not type checked.
+   /** Set an list of required columns to reading from database table.
+    * Other columns will return its default value without any run-time exception.
+    * <br/>WARNING 2: the parameters are not type checked in compile time.
+    * @param column A direct property is supported only.
     */
     @SuppressWarnings("unchecked")
     public final Query<UJO> setColumns(UjoProperty... columns)  throws IllegalArgumentException {
         this.columns = new ArrayList<MetaColumn>(columns.length);
         final OrmHandler handler = getHandler();
         for (UjoProperty column : columns) {
-            final MetaColumn mc = (MetaColumn) handler.findColumnModel(column);
+            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getDirectProperty(column));
             if (mc.getTable()!=table) {
                 throw new IllegalArgumentException("Base class doesn't contains the column: " + column);
             } else {
@@ -358,6 +372,17 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             }
         }
         return this;
+    }
+
+    /** Only direct properties are supported */
+    private UjoProperty getDirectProperty(UjoProperty p) {
+        if (p.isDirect()) {
+            return p;
+        } else {
+            //throw new IllegalArgumentException("Only direct properties are supported: " + p);
+            LOGGER.log(Level.WARNING, "Only direct properties are supported: " + p);
+            return ((PathProperty)p).getFirstProperty();
+        }
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase.
