@@ -59,6 +59,7 @@ import org.ujoframework.gxt.client.cquery.CCriterion;
 import org.ujoframework.gxt.client.cquery.CQuery;
 import java.util.List;
 import java.util.Map;
+import org.ujoframework.gxt.client.CLoginRedirectable;
 import org.ujoframework.gxt.client.CujoProperty;
 import org.ujoframework.gxt.client.ao.Permissions;
 import org.ujoframework.gxt.client.commons.Icons;
@@ -68,7 +69,7 @@ import org.ujoframework.gxt.client.tools.MessageDialog;
 import org.ujoframework.gxt.client.tools.Tools;
 
 /** Generic CRUD panel for the table formet */
-abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer implements TablePanelOperations<CUJO> {
+abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer implements TablePanelOperations<CUJO>, CLoginRedirectable {
 
     static TableControllerAsync s;
     protected ContentPanel cpPanel;
@@ -807,5 +808,11 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     protected boolean isActionPanelEnabled() {
         return true;
     }
+
+    @Override
+    public void redirectToLogin() {
+        GWT.log("Session time out", null);
+    }
+
 
 }

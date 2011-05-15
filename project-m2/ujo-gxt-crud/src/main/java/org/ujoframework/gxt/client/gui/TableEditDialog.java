@@ -32,6 +32,7 @@ import org.ujoframework.gxt.client.CujoModel;
 import org.ujoframework.gxt.client.CujoProperty;
 import java.util.List;
 import java.util.Map;
+import org.ujoframework.gxt.client.CLoginRedirectable;
 import org.ujoframework.gxt.client.ClientCallback;
 import org.ujoframework.gxt.client.commons.Icons;
 import org.ujoframework.gxt.client.controller.TableControllerAsync;
@@ -41,7 +42,7 @@ import org.ujoframework.gxt.client.cquery.CQuery;
  * The abstract edit dialog.
  * @author Ponec
  */
-abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO> {
+abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO> implements CLoginRedirectable {
 
     /** A text maximal length (from meta-model) to creating a TextArea
      * instead of TextField component.  */
@@ -456,4 +457,10 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
     public boolean isNewState() {
         return newState;
     }
+
+    @Override
+    public void redirectToLogin() {
+        GWT.log("Session time out", null);
+    }
+
 }

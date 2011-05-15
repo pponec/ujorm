@@ -16,12 +16,21 @@ import com.gwtincubator.security.exception.ApplicationSecurityException;
 
 /**
  * ClientCallback
- * @author Tomas Hampl
+ * @author Tomas Hampl, Pavel Ponec
  */
 public abstract class ClientCallback<T> extends SecuredAsyncCallback<T> {
 
     private boolean callEnd = false;
+    final private CLoginRedirectable loginRedirectable;
 
+    public ClientCallback(CLoginRedirectable loginRedirectable) {
+        this.loginRedirectable = loginRedirectable;
+    }
+
+    public ClientCallback() {
+        this(null);
+    }
+    
     @Override
     protected void onSecurityException(ApplicationSecurityException exception) {
         String msg = getSimpleName(exception) + ": " + exception.getMessage();
@@ -31,11 +40,28 @@ public abstract class ClientCallback<T> extends SecuredAsyncCallback<T> {
     }
 
     @Override
-    protected void onOtherException(Throwable exception) {
+    final protected void onOtherException(Throwable exception) {
+        if (exception instanceof CMessageException 
+        && ((CMessageException)exception).getKey()==CMessageException.KEY_LOGIN_TIMEOUT) {
+            onTimeout(exception);
+        } else {
+            onAnotherException(exception);
+        }
+    }
+
+    protected void onAnotherException(Throwable exception) {
         String msg = getSimpleName(exception) + ": " + exception.getMessage();
         GWT.log(msg, exception);
         Window.alert(msg);
         callEnd = true;
+    }
+
+    protected void onTimeout(Throwable exception) {
+        if (loginRedirectable!=null) {
+            loginRedirectable.redirectToLogin();
+        } else {
+            GWT.log("Timeout", exception);
+        }
     }
 
     private String getSimpleName(Throwable exception) {
