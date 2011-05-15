@@ -8,13 +8,20 @@
 
 package org.ujoframework.gxt.client.ao;
 
+import java.io.Serializable;
+import org.ujoframework.gxt.client.CMessageException;
+
 /**
  * Validation Exception
  * @author Ponec
  */
-public class ValidationException extends RuntimeException {
+public class ValidationException extends CMessageException implements Serializable {
 
-    private final ValidationMessage validationMessage;
+    private ValidationMessage validationMessage;
+
+    public ValidationException() {
+        this("");
+    }
 
     public ValidationException(String message) {
         this(new ValidationMessage(null, message));
