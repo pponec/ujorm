@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -39,9 +37,6 @@ import org.ujoframework.orm.utility.OrmTools;
  * @composed 1 - 1 CriterionDecoder
  */
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
-
-    /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(Query.class.getName());
 
     final private MetaTable table;
     private List<MetaColumn> columns;
@@ -330,9 +325,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-   /** Add text table column to column list to select
-    * Other columns will return its default value without any run-time exception.
-    * @param column A direct property is supported only.
+   /** Set the one column to reading from database table.
+    * Other columns will return a default value, no exception will be throwed.
+    * @param column A Property to select. A composite Property is allowed however only the first item will be used.
+    * @see #setColumn(org.ujoframework.UjoProperty) setColumn(Property)
     */
     public Query<UJO> addColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
         final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(getDirectProperty(column));
@@ -345,9 +341,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-   /** Set text table column to column list to select
-    * Other columns will return its default value without any run-time exception.
-    * @param column A direct property is supported only.
+   /** Set the one column to reading from database table.
+    * Other columns will return a default value, no exception will be throwed.
+    * @param column A Property to select. A composite Property is allowed however only the first item will be used.
+    * @see #addColumn(org.ujoframework.UjoProperty) addColumn(Property)
     */
     public Query<UJO> setColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
         this.columns = new ArrayList<MetaColumn>();
@@ -355,12 +352,15 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
    /** Set an list of required columns to reading from database table.
-    * Other columns will return its default value without any run-time exception.
-    * <br/>WARNING 2: the parameters are not type checked in compile time.
-    * @param column A direct property is supported only.
+    * Other columns (out of the list) will return a default value, no exception will be throwed.
+    * <br/>WARNING: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
+    * @param columns A Property list to select. A composite Property is allowed however only the first item will be used.
+    * @see #setColumn(org.ujoframework.UjoProperty) setColumn(Property)
+    * @see #addColumn(org.ujoframework.UjoProperty) addColumn(Property)
     */
     @SuppressWarnings("unchecked")
-    public final Query<UJO> setColumns(UjoProperty... columns)  throws IllegalArgumentException {
+    public final Query<UJO> setColumns(boolean addPrimaryKey, UjoProperty... columns)  throws IllegalArgumentException {
         this.columns = new ArrayList<MetaColumn>(columns.length);
         final OrmHandler handler = getHandler();
         for (UjoProperty column : columns) {
@@ -371,18 +371,19 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 this.columns.add(mc);
             }
         }
+        if (addPrimaryKey
+        && !this.columns.contains(table.getFirstPK())) {
+            this.columns.add(table.getFirstPK());
+        }
         return this;
     }
 
     /** Only direct properties are supported */
     private UjoProperty getDirectProperty(UjoProperty p) {
-        if (p.isDirect()) {
-            return p;
-        } else {
-            //throw new IllegalArgumentException("Only direct properties are supported: " + p);
-            LOGGER.log(Level.WARNING, "Only direct properties are supported: " + p);
-            return ((PathProperty)p).getFirstProperty();
-        }
+        return p.isDirect()
+            ?  p
+            : ((PathProperty)p).getFirstProperty()
+            ;
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase.
