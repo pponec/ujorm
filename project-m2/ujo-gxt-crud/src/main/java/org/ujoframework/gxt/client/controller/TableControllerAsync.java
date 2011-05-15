@@ -26,7 +26,7 @@ public interface TableControllerAsync extends MetaModelController
      * GWT-RPC service  asynchronous (client-side) interface
      * @see com.jworksheet.application.client.controller.TableController
      */
-    void getCujoList( CQuery query, AsyncCallback<java.util.List<Cujo>> callback );
+    void getCujoList( CQuery query, AsyncCallback<java.util.List<Cujo>> callback);
 
 
     /**
