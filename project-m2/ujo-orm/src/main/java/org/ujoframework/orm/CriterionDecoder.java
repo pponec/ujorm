@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaTable;
@@ -185,7 +185,7 @@ public class CriterionDecoder {
         while(result!=null
         &&   !result.isDirect()
         ){
-            result = ((PathProperty)result).getProperty(0);
+            result = ((CompositeProperty)result).getFirstProperty();
         }
         return result;
     }
@@ -241,11 +241,11 @@ public class CriterionDecoder {
             Object      p2 = value.getRightNode();
 
             if (!p1.isDirect()) {
-                ((PathProperty) p1).exportProperties(dirs);
+                ((CompositeProperty) p1).exportProperties(dirs);
                 dirs.remove(dirs.size()-1); // remove the last direct property
             }
-            if (p2 instanceof PathProperty) {
-                ((PathProperty) p2).exportProperties(dirs);
+            if (p2 instanceof CompositeProperty) {
+                ((CompositeProperty) p2).exportProperties(dirs);
                 dirs.remove(dirs.size()-1); // remove the last direct property
             }
         }
@@ -254,7 +254,7 @@ public class CriterionDecoder {
         if (orderBy!=null) {
             for (UjoProperty p1 : orderBy) {
                 if (!p1.isDirect()) {
-                    ((PathProperty) p1).exportProperties(dirs);
+                    ((CompositeProperty) p1).exportProperties(dirs);
                     dirs.remove(dirs.size()-1); // remove the last direct property
                 }
             }

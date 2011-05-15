@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
-import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.implementation.orm.RelationToMany;
 import org.ujoframework.orm.ao.CacheKey;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -170,7 +170,7 @@ public class Session {
         }
         UjoProperty property = exprValue.getLeftNode();
         while (!property.isDirect()) {
-            property = ((PathProperty) property).getProperty(0);
+            property = ((CompositeProperty) property).getFirstProperty();
         }
 
         MetaRelation2Many result = handler.findColumnModel(property);

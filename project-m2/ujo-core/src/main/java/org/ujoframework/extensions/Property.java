@@ -47,7 +47,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * The UJO property indexed by this method may not be in continuous series
      * however numbers have the <strong>upward direction</strong> always.
      */
-    protected static final synchronized int _nextSequence() {
+    protected static synchronized int _nextSequence() {
         return _sequencer++;
     }
 

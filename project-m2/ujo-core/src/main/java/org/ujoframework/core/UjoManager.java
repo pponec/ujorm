@@ -29,6 +29,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoAction;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.core.annot.Transient;
 import org.ujoframework.core.annot.XmlAttribute;
 import org.ujoframework.core.annot.XmlElementBody;
@@ -729,8 +730,8 @@ public class UjoManager implements Comparator<UjoProperty> {
                 : encodeValue(property.of(ujo), false);
             return result;
         } else {
-            final PathProperty pathProperty = (PathProperty) property;
-            final UjoProperty p = pathProperty.getLastPartialProperty();
+            final CompositeProperty pathProperty = (CompositeProperty) property;
+            final UjoProperty p = pathProperty.getLastProperty();
             final Ujo         u = pathProperty.getSemifinalValue(ujo);
             return getText(u, p, action);
         }
@@ -755,8 +756,8 @@ public class UjoManager implements Comparator<UjoProperty> {
                 setValue(ujo, property, o);
             }
         } else {
-            final PathProperty pathProperty = (PathProperty) property;
-            final UjoProperty p = pathProperty.getLastPartialProperty();
+            final CompositeProperty pathProperty = (CompositeProperty) property;
+            final UjoProperty p = pathProperty.getLastProperty();
             final Ujo         u = pathProperty.getSemifinalValue(ujo);
             setText(u, p, value, type, action);
         }

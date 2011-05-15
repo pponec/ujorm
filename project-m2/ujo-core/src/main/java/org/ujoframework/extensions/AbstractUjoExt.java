@@ -16,10 +16,10 @@
 
 package org.ujoframework.extensions;
 
-import org.ujoframework.UjoAction;
 import java.util.List;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
+import org.ujoframework.UjoAction;
 import org.ujoframework.core.UjoActionImpl;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.swing.UjoPropertyRow;
