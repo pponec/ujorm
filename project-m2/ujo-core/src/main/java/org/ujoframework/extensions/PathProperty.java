@@ -17,6 +17,7 @@
 package org.ujoframework.extensions;
 
 import java.util.List;
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
@@ -32,7 +33,7 @@ import org.ujoframework.UjoProperty;
  * @author Pavel Ponec
  * @since 0.81
  */
-public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VALUE> {
+public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
     private final UjoProperty[] properties;
     private String name;
@@ -53,6 +54,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
+    @Override
     final public <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastProperty() {
         UjoProperty result = properties[properties.length - 1];
         return result.isDirect()
@@ -63,22 +65,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
+    @Override
     final public <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getFirstProperty() {
         UjoProperty result = properties[0];
         return result.isDirect()
             ? result
             : ((PathProperty)result).getFirstProperty()
             ;
-    }
-
-    /** Get a property from selected positon.. The result may not be the direct property only. */
-    final public UjoProperty getProperty(final int index) {
-        return properties[index];
-    }
-
-    /** Returns a count of properties */
-    final public int getPropertyCount() {
-        return properties.length;
     }
 
     /** Full property name */
@@ -106,6 +99,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      * If any value (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
+    @Override
     public Ujo getSemifinalValue(UJO ujo) {
 
         Ujo result = ujo;
@@ -268,6 +262,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
 
     /** Export all <string>direct</strong> properties to the list from parameter. */
     @SuppressWarnings("unchecked")
+    @Override
     public void exportProperties(List<UjoProperty> result) {
         for (UjoProperty p : properties) {
             if (p.isDirect()) {
@@ -307,14 +302,14 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property) {
         return new PathProperty<UJO, VALUE>(property);
     }
 
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
         ( final UjoProperty<UJO1, UJO2> property1
         , final UjoProperty<UJO2, VALUE> property2
         ) {
@@ -324,7 +319,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
         ( final UjoProperty<UJO1, UJO2> property1
         , final UjoProperty<UJO2, UJO3> property2
         , final UjoProperty<UJO3, VALUE> property3
@@ -335,7 +330,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
     /** Create new instance
      * @hidden 
      */
-    public static final <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
         ( final UjoProperty<UJO1, UJO2> property1
         , final UjoProperty<UJO2, UJO3> property2
         , final UjoProperty<UJO3, UJO4> property3
@@ -348,7 +343,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements UjoProperty<UJO, VA
      * @hidden 
      */
     @SuppressWarnings("unchecked")
-    public static final <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(UjoProperty<UJO, ? extends Object>... properties) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(UjoProperty<UJO, ? extends Object>... properties) {
         return new PathProperty(properties);
     }
 

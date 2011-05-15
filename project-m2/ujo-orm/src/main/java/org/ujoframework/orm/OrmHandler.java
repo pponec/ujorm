@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.orm.metaModel.MetaDatabase;
 import org.ujoframework.orm.metaModel.MetaRoot;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -297,12 +297,12 @@ public class OrmHandler {
     }
 
     /** Find a Relation/Column model of the paramemeter property.
-     * @param pathProperty Parameter can be type of Property of PathProperty (direct or indirect);
+     * @param pathProperty Parameter can be type of Property of CompositeProperty (direct or indirect);
      * @return Returns a related model or the NULL if no model was found.
      */
     public MetaRelation2Many findColumnModel(UjoProperty pathProperty) {
         if (pathProperty!=null && !pathProperty.isDirect()) {
-            pathProperty = ((PathProperty)pathProperty).getLastProperty();
+            pathProperty = ((CompositeProperty)pathProperty).getLastProperty();
         }
         final MetaRelation2Many result = propertyMap.get(pathProperty);
         return result;

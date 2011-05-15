@@ -31,7 +31,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.criterion.Criterion;
-import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.orm.ExtendedOrmUjo;
 import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.OrmUjo;
@@ -274,7 +274,7 @@ final public class OrmTools {
         List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
         HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
         while (!property.isDirect()) {
-            property = ((PathProperty)property).getProperty(0);
+            property = ((CompositeProperty)property).getFirstProperty();
         }
         for (UJO u : ujos) {
             result.add(u);

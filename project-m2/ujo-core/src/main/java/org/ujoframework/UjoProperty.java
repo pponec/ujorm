@@ -100,9 +100,12 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Compa
     public boolean equals(UJO ujo, VALUE value);
     
     /**
-     * If the property is the direct property of the related UJO class then method returns the TRUE value.<br />
-     * Note: Indirect (composite) properties are excluded from from function Ujo.readProperties() by default
+     * If the property is the direct property of the related UJO class then method returns the TRUE value.
+     * The return value false means, that property is type of {@link CompositeProperty}.
+     * <br />
+     * Note: The composite properties are excluded from from function Ujo.readProperties() by default
      * and these properties should not be sent to methods Ujo.writeValue() and Ujo.readValue().
+     * @see CompositeProperty
      * @since 0.81
      */
     public boolean isDirect();

@@ -27,7 +27,7 @@ import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaRelation2Many;
 import org.ujoframework.orm.metaModel.MetaTable;
 import org.ujoframework.criterion.Criterion;
-import org.ujoframework.extensions.PathProperty;
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.orm.utility.OrmTools;
 
 /**
@@ -382,7 +382,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private UjoProperty getDirectProperty(UjoProperty p) {
         return p.isDirect()
             ?  p
-            : ((PathProperty)p).getFirstProperty()
+            : ((CompositeProperty)p).getFirstProperty()
             ;
     }
 
