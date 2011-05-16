@@ -602,7 +602,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
                     boolean ok = d.isClickedOk(be);
                     if (ok) {
 
-                        getService().delete(selectedItems, getDeleteActionType(), new ClientCallback() {
+                        getService().delete(selectedItems, getDeleteActionType(), new ClientCallback(TablePanel.this) {
 
                             @Override
                             public void onSuccess(Object result) {
