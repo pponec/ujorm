@@ -698,6 +698,9 @@ abstract public class SqlDialect {
         if (count) {
             out.append("COUNT(*)");
         } else {
+            if (query.isDistinct()) {
+                out.append("DISTINCT ");
+            }
             printTableColumns(query.getColumns(), null, out);
         }
         out.append("\n\tFROM ");
@@ -793,7 +796,7 @@ abstract public class SqlDialect {
 
     /** Print an OFFSET of the statement SELECT. */
     public void printOffset(Query query, Appendable out) throws IOException {
-        int limit = query.getLimit()>0
+        int limit = query.isLimit()
             ? query.getLimit()
             : Integer.MAX_VALUE
             ;

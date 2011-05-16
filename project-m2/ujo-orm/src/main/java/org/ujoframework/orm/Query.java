@@ -42,6 +42,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private List<MetaColumn> columns;
     private Session session;
     private Criterion<UJO> criterion;
+    private boolean distinct;
     private CriterionDecoder decoder;
     private String statementInfo;
 
@@ -438,6 +439,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
      * @see java.sql.Statement#getLimit()
      */
+    final public boolean isLimit() {
+        return limit>0;
+    }
+
+    /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
+     * @see java.sql.Statement#getLimit()
+     */
     final public int getLimit() {
         return limit;
     }
@@ -540,6 +548,17 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             ? result.toString()
             : super.toString()
             ;
+    }
+
+    /** Select DISTINCT for a unique row result */
+    public boolean isDistinct() {
+        return distinct;
+    }
+
+    /** Select DISTINCT for a unique row result */
+    public Query<UJO> setDistinct(boolean distinct) {
+        this.distinct = distinct;
+        return this;
     }
 
 }

@@ -322,7 +322,7 @@ public class SampleORM {
     public void useSelectItems_4() {
         UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderCreated
         Criterion<Item> crit = Criterion.where(ORDER_DATE, LE, new Date());
-        Query<Item> items = session.createQuery(crit);
+        Query<Item> items = session.createQuery(crit).setDistinct(true);
 
         for (Item item : items) {
             System.out.println("Item: " + item);

@@ -55,11 +55,11 @@ public class OracleDialect extends PostgreSqlDialect {
      */
     @Override
     protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
-        if (!count && query.isOffset()) {
+        if (!count && (query.isOffset() || query.isLimit())) {
             out.append("SELECT * FROM (SELECT ujorm__.*, ROWNUM AS ujorm_rownum FROM (\n");
             super.printSelectTable(query, count, out);
             out.append("\n) ujorm__) WHERE ujorm_rownum > " + query.getOffset());
-            if (query.getLimit()>0) {
+            if (query.isLimit()) {
                 final long to = query.getOffset() + query.getLimit();
                 out.append(" AND ujorm_rownum <= " + to);
             }
