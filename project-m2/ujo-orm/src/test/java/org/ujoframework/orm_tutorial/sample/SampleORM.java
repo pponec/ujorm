@@ -322,7 +322,7 @@ public class SampleORM {
     public void useSelectItems_4() {
         UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderCreated
         Criterion<Item> crit = Criterion.where(ORDER_DATE, LE, new Date());
-        Query<Item> items = session.createQuery(crit).setDistinct(true);
+        Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
             System.out.println("Item: " + item);
@@ -357,11 +357,14 @@ public class SampleORM {
         }
     }
 
-    /** Create a SELECT for the one column only for a better performance. */
+    /** Create a SELECT for the one column only 
+     * with no duplicate rows for a better performance.
+     */
     public void useOptimizedSelect() {
         Criterion<Item> crit = Criterion.where(Item.id, NOT_EQ, 0L);
         Query<Item> items = session.createQuery(crit)
                 .setColumn(Item.note) // Select the one column
+                .setDistinct(true)    // Remove duplicate rows
                 ;
         for (Item item : items) {
             System.out.println("Note: " + item.getNote());
