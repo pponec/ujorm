@@ -10,6 +10,7 @@ release 1.20 (2010-05-?)
 + the batch INSERT for list of items usding a multi row SQL INSERT is implemented 
 + the batch UPDATE is supoorted now, see documentation for more information
 + new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
++ select DISTINCT is supported now
 + core class UjoComparator supports the Collator for comparation of the String items.
 + composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
 + auto increment is supported for data type String now
