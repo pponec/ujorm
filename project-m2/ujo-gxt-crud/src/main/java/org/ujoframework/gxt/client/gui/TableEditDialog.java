@@ -118,7 +118,7 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
         onCreateWidgets(parent, pos);
 
         if (editQuery!=null) {
-            TableControllerAsync.Util.getInstance().getCujoList(editQuery, new ClientCallback() {
+            TableControllerAsync.Util.getInstance().getCujoList(editQuery, new ClientCallback(TableEditDialog.this) {
                 @Override
                 public void onSuccess(Object result) {
                     List<CUJO> cujos = (List<CUJO>) result;
@@ -133,7 +133,7 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
             });
         } else {
             // WorkAround for the Component.select();
-            TableControllerAsync.Util.getInstance().pink(new ClientCallback() {
+            TableControllerAsync.Util.getInstance().pink(new ClientCallback(TableEditDialog.this) {
                 @Override
                 public void onSuccess(Object result) {
                     copyValuesToComponent();
