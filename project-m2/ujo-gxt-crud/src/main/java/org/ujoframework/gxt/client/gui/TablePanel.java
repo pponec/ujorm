@@ -60,6 +60,7 @@ import org.ujoframework.gxt.client.cquery.CQuery;
 import java.util.List;
 import java.util.Map;
 import org.ujoframework.gxt.client.CLoginRedirectable;
+import org.ujoframework.gxt.client.CMessageException;
 import org.ujoframework.gxt.client.CujoProperty;
 import org.ujoframework.gxt.client.ao.Permissions;
 import org.ujoframework.gxt.client.commons.Icons;
@@ -131,6 +132,9 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
 
                     @Override
                     public void onFailure(final Throwable caught) {
+                        if (CMessageException.isSessionTimeout(caught)) {
+                            redirectToLogin();
+                        }
                         callback.onFailure(caught);
                         GWT.log("Error TablePanel loading ", caught);
                     }
@@ -741,7 +745,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     }
 
 
-    /** Create a new edit dialog. */
+    /** Create a new edit dialog and make initialization */
     @SuppressWarnings("unchecked")
     protected TableEditDialog<CUJO> createTableEditDialog(final CUJO selectedItem, boolean newState, boolean clone) {
         final TableEditDialog<CUJO> editDialog = createDialogInstance();

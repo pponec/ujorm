@@ -41,8 +41,7 @@ public abstract class ClientCallback<T> extends SecuredAsyncCallback<T> {
 
     @Override
     final protected void onOtherException(Throwable exception) {
-        if (exception instanceof CMessageException 
-        && ((CMessageException)exception).getKey()==CMessageException.KEY_LOGIN_TIMEOUT) {
+        if (CMessageException.isSessionTimeout(exception)) {
             onTimeout(exception);
         } else {
             onAnotherException(exception);

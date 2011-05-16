@@ -18,7 +18,8 @@ import java.util.HashMap;
 public class CMessageException extends RuntimeException implements Serializable {
     
     public static final int KEY_UNDEFINED = 0;
-    public static final int KEY_LOGIN_TIMEOUT = 1;
+    public static final int KEY_SESSION_TIMEOUT = 1;
+
     // ...... more constants .............
 
     /** Exception Key */
@@ -56,6 +57,15 @@ public class CMessageException extends RuntimeException implements Serializable 
     /** Get Key */
     public int getKey() {
         return key;
+    }
+
+    /** Test if the exception is a sign to redirect. */
+    public static boolean isSessionTimeout(Throwable exception) {
+        final boolean result
+                = exception instanceof CMessageException
+                && ((CMessageException)exception).getKey()==KEY_SESSION_TIMEOUT
+                ;
+        return result;
     }
 
 

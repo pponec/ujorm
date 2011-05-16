@@ -22,6 +22,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import java.util.List;
+import org.ujoframework.gxt.client.CLoginRedirectable;
+import org.ujoframework.gxt.client.CMessageException;
 import org.ujoframework.gxt.client.Cujo;
 import org.ujoframework.gxt.client.CujoProperty;
 import org.ujoframework.gxt.client.controller.TableControllerAsync;
@@ -40,8 +42,14 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
     protected CCriterion<CUJO> aditionalCriterion;
     /** Depth to Load relations. Value 0 means no relations, value 1 means load the first level of relations. */
     protected int loadRelations = 0;
+    protected CLoginRedirectable loginRedirectable;
 
     public CujoBox(CujoProperty<? super CUJO,?> displayProperty) {
+        this(displayProperty, null);
+    }
+
+    public CujoBox(CujoProperty<? super CUJO,?> displayProperty, CLoginRedirectable loginRedirectable) {
+        this.loginRedirectable = loginRedirectable;
         setDisplayProperty(displayProperty);
         setEditable(false);
         this.displayProperty = displayProperty;
@@ -73,9 +81,13 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
             public void load(final Object loadConfig, final AsyncCallback<PagingLoadResult<Cujo>> callback) {
                 final AsyncCallback<PagingLoadResult<Cujo>> callback2 = new AsyncCallback<PagingLoadResult<Cujo>>() {
                     @Override
-                    public void onFailure(final Throwable caught) {
-                        callback.onFailure(caught);
-                        GWT.log("Error CujoBox loading", caught);
+                    public void onFailure(final Throwable e) {
+                        if (loginRedirectable!=null && CMessageException.isSessionTimeout(e)) {
+                            loginRedirectable.redirectToLogin();
+                            return;
+                        }
+                        callback.onFailure(e);
+                        GWT.log("Error CujoBox loading", e);
                     }
                     @Override
                     public void onSuccess(final PagingLoadResult<Cujo> result) {
