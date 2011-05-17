@@ -412,11 +412,17 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-    /** Returns an order column. A method for an internal use only. */
-    public MetaColumn readOrderColumn(int i) {
-        UjoProperty property = orderBy.get(i);
-        MetaRelation2Many result = session.getHandler().findColumnModel(property);
-        return (MetaColumn) result;
+    /** Returns an order column. A method for an internal use only.  */
+    public MetaColumn readOrderColumn(int i) throws IllegalStateException {
+        final UjoProperty property = orderBy.get(i);
+        final MetaRelation2Many result = session.getHandler().findColumnModel(property);
+
+        if (result instanceof MetaColumn) {
+            return (MetaColumn) result;
+        } else {
+            String msg = "Property '" + table.getType().getSimpleName() + "." + property + "' is not a persistent table column";
+            throw new IllegalStateException(msg);
+        }        
     }
 
     /** Has this Query an offset? */
