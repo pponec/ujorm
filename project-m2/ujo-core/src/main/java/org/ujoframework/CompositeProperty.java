@@ -17,9 +17,6 @@
 package org.ujoframework;
 
 import java.util.List;
-import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.extensions.SortingProperty;
 
 /**
  * A <strong>CompositeProperty</strong> class is an composite of a UjoProperty objects.

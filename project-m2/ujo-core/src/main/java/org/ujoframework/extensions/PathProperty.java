@@ -16,6 +16,7 @@
    
 package org.ujoframework.extensions;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.ujoframework.CompositeProperty;
 import org.ujoframework.Ujo;
@@ -35,15 +36,42 @@ import org.ujoframework.UjoProperty;
  */
 public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
+    /** Array of <strong>direct</strong> properties */
     private final UjoProperty[] properties;
+    /** Is property ascending / descending */
+    private final boolean ascending;
     private String name;
 
     public PathProperty(List<UjoProperty> properties) {
         this(properties.toArray(new UjoProperty[properties.size()]));
     }
 
+    /** Main constructor */
     public PathProperty(UjoProperty... properties) {
+        this(null, properties);
+    }
+
+    /** Main constructor */
+    public PathProperty(Boolean ascending, UjoProperty... properties) {
+        final ArrayList<UjoProperty> list = new ArrayList<UjoProperty>(properties.length + 3);
+        for (UjoProperty property : properties) {
+            if (property.isDirect()) {
+                list.add(property);
+            } else {
+                ((CompositeProperty)property).exportProperties(list);
+            }
+        }
+        if (list.isEmpty()) {
+            throw new IllegalArgumentException("Argument must not be empty");
+        }
+        this.ascending = ascending!=null ? ascending : properties[properties.length-1].isAscending();
+        this.properties = list.toArray(new UjoProperty[list.size()]);
+    }
+
+    /** Constructor for internal use only */
+    private PathProperty(UjoProperty[] properties, boolean ascending) {
         this.properties = properties;
+        this.ascending = ascending;
     }
 
     /** Get the last property of the current object. The result may not be the direct property. */
@@ -249,7 +277,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      */
     @Override
     public boolean isAscending() {
-        return getLastPartialProperty().isAscending();
+        return ascending;
     }
 
     /** Create a new instance of the property with a descending direction of order.
@@ -257,7 +285,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      */
     @Override
     public UjoProperty<UJO,VALUE> descending() {
-        return isAscending() ? new SortingProperty<UJO,VALUE>(this, false) : this ;
+        return isAscending() ? new PathProperty(properties, false) : this ;
     }
 
     /** Export all <string>direct</strong> properties to the list from parameter. */
