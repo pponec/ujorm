@@ -42,7 +42,7 @@ public class TableListDialog<CUJO extends Cujo> extends DataWindow<CUJO> {
         setIcon(Icons.Pool.selectionDialog());
         setClosable(true);
         setModal(true);
-        setHeading(selectedItem!=null ? "Select" : "List");
+        setHeading(selectedItem!=null ? "Select: " + selectedItem.getFieldLabel() : "List");
         setWidth(600);
         setHeight(450);
         setLayout(new FillLayout());
