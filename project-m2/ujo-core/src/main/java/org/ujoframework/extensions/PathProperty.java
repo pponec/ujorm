@@ -189,7 +189,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     @SuppressWarnings("unchecked")
     @Override
     public boolean isTypeOf(final Class type) {
-        return type.isAssignableFrom(getType());
+        return getLastProperty().isTypeOf(type);
     }
     
     /**
