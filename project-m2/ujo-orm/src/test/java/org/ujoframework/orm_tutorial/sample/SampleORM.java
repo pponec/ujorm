@@ -83,6 +83,7 @@ public class SampleORM {
             sample.useStoredProcedure();
             sample.useUpdate();
             sample.useBatchUpdate();
+            sample.usePesimisticUpdate();
             sample.useDelete();
             sample.useBatchDelete();
             sample.useMetadata();
@@ -364,7 +365,7 @@ public class SampleORM {
         Criterion<Item> crit = Criterion.where(Item.id, NOT_EQ, 0L);
         Query<Item> items = session.createQuery(crit)
                 .setColumn(Item.note) // Select the one column
-                .setDistinct(true)    // Remove duplicate rows
+                .setDistinct()        // Remove duplicate rows
                 ;
         for (Item item : items) {
             System.out.println("Note: " + item.getNote());
@@ -549,6 +550,16 @@ public class SampleORM {
         session.commit();
     }
 
+    /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
+    public void usePesimisticUpdate() {
+        Order order = session.createQuery(Criterion.where(Order.id, 1L))
+            .setLockRequest()
+            .uniqueResult()
+            ;
+        order.setCreated(new Date());
+        session.update(order);
+        session.commit();
+    }
 
     /** How to DELETE the one loaded object? */
     public void useDelete() {

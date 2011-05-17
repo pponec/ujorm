@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.hibernate.dialect.HSQLDialect;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -511,19 +512,22 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         this.statementInfo = statementInfo;
     }
 
-
     /** Pessimistic lock request */
     public boolean isLockRequest() {
         return lockRequest;
     }
 
-    /** Pessimistic lock request. A default value is false. */
+    /** Pessimistic lock request. A default value is false. 
+     * @see org.ujoframework.orm.dialect.HsqldbDialect#printLockForSelect(org.ujoframework.orm.Query, java.lang.Appendable) HsqldbDialect
+     */
     public Query<UJO> setLockRequest(boolean lockRequest) {
         this.lockRequest = lockRequest;
         return this;
     }
 
-    /** Set pessimistic lock request. A default value is false. */
+    /** Set pessimistic lock request. A default value is false.
+     * @see org.ujoframework.orm.dialect.HsqldbDialect#printLockForSelect(org.ujoframework.orm.Query, java.lang.Appendable) HsqldbDialect
+     */
     public Query<UJO> setLockRequest() {
         return setLockRequest(true);
     }
@@ -559,6 +563,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public Query<UJO> setDistinct(boolean distinct) {
         this.distinct = distinct;
         return this;
+    }
+
+    /** Select DISTINCT for a unique row result */
+    public Query<UJO> setDistinct() {
+        return setDistinct(true);
     }
 
 }
