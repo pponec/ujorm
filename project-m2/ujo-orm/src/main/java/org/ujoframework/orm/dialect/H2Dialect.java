@@ -15,9 +15,7 @@
  */
 package org.ujoframework.orm.dialect;
 
-import java.io.IOException;
 import org.ujoframework.orm.SqlDialect;
-import org.ujoframework.orm.metaModel.MetaColumn;
 
 /** H2 (http://www.h2database.com) */
 @SuppressWarnings("unchecked")

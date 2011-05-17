@@ -641,7 +641,7 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    public Appendable printSelect
+    final public Appendable printSelect
         ( final MetaTable table
         , final Query query
         , final boolean count
@@ -888,9 +888,8 @@ abstract public class SqlDialect {
     }
 
     /** Returns true, if the argument text is not null and not empty. */
-    protected boolean isUsable(final CharSequence text) {
-        final boolean result = text!=null && text.length()>0;
-        return result;
+    final protected boolean isUsable(final CharSequence text) {
+        return text!=null && text.length()>0;
     }
 
     /** Print the new line. */
@@ -977,7 +976,7 @@ abstract public class SqlDialect {
         }
     }
 
-    /** The table model for an internal sequence tabable support */
+    /** The table model for an internal sequence table support */
     public SeqTableModel getSeqTableModel() {
         return pkTableModel;
     }

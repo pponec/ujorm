@@ -17,6 +17,7 @@
 package org.ujoframework.orm.dialect;
 
 import java.io.IOException;
+import org.ujoframework.orm.Query;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaTable;
 
@@ -56,6 +57,14 @@ public class HsqldbDialect extends H2Dialect {
     @Override
     public boolean isMultiRowInsertSupported() {
         return false;
+    }
+
+    /** Including 1.7.2, HSQLDB does not support table locking via SELECT FOR UPDATE.<br>
+     * For more information see <a href="http://hsqldb.org/doc/src/org/hsqldb/jdbc/jdbcStatement.html">http://hsqldb.org</a>.
+     */
+    @Override
+    protected Appendable printLockForSelect(Query query, Appendable out) throws IOException, UnsupportedOperationException {
+        return out;
     }
 
 }
