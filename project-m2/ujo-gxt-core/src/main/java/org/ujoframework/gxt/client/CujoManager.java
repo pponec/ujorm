@@ -81,7 +81,7 @@ public class CujoManager {
             case 1:
                 return props.get(0);
             default:
-                return new CPathProperty(null, props);
+                return new CPathProperty(props);
         }
     }
 }
