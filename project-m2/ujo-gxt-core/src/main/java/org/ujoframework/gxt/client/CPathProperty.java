@@ -181,7 +181,7 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     @SuppressWarnings("unchecked")
     @Override
     public boolean isTypeOf(final Class type) {
-        return type.isAssignableFrom(getType());
+        return getLastProperty().isTypeOf(type);
     }
 
     /**
