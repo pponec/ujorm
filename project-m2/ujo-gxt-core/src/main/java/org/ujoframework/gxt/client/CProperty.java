@@ -114,7 +114,6 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
         return true;
     }
 
-
     @Override
     public String toString() {
         return name;
@@ -127,12 +126,12 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
 
     @Override
     public CujoProperty<UJO, VALUE> descending() {
-        return isAscending() ? new CPathProperty<UJO, VALUE>(false, this) : this;
+        return CPathProperty.newInstance(this, false);
     }
 
     @Override
     public <VALUE_PAR> CujoProperty<UJO, VALUE_PAR> add(CujoProperty<? extends VALUE, VALUE_PAR> property) {
-        return new CPathProperty<UJO, VALUE_PAR>(this, property);
+        return CPathProperty.newInstance((CujoProperty)this, property);
     }
 
     @Override

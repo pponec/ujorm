@@ -16,15 +16,13 @@ import java.util.List;
  * A <strong>CPathProperty</strong> class is an composite of a CujoProperty objects.
  * The CPathProperty class can be used wherever is used CujoProperty - with a one important <strong>exception</strong>:
  * do not send the CPathProperty object to methods Cujo.readValue(...) and Cujo.writeValue(...) !!!
- * <p/>You can use the preferred methods UjoManager.setValue(...) / UjoManager.getValue(...) 
- * to write and read a value instead of or use some type safe solution by UjoExt or a method of CujoProperty.
  * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included 
  * in the list returned by Cujo.readProperties().
  * 
  * @author Pavel Ponec
  * @since 0.81
  */
-public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VALUE> {
+final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VALUE> {
 
     /** Array of <strong>direct</strong> properties */
     private final CujoProperty[] properties;
@@ -320,22 +318,39 @@ public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO,
     
     // ================ STATIC ================
 
-    /** Create new instance
+    /** Quick instance for the direct property.
+     * @hidden
+     */
+    public static <UJO extends Cujo, VALUE> CPathProperty<UJO, VALUE> newInstance(final CujoProperty<UJO, VALUE> property, final boolean ascending) {
+        return property.isDirect()
+            ? new CPathProperty<UJO, VALUE>(new CujoProperty[]{property}, ascending)
+            : new CPathProperty<UJO, VALUE>(ascending, property)
+            ;
+    }
+
+    /** Quick instance for the direct property.
      * @hidden
      */
     public static <UJO extends Cujo, VALUE> CPathProperty<UJO, VALUE> newInstance(final CujoProperty<UJO, VALUE> property) {
-        return new CPathProperty<UJO, VALUE>(property);
+        return property.isDirect()
+            ? new CPathProperty<UJO, VALUE>(new CujoProperty[]{property}, property.isAscending())
+            : new CPathProperty<UJO, VALUE>(property.isAscending(), property)
+            ;
     }
 
-    /** Create new instance
+    /** Quick instance for the direct properrites
      * @hidden
      */
     public static <UJO1 extends Cujo, UJO2 extends Cujo, VALUE> CPathProperty<UJO1, VALUE> newInstance
         ( final CujoProperty<UJO1, UJO2> property1
         , final CujoProperty<UJO2, VALUE> property2
         ) {
-        return new CPathProperty<UJO1, VALUE>(property1, property2);
+        return property1.isDirect() && property2.isDirect()
+            ? new CPathProperty<UJO1, VALUE>(new CujoProperty[]{property1,property2}, property2.isAscending())
+            : new CPathProperty<UJO1, VALUE>(property2.isAscending(), property1, property2)
+            ;
     }
+
 
     /** Create new instance
      * @hidden
