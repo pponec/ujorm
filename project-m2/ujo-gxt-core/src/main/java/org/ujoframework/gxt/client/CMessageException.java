@@ -19,6 +19,7 @@ public class CMessageException extends RuntimeException implements Serializable 
     
     public static final int KEY_UNDEFINED = 0;
     public static final int KEY_SESSION_TIMEOUT = 1;
+    public static final int KEY_COLUMN_IS_NOT_SORTABLE = 2;
 
     // ...... more constants .............
 
