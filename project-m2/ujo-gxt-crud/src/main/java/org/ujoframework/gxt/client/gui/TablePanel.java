@@ -137,6 +137,8 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
                         }
                         callback.onFailure(caught);
                         GWT.log("Error TablePanel loading ", caught);
+                        grid.unmask();
+                        MessageDialog.getInstance("Unsupported operation").show();
                     }
 
                     @Override
