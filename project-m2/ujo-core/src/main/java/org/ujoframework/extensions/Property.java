@@ -243,7 +243,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @Override
     public UjoProperty<UJO, VALUE> descending() {
-        return new PathProperty(false, this);
+        return PathProperty.newInstance(this, false);
     }
 
     /** Create new composite (indirect) instance.
@@ -252,7 +252,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @SuppressWarnings("unchecked")
     @Override
     public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
-        return new PathProperty(this, property);
+        return PathProperty.newInstance((UjoProperty)this, property);
     }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */

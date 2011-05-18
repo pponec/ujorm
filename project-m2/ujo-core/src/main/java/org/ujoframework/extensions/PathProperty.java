@@ -26,15 +26,13 @@ import org.ujoframework.UjoProperty;
  * A <strong>PathProperty</strong> class is an composite of a UjoProperty objects.
  * The PathProperty class can be used wherever is used UjoProperty - with a one important <strong>exception</strong>: 
  * do not send the PathProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
- * <p/>You can use the preferred methods UjoManager.setValue(...) / UjoManager.getValue(...) 
- * to write and read a value instead of or use some type safe solution by UjoExt or a method of UjoProperty.
  * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included 
  * in the list returned by Ujo.readProperties().
  * 
  * @author Pavel Ponec
  * @since 0.81
  */
-public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
+final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
     /** Array of <strong>direct</strong> properties */
     private final UjoProperty[] properties;
@@ -46,7 +44,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
         this(properties.toArray(new UjoProperty[properties.size()]));
     }
 
-    /** Main constructor */
+    /** The main constructor. It is recommended to use the factory method 
+     * {@link #newInstance(org.ujoframework.UjoProperty, org.ujoframework.UjoProperty) newInstance(..)}
+     * for better performance in some cases.
+     * @see #newInstance(org.ujoframework.UjoProperty, org.ujoframework.UjoProperty) newInstance(..)
+     */
     public PathProperty(UjoProperty... properties) {
         this(null, properties);
     }
@@ -68,8 +70,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
         this.properties = list.toArray(new UjoProperty[list.size()]);
     }
 
-    /** Constructor for internal use only */
-    private PathProperty(UjoProperty[] properties, boolean ascending) {
+    /** Private constructor for a better performance. For internal use only. */
+    private PathProperty(final UjoProperty[] properties, final boolean ascending) {
         this.properties = properties;
         this.ascending = ascending;
     }
@@ -327,21 +329,37 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
 
     // ================ STATIC ================
     
-    /** Create new instance
-     * @hidden 
+    /** Quick instance for the direct property.
+     * @hidden
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property) {
-        return new PathProperty<UJO, VALUE>(property);
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+        return property.isDirect()
+            ? new PathProperty<UJO, VALUE>(new UjoProperty[]{property}, ascending)
+            : new PathProperty<UJO, VALUE>(ascending, property)
+            ;
     }
 
-    /** Create new instance
-     * @hidden 
+    /** Quick instance for the direct property.
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property) {
+        return property.isDirect()
+            ? new PathProperty<UJO, VALUE>(new UjoProperty[]{property}, property.isAscending())
+            : new PathProperty<UJO, VALUE>(property.isAscending(), property)
+            ;
+    }
+
+    /** Quick instance for the direct properrites
+     * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
         ( final UjoProperty<UJO1, UJO2> property1
         , final UjoProperty<UJO2, VALUE> property2
         ) {
-        return new PathProperty<UJO1, VALUE>(property1, property2);
+        return property1.isDirect() && property2.isDirect()
+            ? new PathProperty<UJO1, VALUE>(new UjoProperty[]{property1,property2}, property2.isAscending())
+            : new PathProperty<UJO1, VALUE>(property2.isAscending(), property1, property2)
+            ;
     }
 
     /** Create new instance
