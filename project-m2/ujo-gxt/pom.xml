@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-gxt</artifactId>
     <packaging>jar</packaging>
-    <version>1.19.02-SNAPSHOT</version>
+    <version>1.19.03-SNAPSHOT</version>
     <name>ujo-gxt</name>
 
     <description>Support for GWT - client UJO objects.
@@ -30,7 +30,7 @@
     </licenses>
 
     <properties>
-        <ujorm.version>1.19.02-SNAPSHOT</ujorm.version>
+        <ujorm.version>1.19.03-SNAPSHOT</ujorm.version>
         <gwt.version>1.7.0</gwt.version>
         <gxt.version>2.1.0</gxt.version>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.19.02-SNAPSHOT</version>
+            <version>1.19.03-SNAPSHOT</version>
        <!-- <scope>compile</scope> -->
         </dependency>
 
