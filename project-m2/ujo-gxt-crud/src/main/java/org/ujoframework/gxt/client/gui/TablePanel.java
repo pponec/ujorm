@@ -176,7 +176,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     }
 
     @Override
-    protected void onRender(Element parent, int index) {
+    protected void onRender(com.google.gwt.user.client.Element parent, int index) {
         super.onRender(parent, index);
         setScrollMode(Scroll.AUTO);
 
