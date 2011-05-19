@@ -29,6 +29,7 @@ import org.ujoframework.gxt.client.CujoProperty;
 import org.ujoframework.gxt.client.controller.TableControllerAsync;
 import org.ujoframework.gxt.client.cquery.CCriterion;
 import org.ujoframework.gxt.client.cquery.CQuery;
+import org.ujoframework.gxt.client.tools.MessageDialog;
 
 /**
  * Component type of drop down for a CUJO object.
@@ -52,7 +53,6 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
         this.loginRedirectable = loginRedirectable;
         setDisplayProperty(displayProperty);
         setEditable(false);
-        this.displayProperty = displayProperty;
     }
 
     @Override
@@ -87,7 +87,9 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
                             return;
                         }
                         callback.onFailure(e);
-                        GWT.log("Error CujoBox loading", e);
+                        String msg = "Data loading error";
+                        new MessageDialog(msg).show();
+                        CujoBox.this.unmask();
                     }
                     @Override
                     public void onSuccess(final PagingLoadResult<Cujo> result) {
@@ -109,6 +111,7 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
     protected void onDataLoadSuccess(List<CUJO> data) {
     }
 
+    /** The underlying data field name to bind to this ComboBox (defaults to 'text' */
     public final void setDisplayProperty(CujoProperty<? super CUJO,?> displayProperty) {
         this.displayProperty = displayProperty;
         setDisplayField( displayProperty!=null
