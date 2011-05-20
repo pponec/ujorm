@@ -33,7 +33,6 @@ import org.ujoframework.orm.TypeService;
 import org.ujoframework.orm.ForeignKey;
 import org.ujoframework.orm.annot.Column;
 import org.ujoframework.orm.annot.Comment;
-import org.ujoframework.orm.annot.Sortable;
 import org.ujoframework.orm.ao.UjoStatement;
 
 /**
@@ -77,7 +76,6 @@ final public class MetaColumn extends MetaRelation2Many {
      */
     private char typeCode;
     private boolean foreignKey;
-    private Sortable sortable;
 
 
     public MetaColumn() {
@@ -122,9 +120,6 @@ final public class MetaColumn extends MetaRelation2Many {
             Comment comment = field.getAnnotation(Comment.class);
             if (comment!=null) changeDefault(this, COMMENT  , comment.value());
         }
-
-        // Assign the Sortable annotation:
-        this.sortable = field!=null ? field.getAnnotation(Sortable.class) : null;
     }
 
     /** It is a DB column (either a value of a foreign key), 
@@ -390,10 +385,5 @@ final public class MetaColumn extends MetaRelation2Many {
     /** Is the related property type void? */
     public boolean isVoid() {
         return getProperty().isTypeOf(Void.class);
-    }
-
-    /** Returns the Sortable annotation */
-    public Sortable getSortable() {
-        return sortable;
     }
 }
