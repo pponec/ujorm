@@ -313,7 +313,7 @@ public class OrmHandler {
                 }
             }
         } catch (Throwable e) {
-            throw new IllegalStateException("Illegal state", e);
+            throw new IllegalStateException("Illegal state for: " + property, e);
         }
         return null;
     }
