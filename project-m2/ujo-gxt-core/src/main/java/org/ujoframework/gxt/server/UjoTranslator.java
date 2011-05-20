@@ -20,6 +20,7 @@ import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.UjoPropertyList;
 import org.ujoframework.core.UjoCoder;
+import org.ujoframework.core.UjoIterator;
 import org.ujoframework.core.UjoManager;
 import org.ujoframework.extensions.ValueExportable;
 import org.ujoframework.gxt.client.CEnum;
@@ -166,6 +167,12 @@ public final class UjoTranslator<CUJO extends Cujo> {
         if (properties.isEmpty()) {
             throw new NoSuchElementException("No matching properties of the " + ujoPropertyList.getType());
         }
+    }
+
+    /** Get List of CUJOs */
+    @SuppressWarnings({"unchecked"})
+    public ListExt<CUJO> translate(UjoIterator<? extends Ujo> iterator) {
+        return translate((Iterator)iterator);
     }
 
     /** Get List of CUJOs */
