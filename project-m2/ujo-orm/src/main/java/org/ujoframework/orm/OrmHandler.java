@@ -19,6 +19,8 @@ package org.ujoframework.orm;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -294,6 +296,26 @@ public class OrmHandler {
                 propertyMap.put(property, column);
             }
         }
+    }
+
+    /** Find a property annotation by the required type.
+     * The property must be a public static final field in the related Ujo class.
+     */
+    public <T extends Annotation> T findAnnotation(UjoProperty property, Class<T> annotationClass) {
+        if (!property.isDirect()) {
+            property = ((CompositeProperty) property).getFirstProperty();
+        }
+        try {
+            for (Field field : findColumnModel(property).getTableClass().getFields()) {
+                if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
+                &&  field.get(null) == property) {
+                    return (T) field.getAnnotation(annotationClass);
+                }
+            }
+        } catch (Throwable e) {
+            throw new IllegalStateException("Illegal state", e);
+        }
+        return null;
     }
 
     /** Find a Relation/Column model of the paramemeter property.

@@ -28,6 +28,7 @@ import org.ujoframework.orm.*;
 import org.ujoframework.orm.ao.CachePolicy;
 import org.ujoframework.orm.ao.CheckReport;
 import org.ujoframework.orm.ao.CommentPolicy;
+import org.ujoframework.orm.annot.Comment;
 import org.ujoframework.orm.metaModel.MetaColumn;
 import org.ujoframework.orm.metaModel.MetaParams;
 import org.ujoframework.orm.utility.OrmTools;
@@ -593,6 +594,11 @@ public class SampleORM {
             + "Dialect: " + col.getDialectName()
             ;
         System.out.println(msg);
+
+        // See, how to get an annotation of a persistent UjoProperty in run-time:
+        Comment annotation = handler.findAnnotation(Order.id, Comment.class);
+        System.out.println(annotation.value());
+
     }
 
     /** Close Ujorm session to clear a session cache 
