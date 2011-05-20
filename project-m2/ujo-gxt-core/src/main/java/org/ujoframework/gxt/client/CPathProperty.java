@@ -318,14 +318,23 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
     
     // ================ STATIC ================
 
-    /** Quick instance for the direct property.
+    /** Create a new instance of property with a new sort attribute value.
      * @hidden
      */
-    public static <UJO extends Cujo, VALUE> CPathProperty<UJO, VALUE> newInstance(final CujoProperty<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Cujo, VALUE> CPathProperty<UJO, VALUE> sort(final CujoProperty<UJO, VALUE> property, final boolean ascending) {
         return property.isDirect()
             ? new CPathProperty<UJO, VALUE>(new CujoProperty[]{property}, ascending)
             : new CPathProperty<UJO, VALUE>(ascending, property)
             ;
+    }
+
+    /** Create a new instance of property with a new sort attribute value.
+     * This is an alias for the static method {@link  #sort(org.ujoframework.gxt.client.CujoProperty, boolean)  sort(..)}.
+     * @hidden
+     * @see #sort(org.ujoframework.gxt.client.CujoProperty, boolean)  sort(..)
+     */
+    public static <UJO extends Cujo, VALUE> CPathProperty<UJO, VALUE> newInstance(final CujoProperty<UJO, VALUE> property, final boolean ascending) {
+        return sort(property, ascending);
     }
 
     /** Quick instance for the direct property.
