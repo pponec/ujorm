@@ -340,7 +340,9 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     /** Create a new instance of property with a new sort attribute value.
+     * This is an alias for the static method {@link #sort(org.ujoframework.UjoProperty, boolean) sort()}.
      * @hidden
+     * @see #sort(org.ujoframework.UjoProperty, boolean) sort(..)
      */
     public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
         return sort(property, ascending);
