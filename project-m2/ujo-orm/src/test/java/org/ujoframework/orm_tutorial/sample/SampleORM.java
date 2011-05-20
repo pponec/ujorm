@@ -598,7 +598,6 @@ public class SampleORM {
         // See, how to get an annotation of a persistent UjoProperty in run-time:
         Comment annotation = handler.findAnnotation(Order.id, Comment.class);
         System.out.println(annotation.value());
-
     }
 
     /** Close Ujorm session to clear a session cache 
