@@ -18,6 +18,7 @@ public class PropertyMetadata implements Serializable {
 
     private boolean primaryKey;
     private boolean mandatory;
+    private boolean sortable;
     private int maxLength;
     private int precision;
     //
@@ -31,6 +32,7 @@ public class PropertyMetadata implements Serializable {
     public PropertyMetadata
         ( boolean primaryKey
         , boolean mandatory
+        , boolean sortable
         , int maxLength
         , int precision
         , String columnLabel
@@ -39,6 +41,7 @@ public class PropertyMetadata implements Serializable {
         ){
         this.primaryKey = primaryKey;
         this.mandatory = mandatory;
+        this.sortable = sortable;
         this.maxLength = maxLength;
         this.precision = precision;
         this.columnLabel = columnLabel;
@@ -50,6 +53,7 @@ public class PropertyMetadata implements Serializable {
     public PropertyMetadata(CujoProperty property) {
         this.primaryKey = false;
         this.mandatory = false;
+        this.sortable = false;
         this.maxLength = Integer.MAX_VALUE;
         this.precision = 0;
         this.columnLabel = property.getCammelName();
@@ -71,6 +75,10 @@ public class PropertyMetadata implements Serializable {
 
     public boolean isMandatory() {
         return mandatory;
+    }
+
+    public boolean isSortable() {
+        return sortable;
     }
 
     public int getMaxLength() {
