@@ -126,7 +126,7 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
 
     @Override
     public CujoProperty<UJO, VALUE> descending() {
-        return CPathProperty.newInstance(this, false);
+        return CPathProperty.sort(this, false);
     }
 
     @Override
