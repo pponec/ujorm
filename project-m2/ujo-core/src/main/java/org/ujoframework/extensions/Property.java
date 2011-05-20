@@ -243,7 +243,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @Override
     public UjoProperty<UJO, VALUE> descending() {
-        return PathProperty.newInstance(this, false);
+        return PathProperty.sort(this, false);
     }
 
     /** Create new composite (indirect) instance.

@@ -329,14 +329,21 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
 
     // ================ STATIC ================
     
-    /** Quick instance for the direct property.
+    /** Create a new instance of property with a new sort attribute value.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> sort(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
         return property.isDirect()
             ? new PathProperty<UJO, VALUE>(new UjoProperty[]{property}, ascending)
             : new PathProperty<UJO, VALUE>(ascending, property)
             ;
+    }
+
+    /** Create a new instance of property with a new sort attribute value.
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+        return sort(property, ascending);
     }
 
     /** Quick instance for the direct property.
