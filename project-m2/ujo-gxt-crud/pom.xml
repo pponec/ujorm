@@ -27,7 +27,7 @@
     <properties>
         <ujorm.version>1.19.03-SNAPSHOT</ujorm.version>
         <gwt.version>1.7.0</gwt.version>
-        <gxt.version>2.1.0</gxt.version>
+        <gxt.version>2.1.1</gxt.version>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
