@@ -554,5 +554,15 @@ public class UjoStatement extends UnsupportedOperationException implements Prepa
     public void addBatch() throws SQLException {
     }
 
+    /** Java 7 Required */
+    public void closeOnCompletion() throws SQLException {
+        close();
+    }
+
+    /** Java 7 Required */
+    public boolean isCloseOnCompletion() throws SQLException {
+        return false;
+    }
+
 
 }
