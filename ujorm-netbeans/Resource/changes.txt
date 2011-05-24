@@ -5,12 +5,13 @@ release 1.20 (2010-05-?)
 + the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL. 
   See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
   Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;  
-+ the 'Sequence Table Model' is implemented to customize of the 'ujorm_pk_support' table.
++ the 'Sequence Table Model' is implemented to an optional customize of the 'ujorm_pk_support' table.
 + persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement include its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
 + the batch INSERT for list of items usding a multi row SQL INSERT is implemented 
 + the batch UPDATE is supoorted now, see documentation for more information
 + new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
 + select DISTINCT is supported now
++ configuration supports the READ-ONLY mode for required table(s)
 + core class UjoComparator supports the Collator for comparation of the String items.
 + composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
 + auto increment is supported for data type String now
@@ -18,6 +19,7 @@ release 1.20 (2010-05-?)
 + database commits are executed by order of assigning database models now
 + API of the class Criterion is extended for two methods: forAll() and forNone()
 + many Ujorm source code cleanings are finished
++ constructor new SortingProperty(..) is replaced for a factory method PathProperty.sort(..)
 - Ujorm configuration loading from XML file is fixed
 - SqlDialect is fixed for the null relation case by sample: Criterion.whereNull(Item.order)
 - the DDL update fixed in case a default value is any implementatione of the interface OrmUjo
