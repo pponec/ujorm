@@ -41,8 +41,9 @@ package org.ujoframework;
  * 
  * @author Pavel Ponec
  * @see UjoProperty
- * @composed 1 - 1 UjoPropertyList
- * @assoc - - - UjoAction
+ * @assoc - - - UjoProperty
+ * @composed - - 1 UjoPropertyList
+ * @composed - - 1 UjoAction
  * @opt attributes
  * @opt operations
  */
