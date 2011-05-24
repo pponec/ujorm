@@ -273,14 +273,33 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             .append(' ');
         }
 
-        out.append(
-            value instanceof Number ||
-            value instanceof CharSequence
-            ? value.toString()
-            : new UjoCoder().encodeValue(value, false)
-        );
-        
+        printValue(value, out);
         return out.toString();
+    }
+
+    /** Print an Ujo value
+     * @param value Not null value
+     */
+    protected void printValue(final Object value, final StringBuilder out) {
+        if (value instanceof Ujo) {
+            final Ujo ujo = (Ujo) value;
+            final UjoProperty firstProperty = ujo.readProperties().get(0);
+            final Object firstValue = firstProperty.of(ujo);
+
+            out.append(ujo.getClass().getSimpleName());
+            out.append('[');
+            out.append(firstProperty);
+            out.append('=');
+            printValue(firstValue, out);
+            out.append(']');
+        } else {
+            out.append(
+                value instanceof Number ||
+                value instanceof CharSequence
+                ? value.toString()
+                : new UjoCoder().encodeValue(value, false)
+            );
+        }
     }
 
 }
