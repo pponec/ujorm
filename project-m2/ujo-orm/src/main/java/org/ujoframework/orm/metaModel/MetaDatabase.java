@@ -70,6 +70,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public static final Property<MetaDatabase,String> ID = newProperty("id", "");
     /** MetaDatabase default schema */
     public static final Property<MetaDatabase,String> SCHEMA = newProperty("schema", "");
+    /** The default state read-only for the database. */
+    public static final Property<MetaDatabase,Boolean> READ_ONLY = newProperty("readOnly", false);
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
     public static final Property<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class);
     /** JDBC URL connection */
@@ -124,6 +126,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
         if (param!=null) {
             changeDefault(this, SCHEMA  , SCHEMA.of(param));
+            changeDefault(this, READ_ONLY, READ_ONLY.of(param));
             changeDefault(this, DIALECT , DIALECT.of(param));
             changeDefault(this, JDBC_URL, JDBC_URL.of(param));
             changeDefault(this, JDBC_DRIVER, JDBC_DRIVER.of(param));
@@ -136,6 +139,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         Db annotDB = database.getClass().getAnnotation(Db.class);
         if (annotDB!=null) {
             changeDefault(this, SCHEMA  , annotDB.schema());
+            changeDefault(this, READ_ONLY, annotDB.readOnly());
             changeDefault(this, DIALECT , annotDB.dialect());
             changeDefault(this, JDBC_URL, annotDB.jdbcUrl());
             changeDefault(this, JDBC_DRIVER, annotDB.jdbcDriver());

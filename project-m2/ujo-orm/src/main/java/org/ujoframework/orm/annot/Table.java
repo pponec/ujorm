@@ -36,8 +36,14 @@ public @interface Table {
     String value() default NULL;
     /** Table alias name. The default value is taken from a name. */
     String alias() default NULL;
-    /** Name of schema. If the value is empty than a default database schema is used. */
+    /** Name of schema. If the value is empty than a default database schema is used.
+     * @see Db#schema()
+     */
     String schema() default NULL;
+    /** Database table can have the the read-only state. The value can change the default value of the @Db.readOnly only
+     * @see Db#readOnly() 
+     */
+    boolean readOnly() default false;
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
     String sequence() default NULL;
