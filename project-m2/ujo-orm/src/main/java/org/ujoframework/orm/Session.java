@@ -252,6 +252,7 @@ public class Session {
         final MetaTable table = handler.findTableModel(bos.get(0).getClass());
         final MetaDatabase db = MetaTable.DATABASE.of(table);
         final int bosCount = bos.size();
+        table.assertChangeAllowed();
 
         if (!db.getDialect().isMultiRowInsertSupported()) {
             for (OrmUjo bo : bos) {
@@ -332,6 +333,7 @@ public class Session {
         try {
             // 1. Update parent
             final MetaTable table = modifyParent(bo);
+            table.assertChangeAllowed();
             // 2. Assigh Primary Key
             table.assignPrimaryKey(bo, this);
             // 3. Session must be assigned after assignPrimaryKey(). A bug was fixed thans to Pavel Slovacek
@@ -383,6 +385,7 @@ public class Session {
                 ? modifyParent(bo)
                 : handler.findTableModel((Class) bo.getClass())
                 ;
+            table.assertChangeAllowed();
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
@@ -432,6 +435,7 @@ public class Session {
      */
     public int delete(final OrmUjo bo) {
         MetaTable table = handler.findTableModel(bo.getClass());
+        table.assertChangeAllowed();
         MetaColumn PK = table.getFirstPK();
         Criterion crn = Criterion.where(PK.getProperty(), PK.getValue(bo));
         int result = delete(table, crn);
@@ -472,6 +476,7 @@ public class Session {
      * @return Returns a number of the realy deleted objects.
      */
     protected <UJO extends OrmUjo> int delete(final MetaTable tableModel, final Criterion<UJO> criterion) {
+        tableModel.assertChangeAllowed();
         int result = 0;
         JdbcStatement statement = null;
         String sql = "";

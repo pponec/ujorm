@@ -25,7 +25,9 @@ import org.ujoframework.orm.SqlDialect;
 @Target(value=ElementType.TYPE)
 public @interface Db {
 
-    /** Default name of table schema is copied into table models if thay are empty. */
+    /** Default name of table schema is copied into table models if thay are empty. 
+     * @see Table#schema() 
+     */
     String schema() default "";
     /** SQL dialect by a DB Vendor. */
     Class<? extends SqlDialect> dialect();
@@ -50,6 +52,11 @@ public @interface Db {
      * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
     Class sequencer() default org.ujoframework.orm.UjoSequencer.class;
+    /** Default read-only state for all database tables.
+     * <br/>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config. 
+     * @see Table#readOnly()
+     */
+    boolean readOnly() default false;
 
 
 }
