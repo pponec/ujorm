@@ -40,7 +40,8 @@ public @interface Table {
      * @see Db#schema()
      */
     String schema() default NULL;
-    /** Database table can have the the read-only state. The value can change the default value of the @Db.readOnly only
+    /** Database table can have the the read-only state. The value can change the default value of the @Db.readOnly() only.
+     * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
      * @see Db#readOnly() 
      */
     boolean readOnly() default false;
