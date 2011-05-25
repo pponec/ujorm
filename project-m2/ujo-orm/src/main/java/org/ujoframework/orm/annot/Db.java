@@ -53,6 +53,7 @@ public @interface Db {
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
     Class sequencer() default org.ujoframework.orm.UjoSequencer.class;
     /** Default read-only state for all database tables.
+     * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
      * <br/>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config. 
      * @see Table#readOnly()
      */
