@@ -17,6 +17,7 @@
 package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
 import org.ujoframework.orm.SqlDialect;
+import org.ujoframework.orm.ao.Orm2ddlPolicy;
 
 /** 
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
@@ -58,6 +59,20 @@ public @interface Db {
      * @see Table#readOnly()
      */
     boolean readOnly() default false;
+    /** Parameter to controll how the DLL (Data Definition Language) statmenets will be used
+     * to a defining data structure modification.
+     * The value can be defined a parent, so the hiearchy from the parrent to a child is:
+     * <ul>
+     *   <li>Meta Parameters</li>
+     *   <li>Database</li>
+     *   <li>Table</li>
+     * </ul>
+     * In case the root Meta Parameters is undefined, then the parameter
+     * {@see Orm2ddlPolicy#CREATE_OR_UPDATE_DDL CREATE_OR_UPDATE_DDL}
+     * will be used.
+     * @see Orm2ddlPolicy#CREATE_OR_UPDATE_DDL
+     */
+    Orm2ddlPolicy Orm2ddlPolicy() default Orm2ddlPolicy.INHERITED;
 
 
 }
