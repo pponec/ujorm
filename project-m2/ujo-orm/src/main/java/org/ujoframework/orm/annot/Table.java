@@ -16,6 +16,7 @@
 
 package org.ujoframework.orm.annot;
 import java.lang.annotation.*;
+import org.ujoframework.orm.ao.Orm2ddlPolicy;
 
 /** 
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
@@ -40,13 +41,27 @@ public @interface Table {
      * @see Db#schema()
      */
     String schema() default NULL;
-    /** Database table can have the the read-only state. The value can change the default value of the @Db.readOnly() only.
-     * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
-     * @see Db#readOnly() 
-     */
-    boolean readOnly() default false;
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
     String sequence() default NULL;
-    
+    /** Database table can have the the read-only state. The value can change the default value of the @Db.readOnly() only.
+     * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
+     * @see Db#readOnly()
+     */
+    boolean readOnly() default false;
+    /** Parameter to controll how the DLL (Data Definition Language) statmenets will be used
+     * to a defining data structure modification.
+     * The value can be defined a parent, so the hiearchy from the parrent to a child is:
+     * <ul>
+     *   <li>Meta Parameters</li>
+     *   <li>Database</li>
+     *   <li>Table</li>
+     * </ul>
+     * In case the root Meta Parameters is undefined, then the parameter
+     * {@see Orm2ddlPolicy#CREATE_OR_UPDATE_DDL CREATE_OR_UPDATE_DDL}
+     * will be used.
+     * @see Orm2ddlPolicy#CREATE_OR_UPDATE_DDL
+     */
+    Orm2ddlPolicy orm2ddlPolicy() default Orm2ddlPolicy.INHERITED;
+
 }

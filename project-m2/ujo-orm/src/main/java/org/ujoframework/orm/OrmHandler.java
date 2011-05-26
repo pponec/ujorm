@@ -228,7 +228,8 @@ public class OrmHandler {
 
         // Log the meta-model:
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.info("DATABASE META-MODEL:\n" + getConfig());
+            final String msg = "DATABASE META-MODEL:\n" + getConfig();
+            LOGGER.info(msg);
         }
 
         // Export the meta-model into a XML file:
@@ -239,14 +240,14 @@ public class OrmHandler {
             throw new IllegalStateException("Can't create configuration " + outConfigFile, e);
         }
 
-        // Create DDL:
-        switch (MetaParams.ORM2DLL_POLICY.of(getParameters())) {
-            case CREATE_DDL:
-            case CREATE_OR_UPDATE_DDL:
-            case VALIDATE:
-                for (MetaDatabase dbModel : getDatabases()) {
+        for (MetaDatabase dbModel : getDatabases()) {
+            // Create DDL:
+            switch (MetaDatabase.ORM2DLL_POLICY.of(dbModel)) {
+                case CREATE_DDL:
+                case CREATE_OR_UPDATE_DDL:
+                case VALIDATE:
                     dbModel.create(getSession());
-                }
+            }
         }
 
     }

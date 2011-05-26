@@ -18,9 +18,12 @@
 package org.ujoframework.orm.ao;
 
 /**
- * Possible values to create the DLL (Data Definition Language) for for defining data structures.
+ * Values list to controll how the DLL (Data Definition Language) statmenets will be used
+ * to a defining data structure modification.
+ * The default value is {@link #CREATE_OR_UPDATE_DDL CREATE_OR_UPDATE_DDL}.
  * @author Pavel Ponec
  * @see org.ujoframework.orm.metaModel.MetaParams
+ * @see #CREATE_OR_UPDATE_DDL Default value
  */
 public enum Orm2ddlPolicy {
 
@@ -28,10 +31,21 @@ public enum Orm2ddlPolicy {
     DO_NOTHING,
     /** Create full DDL structure in condition that the the database structure was not found. */
     CREATE_DDL,
-    /** Create or update full DDL structure. It is the default value. */
+    /** Create or update full DDL structure. It is the DEFAULT value. */
     CREATE_OR_UPDATE_DDL,
     /** Throw the IllegalStateException in case missing a table, index, or column in the connected database. */
     VALIDATE,
+    /** The value is defined from a parent. 
+     * The hiearchy from the parrent to a child is:
+     * <ul>
+     *   <li>Meta Parameters</li>
+     *   <li>Database</li>
+     *   <li>Table</li>
+     * </ul>
+     * In case the parent ROOT is undefined, then the {@see #CREATE_OR_UPDATE_DDL} will be used.
+     * @see #CREATE_OR_UPDATE_DDL
+     */
+    INHERITED,
     ;
 
 }

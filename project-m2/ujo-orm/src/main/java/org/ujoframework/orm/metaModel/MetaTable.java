@@ -36,6 +36,7 @@ import org.ujoframework.orm.OrmUjo;
 import org.ujoframework.orm.Session;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Comment;
+import org.ujoframework.orm.ao.Orm2ddlPolicy;
 
 
 /**
@@ -61,6 +62,10 @@ final public class MetaTable extends AbstractMetaModel {
     public static final Property<MetaTable,String> SCHEMA = newProperty("schema", Table.NULL);
     /** The state read-only for the database. */
     public static final Property<MetaTable,Boolean> READ_ONLY = newProperty("readOnly", false);
+    /** A policy to defining the database structure by a DDL.
+     * @see Orm2ddlPolicy Parameter values
+     */
+    public static final Property<MetaTable,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
     public static final Property<MetaTable,String> SEQUENCE = newProperty("sequence", Table.NULL);
@@ -126,6 +131,7 @@ final public class MetaTable extends AbstractMetaModel {
             changeDefault(this, ALIAS , ALIAS.of(parTable));
             changeDefault(this, SCHEMA, SCHEMA.of(parTable));
             changeDefault(this, READ_ONLY, READ_ONLY.of(parTable));
+            changeDefault(this, ORM2DLL_POLICY, ORM2DLL_POLICY.of(parTable));
             changeDefault(this, SEQUENCE,SEQUENCE.of(parTable));
             changeDefault(this, SELECT, SELECT.of(parTable));
             changeDefault(this, VIEW  , VIEW.of(parTable));
@@ -155,17 +161,20 @@ final public class MetaTable extends AbstractMetaModel {
             if (table1!=null) changeDefault(this, ALIAS , table1.alias());
             if (table1!=null) changeDefault(this, SCHEMA, table1.schema());
             if (table1!=null) changeDefault(this, READ_ONLY, table1.readOnly());
+            if (table1!=null) changeDefault(this, ORM2DLL_POLICY, table1.orm2ddlPolicy());
             if (table1!=null) changeDefault(this, SEQUENCE,table1.sequence());
             if (table2!=null) changeDefault(this, NAME  , table2.name());
             if (table2!=null) changeDefault(this, NAME  , table2.value());
             if (table2!=null) changeDefault(this, ALIAS , table2.alias());
             if (table2!=null) changeDefault(this, SCHEMA, table2.schema());
             if (table2!=null) changeDefault(this, READ_ONLY, table2.readOnly());
+            if (table2!=null) changeDefault(this, ORM2DLL_POLICY, table2.orm2ddlPolicy());
             if (table2!=null) changeDefault(this, SEQUENCE,table2.sequence());
         }
 
         changeDefault(this, SCHEMA, MetaDatabase.SCHEMA.of(database));
         changeDefault(this, READ_ONLY, MetaDatabase.READ_ONLY.of(database));
+        changeDefault(this, ORM2DLL_POLICY, MetaDatabase.ORM2DLL_POLICY.of(database));
         changeDefault(this, NAME, dbProperty.getName());
         String aliasPrefix = MetaParams.TABLE_ALIAS_PREFIX.of(database.getParams());
         String aliasSuffix = MetaParams.TABLE_ALIAS_SUFFIX.of(database.getParams());
@@ -400,4 +409,10 @@ final public class MetaTable extends AbstractMetaModel {
             throw new IllegalStateException(msg);
         }
     }
+    
+    /** Returns Orm2DDl policy */
+    public Orm2ddlPolicy getOrm2ddlPolicy() {
+        return ORM2DLL_POLICY.of(this);
+    }
+
 }

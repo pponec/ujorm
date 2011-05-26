@@ -50,6 +50,7 @@ import org.ujoframework.orm.Session;
 import org.ujoframework.orm.SqlDialect;
 import org.ujoframework.orm.UjoSequencer;
 import org.ujoframework.orm.annot.Db;
+import org.ujoframework.orm.ao.Orm2ddlPolicy;
 
 /**
  * A logical database description.
@@ -90,6 +91,10 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      * A value can be a subtype of 'org.ujoframework.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
     public static final Property<MetaDatabase,Class> SEQUENCER = newProperty("sequencer", Class.class).writeDefault(UjoSequencer.class);
+    /** A policy to defining the database structure by a DDL.
+     * @see Orm2ddlPolicy Parameter values
+     */
+    public static final Property<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** List of tables */
     public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
     /** List of procedures */
@@ -127,6 +132,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (param!=null) {
             changeDefault(this, SCHEMA  , SCHEMA.of(param));
             changeDefault(this, READ_ONLY, READ_ONLY.of(param));
+            changeDefault(this, ORM2DLL_POLICY, ORM2DLL_POLICY.of(param));
             changeDefault(this, DIALECT , DIALECT.of(param));
             changeDefault(this, JDBC_URL, JDBC_URL.of(param));
             changeDefault(this, JDBC_DRIVER, JDBC_DRIVER.of(param));
@@ -140,6 +146,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (annotDB!=null) {
             changeDefault(this, SCHEMA  , annotDB.schema());
             changeDefault(this, READ_ONLY, annotDB.readOnly());
+            changeDefault(this, ORM2DLL_POLICY, annotDB.Orm2ddlPolicy());
             changeDefault(this, DIALECT , annotDB.dialect());
             changeDefault(this, JDBC_URL, annotDB.jdbcUrl());
             changeDefault(this, JDBC_DRIVER, annotDB.jdbcDriver());
@@ -152,6 +159,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         changeDefault(this, ID      , database.getClass().getSimpleName());
         changeDefault(this, JDBC_URL, getDialect().getJdbcUrl());
         changeDefault(this, JDBC_DRIVER, getDialect().getJdbcDriver());
+        changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.of(getParams()));
+        changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.getDefault());
 
         for (UjoProperty tableProperty : database.readProperties()) {
 
@@ -267,23 +276,28 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     private void createTableComments(List<MetaTable> cTables, Statement stat, StringBuilder out) {
         try {
             for (MetaTable table : cTables) {
-                if (table.isTable()) {
-                    if (table.isCommented()) {
-                        out.setLength(0);
-                        Appendable sql = getDialect().printComment(table, out);
-                        if (sql.toString().length() > 0) {
-                            executeUpdate(sql, stat);
-                        }
-                    }
-                    for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
-                        if (column.isCommented()) {
-                            out.setLength(0);
-                            Appendable sql = getDialect().printComment(column, out);
-                            if (sql.toString().length() > 0) {
-                                executeUpdate(sql, stat);
+                switch (MetaTable.ORM2DLL_POLICY.of(table)) {
+                    case CREATE_DDL:
+                    case CREATE_OR_UPDATE_DDL:
+                        if (table.isTable()) {
+                            if (table.isCommented()) {
+                                out.setLength(0);
+                                Appendable sql = getDialect().printComment(table, out);
+                                if (sql.toString().length() > 0) {
+                                    executeUpdate(sql, stat, table);
+                                }
+                            }
+                            for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
+                                if (column.isCommented()) {
+                                    out.setLength(0);
+                                    Appendable sql = getDialect().printComment(column, out);
+                                    if (sql.toString().length() > 0) {
+                                        executeUpdate(sql, stat, table);
+                                    }
+                                }
                             }
                         }
-                    }
+                    default:
                 }
             }
         } catch (Exception e) {
@@ -433,11 +447,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 }
 
                 if (exception!=null) {
-                    switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
+                    switch (ORM2DLL_POLICY.of(this)) {
                         case VALIDATE:
                             throw new IllegalStateException(logMsg, exception);
                         case CREATE_DDL:
                         case CREATE_OR_UPDATE_DDL:
+                        case INHERITED:
                             createSequenceTable = true;
                     }
                 }
@@ -458,11 +473,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             }
 
             boolean ddlOnly = false;
-            switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
+            switch (ORM2DLL_POLICY.of(this)) {
                 case CREATE_DDL:
                     ddlOnly = true;
                 case CREATE_OR_UPDATE_DDL:
                 case VALIDATE:
+                case INHERITED:
                     boolean change = isModelChanged(conn, tables, newColumns, indexes);
                     if (change && ddlOnly) {
                         if (tables.size()<tableTotalCount) {
@@ -520,7 +536,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                     tableCount++;
                     out.setLength(0);
                     sql = getDialect().printTable(table, out);
-                    executeUpdate(sql, stat);
+                    executeUpdate(sql, stat, table);
                     foreignColumns.addAll(table.getForeignColumns());
                     anyChange = true;
                 }
@@ -530,7 +546,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             for (MetaColumn column : newColumns) {
                 out.setLength(0);
                 sql = getDialect().printAlterTable(column, out);
-                executeUpdate(sql, stat);
+                executeUpdate(sql, stat, column.getTable());
                 anyChange = true;
 
                 // Pick up the foreignColumns:
@@ -543,7 +559,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             for (MetaIndex index : indexes) {
                 out.setLength(0);
                 sql = getDialect().printIndex(index, out);
-                executeUpdate(sql, stat);
+                executeUpdate(sql, stat, MetaIndex.TABLE.of(index));
                 anyChange = true;
             }
 
@@ -553,7 +569,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                     out.setLength(0);
                     MetaTable table = MetaColumn.TABLE.of(column);
                     sql = getDialect().printForeignKey(column, table, out);
-                    executeUpdate(sql, stat);
+                    executeUpdate(sql, stat, column.getTable());
                     anyChange = true;
                 }
             }
@@ -562,7 +578,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             if (createSequenceTable) {
                 out.setLength(0);
                 sql = getDialect().printSequenceTable(this, out);
-                executeUpdate(sql, stat);
+                final MetaTable table = new MetaTable();
+                MetaTable.ORM2DLL_POLICY.setValue(table, MetaParams.ORM2DLL_POLICY.getDefault());
+                executeUpdate(sql, stat, table);
             }
 
             // 8. Create table comment for the all tables:
@@ -600,12 +618,18 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Check missing database table, index, or column */
-    private void executeUpdate(final Appendable sql, final Statement stat) throws IllegalStateException, SQLException {
+    private void executeUpdate(final Appendable sql, final Statement stat, final MetaTable table) throws IllegalStateException, SQLException {
 
-       switch (MetaParams.ORM2DLL_POLICY.of(ormHandler.getParameters())) {
+       switch (table.getOrm2ddlPolicy()) {
+           case INHERITED:
+               throw new IllegalStateException("An internal error due the DDL policy: " + table.getOrm2ddlPolicy());
+           case DO_NOTHING:
+               final String errmsg = "Modification is not allowed for the table: " + MetaTable.NAME.of(table) + " : " + sql;
+               LOGGER.log(Level.FINEST, errmsg);
+               return;
            case VALIDATE:
                String msg = "A database validation (caused by the parameter "
-                          + MetaParams.ORM2DLL_POLICY
+                          + MetaTable.ORM2DLL_POLICY
                           + ") have found an inconsistency. "
                           + "There is required a database change: "
                           + sql
