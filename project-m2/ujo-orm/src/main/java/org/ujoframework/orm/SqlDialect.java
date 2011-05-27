@@ -267,7 +267,7 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Is allowed a column length insice a create column statement ? Example: NAME CHAR(10) */
+    /** Is allowed a column length in a SQL phrase for creating column? The length example can be: NAME CHAR(10) */
     protected boolean isColumnLengthAllowed(final MetaColumn column) {
         switch (MetaColumn.DB_TYPE.of(column)) {
             case INT:
