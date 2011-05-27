@@ -31,8 +31,8 @@ public enum Orm2ddlPolicy {
      * @see #WARNING
      */
     DO_NOTHING,
-    /** Log a message only in case missing a table, index, or column in the connected database
-     * unlike option {@link #DO_NOTHING} which make no log.
+    /** The policy makes no change in the database, however it logs a message in case missing a table, index, or column
+     * in the connected database - unlike option {@link #DO_NOTHING} which make no log.
      * @see #DO_NOTHING
      */
     WARNING,
