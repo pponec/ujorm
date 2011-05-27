@@ -27,8 +27,15 @@ package org.ujoframework.orm.ao;
  */
 public enum Orm2ddlPolicy {
 
-    /** Framework is expected to match the DDL structure with the ORM model and do not make any validation. */
+    /** Framework is expected to match the DDL structure with the ORM model and do not make any validation. 
+     * @see #WARNING
+     */
     DO_NOTHING,
+    /** Log a message only in case missing a table, index, or column in the connected database
+     * unlike option {@link #DO_NOTHING} which make no log.
+     * @see #DO_NOTHING
+     */
+    WARNING,
     /** Create full DDL structure in condition that the the database structure was not found. */
     CREATE_DDL,
     /** Create or update full DDL structure. It is the DEFAULT value. */

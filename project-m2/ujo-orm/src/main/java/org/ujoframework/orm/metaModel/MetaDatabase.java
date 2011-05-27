@@ -449,6 +449,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 if (exception!=null) {
                     switch (ORM2DLL_POLICY.of(this)) {
                         case VALIDATE:
+                        case WARNING:
                             throw new IllegalStateException(logMsg, exception);
                         case CREATE_DDL:
                         case CREATE_OR_UPDATE_DDL:
@@ -478,6 +479,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                     ddlOnly = true;
                 case CREATE_OR_UPDATE_DDL:
                 case VALIDATE:
+                case WARNING:
                 case INHERITED:
                     boolean change = isModelChanged(conn, tables, newColumns, indexes);
                     if (change && ddlOnly) {
@@ -620,21 +622,27 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Check missing database table, index, or column */
     private void executeUpdate(final Appendable sql, final Statement stat, final MetaTable table) throws IllegalStateException, SQLException {
 
+       boolean validateCase = false;
        switch (table.getOrm2ddlPolicy()) {
            case INHERITED:
                throw new IllegalStateException("An internal error due the DDL policy: " + table.getOrm2ddlPolicy());
            case DO_NOTHING:
-               final String errmsg = "Modification is not allowed for the table: " + MetaTable.NAME.of(table) + " : " + sql;
-               LOGGER.log(Level.FINEST, errmsg);
                return;
            case VALIDATE:
+               validateCase = true;
+           case WARNING:
                String msg = "A database validation (caused by the parameter "
                           + MetaTable.ORM2DLL_POLICY
                           + ") have found an inconsistency. "
                           + "There is required a database change: "
                           + sql
                           ;
-               throw new IllegalStateException(msg);
+               if (validateCase) {
+                   throw new IllegalStateException(msg);
+               } else {
+                   LOGGER.log(Level.WARNING, msg);
+               }
+
            default:
                stat.executeUpdate(sql.toString());
                LOGGER.info(sql.toString());
