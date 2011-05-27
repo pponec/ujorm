@@ -267,6 +267,24 @@ abstract public class SqlDialect {
         return out;
     }
 
+    /** Is allowed a column length insice a create column statement ? Example: NAME CHAR(10) */
+    protected boolean isColumnLengthAllowed(final MetaColumn column) {
+        switch (MetaColumn.DB_TYPE.of(column)) {
+            case INT:
+            case SMALLINT:
+            case BIGINT:
+            case DATE:
+            case TIME:
+            case TIMESTAMP:
+                 return false;
+            case CHAR:
+            case VARCHAR:
+            case DECIMAL:
+          //case NUMERIC:
+            default:
+                return !MetaColumn.MAX_LENGTH.isDefault(column);
+        }
+    }
 
     /**
      *  Print a SQL to create column
@@ -281,7 +299,7 @@ abstract public class SqlDialect {
         out.append(' ');
         out.append(getColumnType(column));
 
-        if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
+        if (isColumnLengthAllowed(column)) {
             out.append("(" + MetaColumn.MAX_LENGTH.of(column));
             if (!MetaColumn.PRECISION.isDefault(column)) {
                 out.append("," + MetaColumn.PRECISION.of(column));
