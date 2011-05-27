@@ -15,6 +15,7 @@
  */
 package org.ujoframework.orm_tutorial.sample;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.orm.annot.Column;
@@ -37,6 +38,10 @@ public class Item extends OrmTable<Item> {
     public static final UjoProperty<Item,Integer> userId = newProperty(Integer.class);
     /** Description of the Item */
     public static final UjoProperty<Item,String> note = newProperty(String.class);
+    /** Price of the item */
+    @Comment("Price of the item")
+    @Column(length=8, precision=2)
+    public static final UjoProperty<Item,BigDecimal> price = newProperty(BigDecimal.ZERO);
     /** A reference to common Order */
     @Comment("A reference to the Order")
     @Column(name="fk_order")
