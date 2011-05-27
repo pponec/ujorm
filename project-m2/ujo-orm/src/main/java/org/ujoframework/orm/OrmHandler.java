@@ -201,14 +201,22 @@ public class OrmHandler {
         return dbModel;
     }
 
-    /** Load a meta-data and create database tables */
+    /** Load a meta-data, lock it and create database tables.
+     * There is not allowed to make any change to the created meta-model.
+     */
     @SuppressWarnings("unchecked")
     final public <UJO extends OrmUjo> void loadDatabase(final Class<UJO> databaseModel) {
         loadDatabase(new Class[] {databaseModel});
     }
 
-    /** Load a meta-data and create database tables */
+    /** Load a meta-data, lock it and create database tables.
+     * There is not allowed to make any change to the created meta-model.
+     */
     public synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
+
+        if (isReadOnly()) {
+            throw new IllegalArgumentException("The meta-model is locked and can´t be changed.");
+        }
 
         // Load meta-model:
         for (Class<UJO> db : databaseModel) {
@@ -263,8 +271,8 @@ public class OrmHandler {
 
     /** Do the handler have a read-only state? */
     public boolean isReadOnly() {
-        List<MetaDatabase> dbs = getDatabases();
-        boolean result = dbs.size()>0 && dbs.get(0).readOnly();
+        final List<MetaDatabase> dbs = getDatabases();
+        final boolean result = dbs==null || dbs.isEmpty() ? false : dbs.get(0).readOnly();
         return result;
     }
 
