@@ -586,7 +586,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             }
 
             // 8. Create table comment for the all tables:
-            List<MetaTable> cTables = null;
+            @SuppressWarnings("unchecked")
+            final List<MetaTable> cTables;
             switch (MetaParams.COMMENT_POLICY.of(ormHandler.getParameters())) {
                 case FOR_NEW_OBJECT:
                     cTables = tables;

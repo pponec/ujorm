@@ -278,6 +278,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Get the order item array. The method returns a not null result always. */
+    @SuppressWarnings("unchecked")
     final public UjoProperty<UJO,?>[] getOrderAsArray() {
         return orderBy.toArray(new UjoProperty[orderBy.size()]);
     }
@@ -347,6 +348,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #addColumn(org.ujoframework.UjoProperty) addColumn(Property)
     */
+    @SuppressWarnings("unchecked")
     public Query<UJO> setColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
         this.columns = new ArrayList<MetaColumn>();
         return addColumn(getDirectProperty(column));

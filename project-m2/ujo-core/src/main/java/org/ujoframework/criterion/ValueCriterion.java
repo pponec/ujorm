@@ -280,6 +280,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** Print an Ujo value
      * @param value Not null value
      */
+    @SuppressWarnings("unchecked")
     protected void printValue(final Object value, final StringBuilder out) {
         if (value instanceof Ujo) {
             final Ujo ujo = (Ujo) value;

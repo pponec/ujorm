@@ -54,6 +54,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     /** Main constructor */
+    @SuppressWarnings("unchecked")
     public PathProperty(Boolean ascending, UjoProperty... properties) {
         final ArrayList<UjoProperty> list = new ArrayList<UjoProperty>(properties.length + 3);
         for (UjoProperty property : properties) {
@@ -285,6 +286,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @see org.ujoframework.core.UjoComparator
      */
     @Override
+    @SuppressWarnings("unchecked")
     public UjoProperty<UJO,VALUE> descending() {
         return isAscending() ? new PathProperty(properties, false) : this ;
     }
