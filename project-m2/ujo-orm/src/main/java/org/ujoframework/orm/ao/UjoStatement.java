@@ -65,6 +65,7 @@ public class UjoStatement extends UnsupportedOperationException implements Prepa
      * For example a Java Enumerator default value can return either the Integer or String type too.
      * @see TypeService
      */
+    @SuppressWarnings("unchecked")
     public Object getDefaultValue(MetaColumn column) {
         try {
             Object defaultValue = column.getProperty().getDefault();
