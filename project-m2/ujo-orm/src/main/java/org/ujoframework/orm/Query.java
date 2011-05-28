@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.hibernate.dialect.HSQLDialect;
 import org.ujoframework.UjoProperty;
 import org.ujoframework.core.UjoIterator;
 import org.ujoframework.orm.metaModel.MetaColumn;
@@ -444,14 +443,14 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
-     * @see java.sql.Statement#getLimit()
+     * @see #getLimit()
      */
     final public boolean isLimit() {
         return limit>0;
     }
 
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
-     * @see java.sql.Statement#getLimit()
+     * @see #isLimit()
      */
     final public int getLimit() {
         return limit;

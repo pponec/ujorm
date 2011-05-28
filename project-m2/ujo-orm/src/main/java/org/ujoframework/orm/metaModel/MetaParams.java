@@ -56,7 +56,7 @@ final public class MetaParams extends AbstractMetaModel {
      * @see Orm2ddlPolicy Parameter values
      */
     public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
-    /** A policy for assigning an annotation table comment {@link Comment} to database. */
+    /** A policy for assigning an annotation table comment {@link org.ujoframework.orm.annot.Comment} to database. */
     public static final Property<MetaParams,CommentPolicy> COMMENT_POLICY = newProperty("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);

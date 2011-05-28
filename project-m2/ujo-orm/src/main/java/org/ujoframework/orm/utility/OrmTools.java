@@ -55,7 +55,6 @@ final public class OrmTools {
     /**
      * Create a new Blob
      * @param bytes The null value is supported.
-     * @return
      */
     public static final SerialBlob createBlob(byte[] bytes) {
         try {
@@ -68,7 +67,6 @@ final public class OrmTools {
     /**
      * Create a new Blob
      * @param inputStream
-     * @return
      */
     public static SerialBlob createBlob(InputStream inputStream) {
         try {
