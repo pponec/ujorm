@@ -24,8 +24,7 @@ import org.ujoframework.orm.metaModel.MetaTable;
 
 /** Derby (http://db.apache.org/derby/)
  * <br/>NOTE: Dialect supports a LIMIT and OFFSET of the Derby release 10.5
- * @see http://db.apache.org/derby/docs/10.5/ref/
- *
+ * @see <a href="http://db.apache.org/derby/docs/10.5/ref/">Derby documentation</a>
  */
 public class DerbyDialect extends SqlDialect {
 

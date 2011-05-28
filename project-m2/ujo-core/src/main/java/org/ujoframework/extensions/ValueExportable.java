@@ -25,7 +25,7 @@ package org.ujoframework.extensions;
 public interface ValueExportable extends ValueTextable {
 
     /** Export the value as String.
-     * The method replaces the original {@link ValueTextable#toString().
+     * The method replaces the original {@link ValueTextable#toString()}.
      */
     public String exportToString();
 

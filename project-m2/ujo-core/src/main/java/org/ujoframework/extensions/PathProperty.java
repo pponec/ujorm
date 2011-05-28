@@ -219,7 +219,6 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      *
      * @param property A basic CujoProperty.
      * @param value Null value is supported.
-     * @return Accordance
      */
     @Override
     public boolean equals(Object property) {

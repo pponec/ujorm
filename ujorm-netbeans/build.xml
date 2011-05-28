@@ -194,12 +194,12 @@ Implementation-Vendor: "Pavel Ponec"</echo>
               
                 <!-- Parameters: http://www.umlgraph.org/doc/cd-opt.html -->
                 <doclet name="org.umlgraph.doclet.UmlGraphDoc"
-                       path="C:\Progra~1\UMLGraph-5.2\lib\UmlGraph.jar">
+                       path="lib/UmlGraph-5.4.jar">
                     <param name="-visibility" />
                 </doclet>
                 <!--
                 <doclet name="org.umlgraph.doclet.UmlGraphDoc"
-                       path="C:\Progra~1\UMLGraph-5.2\lib\UmlGraph.jar">
+                       path="lib/UmlGraph-5.4.jar">
                     <param name="-attributes" />
                     <param name="-operations" />
                     <param name="-types" />

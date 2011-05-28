@@ -207,7 +207,7 @@ public abstract class Criterion<UJO extends Ujo> {
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param A property direct or indeirect Ujo property
+     * @param property A property direct or indeirect Ujo property
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
      */
@@ -250,8 +250,8 @@ public abstract class Criterion<UJO extends Ujo> {
 
     /** This is an constane criterion independed on an entity.
      * The method is <strong>deprecated</strong> in the ORM, use rather a one method from
-     * {@see #forAll(org.ujoframework.UjoProperty) forAll} or
-     * {@see #forNone(org.ujoframework.UjoProperty) forNone} .
+     * {@line #forAll(org.ujoframework.UjoProperty) forAll} or
+     * {@line #forNone(org.ujoframework.UjoProperty) forNone} .
      * @see #forAll(org.ujoframework.UjoProperty)
      * @see #forNone(org.ujoframework.UjoProperty)
      */

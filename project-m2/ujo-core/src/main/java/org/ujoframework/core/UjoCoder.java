@@ -29,14 +29,14 @@ import org.ujoframework.extensions.ListUjoProperty;
 public class UjoCoder {
 
     /** Date formater and parser with second precision.
-     * @see http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html Performacce tip
+     * @see <a href="http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html">Performacce tip</a>
      */
     public static final ThreadLocal<SimpleDateFormat> FORMAT_DATE = new ThreadLocal<SimpleDateFormat>() {
        @Override protected SimpleDateFormat initialValue() { return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH); }
     };
 
     /** Date formater and parser with daily accuracy.
-     * @see http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html Performacce tip
+     * @see <a href="http://www.javacodegeeks.com/2010/07/java-best-practices-dateformat-in.html">Performacce tip</a>
      */
     public static final ThreadLocal<SimpleDateFormat> FORMAT_DAY = new ThreadLocal<SimpleDateFormat>() {
        @Override protected SimpleDateFormat initialValue() { return new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH); }
