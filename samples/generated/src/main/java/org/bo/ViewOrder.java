@@ -2,7 +2,7 @@
 
 package org.bo;
 import org.bo.gen._ViewOrder;
-import org.ujoframework.orm.annot.View;
+import org.ujorm.orm.annot.View;
 
 @View(select = "SELECT ord_order_alias.id, count(*) AS item_count"
 + " FROM db1.ord_order ord_order_alias"

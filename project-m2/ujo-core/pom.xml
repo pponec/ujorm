@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.19.03-SNAPSHOT</version>
+    <version>1.19.91-SNAPSHOT</version>
     <name>ujo-core</name>
 
     <contributors>
@@ -14,12 +14,12 @@
             <timezone>+1</timezone>
         </contributor>
     </contributors>
-    <description>UJO Framework is an open source small Java library providing non-traditional object architecture different from JavaBeans, where each property has its own static object.</description>
+    <description>Ujorm is an open source small Java library providing non-traditional object architecture different from JavaBeans, where each property has its own static object.</description>
     <url>http://maven.apache.org</url>
 
     <scm>
-        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</url>
-        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
+        <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-core</url>
+        <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-core</connection>
     </scm>
 
     <licenses>
@@ -69,8 +69,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.ujoframework.core.UjoManager</mainClass>
-                            <packageName>org.ujoframework.core</packageName>
+                            <mainClass>org.ujorm.core.UjoManager</mainClass>
+                            <packageName>org.ujorm.core</packageName>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <!-- <addClasspath>true</addClasspath> -->

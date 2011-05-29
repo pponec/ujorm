@@ -17,7 +17,7 @@ table {color: #000000; background-color: #e9e8e2; font-family: monospaced}
 </style>
 </head>
 <body>
-<table width="100%"><tr><td align="center">C:\u\Pavel\Java\ProjectUJO_SF\project-m2\ujo-orm\src\test\java\org\ujoframework\orm_tutorial\sample\SampleORM.java</td></tr></table>
+<table width="100%"><tr><td align="center">C:\u\Pavel\Java\ProjectUJO_SF\project-m2\ujo-orm\src\test\java\org\ujorm\orm_tutorial\sample\SampleORM.java</td></tr></table>
 <pre>
 <span class="line-number">  1</span> <span class="comment">/*</span>
 <span class="line-number">  2</span> <span class="comment"> *  Copyright 2009-2011 Pavel Ponec</span>
@@ -44,15 +44,15 @@ table {color: #000000; background-color: #e9e8e2; font-family: monospaced}
 <span class="line-number"> 23</span> <span class="keyword-directive">import</span> org.bo.MyProcedure;
 <span class="line-number"> 24</span> <span class="keyword-directive">import</span> org.bo.Order;
 <span class="line-number"> 25</span> <span class="keyword-directive">import</span> org.bo.ViewOrder;
-<span class="line-number"> 26</span> <span class="keyword-directive">import</span> org.ujoframework.Ujo;
-<span class="line-number"> 27</span> <span class="keyword-directive">import</span> org.ujoframework.UjoProperty;
-<span class="line-number"> 28</span> <span class="keyword-directive">import</span> org.ujoframework.core.UjoIterator;
-<span class="line-number"> 29</span> <span class="keyword-directive">import</span> org.ujoframework.orm.*;
-<span class="line-number"> 30</span> <span class="keyword-directive">import</span> org.ujoframework.orm.metaModel.MetaColumn;
-<span class="line-number"> 31</span> <span class="keyword-directive">import</span> org.ujoframework.criterion.*;
-<span class="line-number"> 32</span> <span class="keyword-directive">import</span> org.ujoframework.orm.ao.CheckReport;
-<span class="line-number"> 33</span> <span class="keyword-directive">import</span> org.ujoframework.orm.metaModel.MetaParams;
-<span class="line-number"> 34</span> <span class="keyword-directive">import</span> org.ujoframework.orm.utility.OrmTools;
+<span class="line-number"> 26</span> <span class="keyword-directive">import</span> org.ujorm.Ujo;
+<span class="line-number"> 27</span> <span class="keyword-directive">import</span> org.ujorm.UjoProperty;
+<span class="line-number"> 28</span> <span class="keyword-directive">import</span> org.ujorm.core.UjoIterator;
+<span class="line-number"> 29</span> <span class="keyword-directive">import</span> org.ujorm.orm.*;
+<span class="line-number"> 30</span> <span class="keyword-directive">import</span> org.ujorm.orm.metaModel.MetaColumn;
+<span class="line-number"> 31</span> <span class="keyword-directive">import</span> org.ujorm.criterion.*;
+<span class="line-number"> 32</span> <span class="keyword-directive">import</span> org.ujorm.orm.ao.CheckReport;
+<span class="line-number"> 33</span> <span class="keyword-directive">import</span> org.ujorm.orm.metaModel.MetaParams;
+<span class="line-number"> 34</span> <span class="keyword-directive">import</span> org.ujorm.orm.utility.OrmTools;
 <span class="line-number"> 35</span>
 <span class="line-number"> 36</span> <span class="comment">/**</span>
 <span class="line-number"> 37</span> <span class="comment"> * </span><span class="comment">The</span> <span class="comment">tutorial</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">clas</span><span class="comment">s</span> <span class="comment">for</span> <span class="comment">the</span> <span class="comment">Ujorm</span> <span class="ST0">&lt;br&gt;</span>
@@ -130,7 +130,7 @@ table {color: #000000; background-color: #e9e8e2; font-family: monospaced}
 <span class="line-number">109</span>
 <span class="line-number">110</span>         <span class="keyword-directive">boolean</span> yesIWantToLoadExternalConfig = <span class="keyword-directive">false</span>;
 <span class="line-number">111</span>         <span class="keyword-directive">if</span> (yesIWantToLoadExternalConfig) {
-<span class="line-number">112</span>             java.net.URL config = getClass().getResource(<span class="character">&quot;</span><span class="character">/org/ujoframework/orm/sample/config.xml</span><span class="character">&quot;</span>);
+<span class="line-number">112</span>             java.net.URL config = getClass().getResource(<span class="character">&quot;</span><span class="character">/org/ujorm/orm/sample/config.xml</span><span class="character">&quot;</span>);
 <span class="line-number">113</span>             handler.config(config, <span class="keyword-directive">true</span>);
 <span class="line-number">114</span>         }
 <span class="line-number">115</span>

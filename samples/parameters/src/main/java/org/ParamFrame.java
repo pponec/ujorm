@@ -4,10 +4,10 @@ import javax.swing.*;
 
 import java.awt.event.*;
 import java.io.File;
-import org.ujoframework.core.UjoManagerRBundle;
-import org.ujoframework.swing.SingleUjoTabModel;
-import org.ujoframework.swing.UjoPropertyRow;
-import static org.ujoframework.swing.UjoPropertyRow.*;
+import org.ujorm.core.UjoManagerRBundle;
+import org.ujorm.swing.SingleUjoTabModel;
+import org.ujorm.swing.UjoPropertyRow;
+import static org.ujorm.swing.UjoPropertyRow.*;
 
 
 /** Parameter manager. */

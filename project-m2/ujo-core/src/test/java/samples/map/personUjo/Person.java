@@ -5,11 +5,11 @@
 package samples.map.personUjo;
 
 import java.util.HashMap;
-import org.ujoframework.*;
-import org.ujoframework.core.UjoManager;
-import org.ujoframework.UjoPropertyList;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.UjoAction;
+import org.ujorm.*;
+import org.ujorm.core.UjoManager;
+import org.ujorm.UjoPropertyList;
+import org.ujorm.extensions.Property;
+import org.ujorm.UjoAction;
 
 
 public class Person implements Ujo {

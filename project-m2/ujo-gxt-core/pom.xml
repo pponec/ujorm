@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-gxt-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.19.03-SNAPSHOT</version>
+    <version>1.19.91-SNAPSHOT</version>
     <name>ujo-gxt-core</name>
 
     <description>Support for GWT - client UJO objects.
@@ -12,8 +12,8 @@
     <url>http://maven.apache.org</url>
 
     <scm>
-        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-gxt</url>
-        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-gxt</connection>
+        <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-gxt</url>
+        <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-gxt</connection>
     </scm>
 
     <licenses>
@@ -30,7 +30,7 @@
     </licenses>
 
     <properties>
-        <ujorm.version>1.19.03-SNAPSHOT</ujorm.version>
+        <ujorm.version>1.19.91-SNAPSHOT</ujorm.version>
         <gwt.version>1.7.0</gwt.version>
         <gxt.version>2.1.1</gxt.version>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.19.03-SNAPSHOT</version>
+            <version>1.19.91-SNAPSHOT</version>
        <!-- <scope>compile</scope> -->
         </dependency>
 

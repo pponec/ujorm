@@ -18,11 +18,11 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import org.ujoframework.UjoPropertyList;
-import org.ujoframework.extensions.PathProperty;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.orm.annot.Column;
+import org.ujorm.UjoPropertyList;
+import org.ujorm.extensions.PathProperty;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 
 /**
  * Order item

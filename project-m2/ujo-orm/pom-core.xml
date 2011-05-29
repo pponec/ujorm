@@ -6,10 +6,10 @@
   <groupId>org.ujoframework</groupId>
   <artifactId>core</artifactId>
   <packaging>jar</packaging>
-  <name>UJO Framework</name>
+  <name>Ujorm ORM</name>
   <version>0.84</version>
-  <description>UJO Framework provides a special type save bean architecture based on property constants.</description>
-  <url>http://ujoframework.org/</url>
+  <description>Ujorm provides a special type save bean architecture based on property constants.</description>
+  <url>http://ujorm.org/</url>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -18,6 +18,6 @@
     </license>
   </licenses>
   <scm>
-    <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/</url>
+    <url>http://ujorm.svn.sourceforge.net/viewvc/ujorm/</url>
   </scm>
 </project>

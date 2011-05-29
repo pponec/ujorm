@@ -13,7 +13,7 @@
         <timezone>+1</timezone>
     </contributor>
   </contributors>
-  <description>UJO Framework is a Java library providing non-traditional object architecture
+  <description>Ujorm is a Java library providing non-traditional object architecture
     different from JavaBeans, where each property has its own static object.
     The architecture has some exciting new features.</description>
   <url>http://maven.apache.org</url>

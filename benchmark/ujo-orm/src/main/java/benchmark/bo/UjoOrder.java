@@ -18,12 +18,12 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.UjoPropertyList;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.orm.annot.Column;
+import org.ujorm.UjoProperty;
+import org.ujorm.UjoPropertyList;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.annot.Column;
 
 /**
  * Objednávky

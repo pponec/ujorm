@@ -18,10 +18,10 @@ package org;
 
 import org.bo.Customer;
 import org.bo.User;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.orm.annot.Db;
-import org.ujoframework.orm.dialect.*;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.annot.Db;
+import org.ujorm.orm.dialect.*;
 
 /**
  * An table mapping to a database (a sample of usage).

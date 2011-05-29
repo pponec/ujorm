@@ -17,9 +17,9 @@ package org;
 
 import java.util.logging.*;
 import org.bo.*;
-import org.ujoframework.Ujo;
-import org.ujoframework.orm.*;
-import org.ujoframework.criterion.*;
+import org.ujorm.Ujo;
+import org.ujorm.orm.*;
+import org.ujorm.criterion.*;
 
 /**
  * Sample of inheritance for the persistent objects.

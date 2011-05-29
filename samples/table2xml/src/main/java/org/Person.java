@@ -1,8 +1,8 @@
 package org;
-import org.ujoframework.*;
+import org.ujorm.*;
 
 /** Person BO */
-public class Person extends org.ujoframework.implementation.map.MapUjoExt<Person> {
+public class Person extends org.ujorm.implementation.map.MapUjoExt<Person> {
 
   public static final UjoProperty<Person,Integer> ID        = newProperty("ID", Integer.class);
   public static final UjoProperty<Person,String>  FIRSTNAME = newProperty("FirstName", String.class);

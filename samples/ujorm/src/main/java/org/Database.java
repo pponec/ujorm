@@ -20,14 +20,14 @@ import org.bo.Item;
 import org.bo.MyProcedure;
 import org.bo.Order;
 import org.bo.ViewOrder;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.orm.annot.Table;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.orm.annot.Db;
-import org.ujoframework.orm.annot.Procedure;
-import org.ujoframework.orm.annot.View;
-import org.ujoframework.orm.dialect.*;
+import org.ujorm.extensions.Property;
+import org.ujorm.orm.annot.Table;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.annot.Db;
+import org.ujorm.orm.annot.Procedure;
+import org.ujorm.orm.annot.View;
+import org.ujorm.orm.dialect.*;
 
 /**
  * A class mapping to a database (sample of usage)

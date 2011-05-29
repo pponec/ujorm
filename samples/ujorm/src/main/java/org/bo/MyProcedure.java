@@ -17,11 +17,11 @@
 
 package org.bo;
 
-import org.ujoframework.extensions.Property;
-import org.ujoframework.orm.DbProcedure;
-import org.ujoframework.orm.Session;
-import org.ujoframework.orm.annot.Parameter;
-import org.ujoframework.orm.annot.Procedure;
+import org.ujorm.extensions.Property;
+import org.ujorm.orm.DbProcedure;
+import org.ujorm.orm.Session;
+import org.ujorm.orm.annot.Parameter;
+import org.ujorm.orm.annot.Procedure;
 
 /**
  * The API for a database stored procedure:

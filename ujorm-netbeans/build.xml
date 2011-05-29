@@ -91,7 +91,7 @@
     
     <target name="-pre-jar">
         <mkdir dir="dist"/>
-        <echo file="${manifest.file}">Main-Class: org.ujoframework.core.UjoManager
+        <echo file="${manifest.file}">Main-Class: org.ujorm.core.UjoManager
 Specification-Title: ${name}
 Specification-Version: ${version}
 Specification-Vendor: Pavel Ponec
@@ -103,8 +103,8 @@ Implementation-Vendor: "Pavel Ponec"</echo>
     <target name="-javadoc-build" depends="init">
         
         <!-- INIT before JAVADOC:
-        <copy file="${src.java.dir}/org/ujoframework/z_package_${jDocLang}.html"
-              tofile="${src.java.dir}/org/ujoframework/package.html"
+        <copy file="${src.java.dir}/org/ujorm/z_package_${jDocLang}.html"
+              tofile="${src.java.dir}/org/ujorm/package.html"
               overwrite="true"
        />
         -->
@@ -141,12 +141,12 @@ Implementation-Vendor: "Pavel Ponec"</echo>
         
         <!-- Append CSS definition: -->
         <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-            <filelist dir="${src.java.dir}/org/ujoframework" files="style.css"/>
+            <filelist dir="${src.java.dir}/org/ujorm" files="style.css"/>
         </concat>
         <!-- Copy Image(s): -->
-        <copy file="${src.java.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.java.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.java.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujorm/ujo32.png" todir="${dist.javadoc.dir}/org/ujorm"/>
+        <copy file="${src.java.dir}/org/ujorm/UjoUml.png" todir="${dist.javadoc.dir}/org/ujorm"/>
+        <copy file="${src.java.dir}/org/ujorm/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujorm"/>
         <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
         
     </target>    
@@ -158,8 +158,8 @@ Implementation-Vendor: "Pavel Ponec"</echo>
         <property name="reports.dir" value="${dist.javadoc.dir}/.." />    
         
         <!-- INIT before JAVADOC: 
-        <copy file="${src.java.dir}/org/ujoframework/z_package_${jDocLang}.html"
-              tofile="${src.java.dir}/org/ujoframework/package.html"
+        <copy file="${src.java.dir}/org/ujorm/z_package_${jDocLang}.html"
+              tofile="${src.java.dir}/org/ujorm/package.html"
               overwrite="true"
        />
        -->
@@ -230,12 +230,12 @@ Implementation-Vendor: "Pavel Ponec"</echo>
           
         <!-- Append CSS definition: -->
         <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-            <filelist dir="${src.java.dir}/org/ujoframework" files="style.css"/>
+            <filelist dir="${src.java.dir}/org/ujorm" files="style.css"/>
         </concat>
         <!-- Copy Image(s): -->
-        <copy file="${src.java.dir}/org/ujoframework/ujo32.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.java.dir}/org/ujoframework/UjoUml.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
-        <copy file="${src.java.dir}/org/ujoframework/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujoframework"/>
+        <copy file="${src.java.dir}/org/ujorm/ujo32.png" todir="${dist.javadoc.dir}/org/ujorm"/>
+        <copy file="${src.java.dir}/org/ujorm/UjoUml.png" todir="${dist.javadoc.dir}/org/ujorm"/>
+        <copy file="${src.java.dir}/org/ujorm/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujorm"/>
         <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
           
           

@@ -17,8 +17,8 @@
 package org;
 
 import org.bo.gen._Database;
-import org.ujoframework.orm.annot.Db;
-import org.ujoframework.orm.dialect.*;
+import org.ujorm.orm.annot.Db;
+import org.ujorm.orm.dialect.*;
 
 /**
  * A class mapping to a database (sample of usage)

@@ -23,16 +23,16 @@ import org.bo.Item;
 import org.bo.MyProcedure;
 import org.bo.Order;
 import org.bo.ViewOrder;
-import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoIterator;
-import org.ujoframework.criterion.*;
-import org.ujoframework.orm.*;
-import org.ujoframework.orm.ao.CheckReport;
-import org.ujoframework.orm.metaModel.MetaColumn;
-import org.ujoframework.orm.metaModel.MetaParams;
-import org.ujoframework.orm.utility.OrmTools;
-import static org.ujoframework.criterion.Operator.*;
+import org.ujorm.Ujo;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.UjoIterator;
+import org.ujorm.criterion.*;
+import org.ujorm.orm.*;
+import org.ujorm.orm.ao.CheckReport;
+import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.orm.metaModel.MetaParams;
+import org.ujorm.orm.utility.OrmTools;
+import static org.ujorm.criterion.Operator.*;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -110,7 +110,7 @@ public class SampleORM {
 
         boolean yesIWantToLoadExternalConfig = false;
         if (yesIWantToLoadExternalConfig) {
-            java.net.URL config = getClass().getResource("/org/ujoframework/orm/sample/config.xml");
+            java.net.URL config = getClass().getResource("/org/ujorm/orm/sample/config.xml");
             handler.config(config, true);
         }
 

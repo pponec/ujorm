@@ -1,4 +1,4 @@
-The UJO Framework release notes
+The Ujorm release notes
 *******************************
 
 release 1.20 (2010-05-?)
@@ -163,7 +163,7 @@ release 0.80.rc3 (2008-08-23)
 + new method UjoExt.findProperty(String)
 + SingleUjoTabModel enhancements
 + PojoUjo class was renamed to a more comprehensible name BeanUjo (include properties and subclasses)
-+ Properties *Rife was removed from the UJO Framework core for simplification class model
++ Properties *Rife was removed from the Ujorm core for simplification class model
 
 release 0.80.rc2 (2008-08-07)
 + some abstract implementations of UjoExt interface are slightly improved for better type safe features

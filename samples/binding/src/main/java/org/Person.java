@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2008, Paval Ponec, contact: http://ujoframework.org/
+  * Copyright (C) 2008, Paval Ponec, contact: http://ujorm.org/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,10 @@
   */
 
 package org;
-import org.ujoframework.*;
+import org.ujorm.*;
 
 /** Person BO */
-public class Person extends org.ujoframework.implementation.map.MapUjoExt<Person> {
+public class Person extends org.ujorm.implementation.map.MapUjoExt<Person> {
 
   public static final UjoProperty<Person,Integer> ID        = newProperty("ID", Integer.class);
   public static final UjoProperty<Person,String>  FIRSTNAME = newProperty("FirstName", String.class);

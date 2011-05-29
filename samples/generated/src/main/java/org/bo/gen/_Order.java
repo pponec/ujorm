@@ -7,15 +7,15 @@ package org.bo.gen;
 import java.util.Date;
 import org.bo.Item;
 import org.bo.Order;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoIterator;
-import org.ujoframework.extensions.ValueExportable;
-import org.ujoframework.orm.DbType;
-import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.orm.annot.Comment;
-import org.ujoframework.orm.annot.Table;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.UjoIterator;
+import org.ujorm.extensions.ValueExportable;
+import org.ujorm.orm.DbType;
+import org.ujorm.orm.annot.Column;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Table;
 
 @Table(name = "ord_order")
 abstract public class _Order extends OrmTable<Order> {

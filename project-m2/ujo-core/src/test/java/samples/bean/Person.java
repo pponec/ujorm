@@ -9,10 +9,10 @@
 
 package samples.bean;
 
-import org.ujoframework.Ujo;
-import org.ujoframework.core.UjoManager;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.map.MapUjo;
+import org.ujorm.Ujo;
+import org.ujorm.core.UjoManager;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.map.MapUjo;
 
 public class Person extends MapUjo {
     

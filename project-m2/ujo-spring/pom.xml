@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm-spring</artifactId>
     <packaging>jar</packaging>
-    <version>1.19.03-SNAPSHOT</version>
+    <version>1.19.91-SNAPSHOT</version>
 
     <contributors>
         <contributor>
@@ -22,8 +22,8 @@
     <url>http://maven.apache.org</url>
 
     <scm>
-        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-spring</url>
-        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-spring</connection>
+        <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-spring</url>
+        <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-spring</connection>
     </scm>
 
     <licenses>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.19.03-SNAPSHOT</version>
+            <version>1.19.91-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

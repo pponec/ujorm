@@ -6,10 +6,10 @@ package org.bo.gen;
 
 import org.bo.Item;
 import org.bo.Order;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.orm.annot.Comment;
+import org.ujorm.UjoProperty;
+import org.ujorm.orm.annot.Column;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Comment;
 
 /**
  * Order Item

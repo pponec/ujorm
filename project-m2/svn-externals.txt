@@ -1,4 +1,4 @@
-Tip: how to include UJO Framework to your SVN project structure:
+Tip: how to include Ujorm to your SVN project structure:
 ****************************************************************
 Set the subversion property 'svn:externals' to value: 
    ujo-framework https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2

@@ -12,9 +12,9 @@ package samples.persistence;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.ujoframework.core.UjoManagerCSV;
-import org.ujoframework.core.UjoManagerRBundle;
-import org.ujoframework.core.UjoManagerXML;
+import org.ujorm.core.UjoManagerCSV;
+import org.ujorm.core.UjoManagerRBundle;
+import org.ujorm.core.UjoManagerXML;
 import samples.map.Person;
 
 /**

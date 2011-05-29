@@ -18,9 +18,9 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import org.ujoframework.UjoPropertyList;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.quick.QuickUjo;
+import org.ujorm.UjoPropertyList;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.quick.QuickUjo;
 
 /**
  * The Order Item

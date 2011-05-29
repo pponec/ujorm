@@ -449,8 +449,8 @@ body {
 Licence dokumentu:&nbsp;<a href=http://creativecommons.org/licenses/by-nd/3.0/cz/ rel=license>Creative Commons BY-ND</a> <a href=http://creativecommons.org/licenses/by-nd/3.0/cz/ rel=license><img alt="Creative Commons License" height=14 src="images/EXTERN_0000.png" style=BORDER-WIDTH:0pt width=41></a>,<br>
 Autor: Pavel Ponec, ponec@ujorm.com<br>
 Verze: Ujorm 0.94 (květen, 2010)<br>
-Odkaz: tento <a href="http://ujoframework.org/orm//tutorial-cs/">dokument</a> a homepage <a href="http:/ujorm.com">Ujorm</a><br>
-Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguje-ujorm.html">připomínky</a> i náměty.</i><br>&nbsp;<br>
+Odkaz: tento <a href="http://ujorm.org/orm//tutorial-cs/">dokument</a> a homepage <a href="http:/ujorm.com">Ujorm</a><br>
+Děkuji za Vaše <a href="http://ujorm-cs.blogspot.com/2010/05/jak-funguje-ujorm.html">připomínky</a> i náměty.</i><br>&nbsp;<br>
 <span style="color:red;">Poznámka: Pozor, tato česká verze už nebude dále aktualiovaná, použijte anglickou verzi dokumentu pro novější informace!</span><br>
 <br>
 
@@ -507,7 +507,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
 <h2>
   <a id=Quick_start_9913036752823979_3 name=Quick_start_9913036752823979_3></a>Quick start:
 </h2>
-<a href=http://ujorm.com/ id=xrje title=Ujorm>Ujorm</a> je lightweight ORM framework umožňující <b>efektivní </b>vývoj Java aplikací nad relační databází. Pro rychlé získání základních dovedností doporučuji prostudovat krátký <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=fxed title=tutorialu>tutorial</a> postavený na komentovaném zdrojovém kódu. V tutoriálu se objevují entity z následujícího class diagramu:<br>
+<a href=http://ujorm.com/ id=xrje title=Ujorm>Ujorm</a> je lightweight ORM framework umožňující <b>efektivní </b>vývoj Java aplikací nad relační databází. Pro rychlé získání základních dovedností doporučuji prostudovat krátký <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=fxed title=tutorialu>tutorial</a> postavený na komentovaném zdrojovém kódu. V tutoriálu se objevují entity z následujícího class diagramu:<br>
 <br>
 <div id=qbdt style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
   <img height=202 src="images/ddcs2pg5_118gspsjpdx_b.png" width=367>
@@ -521,7 +521,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
   <h2>
     <a id=Stavy_perzistentn_ho_objektu_4 name=Stavy_perzistentn_ho_objektu_4></a>Stavy perzistentního objektu
   </h2>
-  Perzistentní třídu lze získat buď rozšířením abstraktní třídy <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/OrmTable.html id=f0kd title=OrmTable>OrmTable</a>, nebo implementací interface <a href="http://ujoframework.org/javadoc/org/ujoframework/orm/OrmUjo.html" title=OrmUjo>OrmUjo</a>. Perzistentní objekt obsahuje kromě vlastních hodnot ještě dvě stavové informace:<br>
+  Perzistentní třídu lze získat buď rozšířením abstraktní třídy <a href=http://ujorm.org/javadoc/org/ujorm/implementation/orm/OrmTable.html id=f0kd title=OrmTable>OrmTable</a>, nebo implementací interface <a href="http://ujorm.org/javadoc/org/ujorm/orm/OrmUjo.html" title=OrmUjo>OrmUjo</a>. Perzistentní objekt obsahuje kromě vlastních hodnot ještě dvě stavové informace:<br>
   <ul>
     <li>
       Session, která je potřebná pro získání DB connection při pozdním volání hodnot (lazy-loading)<br>
@@ -544,7 +544,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
       objektu lze přiřadit kdykoli novou Session bez dalších závislostí
     </li>
     <li>
-      objektu lze přiřadit <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=wgku title="Cizí klíč">Cizí klíč</a> pro vynucení LazyLoading (pomocí metody Ujo.writeValue).
+      objektu lze přiřadit <a href=http://ujorm.org/javadoc/org/ujorm/orm/ForeignKey.html id=wgku title="Cizí klíč">Cizí klíč</a> pro vynucení LazyLoading (pomocí metody Ujo.writeValue).
     </li>
   </ul>
   Poslání OrmUjo objektu se tak blíží pouhým "přepravkám dat".<br>
@@ -565,7 +565,7 @@ Děkuji za Vaše <a href="http://ujoframework-cs.blogspot.com/2010/05/jak-funguj
     <b>explicitní </b>mapování se uvádí v anotaci @Column, případně pomocí konfiguračního XML souboru<br>
   </li>
   <li>
-    pomocí <b>interface</b>: libovolný objekt implementující rozhraní <a href="http://ujoframework.org/javadoc/org/ujoframework/extensions/ValueExportable.html">ValueExportable</a> je automaticky mapovaný na VARCHAR. Uvedené rozhraní může implementovat také Enum.<br>
+    pomocí <b>interface</b>: libovolný objekt implementující rozhraní <a href="http://ujorm.org/javadoc/org/ujorm/extensions/ValueExportable.html">ValueExportable</a> je automaticky mapovaný na VARCHAR. Uvedené rozhraní může implementovat také Enum.<br>
   </li>
   <li>
     specifické požadavky na mapování lze implementovat překrytím třídy <b>TypeService</b><br>
@@ -661,7 +661,7 @@ Při pozdním načtení objektu spouští Ujorm nový databázový dotaz, který
 </div>
 <ul>
   <li>
-    někdy není nutné dotahovat celou entitu, stačí pouze její <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=atiw title="cizí klíč">cizí klíč</a>, pro který není potřeba mít otevřenou Session. Tento klíč lze získat metodou OrmTable.readFK(property) .<br>
+    někdy není nutné dotahovat celou entitu, stačí pouze její <a href=http://ujorm.org/javadoc/org/ujorm/orm/ForeignKey.html id=atiw title="cizí klíč">cizí klíč</a>, pro který není potřeba mít otevřenou Session. Tento klíč lze získat metodou OrmTable.readFK(property) .<br>
   </li>
 </ul>
 <br>
@@ -688,14 +688,14 @@ Při pozdním načtení objektu spouští Ujorm nový databázový dotaz, který
       do cache se dostanou jen objekty cizího klíče při líném čtení (lazy loading), v ostatních případech se objekty čtou vždy z databáze
     </li>
     <li>
-      při UPDATE objektu se neprovádí synchronizace cache a tak pro elimilaci případných konflitků lze vyprázdnit cache metodou <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#cacheClear%28%29 id=id5r title=clearCache()>clearCache()</a><br>
+      při UPDATE objektu se neprovádí synchronizace cache a tak pro elimilaci případných konflitků lze vyprázdnit cache metodou <a href=http://ujorm.org/javadoc/org/ujorm/orm/Session.html#cacheClear%28%29 id=id5r title=clearCache()>clearCache()</a><br>
     </li>
     <li>
       cache má ochranu proti paměťovému přetížení, v praxi to znamená, že garbage collector může část cache kdykoli uvolnit
     </li>
   </ul>
   <br>
-  Z pohledu cache: Ujorm nemusí mít výhradní přístup do databáze, při zápisu bude třeba pouze sjednotit přidělování primárních klíčů. Pomocí parametru <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> lze pro celý meta-model cache zakázat, alternativně je možné zakázat uvolňování cache pomocí garbage collectoru.<br>
+  Z pohledu cache: Ujorm nemusí mít výhradní přístup do databáze, při zápisu bude třeba pouze sjednotit přidělování primárních klíčů. Pomocí parametru <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> lze pro celý meta-model cache zakázat, alternativně je možné zakázat uvolňování cache pomocí garbage collectoru.<br>
   <br>
   Pro optimalizaci performance je doporučeno udržovat cache logických celků (například článek) na úrovni aplikační logiky.<br>
   <br>
@@ -747,7 +747,7 @@ Při pozdním načtení objektu spouští Ujorm nový databázový dotaz, který
     </li>
   </ul>
   <br>
-  Parametrem <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#ORM2DLL_POLICY id=hj1l title=ORM2DLL_POLICY>ORM2DLL_POLICY</a> lze chování aktualizace změnit na některý z následujících <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ao/Orm2ddlPolicy.html id=xifg title=přístupů>přístupů</a>:<br>
+  Parametrem <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#ORM2DLL_POLICY id=hj1l title=ORM2DLL_POLICY>ORM2DLL_POLICY</a> lze chování aktualizace změnit na některý z následujících <a href=http://ujorm.org/javadoc/org/ujorm/orm/ao/Orm2ddlPolicy.html id=xifg title=přístupů>přístupů</a>:<br>
   <ul>
     <li>
       zákaz aktualizace<br>
@@ -761,7 +761,7 @@ Při pozdním načtení objektu spouští Ujorm nový databázový dotaz, který
   </ul>
 </div>
 <div>
-  Obecné použití parametrů Ujorm je popsané v <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=mqa3 title="tomto dokumentu">tutoriálu</a>.<br>
+  Obecné použití parametrů Ujorm je popsané v <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=mqa3 title="tomto dokumentu">tutoriálu</a>.<br>
 </div>
 <br>
 <h2>
@@ -835,7 +835,7 @@ Při operacích typu INSERT a UPDATE je však třeba se postarat o každou entit
   session.commit();<br>
 </div>
 <br>
-Ukázka úplné implementace dědičnosti třídy Customer je ke shlédnutí <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/bo/Customer.java?view=markup id=jrji title=tady>tady</a> a jeho použití je <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/SampleOfInheritance.java?view=markup id=gj3w title=tady>zde</a>.<br>
+Ukázka úplné implementace dědičnosti třídy Customer je ke shlédnutí <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/inheritance/src/main/java/org/bo/Customer.java?view=markup id=jrji title=tady>tady</a> a jeho použití je <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/inheritance/src/main/java/org/SampleOfInheritance.java?view=markup id=gj3w title=tady>zde</a>.<br>
 <br>
 <br>
 <h2>
@@ -909,7 +909,7 @@ Při použití vytvoříme instanci procedury, naplníme její parametry typu IN
   <font face="courier new">String result = procedure.call(session);</font><br>
   <br>
 </div>
-Úplnou ukázku najdete na odkazu <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorialu>tutorial</a>. Instance procedury není spojena s konkrétní session a tak lze takovou instanci použít opakovaně s různými parametry (pouze jedno-vláknový přístup).&nbsp; Ujorm v současné verzi nepodporuje návratový typ parametru ResultSet.<br>
+Úplnou ukázku najdete na odkazu <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorialu>tutorial</a>. Instance procedury není spojena s konkrétní session a tak lze takovou instanci použít opakovaně s různými parametry (pouze jedno-vláknový přístup).&nbsp; Ujorm v současné verzi nepodporuje návratový typ parametru ResultSet.<br>
 <br>
 <h2>
   <a id=Pro_n_zvy_Property_maj_mal_p_s name=Pro_n_zvy_Property_maj_mal_p_s></a>Proč názvy Property mají malá písmena?
@@ -922,7 +922,7 @@ V ukázkách uvedených v této dokumentaci jsou názvy statických fieldů UjoP
 Při zkráceném zápisu se název Property přebírá z názvu fieldu, ukázka použití je tady:<br>
 &nbsp;&nbsp; public static final Property&lt;BO, Long&gt; <b>id</b> = newProperty(Long, class);<br>
 <br>
-Krátké připomenutí pojmů UJO Frameworku:<br>
+Krátké připomenutí pojmů Ujormu:<br>
 <ul>
   <li>
     <b>field </b>UjoProperty - je název statické konstanty UjoProperty v implementaci Ujo<br>
@@ -995,7 +995,7 @@ Doporučuji mít na paměti následujcí vlastnosti UJO, které mají vliv na je
     Ujo objekty lze obecně dědit, nicméně dědičnost objektů OrmUjo podporovaná není.<br>
   </li>
   <li>
-    více informací k Ujo Core lze najít <a href=http://ujoframework.org/javadoc/org/ujoframework/package-summary.html#UJO id=d6tt title=zde>zde</a>.<br>
+    více informací k Ujo Core lze najít <a href=http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO id=d6tt title=zde>zde</a>.<br>
   </li>
 </ul>
 <br>

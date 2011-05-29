@@ -1,5 +1,5 @@
 /**
-  * Copyright (C) 2008, Paval Ponec, contact: http://ujoframework.org/
+  * Copyright (C) 2008, Paval Ponec, contact: http://ujorm.org/
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@ package org;
 import java.util.HashMap;
 import java.util.Map;
 import org.impl.*;
-import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
+import org.ujorm.Ujo;
+import org.ujorm.UjoProperty;
 
 /**
  * Example of a binding the UJO object to an UI component(s).

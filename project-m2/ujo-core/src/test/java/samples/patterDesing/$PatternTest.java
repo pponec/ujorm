@@ -29,7 +29,7 @@ public class $PatternTest extends TestCase {
 
 
     /**
-     * Test of getItemClass method, of class org.ujoframework.core.UjoPersistentManager.
+     * Test of getItemClass method, of class org.ujorm.core.UjoPersistentManager.
      */
     public void testPattern() {
         new MyMap.UsageTest();

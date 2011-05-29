@@ -17,9 +17,9 @@
 
 package benchmark.bo;
 
-import org.ujoframework.UjoPropertyList;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.quick.QuickUjo;
+import org.ujorm.UjoPropertyList;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.quick.QuickUjo;
 
 /**
  * The User

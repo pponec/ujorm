@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>package.html - UJO (en)</title>
+
+        <link rel="stylesheet" type="text/css" href="../style.css" title="style">
+        <!--
+        <script type="text/javascript">
+        function loadCSS (cssUrl) {
+        var oLink = document.createElement("link")
+        oLink.href = cssUrl;
+        oLink.rel = "stylesheet";
+        oLink.type = "text/css";
+        document.body.appendChild(oLink);
+                } </script>
+        -->
+    </head>
+
+    <body>
+        The ORM support.
+
+        <div>
+            <div id="ORM">
+                <img style="width: 32px; height: 32px; margin-right: 10px;" alt="logo" src="../ujo32.png" style="margin: 0px; top: 0; float: left" />
+                <h1  style="margin: 2px 0 1px 75px;"> ORM module of the Ujorm</h1>
+                <div style="margin: 2px 0 25px 75px; font-style: italic; color: gray;">am easy to use implementation of the object-relation mapping</div>
+            </div>
+
+            <!-- This is short description of a new ORM implementation. --> Why a new ORM mapping?
+            <ul>
+                <li>framework has a type safe query language which allows the java compiler find a syntax error similar like a 4GL language</li>
+                <li>never more a LazyInitialization exception though a lazy initialization is supported</li>
+                <li>no confusing proxy business objects</li>
+                <li>no list properties are supported but a special object called {@link org.ujorm.core.UjoIterator UjoIterator} is designed for a collection. The UjoIterator provides a toList() method however</li>
+                <li>easy to configure the ORM model by java source code, optionaly by annotations or a XML file</li>
+                <li>very small framework without more library dependencies, the current size of the JAR file is around 160 kB</li>
+                <li>great performance mainly for the SQL SELECT statement</li>
+            </ul>
+            Some other features:
+            <ul>
+                <li>all persistent objects are based on the {@link org.ujorm.orm.OrmUjo OrmUjo} interface, namely on the {@link org.ujorm.implementation.orm.OrmTable OrmTable} implementation</li>
+                <li>resources for ORM mapping can be a database table, view, or your own SQL SELECT</li>
+                <li>default ORM mapping is described by {@link org.ujorm.UjoProperty UjoProperties} however there is possible overwrite the mapping by annotations and the annotations can be overwrited by a XML files</li>
+                <li>JDBC query parameters are passed by a question notation to the PreparedStatement for a high security</li>
+                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
+                <li>the API was inspired by ORM frameworks Cayenne and Hibernate</li>
+            </ul>
+
+            <h3>A sample of use</h3>
+            See how to create database and to how to INSERT an order with two items into database:
+
+            <pre class="pre">
+  OrmHandler.getInstance().loadDatabase(Database.class);
+
+  Order order = new Order();
+  order.setDate(new Date());
+  order.setDescr("John's order");
+
+  Item item1 = new Item();
+  item1.setOrder(order);
+  item1.setDescr("Yellow table");
+
+  Item item2 = new Item();
+  item2.setOrder(order);
+  item2.setDescr("Green window");
+
+  Session session = OrmHandler.getInstance().getSession();
+  session.save(order);
+  session.save(item1);
+  session.save(item2);
+
+  session.commit();
+            </pre>
+
+            The next source code calls a SELECT by the <strong>UJO Criteria</strong>:
+            <pre class="pre">
+  Criterion&lt;Order&gt; criter1 = Criterion.where(Order.DESCR, "John's order");
+  Criterion&lt;Order&gt; criter2 = Criterion.where(Order.DATE, Operator.LE, new Date());
+  Criterion&lt;Order&gt; criterion = criter1.and(criter2);
+
+  Session session = OrmHandler.getInstance().getSession();
+  UjoIterator&lt;Order&gt; orders = session.createQuery(criterion).iterate();
+  System.out.println("ORDER COUNT: " + orders.count()); // method calls SQL SELECT COUNT(*) in case the iterator can provide first item!
+
+  for (Order order : orders) {
+      String descr = order.getDescr();
+      System.out.println("ORDER ROW: " + order + " // descr: " + descr);
+  }
+            </pre>
+
+            The next source code calls a SELECT by an UJO object <strong>relation</strong>:
+            <pre class="pre">
+  Session session = OrmHandler.getInstance().getSession();
+  Database db = session.getDatabase();
+  UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
+
+  for (Order order : orders) {
+      String descr = order.getDescr();
+      System.out.println("Order: " + order + " // descr: " + descr);
+
+      for (Item item : order.getItems()) {
+          Long itemId = item.getId();
+          String itemDescr = item.getDescr();
+          System.out.println(" Item id: " + itemId + " descr: " + itemDescr);
+      }
+  }
+            </pre>
+
+            <h3 id="sources">More sources:</h3>
+            <ul>
+                <li><a href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a></li>
+                <li><a href="http://ujorm.com/">Home page</a></li>
+                <li><a href="http://ujorm.org/dokuwiki/doku.php?id=orm_links">Wiki tutorial</a></li>
+            </ul>
+
+            <h3 id="license">License:</h3>
+            <ul>
+                <li><a href="http://www.apache.org/licenses/LICENSE-2.0.html">Ujorm</a> has a license <a href="http://www.gnu.org/licenses/gpl-2.0.txt">Apache License, Version 2.0</a></li>
+                <li>no more dependences</li>
+            </ul>
+
+            <!--
+           <p>
+             <a href="http://validator.w3.org/check?uri=referer"><img
+                 src="http://www.w3.org/Icons/valid-xhtml10-blue"
+                 alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+
+           </p>
+            -->
+            <div style="display: none;">
+                <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+            </div>
+
+
+        </div>
+    </body>
+</html>

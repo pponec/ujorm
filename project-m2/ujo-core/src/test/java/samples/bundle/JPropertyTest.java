@@ -29,7 +29,7 @@ public class JPropertyTest extends TestCase {
     }
 
     /**
-     * Test of getItemClass method, of class org.ujoframework.core.UjoManagerXML.
+     * Test of getItemClass method, of class org.ujorm.core.UjoManagerXML.
      */
     public void testProperty() throws IOException {
 
