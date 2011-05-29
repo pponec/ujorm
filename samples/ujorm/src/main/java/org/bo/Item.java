@@ -15,10 +15,12 @@
  */
 package org.bo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.UjoProperty;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Comment;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
@@ -26,6 +28,7 @@ import org.ujorm.implementation.orm.OrmTable;
  * @hidden
  * @Table=bo_item
  */
+@Comment("Order item")
 public class Item extends OrmTable<Item> {
 
     /** Unique key */
@@ -33,13 +36,18 @@ public class Item extends OrmTable<Item> {
     public static final UjoProperty<Item,Long> id = newProperty(Long.class);
     /** User key */
     public static final UjoProperty<Item,Integer> userId = newProperty(Integer.class);
-    /** Description of Item */
-    public static final UjoProperty<Item,String> descr = newProperty(String.class);
+    /** Description of the Item */
+    public static final UjoProperty<Item,String> note = newProperty(String.class);
+    /** Price of the item */
+    @Comment("Price of the item")
+    @Column(length=8, precision=2)
+    public static final UjoProperty<Item,BigDecimal> price = newProperty(BigDecimal.ZERO);
     /** A reference to common Order */
+    @Comment("A reference to the Order")
     @Column(name="fk_order")
     public static final UjoProperty<Item,Order> order = newProperty(Order.class);
-    /** A composed (indirect) property provides a 'created' attribute of the Order */
-    public static final UjoProperty<Item,Date> $orderDate = Item.order.add(Order.created);
+    /** A composed property provides a 'created' attribute of the Order */
+    public static final UjoProperty<Item,Date> $orderCreated = Item.order.add(Order.created);
 
     // --- An optional implementation of commonly used setters and getters ---
 
@@ -55,11 +63,11 @@ public class Item extends OrmTable<Item> {
     public void setUsrId(Integer _id) {
         set(userId, _id);
     }
-    public String getDescr() {
-        return get(descr);
+    public String getNote() {
+        return get(note);
     }
-    public void setDescr(String _descr) {
-        set(descr, _descr);
+    public void setNote(String _descr) {
+        set(note, _descr);
     }
     public Order getOrder() {
         return get(order);
@@ -68,10 +76,10 @@ public class Item extends OrmTable<Item> {
         set(order, _descr);
     }
 
-    /** Example of the composed PATH property */
-    public Date getOrderDate() {
+    /** Example of the composed property */
+    public Date getOrderCreated() {
         // An alternative solution for: getOrder().getCreated();
-        return get($orderDate);
+        return get($orderCreated);
     }
 
 

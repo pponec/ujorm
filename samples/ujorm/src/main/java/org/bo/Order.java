@@ -24,6 +24,7 @@ import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 
 /**
@@ -31,7 +32,8 @@ import org.ujorm.orm.annot.Table;
  * Note, that the Order object has got an collection of Items.
  * @hidden
  */
-@Table(name="ord_order")
+@Comment("Order table for registering the 'order items'")
+@Table(name = "ord_order")
 public class Order extends OrmTable<Order> {
 
     /** Store the value like VARCHAR. */
@@ -44,24 +46,26 @@ public class Order extends OrmTable<Order> {
         }
     }
 
-    /** The Unique Key */
+    /** The Primary Key */
+    @Comment("The Primary Key")
     @Column(pk = true)
     public static final UjoProperty<Order, Long> id = newProperty(Long.class);
     /** Order state, default is ACTIVE */
+    @Comment("Order state, default value is ACTIVE")
     public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
     /** User key */
     public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
-    /** Description of the order */
-    @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true)
-    public static final UjoProperty<Order, String> descr = newProperty(String.class);
+    /** Description of the Order */
+    @Comment("Description of the Order")
+    @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
+    public static final UjoProperty<Order, String> note = newProperty(String.class);
     /** Date of creation */
     public static final UjoProperty<Order, Date> created = newProperty(Date.class);
     /** Reference to Items */
     public static final RelationToMany<Order, Item> items = newRelation(Item.class);
 
-    // -----------------------------------------------------------------------
-
     // --- An optional implementation of commonly used setters and getters ---
+
     public Long getId() {
         return get(id);
     }
@@ -78,20 +82,20 @@ public class Order extends OrmTable<Order> {
         set(userId, _usrId);
     }
 
-    public String getDescr() {
-        return get(descr);
+    public String getNote() {
+        return get(note);
     }
 
-    public void setDescr(String _descr) {
-        set(descr, _descr);
+    public void setNote(String _note) {
+        set(note, _note);
     }
 
-    public Date getDate() {
+    public Date getCreated() {
         return get(created);
     }
 
-    public void setDate(Date _date) {
-        set(created, _date);
+    public void setCreated(Date _created) {
+        set(created, _created);
     }
 
     public State getState() {
