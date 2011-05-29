@@ -16,7 +16,7 @@
    sodipodi:version="0.32"
    inkscape:version="0.46"
    version="1.0"
-   sodipodi:docbase="C:\u\Pavel\Java\ProjectUJO\src\org\ujoframework"
+   sodipodi:docbase="C:\u\Pavel\Java\ProjectUJO\src\org\ujorm"
    sodipodi:docname="Logo.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="C:\temp\UjoIcons2.png"
@@ -191,7 +191,7 @@
             <dc:title>GNU/GPL v3</dc:title>
           </cc:Agent>
         </dc:rights>
-        <dc:source>http://ujoframework.org/</dc:source>
+        <dc:source>http://ujorm.org/</dc:source>
         <dc:coverage>Ujorm logo</dc:coverage>
         <cc:license
            rdf:resource="http://www.gnu.org/licenses/gpl.html" />
