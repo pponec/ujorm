@@ -436,7 +436,7 @@ body {
 </style>
 
   
-  <title>Ujorm tutorial - EN</title>
+  <title>Ujorm User Guide - EN</title>
 
 </head>
 
@@ -447,15 +447,19 @@ body {
     
     
 <h1>
-  <a id=Ujorm_User_Guide_1070508786431 name=Ujorm_User_Guide_1070508786431></a><font color=#674ea7>Ujorm User Guide</font><img height=65 id=syq1 src="images/ddcs2pg5_136gwrcjzf3_b.png" style=FLOAT:right;MARGIN-LEFT:40pt;MARGIN-RIGHT:1em width=65>
+  <a id=tcsp name=Ujorm_User_Guide_1070508786431></a><font color=#674ea7>Ujorm User Guide</font><img height=65 id=syq1 src="images/ddcs2pg5_136gwrcjzf3_b.png" style=FLOAT:right;MARGIN-LEFT:40pt;MARGIN-RIGHT:1em width=65>
 </h1>
-<i>Document License: <a href=http://creativecommons.org/licenses/by-nd/3.0/ rel=license title="Creative Commons BY-ND">Creative Commons BY-ND</a> ,<br>
+<h1>
+  <a id=vz:5 name=Ujorm_User_Guide_1070508786431></a><font size=2><font color=#674ea7>the ORM module</font></font>
+</h1>
+<i><br>
+Document License: <a href=http://creativecommons.org/licenses/by-nd/3.0/ rel=license title="Creative Commons BY-ND">Creative Commons BY-ND</a> ,<br>
 Author: Pavel Ponec, ponec@ujorm.com<br>
 </i>
 <div style=MARGIN-LEFT:40px>
   <i>&nbsp;&nbsp; Spring Integration by Tomas Hampl</i><br>
 </div>
-<i>Version: Ujorm 1.20 (May, 2011)<br>
+<i>Version: Ujorm 1.20 (May, 30)<br>
 PDF format:</i> <a href=http://ujorm.org/orm/tutorial/UjormUserGuide-1.20.pdf title=Print><img src="images/ddcs2pg5_190djqbwxd2_b.png" style=HEIGHT:16px;WIDTH:16px>http://ujorm.org/orm/tutorial/UjormUserGuide-1.20.pdf</a><i><br>
 Thank you for your comments or suggestions.</i><br>
 <br>
@@ -610,6 +614,12 @@ Thank you for your comments or suggestions.</i><br>
     lazy initialization is supported
   </li>
   <li>
+    multi row insert, update and delete is supported by a single SQL statement<br>
+  </li>
+  <li>
+    subset of table columns on SELECT can be specified for the statement<br>
+  </li>
+  <li>
     simple and reliable implementation solution
   </li>
   <li>
@@ -663,7 +673,7 @@ When you use the Maven POM file, take the following dependency:<br>
       <font face="courier new">&nbsp; &lt;dependency&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;</font><b style="FONT-FAMILY:Courier New">org.ujorm</b><font face="courier new">&lt;/groupId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><br clear=none style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;</font><b style="FONT-FAMILY:Courier New">ujo-orm</b><font face="courier new">&lt;/artifactId&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
-      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;</font><b style="FONT-FAMILY:Courier New">1.10</b><font face="courier new">&lt;/version&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;</font><b style="FONT-FAMILY:Courier New">1.20</b><font face="courier new">&lt;/version&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp; &lt;/dependency&gt;</font><br>
     </td>
   </tr>
@@ -878,17 +888,17 @@ Ujorm framework can use to persistence any object which implements the OrmUjo in
       public class <b style=COLOR:#351c75>Order </b>extends OrmTable&lt;Order&gt; {<br>
       <br>
       &nbsp;&nbsp;&nbsp; @Column(pk = true)<br>
-      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Long&gt; id<br>
+      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Long&gt; <b style=COLOR:#351c75>id </b><br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = newProperty(Long.<b style=COLOR:#741b47>class</b>);<br>
       <br>
-      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Date&gt; created<br>
+      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Date&gt; <b style=COLOR:#351c75>created </b><br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = newProperty(Date.<b style=COLOR:#741b47>class</b>);<br>
       <br>
-      &nbsp;&nbsp;&amp;nbsp; public static final UjoProperty&lt;Order, User&gt; user<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;nbsp;&nbsp; = newProperty(User.<b style=COLOR:#741b47>class</b>);<br>
+      &nbsp; &nbsp; public static final UjoProperty&lt;Order, User&gt; <b style=COLOR:#351c75>user </b><br>
+      &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; = newProperty(User.<b style=COLOR:#741b47>class</b>);<br>
       <br>
-      <i style=COLOR:#999999>&nbsp;&nbsp;&nbsp; /** Reference to the Order Items */</i><br>
-      &nbsp;&nbsp;&nbsp; public static final RelationToMany&lt;Order, Item&gt; items<br>
+      <i style=COLOR:#999999>&nbsp;&nbsp;&nbsp; /** Reference to the Order Item Iterator */</i><br>
+      &nbsp;&nbsp;&nbsp; public static final RelationToMany&lt;Order, Item&gt; <b style=COLOR:#351c75>items </b><br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = newRelation(Item.<b style=COLOR:#741b47>class</b>);<br>
       }<br>
     </td>
@@ -907,29 +917,29 @@ OK, for better comfort for developers we can optionally add getters and setters,
     <td width=100%>
       public class <b style=COLOR:#351c75>Order </b>extends OrmTable&lt;Order&gt; {<br>
       <br>
-      <i style=COLOR:#999999>&nbsp;&nbsp;&nbsp; [ The UjoProperty declarations ]</i><br>
+      <i style=COLOR:#999999>&nbsp;&nbsp;&nbsp; [ The UjoProperty declarations ... ]</i><br>
       <br>
       &nbsp;&nbsp;&nbsp; public Long getId() {<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(id);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(<b style=COLOR:#351c75>id</b>);<br>
       &nbsp;&nbsp;&nbsp; }<br>
       &nbsp;&nbsp;&nbsp; public <b><font color=#741b47>void </font></b>setId(Long _id) {<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set(id, _id);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set(<b style=COLOR:#351c75>id</b>, _id);<br>
       &nbsp;&nbsp;&nbsp; }<br>
       &nbsp;&nbsp;&nbsp; public Date getCreated() {<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(created);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(<b style=COLOR:#351c75>created</b>);<br>
       &nbsp;&nbsp;&nbsp; }<br>
       &nbsp;&nbsp;&nbsp; public <b><font color=#741b47>void </font></b>setCreated(Date _created) {<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set(created, _created);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set(<b style=COLOR:#351c75>created</b>, _created);<br>
       &nbsp;&nbsp;&nbsp; }<br>
       &nbsp;&nbsp;&nbsp; public User getUser() {<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(user);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(<b style=COLOR:#351c75>user</b>);<br>
       &nbsp;&nbsp;&nbsp; }<br>
       &nbsp;&nbsp;&nbsp; public <b><font color=#741b47>void </font></b>setUser(User _user) {<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set(user, _user);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set(<b style=COLOR:#351c75>user</b>, _user);<br>
       &nbsp;&nbsp;&nbsp; }<br>
       &nbsp;&nbsp;&nbsp; <i style=COLOR:#999999>/** Only getter is allowed for the UjoIterlator */</i><br>
       &nbsp;&nbsp;&nbsp; public UjoIterator&lt;Item&gt; getItems() {<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(items);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><font color=#741b47>return </font></b>get(<b style=COLOR:#351c75>items</b>);<br>
       &nbsp;&nbsp;&nbsp; }<br>
       }<br>
     </td>
@@ -973,13 +983,13 @@ Sample of the use:<br>
       <br>
       &nbsp;&nbsp;&nbsp; <b><font color=#741b47>@Comment</font></b>("<font color=#351c75>The Primary Key</font>")<br>
       &nbsp;&nbsp;&nbsp; @Column(pk = true)<br>
-      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Long&gt; id ...<br>
+      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Long&gt; <b style=COLOR:#351c75>id </b>...<br>
       <br>
       &nbsp;&nbsp;&nbsp; <b><font color=#741b47>@Comment</font></b>("<font color=#351c75>Date of insert</font>")<br>
-      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Date&gt; created ...<br>
+      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, Date&gt; <b style=COLOR:#351c75>created </b>...<br>
       <br>
       &nbsp;&nbsp;&nbsp; <b><font color=#741b47>@Comment</font></b>("<font color=#351c75>Key to related user</font>")<br>
-      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, User&gt; user ...<br>
+      &nbsp;&nbsp;&nbsp; public static final UjoProperty&lt;Order, User&gt; <b style=COLOR:#351c75>user </b>...<br>
       <br>
       }<br>
     </td>
@@ -1114,7 +1124,7 @@ The instance of the native Criterion have got some special features:<br>
 <br>
 <ul>
   <li>
-    parameters of the SQL_condition are not supported by the Ujorm
+    parameters inside the SQL_condition are not supported by the Ujorm using a 'question mark' notation<br>
   </li>
   <li>
     your own implementation of SQL the parameters can increase a risk of the <a href=http://en.wikipedia.org/wiki/SQL_injection id=ga:j title="SQL injection">SQL injection</a> attacks
@@ -1127,7 +1137,7 @@ The instance of the native Criterion have got some special features:<br>
   </li>
 </ul>
 <br>
-The native Criterion can be <b>joined </b>with another Criterions include the native type. The Criterion can be used also in a <a href=#Native_Ujorm_query_3626118237620981 id=xhv6 target=_self title="Native Query">Native Query</a>.<br>
+The native Criterion can be <b>joined </b>with another Criterions include the native type. The Criterion can be used also in the <a href=#Native_Ujorm_query_3626118237620981 id=xhv6 target=_self title="Native Query">Native Query</a>.<br>
 <br>
 Sample of the use:<br>
 <br>
@@ -1136,7 +1146,7 @@ Sample of the use:<br>
   <tr>
     <td width=100%>
       <font face="courier new">&nbsp;Criterion&lt;Order&gt; crn1 = Criterion.forSql<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Order.<b><font color=#a64d79>id</font></b>, "<b style=COLOR:#674ea7>ord_order_alias.id&gt;0</b>");</font><br style="FONT-FAMILY:Courier New">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Order.<b><font color=#a64d79>id</font></b>, "<b style=COLOR:#674ea7>ord_order_alias.id&gt;3</b>");</font><br style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp;Criterion&lt;Order&gt; crn2 = Criterion.where<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Order.created, Operator.LE, new Date());</font><br style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp;Query&lt;Order&gt; orders = session.createQuery(crn1.and(crn2));</font><br style="FONT-FAMILY:Courier New">
@@ -1687,18 +1697,18 @@ There are three basic ways how to configure the database connection:<br>
     <tbody>
     <tr>
       <td width=100%>
-        &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
-        &lt;body&gt;<br>
-        &nbsp;&nbsp;&nbsp; &lt;database id="DatabaseConfigurationClass"&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;schema&gt;TestDBSchema&lt;/schema&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;user&gt;applicationUser&lt;/user&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;password&gt;userPassword&lt;/password&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;dialect&gt;<span class=tx>org.ujorm.orm.dialect.MySqlDialect</span>&lt;/dialect&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jdbcUrl&gt;jdbc:mysql://127.0.0.1:3306/&lt;/jdbcUrl&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jdbcDriver&gt;com.mysql.jdbc.Driver&lt;/jdbcDriver&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jndi&gt;&lt;/jndi&gt;<br>
-        &nbsp;&nbsp;&nbsp; &lt;/database&gt;<br>
-        &lt;/body&gt;<br>
+        <font color=#7f6000>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&lt;body&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp; &lt;database id="DatabaseConfigurationClass"&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;schema&gt;TestDBSchema&lt;/schema&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;user&gt;applicationUser&lt;/user&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;password&gt;userPassword&lt;/password&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;dialect&gt;</font><span class=tx><font color=#7f6000>org.ujorm.orm.dialect.MySqlDialect</font></span><font color=#7f6000>&lt;/dialect&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jdbcUrl&gt;jdbc:mysql://127.0.0.1:3306/&lt;/jdbcUrl&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jdbcDriver&gt;com.mysql.jdbc.Driver&lt;/jdbcDriver&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jndi&gt;&lt;/jndi&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&nbsp;&nbsp;&nbsp; &lt;/database&gt;</font><br style=COLOR:#7f6000>
+        <font color=#7f6000>&lt;/body&gt;</font><br>
       </td>
     </tr>
     </tbody>
@@ -1749,7 +1759,6 @@ There are three basic ways how to configure the database connection:<br>
   <a id=Batch_operations_7543325439872 name=Batch_operations_7543325439872></a>Batch database operations
 </h2>
 For a better performance is useful to use so called 'batch operation'. The common feature is that many rows is affected by a single SQL statement. There are supported next cases of the typical use.<br>
-<br>
 <h4>
   <a id=Batch_insert_2512909723674447__8896487288345089 name=Batch_insert_2512909723674447__8896487288345089></a>Batch insert
 </h4>
@@ -1793,6 +1802,8 @@ For a better performance is useful to use so called 'batch operation'. The commo
         <br>
         <font color=#999999>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Activate the Change column management:</font><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; order.writeSession(session);<br>
+        <br>
+        <font color=#999999>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Set a value(s) to the change:</font><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; order.setCreated(new <b>Date</b>());<br>
         <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Criterion&lt;Order&gt; criterion&nbsp; = Criterion.where(Order.id, GE, 1L);<br>
