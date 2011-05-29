@@ -2,15 +2,17 @@ The Ujorm release notes
 *******************************
 
 release 1.20 (2010-05-?)
++ the project leaves the old domain org.ujoframework so all new Java packages are renamed to: org.ujorm
 + the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL. 
   See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
-  Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;  
+  Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;
 + the 'Sequence Table Model' is implemented to an optional customize of the 'ujorm_pk_support' table.
 + persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement include its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
 + the batch INSERT for list of items usding a multi row SQL INSERT is implemented 
 + the batch UPDATE is supoorted now, see documentation for more information
 + new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
 + select DISTINCT is supported now
++ each meta-model table can be marked like a READ-ONLY using a new parameter in annotation @Table
 + configuration supports the READ-ONLY mode for required table(s)
 + core class UjoComparator supports the Collator for comparation of the String items.
 + composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
