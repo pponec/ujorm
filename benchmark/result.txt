@@ -4,7 +4,7 @@ ENVIRONMENT:
  * against the database PostgreSQL 8.3 (on the same computer)
  * values are an average of 5 measurements
  * DB indexes was insignificant
- * UJO Framework release 0.91
+ * Ujorm release 0.91
  * Hibernate 3.3.1.GA + EhCachProvider
  * Java version "1.6.0_14", running with default parameters
  * Intel Dual Core, 2GB RAM

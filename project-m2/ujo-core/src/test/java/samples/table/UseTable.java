@@ -12,7 +12,7 @@ package samples.table;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
-import org.ujoframework.swing.UjoTableModel;
+import org.ujorm.swing.UjoTableModel;
 import samples.array.Person;
 
 /**

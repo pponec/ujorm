@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import javax.xml.parsers.ParserConfigurationException;
-import org.ujoframework.Ujo;
-import org.ujoframework.core.UjoManager;
-import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.map.*;
+import org.ujorm.Ujo;
+import org.ujorm.core.UjoManager;
+import org.ujorm.core.UjoManagerXML;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.map.*;
 import org.xml.sax.SAXException;
 public class Person extends MapUjo {
     

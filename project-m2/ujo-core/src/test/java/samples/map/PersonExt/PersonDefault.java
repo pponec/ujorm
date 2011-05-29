@@ -9,8 +9,8 @@
 
 package samples.map.PersonExt;
 
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.map.*;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.map.*;
 public class PersonDefault extends MapUjoExt<PersonDefault> {
     
   public static final Property<PersonDefault, String > NAME = newProperty("Name", "");

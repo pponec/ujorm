@@ -16,9 +16,9 @@
 
 package benchmark;
 
-import org.ujoframework.orm.annot.Db;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.implementation.orm.RelationToMany;
+import org.ujorm.orm.annot.Db;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.RelationToMany;
 import benchmark.bo.*;
 
 
@@ -26,8 +26,8 @@ import benchmark.bo.*;
  * An table mapping to a database (a sample of usage).
  * @hidden
  */
-@Db(schema="bmk", dialect=org.ujoframework.orm.dialect.PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/benchmark")
-//@Db(schema="db1", dialect=org.ujoframework.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+@Db(schema="bmk", dialect=org.ujorm.orm.dialect.PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/benchmark")
+//@Db(schema="db1", dialect=org.ujorm.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 public class Database extends OrmTable<Database> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */

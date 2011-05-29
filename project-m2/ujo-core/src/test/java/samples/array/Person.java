@@ -10,10 +10,10 @@
 package samples.array;
 
 import java.util.Date;
-import org.ujoframework.Ujo;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.core.UjoManager;
-import org.ujoframework.implementation.array.ArrayUjo;
+import org.ujorm.Ujo;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.UjoManager;
+import org.ujorm.implementation.array.ArrayUjo;
 
 public class Person extends ArrayUjo {
     

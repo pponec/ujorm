@@ -10,7 +10,7 @@
 package samples.map;
 
 import java.util.Date;
-import org.ujoframework.extensions.Property;
+import org.ujorm.extensions.Property;
 
 public class PersonX extends Person {
     

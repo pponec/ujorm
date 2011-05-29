@@ -17,10 +17,10 @@
 package org.bo;
 
 
-import org.ujoframework.UjoProperty;
-import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.orm.annot.Table;
+import org.ujorm.UjoProperty;
+import org.ujorm.orm.annot.Column;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Table;
 
 /** User implementation */
 @Table(name="usr_user")

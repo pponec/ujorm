@@ -53,7 +53,7 @@
     
     <target name="-pre-jar">
         <mkdir dir="dist"/>
-        <echo file="${manifest.file}">Main-Class: org.ujoframework.core.UjoManager
+        <echo file="${manifest.file}">Main-Class: org.ujorm.core.UjoManager
 Specification-Title: ${name}
 Specification-Version: ${version}
 Specification-Vendor: Pavel Ponec
@@ -62,7 +62,7 @@ Implementation-Version: ${version}
 Implementation-Vendor: "Pavel Ponec"</echo>
 
         <!-- delete sample -->
-        <delete dir="build/classes/org/ujoframework/orm/sample" />
+        <delete dir="build/classes/org/ujorm/orm/sample" />
 
     </target>    
 

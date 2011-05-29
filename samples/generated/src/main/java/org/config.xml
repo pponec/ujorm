@@ -3,7 +3,7 @@
 <body>
     <database id="Database">
         <schema>db1</schema>
-        <dialect>org.ujoframework.orm.dialect.H2Dialect</dialect>
+        <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
         <table id="ORDERS">
             <name>ord_order</name>
             <alias>ord_order_alias</alias>

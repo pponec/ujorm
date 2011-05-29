@@ -9,11 +9,11 @@
 
 package samples.xml;
 
-import org.ujoframework.UjoProperty;
-import org.ujoframework.UjoAction;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.map.*;
-import static org.ujoframework.UjoAction.*;
+import org.ujorm.UjoProperty;
+import org.ujorm.UjoAction;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.map.*;
+import static org.ujorm.UjoAction.*;
 
 /**
  * @author Pavel Ponec

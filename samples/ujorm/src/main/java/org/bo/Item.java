@@ -16,9 +16,9 @@
 package org.bo;
 
 import java.util.Date;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.OrmTable;
+import org.ujorm.UjoProperty;
+import org.ujorm.orm.annot.Column;
+import org.ujorm.implementation.orm.OrmTable;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).

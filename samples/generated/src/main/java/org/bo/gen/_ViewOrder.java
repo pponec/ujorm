@@ -5,10 +5,10 @@
 package org.bo.gen;
 
 import org.bo.ViewOrder;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.orm.annot.Column;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.orm.annot.View;
+import org.ujorm.UjoProperty;
+import org.ujorm.orm.annot.Column;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.View;
 
 @View(select = "SELECT ord_order_alias.id, count(*) AS item_count"
 + " FROM db1.ord_order ord_order_alias"

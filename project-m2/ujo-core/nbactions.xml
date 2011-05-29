@@ -71,7 +71,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath org.ujoframework.core.UjoManager</exec.args>
+                <exec.args>-classpath %classpath org.ujorm.core.UjoManager</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

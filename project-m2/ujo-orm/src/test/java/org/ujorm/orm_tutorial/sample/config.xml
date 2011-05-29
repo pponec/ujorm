@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release 1.02 was created 2010/11/12 21:21 -->
+<body>
+    <database id="Database">
+        <schema>db1</schema>
+        <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
+        <table id="ORDERS">
+            <name>ord_order</name>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="state">
+                <name>state</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>2</maxLength>
+                <comment>Order state, default value is ACTIVE</comment>
+            </column>
+            <column id="userId">
+                <name>userId</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="descr">
+                <name>DESCR</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="created">
+                <name>created</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+            <column id="customer">
+                <name>fk_customer</name>
+            </column>
+            <column id="newColumn">
+                <name>newColumn</name>
+                <dbType>INT</dbType>
+                <mandatory>true</mandatory>
+            </column>
+            <relation2m id="items">
+                <name>items</name>
+            </relation2m>
+            <comment>Order table for registering the &apos;order items&apos;</comment>
+        </table>
+        <table id="ORDER_ITEMS">
+            <name>ord_item</name>
+            <alias>ord_item_alias</alias>
+            <schema>db1</schema>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="userId">
+                <name>userId</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="descr">
+                <name>descr</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="order">
+                <name>fk_order</name>
+            </column>
+            <comment>Order item</comment>
+        </table>
+        <table id="VIEW_ORDERS" view="true">
+            <name>ord_order</name>
+            <alias>ord_order_alias</alias>
+            <schema>db1</schema>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="ITEM_COUNT">
+                <name>ITEM_COUNT</name>
+                <dbType>INT</dbType>
+            </column>
+            <select>SELECT ord_order_alias.id, count(*) AS item_count FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
+        </table>
+        <table id="CUSTOMER">
+            <name>ord_customer</name>
+            <alias>ord_customer_alias</alias>
+            <schema>db1</schema>
+            <column id="id">
+                <name>id</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+            </column>
+            <column id="pin">
+                <name>pin</name>
+                <dbType>INT</dbType>
+            </column>
+            <column id="surename">
+                <name>surename</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>50</maxLength>
+                <uniqueIndex>idx_customer_full_name</uniqueIndex>
+            </column>
+            <column id="lastname">
+                <name>lastname</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>50</maxLength>
+                <uniqueIndex>idx_customer_full_name</uniqueIndex>
+            </column>
+            <column id="created">
+                <name>created</name>
+                <dbType>TIMESTAMP</dbType>
+            </column>
+        </table>
+        <table id="db1">
+            <name>db1</name>
+            <alias>db1_alias</alias>
+            <schema>db1</schema>
+            <column id="myProcedure">
+                <name>myProcedure</name>
+            </column>
+            <relation2m id="ORDERS">
+                <name>ORDERS</name>
+            </relation2m>
+            <relation2m id="ORDER_ITEMS">
+                <name>ORDER_ITEMS</name>
+            </relation2m>
+            <relation2m id="VIEW_ORDERS">
+                <name>VIEW_ORDERS</name>
+            </relation2m>
+            <relation2m id="CUSTOMER">
+                <name>CUSTOMER</name>
+            </relation2m>
+        </table>
+        <procedure id="myProcedure">
+            <name>ujorm_test</name>
+            <schema>db1</schema>
+            <parameter id="result">
+                <name>result</name>
+                <dbType>INT</dbType>
+            </parameter>
+            <parameter id="paramCode">
+                <name>paramCode</name>
+                <dbType>INT</dbType>
+            </parameter>
+            <parameter id="paramEnabled">
+                <name>paramEnabled</name>
+                <dbType>BOOLEAN</dbType>
+            </parameter>
+        </procedure>
+        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
+        <user>sa</user>
+    </database>
+    <parameters>
+        <cachePolicy>SOLID_CACHE</cachePolicy>
+        <tableAliasSuffix>_alias</tableAliasSuffix>
+        <sequenceCache>1</sequenceCache>
+        <commentPolicy>ALWAYS</commentPolicy>
+    </parameters>
+</body>

@@ -3,8 +3,8 @@ import javax.swing.*;
 import java.util.*;
 import java.awt.event.*;
 import java.io.File;
-import org.ujoframework.core.UjoManagerXML;
-import org.ujoframework.swing.UjoTableModel;
+import org.ujorm.core.UjoManagerXML;
+import org.ujorm.swing.UjoTableModel;
 import static org.Company.*;
 import static org.Person.*;
 

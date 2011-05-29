@@ -21,12 +21,12 @@ import org.bo.Item;
 import org.bo.MyProcedure;
 import org.bo.Order;
 import org.bo.ViewOrder;
-import org.ujoframework.extensions.Property;
-import org.ujoframework.implementation.orm.OrmTable;
-import org.ujoframework.implementation.orm.RelationToMany;
-import org.ujoframework.orm.annot.Procedure;
-import org.ujoframework.orm.annot.Table;
-import org.ujoframework.orm.annot.View;
+import org.ujorm.extensions.Property;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.annot.Procedure;
+import org.ujorm.orm.annot.Table;
+import org.ujorm.orm.annot.View;
 
 abstract public class _Database extends OrmTable<_Database> {
 

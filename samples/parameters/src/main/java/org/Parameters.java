@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.Calendar;
 import java.util.Locale;
-import org.ujoframework.UjoProperty;
-import org.ujoframework.implementation.map.MapUjo;
+import org.ujorm.UjoProperty;
+import org.ujorm.implementation.map.MapUjo;
 
 public class Parameters extends MapUjo {
 

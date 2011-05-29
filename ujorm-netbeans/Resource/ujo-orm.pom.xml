@@ -14,7 +14,7 @@
         </contributor>
     </contributors>
     <description>Simple ORM implementation based on the UJO objects.
-UJO Frameworkprovides a non-traditional object architecture  different from JavaBeans, where each property has its own static object.</description>
+Ujormprovides a non-traditional object architecture  different from JavaBeans, where each property has its own static object.</description>
     <url>http://maven.apache.org</url>
 
     <licenses>
@@ -64,8 +64,8 @@ UJO Frameworkprovides a non-traditional object architecture  different from Java
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass  >org.ujoframework.core.UjoManager</mainClass>
-                            <packageName>org.ujoframework.core</packageName>
+                            <mainClass  >org.ujorm.core.UjoManager</mainClass>
+                            <packageName>org.ujorm.core</packageName>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>

@@ -20,13 +20,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujoframework.Ujo;
-import org.ujoframework.core.UjoIterator;
-import org.ujoframework.core.UjoManager;
-import org.ujoframework.criterion.Criterion;
-import org.ujoframework.orm.OrmHandler;
-import org.ujoframework.orm.Session;
-import org.ujoframework.orm.metaModel.MetaParams;
+import org.ujorm.Ujo;
+import org.ujorm.core.UjoIterator;
+import org.ujorm.core.UjoManager;
+import org.ujorm.criterion.Criterion;
+import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.Session;
+import org.ujorm.orm.metaModel.MetaParams;
 import benchmark.bo.*;
 
 /**

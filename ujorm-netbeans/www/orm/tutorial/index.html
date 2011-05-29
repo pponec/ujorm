@@ -456,7 +456,7 @@ Author: Pavel Ponec, ponec@ujorm.com<br>
   <i>&nbsp;&nbsp; Spring Integration by Tomas Hampl</i><br>
 </div>
 <i>Version: Ujorm 1.20 (May, 2011)<br>
-PDF format:</i> <a href=http://ujoframework.org/orm/tutorial/UjormUserGuide-1.20.pdf title=Print><img src="images/ddcs2pg5_190djqbwxd2_b.png" style=HEIGHT:16px;WIDTH:16px>http://ujoframework.org/orm/tutorial/UjormUserGuide-1.20.pdf</a><i><br>
+PDF format:</i> <a href=http://ujorm.org/orm/tutorial/UjormUserGuide-1.20.pdf title=Print><img src="images/ddcs2pg5_190djqbwxd2_b.png" style=HEIGHT:16px;WIDTH:16px>http://ujorm.org/orm/tutorial/UjormUserGuide-1.20.pdf</a><i><br>
 Thank you for your comments or suggestions.</i><br>
 <br>
 <br>
@@ -641,7 +641,7 @@ The main vision is:<br>
 <h2>
   <a id=Quick_Start_024257222361389164 name=Quick_Start_024257222361389164></a>Quick Start
 </h2>
-There is recommended to read first of all this <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup title=tutorial>class tutorial</a> based on an annotated source code for <span class=short_text id=d41o><span class=hps title="Kliknutím zobrazíte alternativní překlady">quick</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">introduction</span></span>. In the tutorial you can found entities from following class diagram:<br>
+There is recommended to read first of all this <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup title=tutorial>class tutorial</a> based on an annotated source code for <span class=short_text id=d41o><span class=hps title="Kliknutím zobrazíte alternativní překlady">quick</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">introduction</span></span>. In the tutorial you can found entities from following class diagram:<br>
 <div style=MARGIN-LEFT:40px;TEXT-ALIGN:left>
   <br>
 </div>
@@ -661,7 +661,7 @@ When you use the Maven POM file, take the following dependency:<br>
   <tr>
     <td width=100%>
       <font face="courier new">&nbsp; &lt;dependency&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
-      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;</font><b style="FONT-FAMILY:Courier New">org.ujoframework</b><font face="courier new">&lt;/groupId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><br clear=none style="FONT-FAMILY:Courier New">
+      <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;</font><b style="FONT-FAMILY:Courier New">org.ujorm</b><font face="courier new">&lt;/groupId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><br clear=none style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;</font><b style="FONT-FAMILY:Courier New">ujo-orm</b><font face="courier new">&lt;/artifactId&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;</font><b style="FONT-FAMILY:Courier New">1.10</b><font face="courier new">&lt;/version&gt;</font><br clear=none style="FONT-FAMILY:Courier New">
       <font face="courier new">&nbsp; &lt;/dependency&gt;</font><br>
@@ -674,7 +674,7 @@ When you use the Maven POM file, take the following dependency:<br>
 <h2>
   <a id=Architecture_924643946159931_7 name=Architecture_924643946159931_7></a>Architecture
 </h2>
-The next class diagram clarifies relation between Ujorm framework classes and application domain classes. The diagram is simplified and slightly modified to show only the relevant entities. A more detailed descriptions can be found, if necessary, in the <a href=http://ujoframework.org/javadoc/ id=e3-s title="JavaDoc Project">Ujorm JavaDoc</a> .<br>
+The next class diagram clarifies relation between Ujorm framework classes and application domain classes. The diagram is simplified and slightly modified to show only the relevant entities. A more detailed descriptions can be found, if necessary, in the <a href=http://ujorm.org/javadoc/ id=e3-s title="JavaDoc Project">Ujorm JavaDoc</a> .<br>
 <div id=le08 style=TEXT-ALIGN:left>
   <div id=saxt style=TEXT-ALIGN:left>
     <br>
@@ -692,33 +692,33 @@ The next class diagram clarifies relation between Ujorm framework classes and ap
   </div>
 </div>
 Notes to graph:<br>
-<a href=http://ujoframework.org/javadoc/org/ujoframework/UjoProperty.html id=si4c title=UjoProperty>UjoProperty</a> attributes described in the domain objects are always <b>immutable static constants,</b> which provide methods for writing and reading values to (from) the Ujo object. Only this diagram is hinted for better illustration the implementation of UjoProperties in domain objects, in other diagrams of this document is used the same formal registration as for a regular POJO attributes.<br>
+<a href=http://ujorm.org/javadoc/org/ujorm/UjoProperty.html id=si4c title=UjoProperty>UjoProperty</a> attributes described in the domain objects are always <b>immutable static constants,</b> which provide methods for writing and reading values to (from) the Ujo object. Only this diagram is hinted for better illustration the implementation of UjoProperties in domain objects, in other diagrams of this document is used the same formal registration as for a regular POJO attributes.<br>
 <br>
 Entity Description:<br>
 <ul>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/Ujo.html id=xqd8 title=Ujo>Ujo</a> - interface of an object containing the values. The object provides a list of their properties. A kind of data storage determines the implementation, for example OrmTable uses internally an array of objects.<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/Ujo.html id=xqd8 title=Ujo>Ujo</a> - interface of an object containing the values. The object provides a list of their properties. A kind of data storage determines the implementation, for example OrmTable uses internally an array of objects.<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/UjoProperty.html id=w.:k title=UjoProperty>UjoProperty</a> - immutable object containing meta-data of the property, which provides two methods for reading and writing values to Ujo object. Two related UjoProperties could be joined using the method add(), the result is stored in a new immutable instance of the UjoProperty interface.
+    <a href=http://ujorm.org/javadoc/org/ujorm/UjoProperty.html id=w.:k title=UjoProperty>UjoProperty</a> - immutable object containing meta-data of the property, which provides two methods for reading and writing values to Ujo object. Two related UjoProperties could be joined using the method add(), the result is stored in a new immutable instance of the UjoProperty interface.
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/extensions/Property.html id=je:b title=Property>Property</a> - the default implementation of UjoProperty<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/extensions/Property.html id=je:b title=Property>Property</a> - the default implementation of UjoProperty<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/RelationToMany.html id=mbhx title=RelationToMany>RelationToMany</a> - extended default implementation of UjoProperty designed for the data type: UjoIterator&lt;item&gt;<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/implementation/orm/RelationToMany.html id=mbhx title=RelationToMany>RelationToMany</a> - extended default implementation of UjoProperty designed for the data type: UjoIterator&lt;item&gt;<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmUjo.html id=aijk title=OrmUjo>OrmUjo</a> - an interface designed for persistent application domain objects. Each object contains the session and provides a list of modified properties, more information are available later in this document<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/orm/OrmUjo.html id=aijk title=OrmUjo>OrmUjo</a> - an interface designed for persistent application domain objects. Each object contains the session and provides a list of modified properties, more information are available later in this document<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/OrmTable.html id=cxp6 title=OrmTable>OrmTable</a> - default implementation of OrmUjo interface<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/implementation/orm/OrmTable.html id=cxp6 title=OrmTable>OrmTable</a> - default implementation of OrmUjo interface<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=c1tj title=OrmHandler>OrmHandler</a> - owner of the meta-model, which provides an efficient methods to search for specific parts of the meta-model. Meta-model is locked after initialization and can't be changed later.<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/orm/OrmHandler.html id=c1tj title=OrmHandler>OrmHandler</a> - owner of the meta-model, which provides an efficient methods to search for specific parts of the meta-model. Meta-model is locked after initialization and can't be changed later.<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=mra2 title=Criterion>Criterion</a> - the fundamental condition for the evaluation database Query. Criterion objects can be joined into a binary tree by operators <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#and%28org.ujoframework.criterion.Criterion%29 id=qghe title="and ()">and()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#or%28org.ujoframework.criterion.Criterion%29 id=zrqu title="or ()">or()</a> .<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html id=mra2 title=Criterion>Criterion</a> - the fundamental condition for the evaluation database Query. Criterion objects can be joined into a binary tree by operators <a href=http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html#and%28org.ujorm.criterion.Criterion%29 id=qghe title="and ()">and()</a> and <a href=http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html#or%28org.ujorm.criterion.Criterion%29 id=zrqu title="or ()">or()</a> .<br>
   </li>
   <li>
     Database - the class form an application package containing a description of the persistent domain classes and stored procedures. For different DB connections, you can define multiple classes type of Database<br>
@@ -731,7 +731,7 @@ Entity Description:<br>
 <h2>
   <a id=Example_of_application_the_cod name=Example_of_application_the_cod></a>Example of the application code
 </h2>
-The following code example obtains instances of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmHandler.html id=ev92 title=OrmHandler>OrmHandler</a> class and its configuration using the Database class, the instance is retained for. It creates an instance of Order class Items and stores in a database. The <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#save%28org.ujoframework.orm.OrmUjo%29 id=hkp7 title=save()>save()</a> and <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#commit%28%29 id=tort title=commit()>commit()</a> operations can throw an run-time exception so there is necessary to catch the exception and close the used <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html id=c1jz title=Session>Session</a>.<br>
+The following code example obtains instances of <a href=http://ujorm.org/javadoc/org/ujorm/orm/OrmHandler.html id=ev92 title=OrmHandler>OrmHandler</a> class and its configuration using the Database class, the instance is retained for. It creates an instance of Order class Items and stores in a database. The <a href=http://ujorm.org/javadoc/org/ujorm/orm/Session.html#save%28org.ujorm.orm.OrmUjo%29 id=hkp7 title=save()>save()</a> and <a href=http://ujorm.org/javadoc/org/ujorm/orm/Session.html#commit%28%29 id=tort title=commit()>commit()</a> operations can throw an run-time exception so there is necessary to catch the exception and close the used <a href=http://ujorm.org/javadoc/org/ujorm/orm/Session.html id=c1jz title=Session>Session</a>.<br>
 <br>
 <div style=MARGIN-LEFT:40px>
   <table border=1 cellpadding=3 cellspacing=0 height=360 id=azp2 width=396>
@@ -767,7 +767,7 @@ The following code example obtains instances of <a href=http://ujoframework.org/
 </div>
 <br>
 <br>
-The second example contains usage a query using the <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=pcyw title=Criterion>Criterion</a> joined by two elementary conditions. Missing operator is replaced by the EQUALS' one. Notice how is created composite 'UjoProperty'. The composite 'property' can be stored as an additional static constants of domain object. Prepared query is contained in the 'Query' object a can be simply used in 'for-each' command. In the end we have to close database 'session' again. More information about the Criterion use can be found <a href=#How_to_use_the_Criterion_33739 id=ofxo target=_self title=later>later</a> in this document.<br>
+The second example contains usage a query using the <a href=http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html id=pcyw title=Criterion>Criterion</a> joined by two elementary conditions. Missing operator is replaced by the EQUALS' one. Notice how is created composite 'UjoProperty'. The composite 'property' can be stored as an additional static constants of domain object. Prepared query is contained in the 'Query' object a can be simply used in 'for-each' command. In the end we have to close database 'session' again. More information about the Criterion use can be found <a href=#How_to_use_the_Criterion_33739 id=ofxo target=_self title=later>later</a> in this document.<br>
 <div style=MARGIN-LEFT:40px>
   <br>
 </div>
@@ -943,10 +943,10 @@ Note, that the relation to the Items can't have got the setter. A new Items can 
 <h2>
   <a id=Comment_by_annotations_3525065_0811885504283516 name=Comment_by_annotations_3525065_0811885504283516></a>Comment by annotations
 </h2>
-Since Ujorm release 1.10 is allowed to describe persistent objects or its properties by special annotation called <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/annot/Comment.html id=j1_t title=Comment.>Comment.</a><br>
+Since Ujorm release 1.10 is allowed to describe persistent objects or its properties by special annotation called <a href=http://ujorm.org/javadoc/org/ujorm/orm/annot/Comment.html id=j1_t title=Comment.>Comment.</a><br>
 In case that a DDL auto-update is enabled than Ujorm write the text to relation database meta-model loading time, if the feature is supported<br>
 <br>
-The assigned policy can be affected by parameter <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#COMMENT_POLICY id=zxtw title=COMMENT_POLICY>COMMENT_POLICY</a> with options:<br>
+The assigned policy can be affected by parameter <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#COMMENT_POLICY id=zxtw title=COMMENT_POLICY>COMMENT_POLICY</a> with options:<br>
 <ul>
   <li>
     ON_ANY_CHANGE - Assign all available comments from annotations to database on a new database object event,exactly on new table, column or index. It is a <b>default </b>option.
@@ -991,7 +991,7 @@ Sample of the use:<br>
 <h2>
   <a id=How_to_use_the_Criterion_33739_07513349608950382 name=How_to_use_the_Criterion_33739_07513349608950382></a>How to use the Criterion?
 </h2>
-The <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html id=qbvw title=Criterion>Criterion</a> is a base element to restrict a database <b>query</b>, however criterions have got one next <span class=hps title="Kliknutím zobrazíte alternativní překlady">feature</span>: they can <span class=hps title="Kliknutím zobrazíte alternativní překlady">be</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">used</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">immediately for the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">evaluation of</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">an object -</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">as a</span> <b><span class=hps title="Kliknutím zobrazíte alternativní překlady">validator</span></b>.<br>
+The <a href=http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html id=qbvw title=Criterion>Criterion</a> is a base element to restrict a database <b>query</b>, however criterions have got one next <span class=hps title="Kliknutím zobrazíte alternativní překlady">feature</span>: they can <span class=hps title="Kliknutím zobrazíte alternativní překlady">be</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">used</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">immediately for the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">evaluation of</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">an object -</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">as a</span> <b><span class=hps title="Kliknutím zobrazíte alternativní překlady">validator</span></b>.<br>
 Each Criterion can be built to the binary tree by to operators: <b>and</b>(), <b>or</b>().<br>
 <br>
 For example let's create an instance of the Order entity:<br>
@@ -1090,7 +1090,7 @@ Order.created&lt;=now() or Order.descr='another') and <font face="courier new">O
   </tbody>
 </table>
 <br>
-Further examples of solved tasks can be found at this <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=xgyt title=link>link</a> .<br>
+Further examples of solved tasks can be found at this <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=xgyt title=link>link</a> .<br>
 <br>
 <br>
 <h2>
@@ -1120,7 +1120,7 @@ The instance of the native Criterion have got some special features:<br>
     your own implementation of SQL the parameters can increase a risk of the <a href=http://en.wikipedia.org/wiki/SQL_injection id=ga:j title="SQL injection">SQL injection</a> attacks
   </li>
   <li>
-    method <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/Criterion.html#evaluate%28UJO%29 id=p.o: title=Criterion.valuate(ujo)>Criterion.evaluate(ujo)</a> is not supported and throws the exception UnsupportedOperationException in the run-time<br>
+    method <a href=http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html#evaluate%28UJO%29 id=p.o: title=Criterion.valuate(ujo)>Criterion.evaluate(ujo)</a> is not supported and throws the exception UnsupportedOperationException in the run-time<br>
   </li>
   <li>
     native Criterion dependents on a selected database so application developers should to create support for each supported database of target application to ensure database compatibility
@@ -1154,7 +1154,7 @@ Note: the property <b style=COLOR:#741b47>id</b> from the sample can be replaced
 <h2>
   <a id=Native_Ujorm_query_36261182376 name=Native_Ujorm_query_36261182376></a>Native Query
 </h2>
-The native Query <span class=hps title="Kliknutím zobrazíte alternativní překlady">is a tool</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">of the framework Ujorm</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">to </span><span class=hps title="Kliknutím zobrazíte alternativní překlady">mapping</span> a <span class=hps title="Kliknutím zobrazíte alternativní překlady">native (</span><span class="atn hps" title="Kliknutím zobrazíte alternativní překlady">database-</span>dependent) <span class=hps title="Kliknutím zobrazíte alternativní překlady">SQL</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">query</span> to <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmUjo.html title="interface in org.ujoframework.orm">OrmUjo</a> business object. Each native Query must be mapped to new object. Using of the Query is similar like the object-table mapping, however the <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/annot/View.html id=k_tn title=@View>@View</a> annotation is used instead of @<b>Table</b>.<br>
+The native Query <span class=hps title="Kliknutím zobrazíte alternativní překlady">is a tool</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">of the framework Ujorm</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">to </span><span class=hps title="Kliknutím zobrazíte alternativní překlady">mapping</span> a <span class=hps title="Kliknutím zobrazíte alternativní překlady">native (</span><span class="atn hps" title="Kliknutím zobrazíte alternativní překlady">database-</span>dependent) <span class=hps title="Kliknutím zobrazíte alternativní překlady">SQL</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">query</span> to <a href=http://ujorm.org/javadoc/org/ujorm/orm/OrmUjo.html title="interface in org.ujorm.orm">OrmUjo</a> business object. Each native Query must be mapped to new object. Using of the Query is similar like the object-table mapping, however the <a href=http://ujorm.org/javadoc/org/ujorm/orm/annot/View.html id=k_tn title=@View>@View</a> annotation is used instead of @<b>Table</b>.<br>
 <br>
 <br>
 <table border=1 cellpadding=3 cellspacing=0 height=280 id=ign_ style=MARGIN-LEFT:40px width=480>
@@ -1214,14 +1214,14 @@ The View:<br>
 <h2>
   <a id=States_of_persistent_object_83_9820068836910659 name=States_of_persistent_object_83_9820068836910659></a>States of persistent object
 </h2>
-Persistent class is obtained by extending the abstract class <a href=http://ujoframework.org/javadoc/org/ujoframework/implementation/orm/OrmTable.html id=f0kd title=OrmTable>OrmTable</a> or implementation of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/OrmUjo.html id=k8ng title=OrmUjo>OrmUjo</a> interface. Persistent object <b>doesn't</b> contain invasive states known from specifications of 'JPA/Hibernate', but each persistent object of OrmUjo type contains two other attributes:<br>
+Persistent class is obtained by extending the abstract class <a href=http://ujorm.org/javadoc/org/ujorm/implementation/orm/OrmTable.html id=f0kd title=OrmTable>OrmTable</a> or implementation of <a href=http://ujorm.org/javadoc/org/ujorm/orm/OrmUjo.html id=k8ng title=OrmUjo>OrmUjo</a> interface. Persistent object <b>doesn't</b> contain invasive states known from specifications of 'JPA/Hibernate', but each persistent object of OrmUjo type contains two other attributes:<br>
 <br>
 <ul>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html id=nsu. title=Session>Session</a> - is needed to obtain a 'DB connection' in late values approach, the process is called 'lazy-loading'. If an <b>attribute of</b> the persistent object is another persistent object, then in each session reading is 'session' propagated from the reference to the relational object. For this reason, if you restore the 'session', there is sufficient to setup only the first object of the relational hierarchy to the current Session.<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/orm/Session.html id=nsu. title=Session>Session</a> - is needed to obtain a 'DB connection' in late values approach, the process is called 'lazy-loading'. If an <b>attribute of</b> the persistent object is another persistent object, then in each session reading is 'session' propagated from the reference to the relational object. For this reason, if you restore the 'session', there is sufficient to setup only the first object of the relational hierarchy to the current Session.<br>
   </li>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/UjoProperty.html id=fzbr title=UjoProperty>UjoProperty</a><font color=#000000>[] - contains a list of 'Properties' </font><b style=COLOR:#000000>registered</b><font color=#000000> during the assigned session. This list provides more efficient updating of the database by 'UPDATE' command, because the command is compiled only for the modified value of the 'Properties'. Other values are ignored while updating. Note that if a session isn't assigned to the object, there is registered no value changes</font><font color=#000000>. </font><br style=COLOR:#00ff00>
+    <a href=http://ujorm.org/javadoc/org/ujorm/UjoProperty.html id=fzbr title=UjoProperty>UjoProperty</a><font color=#000000>[] - contains a list of 'Properties' </font><b style=COLOR:#000000>registered</b><font color=#000000> during the assigned session. This list provides more efficient updating of the database by 'UPDATE' command, because the command is compiled only for the modified value of the 'Properties'. Other values are ignored while updating. Note that if a session isn't assigned to the object, there is registered no value changes</font><font color=#000000>. </font><br style=COLOR:#00ff00>
   </li>
 </ul>
 <br>
@@ -1234,7 +1234,7 @@ Function of OrmUjo object is just "data transporter", without any restrictions y
     a new session can be assigned to object anytime (no other dependency)
   </li>
   <li>
-    object can be assigned with <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=wgku title="Foreign key">foreign key</a> to force LazyLoading - using 'Ujo.writeValue()'
+    object can be assigned with <a href=http://ujorm.org/javadoc/org/ujorm/orm/ForeignKey.html id=wgku title="Foreign key">foreign key</a> to force LazyLoading - using 'Ujo.writeValue()'
   </li>
   <li style=BACKGROUND-COLOR:#ffffff>
     <font color=#000000>to change the session of ManyToOne type (update of foreign key) is sufficient to assign a new instance of an object containing an real Primary Key</font>
@@ -1365,7 +1365,7 @@ In late loading of an object Ujorm starts new database query that uses a databas
 </div>
 <ul>
   <li>
-    sometimes it is not necessary to load the entire entity, just a <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ForeignKey.html id=atiw title="Foreign Key">foreign key</a>, for which there is no need to have an opened session. This key can be obtained by command:<br>
+    sometimes it is not necessary to load the entire entity, just a <a href=http://ujorm.org/javadoc/org/ujorm/orm/ForeignKey.html id=atiw title="Foreign Key">foreign key</a>, for which there is no need to have an opened session. This key can be obtained by command:<br>
   </li>
 </ul>
 &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; OrmTable.readFK (property)<br>
@@ -1395,14 +1395,14 @@ Note: Ujorm core doesn't use this method and isn't included in OrmUjo interface.
       in cache would get only objects of foreign key when loading lazy (lazy loading), in other cases the object is always loaded from the database
     </li>
     <li>
-      while updating the object, cache doesn't sync and so for elimination of potential conflicts you can empty the cache by <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/Session.html#cacheClear%28%29 id=id5r title="clearCache ()">clearCache()</a><br>
+      while updating the object, cache doesn't sync and so for elimination of potential conflicts you can empty the cache by <a href=http://ujorm.org/javadoc/org/ujorm/orm/Session.html#cacheClear%28%29 id=id5r title="clearCache ()">clearCache()</a><br>
     </li>
     <li>
       cache storage is protected against memory overload, it means that the garbage collector can release part of the cache at any time
     </li>
   </ul>
   <br style=COLOR:#000000>
-  <font color=#000000><font color=#000000>From cache side</font>: Ujorm doesn't have exclusive access to the database, the registration will only need to align the allocation of p</font>rimary keys. With parameter <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> you can disable the cache for whole meta-model or you can disable releasing the cache with the garbage collector.<br>
+  <font color=#000000><font color=#000000>From cache side</font>: Ujorm doesn't have exclusive access to the database, the registration will only need to align the allocation of p</font>rimary keys. With parameter <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#CACHE_POLICY id=xo:2 title=CACHE_POLICY>CACHE_POLICY</a> you can disable the cache for whole meta-model or you can disable releasing the cache with the garbage collector.<br>
   <br>
   To optimize performance rather recommend to keep the cache of<b> logic units</b> at the level of application logic (e.g., Articles) than maintaining a cache of database rows.<br>
   <br>
@@ -1454,7 +1454,7 @@ Note: Ujorm core doesn't use this method and isn't included in OrmUjo interface.
     </li>
   </ul>
   <br>
-  Parameter <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#ORM2DLL_POLICY id=hj1l title=ORM2DLL_POLICY>ORM2DLL_POLICY</a> can change behavior of update to one of the following <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/ao/Orm2ddlPolicy.html id=xifg title=approaches>approaches</a>:<br>
+  Parameter <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#ORM2DLL_POLICY id=hj1l title=ORM2DLL_POLICY>ORM2DLL_POLICY</a> can change behavior of update to one of the following <a href=http://ujorm.org/javadoc/org/ujorm/orm/ao/Orm2ddlPolicy.html id=xifg title=approaches>approaches</a>:<br>
   <ul>
     <li>
       update ban<br>
@@ -1468,7 +1468,7 @@ Note: Ujorm core doesn't use this method and isn't included in OrmUjo interface.
   </ul>
 </div>
 <div>
-  General use of Ujorm parameters is described in the <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=mqa3 title="This document">tutorial</a>.<br>
+  General use of Ujorm parameters is described in the <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=mqa3 title="This document">tutorial</a>.<br>
 </div>
 <br>
 <h2>
@@ -1585,7 +1585,7 @@ In operations such as INSERT and UPDATE, we have to take care of each entity sep
   <br>
 </div>
 <br>
-Example of a full implementing the inheritance of the 'Customer' class can be found <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/bo/Customer.java?view=markup id=jrji title=here>here</a> and its use <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/inheritance/src/main/java/org/SampleOfInheritance.java?view=markup id=gj3w title=here>here</a>. For more information see the parametr <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/metaModel/MetaParams.html#INHERITANCE_MODE id=m_op title=INHERITANCE_MODE>INHERITANCE_MODE</a>.<br>
+Example of a full implementing the inheritance of the 'Customer' class can be found <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/inheritance/src/main/java/org/bo/Customer.java?view=markup id=jrji title=here>here</a> and its use <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/inheritance/src/main/java/org/SampleOfInheritance.java?view=markup id=gj3w title=here>here</a>. For more information see the parametr <a href=http://ujorm.org/javadoc/org/ujorm/orm/metaModel/MetaParams.html#INHERITANCE_MODE id=m_op title=INHERITANCE_MODE>INHERITANCE_MODE</a>.<br>
 <br>
 <h2>
   <a id=Primary_key_auto_increment_933_7207066299574915 name=Primary_key_auto_increment_933_7207066299574915></a> Primary key auto increment
@@ -1635,7 +1635,7 @@ Ujorm supports automatic generation of primary key using <b>UjoSequencer </b>cla
 <br>
 <span class=hps title="Kliknutím zobrazíte alternativní překlady">How does the</span> default class <b>UjoSequence</b>? <span class=hps title="Kliknutím zobrazíte alternativní překlady">Sequence</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">numbers</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">are taken </span><span class=hps title="Kliknutím zobrazíte alternativní překlady">from</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">the database table column </span><b><span class=hps title="Kliknutím zobrazíte alternativní překlady">ujorm_pk_support.seq</span></b>. <span class=hps title="Kliknutím zobrazíte alternativní překlady">Ujorm</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">have</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">also</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">booked</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">a series</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">of numbers</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">in advance</span>, <span class=hps title="Kliknutím zobrazíte alternativní překlady">not to have</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">ID</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">for</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">each</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">reaching</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">back</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">to the DB</span>, <span class=hps title="Kliknutím zobrazíte alternativní překlady">the buffer size</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">is</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">governed by</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">the cache</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">column</span>. <span class=hps title="Kliknutím zobrazíte alternativní překlady">The</span> <b>seq</b> <span class=hps title="Kliknutím zobrazíte alternativní překlady">column</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">is</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">always</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">the last</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">number</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">of the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">allocated</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">range</span>. <span class=hps title="Kliknutím zobrazíte alternativní překlady">Column</span> <b><span class=hps title="Kliknutím zobrazíte alternativní překlady">maxvalue</span></b> <span class=hps title="Kliknutím zobrazíte alternativní překlady">can</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">limit</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">the maximum</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">number of</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">assigned</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">sequence</span>, in case <span class=hps title="Kliknutím zobrazíte alternativní překlady">the next number</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">overcome</span>s <span class=hps title="Kliknutím zobrazíte alternativní překlady">the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">limit</span> so the class <span class=hps title="Kliknutím zobrazíte alternativní překlady">UjoSequencer</span>&nbsp;<span class=hps title="Kliknutím zobrazíte alternativní překlady">throws</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">exception</span>. <span class=hps title="Kliknutím zobrazíte alternativní překlady">If</span> <b><span class=hps title="Kliknutím zobrazíte alternativní překlady">maxvalue</span> </b><span class=hps title="Kliknutím zobrazíte alternativní překlady">have got zero, so</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">the</span> <span class=hps title="Kliknutím zobrazíte alternativní překlady">limit</span> is not checked.<br>
 <br>
-A common question is how to use native support of database sequence? The solution lies in creating own implementation (child) of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/UjoSequencer.html id=j8-n title=UjoSequencer>UjoSequencer</a> class. Class of this child must be registered in the parameters Ujorm before creating a meta-model. The only requirement of solution is that the acquisition of a new primary key (e.g. using JDBC) must be completed before INSERT command. Removing this condition is in the development plan of Ujorm.<br>
+A common question is how to use native support of database sequence? The solution lies in creating own implementation (child) of <a href=http://ujorm.org/javadoc/org/ujorm/orm/UjoSequencer.html id=j8-n title=UjoSequencer>UjoSequencer</a> class. Class of this child must be registered in the parameters Ujorm before creating a meta-model. The only requirement of solution is that the acquisition of a new primary key (e.g. using JDBC) must be completed before INSERT command. Removing this condition is in the development plan of Ujorm.<br>
 <br>
 There is possible to suppress the formation table 'ujorm_pk_support' by the overriding the method UjoSequencer.isSequenceTableRequired() in case a different implementation of the ID generator is used.<br>
 <br>
@@ -1661,7 +1661,7 @@ We create an instance of the procedure, fill the INPUT type parameters and invok
   String result = procedure.call (session);<br>
   <br>
 </div>
-Complete example you can find in <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorial>tutorial</a>. Instances of the procedure isn't connected with a particular session and such instance can be used can frequently with different parameters (only one-thread access). Ujorm version 1.00 does not support the return type of parameter ResultSet.<br>
+Complete example you can find in <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=izey title=tutorial>tutorial</a>. Instances of the procedure isn't connected with a particular session and such instance can be used can frequently with different parameters (only one-thread access). Ujorm version 1.00 does not support the return type of parameter ResultSet.<br>
 <br>
 <br>
 <h2>
@@ -1673,7 +1673,7 @@ There are three basic ways how to configure the database connection:<br>
 <br>
 <ul>
   <li>
-    Use the annotation <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/annot/Db.html id=f4j2 title=@Db>@Db</a> on the class where are database table configured. See the <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/Database.java?view=markup id=lqy4 title=sample>sample</a> of use for more information. This is very quick and type safe solution.<br>
+    Use the annotation <a href=http://ujorm.org/javadoc/org/ujorm/orm/annot/Db.html id=f4j2 title=@Db>@Db</a> on the class where are database table configured. See the <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/Database.java?view=markup id=lqy4 title=sample>sample</a> of use for more information. This is very quick and type safe solution.<br>
   </li>
   <li>
     Overwrite the configuration annotations by XML configuration file. The full final content of the file is logged in the time of start you application. Simple example for the MySQL dialect follows:
@@ -1693,7 +1693,7 @@ There are three basic ways how to configure the database connection:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;schema&gt;TestDBSchema&lt;/schema&gt;<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;user&gt;applicationUser&lt;/user&gt;<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;password&gt;userPassword&lt;/password&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;dialect&gt;<span class=tx>org.ujoframework.orm.dialect.MySqlDialect</span>&lt;/dialect&gt;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;dialect&gt;<span class=tx>org.ujorm.orm.dialect.MySqlDialect</span>&lt;/dialect&gt;<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jdbcUrl&gt;jdbc:mysql://127.0.0.1:3306/&lt;/jdbcUrl&gt;<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jdbcDriver&gt;com.mysql.jdbc.Driver&lt;/jdbcDriver&gt;<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;jndi&gt;&lt;/jndi&gt;<br>
@@ -1734,13 +1734,13 @@ There are three basic ways how to configure the database connection:<br>
       <b>jdbcDriver </b>- JDBC Driver
     </li>
     <li>
-      <b>jndi </b>- no empty JNDI string have got an more strong priority than previous parameters. Some more information can be found in the <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/annot/Db.html#jndi%28%29 id=qzdq title=JavaDoc>JavaDoc</a> .<br>
+      <b>jndi </b>- no empty JNDI string have got an more strong priority than previous parameters. Some more information can be found in the <a href=http://ujorm.org/javadoc/org/ujorm/orm/annot/Db.html#jndi%28%29 id=qzdq title=JavaDoc>JavaDoc</a> .<br>
     </li>
   </ul>
 </div>
 <ul>
   <li>
-    Create a special child of the SqlDialect class and overwrite a special method for creating the database connection: <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/SqlDialect.html#createConnection%28org.ujoframework.orm.metaModel.MetaDatabase%29 id=mr_5 title=SqlDialect.createConnection()>SqlDialect.createConnection()</a>. The method can implement any special implementation by your idea.<br>
+    Create a special child of the SqlDialect class and overwrite a special method for creating the database connection: <a href=http://ujorm.org/javadoc/org/ujorm/orm/SqlDialect.html#createConnection%28org.ujorm.orm.metaModel.MetaDatabase%29 id=mr_5 title=SqlDialect.createConnection()>SqlDialect.createConnection()</a>. The method can implement any special implementation by your idea.<br>
   </li>
 </ul>
 <br>
@@ -1854,7 +1854,7 @@ For a better performance is useful to use so called 'batch operation'. The commo
 <h2>
   <a id=API_extention_3988491735460056 name=API_extention_3988491735460056></a> API extension
 </h2>
-In development, after time we can meet the requirement of implementation of specific function or features of SQL language. For this type of requirement can be created "own child" of <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/SqlDialect.html id=m2mt title=SqlDialect><b>SqlDialect</b></a> class (or some of its implementation), because this class provides several important activities:<br>
+In development, after time we can meet the requirement of implementation of specific function or features of SQL language. For this type of requirement can be created "own child" of <a href=http://ujorm.org/javadoc/org/ujorm/orm/SqlDialect.html id=m2mt title=SqlDialect><b>SqlDialect</b></a> class (or some of its implementation), because this class provides several important activities:<br>
 <br>
 <ul>
   <li>
@@ -1887,10 +1887,10 @@ Any of the attributes above can be easily modified by creating a 'child', new cl
   </li>
   <ol>
     <li>
-      create a child of <a href=http://ujoframework.org/javadoc/org/ujoframework/criterion/ValueCriterion.html id=sekh title=ValueCriterion>ValueCriterion</a> class, extended with specification of a custom type
+      create a child of <a href=http://ujorm.org/javadoc/org/ujorm/criterion/ValueCriterion.html id=sekh title=ValueCriterion>ValueCriterion</a> class, extended with specification of a custom type
     </li>
     <li>
-      overlay method <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/SqlDialect.html#getCriterionTemplate%28org.ujoframework.criterion.ValueCriterion%29 id=s7m9 title="SqlDialect.getCriterionTemplate ()">SqlDialect.getCriterionTemplate ()</a> implementing the extended operator
+      overlay method <a href=http://ujorm.org/javadoc/org/ujorm/orm/SqlDialect.html#getCriterionTemplate%28org.ujorm.criterion.ValueCriterion%29 id=s7m9 title="SqlDialect.getCriterionTemplate ()">SqlDialect.getCriterionTemplate ()</a> implementing the extended operator
     </li>
   </ol>
   <li>
@@ -2125,7 +2125,7 @@ Environment description:<br>
     DB indexes was insignificant
   </li>
   <li>
-    UJO Framework release 1.00
+    Ujorm release 1.00
   </li>
   <li>
     Hibernate 3.3.1.GA + EhCacheProvider
@@ -2305,7 +2305,7 @@ Ujorm framework offers prepared dialects for the following databases:<br>
   </li>
 </ul>
 <br>
-As mentioned in the previous chapter, support for other databases can be implemented by overwriting the <a href=http://ujorm.com/javadoc/org/ujoframework/orm/SqlDialect.html id=hgr8 title=SqlDialect><b>SqlDialect</b></a> class or one of its 'child'. The new class has to be registered in application class of the 'Database' type.<br>
+As mentioned in the previous chapter, support for other databases can be implemented by overwriting the <a href=http://ujorm.com/javadoc/org/ujorm/orm/SqlDialect.html id=hgr8 title=SqlDialect><b>SqlDialect</b></a> class or one of its 'child'. The new class has to be registered in application class of the 'Database' type.<br>
 <br>
 <br>
 <br>
@@ -2320,7 +2320,7 @@ Full specification of UjoProperty can be set explicitly, including a <b>name</b>
 In short writing is name of 'Property' taken from name of field:<br>
 &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;public static final Property &lt;BO, Long&gt; <b style="FONT-FAMILY:Courier New">id</b> = newProperty (Long, class);<br>
 <br>
-Terms used in UJO Framework:<br>
+Terms used in Ujorm:<br>
 <ul>
   <li>
     UjoProperty&nbsp;<b>field</b>&nbsp;- the name of the static constants of UjoProperty in the implementation of Ujo<br>
@@ -2394,7 +2394,7 @@ This chapter describes the important features of the UJO object, which have an e
     Ujo objects <font color=#000000>can be generally inherited</font>, inheritance of OrmUjo objects isn't supported directly<br>
   </li>
   <li>
-    more information about Ujo Core can be found <a href=http://ujoframework.org/javadoc/org/ujoframework/package-summary.html#UJO id=d6tt title=here>here</a> .<br>
+    more information about Ujo Core can be found <a href=http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO id=d6tt title=here>here</a> .<br>
   </li>
 </ul>
 <br>
@@ -2434,7 +2434,7 @@ This chapter describes the important features of the UJO object, which have an e
   <tr>
     <td width=100%>
       <i>&nbsp;&nbsp; &lt;dependency&gt;<br clear=none>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;<b>org.ujoframework</b>&lt;/groupId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br clear=none>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;groupId&gt;<b>org.ujorm</b>&lt;/groupId&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br clear=none>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;artifactId&gt;<b>ujo-spring</b>&lt;/artifactId&gt;<br clear=none>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;version&gt;<b>1.10</b>&lt;/version&gt;<br clear=none>
       &nbsp;&nbsp; &lt;/dependency&gt;<br>
@@ -2522,13 +2522,13 @@ See the official <a href=http://www.springsource.org/documentation id=isjx title
 </h2>
 <ul>
   <li>
-    <a href=http://ujoframework.org/javadoc/org/ujoframework/orm/package-summary.html id=dqu4 title=JavaDoc>JavaDoc</a> the detail API descriptions with some examples of use<br>
+    <a href=http://ujorm.org/javadoc/org/ujorm/orm/package-summary.html id=dqu4 title=JavaDoc>JavaDoc</a> the detail API descriptions with some examples of use<br>
   </li>
   <li>
     <a href=http://ujorm.com/ id=bbaa title="Home Page">Home Page</a>
   </li>
   <li>
-    <a href=http://ujoframework.org/presentation/index.htm#orm>Presentation</a> (intro slide show), includes<br>
+    <a href=http://ujorm.org/presentation/index.htm#orm>Presentation</a> (intro slide show), includes<br>
   </li>
   <ul>
     <li>
@@ -2542,16 +2542,16 @@ See the official <a href=http://www.springsource.org/documentation id=isjx title
     </li>
   </ul>
   <li>
-    Examples of using <a href=http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=sqm9 title="Source Code">the source code</a><br>
+    Examples of using <a href=http://ujorm.svn.sourceforge.net/viewvc/ujorm/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup id=sqm9 title="Source Code">the source code</a><br>
   </li>
   <li>
-    <a href=http://ujoframework.blogspot.com/ id=pdbl title=Blog>Blog</a>
+    <a href=http://ujorm.blogspot.com/ id=pdbl title=Blog>Blog</a>
   </li>
   <li>
-    <a href=http://ujoframework.org/dokuwiki/doku.php id=n1ei title=Wiki>Wiki</a>
+    <a href=http://ujorm.org/dokuwiki/doku.php id=n1ei title=Wiki>Wiki</a>
   </li>
   <li>
-    <a href=http://ujoframework.org/dokuwiki/doku.php?id=orm_faq id=fzmq title=FAQ>Frequently asked questions - FAQ</a>
+    <a href=http://ujorm.org/dokuwiki/doku.php?id=orm_faq id=fzmq title=FAQ>Frequently asked questions - FAQ</a>
   </li>
   <li>
     <a href=http://en.wikipedia.org/wiki/Wikipedia_talk:Articles_for_creation/Ujorm id=vp62 title=Wikipedia>Wikipedia</a> (declined article: how to get reputable, third-party information sources?)<br>
@@ -2564,7 +2564,7 @@ See the official <a href=http://www.springsource.org/documentation id=isjx title
 </h2>
 <ul>
   <li>
-    The <a href=http://www.effectiva.cz/en/ecall>eCall</a> is a complete software solution for management of corporate telecommunications - especially for a modern call center. It enables easy organization, management and automated operation of all telecommunications. See Ujorm development <a href=http://ujoframework.blogspot.com/2010/10/ujorm-development-interview.html>Interview</a>.
+    The <a href=http://www.effectiva.cz/en/ecall>eCall</a> is a complete software solution for management of corporate telecommunications - especially for a modern call center. It enables easy organization, management and automated operation of all telecommunications. See Ujorm development <a href=http://ujorm.blogspot.com/2010/10/ujorm-development-interview.html>Interview</a>.
   </li>
   <li>
     Do you wish to make reference to your application, built on Ujorm? Send us a link to your project to the email address support@ujorm.com
