@@ -128,10 +128,10 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Compa
     public UjoProperty<UJO,VALUE> descending();
 
 
-    /** Create new composite (indirect) instance.
+    /** Create new composite (indirect) instance of the {@link  UjoProperty}.
      * @since 0.92
      */
-    public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(UjoProperty<? extends VALUE, VALUE_PAR> property);
+    public <VALUE_PAR> CompositeProperty<UJO, VALUE_PAR> add(UjoProperty<? extends VALUE, VALUE_PAR> property);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(UJO from, UJO to);

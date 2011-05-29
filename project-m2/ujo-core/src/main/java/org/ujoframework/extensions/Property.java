@@ -16,6 +16,7 @@
 
 package org.ujoframework.extensions;
 
+import org.ujoframework.CompositeProperty;
 import org.ujoframework.Ujo;
 import org.ujoframework.UjoProperty;
 
@@ -251,7 +252,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <VALUE_PAR> UjoProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
+    public <VALUE_PAR> CompositeProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
         return PathProperty.newInstance((UjoProperty)this, property);
     }
 
