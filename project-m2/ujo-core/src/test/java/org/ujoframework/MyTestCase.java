@@ -42,6 +42,7 @@ abstract public class MyTestCase extends TestCase {
     /**
      * Compare two Ujo objects.
      */
+    @SuppressWarnings("unchecked")
     public static void assertEquals(Ujo expected, Ujo actual) {
         
         if (expected==actual) { return; }
