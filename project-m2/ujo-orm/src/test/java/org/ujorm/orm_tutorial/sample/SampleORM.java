@@ -102,7 +102,7 @@ public class SampleORM {
     /** The session contains a cache and database connections. */
     private Session session;
 
-    /** Before the first use create a meta-model.
+    /** Before the first: create a meta-model.
      * Database tables will be created in the first time.
      */
     public void createMetaModel() {
@@ -119,7 +119,6 @@ public class SampleORM {
             params.set(MetaParams.SEQUENCE_CACHE, 1);
             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
             params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
-            params.set(MetaParams.COMMENT_POLICY, CommentPolicy.ALWAYS);
             handler.config(params);
         }
 
