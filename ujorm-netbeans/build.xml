@@ -102,11 +102,12 @@ Implementation-Vendor: "Pavel Ponec"</echo>
 
     <target name="-javadoc-build" depends="init">
         
-        <!-- INIT before JAVADOC: -->
+        <!-- INIT before JAVADOC:
         <copy file="${src.java.dir}/org/ujoframework/z_package_${jDocLang}.html"
               tofile="${src.java.dir}/org/ujoframework/package.html"
               overwrite="true"
        />
+        -->
         
         <mkdir dir="${dist.javadoc.dir}"/>
         <javadoc additionalparam="${javadoc.additionalparam}" 
@@ -156,11 +157,12 @@ Implementation-Vendor: "Pavel Ponec"</echo>
         <echo message="src.java.dir: ${src.java.dir}"/>
         <property name="reports.dir" value="${dist.javadoc.dir}/.." />    
         
-        <!-- INIT before JAVADOC: -->
+        <!-- INIT before JAVADOC: 
         <copy file="${src.java.dir}/org/ujoframework/z_package_${jDocLang}.html"
               tofile="${src.java.dir}/org/ujoframework/package.html"
               overwrite="true"
        />
+       -->
        <mkdir dir="${dist.javadoc.dir}"/>
 
 
