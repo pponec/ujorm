@@ -20,6 +20,7 @@ import java.sql.Connection;
 import junit.framework.TestCase;
 //import org.ujorm.orm_tutorial.core.SampleCORE;
 import org.ujorm.orm_tutorial.sample.SampleORM;
+import org.ujorm.ujo_core.SampleCORE;
 
 
 /**
@@ -62,13 +63,20 @@ public class OrmTutorialTest extends TestCase {
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */
-    public void testTutorial() {
+    public void testOrmTutorial() {
 
         if (noRunned) {
             noRunned = true;
             SampleORM.main(new String[]{});
             //SampleCORE.main(new String[]{});
         }
+    }
+
+    /**
+     * Test of getItemCount method, of class AbstractPropertyList.
+     */
+    public void testCoreTutorial() {
+         SampleCORE.main(new String[]{});
     }
 
     /**
