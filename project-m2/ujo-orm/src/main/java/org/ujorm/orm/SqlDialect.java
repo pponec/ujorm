@@ -714,7 +714,7 @@ abstract public class SqlDialect {
         if (count && query.isDistinct()) {
             out.append("SELECT COUNT(*) FROM (");
             printSelectTable_(query, count, out);
-            out.append(") _ujorm_count_");
+            out.append(") ujorm_count_");
         } else {
             printSelectTable_(query, count, out);
         }

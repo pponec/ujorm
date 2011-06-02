@@ -22,6 +22,7 @@ import org.ujorm.criterion.*;
 import org.ujorm.orm.inheritance.sample.bo.Customer;
 import org.ujorm.orm.inheritance.sample.bo.IUser;
 import org.ujorm.orm.inheritance.sample.bo.User;
+import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
  * Sample of inheritance for the persistent objects.
@@ -95,6 +96,22 @@ public class SampleOfInheritance {
         System.out.println("Count: " + count);
     }
 
+    /** Print some meta-data of the property Order.note. */
+    public void printMetadata() {
+        MetaColumn col = (MetaColumn) handler.findColumnModel(Customer.discount);
+
+        String msg = "** METADATA OF COLUMN: " + Customer.discount.toString() + '\n'
+            + "DB name: " + col.getFullName()  + '\n'
+            + "Comment: " + col.getComment()   + '\n'
+            + "Length : " + col.getMaxLength() + '\n'
+            + "NotNull: " + col.isMandatory()  + '\n'
+            + "Primary: " + col.isPrimaryKey() + '\n'
+            + "Dialect: " + col.getDialectName()
+            ;
+        System.out.println(msg);
+    }
+
+
     /** Close Ujorm session to clear a session cache include
      * a database connection(s)
      */
@@ -111,6 +128,7 @@ public class SampleOfInheritance {
             sample.useInsert();
             sample.useSelect();
             sample.useSelectCountDistinct();
+            sample.printMetadata();
 
         } finally {
             sample.useCloseSession();
