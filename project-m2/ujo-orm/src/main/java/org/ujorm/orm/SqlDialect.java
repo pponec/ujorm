@@ -706,19 +706,35 @@ abstract public class SqlDialect {
         return out;
     }
 
-
     /** Print SQL database SELECT
      * @param query The UJO query
      * @param count only count of items is required;
      */
     protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
-        out.append("SELECT ");
-        if (count) {
-            out.append("COUNT(*)");
+        if (count && query.isDistinct()) {
+            out.append("SELECT COUNT(*) FROM (");
+            printSelectTable_(query, count, out);
+            out.append(") _ujorm_count_");
         } else {
-            if (query.isDistinct()) {
-                out.append("DISTINCT ");
-            }
+            printSelectTable_(query, count, out);
+        }
+        return out;
+    }
+
+    /** Print SQL database SELECT
+     * @param query The UJO query
+     * @param count only count of items is required;
+     */
+    private Appendable printSelectTable_(Query query, boolean count, Appendable out) throws IOException {
+        out.append("SELECT ");
+        
+        if (count!=query.isDistinct()) {
+            out.append(count 
+                ? "COUNT(*)"
+                : "DISTINCT "
+                );
+        }
+        if (!count || query.isDistinct()) {
             printTableColumns(query.getColumns(), null, out);
         }
         out.append("\n\tFROM ");
@@ -742,7 +758,13 @@ abstract public class SqlDialect {
         } else {
             printTableAliasDefinition(query.getTableModel(), out);
         }
-        if (!count) {
+
+        if (count) {
+            if (query.isDistinct()) {
+                out.append(" GROUP BY ");
+                printTableColumns(query.getColumns(), null, out);
+            }
+        } else {
             if (!query.getOrderBy().isEmpty()) {
                printSelectOrder(query, out);
             }
