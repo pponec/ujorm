@@ -20,6 +20,7 @@ import java.util.List;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -83,6 +84,100 @@ public class MSSqlDialect extends SqlDialect {
         out.append("\n\tWHERE ");
         out.append(decoder.getWhere());
 
+        return out;
+    }
+
+
+    protected void createSelectPart(Query query, Appendable out) throws IOException {
+        out.append("SELECT ");
+        if (query.isDistinct()) {
+            out.append("DISTINCT ");
+        }
+        printTableColumns(query.getColumns(), null, out);
+
+    }
+
+    protected void createRowOrderPart(Query query,  Appendable out) throws IOException {
+        out.append(", ROW_NUMBER() OVER (");
+        if (query.getOrderBy().isEmpty()) {
+            MetaColumn column = query.getColumn(0);
+            out.append(" ORDER BY ");
+            printColumnAlias(column, out);
+        } else {
+            printSelectOrder(query, out);
+        }
+        out.append(") AS RowNum ");
+    }
+
+    protected void createWherePart(Query query, Appendable out) throws IOException {
+        if (query.getCriterion() != null) {
+            CriterionDecoder ed = query.getDecoder();
+            MetaTable[] tables = ed.getTables(query.getTableModel());
+            for (int i = 0; i < tables.length; ++i) {
+                MetaTable table = tables[i];
+                if (i > 0) {
+                    out.append(", ");
+                }
+                printTableAliasDefinition(table, out);
+            }
+            String sql = ed.getWhere();
+            if (!sql.isEmpty()) {
+                out.append(" WHERE ");
+                out.append(ed.getWhere());
+            }
+        } else {
+            printTableAliasDefinition(query.getTableModel(), out);
+        }
+    }
+
+    protected void createOuterPart(String innerSelect, Query query, Appendable out) throws IOException {
+        out.append("SELECT ");
+          //  printTableColumns(query.getColumns(), null, out);
+        List<MetaColumn> columns = query.getColumns();
+        boolean first = true;
+        for (MetaColumn column : columns) {
+            if (!first) {
+                out.append(", ");
+            }
+            out.append(MetaColumn.NAME.of(column));
+            first = false;
+        }
+
+    //    out.append("SELECT ");
+        out.append("\n\tFROM (");
+        out.append(innerSelect);
+        out.append("\n) AS MyInnerTable ");
+        out.append("WHERE MyInnerTable.RowNum ");
+        if (query.isLimit()) {
+            // MS-SQL's first index is 1 !!!
+            int start = query.isOffset() ? (query.getOffset() + 1) : 1;
+            out.append("BETWEEN " + start + " AND ");
+            // exclusive - between 1 and 2 returns 2 rows
+            int end = start + query.getLimit() - 1;
+            out.append(String.valueOf(end));
+
+        } else if (query.isOffset()) {
+            out.append("> ");
+            out.append(String.valueOf(query.getOffset()));
+        }
+    }
+
+    /** Custom implementation of MS-SQL dialect due to different offset and limit usage */
+    @Override
+    protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
+        if (count || (!query.isLimit() && !query.isOffset())) {
+            out = super.printSelectTable(query, count, out);
+        } else {
+            StringBuilder innerPart = new StringBuilder(256);
+            createSelectPart(query, innerPart);
+            // row + order by
+            createRowOrderPart(query, innerPart);
+            // from + where cond
+            innerPart.append("\n\t\tFROM ");
+            createWherePart(query, innerPart);
+            // add limit + offset
+            createOuterPart(innerPart.toString(), query, out);
+        }
         return out;
     }
 
