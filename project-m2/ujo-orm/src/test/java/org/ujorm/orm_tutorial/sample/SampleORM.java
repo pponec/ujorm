@@ -27,7 +27,6 @@ import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.CheckReport;
-import org.ujorm.orm.ao.CommentPolicy;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
