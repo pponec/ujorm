@@ -78,6 +78,23 @@ public class SampleOfInheritance {
         }
     }
 
+    /** Now, how to select Customers? */
+    public void useSelectCountDistinct() {
+
+        Criterion<Customer> cn1, cn2, crit;
+
+        cn1 = Criterion.where(Customer.user.add(User.login), "ponec");
+        cn2 = Criterion.where(Customer.company, "ABC");
+        crit = cn1.or(cn2);
+
+        Session session = handler.getSession();
+        Query<Customer> customers = session.createQuery(crit);
+        customers.setDistinct();
+
+        Long count = customers.getCount();
+        System.out.println("Count: " + count);
+    }
+
     /** Close Ujorm session to clear a session cache include
      * a database connection(s)
      */
@@ -93,6 +110,7 @@ public class SampleOfInheritance {
             sample.loadMetaModel();
             sample.useInsert();
             sample.useSelect();
+            sample.useSelectCountDistinct();
 
         } finally {
             sample.useCloseSession();
