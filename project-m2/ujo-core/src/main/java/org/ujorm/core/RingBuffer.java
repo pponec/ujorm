@@ -126,11 +126,11 @@ final public class RingBuffer implements CharSequence {
      * @param reader A data source
      * @param beg Start tag (text) where the empty value means find end from the current cursor.
      * @param end End tag (text) must not be empty.
-     * @return Return a result between beg and end texts. The result is newer NULL.
+     * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
-    public static String findTrimWord(final Reader reader, final String beg, final String end) throws IOException {
-        return findWord(reader, beg, end).trim();
+    public static String findWord(final Reader reader, final String beg, final String end) throws IOException {
+        return findWordNoTrim(reader, beg, end).trim();
     }
     /**
      * Find a word betveen beg and end text from the source start and trim the result.
@@ -139,11 +139,11 @@ final public class RingBuffer implements CharSequence {
      * @param source a Data source
      * @param beg Start tag (text) where the empty value means find end from the current cursor.
      * @param end End tag (text) must not be empty.
-     * @return Return a result between beg and end texts. The result is newer NULL.
+     * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
-    public static String findTrimWord(final String source, final String beg, final String end) throws IOException {
-        return findWord(createReader(source), beg, end).trim();
+    public static String findWord(final String source, final String beg, final String end) throws IOException {
+        return findWordNoTrim(createReader(source), beg, end).trim();
     }
 
     /**
@@ -159,11 +159,11 @@ final public class RingBuffer implements CharSequence {
      * @param reader A data source
      * @param beg Start tag (text) where the empty value means find end from the current cursor.
      * @param end End tag (text) must not be empty.
-     * @return Return a result between beg and end texts. The result is newer NULL.
+     * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
-    public static String findWord(final String source, final String beg, final String end) throws IOException {
-        return findWord(createReader(source), beg, end);
+    public static String findWordNoTrim(final String source, final String beg, final String end) throws IOException {
+        return findWordNoTrim(createReader(source), beg, end);
     }
 
 
@@ -173,10 +173,10 @@ final public class RingBuffer implements CharSequence {
      * @param reader A data source
      * @param beg Start tag (text) where the empty value means find end from the current cursor.
      * @param end End tag (text) must not be empty.
-     * @return Return a result between beg and end texts. The result is newer NULL.
+     * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
-    public static String findWord(final Reader reader, final String beg, final String end) throws IOException {
+    public static String findWordNoTrim(final Reader reader, final String beg, final String end) throws IOException {
         final StringBuilder result = new StringBuilder();
         boolean secondState = beg==null || beg.length()==0;
         String border = secondState ? end : beg;
