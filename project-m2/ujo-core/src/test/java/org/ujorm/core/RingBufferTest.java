@@ -70,7 +70,7 @@ public class RingBufferTest extends TestCase {
      */
     public void testFindWord_1() throws IOException {
         String text = "xxx ${abc} def";
-        String word = RingBuffer.findWord(text, "${", "}");
+        String word = RingBuffer.findWordNoTrim(text, "${", "}");
         assertEquals("abc", word);
     }
 
@@ -79,13 +79,13 @@ public class RingBufferTest extends TestCase {
      */
     public void testFindWord_2() throws IOException {
         Reader reader = RingBuffer.createReader("xxx ${abc} def");
-        String word = RingBuffer.findTrimWord(reader, "", "$");
+        String word = RingBuffer.findWord(reader, "", "$");
         assertEquals("xxx", word);
         //
-        word = RingBuffer.findTrimWord(reader, "", "f");
+        word = RingBuffer.findWord(reader, "", "f");
         assertEquals("{abc} de", word);
         //
-        word = RingBuffer.findTrimWord(reader, "", "XYZ");
+        word = RingBuffer.findWord(reader, "", "XYZ");
         assertEquals("", word);
     }
 
@@ -94,7 +94,7 @@ public class RingBufferTest extends TestCase {
      */
     public void testFindWord_3() throws IOException {
         String text = "xxx ${abc} def";
-        String word = RingBuffer.findTrimWord(text, "ABC", "DEF");
+        String word = RingBuffer.findWord(text, "ABC", "DEF");
         assertEquals("", word);
     }
 
