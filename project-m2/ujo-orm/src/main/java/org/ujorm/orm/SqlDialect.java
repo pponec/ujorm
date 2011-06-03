@@ -710,13 +710,15 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
+    protected Appendable printSelectTable(final Query query, final boolean count, final Appendable out) throws IOException {
         if (count && query.isDistinct()) {
             out.append("SELECT COUNT(*) FROM (");
-            printSelectTable_(query, count, out);
+            printSelectTableBase(query, count, out);
+            out.append("\n\tGROUP BY ");
+            printTableColumns(query.getColumns(), null, out);
             out.append(") ujorm_count_");
         } else {
-            printSelectTable_(query, count, out);
+            printSelectTableBase(query, count, out);
         }
         return out;
     }
@@ -725,7 +727,7 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    private Appendable printSelectTable_(Query query, boolean count, Appendable out) throws IOException {
+    protected void printSelectTableBase(final Query query, final boolean count, final Appendable out) throws IOException {
         out.append("SELECT ");
         
         if (count!=query.isDistinct()) {
@@ -759,12 +761,7 @@ abstract public class SqlDialect {
             printTableAliasDefinition(query.getTableModel(), out);
         }
 
-        if (count) {
-            if (query.isDistinct()) {
-                out.append(" GROUP BY ");
-                printTableColumns(query.getColumns(), null, out);
-            }
-        } else {
+        if (!count) {
             if (!query.getOrderBy().isEmpty()) {
                printSelectOrder(query, out);
             }
@@ -776,7 +773,6 @@ abstract public class SqlDialect {
                printLockForSelect(query, out);
             }
         }
-        return out;
     }
 
     /** Print a 'lock clausule' to the end of SQL SELECT statement to use a pessimistic lock.
