@@ -132,6 +132,11 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
     /** Add newe Criterion to the default Query and reload the Store. */
     public void addCriterionNLoad(CCriterion<CUJO> aditionalCriterion) {
         this.aditionalCriterion = aditionalCriterion;
+        this.reloadStore();
+    }
+
+    /** Reload the Store */
+    public void reloadStore() {
         this.getStore().getLoader().load();
     }
 
