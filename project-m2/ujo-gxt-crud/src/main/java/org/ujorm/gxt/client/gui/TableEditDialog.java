@@ -434,6 +434,13 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
         return result;
     }
 
+    /** New instance of OK button. */
+    protected Button newQuitButton(boolean newState) {
+        Button result = new Button("Quit");
+        result.setIcon(Icons.Pool.goBack());
+        return result;
+    }
+
     protected Long getSaveCujoId() {
         if (cujo == null || cujo.get("id") == null) {
             cujo.set("id", -1l);
