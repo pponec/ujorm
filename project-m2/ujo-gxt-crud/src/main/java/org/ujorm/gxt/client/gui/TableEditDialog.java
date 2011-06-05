@@ -396,7 +396,9 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
 
     /** Copy the one value per one component. */
     protected void copyValueToComponent(Field w, CujoProperty p, Object value) throws NumberFormatException {
-        if (p.isTypeOf(String.class)) {
+        if (w instanceof CujoField) {
+            ((CujoField)w).setRawValue((Cujo)value);
+        } else if(p.isTypeOf(String.class)) {
             w.setRawValue(value != null ? value.toString() : null);
         } else {
             w.setValue(value);

@@ -49,7 +49,6 @@ import com.extjs.gxt.ui.client.widget.toolbar.PagingToolBar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import java.util.EnumSet;
@@ -68,6 +67,7 @@ import org.ujorm.gxt.client.controller.TableController;
 import org.ujorm.gxt.client.controller.TableControllerAsync;
 import org.ujorm.gxt.client.tools.MessageDialog;
 import org.ujorm.gxt.client.tools.Tools;
+import static org.ujorm.gxt.client.commons.KeyCodes.*;
 
 /** Generic CRUD panel for the table formet */
 abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer implements TablePanelOperations<CUJO>, CLoginRedirectable {
@@ -259,30 +259,14 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
 
             @Override
             public void handleEvent(GridEvent be) {
-                editItem(getFirstSelectedItem(), gridToolBar);
+                if (isSelectMode()) {
+                    selectItem(getAllSelectedItems());
+                } else {
+                    editItem(getFirstSelectedItem(), gridToolBar);
+                }
             }
         });
         grid.addListener(Events.OnKeyDown, new Listener<GridEvent>() {
-
-            //klavesy
-            private final int F2 = 113;
-            private final int F3 = 114;
-            private final int F4 = 115;
-            private final int F5 = 116;
-            private final int F6 = 117;
-            private final int F7 = 118;
-            private final int F8 = 119;
-            private final int F9 = 120;
-            private final int F10 = 121;
-            private final int home = 36;
-            private final int end = 35;
-            private final int pageUpKey = 33;
-            private final int pageDownKey = 34;
-            private final int esc = 27;
-            private final int backspace = 8;
-            private final int space = 32;
-            private final int delete = 46;
-            private final int enter = 13;
 
             @Override
             public void handleEvent(GridEvent ge) {
@@ -294,13 +278,20 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
                 } else if (keyCode == F5) {
                     copyItem(gridToolBar);
                     stop(ge);
-                } else if (keyCode == enter || keyCode == F2) {
+                } else if (keyCode == F2) {
                     editItem(item, gridToolBar);
                     stop(ge);
-                } else if (keyCode == delete || keyCode == F8) {
+                } else if (keyCode == ENTER) {
+                    if (isSelectMode()) {
+                       selectItem(getAllSelectedItems());
+                    } else {
+                       editItem(item, gridToolBar);
+                    }
+                    stop(ge);
+                } else if (keyCode == DELETE || keyCode == F8) {
                     deleteItem(grid.getSelectionModel().getSelectedItems(), gridToolBar);
                     stop(ge);
-                } else if (buttonBack != null && keyCode == backspace) {
+                } else if (buttonBack != null && keyCode == BACKSPACE) {
                     doGoBack();
                     stop(ge);
                 }
@@ -459,20 +450,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
 
                 @Override
                 public void componentSelected(ButtonEvent ce) {
-                    selectedItems = grid.getSelectionModel().getSelectedItems();
-                    if (selectedItems.size() > 0 && selectedComponent != null) {
-                        if (isMultiSelectMode()) {
-                            ((MultiField) selectedComponent).setValues(selectedItems);
-                        } else {
-                            selectedItem = selectedItems.get(0);
-                            selectedComponent.setValue(selectedItem);
-                        }
-                        doGoBack();
-
-                    } else {
-                        MessageDialog.getInstance("No row was selected.").show();
-                        return;
-                    }
+                    selectItem(getAllSelectedItems());
                 }
             });
         }
@@ -567,6 +545,22 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
         }
     }
 
+    protected boolean selectItem(List<CUJO> selectedItems) {
+        if (selectedItems.size() > 0 && selectedComponent != null) {
+            if (isMultiSelectMode()) {
+                ((MultiField) selectedComponent).setValues(selectedItems);
+            } else {
+                selectedItem = selectedItems.get(0);
+                selectedComponent.setValue(selectedItem);
+            }
+            doGoBack();
+        } else {
+            MessageDialog.getInstance("No row was selected.").show();
+            return true;
+        }
+        return false;
+    }
+
     protected void createItem(CUJO firstSelectedItem, final PagingToolBar toolBar) {
         if (!isActionPanelEnabled()) { 
             return; 
@@ -650,8 +644,14 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
 
     /** Returns the first selected item or null if no rows is selected */
     protected CUJO getFirstSelectedItem() {
-        List<CUJO> result = selectedItems = grid.getSelectionModel().getSelectedItems();
+        final List<CUJO> result = getAllSelectedItems();
         return result.size() > 0 ? result.get(0) : null;
+    }
+
+    /** Returns all selected item or null if no rows is selected */
+    protected List<CUJO> getAllSelectedItems() {
+        final List<CUJO> result = selectedItems = grid.getSelectionModel().getSelectedItems();
+        return result;
     }
 
     /** Define a list of the Table columns. If the result will be null or empty than table show all rows. */
