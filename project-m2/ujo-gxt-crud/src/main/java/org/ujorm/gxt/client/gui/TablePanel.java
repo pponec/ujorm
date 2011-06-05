@@ -89,7 +89,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     protected String buttonUpdate = "Update";
     protected String buttonDelete = "Delete";
     protected String buttonCopy = "Copy";
-    protected String buttonBack = "Go back";
+    protected String buttonQuit = "Quit";
     protected int pageSize = 30;
     private CQuery<CUJO> query;
     private CCriterion<CUJO> advancedCrn = null;
@@ -291,7 +291,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
                 } else if (keyCode == DELETE || keyCode == F8) {
                     deleteItem(grid.getSelectionModel().getSelectedItems(), gridToolBar);
                     stop(ge);
-                } else if (buttonBack != null && keyCode == BACKSPACE) {
+                } else if (buttonQuit != null && keyCode == BACKSPACE) {
                     doGoBack();
                     stop(ge);
                 }
@@ -401,7 +401,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
         Button result = null;
         boolean selectlabel = label.equals(buttonSelect);
 
-        if (buttonBack == label
+        if (buttonQuit == label
                 ? selectedDialog != null
                 : (isSelectMode() == selectlabel || buttonCreate == label)) {
             result = new Button(label);
@@ -441,7 +441,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
         //tton buttonE = addButton(buttonDetail, Icons.Pool.detail(), buttonContainer);
         Button buttonD = addButton(buttonDelete, Icons.Pool.delete(), buttonContainer);
         //c.add(new Button(button4Text), new VBoxLayoutData(new Margins(0)));
-        Button buttonG = addButton(buttonBack, Icons.Pool.goBack(), buttonContainer);
+        Button buttonG = addButton(buttonQuit, Icons.Pool.goBack(), buttonContainer);
 
         // ------------------------
         // SELECT action:
