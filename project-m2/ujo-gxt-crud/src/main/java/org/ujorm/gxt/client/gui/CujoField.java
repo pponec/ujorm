@@ -9,7 +9,12 @@
 package org.ujorm.gxt.client.gui;
 
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.GridEvent;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.util.DelayedTask;
+import com.extjs.gxt.ui.client.widget.ComponentAttachable;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.AdapterField;
@@ -55,26 +60,47 @@ public class CujoField extends AdapterField {
         container.add(textField, "td.cujo-field");
         container.add(button, "td.cujo-btn");
 
-        textField.setEnabled(false);
+        textField.setEnabled(true);
         textField.setEmptyText(" ");
         textField.setWidth("100%");
 
         final TableListDialog selectionDialog = new TableListDialog(tablePanel, (Field) this);
         button.setWidth("100%");
+
+
         if (false) {
             button.setIcon(Icons.Pool.selectionDialog()); // toodo: how to center the icon?
         }
+
         button.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 selectionDialog.show();
             }
         });
-    }
 
-    @Override
-    public Object getValue() {
-        return value;
+        textField.addListener(Events.OnClick, new Listener<GridEvent>() {
+            @Override
+            public void handleEvent(GridEvent be) {
+                selectionDialog.show();
+            }
+        });
+
+        textField.addListener(Events.OnKeyDown, new Listener<GridEvent>() {
+            @Override
+            public void handleEvent(GridEvent be) {
+                selectionDialog.show();
+
+            }
+        });
+
+        textField.addListener(Events.OnBlur, new Listener<GridEvent>() {
+            @Override
+            public void handleEvent(GridEvent be) {
+                refreshValue();
+            }
+        });
+
     }
 
     @Override
@@ -101,13 +127,24 @@ public class CujoField extends AdapterField {
     }
 
     @Override
+    public Cujo getValue() {
+        return value;
+    }
+
+    @Override
     public void setValue(Object aValue) {
         this.value = (Cujo) aValue;
-        if (value != null) {
-            textField.setValue((String) value.get(displayField));
-        } else {
-            textField.setValue(null);
-        }
+        textField.setValue(value != null ? (String) value.get(displayField) : null);
+    }
+
+    public void setRawValue(Cujo aValue) {
+        this.value = aValue;
+        textField.setRawValue(value != null ? (String) value.get(displayField) : null);
+    }
+
+    /** Refresh Value */
+    public void refreshValue() {
+        setValue(value);
     }
 
     /** Default value is 'name' */
@@ -126,6 +163,7 @@ public class CujoField extends AdapterField {
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
+        textField.setEnabled(enabled);
         button.setEnabled(enabled);
     }
 
@@ -154,6 +192,24 @@ public class CujoField extends AdapterField {
      */
     public boolean getAllowBlank() {
         return textField.getAllowBlank();
+    }
+
+    @Override
+    protected void addAttachable(ComponentAttachable a) {
+        super.addAttachable(a);
+    }
+
+    @Override
+    public void clearInvalid() {
+        super.clearInvalid();
+        textField.clearInvalid();
+    }
+
+
+    @Override
+    public void clear() {
+        super.clear();
+        textField.clear();
     }
 
 }
