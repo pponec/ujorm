@@ -13,7 +13,6 @@ import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.GridEvent;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.util.DelayedTask;
 import com.extjs.gxt.ui.client.widget.ComponentAttachable;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
@@ -210,6 +209,16 @@ public class CujoField extends AdapterField {
     public void clear() {
         super.clear();
         textField.clear();
+    }
+
+    /** Is the field sensitive on a mouse click ? */
+    public boolean isClickSensitive() {
+        return textField.isEnabled();
+    }
+
+    /** Is the field sensitive on a mouse click ? */
+    public void setClickSensitive(boolean clickSensitive) {
+        textField.setEnabled(clickSensitive);
     }
 
 }
