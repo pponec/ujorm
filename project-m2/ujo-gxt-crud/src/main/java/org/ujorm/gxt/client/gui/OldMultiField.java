@@ -17,7 +17,7 @@ import java.util.List;
  * A logical field with a multi-value setters / getters.
  * @author Ponec
  */
-public class MultiField extends Field<Cujo> {
+public class OldMultiField extends Field<Cujo> {
 
     private List<Cujo> values;
 

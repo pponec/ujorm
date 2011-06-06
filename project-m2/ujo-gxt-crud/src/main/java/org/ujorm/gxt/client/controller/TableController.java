@@ -37,6 +37,8 @@ public interface TableController extends RemoteService {
 
     /** Save or Update selected CUJO */
     public ValidationMessage saveOrUpdate(Cujo cujo, boolean create) throws CMessageException;
+    
+    public ValidationMessage saveOrUpdate(List<? extends Cujo> cujo, boolean create);
 
     /** Delete the row by an action type.
      * If action type quals to DELETE_AUTO thean and there is exists an attribute 'active' typove of Boolean,

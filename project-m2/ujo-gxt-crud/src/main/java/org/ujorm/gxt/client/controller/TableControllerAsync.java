@@ -41,6 +41,12 @@ public interface TableControllerAsync extends MetaModelController
      * @see com.jworksheet.application.client.controller.TableController
      */
     void saveOrUpdate( Cujo cujo, boolean create, AsyncCallback<ValidationMessage> callback );
+    
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see com.jworksheet.application.client.controller.TableController
+     */
+    void saveOrUpdate(List<? extends Cujo> cujo, boolean create, AsyncCallback<ValidationMessage> callback);
 
     /**
      * GWT-RPC service  asynchronous (client-side) interface
