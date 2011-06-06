@@ -28,12 +28,15 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
- * An 'ring buffer' implementation. The object have got the initialization length allways.
- * You can to use a one of static method to find substrings:
+ * A 'ring buffer' implementation whith a required length of the buffer.
+ * See a sample use case of finding some substrings:
  * <pre>
- *    String text = "xxx ${abc} def";
- *    String word = RingBuffer.findWord(text, "${", "}");
- *    assert "abc".equals(word)
+ *    String text = "xxx ${abc} ${def} xyz";
+ *    Reader reader = RingBuffer.createReader(text);
+ *    String word_1 = RingBuffer.findWord(reader, "${", "}");
+ *    assert "abc".equals(word_1)
+ *    String word_2 = RingBuffer.findWord(reader, "${", "}");
+ *    assert "def".equals(word_2)
  * </pre>
 
  * @author Pavel Ponec
@@ -78,6 +81,7 @@ final public class RingBuffer implements CharSequence {
     }
 
     /** Returns a character from position 'i' */
+    @Override
     public char charAt(int i) {
        return b[(pos + i) % length];
     }
@@ -102,10 +106,12 @@ final public class RingBuffer implements CharSequence {
     }
 
     /** Length of the String */
+    @Override
     final public int length() {
         return length;
     }
 
+    /** Get a sub-sequence */
     @Override
     public CharSequence subSequence(int start, int end) {
         return toString().subSequence(start, end);
