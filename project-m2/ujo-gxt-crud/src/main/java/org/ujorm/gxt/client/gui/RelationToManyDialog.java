@@ -4,7 +4,6 @@
  */
 package org.ujorm.gxt.client.gui;
 
-import org.ujorm.gxt.client.tools.CujoBox;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
