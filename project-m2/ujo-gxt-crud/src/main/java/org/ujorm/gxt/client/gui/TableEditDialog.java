@@ -194,14 +194,14 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
 
     /** Create a box relation by property */
     @SuppressWarnings("unchecked")
-    protected Field createBoxRelation(CujoProperty<? super CUJO, ?> p, CujoBox box) {
+    protected Field createBoxRelation(CujoProperty<? super CUJO, ?> p, OldCujoBox box) {
         return createWidget(p, box);
     }
 
     /** Create a widget relation by property */
     @SuppressWarnings("unchecked")
     protected Field createWidgetRelation(CujoProperty<? super CUJO, ?> p, TablePanel tablePanel) {
-        return createWidget(p, new CujoField(tablePanel));
+        return createWidget(p, new OldCujoField(tablePanel));
     }
 
     /** Create a widget relation by property */
@@ -210,7 +210,7 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
         Field field = createWidgetRelation(p, tablePanel);
 
         if (display != null) {
-            ((CujoField) field).setDisplayField(display.getName());
+            ((OldCujoField) field).setDisplayField(display.getName());
         }
 
         return field;
@@ -238,8 +238,8 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
                 ((TextArea) widget).setAllowBlank(!metadata.isMandatory());
                 ((TextArea) widget).setMaxLength(metadata.getMaxLengthExt());
             }
-            if (widget.getClass().equals(CujoField.class)) {
-                ((CujoField) widget).setAllowBlank(!metadata.isMandatory());
+            if (widget.getClass().equals(OldCujoField.class)) {
+                ((OldCujoField) widget).setAllowBlank(!metadata.isMandatory());
             }
             widget.clearInvalid();
 
@@ -396,8 +396,8 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
 
     /** Copy the one value per one component. */
     protected void copyValueToComponent(Field w, CujoProperty p, Object value) throws NumberFormatException {
-        if (w instanceof CujoField) {
-            ((CujoField)w).setRawValue((Cujo)value);
+        if (w instanceof OldCujoField) {
+            ((OldCujoField)w).setRawValue((Cujo)value);
         } else if(p.isTypeOf(String.class)) {
             w.setRawValue(value != null ? value.toString() : null);
         } else {

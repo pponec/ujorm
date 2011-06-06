@@ -36,7 +36,7 @@ import org.ujorm.gxt.client.tools.MessageDialog;
  * @author Pelc, Ponec
  * @see CujoField
  */
-public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
+public abstract class OldCujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
 
     /** The property to display in the drop-down list */
     protected CujoProperty displayProperty;
@@ -45,11 +45,11 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
     protected int loadRelations = 0;
     protected CLoginRedirectable loginRedirectable;
 
-    public CujoBox(CujoProperty<? super CUJO,?> displayProperty) {
+    public OldCujoBox(CujoProperty<? super CUJO,?> displayProperty) {
         this(displayProperty, null);
     }
 
-    public CujoBox(CujoProperty<? super CUJO,?> displayProperty, CLoginRedirectable loginRedirectable) {
+    public OldCujoBox(CujoProperty<? super CUJO,?> displayProperty, CLoginRedirectable loginRedirectable) {
         this.loginRedirectable = loginRedirectable;
         setDisplayProperty(displayProperty);
         setEditable(false);
@@ -89,7 +89,7 @@ public abstract class CujoBox<CUJO extends Cujo> extends ComboBox<CUJO> {
                         callback.onFailure(e);
                         String msg = "Data loading error";
                         new MessageDialog(msg).show();
-                        CujoBox.this.unmask();
+                        OldCujoBox.this.unmask();
                     }
                     @Override
                     public void onSuccess(final PagingLoadResult<Cujo> result) {

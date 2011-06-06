@@ -165,7 +165,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     /** Is allowed to select a many table rows? */
     protected boolean isMultiSelectMode() {
         boolean result = selectedComponent != null
-                && MultiField.class.equals(selectedComponent.getClass());
+                && OldMultiField.class.equals(selectedComponent.getClass());
         return result;
     }
 
@@ -548,7 +548,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     protected boolean selectItem(List<CUJO> selectedItems) {
         if (selectedItems.size() > 0 && selectedComponent != null) {
             if (isMultiSelectMode()) {
-                ((MultiField) selectedComponent).setValues(selectedItems);
+                ((OldMultiField) selectedComponent).setValues(selectedItems);
             } else {
                 selectedItem = selectedItems.get(0);
                 selectedComponent.setValue(selectedItem);

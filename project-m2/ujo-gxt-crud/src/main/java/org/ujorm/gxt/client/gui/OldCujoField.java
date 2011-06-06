@@ -27,7 +27,7 @@ import org.ujorm.gxt.client.commons.Icons;
 /** A client field relation.
  * @see CujoBox
  */
-public class CujoField extends AdapterField {
+public class OldCujoField extends AdapterField {
 
     private static final String fieldWidth = "270px";
     private Cujo value;
@@ -52,7 +52,7 @@ public class CujoField extends AdapterField {
     }
 
     @SuppressWarnings({"unchecked"})
-    public CujoField(TablePanel tablePanel) {
+    public OldCujoField(TablePanel tablePanel) {
         super(new MyContainer());
         MyContainer container = (MyContainer) super.getWidget();
 
