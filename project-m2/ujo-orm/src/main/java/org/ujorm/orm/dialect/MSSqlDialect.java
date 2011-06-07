@@ -16,6 +16,7 @@
 package org.ujorm.orm.dialect;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.util.List;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
@@ -35,6 +36,9 @@ import org.ujorm.orm.metaModel.MetaTable;
  * @since 1.10
  */
 public class MSSqlDialect extends SqlDialect {
+    //maximum allowed size for any data type (8000)
+
+    private final Integer MSSQL_MAX_ALLOWED_SIZE = 8000;
 
     @Override
     public String getJdbcUrl() {
@@ -69,14 +73,9 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
-      /** Print an SQL DELETE statement. */
+    /** Print an SQL DELETE statement. */
     @Override
-    public Appendable printDelete
-        ( MetaTable table
-        , CriterionDecoder decoder
-        , Appendable out
-        ) throws IOException
-    {
+    public Appendable printDelete(MetaTable table, CriterionDecoder decoder, Appendable out) throws IOException {
         out.append("DELETE ");
         out.append(table.getAlias());
         out.append("\n\tFROM ");
@@ -87,111 +86,16 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
-
-    protected void createSelectPart(Query query, Appendable out) throws IOException {
-        out.append("SELECT ");
-        if (query.isDistinct()) {
-            out.append("DISTINCT ");
-        }
-        printTableColumns(query.getColumns(), null, out);
-
-    }
-
-    protected void createRowOrderPart(Query query,  Appendable out) throws IOException {
-        out.append(", ROW_NUMBER() OVER (");
-        if (query.getOrderBy().isEmpty()) {
-            MetaColumn column = query.getColumn(0);
-            out.append(" ORDER BY ");
-            printColumnAlias(column, out);
-        } else {
-            printSelectOrder(query, out);
-        }
-        out.append(") AS RowNum ");
-    }
-
-    protected void createWherePart(Query query, Appendable out) throws IOException {
-        if (query.getCriterion() != null) {
-            CriterionDecoder ed = query.getDecoder();
-            MetaTable[] tables = ed.getTables(query.getTableModel());
-            for (int i = 0; i < tables.length; ++i) {
-                MetaTable table = tables[i];
-                if (i > 0) {
-                    out.append(", ");
-                }
-                printTableAliasDefinition(table, out);
-            }
-            String sql = ed.getWhere();
-            if (!sql.isEmpty()) {
-                out.append(" WHERE ");
-                out.append(ed.getWhere());
-            }
-        } else {
-            printTableAliasDefinition(query.getTableModel(), out);
-        }
-    }
-
-    protected void createOuterPart(String innerSelect, Query query, Appendable out) throws IOException {
-        out.append("SELECT ");
-          //  printTableColumns(query.getColumns(), null, out);
-        List<MetaColumn> columns = query.getColumns();
-        boolean first = true;
-        for (MetaColumn column : columns) {
-            if (!first) {
-                out.append(", ");
-            }
-            out.append(MetaColumn.NAME.of(column));
-            first = false;
-        }
-
-    //    out.append("SELECT ");
-        out.append("\n\tFROM (");
-        out.append(innerSelect);
-        out.append("\n) AS MyInnerTable ");
-        out.append("WHERE MyInnerTable.RowNum ");
-        if (query.isLimit()) {
-            // MS-SQL's first index is 1 !!!
-            int start = query.isOffset() ? (query.getOffset() + 1) : 1;
-            out.append("BETWEEN " + start + " AND ");
-            // exclusive - between 1 and 2 returns 2 rows
-            int end = start + query.getLimit() - 1;
-            out.append(String.valueOf(end));
-
-        } else if (query.isOffset()) {
-            out.append("> ");
-            out.append(String.valueOf(query.getOffset()));
-        }
-    }
-
-    /** Custom implementation of MS-SQL dialect due to different offset and limit usage */
-    @Override
-    protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
-        if (count || (!query.isLimit() && !query.isOffset())) {
-            out = super.printSelectTable(query, count, out);
-        } else {
-            StringBuilder innerPart = new StringBuilder(256);
-            createSelectPart(query, innerPart);
-            // row + order by
-            createRowOrderPart(query, innerPart);
-            // from + where cond
-            innerPart.append("\n\t\tFROM ");
-            createWherePart(query, innerPart);
-            // add limit + offset
-            createOuterPart(innerPart.toString(), query, out);
-        }
-        return out;
-    }
-
-
-
     @Override
     protected String getColumnType(final MetaColumn column) {
         switch (MetaColumn.DB_TYPE.of(column)) {
-
             //timestamp data type has nothing to do with times or dates.
             //SQL Server timestamps are binary numbers that indicate the relative sequence in which data modifications took place in a database.
             //The timestamp data type was originally implemented to support the SQL Server recovery algorithms.
             //It further states Never use timestamp columns in keys, especially primary keys,
             //because the timestamp value changes every time the row is modified.
+            case BLOB:
+                return "VARBINARY";
             case TIMESTAMP:
                 return "DATETIME";
             case BOOLEAN:
@@ -267,7 +171,6 @@ public class MSSqlDialect extends SqlDialect {
             out.append('.');
         }
         out.append("dbo.");
-
         out.append(tableName);
         return out;
     }
@@ -289,12 +192,11 @@ public class MSSqlDialect extends SqlDialect {
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
         out.append(getSeqTableModel().getTableName()
-        + "\n\t( " + getSeqTableModel().getId() + " VARCHAR(96) NOT NULL PRIMARY KEY"
-        + "\n\t, " + getSeqTableModel().getSequence() + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getSeqTableModel().getCache() + " INT DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getSeqTableModel().getMaxValue() + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
-        + "\n\t)"
-        );
+                + "\n\t( " + getSeqTableModel().getId() + " VARCHAR(96) NOT NULL PRIMARY KEY"
+                + "\n\t, " + getSeqTableModel().getSequence() + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+                + "\n\t, " + getSeqTableModel().getCache() + " INT DEFAULT " + cache + " NOT NULL"
+                + "\n\t, " + getSeqTableModel().getMaxValue() + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+                + "\n\t)");
         return out;
     }
 
@@ -327,12 +229,12 @@ public class MSSqlDialect extends SqlDialect {
         }
         return out;
     }
-    
+
     /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
     @Override
     public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
         Object value = column.getJdbcFriendlyDefaultValue();
-        boolean isDefault = value!=null;
+        boolean isDefault = value != null;
         String quotMark = "";
         if (value instanceof String) {
             isDefault = ((String) value).length() > 0;
@@ -345,7 +247,7 @@ public class MSSqlDialect extends SqlDialect {
             out.append(" DEFAULT ");
             out.append(quotMark);
             if (value instanceof Boolean) {
-                out.append((Boolean)value ? '1' : '0'); // << MS-SQL change
+                out.append((Boolean) value ? '1' : '0'); // << MS-SQL change
             } else {
                 out.append(value.toString());
             }
@@ -355,8 +257,32 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     @Override
-    public Appendable printInsert(List<? extends OrmUjo> bo, int idxFrom, int idxTo, Appendable out) throws IOException {
-        return printInsertBySelect(bo, idxFrom, idxTo, "", out);
-    }
+    public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
+        if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
+            //TODO : probably MAX_ALLOWED_SIZE is used to all types not only for BLOB
+            if ((column.getType().equals(Blob.class)) && (MetaColumn.MAX_LENGTH.getValue(column) > MSSQL_MAX_ALLOWED_SIZE)) {
 
+                String name = aName != null ? aName : MetaColumn.NAME.of(column);
+                out.append(name);
+                out.append(' ');
+                out.append(getColumnType(column));
+
+                out.append("( MAX");
+                if (!MetaColumn.PRECISION.isDefault(column)) {
+                    out.append("," + MetaColumn.PRECISION.of(column));
+                }
+                out.append(")");
+
+                if (MetaColumn.MANDATORY.of(column) && aName == null) {
+                    out.append(" NOT NULL");
+                }
+                if (MetaColumn.PRIMARY_KEY.of(column) && aName == null) {
+                    out.append(" PRIMARY KEY");
+                }
+                return out;
+            }
+        }
+
+        return super.printColumnDeclaration(column, aName, out);
+    }
 }
