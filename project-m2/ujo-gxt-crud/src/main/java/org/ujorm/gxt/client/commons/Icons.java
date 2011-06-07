@@ -15,16 +15,16 @@ public interface Icons extends ImageBundle {
 
     public static final Icons Pool = GWT.create(Icons.class);
 
-    @Resource("org/ujoframework/gxt/staticweb/resources/icons/arrow_rotate_clockwise.png")
+    @Resource("org/ujorm/gxt/staticweb/resources/icons/arrow_rotate_clockwise.png")
     AbstractImagePrototype repeat();
     
-    @Resource("org/ujoframework/gxt/staticweb/resources/icons/control_repeat_blue.png")
+    @Resource("org/ujorm/gxt/staticweb/resources/icons/control_repeat_blue.png")
     AbstractImagePrototype go_to_default();
     
-    @Resource("org/ujoframework/gxt/staticweb/resources/icons/search.png")
+    @Resource("org/ujorm/gxt/staticweb/resources/icons/search.png")
     AbstractImagePrototype liveSearch();
 
-    @Resource("org/ujoframework/gxt/staticweb/resources/icons/bullet_blue.png")
+    @Resource("org/ujorm/gxt/staticweb/resources/icons/bullet_blue.png")
     AbstractImagePrototype bullet_blue();
 
     @Resource("org/ujorm/gxt/staticweb/resources/icons/table.png")
