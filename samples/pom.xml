@@ -17,11 +17,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujoframework</groupId>
-    <artifactId>ujo</artifactId>
+    <artifactId>ujo-samples</artifactId>
     <version>1.20.02-SNAPSHOT</version>
-    <name>Main UJO</name>
+    <name>Main UJO Samples</name>
     <packaging>pom</packaging>
-    <description>Ujorm common project</description>
+    <description>Ujorm Sample Projects</description>
 
     <!-- SUB PROJECTS -->
     <build>
@@ -38,22 +38,12 @@
     </build>
 
     <modules>
-        <module>project-m2/ujo-core</module>
-        <module>project-m2/ujo-orm</module>
-        <module>project-m2/ujo-spring</module>
-        <module>project-m2/ujo-gxt-core</module>
-        <module>project-m2/ujo-gxt-crud</module>
-
-        <module>samples/core</module>
-        <module>samples/parameters</module>
-        <module>samples/table2xml</module>
-        <module>samples/ujorm</module>
-        <module>samples/inheritance</module>
-        <module>samples/binding</module>
-
-        <module>benchmark/hibernate</module>
-        <module>benchmark/hibernate-ujo</module>
-        <module>benchmark/ujo-orm</module>
+        <module>core</module>
+        <module>parameters</module>
+        <module>table2xml</module>
+        <module>ujorm</module>
+        <module>inheritance</module>
+        <module>binding</module>
     </modules>
 
 
