@@ -56,7 +56,7 @@ public class PropertyMetadata implements Serializable {
         this.sortable = false;
         this.maxLength = Integer.MAX_VALUE;
         this.precision = 0;
-        this.columnLabel = property.getCammelName();
+        this.columnLabel = property.getLabel();
         this.sideLabel = columnLabel;
         this.description = isValid(columnLabel) ? columnLabel : null;
     }

@@ -271,7 +271,18 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
      */
     @Override
     public CujoProperty<UJO,VALUE> descending() {
-        return isAscending() ? new CPathProperty(properties, false) : this ;
+        return descending(true);
+    }
+
+    /** Create a new instance of the property with a descending direction of order.
+     * @see org.ujorm.core.UjoComparator
+     */
+    @Override
+    public CujoProperty<UJO,VALUE> descending(boolean descending) {
+        return isAscending()==descending
+                ? new CPathProperty(properties, !descending)
+                : this
+                ;
     }
 
     /** Export all <string>direct</strong> properties to the list from parameter. */
@@ -311,10 +322,21 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
              ;
     }
 
+    /**
+     * Get a cammel case from the property Name
+     * @deprecated Use: {@link #getLabel()}
+     * @see #getLabel()
+     */
     @Override
     public String getCammelName() {
         return getLastPartialProperty().getCammelName();
     }
+
+    @Override
+    public String getLabel() {
+        return getLastPartialProperty().getLabel();
+    }
+
     
     // ================ STATIC ================
 

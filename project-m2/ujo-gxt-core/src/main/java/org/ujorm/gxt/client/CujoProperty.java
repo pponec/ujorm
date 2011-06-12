@@ -28,7 +28,15 @@ public interface CujoProperty<UJO extends Cujo, VALUE> extends Comparable<CujoPr
     /** Returns the property name */
     public String getName();
 
+    /**
+     * Get a cammel case from the property Name
+     * @deprecated Use: {@link #getLabel()}
+     * @see #getLabel()
+     */
     public String getCammelName();
+
+    /** Returns a Label derived from the Name */
+    public String getLabel();
 
     public Class getType();
 
@@ -47,6 +55,8 @@ public interface CujoProperty<UJO extends Cujo, VALUE> extends Comparable<CujoPr
     public boolean isAscending();
 
     public CujoProperty<UJO, VALUE> descending();
+
+    public CujoProperty<UJO, VALUE> descending(boolean descending);
 
     public <VALUE_PAR> CujoProperty<UJO, VALUE_PAR> add(CujoProperty<? extends VALUE, VALUE_PAR> property);
 

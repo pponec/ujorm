@@ -185,8 +185,8 @@ final public class RingBuffer implements CharSequence {
     public static String findWordNoTrim(final Reader reader, final String beg, final String end) throws IOException {
         final StringBuilder result = new StringBuilder();
         boolean secondState = beg==null || beg.length()==0;
-        String border = secondState ? end : beg;
-        RingBuffer ring = new RingBuffer(border.length());
+        char[] border = (secondState ? end : beg).toCharArray();
+        RingBuffer ring = new RingBuffer(border.length);
 
         int c;
         while ((c = reader.read()) != -1) {
@@ -201,8 +201,8 @@ final public class RingBuffer implements CharSequence {
                     break;
                 } else {
                     secondState = true;
-                    border = end;
-                    ring = new RingBuffer(border.length());
+                    border = end.toCharArray();
+                    ring = new RingBuffer(border.length);
                 }
             }
         }
@@ -239,7 +239,7 @@ final public class RingBuffer implements CharSequence {
     /** Create Reader */
     public static Reader createReader(URL url, Charset charset) throws IOException {
         final InputStreamReader reader = new InputStreamReader(url.openStream(), charset);
-        return new BufferedReader(reader);
+        return reader;
     }
 
 }

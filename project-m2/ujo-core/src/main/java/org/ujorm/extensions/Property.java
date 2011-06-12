@@ -244,7 +244,17 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @Override
     public UjoProperty<UJO, VALUE> descending() {
-        return PathProperty.sort(this, false);
+        return descending(false);
+    }
+
+    /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
+     * @since 1.21
+     * @see #isAscending()
+     * @see org.ujorm.core.UjoComparator
+     */
+    @Override
+    public UjoProperty<UJO, VALUE> descending(boolean descending) {
+        return PathProperty.sort(this, !descending);
     }
 
     /** Create new composite (indirect) instance.

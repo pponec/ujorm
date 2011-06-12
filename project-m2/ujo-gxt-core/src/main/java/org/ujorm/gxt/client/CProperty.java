@@ -54,12 +54,40 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
         return name;
     }
 
+    /**
+     * Get a cammel case from the property Name
+     * @deprecated Use: {@link #getLabel()}
+     * @see #getLabel()
+     */
     @Override
     public String getCammelName() {
         String result =
             Character.toUpperCase(name.charAt(0)) +
             name.substring(1);
         return result;
+    }
+
+    /** Returns a Label derived from the Name */
+    @Override
+    public String getLabel() {
+        final int length = name.length();
+        final StringBuilder sb = new StringBuilder(length + 3);
+
+        boolean cLow = false;
+        for (int i = 0; i < length; ++i) {
+            final char c = name.charAt(i);
+            if (i==0) {
+                 sb.append(Character.toUpperCase(c));
+            } else  {
+                boolean cUp = Character.isUpperCase(c);
+                if (cLow && cUp) {
+                    sb.append(' ');
+                }
+                cLow = !cUp;
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     @Override
@@ -124,9 +152,21 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
         return true;
     }
 
+    /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
+     * @see #isAscending()
+     */
     @Override
     public CujoProperty<UJO, VALUE> descending() {
-        return CPathProperty.sort(this, false);
+        return descending(false);
+    }
+
+    /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
+     * @since 1.21
+     * @see #isAscending()
+     */
+    @Override
+    public CujoProperty<UJO, VALUE> descending(boolean descending) {
+        return CPathProperty.sort(this, !descending);
     }
 
     @Override
