@@ -288,7 +288,19 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     @Override
     @SuppressWarnings("unchecked")
     public UjoProperty<UJO,VALUE> descending() {
-        return isAscending() ? new PathProperty(properties, false) : this ;
+        return descending(true);
+    }
+
+    /** Create a new instance of the property with a descending direction of order.
+     * @see org.ujorm.core.UjoComparator
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public UjoProperty<UJO,VALUE> descending(boolean descending) {
+        return isAscending()==descending
+                ? new PathProperty(properties, !descending)
+                : this
+                ;
     }
 
     /** Export all <string>direct</strong> properties to the list from parameter. */

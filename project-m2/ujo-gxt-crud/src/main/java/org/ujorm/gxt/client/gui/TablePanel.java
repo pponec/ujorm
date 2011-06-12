@@ -89,7 +89,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     protected String buttonUpdate = "Update";
     protected String buttonDelete = "Delete";
     protected String buttonCopy = "Copy";
-    protected String buttonQuit = "Quit";
+    protected String buttonQuit = "Close";
     protected int pageSize = 30;
     private CQuery<CUJO> query;
     private CCriterion<CUJO> advancedCrn = null;
@@ -368,7 +368,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
             Long selectedId = selectedItem.get("id");
             for (CUJO cujo : grid.getStore().getModels()) {
                 Long id = cujo.get("id");
-                if (id.equals(selectedId)) {
+                if (id!=null && id.equals(selectedId)) {
                     setUpdateValue(cujo);
                     return;
                 }

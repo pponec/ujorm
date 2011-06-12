@@ -127,6 +127,13 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Compa
      */
     public UjoProperty<UJO,VALUE> descending();
 
+    /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
+     * @return returns a new instance of the indirect UjoProperty
+     * @since 1.21
+     * @see #isAscending()
+     * @see org.ujorm.core.UjoComparator
+     */
+    public UjoProperty<UJO,VALUE> descending(boolean descending);
 
     /** Create new composite (indirect) instance of the {@link  UjoProperty}.
      * @since 0.92

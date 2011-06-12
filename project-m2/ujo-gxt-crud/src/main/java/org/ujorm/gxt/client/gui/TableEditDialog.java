@@ -8,6 +8,9 @@
 
 package org.ujorm.gxt.client.gui;
 
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.FieldEvent;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
@@ -34,15 +37,19 @@ import java.util.List;
 import java.util.Map;
 import org.ujorm.gxt.client.CLoginRedirectable;
 import org.ujorm.gxt.client.ClientCallback;
+import org.ujorm.gxt.client.ao.ValidationMessage;
 import org.ujorm.gxt.client.commons.Icons;
+import org.ujorm.gxt.client.commons.KeyCodes;
 import org.ujorm.gxt.client.controller.TableControllerAsync;
 import org.ujorm.gxt.client.cquery.CQuery;
+import org.ujorm.gxt.client.tools.MessageDialog;
 
 /**
  * The abstract edit dialog.
  * @author Ponec
  */
-abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO> implements CLoginRedirectable {
+abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO>
+        implements CLoginRedirectable, Listener<FieldEvent> {
 
     /** A text maximal length (from meta-model) to creating a TextArea
      * instead of TextField component.  */
@@ -60,6 +67,7 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
     protected PropertyMetadataProvider metadataProvider;
     protected TablePanelOperations<CUJO> operations;
     protected CQuery<CUJO> editQuery;
+    private boolean submitOnEnter = true;
 
     /** Public Constructor */
     public TableEditDialog(CUJO cujo, boolean newState) {
@@ -70,6 +78,7 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
      * Call the init(...) method before use the dialog.
      */
     public TableEditDialog() {
+        setOnEsc(true);
     }
 
     /** Create new Item. */
@@ -139,6 +148,12 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
                     copyValuesToComponent();
                 }
             });
+        }
+
+        if (submitOnEnter) {
+            for (Field field : this.binding.values()) {
+                field.addListener(Events.OnKeyDown, this);
+            }
         }
     }
 
@@ -334,7 +349,8 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
                 result = false;
                 continue;
             }
-            if (newState || w.isDirty()) {
+            // Note: all field are lodaded lazy (by RCP) so the DIRTY state isn't relevant:
+            if (true /*newState || w.isDirty()*/) {
                 try {
                     copyValueFromComponent(p, w.getValue());
                 } catch (Throwable e) {
@@ -430,13 +446,15 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
     /** New instance of OK button. */
     protected Button newOkButton(boolean newState) {
         Button result = new Button(newState ? "Create" : "Update");
+        result.setToolTip("Submit the form by the [ENTER] key");
         result.setIcon(Icons.Pool.ok());
         return result;
     }
 
     /** New instance of OK button. */
     protected Button newQuitButton(boolean newState) {
-        Button result = new Button("Quit");
+        Button result = new Button("Close");
+        result.setToolTip("Leave the from by the [ESC] key");
         result.setIcon(Icons.Pool.goBack());
         return result;
     }
@@ -462,6 +480,33 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
         return (T) binding.get(p);
     }
 
+    /** Find a field by the property. */
+    public <T extends Field> T findFieldByText(String propertyName) {
+        for (CujoProperty p : binding.keySet()) {
+            if (p.toString().equals(propertyName)) {
+                 return (T) binding.get(p);
+            }
+        }
+        return null;
+    }
+
+    /** Mark Invalid Field */
+    protected void markInvalidField(ValidationMessage msg) {
+        if (msg!=null && !msg.isOk()) {
+            markInvalidField(msg.getPropertyName(), msg.getMessage());
+        }
+    }
+
+    /** Mark Invalid Field */
+    protected void markInvalidField(String fieldKey, String msg) {
+        Field field = findFieldByText(fieldKey);
+        if (field!=null) {
+            field.markInvalid(msg);
+            //field.forceInvalid(msg);
+            field.focus();
+        }
+    }
+
     /** Have got the dialog a NEW STATE? */
     public boolean isNewState() {
         return newState;
@@ -470,6 +515,49 @@ abstract public class TableEditDialog<CUJO extends Cujo> extends DataWindow<CUJO
     @Override
     public void redirectToLogin() {
         GWT.log("Session time out", null);
+    }
+
+
+    /** Submit the form on the ENTER key */
+    @Override
+    public void handleEvent(FieldEvent fe) {
+        switch (fe.getEvent().getKeyCode()) {
+             case KeyCodes.ENTER:
+                 onSubmit();
+                 break;
+        }
+    }
+
+    /** Submit the dialog */
+    protected void onSubmit() {
+        boolean valid = copyValuesFromComponent();
+        if (!valid) {
+            MessageDialog.getInstance("An input value is invalid").show();
+            return;
+        }
+        getController().saveOrUpdate(cujo, newState, new ClientCallback<ValidationMessage>(TableEditDialog.this) {
+
+            @Override
+            public void onSuccess(ValidationMessage msg) {
+                changedData = msg.isOk();
+                if (changedData) {
+                    hide();
+                    return;
+                } else {
+                    markInvalidField(msg);
+                }
+            }
+        });
+    }
+
+    /** Submit data from dialog on ENTER */
+    public boolean isSubmitOnEnter() {
+        return submitOnEnter;
+    }
+
+    /** Submit data from dialog on ENTER */
+    public void setSubmitOnEnter(boolean submitOnEnter) {
+        this.submitOnEnter = submitOnEnter;
     }
 
 }
