@@ -244,7 +244,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @Override
     public UjoProperty<UJO, VALUE> descending() {
-        return descending(false);
+        return descending(true);
     }
 
     /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
