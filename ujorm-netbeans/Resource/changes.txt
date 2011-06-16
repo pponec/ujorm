@@ -1,7 +1,7 @@
 The Ujorm release notes
 *******************************
 
-release 1.20 (2010-05-?)
+release 1.20 (2010-05-07)
 + the project leaves the old domain org.ujoframework so all new Java packages are renamed to: org.ujorm
 + the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL. 
   See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
