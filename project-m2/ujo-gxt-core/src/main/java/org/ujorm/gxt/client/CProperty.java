@@ -157,7 +157,7 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
      */
     @Override
     public CujoProperty<UJO, VALUE> descending() {
-        return descending(false);
+        return descending(true);
     }
 
     /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
