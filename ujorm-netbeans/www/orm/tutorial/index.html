@@ -1823,7 +1823,7 @@ For a better performance is useful to use so called 'batch operation'. The commo
   <a id=Barch_delete_807536556881826_6_0718252971177965 name=Barch_delete_807536556881826_6_0718252971177965></a>Batch delete
 </h4>
 <div style=MARGIN-LEFT:40px>
-  The next example deletes all Items where Item.id = 1. See more information in JavaDoc.<br>
+  The next example deletes all Items where Item.id &lt; 10. See more information in JavaDoc.<br>
 </div>
 <br>
 <div style=MARGIN-LEFT:40px>
@@ -1831,7 +1831,7 @@ For a better performance is useful to use so called 'batch operation'. The commo
     <tbody>
     <tr>
       <td width=100%>
-        &nbsp;&nbsp;&nbsp; Criterion&lt;Item&gt; crit = Criterion.where(Item.id, 1L);<br>
+        &nbsp;&nbsp;&nbsp; Criterion&lt;Item&gt; crit = Criterion.where(Item.id, LT, <b>10</b>L);<br>
         &nbsp;&nbsp;&nbsp; int count = session.delete(crit);<br>
         &nbsp;&nbsp;&nbsp; session.commit();<br>
         &nbsp;&nbsp;&nbsp; System.out.println("There are DELETED rows: " + count);<br>
@@ -1987,21 +1987,21 @@ Ujorm is very fast in comparison to its competitors, see the benchmark table to 
       <b><font color=#674ea7>Hibernate 3.3.1<br>
       </font></b><font color=#674ea7>[sec]</font><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
-      <b><font color=#674ea7>Ratio</font></b><br>
+    <td style=TEXT-ALIGN:right width=25%>
+      <b><font color=#674ea7>Ratio</font></b>&nbsp;<br>
     </td>
   </tr>
   <tr>
     <td valign=top>
       <b>meta data</b><br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       0.33<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       1.53<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       4.65<br>
     </td>
   </tr>
@@ -2009,13 +2009,13 @@ Ujorm is very fast in comparison to its competitors, see the benchmark table to 
     <td width=25%>
       <b>single select</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.35<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.58<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       1.67<br>
     </td>
   </tr>
@@ -2023,13 +2023,13 @@ Ujorm is very fast in comparison to its competitors, see the benchmark table to 
     <td width=25%>
       <b>multi select</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       21.78<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       168.01<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       7.71<br>
     </td>
   </tr>
@@ -2037,13 +2037,13 @@ Ujorm is very fast in comparison to its competitors, see the benchmark table to 
     <td valign=top>
       <b>empty select</b><br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       1.24<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       151.17<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       <b style=COLOR:#cc0000>121.85</b><br>
     </td>
   </tr>
@@ -2051,13 +2051,13 @@ Ujorm is very fast in comparison to its competitors, see the benchmark table to 
     <td width=25%>
       <b>insert</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       11.12<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       12.30<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       1.11<br>
     </td>
   </tr>
@@ -2065,13 +2065,13 @@ Ujorm is very fast in comparison to its competitors, see the benchmark table to 
     <td width=25%>
       <b>delete</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       101.18<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       208.28<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       2.06<br>
     </td>
   </tr>
@@ -2079,13 +2079,13 @@ Ujorm is very fast in comparison to its competitors, see the benchmark table to 
     <td width=25%>
       <b>update</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       8.04<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       3.90<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.49<br>
     </td>
   </tr>
@@ -2174,21 +2174,21 @@ Environment description:<br>
       <b><font color=#674ea7>Hibernate 3.3.1<br>
       </font></b><font color=#674ea7>[sec]</font><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
-      <b><font color=#674ea7>Ratio</font></b><br>
+    <td style=TEXT-ALIGN:right width=25%>
+      <b><font color=#674ea7>Ratio</font></b>&nbsp;<br>
     </td>
   </tr>
   <tr>
     <td valign=top>
       <b>meta data</b><br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       0.42<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       1.26<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       3.0<br>
     </td>
   </tr>
@@ -2196,13 +2196,13 @@ Environment description:<br>
     <td width=25%>
       <b>single select</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.19<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.53<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       2.9<br>
     </td>
   </tr>
@@ -2210,13 +2210,13 @@ Environment description:<br>
     <td width=25%>
       <b>multi select</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.69<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       155.28<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       <b style=COLOR:#cc0000>225.9</b><br>
     </td>
   </tr>
@@ -2224,13 +2224,13 @@ Environment description:<br>
     <td valign=top>
       <b>empty select</b><br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       0.36<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       155.37<br>
     </td>
-    <td style=TEXT-ALIGN:left valign=top>
+    <td style=TEXT-ALIGN:right valign=top>
       <b style=COLOR:#cc0000>432.1</b><br>
     </td>
   </tr>
@@ -2238,13 +2238,13 @@ Environment description:<br>
     <td width=25%>
       <b>insert</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       1.62<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       2.43<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       1.5<br>
     </td>
   </tr>
@@ -2252,13 +2252,13 @@ Environment description:<br>
     <td width=25%>
       <b>delete</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.37<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       151.43<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       <b style=COLOR:#cc0000>407.3</b><br>
     </td>
   </tr>
@@ -2266,13 +2266,13 @@ Environment description:<br>
     <td width=25%>
       <b>update</b><br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       1.28<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       1.13<br>
     </td>
-    <td style=TEXT-ALIGN:left width=25%>
+    <td style=TEXT-ALIGN:right width=25%>
       0.9<br>
     </td>
   </tr>
