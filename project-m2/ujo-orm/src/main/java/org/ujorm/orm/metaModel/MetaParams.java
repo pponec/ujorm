@@ -93,6 +93,9 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Property<MetaParams,Integer> INSERT_MULTIROW_ITEM_LIMIT = newProperty("insertMultirowItemLimit", 100);
 
+    /** The parameter contains the special parameters with for different use. */
+    public static final Property<MetaParams,MoreParams> MORE_PARAMS = newProperty("moreParams", MoreParams.class);
+
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
     public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
@@ -102,6 +105,10 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** TypeService */
     private TypeService typeService;
+
+    public MetaParams() {
+        MORE_PARAMS.setValue(this, new MoreParams());
+    }
 
     @Override
     public void writeValue(UjoProperty property, Object value) {

@@ -21,7 +21,9 @@ import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
+import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.orm.metaModel.MoreParams;
 
 /** Dialect for the MySQL since release 5.0 for the InnoDB engine.
  * <br><a href="http://dev.mysql.com/">http://dev.mysql.com/</a>
@@ -72,18 +74,26 @@ public class MySqlDialect extends SqlDialect {
 
     @Override
     public Appendable printSequenceTable(MetaDatabase db, Appendable out) throws IOException {
-        return super.printSequenceTable(db, out).append(getEngine());
+        return super.printSequenceTable(db, out)
+              .append(' ')
+              .append(getEngine(null))
+              ;
     }
 
     @Override
     public Appendable printTable(MetaTable table, Appendable out) throws IOException {
-        return super.printTable(table, out).append(getEngine());
+        return super.printTable(table, out)
+              .append(' ')
+              .append(getEngine(table))
+              ;
     }
 
     /** Returns a MySQL enginge. <br>
      * The default value is " ENGINE = InnoDB". */
-    protected String getEngine() {
-        return " ENGINE = InnoDB";
+    protected String getEngine(final MetaTable table) {
+        final String result = MetaParams.MORE_PARAMS.add(MoreParams.DIALECT_MYSQL_ENGINE_TYPE)
+              .of(ormHandler.getParameters());
+        return result;
     }
 
     /** MySQL dialect uses a database type DATETIME (instead of the TIMESTAMP) for the java.util.Date. */
