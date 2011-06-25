@@ -149,4 +149,8 @@ final public class MetaParams extends AbstractMetaModel {
         return this;
     }
 
+    /** Returns an object to provide the special parameters for a different use. */
+    public MoreParams more() {
+        return MORE_PARAMS.getValue(this);
+    }
 }
