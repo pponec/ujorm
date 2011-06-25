@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.02 was created 2010/11/12 21:21 -->
+<!-- The Ujorm configuration file release 1.20.02-SNAPSHOT was created 2011/06/25 07:14 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
+        <readOnly>false</readOnly>
         <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
+        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
+        <user>sa</user>
+        <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
+        <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
         <table id="ORDERS">
             <name>ord_order</name>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -24,11 +31,12 @@
                 <name>userId</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="descr">
-                <name>DESCR</name>
+            <column id="note">
+                <name>NOTE</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>128</maxLength>
+                <comment>Description of the Order</comment>
             </column>
             <column id="created">
                 <name>created</name>
@@ -51,6 +59,7 @@
             <name>ord_item</name>
             <alias>ord_item_alias</alias>
             <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -60,13 +69,21 @@
                 <name>userId</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="descr">
-                <name>descr</name>
+            <column id="note">
+                <name>note</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>128</maxLength>
             </column>
+            <column id="price">
+                <name>price</name>
+                <dbType>DECIMAL</dbType>
+                <maxLength>8</maxLength>
+                <precision>2</precision>
+                <comment>Price of the item</comment>
+            </column>
             <column id="order">
                 <name>fk_order</name>
+                <comment>A reference to the Order</comment>
             </column>
             <comment>Order item</comment>
         </table>
@@ -74,6 +91,7 @@
             <name>ord_order</name>
             <alias>ord_order_alias</alias>
             <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="ID">
                 <name>ID</name>
                 <primaryKey>true</primaryKey>
@@ -89,6 +107,7 @@
             <name>ord_customer</name>
             <alias>ord_customer_alias</alias>
             <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
@@ -119,6 +138,7 @@
             <name>db1</name>
             <alias>db1_alias</alias>
             <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="myProcedure">
                 <name>myProcedure</name>
             </column>
@@ -151,14 +171,11 @@
                 <dbType>BOOLEAN</dbType>
             </parameter>
         </procedure>
-        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
-        <jdbcDriver>org.h2.Driver</jdbcDriver>
-        <user>sa</user>
     </database>
     <parameters>
         <cachePolicy>SOLID_CACHE</cachePolicy>
         <tableAliasSuffix>_alias</tableAliasSuffix>
         <sequenceCache>1</sequenceCache>
-        <commentPolicy>ALWAYS</commentPolicy>
+        <moreParams></moreParams>
     </parameters>
 </body>
