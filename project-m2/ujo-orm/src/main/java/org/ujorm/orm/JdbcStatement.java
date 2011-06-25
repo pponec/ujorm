@@ -187,14 +187,15 @@ public class JdbcStatement {
         , final OrmUjo bo
         ) throws SQLException {
 
+        final UjoProperty property = column.getProperty();
 
-        UjoProperty property = column.getProperty();
-
-        if (bo!=null) {
-           logValue(bo, property);
-        } else if (logValues) {
-           String textValue = UjoManager.getInstance().encodeValue(value, false);
-           logValue(textValue, property);
+        if (logValues) {
+            if (bo != null) {
+                logValue(bo, property);
+            } else {
+                String textValue = UjoManager.getInstance().encodeValue(value, false);
+                logValue(textValue, property);
+            }
         }
 
         try {
@@ -285,26 +286,23 @@ public class JdbcStatement {
         }
     }
 
-
     /** Log a value value into a text format. */
     protected void logValue(final Ujo bo, final UjoProperty property) {
-        if (logValues) {
-            String textValue = UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY);
-            logValue(textValue, property);
-        }
+        String textValue = UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY);
+        logValue(textValue, property);
     }
 
     /** Log a value value into a text format. */
     protected void logValue(final String textValue, final UjoProperty property) {
+        final boolean quotaType = property.isTypeOf(CharSequence.class)
+                               || property.isTypeOf(java.util.Date.class)
+                                ;
+        final String textSeparator = quotaType ? "\'" : "";
 
-        if (logValues) {
-            String textSeparator = property.isTypeOf(CharSequence.class) ? "\"" : "";
-
-            values.append(parameterPointer==0 ? "[" : ", " );
-            values.append(textSeparator);
-            values.append(textValue);
-            values.append(textSeparator);
-        }
+        values.append(parameterPointer == 0 ? "[" : ", ");
+        values.append(textSeparator);
+        values.append(textValue);
+        values.append(textSeparator);
     }
 
     /** Returns prepared statement - for internal use only */
