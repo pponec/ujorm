@@ -77,15 +77,15 @@ Released   : 20080129
                     a module for easy-to-use object-relation mappings
                   </td>
 
-                  <td><a href="http://ujorm.com/orm/tutorial"><img src="images/milky-12.png" alt="12.png" width="48" height="48" /></a>
+                  <td><a href="http://ujorm.blogspot.com/2009/08/ujorm-new-high-performance-orm-for-java.html"><img src="images/milky-12.png" alt="12.png" width="48" height="48" /></a>
                   </td><td style="width: 40%;">
-                    <a href="http://ujorm.com/orm/tutorial" class="subTitle">Performance</a>
+                    <a href="http://ujorm.blogspot.com/2009/08/ujorm-new-high-performance-orm-for-java.html" class="subTitle">Performance</a>
                     great performance include a high speed XML serialization
                 </td></tr>
 
-                <tr><td><a href="http://ujorm.com/orm/tutorial"><img src="images/milky-54.png" alt="54.png" width="48" height="48" /></a>
+                <tr><td><a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup"><img src="images/milky-54.png" alt="54.png" width="48" height="48" /></a>
                   </td><td style="width: 40%;">
-                    <a href="http://ujorm.com/orm/tutorial" class="subTitle">Easy to use</a>
+                    <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/samples/ujorm/src/main/java/org/SampleORM.java?view=markup" class="subTitle">Easy to use</a>
                     short learning,
                     high object reusability,
                     open source
@@ -126,7 +126,7 @@ Released   : 20080129
                <li>lazy initialization is supported</li>
                <li>database incremental update (according to the model meta-model) is supported by DDL commands</li>
                <li>no confusing proxy or binary modified business objects</li>
-               <li>very lightweight framework with no library dependencies</li>
+               <li>very lightweight framework with no library dependencies in the run-time</li>
               </ul>
 
             </div>
@@ -158,7 +158,7 @@ Released   : 20080129
                <li>internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException</li>
                <li>database indexes are created by the meta-model, added support for unique, non-unique indexes including the composed one</li>
               </ul>
-                
+
                Some parts of the API was inspired by
                <a href="http://cayenne.apache.org/">Canyenne</a> and
                <a href="https://www.hibernate.org/">Hibernate</a> frameworks.
@@ -174,7 +174,7 @@ Released   : 20080129
             <img src="images/milky-10.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title" id="sample"><a href="#">Sample of usage:</a></h2>
             <div class="entry">
-                See how to create database and to how to INSERT an order with two items into database:
+                See how to create a database and to how to INSERT an Order with two Items into related database tables:
 
 <pre name="code" class="java">
   Order order = new Order();
@@ -252,18 +252,18 @@ Prints the text report on the console output:
             <img src="images/milky-54.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title" id="reference"><a href="#">Reference projects</a></h2>
             <div class="entry">
-	        Projects based on the Ujorm ORM:
+	        Projects based on the <strong>Ujorm</strong> ORM framework:
                 <ul>
                    <li><a href="http://inspectime.com"><img src="images/itm-screenshot-thumb.png" width="180" height="100" alt="Inspectime screen shot" style="float:right; margin: 0 0 5px 5px; vertical-align:text-top; border:0" /></a>
                        The <a href="http://inspectime.com">Inspectime</a> is a server side <strong>Time tracking</strong> application based on the Ext&nbsp;GWT and Ujorm framework.
                        The key features are: Live monitoring of employees' work, real-time reporting, rights management and projects &amp; products based structure.
                    </li>
-                   <li>The <a href="http://www.effectiva.cz/en/ecall">eCall</a> is a complete software solution for management of corporate telecommunications 
+                   <li>The <a href="http://www.effectiva.cz/en/ecall">eCall</a> is a complete software solution for management of corporate telecommunications
                        - especially for a modern call center. It enables easy organization, management and automated operation of all telecommunications.
                        See Ujorm development <a href="http://ujorm.blogspot.com/2010/10/ujorm-development-interview.html">Interview</a>.</li>
                    <li><!-- <a href="http://www.effectiva.cz/en/uzei"><img src="images/uzei-01.png" width="180" height="97" alt="Inspectime screen shot" style="float:right; margin: 5px 5px 5px 5px; vertical-align:text-top; border:0" /></a> -->
                        The system <a href="http://www.effectiva.cz/en/uzei">ÚZEI</a> is used primarily for collecting information about organic agriculture in a region.
-                       The application is designed for administrators and inspectors of monitoring organizations. Inspectors enter the data through a web interface from office, 
+                       The application is designed for administrators and inspectors of monitoring organizations. Inspectors enter the data through a web interface from office,
                        but also from the field during the inspections of organics farms. </li>
                    <li>Do you wish to make reference to your application, built on Ujorm? Send us a link to your project to the email address support@ujorm.com .</li>
                 </ul>
@@ -277,7 +277,7 @@ Prints the text report on the console output:
             <img src="images/milky-27.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title" id="similar"><a href="#">Similar frameworks:</a></h2>
             <div class="entry">
-                There are some links to similar open-source frameworks with a type-safe queries:
+                Here are some links to similar open-source frameworks with the type-safe queries:
                 <ul>
                 <li><a href="http://www.simpleorm.org/">SimpleORM</a> - object relational mapping system that avoids exotic technologies such as byte code generation, where queries can be specified in terms of Java objects, object identity is aligned with database keys.</li>
                 <li><a href="http://incubator.apache.org/empire-db/">Empire-db</a> - relational data persistence component which allows database vendor independent dynamic query definition with a special focus on compile-time safety, reduced redundancies and improved developer productivity.</li>

@@ -12,11 +12,8 @@ table.top td {
 	padding-bottom: 8px;
 }
 
-#logo h1 {style.css (line 137)
-	font-family: Arial,Helvetica,sans-serif;
-}
-
 #logo h1 {
+	font-family: Arial,Helvetica,sans-serif;
 	text-transform: none;
 	font-size: 50px;
 }
