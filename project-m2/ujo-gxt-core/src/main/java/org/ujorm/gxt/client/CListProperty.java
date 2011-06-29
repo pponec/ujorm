@@ -22,7 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoComparator;
-import org.ujorm.extensions.AbstractUjo;
 
 /**
  * The main implementation of the interface ListUjoProperty.
