@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Client Ujo Property List
- * @author PropertyList
+ * @author Pavel Ponec
  */
 public class CujoPropertyList implements Iterable<CujoProperty> {
 
@@ -91,6 +91,17 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
     public <UJO extends Cujo, VALUE> CujoProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
         return newProperty(name, type, null);
     }
+
+    /** A ListProperty Factory
+     * Method assigns a next property index.
+     */
+    public <UJO extends Cujo, ITEM> CListUjoProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
+        if (lock) {
+            throw new UnsupportedOperationException("The " + getClass() + " is locked");
+        }
+        return CListProperty.newListProperty(name, type, properties.size());
+    }
+
 
     public <UJO extends Cujo, VALUE extends CEnum> CProperty<UJO, VALUE> newPropertyEnum(String name, String enumKey) {
         if (lock) {

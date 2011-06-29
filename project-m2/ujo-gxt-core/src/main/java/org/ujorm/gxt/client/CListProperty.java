@@ -14,53 +14,31 @@
  *  limitations under the License.
  */
 
-package org.ujorm.extensions;
+package org.ujorm.gxt.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoComparator;
+import org.ujorm.extensions.AbstractUjo;
 
 /**
  * The main implementation of the interface ListUjoProperty.
- * @see AbstractUjo
  * @author Pavel Ponec
  */
-public class ListProperty<UJO extends Ujo, ITEM>
-    extends Property<UJO,List<ITEM>>
-    implements ListUjoProperty<UJO,ITEM> {
+public class CListProperty<UJO extends Cujo, ITEM>
+    extends CProperty<UJO,List<ITEM>>
+    implements CListUjoProperty<UJO,ITEM> {
 
     /** Class of the list item. */
     final private Class<ITEM> itemType;
 
     /** Protected constructor */
-    protected ListProperty(Class<ITEM> itemType) {
+    protected CListProperty(String name, Class<ITEM> itemType, int index) {
+        super(name, ArrayList.class, null, index);
         this.itemType = itemType;
-    }
-
-    /** Protected constructor */
-    protected ListProperty(String name, Class<ITEM> itemType, int index) {
-        initList(name, index, true);
-        this.itemType = itemType;
-    }
-
-    /**
-     * List property initialization.
-     * @param name Replace the Name of property if the one is NULL.
-     * @param index Replace index always, the value -1 invoke a next number from the internal sequencer.
-     * @param lock Lock the property.
-     */
-    @SuppressWarnings("unchecked")
-    final protected ListProperty<UJO,ITEM> initList
-    ( final String name
-    , final int index
-    , final Boolean lock
-    ) {
-       init(name, (Class) List.class, null, index, lock);
-       return this;
     }
 
 
@@ -129,15 +107,8 @@ public class ListProperty<UJO extends Ujo, ITEM>
     public List<ITEM> getList(final UJO ujo) {
         List<ITEM> result = getValue(ujo);
         if (result==null) {
-            try {
-                result = getType().isInterface()
-                    ? (List<ITEM>) new ArrayList()
-                    : getType().newInstance()
-                    ;
-                setValue(ujo, result);
-            } catch (InstantiationException ex) { throw new IllegalStateException("Can't create an empty list: " + getType(), ex);
-            } catch (IllegalAccessException ex) { throw new IllegalStateException("Can't create an empty list: " + getType(), ex);
-            }
+            result = new ArrayList();
+            setValue(ujo, result);
         }
         return result;
     }
@@ -151,6 +122,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
             Collections.sort(list, comp);
         }
     }
+
 
     /** Indicates whether a list of items is null or empty. */
     @Override
@@ -166,39 +138,12 @@ public class ListProperty<UJO extends Ujo, ITEM>
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
-    ( final String name
-    , final Class<ITEM> itemType
-    , final int index
-    , final boolean lock
-    ) {
-        final ListProperty<UJO,ITEM> result = new ListProperty<UJO,ITEM>(itemType);
-        result.init(name, (Class) List.class, null, index, lock);
-        return result;
-    }
-
-    /** A ListUjoProperty Factory
-     * Method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    public static <UJO extends Cujo, ITEM> CListProperty<UJO,ITEM> newListProperty
     ( final String name
     , final Class<ITEM> itemType
     , final int index
     ) {
-        return newListProperty(name, itemType, index, true);
-    }
-
-
-    /** A ListUjoProperty Factory
-     * Method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
-    ( final String name
-    , final Class<ITEM> itemType
-    ) {
-        return newListProperty(name, itemType, -1);
+        return new CListProperty<UJO,ITEM>(name, (Class) List.class, index);
     }
     
 }
