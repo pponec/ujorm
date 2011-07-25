@@ -87,8 +87,15 @@ final public class MetaPKey extends AbstractMetaModel {
                 default: return false;
             }
         } else {
-            String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
-            throw new IllegalArgumentException(msg);
+            for (int i = 0; i < count; i++) {
+                final MetaColumn column = COLUMNS.getItem(this, i);
+                final UjoProperty property = column.getProperty();
+                if (property.of(bo) == null) {
+                    String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
+                    throw new IllegalArgumentException(msg);
+                }
+            }
+            return false;
         }
     }
 
