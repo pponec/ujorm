@@ -154,11 +154,16 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Set a new Criterion. There is recommended
+     * @param criterion The value NULL is allowed because the value is replaced internally to expression <code>Criterion.where(true)</code>.
+     *                  A MetaTable parameter must be specified in the constuctor for this case.
      * @see Session#createQuery(org.ujorm.criterion.Criterion) createQuery(Criteron)
      * @see #addCriterion(org.ujorm.criterion.Criterion) addCriterion(..)
      **/
     public Query<UJO> setCriterion(Criterion<UJO> criterion) {
-        this.criterion = criterion;
+        this.criterion = criterion != null
+            ? criterion
+            : ((Criterion<UJO>) (Object) Criterion.where(true))
+            ;
         clearDecoder();
         return this;
     }
