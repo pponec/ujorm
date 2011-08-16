@@ -69,12 +69,15 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
     /** Read a session */
     @Override
     public Session readSession() {
-        return session.get();
+        return session!=null ? session.get() : null ;
     }
 
     /** Write a session */
     @Override
     public void writeSession(Session session) {
+        if (this.session==null) {
+            this.session = new ThreadLocal<Session>();
+        }
         this.session.set(session);
     }
 
