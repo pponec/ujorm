@@ -95,26 +95,30 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     @Override
     public Object readValue(final UjoProperty property) {
         Object result = super.readValue(property);
+        final Session mySession = session;  // maybe readSession() is better?
 
         if (property.isTypeOf(OrmUjo.class)) {
             if (result instanceof ForeignKey) {
-                result = session.loadInternal(property, ((ForeignKey)result).getValue(), true);
+                if (mySession==null) {
+                    throw new IllegalArgumentException("The Session was not assigned.");
+                }
+                result = mySession.loadInternal(property, ((ForeignKey)result).getValue(), true);
                 super.writeValue(property, result);
             }
             else
             if (result!=null
-            && session!=null
-            && session!=((OrmUjo)result).readSession()
+            && mySession!=null
+            && mySession!=((OrmUjo)result).readSession()
             ){
                 // Write the current session to a related object:
-                ((OrmUjo)result).writeSession(session);
+                ((OrmUjo)result).writeSession(mySession);
             }
         } else
         if (property instanceof RelationToMany
-        &&  session!=null
-        &&  session.getHandler().isPersistent(property)
+        &&  mySession!=null
+        &&  mySession.getHandler().isPersistent(property)
         ){
-            result = session.iterateInternal( (RelationToMany) property, this);
+            result = mySession.iterateInternal( (RelationToMany) property, this);
             // Don't save the result!
         }
         return result;

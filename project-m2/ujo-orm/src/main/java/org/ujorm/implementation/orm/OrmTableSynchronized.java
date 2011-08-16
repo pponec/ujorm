@@ -89,6 +89,9 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
 
         if (property.isTypeOf(OrmUjo.class)) {
             if (result instanceof ForeignKey) {
+                if (mySession==null) {
+                    throw new IllegalArgumentException("The Session was not assigned.");
+                }
                 result = mySession.loadInternal(property, ((ForeignKey)result).getValue(), true);
                 super.writeValue(property, result);
             }
