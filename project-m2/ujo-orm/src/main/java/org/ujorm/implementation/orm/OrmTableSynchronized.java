@@ -29,32 +29,16 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 
 /**
- * This abstract implementation of the OrmUjo interface is situable
- * for implementation the persistent entities.
- * <br>Instances of the OrmTable are serializable, but you need to know that only 
- * business data will be transferred, the session and property changes will not be passed.
- * <br>The sample of use:
- * <pre class="pre">
- *  <span class="comment">&#47;** Using INSERT *&#47;</span>
- *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useCreateItem() {
- *
- *      Order order = <span class="keyword-directive">new</span> Order();
- *      order.set(Order.DATE, <span class="keyword-directive">new</span> Date());
- *      order.set(Order.DESCR, <span class="character">&quot;John's order&quot;</span>);
- *
- *      Item item = <span class="keyword-directive">new</span> Item();
- *      item.set(Item.ORDER, order);
- *      item.set(Item.DESCR, <span class="character">&quot;Yellow table&quot;</span>);
- *
- *      Session session = OrmHandler.getInstance().getSession();
- *      session.save(order);
- *      session.save(item);
- *      session.commit();
- *  }</pre>
- *
+ * It is an abstract implementation of the OrmUjo for the <strong>multi-thread use</strong>.
+ * The special feature are:
+ * <ul>
+ *   <li>some critical method are synchronized</li>
+ *   <li>Session is saved to the ThreadLocal instance so object in different thread must assign a new Session</li>
+ * </ul>
+ * <ul>
+ * See the {@link OrmTable} javadoc for basic information.
  * @author Pavel Ponec
- * @see org.ujorm.implementation.orm.RelationToMany
- * @see org.ujorm.core.UjoIterator
+ * @see OrmTable
  */
 public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
 
@@ -196,20 +180,19 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
 
     // --------- STATIC METHODS -------------------
 
-//    /** A PropertyIterator Factory creates an new property and assign a next index.
-//     * @hidden
-//     */
-//    protected static <UJO extends OrmTable, ITEM extends OrmTableSynchronized> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
-//        return null;
-//        //return new RelationToMany<UJO,ITEM> (name, type, -1, false);
-//    }
-//
-//    /** A PropertyIterator Factory creates an new property and assign a next index.
-//     * @hidden
-//     */
-//    protected static <UJO extends OrmTableSynchronized, ITEM extends OrmTableSynchronized> RelationToMany<UJO,ITEM> newRelation(Class<ITEM> type) {
-//        return newRelation(null, type);
-//    }
+    /** A PropertyIterator Factory creates an new property and assign a next index.
+     * @hidden
+     */
+    protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
+        return new RelationToMany<UJO,ITEM> (name, type, -1, false);
+    }
+
+    /** A PropertyIterator Factory creates an new property and assign a next index.
+     * @hidden
+     */
+    protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation(Class<ITEM> type) {
+        return newRelation(null, type);
+    }
 
 
 

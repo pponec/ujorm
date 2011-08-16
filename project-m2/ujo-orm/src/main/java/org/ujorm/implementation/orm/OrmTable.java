@@ -192,14 +192,14 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     /** A PropertyIterator Factory creates an new property and assign a next index.
      * @hidden
      */
-    protected static <UJO extends OrmTable, ITEM extends OrmTable> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
+    protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation(String name, Class<ITEM> type) {
         return new RelationToMany<UJO,ITEM> (name, type, -1, false);
     }
 
     /** A PropertyIterator Factory creates an new property and assign a next index.
      * @hidden
      */
-    protected static <UJO extends OrmTable, ITEM extends OrmTable> RelationToMany<UJO,ITEM> newRelation(Class<ITEM> type) {
+    protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation(Class<ITEM> type) {
         return newRelation(null, type);
     }
 
