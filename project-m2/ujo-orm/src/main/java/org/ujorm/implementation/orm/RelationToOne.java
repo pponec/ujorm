@@ -18,13 +18,14 @@ package org.ujorm.implementation.orm;
 
 import org.ujorm.UjoProperty;
 import org.ujorm.extensions.Property;
+import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.OrmUjo;
 
 /**
  * Foreign key property
  * @author Pavel Ponec
  */
-public class RelationToOne<UJO extends OrmUjo, VALUE> extends Property<UJO, VALUE> {
+public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends Property<UJO, VALUE> {
 
     private UjoProperty relatedKey;
 
@@ -47,7 +48,7 @@ public class RelationToOne<UJO extends OrmUjo, VALUE> extends Property<UJO, VALU
     //}
 
     /** A Property Factory */
-    public static <UJO extends OrmUjo, VALUE extends OrmUjo> RelationToOne<UJO, VALUE> newInstance(Class<VALUE> type, UjoProperty<VALUE,?> relatedKey) {
+    public static <UJO extends ExtendedOrmUjo, VALUE extends ExtendedOrmUjo> RelationToOne<UJO, VALUE> newInstance(Class<VALUE> type, UjoProperty<VALUE,?> relatedKey) {
         return new RelationToOne<UJO, VALUE>(null, type, relatedKey);
     }
 

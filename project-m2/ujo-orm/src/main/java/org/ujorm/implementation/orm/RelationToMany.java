@@ -18,13 +18,14 @@ package org.ujorm.implementation.orm;
 
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.Property;
+import org.ujorm.orm.ExtendedOrmUjo;
 
 /**
  * The relation 1:N to another UJO type items
  * @author Pavel Ponec
  * @see org.ujorm.core.UjoIterator
  */
-public class RelationToMany<UJO extends OrmTable, ITEM extends OrmTable>
+public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo>
     extends Property<UJO, UjoIterator<ITEM>>
 {
 
