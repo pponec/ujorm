@@ -64,7 +64,6 @@ public class OrmTutorialTest extends TestCase {
      * Test of getItemCount method, of class AbstractPropertyList.
      */
     public void testOrmTutorial() {
-
         if (noRunned) {
             noRunned = true;
             SampleORM.main(new String[]{});
