@@ -108,6 +108,9 @@ public class SampleORM {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.FINE);
+        // For the Logback framework you can activate the bridge: SLF4JBridgeHandler.install();
+
+        // Create new ORM Handler:
         handler = new OrmHandler();
 
         // There are prefered default properties for a production environment:
@@ -115,8 +118,7 @@ public class SampleORM {
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
-            params.set(MetaParams.SEQUENCE_CACHE, 1);
-            params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
+            params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
             handler.config(params);
         }
@@ -386,7 +388,6 @@ public class SampleORM {
             System.out.println("ORDER: " + order);
         }
     }
-
 
     /** How to reload the object property values from the database ? */
     public void useReloading() {

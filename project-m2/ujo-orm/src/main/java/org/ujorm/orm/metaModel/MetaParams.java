@@ -39,30 +39,39 @@ final public class MetaParams extends AbstractMetaModel {
     private static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
     
 
-    /** Session cache policy.
-     * @see CachePolicy Parameter values
-     */
+    /** Session cache policy. 
+     * The default value is PROTECTED_CACHE.
+     * @see CachePolicy Parameter values */
     public static final Property<MetaParams,CachePolicy> CACHE_POLICY = newProperty("cachePolicy", CachePolicy.PROTECTED_CACHE);
-    /** Special prameter for an automatically assembled table alias prefix. */
+    /** Special prameter for an automatically assembled table alias prefix.
+     * The default value is the empty string. */
     public static final Property<MetaParams,String> TABLE_ALIAS_PREFIX = newProperty("tableAliasPrefix", "");
-    /** Special prameter for an automatically assembled table alias prefix. */
+    /** Special prameter for an automatically assembled table alias prefix.
+     * The default value is the empty String. */
     public static final Property<MetaParams,String> TABLE_ALIAS_SUFFIX = newProperty("tableAliasSuffix", "");
     /** Sequential cache parameter saves the number of requests to the following sequence when a insert statement into DB.
      * The value of the parameter is used only when creating a new DB, indivuální ORM changes for each table 
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 100, the smallest possible value is 1. */
     public static final Property<MetaParams,Integer> SEQUENCE_CACHE = newProperty("sequenceCache", 100);
-    /** A policy to defining the database structure by a DDL. 
+    /** A policy to defining the database structure by a DDL.
+     * The default value is option: CREATE_OR_UPDATE_DDL.
      * @see Orm2ddlPolicy Parameter values
      */
     public static final Property<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
-    /** A policy for assigning an annotation table comment {@link org.ujorm.orm.annot.Comment} to database. */
+    /** A policy for assigning an annotation table comment {@link org.ujorm.orm.annot.Comment} to database. 
+     * The default value is ON_ANY_CHANGE.
+     * @see CommentPolicy  Parameter values
+     */
     public static final Property<MetaParams,CommentPolicy> COMMENT_POLICY = newProperty("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
-    /** Change a TypeService class by a subtype for user type customization. */
+    /** Change a TypeService class by a subtype for user type customization. 
+     * @see TypeService
+     */
     public static final Property<MetaParams,Class> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
-    /** CheckReport a keyword in the database table or colum name inside the meta-model. 
+    /** CheckReport a keyword in the database table or colum name inside the meta-model.
+     * The default value is EXCEPTION.
      * @see CheckReport Parameter values
      */
     public static final Property<MetaParams,CheckReport> CHECK_KEYWORDS = newProperty("checkKeywords", CheckReport.EXCEPTION);
@@ -72,28 +81,33 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Property<MetaParams,Integer> MAX_ITEM_COUNT_4_IN = newProperty("maxItemCountForIN", 500);
 
-    /** The experimental parameter affects to a Sequence key name in the internal sequsence generator.
-     * Value TRUE use a special character "~" instead of default database schema in the sequence table.
+    /** The parameter value TRUE affects to a Sequence key name in the internal sequence generator.
+     * Value TRUE generate a special character "~" instead of default database schema in the sequence table.
+     * The benefit of the special chatacter can be evaluated in the case of the renaming of the database schema.
      * In case of change of the parameter value is necessary to convert values in the database column 'ujorm_pk_support.id' by hand.
+     * The default value is FALSE.
      */
     public static final Property<MetaParams,Boolean> SEQUENCE_SCHEMA_SYMBOL = newProperty("sequenceSchemaSymbol", false);
 
     /** Any action type or CREATE, UPDATE, DELETE on inheritance objects calls the same action to its 'parrent' object.
-     * If the mode is off than you must take care of all its parents in the code handy. <br />
+     * If the mode is off than you must take care of all its parents in the code handy. 
+     * The default falue is TRUE.<br />
      * Note: the parameter does not affect the opearations
      * {@link org.ujorm.orm.Session#update(org.ujorm.orm.OrmUjo, org.ujorm.criterion.Criterion) batch update} or
      * {@link org.ujorm.orm.Session#delete(org.ujorm.criterion.Criterion) batch delete} due direct modification of database.
-     *
      * @see MetaTable#getParent(org.ujorm.orm.OrmUjo) MetaTable.getParent(..)
      */
     public static final Property<MetaParams,Boolean> INHERITANCE_MODE = newProperty("inheritanceMode", true);
 
     /** The parameter is used to limit of the insert sttatemtn in case the "sql multirow insert".
+     * The default value is 100.
      * @see org.ujorm.orm.Session#save(java.util.List, int) save(List)
      */
     public static final Property<MetaParams,Integer> INSERT_MULTIROW_ITEM_LIMIT = newProperty("insertMultirowItemLimit", 100);
 
-    /** The parameter contains the special parameters with for different use. */
+    /** The parameter contains the special parameters with for different use. 
+     * @see MoreParams
+     */
     public static final Property<MetaParams,MoreParams> MORE_PARAMS = newProperty("moreParams", MoreParams.class);
 
     /** An application context for initializaton of the customer componets of the meta-model. */
@@ -118,7 +132,8 @@ final public class MetaParams extends AbstractMetaModel {
             int val = (Integer) value;
             if (val<1) {
                 value = 1;
-                LOGGER.warning("The smallest possible value of property '"+property+"' is 1, not " + val);
+                final String msg = "The smallest possible value of property '"+property+"' is 1, not " + val;
+                LOGGER.warning(msg);
             }
         }
         super.writeValue(property, value);
