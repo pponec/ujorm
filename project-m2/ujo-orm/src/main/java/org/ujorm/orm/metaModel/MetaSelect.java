@@ -61,6 +61,7 @@ final public class MetaSelect extends AbstractMetaModel {
         String orig = select.trim();
         select = orig.toUpperCase();
         int i = select.length();
+        int xi = Integer.MAX_VALUE;
 
         if (select.endsWith(END_CHAR)) {
             i -= END_CHAR.length();
@@ -71,8 +72,12 @@ final public class MetaSelect extends AbstractMetaModel {
         for (int j=props.size()-1; j>=0; --j) {
             UjoProperty p = props.get(j);
 
-            i = select.lastIndexOf(p.getName());
-            if (i>=0) {
+            i = (SELECT==p || FROM==p )
+               ? select.indexOf(p.getName())
+               : select.lastIndexOf(p.getName())
+               ;
+            if (xi > i && i >= 0) {
+                xi = i;
                 String value = orig.substring(i + p.getName().length(), select.length()).trim();
                 writeValue(p, value);
                 select = select.substring(0, i);
@@ -80,7 +85,8 @@ final public class MetaSelect extends AbstractMetaModel {
         }
 
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.log(Level.INFO, getClass().getSimpleName() + ": " + toString());
+            final String msg = getClass().getSimpleName() + ": " + toString();
+            LOGGER.log(Level.INFO, msg);
         }
     }
 
