@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 import org.ujorm.orm_tutorial.sample.SampleORM;
 import org.ujorm.ujo_core.SampleCORE;
 
-
 /**
  * Tutorial test
  * @author Pavel Ponec

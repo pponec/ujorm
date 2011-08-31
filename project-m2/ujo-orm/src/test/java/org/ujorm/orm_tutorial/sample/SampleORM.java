@@ -26,7 +26,6 @@ import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CachePolicy;
-import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -65,7 +64,7 @@ public class SampleORM {
             sample.useCriterions();
             sample.useSortOrders();
             sample.useSortOrderItems();
-         // sample.useSelectViewOrders();
+            sample.useSelectViewOrders();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -270,10 +269,8 @@ public class SampleORM {
      * by a special entity signed by the @View annotation.
      */
     public void useSelectViewOrders() {
-
-        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, GE, 0L);
+        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
         Query<ViewOrder> orders = session.createQuery(crit);
-        System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
 
         for (ViewOrder order : orders) {
             System.out.println("ORDER ROW: " + order);

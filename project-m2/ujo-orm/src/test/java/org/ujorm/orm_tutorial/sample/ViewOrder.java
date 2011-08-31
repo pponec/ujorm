@@ -25,7 +25,8 @@ import org.ujorm.orm.annot.View;
  * The column mapping to FROM view.
  * @hidden
  */
-@View(select="SELECT * FROM ( SELECT ord_order_alias.id"
+@View(select="SELECT * FROM ( "
+    + "SELECT ord_order_alias.id"
     +         ", count(*) AS item_count"
     + " FROM db1.ord_order ord_order_alias"
     +     ", db1.ord_item  ord_item_alias"
@@ -33,16 +34,20 @@ import org.ujorm.orm.annot.View;
     + " GROUP BY ord_order_alias.id"
     + " ORDER BY ord_order_alias.id"
     + ") testView WHERE true"
-    , name="testView"
+    , alias="testView"
     )
   
 //  /* MSSQL query */
-//  @View(select="SELECT ord_order_alias.id, count(*) AS item_count"
+//  @View(SELECT * FROM ( "
+//  + " SELECT ord_order_alias.id, count(*) AS item_count"
 //  + " FROM db1.dbo.ord_order ord_order_alias"
 //  +     ", db1.dbo.ord_item  ord_item_alias"
 //  + " WHERE ord_order_alias.id = ord_item_alias.fk_order"
 //  + " GROUP BY ord_order_alias.id"
 //  + " ORDER BY ord_order_alias.id")
+//  + ") testView WHERE true"
+//  , alias="testView"
+//  )
 
  public class ViewOrder extends OrmTable<ViewOrder> {
 
