@@ -61,7 +61,7 @@ final public class MetaSelect extends AbstractMetaModel {
         String orig = select.trim();
         select = orig.toUpperCase();
         int i = select.length();
-        int xi = Integer.MAX_VALUE;
+        int xi = -1;
 
         if (select.endsWith(END_CHAR)) {
             i -= END_CHAR.length();
@@ -69,18 +69,26 @@ final public class MetaSelect extends AbstractMetaModel {
         }
 
         UjoPropertyList props = readProperties();
-        for (int j=props.size()-1; j>=0; --j) {
-            UjoProperty p = props.get(j);
+        UjoProperty px = props.get(0); // SELECT
+        for (int j=0, max=props.size()-1; j<=max; ++j) {
+            final UjoProperty p = props.get(j);
+            final boolean fromLeft = p.getIndex() <= FROM.getIndex();
 
-            i = (SELECT==p || FROM==p )
-               ? select.indexOf(p.getName())
-               : select.lastIndexOf(p.getName())
-               ;
-            if (xi > i && i >= 0) {
-                xi = i;
-                String value = orig.substring(i + p.getName().length(), select.length()).trim();
-                writeValue(p, value);
-                select = select.substring(0, i);
+            i = fromLeft
+              ? select.indexOf(p.getName(), xi)
+              : select.lastIndexOf(p.getName())
+              ;
+            if (xi < i) {
+                if (j>SELECT.getIndex()) {
+                    final String value = orig.substring(xi, i).trim();
+                    writeValue(px, value);
+                    px = p;
+                }
+                xi = i + p.getName().length();
+            }
+            if (j==max) {
+                final String value = orig.substring(xi).trim();
+                writeValue(px, value);
             }
         }
 
