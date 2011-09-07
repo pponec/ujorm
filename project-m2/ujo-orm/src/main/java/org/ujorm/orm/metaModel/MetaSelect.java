@@ -39,6 +39,7 @@ final public class MetaSelect extends AbstractMetaModel {
     public static final Property<MetaSelect,String> GROUP  = newProperty(" GROUP BY ", "");
     public static final Property<MetaSelect,String> ORDER  = newProperty(" ORDER BY ", "");
     public static final Property<MetaSelect,String> LIMIT  = newProperty(" LIMIT "   , "");
+    public static final Property<MetaSelect,String> OFFSET = newProperty(" OFFSET "   , "");
 
     /** The property initialization */
     static{init(CLASS);}
