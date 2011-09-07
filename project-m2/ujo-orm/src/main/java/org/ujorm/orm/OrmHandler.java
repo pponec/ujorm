@@ -194,10 +194,6 @@ public class OrmHandler {
         MetaDatabase dbModel = new MetaDatabase(this, root, paramDb, databases.getDatabaseCount());
         databases.add(dbModel);
 
-        if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.info("DATABASE META-MODEL:\n"+getConfig());
-        }
-        
         return dbModel;
     }
 
@@ -257,7 +253,6 @@ public class OrmHandler {
                     dbModel.create(getSession());
             }
         }
-
     }
 
     /** Create an instance from the class */
@@ -392,10 +387,9 @@ public class OrmHandler {
         return result;
     }
 
-
     /** Returns a final meta-model in the XML format */
     public String getConfig() {
         return databases.toString();
     }
-    
+
 }
