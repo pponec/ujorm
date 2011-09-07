@@ -459,8 +459,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 }
 
                 if (LOGGER.isLoggable(Level.INFO)) {
-                    logMsg = "Table '" + getDialect().getSeqTableModel().getTableName() + "' {0} available on the database '{1}'.";
-                    logMsg = MessageFormat.format(logMsg, exception!=null ? "is not" : "is", getId());
+                    logMsg = "Table ''{0}'' {1} available on the database ''{2}''.";
+                    logMsg = MessageFormat.format(logMsg
+                           , getDialect().getSeqTableModel().getTableName()
+                           , exception!=null ? "is not" : "is"
+                           , getId()
+                           );
                     LOGGER.log(Level.INFO, logMsg);
                 }
 
