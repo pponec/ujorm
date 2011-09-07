@@ -678,9 +678,9 @@ abstract public class SqlDialect {
      * @param count only count of items is required;
      */
     protected Appendable printSelectView(MetaTable table, Query query, boolean count, Appendable out) throws IOException {
-        MetaSelect select = MetaTable.SELECT_MODEL.of(table);
-        String where = query.getDecoder().getWhere();
-        List<UjoProperty> order = query.getOrderBy();
+        final MetaSelect select = MetaTable.SELECT_MODEL.of(table);
+        final String where = query.getDecoder().getWhere();
+        final List<UjoProperty> orderByList = query.getOrderBy();
 
         for (UjoProperty p : select.readProperties()) {
             String value = (String) p.of(select);
@@ -693,11 +693,14 @@ abstract public class SqlDialect {
                 out.append( value );
                 out.append( value.isEmpty() || where.isEmpty() ? "" : " AND " );
                 out.append( where );
-            } else if (p==MetaSelect.ORDER && !order.isEmpty()){
-                out.append(p.toString());
-                out.append( value );
-                out.append( value.isEmpty() || order.isEmpty() ? "" : " AND " );
+            } else if (p==MetaSelect.ORDER && !orderByList.isEmpty()){
                 printSelectOrder(query, out);
+            } else if (p==MetaSelect.LIMIT && query.getLimit()>0){
+                out.append(p.toString());
+                out.append(String.valueOf(query.getLimit()));
+            } else if (p==MetaSelect.OFFSET && query.getOffset()>0){
+                out.append(p.toString());
+                out.append(String.valueOf(query.getOffset()));
             } else if (value.length()>0) {
                 out.append(p.toString());
                 out.append( value );
