@@ -322,7 +322,7 @@ final public class MetaTable extends AbstractMetaModel {
     /** Finds the first column by ID or returns null. The method is for internal use only. */
     MetaColumn findColumn(String id) {
 
-        if (isUsable(id)) for (MetaColumn column : COLUMNS.of(this)) {
+        if (isFilled(id)) for (MetaColumn column : COLUMNS.of(this)) {
             if (MetaColumn.ID.equals(column, id)) {
                 return column;
             }
@@ -333,7 +333,7 @@ final public class MetaTable extends AbstractMetaModel {
     /** Finds the first relation by ID or returns null. The method is for internal use only. */
     MetaRelation2Many findRelation(String id) {
 
-        if (isUsable(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
+        if (isFilled(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
             if (MetaRelation2Many.ID.equals(relation, id)) {
                 return relation;
             }

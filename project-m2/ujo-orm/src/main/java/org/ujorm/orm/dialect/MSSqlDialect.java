@@ -164,7 +164,7 @@ public class MSSqlDialect extends SqlDialect {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
-        if (isUsable(tableSchema)) {
+        if (isFilled(tableSchema)) {
             out.append((printSymbolSchema && table.isDefaultSchema())
                     ? DEFAULT_SCHEMA_SYMBOL
                     : tableSchema);
@@ -182,7 +182,7 @@ public class MSSqlDialect extends SqlDialect {
         Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
 
         out.append("CREATE TABLE ");
-        if (isUsable(schema)) {
+        if (isFilled(schema)) {
             out.append(schema);
             out.append('.');
         }
@@ -203,7 +203,7 @@ public class MSSqlDialect extends SqlDialect {
     @Override
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
-        if (isUsable(schema)) {
+        if (isFilled(schema)) {
             out.append(schema);
             out.append('.');
         }
