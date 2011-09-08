@@ -76,10 +76,10 @@ public class UjoCoder {
             StringBuilder sb = new StringBuilder(10);
             sb.append(locale.getLanguage());
             String p = locale.getCountry();
-            if (UjoManager.isUsable(p)) {
+            if (UjoManager.isFilled(p)) {
                 sb.append('-').append(p);
                 p = locale.getVariant();
-                if (UjoManager.isUsable(p)) {
+                if (UjoManager.isFilled(p)) {
                     sb.append('-').append(p);
                 }
             }

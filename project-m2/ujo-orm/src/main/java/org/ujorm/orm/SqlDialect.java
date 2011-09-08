@@ -117,7 +117,7 @@ abstract public class SqlDialect {
         final String tableSchema = MetaTable.SCHEMA.of(table);
         final String tableName = MetaTable.NAME.of(table);
 
-        if (isUsable(tableSchema)) {
+        if (isFilled(tableSchema)) {
             out.append( (printSymbolSchema && table.isDefaultSchema())
                     ? DEFAULT_SCHEMA_SYMBOL
                     : tableSchema
@@ -403,7 +403,7 @@ abstract public class SqlDialect {
         for (int i=idxFrom; i<idxTo; ++i) {
             out.append(i==idxFrom ? ")\nSELECT " : " UNION ALL\nSELECT ")
                .append(values);
-            if (isUsable(fromPhrase)) {
+            if (isFilled(fromPhrase)) {
                 out.append(" ").append(fromPhrase);
             }
         }
@@ -647,7 +647,7 @@ abstract public class SqlDialect {
             
             String alias = MetaColumn.TABLE.of(column).getAlias();
             String columnName = column.getForeignColumnName(i);
-            if (isUsable(alias)) {
+            if (isFilled(alias)) {
                 columnName = alias + '.' + columnName;
             }
             String f = MessageFormat.format(template, columnName, "?");
@@ -846,7 +846,7 @@ abstract public class SqlDialect {
     /** Prinnt the full sequence table */
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
-        if (isUsable(schema)) {
+        if (isFilled(schema)) {
             out.append(schema);
             out.append('.');
         }
@@ -860,7 +860,7 @@ abstract public class SqlDialect {
         Integer cache = MetaParams.SEQUENCE_CACHE.of(db.getParams());
 
         out.append("CREATE TABLE ");
-        if (isUsable(schema)) {
+        if (isFilled(schema)) {
             out.append(schema);
             out.append('.');
         }
@@ -927,7 +927,7 @@ abstract public class SqlDialect {
     }
 
     /** Returns true, if the argument text is not null and not empty. */
-    final protected boolean isUsable(final CharSequence text) {
+    final protected boolean isFilled(final CharSequence text) {
         return text!=null && text.length()>0;
     }
 

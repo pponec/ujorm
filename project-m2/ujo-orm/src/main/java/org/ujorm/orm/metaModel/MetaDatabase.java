@@ -525,7 +525,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             if (tableTotalCount==tables.size()) for (String schema : getSchemas(tables)) { // TODO
                 out.setLength(0);
                 sql = getDialect().printCreateSchema(schema, out);
-                if (isUsable(sql)) {
+                if (isFilled(sql)) {
                     try {
                        stat.executeUpdate(sql.toString());
                     } catch (SQLException e) {
@@ -817,7 +817,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 String schema = MetaTable.SCHEMA.of(table);
-                if (isUsable(schema)) {
+                if (isFilled(schema)) {
                     result.add(schema);
                 }
             }
@@ -830,7 +830,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     MetaTable findTable(String id) {
 
-        if (isUsable(id)) for (MetaTable table : TABLES.getList(this)) {
+        if (isFilled(id)) for (MetaTable table : TABLES.getList(this)) {
             if (MetaTable.ID.equals(table, id)) {
                 return table;
             }
@@ -843,7 +843,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     MetaProcedure findProcedure(String id) {
 
-        if (isUsable(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
+        if (isFilled(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
             if (MetaProcedure.ID.equals(procedure, id)) {
                 return procedure;
             }
