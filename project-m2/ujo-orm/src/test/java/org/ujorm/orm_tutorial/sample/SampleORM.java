@@ -270,8 +270,10 @@ public class SampleORM {
      */
     public void useSelectViewOrders() {
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
-        Query<ViewOrder> orders = session.createQuery(crit);
-
+        Query<ViewOrder> orders = session.createQuery(crit)
+                .setLimit(5)
+                .orderBy(ViewOrder.ID)
+                ;
         for (ViewOrder order : orders) {
             System.out.println("ORDER ROW: " + order);
         }
