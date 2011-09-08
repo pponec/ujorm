@@ -701,7 +701,7 @@ abstract public class SqlDialect {
             } else if (p==MetaSelect.OFFSET && !count && query.getOffset()>0){
                 out.append(p.toString());
                 out.append(String.valueOf(query.getOffset()));
-            } else if (value.length()>0) {
+            } else if (isFilled(value)) {
                 out.append(p.toString());
                 out.append( value );
             }
