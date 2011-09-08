@@ -695,10 +695,10 @@ abstract public class SqlDialect {
                 out.append( where );
             } else if (p==MetaSelect.ORDER && !orderByList.isEmpty()){
                 printSelectOrder(query, out);
-            } else if (p==MetaSelect.LIMIT && query.getLimit()>0){
+            } else if (p==MetaSelect.LIMIT && !count && query.getLimit()>0){
                 out.append(p.toString());
                 out.append(String.valueOf(query.getLimit()));
-            } else if (p==MetaSelect.OFFSET && query.getOffset()>0){
+            } else if (p==MetaSelect.OFFSET && !count && query.getOffset()>0){
                 out.append(p.toString());
                 out.append(String.valueOf(query.getOffset()));
             } else if (value.length()>0) {
