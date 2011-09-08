@@ -352,8 +352,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
              
                 Set<String> items = new HashSet<String>(32);
                 ResultSet rs = dmd.getColumns
-                    ( dbIdentifier(MetaTable.SCHEMA.of(table),dmd)
-                    , null
+                    ( null
+                    , dbIdentifier(MetaTable.SCHEMA.of(table),dmd)
                     , dbIdentifier(MetaTable.NAME.of(table),dmd)
                     , column
                     );
