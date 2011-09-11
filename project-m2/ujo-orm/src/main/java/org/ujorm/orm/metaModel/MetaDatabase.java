@@ -51,6 +51,7 @@ import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
+import org.ujorm.orm.dialect.MySqlDialect;
 
 /**
  * A logical database description.
@@ -342,23 +343,35 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         newColumns.clear();
         newIndexes.clear();
 
-        DatabaseMetaData dmd = conn.getMetaData();
+        final DatabaseMetaData dmd = conn.getMetaData();
+        final boolean catalog = getDialect() instanceof MySqlDialect;
         final String column = null;
 
         for (MetaTable table : TABLES.of(this)) {
             if (table.isTable()) {
 
                 // ---------- CHECK TABLE COLUMNS ----------
-             
-                Set<String> items = new HashSet<String>(32);
+
+                final Set<String> items = new HashSet<String>(32);
+                final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dmd);
                 ResultSet rs = dmd.getColumns
-                    ( null
-                    , dbIdentifier(MetaTable.SCHEMA.of(table),dmd)
+                    ( catalog ? schema : null
+                    , catalog ? null  : schema
                     , dbIdentifier(MetaTable.NAME.of(table),dmd)
                     , column
                     );
                 while(rs.next()) {
                     items.add(rs.getString("COLUMN_NAME").toUpperCase());
+                    if (false && LOGGER.isLoggable(Level.INFO)) {
+                        // Debug message:
+                        String msg = "DB column: "
+                                   + rs.getString("TABLE_CAT") + "."
+                                   + rs.getString("TABLE_SCHEM") + "."
+                                   + rs.getString("TABLE_NAME") + "."
+                                   + rs.getString("COLUMN_NAME")
+                                   ;
+                        LOGGER.log(Level.INFO, msg);
+                    }
                 }
                 rs.close();
 
@@ -383,8 +396,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 items.clear();
                 if (tableExists) {
                     rs = dmd.getIndexInfo
-                    ( dbIdentifier(MetaTable.SCHEMA.of(table),dmd)
-                    , null
+                    ( catalog ? schema : null
+                    , catalog ? null : schema
                     , dbIdentifier(MetaTable.NAME.of(table),dmd)
                     , false // unique
                     , false // approximate
@@ -749,7 +762,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public Connection createConnection() throws Exception {
         final Connection result = dialect.createConnection(this);
         result.setAutoCommit(false);
-        
+
         return result;
     }
 
@@ -893,7 +906,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Returns all database indexes */
     public List<MetaIndex> getIndexList() {
         final List<MetaIndex> result = new ArrayList<MetaIndex>(32);
-        
+
         for (MetaTable table : TABLES.of(this)) {
             result.addAll(table.getIndexCollection());
         }
