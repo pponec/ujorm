@@ -499,7 +499,6 @@ public class UjoManager implements Comparator<UjoProperty> {
         return result.toString();
     }
     
-    
     /** Returns true, if text is not null and is not empty. */
     public static boolean isFilled(final CharSequence text) {
         return text!=null && text.length()>0;

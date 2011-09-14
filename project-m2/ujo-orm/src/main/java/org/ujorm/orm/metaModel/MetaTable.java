@@ -69,10 +69,6 @@ final public class MetaTable extends AbstractMetaModel {
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
     public static final Property<MetaTable,String> SEQUENCE = newProperty("sequence", Table.NULL);
-    /** Table Columns (no relations) */
-    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
-    /** Table relations to many */
-    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class);
     /** Is it a model of a database view or table ? */
     @XmlAttribute
     public static final Property<MetaTable,Boolean> VIEW = newProperty("view", false);
@@ -80,6 +76,10 @@ final public class MetaTable extends AbstractMetaModel {
     public static final Property<MetaTable,String> SELECT = newProperty("select", "");
     /** Comment of the database table */
     public static final Property<MetaTable,String> COMMENT = newProperty("comment", Comment.NULL);
+    /** Table Columns (no relations) */
+    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
+    /** Table relations to many */
+    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class);
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
     public static final Property<MetaTable,MetaSelect> SELECT_MODEL = newProperty("selectModel", MetaSelect.class);
@@ -149,10 +149,6 @@ final public class MetaTable extends AbstractMetaModel {
             if (view2!=null) changeDefault(this, ALIAS , view2.alias());
             if (view2!=null) changeDefault(this, SCHEMA, view2.schema());
             if (view2!=null) changeDefault(this, SELECT, view2.select());
-
-            if (!SELECT.isDefault(this)) {
-                SELECT_MODEL.setValue(this, new MetaSelect(SELECT.of(this)));
-            }
         } else {
             Table table1 = field.getAnnotation(Table.class);
             Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
@@ -185,6 +181,10 @@ final public class MetaTable extends AbstractMetaModel {
         Comment comment2 = (Comment) dbProperty.getItemType().getAnnotation(Comment.class);
         if (comment1!=null) changeDefault(this, COMMENT  , comment1.value());
         if (comment2!=null) changeDefault(this, COMMENT  , comment2.value());
+
+        if (VIEW.of(this) && !SELECT.isDefault(this)) {
+            SELECT_MODEL.setValue(this, new MetaSelect(this));
+        }
 
         // -----------------------------------------------
 
