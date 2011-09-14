@@ -30,6 +30,9 @@ import org.ujorm.orm.AbstractMetaModel;
 final public class MetaSelect extends AbstractMetaModel {
     private static final Class CLASS = MetaSelect.class;
 
+    /** Schema variable is replaced for a real schema name. */
+    public static final String SCHEMA = "${SCHEMA}";
+
     /** Logger */
     private static final Logger LOGGER = Logger.getLogger(MetaSelect.class.getName());
 
@@ -39,7 +42,7 @@ final public class MetaSelect extends AbstractMetaModel {
     public static final Property<MetaSelect,String> GROUP  = newProperty(" GROUP BY ", "");
     public static final Property<MetaSelect,String> ORDER  = newProperty(" ORDER BY ", "");
     public static final Property<MetaSelect,String> LIMIT  = newProperty(" LIMIT "   , "");
-    public static final Property<MetaSelect,String> OFFSET = newProperty(" OFFSET "   , "");
+    public static final Property<MetaSelect,String> OFFSET = newProperty(" OFFSET "  , "");
 
     /** The property initialization */
     static{init(CLASS);}
@@ -53,8 +56,43 @@ final public class MetaSelect extends AbstractMetaModel {
      *  WHERE ord.id=itm.orderId
      *  GROUP BY ord.id ;
      */
-    public MetaSelect(String select) {
-        parse(select);
+    public MetaSelect(String select, String schema) {
+        parse(modifySchema(select, schema));
+    }
+
+    public MetaSelect(MetaTable view) {
+        this( MetaTable.SELECT.of(view)
+            , MetaTable.SCHEMA.of(view)
+            ) ;
+    }
+
+    /** Replace Schema for value */
+    private String modifySchema(String select, String schema) {
+        int j=0, i=select.indexOf(SCHEMA);
+        if (i<0) {
+            return select;
+        }
+        final boolean emptySchema = MetaTable.SCHEMA.getDefault().equals(schema);
+        final StringBuilder sb = new StringBuilder(select.length()+3);
+
+        while (i>=0) {
+            final boolean constant = i>0 && select.charAt(i-1)=='\\';
+            if (constant) {
+                sb.append(select.substring(j, i-1));
+                sb.append(SCHEMA);
+            } else {
+                sb.append(select.substring(j, i));
+                sb.append(schema);
+            }
+
+            j = i + SCHEMA.length();
+            if (emptySchema && select.charAt(j)=='.' && !constant) {
+                ++j;
+            }
+            i = select.indexOf(SCHEMA, j);
+        }
+        sb.append(select.substring(j));
+        return sb.toString();
     }
 
     /** Parse the SQL SELECT. */

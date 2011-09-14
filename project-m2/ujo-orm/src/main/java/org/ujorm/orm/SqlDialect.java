@@ -693,7 +693,7 @@ abstract public class SqlDialect {
                 out.append( value );
                 out.append( value.isEmpty() || where.isEmpty() ? "" : " AND " );
                 out.append( where );
-            } else if (p==MetaSelect.ORDER && !orderByList.isEmpty()){
+            } else if (p==MetaSelect.ORDER && !count && !orderByList.isEmpty()){
                 printSelectOrder(query, out);
             } else if (p==MetaSelect.LIMIT && !count && query.getLimit()>0){
                 out.append(p.toString());

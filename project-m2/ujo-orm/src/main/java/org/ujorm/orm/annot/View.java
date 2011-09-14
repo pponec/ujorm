@@ -33,7 +33,10 @@ public @interface View {
     String value() default Table.NULL;
     /** View alias name. The default value is taken from a name. */
     String alias() default Table.NULL;
-    /** Mapping a VIEW to the SQL SELECT. */
+    /** Mapping a VIEW to the SQL SELECT.
+     * The expession <code>${SCHEMA}</code> is replaced for the real schema name in the SQL sttatement.
+     * @see org.ujorm.orm.metaModel.MetaSelect.SCHEMA
+     */
     String  select() default Table.NULL;
     /** Name of schema. If the value is empty than a default database schema is used. */
     String schema() default Table.NULL;

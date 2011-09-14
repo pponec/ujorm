@@ -20,8 +20,6 @@ import java.sql.Blob;
 import java.util.List;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
-import org.ujorm.orm.OrmUjo;
-import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.metaModel.MetaColumn;

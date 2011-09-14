@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.20.02-SNAPSHOT was created 2011/06/25 07:14 -->
+<!-- The Ujorm configuration file release 1.20 was created 2011/09/14 10:20 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
@@ -10,172 +10,67 @@
         <user>sa</user>
         <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
         <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-        <table id="ORDERS">
-            <name>ord_order</name>
-            <alias>ord_order_alias</alias>
+        <table id="users">
+            <name>usr_user</name>
+            <alias>usr_user</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="id">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
-                <comment>The Primary Key</comment>
             </column>
-            <column id="state">
-                <name>state</name>
+            <column id="login">
+                <name>login</name>
                 <dbType>VARCHAR</dbType>
-                <maxLength>2</maxLength>
-                <comment>Order state, default value is ACTIVE</comment>
-            </column>
-            <column id="userId">
-                <name>userId</name>
-                <dbType>INT</dbType>
-            </column>
-            <column id="note">
-                <name>NOTE</name>
-                <dbType>VARCHAR</dbType>
-                <mandatory>true</mandatory>
                 <maxLength>128</maxLength>
-                <comment>Description of the Order</comment>
+                <uniqueIndex>idx_login</uniqueIndex>
             </column>
-            <column id="created">
-                <name>created</name>
-                <dbType>TIMESTAMP</dbType>
-            </column>
-            <column id="customer">
-                <name>fk_customer</name>
-            </column>
-            <column id="newColumn">
-                <name>newColumn</name>
-                <dbType>INT</dbType>
-                <mandatory>true</mandatory>
-            </column>
-            <relation2m id="items">
-                <name>items</name>
-            </relation2m>
-            <comment>Order table for registering the &apos;order items&apos;</comment>
-        </table>
-        <table id="ORDER_ITEMS">
-            <name>ord_item</name>
-            <alias>ord_item_alias</alias>
-            <schema>db1</schema>
-            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <column id="id">
-                <name>id</name>
-                <primaryKey>true</primaryKey>
-                <dbType>BIGINT</dbType>
-            </column>
-            <column id="userId">
-                <name>userId</name>
-                <dbType>INT</dbType>
-            </column>
-            <column id="note">
-                <name>note</name>
+            <column id="password">
+                <name>password_text</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>128</maxLength>
             </column>
-            <column id="price">
-                <name>price</name>
-                <dbType>DECIMAL</dbType>
-                <maxLength>8</maxLength>
-                <precision>2</precision>
-                <comment>Price of the item</comment>
+            <column id="name">
+                <name>name</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
             </column>
-            <column id="order">
-                <name>fk_order</name>
-                <comment>A reference to the Order</comment>
-            </column>
-            <comment>Order item</comment>
         </table>
-        <table id="VIEW_ORDERS" view="true">
-            <name>ord_order</name>
-            <alias>ord_order_alias</alias>
+        <table id="customers">
+            <name>usr_customer</name>
+            <alias>usr_customer</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <column id="ID">
-                <name>ID</name>
-                <primaryKey>true</primaryKey>
-                <dbType>BIGINT</dbType>
-            </column>
-            <column id="ITEM_COUNT">
-                <name>ITEM_COUNT</name>
-                <dbType>INT</dbType>
-            </column>
-            <select>SELECT ord_order_alias.id, count(*) AS item_count FROM db1.ord_order ord_order_alias, db1.ord_item  ord_item_alias WHERE ord_order_alias.id = ord_item_alias.fk_order GROUP BY ord_order_alias.id ORDER BY ord_order_alias.id</select>
-        </table>
-        <table id="CUSTOMER">
-            <name>ord_customer</name>
-            <alias>ord_customer_alias</alias>
-            <schema>db1</schema>
-            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <column id="id">
+            <column id="user">
                 <name>id</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
-            <column id="pin">
-                <name>pin</name>
+            <column id="company">
+                <name>company</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>128</maxLength>
+            </column>
+            <column id="discount">
+                <name>discount</name>
                 <dbType>INT</dbType>
-            </column>
-            <column id="surename">
-                <name>surename</name>
-                <dbType>VARCHAR</dbType>
-                <maxLength>50</maxLength>
-                <uniqueIndex>idx_customer_full_name</uniqueIndex>
-            </column>
-            <column id="lastname">
-                <name>lastname</name>
-                <dbType>VARCHAR</dbType>
-                <maxLength>50</maxLength>
-                <uniqueIndex>idx_customer_full_name</uniqueIndex>
-            </column>
-            <column id="created">
-                <name>created</name>
-                <dbType>TIMESTAMP</dbType>
             </column>
         </table>
         <table id="db1">
             <name>db1</name>
-            <alias>db1_alias</alias>
+            <alias>db1</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <column id="myProcedure">
-                <name>myProcedure</name>
-            </column>
-            <relation2m id="ORDERS">
-                <name>ORDERS</name>
+            <relation2m id="users">
+                <name>users</name>
             </relation2m>
-            <relation2m id="ORDER_ITEMS">
-                <name>ORDER_ITEMS</name>
-            </relation2m>
-            <relation2m id="VIEW_ORDERS">
-                <name>VIEW_ORDERS</name>
-            </relation2m>
-            <relation2m id="CUSTOMER">
-                <name>CUSTOMER</name>
+            <relation2m id="customers">
+                <name>customers</name>
             </relation2m>
         </table>
-        <procedure id="myProcedure">
-            <name>ujorm_test</name>
-            <schema>db1</schema>
-            <parameter id="result">
-                <name>result</name>
-                <dbType>INT</dbType>
-            </parameter>
-            <parameter id="paramCode">
-                <name>paramCode</name>
-                <dbType>INT</dbType>
-            </parameter>
-            <parameter id="paramEnabled">
-                <name>paramEnabled</name>
-                <dbType>BOOLEAN</dbType>
-            </parameter>
-        </procedure>
     </database>
     <parameters>
-        <cachePolicy>SOLID_CACHE</cachePolicy>
-        <tableAliasSuffix>_alias</tableAliasSuffix>
-        <sequenceCache>1</sequenceCache>
         <moreParams></moreParams>
     </parameters>
 </body>
