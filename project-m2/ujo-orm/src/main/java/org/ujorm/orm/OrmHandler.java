@@ -231,13 +231,16 @@ public class OrmHandler {
         databases.setReadOnly(true);
 
         // Log the meta-model:
-        if (LOGGER.isLoggable(Level.INFO)) {
+        final Level level = MetaParams.METAMODEL_LOG_INFO.of(params)
+            ? Level.INFO
+            : Level.FINE ;
+        if (LOGGER.isLoggable(level)) {
             final String msg = "DATABASE META-MODEL:\n" + getConfig();
-            LOGGER.info(msg);
+            LOGGER.log(level, msg);
         }
 
         // Export the meta-model into a XML file:
-        File outConfigFile = MetaParams.SAVE_CONFIG_TO_FILE.of(getParameters());
+        final File outConfigFile = MetaParams.SAVE_CONFIG_TO_FILE.of(getParameters());
         if (outConfigFile!=null) try {
             databases.print(outConfigFile);
         } catch (IOException e) {
