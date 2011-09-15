@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -230,6 +231,11 @@ public class OrmHandler {
         // Lock the meta-model:
         databases.setReadOnly(true);
 
+        // Install a brigge to a Logback framework
+        if (MetaParams.LOGBACK_LOGGING_SUPPORT.of(params)) {
+            installLogbackBridge();
+        }
+
         // Log the meta-model:
         final Level level = MetaParams.METAMODEL_LOG_INFO.of(params)
             ? Level.INFO
@@ -393,6 +399,23 @@ public class OrmHandler {
     /** Returns a final meta-model in the XML format */
     public String getConfig() {
         return databases.toString();
+    }
+
+    /** SLF4JBridgeHandler instance will redirect all JUL log records are redirected to the SLF4J API */
+    public void installLogbackBridge() {
+        try {
+            final String className = "org.slf4j.bridge.SLF4JBridgeHandler";
+            final Class clazz = Class.forName(className);
+            final Method method = clazz.getMethod("install");
+
+            final java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
+            for (java.util.logging.Handler hr : rootLogger.getHandlers()) {
+                rootLogger.removeHandler(hr);
+            }
+            method.invoke(null);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Can't redirect logging to the SLF4J", e);
+        }
     }
 
 }
