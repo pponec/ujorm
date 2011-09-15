@@ -115,6 +115,11 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Property<MetaParams,Boolean> METAMODEL_LOG_INFO = newProperty("metamodelLogInfo", true);
 
+    /** Pamameter tries to install a brighe to the <a href="http://logback.qos.ch/">Logback</a> logging framework
+     * using a statement <code>SLF4JBridgeHandler.install()</code>;
+     */
+    public static final Property<MetaParams,Boolean> LOGBACK_LOGGING_SUPPORT = newProperty("logbackLoggingSupport", false);
+
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
     public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
