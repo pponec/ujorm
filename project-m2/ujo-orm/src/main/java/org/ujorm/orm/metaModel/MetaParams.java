@@ -110,6 +110,11 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Property<MetaParams,MoreParams> MORE_PARAMS = newProperty("moreParams", MoreParams.class);
 
+    /** Set a logging level for a full meta-model information in the XML format.
+     * The TRUE value means the INFO level and the FALSE value means the FINE logging level.
+     */
+    public static final Property<MetaParams,Boolean> METAMODEL_LOG_INFO = newProperty("metamodelLogInfo", true);
+
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
     public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
