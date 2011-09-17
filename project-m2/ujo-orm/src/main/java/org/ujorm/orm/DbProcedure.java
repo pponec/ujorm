@@ -30,8 +30,8 @@ import org.ujorm.orm.metaModel.MetaProcedure;
  */
 abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<UJO> {
 
-    @Transient
-    protected MetaProcedure metaProcedure = null;
+    /** Meta - model */
+    transient protected MetaProcedure metaProcedure = null;
 
     /** Clear all parameters */
     @SuppressWarnings("unchecked")
