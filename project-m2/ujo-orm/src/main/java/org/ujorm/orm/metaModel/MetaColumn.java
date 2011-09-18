@@ -367,11 +367,15 @@ final public class MetaColumn extends MetaRelation2Many {
 
     /** Initialize a type code - for an internal use only. */
     public void initTypeCode(final MetaParams params) {
+        initTypeCode(params.getTypeService());
+    }
+    /** Initialize a type code - for an internal use only. */
+    public void initTypeCode(final TypeService typeService) {
         // Test for a read-only state:
         checkReadOnly(true);
 
         // Assign a type code:
-        typeCode = params.getTypeService().getTypeCode(this);
+        typeCode = typeService.getTypeCode(this);
 
         // Modify a relation type:
         if (isForeignKey()) {

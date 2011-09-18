@@ -607,7 +607,7 @@ public class Session {
             if (query.getFetchSize()>=0) {
                 result.getPreparedStatement().setFetchSize(query.getFetchSize());
             }
-            result.assignValues(query.getDecoder());
+            result.assignValues(query);
 
             if (LOGGER.isLoggable(Level.INFO)) {
                 LOGGER.log(Level.INFO, sql + SQL_VALUES + result.getAssignedValues());

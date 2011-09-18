@@ -65,6 +65,7 @@ public class SampleORM {
             sample.useSortOrders();
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
+            sample.useSelectViewOrdersExtended();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -282,6 +283,23 @@ public class SampleORM {
             System.out.println("ORDER ROW: " + order);
         }
     }
+
+    /** Use a 'native query' where the query is created
+     * by a special entity signed by the @View annotation.
+     */
+    public void useSelectViewOrdersExtended() {
+        Criterion<ViewOrderParam> crit = Criterion.where(ViewOrderParam.ITEM_COUNT, GT, 0);
+        Query<ViewOrderParam> orders = session.createQuery(crit)
+                .setLimit(5)
+                .orderBy(ViewOrderParam.ID)
+                ;
+        orders.setSqlParameters(new SqlParameters(0){}); // OK
+
+        for (ViewOrderParam order : orders) {
+            System.out.println("ORDER ROW: " + order);
+        }
+    }
+
 
     /** Select all items with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {

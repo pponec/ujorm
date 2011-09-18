@@ -19,9 +19,6 @@ package org.ujorm.orm_tutorial.sample;
 
 import org.ujorm.extensions.Property;
 import org.ujorm.orm.DbProcedure;
-import org.ujorm.orm.DbType;
-import org.ujorm.orm.Session;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Parameter;
 import org.ujorm.orm.annot.Procedure;
 
