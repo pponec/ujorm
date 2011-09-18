@@ -18,7 +18,6 @@
 package org.ujorm.orm;
 
 import org.ujorm.UjoProperty;
-import org.ujorm.core.annot.Transient;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.implementation.quick.QuickUjoMid;
