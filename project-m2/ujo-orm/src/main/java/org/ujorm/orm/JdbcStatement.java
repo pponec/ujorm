@@ -28,6 +28,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
 import org.ujorm.UjoAction;
+import org.ujorm.extensions.Property;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -130,6 +131,47 @@ public class JdbcStatement {
         }
     }
 
+    /** Assign values into the prepared statement */
+    final public void assignValues(Query query) throws SQLException {
+        if (query.getSqlParameters()!=null) {
+            assignExtendedValues(query);
+        }
+        assignValues(query.getDecoder());
+    }
+
+    /** Assign extended values into the prepared statement */
+    public void assignExtendedValues(Query query) throws SQLException {
+        SqlParameters params = query.getSqlParameters();
+        if (params==null) {
+            return;
+        }
+        for (Object value : params.getParameters()) {
+
+            Class type = value != null ? value.getClass() : Long.class;
+            Property property = Property.newInstance("[sqlParameter]", type);
+            MetaColumn column = new MetaColumn();
+
+            MetaColumn.TABLE.setValue(column, query.getTableModel());
+            MetaColumn.TABLE_PROPERTY.setValue(column, property);
+            query.getTableModel().getDatabase().changeDbType(column);
+            query.getTableModel().getDatabase().changeDbLength(column);
+            column.initTypeCode(typeService);
+
+            if (logValues) {
+                String textValue = UjoManager.getInstance().encodeValue(value, false);
+                logValue(textValue, property);
+            }
+
+            try {
+                ++parameterPointer;
+                typeService.setValue(column, ps, value, parameterPointer);
+            } catch (Throwable e) {
+                String textValue = UjoManager.getInstance().encodeValue(value, false);
+                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", property.getType().getSimpleName(), column, parameterPointer, textValue);
+                throw new IllegalStateException(msg, e);
+            }
+        }
+    }
 
     /** Assign values into the prepared statement */
     public void assignValues(CriterionDecoder decoder) throws SQLException {

@@ -52,6 +52,10 @@ public class Database extends OrmTable<Database> {
     @View("ord_order")
     public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation(ViewOrder.class);
 
+    /** View to aggregate data. */
+    @View("ord_order_par")
+    public static final RelationToMany<Database,ViewOrderParam> VIEW_ORDERS_PAR = newRelation(ViewOrderParam.class);
+
     /** Customer */
     @Table("ord_customer") public static final RelationToMany<Database,Customer> CUSTOMER = newRelation(Customer.class);
 

@@ -56,6 +56,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private int fetchSize = -1;
     /** Pessimistic lock request */
     private boolean lockRequest;
+    /** SQL parameters for a Native view */
+    private SqlParameters sqlParameters;
 
     /**
      * Create new ORM query. A one from argument is mandatory.
@@ -580,6 +582,16 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Select DISTINCT for a unique row result */
     public Query<UJO> setDistinct() {
         return setDistinct(true);
+    }
+
+    /** Get a SQL parameters of the Native view */
+    public SqlParameters getSqlParameters() {
+        return sqlParameters;
+    }
+
+    /** Set a SQL parameters of the Native view */
+    public void setSqlParameters(SqlParameters sqlParameters) {
+        this.sqlParameters = sqlParameters;
     }
 
 }
