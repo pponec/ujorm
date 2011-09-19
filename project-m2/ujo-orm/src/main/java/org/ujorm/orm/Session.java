@@ -574,7 +574,7 @@ public class Session {
             LOGGER.log(Level.INFO, sql);
 
             statement = getStatement(db, sql);
-            statement.assignValues(query.getDecoder());
+            statement.assignValues(query);
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
             rs = statement.executeQuery(); // execute a select statement

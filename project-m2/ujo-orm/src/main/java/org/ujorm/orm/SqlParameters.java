@@ -18,10 +18,11 @@
 package org.ujorm.orm;
 
 /**
- * Abstract class for a special User parameters.
+ * The class for a special User parameters in the <strong>Native Query</strong>.
+ * @see org.ujorm.orm.annot.View
  * @author Ponec
  */
-abstract public class SqlParameters {
+public class SqlParameters {
 
     /** SQL parameter values */
     final private Object[] parameters;
@@ -40,5 +41,17 @@ abstract public class SqlParameters {
         return parameters.length;
     }
 
+    /** Show all parameters. */
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        for (Object p : parameters) {
+            if (sb.length()>0) {
+                sb.append(", ");
+            }
+            sb.append(p);
+        }
+        return sb.toString();
+    }
 
 }
