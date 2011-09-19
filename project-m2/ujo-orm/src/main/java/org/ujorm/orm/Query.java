@@ -589,9 +589,24 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return sqlParameters;
     }
 
-    /** Set a SQL parameters of the Native view */
-    public void setSqlParameters(SqlParameters sqlParameters) {
+    /** Set a SQL parameters of the <strong>Native View</strong>
+     * @see org.ujorm.orm.annot.View
+     * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
+     */
+    public Query<UJO> setSqlParameters(SqlParameters sqlParameters) throws IllegalArgumentException {
+        if (table!=null && !table.isView()) {
+            throw new IllegalArgumentException("The SQL parameters can be used for the VIEW only");
+        }
         this.sqlParameters = sqlParameters;
+        return this;
+    }
+
+    /** Set a SQL parameters of the Native View
+     * @see org.ujorm.orm.annot.View
+     * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
+     */
+    public Query<UJO> setSqlParameters(Object ... parameters) throws IllegalArgumentException {
+        return setSqlParameters(new SqlParameters(parameters));
     }
 
 }
