@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010 Ponec.
+ *  Copyright 2011 Ponec.
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,9 @@ public class SqlParameters {
     /** SQL parameter values */
     final private Object[] parameters;
 
+    /** SQL Statement, the NULL value means an undefined statement */
+    private String sqlStatement;
+
     public SqlParameters(Object ... parameters) {
         this.parameters = parameters;
     }
@@ -36,9 +39,20 @@ public class SqlParameters {
         return parameters;
     }
 
-    /** Returns count of the SQL parameters */
+    /** Returns parameter count of the SQL parameters */
     public int getCount() {
         return parameters.length;
+    }
+
+    /** SQL Statement, the NULL value means an undefined statement */
+    public String getSqlStatement() {
+        return sqlStatement;
+    }
+
+    /** SQL Statement, the NULL value means an undefined statement */
+    public SqlParameters setSqlStatement(String sqlStatement) {
+        this.sqlStatement = sqlStatement;
+        return this;
     }
 
     /** Show all parameters. */
@@ -51,7 +65,10 @@ public class SqlParameters {
             }
             sb.append(p);
         }
+        if (sqlStatement!=null) {
+            sb.append(" [SQL]: ");
+            sb.append(sqlStatement);
+        }
         return sb.toString();
     }
-
 }

@@ -672,13 +672,19 @@ abstract public class SqlDialect {
             ;
     }
 
-
     /** Print SQL view SELECT
      * @param query The UJO query
      * @param count only count of items is required;
      */
     protected Appendable printSelectView(MetaTable table, Query query, boolean count, Appendable out) throws IOException {
-        final MetaSelect select = MetaTable.SELECT_MODEL.of(table);
+        final String userSql = query.getSqlParameters()!=null
+                ? query.getSqlParameters().getSqlStatement() 
+                : null
+                ;
+        final MetaSelect select = userSql!=null
+                ? new MetaSelect(userSql, MetaTable.SCHEMA.of(table))
+                : MetaTable.SELECT_MODEL.of(table)
+                ;
         final String where = query.getDecoder().getWhere();
         final List<UjoProperty> orderByList = query.getOrderBy();
 
