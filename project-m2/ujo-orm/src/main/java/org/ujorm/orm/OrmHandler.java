@@ -237,7 +237,7 @@ public class OrmHandler {
         }
 
         // Log the meta-model:
-        final Level level = MetaParams.METAMODEL_LOG_INFO.of(params)
+        final Level level = MetaParams.LOG_METAMODEL_INFO.of(params)
             ? Level.INFO
             : Level.FINE ;
         if (LOGGER.isLoggable(level)) {
