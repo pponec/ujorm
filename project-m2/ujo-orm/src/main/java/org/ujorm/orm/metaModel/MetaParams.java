@@ -113,7 +113,7 @@ final public class MetaParams extends AbstractMetaModel {
     /** Set a logging level for a full meta-model information in the XML format.
      * The TRUE value means the INFO level and the FALSE value means the FINE logging level.
      */
-    public static final Property<MetaParams,Boolean> METAMODEL_LOG_INFO = newProperty("metamodelLogInfo", true);
+    public static final Property<MetaParams,Boolean> LOG_METAMODEL_INFO = newProperty("metamodelLogInfo", true);
 
     /** Pamameter tries to install a brighe to the <a href="http://logback.qos.ch/">Logback</a> logging framework
      * using a statement <code>SLF4JBridgeHandler.install()</code>;
