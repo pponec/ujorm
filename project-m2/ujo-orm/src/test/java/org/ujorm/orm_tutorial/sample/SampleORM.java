@@ -65,6 +65,7 @@ public class SampleORM {
             sample.useSortOrders();
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
+            sample.useSelectWithNativeSQL();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -269,7 +270,7 @@ public class SampleORM {
      * by a special entity signed by the @View annotation. <br/>
      * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class ViewOrder,
      * where value for this (optional) parameter is set by the method Query.setSqlParameters();
-     * @see Query#setSqlParameters(java.lang.Object[]) 
+     * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
@@ -284,6 +285,40 @@ public class SampleORM {
                 .setLimit(5)
                 .orderBy(ViewOrder.ID)
                 .setSqlParameters(0)
+                ;
+        for (ViewOrder order : orders) {
+            System.out.println("ORDER ROW: " + order);
+        }
+    }
+
+    /** Use a 'native query' where the query is created
+     * by a special entity signed by the @View annotation. <br/>
+     * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class ViewOrder,
+     * where value for this (optional) parameter is set by the method Query.setSqlParameters();
+     * @see Query#setSqlParameters(java.lang.Object[])
+     */
+    public void useSelectWithNativeSQL() {
+        SqlParameters sql = new SqlParameters().setSqlStatement("SELECT * FROM ("
+                + "SELECT ord_order_alias.id"
+                +         ", 1000 AS item_count"
+                + " FROM ${SCHEMA}.ord_order ord_order_alias"
+                + " LEFT JOIN ${SCHEMA}.ord_item ord_item_alias"
+                + " ON ord_order_alias.id = ord_item_alias.fk_order"
+                + " GROUP BY ord_order_alias.id"
+                + " ORDER BY ord_order_alias.id"
+                + ") testView WHERE true"
+                );
+        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
+        long orderCount = session.createQuery(crit)
+                .setSqlParameters(sql)
+                .getCount()
+                ;
+        System.out.println("Order Count: " + orderCount);
+
+        Query<ViewOrder> orders = session.createQuery(crit)
+                .setLimit(5)
+                .orderBy(ViewOrder.ID)
+                .setSqlParameters(sql)
                 ;
         for (ViewOrder order : orders) {
             System.out.println("ORDER ROW: " + order);

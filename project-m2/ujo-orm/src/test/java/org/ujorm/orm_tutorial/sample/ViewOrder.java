@@ -31,7 +31,7 @@ import org.ujorm.orm.annot.View;
     + " FROM ${SCHEMA}.ord_order ord_order_alias"
     + " LEFT JOIN ${SCHEMA}.ord_item ord_item_alias"
     + " ON ord_order_alias.id = ord_item_alias.fk_order"
-    + " WHERE ord_order_alias.id>=? "
+    + " WHERE ord_item_alias.id>=? "
     + " GROUP BY ord_order_alias.id"
     + " ORDER BY ord_order_alias.id"
     + ") testView WHERE true"
