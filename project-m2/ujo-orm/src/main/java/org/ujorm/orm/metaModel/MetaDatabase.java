@@ -21,7 +21,7 @@ import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import javax.sql.DataSource;
 import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
@@ -42,6 +42,7 @@ import java.util.Set;
 import javax.naming.InitialContext;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ValueExportable;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.JdbcStatement;
@@ -63,7 +64,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     private static final Class CLASS = MetaDatabase.class;
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(MetaDatabase.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDatabase.class.getName());
     /** Add a DB relation into table models */
     private static final boolean ADD_DB_MODEL = true;
 
@@ -663,7 +664,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
            default:
                stat.executeUpdate(sql.toString());
-               LOGGER.info(sql.toString());
+               LOGGER.log(Level.INFO, sql.toString());
        }
     }
 

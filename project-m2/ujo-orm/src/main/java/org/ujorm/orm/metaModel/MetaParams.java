@@ -17,10 +17,12 @@
 package org.ujorm.orm.metaModel;
 
 import java.io.File;
-import java.util.logging.Logger;
+import java.util.logging.Level;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.extensions.Property;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.ao.CachePolicy;
@@ -36,7 +38,7 @@ import org.ujorm.orm.utility.OrmTools;
  */
 final public class MetaParams extends AbstractMetaModel {
     private static final Class CLASS = MetaParams.class;
-    private static final Logger LOGGER = Logger.getLogger(MetaParams.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaParams.class.getName());
     
 
     /** Session cache policy. 
@@ -143,7 +145,7 @@ final public class MetaParams extends AbstractMetaModel {
             if (val<1) {
                 value = 1;
                 final String msg = "The smallest possible value of property '"+property+"' is 1, not " + val;
-                LOGGER.warning(msg);
+                LOGGER.log(Level.WARNING, msg);
             }
         }
         super.writeValue(property, value);
