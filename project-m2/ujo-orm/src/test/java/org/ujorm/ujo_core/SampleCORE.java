@@ -16,10 +16,10 @@
 
 package org.ujorm.ujo_core;
 
+import java.util.logging.Logger;
 import org.ujorm.Ujo;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.criterion.*;

@@ -23,12 +23,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -40,7 +41,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 public class JdbcStatement {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(JdbcStatement.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(JdbcStatement.class);
 
     /** Prepared Statement */
     private final PreparedStatement ps;

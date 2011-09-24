@@ -21,7 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -34,7 +35,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 public class UjoSequencer {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(UjoSequencer.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSequencer.class.getName());
 
     /** Basic table. */
     final protected MetaTable table;

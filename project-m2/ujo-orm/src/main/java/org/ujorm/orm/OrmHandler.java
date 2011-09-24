@@ -28,11 +28,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.CompositeProperty;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -50,7 +51,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 public class OrmHandler {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(OrmHandler.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmHandler.class.getName());
     /** Default handler */
     private static OrmHandler handler = new OrmHandler();
 
@@ -231,11 +232,6 @@ public class OrmHandler {
         // Lock the meta-model:
         databases.setReadOnly(true);
 
-        // Install a brigge to a Logback framework
-        if (MetaParams.LOGBACK_LOGGING_SUPPORT.of(params)) {
-            installLogbackBridge();
-        }
-
         // Log the meta-model:
         final Level level = MetaParams.LOG_METAMODEL_INFO.of(params)
             ? Level.INFO
@@ -399,23 +395,6 @@ public class OrmHandler {
     /** Returns a final meta-model in the XML format */
     public String getConfig() {
         return databases.toString();
-    }
-
-    /** SLF4JBridgeHandler instance will redirect all JUL log records are redirected to the SLF4J API */
-    public void installLogbackBridge() {
-        try {
-            final String className = "org.slf4j.bridge.SLF4JBridgeHandler";
-            final Class clazz = Class.forName(className);
-            final Method method = clazz.getMethod("install");
-
-            final java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
-            for (java.util.logging.Handler hr : rootLogger.getHandlers()) {
-                rootLogger.removeHandler(hr);
-            }
-            method.invoke(null);
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Can't redirect logging to the SLF4J", e);
-        }
     }
 
 }

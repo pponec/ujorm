@@ -17,7 +17,7 @@ package org.ujorm.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -29,7 +29,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
  */
 public class UjormTransactionManager extends AbstractPlatformTransactionManager {
 
-    private static final Logger LOGGER = Logger.getLogger(UjormTransactionManager.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjormTransactionManager.class.getName());
     /** UjoSessionFactory is thread safe
      * so we do not need to use transaction Objects
      */

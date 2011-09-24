@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
@@ -42,6 +42,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.ValueCriterion;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaProcedure;
 
@@ -60,7 +61,7 @@ public class Session {
     /** Exception SQL message prefix */
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Session.class.getName());
     /** Handler. */
     final private OrmHandler handler;
     /** Orm parameters. */
@@ -389,7 +390,7 @@ public class Session {
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
-                LOGGER.warning("No changes to update in the object: " + bo);
+                LOGGER.log(Level.WARNING, "No changes to update in the object: " + bo);
                 return result;
             }
             final MetaTable ormTable = handler.findTableModel(bo.getClass());

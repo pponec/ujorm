@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.ujorm.UjoProperty;
@@ -35,6 +35,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MetaSelect;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -51,7 +52,7 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 abstract public class SqlDialect {
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(SqlDialect.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(SqlDialect.class.getName());
 
     /** The table model for an internal sequence tabable support */
     final private SeqTableModel pkTableModel = new SeqTableModel();

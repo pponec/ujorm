@@ -24,12 +24,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
+import org.ujorm.logger.UjoLoggerFactory;
 
 /**
  * A logical database description.
@@ -40,7 +41,7 @@ import org.ujorm.extensions.Property;
  */
 final public class MetaRoot extends AbstractMetaModel {
     private static final Class CLASS = MetaRoot.class;
-    private static final Logger LOGGER = Logger.getLogger(MetaRoot.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class.getName());
 
     /** List of tables */
     public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class);

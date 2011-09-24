@@ -17,10 +17,11 @@
 package org.ujorm.orm.metaModel;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.extensions.Property;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 
 /**
@@ -34,7 +35,7 @@ final public class MetaSelect extends AbstractMetaModel {
     public static final String SCHEMA = "${SCHEMA}";
 
     /** Logger */
-    private static final Logger LOGGER = Logger.getLogger(MetaSelect.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaSelect.class.getName());
 
     public static final Property<MetaSelect,String> SELECT = newProperty("SELECT "   , "");
     public static final Property<MetaSelect,String> FROM   = newProperty(" FROM "    , "");
