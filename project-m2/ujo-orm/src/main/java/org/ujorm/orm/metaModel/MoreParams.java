@@ -27,7 +27,7 @@ import org.ujorm.orm.AbstractMetaModel;
  */
 final public class MoreParams extends AbstractMetaModel {
     private static final Class CLASS = MoreParams.class;
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MoreParams.class.getName());    
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MoreParams.class.getName());
 
     /** A default engine for the MySQL dialect. The default value of this parameter is: "ENGINE = InnoDB".
      * @see org.ujorm.orm.dialect.MySqlDialect#getEngine()
