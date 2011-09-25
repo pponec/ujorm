@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * Bridge to logging framework JSF4J.
  * @author Ponec
  */
-class UjoLoggerBridge2Slf4j implements UjoLogger {
+final class UjoLoggerBridge2Slf4j implements UjoLogger {
 
     /** JUL SEVERE -&gt; */
     private static final int ERROR = Level.SEVERE.intValue();
@@ -69,27 +69,15 @@ class UjoLoggerBridge2Slf4j implements UjoLogger {
         }
     }
 
+    /** Log Message */
     public void log(Level level, String message) {
-        final int levelId = level.intValue();
-        if (levelId>=ERROR) {
-            logger.error(message);
-        }
-        else if(levelId >= WARN) {
-            logger.warn(message);
-        }
-        else if (levelId>=INFO) {
-            logger.info(message);
-        }
-        else if (levelId>=DEBUG) {
-            logger.debug(message);
-        }
-        else /* if (levelId>=TRACE) */ {
-            logger.debug(message);
-        }
+        log(level, message, (Throwable) null);
     }
 
+    /** Log Message */
     public void log(Level level, String message, Throwable e) {
         final int levelId = level.intValue();
+
         if (levelId>=ERROR) {
             logger.error(message, e);
         }
@@ -103,12 +91,14 @@ class UjoLoggerBridge2Slf4j implements UjoLogger {
             logger.debug(message, e);
         }
         else /* if (levelId>=TRACE) */ {
-            logger.debug(message, e);
+            logger.trace(message, e);
         }
     }
 
+    /** Log Message */
     public void log(Level level, String message, Object... params) {
         final int levelId = level.intValue();
+
         if (levelId>=ERROR) {
             logger.error(message, params);
         }
@@ -122,7 +112,7 @@ class UjoLoggerBridge2Slf4j implements UjoLogger {
             logger.debug(message, params);
         }
         else /* if (levelId>=TRACE) */ {
-            logger.debug(message, params);
+            logger.trace(message, params);
         }
     }
 }
