@@ -51,7 +51,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 public class OrmHandler {
 
     /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmHandler.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmHandler.class);
     /** Default handler */
     private static OrmHandler handler = new OrmHandler();
 

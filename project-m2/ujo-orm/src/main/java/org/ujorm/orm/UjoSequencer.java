@@ -35,7 +35,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 public class UjoSequencer {
 
     /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSequencer.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSequencer.class);
 
     /** Basic table. */
     final protected MetaTable table;

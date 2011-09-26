@@ -41,7 +41,7 @@ import org.ujorm.logger.UjoLoggerFactory;
  */
 final public class MetaRoot extends AbstractMetaModel {
     private static final Class CLASS = MetaRoot.class;
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);
 
     /** List of tables */
     public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class);

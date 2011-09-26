@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 
 /**
@@ -28,7 +29,7 @@ import org.ujorm.orm.Session;
 //TODO : multithread testing
 public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
 
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(AroundServiceTransaction.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(AroundServiceTransaction.class);
     final private UjoSessionFactory ujoSessionFactory;
     final private ThreadLocal<AtomicInteger> deepHolder = new ThreadLocal<AtomicInteger>();
 

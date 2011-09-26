@@ -64,7 +64,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     private static final Class CLASS = MetaDatabase.class;
 
     /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDatabase.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDatabase.class);
     /** Add a DB relation into table models */
     private static final boolean ADD_DB_MODEL = true;
 
