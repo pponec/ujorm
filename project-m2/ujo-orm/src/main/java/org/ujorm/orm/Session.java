@@ -61,7 +61,7 @@ public class Session {
     /** Exception SQL message prefix */
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
     /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Session.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Session.class);
     /** Handler. */
     final private OrmHandler handler;
     /** Orm parameters. */

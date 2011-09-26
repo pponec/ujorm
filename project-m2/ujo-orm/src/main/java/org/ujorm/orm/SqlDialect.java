@@ -52,7 +52,7 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 abstract public class SqlDialect {
 
     /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(SqlDialect.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(SqlDialect.class);
 
     /** The table model for an internal sequence tabable support */
     final private SeqTableModel pkTableModel = new SeqTableModel();

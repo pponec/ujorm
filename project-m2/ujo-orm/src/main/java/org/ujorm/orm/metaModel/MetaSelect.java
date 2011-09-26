@@ -35,7 +35,7 @@ final public class MetaSelect extends AbstractMetaModel {
     public static final String SCHEMA = "${SCHEMA}";
 
     /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaSelect.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaSelect.class);
 
     public static final Property<MetaSelect,String> SELECT = newProperty("SELECT "   , "");
     public static final Property<MetaSelect,String> FROM   = newProperty(" FROM "    , "");

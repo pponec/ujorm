@@ -17,6 +17,7 @@ package org.ujorm.orm.support;
 
 import org.ujorm.logger.UjoLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Session;
 
@@ -26,7 +27,7 @@ import org.ujorm.orm.Session;
  */
 public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFactoryAOP, UjoSessionFactoryFilter {
 
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSessionFactoryImpl.class.getName());
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSessionFactoryImpl.class);
     final private ThreadLocal<UjoSessionFactoryThreadImpl> holder = new ThreadLocal<UjoSessionFactoryThreadImpl>();
     private OrmHandler handler;
 

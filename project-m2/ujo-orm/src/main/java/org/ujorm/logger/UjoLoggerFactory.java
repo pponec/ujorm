@@ -17,7 +17,6 @@ package org.ujorm.logger;
 
 import java.lang.reflect.Constructor;
 import java.util.logging.*;
-import org.ujorm.orm.JdbcStatement;
 
 /**
  * Bridge to logging framework JSF4J.
@@ -26,7 +25,7 @@ import org.ujorm.orm.JdbcStatement;
 final public class UjoLoggerFactory implements UjoLogger {
 
     /** Class name of the UjoLoggerBridge2Slf4j */
-    private static final String SLF4J_BRIDGE_TYPE = "org.ujorm.logger.UjoLoggerBridge2Slf4j";
+    private static final String SLF4J_BRIDGE_TYPE = UjoLogger.class.getPackage().getName() + ".UjoLoggerBridge2Slf4j";
 
     /** Logger */
     final Logger logger;
@@ -62,30 +61,11 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     // ---------- FACTORY -----------------
 
-    public static UjoLogger getLogger(Class<JdbcStatement> name) {
+    public static UjoLogger getLogger(Class<?> name) {
         return isSlf4jSupport()
              ? newUjoLoggerBridge2Slf4j(name)
              : new UjoLoggerFactory(name)
              ;
-    }
-
-    public static UjoLogger getLogger(String name) {
-        return isSlf4jSupport()
-             ? newUjoLoggerBridge2Slf4j(name)
-             : new UjoLoggerFactory(name)
-             ;
-    }
-
-    private static UjoLogger newUjoLoggerBridge2Slf4j(String name) {
-        UjoLogger result;
-        try {
-            final Class clazz = Class.forName(SLF4J_BRIDGE_TYPE);
-            final Constructor c = clazz.getConstructor(name.getClass());
-            result = (UjoLogger) c.newInstance(name);
-        } catch (Exception e) {
-            result = new UjoLoggerFactory(name);
-        }
-        return result;
     }
 
     private static UjoLogger newUjoLoggerBridge2Slf4j(Class name) {
@@ -104,7 +84,12 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     /** Is supported a Slf4Java */
     private static boolean isSlf4jSupport() {
-        return true;
+        try {
+            Class.forName("org.slf4j.Logger");
+            return true;
+        } catch (final Exception e) {
+            return false;
+        }
     }
 
 }
