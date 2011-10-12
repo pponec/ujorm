@@ -25,6 +25,9 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     /** SLF4J Support */
     volatile private static boolean slf4jSupport = true;
+
+    /** Sign to show a log */
+    volatile private static boolean showLog = true;
     
     /** Target Logger */
     final private Logger logger;
@@ -71,7 +74,10 @@ final public class UjoLoggerFactory implements UjoLogger {
         UjoLogger result;
         try {
             result = new UjoLoggerBridge2Slf4j(name);
-            result.log(Level.INFO, "Ujorm logging is switched to the SLF4J.");
+            if (showLog) {
+                showLog = false;
+                result.log(Level.INFO, "Ujorm logging is switched to the SLF4J.");
+            }
         } catch (Throwable e) {
             slf4jSupport = false;
             result = new UjoLoggerFactory(name);
