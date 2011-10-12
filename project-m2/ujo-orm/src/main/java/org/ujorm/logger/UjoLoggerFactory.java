@@ -15,7 +15,6 @@
  */
 package org.ujorm.logger;
 
-import java.lang.reflect.Constructor;
 import java.util.logging.*;
 
 /**
@@ -24,11 +23,11 @@ import java.util.logging.*;
  */
 final public class UjoLoggerFactory implements UjoLogger {
 
-    /** Class name of the UjoLoggerBridge2Slf4j */
-    private static final String SLF4J_BRIDGE_TYPE = UjoLogger.class.getPackage().getName() + ".UjoLoggerBridge2Slf4j";
-
-    /** Logger */
-    final Logger logger;
+    /** SLF4J Support */
+    volatile private static boolean slf4jSupport = true;
+    
+    /** Target Logger */
+    final private Logger logger;
 
     private UjoLoggerFactory(String name) {
         this.logger = java.util.logging.Logger.getLogger(name);
@@ -62,7 +61,7 @@ final public class UjoLoggerFactory implements UjoLogger {
     // ---------- FACTORY -----------------
 
     public static UjoLogger getLogger(Class<?> name) {
-        return isSlf4jSupport()
+        return slf4jSupport
              ? newUjoLoggerBridge2Slf4j(name)
              : new UjoLoggerFactory(name)
              ;
@@ -71,25 +70,14 @@ final public class UjoLoggerFactory implements UjoLogger {
     private static UjoLogger newUjoLoggerBridge2Slf4j(Class name) {
         UjoLogger result;
         try {
-            final Class clazz = Class.forName(SLF4J_BRIDGE_TYPE);
-            final Constructor c = clazz.getConstructor(name.getClass());
-            result = (UjoLogger) c.newInstance(name);
+            result = new UjoLoggerBridge2Slf4j(name);
             result.log(Level.INFO, "Ujorm logging is switched to the SLF4J.");
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            slf4jSupport = false;
             result = new UjoLoggerFactory(name);
             result.log(Level.INFO, "Ujorm logging is switched to the JUL.");
         }
         return result;
-    }
-
-    /** Is supported a Slf4Java */
-    private static boolean isSlf4jSupport() {
-        try {
-            Class.forName("org.slf4j.Logger");
-            return true;
-        } catch (final Exception e) {
-            return false;
-        }
     }
 
 }
