@@ -324,7 +324,7 @@ abstract public class SqlDialect {
     /** Print a SQL to create foreign keys. */
     public Appendable printFKColumnsDeclaration(MetaColumn column, Appendable out) throws IOException {
 
-        List<MetaColumn> columns = column.getForeignColumns();
+        final List<MetaColumn> columns = column.getForeignColumns();
 
         for (int i=0; i<columns.size(); ++i) {
             MetaColumn col = columns.get(i);
@@ -333,6 +333,9 @@ abstract public class SqlDialect {
             printColumnDeclaration(col, name, out);
             if (MetaColumn.MANDATORY.of(column)) {
                 out.append(" NOT NULL");
+            }
+            if (MetaColumn.PRIMARY_KEY.of(column)) {
+                out.append(" PRIMARY KEY");
             }
         }
         return out;
