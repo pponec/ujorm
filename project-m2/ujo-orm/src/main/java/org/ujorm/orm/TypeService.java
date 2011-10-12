@@ -59,6 +59,7 @@ public class TypeService {
     public static final char EXPORT_ENUM = 20;
     public static final char ENUM = 21;
     public static final char COLOR = 22;
+    public static final char STRINGWRAP = 23;
 
     /** Constructor argument type */
     private static final Class[] ARGS = new Class[] {String.class};
@@ -91,6 +92,7 @@ public class TypeService {
         if (type==java.sql.Clob.class) return CLOB;
         if (type.isEnum()) return ENUM;
         if (type==Color.class) return COLOR;
+        if (type==StringWrapper.class) return STRINGWRAP;
 
         if (column.isForeignKey()) {
             List<MetaColumn> columns = column.getForeignColumns();
@@ -136,6 +138,7 @@ public class TypeService {
                             : new Color(c);
             case EXPORTABLE : return getValue(rs.getString(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
+            case STRINGWRAP : return new StringWrapper(rs.getBytes(column));
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -175,6 +178,7 @@ public class TypeService {
                             : new Color(c);
             case EXPORTABLE : return getValue(rs.getString(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
+            case STRINGWRAP : return new StringWrapper(rs.getBytes(column));
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -214,6 +218,7 @@ public class TypeService {
                             : new Color(c);
             case EXPORTABLE : return getValue(rs.getString(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
+            case STRINGWRAP : return new StringWrapper(rs.getBytes(column));
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -243,7 +248,7 @@ public class TypeService {
             case FLOAT    : rs.setFloat(i, (Float)value); break;
             case DOUBLE   : rs.setDouble(i, (Double)value); break;
             case BIG_DECI : rs.setBigDecimal(i, (BigDecimal) value); break;
-            case BIG_INTE : rs.setBigDecimal(i, new BigDecimal((BigInteger)value)) ; break;
+            case BIG_INTE : rs.setBigDecimal(i, new BigDecimal((BigInteger)value)); break;
             case STRING   : rs.setString(i, (String)value); break;
             case BYTES    : rs.setBytes(i, (byte[]) value); break;
             case DATE_UTIL: rs.setTimestamp(i, new java.sql.Timestamp(((java.util.Date)value).getTime()) ); break;
@@ -256,6 +261,13 @@ public class TypeService {
             case COLOR    : rs.setInt(i, ((Color)value).getRGB()); break;
             case EXPORTABLE:
             case EXPORT_ENUM: rs.setString(i, value!=null ? ((ValueExportable)value).exportToString() : null ); break;
+            case STRINGWRAP : final StringWrapper sw = (StringWrapper) value;
+                            if (sw.isNull()) {
+                                rs.setNull(i, MetaColumn.DB_TYPE.of(mColumn).getSqlType());
+                            } else {
+                                rs.setBytes(i, sw.asBytes());
+                            }
+                            break;
             default       : rs.setObject(i, value);  break;
         }
     }
