@@ -49,6 +49,7 @@ import org.ujorm.orm.JdbcStatement;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.StringWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
@@ -246,7 +247,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         else if (Enum.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
         }
-        else if (Blob.class.isAssignableFrom(type)) {
+        else if (Blob.class.isAssignableFrom(type)
+        || StringWrapper.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.BLOB);
         }
         else if (Clob.class.isAssignableFrom(type)) {
