@@ -274,7 +274,7 @@ public class JdbcStatement {
         Object value = null;
 
         for (MetaColumn metaParam : MetaProcedure.PARAMETERS.getList(procedure)) {
-            UjoProperty property = metaParam.getProperty();
+            final UjoProperty property = metaParam.getProperty();
 
             if (!property.isTypeOf(Void.class)) try {
                 
