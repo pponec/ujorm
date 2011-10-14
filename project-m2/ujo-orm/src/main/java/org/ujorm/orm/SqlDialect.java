@@ -701,7 +701,7 @@ abstract public class SqlDialect {
             } else if (p==MetaSelect.WHERE && value.length()+where.length()>0) {
                 out.append(p.toString());
                 out.append( value );
-                out.append( value.isEmpty() || where.isEmpty() ? "" : " AND " );
+                out.append( value.length()==0 || where.length()==0 ? "" : " AND " );
                 out.append( where );
             } else if (p==MetaSelect.ORDER && !count && !orderByList.isEmpty()){
                 printSelectOrder(query, out);
@@ -766,7 +766,7 @@ abstract public class SqlDialect {
             }
 
             final String sql = ed.getWhere();
-            if (!sql.isEmpty()) {
+            if (sql.length()>0) {
                 out.append(" WHERE ");
                 out.append(sql);
             }

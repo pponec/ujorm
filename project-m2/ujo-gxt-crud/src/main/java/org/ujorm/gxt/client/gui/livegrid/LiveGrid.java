@@ -374,7 +374,7 @@ public abstract class LiveGrid<CUJO extends AbstractCujo> extends LayoutContaine
 
             // orderBy
             final String configSort = config.getSortField();
-            final String sortField = configSort != null && !configSort.isEmpty()
+            final String sortField = configSort != null && configSort.length()>0
                     ? configSort
                     : getAutoExpandColumnName();
             if (sortField != null) {
@@ -456,7 +456,7 @@ public abstract class LiveGrid<CUJO extends AbstractCujo> extends LayoutContaine
         // grid
         final Grid<CUJO> grid = new Grid<CUJO>(store, cm);
         setCrudId(grid, "grid");
-        if (autoExpandColumnName != null && !autoExpandColumnName.isEmpty()) {
+        if (autoExpandColumnName != null && autoExpandColumnName.length()>0) {
             grid.setAutoExpandColumn(getAutoExpandColumnName());
             grid.setAutoExpandMax(10000);
             grid.setAutoExpandMin(150);

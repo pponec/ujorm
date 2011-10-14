@@ -75,7 +75,7 @@ public abstract class LiveGridSearch<CUJO extends AbstractCujo> extends LiveGrid
         // TODO: nahradit zjiĹˇĹĄovĂˇnĂ­ datovĂ©ho typu z CujoProperty, podle kterĂ© se Ĺ™adĂ­
         final Object searchedColumnValue = selectedCujo.get(orderBy);
         //
-        if (searched == null || searched.isEmpty()) {
+        if (searched == null || searched.length()==0) {
             stornoTextField();
         }
         //
@@ -91,7 +91,7 @@ public abstract class LiveGridSearch<CUJO extends AbstractCujo> extends LiveGrid
             public void onSuccess(Boolean result) {
                 if (result != null && result) {
                     // TODO: vĂ˝raz nalezen - dohledĂˇvanĂ­ polĂ­ÄŤko by mÄ›lo zezelenat...
-                    if (!searched.isEmpty()) {
+                    if (searched.length()>0) {
                         searchedToGreen();
                     }
                     AsyncCallback getRowNumCallback = new AsyncCallback<Integer>() {

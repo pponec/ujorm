@@ -145,7 +145,7 @@ final public class MetaSelect extends AbstractMetaModel {
         final StringBuilder r = new StringBuilder(128);
         for (UjoProperty p : readProperties()) {
             String value = (String) p.of(this);
-            if (!value.isEmpty()) {
+            if (value.length()>0) {
                 r.append(p);
                 r.append(value);
             }
