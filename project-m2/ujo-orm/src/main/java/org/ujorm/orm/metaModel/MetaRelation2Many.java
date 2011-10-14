@@ -93,6 +93,11 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return TABLE_PROPERTY.of(this);
     }
 
+    /** Returns true if the property type is a type or subtype of the parameter class. */
+    final public Boolean isTypeOf(Class type) {
+        return getProperty().isTypeOf(type);
+    }
+
     final public MetaTable getTable() {
         return TABLE.of(this);
     }

@@ -83,7 +83,7 @@ final public class MetaColumn extends MetaRelation2Many {
 
     public MetaColumn(MetaTable table, UjoProperty tableProperty, MetaColumn param) {
         super(table, tableProperty, param);
-        this.foreignKey = getProperty().isTypeOf(OrmUjo.class);
+        this.foreignKey = isTypeOf(OrmUjo.class);
 
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
@@ -388,6 +388,6 @@ final public class MetaColumn extends MetaRelation2Many {
 
     /** Is the related property type void? */
     public boolean isVoid() {
-        return getProperty().isTypeOf(Void.class);
+        return isTypeOf(Void.class);
     }
 }
