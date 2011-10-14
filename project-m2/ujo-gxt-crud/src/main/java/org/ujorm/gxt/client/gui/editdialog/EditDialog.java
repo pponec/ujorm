@@ -451,7 +451,7 @@ public abstract class EditDialog<CUJO extends Cujo> extends EditWindow<CUJO> {
 
     public void loadSavedTranslate(final String key) {
 
-        if (key == null || key.isEmpty()) {
+        if (key == null || key.length()==0) {
             MessageDialog.getInstance(translate("default", "keyIsEmptyEnterNonemptyKey")).show();
             return;
         }

@@ -83,7 +83,7 @@ public abstract class RelationToManyDialog<CR1 extends AbstractCujo, CR2 extends
         final String relations = cujos.get(0).get(relationProperty);
         if (relations != null) {
             for (String relationId : relations.split("; ")) {
-                if (!relationId.isEmpty()) {
+                if (relationId.length()>0) {
                     CujoProperty idProperty = cujos.get(0).readProperties().findProperty("id");
                     CCriterion userCrit = CCriterion.where(idProperty, Long.parseLong(relationId));
                     sharedCrit = sharedCrit == null ? userCrit : sharedCrit.or(userCrit);
@@ -187,7 +187,7 @@ public abstract class RelationToManyDialog<CR1 extends AbstractCujo, CR2 extends
         for (Long cujoRelation : binding.keySet()) {
             CheckBox box = binding.get(cujoRelation);
             if (box.getValue()) {
-                relations = relations.isEmpty()
+                relations = relations.length()==0
                         ? "" + cujoRelation
                         : relations + "; " + cujoRelation;
             }
