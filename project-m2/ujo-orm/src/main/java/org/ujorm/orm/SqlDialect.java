@@ -765,10 +765,10 @@ abstract public class SqlDialect {
                 printTableAliasDefinition(table, out);
             }
 
-            String sql = ed.getWhere();
+            final String sql = ed.getWhere();
             if (!sql.isEmpty()) {
                 out.append(" WHERE ");
-                out.append(ed.getWhere());
+                out.append(sql);
             }
         } else {
             printTableAliasDefinition(query.getTableModel(), out);
