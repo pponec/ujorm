@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
 import org.ujorm.extensions.Property;
-import org.ujorm.extensions.ValueExportable;
+import org.ujorm.extensions.StringWrapper;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.OrmHandler;
@@ -49,7 +49,7 @@ import org.ujorm.orm.JdbcStatement;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
-import org.ujorm.orm.StringWrapper;
+import org.ujorm.orm.BytesWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
@@ -212,7 +212,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
        Class type = property.getType();
 
-        if (ValueExportable.class.isAssignableFrom(type)) {
+        if (StringWrapper.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
         else if (String.class==type) {
@@ -248,7 +248,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
         }
         else if (Blob.class.isAssignableFrom(type)
-        || StringWrapper.class.isAssignableFrom(type)) {
+        || BytesWrapper.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.BLOB);
         }
         else if (Clob.class.isAssignableFrom(type)) {

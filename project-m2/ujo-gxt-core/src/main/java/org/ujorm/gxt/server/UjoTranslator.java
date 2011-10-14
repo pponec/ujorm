@@ -22,7 +22,7 @@ import org.ujorm.UjoPropertyList;
 import org.ujorm.core.UjoCoder;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
-import org.ujorm.extensions.ValueExportable;
+import org.ujorm.extensions.StringWrapper;
 import org.ujorm.gxt.client.CEnum;
 import org.ujorm.gxt.client.Cujo;
 import org.ujorm.gxt.client.CujoProperty;
@@ -153,7 +153,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
                                 break;
                             }
                         }
-                        if (ValueExportable.class.isAssignableFrom(p1.getType())) {
+                        if (StringWrapper.class.isAssignableFrom(p1.getType())) {
                             if (p2.isTypeOf(String.class)) {
                                 properties.add(new PropContainer(p1, p2, pk));
                                 break;
@@ -241,8 +241,8 @@ public final class UjoTranslator<CUJO extends Cujo> {
                 } else {
                     value = enumValue.name();
                 }
-            } else if (pc.p1.isTypeOf(ValueExportable.class)) {
-                final ValueExportable exportableValue = (ValueExportable) value;
+            } else if (pc.p1.isTypeOf(StringWrapper.class)) {
+                final StringWrapper exportableValue = (StringWrapper) value;
                 value = exportableValue.exportToString();
             } else if (isRelations() && pc.p1.isTypeOf(Ujo.class)) {
                 UjoTranslator ut = relationMap.get(pc.p1);
@@ -309,9 +309,9 @@ public final class UjoTranslator<CUJO extends Cujo> {
                     value = Enum.valueOf(pc.p1.getType(), (String) value);
                 }
             }
-            else if (pc.p1.isTypeOf(ValueExportable.class)) {
+            else if (pc.p1.isTypeOf(StringWrapper.class)) {
                 try {
-                    // Copy ValueExportable:
+                    // Copy StringWrapper:
                     value = pc.p1.getType().getConstructor(String.class).newInstance((String)value);
                 } catch (Exception e) {
                     throw new IllegalStateException("Can't create instance of the " + pc.p1.getType() + " for value " + value);

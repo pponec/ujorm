@@ -26,7 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import org.ujorm.extensions.ValueExportable;
+import org.ujorm.extensions.StringWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
@@ -55,23 +55,27 @@ public class TypeService {
     public static final char TIMESTAMP = 16;
     public static final char BLOB = 17;
     public static final char CLOB = 18;
-    public static final char EXPORTABLE  = 19;
-    public static final char EXPORT_ENUM = 20;
-    public static final char ENUM = 21;
-    public static final char COLOR = 22;
-    public static final char STRINGWRAP = 23;
+    public static final char EXPORT_ENUM = 19;
+    public static final char STRING_WRAP = 20;
+    public static final char BYTES_WRAP = 21;
+    public static final char ENUM = 22;
+    public static final char COLOR = 23;
 
-    /** Constructor argument type */
-    private static final Class[] ARGS = new Class[] {String.class};
+    /** Constructor for the String argument type */
+    private static final Class[] STR_ARGS = new Class[] {String.class};
+
+    /** Constructor for the byte[] argument type */
+    private static final Class[] BYTES_ARGS = new Class[] {byte[].class};
 
     /** The method returns a data type code include relation */
     public char getTypeCode(final MetaColumn column) {
 
         final Class type = column.getType();
 
-        if (ValueExportable.class.isAssignableFrom(type)) return type.isEnum()
+        if (StringWrapper.class.isAssignableFrom(type)) return type.isEnum()
                 ? EXPORT_ENUM
-                : EXPORTABLE;
+                : STRING_WRAP;
+        if (BytesWrapper.class.isAssignableFrom(type)) return BYTES_WRAP;
         if (type==String.class) return STRING;
         if (type==Boolean.class) return BOOLEAN;
         if (type==Byte.class) return BYTE;
@@ -92,7 +96,6 @@ public class TypeService {
         if (type==java.sql.Clob.class) return CLOB;
         if (type.isEnum()) return ENUM;
         if (type==Color.class) return COLOR;
-        if (type==StringWrapper.class) return STRINGWRAP;
 
         if (column.isForeignKey()) {
             List<MetaColumn> columns = column.getForeignColumns();
@@ -136,9 +139,9 @@ public class TypeService {
                             return c==0 && rs.wasNull()
                             ? null
                             : new Color(c);
-            case EXPORTABLE : return getValue(rs.getString(column), mColumn);
+            case STRING_WRAP: return createStringWrapper(rs.getString(column), mColumn);
+            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
-            case STRINGWRAP : return new StringWrapper(rs.getBytes(column));
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -176,9 +179,9 @@ public class TypeService {
                             return c==0 && rs.wasNull()
                             ? null
                             : new Color(c);
-            case EXPORTABLE : return getValue(rs.getString(column), mColumn);
+            case STRING_WRAP: return createStringWrapper(rs.getString(column), mColumn);
+            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
-            case STRINGWRAP : return new StringWrapper(rs.getBytes(column));
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -216,9 +219,9 @@ public class TypeService {
                             return c==0 && rs.wasNull()
                             ? null
                             : new Color(c);
-            case EXPORTABLE : return getValue(rs.getString(column), mColumn);
+            case STRING_WRAP: return createStringWrapper(rs.getString(column), mColumn);
+            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(column), mColumn);
             case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
-            case STRINGWRAP : return new StringWrapper(rs.getBytes(column));
             default       : return rs.getObject(column);
         }
         return rs.wasNull() ? null : r;
@@ -259,15 +262,9 @@ public class TypeService {
             case CLOB     : rs.setClob(i, (Clob)value); break;
             case ENUM     : rs.setInt(i, ((Enum)value).ordinal()); break;
             case COLOR    : rs.setInt(i, ((Color)value).getRGB()); break;
-            case EXPORTABLE:
-            case EXPORT_ENUM: rs.setString(i, value!=null ? ((ValueExportable)value).exportToString() : null ); break;
-            case STRINGWRAP : final StringWrapper sw = (StringWrapper) value;
-                            if (sw.isNull()) {
-                                rs.setNull(i, MetaColumn.DB_TYPE.of(mColumn).getSqlType());
-                            } else {
-                                rs.setBytes(i, sw.asBytes());
-                            }
-                            break;
+            case EXPORT_ENUM:
+            case STRING_WRAP:rs.setString(i, value!=null ? ((StringWrapper)value).exportToString() : null ); break;
+            case BYTES_WRAP :rs.setBytes(i, value!=null ? ((BytesWrapper)value).exportToBytes() : null ); break;
             default       : rs.setObject(i, value);  break;
         }
     }
@@ -278,26 +275,39 @@ public class TypeService {
             return null;
         }
         for (Object o : mColumn.getType().getEnumConstants()) {
-            if (key.equals(((ValueExportable)o).exportToString())) {
+            if (key.equals(((StringWrapper)o).exportToString())) {
                 return o;
             }
         }
         throw new IllegalArgumentException("No enum key " + mColumn.getType() + "." + key);
     }
 
-    /** Create a value by KEY. */
+    /** Create the new StringWrapper by the KEY. */
     @SuppressWarnings("unchecked")
-    private Object getValue(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
+    private Object createStringWrapper(final String key, final MetaColumn mColumn) throws IllegalArgumentException {
         if (key==null || key.length()==0) {
             return null;
         }
         try {
-            final Object result = mColumn.getType().getConstructor(ARGS).newInstance(key);
+            final Object result = mColumn.getType().getConstructor(STR_ARGS).newInstance(key);
             return result;
         } catch (Exception e) {
             throw new IllegalArgumentException("Bad value export " + mColumn.getType() + "." + key, e);
         }
-        
+    }
+
+    /** Create the new BytesWrapper by the KEY. */
+    @SuppressWarnings("unchecked")
+    private Object createBytesWrapper(final byte[] key, final MetaColumn mColumn) throws IllegalArgumentException {
+        if (key==null || key.length==0) {
+            return null;
+        }
+        try {
+            final Object result = mColumn.getType().getConstructor(BYTES_ARGS).newInstance(key);
+            return result;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Bad value export " + mColumn.getType() + "." + key, e);
+        }
     }
 
 }
