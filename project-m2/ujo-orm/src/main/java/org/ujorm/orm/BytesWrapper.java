@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2010 Pavel Ponec
+ *  Copyright 2011-2011 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-
-package org.ujorm.extensions;
+package org.ujorm.orm;
 
 /**
- * The method {@link #exportToString()} replaces the original {@link ValueTextable#toString()}.
- * @author Ponec
- * @see StringWrapper
- * @deprecated Use the interface StringWrapper rather.
+ * Bytes wrapper is used to store Java objects to BLOB or BYTEA databse column type.
+ * @author Pavel Ponec
+ * @see org.ujorm.extensions.StringWraper
  */
-public interface ValueExportable extends StringWrapper {
+public interface BytesWrapper  {
 
+    /** Export the value as an array of bytes. */
+    public byte[] exportToBytes();
 
 }

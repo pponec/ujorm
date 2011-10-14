@@ -19,11 +19,14 @@ package org.ujorm.extensions;
 
 /**
  * The method {@link #exportToString()} replaces the original {@link ValueTextable#toString()}.
- * @author Ponec
- * @see StringWrapper
- * @deprecated Use the interface StringWrapper rather.
+ * @author Pavel Ponec
+ * @see ValueTextable#toString()
  */
-public interface ValueExportable extends StringWrapper {
+public interface StringWrapper extends ValueTextable {
 
+    /** Export the value as String.
+     * The method replaces the original {@link ValueTextable#toString()}.
+     */
+    public String exportToString();
 
 }

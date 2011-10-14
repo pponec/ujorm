@@ -21,7 +21,7 @@ import java.util.Date;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;
-import org.ujorm.extensions.ValueExportable;
+import org.ujorm.extensions.StringWrapper;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
@@ -40,7 +40,7 @@ import org.ujorm.orm.utility.OrmTools;
 public class Order extends OrmTable<Order> {
 
     /** Store the value like VARCHAR. */
-    public enum State implements ValueExportable {
+    public enum State implements StringWrapper {
         ACTIVE,
         DELETED;
 
