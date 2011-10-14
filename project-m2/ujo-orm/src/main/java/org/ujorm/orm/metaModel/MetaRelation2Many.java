@@ -94,7 +94,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
-    final public Boolean isTypeOf(Class type) {
+    final public boolean isTypeOf(Class type) {
         return getProperty().isTypeOf(type);
     }
 
