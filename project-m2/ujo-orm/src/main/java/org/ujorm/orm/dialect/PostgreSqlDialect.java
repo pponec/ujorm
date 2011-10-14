@@ -47,8 +47,11 @@ public class PostgreSqlDialect extends SqlDialect {
     @Override
     protected String getColumnType(final MetaColumn column) {
         switch (MetaColumn.DB_TYPE.of(column)) {
-            case BLOB:
             case CLOB:
+                if (column.isTypeOf(String.class)) {
+                    return "TEXT"; // variable type with unlimited length
+                }
+            case BLOB:
             case BINARY:
                 return "BYTEA"; // The 'bytea' data type allows storage of binary strings.
             default:
