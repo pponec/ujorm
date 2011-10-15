@@ -92,13 +92,19 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Compa
     
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
-     * 
+     *
      * @param ujo A basic Ujo.
      * @param value Null value is supported.
      * @return Accordance
      */
     public boolean equals(UJO ujo, VALUE value);
-    
+
+    /**
+     * Returns true, if the property name equals to the parameter value.
+     * @param name The name of a property
+     */
+    public boolean equalsName(CharSequence name);
+
     /**
      * If the property is the direct property of the related UJO class then method returns the TRUE value.
      * The return value false means, that property is type of {@link CompositeProperty}.

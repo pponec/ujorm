@@ -216,16 +216,25 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     /**
+     * Returns true, if the property name equals to the parameter value.
+     */
+    @Override
+    public boolean equalsName(final CharSequence name) {
+        return name!=null && name.toString().equals(getName());
+    }
+
+    /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
      *
      * @param property A basic CujoProperty.
      * @param value Null value is supported.
      */
     @Override
-    public boolean equals(Object property) {
-        final String t1 = this.getName();
-        final String t2 = property!=null ? property.toString() : null;
-        return t1.equals(t2) && getType().equals(((UjoProperty)property).getType());
+    public boolean equals(final Object property) {
+        return property instanceof UjoProperty
+            && property.toString().equals(getName())
+            && getType().equals(((UjoProperty)property).getType())
+            ;
     }
 
     @Override
