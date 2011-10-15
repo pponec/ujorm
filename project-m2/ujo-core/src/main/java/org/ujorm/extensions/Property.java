@@ -299,6 +299,14 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return result;
     }
 
+    /**
+     * Returns true, if the property name equals to the parameter value.
+     */
+    @Override
+    public boolean equalsName(final CharSequence name) {
+        return name!=null && name.toString().equals(this.name);
+    }
+
     /** Compare to another UjoProperty object by the index and name of the property.
      * @since 1.20
      */
