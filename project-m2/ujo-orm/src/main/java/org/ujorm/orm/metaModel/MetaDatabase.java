@@ -208,11 +208,13 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Change DbType by a Java property */
     public void changeDbType(MetaColumn column) {
-       UjoProperty property = column.getProperty();
+        final UjoProperty property = column.getProperty();
+        final Class type = property.getType();
 
-       Class type = property.getType();
-
-        if (StringWrapper.class.isAssignableFrom(type)) {
+        if (Void.class==type) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.NULL);
+        }
+        else if (StringWrapper.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
         else if (String.class==type) {

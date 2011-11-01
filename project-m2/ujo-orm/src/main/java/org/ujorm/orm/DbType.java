@@ -47,6 +47,7 @@ public enum DbType {
     CHAR(Types.CHAR),
     BLOB(Types.BLOB),
     CLOB(Types.CLOB),
+    NULL(Types.NULL),
  
     //UUID(Types.UUID),
     //ARRAY(Types.ARRAY),
