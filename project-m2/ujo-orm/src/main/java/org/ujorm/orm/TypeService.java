@@ -113,7 +113,7 @@ public class TypeService {
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : r = rs.getBoolean(column); break;
             case BYTE     : r = rs.getByte(column); break;
-            case CHAR     : r = (char) rs.getInt(column); break;
+            case CHAR     : String s = rs.getString(column); return (s != null && s.length() > 0) ? s.charAt(0) : null;
             case SHORT    : r = rs.getShort(column); break;
             case INT      : r = rs.getInt(column); break;
             case LONG     : r = rs.getLong(column); break;
@@ -153,7 +153,7 @@ public class TypeService {
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : r = rs.getBoolean(column); break;
             case BYTE     : r = rs.getByte(column); break;
-            case CHAR     : r = (char) rs.getInt(column); break;
+            case CHAR     : String s = rs.getString(column); return (s != null && s.length() > 0) ? s.charAt(0) : null;
             case SHORT    : r = rs.getShort(column); break;
             case INT      : r = rs.getInt(column); break;
             case LONG     : r = rs.getLong(column); break;
@@ -193,7 +193,7 @@ public class TypeService {
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : r = rs.getBoolean(column); break;
             case BYTE     : r = rs.getByte(column); break;
-            case CHAR     : r = (char) rs.getInt(column); break;
+            case CHAR     : String s = rs.getString(column); return (s != null && s.length() > 0) ? s.charAt(0) : null;
             case SHORT    : r = rs.getShort(column); break;
             case INT      : r = rs.getInt(column); break;
             case LONG     : r = rs.getLong(column); break;
@@ -244,7 +244,7 @@ public class TypeService {
         switch (mColumn.getTypeCode()) {
             case BOOLEAN  : rs.setBoolean(i, (Boolean)value); break;
             case BYTE     : rs.setByte(i, (Byte)value); break;
-            case CHAR     : rs.setInt(i, ((Character)value).charValue()); break;
+            case CHAR     : rs.setString(i, String.valueOf(value)); break;
             case SHORT    : rs.setShort(i, (Short)value); break;
             case INT      : rs.setInt(i, (Integer)value); break;
             case LONG     : rs.setLong(i, (Long)value); break;
