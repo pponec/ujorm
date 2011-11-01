@@ -298,17 +298,19 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectWithNativeSQL() {
-        SqlParameters sql = new SqlParameters().setSqlStatement("SELECT * FROM ("
+        Long excludedId = -7L;
+        SqlParameters sql = new SqlParameters(excludedId).setSqlStatement("SELECT * FROM ("
                 + "SELECT ord_order_alias.id"
-                +         ", 1000 AS item_count"
+                +         ", 1000 + count(*) AS item_count"
                 + " FROM ${SCHEMA}.ord_order ord_order_alias"
                 + " LEFT JOIN ${SCHEMA}.ord_item ord_item_alias"
                 + " ON ord_order_alias.id = ord_item_alias.fk_order"
+                + " WHERE ord_item_alias.id != ?" // Parameter is replaced by the excludedId
                 + " GROUP BY ord_order_alias.id"
                 + " ORDER BY ord_order_alias.id"
                 + ") testView WHERE true"
                 );
-        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
+        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, LE, 100);
         long orderCount = session.createQuery(crit)
                 .setSqlParameters(sql)
                 .getCount()
