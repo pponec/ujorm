@@ -148,7 +148,7 @@ public class JdbcStatement {
         }
         for (Object value : params.getParameters()) {
 
-            Class type = value != null ? value.getClass() : Long.class;
+            Class type = value != null ? value.getClass() : Void.class;
             Property property = Property.newInstance("[sqlParameter]", type);
             MetaColumn column = new MetaColumn();
 
