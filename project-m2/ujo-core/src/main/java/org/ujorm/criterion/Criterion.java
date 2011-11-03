@@ -233,16 +233,28 @@ public abstract class Criterion<UJO extends Ujo> {
     }
 
     /**
-     * Criterion where property equals to NULL.
+     * Create new Criterion where a property value equals to the NULL.
+     * The method is a shortcut to the next full expression:
+     * <pre class="pre">
+     * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
+     * for the String property type in this case.
      * @param property UjoProperty
+     * @see #whereNotNull(org.ujorm.UjoProperty)
+     * @see Operator#EQ
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNull(UjoProperty<UJO,TYPE> property) {
         return new ValueCriterion<UJO>(property, Operator.EQ, (TYPE)null);
     }
 
     /**
-     * Criterion where property not equals to NULL.
+     * Create new Criterion where a property value not equals to the NULL.
+     * The method is a shortcut to the next full expression:
+     * <pre class="pre">
+     * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
+     * for the String property type in this case.
      * @param property UjoProperty
+     * @see #whereNull(org.ujorm.UjoProperty)
+     * @see Operator#NOT_EQ
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotNull(UjoProperty<UJO,TYPE> property) {
         return new ValueCriterion<UJO>(property, Operator.NOT_EQ, (TYPE)null);
