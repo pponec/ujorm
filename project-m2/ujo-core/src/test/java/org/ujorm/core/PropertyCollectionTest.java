@@ -25,8 +25,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import junit.framework.TestCase;
 import org.ujorm.core.ujos.UjoCSV;
-import org.ujorm.implementation.xmlSpeed.PojoTree;
-import org.ujorm.implementation.xmlSpeed.ZCounter;
 
 /**
  *

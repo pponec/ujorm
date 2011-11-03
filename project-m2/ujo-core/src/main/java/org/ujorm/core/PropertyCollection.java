@@ -31,19 +31,27 @@ import org.ujorm.UjoPropertyList;
  * @author Pavel Ponec
  */
 public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty<UJO,?>>, Serializable {
-
     static final long serialVersionUID = 1L;
 
     private final Class<UJO> baseClass;
     private final String[] tProperties;
-    transient private List<UjoProperty<UJO,?>> properties;
+    private transient List<UjoProperty<UJO,?>> properties;
 
+    /**
+     * Constructor
+     * @param baseClass Not null base class for all properties
+     * @param properties Property array
+     * @see #newInstance(java.lang.Class, org.ujorm.UjoProperty<T,?>[]) 
+     */
     public PropertyCollection(Class<UJO> baseClass, UjoProperty<UJO, ?> ... properties) {
+        if (baseClass==null) {
+            throw new IllegalArgumentException("The baseClass must be defined");
+        }
         this.baseClass = baseClass;
         this.properties = Arrays.asList(properties);
+        this.tProperties = new String[properties.length];
 
-        tProperties = new String[properties.length];
-        for (int i = 0; i < properties.length; i++) {
+        for (int i = properties.length - 1; i >= 0; --i) {
             tProperties[i] = properties[i].getName();
         }
     }
@@ -58,7 +66,7 @@ public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty
         final UjoPropertyList propertyList = UjoManager.getInstance().readProperties(baseClass);
 
         if (properties==null) {
-            List<UjoProperty<UJO,?>> ps = new ArrayList<UjoProperty<UJO,?>>(tProperties.length);
+            final List<UjoProperty<UJO,?>> ps = new ArrayList<UjoProperty<UJO,?>>(tProperties.length);
             for (int i = 0; i < tProperties.length; i++) {
                 ps.add(propertyList.findIndirect(tProperties[i], true));
             }
@@ -88,21 +96,20 @@ public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty
         return tProperties.length;
     }
 
-    public boolean contains(Object o) {
-        return getProperties().contains(o);
+    /** Test collection if it contains a property parameter  */
+    @SuppressWarnings("element-type-mismatch")
+    public boolean contains(Object property) {
+        return getProperties().contains(property);
     }
 
+    /** Create Property Interator */
     public Iterator<UjoProperty<UJO, ?>> iterator() {
         return getProperties().iterator();
     }
 
+    /** Convert Properties to an Array */
     public UjoProperty[] toArray() {
         return getProperties().toArray(new  UjoProperty[tProperties.length]);
-    }
-
-    /** Create new Instance */
-    public static <T extends Ujo> PropertyCollection<T> newInstance(Class<T> baseClass, UjoProperty<T, ?> ... properties) {
-        return new PropertyCollection<T>(baseClass, properties);
     }
 
     /** Returns the property names */
@@ -147,6 +154,13 @@ public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty
         hash = 83 * hash + (this.baseClass != null ? this.baseClass.hashCode() : 0);
         hash = 83 * hash + Arrays.deepHashCode(this.tProperties);
         return hash;
+    }
+    
+    // -------------- STATIC METHOD(S) --------------
+
+    /** Create new Instance */
+    public static <T extends Ujo> PropertyCollection<T> newInstance(Class<T> baseClass, UjoProperty<T, ?> ... properties) {
+        return new PropertyCollection<T>(baseClass, properties);
     }
 
 }
