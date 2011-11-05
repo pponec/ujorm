@@ -194,12 +194,12 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** Compare Ujo properties by index. An undefined property indexes (-1 are sorted to the end. */
     public int compare(final UjoProperty p1, final UjoProperty p2) {
-        int i1 = p1.getIndex()>=0 ? p1.getIndex() : Integer.MAX_VALUE;
-        int i2 = p2.getIndex()>=0 ? p2.getIndex() : Integer.MAX_VALUE;
+        final int i1 = p1.getIndex()>=0 ? p1.getIndex() : Integer.MAX_VALUE;
+        final int i2 = p2.getIndex()>=0 ? p2.getIndex() : Integer.MAX_VALUE;
 
-        return i1>i2 ?  1
-        :      i2<i2 ? -1
-        :               0
+        return i1<i2 ? -1
+        :      i1>i2 ? 1
+        :              0
         ;
     }
 
