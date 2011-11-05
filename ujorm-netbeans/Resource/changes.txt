@@ -1,7 +1,31 @@
 The Ujorm release notes
 *******************************
 
-release 1.20 (2010-05-07)
+release 1.21 (2011-11-06)
++ Java 7.0 is supported now
++ a native SQL query with parameters is support now
++ new serializable property container PropertyGroup is implemented now
++ the ORM support for the Character value type is fixed.
++ new method of the API: UjoProperty.equalsName(CharSequence name)
++ PostgreSqlDialect supports the TEXT database type.
++ new BytesWrapper interface to store binary content to a BLOB is implemented in ORM.
++ Ujorm have got a native support for the "org.slf4j.Logger" framework
++ an expression ${SCHEMA} is replaced for a real schema name in the NATIVE SQL view.
++ The LIMIT and OFFSET parameters are implemented for the Native View query 
++ DDL management is fixed for the multi schema structure in databases
++ the SQL parser for a Native View is improved
++ the OrmTableSynchronized class implementation is ready to use for the multi-thread environment.
++ the parameter NULL is allowed in the method Query.setCriterion(Criteron);
++ values of the multi column primary key can be assigned by application thank to a patch from Mr. Tomas Hampl.
++ class MetaParams API to more paramters is extended.
++ the cew API: UjoProperty.descending(boolean descending)
++ the common SqlDialect fixed for combimation SELECT DISTINCT COUNT
++ dialect MSSqlDialect fixed and the blob is supported in MSSqlDialect.java
++ performance is improved
++ JavaDoc is extended
+
+
+release 1.20 (2011-05-29)
 + the project leaves the old domain org.ujoframework so all new Java packages are renamed to: org.ujorm
 + the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL. 
   See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
@@ -30,7 +54,7 @@ release 1.20 (2010-05-07)
 - implementation CommentPolicy.ON_ANY_CHANGE is fixed
 - log message for SQL values is fixed
 
-release 1.10 (2010-02-06)
+release 1.10 (2011-02-06)
 + dialect for the database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
 + new native Criterion is implemented with an SQL expression to use on Ujorm query
 + new annotation @Comment can be used to describe database tables or columns
