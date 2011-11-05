@@ -30,7 +30,7 @@ import org.ujorm.UjoPropertyList;
  * The Immutable and Serializable UjoProperty collection.
  * @author Pavel Ponec
  */
-public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty<UJO,?>>, Serializable {
+public class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,?>>, Serializable {
     static final long serialVersionUID = 1L;
 
     private final Class<UJO> baseClass;
@@ -43,7 +43,7 @@ public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty
      * @param properties Property array
      * @see #newInstance(java.lang.Class, org.ujorm.UjoProperty<T,?>[]) 
      */
-    public PropertyCollection(Class<UJO> baseClass, UjoProperty<UJO, ?> ... properties) {
+    public PropertyGroup(Class<UJO> baseClass, UjoProperty<UJO, ?> ... properties) {
         if (baseClass==null) {
             throw new IllegalArgumentException("The baseClass must be defined");
         }
@@ -127,8 +127,8 @@ public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof PropertyCollection) {
-            PropertyCollection<UJO> o = (PropertyCollection<UJO>) obj;
+        if (obj instanceof PropertyGroup) {
+            PropertyGroup<UJO> o = (PropertyGroup<UJO>) obj;
             if (this.size()!=o.size()) {
                 return false;
             }
@@ -159,8 +159,8 @@ public class PropertyCollection<UJO extends Ujo> implements Iterable<UjoProperty
     // -------------- STATIC METHOD(S) --------------
 
     /** Create new Instance */
-    public static <T extends Ujo> PropertyCollection<T> newInstance(Class<T> baseClass, UjoProperty<T, ?> ... properties) {
-        return new PropertyCollection<T>(baseClass, properties);
+    public static <T extends Ujo> PropertyGroup<T> newInstance(Class<T> baseClass, UjoProperty<T, ?> ... properties) {
+        return new PropertyGroup<T>(baseClass, properties);
     }
 
 }

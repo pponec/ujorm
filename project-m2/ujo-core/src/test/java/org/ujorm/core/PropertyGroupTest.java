@@ -30,9 +30,9 @@ import org.ujorm.core.ujos.UjoCSV;
  *
  * @author Ponec
  */
-public class PropertyCollectionTest extends TestCase {
+public class PropertyGroupTest extends TestCase {
 
-    public PropertyCollectionTest(String testName) {
+    public PropertyGroupTest(String testName) {
         super(testName);
     }
 
@@ -47,14 +47,14 @@ public class PropertyCollectionTest extends TestCase {
     }
 
     /**
-     * Test of getBaseClass method, of class PropertyCollection.
+     * Test of getBaseClass method, of class PropertyGroup.
      */
     public void testGetBaseClass() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
-        PropertyCollection<UjoCSV> props1, props2;
-        props1 = PropertyCollection.newInstance(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
+        PropertyGroup<UjoCSV> props1, props2;
+        props1 = PropertyGroup.newInstance(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
         props2 = null;
 
         try {
@@ -64,7 +64,7 @@ public class PropertyCollectionTest extends TestCase {
             encoder.close();
             InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
             ObjectInput decoder = new ObjectInputStream(is);
-            props2 = (PropertyCollection<UjoCSV>) decoder.readObject();
+            props2 = (PropertyGroup<UjoCSV>) decoder.readObject();
         } catch (Throwable e) {
             assertNull(e);
         }
