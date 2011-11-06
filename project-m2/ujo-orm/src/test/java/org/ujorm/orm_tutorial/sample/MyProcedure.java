@@ -37,12 +37,12 @@ public class MyProcedure extends DbProcedure<MyProcedure> {
 
     /** The first parameter is the OUTPUT allways. <br/>
      * If the stored procedure has no return parameter, set the first property type to: java.lang.Void */
-    public static final Property<MyProcedure,Integer> result = newProperty(Integer.class);
+    public static final Property<MyProcedure,Integer> RESULT = newProperty(Integer.class);
     /** INPUT parameter */
     @Parameter(input=true)
-    public static final Property<MyProcedure,Integer> paramCode = newProperty(0);
+    public static final Property<MyProcedure,Integer> PARAM_CODE = newProperty(0);
     /** INPUT parameter */
-    public static final Property<MyProcedure,Boolean> paramEnabled = newProperty(false);
+    public static final Property<MyProcedure,Boolean> PARAM_ENABLED = newProperty(false);
 
 
 }

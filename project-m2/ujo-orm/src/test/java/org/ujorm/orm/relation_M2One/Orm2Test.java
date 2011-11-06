@@ -351,16 +351,16 @@ public class Orm2Test extends TestCase {
         MyProcedure procedure = new MyProcedure();
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
-        procedure.set(MyProcedure.paramCode, 5);
-        procedure.set(MyProcedure.paramEnabled, true);
+        procedure.set(MyProcedure.RESULT, null); // The output parameter(s) can't be initialized.
+        procedure.set(MyProcedure.PARAM_CODE, 5);
+        procedure.set(MyProcedure.PARAM_ENABLED, true);
 
         Integer result = procedure.call(session);
         System.out.println("The stored procedure result #1: " + result);
 
         // See how to reuse input parameters of the object 'procedure':
-        procedure.set(MyProcedure.paramCode, 24);
-        result = procedure.call(session, MyProcedure.result); // Take the result of any (output) parameter
+        procedure.set(MyProcedure.PARAM_CODE, 24);
+        result = procedure.call(session, MyProcedure.RESULT); // Take the RESULT of any (output) parameter
         System.out.println("The stored procedure result #2: " + result);
     }
 
@@ -382,16 +382,16 @@ public class Orm2Test extends TestCase {
         // MyProcedure procedure2 = session.newProcedure(MyProcedure.class);
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
-        procedure.set(MyProcedure.paramCode, 5);
-        procedure.set(MyProcedure.paramEnabled, true);
+        procedure.set(MyProcedure.RESULT, null); // The output parameter(s) can't be initialized.
+        procedure.set(MyProcedure.PARAM_CODE, 5);
+        procedure.set(MyProcedure.PARAM_ENABLED, true);
 
         Integer result = procedure.call(session);
         System.out.println("The stored procedure result #1: " + result);
 
         // See how to reuse input parameters of the object 'procedure':
-        procedure.set(MyProcedure.paramCode, 24);
-        result = procedure.call(session, MyProcedure.result); // Take the result of any (output) parameter
+        procedure.set(MyProcedure.PARAM_CODE, 24);
+        result = procedure.call(session, MyProcedure.RESULT); // Take the RESULT of any (output) parameter
         System.out.println("The stored procedure result #2: " + result);
     }
 

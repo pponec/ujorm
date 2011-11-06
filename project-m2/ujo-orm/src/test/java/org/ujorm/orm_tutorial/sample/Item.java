@@ -33,53 +33,53 @@ public class Item extends OrmTable<Item> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<Item,Long> id = newProperty(Long.class);
+    public static final UjoProperty<Item,Long> ID = newProperty(Long.class);
     /** User key */
-    public static final UjoProperty<Item,Integer> userId = newProperty(Integer.class);
+    public static final UjoProperty<Item,Integer> USER_ID = newProperty(Integer.class);
     /** Description of the Item */
-    public static final UjoProperty<Item,String> note = newProperty(String.class);
+    public static final UjoProperty<Item,String> NOTE = newProperty(String.class);
     /** Price of the item */
     @Comment("Price of the item")
     @Column(length=8, precision=2)
-    public static final UjoProperty<Item,BigDecimal> price = newProperty(BigDecimal.ZERO);
+    public static final UjoProperty<Item,BigDecimal> PRICE = newProperty(BigDecimal.ZERO);
     /** A reference to common Order */
     @Comment("A reference to the Order")
     @Column(name="fk_order")
-    public static final UjoProperty<Item,Order> order = newProperty(Order.class);
-    /** A composed (or indirect) property provides a 'created' attribute of the Order */
-    public static final UjoProperty<Item,Date> $orderCreated = Item.order.add(Order.created);
+    public static final UjoProperty<Item,Order> ORDER = newProperty(Order.class);
+    /** A composed (or indirect) property provides a 'CREATED' attribute of the Order */
+    public static final UjoProperty<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
 
     // --- An optional implementation of commonly used setters and getters ---
 
     public Long getId() {
-        return get(id);
+        return get(ID);
     }
     public void setId(Long _id) {
-        set(id, _id);
+        set(ID, _id);
     }
     public Integer getUsrId() {
-        return get(userId);
+        return get(USER_ID);
     }
     public void setUsrId(Integer _id) {
-        set(userId, _id);
+        set(USER_ID, _id);
     }
     public String getNote() {
-        return get(note);
+        return get(NOTE);
     }
     public void setNote(String _descr) {
-        set(note, _descr);
+        set(NOTE, _descr);
     }
     public Order getOrder() {
-        return get(order);
+        return get(ORDER);
     }
     public void setOrder(Order _descr) {
-        set(order, _descr);
+        set(ORDER, _descr);
     }
 
     /** Example of the composed property */
     public Date getOrderCreated() {
         // An alternative solution for: getOrder().getCreated();
-        return get($orderCreated);
+        return get($ORDER_CREATED);
     }
 
 

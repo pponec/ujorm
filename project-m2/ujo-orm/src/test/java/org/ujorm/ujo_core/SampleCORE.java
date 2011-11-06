@@ -37,8 +37,8 @@ import static org.ujorm.ujo_core.Employee.*;
  * Learn the basic skills in 15 minutes by a live Java code.
  *
  * Entities: <pre>
- *  - Employee [id, name, wage, address]
- *  - Company [id, city, country]
+ *  - Employee [ID, NAME, WAGE, ADDRESS]
+ *  - Company [ID, CITY, COUNTRY]
  * </pre>
  *
  * Copyright 2011, Pavel Ponec
@@ -92,7 +92,7 @@ public class SampleCORE {
         // == Sample of compilation bugs: ==
         // person.set(AnotherID, 7L);  // Property from another object is not allowed
         // person.set(ID, "Pavel");    // Wrong data type of the parameter
-        // String id = person.get(ID); // Wrong the return data type
+        // String ID = person.get(ID); // Wrong the return data type
     }
 
    /** How to copy all properties from BO to another object? */
@@ -194,8 +194,8 @@ public class SampleCORE {
          Session session = createSession();
          Criterion<Item> crn1, crn2, criterion;
 
-         crn1 = Criterion.where( Item.id, GE, 1L );
-         crn2 = Criterion.where( Item.order.add(Order.note)
+         crn1 = Criterion.where( Item.ID, GE, 1L );
+         crn2 = Criterion.where( Item.ORDER.add(Order.NOTE)
                                , "My order" );
          criterion = crn1.and(crn2);
 
