@@ -3,9 +3,8 @@ The Ujorm release notes
 
 release 1.21 (2011-11-06)
 + Java 7.0 is supported now
-+ a native SQL query with parameters is support now
-+ new serializable property container PropertyGroup is implemented now
-+ the ORM support for the Character value type is fixed.
++ a native SQL query with parameters is supported using the class SqlParameters
++ new serializable property container PropertyGroup is implemented
 + new method of the API: UjoProperty.equalsName(CharSequence name)
 + PostgreSqlDialect supports the TEXT database type.
 + new BytesWrapper interface to store binary content to a BLOB is implemented in ORM.
@@ -20,6 +19,7 @@ release 1.21 (2011-11-06)
 + class MetaParams API to more paramters is extended.
 + the cew API: UjoProperty.descending(boolean descending)
 + the common SqlDialect fixed for combimation SELECT DISTINCT COUNT
++ the ORM support for the Character value type is fixed.
 + dialect MSSqlDialect fixed and the blob is supported in MSSqlDialect.java
 + performance is improved
 + JavaDoc is extended
