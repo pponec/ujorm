@@ -98,7 +98,7 @@ final public class MetaRoot extends AbstractMetaModel {
 
     /** Returns XML header */
     private String getXmlHeader() {
-        final SimpleDateFormat dFormat = new SimpleDateFormat("yyyy/MM/dd mm:HH", Locale.ENGLISH);
+        final SimpleDateFormat dFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.ENGLISH);
         final String result = new StringBuilder(128)
           .append(UjoManagerXML.XML_HEADER)
           .append("\n<!-- The Ujorm configuration file release ")
