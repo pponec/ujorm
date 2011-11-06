@@ -29,33 +29,33 @@ public class Customer extends OrmTable<Customer> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<Customer, Long> id = newProperty(Long.class);
+    public static final UjoProperty<Customer, Long> ID = newProperty(Long.class);
     /** Personal Numbr */
-    public static final UjoProperty<Customer, Integer> pin = newProperty(Integer.class);
+    public static final UjoProperty<Customer, Integer> PIN = newProperty(Integer.class);
     /** Firstname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final UjoProperty<Customer, String> surename = newProperty(String.class);
+    public static final UjoProperty<Customer, String> SURENAME = newProperty(String.class);
     /** Lastname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final UjoProperty<Customer, String> lastname = newProperty(String.class);
+    public static final UjoProperty<Customer, String> LASTNAME = newProperty(String.class);
     /** Date of creation */
-    public static final UjoProperty<Customer, Date> created = newProperty(Date.class);
+    public static final UjoProperty<Customer, Date> CREATED = newProperty(Date.class);
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {
-        return get(id);
+        return get(ID);
     }
 
     public void setId(Long _id) {
-        set(id, _id);
+        set(ID, _id);
     }
 
     public Integer getPin() {
-        return get(pin);
+        return get(PIN);
     }
 
     public void setPin(Integer _pin) {
-        set(pin, _pin);
+        set(PIN, _pin);
     }
 
 }
