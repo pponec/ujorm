@@ -37,7 +37,7 @@ import static org.ujorm.criterion.Operator.*;
  * --------------------------------------- <br>
  * Learn the basic skills in 15 minutes by a live Java code.
  * The next several methods demonstrate the use of statements:
- *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE 
+ *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE
  * and show how to use a meta-model.
  *
  * Entities: <pre>
@@ -45,8 +45,8 @@ import static org.ujorm.criterion.Operator.*;
  *  - Item [ID, ORDER, NOTE, ...]
  * </pre>
 
- * Copyright 2010, Pavel Ponec
- * 
+ * Copyright 2011, Pavel Ponec
+ *
  * @see Order
  * @see Item
  */
@@ -108,7 +108,6 @@ public class SampleORM {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.FINE);
-        // For the Logback framework you can activate the bridge: SLF4JBridgeHandler.install();
 
         // Create new ORM Handler:
         handler = new OrmHandler();
@@ -185,10 +184,10 @@ public class SampleORM {
      * will be similar like the next statement:
      * <pre>
      * SELECT * FROM item
-     * JOIN ORDER ON ORDER.ID = item.id_order
-     * WHERE item.ID >= 1
-     *   AND item.NOTE LIKE '%table%'
-     *   AND ORDER.NOTE = 'My ORDER';
+     * JOIN order ON order.id = item.id_order
+     * WHERE item.id >= 1
+     *   AND item.note LIKE '%table%'
+     *   AND order.note = 'My order';
      * </pre>
      * where both parameters are passed by a 'question mark' notation
      * for a better security.
@@ -248,7 +247,7 @@ public class SampleORM {
         System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
     }
 
-    /** Sort ITEMS by a <strong>composite</strong> propertry. <br>
+    /** Sort items by a <strong>composite</strong> propertry. <br>
      * Note 1: see how a composite property can be used for reading values too. <br>
      * Note 2: the metod loadLazyValues(..) is able to load all lazy properties for the Item and its related Order<br>
      */
@@ -364,7 +363,7 @@ public class SampleORM {
         }
     }
 
-    /** Select ITEMS by a composed property.
+    /** Select items by a composed property.
      * It is a sample of a multi-table query.
      * @see Item#$ORDER_CREATED
      */
@@ -378,7 +377,7 @@ public class SampleORM {
         }
     }
 
-    /** Select ITEMS by a composed property.
+    /** Select items by a composed property.
      * It is a sample of a multi-table query.
      * See used Criterion with the whereIn method. The value list can be empty and the RESULT returns FALSE always in this case.
      * @see Item#$ORDER_CREATED
@@ -406,7 +405,7 @@ public class SampleORM {
         }
     }
 
-    /** Create a SELECT for the one column only 
+    /** Create a SELECT for the one column only
      * with no duplicate rows for a better performance.
      */
     public void useOptimizedSelect() {
@@ -424,7 +423,7 @@ public class SampleORM {
         }
     }
 
-    /** Select all ITEMS with a description with the 'table' insensitive text. */
+    /** Select all items with a description with the 'table' insensitive text. */
     public void useNativeCriterion() {
 
         Criterion<Order> crn1 = Criterion.forSql(Order.STATE, "ord_order_alias.id>0");
@@ -445,7 +444,7 @@ public class SampleORM {
         System.out.println("Reloading result: " + result + " for Order: " + order);
     }
 
-    /** How to get the latest ORDER by the LIMIT attribute? */
+    /** How to get the latest order by the LIMIT attribute? */
     public void useLimitAndOffset() {
         Order order = session.createQuery(Order.class)
                 .setLimit(1)
@@ -456,7 +455,7 @@ public class SampleORM {
         System.out.println("The latest Order: " + order);
     }
 
-    /** How to count ITEMS ? */
+    /** How to count items ? */
     public void useSelectCount() {
         Criterion<Item> crit = Criterion.where(Item.NOTE, CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(crit);
@@ -476,7 +475,7 @@ public class SampleORM {
         }
     }
 
-    /** How to skip ITEMS? */
+    /** How to skip items? */
     public void useIteratorSkip() {
         Criterion<Item> crit = Criterion.where(Item.NOTE, NOT_EQ, "XXXXX");
         UjoIterator<Item> items = session.createQuery(crit).iterator();
@@ -545,11 +544,11 @@ public class SampleORM {
     /** Call a database stored procedure:
      * <code>
      * CREATE OR REPLACE FUNCTION db1.ujorm_test2(integer)
-     * RETURNS refcursor AS 'DECLARE mycurs refcursor;  
-     * BEGIN 
-     *    OPEN mycurs FOR SELECT 11, 12; 
-     *    RETURN mycurs; 
-     * END;' 
+     * RETURNS refcursor AS 'DECLARE mycurs refcursor;
+     * BEGIN
+     *    OPEN mycurs FOR SELECT 11, 12;
+     *    RETURN mycurs;
+     * END;'
      * LANGUAGE plpgsql
      * </code>
      * Note: the source code is an aarly implementation prototype. <br>
@@ -646,7 +645,7 @@ public class SampleORM {
         System.out.println(annotation.value());
     }
 
-    /** Close Ujorm session to clear a session cache 
+    /** Close Ujorm session to clear a session cache
      * and database connection(s).
      */
     public void useCloseSession() {

@@ -27,19 +27,25 @@ import org.ujorm.orm.annot.View;
  * The column mapping to FROM view.
  * @hidden
  */
-@View(select="SELECT ord_order_alias.id as id, count(*) AS item_count"
-    + " FROM db1.ord_order ord_order_alias"
-    +     ", db1.ord_item  ord_item_alias"
-    + " WHERE ord_order_alias.id = ord_item_alias.fk_order"
+@View(select="SELECT * FROM ( "
+    + "SELECT ord_order_alias.id"
+    +         ", count(*) AS item_count"
+    + " FROM ${SCHEMA}.ord_order ord_order_alias"
+    + " LEFT JOIN ${SCHEMA}.ord_item ord_item_alias"
+    + " ON ord_order_alias.id = ord_item_alias.fk_order"
+    + " WHERE ord_item_alias.id>=? "
     + " GROUP BY ord_order_alias.id"
-    + " ORDER BY ord_order_alias.id")
-public class ViewOrder extends OrmTable<ViewOrder> {
+    + " ORDER BY ord_order_alias.id"
+    + ") testView WHERE true"
+    , alias="testView"
+    )
+ public class ViewOrder extends OrmTable<ViewOrder> {
 
     /** Unique key */
     @Column(pk=true, name="id")
     public static final UjoProperty<ViewOrder,Long> ID = newProperty(Long.class);
     /** ItemCount */
-    @Column(pk=true, name="item_count")
+    @Column(name="item_count")
     public static final UjoProperty<ViewOrder,Integer> ITEM_COUNT = newProperty(0);
 
 }

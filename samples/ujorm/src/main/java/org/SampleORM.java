@@ -30,8 +30,6 @@ import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CachePolicy;
-import org.ujorm.orm.ao.CheckReport;
-import org.ujorm.orm.ao.CommentPolicy;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -48,7 +46,7 @@ import static org.ujorm.criterion.Operator.*;
  *
  * Entities: <pre>
  *  - Order [ID, NOTE, CREATED, ...]
- *  - Item [ID, ORDER, PRICE, NOTE, ...]
+ *  - Item [ID, ORDER, NOTE, ...]
  * </pre>
 
  * Copyright 2011, Pavel Ponec
@@ -71,6 +69,7 @@ public class SampleORM {
             sample.useSortOrders();
             sample.useSortOrderItems();
             sample.useSelectViewOrders();
+            sample.useSelectWithNativeSQL();
             sample.useSelectItems_1();
             sample.useSelectItems_2();
             sample.useSelectItems_3();
@@ -113,6 +112,8 @@ public class SampleORM {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.FINE);
+
+        // Create new ORM Handler:
         handler = new OrmHandler();
 
         // There are prefered default properties for a production environment:
@@ -120,8 +121,8 @@ public class SampleORM {
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
-            params.set(MetaParams.SEQUENCE_CACHE, 1);
-            params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
+            params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
+            params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
             handler.config(params);
         }
 
@@ -269,20 +270,67 @@ public class SampleORM {
     }
 
     /** Use a 'native query' where the query is CREATED
-     * by a special entity signed by the @View annotation.
+     * by a special entity signed by the @View annotation. <br/>
+     * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class ViewOrder,
+     * where value for this (optional) parameter is set by the method Query.setSqlParameters();
+     * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
+        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
 
-        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, GE, 0L);
-        Query<ViewOrder> orders = session.createQuery(crit);
-        System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
+        long orderCount = session.createQuery(crit)
+                .setSqlParameters(0)
+                .getCount()
+                ;
+        System.out.println("Order Count: " + orderCount);
 
+        Query<ViewOrder> orders = session.createQuery(crit)
+                .setLimit(5)
+                .orderBy(ViewOrder.ID)
+                .setSqlParameters(0)
+                ;
         for (ViewOrder order : orders) {
             System.out.println("ORDER ROW: " + order);
         }
     }
 
-    /** Select all items with a description with the 'table' insensitive text. */
+    /** Use a 'native query' where the query is CREATED
+     * by a special entity signed by the @View annotation. <br/>
+     * Note the special <strong>inner parameter</strong> in the SQL statement on the Annotation of the class ViewOrder,
+     * where value for this (optional) parameter is set by the method Query.setSqlParameters();
+     * @see Query#setSqlParameters(java.lang.Object[])
+     */
+    public void useSelectWithNativeSQL() {
+        Long excludedId = -7L;
+        SqlParameters sql = new SqlParameters(excludedId).setSqlStatement("SELECT * FROM ("
+                + "SELECT ord_order_alias.id"
+                +         ", 1000 + count(*) AS item_count"
+                + " FROM ${SCHEMA}.ord_order ord_order_alias"
+                + " LEFT JOIN ${SCHEMA}.ord_item ord_item_alias"
+                + " ON ord_order_alias.id = ord_item_alias.fk_order"
+                + " WHERE ord_item_alias.id != ?" // Parameter is replaced by the excludedId
+                + " GROUP BY ord_order_alias.id"
+                + " ORDER BY ord_order_alias.id"
+                + ") testView WHERE true"
+                );
+        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, LE, 100);
+        long orderCount = session.createQuery(crit)
+                .setSqlParameters(sql)
+                .getCount()
+                ;
+        System.out.println("Order Count: " + orderCount);
+
+        Query<ViewOrder> orders = session.createQuery(crit)
+                .setLimit(5)
+                .orderBy(ViewOrder.ID)
+                .setSqlParameters(sql)
+                ;
+        for (ViewOrder order : orders) {
+            System.out.println("ORDER ROW: " + order);
+        }
+    }
+
+    /** Select all ITEMS with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
 
         Criterion<Item> crit = Criterion.where(Item.NOTE, CONTAINS_CASE_INSENSITIVE, "table");
@@ -390,7 +438,6 @@ public class SampleORM {
             System.out.println("ORDER: " + order);
         }
     }
-
 
     /** How to reload the object property values from the database ? */
     public void useReloading() {
