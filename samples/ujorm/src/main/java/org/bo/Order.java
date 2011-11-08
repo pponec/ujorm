@@ -28,7 +28,7 @@ import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 
 /**
- * The column mapping to DB table order (a sample of usage).
+ * The column mapping to DB table ORDER (a sample of usage).
  * Note, that the Order object has got an collection of Items.
  * @hidden
  */
@@ -49,64 +49,64 @@ public class Order extends OrmTable<Order> {
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
-    public static final UjoProperty<Order, Long> id = newProperty(Long.class);
-    /** Order state, default is ACTIVE */
+    public static final UjoProperty<Order, Long> ID = newProperty(Long.class);
+    /** Order STATE, default is ACTIVE */
     @Comment("Order state, default value is ACTIVE")
-    public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
+    public static final UjoProperty<Order, State> STATE = newProperty(State.ACTIVE);
     /** User key */
-    public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
+    public static final UjoProperty<Order, Integer> USER_ID = newProperty(Integer.class);
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final UjoProperty<Order, String> note = newProperty(String.class);
+    public static final UjoProperty<Order, String> NOTE = newProperty(String.class);
     /** Date of creation */
-    public static final UjoProperty<Order, Date> created = newProperty(Date.class);
+    public static final UjoProperty<Order, Date> CREATED = newProperty(Date.class);
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> items = newRelation(Item.class);
+    public static final RelationToMany<Order, Item> ITEMS = newRelation(Item.class);
 
     // --- An optional implementation of commonly used setters and getters ---
 
     public Long getId() {
-        return get(id);
+        return get(ID);
     }
 
     public void setId(Long _id) {
-        set(id, _id);
+        set(ID, _id);
     }
 
     public Integer getUsrId() {
-        return get(userId);
+        return get(USER_ID);
     }
 
     public void setUsrId(Integer _usrId) {
-        set(userId, _usrId);
+        set(USER_ID, _usrId);
     }
 
     public String getNote() {
-        return get(note);
+        return get(NOTE);
     }
 
     public void setNote(String _note) {
-        set(note, _note);
+        set(NOTE, _note);
     }
 
     public Date getCreated() {
-        return get(created);
+        return get(CREATED);
     }
 
     public void setCreated(Date _created) {
-        set(created, _created);
+        set(CREATED, _created);
     }
 
     public State getState() {
-        return get(state);
+        return get(STATE);
     }
 
     public void setState(State _state) {
-        set(state, _state);
+        set(STATE, _state);
     }
 
     public UjoIterator<Item> getItems() {
-        return get(items);
+        return get(ITEMS);
     }
 }

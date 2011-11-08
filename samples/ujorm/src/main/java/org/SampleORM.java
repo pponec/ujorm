@@ -47,8 +47,8 @@ import static org.ujorm.criterion.Operator.*;
  * and show how to use a meta-model.
  *
  * Entities: <pre>
- *  - Order [id, note, created, ...]
- *  - Item [id, order, price, note, ...]
+ *  - Order [ID, NOTE, CREATED, ...]
+ *  - Item [ID, ORDER, PRICE, NOTE, ...]
  * </pre>
 
  * Copyright 2011, Pavel Ponec
@@ -107,7 +107,7 @@ public class SampleORM {
     private Session session;
 
     /** Before the first: create a meta-model.
-     * Database tables will be created in the first time.
+     * Database tables will be CREATED in the first time.
      */
     public void createMetaModel() {
 
@@ -141,7 +141,7 @@ public class SampleORM {
         Order order = new Order();
         order.setCreated(new Date());
         order.setNote("My order");
-        //order.setBinaryFile("binary".getBytes());
+        //ORDER.setBinaryFile("binary".getBytes());
 
         Item item1 = new Item();
         item1.setOrder(order);
@@ -169,7 +169,7 @@ public class SampleORM {
     /** Batch insert by a multi row insert statement. */
     public void useBatchInsert() {
 
-        Order order = session.createQuery(Order.class).orderBy(Order.id.descending()).setLimit(1).uniqueResult();
+        Order order = session.createQuery(Order.class).orderBy(Order.ID.descending()).setLimit(1).uniqueResult();
         List<Item> itemList = new ArrayList<Item>();
 
         for (int i = 0; i < 3; i++) {
@@ -198,9 +198,9 @@ public class SampleORM {
     public void useSelect() {
         Criterion<Item> crn1, crn2, crn3, crit;
 
-        crn1 = Criterion.where( Item.id, GE, 1L );
-        crn2 = Criterion.where( Item.note, CONTAINS, "table" );
-        crn3 = Criterion.where( Item.order.add(Order.note), "My order" );
+        crn1 = Criterion.where( Item.ID, GE, 1L );
+        crn2 = Criterion.where( Item.NOTE, CONTAINS, "table" );
+        crn3 = Criterion.where( Item.ORDER.add(Order.NOTE), "My order" );
         crit = crn1.and(crn2).and(crn3);
 
         for (Item item : session.createQuery(crit)) {
@@ -217,35 +217,35 @@ public class SampleORM {
         order.setNote("my order");
         order.setCreated(new Date());
 
-        Criterion<Order> crnId = Criterion.where(Order.id, GT, 99L);
-        Criterion<Order> crnNote = Criterion.where(Order.note, "another");
-        Criterion<Order> crnCreated = Criterion.where(Order.created, LE, new Date()) ;
+        Criterion<Order> crnId = Criterion.where(Order.ID, GT, 99L);
+        Criterion<Order> crnNote = Criterion.where(Order.NOTE, "another");
+        Criterion<Order> crnCreated = Criterion.where(Order.CREATED, LE, new Date()) ;
         Criterion<Order> crn = null;
 
-        // Simple condition: Order.id>99
+        // Simple condition: Order.ID>99
         assert crnId.evaluate(order);
 
-        // Compound condition: Order.id>99 or Order.note='another'
+        // Compound condition: Order.ID>99 or Order.NOTE='another'
         crn = crnId.or(crnNote);
         assert crn.evaluate(order);
 
-        // Compound condition with parentheses: Order.created<=now() and (Order.note='another' or Order.id>99)
+        // Compound condition with parentheses: Order.CREATED<=now() and (Order.NOTE='another' or Order.ID>99)
         crn = crnCreated.and(crnNote.or(crnId));
         assert crn.evaluate(order);
 
-        // Another condition: (Order.created<=now() or Order.note='another') and Order.id>99
+        // Another condition: (Order.CREATED<=now() or Order.NOTE='another') and Order.ID>99
         crn = (crnCreated.or(crnNote)).and(crnId);
         // ... or simple by a native priority:
         crn =  crnCreated.or(crnNote).and(crnId);
         assert crn.evaluate(order);
     }
 
-    /** Sort orders by two properties: note and created descending. */
+    /** Sort orders by two properties: NOTE and CREATED descending. */
     public void useSortOrders() {
 
         Query<Order> orders = session.createQuery(Order.class);
-        orders.orderBy( Order.note
-                      , Order.created.descending() );
+        orders.orderBy( Order.NOTE
+                      , Order.CREATED.descending() );
 
         System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
     }
@@ -257,18 +257,18 @@ public class SampleORM {
     public void useSortOrderItems() {
 
         Query<Item> items = session.createQuery(Item.class);
-        items.orderBy(Item.order.add(Order.created));
+        items.orderBy(Item.ORDER.add(Order.CREATED));
 
         for (Item item : items) {
             OrmTools.loadLazyValues(item, 2);
-            System.out.println(item.get(Item.order.add(Order.created)) + " " + item);
+            System.out.println(item.get(Item.ORDER.add(Order.CREATED)) + " " + item);
         }
         // Another way to avoid the lazy loading by a bulk property loading:
         List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
         System.out.println("itemList: " + itemList);
     }
 
-    /** Use a 'native query' where the query is created
+    /** Use a 'native query' where the query is CREATED
      * by a special entity signed by the @View annotation.
      */
     public void useSelectViewOrders() {
@@ -285,8 +285,8 @@ public class SampleORM {
     /** Select all items with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
 
-        Criterion<Item> crit = Criterion.where(Item.note, CONTAINS_CASE_INSENSITIVE, "table");
-        Query<Item> items = session.createQuery(crit).orderBy(Item.id.descending());
+        Criterion<Item> crit = Criterion.where(Item.NOTE, CONTAINS_CASE_INSENSITIVE, "table");
+        Query<Item> items = session.createQuery(crit).orderBy(Item.ID.descending());
 
         for (Item item : items) {
             Order order = item.getOrder();
@@ -294,11 +294,11 @@ public class SampleORM {
         }
     }
 
-    /** Select one Order by id and print its Items by a criterion */
+    /** Select one Order by ID and print its Items by a criterion */
     public void useSelectItems_2() {
 
         Order orderValue = session.load(Order.class, 1L);
-        Criterion<Item> crit = Criterion.where(Item.order, orderValue);
+        Criterion<Item> crit = Criterion.where(Item.ORDER, orderValue);
         Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
@@ -307,7 +307,7 @@ public class SampleORM {
         }
     }
 
-    /** Select an Order by id and print its Items
+    /** Select an Order by ID and print its Items
      * by a 'one to many' relation property
      */
     public void useSelectItems_3() {
@@ -321,10 +321,10 @@ public class SampleORM {
 
     /** Select items by a composed property.
      * It is a sample of a multi-table query.
-     * @see Item#$orderCreated
+     * @see Item#$ORDER_CREATED
      */
     public void useSelectItems_4() {
-        UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderCreated
+        UjoProperty<Item, Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_CREATED
         Criterion<Item> crit = Criterion.where(ORDER_DATE, LE, new Date());
         Query<Item> items = session.createQuery(crit);
 
@@ -335,11 +335,11 @@ public class SampleORM {
 
     /** Select items by a composed property.
      * It is a sample of a multi-table query.
-     * See used Criterion with the whereIn method. The value list can be empty and the result returns FALSE always in this case.
-     * @see Item#$orderCreated
+     * See used Criterion with the whereIn method. The value list can be empty and the RESULT returns FALSE always in this case.
+     * @see Item#$ORDER_CREATED
      */
     public void useSelectItems_5() {
-        Criterion<Item> crit = Criterion.whereIn(Item.id, 1L,2L,3L,4L,5L);
+        Criterion<Item> crit = Criterion.whereIn(Item.ID, 1L,2L,3L,4L,5L);
         Query<Item> items = session.createQuery(crit);
 
         for (Item item : items) {
@@ -354,7 +354,7 @@ public class SampleORM {
         Order order_2 = new Order();
         order_2.setId(2L);
 
-        Criterion<Item> crit = Criterion.whereIn(Item.order, order_1, order_2);
+        Criterion<Item> crit = Criterion.whereIn(Item.ORDER, order_1, order_2);
 
         for (Item item : session.createQuery(crit)) {
             System.out.println("Item: " + item);
@@ -365,25 +365,25 @@ public class SampleORM {
      * with no duplicate rows for a better performance.
      */
     public void useOptimizedSelect() {
-        Criterion<Item> crit = Criterion.where(Item.id, NOT_EQ, 0L);
+        Criterion<Item> crit = Criterion.where(Item.ID, NOT_EQ, 0L);
         Query<Item> items = session.createQuery(crit)
-                .setColumn(Item.note) // Select the one column
+                .setColumn(Item.NOTE) // Select the one column
                 .setDistinct()        // Remove duplicate rows
                 ;
         for (Item item : items) {
             System.out.println("Note: " + item.getNote());
 
             // Other columns have got the default value always:
-            assert item.getId() == Item.id.getDefault();
-            assert item.getOrder() == Item.order.getDefault();
+            assert item.getId() == Item.ID.getDefault();
+            assert item.getOrder() == Item.ORDER.getDefault();
         }
     }
 
     /** Select all items with a description with the 'table' insensitive text. */
     public void useNativeCriterion() {
 
-        Criterion<Order> crn1 = Criterion.forSql(Order.state, "ord_order_alias.id>0");
-        Criterion<Order> crn2 = Criterion.where(Order.created, LE, new Date());
+        Criterion<Order> crn1 = Criterion.forSql(Order.STATE, "ord_order_alias.id>0");
+        Criterion<Order> crn2 = Criterion.where(Order.CREATED, LE, new Date());
         Query<Order> orders = session.createQuery(crn1.and(crn2));
 
         for (Order order : orders) {
@@ -406,7 +406,7 @@ public class SampleORM {
         Order order = session.createQuery(Order.class)
                 .setLimit(1)
                 .setOffset(0) // The default value can't be specified
-                .orderBy(Order.created.descending())
+                .orderBy(Order.CREATED.descending())
                 .uniqueResult()
                 ;
         System.out.println("The latest Order: " + order);
@@ -414,7 +414,7 @@ public class SampleORM {
 
     /** How to count items ? */
     public void useSelectCount() {
-        Criterion<Item> crit = Criterion.where(Item.note, CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Criterion.where(Item.NOTE, CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> query = session.createQuery(crit);
 
         long count = query.getCount();
@@ -425,16 +425,16 @@ public class SampleORM {
     public void useForeignKey() {
         Database db = session.getFirstDatabase();
         for (Item item : db.get(Database.ORDER_ITEMS)) {
-            ForeignKey fk1 = item.readFK(Item.order);   // before lazy loading
-            item.get(Item.order);                       // the lazy loading
-            ForeignKey fk2 = item.readFK(Item.order);   // after lazy loading
+            ForeignKey fk1 = item.readFK(Item.ORDER);   // before lazy loading
+            item.get(Item.ORDER);                       // the lazy loading
+            ForeignKey fk2 = item.readFK(Item.ORDER);   // after lazy loading
             System.out.println("FK: " + fk1 + " " + fk1.equals(fk2));
         }
     }
 
     /** How to skip items? */
     public void useIteratorSkip() {
-        Criterion<Item> crit = Criterion.where(Item.note, NOT_EQ, "XXXXX");
+        Criterion<Item> crit = Criterion.where(Item.NOTE, NOT_EQ, "XXXXX");
         UjoIterator<Item> items = session.createQuery(crit).iterator();
 
         boolean skip = items.skip(1);
@@ -485,16 +485,16 @@ public class SampleORM {
         MyProcedure procedure = new MyProcedure();
 
         // Assign input parameters:
-        procedure.set(MyProcedure.paramCode, 5);
-        procedure.set(MyProcedure.paramEnabled, true);
-        Integer result = procedure.call(session); // Take the result from the first parameter
+        procedure.set(MyProcedure.PARAM_CODE, 5);
+        procedure.set(MyProcedure.PARAM_ENABLED, true);
+        Integer result = procedure.call(session); // Take the RESULT from the first parameter
         System.out.println("The stored procedure result #1: " + result);
 
         // Another way how to get the output parameter:
-        procedure.set(MyProcedure.paramCode, 24);
-        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
+        procedure.set(MyProcedure.PARAM_CODE, 24);
+        procedure.set(MyProcedure.RESULT, null); // The output parameter(s) can't be initialized.
         procedure.call(session);
-        result = procedure.get(MyProcedure.result); // Take the result from any output parameter
+        result = procedure.get(MyProcedure.RESULT); // Take the RESULT from any output parameter
         System.out.println("The stored procedure result #2: " + result);
     }
 
@@ -516,16 +516,16 @@ public class SampleORM {
         // MyProcedure procedure2 = session.newProcedure(MyProcedure.class);
 
         // Assign input parameters:
-        procedure.set(MyProcedure.result, null); // The output parameter(s) can't be initialized.
-        procedure.set(MyProcedure.paramCode, 5);
-        procedure.set(MyProcedure.paramEnabled, true);
+        procedure.set(MyProcedure.RESULT, null); // The output parameter(s) can't be initialized.
+        procedure.set(MyProcedure.PARAM_CODE, 5);
+        procedure.set(MyProcedure.PARAM_ENABLED, true);
 
         Integer result = procedure.call(session);
         System.out.println("The stored procedure result #1: " + result);
 
         // See how to reuse input parameters of the object 'procedure':
-        procedure.set(MyProcedure.paramCode, 24);
-        result = procedure.call(session, MyProcedure.result); // Take the result of any (output) parameter
+        procedure.set(MyProcedure.PARAM_CODE, 24);
+        result = procedure.call(session, MyProcedure.RESULT); // Take the RESULT of any (output) parameter
         System.out.println("The stored procedure result #2: " + result);
     }
 
@@ -539,7 +539,7 @@ public class SampleORM {
     }
 
     /** The batch UPDATE of selected columns for required database rows. <br />
-     * The exsample updates one database column (created) to the current date for all Orders where id>=1 .
+     * The exsample updates one database column (CREATED) to the current date for all Orders where ID>=1 .
      */
     public void useBatchUpdate() {
         Order order = new Order();
@@ -548,14 +548,14 @@ public class SampleORM {
         // Set a value(s) to the change:
         order.setCreated(new Date());
 
-        Criterion<Order> criterion  = Criterion.where(Order.id, GE, 1L);
+        Criterion<Order> criterion  = Criterion.where(Order.ID, GE, 1L);
         session.update(order, criterion);
         session.commit();
     }
 
     /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
     public void usePesimisticUpdate() {
-        Order order = session.createQuery(Criterion.where(Order.id, 1L))
+        Order order = session.createQuery(Criterion.where(Order.ID, 1L))
             .setLockRequest()
             .uniqueResult()
             ;
@@ -574,20 +574,20 @@ public class SampleORM {
     }
 
     /** How to use a batch DELETE? <br/>
-     *  The next example deletes all Items where Item.id = 1
+     *  The next example deletes all Items where Item.ID = 1
      */
     public void useBatchDelete() {
-        Criterion<Item> crit = Criterion.where(Item.id, 1L);
+        Criterion<Item> crit = Criterion.where(Item.ID, 1L);
         int count = session.delete(crit);
         session.commit();
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Print some meta-data of the property Order.note. */
+    /** Print some meta-data of the property Order.NOTE. */
     public void useMetadata() {
-        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.note);
+        MetaColumn col = (MetaColumn) handler.findColumnModel(Order.NOTE);
 
-        String msg = "** METADATA OF COLUMN: " + Order.note.toString() + '\n'
+        String msg = "** METADATA OF COLUMN: " + Order.NOTE.toString() + '\n'
             + "DB name: " + col.getFullName()  + '\n'
             + "Comment: " + col.getComment()   + '\n'
             + "Length : " + col.getMaxLength() + '\n'
@@ -598,7 +598,7 @@ public class SampleORM {
         System.out.println(msg);
 
         // See, how to get an annotation of a persistent UjoProperty in run-time:
-        Comment annotation = handler.findAnnotation(Order.id, Comment.class);
+        Comment annotation = handler.findAnnotation(Order.ID, Comment.class);
         System.out.println(annotation.value());
     }
 
