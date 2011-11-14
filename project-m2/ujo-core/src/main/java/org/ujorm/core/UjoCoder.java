@@ -70,7 +70,7 @@ public class UjoCoder {
         } else if (char[].class==value.getClass()) {
             result = new String((char[]) value);
         } else if (Character.class==value.getClass()) {
-            result = Integer.toString(((Character) value).charValue());
+            result = ((Character)value).toString();
         } else if (Locale.class==value.getClass()) {
             Locale locale = (Locale) value;
             StringBuilder sb = new StringBuilder(10);
@@ -219,7 +219,7 @@ public class UjoCoder {
                 return result;
             }
             if (Character.class==type) {
-                final char result = (char) Integer.parseInt(aValue);
+                final char result = aValue.charAt(0);
                 return result;
             }
             if (byte[].class==type) {
