@@ -219,6 +219,12 @@ public class UjoCoder {
                 return result;
             }
             if (Character.class==type) {
+//                TODO:PoP
+//                final char result = aValue.length()>1 && isDigit(aValue)
+//                        ? (char) Integer.parseInt(aValue)
+//                        : aValue.charAt(0)
+//                        ;
+
                 final char result = aValue.charAt(0);
                 return result;
             }
@@ -337,5 +343,17 @@ public class UjoCoder {
             || Object[].class.isAssignableFrom(baseType)
             ;
         return result;
+    }
+
+
+    /** Is the text a number? */
+    final public boolean isDigit(String text) {
+        for (int i = text.length()-1; i>=0; --i) {
+            final char c = text.charAt(i);
+            if (c<'0' || '9'<c) {
+                return false;
+            }
+        }
+        return true;
     }
 }
