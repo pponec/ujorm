@@ -70,7 +70,7 @@ public class UjoCoder {
         } else if (char[].class==value.getClass()) {
             result = new String((char[]) value);
         } else if (Character.class==value.getClass()) {
-            result = ((Character)value).toString();
+            result = Integer.toString(((Character) value).charValue());
         } else if (Locale.class==value.getClass()) {
             Locale locale = (Locale) value;
             StringBuilder sb = new StringBuilder(10);
@@ -219,13 +219,7 @@ public class UjoCoder {
                 return result;
             }
             if (Character.class==type) {
-//                TODO:PoP
-//                final char result = aValue.length()>1 && isDigit(aValue)
-//                        ? (char) Integer.parseInt(aValue)
-//                        : aValue.charAt(0)
-//                        ;
-
-                final char result = aValue.charAt(0);
+                final char result = (char) Integer.parseInt(aValue);
                 return result;
             }
             if (byte[].class==type) {
@@ -343,17 +337,5 @@ public class UjoCoder {
             || Object[].class.isAssignableFrom(baseType)
             ;
         return result;
-    }
-
-
-    /** Is the text a number? */
-    final public boolean isDigit(String text) {
-        for (int i = text.length()-1; i>=0; --i) {
-            final char c = text.charAt(i);
-            if (c<'0' || '9'<c) {
-                return false;
-            }
-        }
-        return true;
     }
 }
