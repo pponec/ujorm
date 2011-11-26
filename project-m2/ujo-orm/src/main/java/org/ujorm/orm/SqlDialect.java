@@ -601,9 +601,6 @@ abstract public class SqlDialect {
             final UjoProperty rightProperty = (UjoProperty) right;
             final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty);
 
-            if (!rightProperty.isDirect()) {
-                throw new UnsupportedOperationException("Two tables is not supported yet");
-            }
             if (col2.isForeignKey()) {
                 throw new UnsupportedOperationException("Foreign key is not supported yet");
             }
