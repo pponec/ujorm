@@ -53,7 +53,7 @@ public class T002c_Test extends MyTestCase {
         
         ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));
         UTechnicalBean person2 = UjoManagerXML.getInstance().parseXML(is, UTechnicalBean.class, false);
-        
+
         assertEquals(person, person2);
     }
     
@@ -61,8 +61,7 @@ public class T002c_Test extends MyTestCase {
     
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
-        UjoPropertyList props = result.readProperties();
-        for (UjoProperty prop : props) {
+        for (UjoProperty prop : result.readProperties()) {
             result.writeValue(prop, null);
         }
         return result;
