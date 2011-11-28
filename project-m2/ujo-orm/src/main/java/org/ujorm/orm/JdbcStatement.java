@@ -146,11 +146,12 @@ public class JdbcStatement {
         if (params==null) {
             return;
         }
-        for (Object value : params.getParameters()) {
 
-            Class type = value != null ? value.getClass() : Void.class;
-            Property property = Property.newInstance("[sqlParameter]", type);
-            MetaColumn column = new MetaColumn();
+        for (int i=0, max=params.getCount(); i<max; i++) {
+            final Object value = params.getParameter(i);
+            final Class type = value!=null ? value.getClass() : Void.class;
+            final Property property = Property.newInstance("[sqlParameter]", type);
+            final MetaColumn column = new MetaColumn();
 
             MetaColumn.TABLE.setValue(column, query.getTableModel());
             MetaColumn.TABLE_PROPERTY.setValue(column, property);

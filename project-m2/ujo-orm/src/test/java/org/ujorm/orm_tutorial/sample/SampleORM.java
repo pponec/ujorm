@@ -274,8 +274,9 @@ public class SampleORM {
     public void useSelectViewOrders() {
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
 
+        long minimalOrderId = 0L;
         long orderCount = session.createQuery(crit)
-                .setSqlParameters(0)
+                .setSqlParameters(minimalOrderId)
                 .getCount()
                 ;
         System.out.println("Order Count: " + orderCount);
@@ -297,8 +298,9 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectWithNativeSQL() {
-        Long excludedId = -7L;
-        SqlParameters sql = new SqlParameters(excludedId).setSqlStatement("SELECT * FROM ("
+        final Long excludedId = -7L;
+        SqlParameters sql = new SqlParameters().setSqlStatement
+                ( "SELECT * FROM ("
                 + "SELECT ord_order_alias.id"
                 +         ", 1000 + count(*) AS item_count"
                 + " FROM ${SCHEMA}.ord_order ord_order_alias"
@@ -308,7 +310,7 @@ public class SampleORM {
                 + " GROUP BY ord_order_alias.id"
                 + " ORDER BY ord_order_alias.id"
                 + ") testView WHERE true"
-                );
+                ).setParameters(excludedId);
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, LE, 100);
         long orderCount = session.createQuery(crit)
                 .setSqlParameters(sql)

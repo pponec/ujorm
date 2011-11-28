@@ -25,18 +25,30 @@ package org.ujorm.orm;
 public class SqlParameters {
 
     /** SQL parameter values */
-    final private Object[] parameters;
+    private Object[] parameters;
 
     /** SQL Statement, the NULL value means an undefined statement */
     private String sqlStatement;
 
+    /** SQL Parameter values */
     public SqlParameters(Object ... parameters) {
         this.parameters = parameters;
     }
 
-    /**  SqlParametsrs */
+    /** SQL Parameter values */
     public Object[] getParameters() {
         return parameters;
+    }
+
+    /** SQL Parameter value */
+    public Object getParameter(int index) {
+        return parameters[index];
+    }
+
+    /** SqlParametsrs */
+    public SqlParameters setParameters (Object ... parameters) {
+        this.parameters = parameters;
+        return this;
     }
 
     /** Returns parameter count of the SQL parameters */
