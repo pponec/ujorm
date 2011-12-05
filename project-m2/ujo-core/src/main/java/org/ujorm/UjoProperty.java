@@ -26,7 +26,7 @@ package org.ujorm;
  * @opt attributes
  * @opt operations
  */
-public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Comparable<UjoProperty> {
+public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Comparable<UjoProperty>, CriterionProvider<UJO,VALUE> {
     
     /** Returns a name of Property. */
     public String getName();

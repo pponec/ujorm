@@ -37,7 +37,7 @@ import org.ujorm.orm.utility.OrmTools;
  */
 @Comment("Order table for registering the 'order items'")
 @Table(name = "ord_order")
-public class Order extends OrmTable<Order> {
+public final class Order extends OrmTable<Order> {
 
     /** Store the value like VARCHAR. */
     public enum State implements StringWrapper {
@@ -75,6 +75,15 @@ public class Order extends OrmTable<Order> {
     /** Customer */
     @Column(name="fk_customer") public static final UjoProperty<Order, Customer> CUSTOMER = newProperty(Customer.class);
     @Column(mandatory=true) public static final UjoProperty<Order, Integer> NEW_COLUMN = newProperty(777);
+
+    // --- Constructors ---
+
+    public Order() {
+    }
+
+    public Order(Long id) {
+        setId(id);
+    }
 
     // --- An optional implementation of commonly used setters and getters ---
 
