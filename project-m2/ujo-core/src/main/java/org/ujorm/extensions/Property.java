@@ -16,9 +16,12 @@
 
 package org.ujorm.extensions;
 
+import java.util.Collection;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
+import org.ujorm.criterion.Criterion;
+import org.ujorm.criterion.Operator;
 
 /**
  * The main implementation of the interface UjoProperty.
@@ -404,6 +407,114 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(UjoProperty p) {
          return newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> where(Operator operator, VALUE value) {
+        return Criterion.where(this, operator, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> where(Operator operator, UjoProperty<?, VALUE> value) {
+        return Criterion.where(this, operator, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereEq(VALUE value) {
+        return Criterion.where(this, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereIn(Collection<VALUE> list) {
+        return Criterion.whereIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereNotIn(Collection<VALUE> list) {
+        return Criterion.whereNotIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereIn(VALUE... list) {
+        return Criterion.whereIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereNotIn(VALUE... list) {
+        return Criterion.whereNotIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereEq(UjoProperty<UJO, VALUE> value) {
+        return Criterion.where(this, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereNull() {
+        return Criterion.whereNull(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereNotNull() {
+        return Criterion.whereNotNull(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereNeq(VALUE value) {
+        return Criterion.where(this, Operator.NOT_EQ, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereGt(VALUE value) {
+        return Criterion.where(this, Operator.GT, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereGe(VALUE value) {
+        return Criterion.where(this, Operator.GE, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereLt(VALUE value) {
+        return Criterion.where(this, Operator.LT, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> whereLe(VALUE value) {
+        return Criterion.where(this, Operator.LE, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> forSql(String sqlCondition) {
+        return Criterion.forSql(this, sqlCondition);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> forAll() {
+        return Criterion.forAll(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> forNone() {
+        return Criterion.forNone(this);
     }
 
 }

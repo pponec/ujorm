@@ -25,7 +25,7 @@ import org.ujorm.implementation.orm.OrmTable;
  * Note, that the Order object has got an collection of Items.
  * @hidden
  */
-public class Customer extends OrmTable<Customer> {
+public final class Customer extends OrmTable<Customer> {
 
     /** Unique key */
     @Column(pk = true)

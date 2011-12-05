@@ -193,14 +193,12 @@ public class SampleORM {
      * for a better security.
      */
     public void useSelect() {
-        Criterion<Item> crn1, crn2, crn3, crit;
+        Criterion<Item> crn = Item.ID.where(GE, 1L )
+            .and( Item.NOTE.where(CONTAINS, "table" ) )
+            .and( Item.ORDER.add(Order.NOTE).whereEq( "My order" ) )
+            ;
 
-        crn1 = Criterion.where( Item.ID, GE, 1L );
-        crn2 = Criterion.where( Item.NOTE, CONTAINS, "table" );
-        crn3 = Criterion.where( Item.ORDER.add(Order.NOTE), "My order" );
-        crit = crn1.and(crn2).and(crn3);
-
-        for (Item item : session.createQuery(crit)) {
+        for (Item item : session.createQuery(crn)) {
             Date created = item.getOrder().getCreated(); // Lazy loading
             System.out.println("Item: " + item + " // created: " + created);
         }
@@ -214,10 +212,11 @@ public class SampleORM {
         order.setNote("my order");
         order.setCreated(new Date());
 
-        Criterion<Order> crnId = Criterion.where(Order.ID, GT, 99L);
-        Criterion<Order> crnNote = Criterion.where(Order.NOTE, "another");
-        Criterion<Order> crnCreated = Criterion.where(Order.CREATED, LE, new Date()) ;
-        Criterion<Order> crn = null;
+        Criterion<Order> crnId, crnNote, crnCreated, crn;
+        crnId = Order.ID.where(GT, 99L);
+        crnNote = Order.NOTE.whereEq("another");
+        crnCreated = Order.CREATED.where(LE, new Date());
+        crn = null;
 
         // Simple condition: Order.ID>99
         assert crnId.evaluate(order);
@@ -272,7 +271,7 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
-        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, GT, 0);
+        Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
 
         long minimalOrderId = 0L;
         long orderCount = session.createQuery(crit)
@@ -311,7 +310,7 @@ public class SampleORM {
                 + " ORDER BY ord_order_alias.id"
                 + ") testView WHERE true"
                 ).setParameters(excludedId);
-        Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ITEM_COUNT, LE, 100);
+        Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereLe(100);
         long orderCount = session.createQuery(crit)
                 .setSqlParameters(sql)
                 .getCount()
@@ -331,7 +330,7 @@ public class SampleORM {
     /** Select all ITEMS with a description with the 'table' insensitive text. */
     public void useSelectItems_1() {
 
-        Criterion<Item> crit = Criterion.where(Item.NOTE, CONTAINS_CASE_INSENSITIVE, "table");
+        Criterion<Item> crit = Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table");
         Query<Item> items = session.createQuery(crit).orderBy(Item.ID.descending());
 
         for (Item item : items) {
@@ -344,8 +343,7 @@ public class SampleORM {
     public void useSelectItems_2() {
 
         Order orderValue = session.load(Order.class, 1L);
-        Criterion<Item> crit = Criterion.where(Item.ORDER, orderValue);
-        Query<Item> items = session.createQuery(crit);
+        Query<Item> items = session.createQuery(Item.ORDER.whereEq(orderValue));
 
         for (Item item : items) {
             Order order2 = item.getOrder();
@@ -371,8 +369,7 @@ public class SampleORM {
      */
     public void useSelectItems_4() {
         UjoProperty<Item, Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_CREATED
-        Criterion<Item> crit = Criterion.where(ORDER_DATE, LE, new Date());
-        Query<Item> items = session.createQuery(crit);
+        Query<Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
 
         for (Item item : items) {
             System.out.println("Item: " + item);
@@ -385,8 +382,7 @@ public class SampleORM {
      * @see Item#$ORDER_CREATED
      */
     public void useSelectItems_5() {
-        Criterion<Item> crit = Criterion.whereIn(Item.ID, 1L,2L,3L,4L,5L);
-        Query<Item> items = session.createQuery(crit);
+        Query<Item> items = session.createQuery(Item.ID.whereIn(1L,2L,3L,4L,5L));
 
         for (Item item : items) {
             System.out.println("Item: " + item);
@@ -395,14 +391,10 @@ public class SampleORM {
 
     /** Select using the IN operator with persistent objects. */
     public void useSelectItems_5b() {
-        Order order_1 = new Order();
-        order_1.setId(1L);
-        Order order_2 = new Order();
-        order_2.setId(2L);
+        Order orderA = new Order(1L);
+        Order orderB = new Order(2L);
 
-        Criterion<Item> crit = Criterion.whereIn(Item.ORDER, order_1, order_2);
-
-        for (Item item : session.createQuery(crit)) {
+        for (Item item : session.createQuery(Item.ORDER.whereIn(orderA, orderB))) {
             System.out.println("Item: " + item);
         }
     }
@@ -411,8 +403,7 @@ public class SampleORM {
      * with no duplicate rows for a better performance.
      */
     public void useOptimizedSelect() {
-        Criterion<Item> crit = Criterion.where(Item.ID, NOT_EQ, 0L);
-        Query<Item> items = session.createQuery(crit)
+        Query<Item> items = session.createQuery(Item.ID.whereNeq(0L))
                 .setColumn(Item.NOTE) // Select the one column
                 .setDistinct()        // Remove duplicate rows
                 ;
@@ -428,9 +419,9 @@ public class SampleORM {
     /** Select all items with a description with the 'table' insensitive text. */
     public void useNativeCriterion() {
 
-        Criterion<Order> crn1 = Criterion.forSql(Order.STATE, "ord_order_alias.id>0");
-        Criterion<Order> crn2 = Criterion.where(Order.CREATED, LE, new Date());
-        Query<Order> orders = session.createQuery(crn1.and(crn2));
+        Criterion<Order> crn = Order.STATE.forSql("ord_order_alias.id>0")
+             .and(Order.CREATED.where(LE, new Date()));
+        Query<Order> orders = session.createQuery(crn);
 
         for (Order order : orders) {
             System.out.println("ORDER: " + order);
@@ -439,8 +430,7 @@ public class SampleORM {
 
     /** How to reload the object property values from the database ? */
     public void useReloading() {
-        Order order = new Order();
-        order.setId(1L);
+        Order order = new Order(1L);
 
         boolean result = session.reload(order);
         System.out.println("Reloading result: " + result + " for Order: " + order);
@@ -459,9 +449,7 @@ public class SampleORM {
 
     /** How to count items ? */
     public void useSelectCount() {
-        Criterion<Item> crit = Criterion.where(Item.NOTE, CONTAINS_CASE_INSENSITIVE, "table");
-        Query<Item> query = session.createQuery(crit);
-
+        Query<Item> query = session.createQuery(Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table"));
         long count = query.getCount();
         System.out.println("Count of the order items: " + count);
     }
@@ -479,8 +467,7 @@ public class SampleORM {
 
     /** How to skip items? */
     public void useIteratorSkip() {
-        Criterion<Item> crit = Criterion.where(Item.NOTE, NOT_EQ, "XXXXX");
-        UjoIterator<Item> items = session.createQuery(crit).iterator();
+        UjoIterator<Item> items = session.createQuery(Item.NOTE.where(NOT_EQ, "XXXXX")).iterator();
 
         boolean skip = items.skip(1);
         if (items.hasNext()) {
@@ -593,14 +580,13 @@ public class SampleORM {
         // Set a value(s) to the change:
         order.setCreated(new Date());
 
-        Criterion<Order> criterion  = Criterion.where(Order.ID, GE, 1L);
-        session.update(order, criterion);
+        session.update(order, Order.ID.whereGe(1L));
         session.commit();
     }
 
     /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
     public void usePesimisticUpdate() {
-        Order order = session.createQuery(Criterion.where(Order.ID, 1L))
+        Order order = session.createQuery(Order.ID.whereEq(1L))
             .setLockRequest()
             .uniqueResult()
             ;
@@ -622,8 +608,7 @@ public class SampleORM {
      *  The next example deletes all Items where Item.ID = 1
      */
     public void useBatchDelete() {
-        Criterion<Item> crit = Criterion.where(Item.ID, 1L);
-        int count = session.delete(crit);
+        int count = session.delete(Item.ID.whereEq(1L));
         session.commit();
         System.out.println("There are DELETED rows: " + count);
     }
