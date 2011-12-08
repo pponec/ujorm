@@ -17,9 +17,15 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.sql.Blob;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import org.ujorm.UjoProperty;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
+import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -77,12 +83,264 @@ public class MSSqlDialect extends SqlDialect {
         out.append("DELETE ");
         out.append(table.getAlias());
         out.append("\n\tFROM ");
-        printTableAliasDefinition(table, out);
-        out.append("\n\tWHERE ");
+        Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
+        getTablesFromCriterion(decoder, table, tables);
+        printTablesWithAlias(tables.values(), out);
+        out.append(" WHERE ");
         out.append(decoder.getWhere());
 
         return out;
     }
+
+    /** Print a full SQL column alias name by sample: <TABLE>_<ALIAS_COLUMN> */
+    public Appendable printColumnUnderAlias(final MetaColumn column, final Appendable out) throws IOException {
+        final MetaTable table = MetaColumn.TABLE.of(column);
+
+        out.append(table.getAlias());
+        out.append('_');
+        out.append(MetaColumn.NAME.of(column));
+
+        return out;
+    }
+
+    /** Print a full SQL column alias name by sample: o_<TABLE>_<ALIAS_COLUMN> - used for as order alias */
+    public Appendable printColumnOrderAlias(final MetaColumn column, final Appendable out) throws IOException {
+        final MetaTable table = MetaColumn.TABLE.of(column);
+
+        out.append("o_");
+        out.append(table.getAlias());
+        out.append('_');
+        out.append(MetaColumn.NAME.of(column));
+
+        return out;
+    }
+
+    /**  prints columns in "<TABLE>.<COLUMN_NAME> AS <TABLE>_<COLUMN_NAME>" format separated by comma */
+    protected void printTableColumnsWithUnderAliases(List<MetaColumn> columns, Appendable out) throws IOException {
+        String separator = "";
+        for (MetaColumn column : columns) {
+            if (column.isForeignKey()) {
+                for (int i = 0; i < column.getForeignColumns().size(); ++i) {
+                    out.append(separator);
+
+                    out.append(MetaColumn.TABLE.of(column).getAlias());
+                    out.append('.');
+                    out.append(column.getForeignColumnName(i));
+
+                    out.append(" AS ");
+                    printColumnUnderAlias(column, out);
+
+                    separator = ", ";
+                }
+            } else if (column.isColumn()) {
+                out.append(separator);
+                printColumnAlias(column, out);
+
+                out.append(" AS ");
+                printColumnUnderAlias(column, out);
+
+                separator = ", ";
+            }
+        }
+    }
+
+    /** prints columns in <TABLE>_<COLUMN_NAME> separated by comma */
+    protected void printTableColumnsUnderAliases(List<MetaColumn> columns, Appendable out) throws IOException {
+        String separator = "";
+        for (MetaColumn column : columns) {
+            if (column.isForeignKey()) {
+                for (int i = 0; i < column.getForeignColumns().size(); ++i) {
+                    out.append(separator);
+
+                    printColumnUnderAlias(column, out);
+
+                    separator = ", ";
+                }
+            } else if (column.isColumn()) {
+                out.append(separator);
+
+                printColumnUnderAlias(column, out);
+
+                separator = ", ";
+            }
+        }
+    }
+
+    /** Inner select select with under aliases assignment and order columns (have to propagate to outer select) */
+    protected void createInnerSelectPart(Query query, Appendable out) throws IOException {
+        out.append("SELECT ");
+        if (query.isDistinct()) {
+            out.append("DISTINCT ");
+        }
+        printTableColumnsWithUnderAliases(query.getColumns(), out);
+
+        // add order props
+        out.append(", ");
+        printOrderColumns(query, out, false, true, false);
+
+    }
+
+    /** Creating RowNumber column */
+    protected void createRowOrderPart(Query query,  Appendable out, boolean asOrderAlias) throws IOException {
+        out.append(", ROW_NUMBER() OVER (");
+        if (query.getOrderBy().isEmpty()) {
+            MetaColumn column = query.getColumn(0);
+            out.append(" ORDER BY ");
+            if (asOrderAlias) {
+                printColumnOrderAlias(column, out);
+            } else {
+                printColumnAlias(column, out);
+            }
+        } else {
+            printSelectOrder(query, out, asOrderAlias);
+        }
+        out.append(") AS RowNum ");
+    }
+
+    /* Prints order columns from input Query separated by comma */
+    protected void printOrderColumns(Query query, Appendable out, boolean asOrderAlias, boolean addOrderAlias, boolean showDesc) throws IOException {
+        final List<UjoProperty> props = query.getOrderBy();
+        for (int i=0; i<props.size(); i++) {
+            MetaColumn column = query.readOrderColumn(i);
+            boolean ascending = props.get(i).isAscending();
+            if (i>0) {
+                out.append(", ");
+            }
+            if (asOrderAlias) {
+                printColumnOrderAlias(column, out);
+            } else {
+                printColumnAlias(column, out);
+                if (addOrderAlias) {
+                    out.append(" AS ");
+                    printColumnOrderAlias(column, out);
+                }
+            }
+            if (!ascending && showDesc) {
+                out.append(" DESC");
+            }
+        }
+    }
+
+    /** Print SQL ORDER BY */
+    public void printSelectOrder(Query query, Appendable out, boolean orderAlias) throws IOException {
+        out.append(" ORDER BY ");
+        printOrderColumns(query, out, orderAlias, false, true);
+    }
+
+    /** Where clause for inner select */
+    protected void createWherePart(Query query, Appendable out) throws IOException {
+        Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
+        List<UjoProperty> props = query.getOrderBy();
+        for (int i = 0; i < props.size(); i++) {
+            MetaColumn column = query.readOrderColumn(i);
+            String alias = column.getTable().getAlias();
+            tables.put(alias, column.getTable());
+        }
+        if (query.getCriterion() != null) {
+            CriterionDecoder ed = query.getDecoder();
+            getTablesFromCriterion(ed, query.getTableModel(), tables);
+            printTablesWithAlias(tables.values(), out);
+            String sql = ed.getWhere();
+            if (!sql.isEmpty()) {
+                out.append(" WHERE ");
+                out.append(ed.getWhere());
+            }
+        } else {
+            printTablesWithAlias(tables.values(), out);
+        }
+    }
+
+    private void getTablesFromCriterion(CriterionDecoder ed, MetaTable metatable, Map<String, MetaTable> tables) {
+        MetaTable[] critTables = ed.getTables(metatable);
+        for (int i = 0; i < critTables.length; ++i) {
+            MetaTable table = critTables[i];
+            String alias = table.getAlias();
+            tables.put(alias, table);
+        }
+    }
+
+    protected void printTablesWithAlias(Collection<MetaTable> tables, Appendable out) throws IOException {
+        boolean first = true;
+        for (MetaTable tab : tables) {
+            if (!first) {
+                out.append(", ");
+            }
+            printTableAliasDefinition(tab, out);
+            first = false;
+        }
+    }
+
+    /** Outer part of select with sorting */
+    protected void createOuterPart(String innerSelect, Query query, Appendable out) throws IOException {
+        out.append("SELECT ");
+          //  printTableColumns(query.getColumns(), null, out);
+        List<MetaColumn> columns = query.getColumns();
+        boolean first = true;
+        for (MetaColumn column : columns) {
+            if (!first) {
+                out.append(", ");
+            }
+            printColumnUnderAlias(column, out);
+            //out.append(MetaColumn.NAME.of(column));
+            first = false;
+        }
+
+        out.append("\n\tFROM (");
+        out.append(innerSelect);
+        out.append("\n) AS MyInnerTable ");
+        if (query.isLimit()) {
+            out.append("WHERE MyInnerTable.RowNum ");
+            // MS-SQL's first index is 1 !!!
+            int start = query.isOffset() ? (query.getOffset() + 1) : 1;
+            out.append("BETWEEN " + start + " AND ");
+            // exclusive - between 1 and 2 returns 2 rows
+            int end = start + query.getLimit() - 1;
+            out.append(String.valueOf(end));
+
+        } else if (query.isOffset()) {
+            out.append("WHERE MyInnerTable.RowNum ");
+            out.append("> ");
+            out.append(String.valueOf(query.getOffset()));
+        }
+
+        // order by part
+        if (query.getOrderBy() != null && !query.getOrderBy().isEmpty()) {
+            printSelectOrder(query, out, true);
+        }
+    }
+
+    /** Custom implementation of MS-SQL dialect due to different offset and limit usage */
+    @Override
+    protected Appendable printSelectTable(Query query, boolean count, Appendable out) throws IOException {
+        if (count || (!query.isLimit() && !query.isOffset())) {
+            out = super.printSelectTable(query, count, out);
+        } else {
+            // we have to order over some column...
+            if (query.getOrderBy() == null || query.getOrderBy().isEmpty()) {
+                query.orderBy(query.getColumn(0).getProperty());
+            }
+            StringBuilder innerPart = new StringBuilder(256);
+            createInnerSelectPart(query, innerPart);
+            // row + order by
+            if (!query.isDistinct()) {
+                createRowOrderPart(query, innerPart, false);
+            }
+            // from + where cond
+            innerPart.append("\n\t\tFROM ");
+            createWherePart(query, innerPart);
+
+            // for distinct request we have to insert one more select...
+            if (query.isDistinct()) {
+                innerPart = createMiddlePart(query, innerPart.toString());
+            }
+
+            // add limit + offset
+            createOuterPart(innerPart.toString(), query, out);
+        }
+        return out;
+    }
+
+
 
     @Override
     protected String getColumnType(final MetaColumn column) {
@@ -255,6 +513,11 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     @Override
+    public Appendable printInsert(List<? extends OrmUjo> bo, int idxFrom, int idxTo, Appendable out) throws IOException {
+        return printInsertBySelect(bo, idxFrom, idxTo, "", out);
+    }
+
+    @Override
     public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
         if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
             //TODO : probably MAX_ALLOWED_SIZE is used to all types not only for BLOB
@@ -282,5 +545,20 @@ public class MSSqlDialect extends SqlDialect {
         }
 
         return super.printColumnDeclaration(column, aName, out);
+    }
+
+    /** Middle select with RowNumber for sorting */
+    private StringBuilder createMiddlePart(Query query, String innerPart) throws IOException {
+        StringBuilder out = new StringBuilder();
+        out.append("SELECT ");
+        printTableColumnsUnderAliases(query.getColumns(), out);
+        out.append(", ");
+        printOrderColumns(query, out, true, false, false);
+        createRowOrderPart(query, out, true);
+        out.append(" FROM (");
+        out.append(innerPart);
+        out.append(") AS DistinctTable");
+
+        return out;
     }
 }
