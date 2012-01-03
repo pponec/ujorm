@@ -206,8 +206,6 @@ abstract public class SqlDialect {
         return out;
     }
 
-
-
     /**
      * Print foreign key for the parameter column
      * @return More statements separated by the ';' charactes are enabled
@@ -220,7 +218,9 @@ abstract public class SqlDialect {
 
         out.append("ALTER TABLE ");
         printFullTableName(table, out);
-        out.append("\n\tADD FOREIGN KEY");
+        out.append("\n\tADD CONSTRAINT ");
+        printConstraintName(table, column, out);
+        out.append(" FOREIGN KEY ");
 
         for (int i=0; i<columnsSize; ++i) {
             out.append(i==0 ? "(" : ", ");
@@ -241,6 +241,19 @@ abstract public class SqlDialect {
         out.append(")");
         //out.append("\tON DELETE CASCADE");
         return out;
+    }
+
+    /** Print a constraint name */
+    protected void printConstraintName(final MetaTable table, final MetaColumn column, final Appendable out) throws IOException {
+        final String cn = column.getConstraintName();
+        if (isFilled(cn)) {
+            out.append(cn);
+        } else {
+            out.append("fk_");
+            out.append(MetaTable.NAME.of(table));
+            out.append("__"); // two characters before a column
+            out.append(MetaColumn.NAME.of(column));
+        }
     }
 
     /**
@@ -837,8 +850,6 @@ abstract public class SqlDialect {
         out.append(' ').append('}');
         return out;
     }
-
-
 
     /** Print an OFFSET of the statement SELECT. */
     public void printOffset(Query query, Appendable out) throws IOException {

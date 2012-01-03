@@ -50,6 +50,8 @@ public @interface Column {
     /** A name of the unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as non-unique, than the entire index will be non-unique. */
     String uniqueIndex() default Table.NULL;
+    /** A name of the constraint for the case a foreign key */
+    String constraintName() default Table.NULL;
 
     
 }

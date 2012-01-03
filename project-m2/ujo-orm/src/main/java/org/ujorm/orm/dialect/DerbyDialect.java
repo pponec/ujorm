@@ -48,46 +48,6 @@ public class DerbyDialect extends SqlDialect {
         return out;
     }
 
-
-    /** Print foreign key for the parameter column */
-    @Override
-    @SuppressWarnings("unchecked")
-    public Appendable printForeignKey(MetaColumn column, MetaTable table, Appendable out) throws IOException {
-
-        List<MetaColumn> fColumns = column.getForeignColumns();
-        MetaTable foreignTable = fColumns.get(0).getTable();
-        int columnsSize = fColumns.size();
-
-        out.append("ALTER TABLE ");
-        printFullTableName(table, out);
-        out.append("\n\tADD CONSTRAINT fk_");
-        out.append(MetaTable.NAME.of(table));
-        out.append('_');
-        out.append(MetaColumn.NAME.of(column));
-        out.append(" FOREIGN KEY");
-
-        for (int i=0; i<columnsSize; ++i) {
-            out.append(i==0 ? "(" : ", ");
-            final String name = column.getForeignColumnName(i);
-            out.append(name);
-        }
-
-        out.append(")\n\tREFERENCES ");
-        printFullTableName(foreignTable, out);
-        String separator = "(";
-
-        for (MetaColumn fColumn : fColumns) {
-            out.append(separator);
-            separator = ", ";
-            out.append(MetaColumn.NAME.of(fColumn));
-        }
-
-        out.append(")");
-        //out.append("\tON DELETE CASCADE");
-        return out;
-    }
-
-
     @Override
     public void printOffset(Query query, Appendable out) throws IOException {
         out.append(" OFFSET " + query.getOffset());

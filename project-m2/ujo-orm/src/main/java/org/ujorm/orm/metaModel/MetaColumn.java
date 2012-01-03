@@ -61,6 +61,8 @@ final public class MetaColumn extends MetaRelation2Many {
     /** A name of the unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
     public static final Property<MetaColumn,String> UNIQUE_INDEX = newProperty("uniqueIndex", "");
+    /** A name of the constraint for the case a foreign key */
+    public static final Property<MetaColumn,String> CONSTRAINT_NAME = newProperty("constraintName", "");
     /** Comment of the database column */
     public static final Property<MetaColumn,String> COMMENT = newProperty("comment", Comment.NULL);
     /** The property initialization */
@@ -106,6 +108,7 @@ final public class MetaColumn extends MetaRelation2Many {
             changeDefault(this, DB_TYPE    , column.type());
             changeDefault(this, INDEX      , column.index());
             changeDefault(this, UNIQUE_INDEX,column.uniqueIndex());
+            changeDefault(this, CONSTRAINT_NAME, column.constraintName());
         }
 
         if (DB_TYPE.isDefault(this)) {
@@ -389,5 +392,10 @@ final public class MetaColumn extends MetaRelation2Many {
     /** Is the related property type void? */
     public boolean isVoid() {
         return isTypeOf(Void.class);
+    }
+
+    /** Returns a constraint name for case a foreigh key */
+    public String getConstraintName() {
+        return CONSTRAINT_NAME.of(this);
     }
 }
