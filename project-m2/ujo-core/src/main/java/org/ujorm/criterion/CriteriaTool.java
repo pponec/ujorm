@@ -71,16 +71,10 @@ public class CriteriaTool<UJO extends Ujo> {
 
     /** Create a sublist of a list by an Ujo criterion. */
     public List<UJO> select(List<UJO> list, Criterion<UJO> criterion, UjoComparator sorting) {
-        List<UJO> result = new ArrayList<UJO>();
-        for (UJO ujo : list) {
-            if (criterion.evaluate(ujo)) {
-                result.add(ujo);
-            }
-        }
+        final List<UJO> result = criterion.evaluate(list);
         if (sorting != null) {
             Collections.sort(result, sorting);
         }
-
         return result;
     }
 

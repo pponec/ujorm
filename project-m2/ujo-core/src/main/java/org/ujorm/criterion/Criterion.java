@@ -16,7 +16,9 @@
    
 package org.ujorm.criterion;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 
@@ -72,9 +74,34 @@ import org.ujorm.UjoProperty;
  * @composed 1 - 1 AbstractOperator
  */
 public abstract class Criterion<UJO extends Ujo> {
-    
+
+    /** Apply the criterion to the UJO object
+     * @return Returns the value {@code true} in case the ujo object satisfies the condition.
+     */
     public abstract boolean evaluate(UJO ujo);
-    
+
+    /** Methods returns a list of items, satisfies the condition. */
+    final public List<UJO> evaluate(final Iterable<UJO> ujoList) {
+        final List<UJO> result = new ArrayList<UJO>();
+        for (final UJO ujo : ujoList) {
+            if (evaluate(ujo)) {
+                result.add(ujo);
+            }
+        }
+        return result;
+    }
+
+    /** Methods returns a list of items, satisfies the condition. */
+    final public List<UJO> evaluate(final UJO ... ujoList) {
+        final List<UJO> result = new ArrayList<UJO>();
+        for (final UJO ujo : ujoList) {
+            if (evaluate(ujo)) {
+                result.add(ujo);
+            }
+        }
+        return result;
+    }
+
     public Criterion<UJO> join(BinaryOperator operator, Criterion<UJO> criterion) {
         return new BinaryCriterion<UJO>(this, operator, criterion);
     }
