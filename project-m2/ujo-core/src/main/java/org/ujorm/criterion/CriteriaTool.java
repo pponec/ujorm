@@ -64,12 +64,16 @@ public class CriteriaTool<UJO extends Ujo> {
         return result;
     }
 
-    /** Create a sublist of a list by an Ujo criterion. */
+    /** Filter the list from parameter by a Criterion. 
+     * @see Criterion#evaluate(java.lang.Iterable) 
+     */
     public List<UJO> select(List<UJO> list, Criterion<UJO> criterion) {
-        return select(list, criterion, null);
+        return criterion.evaluate(list);
     }
 
-    /** Create a sublist of a list by an Ujo criterion. */
+    /** Filter the list from parameter by a Criterion and sort the result.
+     * @see Criterion#evaluate(java.lang.Iterable)
+     */
     public List<UJO> select(List<UJO> list, Criterion<UJO> criterion, UjoComparator sorting) {
         final List<UJO> result = criterion.evaluate(list);
         if (sorting != null) {

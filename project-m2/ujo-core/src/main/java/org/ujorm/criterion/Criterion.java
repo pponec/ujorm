@@ -80,7 +80,9 @@ public abstract class Criterion<UJO extends Ujo> {
      */
     public abstract boolean evaluate(UJO ujo);
 
-    /** Methods returns a list of items, satisfies the condition. */
+    /** Returns a list of items which satisfies the condition in this Criterion.
+     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
+     */
     final public List<UJO> evaluate(final Iterable<UJO> ujoList) {
         final List<UJO> result = new ArrayList<UJO>();
         for (final UJO ujo : ujoList) {
@@ -91,7 +93,9 @@ public abstract class Criterion<UJO extends Ujo> {
         return result;
     }
 
-    /** Methods returns a list of items, satisfies the condition. */
+    /** Returns a list of items which satisfies the condition in this Criterion.
+     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
+     */
     final public List<UJO> evaluate(final UJO ... ujoList) {
         final List<UJO> result = new ArrayList<UJO>();
         for (final UJO ujo : ujoList) {
