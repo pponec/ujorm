@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.criterion.*;
-import static org.ujorm.criterion.Operator.*;
 import static org.Company.CITY;
 import static org.Employee.*;
 
@@ -55,9 +54,11 @@ public class SampleCORE {
             sample.copySomeProperties();
             sample.restoreDefaultValues();
             sample.concatenateProperties();
+            sample.filterEmployeeListByConstant();
+            sample.filterEmployeeListByProperty();
             sample.sortEmployeeList();
+            sample.filterAndSortList();
             sample.employeeValidator();
-            sample.selectFromList();
 
         } catch (Exception e) {
             Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
@@ -92,7 +93,7 @@ public class SampleCORE {
 
    /** How to copy all properties from BO to another object? */
     public void copyAllProperties() throws Exception {
-        Ujo employee1 = findEmployee();
+        Ujo employee1 = getEmployee();
         Ujo employee2 = employee1.getClass().newInstance();
 
         for (UjoProperty p : employee1.readProperties()) {
@@ -103,7 +104,7 @@ public class SampleCORE {
 
    /** How to copy some properties to another object? */
     public void copySomeProperties() {
-        Employee employee1 = findEmployee();
+        Employee employee1 = getEmployee();
         Employee employee2 = new Employee();
 
         for (UjoProperty p : employee1.readProperties()) {
@@ -135,89 +136,123 @@ public class SampleCORE {
 
     /** How to concatenate UJO Properties? */
     public void concatenateProperties() {
-        final String city1, city2;
-        Employee employee = findEmployee();
+        Employee employee = getEmployee();
 
+        final String city1, city2;
         city1 = employee.get(COMPANY).get(CITY);
-        city2 = employee.get(COMPANY.add(CITY)); // Case: Company is NULL ?
+        city2 = employee.get(COMPANY.add(CITY)); // If the Company is null then the result is null too.
 
         System.out.println("The same streets: " + (city1==city2) );
         System.out.println("The composite property: " + COMPANY.add(CITY) );
     }
 
-    /** How to sort the List?  */
-    public void sortEmployeeList() {
-        List<Employee> employeeList = findEmployeeList();
-        Comparator comparator = UjoComparator.newInstance(COMPANY.add(CITY), NAME);
-        Collections.sort(employeeList, comparator);
+    /** Filter all employees, where a city name of a company equals employee name. */
+    public void filterEmployeeListByConstant() {
+        List<Employee> employees = COMPANY.add(CITY)
+                .whereEq("Prague")
+                .evaluate(getEmployees());
 
-        for (Employee employee : employeeList) {
+        for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
         }
-        System.out.println(employeeList.size());
+        System.out.println(employees.size());
     }
 
-    public void employeeValidator() {
-        final Criterion<Employee> validWage, validStreet, validator;
-        validWage = Criterion.where(WAGE, GT, 10.0);
-        validStreet = Criterion.where(COMPANY.add(CITY), "Brno");
-        validator = validWage.or(validStreet);
+    /** Filter all employees, where a city name equals the Prague. */
+    public void filterEmployeeListByProperty() {
+        List<Employee> employees = COMPANY.add(CITY)
+                .whereEq(NAME)
+                .evaluate(getEmployees());
 
-        Employee employee = findEmployee();
-        boolean isValid = validator.evaluate(employee);
-        System.out.println("Is valid: " + isValid + " for " + employee);
+        for (Employee employee : employees) {
+            System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
+        }
+        System.out.println(employees.size());
     }
 
-    public void selectFromList() {
+    /** How to sort the List?  */
+    public void sortEmployeeList() {
+        List<Employee> employees = getEmployees();
+        Collections.sort(employees, UjoComparator.newInstance(COMPANY.add(CITY), NAME.descending()));
+
+        for (Employee employee : employees) {
+            System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
+        }
+        System.out.println(employees.size());
+    }
+
+    /** Filter and sort a Employee list using the class CriteriaTool. */
+    public void filterAndSortList() {
         CriteriaTool<Employee> ct = CriteriaTool.newInstance();
-        List<Employee> employees = ct.select(findEmployeeList(), Criterion.where(WAGE, GT, 5.0));
 
         // Select include sorting:
-        employees = ct.select(findEmployeeList()
-                , Criterion.where(WAGE, GT, 5.0)
-                , UjoComparator.newInstance(Employee.NAME)
+        List<Employee> employees = ct.select
+                ( getEmployees()
+                , WAGE.whereGt(5.0)
+                , UjoComparator.newInstance(Employee.NAME.descending())
                 );
 
         for (Employee employee : employees) {
-            System.out.println("Employee: " + employee);
+            System.out.println("Filtered employee: " + employee);
         }
         System.out.println(employees.size());
+    }
+
+    /** Employee validator */
+    public void employeeValidator() {
+        Criterion<Employee> validator
+                = WAGE.whereGt(10.0)
+                .or(COMPANY.add(CITY).whereEq("Prague"));
+
+        Employee employee = getEmployee();
+        boolean isValid = validator.evaluate(employee);
+        System.out.println("Is valid: " + isValid + " for " + employee);
     }
 
     // ======= Helper methods =======
 
     /** Find an Employee somewhere */
-    private Employee findEmployee() {
-        Employee result = new Employee();
-        result.set(ID, 10L);
-        result.set(NAME, "Pavel");
-        result.set(WAGE, 50.00);
-        result.set(COMPANY, findCompany());
-
-        return result;
+    private Employee getEmployee() {
+        return createEmployee(10L, "Pavel", 50.00, getCompany());
     }
 
+    /** Create the List of Persons */
+    private Employee createEmployee(Long id, String name, Double wage, Company company) {
+             Employee person = new Employee();
+             person.set(ID, id);
+             person.set(NAME, name);
+             person.set(WAGE, wage);
+             person.set(COMPANY, company);
+             return person;
+    }
+
+
     /** Find an Company somewhere */
-    private Company findCompany() {
+    private Company getCompany() {
+        return createCompany(20L, "My Company", "Prague");
+    }
+
+    
+    /** Find an Company somewhere */
+    private Company createCompany(Long id, String name, String city) {
         Company result = new Company();
-        result.set(Company.ID, 20L);
-        result.set(Company.NAME, "My Company");
-        result.set(Company.CITY, "Prague");
+        result.set(Company.ID, id);
+        result.set(Company.NAME, name);
+        result.set(Company.CITY, city);
         result.set(Company.CREATED, new Date());
 
         return result;
     }
 
     /** Create the List of Persons */
-    private List<Employee> findEmployeeList() {
-        List<Employee> result = new ArrayList<Employee>();
+    private List<Employee> getEmployees() {
+        final List<Employee> result = new ArrayList<Employee>();
+        
+        result.add(createEmployee(10L, "Pavel", 50.00, getCompany()));
+        result.add(createEmployee(20L, "Petr", 80.00, getCompany()));
+        result.add(createEmployee(30L, "Kamil", 20.00, getCompany()));
+        result.add(createEmployee(40L, "Prague", 00.00, getCompany()));
 
-        for (long i=1; i<=3; ++i) {
-             Employee person = findEmployee();
-             person.set(ID, i);
-             person.set(NAME, "Name-" + i);
-             result.add(person);
-        }
         return result;
     }
 

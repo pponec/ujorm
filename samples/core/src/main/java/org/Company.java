@@ -19,9 +19,7 @@ import java.util.Date;
 import org.ujorm.UjoProperty;
 import org.ujorm.implementation.quick.QuickUjoMid;
 
-/**
- * Simple Company domain class.
- */
+/** Simple Company domain class. */
 public class Company extends QuickUjoMid<Company> {
 
     /** The Primary Key */
