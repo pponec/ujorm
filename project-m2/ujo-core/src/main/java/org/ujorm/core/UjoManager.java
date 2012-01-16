@@ -456,47 +456,84 @@ public class UjoManager implements Comparator<UjoProperty> {
         return toString(ujo, ujo.readProperties());
     }
 
-    /** Print a String representation */
+    /** Print a String representation. <br>
+     * Note: Very long property values are truncated to the 128 characters. */
     @SuppressWarnings("unchecked")
     public String toString(Ujo ujo, UjoPropertyList properties) {
-        StringBuilder result = new StringBuilder(32);
+        final StringBuilder result = new StringBuilder(32);
         result.append(ujo.getClass().getSimpleName());
-        UjoAction action = new UjoActionImpl(ACTION_TO_STRING, this);
+        final UjoAction action = new UjoActionImpl(ACTION_TO_STRING, this);
 
-        int length = properties.size();
-        for(int i=0; i<length; ++i) {
-            UjoProperty property = properties.get(i);
+        for(int i=0, max = properties.size(); i<max; ++i) {
+            final UjoProperty property = properties.get(i);
             if (!ujo.readAuthorization(action, property, this)) { continue; }
 
-            boolean list = property instanceof ListUjoProperty;
+            // If the parameter is the List or another Ujo, then show a detail information:
+            boolean showInfo = property instanceof ListUjoProperty;
             String textSeparator = "";
             
             String value;
             try {
-                Object objVal = property.of(ujo);
+                final Object objVal = property.of(ujo);
                 textSeparator = objVal instanceof CharSequence ? "\"" : "" ;
-                
-                value
-                = list ? ((ListUjoProperty)property).getItemCount(ujo) + "]"
-                : objVal instanceof Ujo ? "UJO:" + objVal.hashCode()
-                : ujo    instanceof UjoTextable ? ((UjoTextable)ujo).readValueString(property, action)
-                : coder.encodeValue(ujo, false)
-                ;
+
+                if (showInfo) {
+                    final int itemCount = ((ListUjoProperty)property).getItemCount(ujo);
+                    value = String.valueOf(itemCount);
+                } else if (objVal instanceof Ujo) {
+                    value = getFirstValue((Ujo)objVal, 10);
+                    showInfo = true;
+                } else {
+                    value = coder.encodeValue(objVal, false);
+                }
             } catch (Throwable e) {
                 value = e.getClass().getSimpleName();
             }
+
+            // Very long property value is truncated to the 128 characters.
+            if (value!=null && value.length()>128) {
+                value = value.substring(0, 128-3) + "...";
+            }
+
             result.append(i==0 ? "[" : ", ");
             result.append(property.getName());
-            result.append(list ? "[" : "=");
+            result.append(showInfo ? "[" : "=");
             result.append(textSeparator);
             result.append(value);
             result.append(textSeparator);
+            if (showInfo) {
+                result.append("]");
+            }
         }
 
         if (properties.size()>0) {
             result.append("]");
         }
         return result.toString();
+    }
+
+    /** Get a value of the first UjoProperty */
+    private String getFirstValue(final Ujo ujo, int deep) {
+        if (ujo==null) {
+            return "null";
+        }
+        final UjoPropertyList props = ujo.readProperties();
+        if (props.isEmpty()) {
+            return "hash:" + ujo.hashCode();
+        }
+        final UjoProperty p = props.get(0);
+        Object result = p.of(ujo);
+        if (result instanceof Ujo) {
+            if (--deep>0) {
+                return getFirstValue((Ujo)result, deep);
+            } else {
+                return "hash:" + ujo.hashCode();
+            }
+        } else {
+            return result==null
+                ? "hash:" + ujo.hashCode()
+                : (p + "=" + coder.encodeValue(result, false));
+        }
     }
     
     /** Returns true, if text is not null and is not empty. */
