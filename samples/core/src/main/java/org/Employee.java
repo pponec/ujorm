@@ -18,16 +18,14 @@ package org;
 import org.ujorm.UjoProperty;
 import org.ujorm.implementation.quick.QuickUjoMid;
 
-/**
- * Simple Employee domain class
- */
+/** Simple Employee domain class */
 public class Employee extends QuickUjoMid<Employee> {
 
     /** Unique key */
     public static final UjoProperty<Employee, Long> ID = newProperty("id", Long.class);
-    /** User name */
+    /** User first name, where the default value is {@code null} */
     public static final UjoProperty<Employee, String> NAME = newProperty("name", String.class);
-    /** hourly wage */
+    /** Hourly wage with the default value: 0.0 */
     public static final UjoProperty<Employee, Double> WAGE = newProperty("wage", 0.0);
     /** A reference to Company */
     public static final UjoProperty<Employee, Company> COMPANY = newProperty("company", Company.class);
