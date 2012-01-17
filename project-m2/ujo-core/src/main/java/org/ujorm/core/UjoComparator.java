@@ -17,7 +17,10 @@
 package org.ujorm.core;
 
 import java.text.Collator;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
@@ -28,8 +31,7 @@ import org.ujorm.UjoProperty;
  * @see UjoProperty#isAscending()
  * @see UjoProperty#descending() 
  */
-final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have a generic type! */
-    implements Comparator<Ujo> {
+final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     
     final UjoProperty[] properties;
     final private Locale collatorLocale;
@@ -95,7 +97,7 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
      * @return Result of comparation
      */
     @SuppressWarnings("unchecked")
-    public int compare(Ujo u1, Ujo u2) {
+    public int compare(UJO u1, UJO u2) {
         for (UjoProperty property : properties) {
 
             final Comparable c1 = (Comparable) property.of(u1);
@@ -123,7 +125,19 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
         }
         return 0;
     }
-    
+
+    /** Sort a list by this Comparator. */
+    public List<UJO> sort(List<UJO> list) {
+        Collections.sort(list, this);
+        return list;
+    }
+
+    /** Sort a list by this Comparator. */
+    public UJO[] sort(UJO[] array) {
+        Arrays.sort(array, this);
+        return array;
+    }
+
     /** A String reprezentation. */
     @Override
     public String toString() {
@@ -141,7 +155,7 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
     }
     
     /** An equals test */
-    final public boolean equals(final Ujo u1, final Ujo u2) {
+    final public boolean equals(final UJO u1, final UJO u2) {
         final boolean result = compare(u1, u2)==0;
         return result;
     }
@@ -149,13 +163,32 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
     // ------------ STATIC ------------
     
     /** Creates a new instance of UjoComparator. The String are compared as Collator.IDENTICAL by English locale by default.
+     * Sample:
+     * <pre class="pre">
+     * List&lt;Person&gt; result = UjoComparator.&lt;Person&gt;newInstance(Person.NAME).sort(persons);
+     * </pre>
      * @param properties sorting criteria are ordered by importance to down.
      *        A direction of the sorting is used by a method UjoProperty#isAscending().
      * @see UjoProperty#isAscending()
      * @see UjoProperty#descending()
      */
-    public static UjoComparator newInstance(UjoProperty ... properties) {
-        return new UjoComparator(properties);
+    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(UjoProperty<UJO,?> ... properties) {
+        return new UjoComparator<UJO>(properties);
+    }
+    
+    /** @see #newInstance(org.ujorm.UjoProperty<UJO,?>[])  */
+    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(UjoProperty<UJO,?> p1) {
+        return new UjoComparator<UJO>(p1);
+    }
+
+    /** @see #newInstance(org.ujorm.UjoProperty<UJO,?>[])  */
+    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(UjoProperty<UJO,?> p1, UjoProperty<UJO,?> p2) {
+        return new UjoComparator<UJO>(p1, p2);
+    }
+
+    /** @see #newInstance(org.ujorm.UjoProperty<UJO,?>[])  */
+    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(UjoProperty<UJO,?> p1, UjoProperty<UJO,?> p2, UjoProperty<UJO,?> p3) {
+        return new UjoComparator<UJO>(p1, p2, p3);
     }
 
     /** Creates a new instance of UjoComparator
@@ -166,8 +199,8 @@ final public class UjoComparator /* <Ujo extends Ujo>: The comparator can't have
      * @see UjoProperty#isAscending()
      * @see UjoProperty#descending()
      */
-    public static UjoComparator newInstance(Locale locale, int collatorStrength, final UjoProperty ... properties) {
-        return new UjoComparator(properties);
+    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Locale locale, int collatorStrength, final UjoProperty<UJO,?> ... properties) {
+        return new UjoComparator<UJO>(properties);
     }
 
     
