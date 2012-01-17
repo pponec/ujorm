@@ -180,7 +180,8 @@ public class SampleCORE {
 
     /** How to sort the List?  */
     public void sortEmployeeList() {
-        List<Employee> employees = UjoComparator.newInstance(COMPANY.add(CITY), NAME.descending())
+        List<Employee> employees = UjoComparator
+                .newInstance(COMPANY.add(CITY), NAME.descending())
                 .sort(getEmployees());
 
         for (Employee employee : employees) {
