@@ -17,8 +17,6 @@
 package org.ujorm.extensions;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
@@ -147,8 +145,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     public void sort(UJO ujo, UjoProperty ... properties) {
         List<ITEM> list = getValue(ujo);
         if ( list!=null) {
-            Comparator comp = new UjoComparator(properties);
-            Collections.sort(list, comp);
+            new UjoComparator(properties).sort(list);
         }
     }
 

@@ -13,7 +13,6 @@ import junit.framework.*;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.extensions.PathProperty;
-import org.ujorm.criterion.CriteriaTool;
 import static org.ujorm.criterion.Person.*;
 
 /**
@@ -69,10 +68,7 @@ public class ComparatorTest extends MyTestCase {
 
     
     public void testInit_01() {
-        CriteriaTool<Person> uc  = CriteriaTool.newInstance();
-        UjoComparator comp = UjoComparator.newInstance(NAME);
-        List<Person> result = uc.select(persons, comp);
-        
+        List<Person> result = UjoComparator.<Person>newInstance(NAME).sort(persons);
         assertEquals("Eva", result.get(0).get(NAME) );
     }
     

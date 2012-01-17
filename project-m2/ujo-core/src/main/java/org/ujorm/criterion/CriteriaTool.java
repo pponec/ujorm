@@ -58,10 +58,8 @@ public class CriteriaTool<UJO extends Ujo> {
     }
 
     /** Create a copy of the list and sort it. */
-    public List<UJO> select(List<UJO> list, UjoComparator comparator) {
-        List<UJO> result = new ArrayList<UJO>(list);
-        Collections.sort(result, comparator);
-        return result;
+    public List<UJO> select(List<UJO> list, UjoComparator<UJO> comparator) {
+        return comparator.sort(new ArrayList<UJO>(list));
     }
 
     /** Filter the list from parameter by a Criterion. 
@@ -74,10 +72,10 @@ public class CriteriaTool<UJO extends Ujo> {
     /** Filter the list from parameter by a Criterion and sort the result.
      * @see Criterion#evaluate(java.lang.Iterable)
      */
-    public List<UJO> select(List<UJO> list, Criterion<UJO> criterion, UjoComparator sorting) {
+    public List<UJO> select(List<UJO> list, Criterion<UJO> criterion, UjoComparator<UJO> comparator) {
         final List<UJO> result = criterion.evaluate(list);
-        if (sorting != null) {
-            Collections.sort(result, sorting);
+        if (comparator != null) {
+            Collections.sort(result, comparator);
         }
         return result;
     }

@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -522,7 +523,7 @@ abstract public class SqlDialect {
             case NOT_IN:
                 return "NOT {0} IN ({1})";
             case XFIXED:
-                return crit.evaluate(null)
+                return crit.evaluate((Ujo)null)
                     ? "1=1" // "true"
                     : "1=0" // "false"
                     ;
