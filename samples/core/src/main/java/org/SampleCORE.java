@@ -54,11 +54,11 @@ public class SampleCORE {
             sample.copySomeProperties();
             sample.restoreDefaultValues();
             sample.concatenateProperties();
+            sample.employeeValidator();
             sample.filterEmployeeListByConstant();
             sample.filterEmployeeListByProperty();
             sample.sortEmployeeList();
             sample.filterAndSortList();
-            sample.employeeValidator();
 
         } catch (Exception e) {
             Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
@@ -120,9 +120,8 @@ public class SampleCORE {
 
     /** How to restore default values) */
     public void restoreDefaultValues() {
-        Employee employee = new Employee();
+        Employee employee = getEmployee();
 
-        employee.set(WAGE, 123.00);
         for (UjoProperty p : employee.readProperties()) {
              employee.set(p, p.getDefault());
         }
@@ -144,6 +143,15 @@ public class SampleCORE {
 
         System.out.println("The same streets: " + (city1==city2) );
         System.out.println("The composite property: " + COMPANY.add(CITY) );
+    }
+
+    /** Employee validator */
+    public void employeeValidator() {
+        Criterion<Employee> validator = Employee.WAGE.whereGt(10.0)
+                .or(COMPANY.add(CITY).whereEq("Prague"));
+
+        boolean isValid = validator.evaluate(getEmployee());
+        System.out.println("Is valid: " + isValid + " for " + getEmployee());
     }
 
     /** Filter all employees, where a city name of a company equals employee name. */
@@ -172,8 +180,8 @@ public class SampleCORE {
 
     /** How to sort the List?  */
     public void sortEmployeeList() {
-        List<Employee> employees = getEmployees();
-        Collections.sort(employees, UjoComparator.newInstance(COMPANY.add(CITY), NAME.descending()));
+        List<Employee> employees = UjoComparator.newInstance(COMPANY.add(CITY), NAME.descending())
+                .sort(getEmployees());
 
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
@@ -183,10 +191,10 @@ public class SampleCORE {
 
     /** Filter and sort a Employee list using the class CriteriaTool. */
     public void filterAndSortList() {
-        CriteriaTool<Employee> ct = CriteriaTool.newInstance();
+        CriteriaTool<Employee> tool = CriteriaTool.newInstance();
 
         // Select include sorting:
-        List<Employee> employees = ct.select
+        List<Employee> employees = tool.select
                 ( getEmployees()
                 , WAGE.whereGt(5.0)
                 , UjoComparator.newInstance(Employee.NAME.descending())
@@ -196,17 +204,6 @@ public class SampleCORE {
             System.out.println("Filtered employee: " + employee);
         }
         System.out.println(employees.size());
-    }
-
-    /** Employee validator */
-    public void employeeValidator() {
-        Criterion<Employee> validator
-                = WAGE.whereGt(10.0)
-                .or(COMPANY.add(CITY).whereEq("Prague"));
-
-        Employee employee = getEmployee();
-        boolean isValid = validator.evaluate(employee);
-        System.out.println("Is valid: " + isValid + " for " + employee);
     }
 
     // ======= Helper methods =======
