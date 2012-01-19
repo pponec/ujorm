@@ -68,7 +68,7 @@ public class TypeService {
     private static final Class[] BYTES_ARGS = new Class[] {byte[].class};
 
     /** The method returns a data type code include relation */
-    public char getTypeCode(final MetaColumn column) {
+    public final char getTypeCode(final MetaColumn column) {
 
         final Class type = column.getType();
 
@@ -106,166 +106,147 @@ public class TypeService {
         return UNDEFINED;
     }
 
-    /** GetValue from the result set by position */
-    public Object getValue(final MetaColumn mColumn, final ResultSet rs) throws SQLException {
-        Object r;
-        String column = MetaColumn.NAME.of(mColumn);
+    /**
+     * GetValue from the result set by position
+     * It must be the same implementation as {@link #getValue(org.ujorm.orm.metaModel.MetaColumn, java.sql.CallableStatement, int)}.
+     * @param mColumn Meta-model column
+     * @param rs The ResultSet instance
+     * @param c Catabase column index starting at #1
+     * @return Value form the result set.
+     * @throws SQLException
+     */
+    public Object getValue(final MetaColumn mColumn, final ResultSet rs, final int c) throws SQLException {
+        final Object r;
         switch (mColumn.getTypeCode()) {
-            case BOOLEAN  : r = rs.getBoolean(column); break;
-            case BYTE     : r = rs.getByte(column); break;
-            case CHAR     : String s = rs.getString(column); return (s != null && s.length() > 0) ? s.charAt(0) : null;
-            case SHORT    : r = rs.getShort(column); break;
-            case INT      : r = rs.getInt(column); break;
-            case LONG     : r = rs.getLong(column); break;
-            case FLOAT    : r = rs.getFloat(column); break;
-            case DOUBLE   : r = rs.getDouble(column); break;
-            case BIG_DECI : return rs.getBigDecimal(column);
-            case BIG_INTE : BigDecimal d = rs.getBigDecimal(column);
+            case BOOLEAN  : r = rs.getBoolean(c); break;
+            case BYTE     : r = rs.getByte(c); break;
+            case CHAR     : String s = rs.getString(c); return (s != null && s.length() > 0) ? s.charAt(0) : null;
+            case SHORT    : r = rs.getShort(c); break;
+            case INT      : r = rs.getInt(c); break;
+            case LONG     : r = rs.getLong(c); break;
+            case FLOAT    : r = rs.getFloat(c); break;
+            case DOUBLE   : r = rs.getDouble(c); break;
+            case BIG_DECI : return rs.getBigDecimal(c);
+            case BIG_INTE : BigDecimal d = rs.getBigDecimal(c);
                             return d!=null ? d.toBigInteger() : null;
-            case STRING   : return rs.getString(column);
-            case BYTES    : return rs.getBytes(column);
-            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(column);
+            case STRING   : return rs.getString(c);
+            case BYTES    : return rs.getBytes(c);
+            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(c);
                             return t!=null ? new java.util.Date(t.getTime()) : null;
-            case DATE_SQL : return rs.getDate(column);
-            case TIME_SQL : return rs.getTime(column);
-            case TIMESTAMP: return rs.getTimestamp(column);
-            case BLOB     : return rs.getBlob(column);
-            case CLOB     : return rs.getClob(column);
-            case ENUM     : int i = rs.getInt(column);
+            case DATE_SQL : return rs.getDate(c);
+            case TIME_SQL : return rs.getTime(c);
+            case TIMESTAMP: return rs.getTimestamp(c);
+            case BLOB     : return rs.getBlob(c);
+            case CLOB     : return rs.getClob(c);
+            case ENUM     : int i = rs.getInt(c);
                             return i==0 && rs.wasNull()
                             ? null
                             : mColumn.getType().getEnumConstants()[i] ;
-            case COLOR    : int c = rs.getInt(column);
-                            return c==0 && rs.wasNull()
+            case COLOR    : i = rs.getInt(c);
+                            return i==0 && rs.wasNull()
                             ? null
-                            : new Color(c);
-            case STRING_WRAP: return createStringWrapper(rs.getString(column), mColumn);
-            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(column), mColumn);
-            case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
-            default       : return rs.getObject(column);
+                            : new Color(i);
+            case STRING_WRAP: return createStringWrapper(rs.getString(c), mColumn);
+            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
+            case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
+            default       : return rs.getObject(c);
         }
         return rs.wasNull() ? null : r;
     }
 
-    /** GetValue from the result set by position */
-    public Object getValue(final MetaColumn mColumn, final ResultSet rs, final int column) throws SQLException {
-        Object r;
+    /**
+     * GetValue from the <b>stored precedure</b> by position.
+     * It must be the same implementation as {@link #getValue(org.ujorm.orm.metaModel.MetaColumn, java.sql.ResultSet, int)}.
+     * @param mColumn Meta-model column
+     * @param rs The CallableStatement instance
+     * @param c Catabase column index starting at #1
+     * @return Value form the result set.
+     * @throws SQLException
+     */
+    public Object getValue(final MetaColumn mColumn, final CallableStatement rs, final int c) throws SQLException {
+        final Object r;
         switch (mColumn.getTypeCode()) {
-            case BOOLEAN  : r = rs.getBoolean(column); break;
-            case BYTE     : r = rs.getByte(column); break;
-            case CHAR     : String s = rs.getString(column); return (s != null && s.length() > 0) ? s.charAt(0) : null;
-            case SHORT    : r = rs.getShort(column); break;
-            case INT      : r = rs.getInt(column); break;
-            case LONG     : r = rs.getLong(column); break;
-            case FLOAT    : r = rs.getFloat(column); break;
-            case DOUBLE   : r = rs.getDouble(column); break;
-            case BIG_DECI : return rs.getBigDecimal(column);
-            case BIG_INTE : BigDecimal d = rs.getBigDecimal(column);
+            case BOOLEAN  : r = rs.getBoolean(c); break;
+            case BYTE     : r = rs.getByte(c); break;
+            case CHAR     : String s = rs.getString(c); return (s != null && s.length() > 0) ? s.charAt(0) : null;
+            case SHORT    : r = rs.getShort(c); break;
+            case INT      : r = rs.getInt(c); break;
+            case LONG     : r = rs.getLong(c); break;
+            case FLOAT    : r = rs.getFloat(c); break;
+            case DOUBLE   : r = rs.getDouble(c); break;
+            case BIG_DECI : return rs.getBigDecimal(c);
+            case BIG_INTE : BigDecimal d = rs.getBigDecimal(c);
                             return d!=null ? d.toBigInteger() : null;
-            case STRING   : return rs.getString(column);
-            case BYTES    : return rs.getBytes(column);
-            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(column);
+            case STRING   : return rs.getString(c);
+            case BYTES    : return rs.getBytes(c);
+            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(c);
                             return t!=null ? new java.util.Date(t.getTime()) : null;
-            case DATE_SQL : return rs.getDate(column);
-            case TIME_SQL : return rs.getTime(column);
-            case TIMESTAMP: return rs.getTimestamp(column);
-            case BLOB     : return rs.getBlob(column);
-            case CLOB     : return rs.getClob(column);
-            case ENUM     : int i = rs.getInt(column);
+            case DATE_SQL : return rs.getDate(c);
+            case TIME_SQL : return rs.getTime(c);
+            case TIMESTAMP: return rs.getTimestamp(c);
+            case BLOB     : return rs.getBlob(c);
+            case CLOB     : return rs.getClob(c);
+            case ENUM     : int i = rs.getInt(c);
                             return i==0 && rs.wasNull()
                             ? null
                             : mColumn.getType().getEnumConstants()[i] ;
-            case COLOR    : int c = rs.getInt(column);
-                            return c==0 && rs.wasNull()
+            case COLOR    : i = rs.getInt(c);
+                            return i==0 && rs.wasNull()
                             ? null
-                            : new Color(c);
-            case STRING_WRAP: return createStringWrapper(rs.getString(column), mColumn);
-            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(column), mColumn);
-            case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
-            default       : return rs.getObject(column);
+                            : new Color(i);
+            case STRING_WRAP: return createStringWrapper(rs.getString(c), mColumn);
+            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(c), mColumn);
+            case EXPORT_ENUM: return findEnum(rs.getString(c), mColumn);
+            default       : return rs.getObject(c);
         }
         return rs.wasNull() ? null : r;
     }
 
-    /** GetValue from the stored precedure by position */
-    public Object getValue(final MetaColumn mColumn, final CallableStatement rs, final int column) throws SQLException {
-        Object r;
-        switch (mColumn.getTypeCode()) {
-            case BOOLEAN  : r = rs.getBoolean(column); break;
-            case BYTE     : r = rs.getByte(column); break;
-            case CHAR     : String s = rs.getString(column); return (s != null && s.length() > 0) ? s.charAt(0) : null;
-            case SHORT    : r = rs.getShort(column); break;
-            case INT      : r = rs.getInt(column); break;
-            case LONG     : r = rs.getLong(column); break;
-            case FLOAT    : r = rs.getFloat(column); break;
-            case DOUBLE   : r = rs.getDouble(column); break;
-            case BIG_DECI : return rs.getBigDecimal(column);
-            case BIG_INTE : BigDecimal d = rs.getBigDecimal(column);
-                            return d!=null ? d.toBigInteger() : null;
-            case STRING   : return rs.getString(column);
-            case BYTES    : return rs.getBytes(column);
-            case DATE_UTIL: java.sql.Timestamp t = rs.getTimestamp(column);
-                            return t!=null ? new java.util.Date(t.getTime()) : null;
-            case DATE_SQL : return rs.getDate(column);
-            case TIME_SQL : return rs.getTime(column);
-            case TIMESTAMP: return rs.getTimestamp(column);
-            case BLOB     : return rs.getBlob(column);
-            case CLOB     : return rs.getClob(column);
-            case ENUM     : int i = rs.getInt(column);
-                            return i==0 && rs.wasNull()
-                            ? null
-                            : mColumn.getType().getEnumConstants()[i] ;
-            case COLOR    : int c = rs.getInt(column);
-                            return c==0 && rs.wasNull()
-                            ? null
-                            : new Color(c);
-            case STRING_WRAP: return createStringWrapper(rs.getString(column), mColumn);
-            case BYTES_WRAP : return createBytesWrapper(rs.getBytes(column), mColumn);
-            case EXPORT_ENUM: return findEnum(rs.getString(column), mColumn);
-            default       : return rs.getObject(column);
-        }
-        return rs.wasNull() ? null : r;
-    }
-
-    /** GetValue from the result set by position */
+    /** GetValue from the result set by position.
+     * @param mColumn the Column Model
+     * @param rs PreparedStatement
+     * @param value Value to assign
+     * @param c The database column index starts at #1
+     * @throws SQLException
+     */
     public void setValue
         ( final MetaColumn mColumn
         , final PreparedStatement rs
         , final Object value
-        , final int i
+        , final int c
         ) throws SQLException {
 
         if (value==null) {
            final int sqlType = MetaColumn.DB_TYPE.of(mColumn).getSqlType();
-           rs.setNull(i, sqlType);
+           rs.setNull(c, sqlType);
            return;
         }
 
         switch (mColumn.getTypeCode()) {
-            case BOOLEAN  : rs.setBoolean(i, (Boolean)value); break;
-            case BYTE     : rs.setByte(i, (Byte)value); break;
-            case CHAR     : rs.setString(i, String.valueOf(value)); break;
-            case SHORT    : rs.setShort(i, (Short)value); break;
-            case INT      : rs.setInt(i, (Integer)value); break;
-            case LONG     : rs.setLong(i, (Long)value); break;
-            case FLOAT    : rs.setFloat(i, (Float)value); break;
-            case DOUBLE   : rs.setDouble(i, (Double)value); break;
-            case BIG_DECI : rs.setBigDecimal(i, (BigDecimal) value); break;
-            case BIG_INTE : rs.setBigDecimal(i, new BigDecimal((BigInteger)value)); break;
-            case STRING   : rs.setString(i, (String)value); break;
-            case BYTES    : rs.setBytes(i, (byte[]) value); break;
-            case DATE_UTIL: rs.setTimestamp(i, new java.sql.Timestamp(((java.util.Date)value).getTime()) ); break;
-            case DATE_SQL : rs.setDate(i, (java.sql.Date) value); break;
-            case TIME_SQL : rs.setTime(i, (java.sql.Time)value); break;
-            case TIMESTAMP: rs.setTimestamp(i, (java.sql.Timestamp)value); break;
-            case BLOB     : rs.setBlob(i, (Blob)value); break;
-            case CLOB     : rs.setClob(i, (Clob)value); break;
-            case ENUM     : rs.setInt(i, ((Enum)value).ordinal()); break;
-            case COLOR    : rs.setInt(i, ((Color)value).getRGB()); break;
+            case BOOLEAN  : rs.setBoolean(c, (Boolean)value); break;
+            case BYTE     : rs.setByte(c, (Byte)value); break;
+            case CHAR     : rs.setString(c, String.valueOf(value)); break;
+            case SHORT    : rs.setShort(c, (Short)value); break;
+            case INT      : rs.setInt(c, (Integer)value); break;
+            case LONG     : rs.setLong(c, (Long)value); break;
+            case FLOAT    : rs.setFloat(c, (Float)value); break;
+            case DOUBLE   : rs.setDouble(c, (Double)value); break;
+            case BIG_DECI : rs.setBigDecimal(c, (BigDecimal) value); break;
+            case BIG_INTE : rs.setBigDecimal(c, new BigDecimal((BigInteger)value)); break;
+            case STRING   : rs.setString(c, (String)value); break;
+            case BYTES    : rs.setBytes(c, (byte[]) value); break;
+            case DATE_UTIL: rs.setTimestamp(c, new java.sql.Timestamp(((java.util.Date)value).getTime()) ); break;
+            case DATE_SQL : rs.setDate(c, (java.sql.Date) value); break;
+            case TIME_SQL : rs.setTime(c, (java.sql.Time)value); break;
+            case TIMESTAMP: rs.setTimestamp(c, (java.sql.Timestamp)value); break;
+            case BLOB     : rs.setBlob(c, (Blob)value); break;
+            case CLOB     : rs.setClob(c, (Clob)value); break;
+            case ENUM     : rs.setInt(c, ((Enum)value).ordinal()); break;
+            case COLOR    : rs.setInt(c, ((Color)value).getRGB()); break;
             case EXPORT_ENUM:
-            case STRING_WRAP:rs.setString(i, value!=null ? ((StringWrapper)value).exportToString() : null ); break;
-            case BYTES_WRAP :rs.setBytes(i, value!=null ? ((BytesWrapper)value).exportToBytes() : null ); break;
-            default       : rs.setObject(i, value);  break;
+            case STRING_WRAP:rs.setString(c, value!=null ? ((StringWrapper)value).exportToString() : null ); break;
+            case BYTES_WRAP :rs.setBytes(c, value!=null ? ((BytesWrapper)value).exportToBytes() : null ); break;
+            default       : rs.setObject(c, value);  break;
         }
     }
 
