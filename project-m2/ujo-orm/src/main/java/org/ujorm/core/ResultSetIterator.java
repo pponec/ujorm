@@ -111,10 +111,8 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
             for (int i=0; i<colCount; i++) {
                 final MetaColumn column = query.getColumn(i);
-                Object value = view
-                    ? typeService.getValue(column, rs)
-                    : typeService.getValue(column, rs, i+1)
-                    ;
+                final int iCol = view ? rs.findColumn(MetaColumn.NAME.of(column)) : (i+1);
+                final Object value = typeService.getValue(column, rs, iCol);
                 column.setValue(row, value);
             }
             row.writeSession(query.getSession());
