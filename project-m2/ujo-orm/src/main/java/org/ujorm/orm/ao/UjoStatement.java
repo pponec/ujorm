@@ -66,7 +66,7 @@ public class UjoStatement extends UnsupportedOperationException implements Prepa
      * @see TypeService
      */
     @SuppressWarnings("unchecked")
-    public Object getDefaultValue(MetaColumn column) {
+    public Object getDefaultValue(final MetaColumn column) {
         try {
             Object defaultValue = column.getProperty().getDefault();
             if (defaultValue instanceof OrmUjo) {
@@ -75,8 +75,7 @@ public class UjoStatement extends UnsupportedOperationException implements Prepa
                 defaultValue = mt.getFirstPK().getProperty().getValue(tableValue);
             }
 
-            TypeService typeService = column.getHandler().getParameters().getTypeService();
-            typeService.setValue(column, this, defaultValue, 1);
+            column.getConverter().setValue(column, this, defaultValue, 1);
             return v;
         } catch (SQLException e) {
             throw this;

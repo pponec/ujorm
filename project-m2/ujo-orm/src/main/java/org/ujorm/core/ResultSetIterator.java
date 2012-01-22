@@ -35,7 +35,6 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
     private final Query query;
     private final ResultSet rs;
-    private final TypeService typeService;
     /** If the statemtnt is null then is a sign that it is closed. */
     private PreparedStatement statement;
     /** Is the query a view? */
@@ -56,7 +55,6 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             this.statement = query.getStatement();
             this.rs = statement.executeQuery();
             this.view = query.getTableModel().isSelectModel();
-            this.typeService = query.getSession().getParameters().getTypeService();
         } catch (SQLException e) {
             close();
             throw new IllegalStateException(Session.SQL_ILLEGAL + query, e);
@@ -112,7 +110,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             for (int i=0; i<colCount; i++) {
                 final MetaColumn column = query.getColumn(i);
                 final int iCol = view ? rs.findColumn(MetaColumn.NAME.of(column)) : (i+1);
-                final Object value = typeService.getValue(column, rs, iCol);
+                final Object value = column.getConverter().getValue(column, rs, iCol);
                 column.setValue(row, value);
             }
             row.writeSession(query.getSession());

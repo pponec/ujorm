@@ -166,7 +166,11 @@ public class JdbcStatement {
 
             try {
                 ++parameterPointer;
-                typeService.setValue(column, ps, value, parameterPointer);
+                TypeService ts = column.getConverter();
+                if (ts==null) {
+                    ts = typeService;
+                }
+                ts.setValue(column, ps, value, parameterPointer);
             } catch (Throwable e) {
                 String textValue = UjoManager.getInstance().encodeValue(value, false);
                 String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", property.getType().getSimpleName(), column, parameterPointer, textValue);
@@ -245,10 +249,10 @@ public class JdbcStatement {
         try {
             if (value instanceof Object[]) for (Object v : (Object[]) value) {
                 ++parameterPointer;
-                typeService.setValue(column, ps, v, parameterPointer);
+                column.getConverter().setValue(column, ps, v, parameterPointer);
             } else {
                 ++parameterPointer;
-                typeService.setValue(column, ps, value, parameterPointer);
+                column.getConverter().setValue(column, ps, value, parameterPointer);
             }
         } catch (Throwable e) {
             String textValue = bo!=null 
@@ -284,7 +288,7 @@ public class JdbcStatement {
 
                 if (procedure.isInput(metaParam)) {
                     value = property.of(bo);
-                    typeService.setValue(metaParam, ps, value, parameterPointer);
+                    metaParam.getConverter().setValue(metaParam, ps, value, parameterPointer);
 
                     if (logValues) {
                         String textValue = UjoManager.getInstance().encodeValue(value, false);
@@ -318,7 +322,7 @@ public class JdbcStatement {
         try {
             for (MetaColumn c : MetaProcedure.PARAMETERS.getList(procedure)) {
                 if (procedure.isOutput(c)) {
-                    final Object value = typeService.getValue(c, ps, ++i);
+                    final Object value = c.getConverter().getValue(c, ps, ++i);
                     c.setValue(bo, value);
                 } 
                 else if (procedure.isInput(c)) {

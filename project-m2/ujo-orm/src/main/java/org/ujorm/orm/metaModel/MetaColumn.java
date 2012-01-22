@@ -40,7 +40,7 @@ import org.ujorm.orm.ao.UjoStatement;
  * @author Pavel Ponec
  * @composed 1 - * DbType
  */
-final public class MetaColumn extends MetaRelation2Many {
+public final class MetaColumn extends MetaRelation2Many {
     private static final Class CLASS = MetaColumn.class;
 
     /** DB primary key */
@@ -63,6 +63,8 @@ final public class MetaColumn extends MetaRelation2Many {
     public static final Property<MetaColumn,String> UNIQUE_INDEX = newProperty("uniqueIndex", "");
     /** A name of the constraint for the case a foreign key */
     public static final Property<MetaColumn,String> CONSTRAINT_NAME = newProperty("constraintName", "");
+    /** Convert, save and read application data from/to the database */
+    public static final Property<MetaColumn,Class<? extends TypeService>> CONVERTER = newProperty("converter", Class.class).writeDefault(TypeService.class);
     /** Comment of the database column */
     public static final Property<MetaColumn,String> COMMENT = newProperty("comment", Comment.NULL);
     /** The property initialization */
@@ -78,6 +80,7 @@ final public class MetaColumn extends MetaRelation2Many {
      */
     private char typeCode;
     private boolean foreignKey;
+    private TypeService converter;
 
 
     public MetaColumn() {
@@ -99,6 +102,7 @@ final public class MetaColumn extends MetaRelation2Many {
             changeDefault(this, INDEX      , INDEX.of(param));
             changeDefault(this, UNIQUE_INDEX,UNIQUE_INDEX.of(param));
             changeDefault(this, COMMENT    , COMMENT.of(param));
+            changeDefault(this, CONVERTER  , CONVERTER.of(param));
         }
         if (column!=null) {
             changeDefault(this, PRIMARY_KEY, column.pk());
@@ -109,6 +113,7 @@ final public class MetaColumn extends MetaRelation2Many {
             changeDefault(this, INDEX      , column.index());
             changeDefault(this, UNIQUE_INDEX,column.uniqueIndex());
             changeDefault(this, CONSTRAINT_NAME, column.constraintName());
+            changeDefault(this, CONVERTER  , column.converter());
         }
 
         if (DB_TYPE.isDefault(this)) {
@@ -122,6 +127,15 @@ final public class MetaColumn extends MetaRelation2Many {
         if (field!=null) {
             Comment comment = field.getAnnotation(Comment.class);
             if (comment!=null) changeDefault(this, COMMENT  , comment.value());
+        }
+
+        // Assign the Converter:
+        try {
+            converter = CONVERTER.isDefault(this)
+                    ? getHandler().getParameters().getTypeService()
+                    : CONVERTER.of(this).newInstance();
+        } catch (Throwable e) {
+            throw new IllegalArgumentException("Can't create an instance from the class: " + CONVERTER.of(this), e);
         }
     }
 
@@ -369,16 +383,15 @@ final public class MetaColumn extends MetaRelation2Many {
     }
 
     /** Initialize a type code - for an internal use only. */
-    public void initTypeCode(final MetaParams params) {
-        initTypeCode(params.getTypeService());
-    }
-    /** Initialize a type code - for an internal use only. */
-    public void initTypeCode(final TypeService typeService) {
+    public void initTypeCode(final TypeService defautTypeService) {
         // Test for a read-only state:
         checkReadOnly(true);
 
         // Assign a type code:
-        typeCode = typeService.getTypeCode(this);
+        typeCode = converter!=null
+                ? converter.getTypeCode(this)
+                : defautTypeService.getTypeCode(this)
+                ;
 
         // Modify a relation type:
         if (isForeignKey()) {
@@ -397,5 +410,10 @@ final public class MetaColumn extends MetaRelation2Many {
     /** Returns a constraint name for case a foreigh key */
     public String getConstraintName() {
         return CONSTRAINT_NAME.of(this);
+    }
+
+    /** Returna not null converter */
+    public TypeService getConverter() {
+        return converter;
     }
 }

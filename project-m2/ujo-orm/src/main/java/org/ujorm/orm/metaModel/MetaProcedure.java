@@ -119,7 +119,6 @@ final public class MetaProcedure extends AbstractMetaModel {
 
         // -----------------------------------------------
 
-        OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
         MetaTable table = new MetaTable(database, r2m, null);
 
@@ -127,7 +126,7 @@ final public class MetaProcedure extends AbstractMetaModel {
 
             MetaColumn c = new MetaColumn(table, p, null);
             PARAMETERS.addItem(this, c);
-            c.initTypeCode(database.getParams());
+            c.initTypeCode(null);
 
             boolean returnProperty = p.getIndex()==0;
             Parameter par = returnProperty ? null : p.getClass().getAnnotation(Parameter.class);

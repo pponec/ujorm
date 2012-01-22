@@ -71,7 +71,7 @@ final public class MetaParams extends AbstractMetaModel {
     /** Change a TypeService class by a subtype for user type customization. 
      * @see TypeService
      */
-    public static final Property<MetaParams,Class> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
+    public static final Property<MetaParams,Class<? extends TypeService>> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model.
      * The default value is EXCEPTION.
      * @see CheckReport Parameter values
