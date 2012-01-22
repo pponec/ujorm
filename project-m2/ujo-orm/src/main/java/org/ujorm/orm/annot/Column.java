@@ -17,6 +17,7 @@
 package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 import org.ujorm.orm.DbType;
+import org.ujorm.orm.TypeService;
 
 /** 
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
@@ -52,6 +53,8 @@ public @interface Column {
     String uniqueIndex() default Table.NULL;
     /** A name of the constraint for the case a foreign key */
     String constraintName() default Table.NULL;
+    /** Convert, save and read an application data from/to the database */
+    Class<? extends TypeService> converter() default TypeService.class;
 
     
 }
