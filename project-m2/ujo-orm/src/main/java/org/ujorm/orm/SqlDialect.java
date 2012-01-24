@@ -884,7 +884,7 @@ abstract public class SqlDialect {
             out.append('.');
         }
 
-        MetaColumn pkType = new MetaColumn();
+        final MetaColumn pkType = new MetaColumn();
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
         out.append(getSeqTableModel().getTableName()

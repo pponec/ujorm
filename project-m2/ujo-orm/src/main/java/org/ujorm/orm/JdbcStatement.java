@@ -151,13 +151,13 @@ public class JdbcStatement {
             final Object value = params.getParameter(i);
             final Class type = value!=null ? value.getClass() : Void.class;
             final Property property = Property.newInstance("[sqlParameter]", type);
-            final MetaColumn column = new MetaColumn();
+            final MetaColumn column = new MetaColumn(typeService);
 
             MetaColumn.TABLE.setValue(column, query.getTableModel());
             MetaColumn.TABLE_PROPERTY.setValue(column, property);
             query.getTableModel().getDatabase().changeDbType(column);
             query.getTableModel().getDatabase().changeDbLength(column);
-            column.initTypeCode(typeService);
+            column.initTypeCode();
 
             if (logValues) {
                 String textValue = UjoManager.getInstance().encodeValue(value, false);
@@ -166,11 +166,7 @@ public class JdbcStatement {
 
             try {
                 ++parameterPointer;
-                TypeService ts = column.getConverter();
-                if (ts==null) {
-                    ts = typeService;
-                }
-                ts.setValue(column, ps, value, parameterPointer);
+                column.getConverter().setValue(column, ps, value, parameterPointer);
             } catch (Throwable e) {
                 String textValue = UjoManager.getInstance().encodeValue(value, false);
                 String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", property.getType().getSimpleName(), column, parameterPointer, textValue);

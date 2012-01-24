@@ -225,7 +225,7 @@ public class OrmHandler {
         MetaParams params = getParameters();
         for (MetaRelation2Many r : propertyMap.values()) {
             if (r.isColumn()) {
-                ((MetaColumn)r).initTypeCode(params.getTypeService());
+                ((MetaColumn)r).initTypeCode();
             }
         }
 

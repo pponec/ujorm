@@ -126,7 +126,7 @@ final public class MetaProcedure extends AbstractMetaModel {
 
             MetaColumn c = new MetaColumn(table, p, null);
             PARAMETERS.addItem(this, c);
-            c.initTypeCode(null);
+            c.initTypeCode();
 
             boolean returnProperty = p.getIndex()==0;
             Parameter par = returnProperty ? null : p.getClass().getAnnotation(Parameter.class);

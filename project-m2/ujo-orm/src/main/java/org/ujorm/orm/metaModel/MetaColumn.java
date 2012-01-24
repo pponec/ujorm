@@ -80,10 +80,15 @@ public final class MetaColumn extends MetaRelation2Many {
      */
     private char typeCode;
     private boolean foreignKey;
-    private TypeService converter;
+    final private TypeService converter;
 
 
     public MetaColumn() {
+        this(null);
+    }
+
+    public MetaColumn(TypeService converter) {
+        this.converter = converter;
     }
 
     public MetaColumn(MetaTable table, UjoProperty tableProperty, MetaColumn param) {
@@ -383,15 +388,12 @@ public final class MetaColumn extends MetaRelation2Many {
     }
 
     /** Initialize a type code - for an internal use only. */
-    public void initTypeCode(final TypeService defautTypeService) {
+    public void initTypeCode() {
         // Test for a read-only state:
         checkReadOnly(true);
 
         // Assign a type code:
-        typeCode = converter!=null
-                ? converter.getTypeCode(this)
-                : defautTypeService.getTypeCode(this)
-                ;
+        typeCode = converter.getTypeCode(this);
 
         // Modify a relation type:
         if (isForeignKey()) {
