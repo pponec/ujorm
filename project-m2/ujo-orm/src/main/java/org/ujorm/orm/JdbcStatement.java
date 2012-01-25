@@ -60,7 +60,7 @@ public class JdbcStatement {
 
     public JdbcStatement(final PreparedStatement ps, final OrmHandler handler) {
         this.ps = ps;
-        this.typeService = handler.getParameters().getTypeService();
+        this.typeService = handler.getParameters().getConverter(null);
         logValues = LOGGER.isLoggable(Level.INFO);
         if (logValues) {
             values = new StringBuilder();

@@ -134,14 +134,11 @@ public final class MetaColumn extends MetaRelation2Many {
             if (comment!=null) changeDefault(this, COMMENT  , comment.value());
         }
 
-        // Assign the Converter:
-        try {
-            converter = CONVERTER.isDefault(this)
-                    ? getHandler().getParameters().getTypeService()
-                    : CONVERTER.of(this).newInstance();
-        } catch (Throwable e) {
-            throw new IllegalArgumentException("Can't create an instance from the class: " + CONVERTER.of(this), e);
-        }
+        // Assign a Converter:
+        converter = getHandler().getParameters().getConverter(CONVERTER.isDefault(this)
+                ? null
+                : CONVERTER.of(this))
+                ;
     }
 
     /** It is a DB column (either a value of a foreign key), 

@@ -19,6 +19,7 @@ import java.util.Date;
 import org.ujorm.UjoProperty;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.TypeService;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
@@ -28,7 +29,7 @@ import org.ujorm.implementation.orm.OrmTable;
 public class XCustomer extends OrmTable<XCustomer> {
 
     /** Unique key */
-    @Column(pk = true)
+    @Column(pk = true, converter=TypeService.class)
     public static final UjoProperty<XCustomer, Long> ID = newProperty(Long.class);
     /** Personal Numbr */
     public static final UjoProperty<XCustomer, Integer> PIN = newProperty(Integer.class);
