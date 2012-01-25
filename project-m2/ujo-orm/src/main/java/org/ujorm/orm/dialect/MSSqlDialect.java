@@ -444,7 +444,7 @@ public class MSSqlDialect extends SqlDialect {
         }
         out.append("dbo.");
 
-        MetaColumn pkType = new MetaColumn(db.getParams().getTypeService());
+        MetaColumn pkType = new MetaColumn(db.getParams().getConverter(null));
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
         out.append(getSeqTableModel().getTableName()

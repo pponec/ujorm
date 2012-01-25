@@ -53,7 +53,11 @@ public @interface Column {
     String uniqueIndex() default Table.NULL;
     /** A name of the constraint for the case a foreign key */
     String constraintName() default Table.NULL;
-    /** Convert, save and read an application data from/to the database */
+    /** Convert, save and read an application data to/from the ResultSet.
+     * If the value is a {@link TypeService default value}, so the instance for the real converter will be defined 
+     * along the parameter {@link org.ujorm.orm.metaModel.MetaParams.MetaParams#TYPE_SERVICE}.
+     * @see TypeService
+     */
     Class<? extends TypeService> converter() default TypeService.class;
 
     

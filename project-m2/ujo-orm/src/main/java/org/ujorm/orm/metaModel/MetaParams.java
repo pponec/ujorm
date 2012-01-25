@@ -17,7 +17,10 @@
 package org.ujorm.orm.metaModel;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
+import org.hibernate.mapping.Column;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Transient;
@@ -68,8 +71,9 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Property<MetaParams,CommentPolicy> COMMENT_POLICY = newProperty("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
-    /** Change a TypeService class by a subtype for user type customization. 
-     * @see TypeService
+    /** The instance of the parameter class {@see TypeService} is used for conversion, reading and writting to/from the ResultSet.
+     * You can specify a sybtype of the class for a commiono special fetures.
+     * @see org.ujorm.orm.annot.Column#converter() 
      */
     public static final Property<MetaParams,Class<? extends TypeService>> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model.
@@ -129,8 +133,8 @@ final public class MetaParams extends AbstractMetaModel {
     /** The property initialization */
     static{init(CLASS, true);}
 
-    /** TypeService */
-    private TypeService typeService;
+    /** TypeService Map */
+    private final Map<Class, TypeService> typeServices = new HashMap<Class, TypeService>(2);
 
     public MetaParams() {
         MORE_PARAMS.setValue(this, new MoreParams());
@@ -151,16 +155,27 @@ final public class MetaParams extends AbstractMetaModel {
         super.writeValue(property, value);
     }
 
-    /** Returns a type service instance */
-    public TypeService getTypeService() {
-        if (typeService==null) {
+    /** Returns a converter instance.
+     * Method use an internal cache for smaller converter instance count.
+     * @param converterClass A class to create an instance of the converter. If the value is [@code null],
+     * then a default converter defined in parameters is used.
+     * @return Returns a converter instance.
+     */
+    public TypeService getConverter(Class<? extends TypeService> converterClass) {
+        if (converterClass==null) {
+            converterClass = TYPE_SERVICE.of(this);
+        }
+        TypeService result = typeServices.get(converterClass);
+        if (result == null) {
             try {
-                typeService = (TypeService) TYPE_SERVICE.of(this).newInstance();
+                result = (TypeService) TYPE_SERVICE.of(this).newInstance();
+                typeServices.put(CLASS, result);
             } catch (Exception e) {
-                throw new IllegalStateException("Can't create a type service for the " + TYPE_SERVICE.of(this), e);
+                throw new IllegalStateException("Can't create a type service for the " + converterClass, e);
             }
         }
-        return typeService;
+
+        return result;
     }
 
     /** Set a parameter value */
