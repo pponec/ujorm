@@ -291,4 +291,7 @@ public class TypeService {
         }
     }
 
+    /** A {@code null} class value workaround. */
+    public static final class UNDEFINED_SERVICE extends TypeService{}
+
 }

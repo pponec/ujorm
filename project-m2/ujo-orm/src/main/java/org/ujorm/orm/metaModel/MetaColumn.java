@@ -34,6 +34,7 @@ import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.UjoStatement;
+import static org.ujorm.orm.TypeService.UNDEFINED_SERVICE;
 
 /**
  * Database column metadata
@@ -64,7 +65,7 @@ public final class MetaColumn extends MetaRelation2Many {
     /** A name of the constraint for the case a foreign key */
     public static final Property<MetaColumn,String> CONSTRAINT_NAME = newProperty("constraintName", "");
     /** Convert, save and read application data from/to the database */
-    public static final Property<MetaColumn,Class<? extends TypeService>> CONVERTER = newProperty("converter", Class.class).writeDefault(TypeService.class);
+    public static final Property<MetaColumn,Class<? extends TypeService>> CONVERTER = newProperty("converter", Class.class).writeDefault(UNDEFINED_SERVICE.class);
     /** Comment of the database column */
     public static final Property<MetaColumn,String> COMMENT = newProperty("comment", Comment.NULL);
     /** The property initialization */
