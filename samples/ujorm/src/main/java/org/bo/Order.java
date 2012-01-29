@@ -34,7 +34,7 @@ import org.ujorm.orm.annot.Table;
  */
 @Comment("Order table for registering the 'order items'")
 @Table(name = "ord_order")
-public class Order extends OrmTable<Order> {
+public final class Order extends OrmTable<Order> {
 
     /** Store the value like VARCHAR. */
     public enum State implements ValueExportable {
@@ -64,6 +64,14 @@ public class Order extends OrmTable<Order> {
     /** Reference to Items */
     public static final RelationToMany<Order, Item> ITEMS = newRelation(Item.class);
 
+    // --- Constructors ---
+
+    public Order() {
+    }
+
+    public Order(Long id) {
+        setId(id);
+    }
     // --- An optional implementation of commonly used setters and getters ---
 
     public Long getId() {

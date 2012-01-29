@@ -29,7 +29,7 @@ import org.ujorm.orm.annot.Comment;
  * @Table=bo_item
  */
 @Comment("Order item")
-public class Item extends OrmTable<Item> {
+public final class Item extends OrmTable<Item> {
 
     /** Unique key */
     @Column(pk = true)
