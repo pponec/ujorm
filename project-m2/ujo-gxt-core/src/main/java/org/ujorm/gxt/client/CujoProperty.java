@@ -15,7 +15,7 @@ package org.ujorm.gxt.client;
  * The object is not serializable.
  * @author Pavel Ponec
  */
-public interface CujoProperty<UJO extends Cujo, VALUE> extends Comparable<CujoProperty> {
+public interface CujoProperty<UJO extends Cujo, VALUE> extends Comparable<CujoProperty>, CCriterionProvider<UJO,VALUE> {
 
     public VALUE getValue(UJO ujo);
 

@@ -27,6 +27,10 @@ public enum COperator implements AbstractCOperator {
     LT,
     /** Less or equals the value */
     LE,
+    /** Operator to compare a property to collection */
+    IN,
+    /** Negation operator to compare a property to collection */
+    NOT_IN,
     /** Regular expression */
     REGEXP,
     /** Negation of the regular expression */
@@ -53,7 +57,12 @@ public enum COperator implements AbstractCOperator {
     USER,
     /** The operator for an internal use only where a result is
      * <strong>not dependent</strong> on the value. */
-    X_FIXED,
+    XFIXED,
+    /** The operator for an indication of the SQL condition in a text format
+     * Parameters of the SQL condition are not supported by the Ujorm.
+     * @see Criterion#forSql(org.ujorm.UjoProperty, java.lang.String)
+     */
+    XSQL,
     ;
 
 

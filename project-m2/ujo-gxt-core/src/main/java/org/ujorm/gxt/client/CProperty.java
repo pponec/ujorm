@@ -9,6 +9,10 @@
 
 package org.ujorm.gxt.client;
 
+import java.util.Collection;
+import org.ujorm.gxt.client.cquery.CCriterion;
+import org.ujorm.gxt.client.cquery.COperator;
+
 /**
  * Client Ujo Property.
  * The object is not serializable.
@@ -206,4 +210,113 @@ public class CProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VAL
              : name.compareTo(p.getName())
              ;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> where(COperator COperator, VALUE value) {
+        return CCriterion.where(this, COperator, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> where(COperator COperator, CujoProperty<?, VALUE> value) {
+        return CCriterion.where(this, COperator, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereEq(VALUE value) {
+        return CCriterion.where(this, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereIn(Collection<VALUE> list) {
+        return CCriterion.whereIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereNotIn(Collection<VALUE> list) {
+        return CCriterion.whereNotIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereIn(VALUE... list) {
+        return CCriterion.whereIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereNotIn(VALUE... list) {
+        return CCriterion.whereNotIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereEq(CujoProperty<UJO, VALUE> value) {
+        return CCriterion.where(this, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereNull() {
+        return CCriterion.whereNull(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereNotNull() {
+        return CCriterion.whereNotNull(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereNeq(VALUE value) {
+        return CCriterion.where(this, COperator.NOT_EQ, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereGt(VALUE value) {
+        return CCriterion.where(this, COperator.GT, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereGe(VALUE value) {
+        return CCriterion.where(this, COperator.GE, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereLt(VALUE value) {
+        return CCriterion.where(this, COperator.LT, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> whereLe(VALUE value) {
+        return CCriterion.where(this, COperator.LE, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> forSql(String sqlCondition) {
+        return CCriterion.forSql(this, sqlCondition);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> forAll() {
+        return CCriterion.forAll(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CCriterion<UJO> forNone() {
+        return CCriterion.forNone(this);
+    }
+
 }

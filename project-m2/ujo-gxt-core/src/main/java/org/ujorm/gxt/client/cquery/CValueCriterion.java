@@ -40,7 +40,7 @@ public class CValueCriterion<UJO extends Cujo> extends CCriterion<UJO> implement
 
     /** Creante an CCriterion constant */
     public CValueCriterion(boolean value) {
-        this(null, COperator.X_FIXED, value);
+        this(null, COperator.XFIXED, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
@@ -236,7 +236,7 @@ public class CValueCriterion<UJO extends Cujo> extends CCriterion<UJO> implement
 
     /** Is the criterion result independent on the bean object? */
     public final boolean isConstant() {
-        return operator == COperator.X_FIXED;
+        return operator == COperator.XFIXED;
     }
 
     @Override
