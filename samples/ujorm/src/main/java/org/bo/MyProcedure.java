@@ -34,7 +34,7 @@ import org.ujorm.orm.annot.Procedure;
  * @author Pavel Ponec
  */
 @Procedure(name="ujorm_test")
-public class MyProcedure extends DbProcedure<MyProcedure> {
+public final class MyProcedure extends DbProcedure<MyProcedure> {
 
     /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
     public static final Property<MyProcedure,Integer> RESULT = newProperty(Integer.class);

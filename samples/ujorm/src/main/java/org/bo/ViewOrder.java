@@ -39,7 +39,7 @@ import org.ujorm.orm.annot.View;
     + ") testView WHERE true"
     , alias="testView"
     )
- public class ViewOrder extends OrmTable<ViewOrder> {
+ public final class ViewOrder extends OrmTable<ViewOrder> {
 
     /** Unique key */
     @Column(pk=true, name="id")
