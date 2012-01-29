@@ -197,12 +197,9 @@ The next example selects data from database:
 <pre name="code" class="java">
 
   Session session = ormHandler.createSession();
-  Criterion&lt;Item&gt; crn1, crn2, criterion;
-
-  crn1 = Criterion.where( Item.ID, GE, 1L );
-  crn2 = Criterion.where( Item.ORDER.add(Order.NOTE)
-                        , "My order" ); // Equals to
-  criterion = crn1.and(crn2);
+  Criterion&lt;Item&gt; criterion =
+     Item.ID.whereGe( 1L ).and(
+     Item.ORDER.add(Order.NOTE).whereEq("My order"));
 
   for (Item item : session.createQuery(criterion)) {
       Date created = item.getOrder().getDate();
