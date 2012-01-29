@@ -4,7 +4,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>sample-generated</artifactId>
     <packaging>jar</packaging>
-    <version>1.21</version>
+    <version>1.22</version>
     <name>sample-generated</name>
     <url>http://maven.apache.org</url>
     <build>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.21</version>
+            <version>1.22</version>
         </dependency>
 
         <dependency>
