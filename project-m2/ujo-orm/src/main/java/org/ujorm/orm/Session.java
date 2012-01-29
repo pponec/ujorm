@@ -57,7 +57,7 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 public class Session {
 
     /** Common title to print the SQL VALUES */
-    private static final String SQL_VALUES = "\n-- SQL VALUES: ";
+    private static final String SQL_VALUES = "SQL VALUES: ";
     /** Exception SQL message prefix */
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
     /** Logger */
