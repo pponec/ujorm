@@ -19,7 +19,7 @@ package org.ujorm;
 import java.util.List;
 
 /**
- * A <strong>CompositeProperty</strong> class is an composite of a UjoProperty objects.
+ * A <strong>CompositeProperty</strong> interface is a composite of more UjoProperty objects.
  * The CompositeProperty class can be used wherever is used UjoProperty - with a one important <strong>exception</strong>:
  * do not send the CompositeProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
  * <p/>You can use the preferred methods UjoManager.setValue(...) / UjoManager.getValue(...) 
