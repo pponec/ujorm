@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import org.hibernate.mapping.Column;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Transient;
