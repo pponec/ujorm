@@ -1,6 +1,20 @@
 The Ujorm release notes
 *******************************
 
+release 1.22 (2012-01-30)
++ the UjoProperty interface extends the CriterionMaker now for a simpler Criterion building
++ new annotation parameter called converter can be assigned for a special reading data from/to ResultSet.
++ new method UjoComparator.sort() is implemented and a better type safe using Java generics
++ solid database names of foreign columns name constrains is implemented
++ the default implementation toString() of the AbstractUjo object is improved
++ the new method is implemented in the Core module: Criterion.evaluate(Iterable);
++ the dialect MSSqlDialect.java is fixed for a DELETE statement with related tables
++ the right parameter of Criterion can be an indirect property too.
++ small bug fixing
++ tutorial is extended for new API
++ code cleaning is done
+
+
 release 1.21 (2011-11-06)
 + Java 7.0 is supported now
 + a native SQL query with parameters is supported using the class SqlParameters
