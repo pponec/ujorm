@@ -5,10 +5,10 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <style type="text/css">
 <!--
-body {color: #000000; background-color: #ffffff; font-family: monospaced}
-pre {color: #000000; background-color: #ffffff; font-family: monospaced}
-table {color: #000000; background-color: #e9e8e2; font-family: monospaced}
-.ST0 {color: #969696; font-family: monospaced; font-weight: bold}
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+pre {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.ST0 {color: #969696; font-family: Monospaced; font-weight: bold}
 .comment {color: #969696}
 .line-number {background-color: #e9e8e2}
 .character {color: #ce7b00}
@@ -17,7 +17,7 @@ table {color: #000000; background-color: #e9e8e2; font-family: monospaced}
 </style>
 </head>
 <body>
-<table width="100%"><tr><td align="center">C:\u\Pavel\Java\ProjectUJO_SF\project-m2\ujo-orm\src\test\java\org\ujorm\orm_tutorial\sample\SampleORM.java</td></tr></table>
+<table width="100%"><tr><td align="center">C:\u\Pavel\Java\ProjectUJO_SF_Mvn\ujo-orm\src\test\java\org\ujorm\orm_tutorial\sample\SampleORM.java</td></tr></table>
 <pre>
 <span class="line-number">  1</span> <span class="comment">/*</span>
 <span class="line-number">  2</span> <span class="comment"> *  Copyright 2009-2011 Pavel Ponec</span>
@@ -34,516 +34,635 @@ table {color: #000000; background-color: #e9e8e2; font-family: monospaced}
 <span class="line-number"> 13</span> <span class="comment"> *  See the License for the specific language governing permissions and</span>
 <span class="line-number"> 14</span> <span class="comment"> *  limitations under the License.</span>
 <span class="line-number"> 15</span> <span class="comment"> */</span>
-<span class="line-number"> 16</span>
-<span class="line-number"> 17</span> <span class="keyword-directive">package</span> org;
-<span class="line-number"> 18</span>
-<span class="line-number"> 19</span> <span class="keyword-directive">im</span><span class="keyword-directive">port</span> java.util.Date;
-<span class="line-number"> 20</span> <span class="keyword-directive">import</span> java.util.List;
-<span class="line-number"> 21</span> <span class="keyword-directive">import</span> java.util.logging.*;
-<span class="line-number"> 22</span> <span class="keyword-directive">import</span> org.bo.Item;
-<span class="line-number"> 23</span> <span class="keyword-directive">import</span> org.bo.MyProcedure;
-<span class="line-number"> 24</span> <span class="keyword-directive">import</span> org.bo.Order;
-<span class="line-number"> 25</span> <span class="keyword-directive">import</span> org.bo.ViewOrder;
-<span class="line-number"> 26</span> <span class="keyword-directive">import</span> org.ujorm.Ujo;
-<span class="line-number"> 27</span> <span class="keyword-directive">import</span> org.ujorm.UjoProperty;
-<span class="line-number"> 28</span> <span class="keyword-directive">import</span> org.ujorm.core.UjoIterator;
-<span class="line-number"> 29</span> <span class="keyword-directive">import</span> org.ujorm.orm.*;
+<span class="line-number"> 16</span> 
+<span class="line-number"> 17</span> <span class="keyword-directive">package</span> org.ujorm.orm_tutorial.sample;
+<span class="line-number"> 18</span> 
+<span class="line-number"> 19</span> <span class="keyword-directive">import</span> java.util.ArrayList;
+<span class="line-number"> 20</span> <span class="keyword-directive">import</span> java.util.Date;
+<span class="line-number"> 21</span> <span class="keyword-directive">import</span> java.util.List;
+<span class="line-number"> 22</span> <span class="keyword-directive">import</span> java.util.logging.*;
+<span class="line-number"> 23</span> <span class="keyword-directive">import</span> org.ujorm.Ujo;
+<span class="line-number"> 24</span> <span class="keyword-directive">imp</span><span class="keyword-directive">ort</span> org.ujorm.UjoProperty;
+<span class="line-number"> 25</span> <span class="keyword-directive">import</span> org.ujorm.core.UjoIterator;
+<span class="line-number"> 26</span> <span class="keyword-directive">import</span> org.ujorm.criterion.*;
+<span class="line-number"> 27</span> <span class="keyword-directive">import</span> org.ujorm.orm.*;
+<span class="line-number"> 28</span> <span class="keyword-directive">import</span> org.ujorm.orm.ao.CachePolicy;
+<span class="line-number"> 29</span> <span class="keyword-directive">im</span><span class="keyword-directive">port</span> org.ujorm.orm.annot.Comment;
 <span class="line-number"> 30</span> <span class="keyword-directive">import</span> org.ujorm.orm.metaModel.MetaColumn;
-<span class="line-number"> 31</span> <span class="keyword-directive">import</span> org.ujorm.criterion.*;
-<span class="line-number"> 32</span> <span class="keyword-directive">import</span> org.ujorm.orm.ao.CheckReport;
-<span class="line-number"> 33</span> <span class="keyword-directive">import</span> org.ujorm.orm.metaModel.MetaParams;
-<span class="line-number"> 34</span> <span class="keyword-directive">import</span> org.ujorm.orm.utility.OrmTools;
-<span class="line-number"> 35</span>
-<span class="line-number"> 36</span> <span class="comment">/**</span>
-<span class="line-number"> 37</span> <span class="comment"> * </span><span class="comment">The</span> <span class="comment">tutorial</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">clas</span><span class="comment">s</span> <span class="comment">for</span> <span class="comment">the</span> <span class="comment">Ujorm</span> <span class="ST0">&lt;br&gt;</span>
-<span class="line-number"> 38</span> <span class="comment"> * --------------------------------------- </span><span class="ST0">&lt;br&gt;</span>
-<span class="line-number"> 39</span> <span class="comment"> * </span><span class="comment">Learn</span> <span class="comment">the</span> <span class="comment">basic</span> <span class="comment">skills</span> <span class="comment">in</span><span class="comment"> 15 </span><span class="comment">minutes</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">live</span> <span class="comment">Java</span> <span class="comment">code</span><span class="comment">.</span>
-<span class="line-number"> 40</span> <span class="comment"> * </span><span class="comment">The</span> <span class="comment">next</span> <span class="comment">several</span> <span class="comment">methods</span> <span class="comment">demonstrate</span> <span class="comment">the</span> <span class="comment">use</span> <span class="comment">of</span> <span class="comment">statements</span><span class="comment">:</span>
-<span class="line-number"> 41</span> <span class="comment"> *     </span><span class="comment">CREATE</span> <span class="comment">TABLE</span><span class="comment">, </span><span class="comment">INSERT</span><span class="comment">, </span><span class="comment">SELECT</span><span class="comment">, </span><span class="comment">UPDATE</span> <span class="comment">or</span> <span class="comment">DELETE</span>
-<span class="line-number"> 42</span> <span class="comment"> * </span><span class="comment">and</span> <span class="comment">show</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">a</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">model</span><span class="comment">.</span>
-<span class="line-number"> 43</span> <span class="comment"> *</span>
-<span class="line-number"> 44</span> <span class="comment"> * </span><span class="comment">Copyright</span><span class="comment"> 2010, </span><span class="comment">Pavel</span> <span class="comment">Ponec</span>
-<span class="line-number"> 45</span>  <span class="comment">*/</span>
-<span class="line-number"> 46</span> <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> SampleORM {
-<span class="line-number"> 47</span>
-<span class="line-number"> 48</span>     <span class="comment">// ------- TUTORIAL MENU: -------</span>
-<span class="line-number"> 49</span>
-<span class="line-number"> 50</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> main(String[] args) {
-<span class="line-number"> 51</span>         SampleORM sample = <span class="keyword-directive">new</span> SampleORM();
-<span class="line-number"> 52</span>         <span class="keyword-directive">try</span> {
-<span class="line-number"> 53</span>             sample.loadMetaModel();
-<span class="line-number"> 54</span>             sample.useInsert();
-<span class="line-number"> 55</span>             sample.useSelectOrders();
-<span class="line-number"> 56</span>             sample.useCriterions();
-<span class="line-number"> 57</span>             sample.useSortOrders();
-<span class="line-number"> 58</span>             sample.useSortOrderItems();
-<span class="line-number"> 59</span>             sample.useSelectViewOrders();
-<span class="line-number"> 60</span>             sample.useSelectItems_1();
-<span class="line-number"> 61</span>             sample.useSelectItems_2();
-<span class="line-number"> 62</span>             sample.useSelectItems_3();
-<span class="line-number"> 63</span>             sample.useSelectItems_4();
-<span class="line-number"> 64</span>             sample.useSelectItems_5();
-<span class="line-number"> 65</span>             sample.useSelectItems_5b();
-<span class="line-number"> 66</span>             sample.useNativeCriterion();
-<span class="line-number"> 67</span>             sample.useReloading();
-<span class="line-number"> 68</span>             sample.useLimitAndOffset();
-<span class="line-number"> 69</span>             sample.useSelectCount();
-<span class="line-number"> 70</span>             sample.useForeignKey();
-<span class="line-number"> 71</span>             sample.useIteratorSkip();
-<span class="line-number"> 72</span>             sample.useRelation();
-<span class="line-number"> 73</span>             sample.useStoredProcedure();
-<span class="line-number"> 74</span>             sample.useUpdate();
-<span class="line-number"> 75</span>             sample.useDelete_1();
-<span class="line-number"> 76</span>             sample.useDelete_2();
-<span class="line-number"> 77</span>             sample.useMetadata();
-<span class="line-number"> 78</span>         } <span class="keyword-directive">finally</span> {
-<span class="line-number"> 79</span>             sample.useCloseSession();
-<span class="line-number"> 80</span>         }
-<span class="line-number"> 81</span>     }
-<span class="line-number"> 82</span>
-<span class="line-number"> 83</span>     <span class="comment">// ------- CHAP</span><span class="comment">TERS: -------</span>
-<span class="line-number"> 84</span>
-<span class="line-number"> 85</span>     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">handler</span> <span class="comment">contains</span> <span class="comment">the</span> <span class="comment">one</span> <span class="comment">or</span> <span class="comment">more</span> <span class="comment">database</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">models</span><span class="comment">,</span>
-<span class="line-number"> 86</span> <span class="comment">     * </span><span class="comment">the</span> <span class="comment">one</span> <span class="comment">applicatin</span> <span class="comment">can</span> <span class="comment">have</span> <span class="comment">more</span> <span class="comment">OrmHandler</span> <span class="comment">instances</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number"> 87</span>     <span class="keyword-directive">private</span> OrmHandler handler;
-<span class="line-number"> 88</span>
-<span class="line-number"> 89</span>     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">session</span> <span class="comment">contains</span> <span class="comment">a</span> <span class="comment">cache</span> <span class="comment">and</span> <span class="comment">database</span> <span class="comment">connections</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number"> 90</span>     <span class="keyword-directive">private</span> Session session;
-<span class="line-number"> 91</span>
-<span class="line-number"> 92</span>     <span class="comment">/**</span> <span class="comment">Before</span> <span class="comment">the</span> <span class="comment">first</span> <span class="comment">use</span> <span class="comment">load</span> <span class="comment">a</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">model</span><span class="comment">.</span>
-<span class="line-number"> 93</span> <span class="comment">     * </span><span class="comment">Database</span> <span class="comment">tables</span> <span class="comment">will</span> <span class="comment">be</span> <span class="comment">created</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">first</span> <span class="comment">time</span><span class="comment">.</span>
-<span class="line-number"> 94</span>      <span class="comment">*/</span>
-<span class="line-number"> 95</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">voi</span><span class="keyword-directive">d</span> loadMetaModel() {
-<span class="line-number"> 96</span>
-<span class="line-number"> 97</span>         Logger.getLogger(Ujo.<span class="keyword-directive">class</span>.getPackage().getName()).setLevel(Level.ALL);
-<span class="line-number"> 98</span>         handler = <span class="keyword-directive">new</span> OrmHandler();
-<span class="line-number"> 99</span>
-<span class="line-number">100</span>         <span class="comment">//</span><span class="comment"> There are prefered default properties for a production environment:</span>
-<span class="line-number">101</span>         <span class="keyword-directive">boolean</span> yesIWantToChangeDefaultParameters = <span class="keyword-directive">true</span>;
-<span class="line-number">102</span>         <span class="keyword-directive">if</span> (yesIWantToChangeDefaultParameters) {
-<span class="line-number">103</span>             MetaParams params = <span class="keyword-directive">new</span> MetaParams();
-<span class="line-number">104</span>             params.set(MetaParams.TABLE_ALIAS_SUFFIX, <span class="character">&quot;</span><span class="character">_alias</span><span class="character">&quot;</span>);
-<span class="line-number">105</span>             params.set(MetaParams.SEQUENCE_CACHE, 1);
-<span class="line-number">106</span>             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.EXCEPTION);
-<span class="line-number">107</span>             handler.config(params);
-<span class="line-number">108</span>         }
-<span class="line-number">109</span>
-<span class="line-number">110</span>         <span class="keyword-directive">boolean</span> yesIWantToLoadExternalConfig = <span class="keyword-directive">false</span>;
-<span class="line-number">111</span>         <span class="keyword-directive">if</span> (yesIWantToLoadExternalConfig) {
-<span class="line-number">112</span>             java.net.URL config = getClass().getResource(<span class="character">&quot;</span><span class="character">/org/ujorm/orm/sample/config.xml</span><span class="character">&quot;</span>);
-<span class="line-number">113</span>             handler.config(config, <span class="keyword-directive">true</span>);
-<span class="line-number">114</span>         }
-<span class="line-number">115</span>
-<span class="line-number">116</span>         handler.loadDatabase(Database.<span class="keyword-directive">class</span>);
-<span class="line-number">117</span>         session = handler.createSession();
-<span class="line-number">118</span>     }
-<span class="line-number">119</span>
-<span class="line-number">120</span>     <span class="comment">/**</span> <span class="comment">Insert</span> <span class="comment">one</span> <span class="comment">Or</span><span class="comment">der</span> <span class="comment">and</span> <span class="comment">two</span> <span class="comment">Items</span> <span class="comment">into</span> <span class="comment">database</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number">121</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useInsert() {
-<span class="line-number">122</span>
-<span class="line-number">123</span>         Order order = <span class="keyword-directive">new</span> Order();
-<span class="line-number">124</span>         order.setDate(<span class="keyword-directive">new</span> Date());
-<span class="line-number">125</span>         order.setDescr(<span class="character">&quot;</span><span class="character">Joh</span><span class="character">n&#39;s order</span><span class="character">&quot;</span>);
-<span class="line-number">126</span>
-<span class="line-number">127</span>         Item item1 = <span class="keyword-directive">new</span> Item();
-<span class="line-number">128</span>         item1.setOrder(order);
-<span class="line-number">129</span>         item1.setDescr(<span class="character">&quot;</span><span class="character">Yellow table</span><span class="character">&quot;</span>);
-<span class="line-number">130</span>
-<span class="line-number">131</span>         Item item2 = <span class="keyword-directive">n</span><span class="keyword-directive">ew</span> Item();
-<span class="line-number">132</span>         item2.setOrder(order);
-<span class="line-number">133</span>         item2.setDescr(<span class="character">&quot;</span><span class="character">Green window</span><span class="character">&quot;</span>);
-<span class="line-number">134</span>
-<span class="line-number">135</span>         System.out.println(<span class="character">&quot;</span><span class="character">order: </span><span class="character">&quot;</span> + order);
-<span class="line-number">136</span>         System.out.println(<span class="character">&quot;</span><span class="character">item1: </span><span class="character">&quot;</span> + item1);
-<span class="line-number">137</span>         System.out.println(<span class="character">&quot;</span><span class="character">item2: </span><span class="character">&quot;</span> + item2);
-<span class="line-number">138</span>
-<span class="line-number">139</span>         session.save(order);
-<span class="line-number">140</span>         session.save(item1);
-<span class="line-number">141</span>         session.save(item2);
-<span class="line-number">142</span>
-<span class="line-number">143</span>         <span class="keyword-directive">if</span> (<span class="keyword-directive">true</span>) {
-<span class="line-number">144</span>             session.commit();
-<span class="line-number">145</span>         } <span class="keyword-directive">else</span> {
-<span class="line-number">146</span>             session.rollback();
-<span class="line-number">147</span>         }
-<span class="line-number">148</span>     }
-<span class="line-number">149</span>
-<span class="line-number">150</span>     <span class="comment">/**</span> <span class="comment">Now</span><span class="comment">, </span><span class="comment">how</span> <span class="comment">to</span> <span class="comment">select</span> <span class="comment">Orders</span> <span class="comment">from</span> <span class="comment">the</span> <span class="comment">database</span> <span class="comment">by</span> <span class="comment">Criterions</span><span class="comment">? </span><span class="comment">*/</span>
-<span class="line-number">151</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectOrders() {
-<span class="line-number">152</span>
-<span class="line-number">153</span>         Criterion&lt;Order&gt; cn1, cn2, cn3, crit;
-<span class="line-number">154</span>
-<span class="line-number">155</span>         cn1 = Criterion.where(Order.descr, <span class="character">&quot;</span><span class="character">John&#39;s order</span><span class="character">&quot;</span>);
-<span class="line-number">156</span>         cn2 = Criterion.where(Order.created, Operator.LE, <span class="keyword-directive">new</span> Date());
-<span class="line-number">157</span>         cn3 = Criterion.where(Order.state, Order.State.ACTIVE);
-<span class="line-number">158</span>         crit = cn1.and(cn2).and(cn3);
-<span class="line-number">159</span>
-<span class="line-number">160</span>         Query&lt;Order&gt; orders = session.createQuery(crit);
-<span class="line-number">161</span>
-<span class="line-number">162</span>         <span class="keyword-directive">for</span> (Order order : orders) {
-<span class="line-number">163</span>             String descr = order.getDescr();
-<span class="line-number">164</span>             System.out.println(<span class="character">&quot;</span><span class="character">ORDER ROW: </span><span class="character">&quot;</span> + order + <span class="character">&quot;</span><span class="character"> // descr: </span><span class="character">&quot;</span> + descr);
-<span class="line-number">165</span>         }
-<span class="line-number">166</span>     }
-<span class="line-number">167</span>
-<span class="line-number">168</span>     <span class="comment">/**</span> <span class="comment">Lern</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">the</span> <span class="comment">Criterion</span> <span class="comment">as</span> <span class="comment">an</span> <span class="comment">simple</span> <span class="comment">object</span> <span class="comment">validator</span> <span class="comment">only</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number">169</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useCriterions() {
-<span class="line-number">170</span>
-<span class="line-number">171</span>         <span class="keyword-directive">f</span><span class="keyword-directive">inal</span> Order order = <span class="keyword-directive">new</span> Order();
-<span class="line-number">172</span>         order.setId(100L);
-<span class="line-number">173</span>         order.setDescr(<span class="character">&quot;</span><span class="character">my order</span><span class="character">&quot;</span>);
-<span class="line-number">174</span>         order.setDate(<span class="keyword-directive">new</span> Date());
-<span class="line-number">175</span>
-<span class="line-number">176</span>         Criterion&lt;Order&gt; crnId = Criterion.where(Order.id, Operator.GT, 99L);
-<span class="line-number">177</span>         Criterion&lt;Order&gt; crnDescr = Criterion.where(Order.descr, <span class="character">&quot;</span><span class="character">another</span><span class="character">&quot;</span>);
-<span class="line-number">178</span>         Criterion&lt;Order&gt; crnCreated = Criterion.where(Order.created, Operator.LE, <span class="keyword-directive">new</span> Date());
-<span class="line-number">179</span>         Criterion&lt;Order&gt; crn = <span class="keyword-directive">null</span>;
-<span class="line-number">180</span>
-<span class="line-number">181</span>         <span class="comment">// Simple condition: Order.id&gt;99</span>
-<span class="line-number">182</span>         <span class="keyword-directive">assert</span> crnId.evaluate(order);
-<span class="line-number">183</span>
-<span class="line-number">184</span>         <span class="comment">//</span><span class="comment"> Compound condition: Order.id&gt;99 or Order.descr=&#39;another&#39;</span>
-<span class="line-number">185</span>         crn = crnId.or(crnDescr);
-<span class="line-number">186</span>         <span class="keyword-directive">assert</span> crn.evaluate(order);
-<span class="line-number">187</span>
-<span class="line-number">188</span>         <span class="comment">// Compound condition with parentheses: Order.cre</span><span class="comment">ated&lt;=now() and (Order.descr=&#39;another&#39; or Order.id&gt;99)</span>
-<span class="line-number">189</span>         crn = crnCreated.and(crnDescr.or(crnId));
-<span class="line-number">190</span>         <span class="keyword-directive">assert</span> crn.evaluate(order);
-<span class="line-number">191</span>
-<span class="line-number">192</span>         <span class="comment">// Another condition: (Order.crea</span><span class="comment">ted&lt;=now() or Order.descr=&#39;another&#39;) and Order.id&gt;99</span>
-<span class="line-number">193</span>         crn = (crnCreated.or(crnDescr)).and(crnId);
-<span class="line-number">194</span>         <span class="comment">// ... or simple by a native priority:</span>
-<span class="line-number">195</span>         crn = crnCreated.or(crnDescr).and(crnId);
-<span class="line-number">196</span>         <span class="keyword-directive">assert</span> crn.evaluate(order);
-<span class="line-number">197</span>     }
-<span class="line-number">198</span>
-<span class="line-number">199</span>     <span class="comment">/**</span> <span class="comment">Sort</span> <span class="comment">orders</span> <span class="comment">by</span> <span class="comment">two</span> <span class="comment">properties</span><span class="comment">: </span><span class="comment">descr</span> <span class="comment">and</span> <span class="comment">created</span> <span class="comment">descending</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number">200</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">vo</span><span class="keyword-directive">id</span> useSortOrders() {
-<span class="line-number">201</span>
-<span class="line-number">202</span>         Query&lt;Order&gt; orders = session.createQuery(Order.<span class="keyword-directive">class</span>);
-<span class="line-number">203</span>         orders.orderBy( Order.descr
-<span class="line-number">204</span>                       , Order.created.descending() );
-<span class="line-number">205</span>
-<span class="line-number">206</span>         System.out.println(<span class="character">&quot;</span><span class="character">VIEW-ORDER COUNT: </span><span class="character">&quot;</span> + orders.getCount());
-<span class="line-number">207</span>     }
-<span class="line-number">208</span>
-<span class="line-number">209</span>     <span class="comment">/**</span> <span class="comment">Sort</span> <span class="comment">items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="ST0">&lt;strong&gt;</span><span class="comment">composite</span><span class="ST0">&lt;/strong&gt;</span> <span class="comment">propertry</span><span class="comment">.</span> <span class="ST0">&lt;br&gt;</span>
-<span class="line-number">210</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment"> 1: </span><span class="comment">see</span> <span class="comment">how</span> <span class="comment">a</span> <span class="comment">composite</span> <span class="comment">property</span> <span class="comment">can</span> <span class="comment">be</span> <span class="comment">used</span> <span class="comment">for</span> <span class="comment">reading</span> <span class="comment">values</span> <span class="comment">too</span><span class="comment">.</span> <span class="ST0">&lt;br&gt;</span>
-<span class="line-number">211</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment"> 2: </span><span class="comment">the</span> <span class="comment">metod</span> <span class="comment">loadLazyValues</span><span class="comment">(</span><span class="comment">.</span><span class="comment">.</span><span class="comment">)</span> <span class="comment">is</span> <span class="comment">able</span> <span class="comment">to</span> <span class="comment">load</span> <span class="comment">all</span> <span class="comment">lazy</span> <span class="comment">properties</span> <span class="comment">for</span> <span class="comment">the</span> <span class="comment">Item</span> <span class="comment">and</span> <span class="comment">its</span> <span class="comment">related</span> <span class="comment">Order</span><span class="ST0">&lt;br&gt;</span>
-<span class="line-number">212</span>      <span class="comment">*/</span>
-<span class="line-number">213</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSortOrderItems() {
-<span class="line-number">214</span>
-<span class="line-number">215</span>         Query&lt;Item&gt; items = session.createQuery(Item.<span class="keyword-directive">class</span>);
-<span class="line-number">216</span>         items.orderBy(Item.order.add(Order.created));
-<span class="line-number">217</span>
-<span class="line-number">218</span>         <span class="keyword-directive">for</span> (Item item : items) {
-<span class="line-number">219</span>             OrmTools.loadLazyValues(item, 2);
-<span class="line-number">220</span>             System.out.println(item.get(Item.order.add(Order.created)) + <span class="character">&quot;</span> <span class="character">&quot;</span> + item);
-<span class="line-number">221</span>         }
-<span class="line-number">222</span>
-<span class="line-number">223</span>         <span class="comment">// Another way to avoid the lazy loading by a bulk property loading:</span>
-<span class="line-number">224</span>         List&lt;Item&gt; itemList = OrmTools.loadLazyValuesAsBatch(items);
-<span class="line-number">225</span>         System.out.println(<span class="character">&quot;</span><span class="character">itemList: </span><span class="character">&quot;</span> + itemList);
-<span class="line-number">226</span>     }
-<span class="line-number">227</span>
-<span class="line-number">228</span>     <span class="comment">/**</span> <span class="comment">Use</span> <span class="comment">a</span><span class="comment"> &#39;</span><span class="comment">native</span> <span class="comment">query</span><span class="comment">&#39; </span><span class="comment">where</span> <span class="comment">the</span> <span class="comment">query</span> <span class="comment">is</span> <span class="comment">created</span>
-<span class="line-number">229</span> <span class="comment">     * </span><span class="comment">by</span> <span class="comment">a</span> <span class="comment">special</span> <span class="comment">entity</span> <span class="comment">signed</span> <span class="comment">by</span> <span class="comment">the</span> <span class="ST0">@View</span> <span class="comment">annotation</span><span class="comment">.</span>
-<span class="line-number">230</span>      <span class="comment">*/</span>
-<span class="line-number">231</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectViewOrders() {
-<span class="line-number">232</span>
-<span class="line-number">233</span>         Criterion&lt;ViewOrder&gt; crit = Criterion.where(ViewOrder.ID, Operator.GE, 0L);
-<span class="line-number">234</span>         Query&lt;ViewOrder&gt; orders = session.createQuery(crit);
-<span class="line-number">235</span>         System.out.println(<span class="character">&quot;</span><span class="character">VIEW-ORDER COUNT: </span><span class="character">&quot;</span> + orders.getCount());
-<span class="line-number">236</span>
-<span class="line-number">237</span>         <span class="keyword-directive">for</span> (ViewOrder order : orders) {
-<span class="line-number">238</span>             System.out.println(<span class="character">&quot;</span><span class="character">ORDER ROW: </span><span class="character">&quot;</span> + order);
-<span class="line-number">239</span>         }
-<span class="line-number">240</span>     }
-<span class="line-number">241</span>
-<span class="line-number">242</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">all</span> <span class="comment">items</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">description</span> <span class="comment">with</span> <span class="comment">the</span><span class="comment"> &#39;</span><span class="comment">table</span><span class="comment">&#39; </span><span class="comment">insensitive</span> <span class="comment">text</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number">243</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_1() {
-<span class="line-number">244</span>
-<span class="line-number">245</span>         Criterion&lt;Item&gt; crit = Criterion.where(Item.descr, Operator.CONTAINS_CASE_INSENSITIVE, <span class="character">&quot;</span><span class="character">table</span><span class="character">&quot;</span>);
-<span class="line-number">246</span>         Query&lt;Item&gt; items = session.createQuery(crit).orderBy(Item.id.descending());
-<span class="line-number">247</span>
-<span class="line-number">248</span>         <span class="keyword-directive">for</span> (Item item : items) {
-<span class="line-number">249</span>             Order order = item.getOrder();
-<span class="line-number">250</span>             System.out.println(<span class="character">&quot;</span><span class="character">ITEM ROW: </span><span class="character">&quot;</span> + item + <span class="character">&quot;</span><span class="character"> ORDER: </span><span class="character">&quot;</span> + order);
-<span class="line-number">251</span>         }
-<span class="line-number">252</span>     }
-<span class="line-number">253</span>
-<span class="line-number">254</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">one</span> <span class="comment">Order</span> <span class="comment">by</span> <span class="comment">id</span> <span class="comment">and</span> <span class="comment">pr</span><span class="comment">int</span> <span class="comment">its</span> <span class="comment">Items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">criterion</span> <span class="comment">*/</span>
-<span class="line-number">255</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_2() {
-<span class="line-number">256</span>
-<span class="line-number">257</span>         Order orderValue = session.load(Order.<span class="keyword-directive">class</span>, 1L);
-<span class="line-number">258</span>         Criterion&lt;Item&gt; crit = Criterion.where(Item.order, orderValue);
-<span class="line-number">259</span>         Query&lt;Item&gt; items = session.createQuery(crit);
-<span class="line-number">260</span>
-<span class="line-number">261</span>         <span class="keyword-directive">for</span> (Item item : items) {
-<span class="line-number">262</span>             Order order2 = item.getOrder();
-<span class="line-number">263</span>             System.out.println(<span class="character">&quot;</span><span class="character">ITEM ROW: </span><span class="character">&quot;</span> + item + <span class="character">&quot;</span><span class="character"> ORDER: </span><span class="character">&quot;</span> + order2);
-<span class="line-number">264</span>         }
+<span class="line-number"> 31</span> <span class="keyword-directive">import</span> org.ujorm.orm.metaModel.MetaParams;
+<span class="line-number"> 32</span> <span class="keyword-directive">import</span> org.ujorm.orm.utility.OrmTools;
+<span class="line-number"> 33</span> <span class="keyword-directive">imp</span><span class="keyword-directive">ort</span> <span class="keyword-directive">static</span> org.ujorm.criterion.Operator.*;
+<span class="line-number"> 34</span> 
+<span class="line-number"> 35</span> <span class="comment">/**</span>
+<span class="line-number"> 36</span> <span class="comment"> * </span><span class="comment">The</span> <span class="comment">tutorial</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">class</span> <span class="comment">for</span> <span class="comment">the</span> <span class="comment">Ujorm</span> <span class="ST0">&lt;br&gt;</span>
+<span class="line-number"> 37</span> <span class="comment"> * --------------------------------------- </span><span class="ST0">&lt;br&gt;</span>
+<span class="line-number"> 38</span> <span class="comment"> * </span><span class="comment">Learn</span> <span class="comment">the</span> <span class="comment">basic</span> <span class="comment">skills</span> <span class="comment">i</span><span class="comment">n</span><span class="comment"> 15 </span><span class="comment">minutes</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">live</span> <span class="comment">Java</span> <span class="comment">code</span><span class="comment">.</span>
+<span class="line-number"> 39</span> <span class="comment"> * </span><span class="comment">The</span> <span class="comment">next</span> <span class="comment">several</span> <span class="comment">methods</span> <span class="comment">demonstrate</span> <span class="comment">the</span> <span class="comment">use</span> <span class="comment">of</span> <span class="comment">statements</span><span class="comment">:</span>
+<span class="line-number"> 40</span> <span class="comment"> *     </span><span class="comment">CREATE</span> <span class="comment">TABLE</span><span class="comment">, </span><span class="comment">INSERT</span><span class="comment">, </span><span class="comment">SELECT</span><span class="comment">, </span><span class="comment">UPDATE</span> <span class="comment">or</span> <span class="comment">DELETE</span>
+<span class="line-number"> 41</span> <span class="comment"> * </span><span class="comment">and</span> <span class="comment">show</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">a</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">model</span><span class="comment">.</span>
+<span class="line-number"> 42</span> <span class="comment"> *</span>
+<span class="line-number"> 43</span> <span class="comment"> * </span><span class="comment">Entities</span><span class="comment">: </span><span class="ST0">&lt;pre&gt;</span>
+<span class="line-number"> 44</span> <span class="comment"> *  - </span><span class="comment">Order</span><span class="comment"> [</span><span class="comment">ID</span><span class="comment">, </span><span class="comment">NOTE</span><span class="comment">, </span><span class="comment">CREATED</span><span class="comment">, </span><span class="comment">.</span><span class="comment">.</span><span class="comment">.</span><span class="comment">]</span>
+<span class="line-number"> 45</span> <span class="comment"> *  - </span><span class="comment">Item</span><span class="comment"> [</span><span class="comment">ID</span><span class="comment">, </span><span class="comment">ORDER</span><span class="comment">, </span><span class="comment">NOTE</span><span class="comment">, </span><span class="comment">.</span><span class="comment">.</span><span class="comment">.</span><span class="comment">]</span>
+<span class="line-number"> 46</span> <span class="comment"> * </span><span class="ST0">&lt;/pre&gt;</span>
+<span class="line-number"> 47</span> 
+<span class="line-number"> 48</span> <span class="comment"> * </span><span class="comment">Copyright</span><span class="comment"> 2011, </span><span class="comment">Pavel</span> <span class="comment">Ponec</span>
+<span class="line-number"> 49</span> <span class="comment"> *</span>
+<span class="line-number"> 50</span> <span class="comment"> * </span><span class="ST0">@see</span> <span class="comment">Order</span>
+<span class="line-number"> 51</span> <span class="comment"> * </span><span class="ST0">@see</span> <span class="comment">Item</span>
+<span class="line-number"> 52</span>  <span class="comment">*/</span>
+<span class="line-number"> 53</span> <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> SampleORM {
+<span class="line-number"> 54</span> 
+<span class="line-number"> 55</span>     <span class="comment">// ------- TUTORIAL MENU: -------</span>
+<span class="line-number"> 56</span> 
+<span class="line-number"> 57</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> main(String[] args) {
+<span class="line-number"> 58</span>         SampleORM sample = <span class="keyword-directive">new</span> SampleORM();
+<span class="line-number"> 59</span>         <span class="keyword-directive">try</span> {
+<span class="line-number"> 60</span>             sample.createMetaModel();
+<span class="line-number"> 61</span>             sample.useInsert();
+<span class="line-number"> 62</span>             sample.useSelect();
+<span class="line-number"> 63</span>             sample.useBatchInsert();
+<span class="line-number"> 64</span>             sample.useCriterions();
+<span class="line-number"> 65</span>             sample.useSortOrders();
+<span class="line-number"> 66</span>             sample.useSortOrderItems();
+<span class="line-number"> 67</span>             sample.useSelectViewOrders();
+<span class="line-number"> 68</span>             sample.useSelectWithNativeSQL();
+<span class="line-number"> 69</span>             sample.useSelectItems_1();
+<span class="line-number"> 70</span>             sample.useSelectItems_2();
+<span class="line-number"> 71</span>             sample.useSelectItems_3();
+<span class="line-number"> 72</span>             sample.useSelectItems_4();
+<span class="line-number"> 73</span>             sample.useSelectItems_5();
+<span class="line-number"> 74</span>             sample.useSelectItems_5b();
+<span class="line-number"> 75</span>             sample.useOptimizedSelect();
+<span class="line-number"> 76</span>             sample.useNativeCriterion();
+<span class="line-number"> 77</span>             sample.useReloading();
+<span class="line-number"> 78</span>             sample.useLimitAndOffset();
+<span class="line-number"> 79</span>             sample.useSelectCount();
+<span class="line-number"> 80</span>             sample.useForeignKey();
+<span class="line-number"> 81</span>             sample.useIteratorSkip();
+<span class="line-number"> 82</span>             sample.useRelation();
+<span class="line-number"> 83</span>             sample.useStoredProcedure();
+<span class="line-number"> 84</span>             sample.useUpdate();
+<span class="line-number"> 85</span>             sample.useBatchUpdate();
+<span class="line-number"> 86</span>             sample.usePesimisticUpdate();
+<span class="line-number"> 87</span>             sample.useDelete();
+<span class="line-number"> 88</span>             sample.useBatchDelete();
+<span class="line-number"> 89</span>             sample.useMetadata();
+<span class="line-number"> 90</span>         } <span class="keyword-directive">finally</span> {
+<span class="line-number"> 91</span>             sample.useCloseSession();
+<span class="line-number"> 92</span>         }
+<span class="line-number"> 93</span>     }
+<span class="line-number"> 94</span> 
+<span class="line-number"> 95</span>     <span class="comment">// ------- CHAPTERS: -------</span>
+<span class="line-number"> 96</span> 
+<span class="line-number"> 97</span>     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">handler</span> <span class="comment">contains</span> <span class="comment">the</span> <span class="comment">one</span> <span class="comment">or</span> <span class="comment">more</span> <span class="comment">database</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">models</span><span class="comment">,</span>
+<span class="line-number"> 98</span> <span class="comment">     * </span><span class="comment">the</span> <span class="comment">one</span> <span class="comment">applicatin</span> <span class="comment">can</span> <span class="comment">have</span> <span class="comment">more</span> <span class="comment">OrmHandler</span> <span class="comment">instances</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number"> 99</span>     <span class="keyword-directive">private</span> OrmHandler handler;
+<span class="line-number">100</span> 
+<span class="line-number">101</span>     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">session</span> <span class="comment">contains</span> <span class="comment">a</span> <span class="comment">cache</span> <span class="comment">and</span> <span class="comment">database</span> <span class="comment">connections</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">102</span>     <span class="keyword-directive">private</span> Session session;
+<span class="line-number">103</span> 
+<span class="line-number">104</span>     <span class="comment">/**</span> <span class="comment">Before</span> <span class="comment">the</span> <span class="comment">first</span><span class="comment">: </span><span class="comment">create</span> <span class="comment">a</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">model</span><span class="comment">.</span>
+<span class="line-number">105</span> <span class="comment">     * </span><span class="comment">Database</span> <span class="comment">tables</span> <span class="comment">will</span> <span class="comment">be</span> <span class="comment">CREATED</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">first</span> <span class="comment">time</span><span class="comment">.</span>
+<span class="line-number">106</span>      <span class="comment">*/</span>
+<span class="line-number">107</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> createMetaModel() {
+<span class="line-number">108</span> 
+<span class="line-number">109</span>         <span class="comment">// Set the log level specifying which message levels will be logged by Ujorm:</span>
+<span class="line-number">110</span>         Logger.getLogger(Ujo.<span class="keyword-directive">class</span>.getPackage().getName()).setLevel(Level.FINE);
+<span class="line-number">111</span> 
+<span class="line-number">112</span>         <span class="comment">// Create new ORM Handler:</span>
+<span class="line-number">113</span>         handler = <span class="keyword-directive">new</span> OrmHandler();
+<span class="line-number">114</span> 
+<span class="line-number">115</span>         <span class="comment">// There are prefered default properties for a </span><span class="comment">production environment:</span>
+<span class="line-number">116</span>         <span class="keyword-directive">boolean</span> yesIWantToChangeDefaultParameters = <span class="keyword-directive">true</span>;
+<span class="line-number">117</span>         <span class="keyword-directive">if</span> (yesIWantToChangeDefaultParameters) {
+<span class="line-number">118</span>             MetaParams params = <span class="keyword-directive">new</span> MetaParams();
+<span class="line-number">119</span>             params.set(MetaParams.TABLE_ALIAS_SUFFIX, <span class="character">&quot;</span><span class="character">_alias</span><span class="character">&quot;</span>);
+<span class="line-number">120</span>             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, <span class="keyword-directive">true</span>);
+<span class="line-number">121</span>             params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
+<span class="line-number">122</span>             handler.config(params);
+<span class="line-number">123</span>         }
+<span class="line-number">124</span> 
+<span class="line-number">125</span>         <span class="keyword-directive">boolean</span> yesIWantToLoadExternalConfig = <span class="keyword-directive">false</span>;
+<span class="line-number">126</span>         <span class="keyword-directive">if</span> (yesIWantToLoadExternalConfig) {
+<span class="line-number">127</span>             java.net.URL config = getClass().getResource(<span class="character">&quot;</span><span class="character">/org/ujorm/orm/sample/conf</span><span class="character">ig.xml</span><span class="character">&quot;</span>);
+<span class="line-number">128</span>             handler.config(config, <span class="keyword-directive">true</span>);
+<span class="line-number">129</span>         }
+<span class="line-number">130</span> 
+<span class="line-number">131</span>         handler.loadDatabase(Database.<span class="keyword-directive">class</span>);
+<span class="line-number">132</span>         session = handler.createSession();
+<span class="line-number">133</span>     }
+<span class="line-number">134</span> 
+<span class="line-number">135</span>     <span class="comment">/**</span> <span class="comment">Insert</span> <span class="comment">one</span> <span class="comment">Order</span> <span class="comment">and</span> <span class="comment">two</span> <span class="comment">Items</span> <span class="comment">into</span> <span class="comment">database</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">136</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useInsert() {
+<span class="line-number">137</span> 
+<span class="line-number">138</span>         Order order = <span class="keyword-directive">new</span> Order();
+<span class="line-number">139</span>         order.setCreated(<span class="keyword-directive">new</span> Date());
+<span class="line-number">140</span>         order.setNote(<span class="character">&quot;</span><span class="character">My order</span><span class="character">&quot;</span>);
+<span class="line-number">141</span>         <span class="comment">//ORDER.setBinaryFile(&quot;binary&quot;.getBytes());</span>
+<span class="line-number">142</span> 
+<span class="line-number">143</span>         Item item1 = <span class="keyword-directive">new</span> Item();
+<span class="line-number">144</span>         item1.setOrder(order);
+<span class="line-number">145</span>         item1.setNote(<span class="character">&quot;</span><span class="character">Yellow table</span><span class="character">&quot;</span>);
+<span class="line-number">146</span> 
+<span class="line-number">147</span>         Item item2 = <span class="keyword-directive">new</span> Item();
+<span class="line-number">148</span>         item2.setOrder(order);
+<span class="line-number">149</span>         item2.setNote(<span class="character">&quot;</span><span class="character">Green window</span><span class="character">&quot;</span>);
+<span class="line-number">150</span> 
+<span class="line-number">151</span>         System.out.println(<span class="character">&quot;</span><span class="character">order: </span><span class="character">&quot;</span> + order);
+<span class="line-number">152</span>         System.out.println(<span class="character">&quot;</span><span class="character">item1: </span><span class="character">&quot;</span> + item1);
+<span class="line-number">153</span>         System.out.println(<span class="character">&quot;</span><span class="character">item2: </span><span class="character">&quot;</span> + item2);
+<span class="line-number">154</span> 
+<span class="line-number">155</span>         session.save(order);
+<span class="line-number">156</span>         session.save(item1);
+<span class="line-number">157</span>         session.save(item2);
+<span class="line-number">158</span> 
+<span class="line-number">159</span>         <span class="keyword-directive">if</span> (<span class="keyword-directive">true</span>) {
+<span class="line-number">160</span>             session.commit();
+<span class="line-number">161</span>         } <span class="keyword-directive">else</span> {
+<span class="line-number">162</span>             session.rollback();
+<span class="line-number">163</span>         }
+<span class="line-number">164</span>     }
+<span class="line-number">165</span> 
+<span class="line-number">166</span>     <span class="comment">/**</span> <span class="comment">Bat</span><span class="comment">ch</span> <span class="comment">insert</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">multi</span> <span class="comment">row</span> <span class="comment">insert</span> <span class="comment">statement</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">167</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useBatchInsert() {
+<span class="line-number">168</span> 
+<span class="line-number">169</span>         Order order = session.createQuery(Order.<span class="keyword-directive">class</span>).orderBy(Order.ID.descending()).setLimit(1).uniqueResult();
+<span class="line-number">170</span>         List&lt;Item&gt; itemList = <span class="keyword-directive">new</span> ArrayList&lt;Item&gt;();
+<span class="line-number">171</span> 
+<span class="line-number">172</span>         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = 0; i &lt; 3; i++) {
+<span class="line-number">173</span>             Item item = <span class="keyword-directive">new</span> Item();
+<span class="line-number">174</span>             item.setOrder(order);
+<span class="line-number">175</span>             item.setNote(<span class="character">&quot;</span><span class="character">Item number #i</span><span class="character">&quot;</span>);
+<span class="line-number">176</span>             itemList.add(item);
+<span class="line-number">177</span>         }
+<span class="line-number">178</span>         session.save(itemList);
+<span class="line-number">179</span>         session.commit();
+<span class="line-number">180</span>     }
+<span class="line-number">181</span> 
+<span class="line-number">182</span>     <span class="comment">/**</span> <span class="comment">Now</span><span class="comment">, </span><span class="comment">how</span> <span class="comment">to</span> <span class="comment">select</span> <span class="comment">Orders</span> <span class="comment">from</span> <span class="comment">a</span> <span class="comment">database</span> <span class="comment">by</span> <span class="comment">Criterions</span><span class="comment">? </span><span class="ST0">&lt;br/&gt;</span>
+<span class="line-number">183</span> <span class="comment">     * </span><span class="comment">The</span> <span class="comment">generated</span> <span class="comment">SQL</span> <span class="comment">code</span> <span class="comment">from</span> <span class="comment">this</span> <span class="comment">example</span>
+<span class="line-number">184</span>   <span class="comment">   * </span><span class="comment">will</span> <span class="comment">be</span> <span class="comment">similar</span> <span class="comment">like</span> <span class="comment">the</span> <span class="comment">next</span> <span class="comment">statement</span><span class="comment">:</span>
+<span class="line-number">185</span> <span class="comment">     * </span><span class="ST0">&lt;pre&gt;</span>
+<span class="line-number">186</span> <span class="comment">     * </span><span class="comment">SELECT</span><span class="comment"> * </span><span class="comment">FROM</span> <span class="comment">item</span>
+<span class="line-number">187</span> <span class="comment">     * </span><span class="comment">JOIN</span> <span class="comment">order</span> <span class="comment">ON</span> <span class="comment">order</span><span class="comment">.</span><span class="comment">id</span><span class="comment"> = </span><span class="comment">item</span><span class="comment">.</span><span class="comment">id_order</span>
+<span class="line-number">188</span> <span class="comment">     * </span><span class="comment">WHERE</span> <span class="comment">item</span><span class="comment">.</span><span class="comment">id</span><span class="comment"> &gt;= 1</span>
+<span class="line-number">189</span> <span class="comment">     *   </span><span class="comment">AND</span> <span class="comment">item</span><span class="comment">.</span><span class="comment">note</span> <span class="comment">LIKE</span><span class="comment"> &#39;%</span><span class="comment">table</span><span class="comment">%&#39;</span>
+<span class="line-number">190</span> <span class="comment">     *   </span><span class="comment">AND</span> <span class="comment">order</span><span class="comment">.</span><span class="comment">note</span><span class="comment"> = &#39;</span><span class="comment">My</span> <span class="comment">order</span><span class="comment">&#39;;</span>
+<span class="line-number">191</span> <span class="comment">     * </span><span class="ST0">&lt;/pre&gt;</span>
+<span class="line-number">192</span> <span class="comment">     * </span><span class="comment">where</span> <span class="comment">both</span> <span class="comment">parameters</span> <span class="comment">are</span> <span class="comment">passed</span> <span class="comment">by</span> <span class="comment">a</span><span class="comment"> &#39;</span><span class="comment">question</span> <span class="comment">mark</span><span class="comment">&#39; </span><span class="comment">notation</span>
+<span class="line-number">193</span> <span class="comment">     *</span> <span class="comment">for</span> <span class="comment">a</span> <span class="comment">better</span> <span class="comment">security</span><span class="comment">.</span>
+<span class="line-number">194</span>      <span class="comment">*/</span>
+<span class="line-number">195</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelect() {
+<span class="line-number">196</span>         Criterion&lt;Item&gt; crn = Item.ID.where(GE, 1L )
+<span class="line-number">197</span>             .and( Item.NOTE.where(CONTAINS, <span class="character">&quot;</span><span class="character">table</span><span class="character">&quot;</span> ) )
+<span class="line-number">198</span>             .and( Item.ORDER.add(Order.NOTE).whereEq( <span class="character">&quot;</span><span class="character">My order</span><span class="character">&quot;</span> ) )
+<span class="line-number">199</span>             ;
+<span class="line-number">200</span> 
+<span class="line-number">201</span>         <span class="keyword-directive">for</span> (Item item : session.createQuery(crn)) {
+<span class="line-number">202</span>             Date created = item.getOrder().getCreated(); <span class="comment">// Lazy loading</span>
+<span class="line-number">203</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item: </span><span class="character">&quot;</span> + item + <span class="character">&quot;</span><span class="character"> // c</span><span class="character">reated: </span><span class="character">&quot;</span> + created);
+<span class="line-number">204</span>         }
+<span class="line-number">205</span>     }
+<span class="line-number">206</span> 
+<span class="line-number">207</span>     <span class="comment">/**</span> <span class="comment">Lern</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">the</span> <span class="comment">Criterion</span> <span class="comment">as</span> <span class="comment">an</span> <span class="comment">simple</span> <span class="comment">object</span> <span class="comment">validator</span> <span class="comment">only</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">208</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useCriterions() {
+<span class="line-number">209</span> 
+<span class="line-number">210</span>         <span class="keyword-directive">final</span> Order order = <span class="keyword-directive">new</span> Order();
+<span class="line-number">211</span>         order.setId(100L);
+<span class="line-number">212</span>         order.setNote(<span class="character">&quot;</span><span class="character">my order</span><span class="character">&quot;</span>);
+<span class="line-number">213</span>         order.setCreated(<span class="keyword-directive">new</span> Date());
+<span class="line-number">214</span> 
+<span class="line-number">215</span>         Criterion&lt;Order&gt; crnId, crnNote, crnCreated, crn;
+<span class="line-number">216</span>         crnId = Order.ID.where(GT, 99L);
+<span class="line-number">217</span>         crnNote = Order.NOTE.whereEq(<span class="character">&quot;</span><span class="character">another</span><span class="character">&quot;</span>);
+<span class="line-number">218</span>         crnCreated = Order.CREATED.where(LE, <span class="keyword-directive">new</span> Date());
+<span class="line-number">219</span>         crn = <span class="keyword-directive">null</span>;
+<span class="line-number">220</span> 
+<span class="line-number">221</span>         <span class="comment">// Simple condition: Order.ID&gt;99</span>
+<span class="line-number">222</span>         <span class="keyword-directive">assert</span> crnId.evaluate(order);
+<span class="line-number">223</span> 
+<span class="line-number">224</span>         <span class="comment">// Compound condition: Order.ID&gt;99 or Order.NOTE=&#39;another&#39;</span>
+<span class="line-number">225</span>         crn = crnId.or(crnNote);
+<span class="line-number">226</span>         <span class="keyword-directive">assert</span> crn.evaluate(order);
+<span class="line-number">227</span> 
+<span class="line-number">228</span>         <span class="comment">// Compound condition with parentheses: Order.CREATED&lt;=now() and (Order.NOTE=&#39;another&#39; or Order.ID&gt;99)</span>
+<span class="line-number">229</span>         crn = crnCreated.and(crnNote.or(crnId));
+<span class="line-number">230</span>         <span class="keyword-directive">assert</span> crn.evaluate(order);
+<span class="line-number">231</span> 
+<span class="line-number">232</span>         <span class="comment">// Another condition: (Order.CREATED&lt;=now() or Order.NOTE=&#39;another&#39;) and Order.ID&gt;9</span><span class="comment">9</span>
+<span class="line-number">233</span>         crn = (crnCreated.or(crnNote)).and(crnId);
+<span class="line-number">234</span>         <span class="comment">// ... or simple by a native priority:</span>
+<span class="line-number">235</span>         crn =  crnCreated.or(crnNote).and(crnId);
+<span class="line-number">236</span>         <span class="keyword-directive">assert</span> crn.evaluate(order);
+<span class="line-number">237</span>     }
+<span class="line-number">238</span> 
+<span class="line-number">239</span>     <span class="comment">/**</span> <span class="comment">Sort</span> <span class="comment">orders</span> <span class="comment">by</span> <span class="comment">two</span> <span class="comment">properties</span><span class="comment">: </span><span class="comment">NOTE</span> <span class="comment">and</span> <span class="comment">CREATED</span> <span class="comment">descending</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">240</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">voi</span><span class="keyword-directive">d</span> useSortOrders() {
+<span class="line-number">241</span> 
+<span class="line-number">242</span>         Query&lt;Order&gt; orders = session.createQuery(Order.<span class="keyword-directive">class</span>);
+<span class="line-number">243</span>         orders.orderBy( Order.NOTE
+<span class="line-number">244</span>                       , Order.CREATED.descending() );
+<span class="line-number">245</span> 
+<span class="line-number">246</span>         System.out.println(<span class="character">&quot;</span><span class="character">VIEW-ORDER COUNT: </span><span class="character">&quot;</span> + orders.getCount());
+<span class="line-number">247</span>     }
+<span class="line-number">248</span> 
+<span class="line-number">249</span>     <span class="comment">/**</span> <span class="comment">Sort</span> <span class="comment">items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="ST0">&lt;strong&gt;</span><span class="comment">composite</span><span class="ST0">&lt;/strong&gt;</span> <span class="comment">propertry</span><span class="comment">.</span> <span class="ST0">&lt;br&gt;</span>
+<span class="line-number">250</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment"> 1: </span><span class="comment">see</span> <span class="comment">how</span> <span class="comment">a</span> <span class="comment">composite</span> <span class="comment">property</span> <span class="comment">can</span> <span class="comment">be</span> <span class="comment">used</span> <span class="comment">for</span> <span class="comment">reading</span> <span class="comment">values</span> <span class="comment">too</span><span class="comment">.</span> <span class="ST0">&lt;br&gt;</span>
+<span class="line-number">251</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment"> 2: </span><span class="comment">the</span> <span class="comment">metod</span> <span class="comment">loadLazyValues</span><span class="comment">(</span><span class="comment">.</span><span class="comment">.</span><span class="comment">)</span> <span class="comment">is</span> <span class="comment">able</span> <span class="comment">to</span> <span class="comment">load</span> <span class="comment">all</span> <span class="comment">lazy</span> <span class="comment">properties</span> <span class="comment">for</span> <span class="comment">the</span> <span class="comment">Item</span> <span class="comment">and</span> <span class="comment">its</span> <span class="comment">related</span> <span class="comment">Order</span><span class="ST0">&lt;br&gt;</span>
+<span class="line-number">252</span>      <span class="comment">*/</span>
+<span class="line-number">253</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSortOrderItems() {
+<span class="line-number">254</span> 
+<span class="line-number">255</span>         Query&lt;Item&gt; items = session.createQuery(Item.<span class="keyword-directive">class</span>);
+<span class="line-number">256</span>         items.orderBy(Item.ORDER.add(Order.CREATED));
+<span class="line-number">257</span> 
+<span class="line-number">258</span>         <span class="keyword-directive">for</span> (Item item : items) {
+<span class="line-number">259</span>             OrmTools.loadLazyValues(item, 2);
+<span class="line-number">260</span>             System.out.println(item.get(Item.ORDER.add(Order.CREATED)) + <span class="character">&quot;</span> <span class="character">&quot;</span> + item);
+<span class="line-number">261</span>         }
+<span class="line-number">262</span>         <span class="comment">// Another way to avoid the lazy loading by a bulk property loading:</span>
+<span class="line-number">263</span>         List&lt;Item&gt; itemList = OrmTools.loadLazyValuesAsBatch(items);
+<span class="line-number">264</span>         System.out.println(<span class="character">&quot;</span><span class="character">itemList: </span><span class="character">&quot;</span> + itemList);
 <span class="line-number">265</span>     }
-<span class="line-number">266</span>
-<span class="line-number">267</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">an</span> <span class="comment">Order</span> <span class="comment">by</span> <span class="comment">id</span> <span class="comment">and</span> <span class="comment">pr</span><span class="comment">int</span> <span class="comment">its</span> <span class="comment">Items</span>
-<span class="line-number">268</span> <span class="comment">     * </span><span class="comment">by</span> <span class="comment">a</span><span class="comment"> &#39;</span><span class="comment">one</span> <span class="comment">to</span> <span class="comment">many</span><span class="comment">&#39; </span><span class="comment">relation</span> <span class="comment">property</span>
-<span class="line-number">269</span>      <span class="comment">*/</span>
-<span class="line-number">270</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_3() {
-<span class="line-number">271</span>         Order order = session.load(Order.<span class="keyword-directive">class</span>, 1L);
-<span class="line-number">272</span>
-<span class="line-number">273</span>         <span class="keyword-directive">for</span> (Item item : order.getItems()) {
-<span class="line-number">274</span>             Order order2 = item.getOrder();
-<span class="line-number">275</span>             System.out.println(<span class="character">&quot;</span><span class="character">ITEM R</span><span class="character">OW: </span><span class="character">&quot;</span> + item + <span class="character">&quot;</span><span class="character"> ORDER: </span><span class="character">&quot;</span> + order2);
-<span class="line-number">276</span>         }
-<span class="line-number">277</span>     }
-<span class="line-number">278</span>
-<span class="line-number">279</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">composed</span> <span class="comment">property</span><span class="comment">.</span>
-<span class="line-number">280</span> <span class="comment">     * </span><span class="comment">It</span> <span class="comment">is</span> <span class="comment">a</span> <span class="comment">sample</span> <span class="comment">of</span> <span class="comment">a</span> <span class="comment">multi</span><span class="comment">-</span><span class="comment">table</span> <span class="comment">query</span><span class="comment">.</span>
-<span class="line-number">281</span> <span class="comment">     * </span><span class="ST0">@see</span> <span class="comment">Item</span><span class="comment">#</span><span class="comment">$or</span><span class="comment">derDate</span>
-<span class="line-number">282</span>      <span class="comment">*/</span>
-<span class="line-number">283</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_4() {
-<span class="line-number">284</span>         UjoProperty&lt;Item, Date&gt; ORDER_DATE = Item.order.add(Order.created); <span class="comment">// or u</span><span class="comment">se: Item.$orderDate</span>
-<span class="line-number">285</span>         Criterion&lt;Item&gt; crit = Criterion.where(ORDER_DATE, Operator.LE, <span class="keyword-directive">new</span> Date());
-<span class="line-number">286</span>         Query&lt;Item&gt; items = session.createQuery(crit);
-<span class="line-number">287</span>
-<span class="line-number">288</span>         <span class="keyword-directive">for</span> (Item item : items) {
-<span class="line-number">289</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item: </span><span class="character">&quot;</span> + item);
+<span class="line-number">266</span> 
+<span class="line-number">267</span>     <span class="comment">/**</span> <span class="comment">Use</span> <span class="comment">a</span><span class="comment"> &#39;</span><span class="comment">native</span> <span class="comment">query</span><span class="comment">&#39; </span><span class="comment">where</span> <span class="comment">the</span> <span class="comment">query</span> <span class="comment">is</span> <span class="comment">CREATED</span>
+<span class="line-number">268</span> <span class="comment">     * </span><span class="comment">by</span> <span class="comment">a</span> <span class="comment">special</span> <span class="comment">entity</span> <span class="comment">signed</span> <span class="comment">by</span> <span class="comment">the</span> <span class="ST0">@View</span> <span class="comment">annotation</span><span class="comment">.</span> <span class="ST0">&lt;br/&gt;</span>
+<span class="line-number">269</span> <span class="comment">     * </span><span class="comment">Note</span> <span class="comment">the</span> <span class="comment">special</span> <span class="ST0">&lt;strong&gt;</span><span class="comment">inner</span> <span class="comment">parameter</span><span class="ST0">&lt;/strong&gt;</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">SQL</span> <span class="comment">statement</span> <span class="comment">on</span> <span class="comment">the</span> <span class="comment">Annotation</span> <span class="comment">of</span> <span class="comment">the</span> <span class="comment">class</span> <span class="comment">ViewOrder</span><span class="comment">,</span>
+<span class="line-number">270</span> <span class="comment">     * </span><span class="comment">w</span><span class="comment">here</span> <span class="comment">value</span> <span class="comment">for</span> <span class="comment">this</span><span class="comment"> (</span><span class="comment">optional</span><span class="comment">) </span><span class="comment">parameter</span> <span class="comment">is</span> <span class="comment">set</span> <span class="comment">by</span> <span class="comment">the</span> <span class="comment">method</span> <span class="comment">Query</span><span class="comment">.</span><span class="comment">setSqlParameters</span><span class="comment">();</span>
+<span class="line-number">271</span> <span class="comment">     * </span><span class="ST0">@see</span> <span class="comment">Query</span><span class="comment">#</span><span class="comment">setSqlParameters</span><span class="comment">(</span><span class="comment">java</span><span class="comment">.</span><span class="comment">lang</span><span class="comment">.</span><span class="comment">Object</span><span class="comment">[])</span>
+<span class="line-number">272</span>      <span class="comment">*/</span>
+<span class="line-number">273</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectViewOrders() {
+<span class="line-number">274</span>         Criterion&lt;ViewOrder&gt; crit = ViewOrder.ITEM_COUNT.whereGt(0);
+<span class="line-number">275</span> 
+<span class="line-number">276</span>         <span class="keyword-directive">long</span> minimalOrderId = 0L;
+<span class="line-number">277</span>         <span class="keyword-directive">long</span> orderCount = session.createQuery(crit)
+<span class="line-number">278</span>                 .setSqlParameters(minimalOrderId)
+<span class="line-number">279</span>                 .getCount()
+<span class="line-number">280</span>                 ;
+<span class="line-number">281</span>         System.out.println(<span class="character">&quot;</span><span class="character">Order Count: </span><span class="character">&quot;</span> + orderCount);
+<span class="line-number">282</span> 
+<span class="line-number">283</span>         Query&lt;ViewOrder&gt; orders = session.createQuery(crit)
+<span class="line-number">284</span>                 .setLimit(5)
+<span class="line-number">285</span>                 .orderBy(ViewOrder.ID)
+<span class="line-number">286</span>                 .setSqlParameters(0)
+<span class="line-number">287</span>                 ;
+<span class="line-number">288</span>         <span class="keyword-directive">for</span> (ViewOrder order : orders) {
+<span class="line-number">289</span>             System.out.println(<span class="character">&quot;</span><span class="character">ORDER ROW: </span><span class="character">&quot;</span> + order);
 <span class="line-number">290</span>         }
 <span class="line-number">291</span>     }
-<span class="line-number">292</span>
-<span class="line-number">293</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">c</span><span class="comment">omposed</span> <span class="comment">property</span><span class="comment">.</span>
-<span class="line-number">294</span> <span class="comment">     * </span><span class="comment">It</span> <span class="comment">is</span> <span class="comment">a</span> <span class="comment">sample</span> <span class="comment">of</span> <span class="comment">a</span> <span class="comment">multi</span><span class="comment">-</span><span class="comment">table</span> <span class="comment">query</span><span class="comment">.</span>
-<span class="line-number">295</span> <span class="comment">     * </span><span class="comment">See</span> <span class="comment">used</span> <span class="comment">Criterion</span> <span class="comment">with</span> <span class="comment">the</span> <span class="ST0">&lt;strong&gt;</span><span class="comment">whereIn</span><span class="ST0">&lt;/string&gt;</span> <span class="comment">method</span><span class="comment">.</span>
-<span class="line-number">296</span> <span class="comment">     * </span><span class="comment">The</span> <span class="comment">val</span><span class="comment">ue</span> <span class="comment">list</span> <span class="comment">can</span> <span class="comment">be</span> <span class="comment">empty</span> <span class="comment">and</span> <span class="comment">the</span> <span class="comment">result</span> <span class="comment">returns</span> <span class="comment">FALSE</span> <span class="comment">always</span> <span class="comment">in</span> <span class="comment">this</span> <span class="comment">case</span><span class="comment">.</span>
-<span class="line-number">297</span> <span class="comment">     * </span><span class="ST0">@see</span> <span class="comment">Item</span><span class="comment">#</span><span class="comment">$orderDate</span>
+<span class="line-number">292</span> 
+<span class="line-number">293</span>     <span class="comment">/**</span> <span class="comment">Use</span> <span class="comment">a</span><span class="comment"> &#39;</span><span class="comment">native</span> <span class="comment">query</span><span class="comment">&#39; </span><span class="comment">where</span> <span class="comment">the</span> <span class="comment">query</span> <span class="comment">is</span> <span class="comment">CREATED</span>
+<span class="line-number">294</span> <span class="comment">     * </span><span class="comment">by</span> <span class="comment">a</span> <span class="comment">special</span> <span class="comment">entity</span> <span class="comment">signed</span> <span class="comment">by</span> <span class="comment">the</span> <span class="ST0">@View</span> <span class="comment">annotation</span><span class="comment">.</span> <span class="ST0">&lt;br/&gt;</span>
+<span class="line-number">295</span> <span class="comment">     * </span><span class="comment">Note</span> <span class="comment">the</span> <span class="comment">special</span> <span class="ST0">&lt;strong&gt;</span><span class="comment">inner</span> <span class="comment">parameter</span><span class="ST0">&lt;/strong&gt;</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">SQL</span> <span class="comment">statement</span> <span class="comment">on</span> <span class="comment">the</span> <span class="comment">Annotation</span> <span class="comment">of</span> <span class="comment">the</span> <span class="comment">class</span> <span class="comment">ViewOrder</span><span class="comment">,</span>
+<span class="line-number">296</span> <span class="comment">     * </span><span class="comment">w</span><span class="comment">here</span> <span class="comment">value</span> <span class="comment">for</span> <span class="comment">this</span><span class="comment"> (</span><span class="comment">optional</span><span class="comment">) </span><span class="comment">parameter</span> <span class="comment">is</span> <span class="comment">set</span> <span class="comment">by</span> <span class="comment">the</span> <span class="comment">method</span> <span class="comment">Query</span><span class="comment">.</span><span class="comment">setSqlParameters</span><span class="comment">();</span>
+<span class="line-number">297</span> <span class="comment">     * </span><span class="ST0">@see</span> <span class="comment">Query</span><span class="comment">#</span><span class="comment">setSqlParameters</span><span class="comment">(</span><span class="comment">java</span><span class="comment">.</span><span class="comment">lang</span><span class="comment">.</span><span class="comment">Object</span><span class="comment">[])</span>
 <span class="line-number">298</span>      <span class="comment">*/</span>
-<span class="line-number">299</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_5() {
-<span class="line-number">300</span>         Criterion&lt;Item&gt; crit = Criterion.whereIn(Item.id, 1L,2L,3L,4L,5L);
-<span class="line-number">301</span>         Query&lt;Item&gt; items = session.createQuery(crit);
-<span class="line-number">302</span>
-<span class="line-number">303</span>         <span class="keyword-directive">for</span> (Item item : items) {
-<span class="line-number">304</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item: </span><span class="character">&quot;</span> + item);
-<span class="line-number">305</span>         }
-<span class="line-number">306</span>     }
-<span class="line-number">307</span>
-<span class="line-number">308</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">using</span> <span class="comment">the</span> <span class="comment">IN</span> <span class="comment">operator</span> <span class="comment">with</span> <span class="comment">persistent</span> <span class="comment">objects</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number">309</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_5b() {
-<span class="line-number">310</span>         Order order_1 = <span class="keyword-directive">new</span> Order();
-<span class="line-number">311</span>         order_1.setId(1L);
-<span class="line-number">312</span>         Order order_2 = <span class="keyword-directive">new</span> Order();
-<span class="line-number">313</span>         order_2.setId(2L);
-<span class="line-number">314</span>
-<span class="line-number">315</span>         Criterion&lt;Item&gt; crit = Criterion.whereIn(Item.order, order_1, order_2);
-<span class="line-number">316</span>         Query&lt;Item&gt; items = session.createQuery(crit);
-<span class="line-number">317</span>
-<span class="line-number">318</span>         Object oo = items.iterator();
-<span class="line-number">319</span>
-<span class="line-number">320</span>         <span class="keyword-directive">for</span> (Item item : items) {
-<span class="line-number">321</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item: </span><span class="character">&quot;</span> + item);
-<span class="line-number">322</span>         }
-<span class="line-number">323</span>     }
-<span class="line-number">324</span>
-<span class="line-number">325</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">all</span> <span class="comment">items</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">description</span> <span class="comment">with</span> <span class="comment">the</span><span class="comment"> &#39;</span><span class="comment">table</span><span class="comment">&#39; </span><span class="comment">i</span><span class="comment">nsensitive</span> <span class="comment">text</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number">326</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useNativeCriterion() {
-<span class="line-number">327</span>
-<span class="line-number">328</span>         Criterion&lt;Order&gt; crn1 = Criterion.forSql(Order.state, <span class="character">&quot;</span><span class="character">ord_order_alias.id&gt;0</span><span class="character">&quot;</span>);
-<span class="line-number">329</span>         Criterion&lt;Order&gt; crn2 = Criterion.where(Order.created, Operator.LE, <span class="keyword-directive">new</span> Date());
-<span class="line-number">330</span>         Query&lt;Order&gt; orders = session.createQuery(crn1.and(crn2));
-<span class="line-number">331</span>
-<span class="line-number">332</span>         <span class="keyword-directive">for</span> (Order order : orders) {
-<span class="line-number">333</span>             System.out.println(<span class="character">&quot;</span><span class="character">ORDER: </span><span class="character">&quot;</span> + order);
-<span class="line-number">334</span>         }
-<span class="line-number">335</span>     }
-<span class="line-number">336</span>
-<span class="line-number">337</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">reload</span> <span class="comment">the</span> <span class="comment">object</span> <span class="comment">property</span> <span class="comment">values</span> <span class="comment">from</span> <span class="comment">the</span> <span class="comment">database</span><span class="comment"> ? </span><span class="comment">*/</span>
-<span class="line-number">338</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useReloading() {
-<span class="line-number">339</span>         Order order = <span class="keyword-directive">new</span> Order();
-<span class="line-number">340</span>         order.setId(1L);
-<span class="line-number">341</span>
-<span class="line-number">342</span>         <span class="keyword-directive">boolean</span> result = session.reload(order);
-<span class="line-number">343</span>         System.out.println(<span class="character">&quot;</span><span class="character">Reloading result: </span><span class="character">&quot;</span> + result + <span class="character">&quot;</span><span class="character"> for Order: </span><span class="character">&quot;</span> + order);
-<span class="line-number">344</span>     }
-<span class="line-number">345</span>
-<span class="line-number">346</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">get</span> <span class="comment">the</span> <span class="comment">latest</span> <span class="comment">order</span> <span class="comment">by</span> <span class="comment">the</span> <span class="comment">LIMIT</span> <span class="comment">attribute</span><span class="comment">? </span><span class="comment">*/</span>
-<span class="line-number">347</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useLimitAndOffset() {
-<span class="line-number">348</span>         Order order = session.createQuery(Order.<span class="keyword-directive">class</span>)
-<span class="line-number">349</span>                 .setLimit(1)
-<span class="line-number">350</span>                 .setOffset(0) <span class="comment">// The default value can&#39;t be specified</span>
-<span class="line-number">351</span>                 .orderBy(Order.created.descending())
-<span class="line-number">352</span>                 .uniqueResult()
-<span class="line-number">353</span>                 ;
-<span class="line-number">354</span>         System.out.println(<span class="character">&quot;</span><span class="character">The latest Order: </span><span class="character">&quot;</span> + order);
-<span class="line-number">355</span>     }
-<span class="line-number">356</span>
-<span class="line-number">357</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">t</span><span class="comment">o</span> <span class="comment">count</span> <span class="comment">items</span><span class="comment"> ? </span><span class="comment">*/</span>
-<span class="line-number">358</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectCount() {
-<span class="line-number">359</span>         Criterion&lt;Item&gt; crit = Criterion.where(Item.descr, Operator.CONTAINS_CASE_INSENSITIVE, <span class="character">&quot;</span><span class="character">table</span><span class="character">&quot;</span>);
-<span class="line-number">360</span>         Query&lt;Item&gt; query = session.createQuery(crit);
-<span class="line-number">361</span>
-<span class="line-number">362</span>         <span class="keyword-directive">long</span> count = query.getCount();
-<span class="line-number">363</span>         System.out.println(<span class="character">&quot;</span><span class="character">Count</span><span class="character"> of the order items: </span><span class="character">&quot;</span> + count);
+<span class="line-number">299</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectWithNativeSQL() {
+<span class="line-number">300</span>         <span class="keyword-directive">final</span> Long excludedId = -7L;
+<span class="line-number">301</span>         SqlParameters sql = <span class="keyword-directive">new</span> SqlParameters().setSqlStatement
+<span class="line-number">302</span>                 ( <span class="character">&quot;</span><span class="character">SELECT * FROM (</span><span class="character">&quot;</span>
+<span class="line-number">303</span>                 + <span class="character">&quot;</span><span class="character">SELECT or</span><span class="character">d_order_alias.id</span><span class="character">&quot;</span>
+<span class="line-number">304</span>                 +         <span class="character">&quot;</span><span class="character">, 1000 + count(*) AS item_count</span><span class="character">&quot;</span>
+<span class="line-number">305</span>                 + <span class="character">&quot;</span><span class="character"> FROM ${SCHEMA}.ord_order ord_order_alias</span><span class="character">&quot;</span>
+<span class="line-number">306</span>                 + <span class="character">&quot;</span><span class="character"> LEFT JOIN ${SCHEMA}.ord_item ord_item_alias</span><span class="character">&quot;</span>
+<span class="line-number">307</span>                 + <span class="character">&quot;</span><span class="character"> ON ord_order_alias.id = ord_item_alias.fk_order</span><span class="character">&quot;</span>
+<span class="line-number">308</span>                 + <span class="character">&quot;</span><span class="character"> WHERE ord_item_alias.id != ?</span><span class="character">&quot;</span> <span class="comment">// Parame</span><span class="comment">ter is replaced by the excludedId</span>
+<span class="line-number">309</span>                 + <span class="character">&quot;</span><span class="character"> GROUP BY ord_order_alias.id</span><span class="character">&quot;</span>
+<span class="line-number">310</span>                 + <span class="character">&quot;</span><span class="character"> ORDER BY ord_order_alias.id</span><span class="character">&quot;</span>
+<span class="line-number">311</span>                 + <span class="character">&quot;</span><span class="character">) testView </span><span class="character">WHERE true</span><span class="character">&quot;</span>
+<span class="line-number">312</span>                 ).setParameters(excludedId);
+<span class="line-number">313</span>         Criterion&lt;ViewOrder&gt; crit = ViewOrder.ITEM_COUNT.whereLe(100);
+<span class="line-number">314</span>         <span class="keyword-directive">long</span> orderCount = session.createQuery(crit)
+<span class="line-number">315</span>                 .setSqlParameters(sql)
+<span class="line-number">316</span>                 .getCount()
+<span class="line-number">317</span>                 ;
+<span class="line-number">318</span>         System.out.println(<span class="character">&quot;</span><span class="character">Order Count: </span><span class="character">&quot;</span> + orderCount);
+<span class="line-number">319</span> 
+<span class="line-number">320</span>         Query&lt;ViewOrder&gt; orders = session.createQuery(crit)
+<span class="line-number">321</span>                 .setLimit(5)
+<span class="line-number">322</span>                 .orderBy(ViewOrder.ID)
+<span class="line-number">323</span>                 .setSqlParameters(sql)
+<span class="line-number">324</span>                 ;
+<span class="line-number">325</span>         <span class="keyword-directive">for</span> (ViewOrder order : orders) {
+<span class="line-number">326</span>             System.out.println(<span class="character">&quot;</span><span class="character">ORDER ROW: </span><span class="character">&quot;</span> + order);
+<span class="line-number">327</span>         }
+<span class="line-number">328</span>     }
+<span class="line-number">329</span> 
+<span class="line-number">330</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">all</span> <span class="comment">ITEMS</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">description</span> <span class="comment">with</span> <span class="comment">the</span><span class="comment"> &#39;</span><span class="comment">table</span><span class="comment">&#39; </span><span class="comment">insensitive</span> <span class="comment">text</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">331</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_1() {
+<span class="line-number">332</span> 
+<span class="line-number">333</span>         Criterion&lt;Item&gt; crit = Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, <span class="character">&quot;</span><span class="character">table</span><span class="character">&quot;</span>);
+<span class="line-number">334</span>         Query&lt;Item&gt; items = session.createQuery(crit).orderBy(Item.ID.descending());
+<span class="line-number">335</span> 
+<span class="line-number">336</span>         <span class="keyword-directive">for</span> (Item item : items) {
+<span class="line-number">337</span>             Order order = item.getOrder();
+<span class="line-number">338</span>             System.out.println(<span class="character">&quot;</span><span class="character">ITEM ROW: </span><span class="character">&quot;</span> + item + <span class="character">&quot;</span><span class="character"> ORDER: </span><span class="character">&quot;</span> + order);
+<span class="line-number">339</span>         }
+<span class="line-number">340</span>     }
+<span class="line-number">341</span> 
+<span class="line-number">342</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">one</span> <span class="comment">Order</span> <span class="comment">by</span> <span class="comment">ID</span> <span class="comment">and</span> <span class="comment">print</span> <span class="comment">its</span> <span class="comment">Items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">criterion</span> <span class="comment">*/</span>
+<span class="line-number">343</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_2() {
+<span class="line-number">344</span> 
+<span class="line-number">345</span>         Order orderValue = session.load(Order.<span class="keyword-directive">class</span>, 1L);
+<span class="line-number">346</span>         Query&lt;Item&gt; items = session.createQuery(Item.ORDER.whereEq(orderValue));
+<span class="line-number">347</span> 
+<span class="line-number">348</span>         <span class="keyword-directive">for</span> (Item item : items) {
+<span class="line-number">349</span>             Order order2 = item.getOrder();
+<span class="line-number">350</span>             System.out.println(<span class="character">&quot;</span><span class="character">ITEM ROW: </span><span class="character">&quot;</span> + item + <span class="character">&quot;</span><span class="character"> ORDER: </span><span class="character">&quot;</span> + order2);
+<span class="line-number">351</span>         }
+<span class="line-number">352</span>     }
+<span class="line-number">353</span> 
+<span class="line-number">354</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">an</span> <span class="comment">Order</span> <span class="comment">by</span> <span class="comment">ID</span> <span class="comment">and</span> <span class="comment">pr</span><span class="comment">int</span> <span class="comment">its</span> <span class="comment">Items</span>
+<span class="line-number">355</span> <span class="comment">     * </span><span class="comment">by</span> <span class="comment">a</span><span class="comment"> &#39;</span><span class="comment">one</span> <span class="comment">to</span> <span class="comment">many</span><span class="comment">&#39; </span><span class="comment">relation</span> <span class="comment">property</span>
+<span class="line-number">356</span>      <span class="comment">*/</span>
+<span class="line-number">357</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_3() {
+<span class="line-number">358</span>         Order order = session.load(Order.<span class="keyword-directive">class</span>, 1L);
+<span class="line-number">359</span> 
+<span class="line-number">360</span>         <span class="keyword-directive">for</span> (Item item : order.getItems()) {
+<span class="line-number">361</span>             Order order2 = item.getOrder();
+<span class="line-number">362</span>             System.out.println(<span class="character">&quot;</span><span class="character">ITEM R</span><span class="character">OW: </span><span class="character">&quot;</span> + item + <span class="character">&quot;</span><span class="character"> ORDER: </span><span class="character">&quot;</span> + order2);
+<span class="line-number">363</span>         }
 <span class="line-number">364</span>     }
-<span class="line-number">365</span>
-<span class="line-number">366</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">get</span> <span class="comment">a</span> <span class="comment">Foreign</span> <span class="comment">Key</span> <span class="comment">without</span> <span class="comment">lazy</span> <span class="comment">loading</span> <span class="comment">*/</span>
-<span class="line-number">367</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useForeignKey() {
-<span class="line-number">368</span>         Database db = session.getFirstDatabase();
-<span class="line-number">369</span>         <span class="keyword-directive">for</span> (Item item : db.get(Database.ORDER_ITEMS)) {
-<span class="line-number">370</span>             ForeignKey fk1 = item.readFK(Item.order);   <span class="comment">// before lazy </span><span class="comment">loading</span>
-<span class="line-number">371</span>             item.get(Item.order);                       <span class="comment">// the lazy loading</span>
-<span class="line-number">372</span>             ForeignKey fk2 = item.readFK(Item.order);   <span class="comment">// after lazy loading</span>
-<span class="line-number">373</span>             System.out.println(<span class="character">&quot;</span><span class="character">FK: </span><span class="character">&quot;</span> + fk1 + <span class="character">&quot;</span> <span class="character">&quot;</span> + fk1.equals(fk2));
-<span class="line-number">374</span>         }
-<span class="line-number">375</span>     }
-<span class="line-number">376</span>
-<span class="line-number">377</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">skip</span> <span class="comment">items</span><span class="comment">? </span><span class="comment">*/</span>
-<span class="line-number">378</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useIteratorSkip() {
-<span class="line-number">379</span>         Criterion&lt;Item&gt; crit = Criterion.where(Item.descr, Operator.NOT_EQ, <span class="character">&quot;</span><span class="character">XXXXX</span><span class="character">&quot;</span>);
-<span class="line-number">380</span>         UjoIterator&lt;Item&gt; items = session.createQuery(crit).iterator();
-<span class="line-number">381</span>
-<span class="line-number">382</span>         <span class="keyword-directive">boolean</span> skip = items.skip(1);
-<span class="line-number">383</span>         <span class="keyword-directive">if</span> (items.hasNext()) {
-<span class="line-number">384</span>             Item item = items.next();
-<span class="line-number">385</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item : </span><span class="character">&quot;</span> + item);
-<span class="line-number">386</span>         }
-<span class="line-number">387</span>
-<span class="line-number">388</span>         skip = items.skip(1);
-<span class="line-number">389</span>         <span class="keyword-directive">boolean</span> isNext = items.hasNext();
-<span class="line-number">390</span>         System.out.println(<span class="character">&quot;</span><span class="character">Next: </span><span class="character">&quot;</span> + isNext);
-<span class="line-number">391</span>     }
-<span class="line-number">392</span>
-<span class="line-number">393</span>     <span class="comment">/**</span> <span class="comment">Sample</span> <span class="comment">for</span><span class="comment"> &#39;</span><span class="comment">one</span> <span class="comment">to</span> <span class="comment">many</span><span class="comment">&#39; </span><span class="comment">relation</span><span class="comment">.</span>
-<span class="line-number">394</span> <span class="comment">     * </span> <span class="comment">Note</span> <span class="comment">that</span> <span class="comment">it</span> <span class="comment">is</span> <span class="comment">possible</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">a</span> <span class="comment">Database</span> <span class="comment">configuration</span> <span class="comment">object</span> <span class="comment">too</span><span class="comment">.</span>
-<span class="line-number">395</span>      <span class="comment">*/</span>
-<span class="line-number">396</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useRelation() {
-<span class="line-number">397</span>         Database db = session.getDatabase(Database.<span class="keyword-directive">class</span>);
-<span class="line-number">398</span>
-<span class="line-number">399</span>         UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
-<span class="line-number">400</span>         <span class="keyword-directive">for</span> (Order order : orders) {
-<span class="line-number">401</span>             String descr = order.getDescr();
-<span class="line-number">402</span>             System.out.println(<span class="character">&quot;</span><span class="character">Order: </span><span class="character">&quot;</span> + order + <span class="character">&quot;</span><span class="character"> // descr: </span><span class="character">&quot;</span> + descr);
-<span class="line-number">403</span>
-<span class="line-number">404</span>             <span class="keyword-directive">for</span> (Item item : order.getItems()) {
-<span class="line-number">405</span>                 Long itemId = item.getId();
-<span class="line-number">406</span>                 String itemDescr = item.getDescr();
-<span class="line-number">407</span>                 System.out.println(<span class="character">&quot;</span><span class="character"> Item id: </span><span class="character">&quot;</span> + itemId + <span class="character">&quot;</span><span class="character"> descr: </span><span class="character">&quot;</span> + itemDescr);
-<span class="line-number">408</span>             }
-<span class="line-number">409</span>         }
-<span class="line-number">410</span>     }
-<span class="line-number">411</span>
-<span class="line-number">412</span>     <span class="comment">/**</span> <span class="comment">Call</span> <span class="comment">a</span> <span class="comment">database</span> <span class="comment">stored</span> <span class="comment">procedure</span><span class="comment">:</span>
-<span class="line-number">413</span> <span class="comment">     * </span><span class="ST0">&lt;code&gt;</span>
-<span class="line-number">414</span> <span class="comment">     * </span><span class="comment">CREATE</span> <span class="comment">OR</span> <span class="comment">REPLACE</span> <span class="comment">FUNCTION</span> <span class="comment">db1</span><span class="comment">.</span><span class="comment">ujorm_test</span><span class="comment">(</span><span class="comment">integer</span><span class="comment">, </span><span class="comment">boolean</span><span class="comment">) </span><span class="comment">RETURNS</span> <span class="comment">integer</span>
-<span class="line-number">415</span> <span class="comment">     *    </span><span class="comment">AS</span><span class="comment"> &#39;</span><span class="comment">select</span> <span class="comment">$1</span><span class="comment"> + </span><span class="comment">$1</span><span class="comment">;&#39;</span>
-<span class="line-number">416</span> <span class="comment">     *    </span><span class="comment">LANGUAGE</span> <span class="comment">SQL</span>
-<span class="line-number">417</span> <span class="comment">     *    </span><span class="comment">IMMUTABLE</span>
-<span class="line-number">418</span> <span class="comment">     *    </span><span class="comment">RETURNS</span> <span class="comment">NULL</span> <span class="comment">ON</span> <span class="comment">NULL</span> <span class="comment">INPUT</span><span class="comment">;</span>
-<span class="line-number">419</span> <span class="comment">     * </span><span class="ST0">&lt;/code&gt;</span>
-<span class="line-number">420</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">the</span> <span class="comment">source</span> <span class="comment">code</span> <span class="comment">is</span> <span class="comment">an</span> <span class="comment">aarly</span> <span class="comment">implementation</span> <span class="comment">prototype</span><span class="comment">.</span><span class="ST0">&lt;br&gt;</span>
-<span class="line-number">421</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">test</span> <span class="comment">was</span> <span class="comment">running</span> <span class="comment">on</span> <span class="comment">the</span> <span class="comment">PostgreSQL</span> <span class="comment">release</span><span class="comment"> 8</span><span class="comment">.</span><span class="comment">4</span>
-<span class="line-number">422</span>      <span class="comment">*/</span>
-<span class="line-number">423</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useStoredProcedure() {
-<span class="line-number">424</span>         <span class="keyword-directive">boolean</span> isProcedureCreated = <span class="keyword-directive">false</span>; <span class="comment">// create the database procedure first</span>
-<span class="line-number">425</span>         <span class="keyword-directive">if</span> ( ! isProcedureCreated ) <span class="keyword-directive">return</span>;
-<span class="line-number">426</span>
-<span class="line-number">427</span>         MyProcedure procedure = <span class="keyword-directive">new</span> MyProcedure();
-<span class="line-number">428</span>
-<span class="line-number">429</span>         <span class="comment">// Assign input paramet</span><span class="comment">ers:</span>
-<span class="line-number">430</span>         procedure.set(MyProcedure.result, <span class="keyword-directive">null</span>); <span class="comment">// The output parameter(s) can&#39;t be initialized.</span>
-<span class="line-number">431</span>         procedure.set(MyProcedure.paramCode, 5);
-<span class="line-number">432</span>         procedure.set(MyProcedure.paramEnabled, <span class="keyword-directive">true</span>);
-<span class="line-number">433</span>
-<span class="line-number">434</span>         Integer result = procedure.call(session);
-<span class="line-number">435</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #1: </span><span class="character">&quot;</span> + result);
-<span class="line-number">436</span>
-<span class="line-number">437</span>         <span class="comment">// See how to reuse input parameters of the object &#39;procedure&#39;:</span>
-<span class="line-number">438</span>         procedure.set(MyProcedure.paramCode, 24);
-<span class="line-number">439</span>         result = procedure.call(session, MyProcedure.result); <span class="comment">// Take the result of any (output) parameter</span>
-<span class="line-number">440</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #2: </span><span class="character">&quot;</span> + result);
-<span class="line-number">441</span>     }
-<span class="line-number">442</span>
-<span class="line-number">443</span>     <span class="comment">/**</span> <span class="comment">Call</span> <span class="comment">a</span> <span class="comment">database</span> <span class="comment">stored</span> <span class="comment">procedure</span><span class="comment">:</span>
-<span class="line-number">444</span> <span class="comment">     *</span> <span class="ST0">&lt;code&gt;</span>
-<span class="line-number">445</span> <span class="comment">     * </span><span class="comment">CREATE</span> <span class="comment">OR</span> <span class="comment">REPLACE</span> <span class="comment">FUNCTION</span> <span class="comment">db1</span><span class="comment">.</span><span class="comment">ujorm_test2</span><span class="comment">(</span><span class="comment">integer</span><span class="comment">)</span>
-<span class="line-number">446</span> <span class="comment">     * </span><span class="comment">RETURNS</span> <span class="comment">refcursor</span> <span class="comment">AS</span><span class="comment"> &#39;</span><span class="comment">DECLARE</span> <span class="comment">mycurs</span> <span class="comment">refcursor</span><span class="comment">;</span>
-<span class="line-number">447</span> <span class="comment">     * </span><span class="comment">BEGIN</span>
-<span class="line-number">448</span>  <span class="comment">    *    </span><span class="comment">OPEN</span> <span class="comment">mycurs</span> <span class="comment">FOR</span> <span class="comment">SELECT</span><span class="comment"> 11, 12;</span>
-<span class="line-number">449</span> <span class="comment">     *    </span><span class="comment">RETURN</span> <span class="comment">mycurs</span><span class="comment">;</span>
-<span class="line-number">450</span> <span class="comment">     * </span><span class="comment">END</span><span class="comment">;&#39;</span>
-<span class="line-number">451</span> <span class="comment">     * </span><span class="comment">LANGUAGE</span> <span class="comment">plpgsql</span>
-<span class="line-number">452</span> <span class="comment">     * </span><span class="ST0">&lt;/code&gt;</span>
-<span class="line-number">453</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">the</span> <span class="comment">source</span> <span class="comment">code</span> <span class="comment">is</span> <span class="comment">an</span> <span class="comment">aarly</span> <span class="comment">implementa</span><span class="comment">tion</span> <span class="comment">prototype</span><span class="comment">.</span> <span class="ST0">&lt;br&gt;</span>
-<span class="line-number">454</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">test</span> <span class="comment">was</span> <span class="comment">running</span> <span class="comment">on</span> <span class="comment">the</span> <span class="comment">PostgreSQL</span> <span class="comment">release</span><span class="comment"> 8</span><span class="comment">.</span><span class="comment">4</span>
-<span class="line-number">455</span>      <span class="comment">*/</span>
-<span class="line-number">456</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useStoredProcedure_2() {
-<span class="line-number">457</span>         MyProcedure procedure = <span class="keyword-directive">new</span> MyProcedure();
-<span class="line-number">458</span>         <span class="comment">// MyProcedure procedure2 = session.newProcedure(MyProcedure.class);</span>
-<span class="line-number">459</span>
-<span class="line-number">460</span>         <span class="comment">// Assign input parameters:</span>
-<span class="line-number">461</span>         procedure.set(MyProcedure.result, <span class="keyword-directive">null</span>); <span class="comment">// The output parameter(s) can&#39;t be initialized.</span>
-<span class="line-number">462</span>         procedure.set(MyProcedure.paramCode, 5);
-<span class="line-number">463</span>         procedure.set(MyProcedure.paramEnabled, <span class="keyword-directive">true</span>);
-<span class="line-number">464</span>
-<span class="line-number">465</span>         Integer result = procedure.call(session);
-<span class="line-number">466</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #1: </span><span class="character">&quot;</span> + result);
-<span class="line-number">467</span>
-<span class="line-number">468</span>         <span class="comment">// See how to reuse input parameters of the ob</span><span class="comment">ject &#39;procedure&#39;:</span>
-<span class="line-number">469</span>         procedure.set(MyProcedure.paramCode, 24);
-<span class="line-number">470</span>         result = procedure.call(session, MyProcedure.result); <span class="comment">// Take the resu</span><span class="comment">lt of any (output) parameter</span>
-<span class="line-number">471</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #2: </span><span class="character">&quot;</span> + result);
-<span class="line-number">472</span>     }
-<span class="line-number">473</span>
-<span class="line-number">474</span>     <span class="comment">/**</span> <span class="comment">Using</span> <span class="comment">the</span> <span class="comment">UPDATE</span> <span class="comment">*/</span>
-<span class="line-number">475</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useUpdate() {
-<span class="line-number">476</span>         Order order = session.load(Order.<span class="keyword-directive">class</span>, 1L);
-<span class="line-number">477</span>         order.setDate(<span class="keyword-directive">new</span> Date());
-<span class="line-number">478</span>
-<span class="line-number">479</span>         session.update(order);
-<span class="line-number">480</span>         session.commit();
+<span class="line-number">365</span> 
+<span class="line-number">366</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">composed</span> <span class="comment">property</span><span class="comment">.</span>
+<span class="line-number">367</span> <span class="comment">     * </span><span class="comment">It</span> <span class="comment">is</span> <span class="comment">a</span> <span class="comment">sample</span> <span class="comment">of</span> <span class="comment">a</span> <span class="comment">multi</span><span class="comment">-</span><span class="comment">table</span> <span class="comment">query</span><span class="comment">.</span>
+<span class="line-number">368</span> <span class="comment">     * </span><span class="ST0">@see</span> <span class="comment">Item</span><span class="comment">#</span><span class="comment">$OR</span><span class="comment">DER_CREATED</span>
+<span class="line-number">369</span>      <span class="comment">*/</span>
+<span class="line-number">370</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_4() {
+<span class="line-number">371</span>         UjoProperty&lt;Item, Date&gt; ORDER_DATE = Item.ORDER.add(Order.CREATED); <span class="comment">// or u</span><span class="comment">se: Item.$ORDER_CREATED</span>
+<span class="line-number">372</span>         Query&lt;Item&gt; items = session.createQuery(ORDER_DATE.whereLe(<span class="keyword-directive">new</span> Date()));
+<span class="line-number">373</span> 
+<span class="line-number">374</span>         <span class="keyword-directive">for</span> (Item item : items) {
+<span class="line-number">375</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item: </span><span class="character">&quot;</span> + item);
+<span class="line-number">376</span>         }
+<span class="line-number">377</span>     }
+<span class="line-number">378</span> 
+<span class="line-number">379</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">items</span> <span class="comment">by</span> <span class="comment">a</span> <span class="comment">composed</span> <span class="comment">property</span><span class="comment">.</span>
+<span class="line-number">380</span> <span class="comment">     * </span><span class="comment">It</span> <span class="comment">is</span> <span class="comment">a</span> <span class="comment">sample</span> <span class="comment">of</span> <span class="comment">a</span> <span class="comment">multi</span><span class="comment">-</span><span class="comment">table</span> <span class="comment">query</span><span class="comment">.</span>
+<span class="line-number">381</span> <span class="comment">     * </span><span class="comment">See</span> <span class="comment">used</span> <span class="comment">Crit</span><span class="comment">erion</span> <span class="comment">with</span> <span class="comment">the</span> <span class="comment">whereIn</span> <span class="comment">method</span><span class="comment">.</span> <span class="comment">The</span> <span class="comment">value</span> <span class="comment">list</span> <span class="comment">can</span> <span class="comment">be</span> <span class="comment">empty</span> <span class="comment">and</span> <span class="comment">the</span> <span class="comment">RESULT</span> <span class="comment">returns</span> <span class="comment">FALSE</span> <span class="comment">always</span> <span class="comment">in</span> <span class="comment">this</span> <span class="comment">case</span><span class="comment">.</span>
+<span class="line-number">382</span> <span class="comment">     * </span><span class="ST0">@see</span> <span class="comment">Item</span><span class="comment">#</span><span class="comment">$ORDER_CREATED</span>
+<span class="line-number">383</span>      <span class="comment">*/</span>
+<span class="line-number">384</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_5() {
+<span class="line-number">385</span>         Query&lt;Item&gt; items = session.createQuery(Item.ID.whereIn(1L,2L,3L,4L,5L));
+<span class="line-number">386</span> 
+<span class="line-number">387</span>         <span class="keyword-directive">for</span> (Item item : items) {
+<span class="line-number">388</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item: </span><span class="character">&quot;</span> + item);
+<span class="line-number">389</span>         }
+<span class="line-number">390</span>     }
+<span class="line-number">391</span> 
+<span class="line-number">392</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">using</span> <span class="comment">the</span> <span class="comment">IN</span> <span class="comment">operator</span> <span class="comment">with</span> <span class="comment">persistent</span> <span class="comment">objects</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">393</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectItems_5b() {
+<span class="line-number">394</span>         Order orderA = <span class="keyword-directive">new</span> Order(1L);
+<span class="line-number">395</span>         Order orderB = <span class="keyword-directive">new</span> Order(2L);
+<span class="line-number">396</span> 
+<span class="line-number">397</span>         <span class="keyword-directive">for</span> (Item item : session.createQuery(Item.ORDER.whereIn(orderA, orderB))) {
+<span class="line-number">398</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item: </span><span class="character">&quot;</span> + item);
+<span class="line-number">399</span>         }
+<span class="line-number">400</span>     }
+<span class="line-number">401</span> 
+<span class="line-number">402</span>     <span class="comment">/**</span> <span class="comment">Create</span> <span class="comment">a</span> <span class="comment">SELECT</span> <span class="comment">for</span> <span class="comment">the</span> <span class="comment">one</span> <span class="comment">column</span> <span class="comment">only</span>
+<span class="line-number">403</span> <span class="comment">     * </span><span class="comment">with</span> <span class="comment">no</span> <span class="comment">duplicate</span> <span class="comment">rows</span> <span class="comment">for</span> <span class="comment">a</span> <span class="comment">better</span> <span class="comment">performance</span><span class="comment">.</span>
+<span class="line-number">404</span>      <span class="comment">*/</span>
+<span class="line-number">405</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useOptimizedSelect() {
+<span class="line-number">406</span>         Query&lt;Item&gt; items = session.createQuery(Item.ID.whereNeq(0L))
+<span class="line-number">407</span>                 .setColumn(Item.NOTE) <span class="comment">// Select the one column</span>
+<span class="line-number">408</span>                 .setDistinct()        <span class="comment">// Remove duplicate rows</span>
+<span class="line-number">409</span>                 ;
+<span class="line-number">410</span>         <span class="keyword-directive">for</span> (Item item : items) {
+<span class="line-number">411</span>             System.out.println(<span class="character">&quot;</span><span class="character">Note: </span><span class="character">&quot;</span> + item.getNote());
+<span class="line-number">412</span> 
+<span class="line-number">413</span>             <span class="comment">// Other columns have got the default value always:</span>
+<span class="line-number">414</span>             <span class="keyword-directive">assert</span> item.getId() == Item.ID.getDefault();
+<span class="line-number">415</span>             <span class="keyword-directive">assert</span> item.getOrder() == Item.ORDER.getDefault();
+<span class="line-number">416</span>         }
+<span class="line-number">417</span>     }
+<span class="line-number">418</span> 
+<span class="line-number">419</span>     <span class="comment">/**</span> <span class="comment">Select</span> <span class="comment">all</span> <span class="comment">items</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">description</span> <span class="comment">with</span> <span class="comment">the</span><span class="comment"> &#39;</span><span class="comment">table</span><span class="comment">&#39; </span><span class="comment">insensitive</span> <span class="comment">text</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">420</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useNativeCriterion() {
+<span class="line-number">421</span> 
+<span class="line-number">422</span>         Criterion&lt;Order&gt; crn = Order.STATE.forSql(<span class="character">&quot;</span><span class="character">ord_order_alias.id&gt;0</span><span class="character">&quot;</span>)
+<span class="line-number">423</span>              .and(Order.CREATED.where(LE, <span class="keyword-directive">new</span> Date()));
+<span class="line-number">424</span>         Query&lt;Order&gt; orders = session.createQuery(crn);
+<span class="line-number">425</span> 
+<span class="line-number">426</span>         <span class="keyword-directive">for</span> (Order order : orders) {
+<span class="line-number">427</span>             System.out.println(<span class="character">&quot;</span><span class="character">OR</span><span class="character">DER: </span><span class="character">&quot;</span> + order);
+<span class="line-number">428</span>         }
+<span class="line-number">429</span>     }
+<span class="line-number">430</span> 
+<span class="line-number">431</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">reload</span> <span class="comment">the</span> <span class="comment">object</span> <span class="comment">property</span> <span class="comment">values</span> <span class="comment">from</span> <span class="comment">the</span> <span class="comment">database</span><span class="comment"> ? </span><span class="comment">*/</span>
+<span class="line-number">432</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useReloading() {
+<span class="line-number">433</span>         Order order = <span class="keyword-directive">new</span> Order(1L);
+<span class="line-number">434</span> 
+<span class="line-number">435</span>         <span class="keyword-directive">boolean</span> result = session.reload(order);
+<span class="line-number">436</span>         System.out.println(<span class="character">&quot;</span><span class="character">Reloading result: </span><span class="character">&quot;</span> + result + <span class="character">&quot;</span><span class="character"> for Order: </span><span class="character">&quot;</span> + order);
+<span class="line-number">437</span>     }
+<span class="line-number">438</span> 
+<span class="line-number">439</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">get</span> <span class="comment">the</span> <span class="comment">latest</span> <span class="comment">order</span> <span class="comment">by</span> <span class="comment">the</span> <span class="comment">LIMIT</span> <span class="comment">attribute</span><span class="comment">? </span><span class="comment">*/</span>
+<span class="line-number">440</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useLimitAndOffset() {
+<span class="line-number">441</span>         Order order = session.createQuery(Order.<span class="keyword-directive">class</span>)
+<span class="line-number">442</span>                 .setLimit(1)
+<span class="line-number">443</span>                 .setOffset(0) <span class="comment">// The default value can&#39;t be specified</span>
+<span class="line-number">444</span>                 .orderBy(Order.CREATED.descending())
+<span class="line-number">445</span>                 .uniqueResult()
+<span class="line-number">446</span>                 ;
+<span class="line-number">447</span>         System.out.println(<span class="character">&quot;</span><span class="character">The latest Order: </span><span class="character">&quot;</span> + order);
+<span class="line-number">448</span>     }
+<span class="line-number">449</span> 
+<span class="line-number">450</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">t</span><span class="comment">o</span> <span class="comment">count</span> <span class="comment">items</span><span class="comment"> ? </span><span class="comment">*/</span>
+<span class="line-number">451</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useSelectCount() {
+<span class="line-number">452</span>         Query&lt;Item&gt; query = session.createQuery(Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, <span class="character">&quot;</span><span class="character">t</span><span class="character">able</span><span class="character">&quot;</span>));
+<span class="line-number">453</span>         <span class="keyword-directive">long</span> count = query.getCount();
+<span class="line-number">454</span>         System.out.println(<span class="character">&quot;</span><span class="character">Count of the order items: </span><span class="character">&quot;</span> + count);
+<span class="line-number">455</span>     }
+<span class="line-number">456</span> 
+<span class="line-number">457</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">g</span><span class="comment">et</span> <span class="comment">a</span> <span class="comment">Foreign</span> <span class="comment">Key</span> <span class="comment">without</span> <span class="comment">lazy</span> <span class="comment">loading</span> <span class="comment">*/</span>
+<span class="line-number">458</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useForeignKey() {
+<span class="line-number">459</span>         Database db = session.getFirstDatabase();
+<span class="line-number">460</span>         <span class="keyword-directive">for</span> (Item item : db.get(Database.ORDER_ITEMS)) {
+<span class="line-number">461</span>             ForeignKey fk1 = item.readFK(Item.ORDER);   <span class="comment">// before lazy loading</span>
+<span class="line-number">462</span>             item.get(Item.ORDER);                       <span class="comment">// the lazy loading</span>
+<span class="line-number">463</span>             ForeignKey fk2 = item.readFK(Item.ORDER);   <span class="comment">// after lazy loading</span>
+<span class="line-number">464</span>             System.out.println(<span class="character">&quot;</span><span class="character">FK: </span><span class="character">&quot;</span> + fk1 + <span class="character">&quot;</span> <span class="character">&quot;</span> + fk1.equals(fk2));
+<span class="line-number">465</span>         }
+<span class="line-number">466</span>     }
+<span class="line-number">467</span> 
+<span class="line-number">468</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">skip</span> <span class="comment">items</span><span class="comment">? </span><span class="comment">*/</span>
+<span class="line-number">469</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useIteratorSkip() {
+<span class="line-number">470</span>         UjoIterator&lt;Item&gt; items = session.createQuery(Item.NOTE.where(NOT_EQ, <span class="character">&quot;</span><span class="character">XXXXX</span><span class="character">&quot;</span>)).iterator();
+<span class="line-number">471</span> 
+<span class="line-number">472</span>         <span class="keyword-directive">boolean</span> skip = items.skip(1);
+<span class="line-number">473</span>         <span class="keyword-directive">if</span> (items.hasNext()) {
+<span class="line-number">474</span>             Item item = items.next();
+<span class="line-number">475</span>             System.out.println(<span class="character">&quot;</span><span class="character">Item : </span><span class="character">&quot;</span> + item);
+<span class="line-number">476</span>         }
+<span class="line-number">477</span> 
+<span class="line-number">478</span>         skip = items.skip(1);
+<span class="line-number">479</span>         <span class="keyword-directive">boolean</span> isNext = items.hasNext();
+<span class="line-number">480</span>         System.out.println(<span class="character">&quot;</span><span class="character">Next: </span><span class="character">&quot;</span> + isNext);
 <span class="line-number">481</span>     }
-<span class="line-number">482</span>
-<span class="line-number">483</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">DELETE</span> <span class="comment">the</span> <span class="comment">one</span> <span class="comment">loaded</span> <span class="comment">object</span><span class="comment">? </span><span class="comment">*/</span>
-<span class="line-number">484</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useDelete_1() {
-<span class="line-number">485</span>         Item item = session.createQuery(Item.<span class="keyword-directive">class</span>).setLimit(1).uniqueResult();
-<span class="line-number">486</span>
-<span class="line-number">487</span>         session.delete(item);
-<span class="line-number">488</span>         session.commit();
-<span class="line-number">489</span>         System.out.println(<span class="character">&quot;</span><span class="character">There is DELETED object: </span><span class="character">&quot;</span> + item);
-<span class="line-number">490</span>     }
-<span class="line-number">491</span>
-<span class="line-number">492</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">a</span> <span class="comment">batch</span> <span class="comment">DELETE</span><span class="comment">? </span><span class="comment">*/</span>
-<span class="line-number">493</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useDelete_2() {
-<span class="line-number">494</span>         Criterion&lt;Item&gt; crit = Criterion.where(Item.id, 1L);
-<span class="line-number">495</span>         <span class="keyword-directive">int</span> count = session.delete(crit);
-<span class="line-number">496</span>         session.commit();
-<span class="line-number">497</span>         System.out.println(<span class="character">&quot;</span><span class="character">There are DELETED rows: </span><span class="character">&quot;</span> + count);
-<span class="line-number">498</span>     }
-<span class="line-number">499</span>
-<span class="line-number">500</span>     <span class="comment">/**</span> <span class="comment">Print</span> <span class="comment">some</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">data</span> <span class="comment">of</span> <span class="comment">the</span> <span class="comment">property</span> <span class="comment">Order</span><span class="comment">.</span><span class="comment">descr</span><span class="comment">.</span> <span class="comment">*/</span>
-<span class="line-number">501</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useMetadata() {
-<span class="line-number">502</span>         MetaColumn col = (MetaColumn) handler.findColumnModel(Order.descr);
-<span class="line-number">503</span>
-<span class="line-number">504</span>         StringBuilder msg = <span class="keyword-directive">new</span> StringBuilder()
-<span class="line-number">505</span>             .append(<span class="character">&quot;</span><span class="character">** METADATA OF COLUMN: </span><span class="character">&quot;</span>)
-<span class="line-number">506</span>             .append(Order.descr.toString() + <span class="character">&#39;\n&#39;</span>)
-<span class="line-number">507</span>             .append(<span class="character">&quot;</span><span class="character">Length : </span><span class="character">&quot;</span> + col.getMaxLength() + <span class="character">&#39;\n&#39;</span>)
-<span class="line-number">508</span>             .append(<span class="character">&quot;</span><span class="character">NotNull: </span><span class="character">&quot;</span> + col.isMandatory()  + <span class="character">&#39;\n&#39;</span>)
-<span class="line-number">509</span>             .append(<span class="character">&quot;</span><span class="character">PrimKey: </span><span class="character">&quot;</span> + col.isPrimaryKey() + <span class="character">&#39;\n&#39;</span>)
-<span class="line-number">510</span>             .append(<span class="character">&quot;</span><span class="character">DB name: </span><span class="character">&quot;</span> + col.getFullName()  + <span class="character">&#39;\n&#39;</span>)
-<span class="line-number">511</span>             .append(<span class="character">&quot;</span><span class="character">Dialect: </span><span class="character">&quot;</span> + col.getDialectClass().getSimpleName())
-<span class="line-number">512</span>             ;
-<span class="line-number">513</span>         System.out.println(msg);
-<span class="line-number">514</span>     }
-<span class="line-number">515</span>
-<span class="line-number">516</span>     <span class="comment">/**</span> <span class="comment">Close</span> <span class="comment">Ujorm</span> <span class="comment">session</span> <span class="comment">to</span> <span class="comment">clear</span> <span class="comment">a</span> <span class="comment">session</span> <span class="comment">cache</span>
-<span class="line-number">517</span> <span class="comment">     * </span><span class="comment">and</span> <span class="comment">database</span> <span class="comment">connection</span><span class="comment">(</span><span class="comment">s</span><span class="comment">)</span><span class="comment">.</span>
-<span class="line-number">518</span>      <span class="comment">*/</span>
-<span class="line-number">519</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useCloseSession() {
-<span class="line-number">520</span>         <span class="keyword-directive">if</span> (session != <span class="keyword-directive">null</span>) {
-<span class="line-number">521</span>             session.close();
-<span class="line-number">522</span>         }
-<span class="line-number">523</span>     }
-<span class="line-number">524</span> }
-<span class="line-number">525</span>
-<span class="line-number">526</span>
+<span class="line-number">482</span> 
+<span class="line-number">483</span>     <span class="comment">/**</span> <span class="comment">Sample</span> <span class="comment">for</span><span class="comment"> &#39;</span><span class="comment">one</span> <span class="comment">to</span> <span class="comment">many</span><span class="comment">&#39; </span><span class="comment">relation</span><span class="comment">.</span>
+<span class="line-number">484</span> <span class="comment">     * </span> <span class="comment">Note</span> <span class="comment">that</span> <span class="comment">it</span> <span class="comment">is</span> <span class="comment">possible</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">a</span> <span class="comment">Database</span> <span class="comment">configuration</span> <span class="comment">object</span> <span class="comment">too</span><span class="comment">.</span>
+<span class="line-number">485</span>      <span class="comment">*/</span>
+<span class="line-number">486</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useRelation() {
+<span class="line-number">487</span>         Database db = session.getDatabase(Database.<span class="keyword-directive">class</span>);
+<span class="line-number">488</span> 
+<span class="line-number">489</span>         UjoIterator&lt;Order&gt; orders = db.get(Database.ORDERS);
+<span class="line-number">490</span>         <span class="keyword-directive">for</span> (Order order : orders) {
+<span class="line-number">491</span>             String note = order.getNote();
+<span class="line-number">492</span>             System.out.println(<span class="character">&quot;</span><span class="character">Order: </span><span class="character">&quot;</span> + order + <span class="character">&quot;</span><span class="character"> // note: </span><span class="character">&quot;</span> + note);
+<span class="line-number">493</span> 
+<span class="line-number">494</span>             <span class="keyword-directive">for</span> (Item item : order.getItems()) {
+<span class="line-number">495</span>                 Long itemId = item.getId();
+<span class="line-number">496</span>                 String itemDescr = item.getNote();
+<span class="line-number">497</span>                 System.out.println(<span class="character">&quot;</span><span class="character"> Item id: </span><span class="character">&quot;</span> + itemId + <span class="character">&quot;</span><span class="character"> note: </span><span class="character">&quot;</span> + itemDescr);
+<span class="line-number">498</span>             }
+<span class="line-number">499</span>         }
+<span class="line-number">500</span>     }
+<span class="line-number">501</span> 
+<span class="line-number">502</span>     <span class="comment">/**</span> <span class="comment">Call</span> <span class="comment">a</span> <span class="comment">database</span> <span class="comment">stored</span> <span class="comment">procedure</span><span class="comment">:</span>
+<span class="line-number">503</span> <span class="comment">     * </span><span class="ST0">&lt;code&gt;</span>
+<span class="line-number">504</span> <span class="comment">     * </span><span class="comment">CREATE</span> <span class="comment">OR</span> <span class="comment">REPLACE</span> <span class="comment">FUNCTION</span> <span class="comment">db1</span><span class="comment">.</span><span class="comment">ujorm_test</span><span class="comment">(</span><span class="comment">integer</span><span class="comment">, </span><span class="comment">boolean</span><span class="comment">) </span><span class="comment">RETURNS</span> <span class="comment">integer</span>
+<span class="line-number">505</span> <span class="comment">     *    </span><span class="comment">AS</span><span class="comment"> &#39;</span><span class="comment">select</span> <span class="comment">$1</span><span class="comment"> + </span><span class="comment">$1</span><span class="comment">;&#39;</span>
+<span class="line-number">506</span> <span class="comment">     *    </span><span class="comment">LANGUAGE</span> <span class="comment">SQL</span>
+<span class="line-number">507</span> <span class="comment">     *    </span><span class="comment">IMMUTABLE</span>
+<span class="line-number">508</span> <span class="comment">     *    </span><span class="comment">RETURNS</span> <span class="comment">NULL</span> <span class="comment">ON</span> <span class="comment">NULL</span> <span class="comment">INPUT</span><span class="comment">;</span>
+<span class="line-number">509</span> <span class="comment">     * </span><span class="ST0">&lt;/code&gt;</span>
+<span class="line-number">510</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">the</span> <span class="comment">source</span> <span class="comment">code</span> <span class="comment">is</span> <span class="comment">an</span> <span class="comment">aarly</span> <span class="comment">implementation</span> <span class="comment">prototype</span><span class="comment">.</span><span class="ST0">&lt;br&gt;</span>
+<span class="line-number">511</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">test</span> <span class="comment">was</span> <span class="comment">running</span> <span class="comment">on</span> <span class="comment">the</span> <span class="comment">PostgreSQL</span> <span class="comment">release</span><span class="comment"> 8</span><span class="comment">.</span><span class="comment">4</span>
+<span class="line-number">512</span>      <span class="comment">*/</span>
+<span class="line-number">513</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useStoredProcedure() {
+<span class="line-number">514</span>         <span class="keyword-directive">boolean</span> isProcedureCreated = <span class="keyword-directive">false</span>; <span class="comment">// create the database procedure first</span>
+<span class="line-number">515</span>         <span class="keyword-directive">if</span> ( ! isProcedureCreated ) <span class="keyword-directive">return</span>;
+<span class="line-number">516</span> 
+<span class="line-number">517</span>         MyProcedure procedure = <span class="keyword-directive">new</span> MyProcedure();
+<span class="line-number">518</span> 
+<span class="line-number">519</span>         <span class="comment">// Assign input paramet</span><span class="comment">ers:</span>
+<span class="line-number">520</span>         procedure.set(MyProcedure.PARAM_CODE, 5);
+<span class="line-number">521</span>         procedure.set(MyProcedure.PARAM_ENABLED, <span class="keyword-directive">true</span>);
+<span class="line-number">522</span>         Integer result = procedure.call(session); <span class="comment">// Take the RESULT from the first parameter</span>
+<span class="line-number">523</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #1: </span><span class="character">&quot;</span> + result);
+<span class="line-number">524</span> 
+<span class="line-number">525</span>         <span class="comment">// Another way how to get the output parameter</span><span class="comment">:</span>
+<span class="line-number">526</span>         procedure.set(MyProcedure.PARAM_CODE, 24);
+<span class="line-number">527</span>         procedure.set(MyProcedure.RESULT, <span class="keyword-directive">null</span>); <span class="comment">// The output parameter(s) c</span><span class="comment">an&#39;t be initialized.</span>
+<span class="line-number">528</span>         procedure.call(session);
+<span class="line-number">529</span>         result = procedure.get(MyProcedure.RESULT); <span class="comment">// Take the RESULT from any output paramete</span><span class="comment">r</span>
+<span class="line-number">530</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #2: </span><span class="character">&quot;</span> + result);
+<span class="line-number">531</span>     }
+<span class="line-number">532</span> 
+<span class="line-number">533</span>     <span class="comment">/**</span> <span class="comment">Call</span> <span class="comment">a</span> <span class="comment">database</span> <span class="comment">stored</span> <span class="comment">procedure</span><span class="comment">:</span>
+<span class="line-number">534</span> <span class="comment">     *</span> <span class="ST0">&lt;code&gt;</span>
+<span class="line-number">535</span> <span class="comment">     * </span><span class="comment">CREATE</span> <span class="comment">OR</span> <span class="comment">REPLACE</span> <span class="comment">FUNCTION</span> <span class="comment">db1</span><span class="comment">.</span><span class="comment">ujorm_test2</span><span class="comment">(</span><span class="comment">integer</span><span class="comment">)</span>
+<span class="line-number">536</span> <span class="comment">     * </span><span class="comment">RETURNS</span> <span class="comment">refcursor</span> <span class="comment">AS</span><span class="comment"> &#39;</span><span class="comment">DECLARE</span> <span class="comment">mycurs</span> <span class="comment">refcursor</span><span class="comment">;</span>
+<span class="line-number">537</span> <span class="comment">     * </span><span class="comment">BEGIN</span>
+<span class="line-number">538</span>  <span class="comment">    *    </span><span class="comment">OPEN</span> <span class="comment">mycurs</span> <span class="comment">FOR</span> <span class="comment">SELECT</span><span class="comment"> 11, 12;</span>
+<span class="line-number">539</span> <span class="comment">     *    </span><span class="comment">RETURN</span> <span class="comment">mycurs</span><span class="comment">;</span>
+<span class="line-number">540</span> <span class="comment">     * </span><span class="comment">END</span><span class="comment">;&#39;</span>
+<span class="line-number">541</span> <span class="comment">     * </span><span class="comment">LANGUAGE</span> <span class="comment">plpgsql</span>
+<span class="line-number">542</span> <span class="comment">     * </span><span class="ST0">&lt;/code&gt;</span>
+<span class="line-number">543</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">the</span> <span class="comment">source</span> <span class="comment">code</span> <span class="comment">is</span> <span class="comment">an</span> <span class="comment">aarly</span> <span class="comment">implementa</span><span class="comment">tion</span> <span class="comment">prototype</span><span class="comment">.</span> <span class="ST0">&lt;br&gt;</span>
+<span class="line-number">544</span> <span class="comment">     * </span><span class="comment">Note</span><span class="comment">: </span><span class="comment">test</span> <span class="comment">was</span> <span class="comment">running</span> <span class="comment">on</span> <span class="comment">the</span> <span class="comment">PostgreSQL</span> <span class="comment">release</span><span class="comment"> 8</span><span class="comment">.</span><span class="comment">4</span>
+<span class="line-number">545</span>      <span class="comment">*/</span>
+<span class="line-number">546</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useStoredProcedure_2() {
+<span class="line-number">547</span>         MyProcedure procedure = <span class="keyword-directive">new</span> MyProcedure();
+<span class="line-number">548</span>         <span class="comment">// MyProcedure procedure2 = session.newProcedure(MyProcedure.class);</span>
+<span class="line-number">549</span> 
+<span class="line-number">550</span>         <span class="comment">// Assign input parameters:</span>
+<span class="line-number">551</span>         procedure.set(MyProcedure.RESULT, <span class="keyword-directive">null</span>); <span class="comment">// The output parameter(s) can&#39;t be initialized.</span>
+<span class="line-number">552</span>         procedure.set(MyProcedure.PARAM_CODE, 5);
+<span class="line-number">553</span>         procedure.set(MyProcedure.PARAM_ENABLED, <span class="keyword-directive">true</span>);
+<span class="line-number">554</span> 
+<span class="line-number">555</span>         Integer result = procedure.call(session);
+<span class="line-number">556</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #1: </span><span class="character">&quot;</span> + result);
+<span class="line-number">557</span> 
+<span class="line-number">558</span>         <span class="comment">// See how to reuse input parameters of the ob</span><span class="comment">ject &#39;procedure&#39;:</span>
+<span class="line-number">559</span>         procedure.set(MyProcedure.PARAM_CODE, 24);
+<span class="line-number">560</span>         result = procedure.call(session, MyProcedure.RESULT); <span class="comment">// Take the RES</span><span class="comment">ULT of any (output) parameter</span>
+<span class="line-number">561</span>         System.out.println(<span class="character">&quot;</span><span class="character">The stored procedure result #2: </span><span class="character">&quot;</span> + result);
+<span class="line-number">562</span>     }
+<span class="line-number">563</span> 
+<span class="line-number">564</span>     <span class="comment">/**</span> <span class="comment">Using</span> <span class="comment">the</span> <span class="comment">database</span> <span class="comment">UPDATE</span> <span class="comment">*/</span>
+<span class="line-number">565</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useUpdate() {
+<span class="line-number">566</span>         Order order = session.load(Order.<span class="keyword-directive">class</span>, 1L);
+<span class="line-number">567</span>         order.setCreated(<span class="keyword-directive">new</span> Date());
+<span class="line-number">568</span> 
+<span class="line-number">569</span>         session.update(order);
+<span class="line-number">570</span>         session.commit();
+<span class="line-number">571</span>     }
+<span class="line-number">572</span> 
+<span class="line-number">573</span>     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">batch</span> <span class="comment">UPDATE</span> <span class="comment">of</span> <span class="comment">selected</span> <span class="comment">columns</span> <span class="comment">for</span> <span class="comment">required</span> <span class="comment">database</span> <span class="comment">rows</span><span class="comment">.</span> <span class="ST0">&lt;br /&gt;</span>
+<span class="line-number">574</span> <span class="comment">     * </span><span class="comment">The</span> <span class="comment">exsample</span> <span class="comment">updates</span> <span class="comment">one</span> <span class="comment">database</span> <span class="comment">column</span><span class="comment"> (</span><span class="comment">CREATED</span><span class="comment">) </span><span class="comment">to</span> <span class="comment">the</span> <span class="comment">current</span> <span class="comment">date</span> <span class="comment">for</span> <span class="comment">all</span> <span class="comment">Orders</span> <span class="comment">where</span> <span class="comment">ID</span><span class="comment">&gt;=1 </span><span class="comment">.</span>
+<span class="line-number">575</span>      <span class="comment">*/</span>
+<span class="line-number">576</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useBatchUpdate() {
+<span class="line-number">577</span>         Order order = <span class="keyword-directive">new</span> Order();
+<span class="line-number">578</span>         <span class="comment">// Activate the Change column management:</span>
+<span class="line-number">579</span>         order.writeSession(session);
+<span class="line-number">580</span>         <span class="comment">// Set a value(s) to the change:</span>
+<span class="line-number">581</span>         order.setCreated(<span class="keyword-directive">new</span> Date());
+<span class="line-number">582</span> 
+<span class="line-number">583</span>         session.update(order, Order.ID.whereGe(1L));
+<span class="line-number">584</span>         session.commit();
+<span class="line-number">585</span>     }
+<span class="line-number">586</span> 
+<span class="line-number">587</span>     <span class="comment">/**</span> <span class="comment">Using</span> <span class="comment">the</span> <span class="comment">pesimistic</span> <span class="comment">database</span> <span class="comment">UPDATE</span> <span class="comment">by</span> <span class="comment">the</span> <span class="comment">method</span><span class="comment">: </span><span class="comment">setLockRequest</span><span class="comment">()</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">588</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">voi</span><span class="keyword-directive">d</span> usePesimisticUpdate() {
+<span class="line-number">589</span>         Order order = session.createQuery(Order.ID.whereEq(1L))
+<span class="line-number">590</span>             .setLockRequest()
+<span class="line-number">591</span>             .uniqueResult()
+<span class="line-number">592</span>             ;
+<span class="line-number">593</span>         order.setCreated(<span class="keyword-directive">new</span> Date());
+<span class="line-number">594</span>         session.update(order);
+<span class="line-number">595</span>         session.commit();
+<span class="line-number">596</span>     }
+<span class="line-number">597</span> 
+<span class="line-number">598</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">DELETE</span> <span class="comment">the</span> <span class="comment">one</span> <span class="comment">loaded</span> <span class="comment">object</span><span class="comment">? </span><span class="comment">*/</span>
+<span class="line-number">599</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useDelete() {
+<span class="line-number">600</span>         Item item = session.createQuery(Item.<span class="keyword-directive">class</span>).setLimit(1).uniqueResult();
+<span class="line-number">601</span> 
+<span class="line-number">602</span>         session.delete(item);
+<span class="line-number">603</span>         session.commit();
+<span class="line-number">604</span>         System.out.println(<span class="character">&quot;</span><span class="character">There is DELETED object: </span><span class="character">&quot;</span> + item);
+<span class="line-number">605</span>     }
+<span class="line-number">606</span> 
+<span class="line-number">607</span>     <span class="comment">/**</span> <span class="comment">How</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">a</span> <span class="comment">batch</span> <span class="comment">DELE</span><span class="comment">TE</span><span class="comment">? </span><span class="ST0">&lt;br/&gt;</span>
+<span class="line-number">608</span> <span class="comment">     *  </span><span class="comment">The</span> <span class="comment">next</span> <span class="comment">example</span> <span class="comment">deletes</span> <span class="comment">all</span> <span class="comment">Items</span> <span class="comment">where</span> <span class="comment">Item</span><span class="comment">.</span><span class="comment">ID</span><span class="comment"> = 1</span>
+<span class="line-number">609</span>      <span class="comment">*/</span>
+<span class="line-number">610</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useBatchDelete() {
+<span class="line-number">611</span>         <span class="keyword-directive">int</span> count = session.delete(Item.ID.whereEq(1L));
+<span class="line-number">612</span>         session.commit();
+<span class="line-number">613</span>         System.out.println(<span class="character">&quot;</span><span class="character">There are DELETED rows: </span><span class="character">&quot;</span> + count);
+<span class="line-number">614</span>     }
+<span class="line-number">615</span> 
+<span class="line-number">616</span>     <span class="comment">/**</span> <span class="comment">Print</span> <span class="comment">some</span> <span class="comment">meta</span><span class="comment">-</span><span class="comment">data</span> <span class="comment">of</span> <span class="comment">the</span> <span class="comment">property</span> <span class="comment">Order</span><span class="comment">.</span><span class="comment">NOTE</span><span class="comment">.</span> <span class="comment">*/</span>
+<span class="line-number">617</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useMetadata() {
+<span class="line-number">618</span>         MetaColumn col = (MetaColumn) handler.findColumnModel(Order.NOTE);
+<span class="line-number">619</span> 
+<span class="line-number">620</span>         String msg = <span class="character">&quot;</span><span class="character">** METADATA OF COLUMN: </span><span class="character">&quot;</span> + Order.NOTE.toString() + <span class="character">&#39;\n&#39;</span>
+<span class="line-number">621</span>             + <span class="character">&quot;</span><span class="character">DB name: </span><span class="character">&quot;</span> + col.getFullName()  + <span class="character">&#39;\n&#39;</span>
+<span class="line-number">622</span>             + <span class="character">&quot;</span><span class="character">Comment: </span><span class="character">&quot;</span> + col.getComment()   + <span class="character">&#39;\n&#39;</span>
+<span class="line-number">623</span>             + <span class="character">&quot;</span><span class="character">Lengt</span><span class="character">h : </span><span class="character">&quot;</span> + col.getMaxLength() + <span class="character">&#39;\n&#39;</span>
+<span class="line-number">624</span>             + <span class="character">&quot;</span><span class="character">NotNull: </span><span class="character">&quot;</span> + col.isMandatory()  + <span class="character">&#39;\n&#39;</span>
+<span class="line-number">625</span>             + <span class="character">&quot;</span><span class="character">Primary: </span><span class="character">&quot;</span> + col.isPrimaryKey() + <span class="character">&#39;\n&#39;</span>
+<span class="line-number">626</span>             + <span class="character">&quot;</span><span class="character">Diale</span><span class="character">ct: </span><span class="character">&quot;</span> + col.getDialectName()
+<span class="line-number">627</span>             ;
+<span class="line-number">628</span>         System.out.println(msg);
+<span class="line-number">629</span> 
+<span class="line-number">630</span>         <span class="comment">// See, how to get an annotation of a persistent UjoProperty in run-time</span><span class="comment">:</span>
+<span class="line-number">631</span>         Comment annotation = handler.findAnnotation(Order.ID, Comment.<span class="keyword-directive">class</span>);
+<span class="line-number">632</span>         System.out.println(annotation.value());
+<span class="line-number">633</span>     }
+<span class="line-number">634</span> 
+<span class="line-number">635</span>     <span class="comment">/**</span> <span class="comment">Close</span> <span class="comment">Ujorm</span> <span class="comment">session</span> <span class="comment">to</span> <span class="comment">clear</span> <span class="comment">a</span> <span class="comment">session</span> <span class="comment">cache</span>
+<span class="line-number">636</span> <span class="comment">     * </span><span class="comment">and</span> <span class="comment">database</span> <span class="comment">connection</span><span class="comment">(</span><span class="comment">s</span><span class="comment">)</span><span class="comment">.</span>
+<span class="line-number">637</span>      <span class="comment">*/</span>
+<span class="line-number">638</span>     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> useCloseSession() {
+<span class="line-number">639</span>         <span class="keyword-directive">if</span> (session != <span class="keyword-directive">null</span>) {
+<span class="line-number">640</span>             session.close();
+<span class="line-number">641</span>         }
+<span class="line-number">642</span>     }
+<span class="line-number">643</span> }
+<span class="line-number">644</span> 
+<span class="line-number">645</span> 
 </pre></body>
 </html>
