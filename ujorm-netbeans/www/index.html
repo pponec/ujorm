@@ -193,13 +193,16 @@ Released   : 20080129
   session.close();
 </pre>
 
-The next example selects data from database:
+The next example show how to select data from database using conditions implemented by the Criterion class.
+Note how two Criterions can be joined to a binary tree:
 <pre name="code" class="java">
 
   Session session = ormHandler.createSession();
-  Criterion&lt;Item&gt; criterion =
-     Item.ID.whereGe( 1L ).and(
-     Item.ORDER.add(Order.NOTE).whereEq("My order"));
+
+  Criterion&lt;Item&gt; crn1, crn2, criterion;
+  crn1 = Item.ID.whereGe(1L);
+  crn2 = Item.ORDER.add(NOTE).whereEq("My order");
+  criterion = crn1.and(crn2);
 
   for (Item item : session.createQuery(criterion)) {
       Date created = item.getOrder().getDate();
