@@ -294,12 +294,19 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             printValue(firstValue, out);
             out.append(']');
         } else {
-            out.append(
-                value instanceof Number ||
-                value instanceof CharSequence
-                ? value.toString()
-                : new UjoCoder().encodeValue(value, false)
-            );
+            if (value instanceof CharSequence) {
+                out.append('"')
+                   .append(value)
+                   .append('"')
+                   ;
+            } else {
+                out.append(
+                    value instanceof Number ||
+                    value instanceof CharSequence
+                    ? value.toString()
+                    : new UjoCoder().encodeValue(value, false)
+                );
+            }
         }
     }
 
