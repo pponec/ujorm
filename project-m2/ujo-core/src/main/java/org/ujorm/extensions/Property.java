@@ -16,7 +16,10 @@
 
 package org.ujorm.extensions;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
@@ -291,7 +294,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @Override
     public boolean equals(final UJO ujo, final VALUE value) {
-        Object myValue = of(ujo);
+        final Object myValue = of(ujo);
         if (myValue==value) { return true; }
         
         final boolean result
@@ -467,6 +470,30 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @Override
     public Criterion<UJO> whereNotNull() {
         return Criterion.whereNotNull(this);
+    }
+
+    /** {@inheritDoc} */
+    public Criterion<UJO> whereFilled() {
+        return Criterion.whereNotIn(this, (VALUE) null, (VALUE) getEmptyValue());
+    }
+
+    /** {@inheritDoc} */
+    public Criterion<UJO> whereNotFilled(){
+        return Criterion.whereIn(this, (VALUE) null, (VALUE) getEmptyValue());
+    }
+
+    /** Returns an empty value */
+    private VALUE getEmptyValue() {
+        if (CharSequence.class.isAssignableFrom(type)) {
+            return (VALUE) "";
+        }
+        if (type.isArray()) {
+            return (VALUE) Array.newInstance(type, 0);
+        }
+        if (List.class.isAssignableFrom(type)) {
+            return (VALUE) Collections.EMPTY_LIST;
+        }
+        return null;
     }
 
     /** {@inheritDoc} */
