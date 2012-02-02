@@ -22,7 +22,7 @@ import java.util.Collection;
 public interface CriterionProvider<UJO extends Ujo, VALUE> {
 
     /**
-     * Create a new Criterion where this property is related to the value along the parameter {@link Operator}.
+     * Create a new Criterion where this property value is related to a parameter value along the {@link Operator}.
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -53,7 +53,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create a new Criterion where this property equals the value
+     * Create a new Criterion where this property equals the parameter value.
      * @param property UjoProperty
      * <ul>
      * <li>TYPE - parameter value</li>
@@ -65,14 +65,14 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
     public Criterion<UJO> whereEq(VALUE value);
 
     /**
-     * Create a new Criterion where this property equals the property
+     * Create a new Criterion where this property value equals the parameter value.
      * @param property UjoProperty can be type a direct of indirect (for a relation) property
      * @return A the new immutable Criterion
      */
     public Criterion<UJO> whereEq(UjoProperty<UJO,VALUE> property);
 
     /**
-     * Create new Criterion for operator IN to compare value to a list of constants.
+     * Create new Criterion where this property value is in the one of parameter values.
      * @param property A direct or indeirect Ujo property
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion.
@@ -82,7 +82,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create new Criterion for operator IN to compare value to a list of constants.
+     * Create new Criterion where this property value is not in any of parameter values.
      * @param property A direct or indeirect Ujo property
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
@@ -92,7 +92,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create new Criterion for operator IN to compare value to a list of constants
+     * Create new Criterion where this property value is in the one of parameter values.
      * @param property A reference to a related entity
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion
@@ -102,7 +102,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create new Criterion for operator IN to compare value to a list of constants.
+     * Create new Criterion where this property value is not in any of parameter values.
      * @param property A property direct or indeirect Ujo property
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
@@ -111,7 +111,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         ( VALUE... list
         );
 
-    /** Create a new Criterion where this property not equals the value
+    /** Create a new Criterion where this property value is not equals the value
      * @see org.ujorm.criterion.Operator#NOT_EQ */
     public Criterion<UJO> whereNeq(VALUE value);
 
