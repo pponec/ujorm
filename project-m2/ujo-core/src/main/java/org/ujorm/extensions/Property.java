@@ -474,12 +474,20 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** {@inheritDoc} */
     public Criterion<UJO> whereFilled() {
-        return Criterion.whereNotIn(this, (VALUE) null, (VALUE) getEmptyValue());
+        final Criterion<UJO> result =
+                Criterion.where(this, Operator.NOT_EQ, (VALUE) null).and(
+                Criterion.where(this, Operator.NOT_EQ, getEmptyValue()))
+                ;
+        return result;
     }
 
     /** {@inheritDoc} */
     public Criterion<UJO> whereNotFilled(){
-        return Criterion.whereIn(this, (VALUE) null, (VALUE) getEmptyValue());
+        final Criterion<UJO> result =
+                Criterion.where(this, Operator.EQ, (VALUE) null).or(
+                Criterion.where(this, Operator.EQ, getEmptyValue()))
+                ;
+        return result;
     }
 
     /** Returns an empty value */
