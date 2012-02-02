@@ -155,6 +155,22 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      */
     public Criterion<UJO> whereNotNull();
 
+    /**
+     * Create a new Criterion where this property is not {@code null} and is no empty text or empty list.
+     * @param property UjoProperty
+     * @see #whereNotNull(org.ujorm.UjoProperty)
+     * @see Operator#EQ
+     */
+    public Criterion<UJO> whereFilled();
+
+    /**
+     * Create a new Criterion where this property is a {@code null} or it is empty string or list.
+     * @param property UjoProperty
+     * @see #whereNotNull(org.ujorm.UjoProperty)
+     * @see Operator#EQ
+     */
+    public Criterion<UJO> whereNotFilled();
+
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
      * <ul>

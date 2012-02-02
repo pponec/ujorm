@@ -16,8 +16,10 @@
    
 package org.ujorm.extensions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
@@ -485,6 +487,31 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     @Override
     public Criterion<UJO> whereNotNull() {
         return Criterion.whereNotNull(this);
+    }
+
+    /** {@inheritDoc} */
+    public Criterion<UJO> whereFilled() {
+        return Criterion.whereNotNull(this).and(Criterion.where(this, Operator.NOT_EQ, getEmptyValue()));
+    }
+
+    /** {@inheritDoc} */
+    public Criterion<UJO> whereNotFilled(){
+        return Criterion.whereNull(this).or(Criterion.where(this, getEmptyValue()));
+    }
+
+    /** Returns an empty value */
+    private VALUE getEmptyValue() {
+        final Class type = getType();
+        if (CharSequence.class.isAssignableFrom(type)) {
+            return (VALUE) "";
+        }
+        if (type.isArray()) {
+            return (VALUE) Array.newInstance(type, 0);
+        }
+        if (List.class.isAssignableFrom(type)) {
+            return (VALUE) Collections.EMPTY_LIST;
+        }
+        return null;
     }
 
     /** {@inheritDoc} */
