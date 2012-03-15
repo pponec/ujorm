@@ -18,6 +18,7 @@ package org.ujorm.orm;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -77,12 +78,29 @@ public class Session {
     private boolean rollbackOnly = false;
     /** Closed session */
     private boolean closed = false;
+    /** Transaction */
+    private Transaction transaction;
 
     /** The default constructor */
     Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
         clearCache(MetaParams.CACHE_POLICY.of(params));
+    }
+
+    /**
+     * Create new (sub) transaction
+     * @return Create new (sub) transaction
+     */
+    public Transaction beginTransaction() {
+        if (transaction==null) {
+            transaction = new Transaction(this);
+            for (MetaDatabase db : handler.getDatabases()) {
+                getConnection(db);
+            }
+        }
+        transaction.beginTransaction();
+        return transaction;
     }
 
     /** Returns a handler */
@@ -104,12 +122,21 @@ public class Session {
      * @param commit if parameters is false than make a rollback.
      */
     public void commit(boolean commit) {
+        commit(commit, null);
+    }
+
+    /** Make commit/rollback for all 'production' databases.
+     * @param commit if parameters is false than make a rollback.
+     * @param savepoint Nullable array of Savepoints to commit / release
+     */
+    /*-DEFAULT-*/ void commit(boolean commit, Savepoint[] savepoint) {
         if (commit && rollbackOnly) {
             commit(false);
             throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
         }
 
         final String errMessage = "Can't make commit of DB ";
+        final boolean savepointSupport = savepoint!=null;
         MetaDatabase database = null;
 
         try {
@@ -132,12 +159,45 @@ public class Session {
                         LOGGER.log(Level.FINE, "Rolback of the " + database.getId());
                     }
                 }
+                if (savepointSupport) {
+                    conn.releaseSavepoint(savepoint[i]);
+                }
             }
         } catch (Throwable e) {
             LOGGER.log(Level.SEVERE, errMessage + database, e);
             throw new IllegalStateException(errMessage + database, e);
         }
         rollbackOnly = false;
+    }
+
+    /** Create a savepoint to all available databases */
+    /*-DEFAULT-*/ Savepoint[] setSavepoint() {
+        if (rollbackOnly) {
+            throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
+        }
+
+        final Savepoint[] result;
+        final String errMessage = "Can't save a savepoint to DB ";
+        MetaDatabase database = null;
+
+        try {
+            MetaDatabase[] databases = connections[0].keySet().toArray(new MetaDatabase[connections[0].size()]);
+            result = new Savepoint[databases.length];
+            if (databases.length>1) {
+                // Sort databases by a definition order:
+                Arrays.sort(databases);
+            }
+            for (int i=0; i<databases.length; ++i) {
+                database = databases[i];
+                final Connection conn = connections[0].get(database);
+                result[i] = conn.setSavepoint();
+            }
+        } catch (Throwable e) {
+            LOGGER.log(Level.SEVERE, errMessage + database, e);
+            throw new IllegalStateException(errMessage + database, e);
+        }
+        rollbackOnly = false;
+        return result;
     }
 
     /** Create query for all rows. */

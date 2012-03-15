@@ -152,14 +152,16 @@ public class SampleORM {
         System.out.println("item1: " + item1);
         System.out.println("item2: " + item2);
 
-        session.save(order);
-        session.save(item1);
-        session.save(item2);
+        Transaction tr = session.beginTransaction();
+
+        tr.getSession().save(order);
+        tr.getSession().save(item1);
+        tr.getSession().save(item2);
 
         if (true) {
-            session.commit();
+            tr.commit();
         } else {
-            session.rollback();
+            tr.rollback();
         }
     }
 
