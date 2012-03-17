@@ -29,7 +29,7 @@ public class Transaction {
     final private Session session;
 
     /** Store of the savepoints */
-    final LinkedList<Savepoint[]> savepoints = new LinkedList<Savepoint[]>();
+    private LinkedList<Savepoint[]> savepoints ;
 
     /* DEFAULT*/ Transaction(Session session) {
         this.session = session;
@@ -51,10 +51,21 @@ public class Transaction {
         session.commit(false, savepoints.removeLast());
     }
 
-    /** Create new beginTransaction. */
-    /*-DEFAULT-*/ void beginTransaction() {
-        savepoints.add(session.setSavepoint());
+    /** Create a nested transaction */
+    public void nestedTransaction() {
+        if (savepoints==null) {
+            savepoints = new LinkedList<Savepoint[]>();
+            savepoints.add(null);
+        } else {
+            savepoints.add(session.setSavepoint());
+        }
     }
+
+    /** Returns a (sub)transaction level */
+    public int getTransactionLevel() {
+        return savepoints!=null ? savepoints.size() : 0 ;
+    }
+
 
     /** Get the current Session */
     public Session getSession() {
