@@ -99,7 +99,7 @@ public class Session {
                 getConnection(db);
             }
         }
-        transaction.beginTransaction();
+        transaction.nestedTransaction();
         return transaction;
     }
 
@@ -145,22 +145,29 @@ public class Session {
                 // Sort databases by a definition order:
                 Arrays.sort(databases);
             }
+            final Level fineLevel = Level.FINE;
             for (int i=0; i<databases.length; ++i) {
                 database = databases[i];
                 final Connection conn = connections[0].get(database);
                 if (commit) {
-                    conn.commit();
-                    if (LOGGER.isLoggable(Level.FINE)) {
-                        LOGGER.log(Level.FINE, "Commit of the " + database.getId());
+                    if (savepointSupport) {
+                        conn.releaseSavepoint(savepoint[i]);
+                    } else {
+                        conn.commit();
+                        if (LOGGER.isLoggable(fineLevel)) {
+                            LOGGER.log(fineLevel, "Commit of the " + database.getId());
+                        }
                     }
                 } else {
-                    conn.rollback();
-                    if (LOGGER.isLoggable(Level.FINE)) {
-                        LOGGER.log(Level.FINE, "Rolback of the " + database.getId());
+                    if (savepointSupport) {
+                        conn.rollback(savepoint[i]);
+                        conn.releaseSavepoint(savepoint[i]);
+                    } else {
+                        conn.rollback();
                     }
-                }
-                if (savepointSupport) {
-                    conn.releaseSavepoint(savepoint[i]);
+                    if (LOGGER.isLoggable(fineLevel)) {
+                        LOGGER.log(fineLevel, "Rolback of the " + database.getId());
+                    }
                 }
             }
         } catch (Throwable e) {
