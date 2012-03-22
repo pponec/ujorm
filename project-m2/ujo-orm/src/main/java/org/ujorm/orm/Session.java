@@ -89,17 +89,11 @@ public class Session {
     }
 
     /**
-     * Create new (sub) transaction
+     * Create a new (sub) transaction
      * @return Create new (sub) transaction
      */
     public Transaction beginTransaction() {
-        if (transaction==null) {
-            transaction = new Transaction(this);
-            for (MetaDatabase db : handler.getDatabases()) {
-                getConnection(db);
-            }
-        }
-        transaction.nestedTransaction();
+        transaction = new Transaction(this, transaction);
         return transaction;
     }
 
@@ -114,14 +108,14 @@ public class Session {
     }
 
     /** Make a rollback for all databases. */
-    public void rollback() {
+    public final void rollback() {
         commit(false);
     }
 
     /** Make commit/rollback for all 'production' databases.
      * @param commit if parameters is false than make a rollback.
      */
-    public void commit(boolean commit) {
+    public final void commit(final boolean commit) {
         commit(commit, null);
     }
 
@@ -129,14 +123,14 @@ public class Session {
      * @param commit if parameters is false than make a rollback.
      * @param savepoint Nullable array of Savepoints to commit / release
      */
-    /*-DEFAULT-*/ void commit(boolean commit, Savepoint[] savepoint) {
+    /*-DEFAULT-*/ void commit(final boolean commit, final Transaction transaction) {
         if (commit && rollbackOnly) {
             commit(false);
             throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
         }
 
         final String errMessage = "Can't make commit of DB ";
-        final boolean savepointSupport = savepoint!=null;
+        final Savepoint[] savepoint = transaction!=null ? transaction.getSavepoints() : null;
         MetaDatabase database = null;
 
         try {
@@ -150,8 +144,11 @@ public class Session {
                 database = databases[i];
                 final Connection conn = connections[0].get(database);
                 if (commit) {
-                    if (savepointSupport) {
-                        conn.releaseSavepoint(savepoint[i]);
+                    if (savepoint!=null) {
+                        final Savepoint sp = savepoint[i];
+                        if (sp!=null) {
+                            conn.releaseSavepoint(sp);
+                        }
                     } else {
                         conn.commit();
                         if (LOGGER.isLoggable(fineLevel)) {
@@ -159,9 +156,13 @@ public class Session {
                         }
                     }
                 } else {
-                    if (savepointSupport) {
-                        conn.rollback(savepoint[i]);
-                        conn.releaseSavepoint(savepoint[i]);
+                    // rollback:
+                    if (savepoint!=null) {
+                        final Savepoint sp = savepoint[i];
+                        if (sp!=null) {
+                            conn.rollback(sp);
+                            conn.releaseSavepoint(sp);
+                        }
                     } else {
                         conn.rollback();
                     }
@@ -170,6 +171,12 @@ public class Session {
                     }
                 }
             }
+
+            // Release the current transaction Level:
+            if (transaction!=null) {
+                this.transaction = transaction.getParent();
+            }
+
         } catch (Throwable e) {
             LOGGER.log(Level.SEVERE, errMessage + database, e);
             throw new IllegalStateException(errMessage + database, e);
@@ -412,6 +419,7 @@ public class Session {
             statement = getStatement(db, sql);
             statement.assignValues(bo);
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
+            // 4. Execute:
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
             rollbackOnly = true;
@@ -727,7 +735,11 @@ public class Session {
         return result;
     }
 
-    /** Get connection for a required database with an autocommit na false. */
+    /** Get or create DB connection for a required database with an autocommit om {@code false}.
+     * @param database required database
+     * @param index Value {@code 0} means the BASE connection, value {@code 1} means the SEQUENCE connection.
+     * @throws IllegalStateException
+     */
     private Connection getConnection_(final MetaDatabase database, final int index) throws IllegalStateException {
         Connection result = connections[index].get(database);
         if (result == null) {
@@ -756,12 +768,19 @@ public class Session {
      * @param databaseIndex The first database have got the index value: 0 .
      */
     final public Connection getConnection(int databaseIndex) throws IllegalStateException {
-        return getConnection_(handler.getDatabases().get(databaseIndex), 0);
+        final MetaDatabase metaDb = handler.getDatabases().get(databaseIndex);
+        return getConnection(metaDb);
     }
 
-    /** Get a Connection for a required database with an autocommit na false. */
+    /** Get or create a Connection for a required database with an autocommit na false.
+     * If a transaction is running, than assign savepoints.
+     */
     final public Connection getConnection(final MetaDatabase database) throws IllegalStateException {
-        return getConnection_(database, 0);
+        final Connection result = getConnection_(database, 0);
+        if (this.transaction!=null) {
+            this.transaction.assignSavepoint(database, result);
+        }
+        return result;
     }
 
     /** Get sequence connection for a required database with an autocommit na false. For internal use only. */
@@ -769,7 +788,7 @@ public class Session {
         return getConnection_(database, 1);
     }
 
-    /** Create new statement */
+    /** Create new statement and assigng Savepoint for a trnasaction sase. */
     public JdbcStatement getStatement(MetaDatabase database, CharSequence sql) throws SQLException {
         final JdbcStatement result = new JdbcStatement(getConnection(database), sql, handler);
         return result;
