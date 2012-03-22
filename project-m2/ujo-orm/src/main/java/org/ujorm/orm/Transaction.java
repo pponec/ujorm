@@ -17,59 +17,87 @@
 
 package org.ujorm.orm;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.LinkedList;
+import org.ujorm.orm.metaModel.MetaDatabase;
 
 /**
  * Transaction manager.
  * @author Pavel Ponec
  */
-public class Transaction {
+final public class Transaction {
 
+    /** Current Sessin */
     final private Session session;
-
+    /** Null value means a root. */
+    final private Transaction parent;
     /** Store of the savepoints */
-    private LinkedList<Savepoint[]> savepoints ;
+    final private Savepoint[] savepoints ;
 
-    /* DEFAULT*/ Transaction(Session session) {
+    /* DEFAULT*/ Transaction(Session session, Transaction parent) {
         this.session = session;
+        this.parent = parent;
+        this.savepoints = isRoot()
+                ? null
+                : new Savepoint[session.getHandler().getDatabases().size()]
+                ;
     }
 
-    /** Commit the current level of the beginTransaction */
-    public void commit() {
-    if (savepoints.size()==0) {
-            throw new IllegalArgumentException("No transaction to commit");
-        }
-        session.commit(true, savepoints.removeLast());
+    /** Returns true, if the transactioni the ROOT. */
+    private boolean isRoot() {
+        return parent==null;
     }
 
-    /** Rollback the current level of the beginTransaction */
-    public void rollback() {
-        if (savepoints.size()==0) {
-            throw new IllegalArgumentException("No transaction to rollback");
+    /** Assign new Savepoint */
+    /* DEFAULT*/ void assignSavepoint(MetaDatabase db, Connection conn) {
+        if (savepoints != null) {
+            // Exclude the root:
+            final int pointer = MetaDatabase.ORDER.of(db);
+            if (savepoints[pointer] == null) {
+                try {
+                    savepoints[pointer] = conn.setSavepoint();
+                } catch (SQLException e) {
+                    throw new IllegalStateException("Cant save Savepoint", e);
+                }
+            }
         }
-        session.commit(false, savepoints.removeLast());
+    }
+
+    /** Commit the current level of the beginTransaction.
+     * @return Return a parrent Transaction or the value [@code null} for the root transaction.
+     */
+    public Transaction commit() {
+        session.commit(true, this);
+        return parent;
+    }
+
+    /** Rollback the current level of the beginTransaction.
+     * @return Return a parrent Transaction or the value [@code null} for the root transaction.
+     */
+    public Transaction rollback() {
+        session.commit(false, this);
+        return parent;
     }
 
     /** Create a nested transaction */
-    public void nestedTransaction() {
-        if (savepoints==null) {
-            savepoints = new LinkedList<Savepoint[]>();
-            savepoints.add(null);
-        } else {
-            savepoints.add(session.setSavepoint());
-        }
+    public Transaction nestedTransaction() {
+        return session.beginTransaction();
     }
-
-    /** Returns a (sub)transaction level */
-    public int getTransactionLevel() {
-        return savepoints!=null ? savepoints.size() : 0 ;
-    }
-
 
     /** Get the current Session */
     public Session getSession() {
         return session;
+    }
+
+    /** Returns a parrent transaction */
+    /*DEFAULT*/ Transaction getParent() {
+        return parent;
+    }
+
+    /** Returns a Savepoint array or {@code null} in case a transaction root. */
+    /*DEFAULT*/ Savepoint[] getSavepoints() {
+        return savepoints;
     }
 
 }
