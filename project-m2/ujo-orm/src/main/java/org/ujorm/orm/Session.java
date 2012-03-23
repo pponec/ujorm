@@ -173,9 +173,9 @@ public class Session {
             }
 
             // Release the current transaction Level:
-            if (transaction!=null) {
-                this.transaction = transaction.getParent();
-            }
+            this.transaction = transaction != null
+                    ? transaction.getParent()
+                    : null;
 
         } catch (Throwable e) {
             LOGGER.log(Level.SEVERE, errMessage + database, e);
