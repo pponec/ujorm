@@ -55,6 +55,7 @@ final public class Transaction {
             // Exclude the root:
             final int pointer = MetaDatabase.ORDER.of(db);
             if (savepoints[pointer] == null) {
+                parent.assignSavepoint(db, conn);
                 try {
                     savepoints[pointer] = conn.setSavepoint();
                 } catch (SQLException e) {
