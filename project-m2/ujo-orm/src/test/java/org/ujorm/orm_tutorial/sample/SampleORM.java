@@ -154,9 +154,9 @@ public class SampleORM {
 
         Transaction tr = session.beginTransaction();
 
-        tr.getSession().save(order);
-        tr.getSession().save(item1);
-        tr.getSession().save(item2);
+        session.save(order);
+        session.save(item1);
+        session.save(item2);
 
         if (true) {
             tr.commit();

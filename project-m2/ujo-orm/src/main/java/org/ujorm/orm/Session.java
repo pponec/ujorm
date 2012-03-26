@@ -91,8 +91,12 @@ public class Session {
     /**
      * Create a new (sub) transaction
      * @return Create new (sub) transaction
+     * @throws IllegalStateException Throw the Exception if a Transaction is running
      */
-    public Transaction beginTransaction() {
+    public Transaction beginTransaction() throws IllegalStateException {
+        if (transaction!=null) {
+            throw new IllegalStateException("Transaction is running ...");
+        }
         transaction = new Transaction(this, transaction);
         return transaction;
     }
