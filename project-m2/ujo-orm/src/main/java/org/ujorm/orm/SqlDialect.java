@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
@@ -1037,6 +1039,17 @@ abstract public class SqlDialect {
     /** The table model for an internal sequence table support */
     public SeqTableModel getSeqTableModel() {
         return pkTableModel;
+    }
+
+    /** Perform the method: {@link Connection#releaseSavepoint(java.sql.Savepoint) ?
+     * @param conn Database Connection
+     * @param savepoint Required Savepoint
+     * @param afterRollback release is called after a rollback ?
+     * @see http://technet.microsoft.com/en-us/library/ms378791%28v=sql.110%29.aspx
+     * @see Connection#releaseSavepoint(java.sql.Savepoint)
+     */
+    public void releaseSavepoint(final Connection conn, final Savepoint savepoint, final boolean afterRollback) throws SQLException {
+        conn.releaseSavepoint(savepoint);
     }
 
 }

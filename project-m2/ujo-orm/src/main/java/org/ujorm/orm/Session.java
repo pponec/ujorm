@@ -177,7 +177,7 @@ public class Session {
                     if (savepoint!=null) {
                         final Savepoint sp = savepoint[i];
                         if (sp!=null) {
-                            conn.releaseSavepoint(sp);
+                            database.getDialect().releaseSavepoint(conn, sp, false);
                         }
                         if (transaction.isRoot()) {
                             commitRequest = "Transaction commit of the ";
@@ -197,7 +197,7 @@ public class Session {
                         final Savepoint sp = savepoint[i];
                         if (sp!=null) {
                             conn.rollback(sp);
-                            conn.releaseSavepoint(sp);
+                            database.getDialect().releaseSavepoint(conn, sp, true);
                         }
                     } else {
                         conn.rollback();

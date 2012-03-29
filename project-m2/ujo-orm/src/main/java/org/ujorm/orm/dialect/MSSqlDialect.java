@@ -17,6 +17,9 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -560,5 +563,16 @@ public class MSSqlDialect extends SqlDialect {
         out.append(") AS DistinctTable");
 
         return out;
+    }
+
+    /** Perform the method: {@link Connection#releaseSavepoint(java.sql.Savepoint) ?
+     * @see http://technet.microsoft.com/en-us/library/ms378791%28v=sql.110%29.aspx
+     * @see Connection#releaseSavepoint(java.sql.Savepoint)
+     */
+
+    @Override
+    public void releaseSavepoint(final Connection conn, final Savepoint savepoint, final boolean afterRollback) throws SQLException {
+        // This method is not currently supported by the Microsoft JDBC Driver for SQL Server:
+        // conn.releaseSavepoint(savepoint);
     }
 }
