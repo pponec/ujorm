@@ -49,6 +49,7 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
         if (incCalling()) {
             LOGGER.log(Level.FINEST, "Auto transaction registred/started");
             ujoSessionFactory.setAutoTransaction(true);
+            beginTransaction();
         }
         try {
             result = doCall(call);
@@ -116,14 +117,16 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
         }
     }
 
+    private void beginTransaction() {
+        getSession().beginTransaction();
+    }
+
     private void rollback() {
-        getSession().rollback();
-        ujoSessionFactory.setHasBeenrollbacked(true);
+        getSession().rollbackTransaction();
     }
 
     private void commit() {
-        getSession().commit();
-        ujoSessionFactory.setHasBeenrollbacked(false);
+        getSession().commitTransaction();
 
     }
 
