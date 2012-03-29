@@ -50,6 +50,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
         if (incCalling()) {
             LOGGER.log(Level.FINEST, "Auto transaction registred/started");
             ujoSessionFactory.setAutoTransaction(true);
+            ujoSessionFactory.getDefaultSession().beginTransaction();
         }
     }
 
@@ -65,8 +66,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
                 return;
             }
             LOGGER.log(Level.INFO, "commiting transaction ...");
-            ujoSessionFactory.getDefaultSession().commit();
-            ujoSessionFactory.setHasBeenrollbacked(false);
+            ujoSessionFactory.getDefaultSession().commitTransaction();
         }
     }
 
@@ -74,8 +74,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     protected void doRollback(DefaultTransactionStatus dts) throws TransactionException {
         LOGGER.log(Level.WARNING, "rolling back transaction");
 
-        ujoSessionFactory.getDefaultSession().rollback();
-        ujoSessionFactory.setHasBeenrollbacked(true);
+        ujoSessionFactory.getDefaultSession().rollbackTransaction();
         deep = null;
     }
 

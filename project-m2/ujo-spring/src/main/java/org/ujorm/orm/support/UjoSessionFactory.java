@@ -27,8 +27,4 @@ public interface UjoSessionFactory {
 
     public void setAutoTransaction(boolean b);
 
-    public boolean isHasBeenrollbacked();
-
-    public void setHasBeenrollbacked(boolean b);
-
 }

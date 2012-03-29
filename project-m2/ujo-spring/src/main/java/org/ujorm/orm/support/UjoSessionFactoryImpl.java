@@ -43,16 +43,6 @@ public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFacto
     }
 
     @Override
-    public boolean isHasBeenrollbacked() {
-        return getThreadImpl().isHasBeenrollbacked();
-    }
-
-    @Override
-    public void setHasBeenrollbacked(boolean b) {
-        getThreadImpl().setHasBeenrollbacked(b);
-    }
-
-    @Override
     public Object aroundSession(ProceedingJoinPoint call) throws Throwable {
         Object result = getThreadImpl().aroundSession(call);
         if (getThreadImpl().isSessionClosed()) {

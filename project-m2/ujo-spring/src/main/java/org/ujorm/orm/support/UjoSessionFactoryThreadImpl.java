@@ -35,7 +35,6 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
     private AtomicInteger deep;
     private Session session;
     private boolean autoTransactionHolder = false;
-    private Boolean rolbackedHolder;
 
     public UjoSessionFactoryThreadImpl(OrmHandler handler) {
         this.handler = handler;
@@ -116,7 +115,6 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
             LOGGER.log(Level.WARNING, "geting session without autotransaction handling !!");
         }
         return getSession();
-
     }
 
     @Override
@@ -126,7 +124,6 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
 
     public boolean getAutoTransaction() {
         return autoTransactionHolder;
-
     }
 
     @Override
@@ -137,20 +134,6 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
     @Override
     public void closeSession() {
         doDecCalling();
-    }
-
-    @Override
-    public boolean isHasBeenrollbacked() {
-        if (rolbackedHolder == null) {
-            return false;
-        } else {
-            return rolbackedHolder;
-        }
-    }
-
-    @Override
-    public void setHasBeenrollbacked(boolean b) {
-        rolbackedHolder = b;
     }
 
     boolean isSessionClosed() {
