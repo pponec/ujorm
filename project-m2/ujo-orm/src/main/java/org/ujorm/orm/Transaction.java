@@ -20,6 +20,7 @@ package org.ujorm.orm;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import org.ujorm.orm.annot.PackagePrivate;
 import org.ujorm.orm.metaModel.MetaDatabase;
 
 /**
@@ -35,32 +36,33 @@ final public class Transaction {
     /** Store of the savepoints */
     final private Savepoint[] savepoints ;
 
-    /* DEFAULT*/ Transaction(Session session, Transaction parent) {
+    @PackagePrivate Transaction(Session session, Transaction parent) {
         this.session = session;
         this.parent = parent;
-        this.savepoints = isRoot()
-                ? null
-                : new Savepoint[session.getHandler().getDatabases().size()]
-                ;
+        this.savepoints = new Savepoint[session.getHandler().getDatabases().size()];
     }
 
     /** Returns true, if the transactioni the ROOT. */
-    private boolean isRoot() {
+    public boolean isRoot() {
         return parent==null;
     }
 
-    /** Assign new Savepoint */
-    /* DEFAULT*/ void assignSavepoint(MetaDatabase db, Connection conn) {
-        if (savepoints != null) {
-            // Exclude the root:
-            final int pointer = MetaDatabase.ORDER.of(db);
-            if (savepoints[pointer] == null) {
+    /**
+     * Assign new Savepoint
+     * @param db Database meta-model
+     * @param conn Database connection
+     * @throws IllegalStateException An envelope for a run-time SQL exception
+     */
+    @PackagePrivate void assignSavepoint(MetaDatabase db, Connection conn) throws IllegalStateException {
+        final int pointer = MetaDatabase.ORDER.of(db);
+        if (savepoints[pointer] == null) {
+            if (parent!=null) {
                 parent.assignSavepoint(db, conn);
-                try {
-                    savepoints[pointer] = conn.setSavepoint();
-                } catch (SQLException e) {
-                    throw new IllegalStateException("Cant save Savepoint", e);
-                }
+            }
+            try {
+                savepoints[pointer] = conn.setSavepoint();
+            } catch (SQLException e) {
+                throw new IllegalStateException("Cant save Savepoint", e);
             }
         }
     }
@@ -86,19 +88,23 @@ final public class Transaction {
         return session.beginTransaction();
     }
 
-    /** Get the current Session */
+    /**
+     * Get the current Session.
+     * @return Not null values
+     */
     public Session getSession() {
         return session;
     }
 
-    /** Returns a parrent transaction */
-    /*DEFAULT*/ Transaction getParent() {
+    /** Returns a parrent transaction.
+     * @return  The null value means a root transaction-
+     */
+    @PackagePrivate Transaction getParent() {
         return parent;
     }
 
     /** Returns a Savepoint array or {@code null} in case a transaction root. */
-    /*DEFAULT*/ Savepoint[] getSavepoints() {
+    @PackagePrivate Savepoint[] getSavepoints() {
         return savepoints;
     }
-
 }

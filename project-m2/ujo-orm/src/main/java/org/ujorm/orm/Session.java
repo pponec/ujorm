@@ -44,6 +44,7 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.annot.PackagePrivate;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaProcedure;
 
@@ -98,14 +99,41 @@ public class Session {
         return transaction;
     }
 
+    /** Returns the current transaction
+      * @return Return {@code null} if no transaction is running.
+      */
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
     /** Returns a handler */
     final public OrmHandler getHandler() {
         return handler;
     }
 
+    /** Make a tranaction commit for all databases. */
+    public void commitTransaction() {
+        if (transaction!=null) {
+            transaction.commit();
+        } else {
+            LOGGER.log(Level.WARNING, "Transaction is not running");
+            commit();
+        }
+    }
+
     /** Make a commit for all databases. */
     public void commit() {
         commit(true);
+    }
+
+    /** Make a transaction rollback for all databases. */
+    public void rollbackTransaction() {
+        if (transaction!=null) {
+            transaction.rollback();
+        } else {
+            LOGGER.log(Level.WARNING, "Transaction is not running");
+            rollback();
+        }
     }
 
     /** Make a rollback for all databases. */
@@ -124,7 +152,7 @@ public class Session {
      * @param commit if parameters is false than make a rollback.
      * @param savepoint Nullable array of Savepoints to commit / release
      */
-    /*-DEFAULT-*/ void commit(final boolean commit, final Transaction transaction) {
+    @PackagePrivate void commit(final boolean commit, final Transaction transaction) {
         if (commit && rollbackOnly) {
             commit(false);
             throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
@@ -145,19 +173,26 @@ public class Session {
                 database = databases[i];
                 final Connection conn = connections[0].get(database);
                 if (commit) {
+                    String commitRequest = null;
                     if (savepoint!=null) {
                         final Savepoint sp = savepoint[i];
                         if (sp!=null) {
                             conn.releaseSavepoint(sp);
                         }
+                        if (transaction.isRoot()) {
+                            commitRequest = "Transaction commit of the ";
+                        }
                     } else {
+                        commitRequest = "Commit of the " ;
+                    }
+                    if (commitRequest!=null) {
                         conn.commit();
                         if (LOGGER.isLoggable(fineLevel)) {
-                            LOGGER.log(fineLevel, "Commit of the " + database.getId());
+                            LOGGER.log(fineLevel, commitRequest + database.getId());
                         }
                     }
                 } else {
-                    // rollback:
+                    // Rollback:
                     if (savepoint!=null) {
                         final Savepoint sp = savepoint[i];
                         if (sp!=null) {
@@ -186,7 +221,7 @@ public class Session {
     }
 
     /** Create a savepoint to all available databases */
-    /*-DEFAULT-*/ Savepoint[] setSavepoint() {
+    @PackagePrivate Savepoint[] setSavepoint() {
         if (rollbackOnly) {
             throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");
         }
@@ -775,6 +810,7 @@ public class Session {
 
     /** Get or create a Connection for a required database with an autocommit na false.
      * If a transaction is running, than assign savepoints.
+     * @throws IllegalStateException An envelope for a run-time SQL exception
      */
     final public Connection getConnection(final MetaDatabase database) throws IllegalStateException {
         final Connection result = getConnection_(database, 0);
