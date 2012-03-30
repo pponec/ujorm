@@ -434,7 +434,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Create DB */
     public void create(Session session) {
-        Connection conn = session.getConnection(this);
+        Connection conn = session.getConnection(this, true);
         Statement stat = null;
         StringBuilder out = new StringBuilder(256);
         Appendable sql = out;
