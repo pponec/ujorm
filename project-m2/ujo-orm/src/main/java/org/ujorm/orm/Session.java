@@ -406,7 +406,7 @@ public class Session {
                 out.setLength(0);
                 sql = db.getDialect().printInsert(bos, idxFrom, idxTo, out).toString();
                 LOGGER.log(Level.INFO, sql);
-                statement = getStatement(db, sql);
+                statement = getStatement(db, sql, true);
                 statement.assignValues(bos, idxFrom, idxTo);
                 LOGGER.log(Level.FINE, SQL_VALUES + statement.getAssignedValues());
                 statement.executeUpdate(); // execute insert statement
@@ -452,7 +452,7 @@ public class Session {
             MetaDatabase db = MetaTable.DATABASE.of(table);
             sql = db.getDialect().printInsert(bo, out(128)).toString();
             LOGGER.log(Level.INFO, sql);
-            statement = getStatement(db, sql);
+            statement = getStatement(db, sql, true);
             statement.assignValues(bo);
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
             // 4. Execute:
@@ -507,7 +507,7 @@ public class Session {
             final MetaTable ormTable = handler.findTableModel(bo.getClass());
             final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
             sql = db.getDialect().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
-            statement = getStatement(db, sql);
+            statement = getStatement(db, sql, true);
             statement.assignValues(bo, changedColumns);
             statement.assignValues(decoder);
 
@@ -597,7 +597,7 @@ public class Session {
             final MetaDatabase db = MetaTable.DATABASE.of(tableModel);
             final CriterionDecoder decoder = new CriterionDecoder(criterion, tableModel);
             sql = db.getDialect().printDelete(tableModel, decoder, out(64)).toString();
-            statement = getStatement(db, sql);
+            statement = getStatement(db, sql, true);
             statement.assignValues(decoder);
 
             if (LOGGER.isLoggable(Level.INFO)) {
@@ -623,7 +623,7 @@ public class Session {
 
         try {
             sql = db.getDialect().printCall(mProcedure, out(64)).toString();
-            statement = getStatementCallable(db, sql);
+            statement = getStatementCallable(db, sql, true);
             statement.assignValues(procedure);
 
             if (LOGGER.isLoggable(Level.INFO)) {
@@ -685,7 +685,7 @@ public class Session {
             sql = db.getDialect().printSelect(table, query, true, out(128)).toString();
             LOGGER.log(Level.INFO, sql);
 
-            statement = getStatement(db, sql);
+            statement = getStatement(db, sql, false);
             statement.assignValues(query);
             LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
 
@@ -712,7 +712,7 @@ public class Session {
 
             sql = db.getDialect().printSelect(table, query, false, out(360)).toString();
             query.setStatementInfo(sql);
-            result = getStatement(db, sql);
+            result = getStatement(db, sql, false);
             if (query.getLimit()>=0) {
                 result.getPreparedStatement().setMaxRows(query.getLimit());
             }
@@ -795,26 +795,38 @@ public class Session {
      * @param databaseIndex The first database have got the index value: 0 .
      */
     final public Connection getFirstConnection() throws IllegalStateException {
-        return getConnection(0);
+        return getFirstConnection(true);
+    }
+    
+    /**
+     * Get the first Connection where an autocommit is set to false.
+     * @param databaseIndex The first database have got the index value: 0 .
+     * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
+     */
+    final public Connection getFirstConnection(boolean toModify) throws IllegalStateException {
+        return getConnection(0, toModify);
     }
 
     /**
      * Get a Connection for a required databse by a database order number (index).
      * The autocommit is set to false.
      * @param databaseIndex The first database have got the index value: 0 .
+     * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
      */
-    final public Connection getConnection(int databaseIndex) throws IllegalStateException {
+    final public Connection getConnection(int databaseIndex, final boolean toModify) throws IllegalStateException {
         final MetaDatabase metaDb = handler.getDatabases().get(databaseIndex);
-        return getConnection(metaDb);
+        return getConnection(metaDb, toModify);
     }
 
     /** Get or create a Connection for a required database with an autocommit na false.
      * If a transaction is running, than assign savepoints.
+     * @param database Database meta-model
+     * @param toModify By the value {@code false} is disabled to assign savepoints in an active transaction.
      * @throws IllegalStateException An envelope for a run-time SQL exception
      */
-    final public Connection getConnection(final MetaDatabase database) throws IllegalStateException {
+    final public Connection getConnection(final MetaDatabase database, final boolean toModify) throws IllegalStateException {
         final Connection result = getConnection_(database, 0);
-        if (this.transaction!=null) {
+        if (this.transaction!=null && toModify) {
             this.transaction.assignSavepoint(database, result);
         }
         return result;
@@ -826,14 +838,14 @@ public class Session {
     }
 
     /** Create new statement and assigng Savepoint for a trnasaction sase. */
-    public JdbcStatement getStatement(MetaDatabase database, CharSequence sql) throws SQLException {
-        final JdbcStatement result = new JdbcStatement(getConnection(database), sql, handler);
+    public JdbcStatement getStatement(MetaDatabase database, CharSequence sql, final boolean toModify) throws SQLException {
+        final JdbcStatement result = new JdbcStatement(getConnection(database, toModify), sql, handler);
         return result;
     }
 
     /** Create new statement */
-    public JdbcStatement getStatementCallable(MetaDatabase database, String sql) throws SQLException {
-        final JdbcStatement result = new JdbcStatement(getConnection(database).prepareCall(sql), handler);
+    public JdbcStatement getStatementCallable(MetaDatabase database, String sql, final boolean toModify) throws SQLException {
+        final JdbcStatement result = new JdbcStatement(getConnection(database, toModify).prepareCall(sql), handler);
         return result;
     }
 
