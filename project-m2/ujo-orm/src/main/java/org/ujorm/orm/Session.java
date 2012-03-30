@@ -111,7 +111,7 @@ public class Session {
         return handler;
     }
 
-    /** Make a tranaction commit for all databases. */
+    /** Make a commit om all databases  for the current transaction level. */
     public void commitTransaction() {
         if (transaction!=null) {
             transaction.commit();
@@ -126,7 +126,7 @@ public class Session {
         commit(true);
     }
 
-    /** Make a transaction rollback for all databases. */
+    /** Make a rollback on all databases for the current transaction level. */
     public void rollbackTransaction() {
         if (transaction!=null) {
             transaction.rollback();
