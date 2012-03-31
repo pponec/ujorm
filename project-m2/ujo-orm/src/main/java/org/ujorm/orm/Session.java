@@ -266,7 +266,9 @@ public class Session {
         return createQuery(criterion, aClass);
     }
 
-    /** Create query. This method has a slightly higher performance than the {@link #createQuery(org.ujorm.criterion.Criterion) createQuery(Criteron)} method.
+    /** Create query. This method has a slightly higher performance
+     * than the method {@link #createQuery(org.ujorm.criterion.Criterion) createQuery(Criteron)}
+     *  without the Class parameter.
      * @see #createQuery(org.ujorm.criterion.Criterion)
      */
     final public <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion, final Class<UJO> aClass) {
