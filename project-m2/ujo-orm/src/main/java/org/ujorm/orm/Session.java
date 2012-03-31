@@ -250,22 +250,34 @@ public class Session {
         return result;
     }
 
-    /** Create query for all rows. */
+    /** Create query for all table rows. */
     public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass) {
         final Criterion<UJO> criterion = Criterion.where(true);
-        return createQuery(aClass, criterion);
+        return createQuery(criterion, aClass);
     }
 
-    /** Create query. */
-    public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
-        MetaTable metaTable = handler.findTableModel(aClass);
+    /** Create query.
+     * @deprecated Use the method {@link #createQuery(org.ujorm.criterion.Criterion, java.lang.Class) createQuery(Criterion, Class)} rather.
+     * @see #createQuery(org.ujorm.criterion.Criterion, java.lang.Class)
+     * @see #createQuery(org.ujorm.criterion.Criterion)
+     */
+    @Deprecated
+    final public <UJO extends OrmUjo> Query<UJO> createQuery(Class<UJO> aClass, Criterion<UJO> criterion) {
+        return createQuery(criterion, aClass);
+    }
+
+    /** Create query. This method has a slightly higher performance than the {@link #createQuery(org.ujorm.criterion.Criterion) createQuery(Criteron)} method.
+     * @see #createQuery(org.ujorm.criterion.Criterion)
+     */
+    final public <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion, final Class<UJO> aClass) {
+        final MetaTable metaTable = handler.findTableModel(aClass);
         return new Query<UJO>(metaTable, criterion, this);
     }
 
     /** The table class is derived from the first criterion column. */
-    public <UJO extends OrmUjo> Query<UJO> createQuery(Criterion<UJO> criterion) {
-        MetaRelation2Many column = getBasicColumn(criterion);
-        MetaTable table = MetaRelation2Many.TABLE.of(column);
+    final public <UJO extends OrmUjo> Query<UJO> createQuery(final Criterion<UJO> criterion) {
+        final MetaRelation2Many column = getBasicColumn(criterion);
+        final MetaTable table = MetaRelation2Many.TABLE.of(column);
         return new Query<UJO>(table, criterion, this);
     }
 
@@ -765,7 +777,7 @@ public class Session {
         Criterion crit = fColumn != null
                 ? Criterion.where(fColumn.getProperty(), value)
                 : Criterion.constant(table.getFirstPK().getProperty(), true);
-        Query query = createQuery(table.getType(), crit);
+        Query query = createQuery(crit, table.getType());
         UjoIterator result = UjoIterator.getInstance(query);
 
         return result;
