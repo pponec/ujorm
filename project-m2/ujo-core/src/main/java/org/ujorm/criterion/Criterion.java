@@ -124,18 +124,17 @@ public abstract class Criterion<UJO extends Ujo> {
      * Evaluate an object along this criterion.
      * If the evaluate method returns false, then the method throws the {@link IllegalArgumentException}
      * with the required message.
-     * @param ujo object to validate
-     * @param template message template wigh syntax along {@link String#format};
+     * @param ujo Object to validate
+     * @param message Message template wigh syntax along {@link String#format};
      * @param params Parameters for the message template.
      * @throws IllegalArgumentException
      */
-    final public void validate(final UJO ujo, String template, Object ... params) throws IllegalArgumentException {
+    final public void validate(final UJO ujo, String message, Object ... params) throws IllegalArgumentException {
         if (!evaluate(ujo)) {
-            final String msg = String.format(template, params);
+            final String msg = String.format(message, params);
             throw new IllegalArgumentException(msg);
         }
     }
-
 
     public Criterion<UJO> join(BinaryOperator operator, Criterion<UJO> criterion) {
         return new BinaryCriterion<UJO>(this, operator, criterion);
