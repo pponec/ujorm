@@ -15,18 +15,10 @@
  */
 package org.ujorm.orm.transaction;
 
-import org.ujorm.orm.inheritance.*;
 import junit.framework.TestCase;
-import org.ujorm.orm.inheritance.sample.SampleOfInheritance;
-import java.util.logging.*;
-import org.ujorm.Ujo;
 import org.ujorm.orm.*;
-import org.ujorm.criterion.*;
 import org.ujorm.orm.inheritance.sample.Database;
-import org.ujorm.orm.inheritance.sample.bo.Customer;
-import org.ujorm.orm.inheritance.sample.bo.IUser;
 import org.ujorm.orm.inheritance.sample.bo.User;
-import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.inheritance.sample.bo.Customer.*;
 
 /**
@@ -58,13 +50,16 @@ public class TransactionTest extends TestCase {
     public void testRollbackTranaction() {
         final Session session = new OrmHandler(Database.class).createSession();
         session.delete(User.id.forAll());
+        session.commit();
         //
         session.save(new User());
         assertEquals(1L, session.createQuery(User.class).getCount());
+        assertEquals(null, session.getTransaction());
         { // 1st Level
             session.beginTransaction();
             session.save(new User());
             assertEquals(2L, session.createQuery(User.class).getCount());
+            assertEquals(true, session.getTransaction().isRoot());
             { // 2md Level
                 session.beginTransaction();
                 session.save(new User());
@@ -76,14 +71,18 @@ public class TransactionTest extends TestCase {
                     session.rollbackTransaction();
                 }
                 assertEquals(3L, session.createQuery(User.class).getCount());
+                assertEquals(false, session.getTransaction().isRoot());
                 session.rollbackTransaction();
             }
             assertEquals(2L, session.createQuery(User.class).getCount());
+            assertEquals(true, session.getTransaction().isRoot());
             session.rollbackTransaction();
         }
         assertEquals(1L, session.createQuery(User.class).getCount());
+        assertEquals(null, session.getTransaction());
         session.rollback();
         assertEquals(0L, session.createQuery(User.class).getCount());
+        assertEquals(null, session.getTransaction());
     }
 
     // ---------- TESTS -----------------------
@@ -91,13 +90,16 @@ public class TransactionTest extends TestCase {
     public void testCommitTranaction() {
         final Session session = new OrmHandler(Database.class).createSession();
         session.delete(User.id.forAll());
+        session.commit();
         //
         session.save(new User());
         assertEquals(1L, session.createQuery(User.class).getCount());
+        assertEquals(null, session.getTransaction());
         { // 1st Level
             session.beginTransaction();
             session.save(new User());
             assertEquals(2L, session.createQuery(User.class).getCount());
+            assertEquals(true, session.getTransaction().isRoot());
             { // 2md Level
                 session.beginTransaction();
                 session.save(new User());
@@ -109,12 +111,15 @@ public class TransactionTest extends TestCase {
                     session.commitTransaction();
                 }
                 assertEquals(4L, session.createQuery(User.class).getCount());
+                assertEquals(false, session.getTransaction().isRoot());
                 session.commitTransaction();
             }
             assertEquals(4L, session.createQuery(User.class).getCount());
+            assertEquals(true, session.getTransaction().isRoot());
             session.commitTransaction();
         }
         assertEquals(4L, session.createQuery(User.class).getCount());
+        assertEquals(null, session.getTransaction());
         session.commit();
         assertEquals(4L, session.createQuery(User.class).getCount());
     }
@@ -124,13 +129,16 @@ public class TransactionTest extends TestCase {
     public void testIComplexTranaction() {
         final Session session = new OrmHandler(Database.class).createSession();
         session.delete(User.id.forAll());
+        session.commit();
         //
         session.save(new User());
         assertEquals(1L, session.createQuery(User.class).getCount());
+        assertEquals(null, session.getTransaction());
         { // 1st Level
             session.beginTransaction();
             session.save(new User());
             assertEquals(2L, session.createQuery(User.class).getCount());
+            assertEquals(true, session.getTransaction().isRoot());
             { // 2md Level
                 session.beginTransaction();
                 session.save(new User());
@@ -142,14 +150,17 @@ public class TransactionTest extends TestCase {
                     session.commitTransaction();
                 }
                 assertEquals(4L, session.createQuery(User.class).getCount());
+                assertEquals(false, session.getTransaction().isRoot());
                 session.commitTransaction();
             }
             assertEquals(4L, session.createQuery(User.class).getCount());
+            assertEquals(true, session.getTransaction().isRoot());
             session.rollbackTransaction();
         }
         assertEquals(1L, session.createQuery(User.class).getCount());
-        session.commit();
-        assertEquals(1L, session.createQuery(User.class).getCount());
+        session.rollback();
+        assertEquals(0L, session.createQuery(User.class).getCount());
+        assertEquals(null, session.getTransaction());
     }
 
     // -----------------------------------------------------
