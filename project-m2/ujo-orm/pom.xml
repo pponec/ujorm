@@ -93,6 +93,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- JTA (Java Transacton API) -->
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- LOGGER SLF4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
