@@ -144,7 +144,7 @@ public class Session {
     /** Make commit/rollback for all 'production' databases.
      * @param commit if parameters is false than make a rollback.
      */
-    public final void commit(final boolean commit) {
+    public final void commit(final boolean commit) throws IllegalStateException {
         commit(commit, null);
     }
 
@@ -152,7 +152,7 @@ public class Session {
      * @param commit if parameters is false than make a rollback.
      * @param savepoint Nullable array of Savepoints to commit / release
      */
-    @PackagePrivate void commit(final boolean commit, final Transaction transaction) {
+    @PackagePrivate void commit(final boolean commit, final Transaction transaction) throws IllegalStateException {
         if (commit && rollbackOnly) {
             commit(false);
             throw new IllegalStateException("The Ujorm session has got the 'rollbackOnly' state.");

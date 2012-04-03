@@ -20,6 +20,10 @@ package org.ujorm.orm;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import javax.transaction.Status;
+import javax.transaction.Synchronization;
+import javax.transaction.SystemException;
+import javax.transaction.xa.XAResource;
 import org.ujorm.orm.annot.PackagePrivate;
 import org.ujorm.orm.metaModel.MetaDatabase;
 
@@ -27,7 +31,7 @@ import org.ujorm.orm.metaModel.MetaDatabase;
  * Transaction manager.
  * @author Pavel Ponec
  */
-final public class Transaction {
+final public class Transaction implements javax.transaction.Transaction{
 
     /** Current Sessin */
     final private Session session;
@@ -35,11 +39,16 @@ final public class Transaction {
     final private Transaction parent;
     /** Store of the savepoints */
     final private Savepoint[] savepoints ;
+    /** JTA Status */
+    private int status = Status.STATUS_UNKNOWN;
+    /** Rollback only */
+    private boolean rollbackOnly = false;
 
     @PackagePrivate Transaction(Session session, Transaction parent) {
         this.session = session;
         this.parent = parent;
         this.savepoints = new Savepoint[session.getHandler().getDatabases().size()];
+        this.status = Status.STATUS_PREPARED;
     }
 
     /** Returns true, if the transactioni the ROOT. */
@@ -61,6 +70,7 @@ final public class Transaction {
             }
             try {
                 savepoints[pointer] = conn.setSavepoint();
+                status = Status.STATUS_ACTIVE;
             } catch (SQLException e) {
                 throw new IllegalStateException("Cant save Savepoint", e);
             }
@@ -70,17 +80,19 @@ final public class Transaction {
     /** Commit the current level of the beginTransaction.
      * @return Return a parrent Transaction or the value [@code null} for the root transaction.
      */
-    public Transaction commit() {
+    @Override
+    public void commit() throws IllegalStateException {
         session.commit(true, this);
-        return parent;
+        status = Status.STATUS_COMMITTED;
     }
 
     /** Rollback the current level of the beginTransaction.
      * @return Return a parrent Transaction or the value [@code null} for the root transaction.
      */
-    public Transaction rollback() {
+    @Override
+    public void rollback() throws IllegalStateException {
         session.commit(false, this);
-        return parent;
+        status = Status.STATUS_ROLLEDBACK;
     }
 
     /** Create a nested transaction */
@@ -106,5 +118,38 @@ final public class Transaction {
     /** Returns a Savepoint array or {@code null} in case a transaction root. */
     @PackagePrivate Savepoint[] getSavepoints() {
         return savepoints;
+    }
+
+    /** {@inheritDoc} */
+    public boolean delistResource(XAResource xaRes, int flag) throws IllegalStateException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean enlistResource(XAResource xaRes) throws IllegalStateException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void registerSynchronization(Synchronization sync) throws IllegalStateException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setRollbackOnly() throws IllegalStateException {
+        rollbackOnly = true;
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @PackagePrivate boolean isRollbackOnly() {
+        return rollbackOnly;
+    }
+
+    /** JTA Status */
+    @Override
+    public int getStatus() throws SystemException {
+        return status;
     }
 }
