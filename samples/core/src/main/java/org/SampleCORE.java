@@ -147,11 +147,12 @@ public class SampleCORE {
 
     /** Employee validator */
     public void employeeValidator() {
-        Criterion<Employee> validator = Employee.WAGE.whereGt(10.0)
-                .or(COMPANY.add(CITY).whereEq("Prague"));
-
-        boolean isValid = validator.evaluate(getEmployee());
-        System.out.println("Is valid: " + isValid + " for " + getEmployee());
+        Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
+        try {
+          validator.validate(getEmployee(), "Minimal WAGE is: %f.", validator.getRightNode());
+        } catch (IllegalArgumentException e) {
+           System.out.println(e.getMessage());
+        }
     }
 
     /** Filter all employees, where a city name of a company equals employee name. */

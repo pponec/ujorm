@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2010 Pavel Ponec
+ *  Copyright 2007-2012 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -111,12 +111,18 @@ public abstract class Criterion<UJO extends Ujo> {
      * If the evaluate method returns false, then the method throws the {@link IllegalArgumentException}
      * with the required message.
      * @param ujo object to validate
-     * @param params Parameters for the message template.
-     * @throws IllegalArgumentException
+     * @param parameters Text parameters for the message template are located by %s expression. See the
+     *   <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/util/Formatter.html">java.util.Formatter</a>
+     *   documentation for more information.
+     * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
      */
-    final public void validate(final UJO ujo, String message) throws IllegalArgumentException {
+    final public void validate(final UJO ujo, String message, Object ... parameters) throws IllegalArgumentException {
         if (!evaluate(ujo)) {
-            throw new IllegalArgumentException(message);
+            final String msg = parameters!=null && parameters.length>0
+                    ? String.format(message, parameters)
+                    : message 
+                    ;
+            throw new IllegalArgumentException(msg);
         }
     }
 
@@ -124,16 +130,10 @@ public abstract class Criterion<UJO extends Ujo> {
      * Evaluate an object along this criterion.
      * If the evaluate method returns false, then the method throws the {@link IllegalArgumentException}
      * with the required message.
-     * @param ujo Object to validate
-     * @param message Message template wigh syntax along {@link String#format};
-     * @param params Parameters for the message template.
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException Exception, if the method {@link #validate(org.ujorm.Ujo) failed.
      */
-    final public void validate(final UJO ujo, String message, Object ... params) throws IllegalArgumentException {
-        if (!evaluate(ujo)) {
-            final String msg = String.format(message, params);
-            throw new IllegalArgumentException(msg);
-        }
+    final public void validate(final UJO ujo) throws IllegalArgumentException {
+        validate(ujo, "Invalid condition (" + toString() + ") for the " + ujo.toString());
     }
 
     public Criterion<UJO> join(BinaryOperator operator, Criterion<UJO> criterion) {
@@ -152,7 +152,7 @@ public abstract class Criterion<UJO extends Ujo> {
         return new BinaryCriterion<UJO>(this, BinaryOperator.NOT, this);
     }
 
-    /** Returns the left node of the parrent */
+    /** Returns the left node of the parrent. */
     abstract public Object getLeftNode();
     /** Returns the right node of the parrent */
     abstract public Object getRightNode();
