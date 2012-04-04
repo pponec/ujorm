@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
 import javax.transaction.xa.XAResource;
 import org.ujorm.orm.annot.PackagePrivate;
 import org.ujorm.orm.metaModel.MetaDatabase;
@@ -40,15 +39,15 @@ final public class Transaction implements javax.transaction.Transaction{
     /** Store of the savepoints */
     final private Savepoint[] savepoints ;
     /** JTA Status */
-    private int status = Status.STATUS_UNKNOWN;
-    /** Rollback only */
-    private boolean rollbackOnly = false;
+    private int status;
+    /** Rollback only, default value is {@code false} */
+    private boolean rollbackOnly;
 
     @PackagePrivate Transaction(Session session, Transaction parent) {
         this.session = session;
         this.parent = parent;
-        this.savepoints = new Savepoint[session.getHandler().getDatabases().size()];
         this.status = Status.STATUS_PREPARED;
+        this.savepoints = new Savepoint[session.getHandler().getDatabases().size()];
     }
 
     /** Returns true, if the transactioni the ROOT. */
@@ -82,8 +81,14 @@ final public class Transaction implements javax.transaction.Transaction{
      */
     @Override
     public void commit() throws IllegalStateException {
-        session.commit(true, this);
-        status = Status.STATUS_COMMITTED;
+        if (status==Status.STATUS_ACTIVE && !rollbackOnly) {
+            status = Status.STATUS_COMMITTED;
+            session.commit(true, this);
+        } else if (this.rollbackOnly) {
+            throw new SecurityException("Transaction have got status ROLLBACK_ONLY");
+        } else {
+            throw new IllegalStateException("Transactíon state isn't STATUS_ACTIVE, but " + status);
+        }
     }
 
     /** Rollback the current level of the beginTransaction.
@@ -91,8 +96,12 @@ final public class Transaction implements javax.transaction.Transaction{
      */
     @Override
     public void rollback() throws IllegalStateException {
-        session.commit(false, this);
-        status = Status.STATUS_ROLLEDBACK;
+        if (status==Status.STATUS_ACTIVE) {
+            status = Status.STATUS_ROLLEDBACK;
+            session.commit(false, this);
+        } else {
+            throw new IllegalStateException("Transactíon state isn't STATUS_ACTIVE, but " + status);
+        }
     }
 
     /** Create a nested transaction */
@@ -137,19 +146,15 @@ final public class Transaction implements javax.transaction.Transaction{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /** Rollback transaction only, default value is {@code false} */
     @Override
-    public void setRollbackOnly() throws IllegalStateException {
+    public void setRollbackOnly() {
         rollbackOnly = true;
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @PackagePrivate boolean isRollbackOnly() {
-        return rollbackOnly;
     }
 
     /** JTA Status */
     @Override
-    public int getStatus() throws SystemException {
+    public int getStatus() {
         return status;
     }
 }
