@@ -25,6 +25,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.criterion.ValueCriterion;
 
 /**
  * The main implementation of the interface UjoProperty.
@@ -474,32 +475,30 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** {@inheritDoc} */
     public Criterion<UJO> whereFilled() {
-        final Criterion<UJO> result =
-                Criterion.where(this, Operator.NOT_EQ, (VALUE) null).and(
-                Criterion.where(this, Operator.NOT_EQ, getEmptyValue()))
+        final Criterion<UJO> result = whereNotNull()
+            .and(Criterion.where(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
                 ;
         return result;
     }
 
     /** {@inheritDoc} */
     public Criterion<UJO> whereNotFilled(){
-        final Criterion<UJO> result =
-                Criterion.where(this, Operator.EQ, (VALUE) null).or(
-                Criterion.where(this, Operator.EQ, getEmptyValue()))
+        final Criterion<UJO> result = whereNull()
+            .or(new ValueCriterion(this, Operator.EQ, getEmptyValue()))
                 ;
         return result;
     }
 
     /** Returns an empty value */
-    private VALUE getEmptyValue() {
+    private Object getEmptyValue() {
         if (CharSequence.class.isAssignableFrom(type)) {
-            return (VALUE) "";
+            return "";
         }
         if (type.isArray()) {
-            return (VALUE) Array.newInstance(type, 0);
+            return Array.newInstance(type, 0);
         }
         if (List.class.isAssignableFrom(type)) {
-            return (VALUE) Collections.EMPTY_LIST;
+            return Collections.EMPTY_LIST;
         }
         return null;
     }
