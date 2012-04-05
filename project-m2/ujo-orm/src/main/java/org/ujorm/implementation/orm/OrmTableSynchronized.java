@@ -176,7 +176,10 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
         } else if (readSession()!=null) {
-            return readSession().readFK(this, property);
+            return (value instanceof OrmUjo)
+                 ? readSession().readFK((OrmUjo)value, property)
+                 : readSession().readFK(this, property)
+                 ;
         }
         throw new NullPointerException("Can't get FK form the property '"+property+"' due the missing Session");
     }
