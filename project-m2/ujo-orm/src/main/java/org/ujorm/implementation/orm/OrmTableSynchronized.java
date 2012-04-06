@@ -172,14 +172,19 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
      */
     @Override
     synchronized public <UJO extends UJO_IMPL> ForeignKey readFK(UjoProperty<UJO, ? extends OrmUjo> property) throws IllegalStateException {
-        Object value = super.readValue(property);
+        final Object value = super.readValue(property);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
-        } else if (readSession()!=null) {
-            return (value instanceof OrmUjo)
-                 ? readSession().readFK((OrmUjo)value, property)
-                 : readSession().readFK(this, property)
-                 ;
+        }
+        if (value instanceof ExtendedOrmUjo) {
+            return ((ExtendedOrmUjo) value).readFK(property);
+        }
+        final Session session = readSession();
+        if (session!=null) {
+            final OrmUjo ujo = value instanceof OrmUjo
+                    ? (OrmUjo) value
+                    : this ;
+            return session.readFK(ujo, property);
         }
         throw new NullPointerException("Can't get FK form the property '"+property+"' due the missing Session");
     }
