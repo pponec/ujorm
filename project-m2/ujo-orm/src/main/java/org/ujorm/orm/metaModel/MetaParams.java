@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.xml.bind.TypeConstraintException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Transient;
@@ -132,7 +133,7 @@ final public class MetaParams extends AbstractMetaModel {
     /** The property initialization */
     static{init(CLASS, true);}
 
-    /** TypeService Map */
+    /** The type service cache */
     private final Map<Class, TypeService> typeServices = new HashMap<Class, TypeService>(2);
 
     public MetaParams() {
@@ -156,24 +157,23 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** Returns a converter instance.
      * Method use an internal cache for smaller converter instance count.
-     * @param converterClass A class to create an instance of the converter. If the value is [@code null],
+     * @param converterClass A class to create an instance of the converter. If the value is {@code null},
      * then a default converter defined in parameters is used.
      * @return Returns a converter instance.
      */
-    public TypeService getConverter(Class<? extends TypeService> converterClass) {
+    public <T extends TypeService> T getConverter(Class<T> converterClass) {
         if (converterClass==null) {
-            converterClass = TYPE_SERVICE.of(this);
+            converterClass = (Class<T>) TYPE_SERVICE.of(this);
         }
-        TypeService result = typeServices.get(converterClass);
+        T result = (T) typeServices.get(converterClass);
         if (result == null) {
             try {
-                result = (TypeService) TYPE_SERVICE.of(this).newInstance();
-                typeServices.put(CLASS, result);
+                result = converterClass.newInstance();
+                typeServices.put(converterClass, result);
             } catch (Exception e) {
                 throw new IllegalStateException("Can't create a type service for the " + converterClass, e);
             }
         }
-
         return result;
     }
 
