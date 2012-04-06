@@ -176,20 +176,25 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
      * This is useful to obtain the foreign key value without (lazy) loading the entire object.
      * If the lazy object is loaded, the method will need the Session to build the ForeignKey instance.
      * <br>NOTE: The method is designed for developers only, the Ujorm doesn't call it newer.
+     * @param property Must be direct property only ({@link UjoProperty#isDirect()}==true)
      * @return If no related object is available, then the result has the NULL value.
      * @throws IllegalStateException Method throws an exception for a wrong property type.
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
      */
     @Override
     public <UJO extends UJO_IMPL> ForeignKey readFK(UjoProperty<UJO, ? extends OrmUjo> property) throws IllegalStateException {
-        Object value = super.readValue(property);
+        final Object value = super.readValue(property);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
-        } else if (session!=null) {
-            return (value instanceof OrmUjo)
-                 ? session.readFK((OrmUjo)value, property)
-                 : session.readFK(this, property)
-                 ;
+        } 
+        if (value instanceof ExtendedOrmUjo) {
+            return ((ExtendedOrmUjo) value).readFK(property);
+        }
+        if (session!=null) {
+            final OrmUjo ujo = value instanceof OrmUjo
+                    ? (OrmUjo) value
+                    : this ;
+            return session.readFK(ujo, property);
         }
         throw new NullPointerException("Can't get FK form the property '"+property+"' due the missing Session");
     }
