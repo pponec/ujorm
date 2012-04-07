@@ -298,26 +298,41 @@ public class TypeService implements ITypeService<Object,Object> {
     public Class getDbTypeClass(final MetaColumn column) {
         assert column.getConverter()==this : "Invalid column for this service: " + column;
 
+        switch (column.getTypeCode()) {
+            case BYTE: return column.getType();
+            case CHAR: return column.getType();
+        }
+
         final Class type = column.getType();
-        Object value = column.getProperty().getDefault();
-        if (value != null) {
-            // OK;
+        Object testValue = column.getProperty().getDefault();
+        if (testValue != null) {
+            // It is OK;
         } else if (type.isEnum()) {
-            value = type.getEnumConstants()[0];
+            testValue = type.getEnumConstants()[0];
         } else if (false) {
             // TODO: to assign another sample value for next types (?)
         } else {
             return type;
         }
 
-        // Convert it:
+        // Column type code may not be intializad:
         if (!column.readOnly() && column.getTypeCode()==UNDEFINED) {
-            column.initTypeCode(); // column type code may not be intializad
+            column.initTypeCode(); 
         }
-        final Object result = new UjoStatement().getDatabaseValue(column, value);
-        return result!=null
-                ? result.getClass()
+
+        // Convert the testValue using current TypeService implementation:
+        Object dbValue = new UjoStatement().getDatabaseValue(column, testValue);
+
+        // The default number of an Enum type is the Short type:
+        if (dbValue instanceof Integer) {
+            switch (column.getTypeCode()) {
+                case ENUM: return Short.class;
+            }
+        }
+
+        // Return a type of the dbValue:
+        return dbValue != null
+                ? dbValue.getClass()
                 : type;
     }
-
 }
