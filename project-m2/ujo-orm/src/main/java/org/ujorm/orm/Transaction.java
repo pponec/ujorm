@@ -45,7 +45,7 @@ final public class Transaction implements javax.transaction.Transaction{
     @PackagePrivate Transaction(Session session, Transaction parent) {
         this.session = session;
         this.parent = parent;
-        this.status = Status.STATUS_PREPARED;
+        this.status = Status.STATUS_ACTIVE;
         this.savepoints = new Savepoint[session.getHandler().getDatabases().size()];
     }
 
