@@ -39,8 +39,8 @@ import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.OrmUjo;
-import org.ujorm.orm.TypeService;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaTable;
 
@@ -62,9 +62,9 @@ final public class UjoStatement extends UnsupportedOperationException implements
     }
 
     /** Returns a <b>default value</b> in a JDBC friendly type.
-     * The real result type depends in an implementatin a TypeService.
+     * The real result type depends in an implementatin a ITypeService.
      * For example a Java Enumerator default value can return either the Integer or String type too.
-     * @see TypeService
+     * @see ITypeService
      */
     @SuppressWarnings("unchecked")
     public Object getDefaultValue(final MetaColumn column) {
@@ -72,9 +72,9 @@ final public class UjoStatement extends UnsupportedOperationException implements
     }
 
     /** Returns a <b>any value</b> in a JDBC friendly type.
-     * The real result type depends in an implementatin a TypeService.
+     * The real result type depends in an implementatin a ITypeService.
      * For example a Java Enumerator default value can return either the Integer or String type too.
-     * @see TypeService
+     * @see ITypeService
      */
     @SuppressWarnings("unchecked")
     public Object getDatabaseValue(final MetaColumn column, Object value) {

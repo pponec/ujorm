@@ -34,7 +34,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
  * A type service for popular Java types and more.
  * @author Ponec
  */
-public class TypeService {
+public class TypeService implements ITypeService<Object,Object> {
 
     // --- Java type book: ---
 
@@ -73,7 +73,7 @@ public class TypeService {
      * @param column Colum provides a Type, there is supported a relation types too.
      * @return Java type code for frequently used types.
      */
-    public final char getTypeCode(final MetaColumn column) {
+    public static char getTypeCode(final MetaColumn column) {
         final Class type = column.getType();
         if (StringWrapper.class.isAssignableFrom(type)) return type.isEnum()
                 ? EXPORT_ENUM
@@ -319,8 +319,5 @@ public class TypeService {
                 ? result.getClass()
                 : type;
     }
-
-    /** A {@code null} class value workaround. */
-    public static final class UNDEFINED_SERVICE extends TypeService{}
 
 }

@@ -23,7 +23,6 @@ import java.util.NoSuchElementException;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
-import org.ujorm.orm.TypeService;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 

@@ -45,7 +45,7 @@ public class JdbcStatement {
 
     /** Prepared Statement */
     private final PreparedStatement ps;
-    private final TypeService typeService;
+    private final ITypeService typeService;
 
     /** Parameter pointer */
     private int parameterPointer = 0;
