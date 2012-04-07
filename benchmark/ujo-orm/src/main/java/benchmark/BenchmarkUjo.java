@@ -28,6 +28,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.metaModel.MetaParams;
 import benchmark.bo.*;
+import org.ujorm.orm.Transaction;
 
 /**
  * OrmUjo performance test
@@ -69,6 +70,7 @@ public class BenchmarkUjo {
     public void useInsert() {
 
         long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
 
         UjoUser user1 = new UjoUser();
         user1.set(UjoUser.lastname, "Lorem ipsum dolor");
@@ -82,9 +84,7 @@ public class BenchmarkUjo {
         user2.set(UjoUser.personalId, "12345678");
         session.save(user2);
 
-
         for (int i=1; i<=ORDER_COUNT; i++) {
-
             UjoOrder order = new UjoOrder();
             order.set(UjoOrder.dateOfOrder, new Date());
             order.set(UjoOrder.deletionReason, "NO");
@@ -111,7 +111,7 @@ public class BenchmarkUjo {
             }
         }
 
-        session.commit();
+        tr.commit();
         printTime("INSERT", time1, System.currentTimeMillis());
     }
 
@@ -120,9 +120,11 @@ public class BenchmarkUjo {
     public void useSingleSelect() {
 
         long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
 
-        Criterion<UjoOrderItem> crn1 = Criterion.where(UjoOrderItem.deleted, false);
-        Criterion<UjoOrderItem> crn2 = Criterion.where(UjoOrderItem._orderDeleted, false);
+        final Criterion<UjoOrderItem> crn1, crn2;
+        crn1 = UjoOrderItem.deleted.whereEq(false);
+        crn2 = UjoOrderItem._orderDeleted.whereEq(false);
 
         UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
 
@@ -136,7 +138,7 @@ public class BenchmarkUjo {
             }
         }
 
-        session.commit();
+        tr.commit();
         printTime("SINGLE SELECT "+i, time1, System.currentTimeMillis());
     }
 
@@ -144,16 +146,17 @@ public class BenchmarkUjo {
     public void useEmptySelect() {
 
         long time1 = System.currentTimeMillis();
-
+        Transaction tr = session.beginTransaction();
 
         for (int i = -ORDER_COUNT; i<0 ; i++) {
-            Criterion<UjoOrder> crn1 = Criterion.where(UjoOrder.id, new Long(i));
-            Criterion<UjoOrder> crn2 = Criterion.where(UjoOrder.deleted, true);
+            final Criterion<UjoOrder> crn1, crn2;
+            crn1 = UjoOrder.id.whereEq(new Long(i));
+            crn2 = UjoOrder.deleted.whereEq(true);
 
-            UjoIterator<UjoOrder> orders = session.createQuery(crn1.and(crn2)).iterate();
+            UjoIterator<UjoOrder> orders = session.createQuery(crn1.and(crn2)).iterator();
             orders.hasNext();
         }
-        session.commit();
+        tr.commit();
         printTime("EMPTY SELECT "+ORDER_COUNT, time1, System.currentTimeMillis());
     }
 
@@ -161,17 +164,20 @@ public class BenchmarkUjo {
     public void useMultiSelect() {
 
         long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
 
-        Criterion<UjoOrder> crn1 = Criterion.where(UjoOrder.deleted, false);
-        UjoIterator<UjoOrder> orders = session.createQuery(crn1).iterate();
+        final Criterion<UjoOrder> crn1 = UjoOrder.deleted.whereEq(false);
+        UjoIterator<UjoOrder> orders = session.createQuery(crn1).iterator();
 
         int i = 0;
         for (UjoOrder order : orders) {
             String surename = order.get(UjoOrder.user).get(UjoUser.surename);
             if (false) System.out.println("Usr.surename: " + surename);
 
-            Criterion<UjoOrderItem> crn2 = Criterion.where(UjoOrderItem.deleted, false);
-            Criterion<UjoOrderItem> crn3 = Criterion.where(UjoOrderItem.order, order);
+            final Criterion<UjoOrderItem> crn2,  crn3;
+            crn2 = UjoOrderItem.deleted.whereEq(false);
+            crn3 = UjoOrderItem.order.whereEq(order);
+
             UjoIterator<UjoOrderItem> items = session.createQuery(crn2.and(crn3)).iterate();
 
             for (UjoOrderItem item : items) {
@@ -186,7 +192,7 @@ public class BenchmarkUjo {
             }
         }
 
-        session.commit();
+        tr.commit();
         printTime("MULTI SELECT "+i, time1, System.currentTimeMillis());
 
     }
@@ -195,9 +201,11 @@ public class BenchmarkUjo {
     public void useUpdate() {
 
         long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
 
-        Criterion<UjoOrderItem> crn1 = Criterion.where(UjoOrderItem.deleted, false);
-        Criterion<UjoOrderItem> crn2 = Criterion.where(UjoOrderItem._orderDeleted, false);
+        final Criterion<UjoOrderItem> crn1, crn2;
+        crn1 = UjoOrderItem.deleted.whereEq(false);
+        crn2 = UjoOrderItem._orderDeleted.whereEq(false);
 
         UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
 
@@ -208,7 +216,7 @@ public class BenchmarkUjo {
             session.update(item);
         }
 
-        session.commit();
+        tr.commit();
         printTime("UPDATE "+i, time1, System.currentTimeMillis());
     }
 
@@ -216,18 +224,16 @@ public class BenchmarkUjo {
     public void useDelete() {
 
         long time1 = System.currentTimeMillis();
+        Transaction tr = session.beginTransaction();
 
         UjoIterator<UjoOrder> orders = session.createQuery(UjoOrder.class).iterate();
         for (UjoOrder order : orders) {
-            Criterion<UjoOrderItem> itemCrn = Criterion.where(UjoOrderItem.order, order);
-            session.delete(itemCrn);
+            session.delete(UjoOrderItem.order.whereEq(order));
             session.delete(order);
         }
+        session.delete(UjoUser.id.forAll());
 
-        Criterion<UjoUser> userCrn = Criterion.constant(UjoUser.id, true);
-        session.delete(userCrn);
-
-        session.commit();
+        tr.commit();
         printTime("DELETE", time1, System.currentTimeMillis());
 
     }
