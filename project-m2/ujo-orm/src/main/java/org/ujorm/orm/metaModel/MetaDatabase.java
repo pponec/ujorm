@@ -204,12 +204,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         return dialect;
     }
 
-
-
     /** Change DbType by a Java property */
     public void changeDbType(MetaColumn column) {
-        final UjoProperty property = column.getProperty();
-        final Class type = property.getType();
+        final Class type = column.getDbTypeClass();
 
         if (Void.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.NULL);

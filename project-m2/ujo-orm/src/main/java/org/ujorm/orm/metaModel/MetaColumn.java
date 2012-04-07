@@ -76,11 +76,12 @@ public final class MetaColumn extends MetaRelation2Many {
     /** Foreign column names. */
     private String[] foreignNames = null;
     private static final String[] EMPTY_NAMES = new String[0];
-    /** A TypeCode
-     * @see TypeService
+    /** A <b>Java Type Code<b> to a quick JDBC management.
+     * @see TypeService#getTypeCode(org.ujorm.orm.metaModel.MetaColumn) 
      */
     private char typeCode;
     private boolean foreignKey;
+    /** Type converter. Value is Notnull allvays. */
     final private TypeService converter;
 
 
@@ -122,9 +123,6 @@ public final class MetaColumn extends MetaRelation2Many {
             changeDefault(this, CONVERTER  , column.converter());
         }
 
-        if (DB_TYPE.isDefault(this)) {
-            MetaTable.DATABASE.of(table).changeDbType(this);
-        }
         if (MAX_LENGTH.isDefault(this)) {
             MetaTable.DATABASE.of(table).changeDbLength(this);
         }
@@ -136,10 +134,13 @@ public final class MetaColumn extends MetaRelation2Many {
         }
 
         // Assign a Converter:
-        converter = getHandler().getParameters().getConverter(CONVERTER.isDefault(this)
-                ? null
-                : CONVERTER.of(this))
-                ;
+        final Class converterType = CONVERTER.isDefault(this) ? null : CONVERTER.of(this);
+        converter = getHandler().getParameters().getConverter(converterType);
+
+        // DB Type must be assigned after to create the converter instance:
+        if (DB_TYPE.isDefault(this)) {
+            MetaTable.DATABASE.of(table).changeDbType(this);
+        }
     }
 
     /** It is a DB column (either a value of a foreign key), 
@@ -212,7 +213,6 @@ public final class MetaColumn extends MetaRelation2Many {
     @SuppressWarnings("unchecked")
     private void assignForeignColumns() {
         List<MetaColumn> result;
-        final Class type = getProperty().getType();
 
         MetaTable table;
         if (TABLE_PROPERTY.of(this) instanceof RelationToOne) {
@@ -221,7 +221,7 @@ public final class MetaColumn extends MetaRelation2Many {
             result = new ArrayList<MetaColumn>(1);
             result.add(mc);
         } else {
-            table = getHandler().findTableModel(type);
+            table = getHandler().findTableModel(getType());
             if (table!=null) {
                 MetaPKey pk = MetaTable.PK.of(table);
                 result = MetaPKey.COLUMNS.getList(pk);
@@ -293,11 +293,9 @@ public final class MetaColumn extends MetaRelation2Many {
         property.setValue(bo, value);
     }
 
-
     /** Returns a Java Class of value */
     public Class getType() {
-        final UjoProperty property = getProperty();
-        return property.getType();
+        return TABLE_PROPERTY.of(this).getType();
     }
 
     /** Returns a TABLE and COLUMN names. */
@@ -415,5 +413,17 @@ public final class MetaColumn extends MetaRelation2Many {
     /** Returna not null converter */
     public TypeService getConverter() {
         return converter;
+    }
+    /** Returns a native database code for a DDL statements */
+    public Class getDbTypeClass() {
+        if (!readOnly()) {
+            if (isForeignKey()) {
+                // The foreign type is not initialized correctly yet.
+                return getType();
+            } else {
+                this.initTypeCode();
+            }
+        }
+        return converter.getDbTypeClass(this);
     }
 }

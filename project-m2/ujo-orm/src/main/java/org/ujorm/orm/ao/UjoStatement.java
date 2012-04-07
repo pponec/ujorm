@@ -52,30 +52,40 @@ import org.ujorm.orm.metaModel.MetaTable;
  *
  * @author Pavel Ponec
  */
-public class UjoStatement extends UnsupportedOperationException implements PreparedStatement {
+final public class UjoStatement extends UnsupportedOperationException implements PreparedStatement {
 
+    /** The converted value */
     private Object v;
 
     public UjoStatement() {
         super("Method is not implemented.");
     }
 
-    /** Returns a default value in a JDBC friendly type.
+    /** Returns a <b>default value</b> in a JDBC friendly type.
      * The real result type depends in an implementatin a TypeService.
      * For example a Java Enumerator default value can return either the Integer or String type too.
      * @see TypeService
      */
     @SuppressWarnings("unchecked")
     public Object getDefaultValue(final MetaColumn column) {
-        try {
-            Object defaultValue = column.getProperty().getDefault();
-            if (defaultValue instanceof OrmUjo) {
-                final OrmUjo tableValue = (OrmUjo) defaultValue;
-                final MetaTable mt = column.getHandler().findTableModel(tableValue.getClass());
-                defaultValue = mt.getFirstPK().getProperty().getValue(tableValue);
-            }
+        return getDatabaseValue(column, column.getProperty().getDefault());
+    }
 
-            column.getConverter().setValue(column, this, defaultValue, 1);
+    /** Returns a <b>any value</b> in a JDBC friendly type.
+     * The real result type depends in an implementatin a TypeService.
+     * For example a Java Enumerator default value can return either the Integer or String type too.
+     * @see TypeService
+     */
+    @SuppressWarnings("unchecked")
+    public Object getDatabaseValue(final MetaColumn column, Object value) {
+        assert value==null || column.getType().isInstance(value) : "Wrong value type: " + value;
+        try {
+            if (value instanceof OrmUjo) {
+                final OrmUjo tableValue = (OrmUjo) value;
+                final MetaTable mt = column.getHandler().findTableModel(tableValue.getClass());
+                value = mt.getFirstPK().getProperty().getValue(tableValue);
+            }
+            column.getConverter().setValue(column, this, value, 1);
             return v;
         } catch (SQLException e) {
             throw this;
