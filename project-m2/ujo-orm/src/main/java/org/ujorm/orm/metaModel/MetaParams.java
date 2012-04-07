@@ -20,13 +20,13 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import javax.xml.bind.TypeConstraintException;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
+import org.ujorm.orm.ITypeService;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.CheckReport;
@@ -71,11 +71,11 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Property<MetaParams,CommentPolicy> COMMENT_POLICY = newProperty("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
-    /** The instance of the parameter class {@see TypeService} is used for conversion, reading and writting to/from the ResultSet.
+    /** The instance of the parameter class {@see ITypeService} is used for conversion, reading and writting to/from the ResultSet.
      * You can specify a sybtype of the class for a commiono special fetures.
      * @see org.ujorm.orm.annot.Column#converter() 
      */
-    public static final Property<MetaParams,Class<? extends TypeService>> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
+    public static final Property<MetaParams,Class<? extends ITypeService>> TYPE_SERVICE = newProperty("typeService", Class.class).writeDefault(TypeService.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model.
      * The default value is EXCEPTION.
      * @see CheckReport Parameter values
@@ -134,7 +134,7 @@ final public class MetaParams extends AbstractMetaModel {
     static{init(CLASS, true);}
 
     /** The type service cache */
-    private final Map<Class, TypeService> typeServices = new HashMap<Class, TypeService>(2);
+    private final Map<Class, ITypeService> typeServices = new HashMap<Class, ITypeService>(2);
 
     public MetaParams() {
         MORE_PARAMS.setValue(this, new MoreParams());
@@ -161,7 +161,7 @@ final public class MetaParams extends AbstractMetaModel {
      * then a default converter defined in parameters is used.
      * @return Returns a converter instance.
      */
-    public <T extends TypeService> T getConverter(Class<T> converterClass) {
+    public <T extends ITypeService> T getConverter(Class<T> converterClass) {
         if (converterClass==null) {
             converterClass = (Class<T>) TYPE_SERVICE.of(this);
         }

@@ -15,10 +15,11 @@
  */
 
 package org.ujorm.orm.annot;
+
 import java.lang.annotation.*;
 import org.ujorm.orm.DbType;
-import org.ujorm.orm.TypeService;
-import static org.ujorm.orm.TypeService.UNDEFINED_SERVICE;
+import org.ujorm.orm.ITypeService;
+
 
 /** 
  * Use the annotation to mark a UjoProperty static field like XML Attribute.
@@ -57,8 +58,8 @@ public @interface Column {
     /** Convert, save and read an application data to/from the ResultSet.
      * If the property have got a default value, so the instance for the real converter will be defined 
      * along the parameter {@link org.ujorm.orm.metaModel.MetaParams.MetaParams#TYPE_SERVICE}.
-     * @see TypeService
+     * @see ITypeService
      */
-    Class<? extends TypeService> converter() default UNDEFINED_SERVICE.class;
+    Class<? extends ITypeService> converter() default ITypeService.class;
     
 }

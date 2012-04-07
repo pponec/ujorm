@@ -29,12 +29,12 @@ import org.ujorm.extensions.Property;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.OrmUjo;
-import org.ujorm.orm.TypeService;
 import org.ujorm.orm.ForeignKey;
+import org.ujorm.orm.ITypeService;
+import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.UjoStatement;
-import static org.ujorm.orm.TypeService.UNDEFINED_SERVICE;
 
 /**
  * Database column metadata
@@ -65,7 +65,7 @@ public final class MetaColumn extends MetaRelation2Many {
     /** A name of the constraint for the case a foreign key */
     public static final Property<MetaColumn,String> CONSTRAINT_NAME = newProperty("constraintName", "");
     /** Convert, save and read application data from/to the database */
-    public static final Property<MetaColumn,Class<? extends TypeService>> CONVERTER = newProperty("converter", Class.class).writeDefault(UNDEFINED_SERVICE.class);
+    public static final Property<MetaColumn,Class<? extends ITypeService>> CONVERTER = newProperty("converter", Class.class).writeDefault(ITypeService.class);
     /** Comment of the database column */
     public static final Property<MetaColumn,String> COMMENT = newProperty("comment", Comment.NULL);
     /** The property initialization */
@@ -77,19 +77,19 @@ public final class MetaColumn extends MetaRelation2Many {
     private String[] foreignNames = null;
     private static final String[] EMPTY_NAMES = new String[0];
     /** A <b>Java Type Code<b> to a quick JDBC management.
-     * @see TypeService#getTypeCode(org.ujorm.orm.metaModel.MetaColumn) 
+     * @see TypeService#getTypeCode(org.ujorm.orm.metaModel.MetaColumn)
      */
     private char typeCode;
     private boolean foreignKey;
     /** Type converter. Value is Notnull allvays. */
-    final private TypeService converter;
+    final private ITypeService converter;
 
 
     public MetaColumn() {
         this(null);
     }
 
-    public MetaColumn(TypeService converter) {
+    public MetaColumn(ITypeService converter) {
         this.converter = converter;
     }
 
@@ -363,9 +363,9 @@ public final class MetaColumn extends MetaRelation2Many {
     }
 
     /** Returns a default value in a JDBC friendly type.
-     * The real result type depends in an implementatin a TypeService.
+     * The real result type depends in an implementatin of the ITypeService.
      * For example a Java Enumerator default value can return either the Integer or String type too.
-     * @see TypeService
+     * @see ITypeService
      */
     public Object getJdbcFriendlyDefaultValue() {
         final Object result = new UjoStatement().getDefaultValue(this);
@@ -388,8 +388,8 @@ public final class MetaColumn extends MetaRelation2Many {
         // Test for a read-only state:
         checkReadOnly(true);
 
-        // Assign a type code:
-        typeCode = converter.getTypeCode(this);
+        // Assign the Type code:
+        typeCode = TypeService.getTypeCode(this);
 
         // Modify a relation type:
         if (isForeignKey()) {
@@ -411,7 +411,7 @@ public final class MetaColumn extends MetaRelation2Many {
     }
 
     /** Returna not null converter */
-    public TypeService getConverter() {
+    public ITypeService getConverter() {
         return converter;
     }
     /** Returns a native database code for a DDL statements */
