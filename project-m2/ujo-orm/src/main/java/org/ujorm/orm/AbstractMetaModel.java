@@ -34,7 +34,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
     /** Read-only state */
     private boolean readOnly = false;
 
-    /** Property values can be readed only */
+    /** Property values are locked to read-only. */
     public boolean readOnly() {
         return readOnly;
     }
