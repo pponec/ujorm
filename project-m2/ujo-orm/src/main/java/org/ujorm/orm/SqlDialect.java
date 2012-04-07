@@ -133,20 +133,20 @@ abstract public class SqlDialect {
     }
 
     /** Print a SQL database and table name and an alias definition - by sample: SCHEMA.TABLE ALIAS */
-    public void printTableAliasDefinition(final MetaTable table, final Appendable out) throws IOException {
-        printFullTableName(table, out);
+    public void printTableAliasDefinition(final TableWrapper table, final Appendable out) throws IOException {
+        printFullTableName(table.getModel(), out);
         out.append(' ');
         out.append(table.getAlias());
     }
 
 
     /** Print a full SQL column alias name by sample: TABLE_ALIAS.COLUMN */
-    public Appendable printColumnAlias(final MetaColumn column, final Appendable out) throws IOException {
-        final MetaTable table = MetaColumn.TABLE.of(column);
+    public Appendable printColumnAlias(final ColumnWrapper column, final Appendable out) throws IOException {
+        final TableWrapper table = column.getTable();
 
         out.append(table.getAlias());
         out.append('.');
-        out.append(MetaColumn.NAME.of(column));
+        out.append(MetaColumn.NAME.of(column.getModel()));
         
         return out;
     }
@@ -367,7 +367,7 @@ abstract public class SqlDialect {
         printFullTableName(table, out);
         out.append(" (");
 
-        printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
+        printTableColumns(table.getColumns(), values, out);
 
         out.append(") VALUES (")
            .append(values)
@@ -392,7 +392,7 @@ abstract public class SqlDialect {
         printFullTableName(table, out);
         out.append(" (");
 
-        printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
+        printTableColumns(table.getColumns(), values, out);
 
         for (int i=idxFrom; i<idxTo; ++i) {
             out.append(i==idxFrom ? ") VALUES \n(" : "),\n(")
@@ -418,7 +418,7 @@ abstract public class SqlDialect {
         printFullTableName(table, out);
         out.append(" (");
 
-        printTableColumns(MetaTable.COLUMNS.getList(table), values, out);
+        printTableColumns(table.getColumns(), values, out);
 
         for (int i=idxFrom; i<idxTo; ++i) {
             out.append(i==idxFrom ? ")\nSELECT " : " UNION ALL\nSELECT ")
@@ -545,15 +545,16 @@ abstract public class SqlDialect {
      * @param out Table columns output.
      * @throws java.io.IOException
      */
-    public void printTableColumns(List<MetaColumn> columns, Appendable values, Appendable out) throws IOException {
+    public void printTableColumns(List<? extends ColumnWrapper> columns, Appendable values, Appendable out) throws IOException {
         String separator = "";
         boolean select = values==null; // SELECT
-        for (MetaColumn column : columns) {
+        for (ColumnWrapper wColumn : columns) {
+            final MetaColumn column = wColumn.getModel();
             if (column.isForeignKey()) {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
                     if (select) {
-                        out.append(MetaColumn.TABLE.of(column).getAlias());
+                        out.append(wColumn.getTable().getAlias());
                         out.append('.');
                     }
                     out.append(column.getForeignColumnName(i));
@@ -649,12 +650,12 @@ abstract public class SqlDialect {
     /** Print all items of the foreign key */
     public void printForeignKey
         ( final ValueCriterion crit
-        , final MetaColumn column
+        , final ColumnWrapper column
         , final String template
         , final Appendable out
         ) throws IOException
     {
-        int size = column.getForeignColumns().size();
+        int size = column.getModel().getForeignColumns().size();
         for (int i=0; i<size; i++) {
             if (i>0) {
                 out.append(' ');
@@ -662,8 +663,8 @@ abstract public class SqlDialect {
                 out.append(' ');
             }
             
-            String alias = MetaColumn.TABLE.of(column).getAlias();
-            String columnName = column.getForeignColumnName(i);
+            String alias = column.getTable().getAlias();
+            String columnName = column.getModel().getForeignColumnName(i);
             if (isFilled(alias)) {
                 columnName = alias + '.' + columnName;
             }
@@ -677,7 +678,7 @@ abstract public class SqlDialect {
      * @param count only count of items is required;
      */
     final public Appendable printSelect
-        ( final MetaTable table
+        ( final TableWrapper table
         , final Query query
         , final boolean count
         , final Appendable out
@@ -693,14 +694,14 @@ abstract public class SqlDialect {
      * @param query The UJO query
      * @param count only count of items is required;
      */
-    protected Appendable printSelectView(MetaTable table, Query query, boolean count, Appendable out) throws IOException {
+    protected Appendable printSelectView(TableWrapper table, Query query, boolean count, Appendable out) throws IOException {
         final String userSql = query.getSqlParameters()!=null
                 ? query.getSqlParameters().getSqlStatement() 
                 : null
                 ;
         final MetaSelect select = userSql!=null
-                ? new MetaSelect(userSql, MetaTable.SCHEMA.of(table))
-                : MetaTable.SELECT_MODEL.of(table)
+                ? new MetaSelect(userSql, MetaTable.SCHEMA.of(table.getModel()))
+                : MetaTable.SELECT_MODEL.of(table.getModel())
                 ;
         final String where = query.getDecoder().getWhere();
         final List<UjoProperty> orderByList = query.getOrderBy();

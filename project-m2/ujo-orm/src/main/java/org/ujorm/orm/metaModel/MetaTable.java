@@ -25,17 +25,19 @@ import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.orm.OrmHandler;
-import org.ujorm.orm.annot.Table;
-import org.ujorm.orm.annot.View;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.AbstractMetaModel;
+import org.ujorm.orm.ColumnWrapper;
+import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.annot.Table;
+import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 
 
@@ -47,7 +49,7 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
  * @composed 1 - 1 MetaPKey
  * @composed 1 - * MetaIndex
  */
-final public class MetaTable extends AbstractMetaModel {
+final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     private static final Class CLASS = MetaTable.class;
 
 
@@ -269,6 +271,7 @@ final public class MetaTable extends AbstractMetaModel {
     }
 
     /** Is the instance a database relation model? */
+    @Override
     public boolean isView() {
         return VIEW.of(this);
     }
@@ -413,6 +416,18 @@ final public class MetaTable extends AbstractMetaModel {
     /** Returns Orm2DDl policy */
     public Orm2ddlPolicy getOrm2ddlPolicy() {
         return ORM2DLL_POLICY.of(this);
+    }
+
+    /** Return an instance of Meta Model */
+    @Override
+    public MetaTable getModel() {
+        return this;
+    }
+
+    /** Returns all columns */
+    @Override
+    public List<? extends ColumnWrapper> getColumns() {
+        return MetaTable.COLUMNS.getList(this);
     }
 
 }
