@@ -26,26 +26,26 @@ import org.ujorm.orm.annot.Column;
 
 /**
  * Order item
- * @author ponec
+ * @author Pavel Ponec
  */
 public class UjoOrderItem extends OrmTable<UjoOrderItem> {
 
     @Column(pk=true)
-    public static final Property<UjoOrderItem,Long> id = newProperty(Long.class);
-    public static final Property<UjoOrderItem,String> publicId = newProperty(String.class);
-    public static final Property<UjoOrderItem,Boolean> deleted = newProperty(false);
-    public static final Property<UjoOrderItem,Date> dateDeleted = newProperty(Date.class);
-    public static final Property<UjoOrderItem,BigDecimal> price = newProperty(BigDecimal.class);
-    public static final Property<UjoOrderItem,BigDecimal> charge = newProperty(BigDecimal.class);
-    public static final Property<UjoOrderItem,Boolean> arrival = newProperty(Boolean.class);
+    public static final Property<UjoOrderItem,Long> ID = newProperty("id", Long.class);
+    public static final Property<UjoOrderItem,String> PUBLIC_ID = newProperty("publicId", String.class);
+    public static final Property<UjoOrderItem,Boolean> DELETED = newProperty("deleted", false);
+    public static final Property<UjoOrderItem,Date> DATE_DELETED = newProperty("dateDeleted", Date.class);
+    public static final Property<UjoOrderItem,BigDecimal> PRICE = newProperty("price", BigDecimal.class);
+    public static final Property<UjoOrderItem,BigDecimal> CHARGE = newProperty("charge", BigDecimal.class);
+    public static final Property<UjoOrderItem,Boolean> ARRIVAL = newProperty("arrival", Boolean.class);
     @Column(length=100)
-    public static final Property<UjoOrderItem,String> description = newProperty(String.class);
-    public static final Property<UjoOrderItem,UjoUser> user = newProperty("user_id", UjoUser.class);
-    public static final Property<UjoOrderItem,UjoOrder> order = newProperty("order_id", UjoOrder.class);
-    public static final Property<UjoOrderItem,UjoOrderItem> parent = newProperty("parent_id", UjoOrderItem.class);
+    public static final Property<UjoOrderItem,String> DESCRIPTION = newProperty("description", String.class);
+    public static final Property<UjoOrderItem,UjoUser> USER = newProperty("user_id", UjoUser.class);
+    public static final Property<UjoOrderItem,UjoOrder> ORDER = newProperty("order_id", UjoOrder.class);
+    public static final Property<UjoOrderItem,UjoOrderItem> PARENT = newProperty("parent_id", UjoOrderItem.class);
 
-    /** Indirect property: order.deleted */
-    public static final PathProperty<UjoOrderItem,Boolean> _orderDeleted = PathProperty.newInstance(UjoOrderItem.order, UjoOrder.deleted);
+    /** Indirect property: ORDER.DELETED */
+    public static final PathProperty<UjoOrderItem,Boolean> _ORDER_DELETED = PathProperty.newInstance(UjoOrderItem.ORDER, UjoOrder.DELETED);
 
 
     // Optional code for better performance:

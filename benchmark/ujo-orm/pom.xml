@@ -59,6 +59,13 @@
             <version>1.23-SNAPSHOT</version>
         </dependency>
 
+        <!-- JTA (Java Transacton API) -->
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+        </dependency>
+
         <!-- Postgresql -->
         <dependency>
             <groupId>postgresql</groupId>

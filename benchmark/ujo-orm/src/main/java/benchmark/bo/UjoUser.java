@@ -24,16 +24,16 @@ import org.ujorm.orm.annot.Column;
 
 /**
  *
- * @author pavel
+ * @author Pavel Ponec
  */
 public class UjoUser extends OrmTable<UjoUser> {
 
     @Column(pk=true)
-    public static final Property<UjoUser,Long> id = newProperty("id", Long.class);
+    public static final Property<UjoUser,Long> ID = newProperty("id", Long.class);
     @Column(length=8)
-    public static final Property<UjoUser,String> personalId = newProperty(String.class);
-    public static final Property<UjoUser,String> surename = newProperty(String.class);
-    public static final Property<UjoUser,String> lastname = newProperty(String.class);
+    public static final Property<UjoUser,String> PERSONAL_ID = newProperty("personalId", String.class);
+    public static final Property<UjoUser,String> SURENAME = newProperty("surename", String.class);
+    public static final Property<UjoUser,String> LASTNAME = newProperty("lastname", String.class);
 
 
 

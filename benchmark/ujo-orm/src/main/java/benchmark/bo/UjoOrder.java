@@ -27,30 +27,30 @@ import org.ujorm.orm.annot.Column;
 
 /**
  * Objednávky
- * @author ponec
+ * @author Pavel Ponec
  */
 public class UjoOrder extends OrmTable<UjoOrder> {
 
     @Column(pk=true)
-    public static final Property<UjoOrder,Long> id = newProperty(Long.class);
-    public static final Property<UjoOrder,Boolean> deleted = newProperty(false);
-    public static final Property<UjoOrder,Date> dateDeleted = newProperty(Date.class);
+    public static final Property<UjoOrder,Long> ID = newProperty("id", Long.class);
+    public static final Property<UjoOrder,Boolean> DELETED = newProperty("deleted", false);
+    public static final Property<UjoOrder,Date> DATE_DELETED = newProperty("dateDeleted", Date.class);
     @Column(length=2)
-    public static final Property<UjoOrder,String> deletionReason = newProperty(String.class);
-    public static final Property<UjoOrder,Boolean> paid = newProperty(Boolean.class);
+    public static final Property<UjoOrder,String> DELETION_REASON = newProperty("deletionReason", String.class);
+    public static final Property<UjoOrder,Boolean> PAID = newProperty("paid", Boolean.class);
     @Column(length=8)
-    public static final Property<UjoOrder,String> publicId = newProperty(String.class);
-    public static final Property<UjoOrder,Date> dateOfOrder = newProperty(Date.class);
+    public static final Property<UjoOrder,String> PUBLIC_ID = newProperty("publicId", String.class);
+    public static final Property<UjoOrder,Date> DATE_OF_ORDER = newProperty("dateOfOrder", Date.class);
     @Column(length=2)
-    public static final Property<UjoOrder,String> paymentType = newProperty(String.class);
-    public static final Property<UjoOrder,BigDecimal> discount = newProperty(BigDecimal.class);
+    public static final Property<UjoOrder,String> PAYMENT_TYPE = newProperty("paymentType", String.class);
+    public static final Property<UjoOrder,BigDecimal> DISCOUNT = newProperty("discount", BigDecimal.class);
     @Column(length=2)
-    public static final Property<UjoOrder,String> orderType = newProperty(String.class);
+    public static final Property<UjoOrder,String> ORDER_TYPE = newProperty("orderType", String.class);
     @Column("language_code")
-    public static final Property<UjoOrder,String> language = newProperty(String.class);
-    public static final Property<UjoOrder,UjoOrder> parent = newProperty("parent_id", UjoOrder.class);
-    public static final UjoProperty<UjoOrder,UjoUser> user = newProperty("user_id", UjoUser.class);
-    public static final RelationToMany<UjoOrder,UjoOrderItem> items = newRelation("items", UjoOrderItem.class);
+    public static final Property<UjoOrder,String> LANGUAGE = newProperty("language", String.class);
+    public static final Property<UjoOrder,UjoOrder> PARENT = newProperty("parent_id", UjoOrder.class);
+    public static final UjoProperty<UjoOrder,UjoUser> USER = newProperty("user_id", UjoUser.class);
+    public static final RelationToMany<UjoOrder,UjoOrderItem> ITEMS = newRelation("items", UjoOrderItem.class);
 
 
     // Optional code for better performance:
