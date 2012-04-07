@@ -27,6 +27,7 @@ import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.orm.RelationToOne;
+import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.ForeignKey;
@@ -41,7 +42,7 @@ import org.ujorm.orm.ao.UjoStatement;
  * @author Pavel Ponec
  * @composed 1 - * DbType
  */
-public final class MetaColumn extends MetaRelation2Many {
+public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
     private static final Class CLASS = MetaColumn.class;
 
     /** DB primary key */
@@ -428,4 +429,11 @@ public final class MetaColumn extends MetaRelation2Many {
         }
         return converter.getDbTypeClass(this);
     }
+
+    /** Get ling to a column neta-model */
+    @Override
+    public MetaColumn getModel() {
+        return this;
+    }
+
 }
