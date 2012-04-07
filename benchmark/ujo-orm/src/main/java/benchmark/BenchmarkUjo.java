@@ -32,7 +32,7 @@ import org.ujorm.orm.Transaction;
 
 /**
  * OrmUjo performance test
- * @author pavel
+ * @author Pavel Ponec
  */
 public class BenchmarkUjo {
 
@@ -73,40 +73,40 @@ public class BenchmarkUjo {
         Transaction tr = session.beginTransaction();
 
         UjoUser user1 = new UjoUser();
-        user1.set(UjoUser.lastname, "Lorem ipsum dolor");
-        user1.set(UjoUser.surename, "Sit amet consectetur");
-        user1.set(UjoUser.personalId, "12345678");
+        user1.set(UjoUser.LASTNAME, "Lorem ipsum dolor");
+        user1.set(UjoUser.SURENAME, "Sit amet consectetur");
+        user1.set(UjoUser.PERSONAL_ID, "12345678");
         session.save(user1);
 
         UjoUser user2 = new UjoUser();
-        user2.set(UjoUser.lastname, "Lorem ipsum dolor");
-        user2.set(UjoUser.surename, "Sit amet consectetur");
-        user2.set(UjoUser.personalId, "12345678");
+        user2.set(UjoUser.LASTNAME, "Lorem ipsum dolor");
+        user2.set(UjoUser.SURENAME, "Sit amet consectetur");
+        user2.set(UjoUser.PERSONAL_ID, "12345678");
         session.save(user2);
 
         for (int i=1; i<=ORDER_COUNT; i++) {
             UjoOrder order = new UjoOrder();
-            order.set(UjoOrder.dateOfOrder, new Date());
-            order.set(UjoOrder.deletionReason, "NO");
-            order.set(UjoOrder.discount, new BigDecimal(100));
-            order.set(UjoOrder.language, "cs");
-            order.set(UjoOrder.orderType, "BX");
-            order.set(UjoOrder.paid, true);
-            order.set(UjoOrder.parent, null);
-            order.set(UjoOrder.paymentType, "C");
-            order.set(UjoOrder.publicId, "P"+String.valueOf(1001000+i));
-            order.set(UjoOrder.user, user1);
+            order.set(UjoOrder.DATE_OF_ORDER, new Date());
+            order.set(UjoOrder.DELETION_REASON, "NO");
+            order.set(UjoOrder.DISCOUNT, new BigDecimal(100));
+            order.set(UjoOrder.LANGUAGE, "cs");
+            order.set(UjoOrder.ORDER_TYPE, "BX");
+            order.set(UjoOrder.PAID, true);
+            order.set(UjoOrder.PARENT, null);
+            order.set(UjoOrder.PAYMENT_TYPE, "C");
+            order.set(UjoOrder.PUBLIC_ID, "P"+String.valueOf(1001000+i));
+            order.set(UjoOrder.USER, user1);
             session.save(order);
 
             for (int j=1; j<=ITEM_COUNT; j++) {
                UjoOrderItem item = new UjoOrderItem();
-               item.set(UjoOrderItem.arrival, false);
-               item.set(UjoOrderItem.charge, new BigDecimal(1000-j));
-               item.set(UjoOrderItem.description, "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
-               item.set(UjoOrderItem.order, order);
-               item.set(UjoOrderItem.price, new BigDecimal(1000+j));
-               item.set(UjoOrderItem.publicId, "xxss-"+j);
-               item.set(UjoOrderItem.user, user2);
+               item.set(UjoOrderItem.ARRIVAL, false);
+               item.set(UjoOrderItem.CHARGE, new BigDecimal(1000-j));
+               item.set(UjoOrderItem.DESCRIPTION, "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
+               item.set(UjoOrderItem.ORDER, order);
+               item.set(UjoOrderItem.PRICE, new BigDecimal(1000+j));
+               item.set(UjoOrderItem.PUBLIC_ID, "xxss-"+j);
+               item.set(UjoOrderItem.USER, user2);
                session.save(item);
             }
         }
@@ -123,16 +123,16 @@ public class BenchmarkUjo {
         Transaction tr = session.beginTransaction();
 
         final Criterion<UjoOrderItem> crn1, crn2;
-        crn1 = UjoOrderItem.deleted.whereEq(false);
-        crn2 = UjoOrderItem._orderDeleted.whereEq(false);
+        crn1 = UjoOrderItem.DELETED.whereEq(false);
+        crn2 = UjoOrderItem._ORDER_DELETED.whereEq(false);
 
-        UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
+        UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterator();
 
         int i = 0;
         for (UjoOrderItem item : items) {
             ++i;
-            Long id = item.get(UjoOrderItem.id);
-            BigDecimal price = item.get(UjoOrderItem.price);
+            Long id = item.get(UjoOrderItem.ID);
+            BigDecimal price = item.get(UjoOrderItem.PRICE);
             if (false) {
                 System.out.println(">>> Item.id: " + id + " " + price);
             }
@@ -150,8 +150,8 @@ public class BenchmarkUjo {
 
         for (int i = -ORDER_COUNT; i<0 ; i++) {
             final Criterion<UjoOrder> crn1, crn2;
-            crn1 = UjoOrder.id.whereEq(new Long(i));
-            crn2 = UjoOrder.deleted.whereEq(true);
+            crn1 = UjoOrder.ID.whereEq(new Long(i));
+            crn2 = UjoOrder.DELETED.whereEq(true);
 
             UjoIterator<UjoOrder> orders = session.createQuery(crn1.and(crn2)).iterator();
             orders.hasNext();
@@ -166,27 +166,27 @@ public class BenchmarkUjo {
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
 
-        final Criterion<UjoOrder> crn1 = UjoOrder.deleted.whereEq(false);
+        final Criterion<UjoOrder> crn1 = UjoOrder.DELETED.whereEq(false);
         UjoIterator<UjoOrder> orders = session.createQuery(crn1).iterator();
 
         int i = 0;
         for (UjoOrder order : orders) {
-            String surename = order.get(UjoOrder.user).get(UjoUser.surename);
+            String surename = order.get(UjoOrder.USER).get(UjoUser.SURENAME);
             if (false) System.out.println("Usr.surename: " + surename);
 
             final Criterion<UjoOrderItem> crn2,  crn3;
-            crn2 = UjoOrderItem.deleted.whereEq(false);
-            crn3 = UjoOrderItem.order.whereEq(order);
+            crn2 = UjoOrderItem.DELETED.whereEq(false);
+            crn3 = UjoOrderItem.ORDER.whereEq(order);
 
             UjoIterator<UjoOrderItem> items = session.createQuery(crn2.and(crn3)).iterate();
 
             for (UjoOrderItem item : items) {
                 ++i;
-                BigDecimal price = item.get(UjoOrderItem.price);
-                BigDecimal charge = item.get(UjoOrderItem.charge);
+                BigDecimal price = item.get(UjoOrderItem.PRICE);
+                BigDecimal charge = item.get(UjoOrderItem.CHARGE);
                 if (true) {
-                    String lang = item.get(UjoOrderItem.order).get(UjoOrder.language);
-                    String name = item.get(UjoOrderItem.user).get(UjoUser.lastname);
+                    String lang = item.get(UjoOrderItem.ORDER).get(UjoOrder.LANGUAGE);
+                    String name = item.get(UjoOrderItem.USER).get(UjoUser.LASTNAME);
                     if (false) System.out.println(">>> Order.lang: " + lang + " User.lastname" + name);
                 }
             }
@@ -204,15 +204,15 @@ public class BenchmarkUjo {
         Transaction tr = session.beginTransaction();
 
         final Criterion<UjoOrderItem> crn1, crn2;
-        crn1 = UjoOrderItem.deleted.whereEq(false);
-        crn2 = UjoOrderItem._orderDeleted.whereEq(false);
+        crn1 = UjoOrderItem.DELETED.whereEq(false);
+        crn2 = UjoOrderItem._ORDER_DELETED.whereEq(false);
 
         UjoIterator<UjoOrderItem> items = session.createQuery(crn1.and(crn2)).iterate();
 
         int i = 0;
         for (UjoOrderItem item : items) {
             ++i;
-            item.set(UjoOrderItem.charge, item.get(UjoOrderItem.charge).add(BigDecimal.ONE));
+            item.set(UjoOrderItem.CHARGE, item.get(UjoOrderItem.CHARGE).add(BigDecimal.ONE));
             session.update(item);
         }
 
@@ -228,10 +228,10 @@ public class BenchmarkUjo {
 
         UjoIterator<UjoOrder> orders = session.createQuery(UjoOrder.class).iterate();
         for (UjoOrder order : orders) {
-            session.delete(UjoOrderItem.order.whereEq(order));
+            session.delete(UjoOrderItem.ORDER.whereEq(order));
             session.delete(order);
         }
-        session.delete(UjoUser.id.forAll());
+        session.delete(UjoUser.ID.forAll());
 
         tr.commit();
         printTime("DELETE", time1, System.currentTimeMillis());
