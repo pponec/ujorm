@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import org.ujorm.extensions.StringWrapper;
+import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
@@ -35,7 +36,8 @@ import org.ujorm.orm.metaModel.MetaColumn;
  */
 public class TypeService {
 
-    // Type book:
+    // --- Java type book: ---
+
     public static final char UNDEFINED = (char) 0;
     public static final char BOOLEAN = 1;
     public static final char BYTE = 2;
@@ -67,11 +69,12 @@ public class TypeService {
     /** Constructor for the byte[] argument type */
     private static final Class[] BYTES_ARGS = new Class[] {byte[].class};
 
-    /** The method returns a data type code include relation */
+    /** The method returns a <b>Java data type code</b>.
+     * @param column Colum provides a Type, there is supported a relation types too.
+     * @return Java type code for frequently used types.
+     */
     public final char getTypeCode(final MetaColumn column) {
-
         final Class type = column.getType();
-
         if (StringWrapper.class.isAssignableFrom(type)) return type.isEnum()
                 ? EXPORT_ENUM
                 : STRING_WRAP;
@@ -109,7 +112,7 @@ public class TypeService {
     /**
      * GetValue from the result set by position
      * It must be the same implementation as {@link #getValue(org.ujorm.orm.metaModel.MetaColumn, java.sql.CallableStatement, int)}.
-     * @param mColumn Meta-model column
+     * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs The ResultSet instance
      * @param c Catabase column index starting at #1
      * @return Value form the result set.
@@ -157,7 +160,7 @@ public class TypeService {
     /**
      * GetValue from the <b>stored precedure</b> by position.
      * It must be the same implementation as {@link #getValue(org.ujorm.orm.metaModel.MetaColumn, java.sql.ResultSet, int)}.
-     * @param mColumn Meta-model column
+     * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs The CallableStatement instance
      * @param c Catabase column index starting at #1
      * @return Value form the result set.
@@ -203,7 +206,7 @@ public class TypeService {
     }
 
     /** GetValue from the result set by position.
-     * @param mColumn the Column Model
+     * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs PreparedStatement
      * @param value Value to assign
      * @param c The database column index starts at #1
@@ -289,6 +292,32 @@ public class TypeService {
         } catch (Exception e) {
             throw new IllegalArgumentException("Bad value export " + mColumn.getType() + "." + key, e);
         }
+    }
+
+    /** Return an converted Java type to database <b>DDL statements</b> by a generic test. */
+    public Class getDbTypeClass(final MetaColumn column) {
+        assert column.getConverter()==this : "Invalid column for this service: " + column;
+
+        final Class type = column.getType();
+        Object value = column.getProperty().getDefault();
+        if (value != null) {
+            // OK;
+        } else if (type.isEnum()) {
+            value = type.getEnumConstants()[0];
+        } else if (false) {
+            // TODO: to assign another sample value for next types (?)
+        } else {
+            return type;
+        }
+
+        // Convert it:
+        if (!column.readOnly() && column.getTypeCode()==UNDEFINED) {
+            column.initTypeCode(); // column type code may not be intializad
+        }
+        final Object result = new UjoStatement().getDatabaseValue(column, value);
+        return result!=null
+                ? result.getClass()
+                : type;
     }
 
     /** A {@code null} class value workaround. */
