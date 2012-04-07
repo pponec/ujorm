@@ -77,6 +77,7 @@ public class OracleDialect extends PostgreSqlDialect {
     /** PostgreSql dialect uses a database type OID (instead of the BLBO). */
     @Override
     protected String getColumnType(final MetaColumn column) {
+
         switch (MetaColumn.DB_TYPE.of(column)) {
             case BIGINT:
                 return "NUMBER";

@@ -19,7 +19,7 @@ package org.ujorm.orm;
 import java.sql.Types;
 
 /**
- * Supported DbTypes
+ * Supported Database Types
  * @author Pavel Ponec
  */
 public enum DbType {
