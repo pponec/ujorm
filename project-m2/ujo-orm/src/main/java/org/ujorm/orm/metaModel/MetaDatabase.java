@@ -53,6 +53,7 @@ import org.ujorm.orm.BytesWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
+import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.dialect.MySqlDialect;
 
 /**
@@ -211,10 +212,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (Void.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.NULL);
         }
-        else if (StringWrapper.class.isAssignableFrom(type)) {
-            MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
-        }
-        else if (String.class==type) {
+        else if (String.class==type
+              || StringWrapper.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.VARCHAR);
         }
         else if (Integer.class==type || Color.class.isAssignableFrom(type)) {
@@ -236,6 +235,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
         else if (java.util.Date.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.TIMESTAMP);
+        }
+        else if (Byte.class.isAssignableFrom(type)) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.CHAR);
         }
         else if (Character.class.isAssignableFrom(type)) {
             MetaColumn.DB_TYPE.setValue(column, DbType.CHAR);
@@ -259,7 +261,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Change DbType by a Java property */
-    public void changeDbLength(MetaColumn column) {
+    public void changeDbLength(final MetaColumn column) {
 
         switch (MetaColumn.DB_TYPE.of(column)) {
             case DECIMAL:
@@ -268,10 +270,30 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 break;
             case VARCHAR:
             case VARCHAR_IGNORECASE:
-                boolean isEnum = column.getType().isEnum();
-                changeDefault(column, MetaColumn.MAX_LENGTH, isEnum ? 2 : 128);
+                if (MetaColumn.MAX_LENGTH.isDefault(column)) {
+                    final boolean isEnum = column.getType().isEnum();
+                    MetaColumn.MAX_LENGTH.setValue(column, isEnum ? maxEnumLenght4Db(column) : 128);
+                }
                 break;
             default:
+        }
+    }
+
+    /** Calculate database VARCHAR lenght for required column. Minimal lenght is 1 character */
+    private int maxEnumLenght4Db(final MetaColumn column) throws IllegalArgumentException {
+        try {
+            int maxLenght = 1;
+            final UjoStatement statement = new UjoStatement();
+            for (Object enumValue : column.getType().getEnumConstants()) {
+                column.getConverter().setValue(column, statement, enumValue, 1);
+                final Object value = statement.getValue();
+                if (value instanceof String) {
+                    maxLenght = Math.max(maxLenght, ((String)value).length());
+                }
+            }
+            return maxLenght;
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
         }
     }
 

@@ -122,13 +122,17 @@ public class SampleORM {
             handler.config(params);
         }
 
+        // Do jou need to load an external confuguration from XML?
         boolean yesIWantToLoadExternalConfig = false;
         if (yesIWantToLoadExternalConfig) {
             java.net.URL config = getClass().getResource("/org/ujorm/orm/sample/config.xml");
             handler.config(config, true);
         }
 
+        // Load Meta-model and lock it to a read-only mode:
         handler.loadDatabase(Database.class);
+
+        // Open an ORM session (which is no thread safe):
         session = handler.createSession();
     }
 

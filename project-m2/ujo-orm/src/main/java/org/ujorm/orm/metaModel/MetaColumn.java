@@ -123,17 +123,13 @@ public final class MetaColumn extends MetaRelation2Many {
             changeDefault(this, CONVERTER  , column.converter());
         }
 
-        if (MAX_LENGTH.isDefault(this)) {
-            MetaTable.DATABASE.of(table).changeDbLength(this);
-        }
-
         // Assign Comments:
         if (field!=null) {
             Comment comment = field.getAnnotation(Comment.class);
             if (comment!=null) changeDefault(this, COMMENT  , comment.value());
         }
 
-        // Assign a Converter:
+        // Assign the Converter:
         final Class converterType = CONVERTER.isDefault(this) ? null : CONVERTER.of(this);
         converter = getHandler().getParameters().getConverter(converterType);
 
@@ -141,6 +137,12 @@ public final class MetaColumn extends MetaRelation2Many {
         if (DB_TYPE.isDefault(this)) {
             MetaTable.DATABASE.of(table).changeDbType(this);
         }
+
+        // The MAX_LENGTH must be after the DB_TYPE:
+        if (MAX_LENGTH.isDefault(this)) {
+            MetaTable.DATABASE.of(table).changeDbLength(this);
+        }
+
     }
 
     /** It is a DB column (either a value of a foreign key), 

@@ -92,6 +92,11 @@ final public class UjoStatement extends UnsupportedOperationException implements
         }
     }
 
+    /** Return the last database value assigned by a JDBC API, */
+    public Object getValue() {
+        return v;
+    }
+
     @Override
     public ResultSet executeQuery() throws SQLException {
         throw this;
