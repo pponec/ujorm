@@ -750,7 +750,7 @@ public class Session {
     private MetaColumn findOrmColumn(MetaTable table, Class tableType) {
         for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
             if (column.isForeignKey()
-            &&  column.getProperty().getType()==tableType) {     // 1
+            &&  column.getType()==tableType) {                   // 1
             //  column.getForeignTable().getType()==tableType) { // 2
                 return column;
             }
