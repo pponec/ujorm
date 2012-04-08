@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package benchmark;
 
 import java.math.BigDecimal;
@@ -36,17 +35,27 @@ import org.ujorm.orm.Transaction;
  */
 public class BenchmarkUjo {
 
-    public static final int ORDER_COUNT = 2000;
-    public static final int ITEM_COUNT = 7;
+    public static final String INFO = "** Ujorm " + UjoManager.projectVersion();
 
+    public static final int DEFAULT_ORDER_COUNT = 2000;
+    public static final int DEFAULT_ITEM_COUNT = 7;
+    public static final boolean DEFAULT_COMMIT_FLUSH_MODE = false;
+    //
+    private final int ORDER_COUNT;
+    private final int ITEM_COUNT;
+    private final boolean COMMIT_FLUSH_MODE;
+    //
     private OrmHandler handler;
     private Session session;
 
+    public BenchmarkUjo(int countOfOrder, int countOfItem, boolean commitFlushMode) {
+        this.ORDER_COUNT = countOfOrder;
+        this.ITEM_COUNT = countOfItem;
+        this.COMMIT_FLUSH_MODE = commitFlushMode;
+    }
 
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel() {
-
-        System.out.println("** Ujorm " + UjoManager.projectVersion());
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
 
         long time1 = System.currentTimeMillis();
@@ -62,6 +71,12 @@ public class BenchmarkUjo {
 
         handler.loadDatabase(Database.class);
         session = handler.createSession();
+        if (this.COMMIT_FLUSH_MODE) {
+            // Note: the default mode of the Ujorm is "AUTO" due to reduced risks
+            throw new IllegalArgumentException("session.setCommitFlushMode(true) is not supported.");
+            //session.setCommitFlushMode(true);
+        }
+
         printTime("META-DATA", time1, System.currentTimeMillis());
 
     }
@@ -84,7 +99,7 @@ public class BenchmarkUjo {
         user2.set(UjoUser.PERSONAL_ID, "12345678");
         session.save(user2);
 
-        for (int i=1; i<=ORDER_COUNT; i++) {
+        for (int i = 1; i <= ORDER_COUNT; i++) {
             UjoOrder order = new UjoOrder();
             order.set(UjoOrder.DATE_OF_ORDER, new Date());
             order.set(UjoOrder.DELETION_REASON, "NO");
@@ -94,27 +109,26 @@ public class BenchmarkUjo {
             order.set(UjoOrder.PAID, true);
             order.set(UjoOrder.PARENT, null);
             order.set(UjoOrder.PAYMENT_TYPE, "C");
-            order.set(UjoOrder.PUBLIC_ID, "P"+String.valueOf(1001000+i));
+            order.set(UjoOrder.PUBLIC_ID, "P" + String.valueOf(1001000 + i));
             order.set(UjoOrder.USER, user1);
             session.save(order);
 
-            for (int j=1; j<=ITEM_COUNT; j++) {
-               UjoOrderItem item = new UjoOrderItem();
-               item.set(UjoOrderItem.ARRIVAL, false);
-               item.set(UjoOrderItem.CHARGE, new BigDecimal(1000-j));
-               item.set(UjoOrderItem.DESCRIPTION, "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
-               item.set(UjoOrderItem.ORDER, order);
-               item.set(UjoOrderItem.PRICE, new BigDecimal(1000+j));
-               item.set(UjoOrderItem.PUBLIC_ID, "xxss-"+j);
-               item.set(UjoOrderItem.USER, user2);
-               session.save(item);
+            for (int j = 1; j <= ITEM_COUNT; j++) {
+                UjoOrderItem item = new UjoOrderItem();
+                item.set(UjoOrderItem.ARRIVAL, false);
+                item.set(UjoOrderItem.CHARGE, new BigDecimal(1000 - j));
+                item.set(UjoOrderItem.DESCRIPTION, "Ut diam ante, aliquam ut varius at, fermentum non odio. Aliquam sodales, diam eu faucibus mattis");
+                item.set(UjoOrderItem.ORDER, order);
+                item.set(UjoOrderItem.PRICE, new BigDecimal(1000 + j));
+                item.set(UjoOrderItem.PUBLIC_ID, "xxss-" + j);
+                item.set(UjoOrderItem.USER, user2);
+                session.save(item);
             }
         }
 
         tr.commit();
         printTime("INSERT", time1, System.currentTimeMillis());
     }
-
 
     /** Test the single SELECT */
     public void useSingleSelect() {
@@ -139,7 +153,7 @@ public class BenchmarkUjo {
         }
 
         tr.commit();
-        printTime("SINGLE SELECT "+i, time1, System.currentTimeMillis());
+        printTime("SINGLE SELECT " + i, time1, System.currentTimeMillis());
     }
 
     /** Test the EMPTY SELECT */
@@ -148,7 +162,7 @@ public class BenchmarkUjo {
         long time1 = System.currentTimeMillis();
         Transaction tr = session.beginTransaction();
 
-        for (int i = -ORDER_COUNT; i<0 ; i++) {
+        for (int i = -ORDER_COUNT; i < 0; i++) {
             final Criterion<UjoOrder> crn1, crn2;
             crn1 = UjoOrder.ID.whereEq(new Long(i));
             crn2 = UjoOrder.DELETED.whereEq(true);
@@ -157,7 +171,7 @@ public class BenchmarkUjo {
             orders.hasNext();
         }
         tr.commit();
-        printTime("EMPTY SELECT "+ORDER_COUNT, time1, System.currentTimeMillis());
+        printTime("EMPTY SELECT " + ORDER_COUNT, time1, System.currentTimeMillis());
     }
 
     /** Test the multi SELECT */
@@ -172,9 +186,9 @@ public class BenchmarkUjo {
         int i = 0;
         for (UjoOrder order : orders) {
             String surename = order.get(UjoOrder.USER).get(UjoUser.SURENAME);
-            if (false) System.out.println("Usr.surename: " + surename);
+            if (false) { System.out.println("Usr.surename: " + surename); }
 
-            final Criterion<UjoOrderItem> crn2,  crn3;
+            final Criterion<UjoOrderItem> crn2, crn3;
             crn2 = UjoOrderItem.DELETED.whereEq(false);
             crn3 = UjoOrderItem.ORDER.whereEq(order);
 
@@ -187,13 +201,13 @@ public class BenchmarkUjo {
                 if (true) {
                     String lang = item.get(UjoOrderItem.ORDER).get(UjoOrder.LANGUAGE);
                     String name = item.get(UjoOrderItem.USER).get(UjoUser.LASTNAME);
-                    if (false) System.out.println(">>> Order.lang: " + lang + " User.lastname" + name);
+                    if (false) { System.out.println(">>> Order.lang: " + lang + " User.lastname" + name); }
                 }
             }
         }
 
         tr.commit();
-        printTime("MULTI SELECT "+i, time1, System.currentTimeMillis());
+        printTime("MULTI SELECT " + i, time1, System.currentTimeMillis());
 
     }
 
@@ -217,7 +231,7 @@ public class BenchmarkUjo {
         }
 
         tr.commit();
-        printTime("UPDATE "+i, time1, System.currentTimeMillis());
+        printTime("UPDATE " + i, time1, System.currentTimeMillis());
     }
 
     /** How to use DELETE */
@@ -243,19 +257,17 @@ public class BenchmarkUjo {
         session.close();
     }
 
-
     /** Print time message. */
     protected void printTime(String msg, long time1, long time2) {
-        long time = time2-time1;
-        double result = time/1000d;
-        System.out.println("TIME - "+msg + ": "+result);
+        long time = time2 - time1;
+        double result = time / 1000d;
+        System.out.println("TIME." + getClass().getSimpleName() + ": " + msg + ": " + result);
     }
-
 
     /** Test */
     public static void main(String[] args) {
         try {
-            BenchmarkUjo sample = new BenchmarkUjo();
+            BenchmarkUjo sample = newInstance(args);
 
             sample.loadMetaModel();
             sample.useInsert();
@@ -269,8 +281,35 @@ public class BenchmarkUjo {
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
-           OrmHandler.getInstance().getSession().close();
+            OrmHandler.getInstance().getSession().close();
         }
     }
 
+    /**  Create new instance*/
+    public static BenchmarkUjo newInstance(String[] args) {
+        int i = -1;
+        try {
+            int countOfOrder = args.length > ++i ? Integer.parseInt(args[i]) : DEFAULT_ORDER_COUNT;
+            int countOfItem = /*args.length>++i ? Integer.parseInt(args[i]) :*/ DEFAULT_ITEM_COUNT;
+            boolean commitFlushMode = args.length > ++i ? "tyTY".contains(args[i].substring(0, 1)) : DEFAULT_COMMIT_FLUSH_MODE;
+
+            BenchmarkUjo result = new BenchmarkUjo(countOfOrder, countOfItem, commitFlushMode);
+            printInputParameters(result, args);
+            return result;
+        } catch (Throwable e) {
+            throw new RuntimeException("Usage: java -jar benchmark.jar [countOfOrder:int] [commitFlushMode:boolean]", e);
+        }
+    }
+
+    /** Print Input Parameters */
+    private static void printInputParameters(Object mainClas, Object[] params) {
+        StringBuilder sb = new StringBuilder(256);
+        sb.append(mainClas.getClass().getSimpleName());
+        sb.append(".java ");
+        for (Object par : params) {
+            sb.append(" ");
+            sb.append(par);
+        }
+        System.out.println(INFO + " (" + sb + ")");
+    }
 }

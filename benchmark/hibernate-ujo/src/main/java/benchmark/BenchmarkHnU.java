@@ -33,21 +33,37 @@ import benchmark.bo.*;
  */
 public class BenchmarkHnU {
 
-    public static final int ORDER_COUNT = 2000;
-    public static final int ITEM_COUNT = 7;
+    public static final String INFO = "** HIBERNATE " + "3.3.1.GA" + " + UJO";
+
+    public static final int DEFAULT_ORDER_COUNT = 2000;
+    public static final int DEFAULT_ITEM_COUNT = 7;
+    public static final boolean DEFAULT_COMMIT_FLUSH_MODE = false;
+    //
+    private final int ORDER_COUNT;
+    private final int ITEM_COUNT;
+    private final boolean COMMIT_FLUSH_MODE;
+    //
     SessionFactory sessionFactory;
     Session session;
 
+    public BenchmarkHnU(int countOfOrder, int countOfItem, boolean commitFlushMode) {
+        this.ORDER_COUNT = countOfOrder;
+        this.ITEM_COUNT = countOfItem;
+        this.COMMIT_FLUSH_MODE = commitFlushMode;
+    }
+
     /** Before the first use you must load a meta-model. */
     public void loadMetaModel() {
-
-        System.out.println("** HIBERNATE " + "3.3.1.GA" + " + UJO");
         Logger.getLogger("").setLevel(Level.SEVERE);
 
         long time1 = System.currentTimeMillis();
 
         sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
         session = sessionFactory.openSession();
+        if (this.COMMIT_FLUSH_MODE) {
+            // Note: the default mode of the Hibernate is "AUTO" due to reduced risks
+            session.setFlushMode(org.hibernate.FlushMode.COMMIT);
+        }
 
         printTime("META-DATA", time1, System.currentTimeMillis());
     }
@@ -256,13 +272,13 @@ public class BenchmarkHnU {
     protected void printTime(String msg, long time1, long time2) {
         long time = time2 - time1;
         double result = time / 1000d;
-        System.out.println("TIME - " + msg + ": " + result);
+        System.out.println("TIME." + getClass().getSimpleName() + ": " + msg + ": " + result);
     }
 
     /** Test */
     public static void main(String[] args) {
         try {
-            BenchmarkHnU sample = new BenchmarkHnU();
+            BenchmarkHnU sample = newInstance(args);
 
             sample.loadMetaModel();
             sample.useInsert();
@@ -276,6 +292,33 @@ public class BenchmarkHnU {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+    }
 
+    /**  Create new instance*/
+    public static BenchmarkHnU newInstance(String[] args) {
+        int i = -1;
+        try {
+            int countOfOrder = args.length > ++i ? Integer.parseInt(args[i]) : DEFAULT_ORDER_COUNT;
+            int countOfItem = /*args.length>++i ? Integer.parseInt(args[i]) :*/ DEFAULT_ITEM_COUNT;
+            boolean commitFlushMode = args.length > ++i ? "tyTY".contains(args[i].substring(0, 1)) : DEFAULT_COMMIT_FLUSH_MODE;
+
+            BenchmarkHnU result = new BenchmarkHnU(countOfOrder, countOfItem, commitFlushMode);
+            printInputParameters(result, args);
+            return result;
+        } catch (Throwable e) {
+            throw new RuntimeException("Usage: java -jar benchmark.jar [countOfOrder:int] [commitFlushMode:boolean]", e);
+        }
+    }
+
+    /** Print Input Parameters */
+    private static void printInputParameters(Object mainClas, Object[] params) {
+        StringBuilder sb = new StringBuilder(256);
+        sb.append(mainClas.getClass().getSimpleName());
+        sb.append(".java ");
+        for (Object par : params) {
+            sb.append(" ");
+            sb.append(par);
+        }
+        System.out.println(INFO + " (" + sb + ")");
     }
 }
