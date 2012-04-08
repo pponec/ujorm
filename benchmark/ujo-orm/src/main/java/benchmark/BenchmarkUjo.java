@@ -305,7 +305,7 @@ public class BenchmarkUjo {
     private static void printInputParameters(Object mainClas, Object[] params) {
         StringBuilder sb = new StringBuilder(256);
         sb.append(mainClas.getClass().getSimpleName());
-        sb.append(".java ");
+        sb.append(".java");
         for (Object par : params) {
             sb.append(" ");
             sb.append(par);
