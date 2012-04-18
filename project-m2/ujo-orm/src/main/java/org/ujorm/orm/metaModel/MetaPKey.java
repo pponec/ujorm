@@ -108,4 +108,9 @@ final public class MetaPKey extends AbstractMetaModel {
     public MetaColumn getColumn(int i) {
         return COLUMNS.of(this).get(i);
     }
+
+    /** Returns a count of the Primary Keys */
+    public int getCount() {
+        return COLUMNS.getItemCount(this);
+    }
 }

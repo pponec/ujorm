@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.orm.metaModel.MetaPKey;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 
@@ -138,14 +140,14 @@ final public class OrmTools {
      * Create a new Clob.
      * @param text The null value is supported.
      */
-    public static final SerialClob createClob(String text) {
+    public static SerialClob createClob(String text) {
         return text!=null ? createClob(text.toCharArray()) : null;
     }
 
     /**
      * Create a new Clob.
      */
-    public static final SerialClob createClob(Reader reader) {
+    public static SerialClob createClob(Reader reader) {
         try {
             char[] buffer = new char[1024];
             CharArrayWriter baos = new CharArrayWriter(buffer.length);
@@ -331,4 +333,40 @@ final public class OrmTools {
         }
         return result;
     }
+
+    /** Create new a Criterion. Both parameters are joined by the
+     * OR operator however if a one from data parameters is null, than the operator is ignored.
+     * @param table NotNull
+     * @param crn Nullable
+     * @param foreighKeys Nullable
+     * @return NotNull
+     */
+    public static Criterion createCriterion
+            ( final MetaTable table
+            , final Criterion crn
+            , final List<Object> primaryKeys
+            ) {
+        Criterion result = crn;
+        if (isFilled(primaryKeys)) {
+            final MetaPKey pKey = MetaTable.PK.of(table);
+            if (pKey.getCount()!=1) {
+                throw new IllegalStateException("There supported only objects with a one primary keys");
+            }
+            final Criterion c = pKey.getFirstColumn().getProperty().whereIn(primaryKeys);
+            result = result!=null ? result.or(c) : c;
+        }
+        return result!=null ? result : table.getFirstPK().getProperty().forNone();
+    }
+
+
+    /** Is the Text not {@code null} and not empty ? */
+    public static boolean isFilled(final CharSequence text) {
+        return text!=null && text.length()>0;
+    }
+
+    /** Is the Collection not {@code null} and not empty ? */
+    public static boolean isFilled(final Collection collection) {
+        return collection!=null && !collection.isEmpty();
+    }
+
 }
