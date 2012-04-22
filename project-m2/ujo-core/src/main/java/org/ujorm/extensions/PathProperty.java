@@ -359,7 +359,10 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Create a new instance of property with a new sort attribute value.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> sort(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> sort(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+        if (property.isAscending()==ascending) {
+            return property;
+        }
         return property.isDirect()
             ? new PathProperty<UJO, VALUE>(new UjoProperty[]{property}, ascending)
             : new PathProperty<UJO, VALUE>(ascending, property)
@@ -371,7 +374,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @hidden
      * @see #sort(org.ujorm.UjoProperty, boolean) sort(..)
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
         return sort(property, ascending);
     }
 
