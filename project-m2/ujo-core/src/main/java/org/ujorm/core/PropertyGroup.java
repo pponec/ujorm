@@ -32,6 +32,7 @@ import org.ujorm.UjoPropertyList;
  */
 public class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,?>>, Serializable {
     static final long serialVersionUID = 1L;
+    private static final String DESCENDING = "~<[DESC]>";
 
     private final Class<UJO> baseClass;
     private final String[] tProperties;
@@ -52,7 +53,11 @@ public class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,
         this.tProperties = new String[properties.length];
 
         for (int i = properties.length - 1; i >= 0; --i) {
-            tProperties[i] = properties[i].getName();
+            final UjoProperty property = properties[i];
+            tProperties[i] = properties[i].isAscending()
+                    ? property.getName()
+                    : (property.getName() + DESCENDING)
+                    ;
         }
     }
 
@@ -68,7 +73,11 @@ public class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,
         if (properties==null) {
             final List<UjoProperty<UJO,?>> ps = new ArrayList<UjoProperty<UJO,?>>(tProperties.length);
             for (int i = 0; i < tProperties.length; i++) {
-                ps.add(propertyList.findIndirect(tProperties[i], true));
+                final String pNameRaw = tProperties[i];
+                final boolean descending = pNameRaw.endsWith(DESCENDING);
+                final String pName = descending ? pNameRaw.substring(0, pNameRaw.length()-DESCENDING.length()) : pNameRaw;
+                final UjoProperty property = propertyList.findIndirect(pName, true).descending(descending);
+                ps.add(property);
             }
             properties = ps;
         }
