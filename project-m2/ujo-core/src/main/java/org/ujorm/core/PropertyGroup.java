@@ -27,12 +27,14 @@ import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 
 /**
- * The Immutable and Serializable UjoProperty collection.
+ * The Immutable and Serializable UjoProperty Collection.
  * @author Pavel Ponec
  */
-public class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,?>>, Serializable {
+public final class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,?>>, Serializable {
+
     static final long serialVersionUID = 1L;
-    private static final String DESCENDING = "~<[DESC]>";
+    /** A text to mark a descending sort of a property in a deserializaton proccess. */
+    private static final String DESCENDING = "..";
 
     private final Class<UJO> baseClass;
     private final String[] tProperties;
@@ -99,7 +101,6 @@ public class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,
         return getProperties().get(i);
     }
 
-
     /** Size */
     public int size() {
         return tProperties.length;
@@ -113,7 +114,25 @@ public class PropertyGroup<UJO extends Ujo> implements Iterable<UjoProperty<UJO,
 
     /** Create Property Interator */
     public Iterator<UjoProperty<UJO, ?>> iterator() {
-        return getProperties().iterator();
+        return new Iterator<UjoProperty<UJO, ?>>() {
+            int i = -1;
+
+            public boolean hasNext() {
+                return (i + i) < tProperties.length;
+            }
+
+            public UjoProperty<UJO, ?> next() {
+                return get(++i);
+            }
+
+            /**
+             * The method is not supported.
+             */
+            @Deprecated
+            public void remove() throws UnsupportedOperationException {
+                throw new UnsupportedOperationException("The REMOVE operation is not supported.");
+            }
+        };
     }
 
     /** Convert Properties to an Array */
