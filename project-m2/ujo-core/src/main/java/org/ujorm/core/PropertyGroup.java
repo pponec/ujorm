@@ -118,7 +118,7 @@ public final class PropertyGroup<UJO extends Ujo> implements Iterable<UjoPropert
             int i = -1;
 
             public boolean hasNext() {
-                return (i + i) < tProperties.length;
+                return (i + 1) < tProperties.length;
             }
 
             public UjoProperty<UJO, ?> next() {
