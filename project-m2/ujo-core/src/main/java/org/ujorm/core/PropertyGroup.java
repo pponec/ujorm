@@ -187,8 +187,8 @@ public final class PropertyGroup<UJO extends Ujo> implements Iterable<UjoPropert
     // -------------- STATIC METHOD(S) --------------
 
     /** Create new Instance */
-    public static <T extends Ujo> PropertyGroup<T> newInstance(Class<T> baseClass, UjoProperty<T, ?> ... properties) {
-        return new PropertyGroup<T>(baseClass, properties);
+    public static <UJO extends Ujo> PropertyGroup<UJO> newInstance(Class<UJO> baseClass, UjoProperty<? super UJO, ?> ... properties) {
+        return new PropertyGroup<UJO>(baseClass, (UjoProperty[]) properties);
     }
 
 }
