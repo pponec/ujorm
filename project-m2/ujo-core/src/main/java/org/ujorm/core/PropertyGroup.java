@@ -64,7 +64,7 @@ public final class PropertyGroup<UJO extends Ujo> implements Iterable<UjoPropert
     }
 
     /** Get Class */
-    public Class<UJO> getBaseClass() {
+    public Class<? super UJO> getBaseClass() {
         return baseClass;
     }
 
