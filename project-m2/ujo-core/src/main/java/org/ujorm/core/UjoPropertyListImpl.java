@@ -32,7 +32,7 @@ import org.ujorm.UjoAction;
  * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
  * @author Pavel Ponec
  */
-final public class UjoPropertyListImpl implements UjoPropertyList {
+final public class UjoPropertyListImpl<UJO extends Ujo> implements UjoPropertyList<UJO> {
 
     /** An empty array of the UJO properties */
     final static public UjoProperty[] EMPTY = new UjoProperty[0];
@@ -43,11 +43,11 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     final private Class type;
 
 
-    public UjoPropertyListImpl(Class type, List<UjoProperty> props) {
+    public UjoPropertyListImpl(Class<UJO> type, List<UjoProperty> props) {
         this(type, props.toArray(new UjoProperty[props.size()]));
     }
 
-    public UjoPropertyListImpl(Class type, UjoProperty[] props) {
+    public UjoPropertyListImpl(Class<UJO> type, UjoProperty[] props) {
         type.hashCode(); // The not null test
 
         this.type  = type;
@@ -56,7 +56,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     }
 
     /** Create the empty list */
-    public UjoPropertyListImpl(Class type) {
+    public UjoPropertyListImpl(Class<UJO> type) {
         this(type, EMPTY);
     }
 
@@ -67,7 +67,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
-    public UjoProperty find
+    public UjoProperty<UJO,?> find
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException
@@ -89,7 +89,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
     }
 
     @Override
-    final public UjoProperty find
+    final public UjoProperty<UJO,?> find
     ( final Ujo ujo
     , final String name
     , final boolean throwException
@@ -108,7 +108,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
      */
     @SuppressWarnings("deprecation")
     @Override
-    public UjoProperty find
+    public UjoProperty<UJO,?> find
     ( final Ujo ujo
     , final String name
     , final UjoAction action
@@ -146,7 +146,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
-    public UjoProperty findIndirect(String name, boolean throwException) throws IllegalArgumentException {
+    public UjoProperty<UJO,?> findIndirect(String name, boolean throwException) throws IllegalArgumentException {
         final UjoProperty result = UjoManager.getInstance().findIndirectProperty(type, name, throwException);
         return result;
     }
@@ -161,19 +161,19 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
 
     /** Get last property */
     @Override
-    public UjoProperty last() {
+    public UjoProperty<UJO,?> last() {
         return props[length-1];
     }
 
     /** Returns a class of the related UJO */
     @Override
-    public Class getType() {
+    public Class<UJO> getType() {
         return type;
     }
 
     /** Create new Instance */
     @Override
-    public <UJO extends Ujo> UJO newInstance() throws IllegalStateException {
+    public UJO newInstance() throws IllegalStateException {
         try {
             @SuppressWarnings("unchecked")
             UJO result = (UJO) type.newInstance();
@@ -222,8 +222,8 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
 
     /** Create an interator for all properties. */
     @Override
-    public Iterator<UjoProperty> iterator() {
-        final Iterator<UjoProperty> result = new Iterator<UjoProperty>() {
+    public Iterator<UjoProperty<UJO,?>> iterator() {
+        final Iterator<UjoProperty<UJO,?>> result = new Iterator<UjoProperty<UJO,?>>() {
             private int i = 0;
 
             @Override final public boolean hasNext() {
@@ -233,7 +233,7 @@ final public class UjoPropertyListImpl implements UjoPropertyList {
                 return props[i++];
             }
             @Override public void remove() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                throw new UnsupportedOperationException("Remove operation is not supported");
             }
         };
         return result;

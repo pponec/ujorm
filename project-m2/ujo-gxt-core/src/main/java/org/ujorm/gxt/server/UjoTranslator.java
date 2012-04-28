@@ -99,7 +99,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
      */
     @SuppressWarnings("unchecked")
     UjoTranslator(CujoPropertyList cujoPropertyList
-          , UjoPropertyList ujoPropertyList
+          , UjoPropertyList<?> ujoPropertyList
           , int relations
           , Set<UjoProperty> myPropertySet
           , IServerClassConfig serverClassConfig)

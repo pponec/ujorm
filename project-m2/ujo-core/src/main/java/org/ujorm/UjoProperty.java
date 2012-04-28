@@ -17,7 +17,7 @@
 package org.ujorm;
 
 /**
- * <i>Ujo property</i> is a property of Ujo object. Every real Ujo implementation (ArrayUjo, MapUjo, BeanUjo)
+ * This class is a property of the {@link Ujo} object. Every real Ujo implementation (ArrayUjo, MapUjo, BeanUjo)
  * have got its special implementation of an UjoProperty interface.
  * <br>See a <a href="package-summary.html#UJO">general information</a> about current framework or see some implementations.
  * 

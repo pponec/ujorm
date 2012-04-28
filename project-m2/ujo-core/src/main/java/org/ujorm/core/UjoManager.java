@@ -103,7 +103,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Read all properties. The first result is cached. */
-    public UjoPropertyList readProperties(Class type) {
+    public UjoPropertyList<?> readProperties(Class type) {
         UjoPropertyList result = propertiesCache.get(type);
         if (result==null) {
             result = new UjoPropertyListImpl(type, readPropertiesNocache(type, true));
@@ -221,7 +221,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     
     /** Calculate a Hash Code. */
     @SuppressWarnings("unchecked")
-    public int getHash(Ujo ujo, UjoPropertyList properties) {
+    public int getHash(Ujo ujo, UjoPropertyList<?> properties) {
         int result = 0;
         if (ujo!=null) for (UjoProperty prop : properties) {
             Object obj = prop.of(ujo);
@@ -802,7 +802,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Create a list of UjoPropertyList */
     @SuppressWarnings("unchecked")
     public List<UjoPropertyRow> createPropertyList(Ujo content, UjoAction action) {
-        UjoPropertyList props = content.readProperties();
+        UjoPropertyList<?> props = content.readProperties();
         ArrayList<UjoPropertyRow> result = new ArrayList<UjoPropertyRow>(props.size());
         for (UjoProperty prop : props) {
             final Object  value   = prop.of(content);
