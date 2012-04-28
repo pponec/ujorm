@@ -185,7 +185,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     
     /** Write required properties to a XML writer. */
     @SuppressWarnings("unchecked")
-    public void printProperties(final Writer writer, UjoTextable ujo, final UjoPropertyList properties) throws IOException {
+    public void printProperties(final Writer writer, UjoTextable ujo, final UjoPropertyList<?> properties) throws IOException {
         UjoProperty bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
         for (UjoProperty property : properties) {

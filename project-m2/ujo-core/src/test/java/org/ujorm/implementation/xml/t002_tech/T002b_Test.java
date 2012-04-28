@@ -58,8 +58,7 @@ public class T002b_Test extends MyTestCase {
     
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
-        UjoPropertyList props = result.readProperties();
-        for (UjoProperty prop : props) {
+        for (UjoProperty prop : result.readProperties()) {
             result.writeValue(prop, null);
         }
         return result;

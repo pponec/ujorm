@@ -83,7 +83,7 @@ public interface Ujo {
      * <br>An index property in the array UJO must be unique a continuous, an order of property array depends on an implementation of UJO object.
      * @see UjoProperty#isDirect()
      */
-    public UjoPropertyList readProperties();
+    public UjoPropertyList<?> readProperties();
     
     /**
      * Get an authorization of the property for different actions.

@@ -62,7 +62,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /**
      * Constructor with an property order
-     * @param name
+     * @param name Name must not contains any dot character
      * @param type
      * @param index On order of the property.
      */
@@ -72,7 +72,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /**
      * Constructor with an property order
-     * @param name
+     * @param name Name must not contains any dot character
      * @param index On order of the property.
      */
     @SuppressWarnings("unchecked")
@@ -111,14 +111,22 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
              }
         }
         this.index = index==-1 ? _nextSequence() : index ;
+        if (name !=null) { setName(name); }
         if (type !=null) { this.type  = type ; }
-        if (name !=null) { this.name  = name ; }
         if (lock !=null) { this.lock  = lock ; }
 
         if (this.lock) {
            checkAttribs();
         }
         return this;
+    }
+
+    /** The Name must not contain any dot character */
+    private void setName(String name) throws IllegalArgumentException{
+        if (name.indexOf('.')>0) {
+            throw new IllegalArgumentException("Property 'name' must not contain a dot character '.': " + name);
+        }
+        this.name = name;
     }
 
     /** Is the property Locked? */

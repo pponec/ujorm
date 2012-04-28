@@ -25,10 +25,11 @@ import java.util.Iterator;
 /**
  * The immutable list of UjoProperties.
  * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
+ * @param <UJO> Base Ujo implementation
  * @author Pavel Ponec
  * @composed 1 - N UjoProperty
  */
-public interface UjoPropertyList extends Iterable<UjoProperty> {
+public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
 
     /**
      * Find a property by property name from parameter.
@@ -37,7 +38,7 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
-    public UjoProperty find
+    public UjoProperty<UJO,?> find
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
@@ -49,14 +50,14 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
-    public UjoProperty findIndirect
+    public UjoProperty<UJO,?> findIndirect
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
 
     
     /** Find UjoProperty by name */
-    public UjoProperty find
+    public UjoProperty<UJO,?> find
     ( final Ujo ujo
     , final String name
     , final boolean throwException
@@ -72,7 +73,7 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
      * @hidden 
      */
     @SuppressWarnings("deprecation")
-    public UjoProperty find
+    public UjoProperty<UJO,?> find
     ( final Ujo ujo
     , final String name
     , final UjoAction action
@@ -85,13 +86,13 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
     public UjoProperty[] toArray();
 
     /** Get last property */
-    public UjoProperty last();
+    public UjoProperty<UJO,?> last();
 
     /** Returns a class of the related UJO */
-    public Class getType();
+    public Class<UJO> getType();
 
     /** Create new Instance */
-    public <UJO extends Ujo> UJO newInstance() throws IllegalStateException;
+    public UJO newInstance() throws IllegalStateException;
 
     /** Returns a class name of the related UJO */
     public String getTypeName();
@@ -108,10 +109,10 @@ public interface UjoPropertyList extends Iterable<UjoProperty> {
     public boolean isEmpty();
 
     /** Returns true if list contains property from the parameter. */
-    public boolean contains(final UjoProperty o);
+    public boolean contains(final UjoProperty<UJO,?> o);
 
     /** Create an interator for all properties. */
     @Override
-    public Iterator<UjoProperty> iterator();
+    public Iterator<UjoProperty<UJO,?>> iterator();
 
 }
