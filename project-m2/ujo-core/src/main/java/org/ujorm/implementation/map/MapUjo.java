@@ -125,7 +125,7 @@ public abstract class MapUjo extends AbstractUjo implements Serializable {
 
     /** A ListProperty Factory
      * Method assigns a next property index.
-     * @deprecated Use newListProperty(...) instead of.
+     * @deprecated Use newListProperty(...) instead of this.
      * @hidden
      */
     protected static final <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {

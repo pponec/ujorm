@@ -57,8 +57,6 @@ public class T002c_Test extends MyTestCase {
         assertEquals(person, person2);
     }
     
-    
-    
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
         for (UjoProperty prop : result.readProperties()) {

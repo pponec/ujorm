@@ -119,7 +119,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         while (keys.hasMoreElements()) {
             final String key = (String) keys.nextElement();
             final String value = bundle.getString(key);
-            final UjoProperty prop = ujo.readProperties().find(key, false);
+            final UjoProperty prop = ujo.readProperties().findDirectProperty(key, false);
             if (prop!=null) {
                 setText(ujo, prop, null, value, action);
             } else if (validate) {

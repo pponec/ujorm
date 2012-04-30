@@ -23,7 +23,7 @@ import java.util.List;
  * The CompositeProperty class can be used wherever is used UjoProperty - with a one important <strong>exception</strong>:
  * do not send the CompositeProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) directly!!!
  * <p/>There is prefered two methods UjoManager.setValue(...) / UjoManager.getValue(...)
- * to write and read a value instead of - or use some type safe solution by UjoExt or a method of UjoProperty.
+ * to write and read a value instead of this - or use some type safe solution by UjoExt or a method of UjoProperty.
  * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included 
  * in the list returned by Ujo.readProperties().
  * 

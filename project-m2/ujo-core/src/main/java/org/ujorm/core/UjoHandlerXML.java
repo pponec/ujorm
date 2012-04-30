@@ -109,7 +109,7 @@ final class UjoHandlerXML extends DefaultHandler {
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
         $parentObj   = lastElement<0 ? new Element() : getLastElement() ;
         $property    = $parentObj.isUjo()
-                     ? $parentObj.ujo.readProperties().find($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
+                     ? $parentObj.ujo.readProperties().findDirectProperty($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
 		             : null ;
         $elementType = $parentObj.isRoot() ? rootType : null ;
         $listType    = null;
@@ -263,7 +263,7 @@ final class UjoHandlerXML extends DefaultHandler {
     protected void addAttributes(final UjoTextable ujo) {
         for (String[] attrib : $attributes) {
 
-            UjoProperty prop = ujo.readProperties().find(ujo, attrib[0], actionElement, false, !ignoreMissingProp);
+            UjoProperty prop = ujo.readProperties().findDirectProperty(ujo, attrib[0], actionElement, false, !ignoreMissingProp);
             if (prop!=null){
                 ujo.writeValueString(prop, attrib[1], null, actionImport);
             }
@@ -287,7 +287,7 @@ final class UjoHandlerXML extends DefaultHandler {
         getLastElement().addBody(bodyText);
     }
 
-    /** Returns the last element from the object list  */
+    /** Returns the getLastProperty element from the object list  */
     final protected Element getLastElement() {
         return elementList[lastElement];
     }

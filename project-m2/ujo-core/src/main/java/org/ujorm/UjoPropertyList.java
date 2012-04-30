@@ -38,7 +38,7 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
-    public UjoProperty<UJO,?> find
+    public UjoProperty<UJO,?> findDirectProperty
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
@@ -48,16 +48,34 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
      *
      * @param name A property name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @depracated Uset the method {@link #find(java.lang.String, boolean)}
+     */
+    public UjoProperty<UJO,?> findIndirectProperty
+    ( final String name
+    , final boolean throwException
+    ) throws IllegalArgumentException;
+
+    /**
+     * Find (both direct or indirect) property by property name from parameter.
+     * @param name A property name by sample "user.address.street".
      * @return .
      */
-    public UjoProperty<UJO,?> findIndirect
+    public UjoProperty<UJO,?> find(String name) throws IllegalArgumentException;
+
+    /**
+     * Find (both direct or indirect) direct or indirect property by property name from parameter.
+     *
+     * @param name A property name.
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     */
+    public UjoProperty<UJO,?> find
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
 
     
     /** Find UjoProperty by name */
-    public UjoProperty<UJO,?> find
+    public UjoProperty<UJO,?> findDirectProperty
     ( final Ujo ujo
     , final String name
     , final boolean throwException
@@ -73,7 +91,7 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
      * @hidden 
      */
     @SuppressWarnings("deprecation")
-    public UjoProperty<UJO,?> find
+    public UjoProperty<UJO,?> findDirectProperty
     ( final Ujo ujo
     , final String name
     , final UjoAction action
@@ -83,19 +101,26 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
 
 
     /** Returns a copy of internal array */
-    public UjoProperty[] toArray();
+    public UjoProperty<UJO,?>[] toArray();
 
-    /** Get last property */
+    /** Get getLastProperty property */
+    public UjoProperty<UJO,?> getLastProperty();
+
+    /** Get last property 
+     * @deprecated Use the method {@link #getLastProperty()} rather.
+     */
+    @Deprecated
     public UjoProperty<UJO,?> last();
 
-    /** Returns a class of the related UJO */
+    /** Returns a base class of the related UJO */
     public Class<UJO> getType();
 
-    /** Create new Instance */
-    public UJO newInstance() throws IllegalStateException;
-
-    /** Returns a class name of the related UJO */
+    /** Returns a base class name of the related UJO */
     public String getTypeName();
+
+    /** Create new Instance */
+    public UJO newBaseUjo() throws IllegalStateException;
+
 
     // ----------------- LIST IMPLEMENTATION ------------------------
 
@@ -115,4 +140,8 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
     @Override
     public Iterator<UjoProperty<UJO,?>> iterator();
 
+    /** Returns or create UjoManager.
+     * In your own implementation keep in a mind a simple serialization freature of the current object.
+     */
+    // public UjoManager getUjoManager();
 }
