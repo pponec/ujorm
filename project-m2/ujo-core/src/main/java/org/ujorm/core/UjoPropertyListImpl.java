@@ -20,223 +20,24 @@
 
 package org.ujorm.core;
 
-import java.util.Iterator;
-import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.UjoAction;
+
 
 /**
  * The immutable list of UjoProperties.
  * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
  * @author Pavel Ponec
+ * @deprecated Use the PropertyStore indead of this.
  */
-final public class UjoPropertyListImpl<UJO extends Ujo> implements UjoPropertyList<UJO> {
+@Deprecated
+final public class UjoPropertyListImpl<UJO extends Ujo> extends PropertyStore<UJO> {
 
     /** An empty array of the UJO properties */
     final static public UjoProperty[] EMPTY = new UjoProperty[0];
-    final private UjoProperty[] props;
-    /** Contains the total count of its properties */
-    final public int length;
-    /** The Ujo type */
-    final private Class type;
 
-
-    public UjoPropertyListImpl(Class<UJO> type, List<UjoProperty> props) {
-        this(type, props.toArray(new UjoProperty[props.size()]));
-    }
-
-    public UjoPropertyListImpl(Class<UJO> type, UjoProperty[] props) {
-        type.hashCode(); // The not null test
-
-        this.type  = type;
-        this.props = props;
-        this.length = props.length;
-    }
-
-    /** Create the empty list */
-    public UjoPropertyListImpl(Class<UJO> type) {
-        this(type, EMPTY);
-    }
-
-    /**
-     * Find a property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @return .
-     */
-    public UjoProperty<UJO,?> find
-    ( final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException
-    {
-        int nameHash = name.hashCode();
-
-        for (UjoProperty prop : props) {
-            if (prop.getName().hashCode()==nameHash  // speed up
-            &&  prop.getName().equals(name)) {
-                return prop;
-            }
-        }
-
-        if (throwException) {
-            throw new IllegalArgumentException("A property called \"" + name + "\" was not found in the " + type);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    final public UjoProperty<UJO,?> find
-    ( final Ujo ujo
-    , final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException
-    {
-        return find(ujo, name, UjoAction.DUMMY, true, throwException);
-    }
-
-    /**
-     * Find a property by property name from parameter.
-     * @param ujo An Ujo object
-     * @param name A property name.
-     * @param action Action type UjoAction.ACTION_* .
-     * @param result Required result of action.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     */
-    @SuppressWarnings("deprecation")
-    @Override
-    public UjoProperty<UJO,?> find
-    ( final Ujo ujo
-    , final String name
-    , final UjoAction action
-    , final boolean result
-    , final boolean throwException
-    ) throws IllegalArgumentException
-    {
-        if (ujo==null) { return null; }
-        int nameHash = name.hashCode();
-        UjoManager ujoManager = UjoManager.getInstance();
-
-        for (final UjoProperty prop : props) {
-            if (prop.getName().hashCode()==nameHash  // speed up
-            &&  prop.getName().equals(name)
-            && (action.getType()==UjoAction.ACTION_XML_ELEMENT
-                ? !ujoManager.isXmlAttribute(prop)
-                : ujo.readAuthorization(action, prop, null)
-               )==result
-            ){
-                return prop;
-            }
-        }
-
-        if (throwException) {
-            throw new IllegalArgumentException("A name \"" + name + "\" was not found in a " + ujo.getClass());
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Find direct or indirect property by property name from parameter.
-     *
-     * @param name A property name by sample "user.address.street".
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @return .
-     */
-    public UjoProperty<UJO,?> findIndirect(String name, boolean throwException) throws IllegalArgumentException {
-        final UjoProperty result = UjoManager.getInstance().findIndirectProperty(type, name, throwException);
-        return result;
-    }
-
-    /** Returns a copy of internal array */
-    @Override
-    public UjoProperty[] toArray() {
-        final UjoProperty[] result = new UjoProperty[length];
-        System.arraycopy(props, 0, result, 0, length);
-        return result;
-    }
-
-    /** Get last property */
-    @Override
-    public UjoProperty<UJO,?> last() {
-        return props[length-1];
-    }
-
-    /** Returns a class of the related UJO */
-    @Override
-    public Class<UJO> getType() {
-        return type;
-    }
-
-    /** Create new Instance */
-    @Override
-    public UJO newInstance() throws IllegalStateException {
-        try {
-            @SuppressWarnings("unchecked")
-            UJO result = (UJO) type.newInstance();
-            return result;
-
-        } catch (Exception e) {
-            throw new IllegalStateException("Can't create instance for " + type, e);
-        }
-    }
-
-
-    /** Returns a class name of the related UJO */
-    @Override
-    public String getTypeName() {
-        return getClass().getName();
-    }
-
-    // ----------------- LIST IMPLEMENTATION ------------------------
-
-    /** Get property on requered index */
-    @Override
-    public UjoProperty get(final int index) {
-        return props[index];
-    }
-
-    /** Returns a total count of its properties */
-    @Override
-    public int size() {
-        return length;
-    }
-
-    /** Is the collection empty? */
-    @Override
-    public boolean isEmpty() {
-        return length==0;
-    }
-
-    /** Returns true if list contains property from the parameter. */
-    @Override
-    public boolean contains(final UjoProperty o) {
-        for (UjoProperty p : props) {
-            if (p==o) return true;
-        }
-        return false;
-    }
-
-    /** Create an interator for all properties. */
-    @Override
-    public Iterator<UjoProperty<UJO,?>> iterator() {
-        final Iterator<UjoProperty<UJO,?>> result = new Iterator<UjoProperty<UJO,?>>() {
-            private int i = 0;
-
-            @Override final public boolean hasNext() {
-                return i<length;
-            }
-            @Override final public UjoProperty next() {
-                return props[i++];
-            }
-            @Override public void remove() {
-                throw new UnsupportedOperationException("Remove operation is not supported");
-            }
-        };
-        return result;
+    public UjoPropertyListImpl(Class<UJO> baseClass, UjoProperty<UJO,?>[] properties) {
+        super(baseClass, properties);
     }
 
 }

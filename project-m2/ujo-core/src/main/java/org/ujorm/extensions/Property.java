@@ -34,6 +34,9 @@ import org.ujorm.criterion.ValueCriterion;
  */
 public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
+    /** Property Separator character */
+    public static final char PROPERTY_SEPARATOR = '.';
+
     /** Property name */
     private String name;
     /** Property index */
@@ -123,8 +126,11 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** The Name must not contain any dot character */
     private void setName(String name) throws IllegalArgumentException{
-        if (name.indexOf('.')>0) {
-            throw new IllegalArgumentException("Property 'name' must not contain a dot character '.': " + name);
+        if (name.indexOf(PROPERTY_SEPARATOR)>0) {
+            final String msg = String.format("Property name '%s' must not contain a dot character '%c'."
+                    , name
+                    , PROPERTY_SEPARATOR);
+            throw new IllegalArgumentException(msg);
         }
         this.name = name;
     }

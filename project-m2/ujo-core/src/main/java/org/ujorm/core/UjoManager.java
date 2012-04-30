@@ -102,11 +102,12 @@ public class UjoManager implements Comparator<UjoProperty> {
         return result;
     }
     
-    /** Read all properties. The first result is cached. */
+    /** Read an UjoPropertyList instance. The first result is cached. */
     public UjoPropertyList<?> readProperties(Class type) {
         UjoPropertyList result = propertiesCache.get(type);
         if (result==null) {
-            result = new UjoPropertyListImpl(type, readPropertiesNocache(type, true));
+            final UjoProperty[] ps = readPropertiesNocache(type, true);
+            result = new UjoPropertyListImpl(type, ps);
             
             // Save the result into buffer:
             propertiesCache.put(type, result);
@@ -381,7 +382,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * @param name A property name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @deprecated Use UjoPropertyList.findPropety(...)
-     * @see UjoPropertyList#find(org.ujorm.Ujo, java.lang.String, boolean)
+     * @see UjoPropertyList#findDirectProperty(org.ujorm.Ujo, java.lang.String, boolean)
      *
      */
     public UjoProperty findProperty
@@ -390,7 +391,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     , final boolean throwException
     ) throws IllegalArgumentException
     {
-        return ujo.readProperties().find(ujo, name, UjoAction.DUMMY, true, throwException);
+        return ujo.readProperties().findDirectProperty(ujo, name, UjoAction.DUMMY, true, throwException);
     }
     
     /**
@@ -400,7 +401,7 @@ public class UjoManager implements Comparator<UjoProperty> {
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @see UjoPropertyList#find(java.lang.String, boolean) 
+     * @see UjoPropertyList#findDirectProperty(java.lang.String, boolean)
      */
     @SuppressWarnings("deprecation")
     public UjoProperty findProperty
@@ -411,7 +412,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     , final boolean throwException
     ) throws IllegalArgumentException
     {
-        return ujo.readProperties().find(ujo, name, action, result, throwException);
+        return ujo.readProperties().findDirectProperty(ujo, name, action, result, throwException);
     }
 
     /** Find <strong>indirect</strong> property by the name */
@@ -423,32 +424,8 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Find <strong>indirect</strong> property by the name. Empty result can trhow NULL value if parameter throwException==false. */
     @SuppressWarnings("unchecked")
     public UjoProperty findIndirectProperty(Class ujoType, String names, boolean throwException) {
-
-        int j, i = 0;
-        List<UjoProperty> props = new ArrayList<UjoProperty>(4);
-        names += ".";
-
-        while ((j = names.indexOf('.', i + 1)) >= 0) {
-            final String name = names.substring(i, j);
-            final UjoProperty p = readProperties(ujoType).find(name, true);
-            props.add(p);
-            ujoType = p.getType();
-            i = j + 1;
-        }
-        switch (props.size()) {
-            case 0:
-                if (throwException) {
-                   throw new IllegalStateException("Invalid property name: " + names);
-                } else {
-                    return null;
-                }
-            case 1:
-                return props.get(0);
-            default:
-                return new PathProperty(props);
-        }
+        return readProperties(ujoType).find(names, throwException);
     }
-
 
     /** Print a String representation */
     @SuppressWarnings("unchecked")

@@ -30,9 +30,9 @@ import org.ujorm.core.ujos.UjoCSV;
  *
  * @author Ponec
  */
-public class PropertyGroupTest extends TestCase {
+public class PropertyStoreTest extends TestCase {
 
-    public PropertyGroupTest(String testName) {
+    public PropertyStoreTest(String testName) {
         super(testName);
     }
 
@@ -47,14 +47,14 @@ public class PropertyGroupTest extends TestCase {
     }
 
     /**
-     * Test of getBaseClass method, of class PropertyGroup.
+     * Test of getType method, of class PropertyStore.
      */
     public void testGetBaseClass() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
-        PropertyGroup<UjoCSV> props1, props2;
-        props1 = PropertyGroup.newInstance(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
+        PropertyStore<UjoCSV> props1, props2;
+        props1 = PropertyStore.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
         props2 = null;
 
         try {
@@ -64,8 +64,9 @@ public class PropertyGroupTest extends TestCase {
             encoder.close();
             InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
             ObjectInput decoder = new ObjectInputStream(is);
-            props2 = (PropertyGroup<UjoCSV>) decoder.readObject();
+            props2 = (PropertyStore<UjoCSV>) decoder.readObject();
         } catch (Throwable e) {
+            e.printStackTrace();
             assertNull(e);
         }
 
@@ -81,14 +82,14 @@ public class PropertyGroupTest extends TestCase {
     }
 
     /**
-     * Test of getBaseClass method, of class PropertyGroup.
+     * Test of getType method, of class PropertyStore.
      */
     public void testGetBaseClassDesc() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
-        PropertyGroup<UjoCSV> props1, props2;
-        props1 = PropertyGroup.newInstance(UjoCSV.class, UjoCSV.P1, UjoCSV.P3.descending()); // !!!
+        PropertyStore<UjoCSV> props1, props2;
+        props1 = PropertyStore.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3.descending()); // !!!
         props2 = null;
 
         try {
@@ -98,7 +99,7 @@ public class PropertyGroupTest extends TestCase {
             encoder.close();
             InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
             ObjectInput decoder = new ObjectInputStream(is);
-            props2 = (PropertyGroup<UjoCSV>) decoder.readObject();
+            props2 = (PropertyStore<UjoCSV>) decoder.readObject();
         } catch (Throwable e) {
             assertNull(e);
         }

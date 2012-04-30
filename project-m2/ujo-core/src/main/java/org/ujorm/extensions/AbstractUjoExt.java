@@ -233,7 +233,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     public UjoProperty findProperty(final String propertyName) throws IllegalArgumentException {
         final boolean throwException = true;
-        return readProperties().find(propertyName, throwException);
+        return readProperties().findDirectProperty(propertyName, throwException);
     }
         
     /** Create a list of UjoProperty. */
