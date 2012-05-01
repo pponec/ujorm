@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -39,6 +40,7 @@ import org.ujorm.orm.utility.OrmTools;
  * The class is a root of database configuration.
  * @author Pavel Ponec
  */
+@Immutable
 final public class MetaParams extends AbstractMetaModel {
     private static final Class CLASS = MetaParams.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaParams.class);

@@ -16,6 +16,7 @@
 
 package org.ujorm.orm.metaModel;
 
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -25,6 +26,7 @@ import org.ujorm.orm.AbstractMetaModel;
  * Class contains the special parameters with for different use.
  * @author Pavel Ponec
  */
+@Immutable
 final public class MoreParams extends AbstractMetaModel {
     private static final Class CLASS = MoreParams.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MoreParams.class);

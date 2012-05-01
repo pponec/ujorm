@@ -40,6 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -62,6 +63,7 @@ import org.ujorm.orm.dialect.MySqlDialect;
  * @composed 1 - * MetaTable
  * @composed 1 - * MetaProcedure
  */
+@Immutable
 final public class MetaDatabase extends AbstractMetaModel implements Comparable<MetaDatabase> {
     private static final Class CLASS = MetaDatabase.class;
 

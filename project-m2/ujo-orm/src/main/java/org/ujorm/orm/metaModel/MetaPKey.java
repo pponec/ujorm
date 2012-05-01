@@ -19,6 +19,7 @@ package org.ujorm.orm.metaModel;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
@@ -31,6 +32,7 @@ import org.ujorm.orm.TypeService;
  * @author Pavel Ponec
  * @composed 1 - * MetaColumn
  */
+@Immutable
 final public class MetaPKey extends AbstractMetaModel {
     private static final Class CLASS = MetaPKey.class;
 

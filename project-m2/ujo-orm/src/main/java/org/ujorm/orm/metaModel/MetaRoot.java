@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
@@ -39,6 +40,7 @@ import org.ujorm.logger.UjoLoggerFactory;
  * @composed 1 - * MetaDatabase
  * @composed 1 - 1 MetaParams
  */
+@Immutable
 final public class MetaRoot extends AbstractMetaModel {
     private static final Class CLASS = MetaRoot.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);

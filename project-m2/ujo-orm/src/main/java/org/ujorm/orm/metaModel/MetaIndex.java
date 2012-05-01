@@ -15,6 +15,7 @@
  */
 package org.ujorm.orm.metaModel;
 
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.extensions.ListProperty;
@@ -25,6 +26,7 @@ import org.ujorm.extensions.Property;
  * DB index metamodel.
  * @author Pavel Ponec
  */
+@Immutable
 final public class MetaIndex extends AbstractMetaModel {
     private static final Class CLASS = MetaIndex.class;
 

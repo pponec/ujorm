@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.extensions.Property;
@@ -32,6 +33,7 @@ import org.ujorm.orm.annot.Column;
  * The database/object relation to many.
  * @author Pavel Ponec
  */
+@Immutable
 public class MetaRelation2Many extends AbstractMetaModel {
     private static final Class CLASS = MetaRelation2Many.class;
 

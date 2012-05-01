@@ -24,6 +24,7 @@ import java.util.List;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 
@@ -37,6 +38,7 @@ import org.ujorm.criterion.Operator;
  * @author Pavel Ponec
  * @since 0.81
  */
+@Immutable
 final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
     /** Array of <strong>direct</strong> properties */

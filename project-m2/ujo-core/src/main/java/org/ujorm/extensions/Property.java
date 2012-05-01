@@ -23,6 +23,7 @@ import java.util.List;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
@@ -32,6 +33,7 @@ import org.ujorm.criterion.ValueCriterion;
  * @see AbstractUjo
  * @author Pavel Ponec
  */
+@Immutable
 public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** Property Separator character */

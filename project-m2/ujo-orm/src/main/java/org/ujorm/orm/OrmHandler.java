@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.CompositeProperty;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaRoot;
@@ -48,6 +48,7 @@ import org.ujorm.orm.metaModel.MetaTable;
  * @composed 1 - 1 MetaRoot
  * @assoc - - - AbstractMetaModel
  */
+@Immutable
 public class OrmHandler {
 
     /** Logger */

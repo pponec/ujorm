@@ -26,6 +26,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.PathProperty;
 
 /**
@@ -33,6 +34,7 @@ import org.ujorm.extensions.PathProperty;
  * Object have got implemented the hashCode() and equals() methods.
  * @author Pavel Ponec
  */
+@Immutable
 public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializable {
 
     static final long serialVersionUID = 1L;
