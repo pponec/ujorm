@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
@@ -28,6 +29,7 @@ import org.ujorm.orm.AbstractMetaModel;
  * Contains a SQL statement for a UJO view user SELECT.
  * @author Ponec
  */
+@Immutable
 final public class MetaSelect extends AbstractMetaModel {
     private static final Class CLASS = MetaSelect.class;
 

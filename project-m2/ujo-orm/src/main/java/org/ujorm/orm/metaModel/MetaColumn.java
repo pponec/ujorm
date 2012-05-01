@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.ColumnWrapper;
@@ -42,6 +43,7 @@ import org.ujorm.orm.ao.UjoStatement;
  * @author Pavel Ponec
  * @composed 1 - * DbType
  */
+@Immutable
 public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
     private static final Class CLASS = MetaColumn.class;
 

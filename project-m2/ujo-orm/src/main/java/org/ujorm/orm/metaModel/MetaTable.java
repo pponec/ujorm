@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.extensions.ListProperty;
@@ -49,6 +50,7 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
  * @composed 1 - 1 MetaPKey
  * @composed 1 - * MetaIndex
  */
+@Immutable
 final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     private static final Class CLASS = MetaTable.class;
 

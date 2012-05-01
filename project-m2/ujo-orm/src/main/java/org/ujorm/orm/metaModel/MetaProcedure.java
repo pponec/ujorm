@@ -18,6 +18,7 @@ package org.ujorm.orm.metaModel;
 import java.lang.reflect.Field;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoManager;
+import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;
@@ -26,7 +27,6 @@ import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.DbProcedure;
-import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.annot.Parameter;
 import org.ujorm.orm.annot.Procedure;
@@ -36,7 +36,8 @@ import org.ujorm.orm.annot.Procedure;
  * DB procudure or function meta-model.
  * @author Pavel Ponec
  * @composed 1 - * MetaColumn
-  */
+ */
+@Immutable
 final public class MetaProcedure extends AbstractMetaModel {
     private static final Class CLASS = MetaProcedure.class;
 
