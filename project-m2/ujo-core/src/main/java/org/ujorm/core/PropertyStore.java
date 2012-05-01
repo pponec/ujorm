@@ -30,6 +30,7 @@ import org.ujorm.extensions.PathProperty;
 
 /**
  * The Immutable and Serializable UjoProperty Collection include some service methods.
+ * Object have got implemented the hashCode() and equals() methods.
  * @author Pavel Ponec
  */
 public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializable {
@@ -45,6 +46,8 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     private int size;
     /** Transient properties */
     private UjoProperty<UJO, ?>[] properties;
+    /** Default hash code. */
+    transient private int hashCode;
 
     /**
      * Constructor
@@ -316,18 +319,18 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof PropertyStore) {
-            PropertyStore<UJO> o = (PropertyStore<UJO>) obj;
+            final PropertyStore<UJO> o = (PropertyStore<UJO>) obj;
             if (this.size() != o.size()) {
                 return false;
             }
             if (!this.getType().equals(o.getType())) {
                 return false;
             }
-            for (int i = size() - 1; i >= 0; --i) {
-                UjoProperty p1 = this.get(i);
-                UjoProperty p2 = o.get(i);
+            for (int i = 0; i < size; ++i) {
+                final UjoProperty p1 = this.get(i);
+                final UjoProperty p2 = o.get(i);
                 if (!p1.equals(p2)) {
                     return false;
                 }
@@ -338,12 +341,16 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
         }
     }
 
+    /** Calculate hashCode */
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + (this.type != null ? this.type.hashCode() : 0);
-        hash = 83 * hash + Arrays.deepHashCode(createPropertyNames());
-        return hash;
+        if (hashCode==0) {
+            int hash = 7;
+            hash = 83 * hash + this.type.hashCode();
+            hash = 83 * hash + Arrays.deepHashCode(createPropertyNames());
+            hashCode = hash;
+        }
+        return hashCode;
     }
 
     // -------------- SERIALIZATION METHOD(S) --------------
