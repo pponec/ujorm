@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.orm.annot;
+package org.ujorm.core.annot;
 import java.lang.annotation.*;
 
 /** Description for the scope "package private". */
