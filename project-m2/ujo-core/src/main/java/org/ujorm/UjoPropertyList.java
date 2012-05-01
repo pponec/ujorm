@@ -32,33 +32,9 @@ import java.util.Iterator;
 public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
 
     /**
-     * Find a property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @return .
-     */
-    public UjoProperty<UJO,?> findDirectProperty
-    ( final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /**
-     * Find direct or indirect property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @depracated Uset the method {@link #find(java.lang.String, boolean)}
-     */
-    public UjoProperty<UJO,?> findIndirectProperty
-    ( final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /**
      * Find (both direct or indirect) property by property name from parameter.
      * @param name A property name by sample "user.address.street".
-     * @return .
+     * @return UjoProperty
      */
     public UjoProperty<UJO,?> find(String name) throws IllegalArgumentException;
 
@@ -73,14 +49,6 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
     , final boolean throwException
     ) throws IllegalArgumentException;
 
-    
-    /** Find UjoProperty by name */
-    public UjoProperty<UJO,?> findDirectProperty
-    ( final Ujo ujo
-    , final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
     /**
      * Find a property by property name from parameter.
      * @param ujo An Ujo object
@@ -88,7 +56,7 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @hidden 
+     * @hidden
      */
     @SuppressWarnings("deprecation")
     public UjoProperty<UJO,?> findDirectProperty
@@ -99,11 +67,44 @@ public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<U
     , final boolean throwException
     ) throws IllegalArgumentException;
 
+    /**
+     * Find a property by property name from parameter.
+     *
+     * @param name A property name.
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @return UjoProperty
+     */
+    public UjoProperty<UJO,?> findDirectProperty
+    ( final String name
+    , final boolean throwException
+    ) throws IllegalArgumentException;
+
+    /** Find UjoProperty by name */
+    public UjoProperty<UJO,?> findDirectProperty
+    ( final Ujo ujo
+    , final String name
+    , final boolean throwException
+    ) throws IllegalArgumentException;
+
+    /**
+     * Find direct or indirect property by property name from parameter.
+     *
+     * @param name A property name.
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @deprecated Uset the method {@link #find(java.lang.String, boolean)}
+     */
+    public UjoProperty<UJO,?> findIndirect
+    ( final String name
+    , final boolean throwException
+    ) throws IllegalArgumentException;
 
     /** Returns a copy of internal array */
     public UjoProperty<UJO,?>[] toArray();
 
-    /** Get getLastProperty property */
+    /** Get the first Property */
+    public UjoProperty<UJO,?> getFirstProperty();
+
+    /** Get the last Property */
     public UjoProperty<UJO,?> getLastProperty();
 
     /** Get last property 
