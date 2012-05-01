@@ -22,7 +22,7 @@ import java.sql.Savepoint;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.xa.XAResource;
-import org.ujorm.orm.annot.PackagePrivate;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.metaModel.MetaDatabase;
 
 /**

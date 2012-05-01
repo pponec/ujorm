@@ -44,7 +44,7 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.BinaryCriterion;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.logger.UjoLoggerFactory;
-import org.ujorm.orm.annot.PackagePrivate;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaProcedure;
 
