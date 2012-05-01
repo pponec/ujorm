@@ -73,6 +73,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
+    @Override
     public UjoProperty<UJO, ?> findDirectProperty(final String name, final boolean throwException) throws IllegalArgumentException {
         int nameHash = name.hashCode();
 
@@ -128,8 +129,14 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
         }
     }
 
-    /** Return */
-    public UjoProperty<UJO, ?> findIndirectProperty(String names, boolean throwException) throws IllegalArgumentException {
+    /**
+     * Find direct or indirect property by property name from parameter.
+     *
+     * @param name A property name.
+     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+     * @deprecated Uset the method {@link #find(java.lang.String, boolean)}
+     */
+    public UjoProperty<UJO, ?> findIndirect(String names, boolean throwException) throws IllegalArgumentException {
         return find(names, throwException);
     }
 
@@ -140,6 +147,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * @return new UjoProperty
      */
     @SuppressWarnings("unchecked")
+    @Override
     public UjoProperty find(String names, boolean throwException) {
         if (names.indexOf(PropertyStore.PROPERTY_SEPARATOR) < 0) {
             return findDirectProperty(names, throwException);
@@ -175,16 +183,19 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * @param name A property name by sample "user.address.street".
      * @return .
      */
+    @Override
     public UjoProperty<UJO, ?> find(String name) throws IllegalArgumentException {
         return find(name, true);
     }
 
     /** Get The First Properties */
+    @Override
     public UjoProperty<UJO, ?> getFirstProperty() {
         return get(0);
     }
 
     /** Get The Last Properties */
+    @Override
     public UjoProperty<UJO, ?> getLastProperty() {
         return get(size - 1);
     }
@@ -192,11 +203,13 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     /** Get The Last Properties 
      * @deprecated Use the method {@link #getLastProperty()} rather.
      */
+    @Override
     final public UjoProperty<UJO, ?> last() {
         return getLastProperty();
     }
 
     /** Get one Property */
+    @Override
     public UjoProperty<UJO, ?> get(int i) {
         return properties[i];
     }
@@ -209,6 +222,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     }
 
     /** Size */
+    @Override
     public int size() {
         return size;
     }
@@ -226,6 +240,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     }
 
     /** Create Property Interator */
+    @Override
     public Iterator<UjoProperty<UJO, ?>> iterator() {
         return new Iterator<UjoProperty<UJO, ?>>() {
 
@@ -250,6 +265,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     }
 
     /** Convert Properties to a new Array */
+    @Override
     public UjoProperty<UJO, ?>[] toArray() {
         final UjoProperty<UJO, ?>[] result = new UjoProperty[size];
         System.arraycopy(this.properties, 0, result, 0, result.length);
@@ -331,6 +347,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     }
 
     // -------------- SERIALIZATION METHOD(S) --------------
+
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.writeObject(this.type);
         out.writeObject(createPropertyNames());
