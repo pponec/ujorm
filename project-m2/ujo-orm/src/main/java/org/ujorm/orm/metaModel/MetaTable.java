@@ -362,7 +362,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return sequencer;
     }
 
-    /** Create a collection of the table indexes. */
+    /** Create a new collection of the table indexes. */
     public Collection<MetaIndex> getIndexCollection() {
         Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
 
