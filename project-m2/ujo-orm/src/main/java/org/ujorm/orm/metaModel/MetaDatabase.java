@@ -465,7 +465,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         List<MetaIndex> indexes = new ArrayList<MetaIndex>();
         boolean createSequenceTable = false;
         int tableTotalCount = getTableTotalCount();
-        boolean anyChange = false;
 
         try {
             stat = conn.createStatement();
