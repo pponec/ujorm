@@ -65,8 +65,11 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
                 // if exception is not catched send it
                 return doReturn(ex, result);
             } else {
-                //there was no sql error
-                commit();
+                if (ex==null) {
+                    commit(); // there was no sql error
+                } else {
+                    rollback();
+                }
                 return doReturn(ex, result);
             }
         } else {//this is not las aop call
