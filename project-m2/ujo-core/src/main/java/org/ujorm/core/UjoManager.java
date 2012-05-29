@@ -832,31 +832,60 @@ public class UjoManager implements Comparator<UjoProperty> {
         copy(source, target, (UjoProperty[]) null);
     }
 
-    /** Get a UjoProperty field. */
-    public Field getPropertyField(Ujo ujo, UjoProperty property) {
-        return getPropertyField(ujo.getClass(), property);
+    /**
+     * Get a UjoProperty field.
+     * @param ujo Type of the Ujo object (Nonnull)
+     * @param property Required property (Nullable)
+     * @return Returns null in case that result was not found
+     * @throws IllegalAccessException Can't get fields.
+     */
+    public Field getPropertyField(Ujo ujo, UjoProperty property) throws IllegalStateException {
+        return getPropertyField(ujo.getClass(), property, false);
+    }
+
+    /**
+     * Get a UjoProperty field.
+     * @param type Type of the Ujo object (Nonnull)
+     * @param property Required property (Nullable)
+     * @return Returns null in case that result was not found
+     * @throws IllegalAccessException Can't get fields.
+     * @throws IllegalArgumentException The property 'property' is not found in the class 'type'.
+     */
+    public Field getPropertyField(Class<?> type, UjoProperty property) throws IllegalStateException {
+        return getPropertyField(type, property, false);
     }
     
-    /** Get a UjoProperty field. */
-    public Field getPropertyField(Class/*<? extends Ujo>*/ type, UjoProperty property) {
-        Field result = null;
-        try {
-            final Field[] fields = type.getFields();
-            for (int j=0; j<fields.length; j++) {
-                result = fields[j];
-                if (result.getModifiers()==UjoManager.PROPERTY_MODIFIER
-                &&  UjoProperty.class.isAssignableFrom(result.getType())
-                ){
+    /**
+     * Get a UjoProperty field.
+     * @param type Type of the Ujo object (Nonnull)
+     * @param property Required property (Nullable)
+     * @param throwException in case the result is {@code null} than throw the exception {@link IllegalArgumentException}.
+     * @return Nonnull value always.
+     * @throws IllegalAccessException Can't get fields.
+     * @throws IllegalArgumentException The property 'property' is not found in the class 'type'.
+     */
+    public Field getPropertyField(Class<?> type, UjoProperty property, boolean throwException) throws IllegalStateException, IllegalArgumentException {
+        for (Field result : type.getFields()) {
+            if (result.getModifiers() == UjoManager.PROPERTY_MODIFIER
+            && UjoProperty.class.isAssignableFrom(result.getType())) {
+                try {
                     final Object p = result.get(null);
-                    if (p==property) {
-                        break;
+                    if (p == property) {
+                        return result;
                     }
+                } catch (Exception e) {
+                    throw new IllegalStateException(String.valueOf(result), e);
                 }
             }
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(String.valueOf(result), e);
         }
-        return result;
+        if (throwException) {
+            final String msg = String.format
+                    ( "The property '%s' was not found in the class '%s'."
+                    , String.valueOf(property)
+                    , type.getName());
+            throw new IllegalArgumentException(msg);
+        }
+        return null;
     }
 
     /** Check ujo properties to a unique name.
