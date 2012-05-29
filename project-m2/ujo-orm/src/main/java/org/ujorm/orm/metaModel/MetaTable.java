@@ -125,8 +125,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         DB_PROPERTY.setValue(this, dbProperty);
 
         final Field field = UjoManager.getInstance().getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
-
-        View view1 = field.getAnnotation(View.class);
+        View view1 = field!=null ? field.getAnnotation(View.class) : null;
         View view2 = (View) dbProperty.getItemType().getAnnotation(View.class);
         VIEW.setValue(this, view1!=null || view2!=null);
 
@@ -154,7 +153,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             if (view2!=null) changeDefault(this, SCHEMA, view2.schema());
             if (view2!=null) changeDefault(this, SELECT, view2.select());
         } else {
-            Table table1 = field.getAnnotation(Table.class);
+            Table table1 = field!=null ? field.getAnnotation(Table.class) : null;
             Table table2 = (Table) dbProperty.getItemType().getAnnotation(Table.class);
             if (table1!=null) changeDefault(this, NAME  , table1.name());
             if (table1!=null) changeDefault(this, NAME  , table1.value());
@@ -181,7 +180,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         changeDefault(this, ALIAS, aliasPrefix+NAME.of(this)+aliasSuffix);
 
         // Assign Comments:
-        Comment comment1 = field.getAnnotation(Comment.class);
+        Comment comment1 = field!=null ? field.getAnnotation(Comment.class) : null;
         Comment comment2 = (Comment) dbProperty.getItemType().getAnnotation(Comment.class);
         if (comment1!=null) changeDefault(this, COMMENT  , comment1.value());
         if (comment2!=null) changeDefault(this, COMMENT  , comment2.value());

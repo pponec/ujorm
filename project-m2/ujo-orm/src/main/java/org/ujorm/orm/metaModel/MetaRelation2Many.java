@@ -60,7 +60,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     
     public MetaRelation2Many(MetaTable table, UjoProperty tableProperty, MetaRelation2Many param) {
         
-        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
+        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
         if (true) {

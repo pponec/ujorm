@@ -96,7 +96,7 @@ final public class MetaProcedure extends AbstractMetaModel {
         DB_PROPERTY.setValue(this, dbProperty);
 
         final Field field = UjoManager.getInstance().getPropertyField(MetaDatabase.ROOT.of(database), dbProperty);
-        Procedure proc1 = field.getAnnotation(Procedure.class);
+        Procedure proc1 =  field!=null ? field.getAnnotation(Procedure.class) : null;
         Procedure proc2 = (Procedure) dbProperty.getType().getAnnotation(Procedure.class);
 
         if (parProcedure!=null) {
