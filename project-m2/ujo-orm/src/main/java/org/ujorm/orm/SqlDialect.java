@@ -171,7 +171,7 @@ abstract public class SqlDialect {
     }
 
     /** Print a SQL sript to add a new column to the table */
-    public Appendable printAlterTable(MetaColumn column, Appendable out) throws IOException {
+    public Appendable printAlterTableAddColumn(MetaColumn column, Appendable out) throws IOException {
         out.append("ALTER TABLE ");
         printFullTableName(column.getTable(), out);
         out.append(" ADD COLUMN ");
