@@ -91,7 +91,7 @@ public class OracleDialect extends PostgreSqlDialect {
      * <br>Sample: ALTER TABLE sa_myphone.ord_order ADD (NEW_COLUMN INT DEFAULT 777 NOT NULL);
      */
     @Override
-    public Appendable printAlterTable(MetaColumn column, Appendable out) throws IOException {
+    public Appendable printAlterTableAddColumn(MetaColumn column, Appendable out) throws IOException {
         out.append("ALTER TABLE ");
         printFullTableName(column.getTable(), out);
         out.append(" ADD (");

@@ -60,7 +60,7 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
      * <BR> The DDL statement does not contains a word COLUMN.
      */
     @Override
-    public Appendable printAlterTable(MetaColumn column, Appendable out) throws IOException {
+    public Appendable printAlterTableAddColumn(MetaColumn column, Appendable out) throws IOException {
         out.append("ALTER TABLE ");
         printFullTableName(column.getTable(), out);
         out.append(" ADD ");

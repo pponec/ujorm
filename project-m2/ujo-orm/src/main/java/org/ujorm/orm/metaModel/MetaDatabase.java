@@ -590,7 +590,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             // 4. Create new columns:
             for (MetaColumn column : newColumns) {
                 out.setLength(0);
-                sql = getDialect().printAlterTable(column, out);
+                sql = getDialect().printAlterTableAddColumn(column, out);
                 executeUpdate(sql, stat, column.getTable());
                 anyChange = true;
 
