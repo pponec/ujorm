@@ -98,8 +98,15 @@ public class ListProperty<UJO extends Ujo, ITEM>
         return getValue(ujo).set(index, value);
     }
 
-    /** Add Item Value. If List is null, the method creates an instance.
-     * @return true (as per the general contract of Collection.add).
+    /** Add an Item value to a List property. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
+     * The method works like a simolar code:
+     * <pre class="pre">
+     * if (ujo.get(VALUE_LIST)==null) {
+     *    ujo.set(VALUE_LIST, new ArrayList());
+     * }
+     * ujo.get(VALUE_LIST).add(itemValue);
+     * <pre class="pre">
+     * @return Value {@code true} as per the general contract of Collection.add.
      */
     @Override
     public boolean addItem(final UJO ujo, final ITEM value) {
