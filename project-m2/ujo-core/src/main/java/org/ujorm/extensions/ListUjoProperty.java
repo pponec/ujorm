@@ -21,7 +21,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 
 /**
- * A property list metadata of Unified Data Object.
+ * A property metadata interface for value type of {@code List<ITEM>}.
  * @author Pavel Ponec
  */
 public interface ListUjoProperty<UJO extends Ujo, ITEM> extends UjoProperty<UJO,List<ITEM>> {
@@ -51,8 +51,15 @@ public interface ListUjoProperty<UJO extends Ujo, ITEM> extends UjoProperty<UJO,
      */
     public ITEM setItem(UJO ujo, int index, ITEM value);
 
-    /** Add an Item Value. If List is null, the method create an instance of List (for exact behaviour see an implementation).
-     * @return true (as per the general contract of Collection.add).
+    /** Add an Item value to a List property. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
+     * The method works like a simolar code:
+     * <pre class="pre">
+     * if (ujo.get(VALUE_LIST)==null) {
+     *    ujo.set(VALUE_LIST, new ArrayList());
+     * }
+     * ujo.get(VALUE_LIST).add(itemValue);
+     * <pre class="pre">
+     * @return Value {@code true} as per the general contract of Collection.add.
      */
     public boolean addItem(UJO ujo, ITEM value);
 
