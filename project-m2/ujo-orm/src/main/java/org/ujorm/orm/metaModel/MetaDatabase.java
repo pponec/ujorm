@@ -69,7 +69,14 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDatabase.class);
-    /** Add a DB relation into table models */
+    /** Add a DB relation into table models. The {@code true} value allows to use a property RelationToMany of Database model 
+     * by the same way as a RelationToMany on any persistent table. A sample of the use:
+     * <pre class="pre">
+     * for (Order order: database.get(Database.ORDER)) {
+     *     // use the order instance
+     * }
+     * </pre>
+     */
     private static final boolean ADD_DB_MODEL = true;
 
     /** The meta-model id */
