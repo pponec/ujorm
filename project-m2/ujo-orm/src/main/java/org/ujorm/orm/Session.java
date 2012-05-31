@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
+import javax.transaction.Status;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoIterator;
@@ -1034,9 +1035,14 @@ public class Session {
         return params;
     }
 
-    /** The rollback is allowed only */
+    /** The rollback is allowed only. 
+     * @return The result is {@code true} if an inner session attribute is true or 
+     * a related transaction have got the status equals {link Status#STATUS_ROLLEDBACK}.
+     */
     public boolean isRollbackOnly() {
-        return rollbackOnly;
+        return rollbackOnly 
+            || transaction!=null 
+            && transaction.getStatus()==Status.STATUS_ROLLEDBACK;
     }
 
     public void markForRolback() {
