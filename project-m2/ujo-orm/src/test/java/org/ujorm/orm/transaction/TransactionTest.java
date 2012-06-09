@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import org.ujorm.orm.*;
 import org.ujorm.orm.inheritance.sample.Database;
 import org.ujorm.orm.inheritance.sample.bo.User;
+import org.ujorm.orm.inheritance.sample.bo.Customer;
 import org.ujorm.orm.inheritance.sample.bo.Customer.*;
 
 /**
@@ -49,6 +50,7 @@ public class TransactionTest extends TestCase {
 
     public void testRollbackTranaction() {
         final Session session = new OrmHandler(Database.class).createSession();
+        session.delete(Customer.user.forAll()); // TODO ?
         session.delete(User.id.forAll());
         session.commit();
         //
@@ -89,6 +91,7 @@ public class TransactionTest extends TestCase {
 
     public void testCommitTranaction() {
         final Session session = new OrmHandler(Database.class).createSession();
+        session.delete(Customer.user.forAll()); // TODO ?
         session.delete(User.id.forAll());
         session.commit();
         //
@@ -128,6 +131,7 @@ public class TransactionTest extends TestCase {
 
     public void testIComplexTranaction() {
         final Session session = new OrmHandler(Database.class).createSession();
+        session.delete(Customer.user.forAll()); // TODO ?
         session.delete(User.id.forAll());
         session.commit();
         //
