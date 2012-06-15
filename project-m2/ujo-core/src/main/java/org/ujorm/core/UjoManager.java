@@ -152,11 +152,11 @@ public class UjoManager implements Comparator<UjoProperty> {
                            propertyList.add(ujoProp);
 
                             if (ujoProp instanceof Property) {
-                                if (ujoProp.getType() == null) {
-                                    PropertyModifier.setType(getGenericClass(field,1), (Property) ujoProp);
-                                }
                                 if (ujoProp.getName() == null) {
                                     PropertyModifier.setName(field.getName(), (Property) ujoProp);
+                                }
+                                if (ujoProp.getType() == null) {
+                                    PropertyModifier.setType(getGenericClass(field,1), (Property) ujoProp);
                                 }
                             }                           
                         }
@@ -174,10 +174,7 @@ public class UjoManager implements Comparator<UjoProperty> {
 
                     }
                 }
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException(String.valueOf(field), e);
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new IllegalStateException(String.valueOf(field), e);
             }
             
@@ -206,8 +203,10 @@ public class UjoManager implements Comparator<UjoProperty> {
     /** Regurns array of generic parameters */
     private static Class getGenericClass(final Field field, final int position) {
         final ParameterizedType type = (ParameterizedType) field.getGenericType();
-        final Type[] types = type.getActualTypeArguments();
-        return (Class) types[position];
+        final Type result = type.getActualTypeArguments()[position];
+        return (result instanceof Class) 
+                ? (Class) result 
+                : Class.class ;
     }       
     
     /** Compare Ujo properties by index. An undefined property indexes (-1 are sorted to the end. */

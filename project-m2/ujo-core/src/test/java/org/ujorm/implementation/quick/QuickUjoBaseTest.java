@@ -7,6 +7,7 @@
 
 package org.ujorm.implementation.quick;
 
+import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -77,18 +78,18 @@ public class QuickUjoBaseTest extends MyTestCase {
         assertEquals(Integer.class, type1);
         assertEquals(String .class, type2);
         assertEquals(Date   .class, type3);
-        assertEquals(Float  .class, type4);
+        assertEquals(Class  .class, type4);
         //
         assertEquals(Long   .class, QuickUjoImplChild.PRO_P0.getType());
         assertEquals(Integer.class, QuickUjoImplChild.PRO_P1.getType());
         assertEquals(String .class, QuickUjoImplChild.PRO_P2.getType());
         assertEquals(Date   .class, QuickUjoImplChild.PRO_P3.getType());
-        assertEquals(Float  .class, QuickUjoImplChild.PRO_P4.getType());
+        assertEquals(Class  .class, QuickUjoImplChild.PRO_P4.getType());
         assertEquals(Long   .class, QuickUjoImplChild.PRO_P5.getType());
         assertEquals(Integer.class, QuickUjoImplChild.PRO_P6.getType());
         assertEquals(String .class, QuickUjoImplChild.PRO_P7.getType());
         assertEquals(Date   .class, QuickUjoImplChild.PRO_P8.getType());
-        assertEquals(Float  .class, QuickUjoImplChild.PRO_P9.getType());
+        assertEquals(Class  .class, QuickUjoImplChild.PRO_P9.getType());
     }
     
     /** Regurns array of generic parameters */
@@ -121,7 +122,7 @@ public class QuickUjoBaseTest extends MyTestCase {
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Class<?> o4 = Color.class;
         
         QuickUjoImpl ujb = new QuickUjoImpl();
         
@@ -145,7 +146,7 @@ public class QuickUjoBaseTest extends MyTestCase {
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Class<?> o4 = Color.class;
         Object result;
         
         callGC();
@@ -187,7 +188,7 @@ public class QuickUjoBaseTest extends MyTestCase {
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Class<?> o4 = Color.class;
         Object result;
         
         callGC();
