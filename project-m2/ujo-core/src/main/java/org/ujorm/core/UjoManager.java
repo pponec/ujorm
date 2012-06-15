@@ -16,6 +16,8 @@
 
 package org.ujorm.core;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -149,9 +151,14 @@ public class UjoManager implements Comparator<UjoProperty> {
                         if (ujoProp.isDirect()) {
                            propertyList.add(ujoProp);
 
-                            if (ujoProp.getName()==null && ujoProp instanceof Property) {
-                                PropertyModifier.setName(field.getName(), (Property)ujoProp);
-                            }
+                            if (ujoProp instanceof Property) {
+                                if (ujoProp.getType() == null) {
+                                    PropertyModifier.setType(getGenericClass(field,1), (Property) ujoProp);
+                                }
+                                if (ujoProp.getName() == null) {
+                                    PropertyModifier.setName(field.getName(), (Property) ujoProp);
+                                }
+                            }                           
                         }
 
                         // set the transient cache:
@@ -168,6 +175,9 @@ public class UjoManager implements Comparator<UjoProperty> {
                     }
                 }
             } catch (IllegalAccessException e) {
+                throw new IllegalStateException(String.valueOf(field), e);
+            } catch (Exception e) {
+                e.printStackTrace();
                 throw new IllegalStateException(String.valueOf(field), e);
             }
             
@@ -192,6 +202,13 @@ public class UjoManager implements Comparator<UjoProperty> {
         
         return result;
     }
+    
+    /** Regurns array of generic parameters */
+    private static Class getGenericClass(final Field field, final int position) {
+        final ParameterizedType type = (ParameterizedType) field.getGenericType();
+        final Type[] types = type.getActualTypeArguments();
+        return (Class) types[position];
+    }       
     
     /** Compare Ujo properties by index. An undefined property indexes (-1 are sorted to the end. */
     public int compare(final UjoProperty p1, final UjoProperty p2) {

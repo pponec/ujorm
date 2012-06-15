@@ -110,8 +110,10 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @deprecated Use rather a method {@link QuickUjo#newProperty(java.lang.String)} instead of this.
      * @hidden
      */
+    @Deprecated
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty
     ( String name
     , Class<VALUE> type
@@ -119,6 +121,14 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
         return newProperty(name, type, null, -1, false);
     }
 
+    /** A Property Factory creates new property and assigns a next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
+     */
+    protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty(String name) {
+        return newProperty(name, null, null, -1, false);
+    }
+    
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
@@ -132,8 +142,10 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
 
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @deprecated Use rather a method {@link QuickUjo#newProperty()} instead of this, 
      * @hidden
      */
+    @Deprecated
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty
     ( Class<VALUE> type
     ) {
@@ -148,6 +160,14 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     ( VALUE value
     ) {
         return newProperty(null, null, value, -1, false);
+    }
+
+    /** A Property Factory creates new property and assigns a next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
+     */
+    protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty() {
+        return newProperty(null, null, null, -1, false);
     }
 
     /** Returns a new instance of property where the default value is null.

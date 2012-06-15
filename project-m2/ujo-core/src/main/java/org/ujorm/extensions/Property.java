@@ -109,13 +109,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
             throw new IllegalArgumentException("The property is already initialized: " + this);
         }
 
-        if (defaultValue!=null) {
-             this.defaultValue = defaultValue;
-             if (type==null) {
-                type = (Class) defaultValue.getClass();
-             }
-        }
         this.index = index==-1 ? _nextSequence() : index ;
+        if (defaultValue!=null) { this.defaultValue = defaultValue; }
         if (name !=null) { setName(name); }
         if (type !=null) { this.type  = type ; }
         if (lock !=null) { this.lock  = lock ; }
