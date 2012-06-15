@@ -123,6 +123,11 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** The Name must not contain any dot character */
     private void setName(String name) throws IllegalArgumentException{
+        if (name.length()==0) {
+            final String msg = String.format("Property name '%s' must be empty"
+                    , name);
+            throw new IllegalArgumentException(msg);
+        }
         if (name.indexOf(PROPERTY_SEPARATOR)>0) {
             final String msg = String.format("Property name '%s' must not contain a dot character '%c'."
                     , name
