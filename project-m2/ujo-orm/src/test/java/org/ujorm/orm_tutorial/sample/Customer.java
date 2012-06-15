@@ -29,17 +29,17 @@ public final class Customer extends OrmTable<Customer> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<Customer, Long> ID = newProperty(Long.class);
+    public static final UjoProperty<Customer, Long> ID = newProperty();
     /** Personal Numbr */
-    public static final UjoProperty<Customer, Integer> PIN = newProperty(Integer.class);
+    public static final UjoProperty<Customer, Integer> PIN = newProperty();
     /** Firstname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final UjoProperty<Customer, String> SURENAME = newProperty(String.class);
+    public static final UjoProperty<Customer, String> SURENAME = newProperty();
     /** Lastname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final UjoProperty<Customer, String> LASTNAME = newProperty(String.class);
+    public static final UjoProperty<Customer, String> LASTNAME = newProperty();
     /** Date of creation */
-    public static final UjoProperty<Customer, Date> CREATED = newProperty(Date.class);
+    public static final UjoProperty<Customer, Date> CREATED = newProperty();
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {
