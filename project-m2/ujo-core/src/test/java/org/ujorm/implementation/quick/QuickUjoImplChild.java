@@ -18,11 +18,11 @@ import org.ujorm.UjoProperty;
  */
 public class QuickUjoImplChild extends QuickUjoImpl {
     
-    public static final UjoProperty <QuickUjoImplChild, Long>    PRO_P5 = newProperty(Long.class);
-    public static final UjoProperty <QuickUjoImplChild, Integer> PRO_P6 = newProperty(Integer.class);
-    public static final UjoProperty <QuickUjoImplChild, String>  PRO_P7 = newProperty(String.class);
-    public static final UjoProperty <QuickUjoImplChild, Date>    PRO_P8 = newProperty(Date.class);
-    public static final UjoProperty <QuickUjoImplChild, Float>   PRO_P9 = newProperty(Float.class);
+    public static final UjoProperty <QuickUjoImplChild, Long>    PRO_P5 = newProperty();
+    public static final UjoProperty <QuickUjoImplChild, Integer> PRO_P6 = newProperty();
+    public static final UjoProperty <QuickUjoImplChild, String>  PRO_P7 = newProperty();
+    public static final UjoProperty <QuickUjoImplChild, Date>    PRO_P8 = newProperty();
+    public static final UjoProperty <QuickUjoImplChild, Float>   PRO_P9 = newProperty();
 
     // --- Mandatory initializaton ---
     static {
