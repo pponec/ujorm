@@ -8,6 +8,7 @@
 package org.ujorm.implementation.quick;
 
 
+import java.awt.Color;
 import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
@@ -46,7 +47,7 @@ public class QuickUjoChildTest extends MyTestCase {
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Class<?> o4 = Color.class;
         
         QuickUjoImplChild ujb = new QuickUjoImplChild();
         
@@ -80,7 +81,7 @@ public class QuickUjoChildTest extends MyTestCase {
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Class<?> o4 = Color.class;
         Object result;
         
         callGC();

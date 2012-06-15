@@ -22,7 +22,7 @@ public class QuickUjoImpl extends QuickUjoMid<QuickUjoImpl> {
     public static final Property<QuickUjoImpl,Integer> PRO_P1 = newProperty();
     public static final Property<QuickUjoImpl,String>  PRO_P2 = newProperty();
     public static final Property<QuickUjoImpl,Date>    PRO_P3 = newProperty();
-    public static final Property<QuickUjoImpl,Float>   PRO_P4 = newProperty();
+    public static final Property<QuickUjoImpl,Class>   PRO_P4 = newProperty();
 
 
     // --- Mandatory initializaton ---
