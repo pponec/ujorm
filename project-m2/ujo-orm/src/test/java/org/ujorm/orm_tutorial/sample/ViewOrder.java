@@ -55,7 +55,7 @@ import org.ujorm.orm.annot.View;
 
     /** Unique key */
     @Column(pk=true, name="id")
-    public static final UjoProperty<ViewOrder,Long> ID = newProperty(Long.class);
+    public static final UjoProperty<ViewOrder,Long> ID = newProperty();
     /** ItemCount */
     @Column(name="item_count")
     public static final UjoProperty<ViewOrder,Integer> ITEM_COUNT = newProperty(0);
