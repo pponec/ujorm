@@ -34,7 +34,6 @@ public class UjoSessionFactoryImpl implements UjoSessionFactory, UjoSessionFacto
     @Override
     public Session getDefaultSession() {
         return getThreadImpl().getDefaultSession();
-
     }
 
     @Override

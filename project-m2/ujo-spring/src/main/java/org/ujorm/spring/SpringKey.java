@@ -26,11 +26,13 @@ public class SpringKey<VALUE> extends Property<AbstractAplicationContextAdapter,
 
     /** Default constructor */
     SpringKey() {
+        super(UNDEFINED_INDEX);
     }
     
     /** Constructor with property name */
     SpringKey(String name) {
-        super(name, (VALUE) null, -1);
+        super(UNDEFINED_INDEX);
+        init(name, null, null, UNDEFINED_INDEX, false);
     }
 
     
