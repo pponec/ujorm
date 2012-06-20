@@ -31,11 +31,12 @@ public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends Property<U
 
     @SuppressWarnings("unchecked")
     protected RelationToOne(String name, Class type, UjoProperty relatedKey) {
-        init(name, type, null, -1, false);
+        super(UNDEFINED_INDEX);
+        init(name, type, null, UNDEFINED_INDEX, false);
         this.relatedKey = relatedKey;
     }
 
-    /** Return null if no related key was assigned. */
+    /** Return {@code null} if no related key was assigned. */
     public UjoProperty getRelatedKey() {
         return relatedKey;
     }

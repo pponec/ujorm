@@ -72,7 +72,7 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Property<MetaParams,CommentPolicy> COMMENT_POLICY = newProperty("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
-    public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile", File.class);
+    public static final Property<MetaParams,File> SAVE_CONFIG_TO_FILE = newProperty("saveConfigToFile");
     /** The instance of the parameter class {@see ITypeService} is used for conversion, reading and writting to/from the ResultSet.
      * You can specify a sybtype of the class for a commiono special fetures.
      * @see org.ujorm.orm.annot.Column#converter() 
@@ -116,7 +116,7 @@ final public class MetaParams extends AbstractMetaModel {
     /** The parameter contains the special parameters with for different use. 
      * @see MoreParams
      */
-    public static final Property<MetaParams,MoreParams> MORE_PARAMS = newProperty("moreParams", MoreParams.class);
+    public static final Property<MetaParams,MoreParams> MORE_PARAMS = newProperty("moreParams");
 
     /** Set a logging level for a full meta-model information in the XML format.
      * The TRUE value means the INFO level and the FALSE value means the FINE logging level.
@@ -130,7 +130,7 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
-    public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext", Object.class);
+    public static final Property<MetaParams,Object> APPL_CONTEXT = newProperty("applContext");
 
     /** The property initialization */
     static{init(CLASS, true);}

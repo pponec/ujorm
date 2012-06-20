@@ -71,9 +71,9 @@ public final class Order extends OrmTable<Order> {
     @Transient
     public static final UjoProperty<Order, Blob> BINARY_FILE = newProperty();
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> ITEMS = newRelation(Item.class);
+    public static final RelationToMany<Order, Item> ITEMS = newRelation();
     /** Customer */
-    @Column(name="fk_customer") public static final UjoProperty<Order, Customer> CUSTOMER = newProperty(Customer.class);
+    @Column(name="fk_customer") public static final UjoProperty<Order, Customer> CUSTOMER = newProperty();
     @Column(mandatory=true) public static final UjoProperty<Order, Integer> NEW_COLUMN = newProperty(777);
 
     // --- Constructors ---

@@ -50,13 +50,13 @@ final public class MetaProcedure extends AbstractMetaModel {
     /** Name of table schema. */
     public static final Property<MetaProcedure,String> SCHEMA = newProperty("schema", Table.NULL);
     /** Procedure parameters */
-    public static final ListProperty<MetaProcedure,MetaColumn> PARAMETERS = newListProperty("parameter", MetaColumn.class);
+    public static final ListProperty<MetaProcedure,MetaColumn> PARAMETERS = newListProperty("parameter");
     /** Procedure <strong>property</strong> (a base definition of the procedure) */
     @Transient
-    public static final Property<MetaProcedure,UjoProperty> DB_PROPERTY = newProperty("dbProperty", UjoProperty.class);
+    public static final Property<MetaProcedure,UjoProperty> DB_PROPERTY = newProperty("dbProperty");
     /** Database */
     @Transient
-    public static final Property<MetaProcedure,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class);
+    public static final Property<MetaProcedure,MetaDatabase> DATABASE = newProperty("database");
     /** Dummy relation for internal use only. */
     @Transient
     @SuppressWarnings("unchecked")

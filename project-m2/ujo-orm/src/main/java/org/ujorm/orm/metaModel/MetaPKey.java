@@ -37,10 +37,10 @@ final public class MetaPKey extends AbstractMetaModel {
     private static final Class CLASS = MetaPKey.class;
 
     /** DB table */
-    public static final Property<MetaPKey,MetaTable> TABLE = newProperty("table", MetaTable.class);
+    public static final Property<MetaPKey,MetaTable> TABLE = newProperty("table");
 
     /** DB columns */
-    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newListProperty("columns", MetaColumn.class);
+    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newListProperty("columns");
 
     /** The property initialization */
     static{init(CLASS);}

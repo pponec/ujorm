@@ -99,7 +99,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string
      */
-    public static final ListProperty<MetaDatabase,String> JNDI = newListProperty("jndi", String.class);
+    public static final ListProperty<MetaDatabase,String> JNDI = newListProperty("jndi");
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujorm.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
@@ -109,15 +109,15 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     public static final Property<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** List of tables */
-    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table", MetaTable.class);
+    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table");
     /** List of procedures */
-    public static final ListProperty<MetaDatabase,MetaProcedure> PROCEDURES = newListProperty("procedure", MetaProcedure.class);
+    public static final ListProperty<MetaDatabase,MetaProcedure> PROCEDURES = newListProperty("procedure");
     /** Database order number */
     @Transient
     public static final Property<MetaDatabase,Integer> ORDER = newProperty("order", 0);
     /** An instance of the DB class. */
     @Transient
-    public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root", OrmUjo.class);
+    public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root");
 
     /** The property initialization */
     static{init(CLASS);}

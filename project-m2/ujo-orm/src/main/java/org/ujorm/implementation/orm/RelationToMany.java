@@ -17,7 +17,7 @@
 package org.ujorm.implementation.orm;
 
 import org.ujorm.core.UjoIterator;
-import org.ujorm.extensions.Property;
+import org.ujorm.extensions.AbstracCollectionProperty;
 import org.ujorm.orm.ExtendedOrmUjo;
 
 /**
@@ -26,34 +26,27 @@ import org.ujorm.orm.ExtendedOrmUjo;
  * @see org.ujorm.core.UjoIterator
  */
 public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo>
-    extends Property<UJO, UjoIterator<ITEM>>
+    extends AbstracCollectionProperty<UJO, UjoIterator<ITEM>, ITEM>
 {
 
-    private final Class<ITEM> itemType;
-
-    /** Constructor */
-    @SuppressWarnings("unchecked")
+    /** Constructor
+     * @param name optional
+     * @param itemType optional
+     */
     public RelationToMany(String name, Class<ITEM> itemType) {
-        init(name, (Class) UjoIterator.class, null, -1, false);
-        this.itemType = itemType;
+        this(name, itemType, UNDEFINED_INDEX, false);
     }
 
     /** Constructor
      * @param name Property name.
-     * @param itemType The type of item.
-     * @param index An property order
+     * @param itemType The type of item (optional)
+     * @param index An property order (optional)
      */
     @SuppressWarnings("unchecked")
     public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {
-        init(name, (Class) UjoIterator.class, null, index, lock);
-        this.itemType = itemType;
+        super((Class<UjoIterator<ITEM>>)(Object)UjoIterator.class);
+        initItemType(itemType);
+        init(name, null, null, index, lock);
     }
-
-
-    /** Returns ItemType */
-    public Class<ITEM> getItemType() {
-        return itemType;
-    }
-
 
 }

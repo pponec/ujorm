@@ -32,16 +32,16 @@ final public class MetaIndex extends AbstractMetaModel {
 
     /** Index database name */
     @Transient
-    public static final Property<MetaIndex,String> NAME = newProperty("name", String.class);
+    public static final Property<MetaIndex,String> NAME = newProperty("name");
     /** Table */
     @Transient
-    public static final Property<MetaIndex,MetaTable> TABLE = newProperty("table", MetaTable.class);
+    public static final Property<MetaIndex,MetaTable> TABLE = newProperty("table");
     /** Is the index unique ? */
     @Transient
     public static final Property<MetaIndex,Boolean> UNIQUE = newProperty("unique", true);
     /** Table Columns */
     @Transient
-    public static final ListProperty<MetaIndex,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
+    public static final ListProperty<MetaIndex,MetaColumn> COLUMNS = newListProperty("column");
 
     /** The property initialization */
     static{init(CLASS);}

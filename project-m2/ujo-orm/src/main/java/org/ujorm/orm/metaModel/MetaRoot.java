@@ -46,9 +46,9 @@ final public class MetaRoot extends AbstractMetaModel {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);
 
     /** List of tables */
-    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database", MetaDatabase.class);
+    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database");
     /** ORM parameters */
-    public static final Property<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters", MetaParams.class);
+    public static final Property<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters");
     /** The property initialization */
     static{init(CLASS);}
 

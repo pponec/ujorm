@@ -37,13 +37,13 @@ public class XDatabase extends OrmTable<XDatabase> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */
     @Table("x_ord_order")
-    public static final RelationToMany<XDatabase,XOrder> ORDERS = newRelation(XOrder.class);
+    public static final RelationToMany<XDatabase,XOrder> ORDERS = newRelation();
 
     /** Items of the Customer order */
     @Table("x_ord_item")
-    public static final RelationToMany<XDatabase,XItem> ORDER_ITEMS = newRelation(XItem.class);
+    public static final RelationToMany<XDatabase,XItem> ORDER_ITEMS = newRelation();
 
     /** Customer */
-    @Table("x_ord_customer") public static final RelationToMany<XDatabase,XCustomer> CUSTOMER = newRelation(XCustomer.class);
+    @Table("x_ord_customer") public static final RelationToMany<XDatabase,XCustomer> CUSTOMER = newRelation();
 
 }

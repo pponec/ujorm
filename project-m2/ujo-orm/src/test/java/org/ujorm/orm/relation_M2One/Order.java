@@ -45,21 +45,21 @@ public class Order extends OrmTable<Order> {
     
     /** The Unique Key */
     @Column(pk = true)
-    public static final UjoProperty<Order, Long> id = newProperty(Long.class);
+    public static final UjoProperty<Order, Long> id = newProperty();
     /** Alternative Unique Key */
     @Column(length=10, uniqueIndex="sid_index")
     public static final UjoProperty<Order,String> sid = newProperty(null, "");
     /** Order state, default is ACTIVE */
     public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
     /** Date of creation */
-    public static final UjoProperty<Order, Date> created = newProperty(Date.class);
+    public static final UjoProperty<Order, Date> created = newProperty();
     /** User key */
-    public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
+    public static final UjoProperty<Order, Integer> userId = newProperty();
     /** Description of the Order */
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final UjoProperty<Order, String> note = newProperty(String.class);
+    public static final UjoProperty<Order, String> note = newProperty();
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> items = newRelation(Item.class);
+    public static final RelationToMany<Order, Item> items = newRelation();
 
     // -----------------------------------------------------------------------
 
