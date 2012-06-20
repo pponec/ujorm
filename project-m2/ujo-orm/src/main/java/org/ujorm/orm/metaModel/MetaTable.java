@@ -81,21 +81,21 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Comment of the database table */
     public static final Property<MetaTable,String> COMMENT = newProperty("comment", Comment.NULL);
     /** Table Columns (no relations) */
-    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column", MetaColumn.class);
+    public static final ListProperty<MetaTable,MetaColumn> COLUMNS = newListProperty("column");
     /** Table relations to many */
-    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m", MetaRelation2Many.class);
+    public static final ListProperty<MetaTable,MetaRelation2Many> RELATIONS = newListProperty("relation2m");
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
-    public static final Property<MetaTable,MetaSelect> SELECT_MODEL = newProperty("selectModel", MetaSelect.class);
+    public static final Property<MetaTable,MetaSelect> SELECT_MODEL = newProperty("selectModel");
     /** Unique Primary Key */
     @Transient
-    public static final Property<MetaTable,MetaPKey> PK = newProperty("pk", MetaPKey.class);
+    public static final Property<MetaTable,MetaPKey> PK = newProperty("pk");
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final Property<MetaTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty", RelationToMany.class);
+    public static final Property<MetaTable,RelationToMany> DB_PROPERTY = newProperty("dbProperty");
     /** Database */
     @Transient
-    public static final Property<MetaTable,MetaDatabase> DATABASE = newProperty("database", MetaDatabase.class);
+    public static final Property<MetaTable,MetaDatabase> DATABASE = newProperty("database");
     /** The property initialization */
     static{init(CLASS);}
 

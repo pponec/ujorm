@@ -37,10 +37,10 @@ public class Database extends OrmTable<Database> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */
     @Table("ord_order")
-    public static final RelationToMany<Database,Order> ORDERS = newRelation(Order.class);
+    public static final RelationToMany<Database,Order> ORDERS = newRelation();
 
     /** Items of the Customer order */
     @Table("ord_item")
-    public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation(Item.class);
+    public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation();
 
 }

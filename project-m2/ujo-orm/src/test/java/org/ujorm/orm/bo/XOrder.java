@@ -44,29 +44,29 @@ public class XOrder extends OrmTable<XOrder> {
     
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<XOrder, Long> ID = newProperty(Long.class);
+    public static final UjoProperty<XOrder, Long> ID = newProperty();
     /** XOrder state, default is ACTIVE */
     public static final UjoProperty<XOrder, State> STATE = newProperty(State.ACTIVE);
     /** User key */
-    public static final UjoProperty<XOrder, Integer> USER_ID = newProperty(Integer.class);
+    public static final UjoProperty<XOrder, Integer> USER_ID = newProperty();
     /** Description of the Order */
     @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true, index="idx_description") //
-    public static final UjoProperty<XOrder, String> DESCR = newProperty(String.class);
+    public static final UjoProperty<XOrder, String> DESCR = newProperty();
     /** Favorite Color */
     public static final UjoProperty<XOrder, Color> COLOR = newProperty(Color.WHITE);
     /** Date of creation */
-    public static final UjoProperty<XOrder, Date> CREATED = newProperty(Date.class);
+    public static final UjoProperty<XOrder, Date> CREATED = newProperty();
     /** Text file */
     @Transient
-    public static final UjoProperty<XOrder, Clob> TEXT_FILE = newProperty(Clob.class);
+    public static final UjoProperty<XOrder, Clob> TEXT_FILE = newProperty();
     /** Binary file */
     @Transient
-    public static final UjoProperty<XOrder, Blob> BINARY_FILE = newProperty(Blob.class);
+    public static final UjoProperty<XOrder, Blob> BINARY_FILE = newProperty();
     /** Reference to Items */
-    public static final RelationToMany<XOrder, XItem> ITEMS = newRelation(XItem.class);
+    public static final RelationToMany<XOrder, XItem> ITEMS = newRelation();
     /** Customer */
     @Column(name="fk_customer") 
-    public static final UjoProperty<XOrder, XCustomer> CUSTOMER = newProperty(XCustomer.class);
+    public static final UjoProperty<XOrder, XCustomer> CUSTOMER = newProperty();
     //@Column(mandatory=true) public static final UjoProperty<XOrder, Integer> NEW_COLUMN = newProperty(777);
 
     // --- An optional implementation of commonly used setters and getters ---

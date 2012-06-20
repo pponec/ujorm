@@ -39,9 +39,9 @@ import org.ujorm.orm.inheritance.sample.bo.User;
 public class Database extends OrmTable<Database> {
 
     /** User */
-    public static final RelationToMany<Database,User> users = newRelation(User.class);
+    public static final RelationToMany<Database,User> users = newRelation();
 
     /** Customer extends the User */
-    public static final RelationToMany<Database,Customer> customers = newRelation(Customer.class);
+    public static final RelationToMany<Database,Customer> customers = newRelation();
 
 }
