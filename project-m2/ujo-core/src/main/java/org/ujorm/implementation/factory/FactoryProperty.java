@@ -42,7 +42,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * @param type Type of a JavaBeans setter input method or getter output method.
      */
     public FactoryProperty(String name, Class<VALUE> type) {
-        this(name, type, -1);
+        this(name, type, UNDEFINED_INDEX);
     }
 
     /**
@@ -51,7 +51,8 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * @param type Type of a JavaBeans setter input method or getter output method.
      */
     public FactoryProperty(String name, Class<VALUE> type, int index) {
-        super(name, type, index);
+        super(index);
+        init(name, type, null, index, true);
         Constructor<VALUE> c = null;
         try {
             c = type.getConstructor(Ujo.class, UjoProperty.class);

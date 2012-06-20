@@ -38,10 +38,21 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
+    /** Unefined index value */
+    protected static final int UNDEFINED_INDEX = -1;
 
     /** Property name */
     private String name;
-    /** Property index */
+    /** Property index, there are exist three indext ranges
+     * <ul>
+     *     <li>index == UNDEFINED_INDEX 
+     *     : an undefine index or a signal for auto-index action</li>
+     *     <li>index &lt; UNDEFINED_INDEX
+     *      : the discontinuous and ascending series of numbers that is generated using a special method</li>
+     *     <li>index &gt; UNDEFINED_INDEX 
+     *     : the continuous and ascending series of numbers usable as a pointer to an array. This is a final state</li>
+     * </ul>
+     */
     private int index;
     /** Property type (class) */
     private Class<VALUE> type;
@@ -54,39 +65,19 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /** A property seqeuncer for an index attribute
      * @see #_nextSequence()
      */
-    private static int _sequencer = 0;
+    private static int _sequencer = Integer.MIN_VALUE;
 
     /** Returns a next property index by a synchronized method.
      * The UJO property indexed by this method may not be in continuous series
      * however numbers have the <strong>upward direction</strong> always.
      */
-    protected static synchronized int _nextSequence() {
+    protected static synchronized int _nextRawSequence() {
         return _sequencer++;
     }
 
-
-    /**
-     * Constructor with an property order
-     * @param name Name must not contains any dot character
-     * @param type
-     * @param index On order of the property.
-     */
-    protected Property(final String name, final Class<VALUE> type, final int index) {
-        init(name, type, null, index, true);
-    }
-
-    /**
-     * Constructor with an property order
-     * @param name Name must not contains any dot character
-     * @param index On order of the property.
-     */
-    @SuppressWarnings("unchecked")
-    protected Property(final String name, final VALUE value, final int index) {
-        init(name, null, value, index, true);
-    }
-
     /** Protected constructor */
-    protected Property() {
+    protected Property(int index) {
+        this.index = index==UNDEFINED_INDEX ? _nextRawSequence() : index ;
     }
 
     /**
@@ -103,26 +94,42 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     , Class<VALUE> type
     , final VALUE defaultValue
     , final int index
-    , final Boolean lock
+    , final boolean lock
     ) {
+        checkLock();
+
+        if (this.index < 0 && index >= 0) {
+            this.index = index ;
+        }
+        if (this.name==null) {
+            setName(name);
+        }
+        if (this.defaultValue == null) {
+            this.defaultValue = defaultValue;
+        }
+        if (this.type == null) {
+            this.type = type;
+        }
+        if (lock) {
+            this.lock = lock;
+            checkAttribs();
+        }
+
+        return this;
+    }
+
+    /** Check an internal log and throw an {@code IllegalStateException} if the object is locked. */
+    final protected void checkLock() throws IllegalStateException {
         if (this.lock) {
             throw new IllegalArgumentException("The property is already initialized: " + this);
         }
-
-        this.index = index==-1 ? _nextSequence() : index ;
-        if (defaultValue!=null) { this.defaultValue = defaultValue; }
-        if (name !=null) { setName(name); }
-        if (type !=null) { this.type  = type ; }
-        if (lock !=null) { this.lock  = lock ; }
-
-        if (this.lock) {
-           checkAttribs();
-        }
-        return this;
     }
 
     /** The Name must not contain any dot character */
     private void setName(String name) throws IllegalArgumentException{
+        if (name==null) {
+            return;
+        }
         if (name.length()==0) {
             final String msg = String.format("Property name '%s' must be empty"
                     , name);
@@ -144,9 +151,13 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** Check properties */
     protected void checkAttribs() {
-        if (name==null) { throw new IllegalArgumentException("Name must not be null in the " + this); }
-        if (type==null) { throw new IllegalArgumentException("Type must not be null in the " + this); }
-        if (defaultValue!=null && !type.isInstance(defaultValue)) {
+        if (name == null) {
+            throw new IllegalArgumentException("Name must not be null for property index: #" + index);
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("Type must not be null in the " + this);
+        }
+        if (defaultValue != null && !type.isInstance(defaultValue)) {
             throw new IllegalArgumentException("Default value have not properly type in the " + this);
         }
     }
@@ -370,8 +381,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * The method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, int index, boolean lock) {
-        return new Property<UJO,VALUE>().init(name, type, value, index, lock);
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
+        return new Property<UJO,VALUE>(index).init(name, type, value, index, lock);
     }
 
 
@@ -380,7 +391,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
-        return new Property<UJO,VALUE>().init(name, type, null, index, true);
+        return new Property<UJO,VALUE>(index).init(name, type, null, index, true);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -388,7 +399,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
-        return newInstance(name, type, -1);
+        return newInstance(name, type, UNDEFINED_INDEX);
     }
 
     /** A Property Factory where a property type is related from from default value.
@@ -398,7 +409,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value, int index) {
         @SuppressWarnings("unchecked")
         Class<VALUE> type = (Class) value.getClass();
-        return new Property<UJO, VALUE>().init(name, type, value, index, true);
+        return new Property<UJO, VALUE>(index).init(name, type, value, index, true);
     }
 
     /** A Property Factory where a property type is related from from default value.
@@ -406,7 +417,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value) {
-         return newInstance(name, value, -1);
+         return newInstance(name, value, UNDEFINED_INDEX);
     }
 
 
@@ -426,7 +437,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(UjoProperty p) {
-         return newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+         return newInstance(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
     }
 
     /** {@inheritDoc} */

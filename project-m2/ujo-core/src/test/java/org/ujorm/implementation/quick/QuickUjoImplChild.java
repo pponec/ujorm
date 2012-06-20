@@ -9,8 +9,10 @@
 
 package org.ujorm.implementation.quick;
 
+import java.awt.Color;
 import java.util.Date;
 import org.ujorm.UjoProperty;
+import org.ujorm.extensions.ListProperty;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -23,10 +25,11 @@ public class QuickUjoImplChild extends QuickUjoImpl {
     public static final UjoProperty <QuickUjoImplChild, String>  PRO_P7 = newProperty();
     public static final UjoProperty <QuickUjoImplChild, Date>    PRO_P8 = newProperty();
     public static final UjoProperty <QuickUjoImplChild, Class>   PRO_P9 = newProperty();
-
+    public static final ListProperty <QuickUjoImplChild,Color> PRO_LST2 = newListProperty();
+    
     // --- Mandatory initializaton ---
     static {
-        init(QuickUjoImpl.class);
+        init(QuickUjoImplChild.class);
     }
     
 }

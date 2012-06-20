@@ -19,22 +19,30 @@ public class PropertyModifier {
             property.init(null, type, null, index, false);
         }
     }
+
+    /** Write an item type into property if it is not locked yet. */
+    @SuppressWarnings("unchecked")
+    public static void setItemType(Class itemType, AbstracCollectionProperty property) {
+        if (itemType==null) {
+            throw new IllegalArgumentException("Item type is undefined for property: " + property);
+        }
+        if (!property.isLock()) {
+            property.initItemType(itemType);
+        }
+    }
     
     /** Write name into property if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setName(String name, Property property) {
         if (!property.isLock()) {
-            int index = property.getIndex();
-            property.init(name, null, null, index, false);
+            property.init(name, null, null, Property.UNDEFINED_INDEX, false);
         }
     }
 
     /** Set the new index and lock the property if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setIndex(int anIndex, Property property) {
-        boolean lock = property.isLock();
-        int index = property.getIndex();
-        if (!lock && index!=anIndex) {
+        if (!property.isLock() && property.getIndex()!=anIndex) {
             property.init(null, null, null, anIndex, true);
         }
     }

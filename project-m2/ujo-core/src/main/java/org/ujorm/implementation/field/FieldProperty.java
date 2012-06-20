@@ -39,7 +39,8 @@ public class FieldProperty<UJO extends Ujo,VALUE>
      * @param type Type of a JavaBeans setter input method or getter output method.
      */
     public FieldProperty(String name, Class<VALUE> type, int index, ValueAgent<UJO,VALUE> agent) {
-        super(name, type, index);
+        super(index);
+        init(name, type, null, index, false);
         this.agent = agent;
     }
     
@@ -49,7 +50,8 @@ public class FieldProperty<UJO extends Ujo,VALUE>
      */
     @SuppressWarnings("unchecked")
     public FieldProperty(String name, VALUE defaultValue, int index, ValueAgent<UJO,VALUE> agent) {
-        super(name, defaultValue, index);
+        super(index);
+        init(name, null, defaultValue, index, false);
         this.agent = agent;
     }
     
