@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.ujorm.Ujo;
@@ -395,8 +396,21 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     }
 
     // -------------- STATIC METHOD(S) --------------
-    /** Create new Instance */
+
+    /** Create a new instance, the parameters is cloned. */
     public static <UJO extends Ujo> PropertyStore<UJO> of(Class<UJO> baseClass, UjoProperty<? super UJO, ?>... properties) {
-        return new PropertyStore<UJO>(baseClass, (UjoProperty[]) properties);
+        UjoProperty[] ps = new UjoProperty[properties.length];
+        System.arraycopy(properties, 0, ps, 0, ps.length);
+        return new PropertyStore<UJO>(baseClass, ps);
+    }
+
+    /** Create a new instance */
+    public static <UJO extends Ujo> PropertyStore<UJO> of(Class<UJO> baseClass, Collection<UjoProperty<? super UJO, ?>> properties) {
+        final UjoProperty<UJO, ?>[] ps = new UjoProperty[properties.size()];
+        int i = 0;
+        for (UjoProperty<? super UJO, ?> p : properties) {
+            ps[i++] = (UjoProperty<UJO, ?>) p;
+        }
+        return new PropertyStore<UJO>(baseClass, (UjoProperty[]) ps);
     }
 }
