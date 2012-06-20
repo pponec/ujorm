@@ -45,21 +45,12 @@ public class QuickUjoBaseTest extends MyTestCase {
      */
     public void testPropertyType() throws Throwable {
         System.out.println("testPropertyType");
-        
-        Type type1 = getGenerics(QuickUjoImpl.class, QuickUjoImpl.PRO_P0.getName())[1];
-        Type type2 = getGenerics(QuickUjoImpl.class, QuickUjoImpl.PRO_P1.getName())[1];
-        Type type3 = getGenerics(QuickUjoImpl.class, QuickUjoImpl.PRO_P2.getName())[1];
-        Type type4 = getGenerics(QuickUjoImpl.class, QuickUjoImpl.PRO_P3.getName())[1];
-        //
-        assertEquals(Long   .class, type1);
-        assertEquals(Integer.class, type2);
-        assertEquals(String .class, type3);
-        assertEquals(Date   .class, type4);
-        //
+
         assertEquals(Long   .class, QuickUjoImpl.PRO_P0.getType());
         assertEquals(Integer.class, QuickUjoImpl.PRO_P1.getType());
         assertEquals(String .class, QuickUjoImpl.PRO_P2.getType());
         assertEquals(Date   .class, QuickUjoImpl.PRO_P3.getType());
+        assertEquals(Color  .class, QuickUjoImpl.PRO_LST1.getItemType());
     }
     
     /**
@@ -68,18 +59,6 @@ public class QuickUjoBaseTest extends MyTestCase {
     public void testPropertyChildype() throws Throwable {
         System.out.println("testPropertyType");
         
-        Type type0 = getGenerics(QuickUjoImpl.class, QuickUjoImplChild.PRO_P0.getName())[1];
-        Type type1 = getGenerics(QuickUjoImpl.class, QuickUjoImplChild.PRO_P1.getName())[1];
-        Type type2 = getGenerics(QuickUjoImpl.class, QuickUjoImplChild.PRO_P2.getName())[1];
-        Type type3 = getGenerics(QuickUjoImpl.class, QuickUjoImplChild.PRO_P3.getName())[1];
-        Type type4 = getGenerics(QuickUjoImpl.class, QuickUjoImplChild.PRO_P4.getName())[1];
-        //
-        assertEquals(Long   .class, type0);
-        assertEquals(Integer.class, type1);
-        assertEquals(String .class, type2);
-        assertEquals(Date   .class, type3);
-        assertEquals(Class  .class, type4);
-        //
         assertEquals(Long   .class, QuickUjoImplChild.PRO_P0.getType());
         assertEquals(Integer.class, QuickUjoImplChild.PRO_P1.getType());
         assertEquals(String .class, QuickUjoImplChild.PRO_P2.getType());
@@ -90,28 +69,10 @@ public class QuickUjoBaseTest extends MyTestCase {
         assertEquals(String .class, QuickUjoImplChild.PRO_P7.getType());
         assertEquals(Date   .class, QuickUjoImplChild.PRO_P8.getType());
         assertEquals(Class  .class, QuickUjoImplChild.PRO_P9.getType());
+        assertEquals(Color  .class, QuickUjoImplChild.PRO_LST1.getItemType());
+        assertEquals(Color  .class, QuickUjoImplChild.PRO_LST2.getItemType());
     }
-    
-    /** Regurns array of generic parameters */
-    private static Type[] getGenerics(Class type, String fieldName) {
-        try {
-            final Field field = type.getDeclaredField(fieldName);
-            final Type[] types = getGenerics(field);
-            return types;
-        } catch (NoSuchFieldException ex) {
-            throw new IllegalStateException(ex);
-        } catch (SecurityException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /** Regurns array of generic parameters */
-    private static Type[] getGenerics(Field field) {
-        final ParameterizedType type = (ParameterizedType) field.getGenericType();
-        final Type[] types = type.getActualTypeArguments();
-        return types;
-    }    
-    
+        
     /**
      * Test of readValue method,
      */

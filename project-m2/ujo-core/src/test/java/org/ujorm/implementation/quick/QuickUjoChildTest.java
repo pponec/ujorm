@@ -122,8 +122,8 @@ public class QuickUjoChildTest extends MyTestCase {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
         QuickUjoImplChild  ujb2 = new QuickUjoImplChild();
         
-        assertEquals( 5, ujb1.readProperties().size());
-        assertEquals(10, ujb2.readProperties().size());
+        assertEquals( 6, ujb1.readProperties().size());
+        assertEquals(12, ujb2.readProperties().size());
     }
 
     public void testPropertyName() throws Throwable {

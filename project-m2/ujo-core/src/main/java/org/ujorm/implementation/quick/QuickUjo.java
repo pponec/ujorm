@@ -50,6 +50,9 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
 
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 754967L;
+
+    /** {@see Property#UNDEFINED_INDEX} */
+    private static final int UNDEFINED_INDEX = -1;
        
     /** Object data. Unauthorized writing is not allowed. */
     final private Object[] data;
@@ -118,7 +121,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     ( String name
     , Class<VALUE> type
     ) {
-        return newProperty(name, type, null, -1, false);
+        return newProperty(name, type, null, UNDEFINED_INDEX, false);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -126,7 +129,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty(String name) {
-        return newProperty(name, null, null, -1, false);
+        return newProperty(name, null, null, UNDEFINED_INDEX, false);
     }
     
     /** A Property Factory creates new property and assigns a next property index.
@@ -137,7 +140,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     ( String name
     , VALUE value
     ) {
-        return newProperty(name, null, value, -1, false);
+        return newProperty(name, null, value, UNDEFINED_INDEX, false);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -149,7 +152,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newProperty
     ( Class<VALUE> type
     ) {
-        return newProperty(null, type, null, -1, false);
+        return newProperty(null, type, null, UNDEFINED_INDEX, false);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -159,7 +162,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty
     ( VALUE value
     ) {
-        return newProperty(null, null, value, -1, false);
+        return newProperty(null, null, value, UNDEFINED_INDEX, false);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -167,7 +170,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty() {
-        return newProperty(null, null, null, -1, false);
+        return newProperty(null, null, null, UNDEFINED_INDEX, false);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -179,27 +182,45 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
         return Property.newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
+    /** A Property Factory creates new property and assigns a next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @deprecated Use rather {@link #newListProperty(java.lang.String) }
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
+    ( String name
+    , Class<ITEM> itemType
+    ) {
+        return ListProperty.newListProperty(name, itemType, UNDEFINED_INDEX, false);
+    }
 
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
-    protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
-    ( String name
-    , Class<ITEM> itemType
-    ) {
-        return ListProperty.newListProperty(name, itemType, -1, false);
+    protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty( String name) {
+        return ListProperty.newListProperty(name, null, UNDEFINED_INDEX, false);
     }
 
     /** A Property Factory creates new property and assigns a name and next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @deprecated Use rather {@link #newListProperty() }
      * @hidden
      */
+    @Deprecated
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
     ( Class<ITEM> itemType
     ) {
         return newListProperty(null, itemType);
     }
-
     
+    /** A Property Factory creates new property and assigns a name and next property index.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
+     */
+    protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty() {
+        return ListProperty.newListProperty((String)null, null);
+    }
+ 
 }

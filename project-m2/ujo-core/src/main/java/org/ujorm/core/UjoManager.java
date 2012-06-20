@@ -32,6 +32,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.CompositeProperty;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.core.annot.XmlElementBody;
@@ -77,7 +78,7 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Get a default initialization */
-    public static final UjoManager getInstance() {
+    public static UjoManager getInstance() {
         return instance;
     }
     
@@ -156,9 +157,15 @@ public class UjoManager implements Comparator<UjoProperty> {
                                     PropertyModifier.setName(field.getName(), (Property) ujoProp);
                                 }
                                 if (ujoProp.getType() == null) {
-                                    PropertyModifier.setType(getGenericClass(field,1), (Property) ujoProp);
+                                    PropertyModifier.setType(getGenericClass(field, 1), (Property) ujoProp);
                                 }
-                            }                           
+                                if (ujoProp instanceof AbstracCollectionProperty) {
+                                    final AbstracCollectionProperty lp = (AbstracCollectionProperty) ujoProp;
+                                    if (lp.getItemType() == null) {
+                                        PropertyModifier.setItemType(getGenericClass(field,1), lp);
+                                    }
+                                }
+                            }
                         }
 
                         // set the transient cache:
@@ -201,13 +208,16 @@ public class UjoManager implements Comparator<UjoProperty> {
     }
     
     /** Regurns array of generic parameters */
-    private static Class getGenericClass(final Field field, final int position) {
-        final ParameterizedType type = (ParameterizedType) field.getGenericType();
-        final Type result = type.getActualTypeArguments()[position];
-        return (result instanceof Class) 
-                ? (Class) result 
-                : Class.class ;
-    }       
+    @PackagePrivate static Class getGenericClass(final Field field, final int position) throws IllegalArgumentException {
+        try {
+            final ParameterizedType type = (ParameterizedType) field.getGenericType();
+            final Type result = type.getActualTypeArguments()[position];
+            return (result instanceof Class) ? (Class) result : Class.class;
+        } catch (Exception e) {
+            final String msg = String.format("The field '%s' generic scan failed", field.getName());
+            throw new IllegalArgumentException(msg, e);
+        }
+    }
     
     /** Compare Ujo properties by index. An undefined property indexes (-1 are sorted to the end. */
     public int compare(final UjoProperty p1, final UjoProperty p2) {

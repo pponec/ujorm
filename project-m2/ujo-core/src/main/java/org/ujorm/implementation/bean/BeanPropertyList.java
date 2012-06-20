@@ -16,7 +16,6 @@
 
 package org.ujorm.implementation.bean;
 
-import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.core.BeanManager;
 import org.ujorm.extensions.ListUjoProperty;
@@ -40,7 +39,7 @@ implements ValueAgent<Object,Object>, ListUjoProperty<UJO, ITEM>
     @SuppressWarnings("unchecked")
     public BeanPropertyList(String name, Class<ITEM> itemType, int index) {
         super(itemType);
-        initList(name, index, true);
+        init(name, null, null, index, true);
         beanManager = BeanManager.getInstance(this);
     }
     

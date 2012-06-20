@@ -28,58 +28,26 @@ import org.ujorm.core.UjoComparator;
  * @author Pavel Ponec
  */
 public class ListProperty<UJO extends Ujo, ITEM>
-    extends Property<UJO,List<ITEM>>
+    extends AbstracCollectionProperty<UJO, List<ITEM>, ITEM>
     implements ListUjoProperty<UJO,ITEM> {
-
-    /** Class of the list item. */
-    final private Class<ITEM> itemType;
 
     /** Protected constructor */
     protected ListProperty(Class<ITEM> itemType) {
-        this.itemType = itemType;
+        this(null, itemType, UNDEFINED_INDEX);
     }
 
     /** Protected constructor */
     protected ListProperty(String name, Class<ITEM> itemType, int index) {
-        initList(name, index, true);
-        this.itemType = itemType;
+        super((Class<List<ITEM>>)(Object)List.class);
+        initItemType(itemType);
+        init(name, null, null, index, false);
     }
-
-    /**
-     * List property initialization.
-     * @param name Replace the Name of property if the one is NULL.
-     * @param index Replace index always, the value -1 invoke a next number from the internal sequencer.
-     * @param lock Lock the property.
-     */
-    @SuppressWarnings("unchecked")
-    final protected ListProperty<UJO,ITEM> initList
-    ( final String name
-    , final int index
-    , final Boolean lock
-    ) {
-       init(name, (Class) List.class, null, index, lock);
-       return this;
-    }
-
 
     /** Returns a count of Items. If a property value is null, method returns 0. */
     @Override
     public int getItemCount(final UJO ujo) {
         List<ITEM> list = getValue(ujo);
         return list!=null ? list.size() : 0 ;
-    }
-
-    /** Return a Class of the Item. */
-    @Override
-    public Class<ITEM> getItemType() {
-        return itemType;
-    }
-
-    /** Returns true if the item type is a type or subtype of the parameter class. */
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean isItemTypeOf(final Class type) {
-        return type.isAssignableFrom(itemType);
     }
 
     /**
@@ -177,7 +145,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     , final boolean lock
     ) {
         final ListProperty<UJO,ITEM> result = new ListProperty<UJO,ITEM>(itemType);
-        result.init(name, (Class) List.class, null, index, lock);
+        result.init(name, null, null, index, lock);
         return result;
     }
 
@@ -190,7 +158,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     , final Class<ITEM> itemType
     , final int index
     ) {
-        return newListProperty(name, itemType, index, true);
+        return newListProperty(name, itemType, index, false);
     }
 
 
@@ -202,7 +170,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     ( final String name
     , final Class<ITEM> itemType
     ) {
-        return newListProperty(name, itemType, -1);
+        return newListProperty(name, itemType, UNDEFINED_INDEX);
     }
     
 }
