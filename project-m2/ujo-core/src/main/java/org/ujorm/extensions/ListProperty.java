@@ -58,6 +58,15 @@ public class ListProperty<UJO extends Ujo, ITEM>
         return getValue(ujo).get(index);
     }
 
+    /**
+     * The alias for {@link #getItem(org.ujorm.Ujo, int) }.
+     * @return Returns a value of property. The result is the same, like Ujo#getValue(UjoPropertyList) .get(index) .
+     */
+    @Override
+    public ITEM of(final UJO ujo, final int index) {
+        return getValue(ujo).get(index);
+    }
+
     /** Set a property item value. The action is the same, like Ujo#getValue(UjoPropertyList) .set(indexm, value).
      * @return the element previously at the specified position.
      */

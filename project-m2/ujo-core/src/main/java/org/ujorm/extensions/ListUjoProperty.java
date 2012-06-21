@@ -41,6 +41,12 @@ public interface ListUjoProperty<UJO extends Ujo, ITEM> extends UjoProperty<UJO,
     public ITEM getItem(UJO ujo, int index);
 
     /**
+     * An alias for {@link #getItem(org.ujorm.Ujo, int)}.
+     * @return Returns a value of property. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
+     */
+    public ITEM of(UJO ujo, int index);
+
+    /**
      * Return a not null List. If original list value is empty, the new List is created.
      * @see #getItem(Ujo, int)
      */
