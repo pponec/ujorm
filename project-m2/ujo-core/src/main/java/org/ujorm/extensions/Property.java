@@ -24,6 +24,7 @@ import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
@@ -89,7 +90,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @param lock Lock the property.
      */
     @SuppressWarnings("unchecked")
-    final protected Property<UJO,VALUE> init
+    protected final Property<UJO,VALUE> init
     ( final String name
     , Class<VALUE> type
     , final VALUE defaultValue
@@ -119,7 +120,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
 
     /** Check an internal log and throw an {@code IllegalStateException} if the object is locked. */
-    final protected void checkLock() throws IllegalStateException {
+    protected final void checkLock() throws IllegalStateException {
         if (this.lock) {
             throw new IllegalArgumentException("The property is already initialized: " + this);
         }
@@ -145,7 +146,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
 
     /** Is the property Locked? */
-    final boolean isLock() {
+    @PackagePrivate final boolean isLock() {
         return lock;
     }
 
@@ -203,7 +204,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    final public VALUE getValue(final UJO ujo) {
+    public final VALUE getValue(final UJO ujo) {
         final Object result = ujo.readValue(this);
         return result!= null ? (VALUE) result : defaultValue;
     }
@@ -214,7 +215,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    final public VALUE of(final UJO ujo) {
+    public final VALUE of(final UJO ujo) {
         final Object result = ujo.readValue(this);
         return result!= null ? (VALUE) result : defaultValue;
     }

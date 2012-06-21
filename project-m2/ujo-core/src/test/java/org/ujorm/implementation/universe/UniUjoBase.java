@@ -14,6 +14,7 @@ import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.PropertyFactory;
 import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
 
 /**
@@ -25,11 +26,15 @@ public class UniUjoBase extends AbstractUjo {
     /** Factory */
     private static final PropertyFactory<UniUjoBase> pf = PropertyFactory.getInstance(UniUjoBase.class);
     
-    public static final Property<UniUjoBase,Long>    PRO_P0 = (Property<UniUjoBase,Long>) (Object) pf.newProperty();
-    public static final Property<UniUjoBase,Integer> PRO_P1 = pf.newProperty();
-    public static final Property<UniUjoBase,String>  PRO_P2 = pf.newProperty();
-    public static final Property<UniUjoBase,Date>    PRO_P3 = pf.newProperty();
-    public static final Property<UniUjoBase,Float>   PRO_P4 = pf.newProperty();
+    public static final Property<UniUjoBase,Long>      PRO_P0 = pf.newProperty();
+    public static final Property<UniUjoBase,Integer>   PRO_P1 = pf.newProperty();
+    public static final Property<UniUjoBase,String>    PRO_P2 = pf.newProperty();
+    public static final Property<UniUjoBase,Date>      PRO_P3 = pf.newProperty();
+    public static final ListProperty<UniUjoBase,Float> PRO_P4 = pf.newListProperty();
+
+    static {
+        pf.lock();
+    }
 
     /** Data */
     protected Object[] data;

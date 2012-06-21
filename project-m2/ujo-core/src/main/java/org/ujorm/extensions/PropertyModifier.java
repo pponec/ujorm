@@ -47,4 +47,17 @@ public class PropertyModifier {
         }
     }
 
+    /** Set the new index and lock the property if it is not locked yet. */
+    @SuppressWarnings("unchecked")
+    public static void lock(Property property) {
+        if (!property.isLock()) {
+            property.init(null, null, null, Property.UNDEFINED_INDEX, true);
+        }
+    }
+
+    /** Lock the property */
+    public static boolean isLock(Property property) {
+        return property.isLock();
+    }
+
 }

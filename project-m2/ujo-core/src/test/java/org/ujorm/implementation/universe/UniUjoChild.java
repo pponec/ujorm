@@ -13,6 +13,7 @@ import java.util.Date;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.PropertyFactory;
+import org.ujorm.extensions.ListUjoProperty;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -27,7 +28,11 @@ public class UniUjoChild extends UniUjoBase {
     public static final UjoProperty <UniUjoChild, Integer> PRO_P6 = pf.newProperty("P6");
     public static final UjoProperty <UniUjoChild, String>  PRO_P7 = pf.newProperty("P7");
     public static final UjoProperty <UniUjoChild, Date>    PRO_P8 = pf.newProperty("P8");
-    public static final UjoProperty <UniUjoChild, Float>   PRO_P9 = pf.newProperty("P9");
+    public static final ListUjoProperty<UniUjoChild,Float> PRO_P9 = pf.newListProperty("P9");
+
+    static {
+        pf.lock();
+    }
 
     @Override
     public UjoPropertyList<?> readProperties() {
