@@ -19,14 +19,14 @@ package org.ujorm.spring;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
-import org.ujorm.implementation.quick.QuickUjo;
 
 /**
  * UJO adapter for the Spring Application Context.
  * @author Pavel Ponec
  */
-abstract public class AbstractAplicationContextAdapter extends QuickUjo implements ApplicationContextAware {
+abstract public class AbstractAplicationContextAdapter implements Ujo, ApplicationContextAware {
     
     /** Spring application Conext */
     private ApplicationContext context;
