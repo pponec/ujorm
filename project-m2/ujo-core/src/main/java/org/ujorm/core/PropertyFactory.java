@@ -216,14 +216,14 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     /** Returns new factory instance along the parameter class {@code factory}
      * @param baseClass base class
-     * @param factory New implementaton of the factory with consturctor parameter type of {@code Class<UJO>}.
+     * @param factoryClass A class with implementaton of the factory with consturctor parameter type of {@code Class<UJO>}.
      * @throws IllegalArgumentException
      */
-    public static <UJO extends Ujo, T extends PropertyFactory<UJO>> T getInstance(Class<UJO> baseClass, Class<T> factory) throws IllegalArgumentException {
+    public static <UJO extends Ujo, T extends PropertyFactory<UJO>> T getInstance(Class<UJO> baseClass, Class<T> factoryClass) throws IllegalArgumentException {
         try {
-            return factory.getConstructor(Class.class).newInstance(factory);
+            return factoryClass.getConstructor(Class.class).newInstance(baseClass);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Can't create instence of the factory " + factory, e);
+            throw new IllegalArgumentException("Can't create instence of the factory " + factoryClass, e);
         }
     }
 
