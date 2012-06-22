@@ -13,28 +13,29 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujorm.spring;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.ujorm.Ujo;
+import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
+import org.ujorm.UjoPropertyList;
 
 /**
  * UJO adapter for the Spring Application Context.
  * @author Pavel Ponec
  */
 abstract public class AbstractAplicationContextAdapter implements Ujo, ApplicationContextAware {
-    
+
     /** Spring application Conext */
     private ApplicationContext context;
 
     /** Default adapter. */
     public AbstractAplicationContextAdapter() {
     }
-    
+
     /** Assign context directly for the case this instance is not a Spring bean. */
     protected AbstractAplicationContextAdapter(ApplicationContext context) {
         setApplicationContext(context);
@@ -42,6 +43,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
 
     /** A delegat for the method {@link #getBean(org.ujorm.UjoProperty). */
     @Override
+    @SuppressWarnings("unchecked")
     final public Object readValue(UjoProperty property) {
         return getBean(property);
     }
@@ -54,38 +56,36 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
     }
 
     /** An delegat for the method {@link ApplicationContext#getBean(java.lang.String, java.lang.Class)} */
-    public <T> T getBean(UjoProperty<? extends AbstractAplicationContextAdapter, T> property) throws BeansException {        
+    @SuppressWarnings("unchecked")
+    public <T> T getBean(UjoProperty<? extends AbstractAplicationContextAdapter, T> property) throws BeansException {
         return (T) context.getBean(property.getName(), property.getType());
     }
 
     /** Assing the application context by Spring framework only. Do not call the method directly. */
     @Override
     final public void setApplicationContext(ApplicationContext ac) throws BeansException {
-        if (this.context!=null) {
+        if (this.context != null) {
             throw new UnsupportedOperationException("The application context is assigned yet");
         }
         this.context = ac;
     }
-    
+
     /** Original application context */
-    protected ApplicationContext getApplicationContext() {        
+    protected ApplicationContext getApplicationContext() {
         return context;
     }
-    
-    
+
+    /** The method must be implemented in the child class. */
+    @Override
+    public UjoPropertyList<?> readProperties() {
+        throw new UnsupportedOperationException("The implementation must be in the a child class");
+    }
+
     // ------------- STATIC METHODS -------------------
-    
-    /** Property name is taken form field and property type is taken form a generic type. */
-    protected static <VALUE> SpringKey<VALUE> newSpringKey() {
-        return new SpringKey<VALUE>();
+
+    @Override
+    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+        return true;
     }
-    
-    /** Property name is taken form field and property type is taken form a generic type.
-     * @Property property name
-     */
-    protected static <VALUE> SpringKey<VALUE> newSpringKey(String name) {
-        return new SpringKey<VALUE>(name);
-    }
-    
-    
+
 }

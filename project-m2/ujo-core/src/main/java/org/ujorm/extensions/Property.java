@@ -502,6 +502,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Criterion<UJO> whereFilled() {
         final Criterion<UJO> result = whereNotNull()
             .and(Criterion.where(this, Operator.NOT_EQ, (VALUE) getEmptyValue()))
@@ -510,6 +511,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     public Criterion<UJO> whereNotFilled(){
         final Criterion<UJO> result = whereNull()
             .or(new ValueCriterion(this, Operator.EQ, getEmptyValue()))

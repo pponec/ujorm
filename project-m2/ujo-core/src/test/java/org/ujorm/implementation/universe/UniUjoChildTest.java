@@ -115,8 +115,8 @@ public class UniUjoChildTest extends MyTestCase {
     }
 
     public void testPropertyCount() throws Throwable {
-        UniUjoBase ujb1 = new UniUjoBase();
-        UniUjoChild  ujb2 = new UniUjoChild();
+        UniUjoBase  ujb1 = new UniUjoBase();
+        UniUjoChild ujb2 = new UniUjoChild();
 
         assertEquals( 5, ujb1.readProperties().size());
         assertEquals(10, ujb2.readProperties().size());

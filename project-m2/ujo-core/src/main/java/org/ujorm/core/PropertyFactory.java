@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ponec.
+ * Copyright 2012-2012 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,9 +50,10 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     private UjoPropertyList<UJO> propertyStore;
 
     /** The Ujo type is serializad */
-    private Class<UJO> type;
+    private Class<? extends UJO> type;
 
-    public PropertyFactory(Class<UJO> type) {
+    @SuppressWarnings("unchecked")
+    public PropertyFactory(Class<? extends UJO> type) {
         this.type = type;
         this.propertyList = new ArrayList<UjoProperty<UJO, ?>>();
         try {
@@ -63,14 +64,27 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                     propertyList.add(p);
                 }
             }
-        } catch (Exception ex) {
-            throw new IllegalArgumentException("Can't create instance of " + type.getSuperclass());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can't create instance of " + type.getSuperclass(), e);
         }
     }
 
-    /** Lock the factory */
+    /** Add an new property for an internal use. */
+    protected boolean addProperty(UjoProperty p) {
+        checkLock();
+        return propertyList.add(p);
+    }
+
+    /** Lock the property factory */
     public final void lock() {
-        getPropertyList();
+        lockAndSize();
+    }
+
+    /** Lock the property factory
+     * @return count of the direct properties.
+     */
+    public final int lockAndSize() {
+        return getPropertyList().size();
     }
 
     /** Get PropertyStore */
@@ -142,25 +156,29 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
 
     /** Create new UjoProperty */
-    public final <T> Property<UJO,T> newProperty() {
-        return newProperty(null, null);
+    public <T> UjoProperty<UJO,T> newProperty() {
+        return createProperty(null, null);
     }
 
     /** Create new UjoProperty */
-    public final <T> Property<UJO,T> newProperty(String name) {
-        return newProperty(name, null);
+    public <T> UjoProperty<UJO,T> newProperty(String name) {
+        return createProperty(name, null);
+    }
+
+    /** Create new UjoProperty with a default value */
+    public <T> UjoProperty<UJO,T> newPropertyDefault(T defaultValue) {
+        return createProperty(null, defaultValue);
     }
 
     /** Create new UjoProperty */
-    public final <T> Property<UJO,T> newPropertyDef(T defaultValue) {
-        return newProperty(null, defaultValue);
+    public <T> UjoProperty<UJO,T> newProperty(String name, T defaultValue) {
+        return createProperty(name, defaultValue);
     }
 
-    /** Create new UjoProperty */
-    public <T> Property<UJO,T> newProperty(String name, T defaultValue) {
-        checkLock();
+    /** Common protected factory method */
+    protected <T> UjoProperty<UJO,T> createProperty(String name, T defaultValue) {
         final Property<UJO,T> p = Property.newInstance(name, null, defaultValue, propertyList.size(), false);
-        propertyList.add(p);
+        addProperty(p);
         return p;
     }
 
@@ -191,8 +209,22 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     /* ================== STATIC METHOD ================== */
 
-    public static <UJO extends Ujo> PropertyFactory<UJO> getInstance(Class baseClass) {
-        return new PropertyFactory<UJO>(baseClass);
+    /** Return an instance of the {@link PropertyFactory} class */
+    public static <UJO extends Ujo> PropertyFactory<UJO> getInstance(Class<UJO> baseClass) {
+        return getInstance(baseClass, PropertyFactory.class);
+    }
+
+    /** Returns new factory instance along the parameter class {@code factory}
+     * @param baseClass base class
+     * @param factory New implementaton of the factory with consturctor parameter type of {@code Class<UJO>}.
+     * @throws IllegalArgumentException
+     */
+    public static <UJO extends Ujo, T extends PropertyFactory<UJO>> T getInstance(Class<UJO> baseClass, Class<T> factory) throws IllegalArgumentException {
+        try {
+            return factory.getConstructor(Class.class).newInstance(factory);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can't create instence of the factory " + factory, e);
+        }
     }
 
     /** Regurns array of generic parameters */
