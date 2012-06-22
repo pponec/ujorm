@@ -44,7 +44,7 @@ final class DummyUjo implements Ujo {
     @Override
     public UjoPropertyList readProperties() {
         final UjoProperty[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
-        return new UjoPropertyListImpl(DummyUjo.class, ps);
+        return PropertyStore.of(DummyUjo.class, ps);
     }    
     
     /** Is an order of properties reversed? */

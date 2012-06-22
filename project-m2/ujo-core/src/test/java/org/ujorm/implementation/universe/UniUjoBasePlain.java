@@ -28,11 +28,11 @@ public class UniUjoBasePlain implements Ujo {
     protected static final PropertyFactory<UniUjoBasePlain> pf = PropertyFactory.getInstance(UniUjoBasePlain.class);
 
     /** Properties */
-    public static final Property<UniUjoBasePlain,Long>    PRO_P0 = (Property<UniUjoBasePlain,Long>) (Object) pf.newProperty();
-    public static final Property<UniUjoBasePlain,Integer> PRO_P1 = pf.newProperty();
-    public static final Property<UniUjoBasePlain,String>  PRO_P2 = pf.newProperty();
-    public static final Property<UniUjoBasePlain,Date>    PRO_P3 = pf.newProperty();
-    public static final Property<UniUjoBasePlain,Float>   PRO_P4 = pf.newProperty();
+    public static final UjoProperty<UniUjoBasePlain,Long>    PRO_P0 = (Property<UniUjoBasePlain,Long>) (Object) pf.newProperty();
+    public static final UjoProperty<UniUjoBasePlain,Integer> PRO_P1 = pf.newProperty();
+    public static final UjoProperty<UniUjoBasePlain,String>  PRO_P2 = pf.newProperty();
+    public static final UjoProperty<UniUjoBasePlain,Date>    PRO_P3 = pf.newProperty();
+    public static final UjoProperty<UniUjoBasePlain,Float>   PRO_P4 = pf.newProperty();
 
     /** Data */
     protected Object[] data;
