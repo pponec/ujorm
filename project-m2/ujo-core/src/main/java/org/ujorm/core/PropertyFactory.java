@@ -98,7 +98,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Create a property List */
-    protected UjoPropertyList<UJO> createPropertyList() {
+    protected UjoPropertyList<UJO> createPropertyList() throws IllegalStateException {
         final List<Field> fields = getFields();
         try {
             for (UjoProperty<UJO, ?> p : propertyList) {
@@ -123,8 +123,8 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                     PropertyModifier.lock(pr); // Lock all attributes:
                 }
             }
-        } catch (Exception ex) {
-            Logger.getLogger(PropertyFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't initialize a property of the " + type, e);
         }
         final UjoPropertyList<UJO> result = PropertyStore.of(type, (List) propertyList);
         return result;
@@ -137,7 +137,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                 return field;
             }
         }
-        throw new IllegalStateException("Can't find a field: " + p);
+        throw new IllegalStateException("Can't get a field for the property index #" + p.getIndex());
     }
 
     /** Find field */
@@ -211,7 +211,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     /** Return an instance of the {@link PropertyFactory} class */
     public static <UJO extends Ujo> PropertyFactory<UJO> getInstance(Class<UJO> baseClass) {
-        return getInstance(baseClass, PropertyFactory.class);
+        return new PropertyFactory(baseClass);
     }
 
     /** Returns new factory instance along the parameter class {@code factory}
