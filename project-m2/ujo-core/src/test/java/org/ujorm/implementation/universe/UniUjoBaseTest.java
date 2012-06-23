@@ -118,7 +118,23 @@ public class UniUjoBaseTest extends MyTestCase {
         assertEquals(UniUjoBase.PRO_P3, props.get(3));
         assertEquals(UniUjoBase.PRO_P4, props.get(4));
     }
-    
+
+    /** Test of properties */
+    // @ExpectedException(class=IllegalStateException.class, message="Exception Message", causeException)
+    public void testMismuch() throws Throwable {
+        try {
+            new MismuchUjoBase().readProperties();
+        } catch (IllegalStateException e) {
+            return;
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return;
+        }
+        assertEquals("The exception " + IllegalArgumentException.class.getSimpleName() + " is expected.", null);
+    }
+
+
+
     /** Test of properties */
     public void testDummy() throws Throwable {
     }

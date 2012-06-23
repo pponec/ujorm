@@ -62,4 +62,15 @@ abstract public class AbstracCollectionProperty<UJO extends Ujo,VALUE,ITEM> exte
             this.itemType = itemType;
         }
     }
+
+    /** Check validity of properties */
+    @Override
+    protected void checkValidity() throws IllegalArgumentException {
+        super.checkValidity();
+        if (itemType == null) {
+            throw new IllegalArgumentException("Type must not be null in the " + this);
+        }
+
+    }
+
 }

@@ -113,7 +113,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         }
         if (lock) {
             this.lock = lock;
-            checkAttribs();
+            checkValidity();
         }
 
         return this;
@@ -150,8 +150,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return lock;
     }
 
-    /** Check properties */
-    protected void checkAttribs() {
+    /** Check validity of properties */
+    protected void checkValidity() throws IllegalArgumentException {
         if (name == null) {
             throw new IllegalArgumentException("Name must not be null for property index: #" + index);
         }
@@ -234,7 +234,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @SuppressWarnings("unchecked")
     public <PROPERTY extends Property> PROPERTY writeDefault(VALUE value) {
         defaultValue = value;
-        if (lock) checkAttribs();
+        if (lock) checkValidity();
         return (PROPERTY) this;
     }
     
