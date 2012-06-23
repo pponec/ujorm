@@ -29,7 +29,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.annot.PackagePrivate;
-import org.ujorm.extensions.AbstracCollectionProperty;
+import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.PropertyModifier;
@@ -114,8 +114,8 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                     if (p.getType() == null) {
                         PropertyModifier.setType(getGenericClass(field, 1), pr);
                     }
-                    if (p instanceof AbstracCollectionProperty) {
-                        final AbstracCollectionProperty lp = (AbstracCollectionProperty) pr;
+                    if (p instanceof AbstractCollectionProperty) {
+                        final AbstractCollectionProperty lp = (AbstractCollectionProperty) pr;
                         if (lp.getItemType() == null) {
                             PropertyModifier.setItemType(getGenericClass(field,1), lp);
                         }

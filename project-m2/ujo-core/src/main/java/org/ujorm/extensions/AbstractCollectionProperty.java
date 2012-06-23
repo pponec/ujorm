@@ -25,17 +25,17 @@ import org.ujorm.core.annot.Immutable;
  * @author Pavel Ponec
  */
 @Immutable
-abstract public class AbstracCollectionProperty<UJO extends Ujo,VALUE,ITEM> extends Property<UJO,VALUE> {
+abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> extends Property<UJO,VALUE> {
 
     /** Class of the list item. */
     private Class<ITEM> itemType;
 
-    public AbstracCollectionProperty(Class<VALUE> collectionType) {
+    public AbstractCollectionProperty(Class<VALUE> collectionType) {
         super(UNDEFINED_INDEX);
         init(null, collectionType, null, UNDEFINED_INDEX, false);
     }
 
-    public AbstracCollectionProperty(String name, Class<VALUE> collectionType, int index) {
+    public AbstractCollectionProperty(String name, Class<VALUE> collectionType, int index) {
         super(index);
         init(name, collectionType, null, index, false);
     }
