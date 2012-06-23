@@ -28,7 +28,7 @@ import org.ujorm.core.UjoComparator;
  * @author Pavel Ponec
  */
 public class ListProperty<UJO extends Ujo, ITEM>
-    extends AbstracCollectionProperty<UJO, List<ITEM>, ITEM>
+    extends AbstractCollectionProperty<UJO, List<ITEM>, ITEM>
     implements ListUjoProperty<UJO,ITEM> {
 
     /** Protected constructor */

@@ -22,7 +22,7 @@ public class PropertyModifier {
 
     /** Write an item type into property if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setItemType(Class itemType, AbstracCollectionProperty property) {
+    public static void setItemType(Class itemType, AbstractCollectionProperty property) {
         if (itemType==null) {
             throw new IllegalArgumentException("Item type is undefined for property: " + property);
         }

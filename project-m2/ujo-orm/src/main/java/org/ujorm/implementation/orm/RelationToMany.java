@@ -17,7 +17,7 @@
 package org.ujorm.implementation.orm;
 
 import org.ujorm.core.UjoIterator;
-import org.ujorm.extensions.AbstracCollectionProperty;
+import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.orm.ExtendedOrmUjo;
 
 /**
@@ -26,7 +26,7 @@ import org.ujorm.orm.ExtendedOrmUjo;
  * @see org.ujorm.core.UjoIterator
  */
 public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo>
-    extends AbstracCollectionProperty<UJO, UjoIterator<ITEM>, ITEM>
+    extends AbstractCollectionProperty<UJO, UjoIterator<ITEM>, ITEM>
 {
 
     /** Constructor

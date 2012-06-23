@@ -156,8 +156,8 @@ public class UjoManager implements Comparator<UjoProperty> {
                                 if (ujoProp.getType() == null) {
                                     PropertyModifier.setType(PropertyFactory.getGenericClass(field, 1), (Property) ujoProp);
                                 }
-                                if (ujoProp instanceof AbstracCollectionProperty) {
-                                    final AbstracCollectionProperty lp = (AbstracCollectionProperty) ujoProp;
+                                if (ujoProp instanceof AbstractCollectionProperty) {
+                                    final AbstractCollectionProperty lp = (AbstractCollectionProperty) ujoProp;
                                     if (lp.getItemType() == null) {
                                         PropertyModifier.setItemType(PropertyFactory.getGenericClass(field,1), lp);
                                     }
