@@ -16,15 +16,16 @@
 package org.ujorm.core;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
@@ -44,24 +45,25 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     public static final int PROPERTY_MODIFIER = Modifier.STATIC|Modifier.PUBLIC|Modifier.FINAL;
 
     /** Transient property list */
-    transient private List<UjoProperty<UJO, ?>> propertyList;
+    transient private InnerDataStore<UJO> tmpStore;
 
     /** Property Store */
     private UjoPropertyList<UJO> propertyStore;
 
-    /** The Ujo type is serializad */
-    private Class<? extends UJO> type;
-
     @SuppressWarnings("unchecked")
     public PropertyFactory(Class<? extends UJO> type) {
-        this.type = type;
-        this.propertyList = new ArrayList<UjoProperty<UJO, ?>>();
+        this(type, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public PropertyFactory(Class<? extends UJO> type, boolean propertyCamelCase) {
+        this.tmpStore = new InnerDataStore<UJO>(type, propertyCamelCase);
         try {
             final Class<?> superClass = type.getSuperclass();
             if (Ujo.class.isAssignableFrom(superClass)
             && !Modifier.isAbstract(superClass.getModifiers())) {
                 for (UjoProperty p : ((Ujo) superClass.newInstance()).readProperties()) {
-                    propertyList.add(p);
+                    tmpStore.addProperty(p);
                 }
             }
         } catch (Exception e) {
@@ -72,7 +74,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     /** Add an new property for an internal use. */
     protected boolean addProperty(UjoProperty p) {
         checkLock();
-        return propertyList.add(p);
+        return tmpStore.addProperty(p);
     }
 
     /** Lock the property factory */
@@ -91,7 +93,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     public UjoPropertyList<UJO> getPropertyList() {
         if (propertyStore==null) {
             propertyStore = createPropertyList();
-            propertyList = null;
+            tmpStore = null;
             onCreate(propertyStore);
         }
         return propertyStore;
@@ -99,9 +101,9 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     /** Create a property List */
     protected UjoPropertyList<UJO> createPropertyList() throws IllegalStateException {
-        final List<Field> fields = getFields();
+        final List<Field> fields = tmpStore.getFields();
         try {
-            for (UjoProperty<UJO, ?> p : propertyList) {
+            for (UjoProperty<UJO, ?> p : tmpStore.getProperties()) {
                 if (p instanceof Property) {
                     final Property pr = (Property) p;
                     if (PropertyModifier.isLock(pr)) {
@@ -119,15 +121,15 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                         if (lp.getItemType() == null) {
                             PropertyModifier.setItemType(getGenericClass(field,1), lp);
                         }
-                    }                    
+                    }
                     PropertyModifier.lock(pr); // Lock all attributes:
+                    tmpStore.addAnnotation(p, field); // Save all annotation s annotations.
                 }
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Can't initialize a property of the " + type, e);
+            throw new IllegalStateException("Can't initialize a property of the " + tmpStore.type, e);
         }
-        final UjoPropertyList<UJO> result = PropertyStore.of(type, (List) propertyList);
-        return result;
+        return tmpStore.createPropertyList();
     }
 
     /** Find field */
@@ -139,21 +141,6 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         }
         throw new IllegalStateException("Can't get a field for the property index #" + p.getIndex());
     }
-
-    /** Find field */
-    private List<Field> getFields() {
-        final Field[] fields = type.getFields();
-        final List<Field> result = new LinkedList<Field>();
-        for (int j = 0; j < fields.length; j++) {
-            final Field field = fields[j];
-            if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
-            &&  UjoProperty.class.isAssignableFrom(field.getType()) ){
-                result.add(field);
-            }
-        }
-        return result;
-    }
-
 
     /** Create new UjoProperty */
     public <T> UjoProperty<UJO,T> newProperty() {
@@ -177,7 +164,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     /** Common protected factory method */
     protected <T> UjoProperty<UJO,T> createProperty(String name, T defaultValue) {
-        final Property<UJO,T> p = Property.newInstance(name, null, defaultValue, propertyList.size(), false);
+        final Property<UJO,T> p = Property.newInstance(name, null, defaultValue, tmpStore.size(), false);
         addProperty(p);
         return p;
     }
@@ -190,8 +177,8 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     /** Create new UjoProperty */
     public <T> ListProperty<UJO,T> newListProperty(String name) {
         checkLock();
-        final ListProperty<UJO,T> p = ListProperty.newListProperty(name, null, propertyList.size(), false);
-        propertyList.add(p);
+        final ListProperty<UJO,T> p = ListProperty.newListProperty(name, null, tmpStore.size(), false);
+        tmpStore.addProperty(p);
         return p;
     }
 
@@ -237,6 +224,92 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
             final String msg = String.format("The field '%s' generic scan failed", field.getName());
             throw new IllegalArgumentException(msg, e);
         }
+    }
+
+    // ================== INNER CLASS ==================
+
+    private static final class InnerDataStore<UJO extends Ujo> {
+
+        /** The Ujo type is serializad */
+        private final Class<? extends UJO> type;
+
+        /** Convert field name to a camelCase */
+        private final boolean camelCase;
+
+        /** Transient property list */
+        private final List<UjoProperty<UJO,?>> propertyList;
+
+        /** Property annotations */
+        private final Map<UjoProperty<UJO,?>, Map<Class<? extends Annotation>,Annotation>> annotationsMap;
+
+        /** Constructor */
+        public InnerDataStore(Class<? extends UJO> type, boolean propertyCamelCase) {
+            this.type = type;
+            this.camelCase = propertyCamelCase;
+            this.propertyList = new ArrayList<UjoProperty<UJO,?>>(32);
+            this.annotationsMap = new HashMap<UjoProperty<UJO,?>,Map<Class<? extends Annotation>,Annotation>>();
+        }
+
+        /** Add all annotation for required property. */
+        public void addAnnotation(UjoProperty<UJO,?> p, Field field) {
+            Map<Class<? extends Annotation>,Annotation> annots = annotationsMap.get(field);
+            if (annots==null) {
+                annots = new HashMap<Class<? extends Annotation>,Annotation>(8);
+                annotationsMap.put(p, annots);
+            }
+            for (Annotation annotation : field.getDeclaredAnnotations()) {
+                annots.put(annotation.getClass(), annotation);
+            }
+        }
+
+        /** Add property to a list */
+        public boolean addProperty(UjoProperty p) {
+            return propertyList.add(p);
+        }
+
+        /** Get all properties */
+        public Iterable<UjoProperty<UJO,?>> getProperties() {
+            return propertyList;
+        }
+
+        /** Create a new Property List */
+        public UjoPropertyList<UJO> createPropertyList() {
+            return PropertyStore.of(type, (List) propertyList);
+        }
+
+        /** Returns a count of the UjoProperty items */
+        public int size() {
+            return propertyList.size();
+        }
+
+        /**
+         * @return the cammelCase
+         */
+        public boolean isCammelCase() {
+            return camelCase;
+        }
+
+        /** Get all UjoPorperty fields */
+        public List<Field> getFields() {
+            final Field[] fields = type.getFields();
+            final List<Field> result = new LinkedList<Field>();
+            for (int j = 0; j < fields.length; j++) {
+                final Field field = fields[j];
+                if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
+                &&  UjoProperty.class.isAssignableFrom(field.getType()) ){
+                    result.add(field);
+                }
+            }
+            return result;
+        }
+
+        /**
+         * Property annotations Set
+         */
+        public  Map<Class<? extends Annotation>,Annotation> getAnnotations(UjoProperty<UJO,?> p) {
+            return annotationsMap.get(p);
+        }
+
     }
 
 }
