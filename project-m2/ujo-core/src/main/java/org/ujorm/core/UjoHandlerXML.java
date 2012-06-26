@@ -44,8 +44,6 @@ final class UjoHandlerXML extends DefaultHandler {
 
     /** Import action */
     final protected UjoAction actionImport;
-    /** XML Element action */
-    final protected UjoAction actionElement;
     /** UjoManager */
     final protected UjoManager ujoManager;
 
@@ -70,7 +68,6 @@ final class UjoHandlerXML extends DefaultHandler {
     /*protected*/ UjoHandlerXML(Class resultType, Object context, UjoManager ujoManager) {
         this.rootType = resultType!=null ? resultType : Object.class ;
         this.actionImport  = new UjoActionImpl(UjoAction.ACTION_XML_IMPORT , context);
-        this.actionElement = new UjoActionImpl(UjoAction.ACTION_XML_ELEMENT, context);
         this.ujoManager    = ujoManager;
     }
 
@@ -263,7 +260,7 @@ final class UjoHandlerXML extends DefaultHandler {
     protected void addAttributes(final UjoTextable ujo) {
         for (String[] attrib : $attributes) {
 
-            UjoProperty prop = ujo.readProperties().findDirectProperty(ujo, attrib[0], actionElement, false, !ignoreMissingProp);
+            UjoProperty prop = ujo.readProperties().findDirectProperty(ujo, attrib[0], actionImport, false, !ignoreMissingProp);
             if (prop!=null){
                 ujo.writeValueString(prop, attrib[1], null, actionImport);
             }

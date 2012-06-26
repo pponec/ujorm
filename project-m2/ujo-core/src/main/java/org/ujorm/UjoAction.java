@@ -37,12 +37,6 @@ public interface UjoAction {
      * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
      */
     public static final int ACTION_XML_IMPORT = 3;
-    /** Some properties can be exported (or imported) to (from) XML file like an attribute. If readAuthorization(...) method returns value FALSE,
-     * then the property is <b>attribute</b>, otherwise TRUE value means <b>element</b>.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
-     */
-    @Deprecated
-    public static final int ACTION_XML_ELEMENT = 4;
     /** An authorization action (of a UjoProperty) for a Resource Bundle export.
      * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
      */
@@ -105,7 +99,7 @@ public interface UjoAction {
      */
     public int getType();
     
-    /** Returns a conetxt of the action. The value is dedicated to a user usage and the value can be null. */
+    /** Returns a context of the action. The value is dedicated to a user usage and the value can be {@code null}. */
     public Object getContext();
     
 }

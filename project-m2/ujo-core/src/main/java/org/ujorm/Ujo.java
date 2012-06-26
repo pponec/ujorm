@@ -78,7 +78,7 @@ public interface Ujo {
     
     /** Returns all direct properties.
      * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).
-     * Two attributes with the same "name" must be demarked by a different ACTION_XML_ELEMENT authorization for a XML export.
+     * Two attributes with the same "name" must be demarked by a different annotation {@link XmlElementBody} for a XML export.
      *
      * <br>An index property in the array UJO must be unique a continuous, an order of property array depends on an implementation of UJO object.
      * @see UjoProperty#isDirect()
