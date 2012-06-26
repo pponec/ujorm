@@ -78,7 +78,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     /** Create Instance */
-    public static final UjoManagerXML getInstance() {
+    public static UjoManagerXML getInstance() {
         return new UjoManagerXML();
     }
     
@@ -142,7 +142,6 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     @SuppressWarnings("deprecation")
     public void saveXML(Writer writer, String rootElementName, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
-        this.actionElement = new UjoActionImpl(UjoAction.ACTION_XML_ELEMENT, context);
         writer.write(xmlHeader!=null ? xmlHeader : XML_HEADER );
         
         @SuppressWarnings("unchecked")

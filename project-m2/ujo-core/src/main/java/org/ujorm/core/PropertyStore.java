@@ -122,9 +122,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
         for (final UjoProperty prop : properties) {
             if (prop.getName().hashCode() == nameHash // speed up
                     && prop.getName().equals(name)
-                    && (action.getType() == UjoAction.ACTION_XML_ELEMENT
-                    ? !getUjoManager().isXmlAttribute(prop)
-                    : ujo.readAuthorization(action, prop, null)) == result) {
+                    && (getUjoManager().isXmlAttribute(prop)) != result) {
                 return prop;
             }
         }
