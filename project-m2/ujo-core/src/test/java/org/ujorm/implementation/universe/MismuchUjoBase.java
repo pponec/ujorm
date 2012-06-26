@@ -24,7 +24,7 @@ public class MismuchUjoBase extends AbstractUjo {
 
     private static Class<MismuchUjoBase> WRONG_CLASS = (Class<MismuchUjoBase>) (Object) UniUjoBaseTest.class;
     /** Factory */
-    private static final PropertyFactory<MismuchUjoBase> pf = PropertyFactory.getInstance(WRONG_CLASS);
+    private static final PropertyFactory<MismuchUjoBase> pf = PropertyFactory.Builder.get(WRONG_CLASS);
     
     public static final UjoProperty<MismuchUjoBase,Long>      PRO_P0 = pf.newProperty();
     public static final UjoProperty<MismuchUjoBase,Integer>   PRO_P1 = pf.newProperty();

@@ -19,16 +19,16 @@ import org.ujorm.extensions.ListUjoProperty;
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class UniUjoChild extends UniUjoBase {
-    
-    /** Factory */
-    private static final PropertyFactory<UniUjoChild> pf = PropertyFactory.Builder.get(UniUjoChild.class);
+public class ImplUjoBase extends AbstractyUjoBase {
 
-    public static final UjoProperty <UniUjoChild, Long>    PRO_P5 = pf.newProperty("P5");
-    public static final UjoProperty <UniUjoChild, Integer> PRO_P6 = pf.newProperty("P6");
-    public static final UjoProperty <UniUjoChild, String>  PRO_P7 = pf.newProperty("P7");
-    public static final UjoProperty <UniUjoChild, Date>    PRO_P8 = pf.newProperty("P8");
-    public static final ListUjoProperty<UniUjoChild,Float> PRO_P9 = pf.newListProperty("P9");
+    /** Factory */
+    protected static final PropertyFactory<ImplUjoBase> pf = PropertyFactory.Builder.get(ImplUjoBase.class);
+    
+    public static final UjoProperty <ImplUjoBase, Long>    PRO_P5 = pf.newProperty("P5");
+    public static final UjoProperty <ImplUjoBase, Integer> PRO_P6 = pf.newProperty("P6");
+    public static final UjoProperty <ImplUjoBase, String>  PRO_P7 = pf.newProperty("P7");
+    public static final UjoProperty <ImplUjoBase, Date>    PRO_P8 = pf.newProperty("P8");
+    public static final ListUjoProperty<ImplUjoBase,Float> PRO_P9 = pf.newListProperty("P9");
 
     static {
         pf.lock();
@@ -40,5 +40,4 @@ public class UniUjoChild extends UniUjoBase {
     }
 
 
-    
 }

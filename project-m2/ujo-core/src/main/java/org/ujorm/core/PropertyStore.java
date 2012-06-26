@@ -34,6 +34,7 @@ import org.ujorm.extensions.PathProperty;
  * The Immutable and Serializable UjoProperty Collection include some service methods.
  * Object have got implemented the hashCode() and equals() methods.
  * @author Pavel Ponec
+ * @pop.todo KeyStore, KeyStock, KeyBundle, KeyBag. KeyPack
  */
 @Immutable
 public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializable {
