@@ -17,14 +17,18 @@
 package org.ujorm;
 
 /**
- * This class is a property of the {@link Ujo} object. Every real Ujo implementation (ArrayUjo, MapUjo, BeanUjo)
- * have got its special implementation of an UjoProperty interface.
+ * This interface is a descriptor of the {@link Ujo} attribute. The property contains only property meta-data
+ * and therefore the UjoPropertry implementation never contains business data. 
+ * Each instance of the UjoProperty must be located in the {@code public static final} field of some Ujo implementation.
+ * The UjoProperty can't have a serializable feature never, because its instance is the unique for a related java field.
+ * An appropriate solution solution for serialization is to use a decorator class KeyBag.
  * <br>See a <a href="package-summary.html#UJO">general information</a> about current framework or see some implementations.
  * 
  * @author Pavel Ponec
  * @see Ujo
  * @opt attributes
  * @opt operations
+ * @see KeyBag
  */
 public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Comparable<UjoProperty>, CriterionProvider<UJO,VALUE> {
     
@@ -34,6 +38,9 @@ public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Compa
     /** Returns  a class of the current property. */
     public Class<VALUE> getType();
     
+    /** Returns a domain class of the property. */
+    // public Class<UJO> getDomain(); // TODO
+
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object. 
      * <br>The method calls a method 

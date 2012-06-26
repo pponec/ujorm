@@ -16,25 +16,24 @@ import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.PropertyFactory;
 import org.ujorm.extensions.ListUjoProperty;
-import static org.ujorm.core.PropertyFactory.*;
 
 /**
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class UniUjoBase implements Ujo {
+abstract public class AbstractyUjoBase implements Ujo {
 
     /** Factory */
-    private static final PropertyFactory<UniUjoBase> pf = PropertyFactory.CamelBuilder.get(UniUjoBase.class);
-    
-    public static final UjoProperty<UniUjoBase,Long>      PRO_P0 = pf.newProperty();
-    public static final UjoProperty<UniUjoBase,Integer>   PRO_P1 = pf.newProperty();
-    public static final UjoProperty<UniUjoBase,String>    PRO_P2 = pf.newProperty();
-    public static final UjoProperty<UniUjoBase,Date>      PRO_P3 = pf.newProperty();
-    public static final ListUjoProperty<UniUjoBase,Float> PRO_P4 = pf.newListProperty();
+    private static final PropertyFactory<AbstractyUjoBase> APF = PropertyFactory.Builder.get(AbstractyUjoBase.class);
+
+    public static final UjoProperty<AbstractyUjoBase,Long>      PRO_P0 = APF.newProperty();
+    public static final UjoProperty<AbstractyUjoBase,Integer>   PRO_P1 = APF.newProperty();
+    public static final UjoProperty<AbstractyUjoBase,String>    PRO_P2 = APF.newProperty();
+    public static final UjoProperty<AbstractyUjoBase,Date>      PRO_P3 = APF.newProperty();
+    public static final ListUjoProperty<AbstractyUjoBase,Float> PRO_P4 = APF.newListProperty();
 
     static {
-        pf.lock();
+        APF.lock();
     }
 
     /** Data */
@@ -42,7 +41,7 @@ public class UniUjoBase implements Ujo {
 
     @Override
     public UjoPropertyList<?> readProperties() {
-        return pf.getPropertyList();
+        return APF.getPropertyList();
     }
 
     public Object readValue(UjoProperty property) {

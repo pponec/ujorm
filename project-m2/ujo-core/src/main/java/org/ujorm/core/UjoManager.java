@@ -107,7 +107,7 @@ public class UjoManager implements Comparator<UjoProperty> {
         UjoPropertyList result = propertiesCache.get(type);
         if (result==null) {
             final UjoProperty[] ps = readPropertiesNocache(type, true);
-            result = new UjoPropertyListImpl(type, ps);
+            result = PropertyStore.of(type, ps);
             
             // Save the result into buffer:
             propertiesCache.put(type, result);
@@ -916,7 +916,6 @@ public class UjoManager implements Comparator<UjoProperty> {
                     );
             }
         }
-
     }
 
     /** Check ujo properties to a unique name.
@@ -927,8 +926,6 @@ public class UjoManager implements Comparator<UjoProperty> {
     public void checkUniqueProperties(final Class<? extends Ujo> type) throws IllegalStateException {
          getInstance().checkUniqueProperties(type, true);
     }
-
-
     
     /** Regurns information about current library. */
     public static String projectInfo() {

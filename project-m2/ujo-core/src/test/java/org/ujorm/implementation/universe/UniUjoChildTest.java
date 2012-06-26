@@ -42,6 +42,12 @@ public class UniUjoChildTest extends MyTestCase {
     public void testReadWrite() throws Throwable {
         System.out.println("testReadWrite");
 
+        assertEquals("proP0", UniUjoChild.PRO_P0.getName());
+        assertEquals("proP1", UniUjoChild.PRO_P1.getName());
+        assertEquals("proP2", UniUjoChild.PRO_P2.getName());
+        assertEquals("proP3", UniUjoChild.PRO_P3.getName());
+        assertEquals("proP4", UniUjoChild.PRO_P4.getName());
+
         Long    o0 = new Long(Long.MAX_VALUE);
         Integer o1 = new Integer(1);
         String  o2 ="TEST";

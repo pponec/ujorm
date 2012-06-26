@@ -15,7 +15,6 @@ import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.PropertyFactory;
-import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.Property;
 
 /**
@@ -25,7 +24,7 @@ import org.ujorm.extensions.Property;
 public class UniUjoBasePlain implements Ujo {
 
     /** Factory */
-    protected static final PropertyFactory<UniUjoBasePlain> pf = PropertyFactory.getInstance(UniUjoBasePlain.class);
+    protected static final PropertyFactory<UniUjoBasePlain> pf = PropertyFactory.Builder.get(UniUjoBasePlain.class);
 
     /** Properties */
     public static final UjoProperty<UniUjoBasePlain,Long>    PRO_P0 = (Property<UniUjoBasePlain,Long>) (Object) pf.newProperty();

@@ -41,6 +41,9 @@ import org.ujorm.extensions.PropertyModifier;
  */
 public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
+    /** Generate property name using the cammel case. */
+    protected static final boolean CAMEL_CASE = true;
+
     /** Requested modifier of property definitions. */
     public static final int PROPERTY_MODIFIER = Modifier.STATIC|Modifier.PUBLIC|Modifier.FINAL;
 
@@ -57,18 +60,78 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     @SuppressWarnings("unchecked")
     public PropertyFactory(Class<? extends UJO> type, boolean propertyCamelCase) {
+        this(type, propertyCamelCase, null);
+    }
+
+    /**
+     * Create new Property Factory for objecty of type.
+     * @param type The domain class
+     * @param propertyCamelCase Property names are created along fild name by a camel case converter.
+     * @param abstractSuperProperties Pass a super properties fromo an abstract super class, if any.
+     */
+    @SuppressWarnings("unchecked")
+    public PropertyFactory(Class<? extends UJO> type, boolean propertyCamelCase, UjoPropertyList<?> abstractSuperProperties) {
         this.tmpStore = new InnerDataStore<UJO>(type, propertyCamelCase);
-        try {
-            final Class<?> superClass = type.getSuperclass();
-            if (Ujo.class.isAssignableFrom(superClass)
-            && !Modifier.isAbstract(superClass.getModifiers())) {
-                for (UjoProperty p : ((Ujo) superClass.newInstance()).readProperties()) {
-                    tmpStore.addProperty(p);
+        if (abstractSuperProperties==null) {
+            abstractSuperProperties = getSuperProperties();
+        } else {
+            assert abstractSuperProperties.getType().isAssignableFrom(type) : "Type parameters is not child of the SuperProperites type: " + abstractSuperProperties.getTypeName();
+        }
+        if (abstractSuperProperties!=null) {
+            for (UjoProperty p : abstractSuperProperties) {
+                tmpStore.addProperty(p);
+            }
+        }
+    }
+
+    /** Read Properties from the super class */
+    protected final UjoPropertyList<?> getSuperProperties() {
+        final Class<?> superClass = this.tmpStore.type.getSuperclass();
+        if (Ujo.class.isAssignableFrom(superClass)) {
+            if (Modifier.isAbstract(superClass.getModifiers())) {
+                UjoPropertyList<?> r1 = null;
+                PropertyFactory<?> r2 = null;
+                for (Field field : superClass.getDeclaredFields()) {
+                    if (Modifier.isStatic(field.getModifiers())) {
+                        try {
+                            if (r1==null) {
+                                r1 = getFieldValue(UjoPropertyList.class, field);
+                            }
+                            if (r2==null) {
+                                r2 = getFieldValue(PropertyFactory.class, field);
+                            }
+                        } catch (Exception e) {
+                            final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please"
+                                    , UjoPropertyList.class.getSimpleName()
+                                    , superClass
+                                    , getClass().getSimpleName());
+                           throw new IllegalArgumentException(msg, e);
+                        }
+                    }
+                }
+                return r1 != null ? r1 //
+                     : r2 != null ? r2.getPropertyList() //
+                     : null;
+            } else {
+                try {
+                    return ((Ujo) superClass.newInstance()).readProperties();
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Can't create instance of " + superClass, e);
                 }
             }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Can't create instance of " + type.getSuperclass(), e);
         }
+        return null;
+    }
+
+    /** Returns a field value */
+    private <T> T getFieldValue(Class<T> type, Field field) throws Exception {
+        if (type.isAssignableFrom(field.getType())) {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            return (T) field.get(null);
+        }
+        return null;
     }
 
     /** Add an new property for an internal use. */
@@ -111,7 +174,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                     }
                     Field field = findField(p, fields);
                     if (p.getName() == null) {
-                        PropertyModifier.setName(field.getName(), pr);
+                        PropertyModifier.setName(createPropertyName(field, this.tmpStore.camelCase), pr);
                     }
                     if (p.getType() == null) {
                         PropertyModifier.setType(getGenericClass(field, 1), pr);
@@ -130,6 +193,27 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
             throw new IllegalStateException("Can't initialize a property of the " + tmpStore.type, e);
         }
         return tmpStore.createPropertyList();
+    }
+
+    /** Create a property name along the field. */
+    protected String createPropertyName(Field field, boolean camelCase) {
+        if (camelCase) {
+            final StringBuilder result = new StringBuilder(32);
+            final String name = field.getName();
+            boolean lower = true;
+            for (int i = 0, max = name.length(); i < max; i++) {
+                final char c = name.charAt(i);
+                if (c == '_') {
+                    lower = false;
+                } else {
+                    result.append(lower ? Character.toLowerCase(c) : c);
+                    lower = true;
+                }
+            }
+            return result.toString();
+        } else {
+            return field.getName();
+        }
     }
 
     /** Find field */
@@ -196,23 +280,6 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     /* ================== STATIC METHOD ================== */
 
-    /** Return an instance of the {@link PropertyFactory} class */
-    public static <UJO extends Ujo> PropertyFactory<UJO> getInstance(Class<UJO> baseClass) {
-        return new PropertyFactory(baseClass);
-    }
-
-    /** Returns new factory instance along the parameter class {@code factory}
-     * @param baseClass base class
-     * @param factoryClass A class with implementaton of the factory with consturctor parameter type of {@code Class<UJO>}.
-     * @throws IllegalArgumentException
-     */
-    public static <UJO extends Ujo, T extends PropertyFactory<UJO>> T getInstance(Class<UJO> baseClass, Class<T> factoryClass) throws IllegalArgumentException {
-        try {
-            return factoryClass.getConstructor(Class.class).newInstance(baseClass);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Can't create instence of the factory " + factoryClass, e);
-        }
-    }
 
     /** Regurns array of generic parameters */
     @PackagePrivate static Class getGenericClass(final Field field, final int position) throws IllegalArgumentException {
@@ -309,7 +376,47 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         public  Map<Class<? extends Annotation>,Annotation> getAnnotations(UjoProperty<UJO,?> p) {
             return annotationsMap.get(p);
         }
-
     }
+
+    /** The base factory */
+    public static final class Builder {
+
+        /** Return an instance of the {@link PropertyFactory} class */
+        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass) {
+            return new PropertyFactory(baseClass);
+        }
+
+        /** Return an instance of the {@link PropertyFactory} class.
+         * @param baseClass The domain class
+         * @param superProperties Properties form an abstract super class
+         */
+        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass, UjoPropertyList<?> superProperties) {
+            return new PropertyFactory(baseClass, false, superProperties);
+        }
+   }
+
+    /** The base factory */
+    public static final class CamelBuilder {
+
+        /** Return an instance of the {@link PropertyFactory} class
+         * @param baseClass Base class
+         * @param propertyCamelCase {@link #CAMEL_CASE}
+         * @return Return an instance of the {@link PropertyFactory} class
+         */
+        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass) {
+            return new PropertyFactory(baseClass, CAMEL_CASE, null);
+        }
+
+        /** Return an instance of the {@link PropertyFactory} class.
+         * @param baseClass The domain class
+         * @param propertyCamelCase {@link #CAMEL_CASE}
+         * @param superProperties Properties form an abstract super class
+         */
+        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass, UjoPropertyList<?> superProperties) {
+            return new PropertyFactory(baseClass, CAMEL_CASE, superProperties);
+        }
+
+   }
+
 
 }
