@@ -264,7 +264,10 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                 return field;
             }
         }
-        throw new IllegalStateException("Can't get a field for the property index #" + p.getIndex());
+        final String msg = String.format("Can't get a field for the property index #%d - %s"
+                , p.getIndex()
+                , p.getName());
+        throw new IllegalStateException(msg);
     }
 
     /** Create new UjoProperty */
