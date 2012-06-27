@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 import org.ujorm.UjoAction;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.implementation.quick.QuickUjo;
