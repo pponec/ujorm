@@ -101,5 +101,8 @@ public interface UjoAction {
     
     /** Returns a context of the action. The value is dedicated to a user usage and the value can be {@code null}. */
     public Object getContext();
+
+    /** Returns a default UjoManager */
+    // TODO: public org.ujorm.core.UjoManager getManager();
     
 }
