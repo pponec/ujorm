@@ -19,7 +19,7 @@ package org.ujorm.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import org.ujorm.UjoProperty;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 
 /**
  * Manager of <code>BeanUjo</code>

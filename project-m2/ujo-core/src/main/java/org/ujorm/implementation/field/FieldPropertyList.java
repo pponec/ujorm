@@ -19,7 +19,7 @@ package org.ujorm.implementation.field;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 import org.ujorm.extensions.ValueAgent;
 import org.ujorm.implementation.bean.BeanProperty;
 

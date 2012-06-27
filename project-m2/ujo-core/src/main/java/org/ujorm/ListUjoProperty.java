@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.extensions;
+package org.ujorm;
 
 import java.util.List;
 import org.ujorm.Ujo;
