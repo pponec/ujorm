@@ -176,7 +176,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Add an new property for an internal use. */
-    protected boolean addProperty(UjoProperty p) {
+    protected boolean addProperty(Property p) {
         checkLock();
         return tmpStore.addProperty(p);
     }
@@ -285,6 +285,20 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     /** Create new UjoProperty */
     public <T> UjoProperty<UJO,T> newProperty(String name, T defaultValue) {
         return createProperty(name, defaultValue);
+    }
+
+    /** Create new UjoProperty for a value type class */
+    public <T> UjoProperty<UJO,T> newClassProperty(String name, Class<?> defaultClassValue) {
+        return createProperty(name, (T) defaultClassValue);
+    }
+
+    /** Add new UjoProperty for a value type class, index must be undefied */
+    public <P extends Property<UJO,?>> P add(P property) {
+        if (property.getIndex()>=0) {
+            throw new IllegalArgumentException("Property index must be undefined");
+        }
+        addProperty(property);
+        return (P) property;
     }
 
     /** Common protected factory method */
