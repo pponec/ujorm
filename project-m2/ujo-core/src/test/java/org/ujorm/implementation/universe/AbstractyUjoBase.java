@@ -15,7 +15,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.PropertyFactory;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 
 /**
  * An UnifiedDataObject Imlpementation

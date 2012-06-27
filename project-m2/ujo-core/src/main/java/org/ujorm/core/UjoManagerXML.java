@@ -28,7 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.extensions.Property;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 import org.xml.sax.SAXException;
@@ -164,7 +164,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             if (value!=null
             && !Ujo.class.isAssignableFrom(property.getType())
             &&  getUjoManager().isXmlAttribute(property)
-            &&  ujo.readAuthorization(actionExport , property, value)
+            &&  ujo.readAuthorization(actionExport, property, value)
             && !getUjoManager().isTransientProperty(property)
             ){
                 final String valueStr = ujo.readValueString(property, actionExport);
@@ -191,7 +191,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             Object value = property.of(ujo);
             
             if (value==null
-            || !ujo.readAuthorization(actionExport , property, value)
+            || !ujo.readAuthorization(actionExport, property, value)
             || getUjoManager().isXmlAttribute(property)
             || (value instanceof List && ((List)value).isEmpty())
             || getUjoManager().isTransientProperty(property)

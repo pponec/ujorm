@@ -18,7 +18,7 @@ package org.ujorm.implementation.bean;
 
 import org.ujorm.Ujo;
 import org.ujorm.core.BeanManager;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.ValueAgent;
 

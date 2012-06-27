@@ -16,6 +16,7 @@
 
 package org.ujorm.extensions;
 
+import org.ujorm.ListUjoProperty;
 import java.util.ArrayList;
 import java.util.List;
 import org.ujorm.Ujo;

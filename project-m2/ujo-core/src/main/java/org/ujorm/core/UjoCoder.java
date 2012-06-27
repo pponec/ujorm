@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 
 /**
  * A tool for encoding an object to a text and a text back to the object.

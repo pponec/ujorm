@@ -28,7 +28,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import org.ujorm.Ujo;
-import org.ujorm.extensions.ListUjoProperty;
+import org.ujorm.ListUjoProperty;
 import org.ujorm.UjoAction;
 
 /** Use an subclass on your own risk.

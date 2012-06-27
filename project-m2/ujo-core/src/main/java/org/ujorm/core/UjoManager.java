@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import org.ujorm.ListUjoProperty;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
