@@ -36,8 +36,48 @@ import org.ujorm.extensions.Property;
 import org.ujorm.extensions.PropertyModifier;
 
 /**
- * Non serializable property factory
- * @author ponec
+ * Serializable property factory is the best tool of Ujorm to create Property implementations.
+ * <h3>Sample of usage</h3>
+ * <pre class="pre">
+ * <span class="java-keywords">import</span> org.ujorm.*;
+ * <span class="keyword-directive">public class</span> Person <span class="keyword-directive">implements</span> Ujo {
+ *
+ *     <span class="keyword-directive">private static final</span> PropertyFactory&lt;Person&gt; factory
+ *             = PropertyFactory.CamelBuilder.get(Person.<span class="keyword-directive">class</span>);
+ *
+ *     <span class="keyword-directive">public static final</span> UjoProperty&lt;Person,Long&gt; PID = factory.newProperty();
+ *     <span class="keyword-directive">public static final</span> UjoProperty&lt;Person,Integer&gt; AGE = factory.newProperty();
+ *     <span class="keyword-directive">public static final</span> ListUjoProperty&lt;Person,String&gt; NAMES = factory.newListProperty();
+ *
+ *     <span class="keyword-directive">static</span> {
+ *         pf.lock();
+ *     }
+ *
+ *     <span class="comment">/&#42;&#42; Data container &#42;/</span>
+ *     <span class="keyword-directive">protected</span> Object[] data;
+ *
+ *     <span class="keyword-directive">public</span> Object readValue(UjoProperty property) {
+ *         <span class="keyword-directive">return</span> data==<span class="keyword-directive">null</span> ? data : data[property.getIndex()];
+ *     }
+ *
+ *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(UjoProperty property, Object value) {
+ *         <span class="keyword-directive">if</span> (data==<span class="keyword-directive">null</span>) {
+ *             data = <span class="keyword-directive">new</span> Object[readProperties().size()];
+ *         }
+ *         data[property.getIndex()] = value;
+ *     }
+ *
+ *     <span class="keyword-directive">public</span> UjoPropertyList&lt;?&gt; readProperties() {
+ *         <span class="keyword-directive">return</span> factory.getPropertyList();
+ *     }
+ *
+ *     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, UjoProperty property, Object value) {
+ *         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+ *     }
+ * }
+ * </pre>
+
+ * @author Pavel Ponec
  */
 public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
