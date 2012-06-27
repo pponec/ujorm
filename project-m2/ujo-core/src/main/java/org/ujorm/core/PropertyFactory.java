@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -196,8 +197,8 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     public UjoPropertyList<UJO> getPropertyList() {
         if (propertyStore==null) {
             propertyStore = createPropertyList();
+            onCreate(propertyStore, tmpStore);
             tmpStore = null;
-            onCreate(propertyStore);
         }
         return propertyStore;
     }
@@ -314,8 +315,8 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** An event on Create */
-    protected void onCreate(UjoPropertyList<UJO> list) {
-        // UjoManager.getInstance().init(list);
+    protected void onCreate(UjoPropertyList<UJO> list, InnerDataStore<UJO> innerData) {
+        UjoManager.getInstance().register(list, innerData);
     }
 
     /* ================== STATIC METHOD ================== */
@@ -335,12 +336,13 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
 
     // ================== INNER CLASS ==================
 
-    private static final class InnerDataStore<UJO extends Ujo> {
+    /** A temporarry data store. */
+    protected static final class InnerDataStore<UJO extends Ujo> {
 
         /** The Ujo type is serializad */
         private final Class<? extends UJO> type;
 
-        /** Convert field name to a camelCase */
+        /** Convert <strong>field names<strong> to a camelCase name.*/
         private final boolean camelCase;
 
         /** Transient property list */
@@ -389,6 +391,11 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
             return propertyList.size();
         }
 
+        /** Returns a domain type. */
+        public Class<? extends UJO> getDomainType() {
+            return type;
+        }
+
         /**
          * @return the cammelCase
          */
@@ -411,10 +418,22 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /**
-         * Property annotations Set
+         * Returns the Property annotations Set.
          */
-        public  Map<Class<? extends Annotation>,Annotation> getAnnotations(UjoProperty<UJO,?> p) {
-            return annotationsMap.get(p);
+        @PackagePrivate Map<Class<? extends Annotation>,Annotation> getAnnotations(UjoProperty<UJO,?> p) {
+            Map<Class<? extends Annotation>,Annotation> result = annotationsMap.get(p);
+            if (result==null) {
+                result = Collections.emptyMap();
+            }
+            return result;
+        }
+
+        /**
+         * Returns required annotation or {@code null}, if no annotatin was not found.
+         */
+        public <A extends Annotation> A getAnnotation(UjoProperty<UJO,?> p, Class<A> annoType) {
+            final Map<Class<? extends Annotation>,Annotation> result = getAnnotations(p);
+            return (A) result.get(annoType);
         }
     }
 

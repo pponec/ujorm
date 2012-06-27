@@ -31,6 +31,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.CompositeProperty;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.core.annot.XmlElementBody;
@@ -200,9 +201,28 @@ public class UjoManager implements Comparator<UjoProperty> {
                     }
                 }
             }
-        }
-        
+        }        
         return result;
+    }
+
+    /** Register new Property list to the internal cache. */
+    @PackagePrivate void register (UjoPropertyList list, PropertyFactory.InnerDataStore data) {
+        this.propertiesCache.put(data.getDomainType(), list);
+
+        final Iterable<UjoProperty<?,?>> it = data.getProperties();
+        for (UjoProperty ujoProp : it) {
+
+            // set the transient cache:
+            final Transient tr = (Transient) data.getAnnotation(ujoProp, Transient.class);
+            // set the xml attribute cache:
+            final XmlAttribute xa = (XmlAttribute) data.getAnnotation(ujoProp, XmlAttribute.class);
+            // set the xml element body cache:
+            final XmlElementBody xb = (XmlElementBody) data.getAnnotation(ujoProp, XmlElementBody.class);
+
+            if      (tr!=null) { cacheTransientAttribute(ujoProp)  ; }
+            else if (xa!=null) { cacheXmlAttribute(ujoProp)        ; }
+            else if (xb!=null) { cacheXmlElementBody(data.getDomainType(), ujoProp); }
+        }
     }
     
     /** Compare Ujo properties by index. An undefined property indexes (-1 are sorted to the end. */
