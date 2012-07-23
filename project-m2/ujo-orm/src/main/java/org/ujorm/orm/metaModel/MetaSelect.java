@@ -20,8 +20,8 @@ import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 
@@ -39,16 +39,18 @@ final public class MetaSelect extends AbstractMetaModel {
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaSelect.class);
 
-    public static final Property<MetaSelect,String> SELECT = newProperty("SELECT "   , "");
-    public static final Property<MetaSelect,String> FROM   = newProperty(" FROM "    , "");
-    public static final Property<MetaSelect,String> WHERE  = newProperty(" WHERE "   , "");
-    public static final Property<MetaSelect,String> GROUP  = newProperty(" GROUP BY ", "");
-    public static final Property<MetaSelect,String> ORDER  = newProperty(" ORDER BY ", "");
-    public static final Property<MetaSelect,String> LIMIT  = newProperty(" LIMIT "   , "");
-    public static final Property<MetaSelect,String> OFFSET = newProperty(" OFFSET "  , "");
+    /** Property Factory */
+    private static final PropertyFactory<MetaSelect> fa = PropertyFactory.CamelBuilder.get(CLASS);
+    public static final UjoProperty<MetaSelect,String> SELECT = fa.newProperty("SELECT "   , "");
+    public static final UjoProperty<MetaSelect,String> FROM   = fa.newProperty(" FROM "    , "");
+    public static final UjoProperty<MetaSelect,String> WHERE  = fa.newProperty(" WHERE "   , "");
+    public static final UjoProperty<MetaSelect,String> GROUP  = fa.newProperty(" GROUP BY ", "");
+    public static final UjoProperty<MetaSelect,String> ORDER  = fa.newProperty(" ORDER BY ", "");
+    public static final UjoProperty<MetaSelect,String> LIMIT  = fa.newProperty(" LIMIT "   , "");
+    public static final UjoProperty<MetaSelect,String> OFFSET = fa.newProperty(" OFFSET "  , "");
 
     /** The property initialization */
-    static{init(CLASS);}
+    static{fa.lock();}
 
     private static String END_CHAR = ";";
 

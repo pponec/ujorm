@@ -19,11 +19,11 @@ package org.ujorm.orm.metaModel;
 import java.lang.reflect.Field;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.extensions.Property;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
@@ -37,22 +37,24 @@ import org.ujorm.orm.annot.Column;
 public class MetaRelation2Many extends AbstractMetaModel {
     private static final Class CLASS = MetaRelation2Many.class;
 
+    /** Property Factory */
+    private static final PropertyFactory<MetaRelation2Many> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** The meta-model ID. */
     @XmlAttribute
-    public static final Property<MetaRelation2Many,String> ID = newProperty("id", "");
+    public static final UjoProperty<MetaRelation2Many,String> ID = fa.newProperty("id", "");
     /** The database column name.
      * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
-    public static final Property<MetaRelation2Many,String> NAME = newProperty("name", "");
+    public static final UjoProperty<MetaRelation2Many,String> NAME = fa.newProperty("name", "");
     /** Table property */
     @Transient
-    public static final Property<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = newProperty("tableProperty", UjoProperty.class);
+    public static final UjoProperty<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = fa.newProperty("tableProperty");
     /** DB table */
     @Transient
-    public static final Property<MetaRelation2Many,MetaTable> TABLE = newProperty("table", MetaTable.class);
+    public static final UjoProperty<MetaRelation2Many,MetaTable> TABLE = fa.newProperty("table");
     /** The property initialization */
-    static{init(CLASS);}
+    static{fa.lock();}
 
 
     public MetaRelation2Many() {
