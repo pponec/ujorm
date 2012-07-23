@@ -227,7 +227,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
                         }
                     }
                     PropertyModifier.lock(pr); // Lock all attributes:
-                    tmpStore.addAnnotation(p, field); // Save all annotation s annotations.
+                    tmpStore.addAnnotations(p, field); // Save all annotation s annotations.
                 }
             }
         } catch (Exception e) {
@@ -377,14 +377,15 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /** Add all annotation for required property. */
-        public void addAnnotation(UjoProperty<UJO,?> p, Field field) {
+        public void addAnnotations(UjoProperty<UJO,?> p, Field field) {
+            final Annotation[] annotations = field.getAnnotations();
             Map<Class<? extends Annotation>,Annotation> annots = annotationsMap.get(field);
-            if (annots==null) {
-                annots = new HashMap<Class<? extends Annotation>,Annotation>(8);
+            if (annots==null && annotations.length>0) {
+                annots = new HashMap<Class<? extends Annotation>,Annotation>(annotations.length);
                 annotationsMap.put(p, annots);
             }
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                annots.put(annotation.getClass(), annotation);
+            for (Annotation annotation : annotations) {
+                annots.put(annotation.annotationType(), annotation);
             }
         }
 
