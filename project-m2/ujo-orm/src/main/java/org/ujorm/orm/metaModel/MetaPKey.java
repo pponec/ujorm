@@ -18,11 +18,11 @@ package org.ujorm.orm.metaModel;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import org.ujorm.ListUjoProperty;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.Property;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.TypeService;
@@ -36,14 +36,15 @@ import org.ujorm.orm.TypeService;
 final public class MetaPKey extends AbstractMetaModel {
     private static final Class CLASS = MetaPKey.class;
 
+    /** Property Factory */
+    private static final PropertyFactory<MetaPKey> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** DB table */
-    public static final Property<MetaPKey,MetaTable> TABLE = newProperty("table");
-
+    public static final UjoProperty<MetaPKey,MetaTable> TABLE = fa.newProperty("table");
     /** DB columns */
-    public static final ListProperty<MetaPKey,MetaColumn> COLUMNS = newListProperty("columns");
+    public static final ListUjoProperty<MetaPKey,MetaColumn> COLUMNS = fa.newListProperty("columns");
 
     /** The property initialization */
-    static{init(CLASS);}
+    static{fa.lock();}
 
     public MetaPKey(MetaTable table) {
         TABLE.setValue(this, table);

@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.extensions.Property;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.DbType;
@@ -47,32 +47,34 @@ import org.ujorm.orm.ao.UjoStatement;
 public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
     private static final Class CLASS = MetaColumn.class;
 
+    /** Property Factory */
+    private static final PropertyFactory<MetaColumn> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** DB primary key */
-    public static final Property<MetaColumn,Boolean> PRIMARY_KEY = newProperty("primaryKey", false);
+    public static final UjoProperty<MetaColumn,Boolean> PRIMARY_KEY = fa.newProperty("primaryKey", false);
     /** Database Type */
-    public static final Property<MetaColumn,DbType> DB_TYPE = newProperty("dbType", DbType.Automatic);
+    public static final UjoProperty<MetaColumn,DbType> DB_TYPE = fa.newProperty("dbType", DbType.Automatic);
     /** Column NOT-NULL */
-    public static final Property<MetaColumn,Boolean> MANDATORY = newProperty("mandatory", false);
+    public static final UjoProperty<MetaColumn,Boolean> MANDATORY = fa.newProperty("mandatory", false);
     /** Column value length */
-    public static final Property<MetaColumn,Integer> MAX_LENGTH = newProperty("maxLength", -1);
+    public static final UjoProperty<MetaColumn,Integer> MAX_LENGTH = fa.newProperty("maxLength", -1);
     /** Column value precision */
-    public static final Property<MetaColumn,Integer> PRECISION = newProperty("precision", -1);
+    public static final UjoProperty<MetaColumn,Integer> PRECISION = fa.newProperty("precision", -1);
     /** DB Default value */
-    public static final Property<MetaColumn,String> DEFAULT_VALUE = newProperty("default", "");
+    public static final UjoProperty<MetaColumn,String> DEFAULT_VALUE = fa.newProperty("default", "");
     /** A name of the non-unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
-    public static final Property<MetaColumn,String> INDEX = newProperty("index", "");
+    public static final UjoProperty<MetaColumn,String> INDEX = fa.newProperty("index", "");
     /** A name of the unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
-    public static final Property<MetaColumn,String> UNIQUE_INDEX = newProperty("uniqueIndex", "");
+    public static final UjoProperty<MetaColumn,String> UNIQUE_INDEX = fa.newProperty("uniqueIndex", "");
     /** A name of the constraint for the case a foreign key */
-    public static final Property<MetaColumn,String> CONSTRAINT_NAME = newProperty("constraintName", "");
+    public static final UjoProperty<MetaColumn,String> CONSTRAINT_NAME = fa.newProperty("constraintName", "");
     /** Convert, save and read application data from/to the database */
-    public static final Property<MetaColumn,Class<? extends ITypeService>> CONVERTER = newProperty("converter", Class.class).writeDefault(ITypeService.class);
+    public static final UjoProperty<MetaColumn,Class<? extends ITypeService>> CONVERTER = fa.newClassProperty("converter", ITypeService.class);
     /** Comment of the database column */
-    public static final Property<MetaColumn,String> COMMENT = newProperty("comment", Comment.NULL);
+    public static final UjoProperty<MetaColumn,String> COMMENT = fa.newProperty("comment", Comment.NULL);
     /** The property initialization */
-    static{init(CLASS);}
+    static{fa.lock();}
 
     /** If current column is a foreign key than related model is a related table column (primarky key by default). */
     private List<MetaColumn> relatedModel;

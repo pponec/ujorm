@@ -16,15 +16,15 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
+import org.ujorm.ListUjoProperty;
 import org.ujorm.UjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.annot.Table;
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.Property;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.OrmUjo;
@@ -42,28 +42,30 @@ final public class MetaProcedure extends AbstractMetaModel {
     private static final Class CLASS = MetaProcedure.class;
 
 
+    /** Property Factory */
+    private static final PropertyFactory<MetaProcedure> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** The meta-model id */
     @XmlAttribute
-    public static final Property<MetaProcedure,String> ID = newProperty("id", Table.NULL);
+    public static final UjoProperty<MetaProcedure,String> ID = fa.newProperty("id", Table.NULL);
     /** Procedure name */
-    public static final Property<MetaProcedure,String> NAME = newProperty("name", Table.NULL);
+    public static final UjoProperty<MetaProcedure,String> NAME = fa.newProperty("name", Table.NULL);
     /** Name of table schema. */
-    public static final Property<MetaProcedure,String> SCHEMA = newProperty("schema", Table.NULL);
+    public static final UjoProperty<MetaProcedure,String> SCHEMA = fa.newProperty("schema", Table.NULL);
     /** Procedure parameters */
-    public static final ListProperty<MetaProcedure,MetaColumn> PARAMETERS = newListProperty("parameter");
+    public static final ListUjoProperty<MetaProcedure,MetaColumn> PARAMETERS = fa.newListProperty("parameter");
     /** Procedure <strong>property</strong> (a base definition of the procedure) */
     @Transient
-    public static final Property<MetaProcedure,UjoProperty> DB_PROPERTY = newProperty("dbProperty");
+    public static final UjoProperty<MetaProcedure,UjoProperty> DB_PROPERTY = fa.newProperty("dbProperty");
     /** Database */
     @Transient
-    public static final Property<MetaProcedure,MetaDatabase> DATABASE = newProperty("database");
-    /** Dummy relation for internal use only. */
+    public static final UjoProperty<MetaProcedure,MetaDatabase> DATABASE = fa.newProperty("database");
+    /** Dummy relation for internal use only. The field is NOT UjoProperty. */
     @Transient
     @SuppressWarnings("unchecked")
     private static final RelationToMany r2m = new RelationToMany("[PROCEDURE]", DbProcedure.class);
 
     /** The property initialization */
-    static{init(CLASS);}
+    static{ fa.lock(); }
 
     /** Full procedure name */
     private String procedureName;

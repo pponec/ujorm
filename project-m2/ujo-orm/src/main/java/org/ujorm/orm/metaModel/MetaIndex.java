@@ -15,11 +15,12 @@
  */
 package org.ujorm.orm.metaModel;
 
+import org.ujorm.ListUjoProperty;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.Property;
 
 
 /**
@@ -30,21 +31,23 @@ import org.ujorm.extensions.Property;
 final public class MetaIndex extends AbstractMetaModel {
     private static final Class CLASS = MetaIndex.class;
 
+    /** Property Factory */
+    private static final PropertyFactory<MetaIndex> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** Index database name */
     @Transient
-    public static final Property<MetaIndex,String> NAME = newProperty("name");
+    public static final UjoProperty<MetaIndex,String> NAME = fa.newProperty("name");
     /** Table */
     @Transient
-    public static final Property<MetaIndex,MetaTable> TABLE = newProperty("table");
+    public static final UjoProperty<MetaIndex,MetaTable> TABLE = fa.newProperty("table");
     /** Is the index unique ? */
     @Transient
-    public static final Property<MetaIndex,Boolean> UNIQUE = newProperty("unique", true);
+    public static final UjoProperty<MetaIndex,Boolean> UNIQUE = fa.newProperty("unique", true);
     /** Table Columns */
     @Transient
-    public static final ListProperty<MetaIndex,MetaColumn> COLUMNS = newListProperty("column");
+    public static final ListUjoProperty<MetaIndex,MetaColumn> COLUMNS = fa.newListProperty("column");
 
     /** The property initialization */
-    static{init(CLASS);}
+    static{fa.lock();}
 
     public MetaIndex(String index, MetaTable table) {
         NAME.setValue(this, index);

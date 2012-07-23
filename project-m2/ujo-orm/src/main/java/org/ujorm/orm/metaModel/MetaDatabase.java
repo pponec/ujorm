@@ -29,7 +29,6 @@ import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.DbType;
-import org.ujorm.extensions.ListProperty;
 import org.ujorm.implementation.orm.RelationToMany;
 import java.sql.*;
 import java.text.MessageFormat;
@@ -40,8 +39,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
+import org.ujorm.ListUjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.extensions.Property;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.DbProcedure;
@@ -79,48 +79,50 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     private static final boolean ADD_DB_MODEL = true;
 
+    /** Property Factory */
+    private static final PropertyFactory<MetaDatabase> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** The meta-model id */
     @XmlAttribute
-    public static final Property<MetaDatabase,String> ID = newProperty("id", "");
+    public static final UjoProperty<MetaDatabase,String> ID = fa.newProperty("id", "");
     /** MetaDatabase default schema */
-    public static final Property<MetaDatabase,String> SCHEMA = newProperty("schema", "");
+    public static final UjoProperty<MetaDatabase,String> SCHEMA = fa.newProperty("schema", "");
     /** The default state read-only for the database. */
-    public static final Property<MetaDatabase,Boolean> READ_ONLY = newProperty("readOnly", false);
+    public static final UjoProperty<MetaDatabase,Boolean> READ_ONLY = fa.newProperty("readOnly", false);
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
-    public static final Property<MetaDatabase,Class> DIALECT = newProperty("dialect", Class.class);
+    public static final UjoProperty<MetaDatabase,Class<? extends SqlDialect>> DIALECT = fa.newProperty("dialect");
     /** JDBC URL connection */
-    public static final Property<MetaDatabase,String> JDBC_URL = newProperty("jdbcUrl", "");
+    public static final UjoProperty<MetaDatabase,String> JDBC_URL = fa.newProperty("jdbcUrl", "");
     /** JDBC Driver */
-    public static final Property<MetaDatabase,String> JDBC_DRIVER = newProperty("jdbcDriver", "");
+    public static final UjoProperty<MetaDatabase,String> JDBC_DRIVER = fa.newProperty("jdbcDriver", "");
     /** DB user */
-    public static final Property<MetaDatabase,String> USER = newProperty("user", "");
+    public static final UjoProperty<MetaDatabase,String> USER = fa.newProperty("user", "");
     /** DB password of the user */
-    public static final Property<MetaDatabase,String> PASSWORD = newProperty("password", "");
+    public static final UjoProperty<MetaDatabase,String> PASSWORD = fa.newProperty("password", "");
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string
      */
-    public static final ListProperty<MetaDatabase,String> JNDI = newListProperty("jndi");
+    public static final ListUjoProperty<MetaDatabase,String> JNDI = fa.newListProperty("jndi");
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujorm.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
-    public static final Property<MetaDatabase,Class> SEQUENCER = newProperty("sequencer", Class.class).writeDefault(UjoSequencer.class);
+    public static final UjoProperty<MetaDatabase,Class<? extends UjoSequencer>> SEQUENCER = fa.newClassProperty("sequencer", UjoSequencer.class);
     /** A policy to defining the database structure by a DDL.
      * @see Orm2ddlPolicy Parameter values
      */
-    public static final Property<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = newProperty("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
+    public static final UjoProperty<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newProperty("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** List of tables */
-    public static final ListProperty<MetaDatabase,MetaTable> TABLES = newListProperty("table");
+    public static final ListUjoProperty<MetaDatabase,MetaTable> TABLES = fa.newListProperty("table");
     /** List of procedures */
-    public static final ListProperty<MetaDatabase,MetaProcedure> PROCEDURES = newListProperty("procedure");
+    public static final ListUjoProperty<MetaDatabase,MetaProcedure> PROCEDURES = fa.newListProperty("procedure");
     /** Database order number */
     @Transient
-    public static final Property<MetaDatabase,Integer> ORDER = newProperty("order", 0);
+    public static final UjoProperty<MetaDatabase,Integer> ORDER = fa.newProperty("order", 0);
     /** An instance of the DB class. */
     @Transient
-    public static final Property<MetaDatabase,OrmUjo> ROOT = newProperty("root");
+    public static final UjoProperty<MetaDatabase,OrmUjo> ROOT = fa.newProperty("root");
 
     /** The property initialization */
-    static{init(CLASS);}
+    static{fa.lock();}
 
     // --------------------
 

@@ -24,13 +24,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
+import org.ujorm.ListUjoProperty;
+import org.ujorm.UjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
 
 /**
@@ -45,12 +46,14 @@ final public class MetaRoot extends AbstractMetaModel {
     private static final Class CLASS = MetaRoot.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);
 
+    /** Property Factory */
+    private static final PropertyFactory<MetaRoot> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** List of tables */
-    public static final ListProperty<MetaRoot,MetaDatabase> DATABASES = newListProperty("database");
+    public static final ListUjoProperty<MetaRoot,MetaDatabase> DATABASES = fa.newListProperty("database");
     /** ORM parameters */
-    public static final Property<MetaRoot,MetaParams> PARAMETERS = newProperty("parameters");
+    public static final UjoProperty<MetaRoot,MetaParams> PARAMETERS = fa.newProperty("parameters");
     /** The property initialization */
-    static{init(CLASS);}
+    static{fa.lock();}
 
     public MetaRoot() {
         // A default instance:

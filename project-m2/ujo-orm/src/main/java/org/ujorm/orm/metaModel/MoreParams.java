@@ -16,9 +16,10 @@
 
 package org.ujorm.orm.metaModel;
 
+import org.ujorm.UjoProperty;
+import org.ujorm.core.PropertyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLogger;
-import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 
@@ -29,11 +30,15 @@ import org.ujorm.orm.AbstractMetaModel;
 @Immutable
 final public class MoreParams extends AbstractMetaModel {
     private static final Class CLASS = MoreParams.class;
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MoreParams.class);
 
+    /** Property Factory */
+    private static final PropertyFactory<MoreParams> fa = PropertyFactory.CamelBuilder.get(CLASS);
     /** A default engine for the MySQL dialect. The default value of this parameter is: "ENGINE = InnoDB".
      * @see org.ujorm.orm.dialect.MySqlDialect#getEngine()
      */
-    public static final Property<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = newProperty("DialectMySqlEngineType", "ENGINE = InnoDB");
+    public static final UjoProperty<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = fa.newProperty("DialectMySqlEngineType", "ENGINE = InnoDB");
+
+    static{fa.lock();}
+
 
 }
