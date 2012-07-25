@@ -18,6 +18,7 @@ package org.ujorm.swing;
 
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.UjoPropertyList;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
 import org.ujorm.UjoAction;

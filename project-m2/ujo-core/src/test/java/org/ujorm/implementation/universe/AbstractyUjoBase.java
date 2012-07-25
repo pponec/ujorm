@@ -40,7 +40,7 @@ abstract public class AbstractyUjoBase implements Ujo {
     protected Object[] data;
 
     @Override
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         return APF.getPropertyList();
     }
 
@@ -50,7 +50,7 @@ abstract public class AbstractyUjoBase implements Ujo {
 
     public void writeValue(Key property, Object value) {
         if (data==null) {
-            data = new Object[readProperties().size()];
+            data = new Object[readKeys().size()];
         }
         data[property.getIndex()] = value;
     }

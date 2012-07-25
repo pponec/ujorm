@@ -249,7 +249,7 @@ public class UjoManager implements Comparator<Key> {
     
     /** Calculate a Hash Code. */
     public int getHash(Ujo ujo) {
-        return getHash(ujo, ujo.readProperties());
+        return getHash(ujo, ujo.readKeys());
     }
     
     /** Calculate a Hash Code. */
@@ -289,7 +289,7 @@ public class UjoManager implements Comparator<Key> {
      * @return Returns true, if objects are the same.
      */
     public boolean equalsUjo(final Ujo u1, final Ujo u2)  {
-        return equalsUjo(u1, u2, u1!=null ? u1.readProperties() : null);
+        return equalsUjo(u1, u2, u1!=null ? u1.readKeys() : null);
     }
     
     /**
@@ -376,7 +376,7 @@ public class UjoManager implements Comparator<Key> {
         }
         try {
             Ujo result = (Ujo) ujo.getClass().newInstance();
-            for (Key property : ujo.readProperties()) {
+            for (Key property : ujo.readKeys()) {
                 Object value = ujo.readValue(property);
                 if (ujo.readAuthorization(action, property, value)) {
                     
@@ -414,7 +414,7 @@ public class UjoManager implements Comparator<Key> {
      * @param name A property name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @deprecated Use KeyList.findPropety(...)
-     * @see KeyList#findDirectProperty(org.ujorm.Ujo, java.lang.String, boolean)
+     * @see KeyList#findDirectKey(org.ujorm.Ujo, java.lang.String, boolean)
      *
      */
     public Key findProperty
@@ -423,7 +423,7 @@ public class UjoManager implements Comparator<Key> {
     , final boolean throwException
     ) throws IllegalArgumentException
     {
-        return ujo.readProperties().findDirectProperty(ujo, name, UjoAction.DUMMY, true, throwException);
+        return ujo.readKeys().findDirectKey(ujo, name, UjoAction.DUMMY, true, throwException);
     }
     
     /**
@@ -433,7 +433,7 @@ public class UjoManager implements Comparator<Key> {
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @see KeyList#findDirectProperty(java.lang.String, boolean)
+     * @see KeyList#findDirectKey(java.lang.String, boolean)
      */
     @SuppressWarnings("deprecation")
     public Key findProperty
@@ -444,7 +444,7 @@ public class UjoManager implements Comparator<Key> {
     , final boolean throwException
     ) throws IllegalArgumentException
     {
-        return ujo.readProperties().findDirectProperty(ujo, name, action, result, throwException);
+        return ujo.readKeys().findDirectKey(ujo, name, action, result, throwException);
     }
 
     /** Find <strong>indirect</strong> property by the name */
@@ -462,7 +462,7 @@ public class UjoManager implements Comparator<Key> {
     /** Print a String representation */
     @SuppressWarnings("unchecked")
     public String toString(Ujo ujo) {
-        return toString(ujo, ujo.readProperties());
+        return toString(ujo, ujo.readKeys());
     }
 
     /** Print a String representation. <br>
@@ -526,7 +526,7 @@ public class UjoManager implements Comparator<Key> {
         if (ujo==null) {
             return "null";
         }
-        final KeyList props = ujo.readProperties();
+        final KeyList props = ujo.readKeys();
         if (props.isEmpty()) {
             return "hash:" + ujo.hashCode();
         }
@@ -811,7 +811,7 @@ public class UjoManager implements Comparator<Key> {
     /** Create a list of KeyList */
     @SuppressWarnings("unchecked")
     public List<UjoPropertyRow> createPropertyList(Ujo content, UjoAction action) {
-        KeyList<?> props = content.readProperties();
+        KeyList<?> props = content.readKeys();
         ArrayList<UjoPropertyRow> result = new ArrayList<UjoPropertyRow>(props.size());
         for (Key prop : props) {
             final Object  value   = prop.of(content);
@@ -833,7 +833,7 @@ public class UjoManager implements Comparator<Key> {
      */    
     public void copy(Ujo source, Ujo target, UjoAction action, Key... properties) {
         if (properties==null) {
-            properties = source.readProperties().toArray();
+            properties = source.readKeys().toArray();
         }
         for(Key p : properties) {
             Object value = source.readValue(p);

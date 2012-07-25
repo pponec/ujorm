@@ -35,7 +35,7 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<U
     /** Clear all parameters */
     @SuppressWarnings("unchecked")
     public DbProcedure clear() {
-        for (Key p : readProperties()) {
+        for (Key p : readKeys()) {
             p.setValue(this, null);
         }
         return this;
@@ -57,7 +57,7 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<U
      */
     @SuppressWarnings("unchecked")
     public <T> T call(final Session session) {
-        return (T) call(session, readProperties().get(0));
+        return (T) call(session, readKeys().get(0));
     }
 
     /** Returns MetaModel of the procedure */

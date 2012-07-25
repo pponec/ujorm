@@ -126,7 +126,7 @@ public class ArrayUjoChildTest extends MyTestCase {
     /** */
     public void testGetProperties1() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
-        KeyList props = ujb1.readProperties();
+        KeyList props = ujb1.readKeys();
         
         assertEquals(ArrayUjoImpl.PRO_P0, props.get(0));
         assertEquals(ArrayUjoImpl.PRO_P1, props.get(1));

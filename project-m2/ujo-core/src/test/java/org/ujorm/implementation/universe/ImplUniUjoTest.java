@@ -118,14 +118,14 @@ public class ImplUniUjoTest extends MyTestCase {
         UniUjoBase  ujb1 = new UniUjoBase();
         ImplUjoBase ujb2 = new ImplUjoBase();
 
-        assertEquals( 5, ujb1.readProperties().size());
-        assertEquals(10, ujb2.readProperties().size());
+        assertEquals( 5, ujb1.readKeys().size());
+        assertEquals(10, ujb2.readKeys().size());
     }
 
     /** */
     public void testGetProperties1() throws Throwable {
         UniUjoBase ujb1 = new UniUjoBase();
-        KeyList props = ujb1.readProperties();
+        KeyList props = ujb1.readKeys();
 
         assertEquals(UniUjoBase.PRO_P0, props.get(0));
         assertEquals(UniUjoBase.PRO_P1, props.get(1));

@@ -16,12 +16,15 @@
 
 package org.ujorm;
 
+import org.ujorm.core.annot.Immutable;
+
 /**
  * A property metadata interface for value type of {@code List<ITEM>}.
  * @deprecated Use the interface {@link ListKey} rather
  * @author Pavel Ponec
  */
 @Deprecated
+@Immutable
 public interface ListUjoProperty<UJO extends Ujo, ITEM> extends ListKey<UJO,ITEM> {
 
 

@@ -177,7 +177,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.of(getParams()));
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.getDefault());
 
-        for (Key tableProperty : database.readProperties()) {
+        for (Key tableProperty : database.readKeys()) {
 
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;

@@ -43,7 +43,7 @@ final public class UjoPropertySetter implements Setter {
      */
     public final void set(final Object target, final Object value, final SessionFactoryImplementor factory) throws HibernateException {
         if (ujoProperty == null) {
-            ujoProperty = ((Ujo)target).readProperties().findDirectProperty(propertyName, true);
+            ujoProperty = ((Ujo)target).readKeys().findDirectKey(propertyName, true);
         }
         ((Ujo) target).writeValue(ujoProperty, value);
     }

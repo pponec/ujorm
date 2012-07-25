@@ -63,12 +63,12 @@ import org.ujorm.extensions.PropertyModifier;
  *
  *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key property, Object value) {
  *         <span class="keyword-directive">if</span> (data==<span class="keyword-directive">null</span>) {
- *             data = <span class="keyword-directive">new</span> Object[readProperties().size()];
+ *             data = <span class="keyword-directive">new</span> Object[readKeys().size()];
  *         }
  *         data[property.getIndex()] = value;
  *     }
  *
- *     <span class="keyword-directive">public</span> KeyList&lt;?&gt; readProperties() {
+ *     <span class="keyword-directive">public</span> KeyList&lt;?&gt; readKeys() {
  *         <span class="keyword-directive">return</span> factory.getPropertyList();
  *     }
  *
@@ -155,7 +155,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                      : null;
             } else {
                 try {
-                    return ((Ujo) superClass.newInstance()).readProperties();
+                    return ((Ujo) superClass.newInstance()).readKeys();
                 } catch (Exception e) {
                     throw new IllegalArgumentException("Can't create instance of " + superClass, e);
                 }

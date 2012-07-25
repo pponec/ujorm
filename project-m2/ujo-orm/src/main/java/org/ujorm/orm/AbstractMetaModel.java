@@ -46,7 +46,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
     public void setReadOnly(boolean recurse) {
         if (readOnly) return;
 
-        for (Key p : readProperties()) {
+        for (Key p : readKeys()) {
 
             if (p instanceof ListKey) {
                final List list = (List) p.of(this);
@@ -59,7 +59,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
 
         this.readOnly = true; // <<<<<< LOCK THE OBJECT !!!
         
-        if (recurse) for (Key p : readProperties()) {
+        if (recurse) for (Key p : readKeys()) {
 
             Object value = p.getValue(this);
             if (value instanceof AbstractMetaModel) {

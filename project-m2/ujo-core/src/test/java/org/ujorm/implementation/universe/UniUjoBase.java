@@ -12,6 +12,7 @@ package org.ujorm.implementation.universe;
 import java.util.Date;
 import org.ujorm.*;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.core.UjoPropertyListImpl;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -37,7 +38,7 @@ public class UniUjoBase implements Ujo {
     protected Object[] data;
 
     @Override
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         return factory.getPropertyList();
     }
 
@@ -49,7 +50,7 @@ public class UniUjoBase implements Ujo {
     @Override
     public void writeValue(Key property, Object value) {
         if (data==null) {
-            data = new Object[readProperties().size()];
+            data = new Object[readKeys().size()];
         }
         data[property.getIndex()] = value;
     }
@@ -57,6 +58,10 @@ public class UniUjoBase implements Ujo {
     @Override
     public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
+    }
+
+    public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
     }
 
 

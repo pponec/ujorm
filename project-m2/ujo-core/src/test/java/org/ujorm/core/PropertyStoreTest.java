@@ -71,12 +71,12 @@ public class PropertyStoreTest extends TestCase {
         }
 
         assertEquals(props1.size(), props2.size());
-        assertSame(props1.getFirstProperty(), props2.getFirstProperty());
-        assertSame(props1.getFirstProperty().getValue(ujo), props2.getFirstProperty().getValue(ujo));
-        assertSame(props1.getFirstProperty().isAscending(), props2.getFirstProperty().isAscending());
-        assertSame(props1.getLastProperty(), props2.getLastProperty());
-        assertSame(props1.getLastProperty().getValue(ujo), props2.getLastProperty().getValue(ujo));
-        assertTrue(props2.contains(props1.getFirstProperty()));
+        assertSame(props1.getFirstKey(), props2.getFirstKey());
+        assertSame(props1.getFirstKey().getValue(ujo), props2.getFirstKey().getValue(ujo));
+        assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
+        assertSame(props1.getLastKey(), props2.getLastKey());
+        assertSame(props1.getLastKey().getValue(ujo), props2.getLastKey().getValue(ujo));
+        assertTrue(props2.contains(props1.getFirstKey()));
         assertFalse(props2.contains(UjoCSV.P2));
         assertTrue(props2.equals(props1));
     }
@@ -105,12 +105,12 @@ public class PropertyStoreTest extends TestCase {
         }
 
         assertEquals(props1.size(), props2.size());
-        assertSame(props1.getFirstProperty(), props2.getFirstProperty());
-        assertSame(props1.getFirstProperty().getValue(ujo), props2.getFirstProperty().getValue(ujo));
-        assertSame(props1.getFirstProperty().isAscending(), props2.getFirstProperty().isAscending());
-        assertEquals(props1.getLastProperty(), props2.getLastProperty());
-        assertSame(props1.getLastProperty().getValue(ujo), props2.getLastProperty().getValue(ujo));
-        assertTrue(props2.contains(props1.getFirstProperty()));
+        assertSame(props1.getFirstKey(), props2.getFirstKey());
+        assertSame(props1.getFirstKey().getValue(ujo), props2.getFirstKey().getValue(ujo));
+        assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
+        assertEquals(props1.getLastKey(), props2.getLastKey());
+        assertSame(props1.getLastKey().getValue(ujo), props2.getLastKey().getValue(ujo));
+        assertTrue(props2.contains(props1.getFirstKey()));
         assertFalse(props2.contains(UjoCSV.P2));
         assertTrue(props2.equals(props1));
     }

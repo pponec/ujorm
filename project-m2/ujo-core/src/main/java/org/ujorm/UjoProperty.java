@@ -16,6 +16,9 @@
    
 package org.ujorm;
 
+import org.ujorm.core.KeyRing;
+import org.ujorm.core.annot.Immutable;
+
 /**
  * This interface is a descriptor of the {@link Ujo} attribute. The property contains only property meta-data
  * and therefore the UjoPropertry implementation never contains business data. 
@@ -32,6 +35,7 @@ package org.ujorm;
  * @deprecated Use the inteface {@link Key} rather
  */
 @Deprecated
+@Immutable
 public interface UjoProperty <UJO extends Ujo,VALUE> extends Key<UJO,VALUE> {
     
     

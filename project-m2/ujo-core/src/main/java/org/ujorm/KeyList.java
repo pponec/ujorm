@@ -59,7 +59,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,?>> {
      * @hidden
      */
     @SuppressWarnings("deprecation")
-    public Key<UJO,?> findDirectProperty
+    public Key<UJO,?> findDirectKey
     ( final Ujo ujo
     , final String name
     , final UjoAction action
@@ -74,27 +74,15 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,?>> {
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return Key
      */
-    public Key<UJO,?> findDirectProperty
+    public Key<UJO,?> findDirectKey
     ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
 
     /** Find Key by name */
-    public Key<UJO,?> findDirectProperty
+    public Key<UJO,?> findDirectKey
     ( final Ujo ujo
     , final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /**
-     * Find direct or indirect property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @deprecated Uset the method {@link #find(java.lang.String, boolean)}
-     */
-    public Key<UJO,?> findIndirect
-    ( final String name
     , final boolean throwException
     ) throws IllegalArgumentException;
 
@@ -102,16 +90,10 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,?>> {
     public Key<UJO,?>[] toArray();
 
     /** Get the first Property */
-    public Key<UJO,?> getFirstProperty();
+    public Key<UJO,?> getFirstKey();
 
     /** Get the last Property */
-    public Key<UJO,?> getLastProperty();
-
-    /** Get last property 
-     * @deprecated Use the method {@link #getLastProperty()} rather.
-     */
-    @Deprecated
-    public Key<UJO,?> last();
+    public Key<UJO,?> getLastKey();
 
     /** Returns a base class of the related UJO */
     public Class<UJO> getType();
