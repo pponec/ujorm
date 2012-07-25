@@ -46,8 +46,8 @@ public class CujoManager {
 
     /** Find <strong>direct</strong> property by the name */
     static public CujoProperty findProperty(Class cujoType, String name) {
-        final CujoPropertyList properties = map.get(cujoType);
-        return properties.findProperty(name);
+        final CujoPropertyList keys = map.get(cujoType);
+        return keys.findProperty(name);
     }
 
     /** Find <strong>indirect</strong> property by the name */

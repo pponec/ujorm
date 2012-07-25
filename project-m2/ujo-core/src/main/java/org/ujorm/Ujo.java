@@ -22,7 +22,7 @@ package org.ujorm;
  * Ujo is a basic inteface of the <strong>Ujorm</strong> together with an interface <code>Key</code> .
  * <p>Basic two methods are <code>writeProperty(..)</code> and <code>readProperty(..)</code> for a manipulation with a value;
  * next method <code>readAuthorization(..)</code> recommends an authorizaton for a required action, selected Property and context;
- * the last method returns all properties of current UJO object.</p>
+ * the last method returns all keys of current UJO object.</p>
  * See a <a href="package-summary.html#UJO">general prologue</a> for more information or see some implementations.
  *
  *<p>The fastest way to use the interface is to extend an abstract parrent:</p>
@@ -76,7 +76,7 @@ public interface Ujo {
      */
     public void writeValue(Key property, Object value);
     
-    /** Returns all direct properties.
+    /** Returns all direct keys.
      * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).
      * Two attributes with the same "name" must be demarked by a different annotation {@link XmlElementBody} for a XML export.
      *
@@ -86,7 +86,7 @@ public interface Ujo {
     public KeyList<?> readKeys();
 
 
-    /** Returns all direct properties.
+    /** Returns all direct keys.
      * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).
      * Two attributes with the same "name" must be demarked by a different annotation {@link XmlElementBody} for a XML export.
      *

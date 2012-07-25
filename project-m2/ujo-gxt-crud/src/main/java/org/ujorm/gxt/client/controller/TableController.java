@@ -54,7 +54,7 @@ public interface TableController extends RemoteService {
     public InitItems getEnums() throws CMessageException;
 
     /** Returns a property MetaModel */
-    public List<PropertyMetadata> getMetaModel(List<CQuery> properties) throws CMessageException;
+    public List<PropertyMetadata> getMetaModel(List<CQuery> keys) throws CMessageException;
 
     /* An workaround for the GXT serialization */
     public ClientSerializableEnvelope typeWorkaround(ClientSerializableEnvelope o);

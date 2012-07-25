@@ -108,7 +108,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      * Create new Property Factory for objecty of type.
      * @param type The domain class
      * @param propertyCamelCase Property names are created along fild name by a camel case converter.
-     * @param abstractSuperProperties Pass a super properties fromo an abstract super class, if any.
+     * @param abstractSuperProperties Pass a super keys fromo an abstract super class, if any.
      */
     @SuppressWarnings("unchecked")
     public KeyFactory(Class<? extends UJO> type, boolean propertyCamelCase, KeyList<?> abstractSuperProperties) {
@@ -187,7 +187,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Lock the property factory
-     * @return count of the direct properties.
+     * @return count of the direct keys.
      */
     public final int lockAndSize() {
         return getPropertyList().size();
@@ -394,7 +394,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             return propertyList.add(p);
         }
 
-        /** Get all properties */
+        /** Get all keys */
         public Iterable<Key<UJO,?>> getProperties() {
             return propertyList;
         }

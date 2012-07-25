@@ -26,8 +26,8 @@ import org.ujorm.extensions.ListProperty;
  * This is a very fast abstract implementation of <code>Ujo</code>.
  * For implementation define only a "public static final Key" constants and a "readPropertyCount()" method in a child class.
  * The code syntax is Java 1.5 complied.
- * <br>All properties must be objects (no primitive types) in the current version of Ujorm.
- * <br>Features: very good performance, an order of properties from "<code>readKeys()</code>" method is guaranteed and independed on a Java implementation.
+ * <br>All keys must be objects (no primitive types) in the current version of Ujorm.
+ * <br>Features: very good performance, an order of keys from "<code>readKeys()</code>" method is guaranteed and independed on a Java implementation.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujorm.implementation.array.*;
@@ -81,7 +81,7 @@ public abstract class ArrayUjo extends AbstractUjo implements Serializable {
         return new Object[readPropertyCount()];
     }
     
-    /** Return a count of properties. */
+    /** Return a count of keys. */
     abstract public int readPropertyCount();
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 

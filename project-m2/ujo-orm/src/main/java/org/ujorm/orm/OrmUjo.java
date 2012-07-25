@@ -42,7 +42,7 @@ public interface OrmUjo extends Ujo {
     public void writeSession(Session session);
 
     /**
-     * Returns changed properties.
+     * Returns changed keys.
      * @param clear True value clears all the property changes.
      */
     public Key[] readChangedProperties(boolean clear);

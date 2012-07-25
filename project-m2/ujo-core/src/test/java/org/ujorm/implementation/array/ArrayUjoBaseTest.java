@@ -148,7 +148,7 @@ public class ArrayUjoBaseTest extends MyTestCase {
     }
         
     
-    /** Test of properties */
+    /** Test of keys */
     public void testGetProperties1() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
         KeyList props = ujb1.readKeys();

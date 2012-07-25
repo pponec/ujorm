@@ -397,7 +397,7 @@ public abstract class EditDialog<CUJO extends Cujo> extends EditWindow<CUJO> {
     protected void beforeValidation(CUJO cujo, boolean newState) {
     }
 
-    /** Tato motoda je poslední, která operuje s daty - pak už jsou předány na server... Pokud nechcete přijít o promazání properties, které podléhají defaultnímu nastavení, při přepsání metody nezapomeňte přepsat rodičovské volání. */
+    /** Tato motoda je poslední, která operuje s daty - pak už jsou předány na server... Pokud nechcete přijít o promazání keys, které podléhají defaultnímu nastavení, při přepsání metody nezapomeňte přepsat rodičovské volání. */
     protected void beforeSave(CUJO cujo, boolean newState) {
         if (getDefaultPropertiesMap() != null && !getDefaultPropertiesMap().keySet().isEmpty()) {
             for (CujoProperty cujoProperty : getDefaultPropertiesMap().keySet()) {

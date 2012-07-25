@@ -161,7 +161,7 @@ public class CQuery<UJO extends Cujo> implements Serializable {
         return this;
     }
 
-    /** Returns all direct properties.  */
+    /** Returns all direct keys.  */
     public CujoProperty[] readProperties() {
         return CujoManager.find(type).getProperties();
     }
@@ -219,15 +219,15 @@ public class CQuery<UJO extends Cujo> implements Serializable {
     }
 
     /**
-     * Factory creates a clienta query with required properties
+     * Factory creates a clienta query with required keys
      * @param type The base query class
-     * @param properties An array of table columns. The null or empty array means show all Properties of the base class.
+     * @param keys An array of table columns. The null or empty array means show all Properties of the base class.
      * @return Client Query.
      */
-    public static <T extends Cujo> CQuery<T> newInstance(Class<? extends T> type, CujoProperty<T,?> ... properties) {
-        return properties==null || properties.length==0
+    public static <T extends Cujo> CQuery<T> newInstance(Class<? extends T> type, CujoProperty<T,?> ... keys) {
+        return keys==null || keys.length==0
           ? new CQuery<T>(type)
-          : new CQuery<T>(type, new CujoModel(properties))
+          : new CQuery<T>(type, new CujoModel(keys))
           ;
     }
 

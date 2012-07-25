@@ -41,8 +41,8 @@ public class PrfOrderItem extends QuickUjo {
     public static final Key<PrfOrderItem,PrfOrderItem> parent = newKey();
 
     // Optional code for better performance when creating instance:
-    private static KeyList properties = init(PrfOrderItem.class);
-    @Override public KeyList readKeys() { return properties; }
+    private static KeyList keys = init(PrfOrderItem.class);
+    @Override public KeyList readKeys() { return keys; }
 
 
     // Setters and Getters:

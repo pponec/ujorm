@@ -62,7 +62,7 @@ public interface CujoProperty<UJO extends Cujo, VALUE> extends Comparable<CujoPr
 
     public boolean equals(UJO ujo, VALUE value);
 
-    /** Compare names of properties */
+    /** Compare names of keys */
     @Override
     public int compareTo(CujoProperty o);
 

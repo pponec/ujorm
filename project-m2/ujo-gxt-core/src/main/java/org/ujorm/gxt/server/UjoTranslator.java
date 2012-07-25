@@ -42,7 +42,7 @@ import org.ujorm.orm.metaModel.MetaRelation2Many;
 public final class UjoTranslator<CUJO extends Cujo> {
 
     private IServerClassConfig serverClassConfig;
-    private List<PropContainer> properties;
+    private List<PropContainer> keys;
     private CujoPropertyList cujoPropertyList;
     private UjoTranslatorCallback<CUJO>[] callBacks;
     private Map<Key, UjoTranslator> relationMap;
@@ -106,7 +106,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
           throws RuntimeException {
 
         this.cujoPropertyList = cujoPropertyList;
-        this.properties = new ArrayList<PropContainer>(ujoPropertyList.size());
+        this.keys = new ArrayList<PropContainer>(ujoPropertyList.size());
         this.serverClassConfig = serverClassConfig;
         this.dummySession = Session.newClosedSession(serverClassConfig.getHandler());
         if (relations > 0) {
@@ -120,12 +120,12 @@ public final class UjoTranslator<CUJO extends Cujo> {
                         boolean pk = isPrimaryKey(p1);
 
                         if (p2.getType().isAssignableFrom(p1.getType())) {
-                            properties.add(new PropContainer(p1, p2, pk));
+                            keys.add(new PropContainer(p1, p2, pk));
                             break;
                         }
                         if (isRelations() && p1.isTypeOf(Ujo.class) && Cujo.class.isAssignableFrom(p2.getType())) {
                             try {
-                                properties.add(new PropContainer(p1, p2, pk));
+                                keys.add(new PropContainer(p1, p2, pk));
                                 UjoTranslator ut = new UjoTranslator(p2.getType(), p1.getType(), relations-1, serverClassConfig);
                                 relationMap.put(p1, ut);
                                 break;
@@ -135,27 +135,27 @@ public final class UjoTranslator<CUJO extends Cujo> {
                         }
                         if (Enum.class.isAssignableFrom(p1.getType())) {
                             if (p2.isTypeOf(String.class)) {
-                                properties.add(new PropContainer(p1, p2, pk));
+                                keys.add(new PropContainer(p1, p2, pk));
                                 break;
                             }
                             if (p2.isTypeOf(CEnum.class)) {
-                                properties.add(new PropContainer(p1, p2, pk));
+                                keys.add(new PropContainer(p1, p2, pk));
                                 break;
                             }
                         }
                         if (Color.class.isAssignableFrom(p1.getType())) {
                             if (p2.isTypeOf(String.class)) {
-                                properties.add(new PropContainer(p1, p2, pk));
+                                keys.add(new PropContainer(p1, p2, pk));
                                 break;
                             }
                             if (p2.isTypeOf(ColorGxt.class)) {
-                                properties.add(new PropContainer(p1, p2, pk));
+                                keys.add(new PropContainer(p1, p2, pk));
                                 break;
                             }
                         }
                         if (StringWrapper.class.isAssignableFrom(p1.getType())) {
                             if (p2.isTypeOf(String.class)) {
-                                properties.add(new PropContainer(p1, p2, pk));
+                                keys.add(new PropContainer(p1, p2, pk));
                                 break;
                             }
                         }
@@ -164,8 +164,8 @@ public final class UjoTranslator<CUJO extends Cujo> {
             }
         }
 
-        if (properties.isEmpty()) {
-            throw new NoSuchElementException("No matching properties of the " + ujoPropertyList.getType());
+        if (keys.isEmpty()) {
+            throw new NoSuchElementException("No matching keys of the " + ujoPropertyList.getType());
         }
     }
 
@@ -226,7 +226,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
     public CUJO translateToClient(Ujo ujo) {
         CUJO cujo = (CUJO) newCujo(cujoPropertyList);
 
-        for (PropContainer pc : properties) {
+        for (PropContainer pc : keys) {
             if (!isRelations() && pc.p1.isTypeOf(Ujo.class)) {
                 continue;
             }
@@ -262,7 +262,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
         return cujo;
     }
 
-    /** Returns an instance of the related server class. Ujo properties of the related clasec are ignored. <>
+    /** Returns an instance of the related server class. Ujo keys of the related clasec are ignored. <>
      * If the primary key is not NULL than the result object has got an dummy session assigned.
      */
     @SuppressWarnings({"unchecked"})
@@ -275,9 +275,9 @@ public final class UjoTranslator<CUJO extends Cujo> {
         T result = (T) serverClassConfig.newServerObject(cujo.getClass().getName());
         boolean insert = true;
 
-        for (PropContainer pc : properties) {
+        for (PropContainer pc : keys) {
 
-            // Set a session to control a modified properties.
+            // Set a session to control a modified keys.
             final boolean hasSession = result.readSession() != null;
             if (pc.pk == hasSession) {
                 result.writeSession(pc.pk ? null : dummySession);

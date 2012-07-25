@@ -113,7 +113,7 @@ public class BindingSample {
         }
     }
 
-    /** Create UICOmponents for all properties from the Person. */
+    /** Create UICOmponents for all keys from the Person. */
     public void bind(Ujo ujo) {
         for (Key p : ujo.readKeys()) {
             bind(p);

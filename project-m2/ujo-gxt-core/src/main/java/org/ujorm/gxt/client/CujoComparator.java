@@ -9,15 +9,15 @@ import java.util.Comparator;
  */
 public class CujoComparator implements Comparator<Cujo> {
 
-    final CujoProperty[] properties;
+    final CujoProperty[] keys;
 
-    public CujoComparator(final CujoProperty ... properties) {
-        this.properties = properties;
+    public CujoComparator(final CujoProperty ... keys) {
+        this.keys = keys;
     }
 
     @Override
     public int compare(Cujo o1, Cujo o2) {
-        for (CujoProperty property : properties) {
+        for (CujoProperty property : keys) {
 
             Comparable c1 = (Comparable) o1.get(property);
             Comparable c2 = (Comparable) o2.get(property);
@@ -39,7 +39,7 @@ public class CujoComparator implements Comparator<Cujo> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(32);
-        for (CujoProperty property : properties) {
+        for (CujoProperty property : keys) {
             if (sb.length()>0) {
                 sb.append(", ");
             }

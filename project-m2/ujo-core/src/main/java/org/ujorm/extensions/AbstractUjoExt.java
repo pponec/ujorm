@@ -42,7 +42,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         return property.of((UJO)this);
     }
 
-    /** Getter based on two properties */
+    /** Getter based on two keys */
     @SuppressWarnings("unchecked")
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
         ( final Key<UJO1, UJO2 > property1
@@ -51,7 +51,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2);
         return get(path);    }
 
-    /** Getter based on three properties */
+    /** Getter based on three keys */
     @SuppressWarnings("unchecked")
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
         ( final Key<UJO1, UJO2 > property1
@@ -73,7 +73,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         return (UJO_IMPL) this;
     }
 
-    /** Setter  based on two properties. Type of value is checked in the runtime. */
+    /** Setter  based on two keys. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> void set
         ( final Key<UJO1, UJO2 > property1
         , final Key<UJO2, VALUE> property2
@@ -84,7 +84,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         set(path, value);
     }
 
-    /** Setter  based on three properties. Type of value is checked in the runtime. */
+    /** Setter  based on three keys. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
         ( final Key<UJO1, UJO2 > property1
         , final Key<UJO2, UJO3 > property2
@@ -265,8 +265,8 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     } 
 
     /** Copy selected attributes to the target */
-    public void copyTo(Ujo target, Key... properties) {
-        UjoManager.getInstance().copy(this, target, new UjoActionImpl(UjoAction.ACTION_COPY), properties);
+    public void copyTo(Ujo target, Key... keys) {
+        UjoManager.getInstance().copy(this, target, new UjoActionImpl(UjoAction.ACTION_COPY), keys);
     }
 
 }

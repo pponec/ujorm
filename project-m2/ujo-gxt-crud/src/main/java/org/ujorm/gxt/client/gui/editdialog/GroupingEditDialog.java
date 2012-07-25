@@ -97,10 +97,10 @@ public abstract class GroupingEditDialog<CUJO extends AbstractCujo> extends Edit
         return set;
     }
 
-    public Map<String, List<CujoProperty>> initGroupsMap(List<CujoProperty> properties) {
+    public Map<String, List<CujoProperty>> initGroupsMap(List<CujoProperty> keys) {
         HashMap<String, List<CujoProperty>> resultMap = new HashMap<String, List<CujoProperty>>();
 
-        for (CujoProperty cujoProperty : properties) {
+        for (CujoProperty cujoProperty : keys) {
             if (resultMap.get(PROPERTY_ABSTRACT) == null) {
                 resultMap.put(PROPERTY_ABSTRACT, new ArrayList<CujoProperty>());
             }

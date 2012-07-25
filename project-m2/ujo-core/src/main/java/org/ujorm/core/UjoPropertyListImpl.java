@@ -37,12 +37,12 @@ import org.ujorm.UjoPropertyList;
 @Deprecated
 final public class UjoPropertyListImpl extends KeyRing implements UjoPropertyList  {
 
-    /** An empty array of the UJO properties */
+    /** An empty array of the UJO keys */
     final static public Key[] EMPTY = new Key[0];
 
     /** Constructor */
     public UjoPropertyListImpl(KeyList keyRing) {
-        super(keyRing.getType(), ((KeyRing)keyRing).properties);
+        super(keyRing.getType(), ((KeyRing)keyRing).keys);
     }
 
     /**
@@ -80,8 +80,8 @@ final public class UjoPropertyListImpl extends KeyRing implements UjoPropertyLis
 
     // ======================= DEPRECATED ===========================
 
-    public UjoPropertyListImpl(Class baseClass, Key[] properties) {
-        super(baseClass, properties);
+    public UjoPropertyListImpl(Class baseClass, Key[] keys) {
+        super(baseClass, keys);
     }
 
     public UjoProperty findDirectProperty(Ujo ujo, String name, UjoAction action, boolean result, boolean throwException) throws IllegalArgumentException {

@@ -74,7 +74,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
         return new Object[readPropertyCount()];
     }
     
-    /** Return a count of properties. */
+    /** Return a count of keys. */
     abstract public int readPropertyCount();
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 

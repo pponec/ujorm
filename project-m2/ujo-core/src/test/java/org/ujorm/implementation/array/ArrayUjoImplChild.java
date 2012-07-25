@@ -33,7 +33,7 @@ public class ArrayUjoImplChild extends ArrayUjoImpl {
     public ArrayUjoImplChild() {
     }
     
-     /** Returns a count of properties. */
+     /** Returns a count of keys. */
     @Override
      public int readPropertyCount() {
          return propertyCount;

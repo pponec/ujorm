@@ -100,7 +100,7 @@ Released   : 20080129
                   <li>direct support for the <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a><!-- component--></li>
                   <li>way for an implementation a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
                     to only one <a href="javadoc/org/ujorm/Ujo.html#writeValue(org.ujorm.UjoProperty,%20java.lang.Object)">place</a>
-                    for each properties include children</li>
+                    for each keys include children</li>
                   <li>unlike some <a href="#similar">competing projects</a> the UjoProperty instance is immutable 
                       (hence never contains value)
                       and the encapsulation is supported</li>
@@ -188,7 +188,7 @@ Released   : 20080129
               <p>The sample uses an <a href="javadoc/org/ujorm/extensions/UjoExt.html">extended API</a>                
               for more conventional property access in a source code
               that's available since the <strong>UJO release 0.80</strong>.
-              The new solution allows to you to chain more properties according to a model of a some new popular languages.
+              The new solution allows to you to chain more keys according to a model of a some new popular languages.
               <!-- <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a> -->
               The extended API is a child of the <a href="javadoc/org/ujorm/Ujo.html">original API</a> so 
               you can mix both types because all internal tools are handling the original API still  .
@@ -233,7 +233,7 @@ Released   : 20080129
 }</pre>
 <p>Compare the both samples with a <a href="sample/PersonBean.html">sample code of a JavaBean</a> object.
 If we exclude all imports from the code then the <strong>Ujo implementation</strong> have got slightly less code lines in compare to JavaBeans.
-However the more properties gives significantly the better effect in favour of the Ujo implementation.
+However the more keys gives significantly the better effect in favour of the Ujo implementation.
 </p>
 <!-- -->           
 
@@ -347,8 +347,8 @@ However the more properties gives significantly the better effect in favour of t
             <div class="entry">
                 Here are links to some other Java projects with similar concerns:
                 <ul>
-                <li><a href="http://joda-beans.sourceforge.net/">Joda-Beans</a> - is a framework that radically enhances working with beans. The aim is to add type-safety, refactorability and compiler-checking to properties on beans.</li>
-                <li><a href="https://bean-properties.dev.java.net/">Bean-properties</a> - project using Java 5 syntax and object oriented features in order to provide property support that leapfrogs the properties available in Delphi/VB and other languages. The properties implemented in bean-properties use Java's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
+                <li><a href="http://joda-beans.sourceforge.net/">Joda-Beans</a> - is a framework that radically enhances working with beans. The aim is to add type-safety, refactorability and compiler-checking to keys on beans.</li>
+                <li><a href="https://bean-keys.dev.java.net/">Bean-keys</a> - project using Java 5 syntax and object oriented features in order to provide property support that leapfrogs the keys available in Delphi/VB and other languages. The keys implemented in bean-keys use Java's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
                 <li><a href="http://commons.apache.org/attributes/">Commom Attributes</a> - an attribute and metadata solution for the Java 1.4 or earlier enables Java programmers to use C#/.Net-style attributes in their code</li>
                 <li><a href="http://jcp.org/en/jsr/detail?id=175">JSR-175</a> - a metadata facility for the JavaTM Programming Language</li>
                 <li><a href="http://spice.codehaus.org/metaclass/model.html">MetaClass</a> - the attributes are usually specified in the java source files as javadoc markup. The source file is then processed and the metadata is compiled into descriptors that MetaClass is capable of reading. These descriptors are then loaded at runtime to provide metadata about the program elements. </li>

@@ -63,7 +63,7 @@ abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> ext
         }
     }
 
-    /** Check validity of properties */
+    /** Check validity of keys */
     @Override
     protected void checkValidity() throws IllegalArgumentException {
         super.checkValidity();

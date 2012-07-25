@@ -22,7 +22,7 @@ import org.ujorm.gxt.client.tools.ClientSerializableEnvelope;
  */
 public interface MetaModelController {
 
-    public void getMetaModel(List<CQuery> properties, AsyncCallback<List<PropertyMetadata>> callback) throws CMessageException;
+    public void getMetaModel(List<CQuery> keys, AsyncCallback<List<PropertyMetadata>> callback) throws CMessageException;
 
     public void getEnums(AsyncCallback<InitItems> callback) throws CMessageException;
 

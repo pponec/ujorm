@@ -41,7 +41,7 @@ public class ArrayUjoImpl extends ArrayUjo {
     public ArrayUjoImpl() {
     }
     
-     /** Returns a count of properties. */
+     /** Returns a count of keys. */
     @Override
      public int readPropertyCount() {
          return propertyCount;

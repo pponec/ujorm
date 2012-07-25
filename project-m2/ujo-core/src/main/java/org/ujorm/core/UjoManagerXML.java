@@ -112,7 +112,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     
-    /** Write properties to XML include XML header. A root tag is "body" by default. */
+    /** Write keys to XML include XML header. A root tag is "body" by default. */
     public void saveXML(File xmlFile, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         final OutputStream os = getOutputStream(xmlFile);
         try {
@@ -122,7 +122,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
     }
     
-    /** Write properties to XML include XML header. A root tag is "body" by default. */
+    /** Write keys to XML include XML header. A root tag is "body" by default. */
     public void saveXML(OutputStream outStream, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         final Writer writer = new OutputStreamWriter(outStream, UTF_8);
         try {
@@ -132,13 +132,13 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
     }
     
-    /** Write properties to XML include XML header. A root tag is "body" by default. */
+    /** Write keys to XML include XML header. A root tag is "body" by default. */
     public void saveXML(Writer writer, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         saveXML(writer, rootElementName, ujo, xmlHeader, context);
         writer.flush();
     }
     
-    /** Write properties to XML include a XML header. */
+    /** Write keys to XML include a XML header. */
     @SuppressWarnings("deprecation")
     public void saveXML(Writer writer, String rootElementName, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
         this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
@@ -177,17 +177,17 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
     }
     
-    /** Write required properties to XML writer. */
+    /** Write required keys to XML writer. */
     public void printProperties(Writer writer, UjoTextable ujo) throws IOException {
         printProperties(writer, ujo, ujo.readKeys());
     }
     
-    /** Write required properties to a XML writer. */
+    /** Write required keys to a XML writer. */
     @SuppressWarnings("unchecked")
-    public void printProperties(final Writer writer, UjoTextable ujo, final KeyList<?> properties) throws IOException {
+    public void printProperties(final Writer writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
         Key bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
-        for (Key property : properties) {
+        for (Key property : keys) {
             Object value = property.of(ujo);
             
             if (value==null

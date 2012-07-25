@@ -317,7 +317,7 @@ final public class OrmTools {
         return result;
     }
 
-    /** Load lazy value for all items and all relation properties by the rule: a one SQL statement per relation property.
+    /** Load lazy value for all items and all relation keys by the rule: a one SQL statement per relation property.
      * @param query
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.

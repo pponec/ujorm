@@ -26,7 +26,7 @@ import org.ujorm.extensions.ListProperty;
 /**
  * This is a fast implementation of the <code>Ujo</code>.
  * For implementation define only a "public static final Key" constants call a static method init() from the static block located after the latest property.
- * <br>All properties must be objects (no primitive types) in the current version of Ujorm.
+ * <br>All keys must be objects (no primitive types) in the current version of Ujorm.
  * <br>Features: good performance, simple code.
  * <h3>Sample of usage</h3>
  * <pre class="pre">

@@ -35,7 +35,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
 
     /**
-     * Initializa all properties. If the properties are unlocked than recalculate index
+     * Initializa all keys. If the keys are unlocked than recalculate index
      * and set an undefined property name by its static field.
      * @param ujoClass Ujo class
      */
@@ -46,10 +46,10 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
 
     /**
-     * Initializa all properties. If the properties are unlocked than recalculate index
+     * Initializa all keys. If the keys are unlocked than recalculate index
      * and set an undefined property name by its static field.
      * @param ujoClass Ujo class
-     * @param checkUniqueProperties Check unique properties
+     * @param checkUniqueProperties Check unique keys
      */
     @SuppressWarnings("unchecked")
     protected static final KeyList init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
@@ -65,8 +65,8 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
         return UjoManager.getInstance();
     }
     
-    /** Returns all direct properties.
-     * <br>Note 1: An order of properties is sorted by a value of the index attribute.
+    /** Returns all direct keys.
+     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
      * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see Key#isDirect()
@@ -76,8 +76,8 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
         return result;
     }
 
-    /** Returns all direct properties.
-     * <br>Note 1: An order of properties is sorted by a value of the index attribute.
+    /** Returns all direct keys.
+     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
      * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see Key#isDirect()
@@ -89,7 +89,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
     /**
      * Get an authorization of the property for different actions.
-     * <br>A Default value is TRUE for all actions, properties and values.
+     * <br>A Default value is TRUE for all actions, keys and values.
      *
      *
      * @param action Type of request. See constant(s) ACTION_* for more information.

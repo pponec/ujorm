@@ -49,24 +49,24 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     private Class<UJO> type;
     /** Property size */
     private int size;
-    /** Transient properties */
-    protected Key<UJO, ?>[] properties;
+    /** Transient keys */
+    protected Key<UJO, ?>[] keys;
     /** Default hash code. */
     transient private int hashCode;
 
     /**
      * Constructor
-     * @param baseClass Not null base class for all properties
-     * @param properties Property array
+     * @param baseClass Not null base class for all keys
+     * @param keys Property array
      * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
      */
-    public KeyRing(Class<UJO> baseClass, Key<UJO, ?>... properties) {
+    public KeyRing(Class<UJO> baseClass, Key<UJO, ?>... keys) {
         if (baseClass == null) {
             throw new IllegalArgumentException("The baseClass must be defined");
         }
         this.type = baseClass;
-        this.properties = properties;
-        this.size = properties.length;
+        this.keys = keys;
+        this.size = keys.length;
     }
 
     /** Get The Base Class */
@@ -85,7 +85,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     public Key<UJO, ?> findDirectKey(final String name, final boolean throwException) throws IllegalArgumentException {
         int nameHash = name.hashCode();
 
-        for (Key prop : properties) {
+        for (Key prop : keys) {
             if (prop.getName().hashCode() == nameHash // speed up
                     && prop.getName().equals(name)) {
                 return prop;
@@ -120,7 +120,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         }
         int nameHash = name.hashCode();
 
-        for (final Key prop : properties) {
+        for (final Key prop : keys) {
             if (prop.getName().hashCode() == nameHash // speed up
                     && prop.getName().equals(name)
                     && (getUjoManager().isXmlAttribute(prop)) != result) {
@@ -137,7 +137,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /**
      * Find <strong>indirect</strong> property by the name. Empty result can trhow NULL value if parameter throwException==false.
-     * @param names Not null property name inclukde composite properties (indirect properties).
+     * @param names Not null property name inclukde composite keys (indirect keys).
      * @param throwException
      * @return new Key
      */
@@ -198,7 +198,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Get one Property */
     @Override
     public Key<UJO, ?> get(int i) {
-        return properties[i];
+        return keys[i];
     }
 
     /** Returns or create UjoManager.
@@ -223,7 +223,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Test collection if it contains a property parameter  */
     @SuppressWarnings("element-type-mismatch")
     public boolean contains(Object property) {
-        return Arrays.asList(properties).contains(property);
+        return Arrays.asList(keys).contains(property);
     }
 
     /** Create Property Interator */
@@ -255,7 +255,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     @Override
     public Key<UJO, ?>[] toArray() {
         final Key<UJO, ?>[] result = new Key[size];
-        System.arraycopy(this.properties, 0, result, 0, result.length);
+        System.arraycopy(this.keys, 0, result, 0, result.length);
         return result;
     }
 
@@ -281,7 +281,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Returns true if list contains property from the parameter. */
     @Override
     public boolean contains(Key<UJO, ?> o) {
-        for (Key p : properties) {
+        for (Key p : keys) {
             if (p.equals(o)) {
                 return true;
             }
@@ -293,7 +293,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(32);
-        for (Key p : properties) {
+        for (Key p : keys) {
             if (sb.length() > 0) {
                 sb.append(", ");
             }
@@ -347,16 +347,16 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         this.type = (Class) in.readObject();
         final String[] nameProperties = (String[]) in.readObject();
-        this.properties = restoreProperties(type, nameProperties);
-        this.size = properties.length;
+        this.keys = restoreProperties(type, nameProperties);
+        this.size = keys.length;
     }
 
     /** Serializable property names */
     private String[] createPropertyNames() {
-        final String[] nameProperties = new String[properties.length];
-        for (int i = properties.length - 1; i >= 0; --i) {
-            final Key property = properties[i];
-            nameProperties[i] = properties[i].isAscending() ? property.getName() : (property.getName() + DESCENDING_SYMBOL);
+        final String[] nameProperties = new String[keys.length];
+        for (int i = keys.length - 1; i >= 0; --i) {
+            final Key property = keys[i];
+            nameProperties[i] = keys[i].isAscending() ? property.getName() : (property.getName() + DESCENDING_SYMBOL);
         }
         return nameProperties;
     }
@@ -372,24 +372,24 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             final Key property = propertyList.find(pName, true).descending(descending);
             ps[i] = property;
         }
-        properties = ps;
-        return properties;
+        keys = ps;
+        return keys;
     }
 
     // -------------- STATIC METHOD(S) --------------
 
     /** Create a new instance, the parameters is cloned. */
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Key<? super UJO, ?>... properties) {
-        Key[] ps = new Key[properties.length];
-        System.arraycopy(properties, 0, ps, 0, ps.length);
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Key<? super UJO, ?>... keys) {
+        Key[] ps = new Key[keys.length];
+        System.arraycopy(keys, 0, ps, 0, ps.length);
         return new KeyRing<UJO>(baseClass, ps);
     }
 
     /** Create a new instance */
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Collection<Key<? super UJO, ?>> properties) {
-        final Key<UJO, ?>[] ps = new Key[properties.size()];
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Collection<Key<? super UJO, ?>> keys) {
+        final Key<UJO, ?>[] ps = new Key[keys.size()];
         int i = 0;
-        for (Key<? super UJO, ?> p : properties) {
+        for (Key<? super UJO, ?> p : keys) {
             ps[i++] = (Key<UJO, ?>) p;
         }
         return new KeyRing<UJO>(baseClass, (Key[]) ps);

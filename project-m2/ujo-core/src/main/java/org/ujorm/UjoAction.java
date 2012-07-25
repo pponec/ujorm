@@ -61,7 +61,7 @@ public interface UjoAction {
      */
     public static final int ACTION_CLONE = 20;
     /**
-     * An authorization action (of a Key) for a method: UjoManager.copy(Ujo source, Ujo target, Key... properties) .
+     * An authorization action (of a Key) for a method: UjoManager.copy(Ujo source, Ujo target, Key... keys) .
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_COPY = 21;

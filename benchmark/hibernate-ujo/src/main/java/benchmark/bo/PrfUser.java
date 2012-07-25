@@ -33,8 +33,8 @@ public class PrfUser extends QuickUjo {
     public static final Key<PrfUser,String> lastname = newKey();
 
     // Optional code for better performance when creating instance:
-    private static KeyList properties = init(PrfUser.class);
-    @Override public KeyList readKeys() { return properties; }
+    private static KeyList keys = init(PrfUser.class);
+    @Override public KeyList readKeys() { return keys; }
 
 
     // Setters and Getters:

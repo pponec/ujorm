@@ -764,7 +764,7 @@ abstract public class TablePanel<CUJO extends Cujo> extends LayoutContainer impl
     /** Create a new instance of the Edit dialog, no initializaton. */
     abstract protected <T extends TableEditDialog<CUJO>> T createDialogInstance();
 
-    /** Copy all properties of the same type exclude the names 'id', 'createdBy', 'modifiedBy' */
+    /** Copy all keys of the same type exclude the names 'id', 'createdBy', 'modifiedBy' */
     protected void copy(Cujo from, Cujo to) {
         if (from != null) {
             for (CujoProperty p : from.readProperties()) {

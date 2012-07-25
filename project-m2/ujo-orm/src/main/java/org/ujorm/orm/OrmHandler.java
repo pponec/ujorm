@@ -380,8 +380,8 @@ public class OrmHandler {
         return MetaRoot.DATABASES.of(databases);
     }
 
-    /** Find all <strong>persistent<strong> properties with the required type or subtype.
-     * @param type The parameter value Object.clas returns all persistent properties.
+    /** Find all <strong>persistent<strong> keys with the required type or subtype.
+     * @param type The parameter value Object.clas returns all persistent keys.
      */
     public List<Key> findPropertiesByType(Class type) {
         List<Key> result = new ArrayList<Key>();

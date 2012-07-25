@@ -95,7 +95,7 @@ public class SampleCORE {
         // String ID = person.get(ID); // Wrong the return data type
     }
 
-   /** How to copy all properties from BO to another object? */
+   /** How to copy all keys from BO to another object? */
     public void copyAllProperties() throws Exception {
         Ujo employee1 = findEmployee();
         Ujo employee2 = employee1.getClass().newInstance();
@@ -106,7 +106,7 @@ public class SampleCORE {
         System.out.println("Employee 2: " + employee2);
     }
 
-   /** How to copy some properties to another object? */
+   /** How to copy some keys to another object? */
     public void copySomeProperties() {
         Employee employee1 = findEmployee();
         Employee employee2 = new Employee();

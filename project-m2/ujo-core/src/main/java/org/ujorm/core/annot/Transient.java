@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 
 /** 
  * Use the annotation to mark a Key static field to a transient state.
- * Values of the transient properties are not stored by any way.
+ * Values of the transient keys are not stored by any way.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)

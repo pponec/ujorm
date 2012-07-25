@@ -125,12 +125,12 @@ public class ListProperty<UJO extends Ujo, ITEM>
         return result;
     }
 
-    /** Sort a list by its properties. */
+    /** Sort a list by its keys. */
     @SuppressWarnings("unchecked")
-    public void sort(UJO ujo, Key ... properties) {
+    public void sort(UJO ujo, Key ... keys) {
         List<ITEM> list = getValue(ujo);
         if ( list!=null) {
-            new UjoComparator(properties).sort(list);
+            new UjoComparator(keys).sort(list);
         }
     }
 

@@ -110,7 +110,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,?>> {
     /** Get property on requered index */
     public Key get(final int index);
 
-    /** Returns a total count of its properties */
+    /** Returns a total count of its keys */
     public int size();
 
     /** Is the collection empty? */
@@ -119,7 +119,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,?>> {
     /** Returns true if list contains property from the parameter. */
     public boolean contains(final Key<UJO,?> o);
 
-    /** Create an interator for all properties. */
+    /** Create an interator for all keys. */
     @Override
     public Iterator<Key<UJO,?>> iterator();
 

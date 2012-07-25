@@ -51,8 +51,8 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     /**
      * Creates a new instance of UjoManagerRBundle
      */
-    public UjoManagerRBundle(Class<UJO> ujoClass, Key ... properties) {
-        super(ujoClass, properties);
+    public UjoManagerRBundle(Class<UJO> ujoClass, Key ... keys) {
+        super(ujoClass, keys);
     }
     
     /**
@@ -135,8 +135,8 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     }
     
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass, Key ... properties) {
-        return new UjoManagerRBundle<UJO>(ujoClass, properties);
+    public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass, Key ... keys) {
+        return new UjoManagerRBundle<UJO>(ujoClass, keys);
     }
     
 }
