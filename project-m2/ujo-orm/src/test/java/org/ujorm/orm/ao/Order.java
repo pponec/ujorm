@@ -17,7 +17,7 @@
 package org.ujorm.orm.ao;
 
 import java.util.Date;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Table;
@@ -31,15 +31,15 @@ public class Order extends OrmTable<Order> {
 
     /** Unique key */
     @Column(pk=true)
-    public static final Property<Order,Long> ID = newProperty("id", Long.class);
+    public static final Key<Order,Long> ID = newKey("id");
     /** User key */
     @Column(pk=true)
-    public static final Property<Order,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final Key<Order,Integer> USER_ID = newKey("usrId");
     /** Date of creation */
     @Column(pk=true)
-    public static final Property<Order,Date> DATE = newProperty("date", Date.class);
+    public static final Key<Order,Date> DATE = newKey("date");
     /** Description of the Order */
-    public static final Property<Order,String> DESCR = newProperty("description", String.class);
+    public static final Key<Order,String> DESCR = newKey("description");
     /** Verify unique constants */
     static{init(Order.class,true);}
 

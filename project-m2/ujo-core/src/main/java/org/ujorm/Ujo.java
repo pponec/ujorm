@@ -19,7 +19,7 @@ package org.ujorm;
 /**
  * <a href="http://ujorm.org/" class="undecor"><img style="width: 32px; height: 32px;" alt="UJO Icons" src="ujo32.png"> 
  * UJO</a> means a <i>Unified Java Object</i> and its implementations provides a similar service like a JavaBeans class.
- * Ujo is a basic inteface of the <strong>Ujorm</strong> together with an interface <code>UjoProperty</code> .
+ * Ujo is a basic inteface of the <strong>Ujorm</strong> together with an interface <code>Key</code> .
  * <p>Basic two methods are <code>writeProperty(..)</code> and <code>readProperty(..)</code> for a manipulation with a value;
  * next method <code>readAuthorization(..)</code> recommends an authorizaton for a required action, selected Property and context;
  * the last method returns all properties of current UJO object.</p>
@@ -29,9 +29,9 @@ package org.ujorm;
  *<pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
  *<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {
  *    
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, <span class="java-numeric-literals">0d</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, String &gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Boolean&gt; MALE = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Double &gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Cash"</span>, <span class="java-numeric-literals">0d</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">addCash</span>(<span class="java-keywords">double</span> cash) {
  *    <span class="java-keywords">double</span> newCash = CASH.<span class="java-layer-method">of</span>(<span class="java-keywords">this</span>) + cash;
@@ -40,9 +40,9 @@ package org.ujorm;
  *}</pre>
  * 
  * @author Pavel Ponec
- * @see UjoProperty
- * @assoc - - - UjoProperty
- * @composed - - 1 UjoPropertyList
+ * @see Key
+ * @assoc - - - Key
+ * @composed - - 1 KeyList
  * @composed - - 1 UjoAction
  * @opt attributes
  * @opt operations
@@ -51,39 +51,39 @@ public interface Ujo {
     
     
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
-     * {@link UjoProperty#getValue(org.ujorm.Ujo)}
+     * {@link Key#getValue(org.ujorm.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br />NOTE: A reaction on an incorrect property depends on the implementation.
      *
      * @param property Property must be a direct type only!
      * @return Property value
-     * @see UjoProperty#getValue(org.ujorm.Ujo)
-     * @see UjoProperty#isDirect()
+     * @see Key#getValue(org.ujorm.Ujo)
+     * @see Key#isDirect()
      */
-    public Object readValue(UjoProperty property);
+    public Object readValue(Key property);
     
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * {@link UjoProperty#setValue(Ujo,Object)}
+     * {@link Key#setValue(Ujo,Object)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: A reaction on an incorrect property depends on the implementation.
      *
      * @param property Property must be a direct type only!
-     * @see UjoProperty#setValue(Ujo,Object)
-     * @see UjoProperty#isDirect()
+     * @see Key#setValue(Ujo,Object)
+     * @see Key#isDirect()
      */
-    public void writeValue(UjoProperty property, Object value);
+    public void writeValue(Key property, Object value);
     
     /** Returns all direct properties.
      * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).
      * Two attributes with the same "name" must be demarked by a different annotation {@link XmlElementBody} for a XML export.
      *
      * <br>An index property in the array UJO must be unique a continuous, an order of property array depends on an implementation of UJO object.
-     * @see UjoProperty#isDirect()
+     * @see Key#isDirect()
      */
-    public UjoPropertyList<?> readProperties();
+    public KeyList<?> readProperties();
     
     /**
      * Get an authorization of the property for different actions.
@@ -97,6 +97,6 @@ public interface Ujo {
      * @return Returns a TRUE value in case the property is authorized successfully.
      * @see UjoAction
      */
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value);
+    public boolean readAuthorization(UjoAction action, Key property, Object value);
     
 }

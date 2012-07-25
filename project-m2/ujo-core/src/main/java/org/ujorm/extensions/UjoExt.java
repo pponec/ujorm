@@ -16,14 +16,14 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 import java.util.List;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * This is an <strong>extended Ujo</strong> interface designed for a more conventional property access evaluated by developers.
- * Most of the functions have been a similar reason like methods in the UjoProperty class. 
+ * Most of the functions have been a similar reason like methods in the Key class.
  * The new solution allows to the developers to chain more properties according to 
  * a model of a some new popular languages.
  * All methods are type safe likewise the usage of the Ujo interface - exclude two methods with an unlimited count of properties: setVal(...) and getVal(...).
@@ -31,9 +31,9 @@ import org.ujorm.UjoProperty;
  *<br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo <span class="java-keywords">implements</span> UjoMiddle {
  *
- *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> Key&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> Key&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> Key&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;George&quot;</span>);
@@ -52,26 +52,26 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
     
     /** Getter based on two properties */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, VALUE> property2);
+        ( Key<UJO1, UJO2 > property1
+        , Key<UJO2, VALUE> property2);
 
     /** Getter based on three properties */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, UJO3 > property2
-        , UjoProperty<UJO3, VALUE> property3 );
+        ( Key<UJO1, UJO2 > property1
+        , Key<UJO2, UJO3 > property2
+        , Key<UJO3, VALUE> property3 );
 
     /** Setter  based on two properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> void set
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, VALUE> property2
+        ( Key<UJO1, UJO2 > property1
+        , Key<UJO2, VALUE> property2
         , VALUE value);
 
     /** Setter  based on three properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
-        ( UjoProperty<UJO1, UJO2 > property1
-        , UjoProperty<UJO2, UJO3 > property2
-        , UjoProperty<UJO3, VALUE> property3
+        ( Key<UJO1, UJO2 > property1
+        , Key<UJO2, UJO3 > property2
+        , Key<UJO3, VALUE> property3
         , VALUE value);
 
 
@@ -81,21 +81,21 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
      * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() .
      */
     public <UJO extends UJO_IMPL, ITEM> int getItemCount
-        ( ListUjoProperty<UJO,ITEM> property);
+        ( ListKey<UJO,ITEM> property);
 
     
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.addItem(...) .
      */
     public <UJO extends UJO_IMPL, ITEM> Ujo add
-        ( ListUjoProperty<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> property
         , ITEM value);
 
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.setItem(...) .
      */
     public <UJO extends UJO_IMPL, ITEM> Ujo set
-        ( ListUjoProperty<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> property
         , int index
         , ITEM value);
     
@@ -103,24 +103,24 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
      * <br>Inside is called a method ListUjoPropertyCommon.getItem(...) .
      */
     public <UJO extends UJO_IMPL, ITEM> ITEM get
-        ( ListUjoProperty<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> property
         , int index);
     
     /** Get Value */
     public <UJO extends UJO_IMPL, ITEM> ITEM remove
-        ( ListUjoProperty<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> property
         , int index);
 
     /** Returns a not null List. If original list value is empty, the new List is created.
      * <br>Inside is called a method ListUjoPropertyCommon.getList() .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( ListUjoProperty<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> property
         );
 
 
     /** Indicates whether a parameter value "equal to" property default value. */
     public <UJO extends UJO_IMPL, VALUE> boolean isDefault
-        ( UjoProperty<UJO, VALUE> property);
+        ( Key<UJO, VALUE> property);
     
 }

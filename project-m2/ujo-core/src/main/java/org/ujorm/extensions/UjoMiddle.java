@@ -17,7 +17,7 @@
 package org.ujorm.extensions;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * This is an <strong>middle extended Ujo</strong> interface designed for a more conventional property access evaluated by developers.
@@ -25,9 +25,9 @@ import org.ujorm.UjoProperty;
  *<br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
  *
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;George&quot;</span>);
@@ -40,13 +40,13 @@ import org.ujorm.UjoProperty;
  */
 public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
     
-    /** Getter based on one UjoProperty */
+    /** Getter based on one Key */
     public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( UjoProperty<UJO, VALUE> property);
+        ( Key<UJO, VALUE> property);
 
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
+    /** Setter  based on Key. Type of value is checked in the runtime. */
     public <UJO extends UJO_IMPL, VALUE> Ujo set
-        ( UjoProperty<UJO, VALUE> property
+        ( Key<UJO, VALUE> property
         , VALUE value);
 
     /**
@@ -57,7 +57,7 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
      * @param property A Property
      * @return If property type is "container" then result is null.
      */
-    public String getText(final UjoProperty property);
+    public String getText(final Key property);
 
 
 
@@ -67,7 +67,7 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
      * @param property Property
      * @param value String value
      */
-    public void setText(final UjoProperty property, final String value);
+    public void setText(final Key property, final String value);
 
 
 }

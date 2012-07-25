@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
@@ -123,7 +123,7 @@ public class JdbcStatement {
         for (MetaColumn column : columns) {
 
             if (column.isForeignKey()) {
-                UjoProperty property = column.getProperty();
+                Key property = column.getProperty();
                 Object value = table!=null ? property.of(table) : null ;
                 assignValues((OrmUjo) value, column.getForeignColumns());
             } else if (column.isColumn()) {
@@ -216,7 +216,7 @@ public class JdbcStatement {
     @SuppressWarnings("unchecked")
     public void assignValue(final OrmUjo table, final MetaColumn column) throws SQLException {
 
-        final UjoProperty property = column.getProperty();
+        final Key property = column.getProperty();
         final Object value = table!=null ? property.of(table) : null ;
 
         assignValue(column, value, table);
@@ -231,7 +231,7 @@ public class JdbcStatement {
         , final OrmUjo bo
         ) throws SQLException {
 
-        final UjoProperty property = column.getProperty();
+        final Key property = column.getProperty();
 
         if (logValues) {
             if (bo != null) {
@@ -275,7 +275,7 @@ public class JdbcStatement {
         Object value = null;
 
         for (MetaColumn metaParam : MetaProcedure.PARAMETERS.getList(procedure)) {
-            final UjoProperty property = metaParam.getProperty();
+            final Key property = metaParam.getProperty();
 
             if (!property.isTypeOf(Void.class)) try {
                 
@@ -331,13 +331,13 @@ public class JdbcStatement {
     }
 
     /** Log a value value into a text format. */
-    protected void logValue(final Ujo bo, final UjoProperty property) {
+    protected void logValue(final Ujo bo, final Key property) {
         String textValue = UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY);
         logValue(textValue, property);
     }
 
     /** Log a value value into a text format. */
-    protected void logValue(final String textValue, final UjoProperty property) {
+    protected void logValue(final String textValue, final Key property) {
         final boolean quotaType = property.isTypeOf(CharSequence.class)
                                || property.isTypeOf(java.util.Date.class)
                                 ;

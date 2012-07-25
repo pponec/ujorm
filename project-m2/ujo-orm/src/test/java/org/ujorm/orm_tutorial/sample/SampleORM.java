@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
@@ -374,7 +374,7 @@ public class SampleORM {
      * @see Item#$ORDER_CREATED
      */
     public void useSelectItems_4() {
-        UjoProperty<Item, Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_CREATED
+        Key<Item, Date> ORDER_DATE = Item.ORDER.add(Order.CREATED); // or use: Item.$ORDER_CREATED
         Query<Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
 
         for (Item item : items) {
@@ -633,7 +633,7 @@ public class SampleORM {
             ;
         System.out.println(msg);
 
-        // See, how to get an annotation of a persistent UjoProperty in run-time:
+        // See, how to get an annotation of a persistent Key in run-time:
         Comment annotation = handler.findAnnotation(Order.ID, Comment.class);
         System.out.println(annotation.value());
     }

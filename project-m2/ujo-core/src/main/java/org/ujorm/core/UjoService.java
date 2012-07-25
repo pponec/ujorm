@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 
@@ -45,7 +45,7 @@ abstract public class UjoService<UJO extends Ujo> {
     /** Basic UJO Class */
     final private Class<UJO> ujoClass;
     /** Properties */
-    private UjoProperty[] properties;
+    private Key[] properties;
     /** Is ujoClass textable */
     final private boolean textable;
     
@@ -54,11 +54,11 @@ abstract public class UjoService<UJO extends Ujo> {
     
     /** Creates a new instance of UjoService */
     public UjoService(Class<UJO> ujoClass) {
-        this(ujoClass, (UjoProperty[]) null);
+        this(ujoClass, (Key[]) null);
     }
     
     /** Creates a new instance of UjoService */
-    public UjoService(Class<UJO> ujoClass, UjoProperty ... properties) {
+    public UjoService(Class<UJO> ujoClass, Key ... properties) {
         this.ujoClass   = ujoClass;
         this.properties = properties;
         this.textable   = UjoTextable.class.isAssignableFrom(ujoClass);
@@ -84,7 +84,7 @@ abstract public class UjoService<UJO extends Ujo> {
     }
     
     /** Get required properties */
-    public UjoProperty[] getProperties() {
+    public Key[] getProperties() {
         if (properties==null) {
             properties = ujoManager.readProperties(getUjoClass()).toArray();
         }
@@ -92,7 +92,7 @@ abstract public class UjoService<UJO extends Ujo> {
     }
     
     /** Returns TEXT */
-    public String getText(final UJO ujo, final UjoProperty<? super Ujo,?> prop, final Object value, final UjoAction action) {
+    public String getText(final UJO ujo, final Key<? super Ujo,?> prop, final Object value, final UjoAction action) {
         final String result = textable
         ? ((UjoTextable)ujo).readValueString(prop, action)
         : ujoManager.encodeValue(value!=UNDEFINED ? value : prop.of(ujo), false)
@@ -101,7 +101,7 @@ abstract public class UjoService<UJO extends Ujo> {
     }
     
     /** Returns TEXT */
-    public void setText(final UJO ujo, final UjoProperty prop, final Class type, final String value, final UjoAction action) {
+    public void setText(final UJO ujo, final Key prop, final Class type, final String value, final UjoAction action) {
         if (textable) {
             ((UjoTextable)ujo).writeValueString(prop, value, type, action);
         } else {

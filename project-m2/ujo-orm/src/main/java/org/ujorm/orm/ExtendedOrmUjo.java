@@ -17,7 +17,7 @@
 package org.ujorm.orm;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * Extended ORM Ujo. Interface methods are not necessary to run the ORM.
@@ -33,6 +33,6 @@ public interface ExtendedOrmUjo<UJO_IMPL extends Ujo> extends OrmUjo {
      * @throws IllegalStateException Method throws an exception for a wrong property type.
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
      */
-    public <UJO extends UJO_IMPL> ForeignKey readFK(UjoProperty<UJO, ? extends OrmUjo> property) throws IllegalStateException;
+    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> property) throws IllegalStateException;
 
 }

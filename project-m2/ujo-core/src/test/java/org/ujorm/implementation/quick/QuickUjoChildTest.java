@@ -12,7 +12,7 @@ import java.awt.Color;
 import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.KeyList;
 
 /**
  *
@@ -141,7 +141,7 @@ public class QuickUjoChildTest extends MyTestCase {
     /** */
     public void testGetProperties1() throws Throwable {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
-        UjoPropertyList props = ujb1.readProperties();
+        KeyList props = ujb1.readProperties();
         
         assertEquals(QuickUjoImplChild.PRO_P0, props.get(0));
         assertEquals(QuickUjoImplChild.PRO_P1, props.get(1));

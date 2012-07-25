@@ -25,19 +25,20 @@ import java.util.Iterator;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.PathProperty;
 
 /**
- * The Immutable and Serializable UjoProperty Collection include some service methods.
+ * The Immutable and Serializable Key Collection include some service methods.
  * Object have got implemented the hashCode() and equals() methods.
  * @author Pavel Ponec
- * @pop.todo KeyStore, KeyStock, KeyBundle, KeyBag. KeyPack
+ * @pop.todo KeyRing, KeyStock, KeyBundle, KeyRing. KeyPack
  */
 @Immutable
-public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializable {
+public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializable {
 
     static final long serialVersionUID = 1L;
     /** Property Separator */
@@ -49,7 +50,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     /** Property size */
     private int size;
     /** Transient properties */
-    private UjoProperty<UJO, ?>[] properties;
+    private Key<UJO, ?>[] properties;
     /** Default hash code. */
     transient private int hashCode;
 
@@ -57,9 +58,9 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * Constructor
      * @param baseClass Not null base class for all properties
      * @param properties Property array
-     * @see #of(java.lang.Class, org.ujorm.UjoProperty<T,?>[])
+     * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
      */
-    public PropertyStore(Class<UJO> baseClass, UjoProperty<UJO, ?>... properties) {
+    public KeyRing(Class<UJO> baseClass, Key<UJO, ?>... properties) {
         if (baseClass == null) {
             throw new IllegalArgumentException("The baseClass must be defined");
         }
@@ -81,10 +82,10 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * @return .
      */
     @Override
-    public UjoProperty<UJO, ?> findDirectProperty(final String name, final boolean throwException) throws IllegalArgumentException {
+    public Key<UJO, ?> findDirectProperty(final String name, final boolean throwException) throws IllegalArgumentException {
         int nameHash = name.hashCode();
 
-        for (UjoProperty prop : properties) {
+        for (Key prop : properties) {
             if (prop.getName().hashCode() == nameHash // speed up
                     && prop.getName().equals(name)) {
                 return prop;
@@ -99,7 +100,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     }
 
     @Override
-    final public UjoProperty<UJO, ?> findDirectProperty(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
+    final public Key<UJO, ?> findDirectProperty(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
         return findDirectProperty(ujo, name, UjoAction.DUMMY, true, throwException);
     }
 
@@ -113,13 +114,13 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      */
     @SuppressWarnings("deprecation")
     @Override
-    public UjoProperty<UJO, ?> findDirectProperty(final Ujo ujo, final String name, final UjoAction action, final boolean result, final boolean throwException) throws IllegalArgumentException {
+    public Key<UJO, ?> findDirectProperty(final Ujo ujo, final String name, final UjoAction action, final boolean result, final boolean throwException) throws IllegalArgumentException {
         if (ujo == null) {
             return null;
         }
         int nameHash = name.hashCode();
 
-        for (final UjoProperty prop : properties) {
+        for (final Key prop : properties) {
             if (prop.getName().hashCode() == nameHash // speed up
                     && prop.getName().equals(name)
                     && (getUjoManager().isXmlAttribute(prop)) != result) {
@@ -141,7 +142,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @deprecated Uset the method {@link #find(java.lang.String, boolean)}
      */
-    public UjoProperty<UJO, ?> findIndirect(String names, boolean throwException) throws IllegalArgumentException {
+    public Key<UJO, ?> findIndirect(String names, boolean throwException) throws IllegalArgumentException {
         return find(names, throwException);
     }
 
@@ -149,22 +150,22 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * Find <strong>indirect</strong> property by the name. Empty result can trhow NULL value if parameter throwException==false.
      * @param names Not null property name inclukde composite properties (indirect properties).
      * @param throwException
-     * @return new UjoProperty
+     * @return new Key
      */
     @SuppressWarnings("unchecked")
     @Override
-    public UjoProperty find(String names, boolean throwException) {
-        if (names.indexOf(PropertyStore.PROPERTY_SEPARATOR) < 0) {
+    public Key find(String names, boolean throwException) {
+        if (names.indexOf(KeyRing.PROPERTY_SEPARATOR) < 0) {
             return findDirectProperty(names, throwException);
         }
 
         Class ujoType = type;
         int j, i = 0;
-        List<UjoProperty> props = new ArrayList<UjoProperty>(8);
+        List<Key> props = new ArrayList<Key>(8);
         names += ".";
         while ((j = names.indexOf('.', i + 1)) >= 0) {
             final String name = names.substring(i, j);
-            final UjoProperty p = UjoManager.getInstance().readProperties(ujoType).findDirectProperty(name, true);
+            final Key p = UjoManager.getInstance().readProperties(ujoType).findDirectProperty(name, true);
             props.add(p);
             ujoType = p.getType();
             i = j + 1;
@@ -189,19 +190,19 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * @return .
      */
     @Override
-    public UjoProperty<UJO, ?> find(String name) throws IllegalArgumentException {
+    public Key<UJO, ?> find(String name) throws IllegalArgumentException {
         return find(name, true);
     }
 
     /** Get The First Properties */
     @Override
-    public UjoProperty<UJO, ?> getFirstProperty() {
+    public Key<UJO, ?> getFirstProperty() {
         return get(0);
     }
 
     /** Get The Last Properties */
     @Override
-    public UjoProperty<UJO, ?> getLastProperty() {
+    public Key<UJO, ?> getLastProperty() {
         return get(size - 1);
     }
 
@@ -209,13 +210,13 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
      * @deprecated Use the method {@link #getLastProperty()} rather.
      */
     @Override
-    final public UjoProperty<UJO, ?> last() {
+    final public Key<UJO, ?> last() {
         return getLastProperty();
     }
 
     /** Get one Property */
     @Override
-    public UjoProperty<UJO, ?> get(int i) {
+    public Key<UJO, ?> get(int i) {
         return properties[i];
     }
 
@@ -246,8 +247,8 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
 
     /** Create Property Interator */
     @Override
-    public Iterator<UjoProperty<UJO, ?>> iterator() {
-        return new Iterator<UjoProperty<UJO, ?>>() {
+    public Iterator<Key<UJO, ?>> iterator() {
+        return new Iterator<Key<UJO, ?>>() {
 
             int i = -1;
 
@@ -255,7 +256,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
                 return (i + 1) < size;
             }
 
-            public UjoProperty<UJO, ?> next() {
+            public Key<UJO, ?> next() {
                 return get(++i);
             }
 
@@ -271,8 +272,8 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
 
     /** Convert Properties to a new Array */
     @Override
-    public UjoProperty<UJO, ?>[] toArray() {
-        final UjoProperty<UJO, ?>[] result = new UjoProperty[size];
+    public Key<UJO, ?>[] toArray() {
+        final Key<UJO, ?>[] result = new Key[size];
         System.arraycopy(this.properties, 0, result, 0, result.length);
         return result;
     }
@@ -298,8 +299,8 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
 
     /** Returns true if list contains property from the parameter. */
     @Override
-    public boolean contains(UjoProperty<UJO, ?> o) {
-        for (UjoProperty p : properties) {
+    public boolean contains(Key<UJO, ?> o) {
+        for (Key p : properties) {
             if (p.equals(o)) {
                 return true;
             }
@@ -311,7 +312,7 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(32);
-        for (UjoProperty p : properties) {
+        for (Key p : properties) {
             if (sb.length() > 0) {
                 sb.append(", ");
             }
@@ -322,8 +323,8 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj instanceof PropertyStore) {
-            final PropertyStore<UJO> o = (PropertyStore<UJO>) obj;
+        if (obj instanceof KeyRing) {
+            final KeyRing<UJO> o = (KeyRing<UJO>) obj;
             if (this.size() != o.size()) {
                 return false;
             }
@@ -331,8 +332,8 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
                 return false;
             }
             for (int i = 0; i < size; ++i) {
-                final UjoProperty p1 = this.get(i);
-                final UjoProperty p2 = o.get(i);
+                final Key p1 = this.get(i);
+                final Key p2 = o.get(i);
                 if (!p1.equals(p2)) {
                     return false;
                 }
@@ -373,21 +374,21 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     private String[] createPropertyNames() {
         final String[] nameProperties = new String[properties.length];
         for (int i = properties.length - 1; i >= 0; --i) {
-            final UjoProperty property = properties[i];
+            final Key property = properties[i];
             nameProperties[i] = properties[i].isAscending() ? property.getName() : (property.getName() + DESCENDING_SYMBOL);
         }
         return nameProperties;
     }
 
     /** Create Properties */
-    private UjoProperty<UJO, ?>[] restoreProperties(Class type, String[] nameProperties) {
-        final UjoPropertyList propertyList = getUjoManager().readProperties(type);
-        final UjoProperty<UJO, ?>[] ps = new UjoProperty[nameProperties.length];
+    private Key<UJO, ?>[] restoreProperties(Class type, String[] nameProperties) {
+        final KeyList propertyList = getUjoManager().readProperties(type);
+        final Key<UJO, ?>[] ps = new Key[nameProperties.length];
         for (int i = 0; i < nameProperties.length; i++) {
             final String pNameRaw = nameProperties[i];
             final boolean descending = pNameRaw.endsWith(DESCENDING_SYMBOL);
             final String pName = descending ? pNameRaw.substring(0, pNameRaw.length() - DESCENDING_SYMBOL.length()) : pNameRaw;
-            final UjoProperty property = propertyList.find(pName, true).descending(descending);
+            final Key property = propertyList.find(pName, true).descending(descending);
             ps[i] = property;
         }
         properties = ps;
@@ -397,19 +398,19 @@ public class PropertyStore<UJO extends Ujo> implements UjoPropertyList<UJO>, Ser
     // -------------- STATIC METHOD(S) --------------
 
     /** Create a new instance, the parameters is cloned. */
-    public static <UJO extends Ujo> PropertyStore<UJO> of(Class<UJO> baseClass, UjoProperty<? super UJO, ?>... properties) {
-        UjoProperty[] ps = new UjoProperty[properties.length];
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Key<? super UJO, ?>... properties) {
+        Key[] ps = new Key[properties.length];
         System.arraycopy(properties, 0, ps, 0, ps.length);
-        return new PropertyStore<UJO>(baseClass, ps);
+        return new KeyRing<UJO>(baseClass, ps);
     }
 
     /** Create a new instance */
-    public static <UJO extends Ujo> PropertyStore<UJO> of(Class<UJO> baseClass, Collection<UjoProperty<? super UJO, ?>> properties) {
-        final UjoProperty<UJO, ?>[] ps = new UjoProperty[properties.size()];
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Collection<Key<? super UJO, ?>> properties) {
+        final Key<UJO, ?>[] ps = new Key[properties.size()];
         int i = 0;
-        for (UjoProperty<? super UJO, ?> p : properties) {
-            ps[i++] = (UjoProperty<UJO, ?>) p;
+        for (Key<? super UJO, ?> p : properties) {
+            ps[i++] = (Key<UJO, ?>) p;
         }
-        return new PropertyStore<UJO>(baseClass, (UjoProperty[]) ps);
+        return new KeyRing<UJO>(baseClass, (Key[]) ps);
     }
 }

@@ -47,14 +47,14 @@ public class PropertyStoreTest extends TestCase {
     }
 
     /**
-     * Test of getType method, of class PropertyStore.
+     * Test of getType method, of class KeyRing.
      */
     public void testGetBaseClass() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
-        PropertyStore<UjoCSV> props1, props2;
-        props1 = PropertyStore.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
+        KeyRing<UjoCSV> props1, props2;
+        props1 = KeyRing.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3);
         props2 = null;
 
         try {
@@ -64,7 +64,7 @@ public class PropertyStoreTest extends TestCase {
             encoder.close();
             InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
             ObjectInput decoder = new ObjectInputStream(is);
-            props2 = (PropertyStore<UjoCSV>) decoder.readObject();
+            props2 = (KeyRing<UjoCSV>) decoder.readObject();
         } catch (Throwable e) {
             e.printStackTrace();
             assertNull(e);
@@ -82,14 +82,14 @@ public class PropertyStoreTest extends TestCase {
     }
 
     /**
-     * Test of getType method, of class PropertyStore.
+     * Test of getType method, of class KeyRing.
      */
     public void testGetBaseClassDesc() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
-        PropertyStore<UjoCSV> props1, props2;
-        props1 = PropertyStore.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3.descending()); // !!!
+        KeyRing<UjoCSV> props1, props2;
+        props1 = KeyRing.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3.descending()); // !!!
         props2 = null;
 
         try {
@@ -99,7 +99,7 @@ public class PropertyStoreTest extends TestCase {
             encoder.close();
             InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
             ObjectInput decoder = new ObjectInputStream(is);
-            props2 = (PropertyStore<UjoCSV>) decoder.readObject();
+            props2 = (KeyRing<UjoCSV>) decoder.readObject();
         } catch (Throwable e) {
             assertNull(e);
         }

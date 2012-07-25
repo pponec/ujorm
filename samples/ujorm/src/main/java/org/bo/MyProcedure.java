@@ -17,7 +17,7 @@
 
 package org.bo;
 
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.annot.Parameter;
@@ -37,12 +37,12 @@ import org.ujorm.orm.annot.Procedure;
 public final class MyProcedure extends DbProcedure<MyProcedure> {
 
     /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
-    public static final Property<MyProcedure,Integer> RESULT = newProperty(Integer.class);
+    public static final Key<MyProcedure,Integer> RESULT = newProperty(Integer.class);
     /** INPUT parameter */
     @Parameter(input=true)
-    public static final Property<MyProcedure,Integer> PARAM_CODE = newProperty(0);
+    public static final Key<MyProcedure,Integer> PARAM_CODE = newKey(0);
     /** INPUT parameter */
-    public static final Property<MyProcedure,Boolean> PARAM_ENABLED = newProperty(false);
+    public static final Key<MyProcedure,Boolean> PARAM_ENABLED = newKey(false);
 
     @Override
     @SuppressWarnings("unchecked")

@@ -12,9 +12,9 @@ package org.ujorm.implementation.universe;
 import java.util.Date;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.Property;
 
 /**
@@ -24,35 +24,35 @@ import org.ujorm.extensions.Property;
 public class UniUjoBasePlain implements Ujo {
 
     /** Factory */
-    protected static final PropertyFactory<UniUjoBasePlain> pf = PropertyFactory.Builder.get(UniUjoBasePlain.class);
+    protected static final KeyFactory<UniUjoBasePlain> pf = KeyFactory.Builder.get(UniUjoBasePlain.class);
 
     /** Properties */
-    public static final UjoProperty<UniUjoBasePlain,Long>    PRO_P0 = (Property<UniUjoBasePlain,Long>) (Object) pf.newProperty();
-    public static final UjoProperty<UniUjoBasePlain,Integer> PRO_P1 = pf.newProperty();
-    public static final UjoProperty<UniUjoBasePlain,String>  PRO_P2 = pf.newProperty();
-    public static final UjoProperty<UniUjoBasePlain,Date>    PRO_P3 = pf.newProperty();
-    public static final UjoProperty<UniUjoBasePlain,Float>   PRO_P4 = pf.newProperty();
+    public static final Key<UniUjoBasePlain,Long>    PRO_P0 = (Property<UniUjoBasePlain,Long>) (Object) pf.newKey();
+    public static final Key<UniUjoBasePlain,Integer> PRO_P1 = pf.newKey();
+    public static final Key<UniUjoBasePlain,String>  PRO_P2 = pf.newKey();
+    public static final Key<UniUjoBasePlain,Date>    PRO_P3 = pf.newKey();
+    public static final Key<UniUjoBasePlain,Float>   PRO_P4 = pf.newKey();
 
     /** Data */
     protected Object[] data;
 
     @Override
-    public UjoPropertyList<?> readProperties() {
+    public KeyList<?> readProperties() {
         return pf.getPropertyList();
     }
 
-    public Object readValue(UjoProperty property) {
+    public Object readValue(Key property) {
         return data==null ? data : data[property.getIndex()];
     }
 
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         if (data==null) {
             data = new Object[readProperties().size()];
         }
         data[property.getIndex()] = value;
     }
 
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
     }
 

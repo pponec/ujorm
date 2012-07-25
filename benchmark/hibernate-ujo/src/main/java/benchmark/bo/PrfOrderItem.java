@@ -18,8 +18,8 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.implementation.quick.QuickUjo;
 
 /**
@@ -28,21 +28,21 @@ import org.ujorm.implementation.quick.QuickUjo;
  */
 public class PrfOrderItem extends QuickUjo {
 
-    public static final Property<PrfOrderItem,Long> id = newProperty(Long.class);
-    public static final Property<PrfOrderItem,String> publicId = newProperty(String.class);
-    public static final Property<PrfOrderItem,Boolean> deleted = newProperty(false);
-    public static final Property<PrfOrderItem,Date> dateDeleted = newProperty(Date.class);
-    public static final Property<PrfOrderItem,BigDecimal> price = newProperty(BigDecimal.class);
-    public static final Property<PrfOrderItem,BigDecimal> charge = newProperty(BigDecimal.class);
-    public static final Property<PrfOrderItem,Boolean> arrival = newProperty(Boolean.class);
-    public static final Property<PrfOrderItem,String> description = newProperty(String.class);
-    public static final Property<PrfOrderItem,PrfUser> user = newProperty(PrfUser.class);
-    public static final Property<PrfOrderItem,PrfOrder> order = newProperty(PrfOrder.class);
-    public static final Property<PrfOrderItem,PrfOrderItem> parent = newProperty(PrfOrderItem.class);
+    public static final Key<PrfOrderItem,Long> id = newKey();
+    public static final Key<PrfOrderItem,String> publicId = newKey();
+    public static final Key<PrfOrderItem,Boolean> deleted = newKey(false);
+    public static final Key<PrfOrderItem,Date> dateDeleted = newKey();
+    public static final Key<PrfOrderItem,BigDecimal> price = newKey();
+    public static final Key<PrfOrderItem,BigDecimal> charge = newKey();
+    public static final Key<PrfOrderItem,Boolean> arrival = newKey();
+    public static final Key<PrfOrderItem,String> description = newKey();
+    public static final Key<PrfOrderItem,PrfUser> user = newKey();
+    public static final Key<PrfOrderItem,PrfOrder> order = newKey();
+    public static final Key<PrfOrderItem,PrfOrderItem> parent = newKey();
 
     // Optional code for better performance when creating instance:
-    private static UjoPropertyList properties = init(PrfOrderItem.class);
-    @Override public UjoPropertyList readProperties() { return properties; }
+    private static KeyList properties = init(PrfOrderItem.class);
+    @Override public KeyList readProperties() { return properties; }
 
 
     // Setters and Getters:

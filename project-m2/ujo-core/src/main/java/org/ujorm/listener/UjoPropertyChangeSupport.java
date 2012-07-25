@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * A Property Change Support for the UJO objects.
@@ -36,10 +36,10 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
     final private Boolean before;
     
     /** Property Listeners Before */
-    private HashMap<UjoProperty,List<UjoPropertyChangeListener>> listenerMapBefore;
+    private HashMap<Key,List<UjoPropertyChangeListener>> listenerMapBefore;
 
     /** Property Listeners After */
-    private HashMap<UjoProperty,List<UjoPropertyChangeListener>> listenerMapAfter;
+    private HashMap<Key,List<UjoPropertyChangeListener>> listenerMapAfter;
     
     /** Constructor */
     public UjoPropertyChangeSupport(Ujo source) {
@@ -65,17 +65,17 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
      * <br>The method creates an empty list if the one was not found.
      */
     private final List<UjoPropertyChangeListener> getListeners
-        ( final UjoProperty property
+        ( final Key property
         , final boolean before
         ){
         
-        HashMap<UjoProperty,List<UjoPropertyChangeListener>> listenerMap = before
+        HashMap<Key,List<UjoPropertyChangeListener>> listenerMap = before
             ? listenerMapBefore
             : listenerMapAfter
             ;
         
         if (listenerMap==null) {
-            listenerMap = new HashMap<UjoProperty,List<UjoPropertyChangeListener>>();
+            listenerMap = new HashMap<Key,List<UjoPropertyChangeListener>>();
             if (before) {
                 listenerMapBefore = listenerMap;
             } else {
@@ -94,7 +94,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
     
     /** Add listener */
     public boolean addPropertyChangeListener
-        ( final UjoProperty property
+        ( final Key property
         , final Boolean before
         , final UjoPropertyChangeListener listener
         ){
@@ -111,7 +111,7 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
 
     /** Remove listener */
     public boolean removePropertyChangeListener
-        ( final UjoProperty property
+        ( final Key property
         , final Boolean before
         , final UjoPropertyChangeListener listener
         ){
@@ -128,13 +128,13 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
     
     /** Fire event for the property */
     public void firePropertyChange
-        ( final UjoProperty property
+        ( final Key property
         , final Object oldValue
         , final Object newValue
         , final boolean beforeChange
         ){
         
-          HashMap<UjoProperty,List<UjoPropertyChangeListener>> listenerMap = beforeChange
+          HashMap<Key,List<UjoPropertyChangeListener>> listenerMap = beforeChange
               ? listenerMapBefore
               : listenerMapAfter
               ;

@@ -9,8 +9,8 @@
 
 package org.ujorm.implementation.xml.t008_array;
 
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.implementation.map.MapUjo;
 
 
@@ -20,9 +20,9 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class AtrPerson extends MapUjo  {
     
-    public static final Property<AtrPerson, String>  NAME = newProperty("Name", String.class );
-    public static final Property<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final Property<AtrPerson, java.sql.Date>   BIRTH = newProperty("Birth", java.sql.Date.class  );
-    public static final ListProperty<AtrPerson, Integer> NUMBERS = newListProperty("Child", Integer.class);
+    public static final Key<AtrPerson, String>  NAME = newProperty("Name", String.class );
+    public static final Key<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final Key<AtrPerson, java.sql.Date>   BIRTH = newProperty("Birth", java.sql.Date.class  );
+    public static final ListKey<AtrPerson, Integer> NUMBERS = newListProperty("Child", Integer.class);
      
 }

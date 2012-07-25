@@ -6,7 +6,7 @@ package org.bo.gen;
 
 import org.bo.Item;
 import org.bo.Order;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Comment;
@@ -19,17 +19,17 @@ abstract public class _Item extends OrmTable<Item> {
     /** Unique key */
     @Comment("Unique key")
     @Column(pk = true)
-    public static final UjoProperty<Item, Long> id = newProperty(Long.class);
+    public static final Key<Item, Long> id = newProperty(Long.class);
     /** User key */
     @Comment("User key")
-    public static final UjoProperty<Item, Integer> userId = newProperty(Integer.class);
+    public static final Key<Item, Integer> userId = newProperty(Integer.class);
     /** Description of Item */
     @Comment("Description of Item")
-    public static final UjoProperty<Item, String> descr = newProperty(String.class);
+    public static final Key<Item, String> descr = newProperty(String.class);
     /** A reference to common Order */
     @Comment("A reference to common Order")
     @Column(name = "fk_order")
-    public static final UjoProperty<Item, Order> order = newProperty(Order.class);
+    public static final Key<Item, Order> order = newProperty(Order.class);
 
     /** The child type */
     final private Item _this = (Item) this;

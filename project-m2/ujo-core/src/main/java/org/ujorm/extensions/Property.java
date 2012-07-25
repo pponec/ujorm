@@ -20,8 +20,9 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.ujorm.CompositeProperty;
+import org.ujorm.CompositeKey;
 import org.ujorm.Ujo;
+import org.ujorm.Key;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
@@ -30,7 +31,7 @@ import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
 
 /**
- * The main implementation of the interface UjoProperty.
+ * The main implementation of the interface Key.
  * @see AbstractUjo
  * @author Pavel Ponec
  */
@@ -184,8 +185,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /**
      * It is a basic method for setting an appropriate type safe value to an MapUjo object. 
      * <br>For the setting value is used internally a method 
-     *     {@link AbstractUjo#writeValue(org.ujorm.UjoProperty, java.lang.Object) }
-     * @see AbstractUjo#writeValue(org.ujorm.UjoProperty, java.lang.Object)
+     *     {@link AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object) }
+     * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
     final public void setValue(final UJO ujo, final VALUE value) {
@@ -195,12 +196,12 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /**
      * It is a basic method for getting an appropriate type safe value from an MapUjo object. 
      * <br>For the getting value is used internally a method 
-     *     {@link AbstractUjo#readValue(org.ujorm.UjoProperty)}
+     *     {@link AbstractUjo#readValue(org.ujorm.Key)}
      * </a>.
      * <br>Note: this method replaces the value of <strong>null</strong> for default
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
-     * @see AbstractUjo#readValue(UjoProperty)
+     * @see AbstractUjo#readValue(Key)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -278,7 +279,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public UjoProperty<UJO, VALUE> descending() {
+    public Key<UJO, VALUE> descending() {
         return descending(true);
     }
 
@@ -288,7 +289,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public UjoProperty<UJO, VALUE> descending(boolean descending) {
+    public Key<UJO, VALUE> descending(boolean descending) {
         return PathProperty.sort(this, !descending);
     }
 
@@ -297,8 +298,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <VALUE_PAR> CompositeProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
-        return PathProperty.newInstance((UjoProperty)this, property);
+    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? extends VALUE, VALUE_PAR> property) {
+        return PathProperty.newInstance((Key)this, property);
     }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
@@ -342,10 +343,10 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return name!=null && name.toString().equals(this.name);
     }
 
-    /** Compare to another UjoProperty object by the index and name of the property.
+    /** Compare to another Key object by the index and name of the property.
      * @since 1.20
      */
-    public int compareTo(final UjoProperty p) {
+    public int compareTo(final Key p) {
         return index<p.getIndex() ? -1
              : index>p.getIndex() ?  1
              : name.compareTo(p.getName()) 
@@ -427,7 +428,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(UjoProperty p, int index) {
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(Key p, int index) {
          return newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
@@ -437,7 +438,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(UjoProperty p) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(Key p) {
          return newInstance(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
     }
 
@@ -449,7 +450,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> where(Operator operator, UjoProperty<?, VALUE> value) {
+    public Criterion<UJO> where(Operator operator, Key<?, VALUE> value) {
         return Criterion.where(this, operator, value);
     }
 
@@ -485,7 +486,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereEq(UjoProperty<UJO, VALUE> value) {
+    public Criterion<UJO> whereEq(Key<UJO, VALUE> value) {
         return Criterion.where(this, value);
     }
 

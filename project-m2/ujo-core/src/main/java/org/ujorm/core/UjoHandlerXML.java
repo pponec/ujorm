@@ -21,14 +21,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.UjoTextable;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import org.ujorm.Ujo;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 import org.ujorm.UjoAction;
 
 /** Use an subclass on your own risk.
@@ -53,7 +53,7 @@ final class UjoHandlerXML extends DefaultHandler {
     // -- Temporarry fields --
     protected String  $elementName  = null;
     protected Class   $elementType  = null;
-    protected UjoProperty $property = null;
+    protected Key     $property = null;
     protected Class   $listType     = null;
     protected Class   $itemType     = null;
     protected Element $parentObj    = null;
@@ -139,7 +139,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 throw new IllegalStateException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
             }
             $elementType = $parentObj.isUjo()
-            ? ($property instanceof ListUjoProperty ? ((ListUjoProperty)$property).getItemType() : $property.getType())
+            ? ($property instanceof ListKey ? ((ListKey)$property).getItemType() : $property.getType())
             : ($parentObj.itemType)
             ;
         }
@@ -165,12 +165,12 @@ final class UjoHandlerXML extends DefaultHandler {
                 if ($parentObj.isUjo()) {
                     Ujo ujoParent = $parentObj.ujo;
 
-                    if ($property instanceof ListUjoProperty) {
+                    if ($property instanceof ListKey) {
                         List list = (List) $property.of(ujoParent);
                         if (list==null) {
                             if ($listType==null 
                             ||  $listType.isInterface()) {
-                                list = ((ListUjoProperty)$property).getList(ujoParent);
+                                list = ((ListKey)$property).getList(ujoParent);
                             } else {
                                 list = (List) $listType.newInstance();
                                 ujoParent.writeValue($property, list);
@@ -260,7 +260,7 @@ final class UjoHandlerXML extends DefaultHandler {
     protected void addAttributes(final UjoTextable ujo) {
         for (String[] attrib : $attributes) {
 
-            UjoProperty prop = ujo.readProperties().findDirectProperty(ujo, attrib[0], actionImport, false, !ignoreMissingProp);
+            Key prop = ujo.readProperties().findDirectProperty(ujo, attrib[0], actionImport, false, !ignoreMissingProp);
             if (prop!=null){
                 ujo.writeValueString(prop, attrib[1], null, actionImport);
             }
@@ -315,7 +315,7 @@ final class UjoHandlerXML extends DefaultHandler {
         List<Object> list;
         Class itemType;
         Ujo ujo;
-        UjoProperty bodyProperty;
+        Key bodyProperty;
         StringBuilder body;
 
         public void init(List<Object> list, Class itemType, Ujo ujo) {

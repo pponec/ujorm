@@ -18,7 +18,7 @@ package org.ujorm.swing;
 
 import java.util.Iterator;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoCoder;
 import org.ujorm.core.UjoManager;
@@ -44,14 +44,14 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
     /**
      * Creates a new instance of SingleUjoTabModel
      */
-    public SingleUjoTabModel(Ujo content, UjoProperty ... columns) {
+    public SingleUjoTabModel(Ujo content, Key ... columns) {
         super(columns);
         rows = UjoManager.getInstance().createPropertyList(content, new UjoActionImpl(UjoAction.ACTION_TABLE_SHOW, this));
     }
     
     /** Only Value is editable. */
     @Override
-    public boolean isCellEditable(int rowIndex, UjoProperty column) {
+    public boolean isCellEditable(int rowIndex, Key column) {
         final boolean result 
         =  column==UjoPropertyRow.P_VALUE
         || column==UjoPropertyRow.P_TEXT
@@ -62,7 +62,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
     /** Set a value to a cell of table model. */
     @Override
     @SuppressWarnings("static-access")
-    public void setValueAt(Object value, int rowIndex, UjoProperty column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         if (column==ROWS.P_VALUE
         && !column.getType().equals(String.class)
         &&  value instanceof String
@@ -77,7 +77,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
     /** Get Value in a String format. */
     @Override
     @SuppressWarnings("static-access")
-    public Object getValueAt(int rowIndex, UjoProperty column) {
+    public Object getValueAt(int rowIndex, Key column) {
         final Object result 
         = (column==ROWS.P_VALUE)
         ?  getRow(rowIndex).readValueString(column, new UjoActionImpl(this))

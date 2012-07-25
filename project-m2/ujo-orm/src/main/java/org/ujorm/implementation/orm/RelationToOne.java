@@ -16,7 +16,7 @@
 
 package org.ujorm.implementation.orm;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.Property;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.OrmUjo;
@@ -27,29 +27,29 @@ import org.ujorm.orm.OrmUjo;
  */
 public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends Property<UJO, VALUE> {
 
-    private UjoProperty relatedKey;
+    private Key relatedKey;
 
     @SuppressWarnings("unchecked")
-    protected RelationToOne(String name, Class type, UjoProperty relatedKey) {
+    protected RelationToOne(String name, Class type, Key relatedKey) {
         super(UNDEFINED_INDEX);
         init(name, type, null, UNDEFINED_INDEX, false);
         this.relatedKey = relatedKey;
     }
 
     /** Return {@code null} if no related key was assigned. */
-    public UjoProperty getRelatedKey() {
+    public Key getRelatedKey() {
         return relatedKey;
     }
 
     // ---- Factory methods ----
 
     /** A Property Factory */
-    //public static <UJO extends OrmUjo, VALUE extends OrmUjo> RelationToOne<UJO, VALUE> newInstance(UjoProperty<VALUE,?> relatedKey) {
+    //public static <UJO extends OrmUjo, VALUE extends OrmUjo> RelationToOne<UJO, VALUE> newInstance(Key<VALUE,?> relatedKey) {
     //    return new RelationToOne<UJO, VALUE>(null, OrmUjo.class, relatedKey);
     //}
 
     /** A Property Factory */
-    public static <UJO extends ExtendedOrmUjo, VALUE extends ExtendedOrmUjo> RelationToOne<UJO, VALUE> newInstance(Class<VALUE> type, UjoProperty<VALUE,?> relatedKey) {
+    public static <UJO extends ExtendedOrmUjo, VALUE extends ExtendedOrmUjo> RelationToOne<UJO, VALUE> newInstance(Class<VALUE> type, Key<VALUE,?> relatedKey) {
         return new RelationToOne<UJO, VALUE>(null, type, relatedKey);
     }
 

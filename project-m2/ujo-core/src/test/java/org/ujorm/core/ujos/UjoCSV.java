@@ -9,7 +9,7 @@
 
 package org.ujorm.core.ujos;
 
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.implementation.map.MapUjo;
 
 /**
@@ -18,9 +18,9 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class UjoCSV extends MapUjo{
 
-    public static final Property<UjoCSV, String> P1 = newProperty("P1", String.class);
-    public static final Property<UjoCSV, String> P2 = newProperty("P2", String.class);
-    public static final Property<UjoCSV, String> P3 = newProperty("P3", String.class);
+    public static final Key<UjoCSV, String> P1 = newProperty("P1", String.class);
+    public static final Key<UjoCSV, String> P2 = newProperty("P2", String.class);
+    public static final Key<UjoCSV, String> P3 = newProperty("P3", String.class);
     
     // ---------------------------
     

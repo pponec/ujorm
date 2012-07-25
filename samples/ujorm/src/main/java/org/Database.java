@@ -20,7 +20,7 @@ import org.bo.Item;
 import org.bo.MyProcedure;
 import org.bo.Order;
 import org.bo.ViewOrder;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
@@ -58,6 +58,6 @@ public class Database extends OrmTable<Database> {
 
     /** Database stored procedure */
     @Procedure("ujorm_test")
-    public static final Property<Database,MyProcedure> myProcedure = newProperty(MyProcedure.class);
+    public static final Key<Database,MyProcedure> myProcedure = newProperty(MyProcedure.class);
 
 }

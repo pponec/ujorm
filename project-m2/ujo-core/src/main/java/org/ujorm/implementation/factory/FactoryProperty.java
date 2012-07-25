@@ -18,7 +18,7 @@ package org.ujorm.implementation.factory;
 
 import java.lang.reflect.Constructor;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ValueAgent;
 
@@ -55,7 +55,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
         init(name, type, null, index, true);
         Constructor<VALUE> c = null;
         try {
-            c = type.getConstructor(Ujo.class, UjoProperty.class);
+            c = type.getConstructor(Ujo.class, Key.class);
         } catch (Throwable e) {
             c = null;
         }
@@ -91,7 +91,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
     /** Throw an RuntimeException */
     protected void throwException(Throwable e) throws RuntimeException {
        throw new IllegalArgumentException("The class " + getType().getName()
-          + " must have got two parameters constructor type of Ujo and UjoProperty", e);
+          + " must have got two parameters constructor type of Ujo and Key", e);
     }
 
     // --------- STATIC METHODS -------------------

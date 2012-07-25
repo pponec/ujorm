@@ -21,22 +21,22 @@
 package org.ujorm.core;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 
 /**
- * The immutable list of UjoProperties.
- * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
+ * The immutable list of KeyProperties.
+ * The UjoPropertyList class is a subset of the methods from class List&lt;Key&gt;.
  * @author Pavel Ponec
- * @deprecated Use the PropertyStore indead of this.
+ * @deprecated Use the KeyRing indead of this.
  */
 @Deprecated
-final public class UjoPropertyListImpl<UJO extends Ujo> extends PropertyStore<UJO> {
+final public class UjoPropertyListImpl<UJO extends Ujo> extends KeyRing<UJO> {
 
     /** An empty array of the UJO properties */
-    final static public UjoProperty[] EMPTY = new UjoProperty[0];
+    final static public Key[] EMPTY = new Key[0];
 
-    public UjoPropertyListImpl(Class<UJO> baseClass, UjoProperty<UJO,?>[] properties) {
+    public UjoPropertyListImpl(Class<UJO> baseClass, Key<UJO,?>[] properties) {
         super(baseClass, properties);
     }
 

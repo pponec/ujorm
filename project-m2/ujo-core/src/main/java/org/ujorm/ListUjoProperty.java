@@ -16,66 +16,13 @@
 
 package org.ujorm;
 
-import java.util.List;
-import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-
 /**
  * A property metadata interface for value type of {@code List<ITEM>}.
+ * @deprecated Use the interface {@link ListKey} rather
  * @author Pavel Ponec
  */
-public interface ListUjoProperty<UJO extends Ujo, ITEM> extends UjoProperty<UJO,List<ITEM>> {
+@Deprecated
+public interface ListUjoProperty<UJO extends Ujo, ITEM> extends ListKey<UJO,ITEM> {
 
-    /** Returns a class of the property. */
-    public Class<ITEM> getItemType();
-
-    /** Returns a count of Items. If the property is null, method returns 0. */
-    public int getItemCount(UJO ujo);
-
-    /** Returns true if the item type is a type or subtype of the parameter class. */
-    public boolean isItemTypeOf(Class type);
-
-    /**
-     * Returns a value of property. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
-     */
-    public ITEM getItem(UJO ujo, int index);
-
-    /**
-     * An alias for {@link #getItem(org.ujorm.Ujo, int)}.
-     * @return Returns a value of property. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
-     */
-    public ITEM of(UJO ujo, int index);
-
-    /**
-     * Return a not null List. If original list value is empty, the new List is created.
-     * @see #getItem(Ujo, int)
-     */
-    public List<ITEM> getList(UJO ujo);
-
-    /** Set a property item value.
-     * @return the element previously at the specified position.
-     */
-    public ITEM setItem(UJO ujo, int index, ITEM value);
-
-    /** Add an Item value to a List property. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
-     * The method works like a simolar code:
-     * <pre class="pre">
-     * if (ujo.get(VALUE_LIST)==null) {
-     *    ujo.set(VALUE_LIST, new ArrayList());
-     * }
-     * ujo.get(VALUE_LIST).add(itemValue);
-     * <pre class="pre">
-     * @return Value {@code true} as per the general contract of Collection.add.
-     */
-    public boolean addItem(UJO ujo, ITEM value);
-
-    /** Removes the first occurrence in this list of the specified element.
-     * @return true if this list is not null and contains the specified element, otherwise returns false.
-     * @since 0.81
-     */
-    public boolean removeItem(UJO ujo, ITEM value);
-
-    /** Indicates whether a list of items is null or empty. */
-    public boolean isDefault(UJO ujo);
 
 }

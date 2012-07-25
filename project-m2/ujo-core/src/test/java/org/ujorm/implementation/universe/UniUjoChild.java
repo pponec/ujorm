@@ -10,10 +10,10 @@
 package org.ujorm.implementation.universe;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.core.PropertyFactory;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
+import org.ujorm.core.KeyFactory;
+import org.ujorm.ListKey;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -22,20 +22,20 @@ import org.ujorm.ListUjoProperty;
 public class UniUjoChild extends UniUjoBase {
     
     /** Factory */
-    private static final PropertyFactory<UniUjoChild> pf = PropertyFactory.Builder.get(UniUjoChild.class);
+    private static final KeyFactory<UniUjoChild> pf = KeyFactory.Builder.get(UniUjoChild.class);
 
-    public static final UjoProperty <UniUjoChild, Long>    PRO_P5 = pf.newProperty("P5");
-    public static final UjoProperty <UniUjoChild, Integer> PRO_P6 = pf.newProperty("P6");
-    public static final UjoProperty <UniUjoChild, String>  PRO_P7 = pf.newProperty("P7");
-    public static final UjoProperty <UniUjoChild, Date>    PRO_P8 = pf.newProperty("P8");
-    public static final ListUjoProperty<UniUjoChild,Float> PRO_P9 = pf.newListProperty("P9");
+    public static final Key <UniUjoChild, Long>    PRO_P5 = pf.newKey("P5");
+    public static final Key <UniUjoChild, Integer> PRO_P6 = pf.newKey("P6");
+    public static final Key <UniUjoChild, String>  PRO_P7 = pf.newKey("P7");
+    public static final Key <UniUjoChild, Date>    PRO_P8 = pf.newKey("P8");
+    public static final ListKey<UniUjoChild,Float> PRO_P9 = pf.newListProperty("P9");
 
     static {
         pf.lock();
     }
 
     @Override
-    public UjoPropertyList<?> readProperties() {
+    public KeyList<?> readProperties() {
         return pf.getPropertyList();
     }
 

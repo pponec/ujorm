@@ -26,7 +26,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
-     * <li>UjoProperty - reference to a related entity</li>
+     * <li>Key - reference to a related entity</li>
      * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
      * </ul>
      * @return A new criterion
@@ -38,27 +38,27 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
 
     /**
      * Create a new Criterion where this property is related to the value along the parameter {@link Operator}.
-     * @param property UjoProperty
+     * @param property Key
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
-     * <li>UjoProperty - reference to a related entity</li>
+     * <li>Key - reference to a related entity</li>
      * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
      * </ul>
      * @return A new criterion
      */
     public Criterion<UJO> where
         ( Operator operator
-        , UjoProperty<?,VALUE> value
+        , Key<?,VALUE> value
         );
 
     /**
      * Create a new Criterion where this property equals the parameter value.
-     * @param property UjoProperty
+     * @param property Key
      * <ul>
      * <li>TYPE - parameter value</li>
      * <li>List&lt;TYPE&gt; - list of values</li>
-     * <li>UjoProperty - reference to a related entity</li>
+     * <li>Key - reference to a related entity</li>
      * </ul>
      * @return A the new immutable Criterion
      */
@@ -66,10 +66,10 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
 
     /**
      * Create a new Criterion where this property value equals the parameter value.
-     * @param property UjoProperty can be type a direct of indirect (for a relation) property
+     * @param property Key can be type a direct of indirect (for a relation) property
      * @return A the new immutable Criterion
      */
-    public Criterion<UJO> whereEq(UjoProperty<UJO,VALUE> property);
+    public Criterion<UJO> whereEq(Key<UJO,VALUE> property);
 
     /**
      * Create new Criterion where this property value is in the one of parameter values.
@@ -137,8 +137,8 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
      * for the String property type in this case.
-     * @param property UjoProperty
-     * @see #whereNotNull(org.ujorm.UjoProperty)
+     * @param property Key
+     * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
     public Criterion<UJO> whereNull();
@@ -149,24 +149,24 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
      * for the String property type in this case.
-     * @param property UjoProperty
-     * @see #whereNull(org.ujorm.UjoProperty)
+     * @param property Key
+     * @see #whereNull(org.ujorm.Key)
      * @see Operator#NOT_EQ
      */
     public Criterion<UJO> whereNotNull();
 
     /**
      * Create a new Criterion where this property is not {@code null} and is no empty text or empty list.
-     * @param property UjoProperty
-     * @see #whereNotNull(org.ujorm.UjoProperty)
+     * @param property Key
+     * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
     public Criterion<UJO> whereFilled();
 
     /**
      * Create a new Criterion where this property is a {@code null} or it is empty string or list.
-     * @param property UjoProperty
-     * @see #whereNotNull(org.ujorm.UjoProperty)
+     * @param property Key
+     * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
     public Criterion<UJO> whereNotFilled();

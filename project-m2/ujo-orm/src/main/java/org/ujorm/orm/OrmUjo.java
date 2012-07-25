@@ -17,14 +17,14 @@
 package org.ujorm.orm;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 
 /**
  * The OrmUjo is a basic interface of the persistent object in the ORM support.
  * A class that implements the interface must have got a special features:
  * <ul>
- *   <li>exactly one UjoProperty must be identified as the primary key. </li>
+ *   <li>exactly one Key must be identified as the primary key. </li>
  *   <li>reference to a foreign BO must be able to store an object of any type by the method Ujo.writeProperty(...).
  *       This feature is necessary for the proper functioning of the lazy initialization</li>
  *   <li>relation many to one can be mapped by a RelationToMany property</li>
@@ -45,14 +45,14 @@ public interface OrmUjo extends Ujo {
      * Returns changed properties.
      * @param clear True value clears all the property changes.
      */
-    public UjoProperty[] readChangedProperties(boolean clear);
+    public Key[] readChangedProperties(boolean clear);
 
-    /** A special implementation, see a source code of the {@link OrmTable#readValue(org.ujorm.UjoProperty) OrmTable} class for more information.<br />
+    /** A special implementation, see a source code of the {@link OrmTable#readValue(org.ujorm.Key) OrmTable} class for more information.<br />
      * Note: In case the parameter Property is type of persistent relation and the current Session is not null then this metod copy
      * the current session to the related value due a lazy loading.
-     * @see OrmTable#readValue(org.ujorm.UjoProperty)
+     * @see OrmTable#readValue(org.ujorm.Key)
      */
     @Override
-    public Object readValue(final UjoProperty property);
+    public Object readValue(final Key property);
 
 }

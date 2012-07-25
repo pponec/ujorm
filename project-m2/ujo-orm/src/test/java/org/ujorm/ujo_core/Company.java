@@ -16,7 +16,7 @@
 package org.ujorm.ujo_core;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.implementation.quick.QuickUjoMid;
 
 /**
@@ -25,13 +25,13 @@ import org.ujorm.implementation.quick.QuickUjoMid;
 public class Company extends QuickUjoMid<Company> {
 
     /** The Primary Key */
-    public static final UjoProperty<Company, Long> ID = newProperty("id", Long.class);
+    public static final Key<Company, Long> ID = newProperty("id", Long.class);
     /** Company name */
-    public static final UjoProperty<Company, String> NAME = newProperty("name", String.class);
+    public static final Key<Company, String> NAME = newProperty("name", String.class);
     /** City name */
-    public static final UjoProperty<Company, String> CITY = newProperty("city", String.class);
+    public static final Key<Company, String> CITY = newProperty("city", String.class);
     /** Registration date */
-    public static final UjoProperty<Company, Date> CREATED = newProperty("created", Date.class);
+    public static final Key<Company, Date> CREATED = newProperty("created", Date.class);
 
     // --- An optional implementation of commonly used setters and getters ---
 

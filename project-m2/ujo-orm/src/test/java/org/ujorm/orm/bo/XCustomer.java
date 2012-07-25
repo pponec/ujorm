@@ -16,7 +16,7 @@
 package org.ujorm.orm.bo;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.TypeService;
@@ -30,17 +30,17 @@ public class XCustomer extends OrmTable<XCustomer> {
 
     /** Unique key */
     @Column(pk = true, converter=TypeService.class)
-    public static final UjoProperty<XCustomer, Long> ID = newProperty(Long.class);
+    public static final Key<XCustomer, Long> ID = newProperty(Long.class);
     /** Personal Numbr */
-    public static final UjoProperty<XCustomer, Integer> PIN = newProperty(Integer.class);
+    public static final Key<XCustomer, Integer> PIN = newProperty(Integer.class);
     /** Firstname */
     @Column(uniqueIndex="idx_xcustomer_full_name")
-    public static final UjoProperty<XCustomer, String> FIRSTNAME = newProperty(String.class);
+    public static final Key<XCustomer, String> FIRSTNAME = newProperty(String.class);
     /** Lastanme */
     @Column(uniqueIndex="idx_xcustomer_full_name")
-    public static final UjoProperty<XCustomer, String> LASTNAME = newProperty(String.class);
+    public static final Key<XCustomer, String> LASTNAME = newProperty(String.class);
     /** Date of creation */
-    public static final UjoProperty<XCustomer, Date> CREATED = newProperty(Date.class);
+    public static final Key<XCustomer, Date> CREATED = newProperty(Date.class);
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {

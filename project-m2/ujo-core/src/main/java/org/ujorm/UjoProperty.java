@@ -19,151 +19,20 @@ package org.ujorm;
 /**
  * This interface is a descriptor of the {@link Ujo} attribute. The property contains only property meta-data
  * and therefore the UjoPropertry implementation never contains business data. 
- * Each instance of the UjoProperty must be located in the {@code public static final} field of some Ujo implementation.
- * The UjoProperty can't have a serializable feature never, because its instance is the unique for a related java field.
- * An appropriate solution solution for serialization is to use a decorator class KeyBag.
+ * Each instance of the Key must be located in the {@code public static final} field of some Ujo implementation.
+ * The Key can't have a serializable feature never, because its instance is the unique for a related java field.
+ * An appropriate solution solution for serialization is to use a decorator class KeyRing.
  * <br>See a <a href="package-summary.html#UJO">general information</a> about current framework or see some implementations.
  * 
  * @author Pavel Ponec
  * @see Ujo
  * @opt attributes
  * @opt operations
- * @see KeyBag
+ * @see KeyRing
+ * @deprecated Use the inteface {@link Key} rather
  */
-public interface UjoProperty <UJO extends Ujo,VALUE> extends CharSequence, Comparable<UjoProperty>, CriterionProvider<UJO,VALUE> {
+@Deprecated
+public interface UjoProperty <UJO extends Ujo,VALUE> extends Key<UJO,VALUE> {
     
-    /** Returns a name of Property. */
-    public String getName();
-
-    /** Returns  a class of the current property. */
-    public Class<VALUE> getType();
-    
-    /** Returns a domain class of the property. */
-    // public Class<UJO> getDomain(); // TODO
-
-    /**
-     * It is a basic method for setting an appropriate type safe value to an Ujo object. 
-     * <br>The method calls a method 
-     * {@link Ujo#writeValue(org.ujorm.UjoProperty, java.lang.Object)}
-     * always.
-     * @see Ujo#writeValue(org.ujorm.UjoProperty, java.lang.Object)
-     */
-    public void setValue(UJO ujo, VALUE value);
-
-    
-    /**
-     * It is a basic method for getting an appropriate type safe value from an Ujo object. 
-     * <br>The method calls a method
-     * {@link Ujo#writeValue(org.ujorm.UjoProperty, java.lang.Object)}
-     * always.
-     * <br>Note: this method replaces the value of <strong>null</strong> by default
-     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
-     * @return Returns a type safe value from the ujo object.
-     * @see Ujo#readValue(UjoProperty)
-     */
-    public VALUE getValue(UJO ujo);
-    
-    
-    /**
-     * A shortcut for the method getValue(Ujo) .
-     * @see #getValue(Ujo)
-     */
-    public VALUE of(UJO ujo);
-    
-
-//    /**
-//     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
-//     * @param ujo If a null parameter is used then the null value is returned.
-//     * @return Returns a type safe value from the ujo object.
-//     * @see #getValue(Ujo)
-//     */
-//    public VALUE takeFrom(UJO ujo);
-
-    /** Returns a property index or value -1 if the property index is not defined.
-     * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used 
-     * <br>for a sorting of Properties in a method <code>UjoManager.readProperties(Class type)</code> .
-     * @see org.ujorm.implementation.array.ArrayUjo
-     * @see org.ujorm.core.UjoManager#readProperties(Class)
-     */
-    public int getIndex();
-    
-    /** Method returns a default value for substitution of the <code>null</code> value for the current property. 
-     * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
-     * @see Ujo#readValue(UjoProperty)
-     */
-    public VALUE getDefault();
-
-
-    /** Indicates whether a parameter value of the ujo "equal to" this property default value. */
-    public boolean isDefault(UJO ujo);
-    
-    /**
-     * Returns true, if the property value equals to a parameter value. The property value can be null.
-     *
-     * @param ujo A basic Ujo.
-     * @param value Null value is supported.
-     * @return Accordance
-     */
-    public boolean equals(UJO ujo, VALUE value);
-
-    /**
-     * Returns true, if the property name equals to the parameter value.
-     * @param name The name of a property
-     */
-    public boolean equalsName(CharSequence name);
-
-    /**
-     * If the property is the direct property of the related UJO class then method returns the TRUE value.
-     * The return value false means, that property is type of {@link CompositeProperty}.
-     * <br />
-     * Note: The composite properties are excluded from from function Ujo.readProperties() by default
-     * and these properties should not be sent to methods Ujo.writeValue() and Ujo.readValue().
-     * @see CompositeProperty
-     * @since 0.81
-     */
-    public boolean isDirect();
-    
-    /** Returns true if the property type is a type or subtype of the parameter class. */
-    public boolean isTypeOf(Class type);
-
-    /** A flag for an ascending direction of sorting. It is recommended that the default result was true. 
-     * @since 0.85
-     * @see org.ujorm.core.UjoComparator
-     */
-    public boolean isAscending();
-    
-    /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
-     * @return returns a new instance of the indirect UjoProperty
-     * @since 0.85
-     * @see #isAscending()
-     * @see org.ujorm.core.UjoComparator
-     */
-    public UjoProperty<UJO,VALUE> descending();
-
-    /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
-     * @return returns a new instance of the indirect UjoProperty
-     * @since 1.21
-     * @see #isAscending()
-     * @see org.ujorm.core.UjoComparator
-     */
-    public UjoProperty<UJO,VALUE> descending(boolean descending);
-
-    /** Create new composite (indirect) instance of the {@link  UjoProperty}.
-     * @since 0.92
-     */
-    public <VALUE_PAR> CompositeProperty<UJO, VALUE_PAR> add(UjoProperty<? extends VALUE, VALUE_PAR> property);
-
-    /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
-    public void copy(UJO from, UJO to);
-
-    /** Compare to another UjoProperty object by the index and name of the property.
-     * @since 1.20
-     */
-    @Override
-    public int compareTo(UjoProperty p);
-
-    /** Returns the name of Property. */
-    @Override
-    public String toString();
     
 }

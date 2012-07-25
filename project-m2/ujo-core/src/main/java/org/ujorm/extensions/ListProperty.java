@@ -16,21 +16,21 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 import java.util.ArrayList;
 import java.util.List;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoComparator;
 
 /**
- * The main implementation of the interface ListUjoProperty.
+ * The main implementation of the interface ListKey.
  * @see AbstractUjo
  * @author Pavel Ponec
  */
 public class ListProperty<UJO extends Ujo, ITEM>
     extends AbstractCollectionProperty<UJO, List<ITEM>, ITEM>
-    implements ListUjoProperty<UJO,ITEM> {
+    implements ListKey<UJO,ITEM> {
 
     /** Protected constructor */
     protected ListProperty(Class<ITEM> itemType) {
@@ -127,7 +127,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
 
     /** Sort a list by its properties. */
     @SuppressWarnings("unchecked")
-    public void sort(UJO ujo, UjoProperty ... properties) {
+    public void sort(UJO ujo, Key ... properties) {
         List<ITEM> list = getValue(ujo);
         if ( list!=null) {
             new UjoComparator(properties).sort(list);
@@ -143,7 +143,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
 
     // --------- STATIC METHODS -------------------
 
-    /** A ListUjoProperty Factory
+    /** A ListKey Factory
      * Method assigns a next property index.
      * @hidden
      */
@@ -159,7 +159,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
         return result;
     }
 
-    /** A ListUjoProperty Factory
+    /** A ListKey Factory
      * Method assigns a next property index.
      * @hidden
      */
@@ -172,7 +172,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     }
 
 
-    /** A ListUjoProperty Factory
+    /** A ListKey Factory
      * Method assigns a next property index.
      * @hidden
      */

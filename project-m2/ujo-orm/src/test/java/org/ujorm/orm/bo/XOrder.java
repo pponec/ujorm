@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.orm.DbType;
@@ -44,30 +44,30 @@ public class XOrder extends OrmTable<XOrder> {
     
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<XOrder, Long> ID = newProperty();
+    public static final Key<XOrder, Long> ID = newKey();
     /** XOrder state, default is ACTIVE */
-    public static final UjoProperty<XOrder, State> STATE = newProperty(State.ACTIVE);
+    public static final Key<XOrder, State> STATE = newKey(State.ACTIVE);
     /** User key */
-    public static final UjoProperty<XOrder, Integer> USER_ID = newProperty();
+    public static final Key<XOrder, Integer> USER_ID = newKey();
     /** Description of the Order */
     @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true, index="idx_description") //
-    public static final UjoProperty<XOrder, String> DESCR = newProperty();
+    public static final Key<XOrder, String> DESCR = newKey();
     /** Favorite Color */
-    public static final UjoProperty<XOrder, Color> COLOR = newProperty(Color.WHITE);
+    public static final Key<XOrder, Color> COLOR = newKey(Color.WHITE);
     /** Date of creation */
-    public static final UjoProperty<XOrder, Date> CREATED = newProperty();
+    public static final Key<XOrder, Date> CREATED = newKey();
     /** Text file */
     @Transient
-    public static final UjoProperty<XOrder, Clob> TEXT_FILE = newProperty();
+    public static final Key<XOrder, Clob> TEXT_FILE = newKey();
     /** Binary file */
     @Transient
-    public static final UjoProperty<XOrder, Blob> BINARY_FILE = newProperty();
+    public static final Key<XOrder, Blob> BINARY_FILE = newKey();
     /** Reference to Items */
     public static final RelationToMany<XOrder, XItem> ITEMS = newRelation();
     /** Customer */
     @Column(name="fk_customer") 
-    public static final UjoProperty<XOrder, XCustomer> CUSTOMER = newProperty();
-    //@Column(mandatory=true) public static final UjoProperty<XOrder, Integer> NEW_COLUMN = newProperty(777);
+    public static final Key<XOrder, XCustomer> CUSTOMER = newKey();
+    //@Column(mandatory=true) public static final Key<XOrder, Integer> NEW_COLUMN = newKey(777);
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {

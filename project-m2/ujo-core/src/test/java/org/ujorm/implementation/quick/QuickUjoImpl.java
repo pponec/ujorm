@@ -11,8 +11,8 @@ package org.ujorm.implementation.quick;
 
 import java.awt.Color;
 import java.util.Date;
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
+import org.ujorm.ListKey;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -20,12 +20,12 @@ import org.ujorm.extensions.Property;
  */
 public class QuickUjoImpl extends QuickUjoMid<QuickUjoImpl> {
     
-    public static final Property<QuickUjoImpl,Long>    PRO_P0 = newProperty();
-    public static final Property<QuickUjoImpl,Integer> PRO_P1 = newProperty();
-    public static final Property<QuickUjoImpl,String>  PRO_P2 = newProperty();
-    public static final Property<QuickUjoImpl,Date>    PRO_P3 = newProperty();
-    public static final Property<QuickUjoImpl,Class>   PRO_P4 = newProperty();
-    public static final ListProperty<QuickUjoImpl,Color> PRO_LST1 = newListProperty();
+    public static final Key<QuickUjoImpl,Long>    PRO_P0 = newKey();
+    public static final Key<QuickUjoImpl,Integer> PRO_P1 = newKey();
+    public static final Key<QuickUjoImpl,String>  PRO_P2 = newKey();
+    public static final Key<QuickUjoImpl,Date>    PRO_P3 = newKey();
+    public static final Key<QuickUjoImpl,Class>   PRO_P4 = newKey();
+    public static final ListKey<QuickUjoImpl,Color> PRO_LST1 = newListKey();
 
     // --- Mandatory initializaton ---
     static {

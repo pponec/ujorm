@@ -18,7 +18,7 @@ package org.ujorm.orm.bo;
 
 import java.io.Serializable;
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
@@ -39,16 +39,16 @@ public class OrderSample extends OrmTable<OrderSample> implements Serializable {
 
     /** Unique key */
     @Column(pk=true)
-    public static final UjoProperty<OrderSample,Long> ID = newProperty("id", Long.class);
+    public static final Key<OrderSample,Long> ID = newProperty("id", Long.class);
     /** Order state, default is ACTIVE */
-    public static final UjoProperty<OrderSample,State> STATE = newProperty("state", State.ACTIVE);
+    public static final Key<OrderSample,State> STATE = newKey("state", State.ACTIVE);
     /** User key */
-    public static final UjoProperty<OrderSample,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final Key<OrderSample,Integer> USER_ID = newProperty("usrId", Integer.class);
     /** Description of the Order */
     @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
-    public static final UjoProperty<OrderSample,String> NOTE = newProperty("description", String.class);
+    public static final Key<OrderSample,String> NOTE = newProperty("description", String.class);
     /** Date of creation */
-    public static final UjoProperty<OrderSample,Date> CREATED = newProperty("created", Date.class);
+    public static final Key<OrderSample,Date> CREATED = newProperty("created", Date.class);
     
 
     // --- An optional implementation of commonly used setters and getters ---

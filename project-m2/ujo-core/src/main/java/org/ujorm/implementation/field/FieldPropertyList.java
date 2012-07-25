@@ -19,7 +19,7 @@ package org.ujorm.implementation.field;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.extensions.ListProperty;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 import org.ujorm.extensions.ValueAgent;
 import org.ujorm.implementation.bean.BeanProperty;
 
@@ -31,7 +31,7 @@ import org.ujorm.implementation.bean.BeanProperty;
  */
 public class FieldPropertyList<UJO extends Ujo, ITEM> 
     extends ListProperty<UJO, ITEM>
-    implements ValueAgent<UJO,  List<ITEM>>, ListUjoProperty<UJO, ITEM>
+    implements ValueAgent<UJO,  List<ITEM>>, ListKey<UJO, ITEM>
 {
     
     /** Bean Manager instance */

@@ -23,8 +23,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.ujorm.UjoProperty;
-import org.ujorm.CompositeProperty;
+import org.ujorm.Key;
+import org.ujorm.CompositeKey;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -44,7 +44,7 @@ public class CriterionDecoder {
     final private SqlDialect dialect;
 
     final private Criterion criterion;
-    final private List<UjoProperty> orderBy;
+    final private List<Key> orderBy;
     final private StringBuilder sql;
     final private List<ValueCriterion> values;
     final private Set<MetaTable> tables;
@@ -56,7 +56,7 @@ public class CriterionDecoder {
     /**
      * @param orderBy The order item list is not mandatory (can be null).
      */
-    public CriterionDecoder(Criterion criterion, MetaDatabase database, List<UjoProperty> orderByItems) {
+    public CriterionDecoder(Criterion criterion, MetaDatabase database, List<Key> orderByItems) {
         this.criterion = criterion;
         this.dialect = database.getDialect();
         this.orderBy = orderByItems;
@@ -115,7 +115,7 @@ public class CriterionDecoder {
 
     /** Returns direct column */
     public MetaColumn getColumn(int i) {
-        UjoProperty p = values.get(i).getLeftNode();
+        Key p = values.get(i).getLeftNode();
         MetaColumn ormColumn = (MetaColumn) handler.findColumnModel(p);
         return ormColumn;
     }
@@ -174,8 +174,8 @@ public class CriterionDecoder {
     }
 
     /** Returns the first direct property. */
-    public UjoProperty getBaseProperty() {
-        UjoProperty result = null;
+    public Key getBaseProperty() {
+        Key result = null;
         for (ValueCriterion eval : values) {
             if (eval.getLeftNode()!=null) {
                 result = eval.getLeftNode();
@@ -185,7 +185,7 @@ public class CriterionDecoder {
         while(result!=null
         &&   !result.isDirect()
         ){
-            result = ((CompositeProperty)result).getFirstProperty();
+            result = ((CompositeKey)result).getFirstProperty();
         }
         return result;
     }
@@ -193,7 +193,7 @@ public class CriterionDecoder {
     /** Writer a relation conditions: */
     @SuppressWarnings("unchecked")
     protected final void writeRelations() {
-        UjoProperty[] relations = getPropertyRelations();
+        Key[] relations = getPropertyRelations();
 
         boolean parenthesis = sql.length()>0 && relations.length>0;
         if (parenthesis) {
@@ -201,7 +201,7 @@ public class CriterionDecoder {
         }
 
         boolean andOperator = false;
-        for (UjoProperty property : relations) try {
+        for (Key property : relations) try {
             MetaColumn fk1 = (MetaColumn) handler.findColumnModel(property);
             List<MetaColumn> pk2 = fk1.getForeignColumns();
             MetaTable tab2 =pk2.get(0).getTable();
@@ -232,36 +232,36 @@ public class CriterionDecoder {
 
     /** Returns the unique direct property relations. */
     @SuppressWarnings("unchecked")
-    protected UjoProperty[] getPropertyRelations() {
-        Set<UjoProperty> result = new HashSet<UjoProperty>();
-        ArrayList<UjoProperty> dirs = new ArrayList<UjoProperty>();
+    protected Key[] getPropertyRelations() {
+        Set<Key> result = new HashSet<Key>();
+        ArrayList<Key> dirs = new ArrayList<Key>();
 
         for (ValueCriterion value : values) {
-            UjoProperty p1 = value.getLeftNode();
+            Key p1 = value.getLeftNode();
             Object      p2 = value.getRightNode();
 
             if (!p1.isDirect()) {
-                ((CompositeProperty) p1).exportProperties(dirs);
+                ((CompositeKey) p1).exportProperties(dirs);
                 dirs.remove(dirs.size()-1); // remove the last direct property
             }
-            if (p2 instanceof CompositeProperty) {
-                ((CompositeProperty) p2).exportProperties(dirs);
+            if (p2 instanceof CompositeKey) {
+                ((CompositeKey) p2).exportProperties(dirs);
                 dirs.remove(dirs.size()-1); // remove the last direct property
             }
         }
 
         // Get relations from the 'order by':
         if (orderBy!=null) {
-            for (UjoProperty p1 : orderBy) {
+            for (Key p1 : orderBy) {
                 if (!p1.isDirect()) {
-                    ((CompositeProperty) p1).exportProperties(dirs);
+                    ((CompositeKey) p1).exportProperties(dirs);
                     dirs.remove(dirs.size()-1); // remove the last direct property
                 }
             }
         }
 
         result.addAll(dirs);
-        return result.toArray(new UjoProperty[result.size()]);
+        return result.toArray(new Key[result.size()]);
     }
 
     /** Returns all participated tables include the parameter table. */

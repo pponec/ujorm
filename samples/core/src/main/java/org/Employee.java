@@ -15,20 +15,20 @@
  */
 package org;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.implementation.quick.QuickUjoMid;
 
 /** Simple Employee domain class */
 public class Employee extends QuickUjoMid<Employee> {
 
     /** Unique key */
-    public static final UjoProperty<Employee, Long> ID = newProperty("id", Long.class);
+    public static final Key<Employee, Long> ID = newProperty("id", Long.class);
     /** User first name, where the default value is {@code null} */
-    public static final UjoProperty<Employee, String> NAME = newProperty("name", String.class);
+    public static final Key<Employee, String> NAME = newProperty("name", String.class);
     /** Hourly wage with the default value: 0.0 */
-    public static final UjoProperty<Employee, Double> WAGE = newProperty("wage", 0.0);
+    public static final Key<Employee, Double> WAGE = newKey("wage", 0.0);
     /** A reference to Company */
-    public static final UjoProperty<Employee, Company> COMPANY = newProperty("company", Company.class);
+    public static final Key<Employee, Company> COMPANY = newProperty("company", Company.class);
 
     // --- An optional implementation of commonly used setters and getters ---
     

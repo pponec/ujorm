@@ -17,14 +17,14 @@
 package org.ujorm.implementation.factory;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.AbstractUjo;
 
 /**
  * The Ujo Factory. A method called readValue() create new instance of the property always by a property type.
  * <br>Each the property type class (see getType() method) must have got at least one of constructor:
  * <ul>
- * <li>an two parameters constructor with types <code>Ujo</code> and <code>UjoProperty</code> or</li>
+ * <li>an two parameters constructor with types <code>Ujo</code> and <code>Key</code> or</li>
  * <li>a no parameter constructor</li>
  * </ul>
  * @author Pavel Ponec
@@ -35,7 +35,7 @@ public abstract class FactoryUjo extends AbstractUjo {
 
     /** It is an unsupported function in this implementation. */
     @Override
-    public void writeValue(final UjoProperty property, final Object value) {
+    public void writeValue(final Key property, final Object value) {
         throw new UnsupportedOperationException();
     }
     
@@ -44,7 +44,7 @@ public abstract class FactoryUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object readValue(final UjoProperty property) {
+    public Object readValue(final Key property) {
         return ((FactoryProperty) property).readValue(this);
     }
     

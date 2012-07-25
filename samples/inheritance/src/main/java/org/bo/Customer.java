@@ -15,7 +15,7 @@
  */
 package org.bo;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Table;
@@ -26,11 +26,11 @@ public class Customer extends OrmTable<Customer> implements ICustomer {
 
     /** Primary key */
     @Column(pk=true, name="id")
-    public static final UjoProperty<Customer, User> user = newProperty(User.class);
+    public static final Key<Customer, User> user = newProperty(User.class);
     /** Company */
-    public static final UjoProperty<Customer, String> company = newProperty(String.class);
+    public static final Key<Customer, String> company = newProperty(String.class);
     /** Discount [%] */
-    public static final UjoProperty<Customer, Integer> discount = newProperty(0);
+    public static final Key<Customer, Integer> discount = newKey(0);
 
     // -------- Setters and getters ---------
 

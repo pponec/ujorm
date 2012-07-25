@@ -11,7 +11,7 @@ package org.ujorm.implementation.quick;
 
 import java.awt.Color;
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.ListProperty;
 
 /**
@@ -20,12 +20,12 @@ import org.ujorm.extensions.ListProperty;
  */
 public class QuickUjoImplChild extends QuickUjoImpl {
     
-    public static final UjoProperty <QuickUjoImplChild, Long>    PRO_P5 = newProperty();
-    public static final UjoProperty <QuickUjoImplChild, Integer> PRO_P6 = newProperty();
-    public static final UjoProperty <QuickUjoImplChild, String>  PRO_P7 = newProperty();
-    public static final UjoProperty <QuickUjoImplChild, Date>    PRO_P8 = newProperty();
-    public static final UjoProperty <QuickUjoImplChild, Class>   PRO_P9 = newProperty();
-    public static final ListProperty <QuickUjoImplChild,Color> PRO_LST2 = newListProperty();
+    public static final Key <QuickUjoImplChild, Long>    PRO_P5 = newKey();
+    public static final Key <QuickUjoImplChild, Integer> PRO_P6 = newKey();
+    public static final Key <QuickUjoImplChild, String>  PRO_P7 = newKey();
+    public static final Key <QuickUjoImplChild, Date>    PRO_P8 = newKey();
+    public static final Key <QuickUjoImplChild, Class>   PRO_P9 = newKey();
+    public static final ListProperty <QuickUjoImplChild,Color> PRO_LST2 = newListKey();
     
     // --- Mandatory initializaton ---
     static {

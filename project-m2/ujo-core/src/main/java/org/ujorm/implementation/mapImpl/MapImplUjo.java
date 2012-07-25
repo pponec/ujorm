@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.ListProperty;
@@ -31,8 +31,8 @@ import org.ujorm.extensions.ListProperty;
  * The abstract String Map Ujo imlementation is an implementation of
  * the <code>UjoMiddle</code>
  * and <code>Map&lt;CharSequence,Object&gt;</code> interfaces.
- * A child implementation can use "public static final UjoProperty" constants for its UjoProperties.
- * The map key can be any CharSequence object include a <strong>direct</strong> UjoProperty from its implementation.
+ * A child implementation can use "public static final Key" constants for its KeyProperties.
+ * The map key can be any CharSequence object include a <strong>direct</strong> Key from its implementation.
  * <br>Notes:
  * <ul>
  *   <li>the NULL key is not supported in this implementation</li>
@@ -44,9 +44,9 @@ import org.ujorm.extensions.ListProperty;
  * <span class="java-keywords">import</span> org.ujorm.implementation.map.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapImplUjo {
  *
- *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
  *
  * }
  * </pre>
@@ -83,7 +83,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
      *
      * @see Property#setValue(Ujo,Object)
      */
-    public void writeValue(final UjoProperty property, final Object value) {
+    public void writeValue(final Key property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
         put(property, value);
     }
@@ -98,7 +98,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
      * @see Property#getValue(org.ujorm.Ujo)
      */
     @Override
-    public Object readValue(final UjoProperty property) {
+    public Object readValue(final Key property) {
         return get(property);
     }
     
@@ -115,7 +115,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
     }
 
     /** Returns <tt>true</tt> if this map contains a mapping for the specified key.
-     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> Key
      */
     @Override public boolean containsKey(Object key) {
         return data.containsKey(key.toString());
@@ -128,7 +128,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
 
     /** Returns the value to which the specified key is mapped, the {@code null}
      * is not supported
-     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> Key
      */
     @Override public Object get(Object key) {
         return data.get(key.toString());
@@ -136,7 +136,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
 
     /**
      * Associates the specified value with the specified key in this map.
-     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> Key
      * @param value
      * @return the previous value associated with <tt>key</tt>,
      *         or <tt>null</tt> if there was no mapping for <tt>key</tt>.
@@ -147,7 +147,7 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
 
     /**
      * Removes the mapping for the specified key from this map if present.
-     * @param key Any CharSequence include a <strong>direct</strong> UjoProperty
+     * @param key Any CharSequence include a <strong>direct</strong> Key
      * @return the previous value associated with <tt>key</tt>,
      *         or <tt>null</tt> if there was no mapping for <tt>key</tt>.
      */

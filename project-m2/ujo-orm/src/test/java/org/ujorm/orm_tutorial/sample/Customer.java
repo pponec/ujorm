@@ -16,7 +16,7 @@
 package org.ujorm.orm_tutorial.sample;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 
@@ -29,17 +29,17 @@ public final class Customer extends OrmTable<Customer> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<Customer, Long> ID = newProperty();
+    public static final Key<Customer, Long> ID = newKey();
     /** Personal Numbr */
-    public static final UjoProperty<Customer, Integer> PIN = newProperty();
+    public static final Key<Customer, Integer> PIN = newKey();
     /** Firstname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final UjoProperty<Customer, String> SURENAME = newProperty();
+    public static final Key<Customer, String> SURENAME = newKey();
     /** Lastname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final UjoProperty<Customer, String> LASTNAME = newProperty();
+    public static final Key<Customer, String> LASTNAME = newKey();
     /** Date of creation */
-    public static final UjoProperty<Customer, Date> CREATED = newProperty();
+    public static final Key<Customer, Date> CREATED = newKey();
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {

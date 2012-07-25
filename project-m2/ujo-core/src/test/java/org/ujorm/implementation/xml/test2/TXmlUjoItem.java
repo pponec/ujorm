@@ -9,7 +9,7 @@
 
 package org.ujorm.implementation.xml.test2;
 
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.implementation.map.MapUjo;
 
 
@@ -19,7 +19,7 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class TXmlUjoItem extends MapUjo  {
     
-    public static final Property<TXmlUjoItem,Integer> PRO_P1 = newProperty("P1", Integer.class);
-    public static final Property<TXmlUjoItem,Integer> PRO_P2 = newProperty("P2", Integer.class);
+    public static final Key<TXmlUjoItem,Integer> PRO_P1 = newProperty("P1", Integer.class);
+    public static final Key<TXmlUjoItem,Integer> PRO_P2 = newProperty("P2", Integer.class);
     
 }

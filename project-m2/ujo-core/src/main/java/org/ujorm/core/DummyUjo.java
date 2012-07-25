@@ -16,9 +16,9 @@
 
 package org.ujorm.core;
 
-import org.ujorm.UjoPropertyList;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.Property;
 import org.ujorm.UjoAction;
 
@@ -29,27 +29,27 @@ import org.ujorm.UjoAction;
  */
 final class DummyUjo implements Ujo {
     
-    public static final Property P0 = Property.newInstance("A", Object.class, -1);
-    public static final Property P1 = Property.newInstance("B", Object.class, -1);
+    public static final Key P0 = Property.newInstance("A", Object.class, -1);
+    public static final Key P1 = Property.newInstance("B", Object.class, -1);
     
     /** A dummy implementation. */
     @Override
-    public void writeValue(UjoProperty property, Object value) {}
+    public void writeValue(Key property, Object value) {}
 
     /** A dummy implementation. */
     @Override
-    public Object readValue(UjoProperty property) { return null;  }
+    public Object readValue(Key property) { return null;  }
 
     /** Returns unsorted properties. */
     @Override
-    public UjoPropertyList readProperties() {
-        final UjoProperty[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
-        return PropertyStore.of(DummyUjo.class, ps);
+    public KeyList readProperties() {
+        final Key[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
+        return KeyRing.of(DummyUjo.class, ps);
     }    
     
     /** Is an order of properties reversed? */
     public Boolean isPropertiesReversed() {
-        final UjoPropertyList props = readProperties();
+        final KeyList props = readProperties();
         final Boolean result = Boolean.valueOf(props.get(0)==P1);
         return result;
     }
@@ -57,7 +57,7 @@ final class DummyUjo implements Ujo {
     /**
      * Get a visibility of the property for different actions.
      */
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
     }
 

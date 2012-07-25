@@ -24,7 +24,7 @@ import org.bo.MyProcedure;
 import org.bo.Order;
 import org.bo.ViewOrder;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
@@ -282,7 +282,7 @@ public class SampleORM {
      * @see Item#$orderDate
      */
     public void useSelectItems_4() {
-        UjoProperty<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
+        Key<Item, Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
         Criterion<Item> crit = Criterion.where(ORDER_DATE, LE, new Date());
         Query<Item> items = session.createQuery(crit);
 

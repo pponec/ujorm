@@ -20,7 +20,7 @@ package org.ujorm.criterion;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoCoder;
 
 /**
@@ -35,7 +35,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     /** False constant criterion */
     public static final Criterion<Ujo> FALSE = new ValueCriterion<Ujo>(false);
     
-    final private UjoProperty property;
+    final private Key property;
     final private Operator    operator;
     final protected Object    value;
     
@@ -45,12 +45,12 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(UjoProperty<UJO,? extends Object> property, Operator operator, UjoProperty<UJO,Object> value) {
+    public ValueCriterion(Key<UJO,? extends Object> property, Operator operator, Key<UJO,Object> value) {
         this(property, operator, (Object) value);    
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(UjoProperty<UJO,? extends Object> property, Operator operator, Object value) {
+    public ValueCriterion(Key<UJO,? extends Object> property, Operator operator, Object value) {
 
         if (property==null) {
             value = (Boolean) value; // Type test for the CriterionConstant.
@@ -91,7 +91,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     /** Returns the left node of the parrent */
     @Override
-    public final UjoProperty getLeftNode() {
+    public final Key getLeftNode() {
         return property;
     }
 
@@ -118,8 +118,8 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
         if (operator==Operator.XFIXED) {
             return (Boolean) value;
         }
-        Object value2 = value instanceof UjoProperty
-            ? ((UjoProperty)value).getValue(ujo)
+        Object value2 = value instanceof Key
+            ? ((Key)value).getValue(ujo)
             : value
             ;
         boolean caseInsensitve = true;
@@ -201,13 +201,13 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
         throw new IllegalArgumentException("Illegal operator: " + operator);
     }
 
-    /** Test a value is an instance of CharSequence or a type UjoProperty is type of CharSequence.
+    /** Test a value is an instance of CharSequence or a type Key is type of CharSequence.
      * If parameter is not valid than method throws Exception.
      */
     protected final void makeCharSequenceTest(Object value) throws IllegalArgumentException {
         if (value instanceof CharSequence
-        ||  value instanceof UjoProperty
-        && ((UjoProperty)value).isTypeOf(CharSequence.class)
+        ||  value instanceof Key
+        && ((Key)value).isTypeOf(CharSequence.class)
         ){
             return;
         } else {
@@ -284,7 +284,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     protected void printValue(final Object value, final StringBuilder out) {
         if (value instanceof Ujo) {
             final Ujo ujo = (Ujo) value;
-            final UjoProperty firstProperty = ujo.readProperties().get(0);
+            final Key firstProperty = ujo.readProperties().get(0);
             final Object firstValue = firstProperty.of(ujo);
 
             out.append(ujo.getClass().getSimpleName());

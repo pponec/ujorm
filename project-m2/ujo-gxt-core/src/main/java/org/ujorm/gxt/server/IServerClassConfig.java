@@ -10,7 +10,7 @@ package org.ujorm.gxt.server;
 
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;
 import java.util.List;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.gxt.client.Cujo;
 import org.ujorm.gxt.client.cquery.CQuery;
 import org.ujorm.orm.OrmHandler;
@@ -43,6 +43,6 @@ public interface IServerClassConfig {
     public Query translate(CQuery cquery);
 
     /** Translate client query to the server query. */
-    public Query translate(CQuery cquery, UjoProperty orderBy, PagingLoadConfig cfg);
+    public Query translate(CQuery cquery, Key orderBy, PagingLoadConfig cfg);
 
 }

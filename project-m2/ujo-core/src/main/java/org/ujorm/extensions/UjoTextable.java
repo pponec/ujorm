@@ -18,7 +18,7 @@ package org.ujorm.extensions;
 
 import org.ujorm.UjoAction;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * The interface is reasonable for a text serialization and deserializaton of non UJO properties of a UJO object.
@@ -37,23 +37,23 @@ public interface UjoTextable extends Ujo {
     /**
      * Set value from a String format. Property can't be an "container" type (Ujo, List, Object[]).
      * 
-     * @param property A direct property only. See a method UjoProperty.isDirect().
+     * @param property A direct property only. See a method Key.isDirect().
      * @param value String value
      * @param type Type can be a subtype of a Property.type. If type is null, then a property.type is used.
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      */
-    public void writeValueString(UjoProperty property, String value, Class type, UjoAction action);
+    public void writeValueString(Key property, String value, Class type, UjoAction action);
     
     /**
      * Get an original value in a String format. If property type is a "container" type (Ujo, List, Object[]), method returns null,
      * otherwise method returns an instance of String.
      * 
-     * @param property A direct property only. See a method UjoProperty.isDirect().
+     * @param property A direct property only. See a method Key.isDirect().
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      * @return If property type is "container" result is null.
      */
-    public String readValueString(UjoProperty property, UjoAction action);
+    public String readValueString(Key property, UjoAction action);
     
 }

@@ -17,7 +17,7 @@
 package org.ujorm.implementation.bean;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.ValueAgent;
 
@@ -31,9 +31,9 @@ import org.ujorm.extensions.ValueAgent;
  * <span class="java-keywords">import</span> org.ujorm.implementation.BEAN.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> BeanUjo {
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
  *
  *    <span class="java-block-comment">// ---- A STANDARD BEAN IMPLEMENTATION ----</span>
  *
@@ -78,7 +78,7 @@ public abstract class BeanUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void writeValue(final UjoProperty property, final Object value) {
+    public void writeValue(final Key property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
         ((ValueAgent) property).writeValue(this, value);
     }
@@ -93,7 +93,7 @@ public abstract class BeanUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object readValue(final UjoProperty property) {
+    public Object readValue(final Key property) {
         return ((ValueAgent) property).readValue(this);
     }
     

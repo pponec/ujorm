@@ -11,7 +11,7 @@ package org.ujorm.core.annot;
 import java.lang.annotation.*;
 
 /** 
- * Use the annotation to mark a UjoProperty static field like a XML <strong>Attribute</strong>.
+ * Use the annotation to mark a Key static field like a XML <strong>Attribute</strong>.
  * <br />All other properties are exported like a XML elements by default.
  */
 @Retention(value=RetentionPolicy.RUNTIME)

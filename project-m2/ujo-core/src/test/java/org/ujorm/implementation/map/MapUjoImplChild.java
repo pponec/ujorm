@@ -10,7 +10,7 @@
 package org.ujorm.implementation.map;
 
 import java.util.Date;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -19,15 +19,15 @@ import org.ujorm.extensions.Property;
 public class MapUjoImplChild extends MapUjoImpl {
     
     /** (Long) */
-    public static final Property<MapUjoImplChild,Long>    PRO_P5 = newProperty("P5", Long.class);
+    public static final Key<MapUjoImplChild,Long>    PRO_P5 = newProperty("P5", Long.class);
     /** (Integer) */
-    public static final Property<MapUjoImplChild,Integer> PRO_P6 = newProperty("P6", Integer.class);
+    public static final Key<MapUjoImplChild,Integer> PRO_P6 = newProperty("P6", Integer.class);
     /** (String) */
-    public static final Property<MapUjoImplChild,String>  PRO_P7 = newProperty("P7", String.class);
+    public static final Key<MapUjoImplChild,String>  PRO_P7 = newProperty("P7", String.class);
     /** (Date) */
-    public static final Property<MapUjoImplChild,Date>    PRO_P8 = newProperty("P8", Date.class);
+    public static final Key<MapUjoImplChild,Date>    PRO_P8 = newProperty("P8", Date.class);
     /** (Float) */
-    public static final Property<MapUjoImplChild,Float>   PRO_P9 = newProperty("P9", Float.class);
+    public static final Key<MapUjoImplChild,Float>   PRO_P9 = newProperty("P9", Float.class);
     
     
     

@@ -10,14 +10,14 @@
 package samples.map;
 
 import java.util.Date;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 
 public class PersonX extends Person {
     
-    public static final Property<PersonX,Date>    BIRTH  = newProperty("Birth" , Date.class);
-    public static final Property<PersonX,String>  CITY   = newProperty("City"  , String.class);
-    public static final Property<PersonX,String>  STREET = newProperty("Street", String.class);
-    public static final Property<PersonX,Integer> ZIP    = newProperty("ZIP"   , Integer.class);
+    public static final Key<PersonX,Date>    BIRTH  = newProperty("Birth" , Date.class);
+    public static final Key<PersonX,String>  CITY   = newProperty("City"  , String.class);
+    public static final Key<PersonX,String>  STREET = newProperty("Street", String.class);
+    public static final Key<PersonX,Integer> ZIP    = newProperty("ZIP"   , Integer.class);
     
   /**
      * Creates a new instance of UsePerson

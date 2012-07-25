@@ -18,7 +18,7 @@ package org.ujorm.implementation.field;
 
 import java.util.List;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.ValueAgent;
 
@@ -33,7 +33,7 @@ import org.ujorm.extensions.ValueAgent;
  *   <span class="keyword-directive">private</span> Long cash;
  *   <span class="keyword-directive">private</span> List&lt;Person&gt; childs;
  *   
- *   <span class="keyword-directive">public static</span> UjoProperty&lt;Person,Long&gt; CASH
+ *   <span class="keyword-directive">public static</span> Key&lt;Person,Long&gt; CASH
  *     = newProperty(<span class="character">"CASH"</span>, Long.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,Long&gt;() {
  *     <span class="keyword-directive">public void</span> writeValue(Person ujo, Long value) { 
@@ -73,7 +73,7 @@ public abstract class FieldUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void writeValue(final UjoProperty property, final Object value) {
+    public void writeValue(final Key property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
         ((ValueAgent) property).writeValue(this, value);
     }
@@ -88,7 +88,7 @@ public abstract class FieldUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object readValue(final UjoProperty property) {
+    public Object readValue(final Key property) {
         return ((ValueAgent) property).readValue(this);
     }
     

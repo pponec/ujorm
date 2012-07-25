@@ -16,7 +16,7 @@
 
 package org.ujorm.core;
 
-import org.ujorm.UjoPropertyList;
+import org.ujorm.KeyList;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,9 +26,9 @@ import java.io.Writer;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.Property;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 import org.xml.sax.SAXException;
@@ -145,7 +145,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         writer.write(xmlHeader!=null ? xmlHeader : XML_HEADER );
         
         @SuppressWarnings("unchecked")
-        UjoProperty property = Property.newInstance(rootElementName, ujo.getClass());
+        Key property = Property.newInstance(rootElementName, ujo.getClass());
         printProperty(null, property, null, ujo, writer, false);
         
     }
@@ -158,7 +158,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     ) throws IOException {
         
         // Write attributes:
-        for (UjoProperty property : ujo.readProperties()) {
+        for (Key property : ujo.readProperties()) {
             Object value = property.of(ujo);
             
             if (value!=null
@@ -184,10 +184,10 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     
     /** Write required properties to a XML writer. */
     @SuppressWarnings("unchecked")
-    public void printProperties(final Writer writer, UjoTextable ujo, final UjoPropertyList<?> properties) throws IOException {
-        UjoProperty bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
+    public void printProperties(final Writer writer, UjoTextable ujo, final KeyList<?> properties) throws IOException {
+        Key bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
-        for (UjoProperty property : properties) {
+        for (Key property : properties) {
             Object value = property.of(ujo);
             
             if (value==null
@@ -201,10 +201,10 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
             
             if (value instanceof List) {
-                final Class itemType = property instanceof ListUjoProperty ? ((ListUjoProperty)property).getItemType() : null ;
+                final Class itemType = property instanceof ListKey ? ((ListKey)property).getItemType() : null ;
 
                 if (itemType!=null
-                && ((ListUjoProperty)property).isItemTypeOf(Ujo.class)) {
+                && ((ListKey)property).isItemTypeOf(Ujo.class)) {
                     for (Object item : (List) value) {
                         Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
                         printProperty( ujo, property, itemClass, item, writer, false );
@@ -240,7 +240,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
      */
     private void printProperty
     ( final UjoTextable ujo
-    , final UjoProperty property
+    , final Key property
     , final Class valueType
     , final Object value
     , final Writer writer
@@ -286,7 +286,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , final Class defaultType
     , final Object value
     , final UjoTextable ujo
-    , final UjoProperty prop
+    , final Key prop
     ) throws IOException {
         
         writeNewLine(writer);
@@ -351,7 +351,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , final Class itemType
     , final Object value
     , final UjoTextable ujo
-    , final UjoProperty prop
+    , final Key prop
     , final boolean simpleProperty
     ) throws IOException {
         

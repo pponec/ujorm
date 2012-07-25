@@ -10,9 +10,9 @@
 package org.ujorm.implementation.xml.t006_attrib3;
 
 import java.util.Date;
+import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.core.annot.*;
-import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.Property;
 import org.ujorm.implementation.map.MapUjo;
 
 
@@ -22,12 +22,12 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class AtrPerson extends MapUjo  {
 
-    public static final Property<AtrPerson, String>  NAME = newProperty("Name", String.class );
+    public static final Key<AtrPerson, String>  NAME = newProperty("Name", String.class );
     @XmlAttribute
-    public static final Property<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final Key<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
     @XmlAttribute
-    public static final Property<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
-    public static final ListProperty<AtrPerson, AtrPerson> CHILDS = newListProperty("Child", AtrPerson.class);
+    public static final Key<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
+    public static final ListKey<AtrPerson, AtrPerson> CHILDS = newListProperty("Child", AtrPerson.class);
     
     
 }

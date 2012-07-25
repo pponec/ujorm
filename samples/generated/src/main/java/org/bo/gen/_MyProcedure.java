@@ -13,12 +13,12 @@ import org.ujorm.orm.annot.Procedure;
 abstract public class _MyProcedure extends DbProcedure<_MyProcedure> {
 
     /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
-    public static final Property<_MyProcedure, Integer> result = newProperty(Integer.class);
+    public static final Key<_MyProcedure, Integer> result = newProperty(Integer.class);
     /** INPUT parameter */
     @Parameter(input = true)
-    public static final Property<_MyProcedure, Integer> paramCode = newProperty(0);
+    public static final Key<_MyProcedure, Integer> paramCode = newProperty(0);
     /** INPUT parameter */
-    public static final Property<_MyProcedure, Boolean> paramEnabled = newProperty(false);
+    public static final Key<_MyProcedure, Boolean> paramEnabled = newProperty(false);
 
     public Integer getResult() {
         return result.getValue(this);

@@ -17,7 +17,7 @@
 package org.ujorm.swing;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
 import org.ujorm.UjoAction;
@@ -27,7 +27,7 @@ import org.ujorm.implementation.map.MapUjoExt;
 
 /**
  * An implementation of TableModel for List of Ujo objects.
- * <br>An typical usage is an preview of UjoProperty list of the one Ujo object include values.
+ * <br>An typical usage is an preview of Key list of the one Ujo object include values.
  * 
  * @author Pavel Ponec
  */
@@ -35,35 +35,35 @@ import org.ujorm.implementation.map.MapUjoExt;
 public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
     
     /** Index of property */
-    public static final Property<UjoPropertyRow,Integer> P_INDEX   = newProperty("Index", Integer.class);
+    public static final Key<UjoPropertyRow,Integer> P_INDEX   = newProperty("Index", Integer.class);
     /** Name of property */
-    public static final Property<UjoPropertyRow,String> P_NAME     = newProperty("Name" , String.class);
+    public static final Key<UjoPropertyRow,String> P_NAME     = newProperty("Name" , String.class);
     /** Type of property */
-    public static final Property<UjoPropertyRow,Class>  P_TYPE     = newProperty("Class", Class.class );
+    public static final Key<UjoPropertyRow,Class>  P_TYPE     = newProperty("Class", Class.class );
     /** Class name without packages */
-    public static final Property<UjoPropertyRow,String> P_TYPENAME = newProperty("Type" , String.class);
+    public static final Key<UjoPropertyRow,String> P_TYPENAME = newProperty("Type" , String.class);
     /** Value */
-    public static final Property<UjoPropertyRow,Object> P_VALUE    = newProperty("Value", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_VALUE    = newProperty("Value", Object.class);
     /** Text Value */
-    public static final Property<UjoPropertyRow,String> P_TEXT     = newProperty("Text" , String.class);
+    public static final Key<UjoPropertyRow,String> P_TEXT     = newProperty("Text" , String.class);
     /** Default Value */
-    public static final Property<UjoPropertyRow,Object> P_DEFAULT  = newProperty("Default", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_DEFAULT  = newProperty("Default", Object.class);
     /** A user column can be used in table renderer for any purpose */
-    public static final Property<UjoPropertyRow,Object> P_USER1    = newProperty("User1", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_USER1    = newProperty("User1", Object.class);
     /** A user column can be used in table renderer for any purpose */
-    public static final Property<UjoPropertyRow,Object> P_USER2    = newProperty("User2", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_USER2    = newProperty("User2", Object.class);
     
     final protected Ujo content;
-    final protected UjoProperty property;
+    final protected Key property;
     
-    public UjoPropertyRow(Ujo content, UjoProperty property) {
+    public UjoPropertyRow(Ujo content, Key property) {
         this.content = content;
         this.property = property;
     }
     
     /** Write value */
     @Override
-    public void writeValue(UjoProperty aProperty, Object value) {
+    public void writeValue(Key aProperty, Object value) {
         if (aProperty==P_VALUE) {
             content.writeValue(property, value);
         } else if (aProperty==P_TEXT) {
@@ -75,7 +75,7 @@ public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
     
     /** Write a text value. */
     @Override
-    public void writeValueString(UjoProperty aProperty, String value, Class subtype, UjoAction action) {
+    public void writeValueString(Key aProperty, String value, Class subtype, UjoAction action) {
         if (aProperty==P_VALUE) {
             if (content instanceof UjoTextable) {
                 ((UjoTextable) content).writeValueString(property, value, subtype, action);
@@ -90,7 +90,7 @@ public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
     
     /** Read Value */
     @Override
-    public Object readValue(final UjoProperty aProperty) {
+    public Object readValue(final Key aProperty) {
         if (aProperty==P_INDEX)   { return property.getIndex(); }
         if (aProperty==P_NAME)    { return property.getName(); }
         if (aProperty==P_TYPE)    { return property.getType(); }
@@ -106,7 +106,7 @@ public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
     }
     
     /** Returns an assigned property (a parameter e.g.) */
-    public final UjoProperty getProperty() {
+    public final Key getProperty() {
         return property;
     }
     

@@ -60,7 +60,7 @@ public enum COperator implements AbstractCOperator {
     XFIXED,
     /** The operator for an indication of the SQL condition in a text format
      * Parameters of the SQL condition are not supported by the Ujorm.
-     * @see Criterion#forSql(org.ujorm.UjoProperty, java.lang.String)
+     * @see Criterion#forSql(org.ujorm.Key, java.lang.String)
      */
     XSQL,
     ;

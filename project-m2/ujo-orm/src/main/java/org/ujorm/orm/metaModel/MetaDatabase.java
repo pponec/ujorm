@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import javax.sql.DataSource;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;
@@ -39,8 +39,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
-import org.ujorm.ListUjoProperty;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.ListKey;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -80,46 +80,46 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     private static final boolean ADD_DB_MODEL = true;
 
     /** Property Factory */
-    private static final PropertyFactory<MetaDatabase> fa = PropertyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MetaDatabase> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<MetaDatabase,String> ID = fa.newProperty("id", "");
+    public static final Key<MetaDatabase,String> ID = fa.newKey("id", "");
     /** MetaDatabase default schema */
-    public static final UjoProperty<MetaDatabase,String> SCHEMA = fa.newProperty("schema", "");
+    public static final Key<MetaDatabase,String> SCHEMA = fa.newKey("schema", "");
     /** The default state read-only for the database. */
-    public static final UjoProperty<MetaDatabase,Boolean> READ_ONLY = fa.newProperty("readOnly", false);
+    public static final Key<MetaDatabase,Boolean> READ_ONLY = fa.newKey("readOnly", false);
     /** SQL dialect type of Class&lt;SqlDialect&gt; */
-    public static final UjoProperty<MetaDatabase,Class<? extends SqlDialect>> DIALECT = fa.newProperty("dialect");
+    public static final Key<MetaDatabase,Class<? extends SqlDialect>> DIALECT = fa.newKey("dialect");
     /** JDBC URL connection */
-    public static final UjoProperty<MetaDatabase,String> JDBC_URL = fa.newProperty("jdbcUrl", "");
+    public static final Key<MetaDatabase,String> JDBC_URL = fa.newKey("jdbcUrl", "");
     /** JDBC Driver */
-    public static final UjoProperty<MetaDatabase,String> JDBC_DRIVER = fa.newProperty("jdbcDriver", "");
+    public static final Key<MetaDatabase,String> JDBC_DRIVER = fa.newKey("jdbcDriver", "");
     /** DB user */
-    public static final UjoProperty<MetaDatabase,String> USER = fa.newProperty("user", "");
+    public static final Key<MetaDatabase,String> USER = fa.newKey("user", "");
     /** DB password of the user */
-    public static final UjoProperty<MetaDatabase,String> PASSWORD = fa.newProperty("password", "");
+    public static final Key<MetaDatabase,String> PASSWORD = fa.newKey("password", "");
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string
      */
-    public static final ListUjoProperty<MetaDatabase,String> JNDI = fa.newListProperty("jndi");
+    public static final ListKey<MetaDatabase,String> JNDI = fa.newListProperty("jndi");
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujorm.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
-    public static final UjoProperty<MetaDatabase,Class<? extends UjoSequencer>> SEQUENCER = fa.newClassProperty("sequencer", UjoSequencer.class);
+    public static final Key<MetaDatabase,Class<? extends UjoSequencer>> SEQUENCER = fa.newClassKey("sequencer", UjoSequencer.class);
     /** A policy to defining the database structure by a DDL.
      * @see Orm2ddlPolicy Parameter values
      */
-    public static final UjoProperty<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newProperty("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
+    public static final Key<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newKey("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** List of tables */
-    public static final ListUjoProperty<MetaDatabase,MetaTable> TABLES = fa.newListProperty("table");
+    public static final ListKey<MetaDatabase,MetaTable> TABLES = fa.newListProperty("table");
     /** List of procedures */
-    public static final ListUjoProperty<MetaDatabase,MetaProcedure> PROCEDURES = fa.newListProperty("procedure");
+    public static final ListKey<MetaDatabase,MetaProcedure> PROCEDURES = fa.newListProperty("procedure");
     /** Database order number */
     @Transient
-    public static final UjoProperty<MetaDatabase,Integer> ORDER = fa.newProperty("order", 0);
+    public static final Key<MetaDatabase,Integer> ORDER = fa.newKey("order", 0);
     /** An instance of the DB class. */
     @Transient
-    public static final UjoProperty<MetaDatabase,OrmUjo> ROOT = fa.newProperty("root");
+    public static final Key<MetaDatabase,OrmUjo> ROOT = fa.newKey("root");
 
     /** The property initialization */
     static{fa.lock();}
@@ -177,7 +177,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.of(getParams()));
         changeDefault(this, ORM2DLL_POLICY, MetaParams.ORM2DLL_POLICY.getDefault());
 
-        for (UjoProperty tableProperty : database.readProperties()) {
+        for (Key tableProperty : database.readProperties()) {
 
             if (tableProperty instanceof RelationToMany) {
                 RelationToMany tProperty = (RelationToMany) tableProperty;
@@ -187,7 +187,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 ormHandler.addTableModel(table);
             }
             else if (tableProperty.isTypeOf(DbProcedure.class)) {
-                UjoProperty tProcedure = tableProperty;
+                Key tProcedure = tableProperty;
                 MetaProcedure par = param!=null ? param.findProcedure(tProcedure.getName()) : null;
                 MetaProcedure procedure = new MetaProcedure(this, tProcedure, par);
                 PROCEDURES.addItem(this, procedure);
@@ -967,7 +967,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** The PASSWORD property is not exported to XML for a better security. */
     @Override
-    public boolean readAuthorization(final UjoAction action, final UjoProperty property, final Object value) {
+    public boolean readAuthorization(final UjoAction action, final Key property, final Object value) {
         switch (action.getType()) {
             case UjoAction.ACTION_XML_EXPORT:
                 return property != PASSWORD;

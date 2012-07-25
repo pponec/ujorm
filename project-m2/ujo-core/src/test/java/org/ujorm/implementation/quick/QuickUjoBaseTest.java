@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.KeyList;
 
 /**
  * TextCase
@@ -189,7 +189,7 @@ public class QuickUjoBaseTest extends MyTestCase {
     /** Test of properties */
     public void testGetProperties1() throws Throwable {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
-        UjoPropertyList props = ujb1.readProperties();
+        KeyList props = ujb1.readProperties();
         
         assertEquals(QuickUjoImpl.PRO_P0, props.get(0));
         assertEquals(QuickUjoImpl.PRO_P1, props.get(1));

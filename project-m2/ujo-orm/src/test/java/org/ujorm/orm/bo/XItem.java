@@ -16,7 +16,7 @@
 package org.ujorm.orm.bo;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 
@@ -30,16 +30,16 @@ public class XItem extends OrmTable<XItem> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<XItem,Long> ID = newProperty(Long.class);
+    public static final Key<XItem,Long> ID = newProperty(Long.class);
     /** User key */
-    public static final UjoProperty<XItem,Integer> USER_ID = newProperty(Integer.class);
+    public static final Key<XItem,Integer> USER_ID = newProperty(Integer.class);
     /** Description of XItem */
-    public static final UjoProperty<XItem,String> NOTE = newProperty(String.class);
+    public static final Key<XItem,String> NOTE = newProperty(String.class);
     /** A reference to common XOrder */
     @Column(name="fk_order")
-    public static final UjoProperty<XItem,XOrder> ORDER = newProperty(XOrder.class);
+    public static final Key<XItem,XOrder> ORDER = newProperty(XOrder.class);
     /** A composed (indirect) property provides a 'created' attribute of the XOrder */
-    public static final UjoProperty<XItem,Date> $ORDER_DATE = XItem.ORDER.add(XOrder.CREATED);
+    public static final Key<XItem,Date> $ORDER_DATE = XItem.ORDER.add(XOrder.CREATED);
 
     // --- An optional implementation of commonly used setters and getters ---
 

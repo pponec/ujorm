@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.ujorm.ListUjoProperty;
-import org.ujorm.UjoProperty;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.ListKey;
+import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
@@ -55,48 +55,48 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     private static final Class CLASS = MetaTable.class;
 
     /** Property Factory */
-    private static final PropertyFactory<MetaTable> fa = PropertyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MetaTable> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** The meta-model id */
     @XmlAttribute
-    public static final UjoProperty<MetaTable,String> ID = fa.newProperty("id", Table.NULL);
+    public static final Key<MetaTable,String> ID = fa.newKey("id", Table.NULL);
     /** DB table name */
-    public static final UjoProperty<MetaTable,String> NAME = fa.newProperty("name", Table.NULL);
+    public static final Key<MetaTable,String> NAME = fa.newKey("name", Table.NULL);
     /** The unique table/view name over all Databases in scope one OrmHandler */
-    public static final UjoProperty<MetaTable,String> ALIAS = fa.newProperty("alias", Table.NULL);
+    public static final Key<MetaTable,String> ALIAS = fa.newKey("alias", Table.NULL);
     /** Name of table schema. */
-    public static final UjoProperty<MetaTable,String> SCHEMA = fa.newProperty("schema", Table.NULL);
+    public static final Key<MetaTable,String> SCHEMA = fa.newKey("schema", Table.NULL);
     /** The state read-only for the database. */
-    public static final UjoProperty<MetaTable,Boolean> READ_ONLY = fa.newProperty("readOnly", false);
+    public static final Key<MetaTable,Boolean> READ_ONLY = fa.newKey("readOnly", false);
     /** A policy to defining the database structure by a DDL.
      * @see Orm2ddlPolicy Parameter values
      */
-    public static final UjoProperty<MetaTable,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newProperty("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
+    public static final Key<MetaTable,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newKey("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
-    public static final UjoProperty<MetaTable,String> SEQUENCE = fa.newProperty("sequence", Table.NULL);
+    public static final Key<MetaTable,String> SEQUENCE = fa.newKey("sequence", Table.NULL);
     /** Is it a model of a database view or table ? */
     @XmlAttribute
-    public static final UjoProperty<MetaTable,Boolean> VIEW = fa.newProperty("view", false);
+    public static final Key<MetaTable,Boolean> VIEW = fa.newKey("view", false);
     /** SQL SELECT statement */
-    public static final UjoProperty<MetaTable,String> SELECT = fa.newProperty("select", "");
+    public static final Key<MetaTable,String> SELECT = fa.newKey("select", "");
     /** Comment of the database table */
-    public static final UjoProperty<MetaTable,String> COMMENT = fa.newProperty("comment", Comment.NULL);
+    public static final Key<MetaTable,String> COMMENT = fa.newKey("comment", Comment.NULL);
     /** Table Columns (no relations) */
-    public static final ListUjoProperty<MetaTable,MetaColumn> COLUMNS = fa.newListProperty("column");
+    public static final ListKey<MetaTable,MetaColumn> COLUMNS = fa.newListProperty("column");
     /** Table relations to many */
-    public static final ListUjoProperty<MetaTable,MetaRelation2Many> RELATIONS = fa.newListProperty("relation2m");
+    public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListProperty("relation2m");
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
-    public static final UjoProperty<MetaTable,MetaSelect> SELECT_MODEL = fa.newProperty("selectModel");
+    public static final Key<MetaTable,MetaSelect> SELECT_MODEL = fa.newKey("selectModel");
     /** Unique Primary Key */
     @Transient
-    public static final UjoProperty<MetaTable,MetaPKey> PK = fa.newProperty("pk");
+    public static final Key<MetaTable,MetaPKey> PK = fa.newKey("pk");
     /** Database relative <strong>property</strong> (a base definition of table) */
     @Transient
-    public static final UjoProperty<MetaTable,RelationToMany> DB_PROPERTY = fa.newProperty("dbProperty");
+    public static final Key<MetaTable,RelationToMany> DB_PROPERTY = fa.newKey("dbProperty");
     /** Database */
     @Transient
-    public static final UjoProperty<MetaTable,MetaDatabase> DATABASE = fa.newProperty("database");
+    public static final Key<MetaTable,MetaDatabase> DATABASE = fa.newKey("database");
 
     /** The property initialization */
     static{fa.lock();}
@@ -198,7 +198,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
         OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
-        for (UjoProperty property : ujoManager.readProperties(dbProperty.getItemType())) {
+        for (Key property : ujoManager.readProperties(dbProperty.getItemType())) {
 
             if (!ujoManager.isTransientProperty(property)) {
 

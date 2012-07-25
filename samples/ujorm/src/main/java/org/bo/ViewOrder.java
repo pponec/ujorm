@@ -17,7 +17,7 @@
 package org.bo;
 
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.View;
@@ -43,9 +43,9 @@ import org.ujorm.orm.annot.View;
 
     /** Unique key */
     @Column(pk=true, name="id")
-    public static final UjoProperty<ViewOrder,Long> ID = newProperty(Long.class);
+    public static final Key<ViewOrder,Long> ID = newProperty(Long.class);
     /** ItemCount */
     @Column(name="item_count")
-    public static final UjoProperty<ViewOrder,Integer> ITEM_COUNT = newProperty(0);
+    public static final Key<ViewOrder,Integer> ITEM_COUNT = newKey(0);
 
 }
