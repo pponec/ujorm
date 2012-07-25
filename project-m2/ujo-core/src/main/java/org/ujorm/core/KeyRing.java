@@ -38,7 +38,7 @@ import org.ujorm.extensions.PathProperty;
  * @pop.todo KeyRing, KeyStock, KeyBundle, KeyRing. KeyPack
  */
 @Immutable
-public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializable {
+public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     static final long serialVersionUID = 1L;
     /** Property Separator */
@@ -50,7 +50,7 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
     /** Property size */
     private int size;
     /** Transient properties */
-    private Key<UJO, ?>[] properties;
+    protected Key<UJO, ?>[] properties;
     /** Default hash code. */
     transient private int hashCode;
 
@@ -82,7 +82,7 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
      * @return .
      */
     @Override
-    public Key<UJO, ?> findDirectProperty(final String name, final boolean throwException) throws IllegalArgumentException {
+    public Key<UJO, ?> findDirectKey(final String name, final boolean throwException) throws IllegalArgumentException {
         int nameHash = name.hashCode();
 
         for (Key prop : properties) {
@@ -100,8 +100,8 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
     }
 
     @Override
-    final public Key<UJO, ?> findDirectProperty(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
-        return findDirectProperty(ujo, name, UjoAction.DUMMY, true, throwException);
+    final public Key<UJO, ?> findDirectKey(final Ujo ujo, final String name, final boolean throwException) throws IllegalArgumentException {
+        return findDirectKey(ujo, name, UjoAction.DUMMY, true, throwException);
     }
 
     /**
@@ -114,7 +114,7 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
      */
     @SuppressWarnings("deprecation")
     @Override
-    public Key<UJO, ?> findDirectProperty(final Ujo ujo, final String name, final UjoAction action, final boolean result, final boolean throwException) throws IllegalArgumentException {
+    public Key<UJO, ?> findDirectKey(final Ujo ujo, final String name, final UjoAction action, final boolean result, final boolean throwException) throws IllegalArgumentException {
         if (ujo == null) {
             return null;
         }
@@ -136,17 +136,6 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
     }
 
     /**
-     * Find direct or indirect property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @deprecated Uset the method {@link #find(java.lang.String, boolean)}
-     */
-    public Key<UJO, ?> findIndirect(String names, boolean throwException) throws IllegalArgumentException {
-        return find(names, throwException);
-    }
-
-    /**
      * Find <strong>indirect</strong> property by the name. Empty result can trhow NULL value if parameter throwException==false.
      * @param names Not null property name inclukde composite properties (indirect properties).
      * @param throwException
@@ -156,7 +145,7 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
     @Override
     public Key find(String names, boolean throwException) {
         if (names.indexOf(KeyRing.PROPERTY_SEPARATOR) < 0) {
-            return findDirectProperty(names, throwException);
+            return findDirectKey(names, throwException);
         }
 
         Class ujoType = type;
@@ -165,7 +154,7 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
         names += ".";
         while ((j = names.indexOf('.', i + 1)) >= 0) {
             final String name = names.substring(i, j);
-            final Key p = UjoManager.getInstance().readProperties(ujoType).findDirectProperty(name, true);
+            final Key p = UjoManager.getInstance().readProperties(ujoType).findDirectKey(name, true);
             props.add(p);
             ujoType = p.getType();
             i = j + 1;
@@ -196,22 +185,14 @@ public class KeyRing<UJO extends Ujo> implements UjoPropertyList<UJO>, Serializa
 
     /** Get The First Properties */
     @Override
-    public Key<UJO, ?> getFirstProperty() {
+    public Key<UJO, ?> getFirstKey() {
         return get(0);
     }
 
     /** Get The Last Properties */
     @Override
-    public Key<UJO, ?> getLastProperty() {
+    public Key<UJO, ?> getLastKey() {
         return get(size - 1);
-    }
-
-    /** Get The Last Properties 
-     * @deprecated Use the method {@link #getLastProperty()} rather.
-     */
-    @Override
-    final public Key<UJO, ?> last() {
-        return getLastProperty();
     }
 
     /** Get one Property */

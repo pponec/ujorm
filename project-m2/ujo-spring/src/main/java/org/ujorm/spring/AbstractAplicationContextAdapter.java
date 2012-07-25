@@ -22,6 +22,8 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.UjoPropertyList;
+import org.ujorm.core.UjoPropertyListImpl;
 
 /**
  * UJO adapter for the Spring Application Context.
@@ -77,8 +79,14 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
 
     /** The method must be implemented in the child class. */
     @Override
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         throw new UnsupportedOperationException("The implementation must be in the a child class");
+    }
+
+
+    @Override
+    final public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
     }
 
     // ------------- STATIC METHODS -------------------

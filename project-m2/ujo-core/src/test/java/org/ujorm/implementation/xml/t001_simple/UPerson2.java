@@ -13,10 +13,12 @@ import java.util.Date;
 import java.util.HashMap;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.UjoPropertyList;
 import org.ujorm.core.UjoManager;
 import org.ujorm.KeyList;
 import org.ujorm.extensions.Property;
 import org.ujorm.UjoAction;
+import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.extensions.UjoTextable;
 
 
@@ -41,7 +43,7 @@ public class UPerson2 implements Ujo, UjoTextable  {
         data.put(property, value);
     }
 
-    public KeyList readProperties() {
+    public KeyList readKeys() {
         return UjoManager.getInstance().readProperties(getClass());
     }
 
@@ -59,6 +61,10 @@ public class UPerson2 implements Ujo, UjoTextable  {
         final Object value  = readValue(property);
         final String result = UjoManager.getInstance().encodeValue(value, false);
         return result;
+    }
+
+    public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
     }
 
 }

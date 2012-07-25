@@ -16,6 +16,9 @@
 
 package org.ujorm.spring;
 
+import org.ujorm.UjoPropertyList;
+import org.ujorm.core.UjoPropertyListImpl;
+
 /**
  * Test implementation of the AbstractAplicationContextAdapter.
  * @author Pavel Ponec

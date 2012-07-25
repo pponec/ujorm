@@ -55,6 +55,6 @@ public class UjoOrder extends OrmTable<UjoOrder> {
 
     // Optional code for better performance:
     private static KeyList properties = init(UjoOrder.class);
-    @Override public KeyList readProperties() { return properties; }
+    @Override public KeyList readKeys() { return properties; }
 
 }

@@ -59,7 +59,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     
     /** Constructor */
     public QuickUjo() {
-        data = new Object[readProperties().size()];
+        data = new Object[readKeys().size()];
     }
 
     /** Constructor */

@@ -96,7 +96,7 @@ public class SampleCORE {
         Ujo employee1 = getEmployee();
         Ujo employee2 = employee1.getClass().newInstance();
 
-        for (Key p : employee1.readProperties()) {
+        for (Key p : employee1.readKeys()) {
             p.copy(employee1, employee2);
         }
         System.out.println("Employee 2: " + employee2);
@@ -107,7 +107,7 @@ public class SampleCORE {
         Employee employee1 = getEmployee();
         Employee employee2 = new Employee();
 
-        for (Key p : employee1.readProperties()) {
+        for (Key p : employee1.readKeys()) {
             if (p.isTypeOf(String.class)) {
                 p.copy(employee1, employee2);
             }
@@ -122,7 +122,7 @@ public class SampleCORE {
     public void restoreDefaultValues() {
         Employee employee = getEmployee();
 
-        for (Key p : employee.readProperties()) {
+        for (Key p : employee.readKeys()) {
              employee.set(p, p.getDefault());
         }
 

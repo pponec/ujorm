@@ -17,13 +17,13 @@
 package org.ujorm;
 
 import java.util.List;
-import org.ujorm.Ujo;
-import org.ujorm.Key;
+import org.ujorm.core.annot.Immutable;
 
 /**
  * A property metadata interface for value type of {@code List<ITEM>}.
  * @author Pavel Ponec
  */
+@Immutable
 public interface ListKey<UJO extends Ujo, ITEM> extends UjoProperty<UJO,List<ITEM>> {
 
     /** Returns a class of the property. */

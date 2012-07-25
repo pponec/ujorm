@@ -122,8 +122,8 @@ public class QuickUjoChildTest extends MyTestCase {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
         QuickUjoImplChild  ujb2 = new QuickUjoImplChild();
         
-        assertEquals( 6, ujb1.readProperties().size());
-        assertEquals(12, ujb2.readProperties().size());
+        assertEquals( 6, ujb1.readKeys().size());
+        assertEquals(12, ujb2.readKeys().size());
     }
 
     public void testPropertyName() throws Throwable {
@@ -141,7 +141,7 @@ public class QuickUjoChildTest extends MyTestCase {
     /** */
     public void testGetProperties1() throws Throwable {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
-        KeyList props = ujb1.readProperties();
+        KeyList props = ujb1.readKeys();
         
         assertEquals(QuickUjoImplChild.PRO_P0, props.get(0));
         assertEquals(QuickUjoImplChild.PRO_P1, props.get(1));

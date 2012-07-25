@@ -35,7 +35,7 @@ public class UniUjoChild extends UniUjoBase {
     }
 
     @Override
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         return pf.getPropertyList();
     }
 

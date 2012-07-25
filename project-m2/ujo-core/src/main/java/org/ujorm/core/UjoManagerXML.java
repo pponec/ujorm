@@ -158,7 +158,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     ) throws IOException {
         
         // Write attributes:
-        for (Key property : ujo.readProperties()) {
+        for (Key property : ujo.readKeys()) {
             Object value = property.of(ujo);
             
             if (value!=null
@@ -179,7 +179,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     
     /** Write required properties to XML writer. */
     public void printProperties(Writer writer, UjoTextable ujo) throws IOException {
-        printProperties(writer, ujo, ujo.readProperties());
+        printProperties(writer, ujo, ujo.readKeys());
     }
     
     /** Write required properties to a XML writer. */

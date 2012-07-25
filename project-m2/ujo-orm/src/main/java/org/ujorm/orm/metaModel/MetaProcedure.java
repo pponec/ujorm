@@ -77,7 +77,7 @@ final public class MetaProcedure extends AbstractMetaModel {
 
     /** No parameter constructor. */
     public MetaProcedure() {
-        input = new boolean[readProperties().size()];
+        input = new boolean[readKeys().size()];
         output = new boolean[input.length];
         procedureName = "";
     }

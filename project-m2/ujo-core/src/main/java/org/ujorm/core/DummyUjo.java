@@ -19,6 +19,7 @@ package org.ujorm.core;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.UjoPropertyList;
 import org.ujorm.extensions.Property;
 import org.ujorm.UjoAction;
 
@@ -42,14 +43,19 @@ final class DummyUjo implements Ujo {
 
     /** Returns unsorted properties. */
     @Override
-    public KeyList readProperties() {
+    public KeyList<?> readKeys() {
         final Key[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
         return KeyRing.of(DummyUjo.class, ps);
-    }    
+    }
+
+    /** Returns unsorted properties. */
+    public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
+    }
     
     /** Is an order of properties reversed? */
     public Boolean isPropertiesReversed() {
-        final KeyList props = readProperties();
+        final KeyList props = readKeys();
         final Boolean result = Boolean.valueOf(props.get(0)==P1);
         return result;
     }

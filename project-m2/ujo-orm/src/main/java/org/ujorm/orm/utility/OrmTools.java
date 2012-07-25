@@ -213,7 +213,7 @@ final public class OrmTools {
             return;
         }
 
-        for (Key p : ujo.readProperties()) {
+        for (Key p : ujo.readKeys()) {
             if (p.isTypeOf(OrmUjo.class)) {
                 Object value = p.getValue(ujo);
                 if (value!=null && depth>0) {

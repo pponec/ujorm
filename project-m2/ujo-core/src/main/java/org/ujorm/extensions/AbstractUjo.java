@@ -21,7 +21,7 @@ import org.ujorm.core.*;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.Key;
-import static org.ujorm.UjoAction.*;
+import org.ujorm.UjoPropertyList;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>
@@ -71,11 +71,22 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see Key#isDirect()
      */
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         final KeyList result = readUjoManager().readProperties(getClass());
         return result;
     }
-    
+
+    /** Returns all direct properties.
+     * <br>Note 1: An order of properties is sorted by a value of the index attribute.
+     * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
+     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
+     * @see Key#isDirect()
+     */
+    final public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
+    }
+
+
     /**
      * Get an authorization of the property for different actions.
      * <br>A Default value is TRUE for all actions, properties and values.
@@ -149,7 +160,6 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
         final String result = readUjoManager().encodeValue(value, false);
         return result;
     }
-
     
     /**
      * Set value from a String format. Property must be an direct type.

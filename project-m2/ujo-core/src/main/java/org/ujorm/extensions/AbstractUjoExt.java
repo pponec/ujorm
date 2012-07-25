@@ -234,7 +234,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     public Key findProperty(final String propertyName) throws IllegalArgumentException {
         final boolean throwException = true;
-        return readProperties().findDirectProperty(propertyName, throwException);
+        return readKeys().findDirectKey(propertyName, throwException);
     }
         
     /** Create a list of Key. */

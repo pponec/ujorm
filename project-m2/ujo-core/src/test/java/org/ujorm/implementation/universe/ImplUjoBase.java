@@ -12,8 +12,10 @@ package org.ujorm.implementation.universe;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.UjoPropertyList;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.ListKey;
+import org.ujorm.core.UjoPropertyListImpl;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -35,8 +37,12 @@ public class ImplUjoBase extends AbstractyUjoBase {
     }
 
     @Override
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         return pf.getPropertyList();
+    }
+
+    public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
     }
 
 

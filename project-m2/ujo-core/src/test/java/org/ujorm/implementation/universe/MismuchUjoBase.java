@@ -40,7 +40,7 @@ public class MismuchUjoBase extends AbstractUjo {
     protected Object[] data;
 
     @Override
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         return pf.getPropertyList();
     }
 
@@ -50,7 +50,7 @@ public class MismuchUjoBase extends AbstractUjo {
 
     public void writeValue(Key property, Object value) {
         if (data==null) {
-            data = new Object[readProperties().size()];
+            data = new Object[readKeys().size()];
         }
         data[property.getIndex()] = value;
     }

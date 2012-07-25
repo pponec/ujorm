@@ -189,7 +189,7 @@ public class QuickUjoBaseTest extends MyTestCase {
     /** Test of properties */
     public void testGetProperties1() throws Throwable {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
-        KeyList props = ujb1.readProperties();
+        KeyList props = ujb1.readKeys();
         
         assertEquals(QuickUjoImpl.PRO_P0, props.get(0));
         assertEquals(QuickUjoImpl.PRO_P1, props.get(1));

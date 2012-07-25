@@ -42,7 +42,7 @@ public class PrfOrderItem extends QuickUjo {
 
     // Optional code for better performance when creating instance:
     private static KeyList properties = init(PrfOrderItem.class);
-    @Override public KeyList readProperties() { return properties; }
+    @Override public KeyList readKeys() { return properties; }
 
 
     // Setters and Getters:

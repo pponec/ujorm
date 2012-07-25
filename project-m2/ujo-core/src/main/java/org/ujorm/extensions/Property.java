@@ -257,7 +257,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     
     /**
      * Returns a true value, if the property contains more properties.
-     * The composite property is excluded from from function Ujo.readProperties() by default.
+     * The composite property is excluded from from function Ujo.readKeys() by default.
      */
     @Override
     public final boolean isDirect() {

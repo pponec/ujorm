@@ -112,7 +112,7 @@ final public class MetaSelect extends AbstractMetaModel {
             select = select.substring(i);
         }
 
-        KeyList props = readProperties();
+        KeyList props = readKeys();
         Key px = props.get(0); // SELECT
         for (int j=0, max=props.size()-1; j<=max; ++j) {
             final Key p = props.get(j);
@@ -147,7 +147,7 @@ final public class MetaSelect extends AbstractMetaModel {
     @SuppressWarnings("unchecked")
     public String toString() {
         final StringBuilder r = new StringBuilder(128);
-        for (Key p : readProperties()) {
+        for (Key p : readKeys()) {
             String value = (String) p.of(this);
             if (value.length()>0) {
                 r.append(p);

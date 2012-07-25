@@ -48,7 +48,7 @@ abstract public class MyTestCase extends TestCase {
         if (expected==actual) { return; }
         assertEquals(expected.getClass(), expected.getClass());
         
-        KeyList properties = expected.readProperties();
+        KeyList properties = expected.readKeys();
         
         if (expected instanceof UjoTextable) {
             for (int i=properties.size()-1; i>=0; i--) {

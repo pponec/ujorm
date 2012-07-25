@@ -14,7 +14,9 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.UjoPropertyList;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.extensions.Property;
 
 /**
@@ -37,7 +39,7 @@ public class UniUjoBasePlain implements Ujo {
     protected Object[] data;
 
     @Override
-    public KeyList<?> readProperties() {
+    public KeyList<?> readKeys() {
         return pf.getPropertyList();
     }
 
@@ -47,13 +49,17 @@ public class UniUjoBasePlain implements Ujo {
 
     public void writeValue(Key property, Object value) {
         if (data==null) {
-            data = new Object[readProperties().size()];
+            data = new Object[readKeys().size()];
         }
         data[property.getIndex()] = value;
     }
 
     public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
+    }
+
+    public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
     }
 
 

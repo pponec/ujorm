@@ -284,7 +284,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     protected void printValue(final Object value, final StringBuilder out) {
         if (value instanceof Ujo) {
             final Ujo ujo = (Ujo) value;
-            final Key firstProperty = ujo.readProperties().get(0);
+            final Key firstProperty = ujo.readKeys().get(0);
             final Object firstValue = firstProperty.of(ujo);
 
             out.append(ujo.getClass().getSimpleName());

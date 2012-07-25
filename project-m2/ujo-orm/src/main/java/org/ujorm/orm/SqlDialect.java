@@ -706,7 +706,7 @@ abstract public class SqlDialect {
         final String where = query.getDecoder().getWhere();
         final List<Key> orderByList = query.getOrderBy();
 
-        for (Key p : select.readProperties()) {
+        for (Key p : select.readKeys()) {
             String value = (String) p.of(select);
 
             if (p==MetaSelect.SELECT && count) {
