@@ -22,14 +22,14 @@ import org.ujorm.orm.ITypeService;
 
 
 /** 
- * Use the annotation to mark a UjoProperty static field like XML Attribute.
+ * Use the annotation to mark a Key static field like XML Attribute.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)
 public @interface Column {
 
     /** A named parameter for the database column name.
-     * If an appropriate UjoProperty is a relation to another ORM object with more primary keys, 
+     * If an appropriate Key is a relation to another ORM object with more primary keys, 
      * then the several names can be separated by a space or comma character.
      */
     String name() default Table.NULL;

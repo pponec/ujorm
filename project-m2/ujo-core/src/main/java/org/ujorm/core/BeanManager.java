@@ -18,8 +18,8 @@ package org.ujorm.core;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import org.ujorm.UjoProperty;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.Key;
+import org.ujorm.ListKey;
 
 /**
  * Manager of <code>BeanUjo</code>
@@ -27,13 +27,13 @@ import org.ujorm.ListUjoProperty;
  */
 public class BeanManager<UJO,VALUE> {
     
-    private final UjoProperty property;
+    private final Key property;
     
     /** An empty array of classes. */
     private Method setter;
     private Method getter;    
     
-    public BeanManager(UjoProperty property) {
+    public BeanManager(Key property) {
         this.property = property;
     }
     
@@ -77,7 +77,7 @@ public class BeanManager<UJO,VALUE> {
                 
                 result = getMethodPlain(ujoClass, type, methodName);
                 if (result==null) {
-                    if (ListUjoProperty.class.isInstance(property) && !methodName.endsWith("s")) {
+                    if (ListKey.class.isInstance(property) && !methodName.endsWith("s")) {
                         // TAG name is a singular:
                         result = getMethodPlain(ujoClass, type, methodName+'s');
                     } else if ((type=getPrimitive(type))!=null) {
@@ -141,7 +141,7 @@ public class BeanManager<UJO,VALUE> {
     }    
     
     /** Create new instance of BeanManager */
-    public static <UJO,VALUE> BeanManager<UJO,VALUE> getInstance(UjoProperty property) {
+    public static <UJO,VALUE> BeanManager<UJO,VALUE> getInstance(Key property) {
         return new BeanManager<UJO,VALUE>(property);
     }
 

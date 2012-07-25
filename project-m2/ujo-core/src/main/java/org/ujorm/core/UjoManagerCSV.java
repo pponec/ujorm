@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.UjoAction;
 
 /**
@@ -64,7 +64,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @param ujoClass   Exported Ujo Class
      * @param properties Exported properties of class, if value is null than all properties are used.
      */
-    public UjoManagerCSV(Class<UJO> ujoClass, UjoProperty ... properties) {
+    public UjoManagerCSV(Class<UJO> ujoClass, Key ... properties) {
         super(ujoClass, properties);
     }
     
@@ -103,7 +103,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         if (printHeader) {
             UJO ujo = ujoList.size()>0 ? ujoList.get(0) : getUjoClass().newInstance();
             boolean printSepar = false;
-            for (UjoProperty p : getProperties()) {
+            for (Key p : getProperties()) {
                 
                 if (!getUjoManager().isTransientProperty(p)
                 && (ujo==null
@@ -122,7 +122,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         
         for (UJO ujo : ujoList) {
             boolean printSepar = false;
-            for (UjoProperty p : getProperties()) {
+            for (Key p : getProperties()) {
                 UjoAction action = new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context);
                 final String value  = getText(ujo, p, UNDEFINED, action);
                 if (ujo.readAuthorization(action, p, value)
@@ -143,9 +143,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     /**
      * Header label for a required Property. You can overwrite the method in case you want to localize header titles.
      * @param p Property
-     * @return Default implementation returns <code>UjoProperty.getName()</code> .
+     * @return Default implementation returns <code>Key.getName()</code> .
      */
-    protected String getHeaderTitle(final UjoProperty p) {
+    protected String getHeaderTitle(final Key p) {
         return p.getName();
     }
     
@@ -282,11 +282,11 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     
     /** Create new instance */
     public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass) {
-        return getInstance(ujoClass, (UjoProperty[]) null);
+        return getInstance(ujoClass, (Key[]) null);
     }
     
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, UjoProperty ... properties) {
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key ... properties) {
         return new UjoManagerCSV<UJO>(ujoClass, properties);
     }
     

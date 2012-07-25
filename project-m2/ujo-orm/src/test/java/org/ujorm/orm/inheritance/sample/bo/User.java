@@ -16,7 +16,7 @@
 
 package org.ujorm.orm.inheritance.sample.bo;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Table;
@@ -31,15 +31,15 @@ public class User extends OrmTable<User> {
 
     /** Primary key */
     @Column(pk=true)
-    public static final UjoProperty<User,Long> id = newProperty(Long.class);
+    public static final Key<User,Long> id = newProperty(Long.class);
     /** Login */
     @Column(uniqueIndex="idx_login")
-    public static final UjoProperty<User,String> login = newProperty(String.class);
+    public static final Key<User,String> login = newProperty(String.class);
     /** Description of the Order */
     @Column(name="password_text")
-    public static final UjoProperty<User,String> password = newProperty(String.class);
+    public static final Key<User,String> password = newProperty(String.class);
     /** Full name */
-    public static final UjoProperty<User,String> name = newProperty(String.class);
+    public static final Key<User,String> name = newProperty(String.class);
 
     // ----------- Optional getters/setters -----------
 

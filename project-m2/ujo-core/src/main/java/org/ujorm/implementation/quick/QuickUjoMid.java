@@ -16,12 +16,12 @@
 package org.ujorm.implementation.quick;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.UjoMiddle;
 
 /**
  * This is a fast implementation of the <code>UjoMiddle</code>.
- * For implementation define only a "public static final UjoProperty" constants call a static method init() from the static block located after the latest property.
+ * For implementation define only a "public static final Key" constants call a static method init() from the static block located after the latest property.
  * <br>All properties must be objects (no primitive types) in the current version of Ujorm.
  * <br>Features: good performance, simple code.
  * <h3>Sample of usage</h3>
@@ -29,9 +29,9 @@ import org.ujorm.extensions.UjoMiddle;
  * <span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjo {
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(String.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(Boolean.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(Date.<span class="java-keywords">class</span>);
  *
  *    <span class="java-keywords">static</span> {
  *        init(Person.<span class="java-keywords">class</span>);
@@ -57,15 +57,15 @@ abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid>
     public QuickUjoMid() {
     }
 
-    /** Getter based on one UjoProperty */
+    /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
+    public <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
         return property.of((UJO) this);
     }
 
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
+    /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> Ujo set(final UjoProperty<UJO, VALUE> property, final VALUE value) {
+    public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
         assert readUjoManager().assertDirectAssign(property, value);
         property.setValue((UJO)this, value);
         return this;
@@ -78,7 +78,7 @@ abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid>
      * @param property A Property
      * @return If property type is "container" then result is null.
      */
-    public String getText(final UjoProperty property) {
+    public String getText(final Key property) {
         return readUjoManager().getText(this, property, null);
     }
 
@@ -88,7 +88,7 @@ abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid>
      * @param property Property
      * @param value String value
      */
-    public void setText(final UjoProperty property, final String value) {
+    public void setText(final Key property, final String value) {
         readUjoManager().setText(this, property, value, null, null);
     }
 

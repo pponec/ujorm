@@ -6,7 +6,7 @@
 package org.ujorm.gxt.server;
 
 import com.extjs.gxt.ui.client.data.PagingLoadConfig;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.gxt.client.cquery.CQuery;
 import org.ujorm.orm.Query;
 
@@ -26,7 +26,7 @@ abstract public class AbstractServerClassConfig implements IServerClassConfig {
 
     /** Translate client query to the server query. */
     @Override
-    public Query translate(CQuery cquery, UjoProperty orderBy, PagingLoadConfig cfg) {
+    public Query translate(CQuery cquery, Key orderBy, PagingLoadConfig cfg) {
 
         Query query = QueryTranslator.newInstance(cquery, getHandler(), this).translate();
 

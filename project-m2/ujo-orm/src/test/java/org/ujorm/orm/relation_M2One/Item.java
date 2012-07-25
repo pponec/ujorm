@@ -15,7 +15,7 @@
  */
 package org.ujorm.orm.relation_M2One;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToOne;
@@ -30,15 +30,15 @@ public class Item extends OrmTable<Item> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final UjoProperty<Item,Long> id = newProperty(Long.class);
+    public static final Key<Item,Long> id = newProperty(Long.class);
     /** User key */
-    public static final UjoProperty<Item,Integer> userId = newProperty(Integer.class);
+    public static final Key<Item,Integer> userId = newProperty(Integer.class);
     /** Description of the Item */
-    public static final UjoProperty<Item,String> note = newProperty(String.class);
+    public static final Key<Item,String> note = newProperty(String.class);
     /** A reference to common Order */
     @Column(name="fk_order")
-    //public static final UjoProperty<Item,Order> order = newProperty(Order.class);
-    public static final UjoProperty<Item,Order> order= RelationToOne.newInstance(Order.class, Order.sid);
+    //public static final Key<Item,Order> order = newKey(Order.class);
+    public static final Key<Item,Order> order= RelationToOne.newInstance(Order.class, Order.sid);
 
     // --- An optional implementation of commonly used setters and getters ---
 

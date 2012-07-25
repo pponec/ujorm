@@ -17,7 +17,7 @@
 package org.ujorm.listener;
 
 import java.beans.PropertyChangeEvent;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * A "PropertyChange" event gets delivered whenever a bean changes a "bound"
@@ -29,12 +29,12 @@ import org.ujorm.UjoProperty;
  */
 public class UjoPropertyChangeEvent extends PropertyChangeEvent {
     
-    final UjoProperty property;
+    final Key property;
     final boolean beforeChange;
 
     public UjoPropertyChangeEvent
         ( final Object source
-        , final UjoProperty property
+        , final Key property
         , final Object oldValue
         , final Object newValue
         , final boolean beforeChange
@@ -45,7 +45,7 @@ public class UjoPropertyChangeEvent extends PropertyChangeEvent {
     }
 
     /** Returns property */
-    public UjoProperty getProperty() {
+    public Key getProperty() {
         return property;
     }
 

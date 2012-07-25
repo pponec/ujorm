@@ -19,7 +19,7 @@ package org.ujorm.spring;
 import org.ujorm.extensions.Property;
 
 /**
- * A UjoProperty implementation for a Spring context.
+ * A Key implementation for a Spring context.
  * @author Pavel Ponec
  */
 public class SpringKeyImpl<VALUE>

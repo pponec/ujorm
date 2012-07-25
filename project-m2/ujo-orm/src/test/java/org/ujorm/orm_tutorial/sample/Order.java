@@ -18,7 +18,7 @@ package org.ujorm.orm_tutorial.sample;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.extensions.StringWrapper;
@@ -52,29 +52,29 @@ public final class Order extends OrmTable<Order> {
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
-    public static final UjoProperty<Order, Long> ID = newProperty();
+    public static final Key<Order, Long> ID = newKey();
     /** Order STATE, default is ACTIVE */
     @Comment("Order state, default value is ACTIVE")
-    public static final UjoProperty<Order, State> STATE = newProperty(State.ACTIVE);
+    public static final Key<Order, State> STATE = newKey(State.ACTIVE);
     /** User key */
-    public static final UjoProperty<Order, Integer> USER_ID = newProperty();
+    public static final Key<Order, Integer> USER_ID = newKey();
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final UjoProperty<Order, String> NOTE = newProperty();
+    public static final Key<Order, String> NOTE = newKey();
     /** Date of creation */
-    public static final UjoProperty<Order, Date> CREATED = newProperty();
+    public static final Key<Order, Date> CREATED = newKey();
     /** Text file */
     @Transient
-    public static final UjoProperty<Order, Clob> TEXT_FILE = newProperty();
+    public static final Key<Order, Clob> TEXT_FILE = newKey();
     /** Binary file */
     @Transient
-    public static final UjoProperty<Order, Blob> BINARY_FILE = newProperty();
+    public static final Key<Order, Blob> BINARY_FILE = newKey();
     /** Reference to Items */
     public static final RelationToMany<Order, Item> ITEMS = newRelation();
     /** Customer */
-    @Column(name="fk_customer") public static final UjoProperty<Order, Customer> CUSTOMER = newProperty();
-    @Column(mandatory=true) public static final UjoProperty<Order, Integer> NEW_COLUMN = newProperty(777);
+    @Column(name="fk_customer") public static final Key<Order, Customer> CUSTOMER = newKey();
+    @Column(mandatory=true) public static final Key<Order, Integer> NEW_COLUMN = newKey(777);
 
     // --- Constructors ---
 

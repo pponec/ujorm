@@ -11,7 +11,7 @@ package samples.array;
 
 import java.util.Date;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.implementation.array.ArrayUjo;
 
@@ -20,9 +20,9 @@ public class Person extends ArrayUjo {
     /** An Incrementator. Use a new counter for each subclass by sample. */
     protected static int propertyCount = ArrayUjo.propertyCount;
     
-    public static final UjoProperty NAME  = newProperty("name", String.class , propertyCount++);
-    public static final UjoProperty MALE  = newProperty("male", Boolean.class, propertyCount++);
-    public static final UjoProperty BIRTH = newProperty("birth", Date.class  , propertyCount++);
+    public static final Key NAME  = newProperty("name", String.class , propertyCount++);
+    public static final Key MALE  = newProperty("male", Boolean.class, propertyCount++);
+    public static final Key BIRTH = newProperty("birth", Date.class  , propertyCount++);
     
     
 

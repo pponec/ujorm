@@ -16,13 +16,13 @@
 
 package org.ujorm.spring;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
- * A UjoProperty implementation for a Spring context.
+ * A Key implementation for a Spring context.
  * @author Pavel Ponec
  */
-public interface SpringKey<VALUE> extends UjoProperty<AbstractAplicationContextAdapter, VALUE> {
+public interface SpringKey<VALUE> extends Key<AbstractAplicationContextAdapter, VALUE> {
 
     
 }

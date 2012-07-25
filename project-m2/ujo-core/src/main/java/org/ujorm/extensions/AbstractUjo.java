@@ -16,16 +16,16 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.UjoPropertyList;
+import org.ujorm.KeyList;
 import org.ujorm.core.*;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import static org.ujorm.UjoAction.*;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>
- * For implementation define only a "public static final UjoProperty" constants in a child class.
+ * For implementation define only a "public static final Key" constants in a child class.
  * The code syntax is Java 1.5 complied.<br>
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
 
@@ -40,7 +40,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * @param ujoClass Ujo class
      */
     @SuppressWarnings("unchecked")
-    protected static final UjoPropertyList init(Class ujoClass) throws IllegalStateException {
+    protected static final KeyList init(Class ujoClass) throws IllegalStateException {
         return init(ujoClass, false);
     }
 
@@ -52,8 +52,8 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * @param checkUniqueProperties Check unique properties
      */
     @SuppressWarnings("unchecked")
-    protected static final UjoPropertyList init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
-        UjoPropertyList result = UjoManager.getInstance().readProperties(ujoClass);
+    protected static final KeyList init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
+        KeyList result = UjoManager.getInstance().readProperties(ujoClass);
         if (checkUniqueProperties) {
             UjoManager.getInstance().checkUniqueProperties(ujoClass);
         }
@@ -69,10 +69,10 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * <br>Note 1: An order of properties is sorted by a value of the index attribute.
      * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
-     * @see UjoProperty#isDirect()
+     * @see Key#isDirect()
      */
-    public UjoPropertyList<?> readProperties() {
-        final UjoPropertyList result = readUjoManager().readProperties(getClass());
+    public KeyList<?> readProperties() {
+        final KeyList result = readUjoManager().readProperties(getClass());
         return result;
     }
     
@@ -88,7 +88,7 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * @return Returns TRUE, if property is authorized.
      * @see UjoAction Action Constants
      */
-    public boolean readAuthorization(final UjoAction action, final UjoProperty property, final Object value) {
+    public boolean readAuthorization(final UjoAction action, final Key property, final Object value) {
         return true;
     }
     
@@ -138,13 +138,13 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
      * Get an original value in a String format. Property must be an direct type.
      * otherwise method returns an instance of String.
      *
-     * @param property A direct property only. See a method UjoProperty.isDirect().
+     * @param property A direct property only. See a method Key.isDirect().
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      * @return If property type is "container" then result is null.
      */
     @SuppressWarnings("unchecked")
-    public String readValueString(final UjoProperty property, final UjoAction action) {
+    public String readValueString(final Key property, final UjoAction action) {
         final Object value  = property.of(this);
         final String result = readUjoManager().encodeValue(value, false);
         return result;
@@ -154,13 +154,13 @@ public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
     /**
      * Set value from a String format. Property must be an direct type.
      *
-     * @param property A direct property only. See a method UjoProperty.isDirect().
+     * @param property A direct property only. See a method Key.isDirect().
      * @param value String value
      * @param type Type can be a subtype of a Property.type. If type is null, then a property.type is used.
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      */
-    public void writeValueString(final UjoProperty property, final String value, final Class type, final UjoAction action) {
+    public void writeValueString(final Key property, final String value, final Class type, final UjoAction action) {
         final Object valueObj = readUjoManager().decodeValue(property, value, type);
         writeValue(property, valueObj);
     }

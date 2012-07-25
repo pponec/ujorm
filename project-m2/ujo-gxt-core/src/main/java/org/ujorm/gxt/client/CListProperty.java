@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoComparator;
 
 /**
@@ -114,7 +114,7 @@ public class CListProperty<UJO extends Cujo, ITEM>
 
     /** Sort a list by its properties. */
     @SuppressWarnings("unchecked")
-    public void sort(UJO ujo, UjoProperty ... properties) {
+    public void sort(UJO ujo, Key ... properties) {
         List<ITEM> list = getValue(ujo);
         if ( list!=null) {
             Comparator comp = new UjoComparator(properties);

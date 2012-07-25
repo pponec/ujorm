@@ -10,7 +10,7 @@
 package org.ujorm.implementation.xmlSpeed;
 
 import java.util.Date;
-import org.ujorm.extensions.ListProperty;
+import org.ujorm.ListKey;
 import org.ujorm.implementation.map.MapUjoImplChild;
 
 /**
@@ -19,7 +19,7 @@ import org.ujorm.implementation.map.MapUjoImplChild;
  */
 public class MapTree extends MapUjoImplChild {
     
-    public static final ListProperty<MapTree, MapTree> PRO_CHILDS = newListProperty("CHILDS", MapTree.class);
+    public static final ListKey<MapTree, MapTree> PRO_CHILDS = newListProperty("CHILDS", MapTree.class);
     
     
     public int size() {

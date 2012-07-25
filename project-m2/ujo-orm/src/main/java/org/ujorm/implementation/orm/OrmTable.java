@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.ujorm.UjoAction;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.implementation.quick.QuickUjo;
 import org.ujorm.orm.ExtendedOrmUjo;
@@ -61,7 +61,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     /** Orm session */
     transient private Session session;
     /** Set of changes */
-    transient private Set<UjoProperty> changes = null;
+    transient private Set<Key> changes = null;
 
     public OrmTable() {
     }
@@ -80,10 +80,10 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
 
     /** A method for an internal use only. */
     @Override
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         if (session!=null) {
             if (changes==null) {
-                changes = new HashSet<UjoProperty>(8);
+                changes = new HashSet<Key>(8);
             }
             changes.add(property);
         }
@@ -93,7 +93,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
 
     /** A method for an internal use only. */
     @Override
-    public Object readValue(final UjoProperty property) {
+    public Object readValue(final Key property) {
         Object result = super.readValue(property);
         final Session mySession = session;  // maybe readSession() is better?
 
@@ -128,11 +128,11 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
      * @param clear True value clears the property changes.
      */
     @Override
-    public UjoProperty[] readChangedProperties(boolean clear) {
-        final UjoProperty[] result
+    public Key[] readChangedProperties(boolean clear) {
+        final Key[] result
             = changes==null || changes.isEmpty()
             ? UjoPropertyListImpl.EMPTY
-            : changes.toArray(new UjoProperty[changes.size()])
+            : changes.toArray(new Key[changes.size()])
             ;
         if (clear) {
             changes = null;
@@ -141,19 +141,19 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     }
 
 
-    /** Getter based on UjoProperty implemeted by a pattern UjoExt */
+    /** Getter based on Key implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
-    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
+    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
         final VALUE result = property.of((UJO)this);
         return result;
     }
 
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime.
+    /** Setter  based on Key. Type of value is checked in the runtime.
      * The method was implemented by a pattern UjoExt.
      */
     @SuppressWarnings({"unchecked"})
     public final <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
-        ( final UjoProperty<UJO, VALUE> property
+        ( final Key<UJO, VALUE> property
         , final VALUE value
         ) {
         readUjoManager().assertAssign(property, value);
@@ -163,7 +163,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
 
     /** Test an authorization of the action. */
     @Override
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         switch (action.getType()) {
             case UjoAction.ACTION_TO_STRING:
                 return !(property instanceof RelationToMany);
@@ -176,13 +176,13 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
      * This is useful to obtain the foreign key value without (lazy) loading the entire object.
      * If the lazy object is loaded, the method will need the Session to build the ForeignKey instance.
      * <br>NOTE: The method is designed for developers only, the Ujorm doesn't call it newer.
-     * @param property Must be direct property only ({@link UjoProperty#isDirect()}==true)
+     * @param property Must be direct property only ({@link Key#isDirect()}==true)
      * @return If no related object is available, then the result has the NULL value.
      * @throws IllegalStateException Method throws an exception for a wrong property type.
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
      */
     @Override
-    public <UJO extends UJO_IMPL> ForeignKey readFK(UjoProperty<UJO, ? extends OrmUjo> property) throws IllegalStateException {
+    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> property) throws IllegalStateException {
         final Object value = super.readValue(property);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;

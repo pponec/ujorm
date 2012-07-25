@@ -20,8 +20,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 
 /**
  * UJO adapter for the Spring Application Context.
@@ -41,23 +41,23 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
         setApplicationContext(context);
     }
 
-    /** A delegat for the method {@link #getBean(org.ujorm.UjoProperty). */
+    /** A delegat for the method {@link #getBean(org.ujorm.Key). */
     @Override
     @SuppressWarnings("unchecked")
-    final public Object readValue(UjoProperty property) {
+    final public Object readValue(Key property) {
         return getBean(property);
     }
 
     /** The bean is a factory type, the writeValue method is not supported. */
     @Deprecated
     @Override
-    final public void writeValue(UjoProperty property, Object value) throws UnsupportedOperationException {
+    final public void writeValue(Key property, Object value) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Method is not supported");
     }
 
     /** An delegat for the method {@link ApplicationContext#getBean(java.lang.String, java.lang.Class)} */
     @SuppressWarnings("unchecked")
-    public <T> T getBean(UjoProperty<? extends AbstractAplicationContextAdapter, T> property) throws BeansException {
+    public <T> T getBean(Key<? extends AbstractAplicationContextAdapter, T> property) throws BeansException {
         return (T) context.getBean(property.getName(), property.getType());
     }
 
@@ -77,14 +77,14 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
 
     /** The method must be implemented in the child class. */
     @Override
-    public UjoPropertyList<?> readProperties() {
+    public KeyList<?> readProperties() {
         throw new UnsupportedOperationException("The implementation must be in the a child class");
     }
 
     // ------------- STATIC METHODS -------------------
 
     @Override
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
     }
 

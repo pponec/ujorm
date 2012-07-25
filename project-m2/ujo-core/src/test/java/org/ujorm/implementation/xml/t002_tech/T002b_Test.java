@@ -11,9 +11,9 @@ import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.KeyList;
 
 /**
  *
@@ -58,7 +58,7 @@ public class T002b_Test extends MyTestCase {
     
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
-        for (UjoProperty prop : result.readProperties()) {
+        for (Key prop : result.readProperties()) {
             result.writeValue(prop, null);
         }
         return result;

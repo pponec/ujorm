@@ -16,7 +16,7 @@
 package org.ujorm.orm.relation_M2One;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.orm.DbType;
@@ -45,26 +45,26 @@ public class Order extends OrmTable<Order> {
     
     /** The Unique Key */
     @Column(pk = true)
-    public static final UjoProperty<Order, Long> id = newProperty();
+    public static final Key<Order, Long> id = newKey();
     /** Alternative Unique Key */
     @Column(length=10, uniqueIndex="sid_index")
-    public static final UjoProperty<Order,String> sid = newProperty(null, "");
+    public static final Key<Order,String> sid = newKey(null, "");
     /** Order state, default is ACTIVE */
-    public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
+    public static final Key<Order, State> state = newKey(State.ACTIVE);
     /** Date of creation */
-    public static final UjoProperty<Order, Date> created = newProperty();
+    public static final Key<Order, Date> created = newKey();
     /** User key */
-    public static final UjoProperty<Order, Integer> userId = newProperty();
+    public static final Key<Order, Integer> userId = newKey();
     /** Description of the Order */
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final UjoProperty<Order, String> note = newProperty();
+    public static final Key<Order, String> note = newKey();
     /** Reference to Items */
     public static final RelationToMany<Order, Item> items = newRelation();
 
     // -----------------------------------------------------------------------
 
     @Override
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         super.writeValue(property, value);
         if (property==id && sid.isDefault(this)) {
             super.writeValue(sid, "S"+value);

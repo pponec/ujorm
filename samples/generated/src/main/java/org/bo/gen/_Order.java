@@ -7,7 +7,7 @@ package org.bo.gen;
 import java.util.Date;
 import org.bo.Item;
 import org.bo.Order;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.ValueExportable;
 import org.ujorm.orm.DbType;
@@ -31,20 +31,20 @@ abstract public class _Order extends OrmTable<Order> {
     /** The Unique Key */
     @Comment("The Unique Key")
     @Column(pk = true)
-    public static final UjoProperty<Order, Long> id = newProperty(Long.class);
+    public static final Key<Order, Long> id = newProperty(Long.class);
     /** Order state, default is ACTIVE */
     @Comment("Order state, default is ACTIVE")
-    public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
+    public static final Key<Order, State> state = newProperty(State.ACTIVE);
     /** User key */
     @Comment("User key")
-    public static final UjoProperty<Order, Integer> userId = newProperty(Integer.class);
+    public static final Key<Order, Integer> userId = newProperty(Integer.class);
     /** Description of the order */
     @Comment("Description of the order")
     @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true)
-    public static final UjoProperty<Order, String> descr = newProperty(String.class);
+    public static final Key<Order, String> descr = newProperty(String.class);
     /** Date of creation */
     @Comment("Date of creation")
-    public static final UjoProperty<Order, Date> created = newProperty(Date.class);
+    public static final Key<Order, Date> created = newProperty(Date.class);
     /** Reference to Items */
     @Comment("Reference to Items")
     public static final RelationToMany<Order, Item> items = newRelation(Item.class);

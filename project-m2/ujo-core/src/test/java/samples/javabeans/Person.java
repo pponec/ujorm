@@ -9,12 +9,12 @@
 
 package samples.javabeans;
 
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.implementation.map.*;
 public class Person extends MapUjo {
     
-    public static final Property<Person, String>  NAME = newProperty("Name", String.class);
-    public static final Property<Person, Integer> AGE  = newProperty("Age" , Integer.class);
+    public static final Key<Person, String>  NAME = newProperty("Name", String.class);
+    public static final Key<Person, Integer> AGE  = newProperty("Age" , Integer.class);
     
     public void setName(String name) {
         NAME.setValue(this, name);

@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.logging.*;
 import junit.framework.TestCase;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.orm.*;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -251,7 +251,7 @@ public class Orm2Test extends TestCase {
      * @see Item#$orderDate
      */
     public void useSelectItems_4() {
-        UjoProperty<Item,Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
+        Key<Item,Date> ORDER_DATE = Item.order.add(Order.created); // or use: Item.$orderDate
         Criterion<Item> crit = Criterion.where(ORDER_DATE, Operator.LE, new Date());
         Query<Item> items = session.createQuery(crit);
 

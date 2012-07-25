@@ -18,9 +18,9 @@ package org.ujorm.orm.metaModel;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import org.ujorm.ListUjoProperty;
-import org.ujorm.UjoProperty;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.ListKey;
+import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.OrmUjo;
@@ -37,11 +37,11 @@ final public class MetaPKey extends AbstractMetaModel {
     private static final Class CLASS = MetaPKey.class;
 
     /** Property Factory */
-    private static final PropertyFactory<MetaPKey> fa = PropertyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MetaPKey> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** DB table */
-    public static final UjoProperty<MetaPKey,MetaTable> TABLE = fa.newProperty("table");
+    public static final Key<MetaPKey,MetaTable> TABLE = fa.newKey("table");
     /** DB columns */
-    public static final ListUjoProperty<MetaPKey,MetaColumn> COLUMNS = fa.newListProperty("columns");
+    public static final ListKey<MetaPKey,MetaColumn> COLUMNS = fa.newListProperty("columns");
 
     /** The property initialization */
     static{fa.lock();}
@@ -73,7 +73,7 @@ final public class MetaPKey extends AbstractMetaModel {
         if (count==1) {
 
             MetaColumn column = COLUMNS.getItem(this, 0);
-            UjoProperty property = column.getProperty();
+            Key property = column.getProperty();
             if (property.of(bo)!=null) {
                 return false;
             }
@@ -92,7 +92,7 @@ final public class MetaPKey extends AbstractMetaModel {
         } else {
             for (int i = 0; i < count; i++) {
                 final MetaColumn column = COLUMNS.getItem(this, i);
-                final UjoProperty property = column.getProperty();
+                final Key property = column.getProperty();
                 if (property.of(bo) == null) {
                     String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
                     throw new IllegalArgumentException(msg);

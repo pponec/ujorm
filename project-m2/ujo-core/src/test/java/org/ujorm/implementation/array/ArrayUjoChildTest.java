@@ -11,7 +11,7 @@ package org.ujorm.implementation.array;
 import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.KeyList;
 
 /**
  *
@@ -126,7 +126,7 @@ public class ArrayUjoChildTest extends MyTestCase {
     /** */
     public void testGetProperties1() throws Throwable {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
-        UjoPropertyList props = ujb1.readProperties();
+        KeyList props = ujb1.readProperties();
         
         assertEquals(ArrayUjoImpl.PRO_P0, props.get(0));
         assertEquals(ArrayUjoImpl.PRO_P1, props.get(1));

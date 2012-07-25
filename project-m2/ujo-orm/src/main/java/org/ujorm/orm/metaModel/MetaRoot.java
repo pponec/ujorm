@@ -24,9 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
-import org.ujorm.ListUjoProperty;
-import org.ujorm.UjoProperty;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.ListKey;
+import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
@@ -47,11 +47,11 @@ final public class MetaRoot extends AbstractMetaModel {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);
 
     /** Property Factory */
-    private static final PropertyFactory<MetaRoot> fa = PropertyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MetaRoot> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** List of tables */
-    public static final ListUjoProperty<MetaRoot,MetaDatabase> DATABASES = fa.newListProperty("database");
+    public static final ListKey<MetaRoot,MetaDatabase> DATABASES = fa.newListProperty("database");
     /** ORM parameters */
-    public static final UjoProperty<MetaRoot,MetaParams> PARAMETERS = fa.newProperty("parameters");
+    public static final Key<MetaRoot,MetaParams> PARAMETERS = fa.newKey("parameters");
     /** The property initialization */
     static{fa.lock();}
 

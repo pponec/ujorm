@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.CompositeProperty;
+import org.ujorm.CompositeKey;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
@@ -47,7 +47,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private String statementInfo;
 
     /** A list of properties to sorting */
-    private List<UjoProperty<UJO,?>> orderBy;
+    private List<Key<UJO,?>> orderBy;
     /** Set the first row to retrieve. If not set, rows will be retrieved beginnning from row 0. */
     private int offset = 0;
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation. */
@@ -135,7 +135,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return result;
     }
 
-    public <ITEM> void setParameter(UjoProperty<UJO,ITEM> property, ITEM value) {
+    public <ITEM> void setParameter(Key<UJO,ITEM> property, ITEM value) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -280,55 +280,55 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Get the order item list. The method returns a not null result always. */
-    final public List<UjoProperty<UJO,?>> getOrderBy() {
+    final public List<Key<UJO,?>> getOrderBy() {
         return orderBy;
     }
 
     /** Get the order item array. The method returns a not null result always. */
     @SuppressWarnings("unchecked")
-    final public UjoProperty<UJO,?>[] getOrderAsArray() {
-        return orderBy.toArray(new UjoProperty[orderBy.size()]);
+    final public Key<UJO,?>[] getOrderAsArray() {
+        return orderBy.toArray(new Key[orderBy.size()]);
     }
 
     /** Set an order of the rows by a SQL ORDER BY phrase.
-     * @deprecated Use the {@link #orderByMany(org.ujorm.UjoProperty[])} method instead of
-     * @see #orderByMany(org.ujorm.UjoProperty[])
+     * @deprecated Use the {@link #orderByMany(org.ujorm.Key[])} method instead of
+     * @see #orderByMany(org.ujorm.Key[])
      */
     @Deprecated
-    public Query<UJO> setOrder(UjoProperty... order) {
+    public Query<UJO> setOrder(Key... order) {
         return orderByMany(order);
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
-    public Query<UJO> orderBy(UjoProperty<UJO,?> orderItem) {
-        return orderByMany(new UjoProperty[]{orderItem});
+    public Query<UJO> orderBy(Key<UJO,?> orderItem) {
+        return orderByMany(new Key[]{orderItem});
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
     public Query<UJO> orderBy
-        ( UjoProperty<UJO,?> orderItem1
-        , UjoProperty<UJO,?> orderItem2
+        ( Key<UJO,?> orderItem1
+        , Key<UJO,?> orderItem2
         ) {
-        return orderByMany(new UjoProperty[]{orderItem1, orderItem2});
+        return orderByMany(new Key[]{orderItem1, orderItem2});
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase. */
     public Query<UJO> orderBy
-        ( UjoProperty<UJO,?> orderItem1
-        , UjoProperty<UJO,?> orderItem2
-        , UjoProperty<UJO,?> orderItem3
+        ( Key<UJO,?> orderItem1
+        , Key<UJO,?> orderItem2
+        , Key<UJO,?> orderItem3
         ) {
-        return orderByMany(new UjoProperty[]{orderItem1, orderItem2, orderItem3});
+        return orderByMany(new Key[]{orderItem1, orderItem2, orderItem3});
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase.
     * <br/>WARNING: the parameters are not type checked.
     */
     @SuppressWarnings("unchecked")
-    public final Query<UJO> orderByMany(UjoProperty... orderItems) {
+    public final Query<UJO> orderByMany(Key... orderItems) {
         clearDecoder();
         this.orderBy = new ArrayList(Math.max(orderItems.length, 4));
-        for (final UjoProperty p : orderItems) {
+        for (final Key p : orderItems) {
             this.orderBy.add(p);
         }
         return this;
@@ -337,9 +337,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
    /** Set the one column to reading from database table.
     * Other columns will return a default value, no exception will be throwed.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
-    * @see #setColumn(org.ujorm.UjoProperty) setColumn(Property)
+    * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
-    public Query<UJO> addColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
+    public Query<UJO> addColumn(Key<UJO,?> column) throws IllegalArgumentException {
         final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(getDirectProperty(column));
         if (mc==null) {
             throw new IllegalArgumentException("Column " + column + " was not foud in the meta-model");
@@ -353,10 +353,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
    /** Set the one column to reading from database table.
     * Other columns will return a default value, no exception will be throwed.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
-    * @see #addColumn(org.ujorm.UjoProperty) addColumn(Property)
+    * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> setColumn(UjoProperty<UJO,?> column) throws IllegalArgumentException {
+    public Query<UJO> setColumn(Key<UJO,?> column) throws IllegalArgumentException {
         this.columns = new ArrayList<MetaColumn>();
         return addColumn(getDirectProperty(column));
     }
@@ -366,14 +366,14 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * <br/>WARNING: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
     * @param columns A Property list to select. A composite Property is allowed however only the first item will be used.
-    * @see #setColumn(org.ujorm.UjoProperty) setColumn(Property)
-    * @see #addColumn(org.ujorm.UjoProperty) addColumn(Property)
+    * @see #setColumn(org.ujorm.Key) setColumn(Property)
+    * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
     @SuppressWarnings("unchecked")
-    public final Query<UJO> setColumns(boolean addPrimaryKey, UjoProperty... columns)  throws IllegalArgumentException {
+    public final Query<UJO> setColumns(boolean addPrimaryKey, Key... columns)  throws IllegalArgumentException {
         this.columns = new ArrayList<MetaColumn>(columns.length);
         final OrmHandler handler = getHandler();
-        for (UjoProperty column : columns) {
+        for (Key column : columns) {
             final MetaColumn mc = (MetaColumn) handler.findColumnModel(getDirectProperty(column));
             if (mc.getTable()!=table) {
                 throw new IllegalArgumentException("Base class doesn't contains the column: " + column);
@@ -389,20 +389,20 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Only direct properties are supported */
-    private UjoProperty getDirectProperty(UjoProperty p) {
+    private Key getDirectProperty(Key p) {
         return p.isDirect()
             ?  p
-            : ((CompositeProperty)p).getFirstProperty()
+            : ((CompositeKey)p).getFirstProperty()
             ;
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase.
     * WARNING: the list items are not type checked. If you need an item chacking,
-    * use the method {@link #addOrderBy(org.ujorm.UjoProperty)} rather.
-    * @see #addOrderBy(org.ujorm.UjoProperty)
+    * use the method {@link #addOrderBy(org.ujorm.Key)} rather.
+    * @see #addOrderBy(org.ujorm.Key)
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> orderBy(Collection<UjoProperty> orderItems) {
+    public Query<UJO> orderBy(Collection<Key> orderItems) {
         clearDecoder();
         if (orderItems==null) {
             return orderByMany(); // empty sorting
@@ -414,7 +414,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Add an item to the end of order list. */
-    public Query<UJO> addOrderBy(UjoProperty<UJO,?> property) {
+    public Query<UJO> addOrderBy(Key<UJO,?> property) {
         clearDecoder();
         orderBy.add(property);
         return this;
@@ -422,7 +422,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Returns an order column. A method for an internal use only.  */
     public MetaColumn readOrderColumn(int i) throws IllegalStateException {
-        final UjoProperty property = orderBy.get(i);
+        final Key property = orderBy.get(i);
         final MetaRelation2Many result = session.getHandler().findColumnModel(property);
 
         if (result instanceof MetaColumn) {

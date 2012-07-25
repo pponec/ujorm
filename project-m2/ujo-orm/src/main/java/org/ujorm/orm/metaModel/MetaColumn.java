@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.implementation.orm.RelationToOne;
@@ -48,31 +48,31 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     private static final Class CLASS = MetaColumn.class;
 
     /** Property Factory */
-    private static final PropertyFactory<MetaColumn> fa = PropertyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MetaColumn> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** DB primary key */
-    public static final UjoProperty<MetaColumn,Boolean> PRIMARY_KEY = fa.newProperty("primaryKey", false);
+    public static final Key<MetaColumn,Boolean> PRIMARY_KEY = fa.newKey("primaryKey", false);
     /** Database Type */
-    public static final UjoProperty<MetaColumn,DbType> DB_TYPE = fa.newProperty("dbType", DbType.Automatic);
+    public static final Key<MetaColumn,DbType> DB_TYPE = fa.newKey("dbType", DbType.Automatic);
     /** Column NOT-NULL */
-    public static final UjoProperty<MetaColumn,Boolean> MANDATORY = fa.newProperty("mandatory", false);
+    public static final Key<MetaColumn,Boolean> MANDATORY = fa.newKey("mandatory", false);
     /** Column value length */
-    public static final UjoProperty<MetaColumn,Integer> MAX_LENGTH = fa.newProperty("maxLength", -1);
+    public static final Key<MetaColumn,Integer> MAX_LENGTH = fa.newKey("maxLength", -1);
     /** Column value precision */
-    public static final UjoProperty<MetaColumn,Integer> PRECISION = fa.newProperty("precision", -1);
+    public static final Key<MetaColumn,Integer> PRECISION = fa.newKey("precision", -1);
     /** DB Default value */
-    public static final UjoProperty<MetaColumn,String> DEFAULT_VALUE = fa.newProperty("default", "");
+    public static final Key<MetaColumn,String> DEFAULT_VALUE = fa.newKey("default", "");
     /** A name of the non-unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
-    public static final UjoProperty<MetaColumn,String> INDEX = fa.newProperty("index", "");
+    public static final Key<MetaColumn,String> INDEX = fa.newKey("index", "");
     /** A name of the unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
-    public static final UjoProperty<MetaColumn,String> UNIQUE_INDEX = fa.newProperty("uniqueIndex", "");
+    public static final Key<MetaColumn,String> UNIQUE_INDEX = fa.newKey("uniqueIndex", "");
     /** A name of the constraint for the case a foreign key */
-    public static final UjoProperty<MetaColumn,String> CONSTRAINT_NAME = fa.newProperty("constraintName", "");
+    public static final Key<MetaColumn,String> CONSTRAINT_NAME = fa.newKey("constraintName", "");
     /** Convert, save and read application data from/to the database */
-    public static final UjoProperty<MetaColumn,Class<? extends ITypeService>> CONVERTER = fa.newClassProperty("converter", ITypeService.class);
+    public static final Key<MetaColumn,Class<? extends ITypeService>> CONVERTER = fa.newClassKey("converter", ITypeService.class);
     /** Comment of the database column */
-    public static final UjoProperty<MetaColumn,String> COMMENT = fa.newProperty("comment", Comment.NULL);
+    public static final Key<MetaColumn,String> COMMENT = fa.newKey("comment", Comment.NULL);
     /** The property initialization */
     static{fa.lock();}
 
@@ -98,7 +98,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         this.converter = converter;
     }
 
-    public MetaColumn(MetaTable table, UjoProperty tableProperty, MetaColumn param) {
+    public MetaColumn(MetaTable table, Key tableProperty, MetaColumn param) {
         super(table, tableProperty, param);
         this.foreignKey = isTypeOf(OrmUjo.class);
 
@@ -281,7 +281,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
     public Object getValue(final OrmUjo bo) {
-        final UjoProperty property = getProperty();
+        final Key property = getProperty();
         final Object result = property.of(bo);
         return result;
     }
@@ -289,7 +289,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
     public void setValue(final Ujo bo, Object value) {
-        final UjoProperty property = getProperty();
+        final Key property = getProperty();
 
         if (isForeignKey()
         &&   value !=null

@@ -28,10 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.CompositeProperty;
+import org.ujorm.CompositeKey;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
@@ -64,7 +64,7 @@ public class OrmHandler {
     private Session session;
 
     /** Map a property to a database column model */
-    private final HashMap<UjoProperty,MetaRelation2Many> propertyMap = new HashMap<UjoProperty,MetaRelation2Many> ();
+    private final HashMap<Key,MetaRelation2Many> propertyMap = new HashMap<Key,MetaRelation2Many> ();
     /** Map a Java class to a database table model */
     private final HashMap<Class,MetaTable> entityMap = new HashMap<Class,MetaTable> ();
     /** Map a Java class to a procedure model */
@@ -176,7 +176,7 @@ public class OrmHandler {
     }
 
     /** Is the parameter a persistent property? */
-    public boolean isPersistent(UjoProperty property) {
+    public boolean isPersistent(Key property) {
         
         final boolean resultFalse
         =  property.isTypeOf(List.class)
@@ -292,7 +292,7 @@ public class OrmHandler {
     /** Map a property to the table */
     @SuppressWarnings("unchecked")
     public void addColumnModel(MetaRelation2Many column) {
-        UjoProperty property = column.getProperty();
+        Key property = column.getProperty();
         MetaRelation2Many oldColumn = findColumnModel(property);
 
         if (oldColumn == null) {
@@ -311,9 +311,9 @@ public class OrmHandler {
     /** Find a property annotation by the required type.
      * The property must be a public static final field in the related Ujo class.
      */
-    public <T extends Annotation> T findAnnotation(UjoProperty property, Class<T> annotationClass) {
+    public <T extends Annotation> T findAnnotation(Key property, Class<T> annotationClass) {
         if (!property.isDirect()) {
-            property = ((CompositeProperty) property).getFirstProperty();
+            property = ((CompositeKey) property).getFirstProperty();
         }
         try {
             for (Field field : findColumnModel(property).getTableClass().getFields()) {
@@ -329,12 +329,12 @@ public class OrmHandler {
     }
 
     /** Find a Relation/Column model of the paramemeter property.
-     * @param pathProperty Parameter can be type of Property of CompositeProperty (direct or indirect);
+     * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
      * @return Returns a related model or the NULL if no model was found.
      */
-    public MetaRelation2Many findColumnModel(UjoProperty pathProperty) {
+    public MetaRelation2Many findColumnModel(Key pathProperty) {
         if (pathProperty!=null && !pathProperty.isDirect()) {
-            pathProperty = ((CompositeProperty)pathProperty).getLastProperty();
+            pathProperty = ((CompositeKey)pathProperty).getLastProperty();
         }
         final MetaRelation2Many result = propertyMap.get(pathProperty);
         return result;
@@ -383,9 +383,9 @@ public class OrmHandler {
     /** Find all <strong>persistent<strong> properties with the required type or subtype.
      * @param type The parameter value Object.clas returns all persistent properties.
      */
-    public List<UjoProperty> findPropertiesByType(Class type) {
-        List<UjoProperty> result = new ArrayList<UjoProperty>();
-        for (UjoProperty p : propertyMap.keySet()) {
+    public List<Key> findPropertiesByType(Class type) {
+        List<Key> result = new ArrayList<Key>();
+        for (Key p : propertyMap.keySet()) {
             if (p.isTypeOf(type)) {
                 result.add(p);
             }

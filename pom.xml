@@ -42,7 +42,9 @@
         <module>project-m2/ujo-orm</module>
         <module>project-m2/ujo-spring</module>
         <module>project-m2/ujo-gxt-core</module>
+        <!--
         <module>project-m2/ujo-gxt-crud</module>
+        -->
 
         <module>samples/core</module>
         <module>samples/parameters</module>

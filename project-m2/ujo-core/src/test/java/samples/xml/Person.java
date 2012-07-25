@@ -9,7 +9,7 @@
 
 package samples.xml;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.map.*;
@@ -20,12 +20,12 @@ import static org.ujorm.UjoAction.*;
  */
 public class Person extends MapUjo {
     
-  public static final Property<Person,String>  NAME   = newProperty("Name" , String.class);
-  public static final Property<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
-  public static final Property<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
+  public static final Key<Person,String>  NAME   = newProperty("Name" , String.class);
+  public static final Key<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
+  public static final Key<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
 
     @Override
-  public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+  public boolean readAuthorization(UjoAction action, Key property, Object value) {
     switch(action.getType()) {
       case ACTION_XML_EXPORT: 
           return property!=NAME;

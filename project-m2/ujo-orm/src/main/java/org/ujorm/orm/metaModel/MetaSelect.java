@@ -18,9 +18,9 @@ package org.ujorm.orm.metaModel;
 
 import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
@@ -40,14 +40,14 @@ final public class MetaSelect extends AbstractMetaModel {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaSelect.class);
 
     /** Property Factory */
-    private static final PropertyFactory<MetaSelect> fa = PropertyFactory.CamelBuilder.get(CLASS);
-    public static final UjoProperty<MetaSelect,String> SELECT = fa.newProperty("SELECT "   , "");
-    public static final UjoProperty<MetaSelect,String> FROM   = fa.newProperty(" FROM "    , "");
-    public static final UjoProperty<MetaSelect,String> WHERE  = fa.newProperty(" WHERE "   , "");
-    public static final UjoProperty<MetaSelect,String> GROUP  = fa.newProperty(" GROUP BY ", "");
-    public static final UjoProperty<MetaSelect,String> ORDER  = fa.newProperty(" ORDER BY ", "");
-    public static final UjoProperty<MetaSelect,String> LIMIT  = fa.newProperty(" LIMIT "   , "");
-    public static final UjoProperty<MetaSelect,String> OFFSET = fa.newProperty(" OFFSET "  , "");
+    private static final KeyFactory<MetaSelect> fa = KeyFactory.CamelBuilder.get(CLASS);
+    public static final Key<MetaSelect,String> SELECT = fa.newKey("SELECT "   , "");
+    public static final Key<MetaSelect,String> FROM   = fa.newKey(" FROM "    , "");
+    public static final Key<MetaSelect,String> WHERE  = fa.newKey(" WHERE "   , "");
+    public static final Key<MetaSelect,String> GROUP  = fa.newKey(" GROUP BY ", "");
+    public static final Key<MetaSelect,String> ORDER  = fa.newKey(" ORDER BY ", "");
+    public static final Key<MetaSelect,String> LIMIT  = fa.newKey(" LIMIT "   , "");
+    public static final Key<MetaSelect,String> OFFSET = fa.newKey(" OFFSET "  , "");
 
     /** The property initialization */
     static{fa.lock();}
@@ -112,10 +112,10 @@ final public class MetaSelect extends AbstractMetaModel {
             select = select.substring(i);
         }
 
-        UjoPropertyList props = readProperties();
-        UjoProperty px = props.get(0); // SELECT
+        KeyList props = readProperties();
+        Key px = props.get(0); // SELECT
         for (int j=0, max=props.size()-1; j<=max; ++j) {
-            final UjoProperty p = props.get(j);
+            final Key p = props.get(j);
             final boolean fromLeft = p.getIndex() <= FROM.getIndex();
 
             i = fromLeft
@@ -147,7 +147,7 @@ final public class MetaSelect extends AbstractMetaModel {
     @SuppressWarnings("unchecked")
     public String toString() {
         final StringBuilder r = new StringBuilder(128);
-        for (UjoProperty p : readProperties()) {
+        for (Key p : readProperties()) {
             String value = (String) p.of(this);
             if (value.length()>0) {
                 r.append(p);

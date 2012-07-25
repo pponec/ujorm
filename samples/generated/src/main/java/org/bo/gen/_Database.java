@@ -46,6 +46,6 @@ abstract public class _Database extends OrmTable<_Database> {
 
     /** Database stored procedure */
     @Procedure("ujorm_test")
-    public static final Property<Database,MyProcedure> myProcedure = newProperty(MyProcedure.class);
+    public static final Key<Database,MyProcedure> myProcedure = newProperty(MyProcedure.class);
 
 }

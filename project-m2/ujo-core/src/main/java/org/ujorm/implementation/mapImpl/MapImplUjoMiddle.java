@@ -18,7 +18,7 @@ package org.ujorm.implementation.mapImpl;
 import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoMiddle;
 
@@ -32,9 +32,9 @@ import org.ujorm.extensions.UjoMiddle;
  * <br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapImplUjoMiddle&lt;Person&gt; {
  *
- *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static final</span> UjoProperty&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> Key&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> Key&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static final</span> Key&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
@@ -62,15 +62,15 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
     public MapImplUjoMiddle() {
     }
 
-    /** Getter based on one UjoProperty */
+    /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
+    public <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
         return property.of((UJO)this);
     }
 
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
+    /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> Ujo set(final UjoProperty<UJO, VALUE> property, final VALUE value) {
+    public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
         assert readUjoManager().assertDirectAssign(property, value);
         property.setValue((UJO)this, value);
         return this;
@@ -83,7 +83,7 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
      * @param property A Property
      * @return If property type is "container" then result is null.
      */
-    public String getText(final UjoProperty property) {
+    public String getText(final Key property) {
         return readUjoManager().getText(this, property, null);
     }
 
@@ -93,7 +93,7 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
      * @param property Property
      * @param value String value
      */
-    public void setText(final UjoProperty property, final String value) {
+    public void setText(final Key property, final String value) {
         readUjoManager().setText(this, property, value, null, null);
     }
 

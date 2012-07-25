@@ -10,7 +10,7 @@
 package org.ujorm.implementation.array;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -21,11 +21,11 @@ public class ArrayUjoImplChild extends ArrayUjoImpl {
     /** Incrementator */
     protected static int propertyCount = ArrayUjoImpl.propertyCount;
 
-    public static final UjoProperty <ArrayUjoImplChild, Long>    PRO_P5 = newProperty("P5", Long.class, propertyCount++);
-    public static final UjoProperty <ArrayUjoImplChild, Integer> PRO_P6 = newProperty("P6", Integer.class, propertyCount++);
-    public static final UjoProperty <ArrayUjoImplChild, String>  PRO_P7 = newProperty("P7", String.class, propertyCount++);
-    public static final UjoProperty <ArrayUjoImplChild, Date>    PRO_P8 = newProperty("P8", Date.class, propertyCount++);
-    public static final UjoProperty <ArrayUjoImplChild, Float>   PRO_P9 = newProperty("P9", Float.class, propertyCount++);
+    public static final Key <ArrayUjoImplChild, Long>    PRO_P5 = newProperty("P5", Long.class, propertyCount++);
+    public static final Key <ArrayUjoImplChild, Integer> PRO_P6 = newProperty("P6", Integer.class, propertyCount++);
+    public static final Key <ArrayUjoImplChild, String>  PRO_P7 = newProperty("P7", String.class, propertyCount++);
+    public static final Key <ArrayUjoImplChild, Date>    PRO_P8 = newProperty("P8", Date.class, propertyCount++);
+    public static final Key <ArrayUjoImplChild, Float>   PRO_P9 = newProperty("P9", Float.class, propertyCount++);
     /** Verify unique constants */
     static{init(ArrayUjoImplChild.class,true);}
     

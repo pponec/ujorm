@@ -30,9 +30,9 @@ import java.util.Iterator;
 import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.CompositeProperty;
+import org.ujorm.CompositeKey;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
@@ -213,7 +213,7 @@ final public class OrmTools {
             return;
         }
 
-        for (UjoProperty p : ujo.readProperties()) {
+        for (Key p : ujo.readProperties()) {
             if (p.isTypeOf(OrmUjo.class)) {
                 Object value = p.getValue(ujo);
                 if (value!=null && depth>0) {
@@ -269,12 +269,12 @@ final public class OrmTools {
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, UjoProperty<UJO, ? extends OrmUjo> property) {
+    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, Key<UJO, ? extends OrmUjo> property) {
 
         List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
         HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
         while (!property.isDirect()) {
-            property = ((CompositeProperty)property).getFirstProperty();
+            property = ((CompositeKey)property).getFirstProperty();
         }
         for (UJO u : ujos) {
             result.add(u);

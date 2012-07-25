@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.PropertyResourceBundle;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.UjoAction;
 
 /**
@@ -51,7 +51,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     /**
      * Creates a new instance of UjoManagerRBundle
      */
-    public UjoManagerRBundle(Class<UJO> ujoClass, UjoProperty ... properties) {
+    public UjoManagerRBundle(Class<UJO> ujoClass, Key ... properties) {
         super(ujoClass, properties);
     }
     
@@ -74,7 +74,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     public void saveResourceBundle(OutputStream out, UJO ujo, String header, Object context) throws IOException {
         java.util.Properties props = new java.util.Properties();
         UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_EXPORT, context);
-        for (UjoProperty prop : getProperties()) {
+        for (Key prop : getProperties()) {
 
             final Object valueObj = prop.of(ujo);
             final String valueStr = getText(ujo, prop, valueObj, action);
@@ -119,7 +119,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         while (keys.hasMoreElements()) {
             final String key = (String) keys.nextElement();
             final String value = bundle.getString(key);
-            final UjoProperty prop = ujo.readProperties().findDirectProperty(key, false);
+            final Key prop = ujo.readProperties().findDirectProperty(key, false);
             if (prop!=null) {
                 setText(ujo, prop, null, value, action);
             } else if (validate) {
@@ -131,11 +131,11 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     
     /** Create new instance */
     public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass) {
-        return getInstance(ujoClass, (UjoProperty[]) null);
+        return getInstance(ujoClass, (Key[]) null);
     }
     
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass, UjoProperty ... properties) {
+    public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass, Key ... properties) {
         return new UjoManagerRBundle<UJO>(ujoClass, properties);
     }
     

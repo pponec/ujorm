@@ -9,7 +9,10 @@
 
 package samples.patterDesing;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class MyMap {
     
     public static final Property<String> NAME = new Property<String>();

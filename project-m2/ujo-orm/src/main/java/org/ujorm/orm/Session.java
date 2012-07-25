@@ -29,10 +29,10 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import javax.transaction.Status;
 import org.ujorm.logger.UjoLogger;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
-import org.ujorm.CompositeProperty;
+import org.ujorm.CompositeKey;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.ao.CacheKey;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -294,9 +294,9 @@ public class Session {
         if (exprValue.getLeftNode() == null) {
             return null;
         }
-        UjoProperty property = exprValue.getLeftNode();
+        Key property = exprValue.getLeftNode();
         while (!property.isDirect()) {
-            property = ((CompositeProperty) property).getFirstProperty();
+            property = ((CompositeKey) property).getFirstProperty();
         }
 
         MetaRelation2Many result = handler.findColumnModel(property);
@@ -656,10 +656,10 @@ public class Session {
     }
 
     /** Convert a property array to a column list. */
-    protected List<MetaColumn> getOrmColumns(final UjoProperty... properties) {
+    protected List<MetaColumn> getOrmColumns(final Key... properties) {
         final List<MetaColumn> result = new ArrayList<MetaColumn>(properties.length);
 
-        for (UjoProperty property : properties) {
+        for (Key property : properties) {
             MetaRelation2Many column = handler.findColumnModel(property);
             if (column instanceof MetaColumn) {
                 result.add((MetaColumn) column);
@@ -892,7 +892,7 @@ public class Session {
      */
     @SuppressWarnings("unchecked")
     public <UJO extends OrmUjo> UJO loadInternal
-        ( final UjoProperty relatedProperty
+        ( final Key relatedProperty
         , final Object id
         , final boolean mandatory
         ) throws NoSuchElementException {
@@ -1053,7 +1053,7 @@ public class Session {
      * @param property The property must be a relalation type of "many to one".
      * @throws IllegalStateException If a parameter property is not a foreign key.
      */
-    public ForeignKey readFK(final OrmUjo ujo, final UjoProperty<?, ? extends OrmUjo> property) throws IllegalStateException {
+    public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> property) throws IllegalStateException {
         MetaColumn column = (MetaColumn) handler.findColumnModel(property);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getProperty().of(ujo);
@@ -1100,7 +1100,7 @@ public class Session {
 
             if (fk && c.isForeignKey()) {
                 // Copy the foreign key only (the workaround of lazy loading):
-                UjoProperty p = c.getProperty();
+                Key p = c.getProperty();
                 ujo.writeValue(p, ((ExtendedOrmUjo)result).readFK(p));
             } else if (c.isColumn()) {
                 c.getProperty().copy(result, ujo);

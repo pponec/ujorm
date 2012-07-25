@@ -9,10 +9,10 @@
 
 package samples.xmlList;
 
-import org.ujorm.UjoProperty;
-import org.ujorm.extensions.ListProperty;
+import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.implementation.map.*;
 public class Person extends MapUjo { 
-  public static final UjoProperty    <Person, String> NAME = newProperty("Name", String.class);
-  public static final ListProperty<Person, Person> CHILDS = newListProperty("Child", Person.class);
+  public static final Key    <Person, String> NAME = newProperty("Name", String.class);
+  public static final ListKey<Person, Person> CHILDS = newListProperty("Child", Person.class);
 }

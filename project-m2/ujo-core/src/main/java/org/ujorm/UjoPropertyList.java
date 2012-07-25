@@ -20,129 +20,60 @@
 
 package org.ujorm;
 
-import java.util.Iterator;
-
 /**
- * The immutable list of UjoProperties.
- * The UjoPropertyList class is a subset of the methods from class List&lt;UjoProperty&gt;.
+ * The immutable list of KeyProperties.
+ * The UjoPropertyList class is a subset of the methods from class List&lt;Key&gt;.
+ * Use the interface {@link KeyList} rather.
  * @param <UJO> Base Ujo implementation
  * @author Pavel Ponec
- * @composed 1 - N UjoProperty
+ * @composed 1 - N Key
  */
-public interface UjoPropertyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
+//@Deprecated
+public interface UjoPropertyList<UJO extends Ujo> extends KeyList<UJO> {
 
-    /**
-     * Find (both direct or indirect) property by property name from parameter.
-     * @param name A property name by sample "user.address.street".
-     * @return UjoProperty
-     */
-    public UjoProperty<UJO,?> find(String name) throws IllegalArgumentException;
-
-    /**
-     * Find (both direct or indirect) direct or indirect property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     */
-    public UjoProperty<UJO,?> find
-    ( final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /**
-     * Find a property by property name from parameter.
-     * @param ujo An Ujo object
-     * @param name A property name.
-     * @param action Action type UjoAction.ACTION_* .
-     * @param result Required result of action.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @hidden
-     */
-    @SuppressWarnings("deprecation")
-    public UjoProperty<UJO,?> findDirectProperty
-    ( final Ujo ujo
-    , final String name
-    , final UjoAction action
-    , final boolean result
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /**
-     * Find a property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @return UjoProperty
-     */
-    public UjoProperty<UJO,?> findDirectProperty
-    ( final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /** Find UjoProperty by name */
-    public UjoProperty<UJO,?> findDirectProperty
-    ( final Ujo ujo
-    , final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /**
-     * Find direct or indirect property by property name from parameter.
-     *
-     * @param name A property name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @deprecated Uset the method {@link #find(java.lang.String, boolean)}
-     */
-    public UjoProperty<UJO,?> findIndirect
-    ( final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException;
-
-    /** Returns a copy of internal array */
-    public UjoProperty<UJO,?>[] toArray();
-
-    /** Get the first Property */
-    public UjoProperty<UJO,?> getFirstProperty();
-
-    /** Get the last Property */
-    public UjoProperty<UJO,?> getLastProperty();
-
-    /** Get last property 
-     * @deprecated Use the method {@link #getLastProperty()} rather.
-     */
-    @Deprecated
-    public UjoProperty<UJO,?> last();
-
-    /** Returns a base class of the related UJO */
-    public Class<UJO> getType();
-
-    /** Returns a base class name of the related UJO */
-    public String getTypeName();
-
-    /** Create new Instance */
-    public UJO newBaseUjo() throws IllegalStateException;
+//    /**
+//     * Find a property by property name from parameter.
+//     * @param ujo An Ujo object
+//     * @param name A property name.
+//     * @param action Action type UjoAction.ACTION_* .
+//     * @param result Required result of action.
+//     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+//     * @hidden
+//     */
+//    @SuppressWarnings("deprecation")
+//    public Key<UJO,?> findDirectProperty
+//    ( final Ujo ujo
+//    , final String name
+//    , final UjoAction action
+//    , final boolean result
+//    , final boolean throwException
+//    ) throws IllegalArgumentException;
+//
+//    /**
+//     * Find a property by property name from parameter.
+//     *
+//     * @param name A property name.
+//     * @param throwException If result not found an Exception is throwed, or a null can be returned.
+//     * @return Key
+//     */
+//    public Key<UJO,?> findDirectProperty
+//    ( final String name
+//    , final boolean throwException
+//    ) throws IllegalArgumentException;
+//
+//    /** Find Key by name */
+//    public Key<UJO,?> findDirectProperty
+//    ( final Ujo ujo
+//    , final String name
+//    , final boolean throwException
+//    ) throws IllegalArgumentException;
+//
+//    /** Get the first Property */
+//    public Key<UJO,?> getFirstProperty();
+//
+//    /** Get the last Property */
+//    public Key<UJO,?> getLastProperty();
 
 
-    // ----------------- LIST IMPLEMENTATION ------------------------
 
-    /** Get property on requered index */
-    public UjoProperty get(final int index);
-
-    /** Returns a total count of its properties */
-    public int size();
-
-    /** Is the collection empty? */
-    public boolean isEmpty();
-
-    /** Returns true if list contains property from the parameter. */
-    public boolean contains(final UjoProperty<UJO,?> o);
-
-    /** Create an interator for all properties. */
-    @Override
-    public Iterator<UjoProperty<UJO,?>> iterator();
-
-    /** Returns or create UjoManager.
-     * In your own implementation keep in a mind a simple serialization freature of the current object.
-     */
-    // public UjoManager getUjoManager();
 }

@@ -16,8 +16,6 @@
 
 package org.ujorm.spring;
 
-import org.ujorm.UjoPropertyList;
-
 /**
  * Test implementation of the AbstractAplicationContextAdapter.
  * @author Pavel Ponec
@@ -27,9 +25,9 @@ public class AplicationContextAdapter extends AbstractAplicationContextAdapter {
     private static final SpringKeyFactory kf = new SpringKeyFactory(AplicationContextAdapter.class);
     
     /** Key with a name: summySpringController */
-    public static final SpringKey<DummySpringController> springController = kf.newProperty();
+    public static final SpringKey<DummySpringController> springController = kf.newKey();
     /** Key with a name: springService */
-    public static final SpringKey<DummySpringService> dummySpringService = kf.newProperty("springService");
+    public static final SpringKey<DummySpringService> dummySpringService = kf.newKey("springService");
 
     static {
         kf.lock();

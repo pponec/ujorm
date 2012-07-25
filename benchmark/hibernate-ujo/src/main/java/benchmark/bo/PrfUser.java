@@ -17,8 +17,8 @@
 
 package benchmark.bo;
 
-import org.ujorm.UjoPropertyList;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.implementation.quick.QuickUjo;
 
 /**
@@ -27,14 +27,14 @@ import org.ujorm.implementation.quick.QuickUjo;
  */
 public class PrfUser extends QuickUjo {
 
-    public static final Property<PrfUser,Long> id = newProperty(Long.class);
-    public static final Property<PrfUser,String> personalId = newProperty(String.class);
-    public static final Property<PrfUser,String> surename = newProperty(String.class);
-    public static final Property<PrfUser,String> lastname = newProperty(String.class);
+    public static final Key<PrfUser,Long> id = newKey();
+    public static final Key<PrfUser,String> personalId = newKey();
+    public static final Key<PrfUser,String> surename = newKey();
+    public static final Key<PrfUser,String> lastname = newKey();
 
     // Optional code for better performance when creating instance:
-    private static UjoPropertyList properties = init(PrfUser.class);
-    @Override public UjoPropertyList readProperties() { return properties; }
+    private static KeyList properties = init(PrfUser.class);
+    @Override public KeyList readProperties() { return properties; }
 
 
     // Setters and Getters:

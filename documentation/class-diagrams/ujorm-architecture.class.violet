@@ -7,7 +7,7 @@
      <object id="ClassNode0" class="com.horstmann.violet.ClassNode"> 
       <void property="attributes"> 
        <void property="text"> 
-        <string>private UjoProperty property
+        <string>private Key property
 private Operator operator
 private Object value</string> 
        </void> 
@@ -76,8 +76,8 @@ private DbMetaModel metamodel</string>
      <object id="InterfaceNode0" class="com.horstmann.violet.InterfaceNode"> 
       <void property="methods"> 
        <void property="text"> 
-        <string>public Object readValue(UjoProperty p)
-public void writeValue(UjoProperty p, Object value)
+        <string>public Object readValue(Key p)
+public void writeValue(Key p, Object value)
 public UjoPropertyList readProperties()</string> 
        </void> 
       </void> 
@@ -94,7 +94,7 @@ Ujo</string>
       <void property="name"> 
        <void property="text"> 
         <string>«interface»
-UjoProperty</string> 
+Key</string> 
        </void> 
       </void> 
      </object> 

@@ -18,8 +18,8 @@ package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
@@ -38,21 +38,21 @@ public class MetaRelation2Many extends AbstractMetaModel {
     private static final Class CLASS = MetaRelation2Many.class;
 
     /** Property Factory */
-    private static final PropertyFactory<MetaRelation2Many> fa = PropertyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MetaRelation2Many> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** The meta-model ID. */
     @XmlAttribute
-    public static final UjoProperty<MetaRelation2Many,String> ID = fa.newProperty("id", "");
+    public static final Key<MetaRelation2Many,String> ID = fa.newKey("id", "");
     /** The database column name.
-     * If an appropriate UjoProperty is a relation to another ORM object with more primary keys,
+     * If an appropriate Key is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
-    public static final UjoProperty<MetaRelation2Many,String> NAME = fa.newProperty("name", "");
+    public static final Key<MetaRelation2Many,String> NAME = fa.newKey("name", "");
     /** Table property */
     @Transient
-    public static final UjoProperty<MetaRelation2Many,UjoProperty> TABLE_PROPERTY = fa.newProperty("tableProperty");
+    public static final Key<MetaRelation2Many,Key> TABLE_PROPERTY = fa.newKey("tableProperty");
     /** DB table */
     @Transient
-    public static final UjoProperty<MetaRelation2Many,MetaTable> TABLE = fa.newProperty("table");
+    public static final Key<MetaRelation2Many,MetaTable> TABLE = fa.newKey("table");
     /** The property initialization */
     static{fa.lock();}
 
@@ -60,7 +60,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     public MetaRelation2Many() {
     }
     
-    public MetaRelation2Many(MetaTable table, UjoProperty tableProperty, MetaRelation2Many param) {
+    public MetaRelation2Many(MetaTable table, Key tableProperty, MetaRelation2Many param) {
         
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
@@ -93,7 +93,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns a column property */
-    final public UjoProperty getProperty() {
+    final public Key getProperty() {
         return TABLE_PROPERTY.of(this);
     }
 

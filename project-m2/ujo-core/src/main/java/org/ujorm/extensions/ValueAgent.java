@@ -7,7 +7,7 @@ package org.ujorm.extensions;
 
 /**
  * The ValueAgent make reading or writing a property value.
- * The interface is designed for implementation to a UjoProperty.
+ * The interface is designed for implementation to a Key.
  * @author Pavel Ponec
  */
 public interface ValueAgent<UJO,VALUE> {

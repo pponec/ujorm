@@ -28,8 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.extensions.ListProperty;
@@ -43,11 +43,11 @@ import org.ujorm.extensions.PropertyModifier;
  * <span class="java-keywords">import</span> org.ujorm.*;
  * <span class="keyword-directive">public class</span> Person <span class="keyword-directive">implements</span> Ujo {
  *
- *     <span class="keyword-directive">private static final</span> PropertyFactory&lt;Person&gt; factory
- *             = PropertyFactory.CamelBuilder.get(Person.<span class="keyword-directive">class</span>);
+ *     <span class="keyword-directive">private static final</span> KeyFactory&lt;Person&gt; factory
+ *             = KeyFactory.CamelBuilder.get(Person.<span class="keyword-directive">class</span>);
  *
- *     <span class="keyword-directive">public static final</span> UjoProperty&lt;Person,Long&gt; PID = factory.newProperty();
- *     <span class="keyword-directive">public static final</span> UjoProperty&lt;Person,Integer&gt; AGE = factory.newProperty();
+ *     <span class="keyword-directive">public static final</span> Key&lt;Person,Long&gt; PID = factory.newKey();
+ *     <span class="keyword-directive">public static final</span> Key&lt;Person,Integer&gt; AGE = factory.newKey();
  *     <span class="keyword-directive">public static final</span> ListUjoProperty&lt;Person,String&gt; NAMES = factory.newListProperty();
  *
  *     <span class="keyword-directive">static</span> {
@@ -57,22 +57,22 @@ import org.ujorm.extensions.PropertyModifier;
  *     <span class="comment">/&#42;&#42; Data container &#42;/</span>
  *     <span class="keyword-directive">protected</span> Object[] data;
  *
- *     <span class="keyword-directive">public</span> Object readValue(UjoProperty property) {
+ *     <span class="keyword-directive">public</span> Object readValue(Key property) {
  *         <span class="keyword-directive">return</span> data==<span class="keyword-directive">null</span> ? data : data[property.getIndex()];
  *     }
  *
- *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(UjoProperty property, Object value) {
+ *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key property, Object value) {
  *         <span class="keyword-directive">if</span> (data==<span class="keyword-directive">null</span>) {
  *             data = <span class="keyword-directive">new</span> Object[readProperties().size()];
  *         }
  *         data[property.getIndex()] = value;
  *     }
  *
- *     <span class="keyword-directive">public</span> UjoPropertyList&lt;?&gt; readProperties() {
+ *     <span class="keyword-directive">public</span> KeyList&lt;?&gt; readProperties() {
  *         <span class="keyword-directive">return</span> factory.getPropertyList();
  *     }
  *
- *     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, UjoProperty property, Object value) {
+ *     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, Key property, Object value) {
  *         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
  *     }
  * }
@@ -80,7 +80,7 @@ import org.ujorm.extensions.PropertyModifier;
 
  * @author Pavel Ponec
  */
-public class PropertyFactory<UJO extends Ujo> implements Serializable {
+public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Generate property name using the cammel case. */
     protected static final boolean CAMEL_CASE = true;
@@ -92,15 +92,15 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     transient private InnerDataStore<UJO> tmpStore;
 
     /** Property Store */
-    private UjoPropertyList<UJO> propertyStore;
+    private KeyList<UJO> propertyStore;
 
     @SuppressWarnings("unchecked")
-    public PropertyFactory(Class<? extends UJO> type) {
+    public KeyFactory(Class<? extends UJO> type) {
         this(type, false);
     }
 
     @SuppressWarnings("unchecked")
-    public PropertyFactory(Class<? extends UJO> type, boolean propertyCamelCase) {
+    public KeyFactory(Class<? extends UJO> type, boolean propertyCamelCase) {
         this(type, propertyCamelCase, null);
     }
 
@@ -111,7 +111,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
      * @param abstractSuperProperties Pass a super properties fromo an abstract super class, if any.
      */
     @SuppressWarnings("unchecked")
-    public PropertyFactory(Class<? extends UJO> type, boolean propertyCamelCase, UjoPropertyList<?> abstractSuperProperties) {
+    public KeyFactory(Class<? extends UJO> type, boolean propertyCamelCase, KeyList<?> abstractSuperProperties) {
         this.tmpStore = new InnerDataStore<UJO>(type, propertyCamelCase);
         if (abstractSuperProperties==null) {
             abstractSuperProperties = getSuperProperties();
@@ -119,31 +119,31 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
             assert abstractSuperProperties.getType().isAssignableFrom(type) : "Type parameters is not child of the SuperProperites type: " + abstractSuperProperties.getTypeName();
         }
         if (abstractSuperProperties!=null) {
-            for (UjoProperty p : abstractSuperProperties) {
+            for (Key p : abstractSuperProperties) {
                 tmpStore.addProperty(p);
             }
         }
     }
 
     /** Read Properties from the super class */
-    protected final UjoPropertyList<?> getSuperProperties() {
+    protected final KeyList<?> getSuperProperties() {
         final Class<?> superClass = this.tmpStore.type.getSuperclass();
         if (Ujo.class.isAssignableFrom(superClass)) {
             if (Modifier.isAbstract(superClass.getModifiers())) {
-                UjoPropertyList<?> r1 = null;
-                PropertyFactory<?> r2 = null;
+                KeyList<?> r1 = null;
+                KeyFactory<?> r2 = null;
                 for (Field field : superClass.getDeclaredFields()) {
                     if (Modifier.isStatic(field.getModifiers())) {
                         try {
                             if (r1==null) {
-                                r1 = getFieldValue(UjoPropertyList.class, field);
+                                r1 = getFieldValue(KeyList.class, field);
                             }
                             if (r2==null) {
-                                r2 = getFieldValue(PropertyFactory.class, field);
+                                r2 = getFieldValue(KeyFactory.class, field);
                             }
                         } catch (Exception e) {
                             final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please"
-                                    , UjoPropertyList.class.getSimpleName()
+                                    , KeyList.class.getSimpleName()
                                     , superClass
                                     , getClass().getSimpleName());
                            throw new IllegalArgumentException(msg, e);
@@ -176,7 +176,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Add an new property for an internal use. */
-    protected boolean addProperty(Property p) {
+    protected boolean addKey(Property p) {
         checkLock();
         return tmpStore.addProperty(p);
     }
@@ -193,8 +193,8 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         return getPropertyList().size();
     }
 
-    /** Get PropertyStore */
-    public UjoPropertyList<UJO> getPropertyList() {
+    /** Get KeyRing */
+    public KeyList<UJO> getPropertyList() {
         if (propertyStore==null) {
             propertyStore = createPropertyList();
             onCreate(propertyStore, tmpStore);
@@ -204,10 +204,10 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Create a property List */
-    protected UjoPropertyList<UJO> createPropertyList() throws IllegalStateException {
+    protected KeyList<UJO> createPropertyList() throws IllegalStateException {
         final List<Field> fields = tmpStore.getFields();
         try {
-            for (UjoProperty<UJO, ?> p : tmpStore.getProperties()) {
+            for (Key<UJO, ?> p : tmpStore.getProperties()) {
                 if (p instanceof Property) {
                     final Property pr = (Property) p;
                     if (PropertyModifier.isLock(pr)) {
@@ -258,7 +258,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Find field */
-    private Field findField(UjoProperty p, List<Field> fields) throws Exception {
+    private Field findField(Key p, List<Field> fields) throws Exception {
         for (Field field : fields) {
             if (field.get(null) == p) {
                 return field;
@@ -270,53 +270,53 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         throw new IllegalStateException(msg);
     }
 
-    /** Create new UjoProperty */
-    public <T> UjoProperty<UJO,T> newProperty() {
+    /** Create new Key */
+    public <T> Key<UJO,T> newKey() {
         return createProperty(null, null);
     }
 
-    /** Create new UjoProperty */
-    public <T> UjoProperty<UJO,T> newProperty(String name) {
+    /** Create new Key */
+    public <T> Key<UJO,T> newKey(String name) {
         return createProperty(name, null);
     }
 
-    /** Create new UjoProperty with a default value */
-    public <T> UjoProperty<UJO,T> newPropertyDefault(T defaultValue) {
+    /** Create new Key with a default value */
+    public <T> Key<UJO,T> newKeyDefault(T defaultValue) {
         return createProperty(null, defaultValue);
     }
 
-    /** Create new UjoProperty */
-    public <T> UjoProperty<UJO,T> newProperty(String name, T defaultValue) {
+    /** Create new Key */
+    public <T> Key<UJO,T> newKey(String name, T defaultValue) {
         return createProperty(name, defaultValue);
     }
 
-    /** Create new UjoProperty for a value type class */
-    public <T> UjoProperty<UJO,T> newClassProperty(String name, Class<?> defaultClassValue) {
+    /** Create new Key for a value type class */
+    public <T> Key<UJO,T> newClassKey(String name, Class<?> defaultClassValue) {
         return createProperty(name, (T) defaultClassValue);
     }
 
-    /** Add new UjoProperty for a value type class, index must be undefied */
-    public <P extends Property<UJO,?>> P add(P property) {
-        if (property.getIndex()>=0) {
+    /** Add new Key for a value type class, index must be undefied */
+    public <P extends Property<UJO,?>> P add(P key) {
+        if (key.getIndex()>=0) {
             throw new IllegalArgumentException("Property index must be undefined");
         }
-        addProperty(property);
-        return (P) property;
+        addKey(key);
+        return (P) key;
     }
 
     /** Common protected factory method */
-    protected <T> UjoProperty<UJO,T> createProperty(String name, T defaultValue) {
+    protected <T> Key<UJO,T> createProperty(String name, T defaultValue) {
         final Property<UJO,T> p = Property.newInstance(name, null, defaultValue, tmpStore.size(), false);
-        addProperty(p);
+        addKey(p);
         return p;
     }
 
-    /** Create new UjoProperty */
+    /** Create new Key */
     public final <T> ListProperty<UJO,T> newListProperty() {
         return newListProperty(null);
     }
 
-    /** Create new UjoProperty */
+    /** Create new Key */
     public <T> ListProperty<UJO,T> newListProperty(String name) {
         checkLock();
         final ListProperty<UJO,T> p = ListProperty.newListProperty(name, null, tmpStore.size(), false);
@@ -332,7 +332,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** An event on Create */
-    protected void onCreate(UjoPropertyList<UJO> list, InnerDataStore<UJO> innerData) {
+    protected void onCreate(KeyList<UJO> list, InnerDataStore<UJO> innerData) {
         UjoManager.getInstance().register(list, innerData);
     }
 
@@ -363,21 +363,21 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         private final boolean camelCase;
 
         /** Transient property list */
-        private final List<UjoProperty<UJO,?>> propertyList;
+        private final List<Key<UJO,?>> propertyList;
 
         /** Property annotations */
-        private final Map<UjoProperty<UJO,?>, Map<Class<? extends Annotation>,Annotation>> annotationsMap;
+        private final Map<Key<UJO,?>, Map<Class<? extends Annotation>,Annotation>> annotationsMap;
 
         /** Constructor */
         public InnerDataStore(Class<? extends UJO> type, boolean propertyCamelCase) {
             this.type = type;
             this.camelCase = propertyCamelCase;
-            this.propertyList = new ArrayList<UjoProperty<UJO,?>>(32);
-            this.annotationsMap = new HashMap<UjoProperty<UJO,?>,Map<Class<? extends Annotation>,Annotation>>();
+            this.propertyList = new ArrayList<Key<UJO,?>>(32);
+            this.annotationsMap = new HashMap<Key<UJO,?>,Map<Class<? extends Annotation>,Annotation>>();
         }
 
         /** Add all annotation for required property. */
-        public void addAnnotations(UjoProperty<UJO,?> p, Field field) {
+        public void addAnnotations(Key<UJO,?> p, Field field) {
             final Annotation[] annotations = field.getAnnotations();
             Map<Class<? extends Annotation>,Annotation> annots = annotationsMap.get(field);
             if (annots==null && annotations.length>0) {
@@ -390,21 +390,21 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /** Add property to a list */
-        public boolean addProperty(UjoProperty p) {
+        public boolean addProperty(Key p) {
             return propertyList.add(p);
         }
 
         /** Get all properties */
-        public Iterable<UjoProperty<UJO,?>> getProperties() {
+        public Iterable<Key<UJO,?>> getProperties() {
             return propertyList;
         }
 
         /** Create a new Property List */
-        public UjoPropertyList<UJO> createPropertyList() {
-            return PropertyStore.of(type, (List) propertyList);
+        public KeyList<UJO> createPropertyList() {
+            return KeyRing.of(type, (List) propertyList);
         }
 
-        /** Returns a count of the UjoProperty items */
+        /** Returns a count of the Key items */
         public int size() {
             return propertyList.size();
         }
@@ -428,7 +428,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
             for (int j = 0; j < fields.length; j++) {
                 final Field field = fields[j];
                 if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
-                &&  UjoProperty.class.isAssignableFrom(field.getType()) ){
+                &&  Key.class.isAssignableFrom(field.getType()) ){
                     result.add(field);
                 }
             }
@@ -438,7 +438,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         /**
          * Returns the Property annotations Set.
          */
-        @PackagePrivate Map<Class<? extends Annotation>,Annotation> getAnnotations(UjoProperty<UJO,?> p) {
+        @PackagePrivate Map<Class<? extends Annotation>,Annotation> getAnnotations(Key<UJO,?> p) {
             Map<Class<? extends Annotation>,Annotation> result = annotationsMap.get(p);
             if (result==null) {
                 result = Collections.emptyMap();
@@ -449,7 +449,7 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
         /**
          * Returns required annotation or {@code null}, if no annotatin was not found.
          */
-        public <A extends Annotation> A getAnnotation(UjoProperty<UJO,?> p, Class<A> annoType) {
+        public <A extends Annotation> A getAnnotation(Key<UJO,?> p, Class<A> annoType) {
             final Map<Class<? extends Annotation>,Annotation> result = getAnnotations(p);
             return (A) result.get(annoType);
         }
@@ -458,39 +458,39 @@ public class PropertyFactory<UJO extends Ujo> implements Serializable {
     /** The base factory */
     public static final class Builder {
 
-        /** Return an instance of the {@link PropertyFactory} class */
-        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass) {
-            return new PropertyFactory(baseClass);
+        /** Return an instance of the {@link KeyFactory} class */
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass) {
+            return new KeyFactory(baseClass);
         }
 
-        /** Return an instance of the {@link PropertyFactory} class.
+        /** Return an instance of the {@link KeyFactory} class.
          * @param baseClass The domain class
          * @param superProperties Properties form an abstract super class
          */
-        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass, UjoPropertyList<?> superProperties) {
-            return new PropertyFactory(baseClass, false, superProperties);
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass, KeyList<?> superProperties) {
+            return new KeyFactory(baseClass, false, superProperties);
         }
    }
 
     /** The base factory */
     public static final class CamelBuilder {
 
-        /** Return an instance of the {@link PropertyFactory} class
+        /** Return an instance of the {@link KeyFactory} class
          * @param baseClass Base class
          * @param propertyCamelCase {@link #CAMEL_CASE}
-         * @return Return an instance of the {@link PropertyFactory} class
+         * @return Return an instance of the {@link KeyFactory} class
          */
-        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass) {
-            return new PropertyFactory(baseClass, CAMEL_CASE, null);
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass) {
+            return new KeyFactory(baseClass, CAMEL_CASE, null);
         }
 
-        /** Return an instance of the {@link PropertyFactory} class.
+        /** Return an instance of the {@link KeyFactory} class.
          * @param baseClass The domain class
          * @param propertyCamelCase {@link #CAMEL_CASE}
          * @param superProperties Properties form an abstract super class
          */
-        public static <UJO extends Ujo> PropertyFactory<UJO> get(Class<UJO> baseClass, UjoPropertyList<?> superProperties) {
-            return new PropertyFactory(baseClass, CAMEL_CASE, superProperties);
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass, KeyList<?> superProperties) {
+            return new KeyFactory(baseClass, CAMEL_CASE, superProperties);
         }
 
    }

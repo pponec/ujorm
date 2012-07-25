@@ -53,7 +53,7 @@ document.body.appendChild(oLink);
         <li>podpora komponenty <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a></li>
         <li>objekt si řídí sám dostupnost svých atributů</li>
         <li>property <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
-            je možné implementovat na jednom <a href="Ujo.html#writeValue(org.ujorm.UjoProperty,%20java.lang.Object)">místě</a>
+            je možné implementovat na jednom <a href="Ujo.html#writeValue(org.ujorm.Key,%20java.lang.Object)">místě</a>
             pro všechny property třídy včetně potomků</li>
         <li>podpora <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a></li>
         <li>úsporný zdrojový kód vašich UJO objektů</li>
@@ -66,11 +66,11 @@ document.body.appendChild(oLink);
         který implementuje rozhraní <a href="Ujo.html">Ujo</a>.
         
         Objekt UJO si lze představit například jako <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">mapu</a> (objekt mapující hodnoty ke klíčům), 
-        ke které se přistupuje pomocí <strong>metod klíče</strong>. Klíč je zde tvořen implementací rozhraní <a href="UjoProperty.html">UjoProperty</a> 
+        ke které se přistupuje pomocí <strong>metod klíče</strong>. Klíč je zde tvořen implementací rozhraní <a href="Key.html">Key</a> 
         obsahující (mimo jiné) dvě typově bezpečné metody:
         <ul>
-            <li><a href="UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - pro zápis hodnoty do objektu a</li> 
-            <li><a href="UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - pro čtení hodnoty.</li>
+            <li><a href="Key.html#setValue(UJO,%20VALUE)">Key.setValue(Ujo, VALUE)</a> - pro zápis hodnoty do objektu a</li> 
+            <li><a href="Key.html#getValue(UJO)">Key.getValue(Ujo)</a> - pro čtení hodnoty.</li>
         </ul>
         
         Na rozdíl od metod objektu JavaBean lze tyto klíče posílat jednoduše dalším objektům, 
@@ -79,7 +79,7 @@ document.body.appendChild(oLink);
         
         Jádrem projektu jsou tedy dvě rozhraní 
         <a href="Ujo.html" style="font-style: italic;">Ujo</a> a 
-        <a href="UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
+        <a href="Key.html" style="font-style: italic;">Key</a>,
         ke kterým jsou k dispozici tři abstraktní implementace:
            <ul>
                <li><a href="implementation/map/MapUjo.html">MapUjo</a> - snadná implementace pro vývojáře s dostatečným výkonem pro běžné aplikace postavená na objektu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
@@ -106,7 +106,7 @@ document.body.appendChild(oLink);
             <li>architektura umožňuje vytvořit odkaz
                 na atribut UJO
                 (nikoli jejich hodnot) a celý seznam atributů lze předat do nějaké
-                metody - například ve formátu  <a href="UjoProperty.html">UjoPropertyList</a>.
+                metody - například ve formátu  <a href="Key.html">UjoPropertyList</a>.
             Tuto vlastnost lze využít například pro definici sloupců tabulky, či pro označení sloupců pro řazení seznamu UJO objektů.</li>
             <li>defaultní implementace UJO objektů jsou součástí projektu.</li>
             <li>framework obsahuje připravenou implementaci UjoTableModel pro <strong>Swing</strong>. Pro jednoduchou vizualizaci UJO
@@ -151,17 +151,17 @@ document.body.appendChild(oLink);
         Jednoduché vzorové vytvoření třídy Person je zde:
 <pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {<br> 
-  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
-  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, Double.<span class="java-keywords">class</span>);<br>
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,String &gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Boolean&gt; MALE = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Double &gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Cash"</span>, Double.<span class="java-keywords">class</span>);<br>
 }</pre>
         Teď, když máme hotovou třídu Person můžeme vytvořit její instanci a zapsat či načíst nějaká data. Pro
         zápis atributů objektu lze využít jednu ze dvou metod API:<i><br>
         </i>
         <ol>
-            <li><i>Person.<strong>writeValue</strong>(UjoProperty, Object)</i>,
+            <li><i>Person.<strong>writeValue</strong>(Key, Object)</i>,
             nebo </li>
-            <li><i>UjoProperty.<strong>setValue</strong>(person,
+            <li><i>Key.<strong>setValue</strong>(person,
             Object)</i>. </li>
         </ol>
         Z pohledu výsledku jsou obě metody ekvivalentní, nicméně druhé
@@ -258,7 +258,7 @@ Pro podrobnější informaci doporučuji prostudovat API.
 Doporučené řešení pro implementaci vazby <strong>1:N</strong> pro objekty Person - Child.
 <pre class="pre">
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo { 
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty    &lt;Person,String&gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty    &lt;Person,String&gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapPropertyList&lt;Person,Child&gt; CHILDS = <span class="java-layer-method">newListProperty</span>(<span class="java-string-literal">&quot;Child&quot;</span>, Child.<span class="java-keywords">class</span>);
 }
 </pre>
@@ -274,7 +274,7 @@ Doporučené řešení pro implementaci vazby <strong>1:N</strong> pro objekty P
         </ul>
         Na následujícím případě si ukážeme, jak vypadá potlačení atributu <strong>NAME</strong> při exportu do XML:
 <pre class="pre">
-<span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(<span class="java-keywords">int</span> action, UjoProperty property, Object value, Object context) {
+<span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(<span class="java-keywords">int</span> action, Key property, Object value, Object context) {
   <span class="java-keywords">switch</span>(action) {
     <span class="java-keywords">case</span> ACTION_XML_EXPORT: 
       <span class="java-keywords">return</span> property!=NAME;
@@ -292,7 +292,7 @@ Ujorm nabízí možnost ukládat vybrané <strong>property</strong> jako atribut
   <li>implementovat vlastní řešení metody <strong>readAuthorization(...)</strong>. 
       Pro rozlišení se využívá autorizační test pro akci ACTION_XML_ELEMENT, návratová hodnota FALSE je zpráva pro zápis XML atributu. Příklad použití, ve kterém se property NAME zapisuje jako XML atribut:
 <pre class="pre"><span class="java-annotation">@</span>Override
-<span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(<span class="java-keywords">int</span> action, UjoProperty property, Object value, Object context) {
+<span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">readAuthorization</span>(<span class="java-keywords">int</span> action, Key property, Object value, Object context) {
   <span class="java-keywords">switch</span>(action) {
     <span class="java-keywords">case</span> ACTION_XML_ELEMENT: <span class="java-keywords">return</span> property!=NAME; // the NAME will be an attribute of an element
     <span class="java-keywords">default</span>: <span class="java-keywords">return</span> <span class="java-keywords">super</span>.<span class="java-layer-method">readAuthorization</span>(action, property, value, context);
@@ -302,7 +302,7 @@ Ujorm nabízí možnost ukládat vybrané <strong>property</strong> jako atribut
   </li>
   <li>pokud použiváte některého abstraktního rodiče (MapUjo, ArrayUjo), je možné označit property přímo anotací <strong>@XmlAttribute</strong> podle vzoru:
 <pre class="pre"><span class="java-annotation">@</span>XmlAttribute
-<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
 </pre>
       Výchozí implementace metody <strong>readAuthorization(...)</strong> v rodičovské třídě rozpoznává přiřazenou anotaci 
       a tak mechanismus stále funguje výše popsaným způsobem.
@@ -316,8 +316,8 @@ Ujorm nabízí možnost ukládat vybrané <strong>property</strong> jako atribut
 <pre class="pre">
 <span class="java-keywords">import</span> org.ujorm.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {<br>
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,String&gt;  NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Double&gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;Cash&quot;</span>, Double.<span class="java-keywords">class</span>);<br>    
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,String&gt;  NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;Person,Double&gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;Cash&quot;</span>, Double.<span class="java-keywords">class</span>);<br>    
   <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setName</span>(String name) {
     NAME.<span class="java-layer-method">setValue</span>(<span class="java-keywords">this</span>, name);
   }
@@ -375,7 +375,7 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
         </ul>
         
         Všechny tyto metody ve třídě UjoTableModel dostanete už implementované.
-        Jméno sloupce a odpovídající třída se berou z přímo objektu UjoProperty, seznam sloupců se vkládá v konstruktoru.
+        Jméno sloupce a odpovídající třída se berou z přímo objektu Key, seznam sloupců se vkládá v konstruktoru.
         
         
         <h2 id="how2">Jak na rozšíření?</h2>
@@ -515,7 +515,7 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
         Využití UJO v servletech zatím není podrobně popsáné, nicméně základní myšlenka pro zpracování textových parametrů objektu ServletRequest je asi tato:<br>
 <pre class="pre">ServletRequest request;
 UjoTextable person;
-UjoProperty personName;
+Key personName;
 ...
 person.<span class="java-layer-method">writeValueString</span>(<span class="java-layer-method"></span>personName, request.<span class="java-layer-method">getParameters</span>(personName.<span class="java-layer-method">getName</span>());
 </pre>
@@ -579,7 +579,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
             
             <li>Q: Jaký bude výsledek při čtení hodnot UJO, které nebyly dosud iniciované? </li>
             <ul><li>A: výsledek je závislý na implementaci UJO objektu</li>
-                <li>B: Výchozí implementaci (AbstractUjo) vrací defaultní hodnotu z UjoProperty.</li>
+                <li>B: Výchozí implementaci (AbstractUjo) vrací defaultní hodnotu z Key.</li>
             </ul>
             
             <li>Q: Je možné nějak vyčistit Properties cache?</li>

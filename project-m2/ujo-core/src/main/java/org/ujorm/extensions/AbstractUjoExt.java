@@ -16,10 +16,10 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 import java.util.List;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.UjoAction;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
@@ -27,17 +27,17 @@ import org.ujorm.swing.UjoPropertyRow;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>
- * For implementation define only a "public static final UjoProperty" constants in a child class.
+ * For implementation define only a "public static final Key" constants in a child class.
  * The code syntax is Java 1.5 complied.<br>
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * @author Pavel Ponec
  */
 public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUjo implements UjoExt<UJO_IMPL> {
     
-    /** Getter based on one UjoProperty */
+    /** Getter based on one Key */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( final UjoProperty<UJO, VALUE> property
+        ( final Key<UJO, VALUE> property
         ) {
         return property.of((UJO)this);
     }
@@ -45,8 +45,8 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     /** Getter based on two properties */
     @SuppressWarnings("unchecked")
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
-        ( final UjoProperty<UJO1, UJO2 > property1
-        , final UjoProperty<UJO2, VALUE> property2) {
+        ( final Key<UJO1, UJO2 > property1
+        , final Key<UJO2, VALUE> property2) {
         
         final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2);
         return get(path);    }
@@ -54,18 +54,18 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     /** Getter based on three properties */
     @SuppressWarnings("unchecked")
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
-        ( final UjoProperty<UJO1, UJO2 > property1
-        , final UjoProperty<UJO2, UJO3 > property2
-        , final UjoProperty<UJO3, VALUE> property3
+        ( final Key<UJO1, UJO2 > property1
+        , final Key<UJO2, UJO3 > property2
+        , final Key<UJO3, VALUE> property3
         ) {
 
         final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2, property3);
         return get(path);    }
 
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime. */
+    /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings({"unchecked"})
     public <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
-        ( final UjoProperty<UJO, VALUE> property
+        ( final Key<UJO, VALUE> property
         , final VALUE value
         ) {
         readUjoManager().assertAssign(property, value);
@@ -75,8 +75,8 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
 
     /** Setter  based on two properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> void set
-        ( final UjoProperty<UJO1, UJO2 > property1
-        , final UjoProperty<UJO2, VALUE> property2
+        ( final Key<UJO1, UJO2 > property1
+        , final Key<UJO2, VALUE> property2
         , final VALUE value
         ) {
         
@@ -86,9 +86,9 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
 
     /** Setter  based on three properties. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
-        ( final UjoProperty<UJO1, UJO2 > property1
-        , final UjoProperty<UJO2, UJO3 > property2
-        , final UjoProperty<UJO3, VALUE> property3
+        ( final Key<UJO1, UJO2 > property1
+        , final Key<UJO2, UJO3 > property2
+        , final Key<UJO3, VALUE> property3
         , final VALUE value
         ) {
 
@@ -103,9 +103,9 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> int getItemCount
-        ( final ListUjoProperty<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> property
         ) {
-        return ((ListUjoProperty)property).getItemCount(this);
+        return ((ListKey)property).getItemCount(this);
     }
     
     /** Add Value, if the List is null then the list will be created.
@@ -113,7 +113,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> UJO_IMPL add
-        ( final ListUjoProperty<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> property
         , final ITEM value
         ) {
         property.addItem((UJO) this, value);
@@ -125,7 +125,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> UJO_IMPL set
-        ( final ListUjoProperty<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> property
         , final int index
         , final ITEM value
         ) {
@@ -138,10 +138,10 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> ITEM get
-        ( final ListUjoProperty<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> property
         , final int index
         ) {
-        return (ITEM) ((ListUjoProperty)property).getItem(this, index);
+        return (ITEM) ((ListKey)property).getItem(this, index);
     }
     
 
@@ -153,10 +153,10 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> ITEM remove
-        ( final ListUjoProperty<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> property
         , final int index
         ) {
-        return (ITEM) ((ListUjoProperty)property).getList(this).remove(index);
+        return (ITEM) ((ListKey)property).getList(this).remove(index);
     }
 
     /**
@@ -167,10 +167,10 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> boolean remove
-        ( final ListUjoProperty<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> property
         , final ITEM item
         ) {
-        return ((ListUjoProperty)property).removeItem(this, item);
+        return ((ListKey)property).removeItem(this, item);
     }
 
     
@@ -180,16 +180,16 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( final ListUjoProperty<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> property
         ) {
-        return (LIST) ((ListUjoProperty)property).getList(this);
+        return (LIST) ((ListKey)property).getList(this);
     }
     
     /** Indicates whether a parameter value "equal to" property default value. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> boolean isDefault
-        ( final UjoProperty<UJO, VALUE> property) {
-        final boolean result = ((UjoProperty) property).isDefault(this);
+        ( final Key<UJO, VALUE> property) {
+        final boolean result = ((Key) property).isDefault(this);
         return result;
     }
 
@@ -203,7 +203,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      * @param property A Property
      * @return If property type is "container" then result is null.
      */
-    public String getText(final UjoProperty property) {
+    public String getText(final Key property) {
         return readUjoManager().getText(this, property, null);
     }
     
@@ -213,7 +213,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
      * @param property Property
      * @param value String value
      */
-    public void setText(final UjoProperty property, final String value) {
+    public void setText(final Key property, final String value) {
         readUjoManager().setText(this, property, value, null, null);
     }       
     
@@ -222,22 +222,22 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     
     /** Compare the property value with a parametrer value. The property value can be null.  */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> boolean equals(UjoProperty<UJO,VALUE> property, VALUE value) {
+    public <UJO extends UJO_IMPL, VALUE> boolean equals(Key<UJO,VALUE> property, VALUE value) {
         return property.equals((UJO)this, value);
     } 
 
     /**
      * Find a property by a "property name".
      * @param propertyName The name of property
-     * @return The first UjoProperty with the same name.
+     * @return The first Key with the same name.
      * @throws java.lang.IllegalArgumentException If property not found.
      */
-    public UjoProperty findProperty(final String propertyName) throws IllegalArgumentException {
+    public Key findProperty(final String propertyName) throws IllegalArgumentException {
         final boolean throwException = true;
         return readProperties().findDirectProperty(propertyName, throwException);
     }
         
-    /** Create a list of UjoProperty. */
+    /** Create a list of Key. */
     public List<UjoPropertyRow> createPropertyList() {
         return UjoManager.getInstance().createPropertyList(this, new UjoActionImpl(this));
     }
@@ -261,11 +261,11 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
     
     /** Copy all attributes to the target */
     public void copyTo(Ujo target, Object context) {
-        UjoManager.getInstance().copy(this, target, new UjoActionImpl(UjoAction.ACTION_COPY, context), (UjoProperty[]) null);
+        UjoManager.getInstance().copy(this, target, new UjoActionImpl(UjoAction.ACTION_COPY, context), (Key[]) null);
     } 
 
     /** Copy selected attributes to the target */
-    public void copyTo(Ujo target, UjoProperty... properties) {
+    public void copyTo(Ujo target, Key... properties) {
         UjoManager.getInstance().copy(this, target, new UjoActionImpl(UjoAction.ACTION_COPY), properties);
     }
 

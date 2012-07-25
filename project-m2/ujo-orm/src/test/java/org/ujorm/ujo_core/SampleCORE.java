@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import org.ujorm.Ujo;
 import java.util.*;
 import java.util.logging.Level;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
@@ -100,7 +100,7 @@ public class SampleCORE {
         Ujo employee1 = findEmployee();
         Ujo employee2 = employee1.getClass().newInstance();
 
-        for (UjoProperty p : employee1.readProperties()) {
+        for (Key p : employee1.readProperties()) {
             p.copy(employee1, employee2);
         }
         System.out.println("Employee 2: " + employee2);
@@ -111,7 +111,7 @@ public class SampleCORE {
         Employee employee1 = findEmployee();
         Employee employee2 = new Employee();
 
-        for (UjoProperty p : employee1.readProperties()) {
+        for (Key p : employee1.readProperties()) {
             if (p.isTypeOf(String.class)) {
                 p.copy(employee1, employee2);
             }
@@ -127,7 +127,7 @@ public class SampleCORE {
         Employee employee = new Employee();
 
         employee.set(WAGE, 123.00);
-        for (UjoProperty p : employee.readProperties()) {
+        for (Key p : employee.readProperties()) {
              employee.set(p, p.getDefault());
         }
 

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.impl.*;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 /**
  * Example of a binding the UJO object to an UI component(s).
@@ -28,7 +28,7 @@ import org.ujorm.UjoProperty;
  */
 public class BindingSample {
 
-    protected Map<UjoProperty, UIComponent> binding = new HashMap<UjoProperty, UIComponent>();
+    protected Map<Key, UIComponent> binding = new HashMap<Key, UIComponent>();
 
      /** Plain mapping any UIComponent to UJO Property. 
       * The type unsafe solution.
@@ -76,7 +76,7 @@ public class BindingSample {
     /** Load data to a GUI panel */
     @SuppressWarnings("unchecked")
 	public void initForm(Ujo ujo) {
-        for (UjoProperty p : binding.keySet()) {
+        for (Key p : binding.keySet()) {
             UIComponent component = binding.get(p);
             component.setValue(p.getValue(ujo));
         }
@@ -85,7 +85,7 @@ public class BindingSample {
     /** Load data from GUI panel to a Person instance. */
     @SuppressWarnings("unchecked")
 	public void copyFormValues(Ujo ujo) {
-        for (UjoProperty p : binding.keySet()) {
+        for (Key p : binding.keySet()) {
             UIComponent component = binding.get(p);
             if (component.isValid()) {
                p.setValue(ujo, component.getValue());
@@ -96,12 +96,12 @@ public class BindingSample {
     }
 
     /** Type safe <build>getComponent binding</build> */
-    public <T> void bind(UjoProperty<?, T> property, UIComponent<T> component) {
+    public <T> void bind(Key<?, T> property, UIComponent<T> component) {
         binding.put(property, component);
     }
 
     /** Auto-binding implementation */
-    public void bind(UjoProperty property) {
+    public void bind(Key property) {
         if (property.isTypeOf(String.class)) {
              binding.put(property, new UIComponentString());
         } else if (property.isTypeOf(Integer.class)) {
@@ -115,14 +115,14 @@ public class BindingSample {
 
     /** Create UICOmponents for all properties from the Person. */
     public void bind(Ujo ujo) {
-        for (UjoProperty p : ujo.readProperties()) {
+        for (Key p : ujo.readProperties()) {
             bind(p);
         }
     }
 
     /** Type safe <build>getComponent binding</build> */
     @SuppressWarnings("unchecked")
-	public <T> UIComponent<T> getComponent(UjoProperty<?, T> property) {
+	public <T> UIComponent<T> getComponent(Key<?, T> property) {
         return binding.get(property);
     }
 }

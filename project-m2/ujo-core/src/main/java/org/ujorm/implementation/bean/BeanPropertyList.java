@@ -18,7 +18,7 @@ package org.ujorm.implementation.bean;
 
 import org.ujorm.Ujo;
 import org.ujorm.core.BeanManager;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.ValueAgent;
 
@@ -29,7 +29,7 @@ import org.ujorm.extensions.ValueAgent;
  */
 public class BeanPropertyList<UJO extends Ujo, ITEM> 
 extends ListProperty<UJO, ITEM>
-implements ValueAgent<Object,Object>, ListUjoProperty<UJO, ITEM>
+implements ValueAgent<Object,Object>, ListKey<UJO, ITEM>
 {
 
     /** Bean Manager instance */

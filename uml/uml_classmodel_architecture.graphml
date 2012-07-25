@@ -31,14 +31,14 @@
           <y:Geometry height="146.43717023488597" width="172.90772894418296" x="581.2896993987977" y="143.43464838508916"/>
           <y:Fill color="#CBC6FF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="84.1240234375" x="44.39185275334148" y="26.701171875">UjoProperty</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="84.1240234375" x="44.39185275334148" y="26.701171875">Key</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="interface" use3DEffect="true">
             <y:AttributeLabel/>
             <y:MethodLabel>getValue : VALUE
 setValue ( VALUE )
 getType  : Class&lt;VALUE&gt; 
 getName : String
-add(UjoProperty) : UjoProperty
+add(Key) : Key
 
 </y:MethodLabel>
           </y:UML>
@@ -157,7 +157,7 @@ add(UjoProperty) : UjoProperty
             <y:AttributeLabel/>
             <y:MethodLabel>readSession : Session
 writeSession ( Session )
-readChangedProperties : UjoProperty[]</y:MethodLabel>
+readChangedProperties : Key[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
@@ -194,7 +194,7 @@ readChangedProperties : UjoProperty[]</y:MethodLabel>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="62.337890625" x="71.48856971756015" y="3.0">Criterion</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>- property : UjoProperty
+            <y:AttributeLabel>- property : Key
 - operator : Operator
 - value : Object</y:AttributeLabel>
             <y:MethodLabel>and (Criterion) : Criterion
@@ -228,7 +228,7 @@ or  (Criterion) : Criterion
             <y:AttributeLabel>- databases : OrmUjo []
 - metaModel : MetaModel</y:AttributeLabel>
             <y:MethodLabel>createSession : Session
-findColumnModel ( UjoProperty )
+findColumnModel ( Key )
 findTableModel ( Class&lt;OrmUjo&gt; )
 findProcedureModel ( Class&lt;DbProcedure&gt; )</y:MethodLabel>
           </y:UML>

@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.ujorm.UjoAction;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.implementation.quick.QuickUjo;
 import org.ujorm.orm.ExtendedOrmUjo;
@@ -45,7 +45,7 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
     /** Orm session */
     transient private ThreadLocal<Session> session;
     /** Set of changes */
-    transient private Set<UjoProperty> changes = null;
+    transient private Set<Key> changes = null;
 
     public OrmTableSynchronized() {
     }
@@ -70,10 +70,10 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
 
     /** A method for an internal use only. */
     @Override
-    synchronized public void writeValue(UjoProperty property, Object value) {
+    synchronized public void writeValue(Key property, Object value) {
         if (readSession()!=null) {
             if (changes==null) {
-                changes = new HashSet<UjoProperty>(8);
+                changes = new HashSet<Key>(8);
             }
             changes.add(property);
         }
@@ -83,7 +83,7 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
 
     /** A method for an internal use only. */
     @Override
-    synchronized public Object readValue(final UjoProperty property) {
+    synchronized public Object readValue(final Key property) {
         Object result = super.readValue(property);
         final Session mySession = readSession();
 
@@ -118,11 +118,11 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
      * @param clear True value clears the property changes.
      */
     @Override
-    synchronized public UjoProperty[] readChangedProperties(boolean clear) {
-        final UjoProperty[] result
+    synchronized public Key[] readChangedProperties(boolean clear) {
+        final Key[] result
             = changes==null || changes.isEmpty()
             ? UjoPropertyListImpl.EMPTY
-            : changes.toArray(new UjoProperty[changes.size()])
+            : changes.toArray(new Key[changes.size()])
             ;
         if (clear) {
             changes = null;
@@ -131,19 +131,19 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
     }
 
 
-    /** Getter based on UjoProperty implemeted by a pattern UjoExt */
+    /** Getter based on Key implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
-    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final UjoProperty<UJO, VALUE> property) {
+    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
         final VALUE result = property.of((UJO)this);
         return result;
     }
 
-    /** Setter  based on UjoProperty. Type of value is checked in the runtime.
+    /** Setter  based on Key. Type of value is checked in the runtime.
      * The method was implemented by a pattern UjoExt.
      */
     @SuppressWarnings({"unchecked"})
     public final <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
-        ( final UjoProperty<UJO, VALUE> property
+        ( final Key<UJO, VALUE> property
         , final VALUE value
         ) {
         readUjoManager().assertAssign(property, value);
@@ -153,7 +153,7 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
 
     /** Test an authorization of the action. */
     @Override
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         switch (action.getType()) {
             case UjoAction.ACTION_TO_STRING:
                 return !(property instanceof RelationToMany);
@@ -171,7 +171,7 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
      */
     @Override
-    synchronized public <UJO extends UJO_IMPL> ForeignKey readFK(UjoProperty<UJO, ? extends OrmUjo> property) throws IllegalStateException {
+    synchronized public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> property) throws IllegalStateException {
         final Object value = super.readValue(property);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;

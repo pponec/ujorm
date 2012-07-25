@@ -18,8 +18,8 @@ package benchmark.bo;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.quick.QuickUjo;
 
@@ -29,23 +29,23 @@ import org.ujorm.implementation.quick.QuickUjo;
  */
 public class PrfOrder extends QuickUjo {
 
-    public static final Property<PrfOrder,Long> id = newProperty(Long.class);
-    public static final Property<PrfOrder,Boolean> deleted = newProperty(false);
-    public static final Property<PrfOrder,Date> dateDeleted = newProperty(Date.class);
-    public static final Property<PrfOrder,String> deletionReason = newProperty(String.class);
-    public static final Property<PrfOrder,Boolean> paid = newProperty(Boolean.class);
-    public static final Property<PrfOrder,String> publicId = newProperty(String.class);
-    public static final Property<PrfOrder,Date> dateOfOrder = newProperty(Date.class);
-    public static final Property<PrfOrder,String> paymentType = newProperty(String.class);
-    public static final Property<PrfOrder,BigDecimal> discount = newProperty(BigDecimal.class);
-    public static final Property<PrfOrder,String> orderType = newProperty(String.class);
-    public static final Property<PrfOrder,String> language = newProperty(String.class);
-    public static final Property<PrfOrder,PrfOrder> parent = newProperty(PrfOrder.class);
-    public static final UjoProperty <PrfOrder,PrfUser>user = newProperty(PrfUser.class);
+    public static final Key<PrfOrder,Long> id = newKey();
+    public static final Key<PrfOrder,Boolean> deleted = newKey(false);
+    public static final Key<PrfOrder,Date> dateDeleted = newKey();
+    public static final Key<PrfOrder,String> deletionReason = newKey();
+    public static final Key<PrfOrder,Boolean> paid = newKey();
+    public static final Key<PrfOrder,String> publicId = newKey();
+    public static final Key<PrfOrder,Date> dateOfOrder = newKey();
+    public static final Key<PrfOrder,String> paymentType = newKey();
+    public static final Key<PrfOrder,BigDecimal> discount = newKey();
+    public static final Key<PrfOrder,String> orderType = newKey();
+    public static final Key<PrfOrder,String> language = newKey();
+    public static final Key<PrfOrder,PrfOrder> parent = newKey();
+    public static final Key <PrfOrder,PrfUser>user = newKey();
 
     // Optional code for better performance when creating instance:
-    private static UjoPropertyList properties = init(PrfOrder.class);
-    @Override public UjoPropertyList readProperties() { return properties; }
+    private static KeyList properties = init(PrfOrder.class);
+    @Override public KeyList readProperties() { return properties; }
 
 
     // Setters and Getters:

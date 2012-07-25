@@ -16,35 +16,35 @@
 
 package org.ujorm.spring;
 
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.core.KeyFactory;
 
 /**
  * Spring Key Factory
  * @author Pavel Ponec
  */
-public class SpringKeyFactory extends PropertyFactory<AbstractAplicationContextAdapter> {
+public class SpringKeyFactory extends KeyFactory<AbstractAplicationContextAdapter> {
 
     public SpringKeyFactory(Class<? extends AbstractAplicationContextAdapter> type) {
         super(type);
     }
 
-    /** Create new UjoProperty */
+    /** Create new Key */
     @Override
-    public final <T> SpringKey<T> newProperty() {
+    public final <T> SpringKey<T> newKey() {
         return createProperty(null, null);
     }
 
-    /** Create new UjoProperty */
+    /** Create new Key */
     @Override
-    public final <T> SpringKey<T> newProperty(String name) {
+    public final <T> SpringKey<T> newKey(String name) {
         return createProperty(name, null);
     }
 
-    /** Create new UjoProperty */
+    /** Create new Key */
     @Override
     protected <T> SpringKey<T> createProperty(String name, T defaultValue) {
-        final SpringKey<T> p = new SpringKeyImpl<T>(name);
-        addProperty(p);
+        final SpringKeyImpl<T> p = new SpringKeyImpl<T>(name);
+        addKey(p);
         return p;
     }
 

@@ -18,7 +18,7 @@ package org.ujorm.hibernateSupport;
 
 import java.lang.reflect.Method;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionFactoryImplementor;
@@ -32,7 +32,7 @@ import org.hibernate.property.Setter;
 final public class UjoPropertySetter implements Setter {
 
     final private String propertyName;
-    private UjoProperty ujoProperty = null;
+    private Key ujoProperty = null;
 
     public UjoPropertySetter(String propertyName) {
         this.propertyName = propertyName;

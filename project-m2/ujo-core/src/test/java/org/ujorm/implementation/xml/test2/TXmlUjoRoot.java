@@ -9,7 +9,7 @@
 
 package org.ujorm.implementation.xml.test2;
 
-import org.ujorm.extensions.ListProperty;
+import org.ujorm.ListKey;
 import org.ujorm.implementation.map.MapUjo;
 
 
@@ -20,6 +20,6 @@ import org.ujorm.implementation.map.MapUjo;
 public class TXmlUjoRoot extends MapUjo  {
 
     //public static final UjoPropertyImpl<TXmlUjoRoot,Object[]>   PRO_P4 = newProperty("ObjArray", Object[].class);
-    public static final ListProperty<TXmlUjoRoot, TXmlUjoItem> PRO_P5 = newListProperty("List", TXmlUjoItem.class);
+    public static final ListKey<TXmlUjoRoot, TXmlUjoItem> PRO_P5 = newListProperty("List", TXmlUjoItem.class);
     
 }

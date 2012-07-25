@@ -9,7 +9,7 @@
 
 package org.ujorm.implementation.xml.t003_list;
 
-import org.ujorm.extensions.ListProperty;
+import org.ujorm.ListKey;
 import org.ujorm.implementation.map.MapUjo;
 
 /**
@@ -18,8 +18,8 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class UMasterBean extends MapUjo  {
     
-    public static final ListProperty<UMasterBean, UItemBean> P0_L1ST  = newListProperty("itemA", UItemBean.class );
-    //public static final ListProperty<UMasterBean, UItemBean> P1_L1ST  = newPropertyList("itemB", UItemBean.class );
+    public static final ListKey<UMasterBean, UItemBean> P0_L1ST  = newListProperty("itemA", UItemBean.class );
+    //public static final ListKey<UMasterBean, UItemBean> P1_L1ST  = newPropertyList("itemB", UItemBean.class );
     
     
 }

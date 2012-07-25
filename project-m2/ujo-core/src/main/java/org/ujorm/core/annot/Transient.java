@@ -11,7 +11,7 @@ package org.ujorm.core.annot;
 import java.lang.annotation.*;
 
 /** 
- * Use the annotation to mark a UjoProperty static field to a transient state.
+ * Use the annotation to mark a Key static field to a transient state.
  * Values of the transient properties are not stored by any way.
  */
 @Retention(value=RetentionPolicy.RUNTIME)

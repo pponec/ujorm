@@ -17,7 +17,7 @@
 package org.ujorm.implementation.factory;
 
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 
 /**
@@ -30,10 +30,10 @@ import org.ujorm.UjoProperty;
  */
 abstract public class FactoryUjoExt<UJO_IMPL extends FactoryUjoExt> extends FactoryUjo {
     
-    /** Getter based on one UjoProperty */
+    /** Getter based on one Key */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( UjoProperty<UJO, VALUE> property) {
+        ( Key<UJO, VALUE> property) {
         return property.of((UJO) this);
     }
 

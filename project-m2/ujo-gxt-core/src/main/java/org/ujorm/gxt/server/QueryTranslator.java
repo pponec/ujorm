@@ -17,7 +17,7 @@ import org.ujorm.gxt.client.cquery.CValueCriterion;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.BinaryOperator;
 import org.ujorm.criterion.Criterion;
@@ -112,7 +112,7 @@ public class QueryTranslator<UJO extends OrmUjo> {
             CujoProperty c1 = c.getLeftNode();
             Object c2 = c.getRightNode();
             //
-            UjoProperty p1;
+            Key p1;
             try {
                 p1 = manager.findIndirectProperty(type, c1.getName());
             } catch (IllegalArgumentException e) {
@@ -146,12 +146,12 @@ public class QueryTranslator<UJO extends OrmUjo> {
     }
 
     /** Convert from Cujo.orderBy to Ujo.orderBy */
-    public List<UjoProperty> orderBy(List<CujoProperty> properties) {
-        List<UjoProperty> result = new ArrayList<UjoProperty>();
+    public List<Key> orderBy(List<CujoProperty> properties) {
+        List<Key> result = new ArrayList<Key>();
 
         if (properties != null) {
             for (CujoProperty cp : properties) {
-                UjoProperty up = manager.findIndirectProperty(type, cp.getName());
+                Key up = manager.findIndirectProperty(type, cp.getName());
                 result.add(cp.isAscending() ? up : up.descending());
             }
         }

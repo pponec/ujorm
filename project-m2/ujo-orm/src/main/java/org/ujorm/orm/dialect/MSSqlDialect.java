@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.OrmUjo;
@@ -202,7 +202,7 @@ public class MSSqlDialect extends SqlDialect {
 
     /* Prints order columns from input Query separated by comma */
     protected void printOrderColumns(Query query, Appendable out, boolean asOrderAlias, boolean addOrderAlias, boolean showDesc) throws IOException {
-        final List<UjoProperty> props = query.getOrderBy();
+        final List<Key> props = query.getOrderBy();
         for (int i=0; i<props.size(); i++) {
             MetaColumn column = query.readOrderColumn(i);
             boolean ascending = props.get(i).isAscending();
@@ -233,7 +233,7 @@ public class MSSqlDialect extends SqlDialect {
     /** Where clause for inner select */
     protected void createWherePart(Query query, Appendable out) throws IOException {
         Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
-        List<UjoProperty> props = query.getOrderBy();
+        List<Key> props = query.getOrderBy();
         for (int i = 0; i < props.size(); i++) {
             MetaColumn column = query.readOrderColumn(i);
             String alias = column.getTable().getAlias();

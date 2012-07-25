@@ -10,7 +10,7 @@
 package org.ujorm.implementation.array;
 
 import java.util.Date;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -26,11 +26,11 @@ public class ArrayUjoImpl extends ArrayUjo {
      */
     protected static int propertyCount = ArrayUjo.propertyCount;
     
-    public static final Property<ArrayUjoImpl,Long>    PRO_P0 = newProperty("P0", Long.class, propertyCount++);
-    public static final Property<ArrayUjoImpl,Integer> PRO_P1 = newProperty("P1", Integer.class, propertyCount++);
-    public static final Property<ArrayUjoImpl,String>  PRO_P2 = newProperty("P2", String.class, propertyCount++);
-    public static final Property<ArrayUjoImpl,Date>    PRO_P3 = newProperty("P3", Date.class, propertyCount++);
-    public static final Property<ArrayUjoImpl,Float>   PRO_P4 = newProperty("P4", Float.class, propertyCount++);
+    public static final Key<ArrayUjoImpl,Long>    PRO_P0 = newProperty("P0", Long.class, propertyCount++);
+    public static final Key<ArrayUjoImpl,Integer> PRO_P1 = newProperty("P1", Integer.class, propertyCount++);
+    public static final Key<ArrayUjoImpl,String>  PRO_P2 = newProperty("P2", String.class, propertyCount++);
+    public static final Key<ArrayUjoImpl,Date>    PRO_P3 = newProperty("P3", Date.class, propertyCount++);
+    public static final Key<ArrayUjoImpl,Float>   PRO_P4 = newProperty("P4", Float.class, propertyCount++);
 
     /** Verify unique constants */
     static{

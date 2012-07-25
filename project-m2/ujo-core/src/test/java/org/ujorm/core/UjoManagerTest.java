@@ -347,7 +347,7 @@ public class UjoManagerTest extends MyTestCase {
 //
 //        UjoCSV ujo = new UjoCSV();
 //
-//        for (UjoProperty p1 : ujo.readProperties()) {
+//        for (Key p1 : ujo.readProperties()) {
 //            Field field = UjoManager.getInstance().getPropertyField(ujo, p1);
 //            Object p2 = field.get(null);
 //            assertSame(p1, p2);

@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.Key;
+import org.ujorm.ListKey;
 
 /**
  * A tool for encoding an object to a text and a text back to the object.
@@ -148,11 +148,11 @@ public class UjoCoder {
      * <br>If value can't be decoded, an IllegalArgumentException is throwed.
      */
     @SuppressWarnings("unchecked")
-    public Object decodeValue(final UjoProperty property, final String aValue, final Class type) throws IllegalArgumentException {
-        if (property instanceof ListUjoProperty) {
+    public Object decodeValue(final Key property, final String aValue, final Class type) throws IllegalArgumentException {
+        if (property instanceof ListKey) {
             if (aValue==null || aValue.length()==0) { return null; }
             List result = new ArrayList();
-            ListUjoProperty propertyList = (ListUjoProperty) property;
+            ListKey propertyList = (ListKey) property;
             String separator = String.valueOf(getSeparator());
             StringTokenizer st = new StringTokenizer(aValue, separator);
             while (st.hasMoreTokens()) {

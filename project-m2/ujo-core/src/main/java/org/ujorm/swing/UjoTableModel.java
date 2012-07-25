@@ -23,7 +23,7 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.UjoCloneable;
@@ -38,7 +38,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     public static final int EVENT_REPAINT_HEADER = 1000;
     
     /** Columns definition */
-    protected UjoProperty[] columns;
+    protected Key[] columns;
     
     /** A data store */
     protected List<ROW> rows;
@@ -47,7 +47,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * Creates a new instance of UjoTableModel
      * @param columns Columns in a required order.
      */
-    public UjoTableModel(UjoProperty ... columns) {;
+    public UjoTableModel(Key ... columns) {;
         this.columns = columns;
         initData();
     }
@@ -84,26 +84,26 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
         return columns.length;
     }
     
-    /** Convert columnIndex to a UjoProperty. */
-    public UjoProperty getColumn(int columnIndex) {
+    /** Convert columnIndex to a Key. */
+    public Key getColumn(int columnIndex) {
         return columns[columnIndex];
     }
     
     /** Set columns into table */
-    public void setColumns(UjoProperty ... columns) {
+    public void setColumns(Key ... columns) {
         this.columns = columns;
         fireTableStructureChanged();
     }
     
     /** Get value from cell.
-     * @deprecated Use a method with column type of UjoProperty instead of.
+     * @deprecated Use a method with column type of Key instead of.
      */
     final public Object getValueAt(int rowIndex, int columnIndex) {
         return getValueAt(rowIndex, columns[columnIndex]);
     }
     
     /** Set value to cell.
-     * @deprecated Use a method with column type of UjoProperty instead of.
+     * @deprecated Use a method with column type of Key instead of.
      */
     final public void setValueAt(Object value, int rowIndex, int columnIndex) {
         setValueAt(value, rowIndex, columns[columnIndex]);
@@ -115,7 +115,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     }
     
     /** Is the Cell Editable?
-     * @deprecated Use a method with column type of UjoProperty instead of.
+     * @deprecated Use a method with column type of Key instead of.
      */
     final public boolean isCellEditable(int rowIndex, int columnIndex) {
         return isCellEditable(rowIndex, columns[columnIndex]);
@@ -124,7 +124,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     /**
      * Returns the most specific superclass for all the cell values in the column.
      * @return the common ancestor class of the object values in the model.
-     * @deprecated Use a method with column type of UjoProperty instead of.
+     * @deprecated Use a method with column type of Key instead of.
      */
     final public Class getColumnClass(int columnIndex) {
         return getColumnClass(columns[columnIndex]);
@@ -155,23 +155,23 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     
     /** Returns a value from the cell. */
     @SuppressWarnings("unchecked")
-    public Object getValueAt(int rowIndex, UjoProperty column) {
+    public Object getValueAt(int rowIndex, Key column) {
         return column.of(rows.get(rowIndex));
     }
     
     /** Set a value to a cell of table model. */
-    public void setValueAt(Object value, int rowIndex, UjoProperty column) {
+    public void setValueAt(Object value, int rowIndex, Key column) {
         getRow(rowIndex).writeValue(column, value);
         fireTableCellUpdated(rowIndex, getColumnIndex(column));
     }
     
     /** Column Name */
-    public String getColumnName(UjoProperty column) {
+    public String getColumnName(Key column) {
         return column.getName();
     }
     
     /** Is the cell editable? */
-    public boolean isCellEditable(int rowIndex, UjoProperty column) {
+    public boolean isCellEditable(int rowIndex, Key column) {
         return true;
     }
     
@@ -179,12 +179,12 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * Returns the most specific superclass for all the cell values in the column.
      * @return the common ancestor class of the object values in the model.
      */
-    public Class getColumnClass(UjoProperty column) {
+    public Class getColumnClass(Key column) {
         return column.getType();
     }
     
     /** Returns a table column index. */
-    public int getColumnIndex(UjoProperty column) {
+    public int getColumnIndex(Key column) {
         for (int i=columns.length-1; i>=0; i--) {
             if (columns[i]==column) {
                 return i;
@@ -248,7 +248,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
      * Sort data by a property list.
      * @param properties Array of properties. A property value must be comparable.
      */
-    public void sort(UjoProperty ... properties) {
+    public void sort(Key ... properties) {
         final Comparator<Ujo> comp = new UjoComparator(properties);
         sort(comp);
     }
@@ -266,7 +266,7 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     
     
     /** Fire an sing, that column was updated. */
-    public void fireTableColumnUpdated(UjoProperty columnProp) {
+    public void fireTableColumnUpdated(Key columnProp) {
         int column = getColumnIndex(columnProp);
         for (int i=getRowCount()-1; i>=0; i--) {
             fireTableCellUpdated(i, column);

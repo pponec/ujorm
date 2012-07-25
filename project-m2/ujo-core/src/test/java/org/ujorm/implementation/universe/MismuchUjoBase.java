@@ -10,11 +10,11 @@
 package org.ujorm.implementation.universe;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.AbstractUjo;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.ListKey;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -24,13 +24,13 @@ public class MismuchUjoBase extends AbstractUjo {
 
     private static Class<MismuchUjoBase> WRONG_CLASS = (Class<MismuchUjoBase>) (Object) UniUjoBaseTest.class;
     /** Factory */
-    private static final PropertyFactory<MismuchUjoBase> pf = PropertyFactory.Builder.get(WRONG_CLASS);
+    private static final KeyFactory<MismuchUjoBase> pf = KeyFactory.Builder.get(WRONG_CLASS);
     
-    public static final UjoProperty<MismuchUjoBase,Long>      PRO_P0 = pf.newProperty();
-    public static final UjoProperty<MismuchUjoBase,Integer>   PRO_P1 = pf.newProperty();
-    public static final UjoProperty<MismuchUjoBase,String>    PRO_P2 = pf.newProperty();
-    public static final UjoProperty<MismuchUjoBase,Date>      PRO_P3 = pf.newProperty();
-    public static final ListUjoProperty<MismuchUjoBase,Float> PRO_P4 = pf.newListProperty();
+    public static final Key<MismuchUjoBase,Long>      PRO_P0 = pf.newKey();
+    public static final Key<MismuchUjoBase,Integer>   PRO_P1 = pf.newKey();
+    public static final Key<MismuchUjoBase,String>    PRO_P2 = pf.newKey();
+    public static final Key<MismuchUjoBase,Date>      PRO_P3 = pf.newKey();
+    public static final ListKey<MismuchUjoBase,Float> PRO_P4 = pf.newListProperty();
 
     static {
         pf.lock();
@@ -40,15 +40,15 @@ public class MismuchUjoBase extends AbstractUjo {
     protected Object[] data;
 
     @Override
-    public UjoPropertyList<?> readProperties() {
+    public KeyList<?> readProperties() {
         return pf.getPropertyList();
     }
 
-    public Object readValue(UjoProperty property) {
+    public Object readValue(Key property) {
         return data==null ? data : data[property.getIndex()];
     }
 
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         if (data==null) {
             data = new Object[readProperties().size()];
         }

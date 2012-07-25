@@ -17,7 +17,7 @@
 
 package org.ujorm.orm;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.implementation.quick.QuickUjoMid;
@@ -35,7 +35,7 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<U
     /** Clear all parameters */
     @SuppressWarnings("unchecked")
     public DbProcedure clear() {
-        for (UjoProperty p : readProperties()) {
+        for (Key p : readProperties()) {
             p.setValue(this, null);
         }
         return this;
@@ -43,7 +43,7 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<U
 
     /** Call the procedure and return a type-safe value of the required Property */
     @SuppressWarnings("unchecked")
-    public <T> T call(final Session session, final UjoProperty<UJO,T> result) {
+    public <T> T call(final Session session, final Key<UJO,T> result) {
         if (metaProcedure==null) {
             metaProcedure = session.getHandler().findProcedureModel(getClass());
         }
@@ -52,8 +52,8 @@ abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<U
     }
 
     /** Call the procedure and return a value of the first Property. <br>
-     * WARNING: The result is NOT type-save value, use rather {@link #call(org.ujorm.orm.Session, org.ujorm.UjoProperty)}.
-     * @see #call(org.ujorm.orm.Session, org.ujorm.UjoProperty)
+     * WARNING: The result is NOT type-save value, use rather {@link #call(org.ujorm.orm.Session, org.ujorm.Key)}.
+     * @see #call(org.ujorm.orm.Session, org.ujorm.Key)
      */
     @SuppressWarnings("unchecked")
     public <T> T call(final Session session) {

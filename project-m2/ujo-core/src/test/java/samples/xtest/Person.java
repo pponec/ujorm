@@ -18,17 +18,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import javax.xml.parsers.ParserConfigurationException;
+import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.extensions.Property;
 import org.ujorm.implementation.map.*;
 import org.xml.sax.SAXException;
 public class Person extends MapUjo {
     
-    public static final Property<Person,String>  NAME   = newProperty("Name" , String.class);
-    public static final Property<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
-    public static final Property<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
+    public static final Key<Person,String>  NAME   = newProperty("Name" , String.class);
+    public static final Key<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
+    public static final Key<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
     
     
     public void testExport() throws IOException, ParserConfigurationException, SAXException {

@@ -20,7 +20,7 @@ import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 
 /** 
- * Use the annotation to mark a UjoProperty static field like XML Attribute.
+ * Use the annotation to mark a Key static field like XML Attribute.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.TYPE)

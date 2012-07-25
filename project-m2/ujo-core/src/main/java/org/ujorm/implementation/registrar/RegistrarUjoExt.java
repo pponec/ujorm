@@ -16,7 +16,7 @@
 
 package org.ujorm.implementation.registrar;
 
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.listener.EventRegistrar;
 import org.ujorm.listener.UjoPropertyChangeSupport;
 import org.ujorm.listener.UjoPropertyChangeListener;
@@ -29,7 +29,7 @@ import org.ujorm.implementation.map.MapUjoExt;
  *    
  *  <span class="keyword-directive">final</span> <span class="keyword-directive">private</span> UjoPropertyChangeSupport eventRegistrar = <span class="keyword-directive">new</span> UjoPropertyChangeSupport(<span class="keyword-directive">this</span>);
  *
- *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(UjoProperty property, Object value) {
+ *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key property, Object value) {
  *    Object oldValue = readValue(property);
  *    eventRegistrar.firePropertyChange(property, oldValue, value, <span class="keyword-directive">true</span>);
  *    <span class="keyword-directive">super</span>.writeValue(property, value);
@@ -37,7 +37,7 @@ import org.ujorm.implementation.map.MapUjoExt;
  *  }
  *
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> addPropertyChangeListener
- *    ( UjoProperty&lt;UJO,?&gt; property
+ *    ( Key&lt;UJO,?&gt; property
  *    , Boolean before
  *    , UjoPropertyChangeListener listener
  *    ) {
@@ -45,7 +45,7 @@ import org.ujorm.implementation.map.MapUjoExt;
  *  }
  *
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> removePropertyChangeListener
- *    ( UjoProperty&lt;UJO,?&gt; property
+ *    ( Key&lt;UJO,?&gt; property
  *    , Boolean before
  *    , UjoPropertyChangeListener listener) {
  *    <span class="keyword-directive">return</span> eventRegistrar.removePropertyChangeListener(property, before, listener);
@@ -59,7 +59,7 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
     final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this);
 
     @Override
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         @SuppressWarnings("unchecked")
         Object oldValue = property.of(this);
         eventRegistrar.firePropertyChange(property, oldValue, value, true);
@@ -69,7 +69,7 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
 
     /** Add property Listener */
     public boolean addPropertyChangeListener
-        ( UjoProperty<UJO,?> property
+        ( Key<UJO,?> property
         , Boolean before
         , UjoPropertyChangeListener listener
         ) {
@@ -78,7 +78,7 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
 
     /** Remove property Listener */
     public boolean removePropertyChangeListener
-        ( UjoProperty<UJO,?> property
+        ( Key<UJO,?> property
         , Boolean before
         , UjoPropertyChangeListener listener) {
         return eventRegistrar.removePropertyChangeListener(property, before, listener);

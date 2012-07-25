@@ -19,7 +19,7 @@ package org.ujorm.hibernateSupport;
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
@@ -34,11 +34,11 @@ import org.ujorm.core.UjoManager;
  */
 final public class UjoPropertyGetter implements Getter {
 
-    final private UjoProperty ujoProperty;
+    final private Key ujoProperty;
 
     /**
      * Create the new UjoPropertyGetter for an Ujo object.
-     * @param propertyName The name of UjoProperty.
+     * @param propertyName The name of Key.
      * @param theClass Class type of Ujo.
      */
     public UjoPropertyGetter(String propertyName, Class theClass) {

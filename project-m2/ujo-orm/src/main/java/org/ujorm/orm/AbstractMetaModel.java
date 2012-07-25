@@ -19,8 +19,8 @@ package org.ujorm.orm;
 import java.util.Collections;
 import java.util.List;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.ListUjoProperty;
+import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.UjoAction;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.implementation.quick.QuickUjo;
@@ -46,9 +46,9 @@ abstract public class AbstractMetaModel extends QuickUjo {
     public void setReadOnly(boolean recurse) {
         if (readOnly) return;
 
-        for (UjoProperty p : readProperties()) {
+        for (Key p : readProperties()) {
 
-            if (p instanceof ListUjoProperty) {
+            if (p instanceof ListKey) {
                final List list = (List) p.of(this);
                p.setValue(this, list!=null
                    ? Collections.unmodifiableList(list)
@@ -59,16 +59,16 @@ abstract public class AbstractMetaModel extends QuickUjo {
 
         this.readOnly = true; // <<<<<< LOCK THE OBJECT !!!
         
-        if (recurse) for (UjoProperty p : readProperties()) {
+        if (recurse) for (Key p : readProperties()) {
 
             Object value = p.getValue(this);
             if (value instanceof AbstractMetaModel) {
                 ((AbstractMetaModel) value).setReadOnly(recurse);
             }
 
-            else if (p instanceof ListUjoProperty) {
-               if ( AbstractMetaModel.class.isAssignableFrom( ((ListUjoProperty)p).getItemType())) {
-                    for (AbstractMetaModel m : ((ListUjoProperty<AbstractMetaModel,AbstractMetaModel>)p).getList(this) ) {
+            else if (p instanceof ListKey) {
+               if ( AbstractMetaModel.class.isAssignableFrom( ((ListKey)p).getItemType())) {
+                    for (AbstractMetaModel m : ((ListKey<AbstractMetaModel,AbstractMetaModel>)p).getList(this) ) {
                         m.setReadOnly(recurse);
                     }
                }
@@ -85,7 +85,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
     }
 
     @Override
-    public void writeValue(final UjoProperty property, final Object value) {
+    public void writeValue(final Key property, final Object value) {
         this.checkReadOnly(true);
         super.writeValue(property, value);
     }
@@ -93,7 +93,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
     /** Assign a 'valid value' over a default UJO property value only */
     protected <UJO extends Ujo, VALUE> void changeDefault
     ( final UJO ujo
-    , final UjoProperty<UJO, VALUE> property
+    , final Key<UJO, VALUE> property
     , final VALUE value
     ) {
         if (property.isDefault(ujo) && isFilled(value)) {
@@ -103,7 +103,7 @@ abstract public class AbstractMetaModel extends QuickUjo {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         if (action.getType()==UjoAction.ACTION_XML_EXPORT) {
             return !property.isDefault(this);
         }
@@ -125,9 +125,9 @@ abstract public class AbstractMetaModel extends QuickUjo {
         return result;
     }
 
-    /** Getter based on one UjoProperty */
+    /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends AbstractMetaModel, VALUE> VALUE get ( UjoProperty<UJO, VALUE> property) {
+    public <UJO extends AbstractMetaModel, VALUE> VALUE get ( Key<UJO, VALUE> property) {
         return property.of((UJO) this);
     }
 

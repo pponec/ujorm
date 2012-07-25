@@ -25,59 +25,59 @@ import org.ujorm.core.UjoActionImpl;
 public interface UjoAction {
 
     /** This is an undefined action.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_UNDEFINED = 0;
-    /** An authorization action (of a UjoProperty) for a XML export.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+    /** An authorization action (of a Key) for a XML export.
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_XML_EXPORT = 2;
-    /** An authorization action (of a UjoProperty) for a XML import.
+    /** An authorization action (of a Key) for a XML import.
      * <br>Note: the authoriazation is not implemented yet.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_XML_IMPORT = 3;
-    /** An authorization action (of a UjoProperty) for a Resource Bundle export.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+    /** An authorization action (of a Key) for a Resource Bundle export.
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_RESBUNDLE_EXPORT = 10;
-    /** An authorization action (of a UjoProperty) for a Resource Bundle import.
+    /** An authorization action (of a Key) for a Resource Bundle import.
      * <br>Note: the authoriazation is not implemented yet.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_RESBUNDLE_IMPORT = 11;
-    /** An authorization action (of a UjoProperty) for a CSV import.
+    /** An authorization action (of a Key) for a CSV import.
      * <br>Note: the authoriazation is not implemented yet.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_CSV_IMPORT = 12;
-    /** An authorization action (of a UjoProperty) for a CSV export.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+    /** An authorization action (of a Key) for a CSV export.
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_CSV_EXPORT = 13;
     /**
-     * An authorization action (of a UjoProperty) for a method: UjoManager.clone(Ujo ujo, int depth) .
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * An authorization action (of a Key) for a method: UjoManager.clone(Ujo ujo, int depth) .
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_CLONE = 20;
     /**
-     * An authorization action (of a UjoProperty) for a method: UjoManager.copy(Ujo source, Ujo target, UjoProperty... properties) .
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * An authorization action (of a Key) for a method: UjoManager.copy(Ujo source, Ujo target, Key... properties) .
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_COPY = 21;
     /**
-     * An authorization action (of a UjoProperty) for a method: toString()
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * An authorization action (of a Key) for a method: toString()
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_TO_STRING = 22;
-    /** An authorization action (of a UjoProperty) for a Zero provider.
+    /** An authorization action (of a Key) for a Zero provider.
      * The constant enable/disable a Zero Provide management.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
-     * @deprecated use the UjoProperty.getDefault() value instead of.
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
+     * @deprecated use the Key.getDefault() value instead of.
      */
     public static final int ACTION_ZERO_REPLACE = 30;
     /** An authorization action for class UjoContentTabModel. Can by displayed the property in a JTable like a row?.
-     * @see Ujo#readAuthorization(UjoAction, UjoProperty, Object)
+     * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_TABLE_SHOW = 100;
     

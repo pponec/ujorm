@@ -17,7 +17,7 @@
 package org.bo;
 
 import java.util.Date;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.ValueExportable;
 import org.ujorm.orm.DbType;
@@ -49,18 +49,18 @@ public final class Order extends OrmTable<Order> {
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
-    public static final UjoProperty<Order, Long> ID = newProperty(Long.class);
+    public static final Key<Order, Long> ID = newProperty(Long.class);
     /** Order STATE, default is ACTIVE */
     @Comment("Order state, default value is ACTIVE")
-    public static final UjoProperty<Order, State> STATE = newProperty(State.ACTIVE);
+    public static final Key<Order, State> STATE = newKey(State.ACTIVE);
     /** User key */
-    public static final UjoProperty<Order, Integer> USER_ID = newProperty(Integer.class);
+    public static final Key<Order, Integer> USER_ID = newProperty(Integer.class);
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final UjoProperty<Order, String> NOTE = newProperty(String.class);
+    public static final Key<Order, String> NOTE = newProperty(String.class);
     /** Date of creation */
-    public static final UjoProperty<Order, Date> CREATED = newProperty(Date.class);
+    public static final Key<Order, Date> CREATED = newProperty(Date.class);
     /** Reference to Items */
     public static final RelationToMany<Order, Item> ITEMS = newRelation(Item.class);
 

@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.core.UjoCoder;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
@@ -45,7 +45,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
     private List<PropContainer> properties;
     private CujoPropertyList cujoPropertyList;
     private UjoTranslatorCallback<CUJO>[] callBacks;
-    private Map<UjoProperty, UjoTranslator> relationMap;
+    private Map<Key, UjoTranslator> relationMap;
     private Session dummySession;
     private UjoCoder ujoCoder;
 
@@ -88,7 +88,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
      */
     @SuppressWarnings("unchecked")
     public UjoTranslator(CujoPropertyList cujoPropertyList
-         , UjoPropertyList ujoPropertyList
+         , KeyList ujoPropertyList
          , IServerClassConfig serverClassConfig) {
         this(cujoPropertyList, ujoPropertyList, 1, null, serverClassConfig);
     }
@@ -99,9 +99,9 @@ public final class UjoTranslator<CUJO extends Cujo> {
      */
     @SuppressWarnings("unchecked")
     UjoTranslator(CujoPropertyList cujoPropertyList
-          , UjoPropertyList<?> ujoPropertyList
+          , KeyList<?> ujoPropertyList
           , int relations
-          , Set<UjoProperty> myPropertySet
+          , Set<Key> myPropertySet
           , IServerClassConfig serverClassConfig)
           throws RuntimeException {
 
@@ -110,10 +110,10 @@ public final class UjoTranslator<CUJO extends Cujo> {
         this.serverClassConfig = serverClassConfig;
         this.dummySession = Session.newClosedSession(serverClassConfig.getHandler());
         if (relations > 0) {
-            relationMap = new HashMap<UjoProperty, UjoTranslator>();
+            relationMap = new HashMap<Key, UjoTranslator>();
         }
 
-        for (UjoProperty p1 : ujoPropertyList) {
+        for (Key p1 : ujoPropertyList) {
             if (myPropertySet == null || myPropertySet.contains(p1)) {
                 for (CujoProperty p2 : cujoPropertyList) {
                     if (p1.getName().equals(p2.getName())) {
@@ -331,7 +331,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
                 try {
                     Object idValue = ((Cujo) value).get(pkPropertyName);
                     OrmUjo ormValue = (OrmUjo) pc.p1.getType().newInstance();
-                    UjoProperty p = ormValue.readProperties().find(pkPropertyName, true);
+                    Key p = ormValue.readProperties().find(pkPropertyName, true);
                     p.setValue(ormValue, idValue);
                     copyToServer((Cujo) value, ormValue);
                     value = ormValue;
@@ -438,7 +438,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
     }
 
     /** Is it a primary key? */
-    private boolean isPrimaryKey(UjoProperty p1) {
+    private boolean isPrimaryKey(Key p1) {
         boolean result = false;
         MetaRelation2Many column = serverClassConfig.getHandler().findColumnModel(p1);
         if (column instanceof MetaColumn && ((MetaColumn) column).isPrimaryKey()) {
@@ -449,11 +449,11 @@ public final class UjoTranslator<CUJO extends Cujo> {
 
     private class PropContainer {
 
-        final UjoProperty p1;
+        final Key p1;
         final CujoProperty p2;
         final boolean pk;
 
-        public PropContainer(UjoProperty uProperty, CujoProperty cProperty, boolean pk) {
+        public PropContainer(Key uProperty, CujoProperty cProperty, boolean pk) {
             this.p1 = uProperty;
             this.p2 = cProperty;
             this.pk = pk;

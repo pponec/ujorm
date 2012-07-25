@@ -21,16 +21,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.ujorm.CompositeKey;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 
 /**
- * A <strong>PathProperty</strong> class is an composite of a UjoProperty objects.
- * The PathProperty class can be used wherever is used UjoProperty - with a one important <strong>exception</strong>: 
+ * A <strong>PathProperty</strong> class is an composite of a Key objects.
+ * The PathProperty class can be used wherever is used Key - with a one important <strong>exception</strong>:
  * do not send the PathProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
  * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included 
  * in the list returned by Ujo.readProperties().
@@ -42,59 +43,59 @@ import org.ujorm.criterion.Operator;
 final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
     /** Array of <strong>direct</strong> properties */
-    private final UjoProperty[] properties;
+    private final Key[] properties;
     /** Is property ascending / descending */
     private final boolean ascending;
     private String name;
 
-    public PathProperty(List<UjoProperty> properties) {
-        this(properties.toArray(new UjoProperty[properties.size()]));
+    public PathProperty(List<Key> properties) {
+        this(properties.toArray(new Key[properties.size()]));
     }
 
     /** The main constructor. It is recommended to use the factory method 
-     * {@link #newInstance(org.ujorm.UjoProperty, org.ujorm.UjoProperty) newInstance(..)}
+     * {@link #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)}
      * for better performance in some cases.
-     * @see #newInstance(org.ujorm.UjoProperty, org.ujorm.UjoProperty) newInstance(..)
+     * @see #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)
      */
-    public PathProperty(UjoProperty... properties) {
+    public PathProperty(Key... properties) {
         this(null, properties);
     }
 
     /** Main constructor */
     @SuppressWarnings("unchecked")
-    public PathProperty(Boolean ascending, UjoProperty... properties) {
-        final ArrayList<UjoProperty> list = new ArrayList<UjoProperty>(properties.length + 3);
-        for (UjoProperty property : properties) {
+    public PathProperty(Boolean ascending, Key... properties) {
+        final ArrayList<Key> list = new ArrayList<Key>(properties.length + 3);
+        for (Key property : properties) {
             if (property.isDirect()) {
                 list.add(property);
             } else {
-                ((CompositeProperty)property).exportProperties(list);
+                ((CompositeKey)property).exportProperties(list);
             }
         }
         if (list.isEmpty()) {
             throw new IllegalArgumentException("Argument must not be empty");
         }
         this.ascending = ascending!=null ? ascending : properties[properties.length-1].isAscending();
-        this.properties = list.toArray(new UjoProperty[list.size()]);
+        this.properties = list.toArray(new Key[list.size()]);
     }
 
     /** Private constructor for a better performance. For internal use only. */
-    private PathProperty(final UjoProperty[] properties, final boolean ascending) {
+    private PathProperty(final Key[] properties, final boolean ascending) {
         this.properties = properties;
         this.ascending = ascending;
     }
 
     /** Get the last property of the current object. The result may not be the direct property. */
     @SuppressWarnings("unchecked")
-    public final <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastPartialProperty() {
+    public final <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastPartialProperty() {
         return properties[properties.length - 1];
     }
 
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     @Override
-    final public <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getLastProperty() {
-        UjoProperty result = properties[properties.length - 1];
+    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty() {
+        Key result = properties[properties.length - 1];
         return result.isDirect()
             ? result
             : ((PathProperty)result).getLastProperty()
@@ -104,8 +105,8 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     @Override
-    final public <UJO_IMPL extends Ujo> UjoProperty<UJO_IMPL, VALUE> getFirstProperty() {
-        UjoProperty result = properties[0];
+    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty() {
+        Key result = properties[0];
         return result.isDirect()
             ? result
             : ((PathProperty)result).getFirstProperty()
@@ -116,7 +117,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     final public String getName() {
         if (name==null) {
             StringBuilder result = new StringBuilder(32);
-            for (UjoProperty p : properties) {
+            for (Key p : properties) {
                 if (result.length() > 0) {
                     result.append('.');
                 }
@@ -238,9 +239,9 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     public boolean equals(final Object property) {
-        return property instanceof UjoProperty
+        return property instanceof Key
             && property.toString().equals(getName())
-            && getType().equals(((UjoProperty)property).getType())
+            && getType().equals(((Key)property).getType())
             ;
     }
 
@@ -303,7 +304,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     @SuppressWarnings("unchecked")
-    public UjoProperty<UJO,VALUE> descending() {
+    public Key<UJO,VALUE> descending() {
         return descending(true);
     }
 
@@ -312,7 +313,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     @SuppressWarnings("unchecked")
-    public UjoProperty<UJO,VALUE> descending(boolean descending) {
+    public Key<UJO,VALUE> descending(boolean descending) {
         return isAscending()==descending
                 ? new PathProperty(properties, !descending)
                 : this
@@ -322,8 +323,8 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Export all <string>direct</strong> properties to the list from parameter. */
     @SuppressWarnings("unchecked")
     @Override
-    public void exportProperties(List<UjoProperty> result) {
-        for (UjoProperty p : properties) {
+    public void exportProperties(List<Key> result) {
+        for (Key p : properties) {
             if (p.isDirect()) {
                 result.add(p);
             } else {
@@ -337,19 +338,19 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <VALUE_PAR> CompositeProperty<UJO, VALUE_PAR> add(final UjoProperty<? extends VALUE, VALUE_PAR> property) {
+    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? extends VALUE, VALUE_PAR> property) {
 
-        UjoProperty[] props = new UjoProperty[properties.length+1];
+        Key[] props = new Key[properties.length+1];
         System.arraycopy(properties, 0, props, 0, properties.length);
         props[properties.length] = property;
 
         return new PathProperty(props);
     }
 
-    /** Compare to another UjoProperty object by the index and name of the property.
+    /** Compare to another Key object by the index and name of the property.
      * @since 1.20
      */
-    public int compareTo(final UjoProperty p) {
+    public int compareTo(final Key p) {
         return getIndex()<p.getIndex() ? -1
              : getIndex()>p.getIndex() ?  1
              : getName().compareTo(p.getName())
@@ -361,31 +362,31 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Create a new instance of property with a new sort attribute value.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> sort(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<UJO, VALUE> property, final boolean ascending) {
         if (property.isAscending()==ascending) {
             return property;
         }
         return property.isDirect()
-            ? new PathProperty<UJO, VALUE>(new UjoProperty[]{property}, ascending)
+            ? new PathProperty<UJO, VALUE>(new Key[]{property}, ascending)
             : new PathProperty<UJO, VALUE>(ascending, property)
             ;
     }
 
     /** Create a new instance of property with a new sort attribute value.
-     * This is an alias for the static method {@link #sort(org.ujorm.UjoProperty, boolean) sort()}.
+     * This is an alias for the static method {@link #sort(org.ujorm.Key, boolean) sort()}.
      * @hidden
-     * @see #sort(org.ujorm.UjoProperty, boolean) sort(..)
+     * @see #sort(org.ujorm.Key, boolean) sort(..)
      */
-    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(final Key<UJO, VALUE> property, final boolean ascending) {
         return sort(property, ascending);
     }
 
     /** Quick instance for the direct property.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final UjoProperty<UJO, VALUE> property) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final Key<UJO, VALUE> property) {
         return property.isDirect()
-            ? new PathProperty<UJO, VALUE>(new UjoProperty[]{property}, property.isAscending())
+            ? new PathProperty<UJO, VALUE>(new Key[]{property}, property.isAscending())
             : new PathProperty<UJO, VALUE>(property.isAscending(), property)
             ;
     }
@@ -394,11 +395,11 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final UjoProperty<UJO1, UJO2> property1
-        , final UjoProperty<UJO2, VALUE> property2
+        ( final Key<UJO1, UJO2> property1
+        , final Key<UJO2, VALUE> property2
         ) {
         return property1.isDirect() && property2.isDirect()
-            ? new PathProperty<UJO1, VALUE>(new UjoProperty[]{property1,property2}, property2.isAscending())
+            ? new PathProperty<UJO1, VALUE>(new Key[]{property1,property2}, property2.isAscending())
             : new PathProperty<UJO1, VALUE>(property2.isAscending(), property1, property2)
             ;
     }
@@ -407,9 +408,9 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @hidden 
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final UjoProperty<UJO1, UJO2> property1
-        , final UjoProperty<UJO2, UJO3> property2
-        , final UjoProperty<UJO3, VALUE> property3
+        ( final Key<UJO1, UJO2> property1
+        , final Key<UJO2, UJO3> property2
+        , final Key<UJO3, VALUE> property3
         ) {
         return new PathProperty<UJO1, VALUE>(property1, property2, property3);
     }
@@ -418,10 +419,10 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @hidden 
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final UjoProperty<UJO1, UJO2> property1
-        , final UjoProperty<UJO2, UJO3> property2
-        , final UjoProperty<UJO3, UJO4> property3
-        , final UjoProperty<UJO4, VALUE> property4
+        ( final Key<UJO1, UJO2> property1
+        , final Key<UJO2, UJO3> property2
+        , final Key<UJO3, UJO4> property3
+        , final Key<UJO4, VALUE> property4
         ) {
         return new PathProperty<UJO1, VALUE>(property1, property2, property3, property4);
     }
@@ -430,7 +431,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @hidden 
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(UjoProperty<UJO, ? extends Object>... properties) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... properties) {
         return new PathProperty(properties);
     }
 
@@ -442,7 +443,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> where(Operator operator, UjoProperty<?, VALUE> value) {
+    public Criterion<UJO> where(Operator operator, Key<?, VALUE> value) {
         return Criterion.where(this, operator, value);
     }
 
@@ -454,7 +455,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
 
     /** {@inheritDoc} */
     @Override
-    public Criterion<UJO> whereEq(UjoProperty<UJO, VALUE> value) {
+    public Criterion<UJO> whereEq(Key<UJO, VALUE> value) {
         return Criterion.where(this, value);
     }
 

@@ -20,8 +20,8 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 
 /**
  * General Ujo Manager
@@ -30,20 +30,20 @@ import org.ujorm.UjoPropertyList;
 public class UjoManagerCache {
 
     /** A properties cache. */
-    final private HashMap<Class, UjoPropertyList> propertiesCache;
+    final private HashMap<Class, KeyList> propertiesCache;
 
     /** A XML <strong>element body</strong> cache */
-    private HashMap<Class, UjoProperty> xmlBodyCache;
+    private HashMap<Class, Key> xmlBodyCache;
     
     /** A XML <strong>attribute</strong> cache. */
-    private HashSet<UjoProperty> attributesCache;
+    private HashSet<Key> attributesCache;
 
     /** A transient <strong>attribute</strong> cache. */
-    private HashSet<UjoProperty> transientCache = null;
+    private HashSet<Key> transientCache = null;
     
     /** Constructor. */
     public UjoManagerCache(boolean recursion, Ujo ... ujos) {
-        this.propertiesCache = new HashMap<Class, UjoPropertyList>();
+        this.propertiesCache = new HashMap<Class, KeyList>();
     }
     
     /** Returns true, if the class is abstract. */
@@ -53,7 +53,7 @@ public class UjoManagerCache {
     }
 
     /** Is the property an XML attribute? */
-    public final boolean isXmlAttribute(final UjoProperty property) {
+    public final boolean isXmlAttribute(final Key property) {
         final boolean result 
             =  attributesCache!=null
             && attributesCache.contains(property)
@@ -62,9 +62,9 @@ public class UjoManagerCache {
     }
 
     /** Returns a Element body of the class or the null if no property was found. */
-    public final UjoProperty getXmlElementBody(final Class type) {
+    public final Key getXmlElementBody(final Class type) {
 
-        final UjoProperty result
+        final Key result
             = xmlBodyCache!=null
             ? xmlBodyCache.get(type)
             : null
@@ -73,7 +73,7 @@ public class UjoManagerCache {
     }
 
     /** Is the property an Transient? */
-    public final boolean isTransientProperty(final UjoProperty property) {
+    public final boolean isTransientProperty(final Key property) {
         final boolean result = transientCache!=null && transientCache.contains(property);
         return result;
     }

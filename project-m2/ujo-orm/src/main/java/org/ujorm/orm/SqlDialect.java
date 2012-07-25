@@ -32,7 +32,7 @@ import org.ujorm.logger.UjoLogger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm.metaModel.MetaSelect;
@@ -586,7 +586,7 @@ abstract public class SqlDialect {
      */
     public ValueCriterion printCriterion(ValueCriterion crit, Appendable out) throws IOException {
         Operator operator = crit.getOperator();
-        UjoProperty property = crit.getLeftNode();
+        Key property = crit.getLeftNode();
         Object right = crit.getRightNode();
 
         MetaColumn column = (MetaColumn) ormHandler.findColumnModel(property);
@@ -614,8 +614,8 @@ abstract public class SqlDialect {
 
         if (crit.isConstant()) {
             out.append( template );
-        } else if (right instanceof UjoProperty) {
-            final UjoProperty rightProperty = (UjoProperty) right;
+        } else if (right instanceof Key) {
+            final Key rightProperty = (Key) right;
             final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty);
 
             if (col2.isForeignKey()) {
@@ -704,9 +704,9 @@ abstract public class SqlDialect {
                 : MetaTable.SELECT_MODEL.of(table.getModel())
                 ;
         final String where = query.getDecoder().getWhere();
-        final List<UjoProperty> orderByList = query.getOrderBy();
+        final List<Key> orderByList = query.getOrderBy();
 
-        for (UjoProperty p : select.readProperties()) {
+        for (Key p : select.readProperties()) {
             String value = (String) p.of(select);
 
             if (p==MetaSelect.SELECT && count) {
@@ -816,7 +816,7 @@ abstract public class SqlDialect {
     public void printSelectOrder(Query query, Appendable out) throws IOException {
         
         out.append(" ORDER BY ");
-        final List<UjoProperty> props = query.getOrderBy();
+        final List<Key> props = query.getOrderBy();
         for (int i=0; i<props.size(); i++) {
             MetaColumn column = query.readOrderColumn(i);
             boolean ascending = props.get(i).isAscending();

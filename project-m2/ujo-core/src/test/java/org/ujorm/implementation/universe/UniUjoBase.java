@@ -11,7 +11,7 @@ package org.ujorm.implementation.universe;
 
 import java.util.Date;
 import org.ujorm.*;
-import org.ujorm.core.PropertyFactory;
+import org.ujorm.core.KeyFactory;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -20,14 +20,14 @@ import org.ujorm.core.PropertyFactory;
 public class UniUjoBase implements Ujo {
 
     /** Factory */
-    private static final PropertyFactory<UniUjoBase> factory
-            = PropertyFactory.CamelBuilder.get(UniUjoBase.class);
+    private static final KeyFactory<UniUjoBase> factory
+            = KeyFactory.CamelBuilder.get(UniUjoBase.class);
     
-    public static final UjoProperty<UniUjoBase,Long>      PRO_P0 = factory.newProperty();
-    public static final UjoProperty<UniUjoBase,Integer>   PRO_P1 = factory.newProperty();
-    public static final UjoProperty<UniUjoBase,String>    PRO_P2 = factory.newProperty();
-    public static final UjoProperty<UniUjoBase,Date>      PRO_P3 = factory.newProperty();
-    public static final ListUjoProperty<UniUjoBase,Float> PRO_P4 = factory.newListProperty();
+    public static final Key<UniUjoBase,Long>      PRO_P0 = factory.newKey();
+    public static final Key<UniUjoBase,Integer>   PRO_P1 = factory.newKey();
+    public static final Key<UniUjoBase,String>    PRO_P2 = factory.newKey();
+    public static final Key<UniUjoBase,Date>      PRO_P3 = factory.newKey();
+    public static final ListKey<UniUjoBase,Float> PRO_P4 = factory.newListProperty();
 
     static {
         factory.lock();
@@ -37,17 +37,17 @@ public class UniUjoBase implements Ujo {
     protected Object[] data;
 
     @Override
-    public UjoPropertyList<?> readProperties() {
+    public KeyList<?> readProperties() {
         return factory.getPropertyList();
     }
 
     @Override
-    public Object readValue(UjoProperty property) {
+    public Object readValue(Key property) {
         return data==null ? data : data[property.getIndex()];
     }
 
     @Override
-    public void writeValue(UjoProperty property, Object value) {
+    public void writeValue(Key property, Object value) {
         if (data==null) {
             data = new Object[readProperties().size()];
         }
@@ -55,7 +55,7 @@ public class UniUjoBase implements Ujo {
     }
 
     @Override
-    public boolean readAuthorization(UjoAction action, UjoProperty property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
     }
 

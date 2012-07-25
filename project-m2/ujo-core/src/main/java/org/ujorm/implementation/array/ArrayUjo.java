@@ -17,14 +17,14 @@
 package org.ujorm.implementation.array;
 
 import java.io.Serializable;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.ListProperty;
 
 /**
  * This is a very fast abstract implementation of <code>Ujo</code>.
- * For implementation define only a "public static final UjoProperty" constants and a "readPropertyCount()" method in a child class.
+ * For implementation define only a "public static final Key" constants and a "readPropertyCount()" method in a child class.
  * The code syntax is Java 1.5 complied.
  * <br>All properties must be objects (no primitive types) in the current version of Ujorm.
  * <br>Features: very good performance, an order of properties from "<code>readProperties()</code>" method is guaranteed and independed on a Java implementation.
@@ -35,9 +35,9 @@ import org.ujorm.extensions.ListProperty;
  *
  *    <span class="java-keywords">protected</span> <span class="java-keywords">static</span> <span class="java-keywords">int</span> propertyCount = ArrayUjo.propertyCount;
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,String &gt; NAME  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span> , propertyCount++);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>, propertyCount++);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> UjoProperty&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>   , propertyCount++);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span> , propertyCount++);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>, propertyCount++);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>   , propertyCount++);
  *
  *    <span class="java-annotation">@</span>Override
  *    <span class="java-keywords">public</span> <span class="java-keywords">int</span> <span class="java-layer-method">readPropertyCount</span>() {
@@ -94,7 +94,7 @@ public abstract class ArrayUjo extends AbstractUjo implements Serializable {
      */
 
     @Override
-    public void writeValue(final UjoProperty property, final Object value) {
+    public void writeValue(final Key property, final Object value) {
         assert readUjoManager().assertDirectAssign(property, value);       
         data[property.getIndex()] = value;
     }
@@ -109,7 +109,7 @@ public abstract class ArrayUjo extends AbstractUjo implements Serializable {
      * @see Property#getValue(Ujo)
      */    
     @Override
-    public Object readValue(final UjoProperty property) {
+    public Object readValue(final Key property) {
         return data[property.getIndex()];
     }
     
