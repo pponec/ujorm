@@ -49,11 +49,11 @@ public class CujoModel extends ColumnModel {
         this(propertyList.getProperties());
     }
 
-    public CujoModel(CujoProperty... properties) {
-        super(createPropertyList(properties));
-        this.propertyList = Arrays.asList(properties);
+    public CujoModel(CujoProperty... keys) {
+        super(createPropertyList(keys));
+        this.propertyList = Arrays.asList(keys);
 
-        for (CujoProperty property : properties) {
+        for (CujoProperty property : keys) {
             String propertyName = property.getName();
             for (ColumnConfig config : super.getColumns()) {
                 if (config.getId().equals(propertyName)) {

@@ -42,14 +42,14 @@ import org.ujorm.criterion.Operator;
 @Immutable
 final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
-    /** Array of <strong>direct</strong> properties */
-    private final Key[] properties;
+    /** Array of <strong>direct</strong> keys */
+    private final Key[] keys;
     /** Is property ascending / descending */
     private final boolean ascending;
     private String name;
 
-    public PathProperty(List<Key> properties) {
-        this(properties.toArray(new Key[properties.size()]));
+    public PathProperty(List<Key> keys) {
+        this(keys.toArray(new Key[keys.size()]));
     }
 
     /** The main constructor. It is recommended to use the factory method 
@@ -57,15 +57,15 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * for better performance in some cases.
      * @see #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)
      */
-    public PathProperty(Key... properties) {
-        this(null, properties);
+    public PathProperty(Key... keys) {
+        this(null, keys);
     }
 
     /** Main constructor */
     @SuppressWarnings("unchecked")
-    public PathProperty(Boolean ascending, Key... properties) {
-        final ArrayList<Key> list = new ArrayList<Key>(properties.length + 3);
-        for (Key property : properties) {
+    public PathProperty(Boolean ascending, Key... keys) {
+        final ArrayList<Key> list = new ArrayList<Key>(keys.length + 3);
+        for (Key property : keys) {
             if (property.isDirect()) {
                 list.add(property);
             } else {
@@ -75,27 +75,27 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         if (list.isEmpty()) {
             throw new IllegalArgumentException("Argument must not be empty");
         }
-        this.ascending = ascending!=null ? ascending : properties[properties.length-1].isAscending();
-        this.properties = list.toArray(new Key[list.size()]);
+        this.ascending = ascending!=null ? ascending : keys[keys.length-1].isAscending();
+        this.keys = list.toArray(new Key[list.size()]);
     }
 
     /** Private constructor for a better performance. For internal use only. */
-    private PathProperty(final Key[] properties, final boolean ascending) {
-        this.properties = properties;
+    private PathProperty(final Key[] keys, final boolean ascending) {
+        this.keys = keys;
         this.ascending = ascending;
     }
 
     /** Get the last property of the current object. The result may not be the direct property. */
     @SuppressWarnings("unchecked")
     public final <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastPartialProperty() {
-        return properties[properties.length - 1];
+        return keys[keys.length - 1];
     }
 
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty() {
-        Key result = properties[properties.length - 1];
+        Key result = keys[keys.length - 1];
         return result.isDirect()
             ? result
             : ((PathProperty)result).getLastProperty()
@@ -106,7 +106,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     @SuppressWarnings("unchecked")
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty() {
-        Key result = properties[0];
+        Key result = keys[0];
         return result.isDirect()
             ? result
             : ((PathProperty)result).getFirstProperty()
@@ -117,7 +117,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     final public String getName() {
         if (name==null) {
             StringBuilder result = new StringBuilder(32);
-            for (Key p : properties) {
+            for (Key p : keys) {
                 if (result.length() > 0) {
                     result.append('.');
                 }
@@ -134,7 +134,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         return getLastPartialProperty().getType();
     }
 
-    /** Get a semifinal value from an Ujo object by a chain of properties.
+    /** Get a semifinal value from an Ujo object by a chain of keys.
      * If any value (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
@@ -142,14 +142,14 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     public Ujo getSemifinalValue(UJO ujo) {
 
         Ujo result = ujo;
-        for (int i=0; i<properties.length-1; i++) {
+        for (int i=0; i<keys.length-1; i++) {
             if (result==null) { return result; }
-            result = (Ujo) properties[i].getValue(result);
+            result = (Ujo) keys[i].getValue(result);
         }
         return result;
     }
 
-    /** Get a value from an Ujo object by a chain of properties.
+    /** Get a value from an Ujo object by a chain of keys.
      * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
@@ -315,16 +315,16 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     @SuppressWarnings("unchecked")
     public Key<UJO,VALUE> descending(boolean descending) {
         return isAscending()==descending
-                ? new PathProperty(properties, !descending)
+                ? new PathProperty(keys, !descending)
                 : this
                 ;
     }
 
-    /** Export all <string>direct</strong> properties to the list from parameter. */
+    /** Export all <string>direct</strong> keys to the list from parameter. */
     @SuppressWarnings("unchecked")
     @Override
     public void exportProperties(List<Key> result) {
-        for (Key p : properties) {
+        for (Key p : keys) {
             if (p.isDirect()) {
                 result.add(p);
             } else {
@@ -340,9 +340,9 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     @Override
     public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? extends VALUE, VALUE_PAR> property) {
 
-        Key[] props = new Key[properties.length+1];
-        System.arraycopy(properties, 0, props, 0, properties.length);
-        props[properties.length] = property;
+        Key[] props = new Key[keys.length+1];
+        System.arraycopy(keys, 0, props, 0, keys.length);
+        props[keys.length] = property;
 
         return new PathProperty(props);
     }
@@ -431,8 +431,8 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @hidden 
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... properties) {
-        return new PathProperty(properties);
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... keys) {
+        return new PathProperty(keys);
     }
 
     /** {@inheritDoc} */

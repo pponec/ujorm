@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 public class CujoPropertyList implements Iterable<CujoProperty> {
 
     private Class<? extends Cujo> type;
-    private List<CujoProperty> properties = new ArrayList<CujoProperty>();
+    private List<CujoProperty> keys = new ArrayList<CujoProperty>();
     private boolean lock = false;
 
     public CujoPropertyList(Class<? extends Cujo> type) {
@@ -32,7 +32,7 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
         if (!lock) {
             lock = true;
         }
-        return properties.toArray(new CujoProperty[properties.size()]);
+        return keys.toArray(new CujoProperty[keys.size()]);
     }
 
     public Class<? extends Cujo> getType() {
@@ -50,7 +50,7 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
      */
     public CujoProperty findProperty(String name, boolean throwsException) {
         int hash = name.hashCode();
-        for (CujoProperty p : properties) {
+        for (CujoProperty p : keys) {
             if (p.getName().hashCode() == hash &&
                 p.getName().equals(name)) {
                 return p;
@@ -79,7 +79,7 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
 
     @Override
     public Iterator<CujoProperty> iterator() {
-        return properties.iterator();
+        return keys.iterator();
     }
 
     public CujoModel createColumnModel() {
@@ -99,7 +99,7 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
         if (lock) {
             throw new UnsupportedOperationException("The " + getClass() + " is locked");
         }
-        return CListProperty.newListProperty(name, type, properties.size());
+        return CListProperty.newListProperty(name, type, keys.size());
     }
 
 
@@ -107,8 +107,8 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
         if (lock) {
             throw new UnsupportedOperationException("The " + getClass() + " is locked");
         }
-        CPropertyEnum<UJO, VALUE> result = new CPropertyEnum<UJO, VALUE>(name, CEnum.class, null, properties.size(), enumKey);
-        properties.add(result);
+        CPropertyEnum<UJO, VALUE> result = new CPropertyEnum<UJO, VALUE>(name, CEnum.class, null, keys.size(), enumKey);
+        keys.add(result);
         return result;
     }
 
@@ -122,8 +122,8 @@ public class CujoPropertyList implements Iterable<CujoProperty> {
         if (lock) {
             throw new UnsupportedOperationException("The " + getClass() + " is locked");
         }
-        CujoProperty<UJO, VALUE> result = new CProperty<UJO, VALUE>(name, type, defaultValue, properties.size());
-        properties.add(result);
+        CujoProperty<UJO, VALUE> result = new CProperty<UJO, VALUE>(name, type, defaultValue, keys.size());
+        keys.add(result);
         return result;
     }
 

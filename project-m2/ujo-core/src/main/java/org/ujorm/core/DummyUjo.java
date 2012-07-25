@@ -41,19 +41,19 @@ final class DummyUjo implements Ujo {
     @Override
     public Object readValue(Key property) { return null;  }
 
-    /** Returns unsorted properties. */
+    /** Returns unsorted keys. */
     @Override
     public KeyList<?> readKeys() {
         final Key[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
         return KeyRing.of(DummyUjo.class, ps);
     }
 
-    /** Returns unsorted properties. */
+    /** Returns unsorted keys. */
     public UjoPropertyList readProperties() {
         return new UjoPropertyListImpl(readKeys());
     }
     
-    /** Is an order of properties reversed? */
+    /** Is an order of keys reversed? */
     public Boolean isPropertiesReversed() {
         final KeyList props = readKeys();
         final Boolean result = Boolean.valueOf(props.get(0)==P1);

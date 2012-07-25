@@ -146,11 +146,11 @@ public class QueryTranslator<UJO extends OrmUjo> {
     }
 
     /** Convert from Cujo.orderBy to Ujo.orderBy */
-    public List<Key> orderBy(List<CujoProperty> properties) {
+    public List<Key> orderBy(List<CujoProperty> keys) {
         List<Key> result = new ArrayList<Key>();
 
-        if (properties != null) {
-            for (CujoProperty cp : properties) {
+        if (keys != null) {
+            for (CujoProperty cp : keys) {
                 Key up = manager.findIndirectProperty(type, cp.getName());
                 result.add(cp.isAscending() ? up : up.descending());
             }

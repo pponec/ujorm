@@ -20,7 +20,7 @@ import java.lang.annotation.*;
 /** 
  * A parameter annotation of the stored procedure.
  * The first property/parameter has allways the output type and it provides a result of the stored procedure. If prcedure does not have a return value, the property type must be Void.
- * The next properties/parameters have an input type by default, there is possible to change this type by this annotations.
+ * The next keys/parameters have an input type by default, there is possible to change this type by this annotations.
  * @see Procedure
  */
 @Retention(value=RetentionPolicy.RUNTIME)

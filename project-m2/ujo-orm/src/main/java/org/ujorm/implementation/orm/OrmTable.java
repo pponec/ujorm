@@ -124,7 +124,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
         return result;
     }
 
-    /** Returns a changed properties. The method is not the thread save.
+    /** Returns a changed keys. The method is not the thread save.
      * @param clear True value clears the property changes.
      */
     @Override

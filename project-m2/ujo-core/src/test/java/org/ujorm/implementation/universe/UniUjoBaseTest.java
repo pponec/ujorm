@@ -107,7 +107,7 @@ public class UniUjoBaseTest extends MyTestCase {
     
         
     
-    /** Test of properties */
+    /** Test of keys */
     public void testGetProperties1() throws Throwable {
         UniUjoBase ujb1 = new UniUjoBase();
         KeyList props = ujb1.readKeys();
@@ -119,7 +119,7 @@ public class UniUjoBaseTest extends MyTestCase {
         assertEquals(UniUjoBase.PRO_P4, props.get(4));
     }
 
-    /** Test of properties */
+    /** Test of keys */
     // @ExpectedException(class=IllegalStateException.class, message="Exception Message", causeException)
     public void testMismuch() throws Throwable {
         try {
@@ -135,7 +135,7 @@ public class UniUjoBaseTest extends MyTestCase {
 
 
 
-    /** Test of properties */
+    /** Test of keys */
     public void testDummy() throws Throwable {
     }
 

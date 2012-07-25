@@ -53,7 +53,7 @@ public class UjoManager implements Comparator<Key> {
     /** UjoManager instance */
     protected static UjoManager instance = new UjoManager();
     
-    /** A properties cache. */
+    /** A keys cache. */
     final private HashMap<Class, KeyList> propertiesCache;
 
     /** A XML <strong>element body</strong> cache */
@@ -65,7 +65,7 @@ public class UjoManager implements Comparator<Key> {
     /** A transient <strong>attribute</strong> cache. */
     private HashSet<Key> transientCache = null;
     
-    /** Are properties reversed? */
+    /** Are keys reversed? */
     private Boolean arePropertiesReversed = null;
     
     private UjoCoder coder;
@@ -90,7 +90,7 @@ public class UjoManager implements Comparator<Key> {
         }
     }
     
-    /** Are properties reversed by default? */
+    /** Are keys reversed by default? */
     public boolean isPropertiesReversed() {
         if (arePropertiesReversed==null) {
             arePropertiesReversed = new DummyUjo().isPropertiesReversed().booleanValue();
@@ -119,7 +119,7 @@ public class UjoManager implements Comparator<Key> {
     
     
     /**
-     * Returns all direct properties (see an method Key.isDirect() for more information).
+     * Returns all direct keys (see an method Key.isDirect() for more information).
      * @param type Ujo class
      * @param sorted I want to sortd the result by a natural order.
      * @return Array of Properties
@@ -225,7 +225,7 @@ public class UjoManager implements Comparator<Key> {
         }
     }
     
-    /** Compare Ujo properties by index. An undefined property indexes (-1 are sorted to the end. */
+    /** Compare Ujo keys by index. An undefined property indexes (-1 are sorted to the end. */
     public int compare(final Key p1, final Key p2) {
         final int i1 = p1.getIndex()>=0 ? p1.getIndex() : Integer.MAX_VALUE;
         final int i2 = p2.getIndex()>=0 ? p2.getIndex() : Integer.MAX_VALUE;
@@ -236,13 +236,13 @@ public class UjoManager implements Comparator<Key> {
         ;
     }
 
-    /** Sort properties. */
-    protected void sortProperties(final Class type, final Key[] properties) {
-        if (properties.length>0) {
+    /** Sort keys. */
+    protected void sortProperties(final Class type, final Key[] keys) {
+        if (keys.length>0) {
             if (ArrayUjo.class.isAssignableFrom(type)) {
-                Arrays.sort(properties, this);
+                Arrays.sort(keys, this);
             } else if(isPropertiesReversed()) {
-                revertArray(properties);
+                revertArray(keys);
             }
         }
     }
@@ -254,9 +254,9 @@ public class UjoManager implements Comparator<Key> {
     
     /** Calculate a Hash Code. */
     @SuppressWarnings("unchecked")
-    public int getHash(Ujo ujo, KeyList<?> properties) {
+    public int getHash(Ujo ujo, KeyList<?> keys) {
         int result = 0;
-        if (ujo!=null) for (Key prop : properties) {
+        if (ujo!=null) for (Key prop : keys) {
             Object obj = prop.of(ujo);
             if (obj!=null) {
                 result = (result>>>3) + obj.hashCode();
@@ -300,7 +300,7 @@ public class UjoManager implements Comparator<Key> {
      * @return Returns true, if objects are the same.
      */
     @SuppressWarnings("unchecked")
-    public boolean equalsUjo(final Ujo u1, final Ujo u2, KeyList properties)  {
+    public boolean equalsUjo(final Ujo u1, final Ujo u2, KeyList keys)  {
         if (u1==u2) {
             return true;
         }
@@ -308,8 +308,8 @@ public class UjoManager implements Comparator<Key> {
             return false;
         }
         if (u1.getClass().equals(u2.getClass())) {
-            for (int i=properties.size()-1; i>=0; i--) {
-                Key property = properties.get(i);
+            for (int i=keys.size()-1; i>=0; i--) {
+                Key property = keys.get(i);
                 final Object o1 = property.of(u1);
                 final Object o2 = property.of(u2);
                 if (! equals(o1, o2)) {
@@ -468,13 +468,13 @@ public class UjoManager implements Comparator<Key> {
     /** Print a String representation. <br>
      * Note: Very long property values are truncated to the 128 characters. */
     @SuppressWarnings("unchecked")
-    public String toString(Ujo ujo, KeyList properties) {
+    public String toString(Ujo ujo, KeyList keys) {
         final StringBuilder result = new StringBuilder(32);
         result.append(ujo.getClass().getSimpleName());
         final UjoAction action = new UjoActionImpl(ACTION_TO_STRING, this);
 
-        for(int i=0, max = properties.size(); i<max; ++i) {
-            final Key property = properties.get(i);
+        for(int i=0, max = keys.size(); i<max; ++i) {
+            final Key property = keys.get(i);
             if (!ujo.readAuthorization(action, property, this)) { continue; }
 
             // If the parameter is the List or another Ujo, then show a detail information:
@@ -515,7 +515,7 @@ public class UjoManager implements Comparator<Key> {
             }
         }
 
-        if (properties.size()>0) {
+        if (keys.size()>0) {
             result.append("]");
         }
         return result.toString();
@@ -705,7 +705,7 @@ public class UjoManager implements Comparator<Key> {
     
     // ---------------------------------------------------------------------
 
-    /** Set a value to an Ujo object by a selected properties. */
+    /** Set a value to an Ujo object by a selected keys. */
     @SuppressWarnings("unchecked")
     public static void setValue(final Ujo ujo, final Key prop, final Object value) {
         if (prop.isDirect()) {
@@ -716,7 +716,7 @@ public class UjoManager implements Comparator<Key> {
     }
     
     
-    /** Set a value to an Ujo object by a chain of properties. 
+    /** Set a value to an Ujo object by a chain of keys. 
      * <br>Type of value is checked in the runtime.
      */
     @SuppressWarnings("unchecked")
@@ -742,7 +742,7 @@ public class UjoManager implements Comparator<Key> {
         return prop.of(ujo);
     } 
     
-    /** Get a value from an Ujo object by a chain of properties. 
+    /** Get a value from an Ujo object by a chain of keys. 
      * If a not getLastPartialProperty value is null, then is throwded a NullPointe exception.
      */
     @SuppressWarnings("unchecked")
@@ -825,17 +825,17 @@ public class UjoManager implements Comparator<Key> {
     }
     
     /**
-     * Copy selected properties from source to target.
+     * Copy selected keys from source to target.
      * @param source Source UJO
      * @param target Target UJO
      * @param action An action of source.
-     * @param properties If the value is null, then all properties of source will be used.
+     * @param keys If the value is null, then all keys of source will be used.
      */    
-    public void copy(Ujo source, Ujo target, UjoAction action, Key... properties) {
-        if (properties==null) {
-            properties = source.readKeys().toArray();
+    public void copy(Ujo source, Ujo target, UjoAction action, Key... keys) {
+        if (keys==null) {
+            keys = source.readKeys().toArray();
         }
-        for(Key p : properties) {
+        for(Key p : keys) {
             Object value = source.readValue(p);
             final boolean enabled = source.readAuthorization(action, p, value);
             if (enabled) {
@@ -845,18 +845,18 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /**
-     * Copy selected properties of the source to target. An action is ACTION_COPY, an context is UjoManager.
+     * Copy selected keys of the source to target. An action is ACTION_COPY, an context is UjoManager.
      * @param source Source UJO
      * @param target Target UJO
-     * @param properties If the value is null, then all properties of source will be used.
+     * @param keys If the value is null, then all keys of source will be used.
      */    
-    public void copy(Ujo source, Ujo target, Key... properties) {
-        copy(source, target, new UjoActionImpl(UjoAction.ACTION_COPY, this), properties);
+    public void copy(Ujo source, Ujo target, Key... keys) {
+        copy(source, target, new UjoActionImpl(UjoAction.ACTION_COPY, this), keys);
     }
     
     
     /**
-     * Copy ALL properties of the source to target. An action is ACTION_COPY, an context is UjoManager.
+     * Copy ALL keys of the source to target. An action is ACTION_COPY, an context is UjoManager.
      * @param source Source UJO
      * @param target Target UJO
      */    
@@ -920,7 +920,7 @@ public class UjoManager implements Comparator<Key> {
         return null;
     }
 
-    /** Check ujo properties to a unique name.
+    /** Check ujo keys to a unique name.
      * There is recommended to calll the method from static block after Key initialization.
      * The beneficial side effect is loading a property cache.
      * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
@@ -939,7 +939,7 @@ public class UjoManager implements Comparator<Key> {
         }
     }
 
-    /** Check ujo properties to a unique name.
+    /** Check ujo keys to a unique name.
      * There is recommended to calll the method from static block after Key initialization.
      * The beneficial side effect is loading a property cache.
      * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.

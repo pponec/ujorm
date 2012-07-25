@@ -186,7 +186,7 @@ public class QuickUjoBaseTest extends MyTestCase {
     }
         
     
-    /** Test of properties */
+    /** Test of keys */
     public void testGetProperties1() throws Throwable {
         QuickUjoImpl ujb1 = new QuickUjoImpl();
         KeyList props = ujb1.readKeys();

@@ -33,31 +33,31 @@ import org.ujorm.Key;
  */
 final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     
-    final Key[] properties;
+    final Key[] keys;
     final private Locale collatorLocale;
     final private int collatorStrength;
     private Collator collator;
     
     /** Creates a new instance of UjoComparator. The String are compared as Collator.IDENTICAL by English locale by default.
-     * @param properties sorting criteria are ordered by importance to down.
+     * @param keys sorting criteria are ordered by importance to down.
      *        A direction of the sorting is used by a method Key#isAscending().
      * @see Key#isAscending()
      * @see Key#descending()
      */
-    public UjoComparator(final Key ... properties) {
-        this(Locale.ENGLISH, Collator.IDENTICAL, properties);
+    public UjoComparator(final Key ... keys) {
+        this(Locale.ENGLISH, Collator.IDENTICAL, keys);
     }
 
     /** Creates a new instance of UjoComparator
      * @param locale Locale for a String coparation
      * @param collatorStrength Cllator Strength for String comparations
-     * @param properties sorting criteria are ordered by importance to down.
+     * @param keys sorting criteria are ordered by importance to down.
      *        A direction of the sorting is used by a method Key#isAscending().
      * @see Key#isAscending()
      * @see Key#descending()
      */
-    public UjoComparator(Locale locale, int collatorStrength, final Key ... properties) {
-        this.properties = properties;
+    public UjoComparator(Locale locale, int collatorStrength, final Key ... keys) {
+        this.keys = keys;
         this.collatorLocale = locale;
         switch (collatorStrength) {
             case (Collator.PRIMARY):
@@ -98,7 +98,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      */
     @SuppressWarnings("unchecked")
     public int compare(UJO u1, UJO u2) {
-        for (Key property : properties) {
+        for (Key property : keys) {
 
             final Comparable c1 = (Comparable) property.of(u1);
             final Comparable c2 = (Comparable) property.of(u2);
@@ -142,7 +142,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(32);
-        for (Key property : properties) {
+        for (Key property : keys) {
             if (sb.length()>0) {
                 sb.append(", ");
             }
@@ -167,13 +167,13 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      * <pre class="pre">
      * List&lt;Person&gt; result = UjoComparator.&lt;Person&gt;newInstance(Person.NAME).sort(persons);
      * </pre>
-     * @param properties sorting criteria are ordered by importance to down.
+     * @param keys sorting criteria are ordered by importance to down.
      *        A direction of the sorting is used by a method Key#isAscending().
      * @see Key#isAscending()
      * @see Key#descending()
      */
-    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Key<UJO,?> ... properties) {
-        return new UjoComparator<UJO>(properties);
+    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Key<UJO,?> ... keys) {
+        return new UjoComparator<UJO>(keys);
     }
     
     /** @see #newInstance(org.ujorm.Key<UJO,?>[])  */
@@ -194,13 +194,13 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     /** Creates a new instance of UjoComparator
      * @param locale Locale for a String coparation
      * @param collatorStrength Cllator Strength for String comparations
-     * @param properties sorting criteria are ordered by importance to down.
+     * @param keys sorting criteria are ordered by importance to down.
      *        A direction of the sorting is used by a method Key#isAscending().
      * @see Key#isAscending()
      * @see Key#descending()
      */
-    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Locale locale, int collatorStrength, final Key<UJO,?> ... properties) {
-        return new UjoComparator<UJO>(properties);
+    public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Locale locale, int collatorStrength, final Key<UJO,?> ... keys) {
+        return new UjoComparator<UJO>(keys);
     }
 
     

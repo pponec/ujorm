@@ -151,7 +151,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return lock;
     }
 
-    /** Check validity of properties */
+    /** Check validity of keys */
     protected void checkValidity() throws IllegalArgumentException {
         if (name == null) {
             throw new IllegalArgumentException("Name must not be null for property index: #" + index);
@@ -256,7 +256,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
     
     /**
-     * Returns a true value, if the property contains more properties.
+     * Returns a true value, if the property contains more keys.
      * The composite property is excluded from from function Ujo.readKeys() by default.
      */
     @Override

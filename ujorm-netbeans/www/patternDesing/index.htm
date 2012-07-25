@@ -163,10 +163,10 @@ System.out.<span class="java-layer-method">println</span>(name + <span class="ja
 The pattern design can be used like a special delegate of the POJO object. It's useful in case there is to need to refer a set of get <strong>method</strong>
 and to avoid a non-type value access by reflection API. Here are some samples of usage in a Java language
 <ul>
-    <li>The sort method takes a list of items and its properties (e.g. NAME, AGE) for the ordering. A GenericSorter implementation builds an appropriate comparator oneself .
+    <li>The sort method takes a list of items and its keys (e.g. NAME, AGE) for the ordering. A GenericSorter implementation builds an appropriate comparator oneself .
 <pre class="pre" style="margin-left: 0;">
 <span class="java-keywords">interface</span> GenericSorter {
-    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">sort</span>(List&lt;MyMap&gt; items, Property ... properties);
+    <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">sort</span>(List&lt;MyMap&gt; items, Property ... keys);
 }</pre>
     </li>
     <li>a child of a TableModel interface, which can to take a list of columns by an argument of a method

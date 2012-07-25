@@ -45,7 +45,7 @@ abstract public class UjoService<UJO extends Ujo> {
     /** Basic UJO Class */
     final private Class<UJO> ujoClass;
     /** Properties */
-    private Key[] properties;
+    private Key[] keys;
     /** Is ujoClass textable */
     final private boolean textable;
     
@@ -58,9 +58,9 @@ abstract public class UjoService<UJO extends Ujo> {
     }
     
     /** Creates a new instance of UjoService */
-    public UjoService(Class<UJO> ujoClass, Key ... properties) {
+    public UjoService(Class<UJO> ujoClass, Key ... keys) {
         this.ujoClass   = ujoClass;
-        this.properties = properties;
+        this.keys = keys;
         this.textable   = UjoTextable.class.isAssignableFrom(ujoClass);
     }
     
@@ -83,12 +83,12 @@ abstract public class UjoService<UJO extends Ujo> {
         return this;
     }
     
-    /** Get required properties */
+    /** Get required keys */
     public Key[] getProperties() {
-        if (properties==null) {
-            properties = ujoManager.readProperties(getUjoClass()).toArray();
+        if (keys==null) {
+            keys = ujoManager.readProperties(getUjoClass()).toArray();
         }
-        return properties;
+        return keys;
     }
     
     /** Returns TEXT */

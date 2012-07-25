@@ -38,12 +38,12 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
     /** Get the first property of the current object. The result is direct property always. */
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty();
 
-    /** Get a semifinal value from an Ujo object by a chain of properties.
+    /** Get a semifinal value from an Ujo object by a chain of keys.
      * If any value (not getLastPartialProperty) is null, then the result is null.
      */
     public Ujo getSemifinalValue(UJO ujo);
 
-    /** Export all <string>direct</strong> properties to the list from parameter. */
+    /** Export all <string>direct</strong> keys to the list from parameter. */
     public void exportProperties(List<Key> result);
 
 

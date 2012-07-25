@@ -656,10 +656,10 @@ public class Session {
     }
 
     /** Convert a property array to a column list. */
-    protected List<MetaColumn> getOrmColumns(final Key... properties) {
-        final List<MetaColumn> result = new ArrayList<MetaColumn>(properties.length);
+    protected List<MetaColumn> getOrmColumns(final Key... keys) {
+        final List<MetaColumn> result = new ArrayList<MetaColumn>(keys.length);
 
-        for (Key property : properties) {
+        for (Key property : keys) {
             MetaRelation2Many column = handler.findColumnModel(property);
             if (column instanceof MetaColumn) {
                 result.add((MetaColumn) column);
@@ -1094,7 +1094,7 @@ public class Session {
             return false;
         }
 
-        // Copy all properties to the original object
+        // Copy all keys to the original object
         ujo.writeSession(null);
         for (MetaColumn c : MetaTable.COLUMNS.of(metaTable)) {
 
@@ -1107,7 +1107,7 @@ public class Session {
             }
         }
         ujo.writeSession(this);
-        ujo.readChangedProperties(true); // Clear changed properties
+        ujo.readChangedProperties(true); // Clear changed keys
 
         return true;
     }

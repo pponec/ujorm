@@ -29,7 +29,7 @@ import org.ujorm.KeyList;
  */
 public class UjoManagerCache {
 
-    /** A properties cache. */
+    /** A keys cache. */
     final private HashMap<Class, KeyList> propertiesCache;
 
     /** A XML <strong>element body</strong> cache */

@@ -527,7 +527,7 @@ Děkuji za Vaše <a href="http://ujorm-cs.blogspot.com/2010/05/jak-funguje-ujorm
       Session, která je potřebná pro získání DB connection při pozdním volání hodnot (lazy-loading)<br>
     </li>
     <li>
-      UjoProperty[] - obsahuje seznam properties <b>zapsaných </b>v době přiřazené Sesssion. Tento seznam umožňuje efektivnější aktualizaci databáze příkazem UPDATE, protože příkaz se sestavuje pouze pro modifikované hodnoty Properties. Ostatní hodnoty se při UPDATE ignorují. Pokud objekt nemá přiřazenou Session, tak se zápis nových hodnot <b>neregistruje</b>.<br>
+      UjoProperty[] - obsahuje seznam keys <b>zapsaných </b>v době přiřazené Sesssion. Tento seznam umožňuje efektivnější aktualizaci databáze příkazem UPDATE, protože příkaz se sestavuje pouze pro modifikované hodnoty Properties. Ostatní hodnoty se při UPDATE ignorují. Pokud objekt nemá přiřazenou Session, tak se zápis nových hodnot <b>neregistruje</b>.<br>
     </li>
   </ul>
   <br>
@@ -889,7 +889,7 @@ Ujorm podporuje automatické generování primárního klíče pomocí třídy <
 <h2>
   <a id=Datab_zov_procedury_6024463592 name=Datab_zov_procedury_6024463592></a><b><b>Databázové procedury:</b></b>
 </h2>
-Ujorm podporuje od verze 0.94 volání databázových uložených <b>procedur</b> a <b>funkcí</b> (dále jen procedura). Každá procedura&nbsp; je popsána třídou rozšiřující abstraktní třídu DbProcedure, která implementuje Ujo. Významné je pořadí UjoProperties ve třídě, které musí odpovídat pořadí parametrů v proceduře. Pokud procedura <b>nemá návratový typ</b>, tak první konstanta UjoProperty v pořadí bude typu <b>Void.class</b>. První UjoProperty je typu OUTPUT, ostatní jsou defaultně typu INPUT. Defaultní typy properties je možné překrýt anotací <i>@Parameter(input=true, output=true)</i>. Databázové procedury je nutné <b>registrovat</b> ve třídě databases podobně jako databázové tabulky:<br>
+Ujorm podporuje od verze 0.94 volání databázových uložených <b>procedur</b> a <b>funkcí</b> (dále jen procedura). Každá procedura&nbsp; je popsána třídou rozšiřující abstraktní třídu DbProcedure, která implementuje Ujo. Významné je pořadí UjoProperties ve třídě, které musí odpovídat pořadí parametrů v proceduře. Pokud procedura <b>nemá návratový typ</b>, tak první konstanta UjoProperty v pořadí bude typu <b>Void.class</b>. První UjoProperty je typu OUTPUT, ostatní jsou defaultně typu INPUT. Defaultní typy keys je možné překrýt anotací <i>@Parameter(input=true, output=true)</i>. Databázové procedury je nutné <b>registrovat</b> ve třídě databases podobně jako databázové tabulky:<br>
 <br>
 <div style=MARGIN-LEFT:40px>
   <font face="courier new">public static final Property&lt;Database,MyProcedure&gt; procedure<br>
@@ -1026,7 +1026,7 @@ Doporučuji mít na paměti následujcí vlastnosti UJO, které mají vliv na je
 <h2>
   <a id=Meta_model_11271129394580981_6 name=Meta_model_11271129394580981_6></a>Meta-model:
 </h2>
-Meta-model se sestavuje podle obsahu Ujo properties třídy Database a jejích tabulek. Názvy tabulek, view, procedur se odvozují z názvů Ujo property. Většinu vlastností modelu lze překrývat anotacemi umístěnými přímo u property a nebo u názvu třídy. Vlastnosti nastavené anotacemi lze dále překrývat konfiguračním XML souborem, který může modifikovat volitelně jen vybrané části meta-modelu.<br>
+Meta-model se sestavuje podle obsahu Ujo keys třídy Database a jejích tabulek. Názvy tabulek, view, procedur se odvozují z názvů Ujo property. Většinu vlastností modelu lze překrývat anotacemi umístěnými přímo u property a nebo u názvu třídy. Vlastnosti nastavené anotacemi lze dále překrývat konfiguračním XML souborem, který může modifikovat volitelně jen vybrané části meta-modelu.<br>
 <br>
 Po sestavení meta-modelu v paměti se model uzamkne a není možné do něj dále zapisovat, za běhu programu však lze získávat z něj užitečné informace. Mírně zjednodušený class diagram meta je na následujícím obrázku:<br>
 <br>

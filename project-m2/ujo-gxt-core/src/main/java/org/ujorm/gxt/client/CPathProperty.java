@@ -27,25 +27,25 @@ import org.ujorm.gxt.client.cquery.COperator;
  */
 final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoProperty<UJO, VALUE> {
 
-    /** Array of <strong>direct</strong> properties */
-    private final CujoProperty[] properties;
+    /** Array of <strong>direct</strong> keys */
+    private final CujoProperty[] keys;
     /** Is property ascending / descending */
     private final boolean ascending;
     private String name;
 
-    public CPathProperty(List<CujoProperty> properties) {
-        this(properties.toArray(new CujoProperty[properties.size()]));
+    public CPathProperty(List<CujoProperty> keys) {
+        this(keys.toArray(new CujoProperty[keys.size()]));
     }
 
     /** Main constructor */
-    public CPathProperty(CujoProperty... properties) {
-        this(null, properties);
+    public CPathProperty(CujoProperty... keys) {
+        this(null, keys);
     }
 
     /** Main constructor */
-    public CPathProperty(Boolean ascending, CujoProperty... properties) {
-        final ArrayList<CujoProperty> list = new ArrayList<CujoProperty>(properties.length + 3);
-        for (CujoProperty property : properties) {
+    public CPathProperty(Boolean ascending, CujoProperty... keys) {
+        final ArrayList<CujoProperty> list = new ArrayList<CujoProperty>(keys.length + 3);
+        for (CujoProperty property : keys) {
             if (property.isDirect()) {
                 list.add(property);
             } else {
@@ -55,26 +55,26 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
         if (list.isEmpty()) {
             throw new IllegalArgumentException("Argument must not be empty");
         }
-        this.ascending = ascending!=null ? ascending : properties[properties.length-1].isAscending();
-        this.properties = list.toArray(new CujoProperty[list.size()]);
+        this.ascending = ascending!=null ? ascending : keys[keys.length-1].isAscending();
+        this.keys = list.toArray(new CujoProperty[list.size()]);
     }
 
     /** Constructor for internal use only */
-    private CPathProperty(CujoProperty[] properties, boolean ascending) {
-        this.properties = properties;
+    private CPathProperty(CujoProperty[] keys, boolean ascending) {
+        this.keys = keys;
         this.ascending = ascending;
     }
 
     /** Get the last property of the current object. The result may not be the direct property. */
     @SuppressWarnings("unchecked")
     public final <UJO_IMPL extends Cujo> CujoProperty<UJO_IMPL, VALUE> getLastPartialProperty() {
-        return properties[properties.length - 1];
+        return keys[keys.length - 1];
     }
 
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     final public <UJO_IMPL extends Cujo> CujoProperty<UJO_IMPL, VALUE> getLastProperty() {
-        CujoProperty result = properties[properties.length - 1];
+        CujoProperty result = keys[keys.length - 1];
         return result.isDirect()
             ? result
             : ((CPathProperty)result).getLastProperty()
@@ -84,7 +84,7 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     final public <UJO_IMPL extends Cujo> CujoProperty<UJO_IMPL, VALUE> getFirstProperty() {
-        CujoProperty result = properties[0];
+        CujoProperty result = keys[0];
         return result.isDirect()
             ? result
             : ((CPathProperty)result).getFirstProperty()
@@ -96,7 +96,7 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
     final public String getName() {
         if (name==null) {
             StringBuilder result = new StringBuilder(32);
-            for (CujoProperty p : properties) {
+            for (CujoProperty p : keys) {
                 if (result.length() > 0) {
                     result.append('.');
                 }
@@ -118,21 +118,21 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
         return getLastPartialProperty().getShortTypeName();
     }
 
-    /** Get a semifinal value from an Cujo object by a chain of properties.
+    /** Get a semifinal value from an Cujo object by a chain of keys.
      * If any value (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     public Cujo getSemifinalValue(UJO ujo) {
 
         Cujo result = ujo;
-        for (int i=0; i<properties.length-1; i++) {
+        for (int i=0; i<keys.length-1; i++) {
             if (result==null) { return result; }
-            result = (Cujo) properties[i].getValue(result);
+            result = (Cujo) keys[i].getValue(result);
         }
         return result;
     }
 
-    /** Get a value from an Cujo object by a chain of properties.
+    /** Get a value from an Cujo object by a chain of keys.
      * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
@@ -283,15 +283,15 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
     @Override
     public CujoProperty<UJO,VALUE> descending(boolean descending) {
         return isAscending()==descending
-                ? new CPathProperty(properties, !descending)
+                ? new CPathProperty(keys, !descending)
                 : this
                 ;
     }
 
-    /** Export all <string>direct</strong> properties to the list from parameter. */
+    /** Export all <string>direct</strong> keys to the list from parameter. */
     @SuppressWarnings("unchecked")
     public void exportProperties(List<CujoProperty> result) {
-        for (CujoProperty p : properties) {
+        for (CujoProperty p : keys) {
             if (p.isDirect()) {
                 result.add(p);
             } else {
@@ -307,9 +307,9 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
     @Override
     public <VALUE_PAR> CujoProperty<UJO, VALUE_PAR> add(final CujoProperty<? extends VALUE, VALUE_PAR> property) {
 
-        CujoProperty[] props = new CujoProperty[properties.length+1];
-        System.arraycopy(properties, 0, props, 0, properties.length);
-        props[properties.length] = property;
+        CujoProperty[] props = new CujoProperty[keys.length+1];
+        System.arraycopy(keys, 0, props, 0, keys.length);
+        props[keys.length] = property;
 
         return new CPathProperty(props);
     }
@@ -413,8 +413,8 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Cujo, VALUE> CPathProperty<UJO, VALUE> create(CujoProperty<UJO, ? extends Object>... properties) {
-        return new CPathProperty(properties);
+    public static <UJO extends Cujo, VALUE> CPathProperty<UJO, VALUE> create(CujoProperty<UJO, ? extends Object>... keys) {
+        return new CPathProperty(keys);
     }
 
     /** {@inheritDoc} */

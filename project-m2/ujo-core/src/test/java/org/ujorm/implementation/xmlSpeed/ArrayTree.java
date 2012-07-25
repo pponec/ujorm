@@ -24,7 +24,7 @@ public class ArrayTree extends ArrayUjoImplChild {
     
     public static final ListKey<ArrayTree, ArrayTree> PRO_CHILDS = newListProperty("CHILDS", ArrayTree.class, propertyCount++);
     
-    /** Returns a count of properties. */
+    /** Returns a count of keys. */
     @Override
     public int readPropertyCount() {
         return propertyCount;

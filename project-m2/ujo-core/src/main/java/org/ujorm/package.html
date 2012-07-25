@@ -48,12 +48,12 @@ document.body.appendChild(oLink);
         <ul>
         <li>an easy object introspection without a heavy PropertyDescriptor implementation</li>
         <li>value type safe solution</li>
-        <li>a transfer of the UJO object properties (not values) by a collection</li>
+        <li>a transfer of the UJO object keys (not values) by a collection</li>
         <li>the core of the building has two interfaces for an easy implementation</li>
         <li>the <a href="orm/package-summary.html#ORM">object-relation mapping</a> (ORM) support</li>
         </ul>
 
-        These properties open up new possibilities for the use in the J2EE mainly in a production 
+        These keys open up new possibilities for the use in the J2EE mainly in a production 
         of generic operations over objects. Framework contains some tools for managing the UJO object 
         in addition. So what are the main <strong>advantages</strong>?
 
@@ -73,7 +73,7 @@ document.body.appendChild(oLink);
         <li>the object itself recommends the availability of its attributes</li>
         <li>there is possible to implement a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
             to only one <a href="Ujo.html#writeValue(org.ujorm.Key,%20java.lang.Object)">place</a>
-            for each properties include children</li>
+            for each keys include children</li>
         <li>support of <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a></li>
         <li>checking by unit tests</li>
         <li>tiny framework without further dependencies</li>
@@ -150,7 +150,7 @@ String  name = NAME.<span class="java-layer-method">of</span>(person); <span cla
 
      There is possible to use an <strong>extended API</strong> with a more obvious source code 
      to the property access since the UJO <strong>release 0.80</strong>.
-     The new solution allows to you a chaining more properties according to the model of a language 
+     The new solution allows to you a chaining more keys according to the model of a language 
      <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a>.
      The new API extends the old one so that you can use an combination of both types.
      
@@ -348,7 +348,7 @@ On the following example we will illustrate, how the suppression of the <strong>
         to compare by the <i>equals()</i> method, but it is possible to use a quicker operator  <strong>==</strong>.
 
 <h3 id="xmlAttributes">The attributes</h3>
-The Ujorm enables to write some <strong>properties</strong> like a XML attribute of the element contrary of the XML child element (it is a default feature).
+The Ujorm enables to write some <strong>keys</strong> like a XML attribute of the element contrary of the XML child element (it is a default feature).
 The solution is to use an annotation <strong>@XmlAttribute</strong> by next sample:
 <pre class="pre"><span class="java-annotation">@</span>XmlAttribute
 <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
@@ -372,7 +372,7 @@ The solution is to use an annotation <strong>@XmlAttribute</strong> by next samp
         Some more features:
         <ul>
           <li>there is recommended that only one property was signed by the annotation XmlElementBody in the class</li>
-          <li>if more XmlElementBody annotated properties are identified than the framework will be considered the valid property with the highest index</li>
+          <li>if more XmlElementBody annotated keys are identified than the framework will be considered the valid property with the highest index</li>
           <li>if a property has an annotation XmlAttribute so the XmlElementBody is ignored.</li>
         </ul>
 
@@ -643,8 +643,8 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         <h2 id="faq">FAQ</h2>
         <ul>
             <li>Q: Is the list of the Properties objects ordered by a natural order?</li>
-            <li>A: The result depends on the implementation. All properties are sorted by a <strong>property index</strong> by default.
-                    All implementations from the Ujorm returns properties in a natural order on condition that the properties
+            <li>A: The result depends on the implementation. All keys are sorted by a <strong>property index</strong> by default.
+                    All implementations from the Ujorm returns keys in a natural order on condition that the keys
                     where created by a factory method newProperty(..). The <i>ArrayUjo</i> has assigned all indexes explicitly.
                     If the index numers have got the same value then the natural ordering is no guarantee by a Sun Microsystems specificaton.
             </li>

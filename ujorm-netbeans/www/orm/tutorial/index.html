@@ -302,7 +302,7 @@ POJO attributes.</span></p>
   <li class="c0"><span class="c11"><a class="c8"
     href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo</a></span><span>&#xa0;-
     interface of an object containing the values. The object provides a list of
-    their properties. A kind of data storage determines the implementation, for
+    their keys. A kind of data storage determines the implementation, for
     example OrmTable uses internally an array of objects.</span></li>
   <li class="c0"><span class="c11"><a class="c8"
     href="http://ujorm.org/javadoc/org/ujorm/UjoProperty.html">UjoProperty</a></span><span>&#xa0;-
@@ -320,7 +320,7 @@ POJO attributes.</span></p>
   <li class="c0"><span class="c11"><a class="c8"
     href="http://ujorm.org/javadoc/org/ujorm/orm/OrmUjo.html">OrmUjo</a></span><span>&#xa0;-
     an interface designed for persistent application domain objects. Each
-    object contains the session and provides a list of modified properties,
+    object contains the session and provides a list of modified keys,
     more information are available later in this document</span></li>
   <li class="c0"><span class="c11"><a class="c8"
     href="http://ujorm.org/javadoc/org/ujorm/implementation/orm/OrmTable.html">OrmTable</a></span><span>&#xa0;-
@@ -793,7 +793,7 @@ only.</span></p>
 annotations</span></h2>
 
 <p class="c4"><span>Since Ujorm release 1.10 is allowed to describe persistent
-objects or its properties by special annotation called </span><span
+objects or its keys by special annotation called </span><span
 class="c11"><a class="c8"
 href="http://ujorm.org/javadoc/org/ujorm/orm/annot/Comment.html">Comment.</a></span></p>
 
@@ -1987,7 +1987,7 @@ must match the order of parameters in the procedure. If the procedure
 constant UjoProperty in order will be </span><span class="c12">Void.class
 </span><span>type</span><span class="c12">.</span><span>&#xa0;The first
 UjoProperty is OUTPUT type, others are INPUT type. The default type of
-properties you can override by annotation </span><span class="c5">@Parameter
+keys you can override by annotation </span><span class="c5">@Parameter
 (input = true, output = true).</span><span>&#xa0;Database procedures need to be
 </span><span class="c12">registered</span><span>&#xa0;in the class of databases
 like the database table:</span></p>
@@ -2360,7 +2360,7 @@ environment</span></h2>
 href="http://ujorm.org/javadoc/org/ujorm/implementation/orm/OrmTable.html">OrmTable</a></span><span>&#xa0;UJO
 class is not ready to use in multi-thread environment by default
 implementation. You can eliminate some risks probably using a read-only mode
-and loading all needed lazy properties before you share the object to more
+and loading all needed lazy keys before you share the object to more
 threads. However for the case is prepared a specilal implementation called
 </span><span class="c11"><a class="c8"
 href="http://ujorm.org/javadoc/org/ujorm/implementation/orm/OrmTableSynchronized.html">OrmTableSynchronized</a></span><span>&#xa0;with
@@ -2458,7 +2458,7 @@ done by annotation in the 'Database' type class.</span></p>
 <h2 class="c19"><a name="h.5902a957f5ab"></a><span>Meta-Model</span></h2>
 
 <p class="c4"><span>Meta-model is created according to the content of Ujo
-properties of Database class and its tables. The names of tables, view and
+keys of Database class and its tables. The names of tables, view and
 procedure are derived from names of Ujo property. Most features of the model
 can be overridden by annotations placed directly in property or in name of the
 class. Features set by annotation can be also overridden by configuration XML

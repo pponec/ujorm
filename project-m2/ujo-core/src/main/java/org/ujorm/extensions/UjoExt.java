@@ -24,9 +24,9 @@ import org.ujorm.Key;
 /**
  * This is an <strong>extended Ujo</strong> interface designed for a more conventional property access evaluated by developers.
  * Most of the functions have been a similar reason like methods in the Key class.
- * The new solution allows to the developers to chain more properties according to 
+ * The new solution allows to the developers to chain more keys according to 
  * a model of a some new popular languages.
- * All methods are type safe likewise the usage of the Ujo interface - exclude two methods with an unlimited count of properties: setVal(...) and getVal(...).
+ * All methods are type safe likewise the usage of the Ujo interface - exclude two methods with an unlimited count of keys: setVal(...) and getVal(...).
  * 
  *<br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo <span class="java-keywords">implements</span> UjoMiddle {
@@ -50,24 +50,24 @@ import org.ujorm.Key;
  */
 public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
     
-    /** Getter based on two properties */
+    /** Getter based on two keys */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
         ( Key<UJO1, UJO2 > property1
         , Key<UJO2, VALUE> property2);
 
-    /** Getter based on three properties */
+    /** Getter based on three keys */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
         ( Key<UJO1, UJO2 > property1
         , Key<UJO2, UJO3 > property2
         , Key<UJO3, VALUE> property3 );
 
-    /** Setter  based on two properties. Type of value is checked in the runtime. */
+    /** Setter  based on two keys. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> void set
         ( Key<UJO1, UJO2 > property1
         , Key<UJO2, VALUE> property2
         , VALUE value);
 
-    /** Setter  based on three properties. Type of value is checked in the runtime. */
+    /** Setter  based on three keys. Type of value is checked in the runtime. */
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
         ( Key<UJO1, UJO2 > property1
         , Key<UJO2, UJO3 > property2

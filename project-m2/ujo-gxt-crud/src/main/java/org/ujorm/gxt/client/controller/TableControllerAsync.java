@@ -74,7 +74,7 @@ public interface TableControllerAsync extends MetaModelController
      * @see com.jworksheet.application.client.controller.TableController
      */
     @Override
-    void getMetaModel( java.util.List<CQuery> properties, AsyncCallback<java.util.List<PropertyMetadata>> callback );
+    void getMetaModel( java.util.List<CQuery> keys, AsyncCallback<java.util.List<PropertyMetadata>> callback );
 
     /**
      * GWT-RPC service  asynchronous (client-side) interface

@@ -46,7 +46,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private CriterionDecoder decoder;
     private String statementInfo;
 
-    /** A list of properties to sorting */
+    /** A list of keys to sorting */
     private List<Key<UJO,?>> orderBy;
     /** Set the first row to retrieve. If not set, rows will be retrieved beginnning from row 0. */
     private int offset = 0;
@@ -388,7 +388,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return this;
     }
 
-    /** Only direct properties are supported */
+    /** Only direct keys are supported */
     private Key getDirectProperty(Key p) {
         return p.isDirect()
             ?  p

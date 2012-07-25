@@ -21,11 +21,11 @@ import org.ujorm.Ujo;
 import org.ujorm.Key;
 
 /**
- * The interface is reasonable for a text serialization and deserializaton of non UJO properties of a UJO object.
+ * The interface is reasonable for a text serialization and deserializaton of non UJO keys of a UJO object.
  * <br>If you can use an UJO persistence (XML, CSV, ResourceBundle) then the all affected UJO classes must have got next features:
  * <ul>
  *   <li>no parameter constructor and</li>
- *   <li>non UJO properties must have got a features of ValueTextable *</li>
+ *   <li>non UJO keys must have got a features of ValueTextable *</li>
  *   <li>property type of List must be implemented by a UjoPropertyList implementation (only XML persistence supports the one)</li>
  * </ul>
  * 

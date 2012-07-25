@@ -62,10 +62,10 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     /**
      * Creates a new instance of UjoManagerCSV
      * @param ujoClass   Exported Ujo Class
-     * @param properties Exported properties of class, if value is null than all properties are used.
+     * @param keys Exported keys of class, if value is null than all keys are used.
      */
-    public UjoManagerCSV(Class<UJO> ujoClass, Key ... properties) {
-        super(ujoClass, properties);
+    public UjoManagerCSV(Class<UJO> ujoClass, Key ... keys) {
+        super(ujoClass, keys);
     }
     
     /** Save Ujo into CSV format by codepage UTF-8. */
@@ -286,8 +286,8 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     }
     
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key ... properties) {
-        return new UjoManagerCSV<UJO>(ujoClass, properties);
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key ... keys) {
+        return new UjoManagerCSV<UJO>(ujoClass, keys);
     }
     
     

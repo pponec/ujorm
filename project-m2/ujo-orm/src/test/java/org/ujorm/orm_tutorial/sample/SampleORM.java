@@ -112,7 +112,7 @@ public class SampleORM {
         // Create new ORM Handler:
         handler = new OrmHandler();
 
-        // There are prefered default properties for a production environment:
+        // There are prefered default keys for a production environment:
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
@@ -242,7 +242,7 @@ public class SampleORM {
         assert crn.evaluate(order);
     }
 
-    /** Sort orders by two properties: NOTE and CREATED descending. */
+    /** Sort orders by two keys: NOTE and CREATED descending. */
     public void useSortOrders() {
 
         Query<Order> orders = session.createQuery(Order.class);
@@ -254,7 +254,7 @@ public class SampleORM {
 
     /** Sort items by a <strong>composite</strong> propertry. <br>
      * Note 1: see how a composite property can be used for reading values too. <br>
-     * Note 2: the metod loadLazyValues(..) is able to load all lazy properties for the Item and its related Order<br>
+     * Note 2: the metod loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
      */
     public void useSortOrderItems() {
 

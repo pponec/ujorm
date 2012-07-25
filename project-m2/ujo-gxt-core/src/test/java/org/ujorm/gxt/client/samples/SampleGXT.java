@@ -92,7 +92,7 @@ public class SampleGXT {
         // String id = person.get(ID); // Wrong the return data type
     }
 
-   /** How to copy all properties from BO to another object? */
+   /** How to copy all keys from BO to another object? */
     public void copyAllProperties() throws Exception {
         Cujo emplA = findEmployee();
         Cujo emplB = emplA.createInstance();
@@ -103,7 +103,7 @@ public class SampleGXT {
         System.out.println("Employee 2: " + emplB);
     }
 
-   /** How to copy some properties to another object? */
+   /** How to copy some keys to another object? */
     public void copySomeProperties() {
         Employee emplA = findEmployee();
         Employee emplB = new Employee();

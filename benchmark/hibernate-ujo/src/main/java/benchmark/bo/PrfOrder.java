@@ -44,8 +44,8 @@ public class PrfOrder extends QuickUjo {
     public static final Key <PrfOrder,PrfUser>user = newKey();
 
     // Optional code for better performance when creating instance:
-    private static KeyList properties = init(PrfOrder.class);
-    @Override public KeyList readKeys() { return properties; }
+    private static KeyList keys = init(PrfOrder.class);
+    @Override public KeyList readKeys() { return keys; }
 
 
     // Setters and Getters:

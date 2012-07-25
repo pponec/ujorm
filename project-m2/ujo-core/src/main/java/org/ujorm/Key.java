@@ -120,8 +120,8 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * If the property is the direct property of the related UJO class then method returns the TRUE value.
      * The return value false means, that property is type of {@link CompositeKey}.
      * <br />
-     * Note: The composite properties are excluded from from function Ujo.readProperties() by default
-     * and these properties should not be sent to methods Ujo.writeValue() and Ujo.readValue().
+     * Note: The composite keys are excluded from from function Ujo.readProperties() by default
+     * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
      * @see CompositeKey
      * @since 0.81
      */
