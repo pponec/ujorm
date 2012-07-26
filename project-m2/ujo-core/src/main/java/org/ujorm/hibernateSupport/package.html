@@ -48,8 +48,8 @@ it is necessary to specify the UJO object getters by the related property name (
 See the example:
 
 <pre class="pre">
-  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Property&lt;Order,Long&gt; ID = newProperty(<span class="character">&quot;</span><span class="character highlight">id</span><span class="character">&quot;</span>, Long.<span class="keyword-directive">class</span>);
-  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Property&lt;Order,Date&gt; DATE = newProperty(<span class="character">&quot;</span><span class="character highlight">myDate</span><span class="character">&quot;</span>, Date.<span class="keyword-directive">class</span>);
+  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Property&lt;Order,Long&gt; ID = newKey(<span class="character">&quot;</span><span class="character highlight">id</span><span class="character">&quot;</span>);
+  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Property&lt;Order,Date&gt; DATE = newKey(<span class="character">&quot;</span><span class="character highlight">myDate</span><span class="character">&quot;</span>);
 
   <span class="keyword-directive">public</span> Long <span class="highlight">getId</span>() {
       <span class="keyword-directive">return</span> ID.of(<span class="keyword-directive">this</span>);

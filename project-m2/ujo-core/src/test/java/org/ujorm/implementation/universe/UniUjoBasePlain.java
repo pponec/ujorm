@@ -28,7 +28,7 @@ public class UniUjoBasePlain implements Ujo {
     /** Factory */
     protected static final KeyFactory<UniUjoBasePlain> pf = KeyFactory.Builder.get(UniUjoBasePlain.class);
 
-    /** Properties */
+    /** Keys */
     public static final Key<UniUjoBasePlain,Long>    PRO_P0 = (Property<UniUjoBasePlain,Long>) (Object) pf.newKey();
     public static final Key<UniUjoBasePlain,Integer> PRO_P1 = pf.newKey();
     public static final Key<UniUjoBasePlain,String>  PRO_P2 = pf.newKey();

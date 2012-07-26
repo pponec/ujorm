@@ -106,7 +106,7 @@ document.body.appendChild(oLink);
             <li>architektura umožňuje vytvořit odkaz
                 na atribut UJO
                 (nikoli jejich hodnot) a celý seznam atributů lze předat do nějaké
-                metody - například ve formátu  <a href="Key.html">UjoPropertyList</a>.
+                metody - například ve formátu  <a href="Key.html">KeyList</a>.
             Tuto vlastnost lze využít například pro definici sloupců tabulky, či pro označení sloupců pro řazení seznamu UJO objektů.</li>
             <li>defaultní implementace UJO objektů jsou součástí projektu.</li>
             <li>framework obsahuje připravenou implementaci UjoTableModel pro <strong>Swing</strong>. Pro jednoduchou vizualizaci UJO
@@ -206,7 +206,7 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
             <li>třídu označit anotací <i>@SuppressWarnings("unchecked")</i>.
                 <br />Osobně jsem zvolil tuto možnost, kód se zprůhlední 
                 a případné kolize na stejném řádku je možné snadno uhlídat.</li>
-            <li>od verze 0.72 je pro tvorbu Property implementovaná typově bezpečná metoda <strong>newProperty(name, type)</strong></li>
+            <li>od verze 0.72 je pro tvorbu Property implementovaná typově bezpečná metoda <strong>newKey(name, type)</strong></li>
         </ul>
         <h3>Implementace metody equals()</h3>
         Naše třída <i>Person</i> má funkci <i>equals()</i> už implementovanou, protože ji zdědila z rodičovské třídy <i>MapUjo</i>.
@@ -251,7 +251,7 @@ person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<spa
 
 <h3>List Property</h3>
 Často se hodí, aby nějaký atribut obsahoval <strong>seznam</strong> dalších UJO objektů. Je sice možné vytvořit 
-atribut typu <strong>ArrayList&lt;UjoItem&gt;</strong>, nicméně vhodnější je použít pro atribut třídu <a href="#">UjoPropertyList</a>. Prvním z důvodů je čistší obsah exportu do XML, 
+atribut typu <strong>ArrayList&lt;UjoItem&gt;</strong>, nicméně vhodnější je použít pro atribut třídu <a href="#">KeyList</a>. Prvním z důvodů je čistší obsah exportu do XML, 
 protože export neobsahuje informace o <strong>datových typech</strong> položek Listu. 
 Pro podrobnější informaci doporučuji prostudovat API.
 <br>&nbsp;<br>
@@ -283,7 +283,7 @@ Doporučené řešení pro implementaci vazby <strong>1:N</strong> pro objekty P
     }
   }
 }</pre>        
-        Poznámka: protože všechny vlastnosti (Properties) UJO objektu jsou typu final, není třeba je porovnávat metodou <strong>equals()</strong>, 
+        Poznámka: protože všechny vlastnosti (Keys) UJO objektu jsou typu final, není třeba je porovnávat metodou <strong>equals()</strong>, 
         ale je možné použít rychlejší porovnání operátorem <strong>==</strong>.
         
 <h3>Zápis XML atributu</h3>
@@ -381,7 +381,7 @@ model.<span class="java-layer-method">sort</span>(<span class="java-keywords">tr
         <h2 id="how2">Jak na rozšíření?</h2>
         Pokud potřebujete vyrobit potomka třídy Person, stačí v potomkovi
         definovat pouze nové atributy. Při prvním volání metody
-        readProperties() se seznam <span style="font-style: italic;">UjoPropertyList</span>
+        readProperties() se seznam <span style="font-style: italic;">KeyList</span>
         získá pomocí Java reflexe, všechny ostatní hodnoty se už berou z cache.<br>
 <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> PersonExt <span class="java-keywords">extends</span> Person {<br>
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> MapProperty&lt;PersonExt,Float&gt; WEIGHT = <span class="java-keywords">new</span> <span class="java-layer-method">MapProperty</span>(<span class="java-string-literal">"Weight"</span>, Float.<span class="java-keywords">class</span>);
@@ -569,10 +569,10 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         
         <h2 id="faq">FAQ</h2>
         <ul>
-            <li>Q: Seznam objektů Properties je seřazený?</li>
+            <li>Q: Seznam objektů Keys je seřazený?</li>
             <ul><li>A: Záleží to na implementaci.
                     Třída ArrayUjo vrací seznam seřazený vždy. 
-                    Třída MapUjo vrací Properties zpravidla v pořadí ve kterém jsou zapsány ve zdrojovém kódu.
+                    Třída MapUjo vrací Keys zpravidla v pořadí ve kterém jsou zapsány ve zdrojovém kódu.
                     Protože však metoda Java reflexe toto pořadí negarantuje, tak v případě, 
                     že je chybné pořadí keys může být kritické je doporučeno nějaké řešení na principu ArrayUjo.
             </li></ul>
@@ -582,7 +582,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
                 <li>B: Výchozí implementaci (AbstractUjo) vrací defaultní hodnotu z Key.</li>
             </ul>
             
-            <li>Q: Je možné nějak vyčistit Properties cache?</li>
+            <li>Q: Je možné nějak vyčistit Keys cache?</li>
             <ul><li>A: Ano, metodou ve třídě UjoManager.</li>
             </ul>
             

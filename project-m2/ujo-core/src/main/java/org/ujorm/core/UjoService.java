@@ -44,7 +44,7 @@ abstract public class UjoService<UJO extends Ujo> {
     
     /** Basic UJO Class */
     final private Class<UJO> ujoClass;
-    /** Properties */
+    /** Keys */
     private Key[] keys;
     /** Is ujoClass textable */
     final private boolean textable;

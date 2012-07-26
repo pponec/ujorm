@@ -122,7 +122,7 @@ public class UjoManager implements Comparator<Key> {
      * Returns all direct keys (see an method Key.isDirect() for more information).
      * @param type Ujo class
      * @param sorted I want to sortd the result by a natural order.
-     * @return Array of Properties
+     * @return Array of Keys
      */
     @SuppressWarnings("unchecked")
     public Key[] readPropertiesNocache(Class type, boolean sorted) throws IllegalStateException {

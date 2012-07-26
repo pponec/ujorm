@@ -125,7 +125,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
     }
 
-    /** Read Properties from the super class */
+    /** Read Keys from the super class */
     protected final KeyList<?> getSuperProperties() {
         final Class<?> superClass = this.tmpStore.type.getSuperclass();
         if (Ujo.class.isAssignableFrom(superClass)) {
@@ -465,7 +465,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Return an instance of the {@link KeyFactory} class.
          * @param baseClass The domain class
-         * @param superProperties Properties form an abstract super class
+         * @param superProperties Keys form an abstract super class
          */
         public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass, KeyList<?> superProperties) {
             return new KeyFactory(baseClass, false, superProperties);
@@ -487,7 +487,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /** Return an instance of the {@link KeyFactory} class.
          * @param baseClass The domain class
          * @param propertyCamelCase {@link #CAMEL_CASE}
-         * @param superProperties Properties form an abstract super class
+         * @param superProperties Keys form an abstract super class
          */
         public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass, KeyList<?> superProperties) {
             return new KeyFactory(baseClass, CAMEL_CASE, superProperties);
