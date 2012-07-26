@@ -183,13 +183,13 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return find(name, true);
     }
 
-    /** Get The First Properties */
+    /** Get The First Keys */
     @Override
     public Key<UJO, ?> getFirstKey() {
         return get(0);
     }
 
-    /** Get The Last Properties */
+    /** Get The Last Keys */
     @Override
     public Key<UJO, ?> getLastKey() {
         return get(size - 1);
@@ -251,7 +251,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         };
     }
 
-    /** Convert Properties to a new Array */
+    /** Convert Keys to a new Array */
     @Override
     public Key<UJO, ?>[] toArray() {
         final Key<UJO, ?>[] result = new Key[size];
@@ -361,7 +361,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return nameProperties;
     }
 
-    /** Create Properties */
+    /** Create Keys */
     private Key<UJO, ?>[] restoreProperties(Class type, String[] nameProperties) {
         final KeyList propertyList = getUjoManager().readProperties(type);
         final Key<UJO, ?>[] ps = new Key[nameProperties.length];

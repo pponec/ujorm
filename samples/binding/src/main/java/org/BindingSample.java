@@ -59,7 +59,7 @@ public class BindingSample {
         bind(Person.CASH);
     }
 
-    /** Create an edit form for all Properties of the Person. */
+    /** Create an edit form for all Keys of the Person. */
     public void defaultMapping(Person person) {
         bind(person);
     }

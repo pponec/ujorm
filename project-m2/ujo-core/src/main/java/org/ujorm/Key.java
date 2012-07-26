@@ -85,7 +85,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     /** Returns a property index or value -1 if the property index is not defined.
      * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used 
-     * <br>for a sorting of Properties in a method <code>UjoManager.readProperties(Class type)</code> .
+     * <br>for a sorting of Keys in a method <code>UjoManager.readProperties(Class type)</code> .
      * @see org.ujorm.implementation.array.ArrayUjo
      * @see org.ujorm.core.UjoManager#readProperties(Class)
      */

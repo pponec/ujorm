@@ -131,7 +131,7 @@ public class SampleGXT {
         System.out.println("Employee: " + employee + " wage: " + employee.get(WAGE));
     }
 
-    /** How to concatenate UJO Properties? */
+    /** How to concatenate UJO Keys? */
     public void concatenateProperties() {
         final String cityA, cityB;
         Employee employee = findEmployee();

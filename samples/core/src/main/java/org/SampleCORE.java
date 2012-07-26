@@ -133,7 +133,7 @@ public class SampleCORE {
         System.out.println("Employee: " + employee + " wage: " + newWage);
     }
 
-    /** How to concatenate UJO Properties? */
+    /** How to concatenate UJO Keys? */
     public void concatenateProperties() {
         Employee employee = getEmployee();
 

@@ -175,7 +175,7 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
             <li>the class can be equipped an annotation <i>@SuppressWarnings("unchecked")</i>
                 <br />I've chosen this possibility myself, the code is getting clearer and in the case 
                 of collision in the same line it´s possible to find it out easily.</li>
-            <li>since version 0.72 is possible to use a type safe method <strong>newProperty(name, type)</strong> pro building a Property object.</li>
+            <li>since version 0.72 is possible to use a type safe method <strong>newKey(name, type)</strong> pro building a Property object.</li>
         </ul>
         <h3>The implementation of the equals() method</h3>
         Our <i>Person</i> class has the <i>equals()</i> function implemented already, which inherited from parental class <i>MapUjo</i>. 
@@ -344,7 +344,7 @@ On the following example we will illustrate, how the suppression of the <strong>
   }
 }</pre>
 
-        Notice: because all the <i>Properties</i> of the UJO object are the final type, it is not necessary
+        Notice: because all the <i>Keys</i> of the UJO object are the final type, it is not necessary
         to compare by the <i>equals()</i> method, but it is possible to use a quicker operator  <strong>==</strong>.
 
 <h3 id="xmlAttributes">The attributes</h3>
@@ -435,7 +435,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
 
         <h2 id="how2">What about the extensions?</h2>
         If you need to create a descendant of the Person class, define in the descendant just new attributes. 
-        The <i>UjoPropertyList</i> will be procured during the first call the <i>readProperties()</i> method by the help of the 
+        The <i>KeyList</i> will be procured during the first call the <i>readProperties()</i> method by the help of the 
         Java reflection, all another values are taken from the cache.
         <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {<br>
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Float&gt; WEIGHT = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Weight"</span>, Float.<span class="java-keywords">class</span>);
@@ -642,10 +642,10 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         
         <h2 id="faq">FAQ</h2>
         <ul>
-            <li>Q: Is the list of the Properties objects ordered by a natural order?</li>
+            <li>Q: Is the list of the Keys objects ordered by a natural order?</li>
             <li>A: The result depends on the implementation. All keys are sorted by a <strong>property index</strong> by default.
                     All implementations from the Ujorm returns keys in a natural order on condition that the keys
-                    where created by a factory method newProperty(..). The <i>ArrayUjo</i> has assigned all indexes explicitly.
+                    where created by a factory method newKey(..). The <i>ArrayUjo</i> has assigned all indexes explicitly.
                     If the index numers have got the same value then the natural ordering is no guarantee by a Sun Microsystems specificaton.
             </li>
             
