@@ -13,9 +13,13 @@ import org.ujorm.Key;
 import org.ujorm.implementation.map.*;
 public class Person extends MapUjoExt<Person> {
     
-  public static final Key<Person, String > NAME = newProperty("Name", String.class);
-  public static final Key<Person, Boolean> MALE = newProperty("Male", Boolean.class);
-  public static final Key<Person, Double > CASH = newProperty("Cash", Double.class);
+  public static final Key<Person, String > NAME = newKey("Name");
+  public static final Key<Person, Boolean> MALE = newKey("Male");
+  public static final Key<Person, Double > CASH = newKey("Cash");
+
+  static {
+     init(Person.class );
+  }
     
   public void addCash(double cash) {
     double newPrice = get(CASH) + cash;

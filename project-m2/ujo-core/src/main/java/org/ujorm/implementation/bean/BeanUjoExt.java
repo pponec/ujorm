@@ -28,9 +28,9 @@ import org.ujorm.extensions.ValueAgent;
  * <br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
  *
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, String &gt; NAME = newKey(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Double &gt; CASH = newKey(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Person&gt; CHILD = newKey(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
@@ -83,20 +83,49 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
     /** A Property Factory
      * @hidden     
      */
-    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
+    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newKey(String name, Class<VALUE> type) {
         return new BeanProperty<UJO,VALUE> (name, type, -1);
     }
     
     /** A Property Factory, a property type is related from the default value.
      * @hidden     
      */
-    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
+    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newKey(String name, VALUE value) {
         return new BeanProperty<UJO, VALUE>(name, value, -1);
     }
 
     /** A ListProperty Factory for a <strong>BeanUjo</strong> object
      * @hidden     
      */
+    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newKeyList(String name, Class<ITEM> type) {
+        return new BeanPropertyList<UJO,ITEM> (name, type, -1);
+    }
+
+    // --------- DEPRECATED -------------------
+
+    /** A Property Factory
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
+        return new BeanProperty<UJO,VALUE> (name, type, -1);
+    }
+
+    /** A Property Factory, a property type is related from the default value.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
+        return new BeanProperty<UJO, VALUE>(name, value, -1);
+    }
+
+    /** A ListProperty Factory for a <strong>BeanUjo</strong> object
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
         return new BeanPropertyList<UJO,ITEM> (name, type, -1);
     }

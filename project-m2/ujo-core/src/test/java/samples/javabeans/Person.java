@@ -13,8 +13,8 @@ import org.ujorm.Key;
 import org.ujorm.implementation.map.*;
 public class Person extends MapUjo {
     
-    public static final Key<Person, String>  NAME = newProperty("Name", String.class);
-    public static final Key<Person, Integer> AGE  = newProperty("Age" , Integer.class);
+    public static final Key<Person, String>  NAME = newKey("Name");
+    public static final Key<Person, Integer> AGE  = newKey("Age");
     
     public void setName(String name) {
         NAME.setValue(this, name);

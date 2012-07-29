@@ -41,8 +41,13 @@ final public class UjoPropertyListImpl extends KeyRing implements UjoPropertyLis
     final static public Key[] EMPTY = new Key[0];
 
     /** Constructor */
-    public UjoPropertyListImpl(KeyList keyRing) {
-        super(keyRing.getType(), ((KeyRing)keyRing).keys);
+    public UjoPropertyListImpl(KeyRing keyRing) {
+        super(keyRing.getType(), keyRing.keys);
+    }
+
+    /** Constructor */
+    public UjoPropertyListImpl(KeyList keyList) {
+        super(keyList.getType(), ((KeyRing)keyList).keys);
     }
 
     /**
