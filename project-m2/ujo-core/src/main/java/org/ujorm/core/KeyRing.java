@@ -27,7 +27,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.PathProperty;
 
@@ -228,8 +228,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create Property Interator */
     @Override
-    public Iterator<Key<UJO, ?>> iterator() {
-        return new Iterator<Key<UJO, ?>>() {
+    public Iterator<UjoProperty<UJO, ?>> iterator() {
+        return new Iterator<UjoProperty<UJO, ?>>() {
 
             int i = -1;
 
@@ -237,8 +237,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
                 return (i + 1) < size;
             }
 
-            public Key<UJO, ?> next() {
-                return get(++i);
+            public UjoProperty<UJO, ?> next() {
+                return (UjoProperty<UJO, ?>) get(++i);
             }
 
             /**

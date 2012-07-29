@@ -103,15 +103,15 @@ public abstract class BeanUjo extends AbstractUjo {
      * Method assigns a next property index.
      * @hidden     
      */
-    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type, -1);
+    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newKey(String name) {
+        return new BeanProperty<UJO,VALUE> (name, (Class)null, -1);
     }
     
     /** A Property Factory, a property type is related from the default value.
      *  Method assigns a next property index.
      * @hidden     
      */
-    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
+    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newKey(String name, VALUE value) {
         return new BeanProperty<UJO, VALUE>(name, value, -1);
     }
 
@@ -119,8 +119,40 @@ public abstract class BeanUjo extends AbstractUjo {
      * Method assigns a next property index.
      * @hidden     
      */
+    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newListKey(String name) {
+        return new BeanPropertyList<UJO,ITEM> (name, null, -1);
+    }
+
+    // --------- DEPRECATED -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * Method assigns a next property index.
+     * @hidden
+     * @deprecated Use method newKey(..) rather
+     */
+    @Deprecated
+    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
+        return new BeanProperty<UJO,VALUE> (name, type, -1);
+    }
+
+    /** A Property Factory, a property type is related from the default value.
+     *  Method assigns a next property index.
+     * @hidden
+     * @deprecated Use method newKey(..) rather
+     */
+    @Deprecated
+    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
+        return new BeanProperty<UJO, VALUE>(name, value, -1);
+    }
+
+    /** A ListProperty Factory for a <strong>BeanUjo</strong> object.
+     * Method assigns a next property index.
+     * @deprecated Use method newListKey(..) rather
+     * @hidden
+     */
+    @Deprecated
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newListProperty(String name, Class<ITEM> type) {
         return new BeanPropertyList<UJO,ITEM> (name, type, -1);
     }
-    
+
 }

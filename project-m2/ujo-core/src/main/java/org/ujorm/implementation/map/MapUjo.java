@@ -43,7 +43,9 @@ import org.ujorm.extensions.AbstractUjo;
  * @see Property
  * @author Pavel Ponec
  * @composed 1 - * Property
-  */
+ * @deprecated Use the class {@link  QuickUKjo} rather or a better class {@link KeyFactory} to create new Keys.
+ */
+@Deprecated
 public abstract class MapUjo extends AbstractUjo implements Serializable {
     
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
@@ -95,15 +97,15 @@ public abstract class MapUjo extends AbstractUjo implements Serializable {
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return Property.newInstance(name, type);
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newKey(String name) {
+        return Property.newInstance(name, (Class)null);
     }
 
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
+    protected static <UJO extends MapUjo, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
         return Property.newInstance(name, value);
     }
     
@@ -111,7 +113,7 @@ public abstract class MapUjo extends AbstractUjo implements Serializable {
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(Key p, int index) {
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newKey(Key p, int index) {
         return Property.newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
@@ -119,6 +121,48 @@ public abstract class MapUjo extends AbstractUjo implements Serializable {
      * Method assigns a next property index.
      * @hidden
      */
+    protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newListKey(String name) {
+        return ListProperty.newListProperty(name, (Class)null);
+    }
+
+    // --------- DEPRECATED -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
+        return Property.newInstance(name, type);
+    }
+
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends MapUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
+        return Property.newInstance(name, value);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(Key p, int index) {
+        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
+    }
+
+    /** A ListProperty Factory
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
     protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
         return ListProperty.newListProperty(name, type);
     }
@@ -128,9 +172,11 @@ public abstract class MapUjo extends AbstractUjo implements Serializable {
      * @deprecated Use newListProperty(...) instead of this.
      * @hidden
      */
-    protected static final <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
+    @Deprecated
+    protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
         return ListProperty.newListProperty(name, type);
     }
+
 
 
 }

@@ -393,7 +393,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
-        return new Property<UJO,VALUE>(index).init(name, type, null, index, true);
+        return new Property<UJO,VALUE>(index).init(name, type, null, index, type!=null);
     }
 
     /** Returns a new instance of property where the default value is null.

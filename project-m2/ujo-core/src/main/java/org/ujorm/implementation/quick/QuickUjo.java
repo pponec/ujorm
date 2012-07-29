@@ -230,7 +230,6 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty()} instead of this,
-     * @deprecated Use the method newKey(...)
      * @hidden
      */
     @Deprecated
@@ -300,7 +299,6 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     /** A Property Factory creates new property and assigns a name and next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather {@link #newListProperty() }
-     * @deprecated Use the method newKey(...)
      * @hidden
      */
     @Deprecated

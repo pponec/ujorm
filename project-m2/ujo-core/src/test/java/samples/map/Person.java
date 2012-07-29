@@ -16,10 +16,13 @@ import org.ujorm.implementation.map.MapUjo;
 
 public class Person extends MapUjo {
     
-    public static final Key<Person, String>  NAME = newProperty("Name", String.class);
-    public static final Key<Person, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final Key<Person, Integer> AGE  = newProperty("Age" , Integer.class);
-    
+    public static final Key<Person, String>  NAME = newKey("Name");
+    public static final Key<Person, Boolean> MALE = newKey("Male");
+    public static final Key<Person, Integer> AGE  = newKey("Age");
+
+  static {
+     init(Person.class );
+  }
     
     /** Equals */
     public boolean equals(Object obj) {

@@ -42,11 +42,11 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
     
     /** Getter based on one Key */
     public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( Key<UJO, VALUE> property);
+        ( Key<UJO, VALUE> key);
 
     /** Setter  based on Key. Type of value is checked in the runtime. */
     public <UJO extends UJO_IMPL, VALUE> Ujo set
-        ( Key<UJO, VALUE> property
+        ( Key<UJO, VALUE> key
         , VALUE value);
 
     /**
@@ -54,10 +54,10 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
      * otherwise method returns an instance of String.
      * <br>The method can be an alias for a method readValueString(...)
      *
-     * @param property A Property
+     * @param key A Property
      * @return If property type is "container" then result is null.
      */
-    public String getText(final Key property);
+    public String getText(final Key key);
 
 
 
@@ -65,9 +65,9 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
      * Set value from a String format by a NULL context. Property can't be an "container" type (Ujo, List, Object[]).
      * <br>The method can be an alias for a method writeValueString(...)
      * @param property Property
-     * @param value String value
+     * @param Key String value
      */
-    public void setText(final Key property, final String value);
+    public void setText(final Key property, final String Key);
 
 
 }

@@ -17,6 +17,7 @@
 package org.ujorm.implementation.array;
 
 import java.io.Serializable;
+import java.security.KeyFactory;
 import org.ujorm.Key;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.AbstractUjo;
@@ -50,6 +51,8 @@ import org.ujorm.extensions.ListProperty;
  * @author Pavel Ponec
  * @composed 1 - * Property
  */
+//@deprecated Use the class {@link  QuickUKjo} rather or a better class {@link KeyFactory} to create new Keys.
+//@Deprecated
 public abstract class ArrayUjo extends AbstractUjo implements Serializable {
     
 
@@ -120,15 +123,15 @@ public abstract class ArrayUjo extends AbstractUjo implements Serializable {
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends ArrayUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
-        return Property.newInstance(name, type, index);
+    public static <UJO extends ArrayUjo,VALUE> Property<UJO,VALUE> newKey(String name, int index) {
+        return Property.newInstance(name, null, null, index, false);
     }
 
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends ArrayUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value, int index) {
+    protected static <UJO extends ArrayUjo, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value, int index) {
         return Property.newInstance(name, value, index);
     }
 
@@ -136,18 +139,50 @@ public abstract class ArrayUjo extends AbstractUjo implements Serializable {
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
-        return ListProperty.newListProperty(name, type, index);
+    protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newListKey(String name, int index) {
+        return ListProperty.newListProperty(name, null, index);
     }
+
+    // --------- DEPRECATED -------------------
 
     /** A ListProperty Factory
      * Method assigns a next property index.
      * @hidden
-     * @deprecated Use method newListProperty
+     * @deprecated Use method newListKey
      */
+    @Deprecated
     protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList_(String name, Class<ITEM> type, int index) {
         return ListProperty.newListProperty(name, type, index);
     }
 
+    /** Returns a new instance of property where the default value is null.
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    public static <UJO extends ArrayUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
+        return Property.newInstance(name, type, index);
+    }
+
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends ArrayUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value, int index) {
+        return Property.newInstance(name, value, index);
+    }
+
+    /** A ListProperty Factory
+     * Method assigns a next property index.
+     * @deprecated Use method newListKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
+        return ListProperty.newListProperty(name, type, index);
+    }
     
 }

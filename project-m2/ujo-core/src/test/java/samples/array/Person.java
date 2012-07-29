@@ -20,9 +20,9 @@ public class Person extends ArrayUjo {
     /** An Incrementator. Use a new counter for each subclass by sample. */
     protected static int propertyCount = ArrayUjo.propertyCount;
     
-    public static final Key NAME  = newProperty("name", String.class , propertyCount++);
-    public static final Key MALE  = newProperty("male", Boolean.class, propertyCount++);
-    public static final Key BIRTH = newProperty("birth", Date.class  , propertyCount++);
+    public static final Key NAME  = newKey("name", String.class , propertyCount++);
+    public static final Key MALE  = newKey("male", Boolean.class, propertyCount++);
+    public static final Key BIRTH = newKey("birth", Date.class  , propertyCount++);
     
     
 

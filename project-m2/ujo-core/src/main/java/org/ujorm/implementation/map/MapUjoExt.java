@@ -28,9 +28,9 @@ import org.ujorm.extensions.ListProperty;
  * <br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt&lt;Person&gt; {
  *
- *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, String&gt; NAME  = newProperty(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Double&gt; CASH  = newProperty(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, String&gt; NAME  = newKey(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Double&gt; CASH  = newKey(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Person&gt; CHILD = newKey(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
@@ -46,7 +46,9 @@ import org.ujorm.extensions.ListProperty;
  * @see Property
  * @author Pavel Ponec
  * @since UJO release 0.80 
+ * @deprecated Use the class {@link  QuickUKjoMid} rather or a better class {@link KeyFactory} to create new Keys.
  */
+@Deprecated
 abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJO> implements Serializable {
 
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
@@ -98,15 +100,15 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * Method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends MapUjoExt,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return Property.newInstance(name, type);
+    public static <UJO extends MapUjoExt,VALUE> Property<UJO,VALUE> newKey(String name) {
+        return Property.newInstance(name, (Class)null);
     }
 
     /** A Property Factory
      * Method assigns a next property index.
      * @hidden
      */
-    protected static <UJO extends MapUjoExt, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
+    protected static <UJO extends MapUjoExt, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
         return Property.newInstance(name, value);
     }
 
@@ -114,6 +116,38 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * Method assigns a next property index.
      * @hidden
      */
+    protected static <UJO extends MapUjoExt, ITEM> ListProperty<UJO,ITEM> newListKey(String name) {
+        return ListProperty.newListProperty(name, (Class)null);
+    }
+
+    // --------- DEPRECATED -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    public static <UJO extends MapUjoExt,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
+        return Property.newInstance(name, type);
+    }
+
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends MapUjoExt, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
+        return Property.newInstance(name, value);
+    }
+
+    /** A ListProperty Factory
+     * Method assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
     protected static <UJO extends MapUjoExt, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
         return ListProperty.newListProperty(name, type);
     }
@@ -123,8 +157,11 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * @deprecated Use newListProperty(...) instead of.
      * @hidden
      */
-    protected static final <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
+    @Deprecated
+    protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
         return ListProperty.newListProperty(name, type);
     }
+
+
 
 }

@@ -34,7 +34,7 @@ import org.ujorm.extensions.ValueAgent;
  *   <span class="keyword-directive">private</span> List&lt;Person&gt; childs;
  *   
  *   <span class="keyword-directive">public static</span> Key&lt;Person,Long&gt; CASH
- *     = newProperty(<span class="character">"CASH"</span>, Long.<span class="keyword-directive">class</span>
+ *     = newKey(<span class="character">"CASH"</span>, Long.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,Long&gt;() {
  *     <span class="keyword-directive">public void</span> writeValue(Person ujo, Long value) { 
  *            ujo.cash = value; 
@@ -45,7 +45,7 @@ import org.ujorm.extensions.ValueAgent;
  *   });    
  *   
  *   <span class="keyword-directive">public static</span> FieldPropertyList&lt;Person,Person&gt; CHILDS
- *     = newListProperty(<span class="character">"CHILDS"</span>, Person.<span class="keyword-directive">class</span>
+ *     = newListKey(<span class="character">"CHILDS"</span>, Person.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,List&lt;Person&gt;&gt;() {
  *     <span class="keyword-directive">public void</span> writeValue(Person ujo, List&lt;Person&gt; value) {
  *         ujo.childs = value; 
@@ -97,18 +97,16 @@ public abstract class FieldUjo extends AbstractUjo {
     /** Returns a new instance of property where the default value is null.
      * @hidden     
      */
-    protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newProperty
-        ( String name
-        , Class<VALUE> type
-        , ValueAgent<UJO, VALUE> agent
+    protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newKey
+        ( String name, ValueAgent<UJO, VALUE> agent
         ) {
-        return new FieldProperty<UJO,VALUE> (name, type, -1, agent);
+        return new FieldProperty<UJO,VALUE> (name, (Class) null, -1, agent);
     }
     
     /** A Property Factory creates a new property and assigns a next property index.
      * @hidden     
      */
-    protected static <UJO extends Ujo, VALUE> FieldProperty<UJO, VALUE> newProperty
+    protected static <UJO extends Ujo, VALUE> FieldProperty<UJO, VALUE> newKey
         ( String name
         , VALUE value
         , ValueAgent<UJO, VALUE> agent
@@ -119,6 +117,46 @@ public abstract class FieldUjo extends AbstractUjo {
     /** A ListProperty Factory for a <strong>FieldUjo</strong> object
      * @hidden     
      */
+    protected static <UJO extends Ujo, ITEM> FieldPropertyList<UJO, ITEM> newListKey
+        ( String name
+        , ValueAgent<UJO, List<ITEM>> agent
+        ) {
+        return new FieldPropertyList<UJO,ITEM> (name, (Class) null, -1, agent);
+    }
+
+    // --------- DEPRECATED -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newProperty
+        ( String name
+        , Class<VALUE> type
+        , ValueAgent<UJO, VALUE> agent
+        ) {
+        return new FieldProperty<UJO,VALUE> (name, type, -1, agent);
+    }
+
+    /** A Property Factory creates a new property and assigns a next property index.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
+    protected static <UJO extends Ujo, VALUE> FieldProperty<UJO, VALUE> newProperty
+        ( String name
+        , VALUE value
+        , ValueAgent<UJO, VALUE> agent
+        ) {
+        return new FieldProperty<UJO, VALUE>(name, value, -1, agent);
+    }
+
+    /** A ListProperty Factory for a <strong>FieldUjo</strong> object
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
     protected static <UJO extends Ujo, ITEM> FieldPropertyList<UJO, ITEM> newListProperty
         ( String name
         , Class<ITEM> type
@@ -126,5 +164,5 @@ public abstract class FieldUjo extends AbstractUjo {
         ) {
         return new FieldPropertyList<UJO,ITEM> (name, type, -1, agent);
     }
-    
+
 }

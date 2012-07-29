@@ -53,6 +53,16 @@ public abstract class FactoryUjo extends AbstractUjo {
     /** Returns a new instance of property where the default value is null.
      * @hidden     
      */
+    protected static <UJO extends Ujo,VALUE> FactoryProperty<UJO, VALUE> newKey
+        ( String name) {
+        return new FactoryProperty<UJO,VALUE> (name, (Class) null, -1);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * @deprecated Use method newKey(..) rather
+     * @hidden
+     */
+    @Deprecated
     protected static <UJO extends Ujo,VALUE> FactoryProperty<UJO, VALUE> newProperty
         ( String name
         , Class<VALUE> type

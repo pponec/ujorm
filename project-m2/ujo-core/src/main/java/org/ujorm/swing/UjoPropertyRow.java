@@ -18,13 +18,11 @@ package org.ujorm.swing;
 
 import org.ujorm.Ujo;
 import org.ujorm.Key;
-import org.ujorm.UjoPropertyList;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
 import org.ujorm.UjoAction;
-import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoTextable;
-import org.ujorm.implementation.map.MapUjoExt;
+import org.ujorm.implementation.quick.QuickUjoMid;
 
 /**
  * An implementation of TableModel for List of Ujo objects.
@@ -33,26 +31,30 @@ import org.ujorm.implementation.map.MapUjoExt;
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
-public class UjoPropertyRow extends MapUjoExt<UjoPropertyRow> {
+public class UjoPropertyRow extends QuickUjoMid<UjoPropertyRow> {
     
     /** Index of property */
-    public static final Key<UjoPropertyRow,Integer> P_INDEX   = newProperty("Index", Integer.class);
+    public static final Key<UjoPropertyRow,Integer> P_INDEX   = newKey("Index");
     /** Name of property */
-    public static final Key<UjoPropertyRow,String> P_NAME     = newProperty("Name" , String.class);
+    public static final Key<UjoPropertyRow,String> P_NAME     = newKey("Name");
     /** Type of property */
-    public static final Key<UjoPropertyRow,Class>  P_TYPE     = newProperty("Class", Class.class );
+    public static final Key<UjoPropertyRow,Class>  P_TYPE     = newKey("Class");
     /** Class name without packages */
-    public static final Key<UjoPropertyRow,String> P_TYPENAME = newProperty("Type" , String.class);
+    public static final Key<UjoPropertyRow,String> P_TYPENAME = newKey("Type");
     /** Value */
-    public static final Key<UjoPropertyRow,Object> P_VALUE    = newProperty("Value", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_VALUE    = newKey("Value");
     /** Text Value */
-    public static final Key<UjoPropertyRow,String> P_TEXT     = newProperty("Text" , String.class);
+    public static final Key<UjoPropertyRow,String> P_TEXT     = newKey("Text");
     /** Default Value */
-    public static final Key<UjoPropertyRow,Object> P_DEFAULT  = newProperty("Default", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_DEFAULT  = newKey("Default");
     /** A user column can be used in table renderer for any purpose */
-    public static final Key<UjoPropertyRow,Object> P_USER1    = newProperty("User1", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_USER1    = newKey("User1");
     /** A user column can be used in table renderer for any purpose */
-    public static final Key<UjoPropertyRow,Object> P_USER2    = newProperty("User2", Object.class);
+    public static final Key<UjoPropertyRow,Object> P_USER2    = newKey("User2");
+
+    static {
+       init(UjoPropertyRow.class);
+    }
     
     final protected Ujo content;
     final protected Key property;

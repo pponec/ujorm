@@ -20,9 +20,9 @@ import static org.ujorm.UjoAction.*;
  */
 public class Person extends MapUjo {
     
-  public static final Key<Person,String>  NAME   = newProperty("Name" , String.class);
-  public static final Key<Person,Boolean> MALE   = newProperty("Male" , Boolean.class);
-  public static final Key<Person,Integer> HEIGHT = newProperty("Height", Integer.class);
+  public static final Key<Person,String>  NAME   = newKey("Name");
+  public static final Key<Person,Boolean> MALE   = newKey("Male");
+  public static final Key<Person,Integer> HEIGHT = newKey("Height");
 
     @Override
   public boolean readAuthorization(UjoAction action, Key property, Object value) {

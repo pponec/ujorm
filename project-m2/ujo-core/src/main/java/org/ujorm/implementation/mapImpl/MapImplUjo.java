@@ -192,6 +192,32 @@ public abstract class MapImplUjo extends AbstractUjo implements Map<CharSequence
      * Method assigns a next property index.
      * @hidden
      */
+    public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newKey(String name) {
+        return Property.newInstance(name, (Class)null);
+    }
+
+    /** A Property Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends MapImplUjo, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
+        return Property.newInstance(name, value);
+    }
+
+    /** A ListProperty Factory
+     * Method assigns a next property index.
+     * @hidden
+     */
+    protected static <UJO extends MapImplUjo, ITEM> ListProperty<UJO,ITEM> newListKey(String name) {
+        return ListProperty.newListProperty(name, (Class)null);
+    }
+
+    // --------- DEPRECATED -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * Method assigns a next property index.
+     * @hidden
+     */
     public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
         return Property.newInstance(name, type);
     }
