@@ -35,7 +35,7 @@ import org.ujorm.UjoPropertyList;
  * @deprecated Use the KeyRing indead of this.
  */
 @Deprecated
-final public class UjoPropertyListImpl extends KeyRing implements UjoPropertyList  {
+final public class UjoPropertyListImpl extends KeyRing<Ujo> implements UjoPropertyList  {
 
     /** An empty array of the UJO keys */
     final static public Key[] EMPTY = new Key[0];
@@ -124,7 +124,15 @@ final public class UjoPropertyListImpl extends KeyRing implements UjoPropertyLis
         return (UjoProperty) find(name);
     }
 
+    @Override
+    public UjoProperty get(int index) {
+        return (UjoProperty) super.keys[index];
+    }
 
+    @Override
+    public boolean contains(Key o) {
+        return super.contains(o);
+    }
 
 
 }

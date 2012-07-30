@@ -25,6 +25,7 @@ import org.ujorm.CompositeKey;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
@@ -304,7 +305,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Key<UJO,VALUE> descending() {
+    public UjoProperty<UJO,VALUE> descending() {
         return descending(true);
     }
 
@@ -313,7 +314,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Key<UJO,VALUE> descending(boolean descending) {
+    public UjoProperty<UJO,VALUE> descending(boolean descending) {
         return isAscending()==descending
                 ? new PathProperty(keys, !descending)
                 : this
@@ -362,9 +363,9 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Create a new instance of property with a new sort attribute value.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> sort(final Key<UJO, VALUE> property, final boolean ascending) {
         if (property.isAscending()==ascending) {
-            return property;
+            return (UjoProperty<UJO, VALUE>) property;
         }
         return property.isDirect()
             ? new PathProperty<UJO, VALUE>(new Key[]{property}, ascending)

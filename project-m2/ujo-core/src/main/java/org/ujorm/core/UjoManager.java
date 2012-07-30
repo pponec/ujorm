@@ -16,6 +16,8 @@
 
 package org.ujorm.core;
 
+import org.ujorm.UjoProperty;
+import org.ujorm.UjoPropertyList;
 import org.ujorm.ListKey;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -105,7 +107,7 @@ public class UjoManager implements Comparator<Key> {
     }
     
     /** Read an KeyList instance. The first result is cached. */
-    public KeyList<?> readProperties(Class type) {
+    public UjoPropertyList readProperties(Class type) {
         KeyList result = propertiesCache.get(type);
         if (result==null) {
             final Key[] ps = readPropertiesNocache(type, true);
@@ -114,7 +116,7 @@ public class UjoManager implements Comparator<Key> {
             // Save the result into buffer:
             propertiesCache.put(type, result);
         }
-        return result;
+        return new UjoPropertyListImpl(result);
     }
     
     
@@ -927,7 +929,8 @@ public class UjoManager implements Comparator<Key> {
      */
     protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalStateException {
         final HashSet<String> names = new HashSet<String>(16);
-        if (enabled) for (Key property : readProperties(type)) {
+        if (enabled) for (UjoProperty property : readProperties(type)) {
+            //final UjoProperty property = (UjoProperty) _property;
             if (!names.add(property.getName())) {
                 throw new IllegalStateException
                     ( "Property '"

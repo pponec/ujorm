@@ -133,7 +133,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
             return;
         }
         if (name.length()==0) {
-            final String msg = String.format("Property name '%s' must be empty"
+            final String msg = String.format("Property name '%s' must not be empty"
                     , name);
             throw new IllegalArgumentException(msg);
         }
@@ -279,7 +279,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public Key<UJO, VALUE> descending() {
+    public UjoProperty<UJO, VALUE> descending() {
         return descending(true);
     }
 
@@ -289,7 +289,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public Key<UJO, VALUE> descending(boolean descending) {
+    public UjoProperty<UJO, VALUE> descending(boolean descending) {
         return PathProperty.sort(this, !descending);
     }
 
