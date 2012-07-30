@@ -20,7 +20,6 @@
 
 package org.ujorm;
 
-import java.util.Iterator;
 import org.ujorm.core.annot.Immutable;
 
 /**
@@ -33,7 +32,7 @@ import org.ujorm.core.annot.Immutable;
  */
 @Deprecated
 @Immutable
-public interface UjoPropertyList extends KeyList {
+public interface UjoPropertyList extends KeyList<Ujo> {
 
     /**
      * Find (both direct or indirect) property by property name from parameter.
@@ -59,7 +58,7 @@ public interface UjoPropertyList extends KeyList {
     // ----------------- LIST IMPLEMENTATION ------------------------
 
     /** Get property on requered index */
-    public Key get(final int index);
+    public UjoProperty get(final int index);
 
     /** Returns a total count of its properties */
     public int size();
@@ -71,8 +70,8 @@ public interface UjoPropertyList extends KeyList {
     public boolean contains(final Key o);
 
     /** Create an interator for all properties. */
-    @Override
-    public Iterator<Key> iterator();
+    //@Override
+    //public Iterator<UjoProperty> iterator();
 
 
     // ================ DEPRECATED ================

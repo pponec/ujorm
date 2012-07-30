@@ -117,9 +117,12 @@ public interface KeyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
     public boolean isEmpty();
 
     /** Returns true if list contains property from the parameter. */
-    public boolean contains(final Key<UJO,?> o);
+    public boolean contains(final Key<?,?> key);
 
-    /** Create an interator for all keys. */
+    /** Create an interator for all keys.
+     * The return UjoProperty item type is used for a back compatibility only,
+     * in feature it will be replaced by the Key interface.
+     */
     @Override
     public Iterator<UjoProperty<UJO,?>> iterator();
 

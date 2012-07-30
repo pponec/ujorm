@@ -220,12 +220,6 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return size == 0;
     }
 
-    /** Test collection if it contains a property parameter  */
-    @SuppressWarnings("element-type-mismatch")
-    public boolean contains(Object property) {
-        return Arrays.asList(keys).contains(property);
-    }
-
     /** Create Property Interator */
     @Override
     public Iterator<UjoProperty<UJO, ?>> iterator() {
@@ -278,9 +272,16 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return type.getName();
     }
 
+//    /** Test collection if it contains a property parameter  */
+//    @SuppressWarnings("element-type-mismatch")
+//    public boolean contains(Object property) {
+//        return Arrays.asList(keys).contains(property);
+//    }
+//
+
     /** Returns true if list contains property from the parameter. */
     @Override
-    public boolean contains(Key<UJO, ?> o) {
+    public boolean contains(Key<?, ?> o) {
         for (Key p : keys) {
             if (p.equals(o)) {
                 return true;

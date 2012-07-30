@@ -142,7 +142,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending();
+    public UjoProperty<UJO,VALUE> descending();
 
     /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
@@ -150,7 +150,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public Key<UJO,VALUE> descending(boolean descending);
+    public UjoProperty<UJO,VALUE> descending(boolean descending);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
