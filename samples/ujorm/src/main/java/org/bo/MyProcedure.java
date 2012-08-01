@@ -37,7 +37,7 @@ import org.ujorm.orm.annot.Procedure;
 public final class MyProcedure extends DbProcedure<MyProcedure> {
 
     /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
-    public static final Key<MyProcedure,Integer> RESULT = newProperty(Integer.class);
+    public static final Key<MyProcedure,Integer> RESULT = newProperty();
     /** INPUT parameter */
     @Parameter(input=true)
     public static final Key<MyProcedure,Integer> PARAM_CODE = newKey(0);

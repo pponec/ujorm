@@ -23,13 +23,13 @@ import org.ujorm.implementation.quick.QuickUjoMid;
 public class Company extends QuickUjoMid<Company> {
 
     /** The Primary Key */
-    public static final Key<Company, Long> ID = newProperty("id", Long.class);
+    public static final Key<Company, Long> ID = newKey("id");
     /** Company name */
-    public static final Key<Company, String> NAME = newProperty("name", String.class);
+    public static final Key<Company, String> NAME = newKey("name");
     /** City name */
-    public static final Key<Company, String> CITY = newProperty("city", String.class);
+    public static final Key<Company, String> CITY = newKey("city");
     /** Registration date */
-    public static final Key<Company, Date> CREATED = newProperty("created", Date.class);
+    public static final Key<Company, Date> CREATED = newKey("created");
 
     // --- An optional implementation of commonly used setters and getters ---
 

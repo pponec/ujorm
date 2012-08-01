@@ -33,11 +33,11 @@ public final class Item extends OrmTable<Item> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final Key<Item,Long> ID = newProperty(Long.class);
+    public static final Key<Item,Long> ID = newKey();
     /** User key */
-    public static final Key<Item,Integer> USER_ID = newProperty(Integer.class);
+    public static final Key<Item,Integer> USER_ID = newKey();
     /** Description of the Item */
-    public static final Key<Item,String> NOTE = newProperty(String.class);
+    public static final Key<Item,String> NOTE = newKey();
     /** Price of the item */
     @Comment("Price of the item")
     @Column(length=8, precision=2)
@@ -45,7 +45,7 @@ public final class Item extends OrmTable<Item> {
     /** A reference to common Order */
     @Comment("A reference to the Order")
     @Column(name="fk_order")
-    public static final Key<Item,Order> ORDER = newProperty(Order.class);
+    public static final Key<Item,Order> ORDER = newKey();
     /** A composed property provides a 'CREATED' attribute of the Order */
     public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
 
