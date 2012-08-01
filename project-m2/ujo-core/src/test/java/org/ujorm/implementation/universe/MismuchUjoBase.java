@@ -30,7 +30,7 @@ public class MismuchUjoBase extends AbstractUjo {
     public static final Key<MismuchUjoBase,Integer>   PRO_P1 = pf.newKey();
     public static final Key<MismuchUjoBase,String>    PRO_P2 = pf.newKey();
     public static final Key<MismuchUjoBase,Date>      PRO_P3 = pf.newKey();
-    public static final ListKey<MismuchUjoBase,Float> PRO_P4 = pf.newListProperty();
+    public static final ListKey<MismuchUjoBase,Float> PRO_P4 = pf.newListKey();
 
     static {
         pf.lock();

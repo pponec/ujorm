@@ -101,7 +101,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** <a href="http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface" target="_blank">JNDI</a>
      * (java naming and directory interface) connection string
      */
-    public static final ListKey<MetaDatabase,String> JNDI = fa.newListProperty("jndi");
+    public static final ListKey<MetaDatabase,String> JNDI = fa.newListKey("jndi");
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujorm.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
@@ -111,9 +111,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     public static final Key<MetaDatabase,Orm2ddlPolicy> ORM2DLL_POLICY = fa.newKey("orm2ddlPolicy", Orm2ddlPolicy.INHERITED);
     /** List of tables */
-    public static final ListKey<MetaDatabase,MetaTable> TABLES = fa.newListProperty("table");
+    public static final ListKey<MetaDatabase,MetaTable> TABLES = fa.newListKey("table");
     /** List of procedures */
-    public static final ListKey<MetaDatabase,MetaProcedure> PROCEDURES = fa.newListProperty("procedure");
+    public static final ListKey<MetaDatabase,MetaProcedure> PROCEDURES = fa.newListKey("procedure");
     /** Database order number */
     @Transient
     public static final Key<MetaDatabase,Integer> ORDER = fa.newKey("order", 0);

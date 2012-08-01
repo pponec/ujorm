@@ -48,7 +48,7 @@ import org.ujorm.extensions.PropertyModifier;
  *
  *     <span class="keyword-directive">public static final</span> Key&lt;Person,Long&gt; PID = factory.newKey();
  *     <span class="keyword-directive">public static final</span> Key&lt;Person,Integer&gt; AGE = factory.newKey();
- *     <span class="keyword-directive">public static final</span> ListUjoProperty&lt;Person,String&gt; NAMES = factory.newListProperty();
+ *     <span class="keyword-directive">public static final</span> ListUjoProperty&lt;Person,String&gt; NAMES = factory.newListKey();
  *
  *     <span class="keyword-directive">static</span> {
  *         pf.lock();
@@ -114,7 +114,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     public KeyFactory(Class<? extends UJO> type, boolean propertyCamelCase, KeyList<?> abstractSuperProperties) {
         this.tmpStore = new InnerDataStore<UJO>(type, propertyCamelCase);
         if (abstractSuperProperties==null) {
-            abstractSuperProperties = getSuperProperties();
+            abstractSuperProperties = getSuperKeys();
         } else {
             assert abstractSuperProperties.getType().isAssignableFrom(type) : "Type parameters is not child of the SuperProperites type: " + abstractSuperProperties.getTypeName();
         }
@@ -126,7 +126,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Read Keys from the super class */
-    protected final KeyList<?> getSuperProperties() {
+    protected final KeyList<?> getSuperKeys() {
         final Class<?> superClass = this.tmpStore.type.getSuperclass();
         if (Ujo.class.isAssignableFrom(superClass)) {
             if (Modifier.isAbstract(superClass.getModifiers())) {
@@ -196,7 +196,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     /** Get KeyRing */
     public KeyList<UJO> getKeyList() {
         if (propertyStore==null) {
-            propertyStore = createPropertyList();
+            propertyStore = createKeyList();
             onCreate(propertyStore, tmpStore);
             tmpStore = null;
         }
@@ -204,7 +204,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Create a property List */
-    protected KeyList<UJO> createPropertyList() throws IllegalStateException {
+    protected KeyList<UJO> createKeyList() throws IllegalStateException {
         final List<Field> fields = tmpStore.getFields();
         try {
             for (Key<UJO, ?> p : tmpStore.getProperties()) {
@@ -215,7 +215,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                     }
                     Field field = findField(p, fields);
                     if (p.getName() == null) {
-                        PropertyModifier.setName(createPropertyName(field, this.tmpStore.camelCase), pr);
+                        PropertyModifier.setName(createKeyName(field, this.tmpStore.camelCase), pr);
                     }
                     if (p.getType() == null) {
                         PropertyModifier.setType(getGenericClass(field, 1), pr);
@@ -233,11 +233,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         } catch (Exception e) {
             throw new IllegalStateException("Can't initialize a property of the " + tmpStore.type, e);
         }
-        return tmpStore.createPropertyList();
+        return tmpStore.createKeyList();
     }
 
     /** Create a property name along the field. */
-    protected String createPropertyName(Field field, boolean camelCase) {
+    protected String createKeyName(Field field, boolean camelCase) {
         if (camelCase) {
             final StringBuilder result = new StringBuilder(32);
             final String name = field.getName();
@@ -272,27 +272,27 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Create new Key */
     public <T> Key<UJO,T> newKey() {
-        return createProperty(null, null);
+        return createKey(null, null);
     }
 
     /** Create new Key */
     public <T> Key<UJO,T> newKey(String name) {
-        return createProperty(name, null);
+        return createKey(name, null);
     }
 
     /** Create new Key with a default value */
     public <T> Key<UJO,T> newKeyDefault(T defaultValue) {
-        return createProperty(null, defaultValue);
+        return createKey(null, defaultValue);
     }
 
     /** Create new Key */
     public <T> Key<UJO,T> newKey(String name, T defaultValue) {
-        return createProperty(name, defaultValue);
+        return createKey(name, defaultValue);
     }
 
     /** Create new Key for a value type class */
     public <T> Key<UJO,T> newClassKey(String name, Class<?> defaultClassValue) {
-        return createProperty(name, (T) defaultClassValue);
+        return createKey(name, (T) defaultClassValue);
     }
 
     /** Add new Key for a value type class, index must be undefied */
@@ -305,19 +305,19 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Common protected factory method */
-    protected <T> Key<UJO,T> createProperty(String name, T defaultValue) {
+    protected <T> Key<UJO,T> createKey(String name, T defaultValue) {
         final Property<UJO,T> p = Property.newInstance(name, null, defaultValue, tmpStore.size(), false);
         addKey(p);
         return p;
     }
 
     /** Create new Key */
-    public final <T> ListProperty<UJO,T> newListProperty() {
-        return newListProperty(null);
+    public final <T> ListProperty<UJO,T> newListKey() {
+        return newListKey(null);
     }
 
     /** Create new Key */
-    public <T> ListProperty<UJO,T> newListProperty(String name) {
+    public <T> ListProperty<UJO,T> newListKey(String name) {
         checkLock();
         final ListProperty<UJO,T> p = ListProperty.newListProperty(name, null, tmpStore.size(), false);
         tmpStore.addProperty(p);
@@ -400,7 +400,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /** Create a new Property List */
-        public KeyList<UJO> createPropertyList() {
+        public KeyList<UJO> createKeyList() {
             return KeyRing.of(type, (List) propertyList);
         }
 

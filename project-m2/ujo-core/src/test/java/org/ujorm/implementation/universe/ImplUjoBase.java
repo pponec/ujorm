@@ -30,7 +30,7 @@ public class ImplUjoBase extends AbstractyUjoBase {
     public static final Key <ImplUjoBase, Integer> PRO_P6 = pf.newKey("P6");
     public static final Key <ImplUjoBase, String>  PRO_P7 = pf.newKey("P7");
     public static final Key <ImplUjoBase, Date>    PRO_P8 = pf.newKey("P8");
-    public static final ListKey<ImplUjoBase,Float> PRO_P9 = pf.newListProperty("P9");
+    public static final ListKey<ImplUjoBase,Float> PRO_P9 = pf.newListKey("P9");
 
     static {
         pf.lock();
