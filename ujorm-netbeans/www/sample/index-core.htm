@@ -147,7 +147,7 @@ The Company object contains two keys only.
 <span class="java-block-comment">/** Company BO */</span>
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Company <span class="java-keywords">extends</span> org.ujorm.implementation.map.MapUjo {<br />
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Company,String&gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;Name&quot;</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ListProperty&lt;Company,Person&gt; PERSONS = <span class="java-layer-method">newListKey</span>(<span class="java-string-literal">&quot;Person&quot;</span>);<br />
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ListKey&lt;Company,Person&gt; PERSONS = <span class="java-layer-method">newListKey</span>(<span class="java-string-literal">&quot;Person&quot;</span>);<br />
   <span class="java-keywords">public</span> <span class="java-layer-method">Company</span>() {
     <span class="highlight">NAME.<span class="java-layer-method">setValue</span>(<span class="java-keywords">this</span>, <span class="java-string-literal">&quot;My Company&quot;</span>);</span> <span class="java-block-comment">// assign a default company name</span>
   }
