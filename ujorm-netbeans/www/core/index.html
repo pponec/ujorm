@@ -70,9 +70,9 @@ Released   : 20080129
                   <li>it is easy to clone, copy, sort and compare</li>
                   <li>direct support for the <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a><!-- component--></li>
                   <li>way for an implementation a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
-                    to only one <a href="javadoc/org/ujorm/Ujo.html#writeValue(org.ujorm.UjoProperty,%20java.lang.Object)">place</a>
+                    to only one <a href="javadoc/org/ujorm/Ujo.html#writeValue(org.ujorm.Key,%20java.lang.Object)">place</a>
                     for each keys include children</li>
-                  <li>unlike some <a href="#similar">competing projects</a> the UjoProperty instance is immutable 
+                  <li>unlike some <a href="#similar">competing projects</a> the Key instance is immutable 
                       (hence never contains value)
                       and the encapsulation is supported</li>
                   <li>most features are checked by unit tests</li>
@@ -96,12 +96,12 @@ Released   : 20080129
               
               You can imagine the object UJO like a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">map</a> (an object that maps keys to values)
               with data access by <strong>methods of the key</strong> for example. 
-              This key is made up of the implementation of the <a href="javadoc/org/ujorm/UjoProperty.html">UjoProperty</a> 
+              This key is made up of the implementation of the <a href="javadoc/org/ujorm/Key.html">Key</a> 
               including (among others) two type-safe methods:
               
               <ul>
-                <li><a href="javadoc/org/ujorm/UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - to write the value into the object and</li> 
-                <li><a href="javadoc/org/ujorm/UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - to read the value.</li>
+                <li><a href="javadoc/org/ujorm/Key.html#setValue(UJO,%20VALUE)">Key.setValue(Ujo, VALUE)</a> - to write the value into the object and</li> 
+                <li><a href="javadoc/org/ujorm/Key.html#getValue(UJO)">Key.getValue(Ujo)</a> - to read the value.</li>
               </ul>
               
               There is possible to send a property method to an another object simply by the <strong>property key</strong> contrary of the methods of JavaBean object.
@@ -111,7 +111,7 @@ Released   : 20080129
               
               The core of the project are two interfaces 
               <a href="javadoc/org/ujorm/Ujo.html" style="font-style: italic;">Ujo</a> a 
-              <a href="javadoc/org/ujorm/UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
+              <a href="javadoc/org/ujorm/Key.html" style="font-style: italic;">Key</a>,
               which have got three abstract implementations:
               
               <ul>
@@ -139,15 +139,16 @@ Released   : 20080129
               For example see an implementation of the class <i>Person</i> which includes three attributes and a one method to add a&nbsp;cash.
               
               <pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt&lt;Person&gt; {
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> AbstractUjo&lt;Person&gt; {
+  <span class="java-keywords">private static final</span> KeyFactory fy = <span class="java-layer-method">newFactory</span>(Person.<span class="java-keywords">class</span>);
     
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person,Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, <span class="java-numeric-literals">0d</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,String &gt; NAME = fy.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Boolean&gt; MALE = fy.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Double &gt; CASH = fy.<span class="java-layer-method">newKey</span>();
     
-  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">addCash</span>(<span class="java-keywords">double</span> cash) {
-    <span class="java-keywords">double</span> newCash = <span class="java-layer-method">get</span>(CASH) + cash;
-    <span class="java-layer-method">set</span>(CASH, newCash);
+  <span class="java-annotation">@</span>Override
+  <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
+    <span class="java-keywords">return</span> fy.<span class="java-layer-method">getKeyList</span>();
   }
 }</pre>
 <!-- -->          
@@ -176,25 +177,26 @@ Released   : 20080129
 
 @SuppressWarnings(<span class="character">&quot;</span><span class="character">unchecked</span><span class="character">&quot;</span>)
 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">implements</span> Ujo {
+  <span class="java-keywords">private static final</span> KeyFactory fy = KeyFactory.CamelBuilder.<span class="java-layer-method">get</span>(Person.<span class="java-keywords">class</span>);
     
-  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Person,String &gt; NAME = Property.newInstance(<span class="character">&quot;</span><span class="character">Name</span><span class="character">&quot;</span>, String.<span class="keyword-directive">class</span>);
-  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Person,Boolean&gt; MALE = Property.newInstance(<span class="character">&quot;</span><span class="character">Male</span><span class="character">&quot;</span>, Boolean.<span class="keyword-directive">class</span>);
-  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Person,Double &gt; CASH = Property.newInstance(<span class="character">&quot;</span><span class="character">Cash</span><span class="character">&quot;</span>, <span class="java-numeric-literals">0d</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = fy.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = fy.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = fy.<span class="java-layer-method">newKey</span>();
   
-  <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the MapUjo implementation ---</span></span>
+  <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the Ujo implementation ---</span></span>
   <span class="keyword-directive">private</span> HashMap map = <span class="keyword-directive">new</span> HashMap();  
-  <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(UjoProperty property) {
+  <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(Key property) {
     return map.get(property);
   }
-  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">writeValue</span>(UjoProperty property, Object value) {
+  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">writeValue</span>(Key property, Object value) {
     map.put(property, value);
   }
-  <span class="keyword-directive">public</span> UjoPropertyList <span class="java-layer-method">readProperties</span>() {
-    <span class="keyword-directive">return</span> UjoManager.getInstance().readProperties(getClass());
+  <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
+    <span class="java-keywords">return</span> fy.<span class="java-layer-method">getKeyList</span>();
   }
-  <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, UjoProperty property, Object value) {
+  <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, Key property, Object value) {
     <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
-  } <span style="background-color: #fbf1f1"><span class="comment">// --- The end of MapUjo implementation ---</span></span>
+  } <span style="background-color: #fbf1f1"><span class="comment">// --- The end of the Ujo implementation ---</span></span>
 
   <span class="comment">/** Add cash in the <strong>Ujo implementation</strong> */</span>
   <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> addCash(<span class="keyword-directive">double</span> cash) {

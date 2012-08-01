@@ -514,7 +514,7 @@ Děkuji za Vaše <a href="http://ujorm-cs.blogspot.com/2010/05/jak-funguje-ujorm
 </div>
 <br>
 <div>
-  <i>Poznámka: UjoProperties jsou v diagramech popsány formálně pomocí atributů entity.</i><br>
+  <i>Poznámka: Keys jsou v diagramech popsány formálně pomocí atributů entity.</i><br>
   <br>
   Při použití Ujorm knihovny (JAR) z Maven repositioy (repo1) doporučuji připojit si ve vašem IDE také JavaDoc, protože knihovna (JAR) je zkompilovaná bez ladicích informací a obsahuje například zkrácené názvy parametrů metod.<br>
   <br>
@@ -527,7 +527,7 @@ Děkuji za Vaše <a href="http://ujorm-cs.blogspot.com/2010/05/jak-funguje-ujorm
       Session, která je potřebná pro získání DB connection při pozdním volání hodnot (lazy-loading)<br>
     </li>
     <li>
-      UjoProperty[] - obsahuje seznam keys <b>zapsaných </b>v době přiřazené Sesssion. Tento seznam umožňuje efektivnější aktualizaci databáze příkazem UPDATE, protože příkaz se sestavuje pouze pro modifikované hodnoty Properties. Ostatní hodnoty se při UPDATE ignorují. Pokud objekt nemá přiřazenou Session, tak se zápis nových hodnot <b>neregistruje</b>.<br>
+      Key[] - obsahuje seznam keys <b>zapsaných </b>v době přiřazené Sesssion. Tento seznam umožňuje efektivnější aktualizaci databáze příkazem UPDATE, protože příkaz se sestavuje pouze pro modifikované hodnoty Properties. Ostatní hodnoty se při UPDATE ignorují. Pokud objekt nemá přiřazenou Session, tak se zápis nových hodnot <b>neregistruje</b>.<br>
     </li>
   </ul>
   <br>
@@ -702,7 +702,7 @@ Při pozdním načtení objektu spouští Ujorm nový databázový dotaz, který
   <h2>
     <a id=DDL_support_36207173943347537_ name=DDL_support_36207173943347537_></a><b>DDL support:</b>
   </h2>
-  Ujorm umí upravovat databázové schema pomocí DDL aktualizací podle svého meta-modelu. Meta-model obsahuje popis struktury reálné databáze, který se sestavuje z názvů tříd, názvů UjoProperties a jejich anotací a případně podle konfiguračního XML souboru. Po načtení do paměti je meta-model uzamčen tak, že žádné pozdější úpravy nejsou možné. Aktualizace databáze se řídí následujícími pravidly:<br>
+  Ujorm umí upravovat databázové schema pomocí DDL aktualizací podle svého meta-modelu. Meta-model obsahuje popis struktury reálné databáze, který se sestavuje z názvů tříd, názvů Keys a jejich anotací a případně podle konfiguračního XML souboru. Po načtení do paměti je meta-model uzamčen tak, že žádné pozdější úpravy nejsou možné. Aktualizace databáze se řídí následujícími pravidly:<br>
   <br>
   <ul>
     <li>
@@ -797,11 +797,11 @@ Všimněte si, že Customer obsahuje <b>primární klíč</b> typu <b>User</b> a
 </div>
 <div style=MARGIN-LEFT:80px>
   <font face="courier new">@Column(<b>pk=true</b>, <font face="courier new">value="id"</font>)</font><br style="FONT-FAMILY:Courier New">
-  <font face="courier new">public static final UjoProperty&lt;Customer, User&gt; <b>user </b></font><br>
+  <font face="courier new">public static final Key&lt;Customer, User&gt; <b>user </b></font><br>
 </div>
 <div style=MARGIN-LEFT:160px>
   <div style=MARGIN-LEFT:40px>
-    <font face="courier new">= newProperty(User.class);</font><br style="FONT-FAMILY:Courier New">
+    <font face="courier new">= newKey(User.class);</font><br style="FONT-FAMILY:Courier New">
   </div>
 </div>
 <div style=MARGIN-LEFT:80px>
@@ -845,7 +845,7 @@ Ujorm podporuje automatické generování primárního klíče pomocí třídy <
 <br>
 <ul>
   <li>
-    primární klíč (PK) bude přiřazen automaticky pouze v případě, že hodnota UjoProperty je NULL. Je tedy možné přiřazovat operativně vlastní hodnoty PK bez nutnosti změny nějaké konfigurace<br>
+    primární klíč (PK) bude přiřazen automaticky pouze v případě, že hodnota Key je NULL. Je tedy možné přiřazovat operativně vlastní hodnoty PK bez nutnosti změny nějaké konfigurace<br>
   </li>
   <li>
     každá tabulka má svoji vlastní řadu primárních klíčů o kterou se stará její vlastní instance třídy UjoSequencer. Třída UjoSequencer si udržuje hodnoty primárního klíče v pomocné databázové tabulce <b>ujorm_pk_support</b>, tady je popis sloupců:<br>
@@ -889,7 +889,7 @@ Ujorm podporuje automatické generování primárního klíče pomocí třídy <
 <h2>
   <a id=Datab_zov_procedury_6024463592 name=Datab_zov_procedury_6024463592></a><b><b>Databázové procedury:</b></b>
 </h2>
-Ujorm podporuje od verze 0.94 volání databázových uložených <b>procedur</b> a <b>funkcí</b> (dále jen procedura). Každá procedura&nbsp; je popsána třídou rozšiřující abstraktní třídu DbProcedure, která implementuje Ujo. Významné je pořadí UjoProperties ve třídě, které musí odpovídat pořadí parametrů v proceduře. Pokud procedura <b>nemá návratový typ</b>, tak první konstanta UjoProperty v pořadí bude typu <b>Void.class</b>. První UjoProperty je typu OUTPUT, ostatní jsou defaultně typu INPUT. Defaultní typy keys je možné překrýt anotací <i>@Parameter(input=true, output=true)</i>. Databázové procedury je nutné <b>registrovat</b> ve třídě databases podobně jako databázové tabulky:<br>
+Ujorm podporuje od verze 0.94 volání databázových uložených <b>procedur</b> a <b>funkcí</b> (dále jen procedura). Každá procedura&nbsp; je popsána třídou rozšiřující abstraktní třídu DbProcedure, která implementuje Ujo. Významné je pořadí Keys ve třídě, které musí odpovídat pořadí parametrů v proceduře. Pokud procedura <b>nemá návratový typ</b>, tak první konstanta Key v pořadí bude typu <b>Void.class</b>. První Key je typu OUTPUT, ostatní jsou defaultně typu INPUT. Defaultní typy keys je možné překrýt anotací <i>@Parameter(input=true, output=true)</i>. Databázové procedury je nutné <b>registrovat</b> ve třídě databases podobně jako databázové tabulky:<br>
 <br>
 <div style=MARGIN-LEFT:40px>
   <font face="courier new">public static final Property&lt;Database,MyProcedure&gt; procedure<br>
@@ -914,21 +914,21 @@ Při použití vytvoříme instanci procedury, naplníme její parametry typu IN
 <h2>
   <a id=Pro_n_zvy_Property_maj_mal_p_s name=Pro_n_zvy_Property_maj_mal_p_s></a>Proč názvy Property mají malá písmena?
 </h2>
-V ukázkách uvedených v této dokumentaci jsou názvy statických fieldů UjoProperties uváděné často malými písmeny - v rozporu se standardem. Důvodem je jednak snaha o zkrácení kódu při tvorbě UjoProperty ale zdá se být také užitečné, že malá písmena korespondují s instančními proměnnými (fields). Malá písmena se osvědčila lépe, nicméně použití velkých písmen ve vašem projektu nepředstavuje technický problém.<br>
+V ukázkách uvedených v této dokumentaci jsou názvy statických fieldů Keys uváděné často malými písmeny - v rozporu se standardem. Důvodem je jednak snaha o zkrácení kódu při tvorbě Key ale zdá se být také užitečné, že malá písmena korespondují s instančními proměnnými (fields). Malá písmena se osvědčila lépe, nicméně použití velkých písmen ve vašem projektu nepředstavuje technický problém.<br>
 <br>
-Úplnou specifikaci UjoProperty lze sestavit explicitně včetně <b>názvu </b>dle následujícího vzoru:<br>
-&nbsp;&nbsp; public static final Property&lt;BO, Long&gt; <b>id</b> = newProperty("<b>id</b>", Long.class);<br>
+Úplnou specifikaci Key lze sestavit explicitně včetně <b>názvu </b>dle následujícího vzoru:<br>
+&nbsp;&nbsp; public static final Property&lt;BO, Long&gt; <b>id</b> = newKey("<b>id</b>", Long.class);<br>
 <br>
 Při zkráceném zápisu se název Property přebírá z názvu fieldu, ukázka použití je tady:<br>
-&nbsp;&nbsp; public static final Property&lt;BO, Long&gt; <b>id</b> = newProperty(Long, class);<br>
+&nbsp;&nbsp; public static final Property&lt;BO, Long&gt; <b>id</b> = newKey(Long, class);<br>
 <br>
 Krátké připomenutí pojmů Ujormu:<br>
 <ul>
   <li>
-    <b>field </b>UjoProperty - je název statické konstanty UjoProperty v implementaci Ujo<br>
+    <b>field </b>Key - je název statické konstanty Key v implementaci Ujo<br>
   </li>
   <li>
-    <b>jméno </b>UjoProperty - je logické označení, které vrací metoda UjoProperty.getName() jako String
+    <b>jméno </b>Key - je logické označení, které vrací metoda Key.getName() jako String
   </li>
 </ul>
 <br>
@@ -938,17 +938,17 @@ Krátké připomenutí pojmů Ujormu:<br>
 Doporučuji mít na paměti následujcí vlastnosti UJO, které mají vliv na jeho správné chování:<br>
 <ul>
   <li>
-    každý <b>atribut entity</b> má svoji unikátní instanci UjoProperty
+    každý <b>atribut entity</b> má svoji unikátní instanci Key
   </li>
   <li>
     pro čtení a zápis hodnot se používají metody:<br>
   </li>
   <ul>
     <li>
-      UjoProperty.getValue(..)<br>
+      Key.getValue(..)<br>
     </li>
     <li>
-      UjoProperty.setValue(..)&nbsp;
+      Key.setValue(..)&nbsp;
     </li>
   </ul>
 </ul>
@@ -970,7 +970,7 @@ Doporučuji mít na paměti následujcí vlastnosti UJO, které mají vliv na je
 </div>
 <ul>
   <li>
-    metoda UjoProperty.getValue() <b>zaměňuje </b>hodnoty NULL za defaultní hodnotu UjoProperty (která je NULL pokud ji nenastavíte jinak). Pozor, metoda Ujo.readValue() žádnou záměnu defaultních hodnot neprovádí.
+    metoda Key.getValue() <b>zaměňuje </b>hodnoty NULL za defaultní hodnotu Key (která je NULL pokud ji nenastavíte jinak). Pozor, metoda Ujo.readValue() žádnou záměnu defaultních hodnot neprovádí.
   </li>
   <li>
     pro zápis a čtení hodnoty <b>není doporučeno</b> volat <b>netypové </b>metody<br>
@@ -989,7 +989,7 @@ Doporučuji mít na paměti následujcí vlastnosti UJO, které mají vliv na je
 </div>
 <ul>
   <li>
-    pro defaultní hodonotu UjoProperty je vhodný pouze <b>neměnný objekt</b> (immutable object)
+    pro defaultní hodonotu Key je vhodný pouze <b>neměnný objekt</b> (immutable object)
   </li>
   <li>
     Ujo objekty lze obecně dědit, nicméně dědičnost objektů OrmUjo podporovaná není.<br>

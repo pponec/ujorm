@@ -107,9 +107,9 @@ How to create a read-only UJO ?</h1>
 
 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> PersonRO <span class="keyword-directive">extends</span> org.ujorm.implementation.map.MapUjoExt&lt;PersonRO&gt; {
 
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;PersonRO,Integer&gt; ID   = newProperty(<span class="character">&quot;</span><span class="character">id</span><span class="character">&quot;</span>  , Integer.<span class="keyword-directive">class</span>);
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;PersonRO,String&gt;  NAME = newProperty(<span class="character">&quot;</span><span class="character">name</span><span class="character">&quot;</span>, String.<span class="keyword-directive">class</span>);
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;PersonRO,Boolean&gt; LOCK = newProperty(<span class="character">&quot;</span><span class="character">LOCK</span><span class="character">&quot;</span>, <span class="highlight"><span class="keyword-directive">false</span></span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;PersonRO,Integer&gt; ID   = newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;PersonRO,String&gt;  NAME = newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;PersonRO,Boolean&gt; LOCK = newKey();
 
     <span class="keyword-directive">public</span> PersonRO(Integer id, String name) {
         set(ID, id);
@@ -118,7 +118,7 @@ How to create a read-only UJO ?</h1>
     }
 
     @Override
-    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(UjoProperty property, Object value) {
+    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key property, Object value) {
         <span class="highlight"><span class="keyword-directive">if</span> (get(LOCK))</span> {
             <span class="keyword-directive">throw</span> <span class="keyword-directive">new</span> UnsupportedOperationException(<span class="character">&quot;</span><span class="character">Property is read-only: </span><span class="character">&quot;</span> + property);
         } <span class="keyword-directive">else</span> {

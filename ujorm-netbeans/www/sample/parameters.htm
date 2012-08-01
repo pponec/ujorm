@@ -130,10 +130,10 @@ Maintenance of application parameters
 <span class="keyword-directive">import</span> java.awt.Rectangle;
 <span class="keyword-directive">import</span> java.util.Calendar;
 <span class="keyword-directive">import</span> java.util.Locale;
-<span class="keyword-directive">import</span> org.ujorm.UjoProperty;
-<span class="keyword-directive">import</span> org.ujorm.implementation.map.MapUjo;
+<span class="keyword-directive">import</span> org.ujorm.Key;
+<span class="keyword-directive">import</span> org.ujorm.core.*;
 
-<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Parameters <span class="keyword-directive">extends</span> MapUjo {
+<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Parameters <span class="keyword-directive">extends</span> AbstractUjo {
     
     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">SysTray</span> <span class="comment">action</span> <span class="comment">on</span> <span class="comment">a</span> <span class="comment">second</span> <span class="comment">mous</span><span class="comment">e</span> <span class="comment">click</span><span class="comment">.</span> <span class="comment">*/</span>
     <span class="keyword-directive">public</span> <span class="keyword-directive highlight">enum</span> Action {
@@ -141,80 +141,80 @@ Maintenance of application parameters
     }
     
     <span class="comment">/**</span> <span class="comment">Localization</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Locale&gt; P_LANG 
-        = newProperty(<span class="character">&quot;</span><span class="character">Language</span><span class="character">&quot;</span>, Locale.getDefault());
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Locale&gt; P_LANG 
+        = newKey(<span class="character">&quot;</span><span class="character">Language</span><span class="character">&quot;</span>, Locale.getDefault());
 
     <span class="comment">/**</span> <span class="comment">Working</span> <span class="comment">Hours</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Float&gt; P_WORKING_HOURS 
-        = newProperty(<span class="character">&quot;</span><span class="character">WorkingHours</span><span class="character">&quot;</span>, 8f);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Float&gt; P_WORKING_HOURS 
+        = newKey(<span class="character">&quot;</span><span class="character">WorkingHours</span><span class="character">&quot;</span>, 8f);
 
     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">First</span> <span class="comment">Day</span> <span class="comment">of</span> <span class="comment">the</span> <span class="comment">Week</span> <span class="comment">Day</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Integer&gt; P_FIRST_DAY_OF_WEEK 
-        = newProperty(<span class="character">&quot;</span><span class="character">FirstDayOfWeek</span><span class="character">&quot;</span>, Calendar.getInstance().getFirstDayOfWeek());
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Integer&gt; P_FIRST_DAY_OF_WEEK 
+        = newKey(<span class="character">&quot;</span><span class="character">FirstDayOfWeek</span><span class="character">&quot;</span>, Calendar.getInstance().getFirstDayOfWeek());
 
     <span class="comment">/**</span> <span class="comment">Decimal</span> <span class="comment">time</span> <span class="comment">format</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_DECIMAL_TIME_FORMAT 
-        = newProperty(<span class="character">&quot;</span><span class="character">DecimalTimeFormat</span><span class="character">&quot;</span>, <span class="keyword-directive">true</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Boolean&gt; P_DECIMAL_TIME_FORMAT 
+        = newKey(<span class="character">&quot;</span><span class="character">DecimalTimeFormat</span><span class="character">&quot;</span>, <span class="keyword-directive">true</span>);
 
     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Main</span> <span class="comment">selecton</span> <span class="comment">format</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_MAIN_FORMAT 
-        = newProperty(<span class="character">&quot;</span><span class="character">DateMainFormat</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">EE, yyyy/MM/dd&#39;  Week: &#39;ww</span><span class="character">&quot;</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,String&gt; P_DATE_MAIN_FORMAT 
+        = newKey(<span class="character">&quot;</span><span class="character">DateMainFormat</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">EE, yyyy/MM/dd&#39;  Week: &#39;ww</span><span class="character">&quot;</span>);
 
     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Export</span> <span class="comment">Date</span> <span class="comment">Selection</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_REPORT_FORMAT 
-        = newProperty(<span class="character">&quot;</span><span class="character">DateReportFormat</span><span class="character">&quot;</span>, P_DATE_MAIN_FORMAT.getDefault() );
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,String&gt; P_DATE_REPORT_FORMAT 
+        = newKey(<span class="character">&quot;</span><span class="character">DateReportFormat</span><span class="character">&quot;</span>, P_DATE_MAIN_FORMAT.getDefault() );
 
     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Export</span> <span class="comment">Date</span> <span class="comment">Selection</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_REPORT_FORMAT2 
-        = newProperty(<span class="character">&quot;</span><span class="character">DateReportFormat2</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">d&#39;&lt;br/&gt;&lt;span class=</span><span class="ST0">\&quot;</span><span class="character">smallMonth</span><span class="ST0">\&quot;</span><span class="character">&gt;&#39;MMMM&#39;&lt;/span&gt;&#39;</span><span class="character">&quot;</span> );
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,String&gt; P_DATE_REPORT_FORMAT2 
+        = newKey(<span class="character">&quot;</span><span class="character">DateReportFormat2</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">d&#39;&lt;br/&gt;&lt;span class=</span><span class="ST0">\&quot;</span><span class="character">smallMonth</span><span class="ST0">\&quot;</span><span class="character">&gt;&#39;MMMM&#39;&lt;/span&gt;&#39;</span><span class="character">&quot;</span> );
 
     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">complementary</span> <span class="comment">report</span> <span class="comment">CSS</span> <span class="comment">style</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_REPORT_CSS 
-        = newProperty(<span class="character">&quot;</span><span class="character">ReportCSS</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">styles/style.css</span><span class="character">&quot;</span> );
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,String&gt; P_REPORT_CSS 
+        = newKey(<span class="character">&quot;</span><span class="character">ReportCSS</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">styles/style.css</span><span class="character">&quot;</span> );
 
     <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">Goto</span> <span class="comment">Date</span> <span class="comment">format</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_DATE_GOTO_FORMAT 
-        = newProperty(<span class="character">&quot;</span><span class="character">DateGotoFormat</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">yyyy/MM/dd</span><span class="character">&quot;</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,String&gt; P_DATE_GOTO_FORMAT 
+        = newKey(<span class="character">&quot;</span><span class="character">DateGotoFormat</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">yyyy/MM/dd</span><span class="character">&quot;</span>);
 
     <span class="comment">/**</span> <span class="comment">A</span> <span class="comment">Color</span> <span class="comment">of</span> <span class="comment">a</span> <span class="comment">private</span> <span class="comment">project</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Color&gt; P_COLOR_PRIVATE 
-        = newProperty(<span class="character">&quot;</span><span class="character">ColorOfPrivateProject</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0x5DA158));
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Color&gt; P_COLOR_PRIVATE 
+        = newKey(<span class="character">&quot;</span><span class="character">ColorOfPrivateProject</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0x5DA158));
 
     <span class="comment">/**</span> <span class="comment">A</span> <span class="comment">Color</span> <span class="comment">of</span> <span class="comment">finished</span> <span class="comment">project</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Color&gt; P_COLOR_FINISHED_PROJ 
-        = newProperty(<span class="character">&quot;</span><span class="character">ColorOfFinishedProject</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0xA9AC88));
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Color&gt; P_COLOR_FINISHED_PROJ 
+        = newKey(<span class="character">&quot;</span><span class="character">ColorOfFinishedProject</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0xA9AC88));
 
     <span class="comment">/**</span> <span class="comment">A</span> <span class="comment">Color</span> <span class="comment">of</span> <span class="comment">an</span> <span class="comment">editable</span> <span class="comment">area</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Color&gt; P_COLOR_EDITABLE 
-        = newProperty(<span class="character">&quot;</span><span class="character">ColorOfEditableArea</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0xFFFACD));
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Color&gt; P_COLOR_EDITABLE 
+        = newKey(<span class="character">&quot;</span><span class="character">ColorOfEditableArea</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Color(0xFFFACD));
 
     <span class="comment">/**</span> <span class="comment">Action</span> <span class="comment">on</span> <span class="comment">a</span> <span class="comment">second</span> <span class="comment">click</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Action&gt; P_SYSTRAY_SECOND_CLICK 
-        = newProperty(<span class="character">&quot;</span><span class="character">SystemTraySecondClick</span><span class="character">&quot;</span>, <span class="highlight">Action.NONE</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Action&gt; P_SYSTRAY_SECOND_CLICK 
+        = newKey(<span class="character">&quot;</span><span class="character">SystemTraySecondClick</span><span class="character">&quot;</span>, <span class="highlight">Action.NONE</span>);
 
     <span class="comment">/**</span> <span class="comment">Modify</span> <span class="comment">value</span> <span class="comment">of</span> <span class="comment">finished</span> <span class="comment">project</span> <span class="comment">or</span> <span class="comment">task</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_MODIFY_FINESHED_PROJ 
-        = newProperty(<span class="character">&quot;</span><span class="character">ModifyFinishedProject</span><span class="character">&quot;</span>, <span class="keyword-directive">false</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Boolean&gt; P_MODIFY_FINESHED_PROJ 
+        = newKey(<span class="character">&quot;</span><span class="character">ModifyFinishedProject</span><span class="character">&quot;</span>, <span class="keyword-directive">false</span>);
 
     <span class="comment">/**</span> <span class="comment">Create</span> <span class="comment">a</span> <span class="comment">new</span> <span class="comment">Event</span> <span class="comment">on</span> <span class="comment">an</span> <span class="comment">EXIT</span> <span class="comment">action</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_EXIT_EVENT_CREATE 
-        = newProperty(<span class="character">&quot;</span><span class="character">ExitEventCreating</span><span class="character">&quot;</span>, Boolean.TRUE);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Boolean&gt; P_EXIT_EVENT_CREATE 
+        = newKey(<span class="character">&quot;</span><span class="character">ExitEventCreating</span><span class="character">&quot;</span>, Boolean.TRUE);
 
     <span class="comment">/**</span> <span class="comment">Description</span> <span class="comment">of</span> <span class="comment">an</span> <span class="comment">EXIT</span> <span class="comment">action</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,String&gt; P_EXIT_EVENT_DESCR 
-        = newProperty(<span class="character">&quot;</span><span class="character">ExitEventDescription</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">EXIT</span><span class="character">&quot;</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,String&gt; P_EXIT_EVENT_DESCR 
+        = newKey(<span class="character">&quot;</span><span class="character">ExitEventDescription</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">EXIT</span><span class="character">&quot;</span>);
 
     <span class="comment">/**</span> <span class="comment">Hide</span> <span class="comment">Buoon</span> <span class="comment">Icon</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_HIDE_ICONS 
-        = newProperty(<span class="character">&quot;</span><span class="character">HideButtonIcons</span><span class="character">&quot;</span>, <span class="keyword-directive">false</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Boolean&gt; P_HIDE_ICONS 
+        = newKey(<span class="character">&quot;</span><span class="character">HideButtonIcons</span><span class="character">&quot;</span>, <span class="keyword-directive">false</span>);
 
     <span class="comment">/**</span> <span class="comment">Last</span> <span class="comment">window</span> <span class="comment">size</span> <span class="comment">and</span> <span class="comment">position</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Rectangle&gt; P_WINDOW_SIZE 
-        = newProperty(<span class="character">&quot;</span><span class="character">WindowSize</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Rectangle(0, 0, 622, 405));
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Rectangle&gt; P_WINDOW_SIZE 
+        = newKey(<span class="character">&quot;</span><span class="character">WindowSize</span><span class="character">&quot;</span>, <span class="keyword-directive">new</span> Rectangle(0, 0, 622, 405));
 
     <span class="comment">/**</span> <span class="comment">Restore</span> <span class="comment">a</span> <span class="comment">last</span> <span class="comment">application</span> <span class="comment">window</span> <span class="comment">size</span> <span class="comment">and</span> <span class="comment">position</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> UjoProperty&lt;Parameters,Boolean&gt; P_WINDOW_SIZE_RESTORATION 
-        = newProperty(<span class="character">&quot;</span><span class="character">WindowSizeRestoration</span><span class="character">&quot;</span>, <span class="keyword-directive">true</span>);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;Parameters,Boolean&gt; P_WINDOW_SIZE_RESTORATION 
+        = newKey(<span class="character">&quot;</span><span class="character">WindowSizeRestoration</span><span class="character">&quot;</span>, <span class="keyword-directive">true</span>);
 }</pre>
 	
     </div>
