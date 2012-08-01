@@ -49,7 +49,7 @@ final public class MetaRoot extends AbstractMetaModel {
     /** Property Factory */
     private static final KeyFactory<MetaRoot> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** List of tables */
-    public static final ListKey<MetaRoot,MetaDatabase> DATABASES = fa.newListProperty("database");
+    public static final ListKey<MetaRoot,MetaDatabase> DATABASES = fa.newListKey("database");
     /** ORM parameters */
     public static final Key<MetaRoot,MetaParams> PARAMETERS = fa.newKey("parameters");
     /** The property initialization */

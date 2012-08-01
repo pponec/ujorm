@@ -44,7 +44,7 @@ final public class MetaIndex extends AbstractMetaModel {
     public static final Key<MetaIndex,Boolean> UNIQUE = fa.newKey("unique", true);
     /** Table Columns */
     @Transient
-    public static final ListKey<MetaIndex,MetaColumn> COLUMNS = fa.newListProperty("column");
+    public static final ListKey<MetaIndex,MetaColumn> COLUMNS = fa.newListKey("column");
 
     /** The property initialization */
     static{fa.lock();}

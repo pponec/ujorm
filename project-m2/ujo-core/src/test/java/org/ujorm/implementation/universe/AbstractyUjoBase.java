@@ -30,7 +30,7 @@ abstract public class AbstractyUjoBase implements Ujo {
     public static final Key<AbstractyUjoBase,Integer>   PRO_P1 = APF.newKey();
     public static final Key<AbstractyUjoBase,String>    PRO_P2 = APF.newKey();
     public static final Key<AbstractyUjoBase,Date>      PRO_P3 = APF.newKey();
-    public static final ListKey<AbstractyUjoBase,Float> PRO_P4 = APF.newListProperty();
+    public static final ListKey<AbstractyUjoBase,Float> PRO_P4 = APF.newListKey();
 
     static {
         APF.lock();

@@ -52,7 +52,7 @@ final public class MetaProcedure extends AbstractMetaModel {
     /** Name of table schema. */
     public static final Key<MetaProcedure,String> SCHEMA = fa.newKey("schema", Table.NULL);
     /** Procedure parameters */
-    public static final ListKey<MetaProcedure,MetaColumn> PARAMETERS = fa.newListProperty("parameter");
+    public static final ListKey<MetaProcedure,MetaColumn> PARAMETERS = fa.newListKey("parameter");
     /** Procedure <strong>property</strong> (a base definition of the procedure) */
     @Transient
     public static final Key<MetaProcedure,Key> DB_PROPERTY = fa.newKey("dbProperty");

@@ -41,7 +41,7 @@ final public class MetaPKey extends AbstractMetaModel {
     /** DB table */
     public static final Key<MetaPKey,MetaTable> TABLE = fa.newKey("table");
     /** DB columns */
-    public static final ListKey<MetaPKey,MetaColumn> COLUMNS = fa.newListProperty("columns");
+    public static final ListKey<MetaPKey,MetaColumn> COLUMNS = fa.newListKey("columns");
 
     /** The property initialization */
     static{fa.lock();}

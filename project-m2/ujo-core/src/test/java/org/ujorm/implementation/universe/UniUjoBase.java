@@ -28,7 +28,7 @@ public class UniUjoBase implements Ujo {
     public static final Key<UniUjoBase,Integer>   PRO_P1 = factory.newKey();
     public static final Key<UniUjoBase,String>    PRO_P2 = factory.newKey();
     public static final Key<UniUjoBase,Date>      PRO_P3 = factory.newKey();
-    public static final ListKey<UniUjoBase,Float> PRO_P4 = factory.newListProperty();
+    public static final ListKey<UniUjoBase,Float> PRO_P4 = factory.newListKey();
 
     static {
         factory.lock();

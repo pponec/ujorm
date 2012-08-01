@@ -82,9 +82,9 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Comment of the database table */
     public static final Key<MetaTable,String> COMMENT = fa.newKey("comment", Comment.NULL);
     /** Table Columns (no relations) */
-    public static final ListKey<MetaTable,MetaColumn> COLUMNS = fa.newListProperty("column");
+    public static final ListKey<MetaTable,MetaColumn> COLUMNS = fa.newListKey("column");
     /** Table relations to many */
-    public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListProperty("relation2m");
+    public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListKey("relation2m");
     /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
     @Transient
     public static final Key<MetaTable,MetaSelect> SELECT_MODEL = fa.newKey("selectModel");

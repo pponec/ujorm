@@ -31,18 +31,18 @@ public class SpringKeyFactory extends KeyFactory<AbstractAplicationContextAdapte
     /** Create new Key */
     @Override
     public final <T> SpringKey<T> newKey() {
-        return createProperty(null, null);
+        return createKey(null, null);
     }
 
     /** Create new Key */
     @Override
     public final <T> SpringKey<T> newKey(String name) {
-        return createProperty(name, null);
+        return createKey(name, null);
     }
 
     /** Create new Key */
     @Override
-    protected <T> SpringKey<T> createProperty(String name, T defaultValue) {
+    protected <T> SpringKey<T> createKey(String name, T defaultValue) {
         final SpringKeyImpl<T> p = new SpringKeyImpl<T>(name);
         addKey(p);
         return p;
