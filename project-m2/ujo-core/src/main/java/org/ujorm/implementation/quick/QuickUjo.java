@@ -19,8 +19,8 @@ package org.ujorm.implementation.quick;
 import java.io.Serializable;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
-import org.ujorm.extensions.Property;
 import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ListProperty;
 
 /**
@@ -33,9 +33,9 @@ import org.ujorm.extensions.ListProperty;
  * <span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjo {
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>();
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>();
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>();
  *
  *    <span class="java-keywords">static</span> {
  *        init(Person.<span class="java-keywords">class</span>);
@@ -54,44 +54,14 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     /** {@see Property#UNDEFINED_INDEX} */
     private static final int UNDEFINED_INDEX = -1;
        
-    /** Object data. Unauthorized writing is not allowed. */
-    final private Object[] data;
-    
     /** Constructor */
     public QuickUjo() {
-        data = new Object[readKeys().size()];
+        super();
     }
 
     /** Constructor */
     public QuickUjo(Object[] data) {
-        this.data = data;
-    }
-
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * {@link Property#setValue(org.ujorm.Ujo, java.lang.Object) }
-     * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
-     * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
-     *
-     * @see Property#setValue(Ujo,Object)
-     */
-
-    public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);       
-        data[property.getIndex()] = value;
-    }
-    
-
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * {@link Property#getValue(org.ujorm.Ujo)}
-     * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
-     * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
-     *
-     * @see Property#getValue(Ujo)
-     */    
-    public Object readValue(final Key property) {
-        return data[property.getIndex()];
+        super(data);
     }
     
     // --------- STATIC METHODS -------------------
@@ -317,6 +287,5 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty() {
         return ListProperty.newListProperty((String)null, null);
     }
-
  
 }

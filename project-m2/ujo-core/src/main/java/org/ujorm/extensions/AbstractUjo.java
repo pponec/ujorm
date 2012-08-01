@@ -16,163 +16,93 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.KeyList;
-import org.ujorm.core.*;
-import org.ujorm.Ujo;
-import org.ujorm.UjoAction;
+import java.io.Serializable;
 import org.ujorm.Key;
-import org.ujorm.UjoPropertyList;
+import org.ujorm.Ujo;
+import org.ujorm.core.KeyFactory;
+import org.ujorm.core.UjoManager;
 
 /**
- * This is a simple abstract implementation of Ujo. <br>
- * For implementation define only a "public static final Key" constants in a child class.
- * The code syntax is Java 1.5 complied.<br>
- * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
-
+ * This is a very fast abstract implementation of <code>Ujo</code>.
+ * For implementation define only a "public static final Key" constants and a "readPropertyCount()" method in a child class.
+ * The code syntax is Java 1.5 complied.
+ * <br>All keys must be objects (no primitive types) in the current version of Ujorm.
+ * <br>Features: very good performance, an order of keys from "<code>readKeys()</code>" method is guaranteed and independed on a Java implementation.
+ * <h3>Sample of usage</h3>
+ * <pre class="pre">
+ * <span class="java-keywords">import</span> org.ujorm.core.*;
+ * <span class="java-keywords">public class</span> Person <span class="java-keywords">extends</span> AbstractUjo {
+ *    <span class="java-keywords">private static final</span> KeyFactory fa = <span class="java-layer-method">newFactory</span>(Person.<span class="java-keywords">class</span>);
+ *
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = fa.<span class="java-layer-method">newKey</span>();
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = fa.<span class="java-layer-method">newKey</span>(<);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = fa.<span class="java-layer-method">newKey</span>(<);
+ *
+ *    <span class="java-annotation">@</span>Override
+ *    <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span><?> <span class="java-layer-method">readKeys(</span>() {
+ *        <span class="java-keywords">return</span> fa.<span class="java-layer-method">getKeyList</span>();
+ *    }
+ * }
+ * </pre>
+ * 
+ * @see Property
  * @author Pavel Ponec
+ * @composed 1 - * Property
  */
-public abstract class AbstractUjo implements Ujo, UjoTextable, UjoCloneable {
-
-
-    /**
-     * Initializa all keys. If the keys are unlocked than recalculate index
-     * and set an undefined property name by its static field.
-     * @param ujoClass Ujo class
-     */
-    @SuppressWarnings("unchecked")
-    protected static final KeyList init(Class ujoClass) throws IllegalStateException {
-        return init(ujoClass, false);
-    }
-
-
-    /**
-     * Initializa all keys. If the keys are unlocked than recalculate index
-     * and set an undefined property name by its static field.
-     * @param ujoClass Ujo class
-     * @param checkUniqueProperties Check unique keys
-     */
-    @SuppressWarnings("unchecked")
-    protected static final KeyList init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
-        KeyList result = UjoManager.getInstance().readProperties(ujoClass);
-        if (checkUniqueProperties) {
-            UjoManager.getInstance().checkUniqueProperties(ujoClass);
-        }
-       return result;
-    }
-
-    /** Returns an UjoManager */
-    protected UjoManager readUjoManager() {
-        return UjoManager.getInstance();
-    }
+//@deprecated Use the class {@link  QuickUKjo} rather or a better class {@link KeyFactory} to create new Keys.
+//@Deprecated
+public abstract class AbstractUjo extends SuperAbstractUjo implements Serializable {
+       
+    /** Object data. Unauthorized writing is not allowed. */
+    private final Object[] data;
     
-    /** Returns all direct keys.
-     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
-     * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
-     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
-     * @see Key#isDirect()
-     */
-    public KeyList<?> readKeys() {
-        final KeyList result = readUjoManager().readProperties(getClass());
-        return result;
+    /** Constructor */
+    public AbstractUjo() {
+        this.data = new Object[readKeys().size()];
     }
 
-    /** Returns all direct keys.
-     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
-     * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
-     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
-     * @see Key#isDirect()
-     */
-    final public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
+    public AbstractUjo(Object[] data) {
+        this.data = data;
     }
-
-
-    /**
-     * Get an authorization of the property for different actions.
-     * <br>A Default value is TRUE for all actions, keys and values.
+        
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+     * {@link Property#setValue(Ujo,Object)}
+     * to an external access for a better type safe.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
-     *
-     * @param action Type of request. See constant(s) ACTION_* for more information.
-     *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
-     * @param property A property of the Ujo
-     * @param value A value
-     * @return Returns TRUE, if property is authorized.
-     * @see UjoAction Action Constants
+     * @see Property#setValue(Ujo,Object)
      */
-    public boolean readAuthorization(final UjoAction action, final Key property, final Object value) {
-        return true;
-    }
-    
-    /**
-     * Is the object equals to a parameter Ujo?
-     */
+
     @Override
-    public boolean equals(final Object obj) {
-        final boolean result = obj instanceof Ujo
-        ? readUjoManager().equalsUjo(this, (Ujo) obj )
-        : false
-        ;
-        return result;
+    public void writeValue(final Key property, final Object value) {
+        assert UjoManager.assertDirectAssign(property, value);
+        data[property.getIndex()] = value;
     }
     
-    
-    /** A String representation. */
+
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+     * {@link Property#getValue(Ujo)}
+     * to an external access for a better type safe.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
+     *
+     * @see Property#getValue(Ujo)
+     */    
     @Override
-    public String toString() {
-        final String result = readUjoManager().toString(this);
-        return result;
-    }
-    
-    /**
-     * Object is Cloneable
-     * <br>Note: There are supported attributes
-     * <ul>
-     * <li>null value </li>
-     * <li>Ujo</li>
-     * <li>UjoCloneable</li>
-     * <li>List</li>
-     * <li>array of privitive values</li>
-     * <ul>
-     * 
-     * @param depth Depth of clone.
-     * @param context A context of the action.
-     * <br>Sample: value "0" returns the same object, value "1" returns the same attribute values, etc.
-     * @return A clone of current class
-     */
-    public Object clone(final int depth, final Object context) {
-        return readUjoManager().clone(this, depth, context);
-    }
-    
-    // ---- An UjoTextable implementation -----
-    
-    /**
-     * Get an original value in a String format. Property must be an direct type.
-     * otherwise method returns an instance of String.
-     *
-     * @param property A direct property only. See a method Key.isDirect().
-     * @param action A context of the action.
-     *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
-     * @return If property type is "container" then result is null.
-     */
-    @SuppressWarnings("unchecked")
-    public String readValueString(final Key property, final UjoAction action) {
-        final Object value  = property.of(this);
-        final String result = readUjoManager().encodeValue(value, false);
-        return result;
-    }
-    
-    /**
-     * Set value from a String format. Property must be an direct type.
-     *
-     * @param property A direct property only. See a method Key.isDirect().
-     * @param value String value
-     * @param type Type can be a subtype of a Property.type. If type is null, then a property.type is used.
-     * @param action A context of the action.
-     *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
-     */
-    public void writeValueString(final Key property, final String value, final Class type, final UjoAction action) {
-        final Object valueObj = readUjoManager().decodeValue(property, value, type);
-        writeValue(property, valueObj);
+    public Object readValue(final Key property) {
+        assert property.isDirect() : "Property must be direct only.";
+        return data[property.getIndex()];
     }
 
+    // ===== STATIC METHODS =====
+
+    /** Create a cactory with a cammel-case Key name generator.
+     * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newFactory
+     */
+    protected static <UJO extends Ujo> KeyFactory<UJO> newFactory(Class<UJO> ujoClass) {
+        return KeyFactory.CamelBuilder.get(ujoClass);
+    }
+    
 }

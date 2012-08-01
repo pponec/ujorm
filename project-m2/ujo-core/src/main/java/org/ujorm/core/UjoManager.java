@@ -659,14 +659,14 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /** An assignable test. */
-    public boolean assertDirectAssign(final Key property, final Object value) throws IllegalArgumentException {
+    static public boolean assertDirectAssign(final Key property, final Object value) throws IllegalArgumentException {
         return assertDirect(property, value) 
             && assertAssign(property, value)
             ;
     }
 
     /** An assignable test. */
-    public boolean assertDirect(final Key property, final Object value) throws IllegalArgumentException {
+    static public boolean assertDirect(final Key property, final Object value) throws IllegalArgumentException {
         if (!property.isDirect()) {
             final String msg
             = "The property \"" 
@@ -682,7 +682,7 @@ public class UjoManager implements Comparator<Key> {
     
     
     /** An assignable test. */
-    public boolean assertAssign(final Key property, final Object value) throws IllegalArgumentException {
+    static public boolean assertAssign(final Key property, final Object value) throws IllegalArgumentException {
         final boolean result 
             =  value==null
             || value instanceof NoCheck

@@ -18,6 +18,7 @@ package org.ujorm.implementation.map;
 import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.AbstractUjoExt;
 import org.ujorm.extensions.ListProperty;
@@ -46,9 +47,7 @@ import org.ujorm.extensions.ListProperty;
  * @see Property
  * @author Pavel Ponec
  * @since UJO release 0.80 
- * @deprecated Use the class {@link  QuickUKjoMid} rather or a better class {@link KeyFactory} to create new Keys.
  */
-@Deprecated
 abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJO> implements Serializable {
 
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
@@ -77,7 +76,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      */
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value);
         data.put(property, value);
     }
 

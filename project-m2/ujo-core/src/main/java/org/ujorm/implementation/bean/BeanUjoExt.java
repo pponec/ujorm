@@ -18,6 +18,7 @@ package org.ujorm.implementation.bean;
 
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.AbstractUjoExt;
 import org.ujorm.extensions.ValueAgent;
 
@@ -28,9 +29,9 @@ import org.ujorm.extensions.ValueAgent;
  * <br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
  *
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, String &gt; NAME = newKey(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Double &gt; CASH = newKey(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Person&gt; CHILD = newKey(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, String &gt; NAME = newKey(<span class="java-string-literal">&quot;Name&quot;</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Double &gt; CASH = newKey(<span class="java-string-literal">&quot;Cash&quot;</span>);
+ *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Person&gt; CHILD = newKey(<span class="java-string-literal">&quot;Child&quot;</span>);
  *    
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
@@ -59,7 +60,7 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      */
     @SuppressWarnings("unchecked")
     public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);       
+        assert UjoManager.assertDirectAssign(property, value);
         ((ValueAgent) property).writeValue(this, value);
     }
     

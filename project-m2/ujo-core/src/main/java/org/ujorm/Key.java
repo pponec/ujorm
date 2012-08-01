@@ -34,6 +34,7 @@ import org.ujorm.core.annot.Immutable;
  * @see KeyRing
  */
 @Immutable
+@SuppressWarnings("deprecation")
 public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<UJO,VALUE> {
     
     /** Returns a name of Property. */

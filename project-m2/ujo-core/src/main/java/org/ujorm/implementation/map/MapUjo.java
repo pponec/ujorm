@@ -19,9 +19,10 @@ package org.ujorm.implementation.map;
 import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ListProperty;
-import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.extensions.SuperAbstractUjo;
 
 /**
  * This is a simple abstract implementation of <code>Ujo</code>.<br>
@@ -33,9 +34,9 @@ import org.ujorm.extensions.AbstractUjo;
  * <span class="java-keywords">import</span> org.ujorm.implementation.map.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;name&quot;</span> , String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;male&quot;</span> , Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;birth&quot;</span>, Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;name&quot;</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;male&quot;</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;birth&quot;</span>);
  *
  * }
  * </pre>
@@ -43,10 +44,8 @@ import org.ujorm.extensions.AbstractUjo;
  * @see Property
  * @author Pavel Ponec
  * @composed 1 - * Property
- * @deprecated Use the class {@link  QuickUKjo} rather or a better class {@link KeyFactory} to create new Keys.
  */
-@Deprecated
-public abstract class MapUjo extends AbstractUjo implements Serializable {
+public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 977567L;
@@ -74,7 +73,7 @@ public abstract class MapUjo extends AbstractUjo implements Serializable {
      * @see Property#setValue(Ujo,Object)
      */
     public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);       
+        assert UjoManager.assertDirectAssign(property, value);
         data.put(property, value);
     }
     
@@ -88,6 +87,7 @@ public abstract class MapUjo extends AbstractUjo implements Serializable {
      * @see Property#getValue(Ujo)
      */
     public Object readValue(final Key property) {
+        assert property.isDirect() : "Property must be direct only.";
         return data.get(property);
     }
     

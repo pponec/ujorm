@@ -30,6 +30,7 @@ import java.util.List;
  * @author Pavel Ponec
  * @since 0.81
  */
+@SuppressWarnings("deprecation")
 public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, VALUE> {
 
     /** Get the first property of the current object. The result is direct property always. */

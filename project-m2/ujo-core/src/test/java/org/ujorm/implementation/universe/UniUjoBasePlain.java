@@ -40,7 +40,7 @@ public class UniUjoBasePlain implements Ujo {
 
     @Override
     public KeyList<?> readKeys() {
-        return pf.getPropertyList();
+        return pf.getKeyList();
     }
 
     public Object readValue(Key property) {

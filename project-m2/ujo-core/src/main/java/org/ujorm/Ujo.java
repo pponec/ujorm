@@ -26,24 +26,26 @@ package org.ujorm;
  * See a <a href="package-summary.html#UJO">general prologue</a> for more information or see some implementations.
  *
  *<p>The fastest way to use the interface is to extend an abstract parrent:</p>
- *<pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
- *<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {
- *    
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, String &gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Boolean&gt; MALE = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
- *  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Double &gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Cash"</span>, <span class="java-numeric-literals">0d</span>);
- *    
- *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">addCash</span>(<span class="java-keywords">double</span> cash) {
- *    <span class="java-keywords">double</span> newCash = CASH.<span class="java-layer-method">of</span>(<span class="java-keywords">this</span>) + cash;
- *    CASH.<span class="java-layer-method">setValue</span>(<span class="java-keywords">this</span>, newCash);
- *  }
- *}</pre>
+ * <pre class="pre">
+ * <span class="java-keywords">import</span> org.ujorm.core.*;
+ * <span class="java-keywords">public class</span> Person <span class="java-keywords">extends</span> AbstractUjo {
+ *    <span class="java-keywords">private static final</span> KeyFactory fa = <span class="java-layer-method">newFactory</span>(Person.<span class="java-keywords">class</span>);
+ *
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = fa.<span class="java-layer-method">newKey</span>();
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = fa.<span class="java-layer-method">newKey</span>(<);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = fa.<span class="java-layer-method">newKey</span>(<);
+ *
+ *    <span class="java-annotation">@</span>Override
+ *    <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span><?> <span class="java-layer-method">readKeys(</span>() {
+ *        <span class="java-keywords">return</span> fa.<span class="java-layer-method">getKeyList</span>();
+ *    }
+ * }
+ * </pre>
  * 
  * @author Pavel Ponec
  * @see Key
  * @assoc - - - Key
  * @composed - - 1 KeyList
- * @composed - - 1 UjoAction
  * @opt attributes
  * @opt operations
  */

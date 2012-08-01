@@ -17,6 +17,7 @@ package org.ujorm.implementation.quick;
 
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.UjoMiddle;
 
 /**
@@ -29,9 +30,9 @@ import org.ujorm.extensions.UjoMiddle;
  * <span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
  * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjo {
  *
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>(String.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>(Boolean.<span class="java-keywords">class</span>);
- *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>(Date.<span class="java-keywords">class</span>);
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>();
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>();
+ *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = <span class="java-layer-method">newKey</span>();
  *
  *    <span class="java-keywords">static</span> {
  *        init(Person.<span class="java-keywords">class</span>);
@@ -66,7 +67,7 @@ abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid>
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
-        assert readUjoManager().assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value);
         property.setValue((UJO)this, value);
         return this;
     }

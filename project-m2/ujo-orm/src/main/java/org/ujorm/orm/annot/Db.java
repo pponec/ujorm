@@ -17,6 +17,7 @@
 package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 
 /** 
@@ -52,7 +53,7 @@ public @interface Db {
     /** The sequencer class for tables of the current database.
      * A value can be a subtype of 'org.ujorm.orm.UjoSequencer' with one-parameter constructor type of MetaTable.
      * If the NULL value is specified the then a default sequencer 'UjoSequencer' will be used. */
-    Class sequencer() default org.ujorm.orm.UjoSequencer.class;
+    Class<? extends UjoSequencer> sequencer() default org.ujorm.orm.UjoSequencer.class;
     /** Default read-only state for all database tables.
      * The parameter value is evaluated in the execution SQL commands type of INSERT, UPDATE, and DELETE.
      * <br/>Note, that only the default value FALSE can be overwritten by a table annotation or by a XML config. 

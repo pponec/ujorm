@@ -32,7 +32,7 @@ import org.ujorm.swing.UjoPropertyRow;
  * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * @author Pavel Ponec
  */
-public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUjo implements UjoExt<UJO_IMPL> {
+public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstractUjo implements UjoExt<UJO_IMPL> {
     
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
@@ -68,7 +68,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends AbstractUj
         ( final Key<UJO, VALUE> property
         , final VALUE value
         ) {
-        readUjoManager().assertAssign(property, value);
+        UjoManager.assertAssign(property, value);
         property.setValue((UJO)this, value);
         return (UJO_IMPL) this;
     }

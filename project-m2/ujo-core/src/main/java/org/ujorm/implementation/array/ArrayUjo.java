@@ -17,11 +17,10 @@
 package org.ujorm.implementation.array;
 
 import java.io.Serializable;
-import java.security.KeyFactory;
 import org.ujorm.Key;
 import org.ujorm.extensions.Property;
-import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.ListProperty;
+import org.ujorm.extensions.SuperAbstractUjo;
 
 /**
  * This is a very fast abstract implementation of <code>Ujo</code>.
@@ -51,9 +50,9 @@ import org.ujorm.extensions.ListProperty;
  * @author Pavel Ponec
  * @composed 1 - * Property
  */
-//@deprecated Use the class {@link  QuickUKjo} rather or a better class {@link KeyFactory} to create new Keys.
-//@Deprecated
-public abstract class ArrayUjo extends AbstractUjo implements Serializable {
+@deprecated Use the class {@link AbstractUjo} rather with the class {@link KeyFactory} to create new Keys.
+@Deprecated
+public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable {
     
 
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */

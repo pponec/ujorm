@@ -11,7 +11,6 @@ package samples.xml;
 
 import org.ujorm.Key;
 import org.ujorm.UjoAction;
-import org.ujorm.extensions.Property;
 import org.ujorm.implementation.map.*;
 import static org.ujorm.UjoAction.*;
 
