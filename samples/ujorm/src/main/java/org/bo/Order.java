@@ -49,20 +49,20 @@ public final class Order extends OrmTable<Order> {
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
-    public static final Key<Order, Long> ID = newProperty(Long.class);
+    public static final Key<Order, Long> ID = newKey();
     /** Order STATE, default is ACTIVE */
     @Comment("Order state, default value is ACTIVE")
     public static final Key<Order, State> STATE = newKey(State.ACTIVE);
     /** User key */
-    public static final Key<Order, Integer> USER_ID = newProperty(Integer.class);
+    public static final Key<Order, Integer> USER_ID = newKey();
     /** Description of the Order */
     @Comment("Description of the Order")
     @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true)
-    public static final Key<Order, String> NOTE = newProperty(String.class);
+    public static final Key<Order, String> NOTE = newKey();
     /** Date of creation */
-    public static final Key<Order, Date> CREATED = newProperty(Date.class);
+    public static final Key<Order, Date> CREATED = newKey();
     /** Reference to Items */
-    public static final RelationToMany<Order, Item> ITEMS = newRelation(Item.class);
+    public static final RelationToMany<Order, Item> ITEMS = newRelation();
 
     // --- Constructors ---
 

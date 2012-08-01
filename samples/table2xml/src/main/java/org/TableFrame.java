@@ -28,7 +28,7 @@ public class TableFrame extends JFrame implements ActionListener, Runnable  {
 
     // Assing Data into TableModel:
     company = loadCompany();
-    List<Person> persons = company.list(PERSONS); // returns a not null list always
+    List<Person> persons = PERSONS.getList(company); // returns a not null list always
     model.setRows(persons);
 
     // Register a Close Listener:

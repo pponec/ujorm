@@ -37,9 +37,9 @@ import org.ujorm.orm.dialect.*;
 public class Database extends OrmTable<Database> {
 
     /** User */
-    public static final RelationToMany<Database,User> users = newRelation(User.class);
+    public static final RelationToMany<Database,User> users = newRelation();
 
     /** Customer extends User */
-    public static final RelationToMany<Database,Customer> customers = newRelation(Customer.class);
+    public static final RelationToMany<Database,Customer> customers = newRelation();
 
 }

@@ -43,7 +43,7 @@ import org.ujorm.orm.annot.View;
 
     /** Unique key */
     @Column(pk=true, name="id")
-    public static final Key<ViewOrder,Long> ID = newProperty(Long.class);
+    public static final Key<ViewOrder,Long> ID = newKey();
     /** ItemCount */
     @Column(name="item_count")
     public static final Key<ViewOrder,Integer> ITEM_COUNT = newKey(0);

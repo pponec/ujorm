@@ -44,20 +44,20 @@ public class Database extends OrmTable<Database> {
 
     /** Customer order. The used annotation overwrites a database schema from the property schema. */
     @Table("ord_order")
-    public static final RelationToMany<Database,Order> ORDERS = newRelation(Order.class);
+    public static final RelationToMany<Database,Order> ORDERS = newRelation();
 
     /** Items of the Customer order */
     @Table("ord_item")
-    public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation(Item.class);
+    public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation();
 
     /** View to aggregate data. */
     @View("ord_order")
-    public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation(ViewOrder.class);
+    public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation();
 
     // ----- STORED PROCEDURE(S) --------
 
     /** Database stored procedure */
     @Procedure("ujorm_test")
-    public static final Key<Database,MyProcedure> myProcedure = newProperty(MyProcedure.class);
+    public static final Key<Database,MyProcedure> myProcedure = newKey();
 
 }

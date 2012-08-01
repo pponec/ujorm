@@ -28,14 +28,14 @@ public class User extends OrmTable<User> {
 
     /** Primary key */
     @Column(pk=true)
-    public static final Key<User,Long> id = newProperty(Long.class);
+    public static final Key<User,Long> id = newKey();
     /** Login */
     @Column(uniqueIndex="idx_login")
-    public static final Key<User,String> login = newProperty(String.class);
+    public static final Key<User,String> login = newKey();
     /** Description of the order */
-    public static final Key<User,String> password = newProperty(String.class);
+    public static final Key<User,String> password = newKey();
     /** Full name */
-    public static final Key<User,String> name = newProperty(String.class);
+    public static final Key<User,String> name = newKey();
 
     // ----------- Optional getters/setters -----------
 

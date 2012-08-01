@@ -22,13 +22,13 @@ import org.ujorm.implementation.quick.QuickUjoMid;
 public class Employee extends QuickUjoMid<Employee> {
 
     /** Unique key */
-    public static final Key<Employee, Long> ID = newProperty("id", Long.class);
+    public static final Key<Employee, Long> ID = newKey("id");
     /** User first name, where the default value is {@code null} */
-    public static final Key<Employee, String> NAME = newProperty("name", String.class);
+    public static final Key<Employee, String> NAME = newKey("name");
     /** Hourly wage with the default value: 0.0 */
     public static final Key<Employee, Double> WAGE = newKey("wage", 0.0);
     /** A reference to Company */
-    public static final Key<Employee, Company> COMPANY = newProperty("company", Company.class);
+    public static final Key<Employee, Company> COMPANY = newKey("company");
 
     // --- An optional implementation of commonly used setters and getters ---
     
