@@ -49,8 +49,8 @@ import org.ujorm.extensions.SuperAbstractUjo;
  * @see Property
  * @author Pavel Ponec
  * @composed 1 - * Property
+ * @deprecated Use the class {@link AbstractUjo} rather with the class {@link KeyFactory} to create new Keys.
  */
-@deprecated Use the class {@link AbstractUjo} rather with the class {@link KeyFactory} to create new Keys.
 @Deprecated
 public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable {
     
