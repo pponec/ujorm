@@ -120,7 +120,7 @@ Ujorm</h1>
         <li>podpora komponenty <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a></li>
         <li>objekt si řídí sám dostupnost svých atributů</li>
         <li>property <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
-            je možné implementovat na jednom <a href="javadoc/org/ujorm/Ujo.html#writeValue(org.ujorm.UjoProperty,%20java.lang.Object)">místě</a>
+            je možné implementovat na jednom <a href="javadoc/org/ujorm/Ujo.html#writeValue(org.ujorm.Key,%20java.lang.Object)">místě</a>
             pro všechny property třídy včetně potomků</li>
         <li>podpora <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a></li>
         <li>úsporný zdrojový kód vašich UJO objektů</li>
@@ -133,11 +133,11 @@ Ujorm</h1>
         který implementuje rozhraní <a href="javadoc/org/ujorm/Ujo.html">Ujo</a>.
         
         Objekt UJO si lze představit například jako <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">mapu</a> (objekt mapující hodnoty ke klíčům), 
-        ke které se přistupuje pomocí <strong>metod klíče</strong>. Klíč je zde tvořen implementací rozhraní <a href="javadoc/org/ujorm/UjoProperty.html">UjoProperty</a> 
+        ke které se přistupuje pomocí <strong>metod klíče</strong>. Klíč je zde tvořen implementací rozhraní <a href="javadoc/org/ujorm/Key.html">Key</a> 
         obsahující (mimo jiné) dvě typově bezpečné metody:
         <ul>
-            <li><a href="javadoc/org/ujorm/UjoProperty.html#setValue(UJO,%20VALUE)">UjoProperty.setValue(Ujo, VALUE)</a> - pro zápis hodnoty do objektu a</li> 
-            <li><a href="javadoc/org/ujorm/UjoProperty.html#getValue(UJO)">UjoProperty.getValue(Ujo)</a> - pro čtení hodnoty.</li>
+            <li><a href="javadoc/org/ujorm/Key.html#setValue(UJO,%20VALUE)">Key.setValue(Ujo, VALUE)</a> - pro zápis hodnoty do objektu a</li> 
+            <li><a href="javadoc/org/ujorm/Key.html#getValue(UJO)">Key.getValue(Ujo)</a> - pro čtení hodnoty.</li>
         </ul>
         
         Na rozdíl od metod objektu JavaBean lze tyto klíče posílat jednoduše dalším objektům, 
@@ -146,7 +146,7 @@ Ujorm</h1>
         
         Jádrem projektu jsou tedy dvě rozhraní 
         <a href="javadoc/org/ujorm/Ujo.html" style="font-style: italic;">Ujo</a> a 
-        <a href="javadoc/org/ujorm/UjoProperty.html" style="font-style: italic;">UjoProperty</a>,
+        <a href="javadoc/org/ujorm/Key.html" style="font-style: italic;">Key</a>,
         ke kterým jsou k dispozici tři abstraktní implementace:
            <ul>
                <li><a href="javadoc/org/ujorm/implementation/map/MapUjo.html">MapUjo</a> - snadná implementace pro vývojáře s dostatečným výkonem pro běžné aplikace postavená na objektu <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
@@ -176,9 +176,9 @@ Ujorm</h1>
 <pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {
     
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, String &gt; NAME = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Boolean&gt; MALE = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> UjoProperty&lt;Person, Double &gt; CASH = <span class="java-layer-method">newProperty</span>(<span class="java-string-literal">"Cash"</span>, <span class="java-numeric-literals">0d</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, String &gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Boolean&gt; MALE = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Male"</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Double &gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Cash"</span>);
     
   <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">addCash</span>(<span class="java-keywords">double</span> cash) {
     <span class="java-keywords">double</span> newCash = CASH.<span class="java-layer-method">of</span>(<span class="java-keywords">this</span>) + cash;

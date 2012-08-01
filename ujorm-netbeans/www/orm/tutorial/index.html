@@ -129,7 +129,7 @@ href="#h.529d45f07307">Performance</a></span></p>
 databases</a></span></p>
 
 <p class="c7"><span class="c25"><a class="c8" href="#h.55252fa54c31">Why
-UjoProperty constants have lowercase letters?</a></span></p>
+Key constants have lowercase letters?</a></span></p>
 
 <p class="c7"><span class="c25"><a class="c8" href="#h.51c99f3693d0">Using of
 UJO objects</a></span></p>
@@ -218,7 +218,7 @@ diagram:</span></p>
 
 <p class="c4 c29"><img height="225" src="images/image03.png" width="444"></p>
 
-<p class="c4"><span class="c5">Note: UjoProperties are in diagrams formally
+<p class="c4"><span class="c5">Note: Keys are in diagrams formally
 described using the attributes of entity.</span></p>
 
 <p class="c4 c21"><span class="c5"></span></p>
@@ -287,11 +287,11 @@ JavaDoc</a></span><span>&#xa0;.</span></p>
 <p class="c4"><span>Notes to graph:</span></p>
 
 <p class="c4"><span class="c11"><a class="c8"
-href="http://ujorm.org/javadoc/org/ujorm/UjoProperty.html">UjoProperty</a></span><span>&#xa0;attributes
+href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a></span><span>&#xa0;attributes
 described in the domain objects are always </span><span class="c12">immutable
 static constants,</span><span>&#xa0;which provide methods for writing and
 reading values to (from) the Ujo object. Only this diagram is hinted for better
-illustration the implementation of UjoProperties in domain objects, in other
+illustration the implementation of Keys in domain objects, in other
 diagrams of this document is used the same formal registration as for a regular
 POJO attributes.</span></p>
 
@@ -305,17 +305,17 @@ POJO attributes.</span></p>
     their keys. A kind of data storage determines the implementation, for
     example OrmTable uses internally an array of objects.</span></li>
   <li class="c0"><span class="c11"><a class="c8"
-    href="http://ujorm.org/javadoc/org/ujorm/UjoProperty.html">UjoProperty</a></span><span>&#xa0;-
+    href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a></span><span>&#xa0;-
     immutable object containing meta-data of the property, which provides two
     methods for reading and writing values to Ujo object. Two related
-    UjoProperties could be joined using the method add(), the result is stored
-    in a new immutable instance of the UjoProperty interface.</span></li>
+    Keys could be joined using the method add(), the result is stored
+    in a new immutable instance of the Key interface.</span></li>
   <li class="c0"><span class="c11"><a class="c8"
     href="http://ujorm.org/javadoc/org/ujorm/extensions/Property.html">Property</a></span><span>&#xa0;-
-    the default implementation of UjoProperty</span></li>
+    the default implementation of Key</span></li>
   <li class="c0"><span class="c11"><a class="c8"
     href="http://ujorm.org/javadoc/org/ujorm/implementation/orm/RelationToMany.html">RelationToMany</a></span><span>&#xa0;-
-    extended default implementation of UjoProperty designed for the data type:
+    extended default implementation of Key designed for the data type:
     UjoIterator&lt;item&gt;</span></li>
   <li class="c0"><span class="c11"><a class="c8"
     href="http://ujorm.org/javadoc/org/ujorm/orm/OrmUjo.html">OrmUjo</a></span><span>&#xa0;-
@@ -442,7 +442,7 @@ href="http://ujorm.org/javadoc/org/ujorm/orm/Session.html">Session</a></span><sp
 </span><span class="c11"><a class="c8"
 href="http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html">Criterion</a></span><span>&#xa0;joined
 by two elementary conditions. Missing operator is replaced by the EQUALS' one.
-Notice how is created composite 'UjoProperty'. The composite 'property' can be
+Notice how is created composite 'Key'. The composite 'property' can be
 stored as an additional static constants of domain object. Prepared query is
 contained in the 'Query' object a can be simply used in 'for-each' command. In
 the end we have to close database 'session' again. More information about the
@@ -634,31 +634,31 @@ abstract class OrmTable:</span></p>
         <p class="c4"><span>&#xa0;&#xa0;&#xa0; @Column(pk = true)</span></p>
 
         <p class="c4"><span>&#xa0;&#xa0;&#xa0; public static final
-        UjoProperty&lt;Order, Long&gt; </span><span class="c2 c12">id</span></p>
+        Key&lt;Order, Long&gt; </span><span class="c2 c12">id</span></p>
 
         <p class="c4"><span>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; =
-        newProperty(Long.</span><span
+        newKey(Long.</span><span
         class="c10">class</span><span>);</span></p>
 
         <p class="c4 c21"><span></span></p>
 
         <p class="c4"><span>&#xa0;&#xa0;&#xa0; public static final
-        UjoProperty&lt;Order, Date&gt; </span><span
+        Key&lt;Order, Date&gt; </span><span
         class="c2 c12">created</span></p>
 
         <p class="c4"><span>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; =
-        newProperty(Date.</span><span
+        newKey(Date.</span><span
         class="c10">class</span><span>);</span></p>
 
         <p class="c4 c21"><span></span></p>
 
         <p class="c4"><span>&#xa0; &#xa0; public static final
-        UjoProperty&lt;Order, User&gt; </span><span
+        Key&lt;Order, User&gt; </span><span
         class="c2 c12">user</span></p>
 
         <p
         class="c4"><span>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
-        = newProperty(User.</span><span
+        = newKey(User.</span><span
         class="c10">class</span><span>);</span></p>
 
         <p class="c4 c21"><span></span></p>
@@ -688,7 +688,7 @@ abstract class OrmTable:</span></p>
 key</span><span>&#xa0;is marked by parameter </span><span
 class="c12">pk</span><span>&#xa0;of the annotation </span><span
 class="c12">Column</span><span>, a database column name is derived from
-UjoProperty field name by default. That is all, isn't it easy?</span></p>
+Key field name by default. That is all, isn't it easy?</span></p>
 
 <p class="c4 c21"><span></span></p>
 
@@ -707,7 +707,7 @@ need the methods:</span></p>
 
         <p class="c4 c21"><span></span></p>
 
-        <p class="c4"><span class="c32 c5">&#xa0;&#xa0;&#xa0; [ The UjoProperty
+        <p class="c4"><span class="c32 c5">&#xa0;&#xa0;&#xa0; [ The Key
         declarations ... ]</span></p>
 
         <p class="c4 c21"><span class="c32 c5"></span></p>
@@ -844,7 +844,7 @@ options:</span></p>
         <p class="c4"><span>&#xa0;&#xa0;&#xa0; @Column(pk = true)</span></p>
 
         <p class="c4"><span>&#xa0;&#xa0;&#xa0; public static final
-        UjoProperty&lt;Order, Long&gt; </span><span class="c2 c12">id
+        Key&lt;Order, Long&gt; </span><span class="c2 c12">id
         </span><span>...</span></p>
 
         <p class="c4 c21"><span></span></p>
@@ -854,7 +854,7 @@ options:</span></p>
         insert</span><span>")</span></p>
 
         <p class="c4"><span>&#xa0;&#xa0;&#xa0; public static final
-        UjoProperty&lt;Order, Date&gt; </span><span class="c2 c12">created
+        Key&lt;Order, Date&gt; </span><span class="c2 c12">created
         </span><span>...</span></p>
 
         <p class="c4 c21"><span></span></p>
@@ -864,7 +864,7 @@ options:</span></p>
         related user</span><span>")</span></p>
 
         <p class="c4"><span>&#xa0;&#xa0;&#xa0; public static final
-        UjoProperty&lt;Order, User&gt; </span><span class="c2 c12">user
+        Key&lt;Order, User&gt; </span><span class="c2 c12">user
         </span><span>...</span></p>
 
         <p class="c4 c21"><span></span></p>
@@ -1193,7 +1193,7 @@ Query</span><span>.</span></p>
 
 <p class="c18"><span>Note: the property </span><span
 class="c10">id</span><span>&#xa0;from the sample can be replaced for another
-UjoProperty from the Order class.</span></p>
+Key from the Order class.</span></p>
 
 <p class="c18 c21"><span></span></p>
 
@@ -1258,11 +1258,11 @@ is used instead of @</span><span class="c12">Table</span><span>.</span></p>
 
         <p class="c4"><span class="c6">&#xa0;&#xa0;&#xa0; </span><span
         class="c6 c9 c12">public static final</span><span
-        class="c6">&#xa0;UjoProperty&lt;ViewOrder,Long&gt; ID</span></p>
+        class="c6">&#xa0;Key&lt;ViewOrder,Long&gt; ID</span></p>
 
         <p class="c4"><span
         class="c6">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;
-        = newProperty(Long.</span><span class="c6 c9 c12">class</span><span
+        = newKey(Long.</span><span class="c6 c9 c12">class</span><span
         class="c6">);</span></p>
 
         <p class="c4"><span class="c6">&#xa0;&#xa0;&#xa0; </span><span
@@ -1270,11 +1270,11 @@ is used instead of @</span><span class="c12">Table</span><span>.</span></p>
 
         <p class="c4"><span class="c6">&#xa0;&#xa0;&#xa0; </span><span
         class="c6 c9 c12">public static final</span><span
-        class="c6">&#xa0;UjoProperty&lt;ViewOrder,Integer&gt;
+        class="c6">&#xa0;Key&lt;ViewOrder,Integer&gt;
         ITEM_COUNT</span></p>
 
         <p class="c4"><span class="c6">&#xa0; &#xa0; &#xa0; &#xa0; &#xa0;&#xa0;
-        = newProperty(</span><span class="c10 c6">0</span><span
+        = newKey(</span><span class="c10 c6">0</span><span
         class="c6">);</span></p>
 
         <p class="c4 c21"><span class="c6"></span></p>
@@ -1443,7 +1443,7 @@ persistent object of OrmUjo type contains two other attributes:</span></p>
     is sufficient to setup only the first object of the relational hierarchy to
     the current Session.</span></li>
   <li class="c0"><span class="c25"><a class="c8"
-    href="http://ujorm.org/javadoc/org/ujorm/UjoProperty.html">UjoProperty</a></span><span>[]
+    href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a></span><span>[]
     - contains a list of 'Properties' </span><span
     class="c12">registered</span><span>&#xa0;during the assigned session. This
     list provides more efficient updating of the database by 'UPDATE' command,
@@ -1683,7 +1683,7 @@ rows.</span></p>
 
 <p class="c4"><span>Ujorm can create or update the database schema using DDL
 commands according its meta-model. Meta-model contains a description of the
-real database structure, which is built from class names, UjoProperty names,
+real database structure, which is built from class names, Key names,
 their annotations and occasionally from a XML configuration file. Once the
 meta-model loading (into a memory) is finished, the information is locked so
 any future modifications aren't possible. Updating the database is following
@@ -1799,12 +1799,12 @@ class="c12">primary key</span><span>&#xa0;of </span><span class="c12">User
         class="c6 c13">"id"</span><span class="c6">)</span></p>
 
         <p class="c1"><span class="c6">public static final
-        UjoProperty&lt;Customer, User&gt; </span><span
+        Key&lt;Customer, User&gt; </span><span
         class="c6 c12">user</span></p>
 
         <p class="c4 c40 c21"><span class="c6 c12"></span></p>
 
-        <p class="c4 c40"><span class="c6">= newProperty(User.</span><span
+        <p class="c4 c40"><span class="c6">= newKey(User.</span><span
         class="c10 c6">class</span><span class="c6">);</span></p>
 
         <p class="c1"><span class="c6">...</span></p>
@@ -1906,7 +1906,7 @@ rules:</span></p>
 <p class="c4 c21"><span></span></p>
 <ol class="c27">
   <li class="c0"><span>Primary key (PK) will be assigned automatically only if
-    the value of 'UjoProperty' is NULL. It is possible to assign own values of
+    the value of 'Key' is NULL. It is possible to assign own values of
     PK without changing any configuration.</span></li>
   <li class="c0"><span>Each table has its own set of primary keys, about which
     take care its own instance of the&#xa0; UjoSequencer class. Class
@@ -1981,12 +1981,12 @@ procedures</span></h2>
 </span><span class="c12">procedures</span><span>&#xa0;and </span><span
 class="c12">functions&#xa0;</span><span>(furthermore just a procedure). Each
 procedure is described by class extending an abstract DbProcedure class, which
-implements the Ujo. Important is an order of UjoProperties in the class, which
+implements the Ujo. Important is an order of Keys in the class, which
 must match the order of parameters in the procedure. If the procedure
 </span><span class="c12">have no return type,</span><span>&#xa0;the first
-constant UjoProperty in order will be </span><span class="c12">Void.class
+constant Key in order will be </span><span class="c12">Void.class
 </span><span>type</span><span class="c12">.</span><span>&#xa0;The first
-UjoProperty is OUTPUT type, others are INPUT type. The default type of
+Key is OUTPUT type, others are INPUT type. The default type of
 keys you can override by annotation </span><span class="c5">@Parameter
 (input = true, output = true).</span><span>&#xa0;Database procedures need to be
 </span><span class="c12">registered</span><span>&#xa0;in the class of databases
@@ -2370,9 +2370,9 @@ the next features:</span></p>
 <ol class="c27">
   <li class="c0"><span>there are synchonized methods </span><span
     class="c11"><a class="c8"
-    href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readValue%28org.ujorm.UjoProperty%29">Ujo.readValue(Property)</a></span><span>&#xa0;and</span></li>
+    href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readValue%28org.ujorm.Key%29">Ujo.readValue(Property)</a></span><span>&#xa0;and</span></li>
   <li class="c0"><span class="c11"><a class="c8"
-    href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#writeValue%28org.ujorm.UjoProperty,%20java.lang.Object%29">Ujo.writeValue(Property,
+    href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#writeValue%28org.ujorm.Key,%20java.lang.Object%29">Ujo.writeValue(Property,
     Object)</a></span><span>&#xa0; and some more strategy methods</span></li>
   <li class="c0"><span>there is used a special object </span><span
     class="c12">ThreadLocal&lt;Session&gt;</span><span>&#xa0;to store the
@@ -2808,12 +2808,12 @@ of the 'Database' type.</span></p>
 
 <p class="c18 c21"><span></span></p>
 
-<h2 class="c19"><a name="h.55252fa54c31"></a><span>Why UjoProperty constants
+<h2 class="c19"><a name="h.55252fa54c31"></a><span>Why Key constants
 have lowercase letters?</span></h2>
 
 <p class="c4"><span>In the examples mentioned in this document are the names of
-the static field of UjoProperties often written in lower case - contrary to
-normal convention. The reason is to shorten the code when creating UjoProperty,
+the static field of Keys often written in lower case - contrary to
+normal convention. The reason is to shorten the code when creating Key,
 but also seems to be useful when small letters more correspond to&#xa0;
 instance variables (fields). Lowercase letters are proven to be better, but the
 using the capital letters in your project won't create a technical
@@ -2821,7 +2821,7 @@ problem.</span></p>
 
 <p class="c4 c21"><span></span></p>
 
-<p class="c4"><span>Full specification of UjoProperty can be set explicitly,
+<p class="c4"><span>Full specification of Key can be set explicitly,
 including a </span><span class="c12">name</span><span>, by this
 pattern:</span></p>
 
@@ -2833,7 +2833,7 @@ pattern:</span></p>
       <td class="c24"><p class="c4"><span>&#xa0;</span><span
         class="c9 c12">public static final</span><span>&#xa0;Property &lt;BO,
         Long&gt;&#xa0;</span><span class="c6 c12">id</span><span>&#xa0;=
-        </span><span class="c6">newProperty</span><span
+        </span><span class="c6">newKey</span><span
         class="c6 c12">('id',</span><span>&#xa0;Long.</span><span
         class="c9 c12">class</span><span>);</span></p>
       </td>
@@ -2853,7 +2853,7 @@ field:</span></p>
     <tr>
       <td class="c24"><p class="c4"><span class="c9 c12">public static
         final</span><span>&#xa0;Property &lt;BO, Long&gt; </span><span
-        class="c6 c12">id</span><span>&#xa0;= newProperty (Long.</span><span
+        class="c6 c12">id</span><span>&#xa0;= newKey (Long.</span><span
         class="c9 c12">class</span><span>);</span></p>
       </td>
     </tr>
@@ -2864,12 +2864,12 @@ field:</span></p>
 
 <p class="c4"><span>Terms used in Ujorm:</span></p>
 <ol class="c27">
-  <li class="c0"><span>UjoProperty&#xa0;</span><span
+  <li class="c0"><span>Key&#xa0;</span><span
     class="c12">field</span><span>&#xa0;- the name of the static constants of
-    UjoProperty in the implementation of Ujo</span></li>
-  <li class="c0"><span>UjoProperty&#xa0;</span><span
+    Key in the implementation of Ujo</span></li>
+  <li class="c0"><span>Key&#xa0;</span><span
     class="c12">name</span><span>&#xa0;- a logical indication that returns
-    'UjoProperty.getName()' as the String type</span></li>
+    'Key.getName()' as the String type</span></li>
 </ol>
 
 <p class="c18 c21"><span></span></p>
@@ -2884,13 +2884,13 @@ object, which have an effect on the correct behavior:</span></p>
 <ol class="c27">
   <li class="c0"><span>each </span><span
     class="c12">attribute</span><span>&#xa0;</span><span class="c12">of
-    entity</span><span>&#xa0;has its own unique UjoProperty instance</span></li>
+    entity</span><span>&#xa0;has its own unique Key instance</span></li>
   <li class="c0"><span>for reading and writing values are used these
     methods:</span></li>
 </ol>
 <ol class="c33">
-  <li class="c4 c16"><span>UjoProperty.getValue (..)</span></li>
-  <li class="c4 c16"><span>UjoProperty.setValue (..)</span></li>
+  <li class="c4 c16"><span>Key.getValue (..)</span></li>
+  <li class="c4 c16"><span>Key.setValue (..)</span></li>
 </ol>
 
 <p class="c1"><span>or other methods that invoke them internally, for
@@ -2905,9 +2905,9 @@ class="c12">getters</span><span>&#xa0;and </span><span
 class="c12">setters,</span><span>&#xa0;that invoke (internally) one of the
 methods above</span></p>
 <ol class="c27">
-  <li class="c0"><span>method 'UjoProperty.getValue()' </span><span
+  <li class="c0"><span>method 'Key.getValue()' </span><span
     class="c12">changes</span><span>&#xa0;values NULL to the default value
-    UjoProperty (which is NULL if it isn't set otherwise). Beware, the method
+    Key (which is NULL if it isn't set otherwise). Beware, the method
     'Ujo.readValue()' doesn't do any replacement of default values.</span></li>
   <li class="c0"><span>for reading and writing values </span><span
     class="c12">is not recommended</span><span>&#xa0;to invoke </span><span
@@ -2923,7 +2923,7 @@ methods above</span></p>
 various conversions, validations and other requirements.</span></p>
 <ol class="c27">
   <li class="c0"><span>for the </span><span
-    class="c12">default</span><span>&#xa0;value of 'UjoProperty' is suitable
+    class="c12">default</span><span>&#xa0;value of 'Key' is suitable
     only an </span><span class="c12">immutable object</span></li>
   <li class="c0"><span>Ujo objects can be generally inherited, inheritance of
     OrmUjo objects isn't supported directly</span></li>
