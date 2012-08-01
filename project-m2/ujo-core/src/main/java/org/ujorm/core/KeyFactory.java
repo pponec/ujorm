@@ -69,7 +69,7 @@ import org.ujorm.extensions.PropertyModifier;
  *     }
  *
  *     <span class="keyword-directive">public</span> KeyList&lt;?&gt; readKeys() {
- *         <span class="keyword-directive">return</span> factory.getPropertyList();
+ *         <span class="keyword-directive">return</span> factory.getKeyList();
  *     }
  *
  *     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, Key property, Object value) {
@@ -151,7 +151,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                     }
                 }
                 return r1 != null ? r1 //
-                     : r2 != null ? r2.getPropertyList() //
+                     : r2 != null ? r2.getKeyList() //
                      : null;
             } else {
                 try {
@@ -190,11 +190,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      * @return count of the direct keys.
      */
     public final int lockAndSize() {
-        return getPropertyList().size();
+        return getKeyList().size();
     }
 
     /** Get KeyRing */
-    public KeyList<UJO> getPropertyList() {
+    public KeyList<UJO> getKeyList() {
         if (propertyStore==null) {
             propertyStore = createPropertyList();
             onCreate(propertyStore, tmpStore);

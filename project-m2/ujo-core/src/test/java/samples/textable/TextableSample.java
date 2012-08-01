@@ -6,27 +6,24 @@
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-
 package samples.textable;
 
 /**
- *
  * @author Pavel Ponec
  */
 public class TextableSample {
-    
+
     /** Creates a new instance of TextableSample */
     public TextableSample() {
     }
-    
+
     /** Run the class */
     public static void main(String[] args) {
-        
+
         Integer textable1 = new Integer(7);
         Integer textable2 = new Integer(textable1.toString());
         boolean result = textable1.equals(textable2);
-        
-        
+
+
     }
-    
 }

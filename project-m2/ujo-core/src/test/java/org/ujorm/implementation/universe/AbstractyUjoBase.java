@@ -41,7 +41,7 @@ abstract public class AbstractyUjoBase implements Ujo {
 
     @Override
     public KeyList<?> readKeys() {
-        return APF.getPropertyList();
+        return APF.getKeyList();
     }
 
     public Object readValue(Key property) {

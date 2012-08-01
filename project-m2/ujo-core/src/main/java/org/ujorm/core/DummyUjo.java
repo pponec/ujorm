@@ -49,6 +49,7 @@ final class DummyUjo implements Ujo {
     }
 
     /** Returns unsorted keys. */
+    @SuppressWarnings("deprecation")
     public UjoPropertyList readProperties() {
         return new UjoPropertyListImpl(readKeys());
     }

@@ -41,6 +41,7 @@ import org.ujorm.criterion.Operator;
  * @since 0.81
  */
 @Immutable
+@SuppressWarnings("deprecation")
 final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
     /** Array of <strong>direct</strong> keys */
@@ -304,7 +305,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked","deprecation"})
     public UjoProperty<UJO,VALUE> descending() {
         return descending(true);
     }
@@ -313,7 +314,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked","deprecation"})
     public UjoProperty<UJO,VALUE> descending(boolean descending) {
         return isAscending()==descending
                 ? new PathProperty(keys, !descending)
@@ -363,6 +364,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Create a new instance of property with a new sort attribute value.
      * @hidden
      */
+    @SuppressWarnings("deprecation")
     public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> sort(final Key<UJO, VALUE> property, final boolean ascending) {
         if (property.isAscending()==ascending) {
             return (UjoProperty<UJO, VALUE>) property;

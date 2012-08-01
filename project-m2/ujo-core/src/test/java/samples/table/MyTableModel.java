@@ -33,13 +33,16 @@ public class MyTableModel extends AbstractTableModel {
         return null;
     }
     
+    @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
     }
     
+    @Override
     public String getColumnName(int column) {
         return null;
     }
     
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return true;
     }

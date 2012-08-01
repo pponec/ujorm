@@ -87,7 +87,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
     ) throws IllegalArgumentException;
 
     /** Returns a copy of internal array */
-    public Key<UJO,?>[] toArray();
+    public Key[] toArray();
 
     /** Get the first Property */
     public Key<UJO,?> getFirstKey();

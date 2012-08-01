@@ -38,6 +38,7 @@ import org.ujorm.extensions.PathProperty;
  * @pop.todo KeyRing, KeyStock, KeyBundle, KeyRing. KeyPack
  */
 @Immutable
+@SuppressWarnings("deprecation")
 public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     static final long serialVersionUID = 1L;
@@ -247,8 +248,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Convert Keys to a new Array */
     @Override
-    public Key<UJO, ?>[] toArray() {
-        final Key<UJO, ?>[] result = new Key[size];
+    public Key[] toArray() {
+        final Key[] result = new Key[size];
         System.arraycopy(this.keys, 0, result, 0, result.length);
         return result;
     }
@@ -346,7 +347,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        this.type = (Class) in.readObject();
+        this.type = (Class<UJO>) in.readObject();
         final String[] nameProperties = (String[]) in.readObject();
         this.keys = restoreProperties(type, nameProperties);
         this.size = keys.length;
@@ -388,7 +389,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create a new instance */
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Collection<Key<? super UJO, ?>> keys) {
-        final Key<UJO, ?>[] ps = new Key[keys.size()];
+        final Key[] ps = new Key[keys.size()];
         int i = 0;
         for (Key<? super UJO, ?> p : keys) {
             ps[i++] = (Key<UJO, ?>) p;

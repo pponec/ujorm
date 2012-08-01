@@ -23,7 +23,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.UjoAction;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.implementation.quick.QuickUjo;
+import org.ujorm.extensions.AbstractUjo;
 
 
 /**
@@ -31,7 +31,7 @@ import org.ujorm.implementation.quick.QuickUjo;
  * @author Pavel Ponec
  */
 @Immutable
-abstract public class AbstractMetaModel extends QuickUjo {
+abstract public class AbstractMetaModel extends AbstractUjo {
 
     /** Read-only state */
     private boolean readOnly = false;

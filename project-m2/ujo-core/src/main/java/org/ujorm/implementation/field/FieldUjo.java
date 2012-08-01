@@ -19,7 +19,8 @@ package org.ujorm.implementation.field;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
-import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.core.UjoManager;
+import org.ujorm.extensions.SuperAbstractUjo;
 import org.ujorm.extensions.ValueAgent;
 
 /**
@@ -61,7 +62,7 @@ import org.ujorm.extensions.ValueAgent;
  * @since ujo-tool
  * @composed 1 - * Property
   */
-public abstract class FieldUjo extends AbstractUjo {
+public abstract class FieldUjo extends SuperAbstractUjo {
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
      * FieldProperty.setValue(Ujo,Object) 
@@ -74,7 +75,7 @@ public abstract class FieldUjo extends AbstractUjo {
     @SuppressWarnings("unchecked")
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);       
+        assert UjoManager.assertDirectAssign(property, value);
         ((ValueAgent) property).writeValue(this, value);
     }
     

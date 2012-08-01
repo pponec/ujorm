@@ -54,6 +54,7 @@ import org.ujorm.implementation.map.MapUjoExt;
  * @since ujo-tool
  * @author Pavel Ponec
  */
+@SuppressWarnings("deprecation")
 public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO> implements EventRegistrar<UJO> {
     
     final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this);

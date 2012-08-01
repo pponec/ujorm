@@ -21,6 +21,7 @@ import java.util.Set;
 import org.ujorm.UjoAction;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.implementation.quick.QuickUjo;
 import org.ujorm.orm.ExtendedOrmUjo;
@@ -222,6 +223,16 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
      */
     protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation() {
         return newRelation(null, null);
+    }
+
+    // ===== STATIC METHODS =====
+
+    /** Create a cactory with a cammel-case Key name generator.
+     * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newFactory
+     */
+    protected static <UJO extends Ujo> KeyFactory<UJO> newFactory(Class<UJO> ujoClass) {
+        return KeyFactory.CamelBuilder.get(ujoClass);
     }
 
 }

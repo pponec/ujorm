@@ -6,7 +6,6 @@
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-
 package samples.array;
 
 import java.util.Date;
@@ -16,30 +15,25 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.implementation.array.ArrayUjo;
 
 public class Person extends ArrayUjo {
-    
+
     /** An Incrementator. Use a new counter for each subclass by sample. */
     protected static int propertyCount = ArrayUjo.propertyCount;
-    
-    public static final Key NAME  = newKey("name", String.class , propertyCount++);
-    public static final Key MALE  = newKey("male", Boolean.class, propertyCount++);
-    public static final Key BIRTH = newKey("birth", Date.class  , propertyCount++);
-    
-    
+    public static final Key NAME = newKey("name", String.class, propertyCount++);
+    public static final Key MALE = newKey("male", Boolean.class, propertyCount++);
+    public static final Key BIRTH = newKey("birth", Date.class, propertyCount++);
 
     /** Equals */
     public boolean equals(Object obj) {
-        return UjoManager.getInstance().equalsUjo(this, (Ujo) obj );
-    }    
+        return UjoManager.getInstance().equalsUjo(this, (Ujo) obj);
+    }
 
-    /** Equals */    
+    /** Equals */
     @Override
     public Object clone(int depth, Object context) {
         return UjoManager.getInstance().clone(this, depth, context);
-    }    
+    }
 
     public int readPropertyCount() {
         return propertyCount;
     }
-    
-    
 }

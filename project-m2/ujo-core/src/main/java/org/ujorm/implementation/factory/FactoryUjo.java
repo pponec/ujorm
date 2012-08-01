@@ -18,7 +18,7 @@ package org.ujorm.implementation.factory;
 
 import org.ujorm.Ujo;
 import org.ujorm.Key;
-import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.extensions.SuperAbstractUjo;
 
 /**
  * The Ujo Factory. A method called readValue() create new instance of the property always by a property type.
@@ -31,7 +31,7 @@ import org.ujorm.extensions.AbstractUjo;
  * @since ujo-tool
  * @composed 1 - * FactoryProperty
   */
-public abstract class FactoryUjo extends AbstractUjo {
+public abstract class FactoryUjo extends SuperAbstractUjo {
 
     /** It is an unsupported function in this implementation. */
     @Override

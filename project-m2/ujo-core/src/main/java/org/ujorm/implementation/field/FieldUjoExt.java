@@ -19,6 +19,7 @@ package org.ujorm.implementation.field;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.AbstractUjoExt;
 import org.ujorm.extensions.ValueAgent;
 
@@ -76,7 +77,7 @@ abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoEx
     @SuppressWarnings("unchecked")
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);       
+        assert UjoManager.assertDirectAssign(property, value);
         ((ValueAgent) property).writeValue(this, value);
     }
     

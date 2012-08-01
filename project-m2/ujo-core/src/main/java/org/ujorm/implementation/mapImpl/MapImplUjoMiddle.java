@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoMiddle;
 
@@ -71,7 +72,7 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
-        assert readUjoManager().assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value);
         property.setValue((UJO)this, value);
         return this;
     }

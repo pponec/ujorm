@@ -38,7 +38,7 @@ public class ImplUjoBase extends AbstractyUjoBase {
 
     @Override
     public KeyList<?> readKeys() {
-        return pf.getPropertyList();
+        return pf.getKeyList();
     }
 
     public UjoPropertyList readProperties() {
