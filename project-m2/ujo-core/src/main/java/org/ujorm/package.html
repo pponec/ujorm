@@ -27,7 +27,7 @@ document.body.appendChild(oLink);
               <li><a href="#xml">XML serialization</a></li>
               <li><a href="#tablemodel">Support of the JTable component</a></li>
               <li><a href="#ORM">Support the object-relation mapping (ORM)</a></li>
-              <li><a href="#how2">What about the extensions?</a></li>
+              <li><a href="#inheritance">UJO inheritance</a></li>
               <li><a href="#performance">Performance</a></li>
               <li><a href="#possibilities">Other possibilities of usage?</a></li>
               <li><a href="#refAppl">Referential Application</a></li>
@@ -58,7 +58,7 @@ document.body.appendChild(oLink);
         in addition. So what are the main <strong>advantages</strong>?
 
         <ul>
-        <li>the possibility to copy all or selected attributes from source to new object by a one statement (<a href="extensions/AbstractUjoExt.html#copyTo(org.ujorm.Ujo, org.ujorm.Key...)">method</a>)</li>
+        <li>the possibility to copy all or selected attributes from source to new object by a one statement (<a href="extensions/AbstractUjo.html#copyTo(org.ujorm.Ujo, org.ujorm.Key...)">method</a>)</li>
         <li>clone the object by a selected depth</li>
         <li>use a generic comparator</li>
         <li>find a property by its text name</li>
@@ -104,8 +104,8 @@ document.body.appendChild(oLink);
         which have got three abstract implementation:
          
            <ul>
-               <li><a href="implementation/map/MapUjo.html">MapUjo</a> - easy for developers to implement with a sufficient performance for common applications based on the object <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
-               <li><a href="implementation/array/ArrayUjo.html">ArrayUjo</a> - hight performance objects are comparable to the speed of the JavaBeans, implemented by the <strong>object array</strong></li>
+               <li><a href="core/AbstractUjo.html">AbstractUjo</a> - great performance objects implemented by the <strong>object array</strong></li>
+               <li><a href="implementation/map/MapUjo.html">MapUjo</a> - a memory safe solution for the case of the sparse attribute values, the solution is based on the object <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
                <li><a href="implementation/bean/BeanUjo.html">BeanUjo</a> - the implementation maps the keys directly to the methods of <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> object using <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflection</a></li>
            </ul>
         
@@ -116,17 +116,34 @@ document.body.appendChild(oLink);
         <br>
         <h2 id="how">How ?</h2>
         How to write the first UJO object? The fastest way is to use some abstract UJO implementation from this project and via few code lines we can make quickly 
-        and easily our own implementation, too. Here is an example - the implementation of the <i>Person</i> class by an abstract <a href="#Changes">MapUjo</a> class.
+        and easily our own implementation, too. Here is an example - the implementation of the <i>Person</i> class by an abstract <a href="#Changes">AbstractUjo</a> class.
         
         <h3>The class code</h3>
-        An easy exemplary formation of the <i>Person</i> class:
+        The typical implementation of the <i>Person</i> class based on the <a href="core/AbstractUjo.html">AbstractUjo</a>:
         
-<pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> MapUjo {<br> 
-  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,String &gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Male"</span>, Boolean.<span class="java-keywords">class</span>);
-  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Double &gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Cash"</span>, Double.<span class="java-keywords">class</span>);<br> 
+<pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> AbstractUjo {
+  <span class="java-keywords">private static final</span> KeyFactory<Person> f = <span class="java-layer-method">newFactory</span>(<span class="highlight">Person</span>.<span class="java-keywords">class</span>);
+
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = f.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Double &gt; CASH = f.<span class="java-layer-method">newKey</span>();
+  
+  <span class="java-annotation">@</span>Override <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
+      <span class="java-keywords">return</span> f.<span class="java-layer-method">getKeyList</span>();
+  }  
 }</pre>
+        
+        or more easy implementation <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/QuickUjo.html">QuickUjo</a>:
+        
+<pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> QuickUjo {<br> 
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,String &gt; NAME = <span class="java-layer-method">newKey</span>();
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = <span class="java-layer-method">newKey</span>();
+  <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Double &gt; CASH = <span class="java-layer-method">newKey</span>();<br> 
+}</pre>
+        
+        
         Now, when the <i>Person</i> class is done, we can make its instance and enter or fetch some data. It´s possible to use one of two API methods for writing the object attributes:
         <ol>
             <li><i>Person.<strong>writeValue</strong>(Key, Object)</i>, or</li>
@@ -178,7 +195,7 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
             <li>since version 0.72 is possible to use a type safe method <strong>newKey(name, type)</strong> pro building a Property object.</li>
         </ul>
         <h3>The implementation of the equals() method</h3>
-        Our <i>Person</i> class has the <i>equals()</i> function implemented already, which inherited from parental class <i>MapUjo</i>. 
+        Our <i>Person</i> class has the <i>equals()</i> function implemented already, which inherited from parental class <i>AbstractUjo</i>. 
         But if you want by some reason to write your own Ujo implementation with this method, it´s enough to write into the class this code:
         
 <pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">boolean</span> <span class="java-layer-method">equals</span>(Object obj) {
@@ -224,12 +241,19 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
 <pre class="pre">{ 
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Double&gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;Cash&quot;</span>, <span class="java-numeric-literals highlight">10.0</span>);
 }</pre>
+        
+        Note, you can change a default <strong>key name</strong> also using the first text parameter. 
+        The default property name have got 
+        <ul>
+        <li>the same value as its property field in the QuickUjo implementation</li>
+        <li>key name created by the KeyFactory depemds on its KeyFactory implementations, you can choice a "cammelCase" key name name builder for example</li>
+        </ul>
 
         Special features:
         <ul>
             <li>the default value is available even if the original property value is changed</li>
             <li>if any property value is changed to a NULL then the property method returns the default value (the feature can be suppressd by overriding method: Ujo.readProperty)</li>
-            <li>interface Key provides some methods to use the default value</li>
+            <li>an implementation if the interface Key provides some methods to use the default value</li>
         </ul>
         
         
@@ -239,10 +263,9 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
         <h2 id="javabean">How to create the JavaBean?</h2>
         It´s easy to make the JavaBean from the UJO object. It´s enough to implement a setter and a getter for each attribute. An example of usage:
 <pre class="pre">
-<span class="java-keywords">import</span> org.ujorm.implementation.map.*;
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo {<br>
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, String&gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;name&quot;</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Double&gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;cash&quot;</span>, Double.<span class="java-keywords">class</span>);<br>    
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjo {<br>
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, String&gt; NAME = <span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Double&gt; CASH = <span class="java-layer-method">newKey</span>();<br>    
   <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setName</span>(String name) {
     NAME.<span class="java-layer-method">setValue</span>(<span class="java-keywords">this</span>, name);
   }
@@ -264,8 +287,8 @@ There is allowed to use a primitive types of the object fields if you can (e.g. 
 <pre class="pre">
 <span class="java-keywords">import</span> org.ujorm.implementation.bean.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> <span class="highlight">BeanUjo</span> {<br>
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty&lt;Person, String&gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;<span class="highlight">name</span>&quot;</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty&lt;Person, Double&gt; CASH = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;<span class="highlight">cash</span>&quot;</span>, Double.<span class="java-keywords">class</span>);
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty&lt;Person, String&gt; NAME = <span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> BeanProperty&lt;Person, Double&gt; CASH = <span class="java-layer-method">newKey</span>();
   
   <span class="java-keywords">private</span> String myname;
   <span class="java-keywords">private</span> Double mycash;
@@ -300,9 +323,9 @@ person = UjoManagerXML.<span class="java-layer-method">getInstance</span>().<spa
         A content of created XML is now:
 <pre class="pre"><span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version="1.0" encoding="UTF-8"</span><span class="xml-pi-start">?&gt;</span>
 <span class="xml-tag">&lt;body</span><span class="xml-tag">&gt;</span>
-  <span class="xml-tag">&lt;Name</span><span class="xml-tag">&gt;</span>Pavel Ponec<span class="xml-tag">&lt;/Name</span><span class="xml-tag">&gt;</span>
-  <span class="xml-tag">&lt;Male</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/Male</span><span class="xml-tag">&gt;</span>
-  <span class="xml-tag">&lt;Cash</span><span class="xml-tag">&gt;</span>34.5<span class="xml-tag">&lt;/Cash</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;NANE</span><span class="xml-tag">&gt;</span>Pavel Ponec<span class="xml-tag">&lt;/NAME</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;MALE</span><span class="xml-tag">&gt;</span>true<span class="xml-tag">&lt;/MALE</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;CASH</span><span class="xml-tag">&gt;</span>34.5<span class="xml-tag">&lt;/CASH</span><span class="xml-tag">&gt;</span>
 <span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
 </pre>
 
@@ -315,9 +338,9 @@ I recommend to read up API for more detailed information.
 
 Recommended solution for the implementation of a link <strong>1:N</strong> for the Person - Child objects.
 <pre class="pre">
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjo { 
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key &lt;Person,String&gt; NAME  = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">&quot;Name&quot;</span>, String.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ListProperty&lt;Person,Child&gt; CHILDS = <span class="java-layer-method">newListProperty</span>(<span class="java-string-literal">&quot;Child&quot;</span>, Child.<span class="java-keywords">class</span>);
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> AbstractUjo { 
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key &lt;Person,String&gt; NAME  = <span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> ListProperty&lt;Person,Child&gt; CHILDS = <span class="java-layer-method">newListKey</span>();
 }
 </pre>
 
@@ -351,7 +374,7 @@ On the following example we will illustrate, how the suppression of the <strong>
 The Ujorm enables to write some <strong>keys</strong> like a XML attribute of the element contrary of the XML child element (it is a default feature).
 The solution is to use an annotation <strong>@XmlAttribute</strong> by next sample:
 <pre class="pre"><span class="java-annotation">@</span>XmlAttribute
-<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Name"</span>, String.<span class="java-keywords">class</span>);
+<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Ujo,String&gt; NAME = <span class="java-layer-method">newKey</span>();
 </pre>
 
 
@@ -359,13 +382,13 @@ The solution is to use an annotation <strong>@XmlAttribute</strong> by next samp
         There is possible print the a one property value per object like an element <strong>body text</strong>.
         For the purpose is designed an annotation <strong>@XmlElementBody</strong> by next sample:
 <pre class="pre"><span class="java-annotation">@</span>@XmlElementBody
-<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Ujo,String&gt; MALE = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Male"</span>, String.<span class="java-keywords">class</span>);
+<span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Ujo,String&gt; MALE = <span class="java-layer-method">newKey</span>();
 </pre>
         A content of the new XML file using both annotations <strong>@XmlAttribute</strong> and <strong>@XmlElementBody</strong> is next:
 <pre class="pre"><span class="xml-pi-start">&lt;?</span><span class="xml-pi-start">xml</span> <span class="xml-pi-content">version="1.0" encoding="UTF-8"</span><span class="xml-pi-start">?&gt;</span>
 <span class="xml-tag">&lt;body Name</span>="Pavel Ponec"<span class="xml-tag">&gt;</span>
   true
-  <span class="xml-tag">&lt;Cash</span><span class="xml-tag">&gt;</span>34.5<span class="xml-tag">&lt;/Cash</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;CASH</span><span class="xml-tag">&gt;</span>34.5<span class="xml-tag">&lt;/CASH</span><span class="xml-tag">&gt;</span>
 <span class="xml-tag">&lt;/body</span><span class="xml-tag">&gt;</span>
 </pre>
 
@@ -433,18 +456,32 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
 
         See a special page for <a href="orm/package-summary.html#ORM">more information</a>.
 
-        <h2 id="how2">What about the extensions?</h2>
-        If you need to create a descendant of the Person class, define in the descendant just new attributes. 
-        The <i>KeyList</i> will be procured during the first call the <i>readProperties()</i> method by the help of the 
-        Java reflection, all another values are taken from the cache.
-        <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {<br>
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Float&gt; WEIGHT = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Weight"</span>, Float.<span class="java-keywords">class</span>);
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Date&gt;  BORN   = <span class="java-layer-method">newKey</span>(<span class="java-string-literal">"Born"</span>  , Date.<span class="java-keywords">class</span>);<br>
+        <h2 id="inheritance">Ujo inheritance</h2>
+        An inheritance of the UJO clasess are supported along the the next examples:
+        <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {
+  <span class="java-keywords">private static final</span> KeyFactory<Person> f = <span class="java-layer-method">newFactory</span>(<span class="highlight">PersonExt</span>.<span class="java-keywords">class</span>);
+
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Float&gt; WEIGHT = f.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Date &gt; BORN   = f.<span class="java-layer-method">newKey</span>();
+
+  <span class="java-annotation">@</span>Override <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
+      <span class="java-keywords">return</span> f.<span class="java-layer-method">getKeyList</span>();
+  }  
+
+}</pre>
+        
+        Or the similar example <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/QuickUjo.html">QuickUjo</a>:
+
+        <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {
+
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Float&gt; WEIGHT = <span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Date &gt; BORN   = <span class="java-layer-method">newKey</span>();<br>
 }</pre>
         
         
+        
         <h2 id="performance">Performance</h2>
-        The processing performance of the UJO objects is dependent on the implementation. During the processing of the <i>MapUjo</i> type object 
+        The processing performance of the UJO objects is dependent on the implementation. During the processing of the <i>AbstractUjo</i> type object 
         is performance (writing/reading) approximately consistent with the operations writing/reading of the <i>HashMap</i> object. 
         The <i>ArrayUjo</i> solution provides the quicker implementation, the JavaBean object is the speediest.<br>
         <br>
@@ -665,6 +702,8 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         <br>
         <h2 id="changes">Release notes</h2>        
         <ul>
+        <li>2012/10 - intrduction the Key interface</li>
+        <li>2011/10 - many ORM improvements</li>
         <li>2010/10 - the stable version 1.00</li>
         <li>2009/09 - the version 0.90 supports the ORM</li>
         <li>2008/09 - the version 0.80 brings an extended interface - UjoExt</li>
