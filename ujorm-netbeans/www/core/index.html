@@ -14,7 +14,7 @@ Released   : 20080129
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Ujorm Core</title>
     <link rel="shortcut icon" href="../images/favicon2.ico" type="image/x-icon" />
-    <meta name="keywords" content="UJO, Framework, UJO Framework, introspection, reflection, property, Java, JavaBean, open source, XML, CSV, serialization, marshal, unmarshal, ORM, object-relation, Key Value Coding, ORM, Ujorm" />
+    <meta name="keywords" content="UJO, Framework, UJO Framework, introspection, reflection, property, key, Java, JavaBean, open source, XML, CSV, serialization, marshal, unmarshal, ORM, object-relation, Key Value Coding, ORM, Ujorm" />
     <meta name="description" content="The revolutionary architecture of the bean object" />
     <link href="../images/style.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="../images/style2.css" rel="stylesheet" type="text/css" media="screen" />
@@ -44,7 +44,7 @@ Released   : 20080129
             <div class="entry">
               The <strong>Ujorm Core</strong> module (the new name for UJO Framework) is an open source small Java library providing non-traditional object architecture
               different from <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>,
-              where each property has its own static object.
+              where each key has its own static object.
               The original idea was a toy with generic data types of Java 5.0 
               however over time it appears, that the architecture has some exciting new features.				
             </div><p class="meta">&nbsp;</p>
@@ -65,7 +65,7 @@ Released   : 20080129
                      <a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> and 
                      <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">Resource bundle</a></li>
                   <li>unique <a href="http://ujorm.com/">object-relation mapping</a> (ORM) solution is available for mapping to <a href="http://en.wikipedia.org/wiki/Relational_database_management_system">RDMBS</a></li>
-                  <li>UJO object controls an access to its property for different actions</li>
+                  <li>UJO object controls an access to its key for different actions</li>
                   <li><a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a> ready</li>
                   <li>it is easy to clone, copy, sort and compare</li>
                   <li>direct support for the <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/JTable.html">JTable</a><!-- component--></li>
@@ -104,7 +104,7 @@ Released   : 20080129
                 <li><a href="javadoc/org/ujorm/Key.html#getValue(UJO)">Key.getValue(Ujo)</a> - to read the value.</li>
               </ul>
               
-              There is possible to send a property method to an another object simply by the <strong>property key</strong> contrary of the methods of JavaBean object.
+              There is possible to send a key method to an another object simply by the <strong>key</strong> contrary of the methods of JavaBean object.
               
               An example of the use can be a list of table columns sent to the data model (type of TableModel)
               or references to the methods of the bean in a JSP page. 
@@ -140,25 +140,25 @@ Released   : 20080129
               
               <pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> AbstractUjo&lt;Person&gt; {
-  <span class="java-keywords">private static final</span> KeyFactory fy = <span class="java-layer-method">newFactory</span>(Person.<span class="java-keywords">class</span>);
+  <span class="java-keywords">private static final</span> KeyFactory f = <span class="java-layer-method">newFactory</span>(Person.<span class="java-keywords">class</span>);
     
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,String &gt; NAME = fy.<span class="java-layer-method">newKey</span>();
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Boolean&gt; MALE = fy.<span class="java-layer-method">newKey</span>();
-  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Double &gt; CASH = fy.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Boolean&gt; MALE = f.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Double &gt; CASH = f.<span class="java-layer-method">newKey</span>();
     
   <span class="java-annotation">@</span>Override
   <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
-    <span class="java-keywords">return</span> fy.<span class="java-layer-method">getKeyList</span>();
+    <span class="java-keywords">return</span> f.<span class="java-layer-method">getKeyList</span>();
   }
 }</pre>
 <!-- -->          
               <p>Note that a result of the method get(CASH) <strong>needs no casting</strong> to Double type and 
               the Java <strong>compiler disallows improper parameter types</strong> in the statement set(CASH, newCash).
-              The CASH property have got a default zero value to all Person instances similar like a primitive type do it.              
+              The CASH key have got a default zero value to all Person instances similar like a primitive type do it.              
               </p>
               
               <p>The sample uses an <a href="javadoc/org/ujorm/extensions/UjoExt.html">extended API</a>                
-              for more conventional property access in a source code
+              for more conventional key access in a source code
               that's available since the <strong>UJO release 0.80</strong>.
               The new solution allows to you to chain more keys according to a model of a some new popular languages.
               <!-- <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a> -->
@@ -168,33 +168,32 @@ Released   : 20080129
               
               <p id="ujoimpl">Sometimes it is not possible to extend an abstract class so you can implements the Ujo interface by four methods only.
               Note the implementation is valid also for <strong>all subclasses</strong> of the Person class.
-              The sample:</p>
+              The simple example:</p>
               
 <pre class="pre"><span class="keyword-directive">import</span> java.util.HashMap;
 <span class="keyword-directive">import</span> org.ujorm.*;
-<span class="keyword-directive">import</span> org.ujorm.core.UjoManager;
-<span class="keyword-directive">import</span> org.ujorm.implementation.map.*;
+<span class="keyword-directive">import</span> org.ujorm.core.*;
 
 @SuppressWarnings(<span class="character">&quot;</span><span class="character">unchecked</span><span class="character">&quot;</span>)
 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">implements</span> Ujo {
-  <span class="java-keywords">private static final</span> KeyFactory fy = KeyFactory.CamelBuilder.<span class="java-layer-method">get</span>(Person.<span class="java-keywords">class</span>);
+  <span class="java-keywords">private static final</span> KeyFactory f = KeyFactory.CamelBuilder.<span class="java-layer-method">get</span>(Person.<span class="java-keywords">class</span>);
     
-  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = fy.<span class="java-layer-method">newKey</span>();
-  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = fy.<span class="java-layer-method">newKey</span>();
-  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Date   &gt; BIRTH = fy.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE = f.<span class="java-layer-method">newKey</span>();
+  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Double &gt; CASH = f.<span class="java-layer-method">newKeyDefault</span>(0.0);
   
   <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the Ujo implementation ---</span></span>
-  <span class="keyword-directive">private</span> HashMap map = <span class="keyword-directive">new</span> HashMap();  
-  <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(Key property) {
-    return map.get(property);
+  <span class="keyword-directive">private</span> Object[] data = <span class="keyword-directive">new</span> Object[f.lockAndSize()];  
+  <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(Key key) {
+    <span class="java-keywords">return</span> data[key.<span class="java-layer-method">getIndex</span>()];
   }
-  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">writeValue</span>(Key property, Object value) {
-    map.put(property, value);
+  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">writeValue</span>(Key key, Object value) {
+    data[key.<span class="java-layer-method">getIndex</span>()] = value;
   }
   <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
-    <span class="java-keywords">return</span> fy.<span class="java-layer-method">getKeyList</span>();
+    <span class="java-keywords">return</span> f.<span class="java-layer-method">getKeyList</span>();
   }
-  <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, Key property, Object value) {
+  <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, Key key, Object value) {
     <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
   } <span style="background-color: #fbf1f1"><span class="comment">// --- The end of the Ujo implementation ---</span></span>
 
@@ -321,7 +320,7 @@ However the more keys gives significantly the better effect in favour of the Ujo
                 Here are links to some other Java projects with similar concerns:
                 <ul>
                 <li><a href="http://joda-beans.sourceforge.net/">Joda-Beans</a> - is a framework that radically enhances working with beans. The aim is to add type-safety, refactorability and compiler-checking to keys on beans.</li>
-                <li><a href="https://bean-keys.dev.java.net/">Bean-keys</a> - project using Java 5 syntax and object oriented features in order to provide property support that leapfrogs the keys available in Delphi/VB and other languages. The keys implemented in bean-keys use Java's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
+                <li><a href="https://bean-keys.dev.java.net/">Bean-keys</a> - project using Java 5 syntax and object oriented features in order to provide key support that leapfrogs the keys available in Delphi/VB and other languages. The keys implemented in bean-keys use Java's abilities (interfaces, annotations, generics etc.) to create a more powerful, extensible and object oriented system to expose component state.</li>
                 <li><a href="http://commons.apache.org/attributes/">Commom Attributes</a> - an attribute and metadata solution for the Java 1.4 or earlier enables Java programmers to use C#/.Net-style attributes in their code</li>
                 <li><a href="http://jcp.org/en/jsr/detail?id=175">JSR-175</a> - a metadata facility for the JavaTM Programming Language</li>
                 <li><a href="http://spice.codehaus.org/metaclass/model.html">MetaClass</a> - the attributes are usually specified in the java source files as javadoc markup. The source file is then processed and the metadata is compiled into descriptors that MetaClass is capable of reading. These descriptors are then loaded at runtime to provide metadata about the program elements. </li>
@@ -329,7 +328,7 @@ However the more keys gives significantly the better effect in favour of the Ujo
                 </ul>
             </div>
 
-            According to some people the UJO property access has a name the
+            According to some people the UJO key access has a name the
             <a href="http://wiki.objectstyle.org/confluence/display/WO/Overview-Key+Value+Coding">Key Value Coding</a>.
             It&nbsp;seems that many successful projects use it - for example
             <a href="http://en.wikipedia.org/wiki/Eiffel_%28programming_language%29">Eiffel</a>,
