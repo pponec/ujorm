@@ -5,7 +5,7 @@
     <groupId>org.ujoframework</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>1.23-SNAPSHOT</version>
+    <version>1.30.RC1-SNAPSHOT</version>
     <name>ujo-orm</name>
     <contributors>
         <contributor>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.ujoframework</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>1.23-SNAPSHOT</version>
+            <version>1.30.RC1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
