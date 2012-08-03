@@ -56,7 +56,6 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
        
     /** Constructor */
     public QuickUjo() {
-        super();
     }
 
     /** Constructor */

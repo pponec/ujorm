@@ -115,8 +115,8 @@ Released   : 20080129
               which have got three abstract implementations:
               
               <ul>
-                <li><a href="javadoc/org/ujorm/implementation/map/MapUjo.html">MapUjo</a> - is suitable for simple implementation with sufficient power for common applications, it is based on the object <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
-                <li><a href="javadoc/org/ujorm/implementation/array/ArrayUjo.html">ArrayUjo</a> - the high performance is implemented by the <strong>object array</strong></li>
+                <li><a href="javadoc/org/ujorm/core/AbstractUjo.html">AbstractUjo</a> - the great performance implemented by the <strong>object array</strong></li>
+                <li><a href="javadoc/org/ujorm/implementation/map/MapUjo.html">MapUjo</a> - a memory safe solution for the case of the sparse attribute values, the solution is based on the object <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
                 <li><a href="javadoc/org/ujorm/implementation/bean/BeanUjo.html">BeanUjo</a> - implementation calls related methods of <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> using a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflection</a></li>
               </ul>
               
@@ -138,8 +138,9 @@ Released   : 20080129
               How do you <strong>write your first</strong> UJO object?	The easiest way is to use some abstract implementation of the Ujo interface.
               For example see an implementation of the class <i>Person</i> which includes three attributes and a one method to add a&nbsp;cash.
               
-              <pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.map.*;
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> AbstractUjo&lt;Person&gt; {
+              <pre class="pre"><span class="java-keywords">import</span> org.ujorm.core.*;
+
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> AbstractUjo {
   <span class="java-keywords">private static final</span> KeyFactory f = <span class="java-layer-method">newFactory</span>(Person.<span class="java-keywords">class</span>);
     
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
