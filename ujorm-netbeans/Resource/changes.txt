@@ -1,6 +1,12 @@
 The Ujorm release notes
 *******************************
 
+release 1.30.RC1 (2012-08-08)
++ the interface UjoProperty is renamed to the Key
++ so may APIs are deprecated now
++ Key/UjoProperty factory method take the Class argument by Java reflecton from its generic type, so the Class parameter is obsolete now and its methods are #Deprecated.
++ Migration notes: replace all texts "UjoProperty" for the target "Key" in your project and later fix all deprecated methods
+
 release 1.22 (2012-01-30)
 + the UjoProperty interface extends the CriterionMaker now for a simpler Criterion building
 + new annotation parameter called converter can be assigned for a special reading data from/to ResultSet.
