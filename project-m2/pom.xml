@@ -15,7 +15,7 @@
     </scm>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.ujoframework</groupId>
+    <groupId>org.ujorm</groupId>
     <artifactId>ujo</artifactId>
     <version>1.30.RC1-SNAPSHOT</version>
     <name>Main UJO</name>
