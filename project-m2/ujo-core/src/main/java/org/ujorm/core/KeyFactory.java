@@ -196,9 +196,14 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     /** Get KeyRing */
     public KeyList<UJO> getKeyList() {
         if (propertyStore==null) {
-            propertyStore = createKeyList();
-            onCreate(propertyStore, tmpStore);
-            tmpStore = null;
+            // Synchronize the factory:
+            synchronized (tmpStore.type) {
+                if (propertyStore==null) {
+                    propertyStore = createKeyList();
+                    onCreate(propertyStore, tmpStore);
+                    tmpStore = (InnerDataStore<UJO>) (Object) InnerDataStore.EMPTY;
+                }
+            }
         }
         return propertyStore;
     }
@@ -355,6 +360,9 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** A temporarry data store. */
     protected static final class InnerDataStore<UJO extends Ujo> {
+
+        /** Empty constant */
+        private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false);
 
         /** The Ujo type is serializad */
         private final Class<? extends UJO> type;
