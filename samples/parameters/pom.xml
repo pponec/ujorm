@@ -8,7 +8,7 @@
     <name>sample-parameters</name>
     <description>The project learns to you how to create a persistent parameter manager easy on the desktop .
 See the more info: http://ujorm.org/sample/parameters.htm .</description>
-    <url>http://maven.apache.org</url>
+    <url>http://ujorm.org</url>
     <build>
         <plugins>
             <plugin>

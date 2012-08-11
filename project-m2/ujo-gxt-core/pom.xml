@@ -9,7 +9,7 @@
 
     <description>Support for GWT - client UJO objects.
     </description>
-    <url>http://maven.apache.org</url>
+    <url>http://ujorm.org</url>
 
     <scm>
         <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-gxt-core</url>
