@@ -5,6 +5,7 @@
     <artifactId>ujo-orm-spring</artifactId>
     <packaging>jar</packaging>
     <version>1.30.RC1-SNAPSHOT</version>
+    <name>ujo-orm-spring</name>
     <description>Quick ORM implementation based on the UJO objects.</description>
     <url>http://ujorm.org</url>
     <contributors>
@@ -137,11 +138,49 @@
             <version>3.8.2</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-    <name>ujo-orm-spring</name>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <!-- PROFILE(S) -->
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <build>
+                <plugins>
+                    <!-- code optimization: -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <debug>false</debug>
+                            <optimize>true</optimize>
+                        </configuration>
+                    </plugin>
+
+                    <!-- Needs the GnuPg: -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
-
-
-
-
