@@ -7,7 +7,7 @@
     <version>1.30.RC1-SNAPSHOT</version>
     <name>sample-core</name>
     <description>The project learns to you how to use basic skils from core module</description>
-    <url>http://maven.apache.org</url>
+    <url>http://ujorm.org</url>
     <build>
         <plugins>
             <plugin>

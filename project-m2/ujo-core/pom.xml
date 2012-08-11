@@ -6,7 +6,10 @@
     <packaging>jar</packaging>
     <version>1.30.RC1-SNAPSHOT</version>
     <name>ujo-core</name>
-
+    <url>http://maven.apache.org</url>
+    <description>Ujorm-core is an open source Java small library which providing non-traditional objects
+        based on the key-value architecture to open up new exciting opportunities for writing efficient code.
+    </description>
     <contributors>
         <contributor>
             <name>Pavel Ponec</name>
@@ -14,8 +17,7 @@
             <timezone>+1</timezone>
         </contributor>
     </contributors>
-    <description>Ujorm is an open source small Java library providing non-traditional object architecture different from JavaBeans, where each property has its own static object.</description>
-    <url>http://maven.apache.org</url>
+
 
     <scm>
         <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-core</url>
@@ -43,6 +45,23 @@
         </resources>
 
         <plugins>
+
+            <!-- Needs the GnuPg: -.->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-.- -->
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.1</version>

@@ -5,7 +5,8 @@
     <artifactId>ujo-orm-spring</artifactId>
     <packaging>jar</packaging>
     <version>1.30.RC1-SNAPSHOT</version>
-
+    <description>Quick ORM implementation based on the UJO objects.</description>
+    <url>http://ujorm.org</url>
     <contributors>
         <contributor>
             <name>Pavel Ponec</name>
@@ -17,9 +18,6 @@
             <timezone>+1</timezone>
         </contributor>
     </contributors>
-    <description>Quick ORM implementation based on the UJO objects.
-    </description>
-    <url>http://maven.apache.org</url>
 
     <scm>
         <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-spring</url>
@@ -48,6 +46,22 @@
         </resources>
 
         <plugins>
+            <!-- Needs the GnuPg: -.->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-.- -->
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

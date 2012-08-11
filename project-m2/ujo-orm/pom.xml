@@ -7,6 +7,11 @@
     <packaging>jar</packaging>
     <version>1.30.RC1-SNAPSHOT</version>
     <name>ujo-orm</name>
+    <url>http://ujorm.org</url>
+    <description> The Ujorm is designed for rapid Java development with great performance
+      and a small footprint. The key features are type safe queries, relation mapping by Java code,
+      no entity states, and a memory overloading protection cache.
+    </description>
     <contributors>
         <contributor>
             <name>Pavel Ponec</name>
@@ -14,9 +19,6 @@
             <timezone>+1</timezone>
         </contributor>
     </contributors>
-    <description>Quick ORM implementation based on the UJO objects.
-    </description>
-    <url>http://maven.apache.org</url>
 
     <scm>
         <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-orm</url>
@@ -45,6 +47,23 @@
         </resources>
 
         <plugins>
+
+            <!-- Needs the GnuPg: -.->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-.- -->
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.1</version>

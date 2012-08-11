@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>1.30.RC1-SNAPSHOT</version>
     <name>xBenchmark-HibernatePojo</name>
-    <url>http://maven.apache.org</url>
+    <url>http://ujorm.org</url>
     <build>
 
         <resources>
