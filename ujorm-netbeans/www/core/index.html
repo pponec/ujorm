@@ -42,11 +42,11 @@ Released   : 20080129
           
           <div class="post">
             <div class="entry">
-              The <strong>Ujorm Core</strong> module (the new name for UJO Framework) is an open source small Java library providing non-traditional object architecture
-              different from <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBeans</a>,
-              where each key has its own static object.
-              The original idea was a toy with generic data types of Java 5.0 
-              however over time it appears, that the architecture has some exciting new features.				
+              The <strong>Ujorm core</strong> (original name was <span>UJO Framework</span>) is
+              an open source Java small library which providing non-traditional objects
+              based on the key&#x2011;value architecture to open up new exciting opportunities for writing efficient code.
+              The original idea was a toy with generic data types of Java 5.0
+              however over time it appears, that the architecture has many interesting features.
             </div><p class="meta">&nbsp;</p>
           </div><!-- post -->
                         
@@ -184,7 +184,7 @@ Released   : 20080129
   <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Double &gt; CASH = f.<span class="java-layer-method">newKeyDefault</span>(0.0);
   
   <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the Ujo implementation ---</span></span>
-  <span class="keyword-directive">private</span> Object[] data = <span class="keyword-directive">new</span> Object[f.lockAndSize()];  
+  <span class="keyword-directive">private</span> Object[] data = <span class="keyword-directive">new</span> Object[f.<span class="java-layer-method">lockAndSize</span>()];
   <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(Key key) {
     <span class="java-keywords">return</span> data[key.<span class="java-layer-method">getIndex</span>()];
   }
@@ -198,10 +198,11 @@ Released   : 20080129
     <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
   } <span style="background-color: #fbf1f1"><span class="comment">// --- The end of the Ujo implementation ---</span></span>
 
-  <span class="comment">/** Add cash in the <strong>Ujo implementation</strong> */</span>
-  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> addCash(<span class="keyword-directive">double</span> cash) {
-    <span class="keyword-directive">double</span> newPrice = CASH.of(<span class="keyword-directive">this</span>) + cash;
-    CASH.setValue(<span class="keyword-directive">this</span>, newPrice);
+
+  <span class="comment">/** Sample method, how to add a new cash */</span>
+  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="java-layer-method">addCash</span>(<span class="keyword-directive">double</span> cash) {
+    <span class="keyword-directive">double</span> newPrice = CASH.<span class="java-layer-method">of</span>(<span class="keyword-directive">this</span>) + cash;
+    CASH.<span class="java-layer-method">setValue</span>(<span class="keyword-directive">this</span>, newPrice);
   }
 }</pre>
 <p>Compare the both samples with a <a href="sample/PersonBean.html">sample code of a JavaBean</a> object.
@@ -390,7 +391,7 @@ However the more keys gives significantly the better effect in favour of the Ujo
                 Are you looking for a quick XML persistence?
                 Do you need an easy introspection?
                 Are you developing a&nbsp;thin client?
-                <strong>Try the Ujorm Core!</strong><br />
+                <strong>Try the Ujorm Core !</strong><br />
                 <!--<a href="#">More&hellip;</a>-->
                 </p>
             </li>
