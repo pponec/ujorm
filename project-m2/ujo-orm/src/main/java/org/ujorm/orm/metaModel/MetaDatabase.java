@@ -796,8 +796,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Create connection with auto-commit false. */
     public Connection createConnection() throws Exception {
         final Connection result = dialect.createConnection(this);
-        result.setAutoCommit(false);
-
+        if (result.getAutoCommit()) {
+            result.setAutoCommit(false);
+        }
         return result;
     }
 
