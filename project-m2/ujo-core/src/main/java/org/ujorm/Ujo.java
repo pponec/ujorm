@@ -17,7 +17,7 @@
 package org.ujorm;
 
 /**
- * <a href="http://ujorm.org/" class="undecor"><img style="width: 32px; height: 32px;" alt="UJO Icons" src="ujo32.png"> 
+ * <a href="http://ujorm.org/" class="undecor"><img style="width: 32px; height: 32px;" alt="UJO Icons" src="doc-files/ujo32.png">
  * UJO</a> means a <i>Unified Java Object</i> and its implementations provides a similar service like a JavaBeans class.
  * Ujo is a basic inteface of the <strong>Ujorm</strong> together with an interface <code>Key</code> .
  * <p>Basic two methods are <code>writeProperty(..)</code> and <code>readProperty(..)</code> for a manipulation with a value;
