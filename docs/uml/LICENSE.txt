@@ -1,0 +1,6 @@
+The license for each part of documentation include class diagrams is:
+
+  Creative Commons - Attribution-NoDerivs 3.0 Unported 
+  http://creativecommons.org/licenses/by-nd/3.0/
+
+Pavel Ponec 
