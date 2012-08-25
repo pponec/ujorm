@@ -1,0 +1,276 @@
+The Ujorm release notes
+*******************************
+
+release 1.30.RC1 (2012-08-25)
++ the interface UjoProperty is renamed to the Key
++ so may APIs are deprecated now
++ Key/UjoProperty factory method take the Class argument by Java reflecton from its generic type, so the Class parameter is obsolete now and its methods are #Deprecated.
++ Migration notes: replace all texts "UjoProperty" for the target "Key" in your project and later fix all deprecated methods
+
+release 1.22 (2012-01-30)
++ the UjoProperty interface extends the CriterionMaker now for a simpler Criterion building
++ new annotation parameter called converter can be assigned for a special reading data from/to ResultSet.
++ new method UjoComparator.sort() is implemented and a better type safe using Java generics
++ solid database names of foreign columns name constrains is implemented
++ the default implementation toString() of the AbstractUjo object is improved
++ the new method is implemented in the Core module: Criterion.evaluate(Iterable);
++ the dialect MSSqlDialect.java is fixed for a DELETE statement with related tables
++ the right parameter of Criterion can be an indirect property too.
++ small bug fixing
++ tutorial is extended for new API
++ code cleaning is done
+
+
+release 1.21 (2011-11-06)
++ Java 7.0 is supported now
++ a native SQL query with parameters is supported using the class SqlParameters
++ new serializable property container PropertyGroup is implemented
++ new method of the API: UjoProperty.equalsName(CharSequence name)
++ PostgreSqlDialect supports the TEXT database type.
++ new BytesWrapper interface to store binary content to a BLOB is implemented in ORM.
++ Ujorm have got a native support for the "org.slf4j.Logger" framework
++ an expression ${SCHEMA} is replaced for a real schema name in the NATIVE SQL view.
++ The LIMIT and OFFSET parameters are implemented for the Native View query 
++ DDL management is fixed for the multi schema structure in databases
++ the SQL parser for a Native View is improved
++ the OrmTableSynchronized class implementation is ready to use for the multi-thread environment.
++ the parameter NULL is allowed in the method Query.setCriterion(Criteron);
++ values of the multi column primary key can be assigned by application thank to a patch from Mr. Tomas Hampl.
++ class MetaParams API to more paramters is extended.
++ the cew API: UjoProperty.descending(boolean descending)
++ the common SqlDialect fixed for combimation SELECT DISTINCT COUNT
++ the ORM support for the Character value type is fixed.
++ dialect MSSqlDialect fixed and the blob is supported in MSSqlDialect.java
++ performance is improved
++ JavaDoc is extended
+
+
+release 1.20 (2011-05-29)
++ the project leaves the old domain org.ujoframework so all new Java packages are renamed to: org.ujorm
++ the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL. 
+  See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
+  Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;
++ the 'Sequence Table Model' is implemented to an optional customize of the 'ujorm_pk_support' table.
++ persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement include its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
++ the batch INSERT for list of items usding a multi row SQL INSERT is implemented 
++ the batch UPDATE is supoorted now, see documentation for more information
++ new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
++ select DISTINCT is supported now
++ each meta-model table can be marked like a READ-ONLY using a new parameter in annotation @Table
++ configuration supports the READ-ONLY mode for required table(s)
++ core class UjoComparator supports the Collator for comparation of the String items.
++ composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
++ auto increment is supported for data type String now
++ the documentation Ujorm User Guide is extended and new samples are done
++ database commits are executed by order of assigning database models now
++ API of the class Criterion is extended for two methods: forAll() and forNone()
++ many Ujorm source code cleanings are finished
++ constructor new SortingProperty(..) is replaced for a factory method PathProperty.sort(..)
+- Ujorm configuration loading from XML file is fixed
+- SqlDialect is fixed for the null relation case by sample: Criterion.whereNull(Item.order)
+- the DDL update fixed in case a default value is any implementatione of the interface OrmUjo
+- Spring integration is fixed for annotations @Transactional in some cases
+- the core method PathProperty.equals(parameter) is fixed for the case the parameter have got the null value
+- implementation CommentPolicy.ON_ANY_CHANGE is fixed
+- log message for SQL values is fixed
+
+release 1.10 (2011-02-06)
++ dialect for the database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
++ new native Criterion is implemented with an SQL expression to use on Ujorm query
++ new annotation @Comment can be used to describe database tables or columns
++ correction the behavior Ujorm release 0.90 where the missing table 'ujorm_pk_support' was a sign to creating all the DB structure
++ there is possible to suppress the formation table 'ujorm_pk_support' by overriding the method UjoSequencer.isSequenceTableRequired() in case a different implementation of the ID generator is used
++ documentation Ujorm User Guide is extended
++ no major bug was discovered
+
+release 1.00 (2010-10-17)
++ the Ujorm User Guide is completed
++ new effective method for bulk loading of lazy attributes: OrmTools.loadLazyValuesAsBatch()
++ support for the Spring Framework to manage an ORM Session and Transactions
++ Criterion have got a native support for IN operator
++ UjoProperty default value reading is fixed in some cases
++ JavaDoc is improved
+
+release 0.94 (2010-05-02)
++ stored database procedures and functions are supported
++ the class Query implements the interface Iterable thanks to idea of Jiri Pejchal
++ mapping the Enum to VARCHAR - by interface ValueExportable
++ mapping any user object to VARCHAR - by interface ValueExportable
++ new method OrmTools.loadLazyValues(...) to load lazy values to required depth
++ new method session.reload(ujo) to reload properties from database
++ new method Criterion.whereNull(..) to simple comparison to the NULL literal
++ MetaParams supports the "set(..)" value to change values
++ checking an open Session is done
++ assembling the meta-model is synchronized now
++ parameter name 'Orm2ddlPolicy' is renamed to 'orm2ddlPolicy'
++ class MetaView is renamed to MetaSelect
++ JavaDoc and Tutorial in the class are improved
+
+release 0.93 (2010-03-07)
++ orm: the incremental database update by meta-model using DDL statements
++ orm: the LIMIT and OFFSET are supported by attributes of the Query
++ orm: database indexes are created by the meta-model, there are supported unique, non-unique indexes include a composed one
++ orm: new method to get a foreign key: OrmTable.readPK(property)
++ orm: checking the SQL keywords
++ orm: note: database table by the SQL statement: ALTER TABLE ormujo_pk_support RENAME TO ujorm_pk_support;
++ core: new method to copy value: UjoProperty.copy(from, to)
++ core: new method to create instance: Criterion.where(condition)
++ core: the Criterion visualization is improved by the method: Criterion.toString()
++ code cleaning
+
+release 0.92 (2010-01-03)
++ THE IMPORTANT CHANGE: the method UjoProperty.getValue() replaces the value of null for default - instead of the original method Ujo.readValue() in the previous release!
++ two UjoProperties can be easily concatenated using the new type safe method add(...)
++ the base UJO objects support the 'java.io.Serializable' feature - include the OrmTable
++ code cleaning, extended JavaDoc, small bug fixing
++ orm: Enum support is done by mapping to a numeric DB type
++ orm: custom Java type mapping is supported by extending the class TypeService
++ orm: the new method OrmHandler.findPropertiesByTypeClass(Class) for common use is done
++ orm: simplified SQL dialect implementations is done include the ORACLE support
++ orm: a new feature available by method Sesssion.isRollbackOnly()
++ orm: default value for parameter SEQUENCE_CACHE is 100 (instead of original 64)
+- orm: reading a null value from ResultSet is fixed
+- orm: the MySqlDialect if fixed, an explicit use of  the engine 'InnoDB' was implemented
+
+release 0.91 (2009-09-20)
++ pesimistic lock implementation for Ujorm
++ internal Ujorm sequence supports now: Long, Integer, BigInteger, Short, Char
++ two Criterion operators are done for a user customization in the SQL statement (Ujorm)
++ Hibernate support is fixed
++ new static method creates a ListProperty with the default property name
++ JavaDoc improvements include 'Tutorial in the class' is done
++ peformance tuning + new benchmark values are released
+
+release 0.90 (2009-08-29)
++ new ORM implementation for databases: PostgreSql, MySql, Derby, H2, HSQLDB, Firebird and Oracle
++ new implementation QuickUjo can take the Ujo property name from a class field name
++ new factory methods of UjoProperty implementation
++ refactoring of the source code
+
+release 0.85 (2009-04-20)
++ new interface UjoMiddle extends the Ujo interface in four methods (set, get, setText, getText)
++ the original UjoExt interface extends UjoMiddle now
++ the first Map & Ujo implementation is called MapImplUjo
++ new annotation @XmlElementBody supports a XML body value now
++ List serialization of the plain objects is supported (e.g. List<Integer>)
++ there is supported a text serialization of the list of simple objects (e.g. List<Integer>)
++ text serialization of the type java.sql.Date is supported
++ interface UjoProperty has new methods for a direction of sorting: isAscending(), descending()
++ new method UjoPropertyList.isItemTypeOf(Class) tests that property type is a type (or subtype) of the parameter
++ all 'Super' classes was renamed to the prefix 'Abstract' classes
++ class PropertyTextable is was renamed to ValueTextable
++ small bug fixing
++ JavaDoc completition
+
+release 0.84 (2009-03-08)
++ new method: UjoProperty.isDefault(UJO) indicates whether a parameter value of the ujo "equal to" the property default value
++ new method: UjoProperty.isTypeOf(Class) returns true if property type is a type (or subtype) of the parameter
++ new property UjoPropertyRow.P_INDEX shows a property index
++ method Ujo.readProperties(..) returns the result properties in a natural order in case the properties was builded by a default newProperty() method
++ text reading from a PathProperty is fixed
+
+
+release 0.831 (2009-01-31)
++ performance improving: for example a deserialization ArrayUjo is about 36% faster in compare to JAXB
+
+release 0.83 (2009-01-29)
++ UjoCriteria supports a searching for objects in the list
++ support or the Proxy pattern design of the BeanUjo class
++ SimpleDateFormat synchronization if fixed
+
+release 0.82 (2008-11-23)
++ there are three new Ujo implementations for different purposes:
++ FactoryUjo: a factory to creating new instances by a property type, the special parameter constructor is supported as well as no parameter constructor
++ RegistrarUjo: the implementation allows to register the PropertyChangeListener for selected property and an action (before or after) value change
++ FieldUjo: the solution provides an access to a private object fields by UjoProperty
++ all implementations are in a different package structure and they will not in the core in the future
+
+release 0.81 (2008-10-21)
++ new class PathProperty for a composition of several UjoProperties
++ Charset is supported by a UjoManager object
++ UjoProperty implements a CharSequence for an easy access to the property Name
++ new class ListProperty extending UjoPropertyList is created for property ArrayList implementations
++ new method is UjoPropertyList.removeItem(UJO, ITEM) is added
++ new method SuperUjoExt.remove(UjoPropertyList, ITEM) is added
++ small bug fixing and new JUnit tests
+
+release 0.80 (2008-09-07)
++ UJO actions are converted from a primitive type int to an new object UjoAction
++ all ACTION constants are moved to the interface UjoAction
++ serialization performance is improved
++ motivation tutorial in a "slide show" format is available on the home page
++ framework version is available in the manifest of JAR file
++ command line: "java -run ujo.jar" shows version number and some basic information about framework
++ class ZeroProviderImpl was removed, its function was replaced by UjoProperty.getDefault() feature
+- class UjoManagerXML is fixed for a multi thread access
+
+release 0.80.rc3 (2008-08-23)
++ new methods UjoExt.getText(...) and Ujo.setText(...) are available for a text processing
++ new method UjoExt.findProperty(String)
++ SingleUjoTabModel enhancements
++ PojoUjo class was renamed to a more comprehensible name BeanUjo (include properties and subclasses)
++ Properties *Rife was removed from the Ujorm core for simplification class model
+
+release 0.80.rc2 (2008-08-07)
++ some abstract implementations of UjoExt interface are slightly improved for better type safe features
++ there is created a new method to set columns to a UjoTableModel class
++ methods of UjoTextable interface was extended about the "context" parameter. The original methods is implemented in a SuperUjo class
++ method of UjoCloneable interface was extended about the "context" parameter.
+
+release 0.80.rc (2008-07-13)
++ UjoExt interface is significantly improved for better type safe features
++ documentation extensions
+
+release 0.80.beta (2008-06-23)
++ interface UjoExt offers a more conventional attribute access
++ chaining of properties is supported
++ default value management is just implemented by a new method getDefault() instead of an obsolete solution using an ACTION_ZERO_REPLACE constant
++ Java parameter -enableassertions switch on a value type checking in a method Ujo.writeProperty(...)
++ many documentation areas are supplemented include a JavaDoc
++ Internet home page is redesigned
+
+release 0.75 (2008-05-18)
++ API of PojoProperty class was extended for a better usability
+- bug of Resource Bundle data export was fixed
+
+release 0.74 (2008-05-11)
++ CSV persistence is supported now
++ XML performance was improved
++ new Ujo implementation called UjoPojo is done for a JavaBean class support
++ API of persistence tools was slightly changed for better extension features
+
+release 0.73 (2008-04-14)
++ attributes in a XML export file is supported now
++ performance tuning 
++ XML persistence performance tests are completed and described in documentation  
++ action constants are reevaluated (there is recommended to recompile your project)
+
+release 0.72 (2008-03-16)
++ UJO implementations have got extended API for easier PROPERTY building with a better type saving.
++ class UjoComparator have got new method: equals(UJO ujo1, UJO ujo2)  
++ documentation was supplemented
+
+release 0.71 (2007-11-26)
++ code cleaning: a compilation with parameter "-Xlint:unchecked parameter" doesn't write any warning.
++ API cleaning: an obscure class names with a suffix "Easy" was replaced by a word "Rife"  
++ documentation was improved
+
+release 0.70 (2007-11-16) 
++ project documentation is translated into English
++ unnecessary class MapUjoTextable was removed
++ class SingleUjoTabModel is fixed
+
+release 0.70.beta2 (2007-10-19)
++ project documentation is fixed and significantly extended
++ method UjoTableModel.insertRow(..) is renamed to addRow(..)
+
+release 0.70.beta (2007-10-12)
++ the first public version
++ Ujo interface API is finished
++ XML export / import is working
++ Resource bundle export / import is working
++ a Zero provider is supported
++ project documentation version is available in a Czech language only
+
+-- 
+EOF
