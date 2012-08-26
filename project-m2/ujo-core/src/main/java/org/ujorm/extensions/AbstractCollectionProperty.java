@@ -32,12 +32,12 @@ abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> ext
 
     public AbstractCollectionProperty(Class<VALUE> collectionType) {
         super(UNDEFINED_INDEX);
-        init(null, collectionType, null, UNDEFINED_INDEX, false);
+        init(null, collectionType, null, null, UNDEFINED_INDEX, false);
     }
 
     public AbstractCollectionProperty(String name, Class<VALUE> collectionType, int index) {
         super(index);
-        init(name, collectionType, null, index, false);
+        init(name, collectionType, null, null, index, false);
     }
     
     /** Return a Class of the Item. */

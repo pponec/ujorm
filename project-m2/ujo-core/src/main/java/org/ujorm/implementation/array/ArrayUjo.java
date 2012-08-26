@@ -161,7 +161,7 @@ public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable 
      */
     @Deprecated
     public static <UJO extends ArrayUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
-        return Property.newInstance(name, type, index);
+        return Property.newInstance(name, type, null, index);
     }
 
     /** A Property Factory

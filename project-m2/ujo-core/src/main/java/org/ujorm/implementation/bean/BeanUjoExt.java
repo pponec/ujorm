@@ -20,6 +20,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.AbstractUjoExt;
+import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ValueAgent;
 
 
@@ -85,21 +86,21 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newKey(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type, -1);
+        return new BeanProperty<UJO,VALUE> (name, type, Property.UNDEFINED_INDEX);
     }
     
     /** A Property Factory, a property type is related from the default value.
      * @hidden     
      */
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newKey(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value, -1);
+        return new BeanProperty<UJO, VALUE>(name, value, Property.UNDEFINED_INDEX);
     }
 
     /** A ListProperty Factory for a <strong>BeanUjo</strong> object
      * @hidden     
      */
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newKeyList(String name, Class<ITEM> type) {
-        return new BeanPropertyList<UJO,ITEM> (name, type, -1);
+        return new BeanPropertyList<UJO,ITEM> (name, type, Property.UNDEFINED_INDEX);
     }
 
     // --------- DEPRECATED -------------------
@@ -110,7 +111,7 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      */
     @Deprecated
     protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type, -1);
+        return new BeanProperty<UJO,VALUE> (name, type, Property.UNDEFINED_INDEX);
     }
 
     /** A Property Factory, a property type is related from the default value.
@@ -119,7 +120,7 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      */
     @Deprecated
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value, -1);
+        return new BeanProperty<UJO, VALUE>(name, value, Property.UNDEFINED_INDEX);
     }
 
     /** A ListProperty Factory for a <strong>BeanUjo</strong> object
@@ -128,7 +129,7 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      */
     @Deprecated
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new BeanPropertyList<UJO,ITEM> (name, type, -1);
+        return new BeanPropertyList<UJO,ITEM> (name, type, Property.UNDEFINED_INDEX);
     }
         
 }

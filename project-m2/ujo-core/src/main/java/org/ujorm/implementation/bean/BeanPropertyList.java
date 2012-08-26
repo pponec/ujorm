@@ -39,7 +39,7 @@ implements ValueAgent<Object,Object>, ListKey<UJO, ITEM>
     @SuppressWarnings("unchecked")
     public BeanPropertyList(String name, Class<ITEM> itemType, int index) {
         super(itemType);
-        init(name, null, null, index, true);
+        init(name, null, null, null, index, false);
         beanManager = BeanManager.getInstance(this);
     }
     

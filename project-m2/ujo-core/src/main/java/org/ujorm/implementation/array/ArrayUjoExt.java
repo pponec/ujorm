@@ -115,7 +115,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      * @hidden
      */
     public static <UJO extends ArrayUjoExt,VALUE> Property<UJO,VALUE> newKey(String name, int index) {
-        return Property.newInstance(name, (Class) null, index);
+        return Property.newInstance(name, (Class) null, (Class) null, index);
     }
 
     /** A Property Factory
@@ -143,7 +143,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      */
     @Deprecated
     public static <UJO extends ArrayUjoExt,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type, int index) {
-        return Property.newInstance(name, type, index);
+        return Property.newInstance(name, type, (Class) null, index);
     }
 
     /** A Property Factory

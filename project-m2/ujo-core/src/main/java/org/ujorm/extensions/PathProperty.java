@@ -136,6 +136,12 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         return getLastPartialProperty().getType();
     }
 
+    /** Property domain type */
+    @Override
+    public Class<UJO> getDomainType() {
+        return keys[0].getDomainType();
+    }
+
     /** Get a semifinal value from an Ujo object by a chain of keys.
      * If any value (not getLastPartialProperty) is null, then the result is null.
      */

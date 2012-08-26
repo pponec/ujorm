@@ -225,6 +225,9 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                     if (p.getType() == null) {
                         PropertyModifier.setType(getGenericClass(field, 1), pr);
                     }
+                    if (p.getDomainType() == null) {
+                        PropertyModifier.setDomainType(getGenericClass(field, 0), pr);
+                    }
                     if (p instanceof AbstractCollectionProperty) {
                         final AbstractCollectionProperty lp = (AbstractCollectionProperty) pr;
                         if (lp.getItemType() == null) {

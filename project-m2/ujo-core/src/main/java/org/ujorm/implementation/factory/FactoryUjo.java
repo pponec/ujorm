@@ -18,6 +18,7 @@ package org.ujorm.implementation.factory;
 
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.extensions.Property;
 import org.ujorm.extensions.SuperAbstractUjo;
 
 /**
@@ -55,7 +56,7 @@ public abstract class FactoryUjo extends SuperAbstractUjo {
      */
     protected static <UJO extends Ujo,VALUE> FactoryProperty<UJO, VALUE> newKey
         ( String name) {
-        return new FactoryProperty<UJO,VALUE> (name, (Class) null, -1);
+        return new FactoryProperty<UJO,VALUE> (name, (Class) null, Property.UNDEFINED_INDEX);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -67,7 +68,7 @@ public abstract class FactoryUjo extends SuperAbstractUjo {
         ( String name
         , Class<VALUE> type
         ) {
-        return new FactoryProperty<UJO,VALUE> (name, type, -1);
+        return new FactoryProperty<UJO,VALUE> (name, type, Property.UNDEFINED_INDEX);
     }
     
 }
