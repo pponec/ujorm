@@ -34,7 +34,7 @@ public class SpringKeyImpl<VALUE>
     /** Constructor with property name */
     SpringKeyImpl(String name) {
         super(UNDEFINED_INDEX);
-        init(name, null, null, UNDEFINED_INDEX, false);
+        init(name, null, null, null, UNDEFINED_INDEX, false);
     }
 
     
