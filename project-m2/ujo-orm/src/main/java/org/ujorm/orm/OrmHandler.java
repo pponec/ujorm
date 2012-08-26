@@ -63,7 +63,7 @@ public class OrmHandler {
     /** The default ORM session */
     private Session session;
 
-    /** Map a property to a database column model */
+    /** Map a <strong>key</strong> to a database <strong>column model</strong> */
     private final HashMap<Key,MetaRelation2Many> propertyMap = new HashMap<Key,MetaRelation2Many> ();
     /** Map a Java class to a database table model */
     private final HashMap<Class,MetaTable> entityMap = new HashMap<Class,MetaTable> ();

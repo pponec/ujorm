@@ -54,7 +54,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
     public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {
         super((Class<UjoIterator<ITEM>>)(Object)UjoIterator.class);
         initItemType(itemType);
-        init(name, null, null, index, lock);
+        init(name, null, null, null, index, lock);
     }
 
 }
