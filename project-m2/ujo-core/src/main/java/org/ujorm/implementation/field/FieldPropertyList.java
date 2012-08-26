@@ -41,7 +41,7 @@ public class FieldPropertyList<UJO extends Ujo, ITEM>
     @SuppressWarnings("unchecked")
     public FieldPropertyList(String name, Class<ITEM> itemType, int index, ValueAgent<UJO, List<ITEM>> agent) {
         super(itemType);
-        init(name, (Class) List.class, null, index, true);
+        init(name, (Class) List.class, null, null, index, false);
         this.agent = agent;
     }
     

@@ -11,12 +11,21 @@ package org.ujorm.extensions;
  */
 public class PropertyModifier {
 
-    /** Write name into property if it is not locked yet. */
+    /** Write property type into property if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setType(Class type, Property property) {
         if (!property.isLock()) {
             final int index = property.getIndex();
-            property.init(null, type, null, index, false);
+            property.init(null, type, null, null, index, false);
+        }
+    }
+
+    /** Write domain type into property if it is not locked yet. */
+    @SuppressWarnings("unchecked")
+    public static void setDomainType(Class domainType, Property property) {
+        if (!property.isLock()) {
+            final int index = property.getIndex();
+            property.init(null, null, domainType, null, index, false);
         }
     }
 
@@ -35,7 +44,7 @@ public class PropertyModifier {
     @SuppressWarnings("unchecked")
     public static void setName(String name, Property property) {
         if (!property.isLock()) {
-            property.init(name, null, null, Property.UNDEFINED_INDEX, false);
+            property.init(name, null, null, null, Property.UNDEFINED_INDEX, false);
         }
     }
 
@@ -43,7 +52,7 @@ public class PropertyModifier {
     @SuppressWarnings("unchecked")
     public static void setIndex(int anIndex, Property property) {
         if (!property.isLock() && property.getIndex()!=anIndex) {
-            property.init(null, null, null, anIndex, true);
+            property.init(null, null, null, null, anIndex, true);
         }
     }
 
@@ -51,7 +60,7 @@ public class PropertyModifier {
     @SuppressWarnings("unchecked")
     public static void lock(Property property) {
         if (!property.isLock()) {
-            property.init(null, null, null, Property.UNDEFINED_INDEX, true);
+            property.init(null, null, null, null, Property.UNDEFINED_INDEX, true);
         }
     }
 

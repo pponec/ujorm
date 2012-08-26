@@ -8,9 +8,6 @@
 package org.ujorm.implementation.quick;
 
 import java.awt.Color;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
@@ -50,6 +47,7 @@ public class QuickUjoBaseTest extends MyTestCase {
         assertEquals(Integer.class, QuickUjoImpl.PRO_P1.getType());
         assertEquals(String .class, QuickUjoImpl.PRO_P2.getType());
         assertEquals(Date   .class, QuickUjoImpl.PRO_P3.getType());
+        assertEquals(Class  .class, QuickUjoImpl.PRO_P4.getType());
         assertEquals(Color  .class, QuickUjoImpl.PRO_LST1.getItemType());
     }
     
@@ -72,7 +70,28 @@ public class QuickUjoBaseTest extends MyTestCase {
         assertEquals(Color  .class, QuickUjoImplChild.PRO_LST1.getItemType());
         assertEquals(Color  .class, QuickUjoImplChild.PRO_LST2.getItemType());
     }
-        
+
+    /**
+     * Test of readValue method,
+     */
+    public void testPropertyDomainType() throws Throwable {
+        System.out.println("testPropertyDomainType");
+
+        assertEquals(QuickUjoImpl.class, QuickUjoImpl.PRO_P0.getDomainType());
+        assertEquals(QuickUjoImpl.class, QuickUjoImpl.PRO_P1.getDomainType());
+        assertEquals(QuickUjoImpl.class, QuickUjoImpl.PRO_P2.getDomainType());
+        assertEquals(QuickUjoImpl.class, QuickUjoImpl.PRO_P3.getDomainType());
+        assertEquals(QuickUjoImpl.class, QuickUjoImpl.PRO_P4.getDomainType());
+        assertEquals(QuickUjoImpl.class, QuickUjoImpl.PRO_LST1.getDomainType());
+
+        assertEquals(QuickUjoImplChild.class, QuickUjoImplChild.PRO_P5.getDomainType());
+        assertEquals(QuickUjoImplChild.class, QuickUjoImplChild.PRO_P6.getDomainType());
+        assertEquals(QuickUjoImplChild.class, QuickUjoImplChild.PRO_P7.getDomainType());
+        assertEquals(QuickUjoImplChild.class, QuickUjoImplChild.PRO_P8.getDomainType());
+        assertEquals(QuickUjoImplChild.class, QuickUjoImplChild.PRO_P9.getDomainType());
+        assertEquals(QuickUjoImplChild.class, QuickUjoImplChild.PRO_LST2.getDomainType());
+    }
+
     /**
      * Test of readValue method,
      */

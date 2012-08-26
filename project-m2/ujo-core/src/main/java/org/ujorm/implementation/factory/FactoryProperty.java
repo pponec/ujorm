@@ -52,7 +52,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      */
     public FactoryProperty(String name, Class<VALUE> type, int index) {
         super(index);
-        init(name, type, null, index, true);
+        init(name, type, null, null, index, false);
         Constructor<VALUE> c = null;
         try {
             c = type.getConstructor(Ujo.class, Key.class);
@@ -107,7 +107,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> FactoryProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
-        return newInstance(name, type, -1);
+        return newInstance(name, type, Property.UNDEFINED_INDEX);
     }
 
 

@@ -160,6 +160,9 @@ public class UjoManager implements Comparator<Key> {
                                 if (ujoProp.getType() == null) {
                                     PropertyModifier.setType(KeyFactory.getGenericClass(field, 1), (Property) ujoProp);
                                 }
+                                if (ujoProp.getDomainType() == null) {
+                                    PropertyModifier.setDomainType(KeyFactory.getGenericClass(field, 0), (Property) ujoProp);
+                                }
                                 if (ujoProp instanceof AbstractCollectionProperty) {
                                     final AbstractCollectionProperty lp = (AbstractCollectionProperty) ujoProp;
                                     if (lp.getItemType() == null) {

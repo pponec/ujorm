@@ -40,8 +40,11 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Returns a name of Property. */
     public String getName();
 
-    /** Returns  a class of the current property. */
+    /** Returns a class of the current property. */
     public Class<VALUE> getType();
+
+    /** Returns a class of the domain Ujo object. */
+    public Class<UJO> getDomainType();
     
     /** Returns a domain class of the property. */
     // public Class<UJO> getDomain(); // TODO

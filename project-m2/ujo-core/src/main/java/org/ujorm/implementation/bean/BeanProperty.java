@@ -41,7 +41,7 @@ public class BeanProperty<UJO extends Ujo,VALUE>
      */
     public BeanProperty(String name, Class<VALUE> type, final int index) {
         super(index);
-        init(name, type, null, index, false);
+        init(name, type, null, null, index, false);
         beanManager = BeanManager.getInstance(this);
     }
     
@@ -53,7 +53,7 @@ public class BeanProperty<UJO extends Ujo,VALUE>
     @SuppressWarnings("unchecked")
     public BeanProperty(String name, VALUE defaultValue, final int index) {
         super(index);
-        init(name, null, defaultValue, index, false);
+        init(name, null, null, defaultValue, index, false);
         beanManager = BeanManager.getInstance(this);
     }
     

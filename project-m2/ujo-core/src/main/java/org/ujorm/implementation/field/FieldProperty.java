@@ -40,7 +40,7 @@ public class FieldProperty<UJO extends Ujo,VALUE>
      */
     public FieldProperty(String name, Class<VALUE> type, int index, ValueAgent<UJO,VALUE> agent) {
         super(index);
-        init(name, type, null, index, false);
+        init(name, type, null, null, index, false);
         this.agent = agent;
     }
     
@@ -51,7 +51,7 @@ public class FieldProperty<UJO extends Ujo,VALUE>
     @SuppressWarnings("unchecked")
     public FieldProperty(String name, VALUE defaultValue, int index, ValueAgent<UJO,VALUE> agent) {
         super(index);
-        init(name, null, defaultValue, index, false);
+        init(name, null, null, defaultValue, index, false);
         this.agent = agent;
     }
     

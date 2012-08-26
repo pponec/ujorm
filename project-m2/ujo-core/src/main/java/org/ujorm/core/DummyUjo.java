@@ -30,8 +30,8 @@ import org.ujorm.UjoAction;
  */
 final class DummyUjo implements Ujo {
     
-    public static final Key P0 = Property.newInstance("A", Object.class, -1);
-    public static final Key P1 = Property.newInstance("B", Object.class, -1);
+    public static final Key<DummyUjo,Object> P0 = Property.newInstance("A", Object.class, DummyUjo.class, Property.UNDEFINED_INDEX);
+    public static final Key<DummyUjo,Object> P1 = Property.newInstance("B", Object.class, DummyUjo.class, Property.UNDEFINED_INDEX);
     
     /** A dummy implementation. */
     @Override

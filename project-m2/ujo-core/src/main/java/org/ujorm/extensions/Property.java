@@ -41,7 +41,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
     /** Unefined index value */
-    protected static final int UNDEFINED_INDEX = -1;
+    public static final int UNDEFINED_INDEX = -1;
 
     /** Property name */
     private String name;
@@ -58,6 +58,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     private int index;
     /** Property type (class) */
     private Class<VALUE> type;
+    /** Doman type type (class) */
+    private Class<UJO> domainType;
     /** Property default value */
     private VALUE defaultValue;
     /** Lock the property after initialization */
@@ -94,6 +96,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     protected final Property<UJO,VALUE> init
     ( final String name
     , Class<VALUE> type
+    , Class<UJO> domainType
     , final VALUE defaultValue
     , final int index
     , final boolean lock
@@ -111,6 +114,9 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         }
         if (this.type == null) {
             this.type = type;
+        }
+        if (this.domainType == null) {
+            this.domainType = domainType;
         }
         if (lock) {
             this.lock = lock;
@@ -174,6 +180,12 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @Override
     final public Class<VALUE> getType() {
         return type;
+    }
+
+    /** Type of Property */
+    @Override
+    final public Class<UJO> getDomainType() {
+        return domainType;
     }
 
     /** Index of Property */
@@ -384,7 +396,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
-        return new Property<UJO,VALUE>(index).init(name, type, value, index, lock);
+        return new Property<UJO,VALUE>(index).init(name, type, null, value, index, lock);
     }
 
 
@@ -392,8 +404,10 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * The method assigns a next property index.
      * @hidden
      */
-    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
-        return new Property<UJO,VALUE>(index).init(name, type, null, index, type!=null);
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, Class<UJO> domainType, int index) {
+        final boolean lock = type!=null
+                    && domainType!=null;
+        return new Property<UJO,VALUE>(index).init(name, type, domainType, null, index, lock);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -401,7 +415,16 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
-        return newInstance(name, type, UNDEFINED_INDEX);
+        final Class<UJO> domainType = null;
+        return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, Class<UJO> domainType) {
+        return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
     }
 
     /** A Property Factory where a property type is related from from default value.
@@ -411,7 +434,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value, int index) {
         @SuppressWarnings("unchecked")
         Class<VALUE> type = (Class) value.getClass();
-        return new Property<UJO, VALUE>(index).init(name, type, value, index, true);
+        return new Property<UJO, VALUE>(index).init(name, type, null, value, index, true);
     }
 
     /** A Property Factory where a property type is related from from default value.
