@@ -23,11 +23,13 @@
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
+    <!--
     <contributor>
         <name>Pavel Ponec</name>
         <url>http://ponec.net/</url>
         <timezone>+1</timezone>
     </contributor>
+    -->
 
     <!-- SUB PROJECTS -->
     <build>

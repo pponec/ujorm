@@ -126,13 +126,17 @@ public class SampleORM {
             handler.config(params);
         }
 
+        // Do jou need to load an external confuguration from XML?
         boolean yesIWantToLoadExternalConfig = false;
         if (yesIWantToLoadExternalConfig) {
             java.net.URL config = getClass().getResource("/org/ujorm/orm/sample/config.xml");
             handler.config(config, true);
         }
 
+        // Load Meta-model and lock it to a read-only mode:
         handler.loadDatabase(Database.class);
+
+        // Open an ORM session (which is no thread safe):
         session = handler.createSession();
     }
 
@@ -156,14 +160,16 @@ public class SampleORM {
         System.out.println("item1: " + item1);
         System.out.println("item2: " + item2);
 
+        Transaction tr = session.beginTransaction();
+
         session.save(order);
         session.save(item1);
         session.save(item2);
 
         if (true) {
-            session.commit();
+            tr.commit();
         } else {
-            session.rollback();
+            tr.rollback();
         }
     }
 

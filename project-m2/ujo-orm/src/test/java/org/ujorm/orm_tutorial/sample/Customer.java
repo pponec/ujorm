@@ -17,29 +17,42 @@ package org.ujorm.orm_tutorial.sample;
 
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
- * Note, that the Order object has got an collection of Items.
+ * Note, how the Keys are created by the KeyFactory.
  * @hidden
  */
 public final class Customer extends OrmTable<Customer> {
+    private static final KeyFactory<Customer> f = newFactory(Customer.class);
 
     /** Unique key */
     @Column(pk = true)
-    public static final Key<Customer, Long> ID = newKey();
+    public static final Key<Customer, Long> ID = f.newKey();
     /** Personal Numbr */
-    public static final Key<Customer, Integer> PIN = newKey();
+    public static final Key<Customer, Integer> PIN = f.newKey();
     /** Firstname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final Key<Customer, String> SURENAME = newKey();
+    public static final Key<Customer, String> SURENAME = f.newKey();
     /** Lastname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final Key<Customer, String> LASTNAME = newKey();
+    public static final Key<Customer, String> LASTNAME = f.newKey();
     /** Date of creation */
-    public static final Key<Customer, Date> CREATED = newKey();
+    public static final Key<Customer, Date> CREATED = f.newKey();
+
+    // Lock the Key factory
+    static { f.lock(); }
+
+    /** An optional method for a better performance.
+     * @return Return all direct Keys (An implementation from hhe Ujo API)
+     */
+    @Override public KeyList<?> readKeys() {
+        return f.getKeyList();
+    }
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {

@@ -25,15 +25,14 @@ import org.ujorm.core.UjoPropertyListImpl;
  */
 public class AplicationContextAdapter extends AbstractAplicationContextAdapter {
 
-    private static final SpringKeyFactory kf = new SpringKeyFactory(AplicationContextAdapter.class);
+    private static final SpringKeyFactory f = new SpringKeyFactory(AplicationContextAdapter.class);
     
     /** Key with a name: summySpringController */
-    public static final SpringKey<DummySpringController> springController = kf.newKey();
+    public static final SpringKey<DummySpringController> springController = f.newKey();
     /** Key with a name: springService */
-    public static final SpringKey<DummySpringService> dummySpringService = kf.newKey("springService");
+    public static final SpringKey<DummySpringService> dummySpringService = f.newKey("springService");
 
-    static {
-        kf.lock();
-    }
+    // Lock factory
+    static { f.lock(); }
 
 }
