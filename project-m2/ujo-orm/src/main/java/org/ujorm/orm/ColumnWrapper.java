@@ -19,7 +19,7 @@ package org.ujorm.orm;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
- * Wrappert for a MetaColumn
+ * Wrapper for a MetaColumn
  * @author Pavel Ponec
  */
 public interface ColumnWrapper {

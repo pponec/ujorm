@@ -20,7 +20,7 @@ import java.util.List;
 import org.ujorm.orm.metaModel.MetaTable;
 
 /**
- * Wrappert for a TetaTable
+ * Wrapper for a MetaTable
  * @author Pavel Ponec
  */
 public interface TableWrapper {
