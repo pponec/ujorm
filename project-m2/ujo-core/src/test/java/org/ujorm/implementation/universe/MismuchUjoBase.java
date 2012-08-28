@@ -24,24 +24,24 @@ public class MismuchUjoBase extends AbstractUjo {
 
     private static Class<MismuchUjoBase> WRONG_CLASS = (Class<MismuchUjoBase>) (Object) UniUjoBaseTest.class;
     /** Factory */
-    private static final KeyFactory<MismuchUjoBase> pf = KeyFactory.Builder.get(WRONG_CLASS);
+    private static final KeyFactory<MismuchUjoBase> f = KeyFactory.Builder.get(WRONG_CLASS);
     
-    public static final Key<MismuchUjoBase,Long>      PRO_P0 = pf.newKey();
-    public static final Key<MismuchUjoBase,Integer>   PRO_P1 = pf.newKey();
-    public static final Key<MismuchUjoBase,String>    PRO_P2 = pf.newKey();
-    public static final Key<MismuchUjoBase,Date>      PRO_P3 = pf.newKey();
-    public static final ListKey<MismuchUjoBase,Float> PRO_P4 = pf.newListKey();
+    public static final Key<MismuchUjoBase,Long>      PRO_P0 = f.newKey();
+    public static final Key<MismuchUjoBase,Integer>   PRO_P1 = f.newKey();
+    public static final Key<MismuchUjoBase,String>    PRO_P2 = f.newKey();
+    public static final Key<MismuchUjoBase,Date>      PRO_P3 = f.newKey();
+    public static final ListKey<MismuchUjoBase,Float> PRO_P4 = f.newListKey();
 
-    static {
-        pf.lock();
-    }
+    // Lock the Key factory
+    static { f.lock(); }
+
 
     /** Data */
     protected Object[] data;
 
     @Override
     public KeyList<?> readKeys() {
-        return pf.getKeyList();
+        return f.getKeyList();
     }
 
     public Object readValue(Key property) {

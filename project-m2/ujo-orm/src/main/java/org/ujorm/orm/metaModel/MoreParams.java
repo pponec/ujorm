@@ -32,13 +32,14 @@ final public class MoreParams extends AbstractMetaModel {
     private static final Class CLASS = MoreParams.class;
 
     /** Property Factory */
-    private static final KeyFactory<MoreParams> fa = KeyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MoreParams> f = KeyFactory.CamelBuilder.get(CLASS);
     /** A default engine for the MySQL dialect. The default value of this parameter is: "ENGINE = InnoDB".
      * @see org.ujorm.orm.dialect.MySqlDialect#getEngine()
      */
-    public static final Key<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = fa.newKey("DialectMySqlEngineType", "ENGINE = InnoDB");
+    public static final Key<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = f.newKey("DialectMySqlEngineType", "ENGINE = InnoDB");
 
-    static{fa.lock();}
+    /** Lock property factory */
+    static{f.lock();}
 
 
 }

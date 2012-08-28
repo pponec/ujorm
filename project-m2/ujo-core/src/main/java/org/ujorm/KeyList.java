@@ -23,7 +23,7 @@ package org.ujorm;
 import java.util.Iterator;
 
 /**
- * The immutable list of KeyProperties.
+ * The immutable list of the Keys.
  * The KeyList class is a subset of the methods from class List&lt;Key&gt;.
  * @param <UJO> Base Ujo implementation
  * @author Pavel Ponec

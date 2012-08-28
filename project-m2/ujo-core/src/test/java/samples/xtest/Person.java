@@ -22,14 +22,13 @@ import org.xml.sax.SAXException;
 
 public class Person extends AbstractUjo {
 
-    private static final KeyFactory<Person> fa = newFactory(Person.class);
-    public static final Key<Person, String> NAME = fa.newKey("Name");
-    public static final Key<Person, Boolean> MALE = fa.newKey("Male");
-    public static final Key<Person, Integer> HEIGHT = fa.newKey("Height");
+    private static final KeyFactory<Person> f = newFactory(Person.class);
+    public static final Key<Person, String> NAME = f.newKey("Name");
+    public static final Key<Person, Boolean> MALE = f.newKey("Male");
+    public static final Key<Person, Integer> HEIGHT = f.newKey("Height");
 
-    static {
-        fa.lock();
-    }
+    // Lock the Key factory
+    static { f.lock(); }
 
     public void testExport() throws IOException, ParserConfigurationException, SAXException {
 

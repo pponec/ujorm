@@ -30,13 +30,13 @@ public class UniUjoBase implements Ujo {
     public static final Key<UniUjoBase,Date>      PRO_P3 = factory.newKey();
     public static final ListKey<UniUjoBase,Float> PRO_P4 = factory.newListKey();
 
-    static {
-        factory.lock();
-    }
+    // Lock the Key factory
+    static { factory.lock(); }
 
     /** Data */
     protected Object[] data;
 
+    /** Return all direct Keys (an implementation from hhe Ujo API) */
     @Override
     public KeyList<?> readKeys() {
         return factory.getKeyList();

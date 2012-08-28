@@ -24,24 +24,24 @@ import org.ujorm.ListKey;
 abstract public class AbstractyUjoBase implements Ujo {
 
     /** Factory */
-    private static final KeyFactory<AbstractyUjoBase> APF = KeyFactory.Builder.get(AbstractyUjoBase.class);
+    private static final KeyFactory<AbstractyUjoBase> f = KeyFactory.Builder.get(AbstractyUjoBase.class);
 
-    public static final Key<AbstractyUjoBase,Long>      PRO_P0 = APF.newKey();
-    public static final Key<AbstractyUjoBase,Integer>   PRO_P1 = APF.newKey();
-    public static final Key<AbstractyUjoBase,String>    PRO_P2 = APF.newKey();
-    public static final Key<AbstractyUjoBase,Date>      PRO_P3 = APF.newKey();
-    public static final ListKey<AbstractyUjoBase,Float> PRO_P4 = APF.newListKey();
+    public static final Key<AbstractyUjoBase,Long>      PRO_P0 = f.newKey();
+    public static final Key<AbstractyUjoBase,Integer>   PRO_P1 = f.newKey();
+    public static final Key<AbstractyUjoBase,String>    PRO_P2 = f.newKey();
+    public static final Key<AbstractyUjoBase,Date>      PRO_P3 = f.newKey();
+    public static final ListKey<AbstractyUjoBase,Float> PRO_P4 = f.newListKey();
 
-    static {
-        APF.lock();
-    }
+    // Lock the Key factory
+    static { f.lock(); }
 
     /** Data */
     protected Object[] data;
 
+    /** Return all direct Keys (an implementation from hhe Ujo API) */
     @Override
     public KeyList<?> readKeys() {
-        return APF.getKeyList();
+        return f.getKeyList();
     }
 
     public Object readValue(Key property) {

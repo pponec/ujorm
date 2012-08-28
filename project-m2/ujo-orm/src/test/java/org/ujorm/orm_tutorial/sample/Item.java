@@ -18,6 +18,7 @@ package org.ujorm.orm_tutorial.sample;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Comment;
@@ -30,24 +31,27 @@ import org.ujorm.orm.annot.Comment;
  */
 @Comment("Order item")
 public final class Item extends OrmTable<Item> {
+    private static final KeyFactory<Item> f = newFactory(Item.class);
 
     /** Unique key */
     @Column(pk = true)
-    public static final Key<Item,Long> ID = newKey();
+    public static final Key<Item,Long> ID = f.newKey();
     /** User key */
-    public static final Key<Item,Integer> USER_ID = newKey();
+    public static final Key<Item,Integer> USER_ID = f.newKey();
     /** Description of the Item */
-    public static final Key<Item,String> NOTE = newKey();
+    public static final Key<Item,String> NOTE = f.newKey();
     /** Price of the item */
     @Comment("Price of the item")
     @Column(length=8, precision=2)
-    public static final Key<Item,BigDecimal> PRICE = newKey(BigDecimal.ZERO);
+    public static final Key<Item,BigDecimal> PRICE = f.newKeyDefault(BigDecimal.ZERO);
     /** A reference to common Order */
     @Comment("A reference to the Order")
     @Column(name="fk_order")
-    public static final Key<Item,Order> ORDER = newKey();
+    public static final Key<Item,Order> ORDER = f.newKey();
     /** A composed (or indirect) property provides a 'CREATED' attribute of the Order */
     public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
+
+
 
     // --- An optional implementation of commonly used setters and getters ---
 

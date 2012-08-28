@@ -24,21 +24,23 @@ import org.ujorm.core.UjoPropertyListImpl;
 public class ImplUjoBase extends AbstractyUjoBase {
 
     /** Factory */
-    protected static final KeyFactory<ImplUjoBase> pf = KeyFactory.Builder.get(ImplUjoBase.class);
+    protected static final KeyFactory<ImplUjoBase> f = KeyFactory.Builder.get(ImplUjoBase.class);
     
-    public static final Key <ImplUjoBase, Long>    PRO_P5 = pf.newKey("P5");
-    public static final Key <ImplUjoBase, Integer> PRO_P6 = pf.newKey("P6");
-    public static final Key <ImplUjoBase, String>  PRO_P7 = pf.newKey("P7");
-    public static final Key <ImplUjoBase, Date>    PRO_P8 = pf.newKey("P8");
-    public static final ListKey<ImplUjoBase,Float> PRO_P9 = pf.newListKey("P9");
+    public static final Key <ImplUjoBase, Long>    PRO_P5 = f.newKey("P5");
+    public static final Key <ImplUjoBase, Integer> PRO_P6 = f.newKey("P6");
+    public static final Key <ImplUjoBase, String>  PRO_P7 = f.newKey("P7");
+    public static final Key <ImplUjoBase, Date>    PRO_P8 = f.newKey("P8");
+    public static final ListKey<ImplUjoBase,Float> PRO_P9 = f.newListKey("P9");
 
-    static {
-        pf.lock();
-    }
+    // Lock the Key factory
+    static { f.lock(); }
 
+    /** An optional method for a better performance.
+     * @return Return all direct Keys (An implementation from hhe Ujo API)
+     */
     @Override
     public KeyList<?> readKeys() {
-        return pf.getKeyList();
+        return f.getKeyList();
     }
 
     public UjoPropertyList readProperties() {
