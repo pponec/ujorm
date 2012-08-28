@@ -1,11 +1,22 @@
 The Ujorm release notes
 *******************************
 
-release 1.30.RC1 (2012-08-25)
-+ the interface UjoProperty is renamed to the Key
-+ so may APIs are deprecated now
-+ Key/UjoProperty factory method take the Class argument by Java reflecton from its generic type, so the Class parameter is obsolete now and its methods are #Deprecated.
-+ Migration notes: replace all texts "UjoProperty" for the target "Key" in your project and later fix all deprecated methods
+release 1.30.RC1 (2012-08-28)
++ the interface UjoProperty is renamed to the Key and the original interface is deprecated now
++ new method Key.getDomainType() inteded to return a related domain class
++ new Key factory method takes the class argument by Java reflecton from its generic type, so the Class parameter is obsolete now and its methods are @Deprecated.
++ new method Key.getDomainType() inteded to returm a domain class of the Key
++ new class KeyFactory for an altenative way to create new ujo keys
++ new class KeyRing intended to create a serializable and immutable Key collection
++ partial implementation of the java transaction API (JTA) is done
++ maven project GroupId is renamed to the Ujorm
++ column widths type of VARCHAR for an Java Enym types are calculated now using maximal Enum value - by default
++ the class SpringKeyFactory is implemented to create a special Keys, see new class ApplicationContextAdapter
++ the class TypeService is replaced with a new interface ITypeService for better type-safe specification by Java generics.
++ JavaDoc is fixed
++ small bug-fix for the exception: SQLException: You cannot set autocommit during a managed transaction
++ the AroundServiceTransaction class calls a rollback for an exception event case
++ impotant migration notes: replace all texts "UjoProperty" for the target "Key" in your project and later fix all deprecated methods
 
 release 1.22 (2012-01-30)
 + the UjoProperty interface extends the CriterionMaker now for a simpler Criterion building
