@@ -10,7 +10,7 @@
     </properties>
 
     <scm>
-        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2</url>
+        <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2</connection>
     </scm>
 
@@ -21,6 +21,12 @@
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <!-- SUB PROJECTS -->
     <build>

@@ -12,7 +12,7 @@
     <url>http://ujorm.org</url>
 
     <scm>
-        <url>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-gxt-core</url>
+        <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-gxt-core/</url>
         <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-gxt-core</connection>
     </scm>
 
@@ -126,6 +126,13 @@
         </dependency>
 
     </dependencies>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
 </project>
 
 
