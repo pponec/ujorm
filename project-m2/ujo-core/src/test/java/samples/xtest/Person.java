@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
 
 public class Person extends AbstractUjo {
 
-    private static final KeyFactory<Person> f = newFactory(Person.class);
+    private static final KeyFactory<Person> f = newCamelFactory(Person.class);
     public static final Key<Person, String> NAME = f.newKey("Name");
     public static final Key<Person, Boolean> MALE = f.newKey("Male");
     public static final Key<Person, Integer> HEIGHT = f.newKey("Height");

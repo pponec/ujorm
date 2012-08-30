@@ -31,7 +31,7 @@ import org.ujorm.orm.annot.Comment;
  */
 @Comment("Order item")
 public final class Item extends OrmTable<Item> {
-    private static final KeyFactory<Item> f = newFactory(Item.class);
+    private static final KeyFactory<Item> f = newCamelFactory(Item.class);
 
     /** Unique key */
     @Column(pk = true)

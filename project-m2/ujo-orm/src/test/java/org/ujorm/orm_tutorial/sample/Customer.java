@@ -28,7 +28,7 @@ import org.ujorm.implementation.orm.OrmTable;
  * @hidden
  */
 public final class Customer extends OrmTable<Customer> {
-    private static final KeyFactory<Customer> f = newFactory(Customer.class);
+    private static final KeyFactory<Customer> f = newCamelFactory(Customer.class);
 
     /** Unique key */
     @Column(pk = true)
