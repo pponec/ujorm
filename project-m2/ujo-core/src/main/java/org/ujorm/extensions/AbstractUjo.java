@@ -97,12 +97,19 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
 
     // ===== STATIC METHODS =====
 
-    /** Create a cactory with a cammel-case Key name generator.
+    /** Create a factory with a cammel-case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
-     * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newFactory
+     * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newCamelFactory
+     */
+    protected static <UJO extends Ujo> KeyFactory<UJO> newCamelFactory(Class<UJO> ujoClass) {
+        return KeyFactory.CamelBuilder.get(ujoClass);
+    }
+
+    /** Create a base factory with a cammel-case Key name generator.
+     * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
+     * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newCamelFactory
      */
     protected static <UJO extends Ujo> KeyFactory<UJO> newFactory(Class<UJO> ujoClass) {
         return KeyFactory.CamelBuilder.get(ujoClass);
     }
-    
 }
