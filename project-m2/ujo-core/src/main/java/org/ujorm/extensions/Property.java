@@ -218,8 +218,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @SuppressWarnings("unchecked")
     @Override
     public final VALUE getValue(final UJO ujo) {
-        final Object result = ujo.readValue(this);
-        return result!= null ? (VALUE) result : defaultValue;
+        return of(ujo);
     }
     
     /**
@@ -228,7 +227,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public final VALUE of(final UJO ujo) {
+    public VALUE of(final UJO ujo) {
         final Object result = ujo.readValue(this);
         return result!= null ? (VALUE) result : defaultValue;
     }
