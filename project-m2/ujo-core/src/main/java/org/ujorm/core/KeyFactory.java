@@ -176,7 +176,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Add an new property for an internal use. */
-    protected boolean addKey(Property p) {
+    protected boolean addKey(Property<?,?> p) {
         checkLock();
         return tmpStore.addProperty(p);
     }
@@ -344,6 +344,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         UjoManager.getInstance().register(list, innerData);
     }
 
+    /** TemporaryStore */
+    protected InnerDataStore<UJO> getTmpStore() {
+        return tmpStore;
+    }
+
     /* ================== STATIC METHOD ================== */
 
 
@@ -470,7 +475,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     public static final class Builder {
 
         /** Return an instance of the {@link KeyFactory} class */
-        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass) {
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass) {
             return new KeyFactory(baseClass);
         }
 
@@ -478,7 +483,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
          * @param baseClass The domain class
          * @param superProperties Keys form an abstract super class
          */
-        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass, KeyList<?> superProperties) {
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass, KeyList<?> superProperties) {
             return new KeyFactory(baseClass, false, superProperties);
         }
    }
@@ -491,7 +496,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
          * @param propertyCamelCase {@link #CAMEL_CASE}
          * @return Return an instance of the {@link KeyFactory} class
          */
-        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass) {
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass) {
             return new KeyFactory(baseClass, CAMEL_CASE, null);
         }
 
@@ -500,7 +505,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
          * @param propertyCamelCase {@link #CAMEL_CASE}
          * @param superProperties Keys form an abstract super class
          */
-        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<UJO> baseClass, KeyList<?> superProperties) {
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass, KeyList<?> superProperties) {
             return new KeyFactory(baseClass, CAMEL_CASE, superProperties);
         }
 
