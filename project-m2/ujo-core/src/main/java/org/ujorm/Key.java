@@ -68,6 +68,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
      * @see Ujo#readValue(Key)
+     * @see #of(org.ujorm.Ujo) 
      */
     public VALUE getValue(UJO ujo);
     
