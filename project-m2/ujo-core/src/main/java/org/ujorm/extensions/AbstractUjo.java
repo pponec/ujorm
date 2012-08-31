@@ -101,7 +101,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newCamelFactory
      */
-    protected static <UJO extends Ujo> KeyFactory<UJO> newCamelFactory(Class<UJO> ujoClass) {
+    protected static <UJO extends Ujo> KeyFactory<UJO> newCamelFactory(Class<? extends UJO> ujoClass) {
         return KeyFactory.CamelBuilder.get(ujoClass);
     }
 
@@ -109,7 +109,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newCamelFactory
      */
-    protected static <UJO extends Ujo> KeyFactory<UJO> newFactory(Class<UJO> ujoClass) {
+    protected static <UJO extends Ujo> KeyFactory<UJO> newFactory(Class<? extends UJO> ujoClass) {
         return KeyFactory.CamelBuilder.get(ujoClass);
     }
 }
