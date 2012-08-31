@@ -119,13 +119,16 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
             this.domainType = domainType;
         }
         if (lock) {
-            this.lock = lock;
+            lock();
             checkValidity();
         }
-
         return this;
     }
 
+    /** Lock the Property */
+    protected void lock() {
+        this.lock = true;
+    }
     /** Check an internal log and throw an {@code IllegalStateException} if the object is locked. */
     protected final void checkLock() throws IllegalStateException {
         if (this.lock) {
