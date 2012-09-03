@@ -48,7 +48,7 @@ public class Order extends OrmTable<Order> {
     public static final Key<Order, Long> id = newKey();
     /** Alternative Unique Key */
     @Column(length=10, uniqueIndex="sid_index")
-    public static final Key<Order,String> sid = newKey(null, "");
+    public static final Key<Order,String> sid = newKeyDefault("");
     /** Order state, default is ACTIVE */
     public static final Key<Order, State> state = newKey(State.ACTIVE);
     /** Date of creation */

@@ -215,7 +215,7 @@ final public class OrmTools {
 
         for (Key p : ujo.readKeys()) {
             if (p.isTypeOf(OrmUjo.class)) {
-                Object value = p.getValue(ujo);
+                Object value = p.of(ujo);
                 if (value!=null && depth>0) {
                     loadLazyValues((OrmUjo) value, depth);
                 }

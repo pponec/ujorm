@@ -159,7 +159,6 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
         return Property.newInstance(name, type, defaultValue, index, lock);
     }
 
-
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty(java.lang.String)} instead of this.

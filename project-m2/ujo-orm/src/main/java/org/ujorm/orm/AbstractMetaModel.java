@@ -61,7 +61,7 @@ abstract public class AbstractMetaModel extends AbstractUjo {
         
         if (recurse) for (Key p : readKeys()) {
 
-            Object value = p.getValue(this);
+            Object value = p.of(this);
             if (value instanceof AbstractMetaModel) {
                 ((AbstractMetaModel) value).setReadOnly(recurse);
             }
