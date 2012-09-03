@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.30.RC1</version>
+    <version>1.30.RC2-SNAPSHOT</version>
     <url>http://maven.apache.org</url>
     <name>ujo-core</name>
     <description>Ujorm-core is an open source Java small library which providing non-traditional objects

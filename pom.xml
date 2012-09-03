@@ -2,23 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <properties>
-        <ujo.version>1.30.RC1</ujo.version>
+        <ujo.version>1.30.RC2-SNAPSHOT</ujo.version>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.5</maven.compiler.target>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!--<scm>
-        <url>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</url>
-        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</connection>
-        <developerConnection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</developerConnection>
-    </scm>-->
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo</artifactId>
-    <version>1.30.RC1</version>
+    <version>1.30.RC2-SNAPSHOT</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
@@ -30,6 +24,17 @@
         <timezone>+1</timezone>
     </contributor>
     -->
+    <scm>
+        <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/</url>
+        <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk</connection>
+        <developerConnection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk</developerConnection>
+    </scm>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <!-- SUB PROJECTS -->
     <build>

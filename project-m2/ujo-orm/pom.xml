@@ -5,7 +5,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
     <packaging>jar</packaging>
-    <version>1.30.RC1</version>
+    <version>1.30.RC2-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-orm</name>
     <description> The Ujorm is designed for rapid Java development with great performance
@@ -23,6 +23,7 @@
     <scm>
         <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-orm/</url>
         <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-orm</connection>
+        <developerConnection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-orm</developerConnection>
     </scm>
 
     <licenses>
@@ -104,7 +105,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>1.30.RC1</version>
+            <version>1.30.RC2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -208,9 +209,9 @@
     </dependencies>
 
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <groupId>org.ujorm</groupId>
+        <artifactId>ujo</artifactId>
+        <version>1.30.RC2-SNAPSHOT</version>
     </parent>
 
     <!-- PROFILE(S) -->
