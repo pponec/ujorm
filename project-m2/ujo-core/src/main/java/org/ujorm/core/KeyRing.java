@@ -29,6 +29,7 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.PathProperty;
 
 /**
@@ -61,11 +62,18 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @param keys Property array
      * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
      */
-    public KeyRing(Class<UJO> baseClass, Key<UJO, ?>... keys) {
-        if (baseClass == null) {
-            throw new IllegalArgumentException("The baseClass must be defined");
-        }
-        this.type = baseClass;
+    public KeyRing(Key<UJO, ?>... keys) {
+        this(null, keys);
+    }
+
+    /**
+     * Constructor
+     * @param domainClass If the parameter is null then the value is calculated from keys.
+     * @param keys Property array
+     * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
+     */
+    protected KeyRing(Class<UJO> domainClass, Key<UJO, ?>... keys) {
+        this.type = domainClass!=null ? domainClass : getBaseType(keys);
         this.keys = keys;
         this.size = keys.length;
     }
@@ -381,19 +389,47 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     // -------------- STATIC METHOD(S) --------------
 
     /** Create a new instance, the parameters is cloned. */
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Key<? super UJO, ?>... keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Key<? super UJO, ?>... keys) {
         Key[] ps = new Key[keys.length];
         System.arraycopy(keys, 0, ps, 0, ps.length);
-        return new KeyRing<UJO>(baseClass, ps);
+        return new KeyRing<UJO>(domainClass, ps);
     }
 
     /** Create a new instance */
-    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> baseClass, Collection<Key<? super UJO, ?>> keys) {
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Collection<Key<? super UJO, ?>> keys) {
         final Key[] ps = new Key[keys.size()];
         int i = 0;
         for (Key<? super UJO, ?> p : keys) {
             ps[i++] = (Key<UJO, ?>) p;
         }
-        return new KeyRing<UJO>(baseClass, (Key[]) ps);
+        return new KeyRing<UJO>(domainClass, (Key[]) ps);
     }
+
+    /** Create a new instance, the parameters is cloned. */
+    public static <UJO extends Ujo> KeyRing<UJO> of(Key<? super UJO, ?>... keys) {
+        return of(null, keys);
+    }
+
+    /** Create a new instance */
+    public static <UJO extends Ujo> KeyRing<UJO> of(Collection<Key<? super UJO, ?>> keys) {
+        return of(null, keys);
+    }
+
+    /** Returns the Common Base Type.
+     * @return If a property is from a child Ujo domain clas, than the farthest child is returned
+     */
+    @PackagePrivate static <UJO extends Ujo> Class<UJO> getBaseType(Key<UJO, ?>... keys) {
+        if (keys.length==0) {
+            throw new IllegalArgumentException("The count if Keys must not be empty");
+        }
+        Class<UJO> result = null;
+        for (Key<UJO, ?> key : keys) {
+            if (result==null || result.isAssignableFrom(key.getDomainType())) {
+                result = key.getDomainType();
+            }
+        }
+        return result;
+    }
+
+
 }
