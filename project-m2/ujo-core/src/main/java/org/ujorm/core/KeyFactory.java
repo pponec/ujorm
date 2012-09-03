@@ -101,28 +101,28 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     private KeyList<UJO> propertyStore;
 
     @SuppressWarnings("unchecked")
-    public KeyFactory(Class<? extends UJO> type) {
-        this(type, false);
+    public KeyFactory(Class<? extends UJO> holder) {
+        this(holder, false);
     }
 
     @SuppressWarnings("unchecked")
-    public KeyFactory(Class<? extends UJO> type, boolean propertyCamelCase) {
-        this(type, propertyCamelCase, null);
+    public KeyFactory(Class<? extends UJO> holder, boolean propertyCamelCase) {
+        this(holder, propertyCamelCase, null);
     }
 
     /**
      * Create new Property Factory for objecty of type.
-     * @param type The domain class
+     * @param holder The holder of the Key fields
      * @param propertyCamelCase Property names are created along fild name by a camel case converter.
      * @param abstractSuperProperties Pass a super keys fromo an abstract super class, if any.
      */
     @SuppressWarnings("unchecked")
-    public KeyFactory(Class<? extends UJO> type, boolean propertyCamelCase, KeyList<?> abstractSuperProperties) {
-        this.tmpStore = new InnerDataStore<UJO>(type, propertyCamelCase);
+    public KeyFactory(Class<?> holder, boolean propertyCamelCase, KeyList<?> abstractSuperProperties) {
+        this.tmpStore = new InnerDataStore<UJO>(holder, propertyCamelCase);
         if (abstractSuperProperties==null) {
             abstractSuperProperties = getSuperKeys();
         } else {
-            assert abstractSuperProperties.getType().isAssignableFrom(type) : "Type parameters is not child of the SuperProperites type: " + abstractSuperProperties.getTypeName();
+            assert abstractSuperProperties.getType().isAssignableFrom(holder) : "Type parameters is not child of the SuperProperites type: " + abstractSuperProperties.getTypeName();
         }
         if (abstractSuperProperties!=null) {
             for (Key p : abstractSuperProperties) {
@@ -133,7 +133,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Read Keys from the super class */
     protected final KeyList<?> getSuperKeys() {
-        final Class<?> superClass = this.tmpStore.type.getSuperclass();
+        final Class<?> superClass = this.tmpStore.holder.getSuperclass();
         if (Ujo.class.isAssignableFrom(superClass)) {
             if (Modifier.isAbstract(superClass.getModifiers())) {
                 KeyList<?> r1 = null;
@@ -203,7 +203,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     public KeyList<UJO> getKeys() {
         if (propertyStore==null) {
             // Synchronize the factory:
-            synchronized (tmpStore.type) {
+            synchronized (tmpStore.holder) {
                 if (propertyStore==null) {
                     propertyStore = createKeyList();
                     onCreate(propertyStore, tmpStore);
@@ -245,7 +245,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 }
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Can't initialize a property of the " + tmpStore.type, e);
+            throw new IllegalStateException("Can't initialize a property of the " + tmpStore.holder, e);
         }
         return tmpStore.createKeyList();
     }
@@ -378,8 +378,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /** Empty constant */
         private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false);
 
-        /** The Ujo type is serializad */
-        private final Class<? extends UJO> type;
+        /** The Ujo type is serializad holder of the Fields*/
+        private final Class<?> holder;
 
         /** Convert <strong>field names<strong> to a camelCase name.*/
         private final boolean camelCase;
@@ -390,9 +390,12 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /** Property annotations */
         private final Map<Key<UJO,?>, Map<Class<? extends Annotation>,Annotation>> annotationsMap;
 
+        /** The Ujo type is serializad holder of the Fields*/
+        private Class<?> type;
+
         /** Constructor */
-        public InnerDataStore(Class<? extends UJO> type, boolean propertyCamelCase) {
-            this.type = type;
+        public InnerDataStore(Class<?> holder, boolean propertyCamelCase) {
+            this.holder = holder;
             this.camelCase = propertyCamelCase;
             this.propertyList = new ArrayList<Key<UJO,?>>(32);
             this.annotationsMap = new HashMap<Key<UJO,?>,Map<Class<? extends Annotation>,Annotation>>();
@@ -423,7 +426,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Create a new Property List */
         public KeyList<UJO> createKeyList() {
-            return KeyRing.of(type, (List) propertyList);
+            return KeyRing.of((List) propertyList);
         }
 
         /** Returns a count of the Key items */
@@ -432,8 +435,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /** Returns a domain type. */
-        public Class<? extends UJO> getDomainType() {
-            return type;
+        public Class<?> getDomainType() {
+            if (type==null) {
+                type = KeyRing.getBaseType(propertyList.toArray(new Key[propertyList.size()]));
+            }
+            return holder;
         }
 
         /**
@@ -445,7 +451,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Get all UjoPorperty fields */
         public List<Field> getFields() {
-            final Field[] fields = type.getFields();
+            final Field[] fields = holder.getFields();
             final List<Field> result = new LinkedList<Field>();
             for (int j = 0; j < fields.length; j++) {
                 final Field field = fields[j];

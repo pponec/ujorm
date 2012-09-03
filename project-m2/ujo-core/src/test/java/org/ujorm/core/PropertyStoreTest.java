@@ -84,12 +84,81 @@ public class PropertyStoreTest extends TestCase {
     /**
      * Test of getType method, of class KeyRing.
      */
+    public void testGetBaseClass_2() throws Exception {
+        System.out.println("getBaseClass");
+        UjoCSV ujo = createUjoInstance();
+
+        KeyRing<UjoCSV> props1, props2;
+        props1 = KeyRing.of(UjoCSV.P1, UjoCSV.P3);
+        props2 = null;
+
+        try {
+            ByteArrayOutputStream dataFile = new ByteArrayOutputStream();
+            ObjectOutput encoder = new ObjectOutputStream(dataFile);
+            encoder.writeObject(props1);
+            encoder.close();
+            InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
+            ObjectInput decoder = new ObjectInputStream(is);
+            props2 = (KeyRing<UjoCSV>) decoder.readObject();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            assertNull(e);
+        }
+
+        assertEquals(props1.size(), props2.size());
+        assertSame(props1.getFirstKey(), props2.getFirstKey());
+        assertSame(props1.getFirstKey().getValue(ujo), props2.getFirstKey().getValue(ujo));
+        assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
+        assertSame(props1.getLastKey(), props2.getLastKey());
+        assertSame(props1.getLastKey().getValue(ujo), props2.getLastKey().getValue(ujo));
+        assertTrue(props2.contains(props1.getFirstKey()));
+        assertFalse(props2.contains(UjoCSV.P2));
+        assertTrue(props2.equals(props1));
+    }
+
+    /**
+     * Test of getType method, of class KeyRing.
+     */
     public void testGetBaseClassDesc() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
         KeyRing<UjoCSV> props1, props2;
         props1 = KeyRing.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3.descending()); // !!!
+        props2 = null;
+
+        try {
+            ByteArrayOutputStream dataFile = new ByteArrayOutputStream();
+            ObjectOutput encoder = new ObjectOutputStream(dataFile);
+            encoder.writeObject(props1);
+            encoder.close();
+            InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
+            ObjectInput decoder = new ObjectInputStream(is);
+            props2 = (KeyRing<UjoCSV>) decoder.readObject();
+        } catch (Throwable e) {
+            assertNull(e);
+        }
+
+        assertEquals(props1.size(), props2.size());
+        assertSame(props1.getFirstKey(), props2.getFirstKey());
+        assertSame(props1.getFirstKey().getValue(ujo), props2.getFirstKey().getValue(ujo));
+        assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
+        assertEquals(props1.getLastKey(), props2.getLastKey());
+        assertSame(props1.getLastKey().getValue(ujo), props2.getLastKey().getValue(ujo));
+        assertTrue(props2.contains(props1.getFirstKey()));
+        assertFalse(props2.contains(UjoCSV.P2));
+        assertTrue(props2.equals(props1));
+    }
+
+    /**
+     * Test of getType method, of class KeyRing.
+     */
+    public void testGetBaseClassDesc_2() throws Exception {
+        System.out.println("getBaseClass");
+        UjoCSV ujo = createUjoInstance();
+
+        KeyRing<UjoCSV> props1, props2;
+        props1 = KeyRing.of(UjoCSV.P1, UjoCSV.P3.descending()); // !!!
         props2 = null;
 
         try {

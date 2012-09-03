@@ -111,7 +111,9 @@ public class UjoManager implements Comparator<Key> {
         KeyList result = propertiesCache.get(type);
         if (result==null) {
             final Key[] ps = readPropertiesNocache(type, true);
-            result = KeyRing.of(type, ps);
+            result = ps.length==0 
+                    ? KeyRing.of(type, ps)
+                    : KeyRing.of(ps);
             
             // Save the result into buffer:
             propertiesCache.put(type, result);
