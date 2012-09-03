@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -35,6 +36,8 @@ import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.PropertyModifier;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 
 /**
  * Serializable property factory is the best tool of Ujorm to create Property implementations.
@@ -81,6 +84,9 @@ import org.ujorm.extensions.PropertyModifier;
  * @author Pavel Ponec
  */
 public class KeyFactory<UJO extends Ujo> implements Serializable {
+
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(KeyFactory.class);
 
     /** Generate property name using the cammel case. */
     protected static final boolean CAMEL_CASE = true;
@@ -359,8 +365,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             final Type result = type.getActualTypeArguments()[position];
             return (result instanceof Class) ? (Class) result : Class.class;
         } catch (Exception e) {
-            final String msg = String.format("The field '%s' generic scan failed", field.getName());
-            throw new IllegalArgumentException(msg, e);
+            LOGGER.log(Level.WARNING, "The generic scan failed for the field '%s'", field.getName());
+            return Class.class;
         }
     }
 
