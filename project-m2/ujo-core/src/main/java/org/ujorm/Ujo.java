@@ -37,7 +37,7 @@ package org.ujorm;
  *
  *    <span class="java-annotation">@</span>Override
  *    <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys(</span>() {
- *        <span class="java-keywords">return</span> fa.<span class="java-layer-method">getKeyList</span>();
+ *        <span class="java-keywords">return</span> fa.<span class="java-layer-method">getKeys</span>();
  *    }
  * }
  * </pre>

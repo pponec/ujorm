@@ -41,7 +41,7 @@ public class MismuchUjoBase extends AbstractUjo {
 
     @Override
     public KeyList<?> readKeys() {
-        return f.getKeyList();
+        return f.getKeys();
     }
 
     public Object readValue(Key property) {

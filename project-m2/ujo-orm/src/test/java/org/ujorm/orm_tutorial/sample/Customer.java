@@ -51,7 +51,7 @@ public final class Customer extends OrmTable<Customer> {
      * @return Return all direct Keys (An implementation from hhe Ujo API)
      */
     @Override public KeyList<?> readKeys() {
-        return f.getKeyList();
+        return f.getKeys();
     }
 
     // --- An optional implementation of commonly used setters and getters ---

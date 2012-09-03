@@ -39,7 +39,7 @@ public class UniUjoBase implements Ujo {
     /** Return all direct Keys (an implementation from hhe Ujo API) */
     @Override
     public KeyList<?> readKeys() {
-        return factory.getKeyList();
+        return factory.getKeys();
     }
 
     @Override
