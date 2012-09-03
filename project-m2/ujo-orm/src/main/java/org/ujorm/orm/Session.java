@@ -1077,7 +1077,7 @@ public class Session {
         }
 
         final MetaTable metaTable = handler.findTableModel(ujo.getClass());
-        final MetaPKey pkeys = MetaTable.PK.getValue(metaTable);
+        final MetaPKey pkeys = MetaTable.PK.of(metaTable);
         boolean fk = ujo instanceof ExtendedOrmUjo;
 
         Criterion<OrmUjo> criterion = null;

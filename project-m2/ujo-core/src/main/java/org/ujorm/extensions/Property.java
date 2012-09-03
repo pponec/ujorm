@@ -261,7 +261,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
     public boolean isDefault(UJO ujo) {
-        VALUE value = getValue(ujo);
+        VALUE value = of(ujo);
         final boolean result
         =  value==defaultValue
         || (defaultValue!=null && defaultValue.equals(value))

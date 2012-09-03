@@ -121,7 +121,6 @@ public class JdbcStatement {
     @SuppressWarnings("unchecked")
     public void assignValues(OrmUjo table, List<MetaColumn> columns) throws SQLException {
         for (MetaColumn column : columns) {
-
             if (column.isForeignKey()) {
                 Key property = column.getProperty();
                 Object value = table!=null ? property.of(table) : null ;

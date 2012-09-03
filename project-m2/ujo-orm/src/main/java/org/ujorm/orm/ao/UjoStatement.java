@@ -83,7 +83,7 @@ final public class UjoStatement extends UnsupportedOperationException implements
             if (value instanceof OrmUjo) {
                 final OrmUjo tableValue = (OrmUjo) value;
                 final MetaTable mt = column.getHandler().findTableModel(tableValue.getClass());
-                value = mt.getFirstPK().getProperty().getValue(tableValue);
+                value = mt.getFirstPK().getProperty().of(tableValue);
             }
             column.getConverter().setValue(column, this, value, 1);
             return v;
