@@ -13,12 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujorm.implementation.orm;
 
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.orm.ExtendedOrmUjo;
+import org.ujorm.orm.Session;
 
 /**
  * The relation 1:N to another UJO type items
@@ -26,8 +27,7 @@ import org.ujorm.orm.ExtendedOrmUjo;
  * @see org.ujorm.core.UjoIterator
  */
 public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo>
-    extends AbstractCollectionProperty<UJO, UjoIterator<ITEM>, ITEM>
-{
+        extends AbstractCollectionProperty<UJO, UjoIterator<ITEM>, ITEM> {
 
     /** Constructor
      * @param name optional
@@ -52,9 +52,27 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
      */
     @SuppressWarnings("unchecked")
     public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {
-        super((Class<UjoIterator<ITEM>>)(Object)UjoIterator.class);
+        super((Class<UjoIterator<ITEM>>) (Object) UjoIterator.class);
         initItemType(itemType);
         init(name, null, null, null, index, lock);
     }
 
+    /**
+     * A shortcut for the method of(Ujo).
+     * The {@code null} value is not replaced for a default one.
+     * @see #of(Ujo)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public UjoIterator<ITEM> of(final UJO ujo) {
+        final Session mySession = ujo.readSession();  // maybe readSession() is better?
+
+        if (mySession != null
+        &&  mySession.getHandler().isPersistent(this)) {
+            return mySession.iterateInternal((RelationToMany) this, ujo);
+            // Don't save the result!
+        } else {
+            return (UjoIterator<ITEM>) ujo.readValue(this);
+        }
+    }
 }

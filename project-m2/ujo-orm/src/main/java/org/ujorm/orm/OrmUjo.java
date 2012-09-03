@@ -18,13 +18,14 @@ package org.ujorm.orm;
 
 import org.ujorm.Ujo;
 import org.ujorm.Key;
-import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.RelationToMany;
 
 /**
  * The OrmUjo is a basic interface of the persistent object in the ORM support.
- * A class that implements the interface must have got a special features:
+ * A class that implements the interface must have got a next special features:
  * <ul>
  *   <li>exactly one Key must be identified as the primary key. </li>
+ *   <li>A Key for a relation type of many-to-one (for lazy lodading) must be an instance of {@link OrmKey}</li>
  *   <li>reference to a foreign BO must be able to store an object of any type by the method Ujo.writeProperty(...).
  *       This feature is necessary for the proper functioning of the lazy initialization</li>
  *   <li>relation many to one can be mapped by a RelationToMany property</li>
@@ -32,27 +33,27 @@ import org.ujorm.implementation.orm.OrmTable;
  * </ul>
  *
  * @author Ponec
+ * @see OrmKeyFactory
+ * @see OrmKey
+ * @see RelationToMany
  */
 public interface OrmUjo extends Ujo {
 
-    /** Read an ORM session, session is an transient property. */
+    /** Read an ORM session where the session is an transient property. */
     public Session readSession();
 
-    /** Write an ORM session */
+    /** Write an ORM session. */
     public void writeSession(Session session);
 
     /**
-     * Returns changed keys.
+     * Returns keys of changed values in time of <strong>not null session<strong>.
+     * The method is userful to a SQL UPDATE statement to manage only assigned values.
+     * Implementation tip: create a new property type of {@link Set<Key>}
+     * and in the method writeValue assing the current Key allways.
      * @param clear True value clears all the property changes.
+     * @return Key array of the modified values.
      */
     public Key[] readChangedProperties(boolean clear);
 
-    /** A special implementation, see a source code of the {@link OrmTable#readValue(org.ujorm.Key) OrmTable} class for more information.<br />
-     * Note: In case the parameter Property is type of persistent relation and the current Session is not null then this metod copy
-     * the current session to the related value due a lazy loading.
-     * @see OrmTable#readValue(org.ujorm.Key)
-     */
-    @Override
-    public Object readValue(final Key property);
 
 }
