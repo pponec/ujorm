@@ -25,7 +25,7 @@ import org.ujorm.orm.OrmUjo;
  * Foreign key property
  * @author Pavel Ponec
  */
-public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends Property<UJO, VALUE> {
+public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends OrmProperty<UJO, VALUE> {
 
     private Key relatedKey;
 
