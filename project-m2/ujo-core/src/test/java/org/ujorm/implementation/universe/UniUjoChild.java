@@ -38,7 +38,7 @@ public class UniUjoChild extends UniUjoBase {
      */
     @Override
     public KeyList<?> readKeys() {
-        return f.getKeyList();
+        return f.getKeys();
     }
 
 

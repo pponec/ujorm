@@ -59,7 +59,7 @@ public final class Item extends OrmTable<Item> {
      * @return Return all direct Keys (An implementation from hhe Ujo API)
      */
     @Override public KeyList<?> readKeys() {
-        return f.getKeyList();
+        return f.getKeys();
     }
 
 

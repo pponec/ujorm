@@ -78,7 +78,7 @@ public class BindingSample {
 	public void initForm(Ujo ujo) {
         for (Key p : binding.keySet()) {
             UIComponent component = binding.get(p);
-            component.setValue(p.getValue(ujo));
+            component.setValue(p.of(ujo));
         }
     }
 

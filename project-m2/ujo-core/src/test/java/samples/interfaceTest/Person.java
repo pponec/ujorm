@@ -30,7 +30,7 @@ public class Person implements Ujo {
     }
 
     public KeyList<?> readKeys() {
-        return f.getKeyList();
+        return f.getKeys();
     }
 
     public boolean readAuthorization(UjoAction action, Key property, Object value) {
