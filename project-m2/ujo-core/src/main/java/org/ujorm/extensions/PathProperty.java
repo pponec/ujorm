@@ -271,7 +271,12 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     public String toString() {
         return getName();
     }
-    
+
+    @Override
+    public String toStringFull() {
+        return getDomainType().getSimpleName() + '.' +  getName();
+    }
+
     /** Length of the Name */
     @Override
     public int length() {
