@@ -32,8 +32,8 @@ abstract public class AbstractyUjoBase implements Ujo {
     public static final Key<AbstractyUjoBase,Date>      PRO_P3 = f.newKey();
     public static final ListKey<AbstractyUjoBase,Float> PRO_P4 = f.newListKey();
 
-    // Lock the Key factory
-    static { f.lock(); }
+    /** Create a list of key */
+    private static final KeyList<?> keys = f.getKeys();
 
     /** Data */
     protected Object[] data;
@@ -41,7 +41,7 @@ abstract public class AbstractyUjoBase implements Ujo {
     /** Return all direct Keys (an implementation from hhe Ujo API) */
     @Override
     public KeyList<?> readKeys() {
-        return f.getKeys();
+        return keys;
     }
 
     public Object readValue(Key property) {
