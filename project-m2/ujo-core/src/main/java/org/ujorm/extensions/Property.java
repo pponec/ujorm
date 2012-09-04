@@ -391,6 +391,12 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return name;
     }
 
+    /** Returns the name of the Key include the simple domain class. Example: Person.id */
+    @Override
+    public final String toStringFull() {
+        return domainType.getSimpleName() + '.' + name;
+    }
+
     // --------- STATIC METHODS -------------------
 
     /** Returns a new instance of property where the default value is null.

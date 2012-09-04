@@ -171,8 +171,11 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     @Override
     public int compareTo(Key p);
 
-    /** Returns the name of Property. */
+    /** Returns the name of the Key. */
     @Override
     public String toString();
-    
+
+    /** Returns the name of the Key include the simple domain class. Example: Person.id */
+    public String toStringFull();
+
 }
