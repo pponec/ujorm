@@ -54,6 +54,16 @@ public class QuickUjoBaseTest extends MyTestCase {
     /**
      * Test of readValue method,
      */
+    public void testPropertyName() throws Throwable {
+        System.out.println("testPropertyName");
+
+        assertEquals(QuickUjoImpl.class.getSimpleName() +'.' + QuickUjoImpl.PRO_P0.getName(), QuickUjoImpl.PRO_P0.toStringFull());
+        assertEquals(QuickUjoImpl.class.getSimpleName() +'.' + QuickUjoImpl.PRO_P1.getName(), QuickUjoImpl.PRO_P1.toStringFull());
+    }
+
+    /**
+     * Test of readValue method,
+     */
     public void testPropertyChildype() throws Throwable {
         System.out.println("testPropertyType");
         

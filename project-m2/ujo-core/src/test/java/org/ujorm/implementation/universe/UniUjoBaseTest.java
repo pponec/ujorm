@@ -37,6 +37,16 @@ public class UniUjoBaseTest extends MyTestCase {
     @Override
     protected void tearDown() throws Exception {
     }
+
+    /**
+     * Test of readValue method,
+     */
+    public void testPropertyName() throws Throwable {
+        System.out.println("testPropertyName");
+
+        assertEquals(UniUjoBase.class.getSimpleName() +'.' + UniUjoBase.PRO_P0.getName(), UniUjoBase.PRO_P0.toStringFull());
+        assertEquals(UniUjoBase.class.getSimpleName() +'.' + UniUjoBase.PRO_P1.getName(), UniUjoBase.PRO_P1.toStringFull());
+    }
     
     /**
      * Test of readValue method,
