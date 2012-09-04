@@ -366,7 +366,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             return (result instanceof Class) ? (Class) result : Class.class;
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "The generic scan failed for the field '%s'", field.getName());
-            return Class.class;
+            return Ujo.class;
         }
     }
 

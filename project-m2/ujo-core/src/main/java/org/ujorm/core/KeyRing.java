@@ -47,7 +47,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     protected static final char PROPERTY_SEPARATOR = '.';
     /** A text to mark a descending sort of a property in a deserializaton proccess. */
     protected static final String DESCENDING_SYMBOL = String.valueOf(PROPERTY_SEPARATOR) + PROPERTY_SEPARATOR;
-    /** The Ujo type is serializad */
+    /** The the domain class of reelated Keys. The value can be {@code null} if the Key array is empty. */
     private Class<UJO> type;
     /** Property size */
     private int size;
@@ -73,13 +73,17 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @see #of(java.lang.Class, org.ujorm.Key<T,?>[])
      */
     protected KeyRing(Class<UJO> domainClass, Key<UJO, ?>... keys) {
-        this.type = domainClass!=null ? domainClass : getBaseType(keys);
+        this.type = domainClass;
         this.keys = keys;
         this.size = keys.length;
     }
 
-    /** Get The Base Class */
+    /** The the domain class of reelated Keys.
+     * The value can be {@code null} if the Key array is empty. */
     public Class<UJO> getType() {
+        if (type==null) {
+            type = getBaseType(keys);
+        }
         return type;
     }
 
@@ -349,11 +353,15 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     // -------------- SERIALIZATION METHOD(S) --------------
 
+    /** Serialization method */
+    @SuppressWarnings("unused")
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        out.writeObject(this.type);
+        out.writeObject(this.getType());
         out.writeObject(createPropertyNames());
     }
 
+    /** Deserialization method */
+    @SuppressWarnings("unused")
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         this.type = (Class<UJO>) in.readObject();
         final String[] nameProperties = (String[]) in.readObject();
@@ -361,7 +369,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         this.size = keys.length;
     }
 
-    /** Serializable property names */
+    /** Create a new text Array of property names */
     private String[] createPropertyNames() {
         final String[] nameProperties = new String[keys.length];
         for (int i = keys.length - 1; i >= 0; --i) {
@@ -415,13 +423,10 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return of(null, keys);
     }
 
-    /** Returns the Common Base Type.
-     * @return If a property is from a child Ujo domain clas, than the farthest child is returned
+    /** Returns the Common Base Type or value {code null}, of keys are empty.
+     * @return If any property is from athe child domain clas, than the farthest child is returned.
      */
     @PackagePrivate static <UJO extends Ujo> Class<UJO> getBaseType(Key<UJO, ?>... keys) {
-        if (keys.length==0) {
-            throw new IllegalArgumentException("The count if Keys must not be empty");
-        }
         Class<UJO> result = null;
         for (Key<UJO, ?> key : keys) {
             if (result==null || result.isAssignableFrom(key.getDomainType())) {
