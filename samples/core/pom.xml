@@ -29,7 +29,6 @@
         </plugins>
     </build>
     <dependencies>
-
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
