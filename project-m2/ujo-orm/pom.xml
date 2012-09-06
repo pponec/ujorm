@@ -8,7 +8,7 @@
     <version>1.30.RC2-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-orm</name>
-    <description> The Ujorm is designed for rapid Java development with great performance
+    <description>The Ujorm is designed for rapid Java development with great performance
       and a small footprint. The key features are type safe queries, relation mapping by Java code,
       no entity states, and a memory overloading protection cache.
     </description>
@@ -22,8 +22,7 @@
 
     <scm>
         <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-orm/</url>
-        <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-orm</connection>
-        <developerConnection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-orm</developerConnection>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2ujo-orm</connection>
     </scm>
 
     <licenses>
@@ -209,9 +208,9 @@
     </dependencies>
 
     <parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>1.30.RC2-SNAPSHOT</version>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
     </parent>
 
     <!-- PROFILE(S) -->
@@ -245,7 +244,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>

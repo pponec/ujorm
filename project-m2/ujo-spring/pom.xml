@@ -22,8 +22,7 @@
 
     <scm>
         <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-spring/</url>
-        <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-spring</connection>
-        <developerConnection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk/project-m2/ujo-spring</developerConnection>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-spring</connection>
     </scm>
 
     <licenses>
@@ -140,6 +139,12 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <!-- PROFILE(S) -->
 

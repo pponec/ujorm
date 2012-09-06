@@ -26,8 +26,7 @@
     -->
     <scm>
         <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/</url>
-        <connection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk</connection>
-        <developerConnection>scm:svn:https://ujorm.svn.sourceforge.net/svnroot/ujorm/trunk</developerConnection>
+        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</connection>
     </scm>
 
     <parent>
@@ -50,28 +49,6 @@
         </plugins>
     </build>
 
-    <modules>
-        <module>project-m2/ujo-core</module>
-        <module>project-m2/ujo-orm</module>
-        <module>project-m2/ujo-spring</module>
-        <module>project-m2/ujo-gxt-core</module>
-        <!--
-        <module>project-m2/ujo-gxt-crud</module>
-        -->
-
-        <module>samples/core</module>
-        <module>samples/parameters</module>
-        <module>samples/table2xml</module>
-        <module>samples/ujorm</module>
-        <module>samples/inheritance</module>
-        <module>samples/binding</module>
-
-        <module>benchmark/hibernate</module>
-        <module>benchmark/hibernate-ujo</module>
-        <module>benchmark/ujo-orm</module>
-    </modules>
-
-
     <!-- DEPENDENCES -->
     <dependencies>
         <dependency>
@@ -82,9 +59,43 @@
         </dependency>
     </dependencies>
 
+    <!-- The default prfile is "production" -->
+    <profiles>
+        <profile>
+            <id>commin</id>
+            <activation>
+               <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>project-m2/ujo-core</module>
+                <module>project-m2/ujo-orm</module>
+                <module>project-m2/ujo-spring</module>
+                <module>project-m2/ujo-gxt-core</module>
+                <!--
+                <module>project-m2/ujo-gxt-crud</module>
+                -->
+
+                <module>samples/core</module>
+                <module>samples/parameters</module>
+                <module>samples/table2xml</module>
+                <module>samples/ujorm</module>
+                <module>samples/inheritance</module>
+                <module>samples/binding</module>
+
+                <module>benchmark/hibernate</module>
+                <module>benchmark/hibernate-ujo</module>
+                <module>benchmark/ujo-orm</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>production</id>
+            <modules>
+                <module>project-m2/ujo-core</module>
+                <module>project-m2/ujo-orm</module>
+                <module>project-m2/ujo-spring</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
-
-
-
-
