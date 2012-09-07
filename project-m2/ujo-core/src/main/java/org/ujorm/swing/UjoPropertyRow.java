@@ -26,7 +26,7 @@ import org.ujorm.implementation.quick.QuickUjoMid;
 
 /**
  * An implementation of TableModel for List of Ujo objects.
- * <br>An typical usage is an preview of Key list of the one Ujo object include values.
+ * <br>An typical usage is an preview of Key list of the one Ujo object including its values.
  * 
  * @author Pavel Ponec
  */

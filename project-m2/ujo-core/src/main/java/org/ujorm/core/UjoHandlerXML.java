@@ -307,7 +307,7 @@ final class UjoHandlerXML extends DefaultHandler {
 
 
     /**
-     * List include metaInfo.
+     * List includes metaInfo.
      * @author Pavel Ponec
      */
     final class Element {

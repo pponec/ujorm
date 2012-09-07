@@ -64,7 +64,7 @@ release 1.20 (2011-05-29)
   See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
   Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;
 + the 'Sequence Table Model' is implemented to an optional customize of the 'ujorm_pk_support' table.
-+ persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement include its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
++ persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement including its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
 + the batch INSERT for list of items usding a multi row SQL INSERT is implemented 
 + the batch UPDATE is supoorted now, see documentation for more information
 + new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
@@ -122,7 +122,7 @@ release 0.94 (2010-05-02)
 release 0.93 (2010-03-07)
 + orm: the incremental database update by meta-model using DDL statements
 + orm: the LIMIT and OFFSET are supported by attributes of the Query
-+ orm: database indexes are created by the meta-model, there are supported unique, non-unique indexes include a composed one
++ orm: database indexes are created by the meta-model, there are supported unique, non-unique indexes including a composed one
 + orm: new method to get a foreign key: OrmTable.readPK(property)
 + orm: checking the SQL keywords
 + orm: note: database table by the SQL statement: ALTER TABLE ormujo_pk_support RENAME TO ujorm_pk_support;
@@ -134,12 +134,12 @@ release 0.93 (2010-03-07)
 release 0.92 (2010-01-03)
 + THE IMPORTANT CHANGE: the method UjoProperty.getValue() replaces the value of null for default - instead of the original method Ujo.readValue() in the previous release!
 + two UjoProperties can be easily concatenated using the new type safe method add(...)
-+ the base UJO objects support the 'java.io.Serializable' feature - include the OrmTable
++ the base UJO objects support the 'java.io.Serializable' feature - including the OrmTable
 + code cleaning, extended JavaDoc, small bug fixing
 + orm: Enum support is done by mapping to a numeric DB type
 + orm: custom Java type mapping is supported by extending the class TypeService
 + orm: the new method OrmHandler.findPropertiesByTypeClass(Class) for common use is done
-+ orm: simplified SQL dialect implementations is done include the ORACLE support
++ orm: simplified SQL dialect implementations is done including the ORACLE support
 + orm: a new feature available by method Sesssion.isRollbackOnly()
 + orm: default value for parameter SEQUENCE_CACHE is 100 (instead of original 64)
 - orm: reading a null value from ResultSet is fixed
@@ -151,7 +151,7 @@ release 0.91 (2009-09-20)
 + two Criterion operators are done for a user customization in the SQL statement (Ujorm)
 + Hibernate support is fixed
 + new static method creates a ListProperty with the default property name
-+ JavaDoc improvements include 'Tutorial in the class' is done
++ JavaDoc improvements including 'Tutorial in the class' is done
 + peformance tuning + new benchmark values are released
 
 release 0.90 (2009-08-29)
@@ -221,7 +221,7 @@ release 0.80.rc3 (2008-08-23)
 + new methods UjoExt.getText(...) and Ujo.setText(...) are available for a text processing
 + new method UjoExt.findProperty(String)
 + SingleUjoTabModel enhancements
-+ PojoUjo class was renamed to a more comprehensible name BeanUjo (include properties and subclasses)
++ PojoUjo class was renamed to a more comprehensible name BeanUjo (including properties and subclasses)
 + Properties *Rife was removed from the Ujorm core for simplification class model
 
 release 0.80.rc2 (2008-08-07)
@@ -239,7 +239,7 @@ release 0.80.beta (2008-06-23)
 + chaining of properties is supported
 + default value management is just implemented by a new method getDefault() instead of an obsolete solution using an ACTION_ZERO_REPLACE constant
 + Java parameter -enableassertions switch on a value type checking in a method Ujo.writeProperty(...)
-+ many documentation areas are supplemented include a JavaDoc
++ many documentation areas are supplemented including a JavaDoc
 + Internet home page is redesigned
 
 release 0.75 (2008-05-18)

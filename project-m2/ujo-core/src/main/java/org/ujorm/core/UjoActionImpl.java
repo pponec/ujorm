@@ -31,7 +31,7 @@ public class UjoActionImpl implements UjoAction {
      
     /** Returns a type of the action. The default type is ACTION_UNDEFINED. 
      * <ul>
-     * <li>Numbers are reserved in range (from 0 to 999 include) for an internal usage of the Ujorm.</li>
+     * <li>Numbers are reserved in range (from 0 to 999, inclusive) for an internal usage of the Ujorm.</li>
      * <li>Zero is an undefined action</li>
      * <li>Negative values are free for general usage too</li>
      * </ul>

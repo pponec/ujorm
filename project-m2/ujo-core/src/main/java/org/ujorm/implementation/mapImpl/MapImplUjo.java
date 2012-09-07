@@ -34,7 +34,7 @@ import org.ujorm.extensions.SuperAbstractUjo;
  * the <code>UjoMiddle</code>
  * and <code>Map&lt;CharSequence,Object&gt;</code> interfaces.
  * A child implementation can use "public static final Key" constants for its KeyProperties.
- * The map key can be any CharSequence object include a <strong>direct</strong> Key from its implementation.
+ * The map key can be any CharSequence object including a <strong>direct</strong> Key from its implementation.
  * <br>Notes:
  * <ul>
  *   <li>the NULL key is not supported in this implementation</li>
@@ -117,7 +117,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     }
 
     /** Returns <tt>true</tt> if this map contains a mapping for the specified key.
-     * @param key Any CharSequence include a <strong>direct</strong> Key
+     * @param key Any CharSequence includes a <strong>direct</strong> Key
      */
     @Override public boolean containsKey(Object key) {
         return data.containsKey(key.toString());

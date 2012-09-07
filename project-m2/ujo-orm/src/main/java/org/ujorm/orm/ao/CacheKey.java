@@ -39,7 +39,7 @@ abstract public class CacheKey {
     abstract public Class getType();
 
 
-    /** Has the two objects the same PK values include BO type ? */
+    /** Has the two objects the same PK values ? */
     @Override
     public boolean equals(Object obj) {
         final CacheKey cache = (CacheKey) obj;

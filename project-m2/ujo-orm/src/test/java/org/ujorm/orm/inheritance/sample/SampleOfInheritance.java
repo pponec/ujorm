@@ -112,7 +112,7 @@ public class SampleOfInheritance {
     }
 
 
-    /** Close Ujorm session to clear a session cache include
+    /** Close Ujorm session to clear a session cache including
      * a database connection(s)
      */
     public void useCloseSession() {
