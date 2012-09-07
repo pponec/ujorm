@@ -33,7 +33,7 @@ import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.PathProperty;
 
 /**
- * The Immutable and Serializable Key Collection include some service methods.
+ * The Immutable and Serializable Key Collection including some service methods.
  * Object have got implemented the hashCode() and equals() methods.
  * @author Pavel Ponec
  * @pop.todo KeyRing, KeyStock, KeyBundle, KeyRing. KeyPack

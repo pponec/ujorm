@@ -178,7 +178,7 @@ public class SampleCORE {
         CriteriaTool<Employee> ct = CriteriaTool.newInstance();
         List<Employee> employees = ct.select(findEmployeeList(), Criterion.where(WAGE, GT, 5.0));
 
-        // Select include sorting:
+        // Select including a sorting:
         employees = ct.select(findEmployeeList()
                 , Criterion.where(WAGE, GT, 5.0)
                 , UjoComparator.newInstance(Employee.NAME)

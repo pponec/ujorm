@@ -139,7 +139,7 @@ public class OrmHandler {
         MetaRoot.PARAMETERS.setValue(databases, params);
     }
 
-    /** Save the alternative ORM configuration include parameters (if the parameters are not null).
+    /** Save the alternative ORM configuration including parameters (if the parameters are not null).
      * The assigning must be finished before an ORM definition loading.
      */
     public void config(MetaRoot config) throws IllegalArgumentException {

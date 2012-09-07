@@ -541,7 +541,7 @@ abstract public class SqlDialect {
     /**
      * Print table columns
      * @param columns List of tablel columns
-     * @param values Print columns include alias.
+     * @param values Print columns including its aliases.
      * @param out Table columns output.
      * @throws java.io.IOException
      */

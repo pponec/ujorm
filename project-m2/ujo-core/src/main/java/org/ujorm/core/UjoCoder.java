@@ -183,7 +183,7 @@ public class UjoCoder {
                 return null;
             }
             if (Integer.class==type) {
-                // Memory optimalization: returns the same instances in interval from -128 to 127 include.
+                // Memory optimalization: returns the same instances in interval from -128 to 127, inclusive.
                 final int result = Integer.parseInt(aValue);
                 return result;
             }

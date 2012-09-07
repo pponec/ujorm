@@ -195,7 +195,7 @@ public class SampleCORE {
     public void filterAndSortList() {
         CriteriaTool<Employee> tool = CriteriaTool.newInstance();
 
-        // Select include sorting:
+        // Select including sorting informations:
         List<Employee> employees = tool.select
                 ( getEmployees()
                 , WAGE.whereGt(5.0)

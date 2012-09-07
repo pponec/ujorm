@@ -41,19 +41,19 @@ public enum Operator implements AbstractOperator {
     REGEXP,
     /** Negation of the regular expression */
     NOT_REGEXP,
-    /** Only for a CharSequence subtypes (include String) */
+    /** Only for a CharSequence subtypes (including String) */
     EQUALS_CASE_INSENSITIVE,
-    /** Only for a CharSequence subtypes (include String) */
+    /** Only for a CharSequence subtypes (including String) */
     STARTS,
-    /** Only for a CharSequence subtypes (include String) */
+    /** Only for a CharSequence subtypes (including String) */
     STARTS_CASE_INSENSITIVE,
-    /** Only for a CharSequence subtypes (include String) */
+    /** Only for a CharSequence subtypes (including String) */
     ENDS,
-    /** Only for a CharSequence subtypes (include String) */
+    /** Only for a CharSequence subtypes (including String) */
     ENDS_CASE_INSENSITIVE,
-    /** Only for a CharSequence subtypes (include String) */
+    /** Only for a CharSequence subtypes (including String) */
     CONTAINS,
-    /** Only for a CharSequence subtypes (include String) */
+    /** Only for a CharSequence subtypes (including String) */
     CONTAINS_CASE_INSENSITIVE,
     /** This operator can have their own SQL condition by a SqlDialect solution.
      * <br>If you need to use more operators, I recommend to implement your own class 
