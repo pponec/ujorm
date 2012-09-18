@@ -313,7 +313,7 @@ public class OrmHandler {
      */
     public <T extends Annotation> T findAnnotation(Key property, Class<T> annotationClass) {
         if (!property.isDirect()) {
-            property = ((CompositeKey) property).getFirstProperty();
+            property = ((CompositeKey) property).getFirstKey();
         }
         try {
             for (Field field : findColumnModel(property).getTableClass().getFields()) {
@@ -334,7 +334,7 @@ public class OrmHandler {
      */
     public MetaRelation2Many findColumnModel(Key pathProperty) {
         if (pathProperty!=null && !pathProperty.isDirect()) {
-            pathProperty = ((CompositeKey)pathProperty).getLastProperty();
+            pathProperty = ((CompositeKey)pathProperty).getLastKey();
         }
         final MetaRelation2Many result = propertyMap.get(pathProperty);
         return result;

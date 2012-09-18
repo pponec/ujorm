@@ -296,7 +296,7 @@ public class Session {
         }
         Key property = exprValue.getLeftNode();
         while (!property.isDirect()) {
-            property = ((CompositeKey) property).getFirstProperty();
+            property = ((CompositeKey) property).getFirstKey();
         }
 
         MetaRelation2Many result = handler.findColumnModel(property);

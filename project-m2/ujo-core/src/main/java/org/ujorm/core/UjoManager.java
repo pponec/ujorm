@@ -783,7 +783,7 @@ public class UjoManager implements Comparator<Key> {
             return result;
         } else {
             final CompositeKey pathProperty = (CompositeKey) property;
-            final Key p = pathProperty.getLastProperty();
+            final Key p = pathProperty.getLastKey();
             final Ujo         u = pathProperty.getSemifinalValue(ujo);
             return getText(u, p, action);
         }
@@ -809,7 +809,7 @@ public class UjoManager implements Comparator<Key> {
             }
         } else {
             final CompositeKey pathProperty = (CompositeKey) property;
-            final Key p = pathProperty.getLastProperty();
+            final Key p = pathProperty.getLastKey();
             final Ujo         u = pathProperty.getSemifinalValue(ujo);
             setText(u, p, value, type, action);
         }
