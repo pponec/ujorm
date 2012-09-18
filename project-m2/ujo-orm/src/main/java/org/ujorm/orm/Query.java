@@ -392,7 +392,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     private Key getDirectProperty(Key p) {
         return p.isDirect()
             ?  p
-            : ((CompositeKey)p).getFirstProperty()
+            : ((CompositeKey)p).getFirstKey()
             ;
     }
 

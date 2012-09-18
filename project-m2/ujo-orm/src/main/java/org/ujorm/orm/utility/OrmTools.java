@@ -274,7 +274,7 @@ final public class OrmTools {
         List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
         HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
         while (!property.isDirect()) {
-            property = ((CompositeKey)property).getFirstProperty();
+            property = ((CompositeKey)property).getFirstKey();
         }
         for (UJO u : ujos) {
             result.add(u);

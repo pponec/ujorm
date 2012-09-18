@@ -71,7 +71,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
             if (property.isDirect()) {
                 list.add(property);
             } else {
-                ((CompositeKey)property).exportProperties(list);
+                ((CompositeKey)property).exportKeys(list);
             }
         }
         if (list.isEmpty()) {
@@ -94,13 +94,20 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     /** Get the first property of the current object. The result is direct property always. */
-    @SuppressWarnings("unchecked")
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty() {
+        return getLastKey();
+    }
+
+    /** Get the first property of the current object. The result is direct property always. */
+    @SuppressWarnings("unchecked")
+    @Override
+    @Deprecated
+    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey() {
         Key result = keys[keys.length - 1];
         return result.isDirect()
             ? result
-            : ((PathProperty)result).getLastProperty()
+            : ((PathProperty)result).getLastKey()
             ;
     }
 
@@ -108,10 +115,18 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     @SuppressWarnings("unchecked")
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty() {
+        return getFirstKey();
+    }
+
+    /** Get the first property of the current object. The result is direct property always. */
+    @SuppressWarnings("unchecked")
+    @Override
+    @Deprecated
+    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey() {
         Key result = keys[0];
         return result.isDirect()
             ? result
-            : ((PathProperty)result).getFirstProperty()
+            : ((PathProperty)result).getFirstKey()
             ;
     }
 
@@ -208,7 +223,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     @SuppressWarnings("unchecked")
     @Override
     public boolean isTypeOf(final Class type) {
-        return getLastProperty().isTypeOf(type);
+        return getLastKey().isTypeOf(type);
     }
     
     /**
@@ -336,12 +351,20 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Export all <string>direct</strong> keys to the list from parameter. */
     @SuppressWarnings("unchecked")
     @Override
+    @Deprecated
     public void exportProperties(List<Key> result) {
+        exportKeys(result);
+    }
+
+    /** Export all <string>direct</strong> keys to the list from parameter. */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void exportKeys(List<Key> result) {
         for (Key p : keys) {
             if (p.isDirect()) {
                 result.add(p);
             } else {
-                ((PathProperty)p).exportProperties(result);
+                ((PathProperty)p).exportKeys(result);
             }
         }
     }

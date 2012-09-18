@@ -34,18 +34,38 @@ import java.util.List;
 public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, VALUE> {
 
     /** Get the first property of the current object. The result is direct property always. */
-    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty();
+    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey();
 
     /** Get the first property of the current object. The result is direct property always. */
-    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty();
+    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey();
+
+    /** Export all <string>direct</strong> keys to the list from parameter. */
+    public void exportKeys(List<Key> result);
 
     /** Get a semifinal value from an Ujo object by a chain of keys.
      * If any value (not getLastPartialProperty) is null, then the result is null.
      */
     public Ujo getSemifinalValue(UJO ujo);
 
-    /** Export all <string>direct</strong> keys to the list from parameter. */
+    /** Get the first property of the current object. The result is direct property always.
+     * @deprecated Uset the {@link #getLastKey()}.
+     */
+    @Deprecated
+    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty();
+
+    /** Get the first property of the current object. The result is direct property always.
+     * @deprecated Uset the {@link #getFirstKey() }.
+     */
+    @Deprecated
+    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty();
+
+    /** Export all <string>direct</strong> keys to the list from parameter.
+     * @deprecated Uset the {@link #exportKeys(java.util.List) }.
+     */
+    @Deprecated
     public void exportProperties(List<Key> result);
+
+
 
 
 }
