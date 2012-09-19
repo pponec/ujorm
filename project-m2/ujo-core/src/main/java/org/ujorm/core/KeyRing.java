@@ -429,11 +429,17 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     @PackagePrivate static <UJO extends Ujo> Class<UJO> getBaseType(Key<UJO, ?>... keys) {
         Class<UJO> result = null;
         for (Key<UJO, ?> key : keys) {
-            if (result==null || result.isAssignableFrom(key.getDomainType())) {
+            if (result==null || result.isAssignableFrom(getDomainType(key))) {
                 result = key.getDomainType();
             }
         }
         return result;
+    }
+
+    /** Returns a domain type, the result is not null always. */
+    private static Class<?> getDomainType(Key<?,?> key) {
+        Class<?> result = key.getDomainType();
+        return result!=null ? result : Ujo.class;
     }
 
 

@@ -12,10 +12,6 @@ import java.util.List;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
-import org.ujorm.criterion.CriteriaTool;
-import org.ujorm.criterion.Criterion;
-import org.ujorm.criterion.BinaryOperator;
-import org.ujorm.criterion.Operator;
 import static org.ujorm.criterion.Person.*;
 
 /**
@@ -129,7 +125,50 @@ public class CriteriaTest extends MyTestCase {
         assertEquals(10.0, result.get(0).get(CASH) );
     }
     
-    
+    public void testInit_in_01() {
+        Criterion<Employee> crn = Criterion.whereIn(Employee.CASH, persons, Person.CASH);
+        boolean ok = crn.evaluate(new Employee(10.0));
+        assertTrue(ok);
+    }
+
+    public void testInit_in_02() {
+        Criterion<Employee> crn = Criterion.whereIn(Employee.CASH, persons, Person.CASH);
+        boolean ok = !crn.evaluate(new Employee(15.0));
+        assertTrue(ok);
+    }
+
+
+    public void testInit_in_03() {
+        Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, persons, Person.NAME);
+        boolean ok = crn.evaluate(new Employee("Julia"));
+        assertTrue(ok);
+    }
+
+    public void testInit_in_04() {
+        Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, persons, Person.NAME);
+        boolean ok = !crn.evaluate(new Employee("Julya"));
+        assertTrue(ok);
+    }
+
+    public void testInit_in_06() {
+        Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, persons, Person.NAME);
+        boolean ok = !crn.evaluate(new Employee("Julya"));
+        assertTrue(ok);
+    }
+
+    public void testInit_in_07() {
+        Criterion<Employee> crn = Criterion.whereNotIn(Employee.NAME, new ArrayList<Person>(), Person.NAME);
+        boolean ok = crn.evaluate(new Employee("Julia"));
+        assertTrue(ok);
+    }
+
+    public void testInit_in_08() {
+        Criterion<Employee> crn = Criterion.whereIn(Employee.NAME, new ArrayList<Person>(), Person.NAME);
+        boolean ok = !crn.evaluate(new Employee("Julya"));
+        assertTrue(ok);
+    }
+
+
     
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());

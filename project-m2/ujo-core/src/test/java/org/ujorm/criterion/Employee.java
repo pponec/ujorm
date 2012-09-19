@@ -12,19 +12,33 @@ import org.ujorm.extensions.PathProperty;
  *
  * @author Pavel Ponec
  */
-public class Person extends MapUjoExt<Person> {
+public final class Employee extends MapUjoExt<Employee> {
 
-    public static final Key<Person, String> NAME = newKey("Name");
-    public static final Key<Person, Boolean> MALE = newKey("Male", false);
-    public static final Key<Person, Double> CASH = newKey("Cash", 0d);
-    public static final Key<Person, Person> MOTHER = newKey("Mother");
+    public static final Key<Employee, String> NAME = newKey("Name");
+    public static final Key<Employee, Boolean> MALE = newKey("Male", false);
+    public static final Key<Employee, Double> CASH = newKey("Cash", 0d);
+    public static final Key<Employee, Employee> MOTHER = newKey("Mother");
 
-    static { init(Person.class); }
+    static { init(Employee.class); }
+
+    public Employee() {
+
+    }
+
+    public Employee(String name) {
+        init();
+        NAME.setValue(this, name);
+    }
+
+    public Employee(double cash) {
+        init();
+        CASH.setValue(this, cash);
+    }
 
 
     public void init() {
         set(NAME, "Jack");
-        set(MOTHER, new Person());
+        set(MOTHER, new Employee());
         set(MOTHER, NAME, "Jane");
         set(MOTHER, CASH, 200d);
 
@@ -36,7 +50,7 @@ public class Person extends MapUjoExt<Person> {
 
     public void init2() {
         set(NAME, "Jack").set(CASH, 50d);
-        set(MOTHER, new Person());
+        set(MOTHER, new Employee());
         get(MOTHER).set(NAME, "Jackie").set(CASH, 10D);
 
         String name = get(MOTHER, NAME);
@@ -47,10 +61,10 @@ public class Person extends MapUjoExt<Person> {
 
     public void init3() {
         set(NAME, "Jack").set(CASH, 50D);
-        set(MOTHER, new Person());
-        set(MOTHER, MOTHER, new Person());
+        set(MOTHER, new Employee());
+        set(MOTHER, MOTHER, new Employee());
         set(MOTHER, MOTHER, CASH, 20D);
-        set(MOTHER, MOTHER, MOTHER, new Person());
+        set(MOTHER, MOTHER, MOTHER, new Employee());
         get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 10D);
         get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 1.1);
 
