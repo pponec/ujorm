@@ -18,6 +18,7 @@ package org.ujorm.criterion;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
@@ -233,11 +234,10 @@ public abstract class Criterion<UJO extends Ujo> {
         , Collection<TYPE> list
         ) {
 
-        if (list.isEmpty()) {
-            return Criterion.constant(property, false);
-        } else {
-            return new ValueCriterion<UJO>(property, Operator.IN, list.toArray());
-        }
+        return list.isEmpty()
+                ? Criterion.constant(property, false)
+                : new ValueCriterion<UJO>(property, Operator.IN, list.toArray())
+                ;
     }
 
     /**
@@ -250,7 +250,10 @@ public abstract class Criterion<UJO extends Ujo> {
         ( Key<UJO,TYPE> property
         , Collection<TYPE> list
         ) {
-        return new ValueCriterion<UJO>(property, Operator.NOT_IN, list.toArray());
+        return list.isEmpty()
+                ? Criterion.constant(property, true)
+                : new ValueCriterion<UJO>(property, Operator.NOT_IN, list.toArray())
+                ;
     }
 
     /**
@@ -263,7 +266,9 @@ public abstract class Criterion<UJO extends Ujo> {
         ( Key<UJO,TYPE> property
         , TYPE... list
         ) {
-        return new ValueCriterion<UJO>(property, Operator.IN, list);
+        return list.length==0
+                ? Criterion.constant(property, false)
+                : new ValueCriterion<UJO>(property, Operator.IN, list);
     }
 
     /**
@@ -276,7 +281,72 @@ public abstract class Criterion<UJO extends Ujo> {
         ( Key<UJO,TYPE> property
         , TYPE... list
         ) {
-        return new ValueCriterion<UJO>(property, Operator.NOT_IN, list);
+        return list.length==0
+                ? Criterion.constant(property, true)
+                : new ValueCriterion<UJO>(property, Operator.NOT_IN, list)
+                ;
+    }
+
+    /**
+     * Create new Criterion for operator IN to compare value to a list of constants.
+     * @param property A direct or indeirect Ujo property
+     * @param list A collection of the UJO values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @param relatedKey The one key related to the one attribute of TYPE object.
+     * @return A the new immutable Criterion.
+     */
+    public static <UJO extends Ujo, ITEM extends Ujo, TYPE> Criterion<UJO> whereIn
+        ( Key<UJO,TYPE> property
+        , Collection<ITEM> list
+        , Key<ITEM, TYPE> relatedKey
+        ) {
+
+        return whereIn(true, property, list, relatedKey);
+    }
+
+    /**
+     * Create new Criterion for operator IN to compare value to a list of constants.
+     * @param property A direct or indeirect Ujo property
+     * @param list A collection of the UJO values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @param relatedKey The one key related to the one attribute of TYPE object.
+     * @return A the new immutable Criterion.
+     */
+    public static <UJO extends Ujo, ITEM extends Ujo, TYPE> Criterion<UJO> whereNotIn
+        ( Key<UJO,TYPE> property
+        , Collection<ITEM> list
+        , Key<ITEM, TYPE> relatedKey
+        ) {
+
+        return whereIn(false, property, list, relatedKey);
+    }
+
+    /**
+     * Create new Criterion for operator IN to compare value to a list of constants.
+     * @param property A direct or indeirect Ujo property
+     * @param list A collection of the UJO values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @param relatedKey The one key related to the one attribute of TYPE object.
+     * @param positive The false value uses the NOT_IN operator.
+     * @return A the new immutable Criterion.
+     */
+    private static <UJO extends Ujo, ITEM extends Ujo, TYPE> Criterion<UJO> whereIn
+        ( boolean positive
+        , Key<UJO,TYPE> property
+        , Collection<ITEM> list
+        , Key<ITEM, TYPE> relatedKey
+        ) {
+
+        if (list.isEmpty()) {
+            return Criterion.constant(property, !positive);
+        } else {
+            final Iterator<ITEM> it = list.iterator();
+            final Object[] values = new Object[list.size()];
+            for (int i = 0, max = values.length; i < max; i++) {
+                values[i] = relatedKey.of(it.next());
+            }
+            return new ValueCriterion<UJO>(property
+                    , positive ? Operator.IN : Operator.NOT_IN
+                    , values
+                    );
+        }
     }
 
 

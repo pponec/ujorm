@@ -7,7 +7,6 @@
 
 package org.ujorm.criterion;
 
-import java.util.ArrayList;
 import java.util.List;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
