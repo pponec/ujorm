@@ -229,15 +229,15 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                         PropertyModifier.setName(createKeyName(field, this.tmpStore.camelCase), pr);
                     }
                     if (p.getType() == null) {
-                        PropertyModifier.setType(getGenericClass(field, 1), pr);
+                        PropertyModifier.setType(getGenericClass(field, true), pr);
                     }
                     if (p.getDomainType() == null) {
-                        PropertyModifier.setDomainType(getGenericClass(field, 0), pr);
+                        PropertyModifier.setDomainType(getGenericClass(field, false), pr);
                     }
                     if (p instanceof AbstractCollectionProperty) {
                         final AbstractCollectionProperty lp = (AbstractCollectionProperty) pr;
                         if (lp.getItemType() == null) {
-                            PropertyModifier.setItemType(getGenericClass(field,1), lp);
+                            PropertyModifier.setItemType(getGenericClass(field, true), lp);
                         }
                     }
                     PropertyModifier.lock(pr); // Lock all attributes:
@@ -359,14 +359,33 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
 
     /** Regurns array of generic parameters */
-    @PackagePrivate static Class getGenericClass(final Field field, final int position) throws IllegalArgumentException {
+    /**
+     *
+     * @param field Base field
+     * @param typeResult Value {@code true} neans a key TYPE, other is required key DOMAIN.
+     * @return type
+     * @throws IllegalArgumentException
+     */
+    @PackagePrivate static Class getGenericClass
+            ( final Field field
+            , final boolean typeResult
+            ) throws IllegalArgumentException {
         try {
             final ParameterizedType type = (ParameterizedType) field.getGenericType();
-            final Type result = type.getActualTypeArguments()[position];
-            return (result instanceof Class) ? (Class) result : Class.class;
+            final Type[] types = type.getActualTypeArguments();
+            final Type result = types[typeResult
+                    ? types.length-1
+                    : 0
+                    ];
+            return (result instanceof Class)
+                    ? (Class) result
+                    :  Class.class
+                    ;
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "The generic scan failed for the field '%s'", field.getName());
-            return Ujo.class;
+            return typeResult
+                    ? Object.class
+                    : Ujo.class;
         }
     }
 

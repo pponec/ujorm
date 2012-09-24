@@ -160,15 +160,15 @@ public class UjoManager implements Comparator<Key> {
                                     PropertyModifier.setName(field.getName(), (Property) ujoProp);
                                 }
                                 if (ujoProp.getType() == null) {
-                                    PropertyModifier.setType(KeyFactory.getGenericClass(field, 1), (Property) ujoProp);
+                                    PropertyModifier.setType(KeyFactory.getGenericClass(field, true), (Property) ujoProp);
                                 }
                                 if (ujoProp.getDomainType() == null) {
-                                    PropertyModifier.setDomainType(KeyFactory.getGenericClass(field, 0), (Property) ujoProp);
+                                    PropertyModifier.setDomainType(KeyFactory.getGenericClass(field, false), (Property) ujoProp);
                                 }
                                 if (ujoProp instanceof AbstractCollectionProperty) {
                                     final AbstractCollectionProperty lp = (AbstractCollectionProperty) ujoProp;
                                     if (lp.getItemType() == null) {
-                                        PropertyModifier.setItemType(KeyFactory.getGenericClass(field,1), lp);
+                                        PropertyModifier.setItemType(KeyFactory.getGenericClass(field, true), lp);
                                     }
                                 }
                             }
