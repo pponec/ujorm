@@ -451,10 +451,10 @@ public class MSSqlDialect extends SqlDialect {
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
         out.append(getSeqTableModel().getTableName()
-                + "\n\t( " + getSeqTableModel().getId() + " VARCHAR(96) NOT NULL PRIMARY KEY"
-                + "\n\t, " + getSeqTableModel().getSequence() + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
-                + "\n\t, " + getSeqTableModel().getCache() + " INT DEFAULT " + cache + " NOT NULL"
-                + "\n\t, " + getSeqTableModel().getMaxValue() + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+                + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
+                + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+                + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
+                + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
                 + "\n\t)");
         return out;
     }
@@ -575,4 +575,16 @@ public class MSSqlDialect extends SqlDialect {
         // This method is not currently supported by the Microsoft JDBC Driver for SQL Server:
         // conn.releaseSavepoint(savepoint);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Appendable printQuotedName(CharSequence name, Appendable sql) throws IOException {
+        sql.append('['); // quotation start character based on SQL dialect
+        sql.append(name);
+        sql.append(']'); // quotation end character based on SQL dialect
+        return sql;
+    }
+
 }
