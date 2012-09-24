@@ -15,6 +15,7 @@
  */
 package org.ujorm.orm.dialect;
 
+import java.io.IOException;
 import org.ujorm.orm.SqlDialect;
 
 /** H2 (http://www.h2database.com) */
@@ -71,6 +72,16 @@ public class H2Dialect extends SqlDialect {
 
     // --- SEQUENCE END ---
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Appendable printQuotedName(CharSequence name, Appendable sql) throws IOException {
+        sql.append('"'); // quotation start character based on SQL dialect
+        sql.append(name);
+        sql.append('"'); // quotation end character based on SQL dialect
+        return sql;
+    }
 
 }
 

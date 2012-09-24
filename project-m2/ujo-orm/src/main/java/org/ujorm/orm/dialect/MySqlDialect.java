@@ -152,4 +152,15 @@ public class MySqlDialect extends SqlDialect {
         return out;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Appendable printQuotedName(CharSequence name, Appendable sql) throws IOException {
+        sql.append('`'); // quotation start character based on SQL dialect
+        sql.append(name);
+        sql.append('`'); // quotation end character based on SQL dialect
+        return sql;
+    }
+
 }

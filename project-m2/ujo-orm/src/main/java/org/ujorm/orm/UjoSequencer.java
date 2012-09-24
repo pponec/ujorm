@@ -80,7 +80,8 @@ public class UjoSequencer {
                 if (i==0) {
                     // INSERT the new sequence:
                     out.setLength(0);
-                    sql = db.getDialect().printSequenceInit(this, out).toString();
+                    final Integer cache = MetaParams.SEQUENCE_CACHE.of(getDatabase().getParams());
+                    sql = db.getDialect().printSequenceInit(this, cache, cache, out).toString();
                     if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
                     statement = connection.prepareStatement(sql);
                     statement.setString(1, tableName);
@@ -108,7 +109,7 @@ public class UjoSequencer {
                             throw new IllegalStateException(msg);
                         }
                         statement.close();
-                        sql = db.getDialect().printSetMaxSequence(this, out).toString();
+                        sql = db.getDialect().printSequenceNextValue(this, out).toString();
                         if (LOGGER.isLoggable(Level.INFO)) {
                             LOGGER.log(Level.INFO, sql + "; [" + tableName + ']');
                         }

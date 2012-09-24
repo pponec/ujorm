@@ -891,43 +891,46 @@ abstract public class SqlDialect {
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
         out.append(getSeqTableModel().getTableName()
-        + "\n\t( " + getSeqTableModel().getId() + " VARCHAR(96) NOT NULL PRIMARY KEY"
-        + "\n\t, " + getSeqTableModel().getSequence() + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getSeqTableModel().getCache() + " INT DEFAULT " + cache + " NOT NULL"
-        + "\n\t, " + getSeqTableModel().getMaxValue() + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+        + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
+        + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+        + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
+        + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
         + "\n\t)");
         return out;
     }
 
     /** Print SQL CREATE SEQUENCE (insert sequence row). No JDBC parameters. */
-    public Appendable printSequenceInit(final UjoSequencer sequence, final Appendable out) throws IOException {
-        Integer cache = MetaParams.SEQUENCE_CACHE.of(sequence.getDatabase().getParams());
+    public Appendable printSequenceInit(final UjoSequencer sequence, long seq, int cache, final Appendable out) throws IOException {
         out.append("INSERT INTO ");
         printSequenceTableName(sequence, out);
-        out.append(" (id,seq,cache) VALUES (?,"+cache+","+cache+")");
+        out.append(" (");
+        printQuotedName(getSeqTableModel().getId(), out);
+        out.append(",");
+        printQuotedName(getSeqTableModel().getSequence(), out);
+        out.append(",");
+        printQuotedName(getSeqTableModel().getCache(), out);
+        out.append(",");
+        printQuotedName(getSeqTableModel().getMaxValue(), out);
+        out.append(") VALUES (?," + seq + "," + cache + ",0)");
+
         return out;
     }
 
-    /** Print SQL UPDATE NEXT SEQUENCE value. */
+    /**
+     * Print SQL UPDATE NEXT SEQUENCE value.
+     */
     public Appendable printSequenceNextValue(final UjoSequencer sequence, final Appendable out) throws IOException {
         out.append("UPDATE ");
         printSequenceTableName(sequence, out);
-        out.append(" SET seq=seq+cache");
-        out.append(" WHERE id=?");
-        return out;
-    }
-
-    /** Set sequence to the max value. */
-    public Appendable printSetMaxSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
-        out.append("UPDATE ");
-        printSequenceTableName(sequence, out);
         out.append(" SET ");
-        out.append(getSeqTableModel().getSequence());
+        printQuotedName(getSeqTableModel().getSequence(), out);
         out.append("=");
-        out.append(getSeqTableModel().getMaxValue());
-        out.append(" WHERE " 
-                   + getSeqTableModel().getId()
-                   + "=?");
+        printQuotedName(getSeqTableModel().getSequence(), out);
+        out.append("+");
+        printQuotedName(getSeqTableModel().getCache(), out);
+        out.append(" WHERE ");
+        printQuotedName(getSeqTableModel().getId(), out);
+        out.append("=?");
         return out;
     }
 
@@ -936,15 +939,17 @@ abstract public class SqlDialect {
         final SeqTableModel tm = getSeqTableModel();
 
         out.append("SELECT ");
-        out.append(tm.getSequence());
+        printQuotedName(tm.getSequence(), out);
         out.append(", ");
-        out.append(tm.getCache());
+        printQuotedName(tm.getCache(), out);
         out.append(", ");
-        out.append(tm.getMaxValue());
+        printQuotedName(tm.getMaxValue(), out);
         out.append(" FROM ");
 
         printSequenceTableName(sequence, out);
-        out.append(" WHERE " + tm.getId() + "=?");
+        out.append(" WHERE ");
+        printQuotedName(tm.getId(), out);
+        out.append("=?");
         return out;
     }
 
@@ -1051,6 +1056,29 @@ abstract public class SqlDialect {
      */
     public void releaseSavepoint(final Connection conn, final Savepoint savepoint, final boolean afterRollback) throws SQLException {
         conn.releaseSavepoint(savepoint);
+    }
+
+    /**
+     * Prints quoted name (identifier) to SQL.
+     *
+     * Method is prepared for overriding based on SQL dialect.
+     *
+     * @param name Name (identifier) for quoting
+     * @param sql Target SQL for printing new quoted name
+     * @return SQL with printed quoted name
+     */
+    protected Appendable printQuotedName(CharSequence name, Appendable sql) throws IOException {
+        // sql.append('['); // quotation start character based on SQL dialect
+        sql.append(name);
+        // sql.append(']'); // quotation end character based on SQL dialect
+        return sql;
+    }
+
+    /** Prints quoted name (identifier) to SQL. */
+    protected final String getQuotedName(final CharSequence name) throws IOException {
+        final StringBuilder result = new StringBuilder(name.length()+4);
+        printQuotedName(name, result);
+        return result.toString();
     }
 
 }
