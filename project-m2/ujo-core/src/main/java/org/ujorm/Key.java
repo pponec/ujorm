@@ -54,6 +54,8 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * <br>The method calls a method 
      * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
      * always.
+     * @param ujo Related Ujo object
+     * @param value A value to assign.
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     public void setValue(UJO ujo, VALUE value);
