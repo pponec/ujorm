@@ -59,7 +59,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
 
     /** An delegat for the method {@link ApplicationContext#getBean(java.lang.String, java.lang.Class)} */
     @SuppressWarnings("unchecked")
-    public <T> T getBean(Key<? extends AbstractAplicationContextAdapter, T> property) throws BeansException {
+    public <T> T getBean(Key<? extends Ujo, T> property) throws BeansException {
         return (T) context.getBean(property.getName(), property.getType());
     }
 

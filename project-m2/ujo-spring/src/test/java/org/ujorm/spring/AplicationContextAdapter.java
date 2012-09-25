@@ -16,8 +16,8 @@
 
 package org.ujorm.spring;
 
-import org.ujorm.UjoPropertyList;
-import org.ujorm.core.UjoPropertyListImpl;
+import org.ujorm.extensions.WeakKeyFactory;
+import org.ujorm.extensions.WeakKey;
 
 /**
  * Test implementation of the AbstractAplicationContextAdapter.
@@ -25,12 +25,12 @@ import org.ujorm.core.UjoPropertyListImpl;
  */
 public class AplicationContextAdapter extends AbstractAplicationContextAdapter {
 
-    private static final SpringKeyFactory f = new SpringKeyFactory(AplicationContextAdapter.class);
+    private static final WeakKeyFactory f = new WeakKeyFactory(AplicationContextAdapter.class);
     
     /** Key with a name: summySpringController */
-    public static final SpringKey<DummySpringController> springController = f.newKey();
+    public static final WeakKey<DummySpringController> springController = f.newKey();
     /** Key with a name: springService */
-    public static final SpringKey<DummySpringService> dummySpringService = f.newKey("springService");
+    public static final WeakKey<DummySpringService> dummySpringService = f.newKey("springService");
 
     // Lock factory
     static { f.lock(); }
