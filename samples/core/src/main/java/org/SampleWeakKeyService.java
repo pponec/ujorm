@@ -102,5 +102,10 @@ public class SampleWeakKeyService {
         assert BORN.getName().equals("born");
         assert WIFE.getName().equals("wife");
         assert CASH.getName().equals("cash");
+
+        assert NAME.isTypeOf(String.class);
+        assert BORN.isTypeOf(Date.class);
+        assert WIFE.isTypeOf(Boolean.class);
+        assert CASH.isTypeOf(BigDecimal.class);
     }
 }
