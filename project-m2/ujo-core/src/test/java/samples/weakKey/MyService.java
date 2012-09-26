@@ -15,6 +15,7 @@
  */
 package samples.weakKey;
 
+import org.ujorm.core.WeakKeyFactory;
 import java.math.BigDecimal;
 import org.ujorm.extensions.*;
 import org.ujorm.WeakKey;

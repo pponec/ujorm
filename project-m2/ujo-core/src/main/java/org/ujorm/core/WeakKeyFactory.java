@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-package org.ujorm.extensions;
+package org.ujorm.core;
 
 import org.ujorm.WeakKey;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
-import org.ujorm.core.KeyFactory;
+import org.ujorm.extensions.WeakKeyImpl;
 
 /**
  * Spring Key Factory

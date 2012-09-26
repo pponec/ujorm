@@ -21,6 +21,7 @@ import java.util.Map;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.WeakKeyFactory;
 
 /**
  * The WeakKeyImpl is a default WeakKeyKey implementation without the generic parameter for the domain type.
@@ -39,13 +40,19 @@ public class WeakKeyImpl<VALUE>
         extends Property<Ujo, VALUE>
         implements WeakKey<VALUE> {
 
-    /** Default constructor */
+    /** Constructor for an internal use only. 
+     * Use the factory {@link WeakKeyFactory} to create a new instance.
+     * @see WeakKeyFactory
+     */
     WeakKeyImpl(int index) {
         this(null, null, index);
     }
 
-    /** Constructor with property name */
-    WeakKeyImpl(String name, VALUE defaultValue, int index) {
+    /** Constructor for an internal use only. 
+     * Use the factory {@link WeakKeyFactory} to create a new instance.
+     * @see WeakKeyFactory
+     */
+    public WeakKeyImpl(String name, VALUE defaultValue, int index) {
         super(index);
         init(name, null, null, defaultValue, UNDEFINED_INDEX, false);
     }
