@@ -39,14 +39,14 @@ public class WeakKeyImpl<VALUE>
         implements WeakKey<VALUE> {
 
     /** Default constructor */
-    WeakKeyImpl() {
-        super(UNDEFINED_INDEX);
+    WeakKeyImpl(int index) {
+        this(null, null, index);
     }
 
     /** Constructor with property name */
-    WeakKeyImpl(String name) {
-        super(UNDEFINED_INDEX);
-        init(name, null, null, null, UNDEFINED_INDEX, false);
+    WeakKeyImpl(String name, VALUE defaultValue, int index) {
+        super(index);
+        init(name, null, null, defaultValue, UNDEFINED_INDEX, false);
     }
 
     /**

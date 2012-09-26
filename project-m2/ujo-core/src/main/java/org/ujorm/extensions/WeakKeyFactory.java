@@ -26,14 +26,31 @@ import org.ujorm.core.KeyFactory;
  */
 public class WeakKeyFactory extends KeyFactory<Ujo> {
 
-    public WeakKeyFactory(Class<? extends Ujo> type) {
-        super(type);
+    /** Default constructor with a CamelCase feature building.
+     * @param holder The class with a public static Keys.
+     */
+    public WeakKeyFactory(Class<?> holder) {
+        this(holder, true);
+    }
+
+    /** Default constructor with a CamelCase feature building.
+     * @param holder The class with a public static Keys.
+     * @param propertyCamelCase Property names are created along fild name by a camel case converter.
+     */
+    public WeakKeyFactory(Class<?> holder, boolean propertyCamelCase) {
+        super(holder, propertyCamelCase, null);
     }
 
     /** Create new Key */
     @Override
     public final <T> WeakKey<T> newKey() {
         return createKey(null, null);
+    }
+    
+    /** Create new Key with a default value */
+    @Override
+    public final <T> WeakKey<T> newKeyDefault(T defaultValue) {
+        return createKey(null, defaultValue);
     }
 
     /** Create new Key */
@@ -42,10 +59,10 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
         return createKey(name, null);
     }
 
-    /** Create new Key */
+    /** For internal use only: Create a new Key */
     @Override
     protected <T> WeakKey<T> createKey(String name, T defaultValue) {
-        final WeakKeyImpl<T> p = new WeakKeyImpl<T>(name);
+        final WeakKeyImpl<T> p = new WeakKeyImpl<T>(name, defaultValue, getTmpStore().size());
         addKey(p);
         return p;
     }
