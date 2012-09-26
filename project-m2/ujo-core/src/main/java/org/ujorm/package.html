@@ -186,11 +186,14 @@ document.body.appendChild(oLink);
         <span class="keyword-directive">assert</span> BORN.getName().equals(<span class="character">&quot;</span><span class="character">born</span><span class="character">&quot;</span>);
         <span class="keyword-directive">assert</span> WIFE.getName().equals(<span class="character">&quot;</span><span class="character">wife</span><span class="character">&quot;</span>);
         <span class="keyword-directive">assert</span> CASH.getName().equals(<span class="character">&quot;</span><span class="character">cash</span><span class="character">&quot;</span>);
+
+        <span class="keyword-directive">assert</span> NAME.isTypeOf(String.<span class="keyword-directive">class</span>);
+        <span class="keyword-directive">assert</span> BORN.isTypeOf(Date.<span class="keyword-directive">class</span>);
+        <span class="keyword-directive">assert</span> WIFE.isTypeOf(Boolean.<span class="keyword-directive">class</span>);
+        <span class="keyword-directive">assert</span> CASH.isTypeOf(BigDecimal.<span class="keyword-directive">class</span>);
     }        
 }
-         </pre>
-        
-        
+        </pre>
         
         <br>
         <h2 id="how">My first Ujo object</h2>
