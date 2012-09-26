@@ -208,6 +208,13 @@ public class SampleCORE {
         System.out.println(employees.size());
     }
 
+    /** Samples of WeakKey using are located in a separated class. */
+    public void howToUseWeakKey() {
+        new SampleWeakKeyService().testWeakKeys2List();
+        new SampleWeakKeyService().testWeakKeys2Map();
+        new SampleWeakKeyService().testWeakKeyAttributes();
+    }
+
     // ======= Helper methods =======
 
     /** Find an Employee somewhere */
