@@ -17,11 +17,12 @@ package samples.weakKey;
 
 import org.ujorm.core.WeakKeyFactory;
 import java.math.BigDecimal;
-import org.ujorm.extensions.*;
 import org.ujorm.WeakKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * WeakKey sample Service
@@ -36,10 +37,11 @@ public class MyService {
     public static final WeakKey<BigDecimal> CASH = f.newKeyDefault(BigDecimal.ZERO);
 
     static {
-        f.lock();
+        f.lock(); // Initialize all keys and lock them.
     }
     
-    public void testWeakKeys() {
+    /** Sample how to use weak keys with a List. */
+    public void testWeakKeys2List() {
         List<Object> list = new ArrayList<Object>();
 
         assert NAME.of(list) == null;
@@ -47,7 +49,7 @@ public class MyService {
         assert WIFE.of(list) == Boolean.TRUE;
         assert CASH.of(list) == BigDecimal.ZERO;
 
-        final String name = "Eva";
+        final String name = "Lucy";
         final Boolean wife = true;
         final Date today = new Date();
         final BigDecimal cash = BigDecimal.TEN;
@@ -63,19 +65,41 @@ public class MyService {
         assert CASH.of(list).equals(cash);
     }
         
+    /** Similar sample how to use weak keys with a Map. */
+    public void testWeakKeys2Map() {
+        Map<String,Object> map = new HashMap<String, Object>();
+
+        assert NAME.of(map) == null;
+        assert BORN.of(map) == null;
+        assert WIFE.of(map) == Boolean.TRUE;
+        assert CASH.of(map) == BigDecimal.ZERO;
+
+        final String name = "Lucy";
+        final Boolean wife = true;
+        final Date today = new Date();
+        final BigDecimal cash = BigDecimal.TEN;
+
+        NAME.setValue(map, name);
+        BORN.setValue(map, today);
+        WIFE.setValue(map, wife);
+        CASH.setValue(map, cash);
+
+        assert NAME.of(map).equals(name);
+        assert BORN.of(map).equals(today);
+        assert WIFE.of(map).equals(wife);
+        assert CASH.of(map).equals(cash);
+    }
+        
     /** Test key attributes */
     public void testWeakKeyAttributes() {
-
         assert NAME.getIndex()==0;
         assert BORN.getIndex()==1;
         assert WIFE.getIndex()==2;
         assert CASH.getIndex()==3;
-        //        
+      
         assert NAME.getName().equals("name");
         assert BORN.getName().equals("born");
         assert WIFE.getName().equals("wife");
         assert CASH.getName().equals("cash");
-    }    
-
-    
+    }        
 }

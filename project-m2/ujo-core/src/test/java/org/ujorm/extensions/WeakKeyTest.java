@@ -126,7 +126,7 @@ public class WeakKeyTest extends TestCase {
         assertEquals(null, BORN.of(list));
         assertEquals(ZERO, CASH.of(list));
                 
-        String name = "Eva";
+        String name = "Lucy";
         Boolean wife = true;
         Date today = new Date();
         BigDecimal cash = TEN;
@@ -160,7 +160,7 @@ public class WeakKeyTest extends TestCase {
         assertEquals(null, BORN.of(list));
         assertEquals(ZERO, CASH.of(list));
                 
-        String name = "Eva";
+        String name = "Lucy";
         Boolean wife = true;
         Date today = new Date();
         BigDecimal cash = TEN;
@@ -201,7 +201,8 @@ public class WeakKeyTest extends TestCase {
     /** Test the sample class MyService */
     public void testMyService() {
         System.out.println("testMyService");
-        new MyService().testWeakKeys();
+        new MyService().testWeakKeys2List();
+        new MyService().testWeakKeys2Map();
         new MyService().testWeakKeyAttributes();
     }
     

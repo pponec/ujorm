@@ -1,8 +1,9 @@
 The Ujorm release notes
 *******************************
 
-release 1.30.RC2 (2012-09-06)
+release 1.30.RC2 (2012-10-06)
 + a lazy loading implementation of the ORM  is moved from domain objects to a new OrmProperty class
++ the new WeakKey interface without the generic domain type parameter is finished. It the simplified Key
 
 release 1.30.RC1 (2012-08-28)
 + maven project GroupId is renamed to the Ujorm
