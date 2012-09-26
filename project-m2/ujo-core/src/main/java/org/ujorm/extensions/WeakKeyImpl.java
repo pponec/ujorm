@@ -22,7 +22,16 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 
 /**
- * A weak Key implementation for a common use.
+ * The WeakKeyImpl is a default WeakKeyKey implementation without the generic parameter for the domain type.
+ * The default implementation does not have the full support of several methods:
+ * <ul>
+ *   <li>{@link Key#getDomainType()} - method return the result {@code Ujo.class} always </li>
+ *   <li>{@link Key#add(org.ujorm.Key)} - method is not supported by the default implementation</li>
+ *   <li>{@link Key#descending() } - result is not type of WeakKey</li>
+ * </ul>
+ * , and some more methods are not fully type-safe.
+ * On the other side the interface supports some operations with the {@link List} and {@link Map} interfaces.
+ * To create new keys use an instance of the factory class {@link WeakKeyFactory}.
  * @author Pavel Ponec
  */
 public class WeakKeyImpl<VALUE>
