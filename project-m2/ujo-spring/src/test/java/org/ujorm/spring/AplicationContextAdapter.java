@@ -16,8 +16,8 @@
 
 package org.ujorm.spring;
 
-import org.ujorm.extensions.WeakKeyFactory;
-import org.ujorm.extensions.WeakKey;
+import org.ujorm.core.WeakKeyFactory;
+import org.ujorm.WeakKey;
 
 /**
  * Test implementation of the AbstractAplicationContextAdapter.
