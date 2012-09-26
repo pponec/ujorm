@@ -16,6 +16,7 @@
 
 package org.ujorm.extensions;
 
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 
@@ -49,5 +50,9 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
         return p;
     }
 
-    
+    /** No event on Create */
+    @Override
+    protected void onCreate(KeyList<Ujo> list, InnerDataStore<Ujo> innerData) {
+        // none
+    }    
 }
