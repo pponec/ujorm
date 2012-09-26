@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
-import static org.ujorm.extensions.WeakKeyCollectionSample.*;
 import static java.lang.Boolean.*;
 
 /**
@@ -30,6 +29,17 @@ import static java.lang.Boolean.*;
  */
 public class WeakKeyTest extends TestCase {
     
+    private static final WeakKeyFactory f = new WeakKeyFactory(WeakKeyTest.class); 
+    
+    public static final WeakKey<String> NAME = f.newKey();
+    public static final WeakKey<Date>   BORN = f.newKey();
+    public static final WeakKey<Double> CASH = f.newKeyDefault(0.0);
+    public static final WeakKey<Boolean> WIFE = f.newKeyDefault(true);
+    
+    static {
+        f.lock();
+    }
+
     public WeakKeyTest(String testName) {
         super(testName);
     }
