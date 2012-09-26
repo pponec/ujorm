@@ -15,6 +15,9 @@
  */
 package org.ujorm.extensions;
 
+import samples.weakKey.MyService;
+import java.math.BigDecimal;
+import org.ujorm.WeakKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -22,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
 import static java.lang.Boolean.*;
+import static java.math.BigDecimal.*;
 
 /**
  *
@@ -33,8 +37,8 @@ public class WeakKeyTest extends TestCase {
     
     public static final WeakKey<String> NAME = f.newKey();
     public static final WeakKey<Date>   BORN = f.newKey();
-    public static final WeakKey<Double> CASH = f.newKeyDefault(0.0);
-    public static final WeakKey<Boolean> WIFE = f.newKeyDefault(true);
+    public static final WeakKey<Boolean> WIFE = f.newKeyDefault(TRUE);
+    public static final WeakKey<BigDecimal> CASH = f.newKeyDefault(ZERO);
     
     static {
         f.lock();
@@ -57,20 +61,24 @@ public class WeakKeyTest extends TestCase {
     /**
      * Test of setValue method, of class WeakKey.
      */
-    public void testDefaultValues() {
-        System.out.println("testDefaultValues");
+    public void testKeyAtrributes() {
+        System.out.println("testKeyAtrributes");
         
         assertEquals(0, NAME.getIndex());
         assertEquals(1, BORN.getIndex());
-        assertEquals(2, CASH.getIndex());        
-        assertEquals(3, WIFE.getIndex());
+        assertEquals(2, WIFE.getIndex());
+        assertEquals(3, CASH.getIndex());
 
-        assertEquals(null, NAME.getDefault());
-        assertEquals(null, BORN.getDefault());
-        assertEquals(0.00, CASH.getDefault());        
-        assertEquals(TRUE, WIFE.getDefault());        
+        assertEquals("name", NAME.getName());
+        assertEquals("born", BORN.getName());
+        assertEquals("wife", WIFE.getName());
+        assertEquals("cash", CASH.getName());        
+        
+        assertSame(null, NAME.getDefault());
+        assertSame(null, BORN.getDefault());
+        assertSame(TRUE, WIFE.getDefault());        
+        assertSame(ZERO, CASH.getDefault());        
     }
-    
 
     /**
      * Test of setValue method, of class WeakKey.
@@ -79,15 +87,15 @@ public class WeakKeyTest extends TestCase {
         System.out.println("testSetValue2Map_1");
         Map<String, Object> map = new HashMap<String, Object>();
         
-        assertEquals(null, NAME.of(map));
-        assertEquals(null, BORN.of(map));
-        assertEquals(TRUE, WIFE.of(map));
-        assertEquals(0.00, CASH.of(map));
+        assertSame(null, NAME.of(map));
+        assertSame(null, BORN.of(map));
+        assertSame(TRUE, WIFE.of(map));
+        assertSame(ZERO, CASH.of(map));
         
         String name = "Pavel";
+        Boolean wife = false;
         Date today = new Date();
-        Boolean wife = true;
-        double cash = 10.0;
+        BigDecimal cash = TEN;
         
         NAME.setValue(map, name);
         WIFE.setValue(map, wife);
@@ -102,29 +110,29 @@ public class WeakKeyTest extends TestCase {
         // -- Defalut test:
 
         CASH.setValue(map, null);
-        assertEquals(0.0, CASH.of(map));
+        assertEquals(ZERO, CASH.of(map));
     }
     
     /**
      * Test of setValue method, of class WeakKey.
      */
     public void testSetValue2List_1() {
-        System.out.println("testSetValue2List_2");
+        System.out.println("testSetValue2List_1");
         List<Object> list = new ArrayList<Object>();
         
         assertEquals(null, NAME.of(list));
-        assertEquals(null, BORN.of(list));
         assertEquals(TRUE, WIFE.of(list));
-        assertEquals(0.00, CASH.of(list));
+        assertEquals(null, BORN.of(list));
+        assertEquals(ZERO, CASH.of(list));
                 
         String name = "Eva";
-        Date today = new Date();
         Boolean wife = true;
-        double cash = 10.0;
+        Date today = new Date();
+        BigDecimal cash = TEN;
         
         NAME.setValue(list, name);
-        BORN.setValue(list, today);
         WIFE.setValue(list, wife);
+        BORN.setValue(list, today);
         CASH.setValue(list, cash);
         
         assertEquals(name, NAME.of(list));
@@ -135,7 +143,7 @@ public class WeakKeyTest extends TestCase {
         // -- Defalut test:
 
         CASH.setValue(list, null);
-        assertEquals(0.0, CASH.of(list));
+        assertEquals(ZERO, CASH.of(list));
     }
     
     
@@ -147,14 +155,14 @@ public class WeakKeyTest extends TestCase {
         List<Object> list = new ArrayList<Object>();
         
         assertEquals(null, NAME.of(list));
-        assertEquals(null, BORN.of(list));
         assertEquals(TRUE, WIFE.of(list));
-        assertEquals(0.00, CASH.of(list));
+        assertEquals(null, BORN.of(list));
+        assertEquals(ZERO, CASH.of(list));
                 
         String name = "Eva";
-        Date today = new Date();
         Boolean wife = true;
-        double cash = 10.0;
+        Date today = new Date();
+        BigDecimal cash = TEN;
         
         BORN.setValue(list, today);
         WIFE.setValue(list, wife);
@@ -169,7 +177,7 @@ public class WeakKeyTest extends TestCase {
         // -- Defalut test:
 
         CASH.setValue(list, null);
-        assertEquals(0.0, CASH.of(list));
+        assertEquals(ZERO, CASH.of(list));
     }
     
     /**
@@ -177,16 +185,23 @@ public class WeakKeyTest extends TestCase {
      */
     public void testSetValue2List_3() {
         System.out.println("testSetValue2List_3");
-        List<Double> list = new ArrayList<Double>();        
-        assertEquals(0.00, CASH.of(list));                
-        double cash = 10.0;        
+        List<BigDecimal> list = new ArrayList<BigDecimal>();        
+        assertEquals(ZERO, CASH.of(list));                
+        BigDecimal cash = TEN;        
         CASH.setValue(list, cash);
         assertEquals(cash, CASH.of(list));
         
         // -- Defalut test:
 
         CASH.setValue(list, null);
-        assertEquals(0.0, CASH.of(list));
+        assertEquals(ZERO, CASH.of(list));
+    }
+    
+    /** Test the sample class MyService */
+    public void testMyService() {
+        System.out.println("testMyService");
+        new MyService().testWeakKeys();
+        new MyService().testWeakKeyAttributes();
     }
     
 
