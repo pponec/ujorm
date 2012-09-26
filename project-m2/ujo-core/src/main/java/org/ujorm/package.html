@@ -20,7 +20,8 @@ document.body.appendChild(oLink);
         <h2 id="UJO"><img style="width: 32px; height: 32px; margin-right: 10px;" alt="UJO Icons" src="doc-files/ujo32.png">Content</h2>
           <ul>
               <li><a href="#UJO2">What is UJO?</a></li>
-              <li><a href="#how">How to write the first UJO object?</a></li>
+              <li><a href="#weakKey">Simplified Key</a></li>
+              <li><a href="#how">My first Ujo object</a></li>
               <li><a href="#defaultvalues">Default values</a></li>
               <li><a href="#ujoext">Interface UjoExt</a></li>
               <li><a href="#javabean">How to create the JavaBean?</a></li>
@@ -35,8 +36,7 @@ document.body.appendChild(oLink);
               <li><a href="#license">License</a></li>
               <li><a href="#faq">FAQ</a></li>
               <li><a href="#changes">Release notes</a></li>
-          </ul>        
-        
+          </ul>                
         
         <h2 id="UJO2">What is UJO ?</h2>
         <a href="doc-files/UjoUmlFull.png" target="_top"><img src="doc-files/UjoUml.png" width="284" height="320" alt="UjoUml.png" style="margin: 0 0 10px 10px; border: 0; float: right;" ></a>
@@ -114,7 +114,86 @@ document.body.appendChild(oLink);
 	<a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a>)
         
         <br>
-        <h2 id="how">How ?</h2>
+        <h2 id="weakKey">Simplified Key</h2>
+        The 
+        <a href="http://ujorm.org/javadoc/org/ujorm/WeakKey.html">WeakKey</a> is a simplified 
+        <a href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a> interface without the generic domain type parameter for a common use.
+         The WeakKey need not to use <a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo objects</a>, 
+         because it works with objects of type <code>Map</code> and <code>List</code>.        
+         <p/>
+         Note, the default implementation does not have the full support of several methods:
+         <ul>
+           <li><a href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDomainType()">Key.getDomainType()</a> - method return the result {@code Ujo.class} always </li>
+           <li><a href="http://ujorm.org/javadoc/org/ujorm/Key.html#add(org.ujorm.Key)">Key.add(org.ujorm.Key)</a> - method is not supported by the default implementation</li>
+           <li><a href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending()">Key.descending()</a> - result is not type of WeakKey</li>
+         </ul>
+         , and some more methods are not fully type-safe.
+         To create new keys use an instance of the factory class WeakKeyFactory. 
+         
+         <h3>The sample of use</h3>
+         <pre class="pre">
+<span class="keyword-directive">public</span> <span class="keyword-directive">class</span> MyService {
+    <span class="keyword-directive">private</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> WeakKeyFactory f = <span class="keyword-directive">new</span> WeakKeyFactory(MyService.<span class="keyword-directive">class</span>);
+    
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> WeakKey&lt;String&gt;     NAME = f.newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> WeakKey&lt;Date&gt;       BORN = f.newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> WeakKey&lt;Boolean&gt;    WIFE = f.newKeyDefault(Boolean.TRUE);
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> WeakKey&lt;BigDecimal&gt; CASH = f.newKeyDefault(BigDecimal.ZERO);
+
+    <span class="keyword-directive">static</span> {
+        f.lock(); <span class="comment">// Initialize all keys and lock them</span>
+    }
+    
+    <span class="comment">/**</span> <span class="comment">Sample</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">weak</span> <span class="comment">keys</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">List</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> testWeakKeys2List() {
+        List&lt;Object&gt; list = <span class="keyword-directive">new</span> ArrayList&lt;Object&gt;();
+
+        <span class="keyword-directive">assert</span> NAME.of(list) == <span class="keyword-directive">null</span>;
+        <span class="keyword-directive">assert</span> BORN.of(list) == <span class="keyword-directive">null</span>;
+        <span class="keyword-directive">assert</span> WIFE.of(list) == Boolean.TRUE;
+        <span class="keyword-directive">assert</span> CASH.of(list) == BigDecimal.ZERO;
+
+        <span class="keyword-directive">final</span> String name = <span class="character">&quot;</span><span class="character">Lucy</span><span class="character">&quot;</span>;
+        <span class="keyword-directive">final</span> Boolean wife = <span class="keyword-directive">true</span>;
+        <span class="keyword-directive">final</span> Date today = <span class="keyword-directive">new</span> Date();
+        <span class="keyword-directive">final</span> BigDecimal cash = BigDecimal.TEN;
+
+        NAME.setValue(list, name);
+        BORN.setValue(list, today);
+        WIFE.setValue(list, wife);
+        CASH.setValue(list, cash);
+
+        <span class="keyword-directive">assert</span> NAME.of(list).equals(name);
+        <span class="keyword-directive">assert</span> BORN.of(list).equals(today);
+        <span class="keyword-directive">assert</span> WIFE.of(list).equals(wife);
+        <span class="keyword-directive">assert</span> CASH.of(list).equals(cash);
+    }
+        
+    <span class="comment">/**</span> <span class="comment">Similar</span> <span class="comment">sample</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">weak</span> <span class="comment">keys</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">Map</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> testWeakKeys2Map() {
+        Map&lt;String,Object&gt; map = <span class="keyword-directive">new</span> HashMap&lt;String, Object&gt;();
+        <span class="comment">// and the same code works for the map instance too ...</span>
+    }
+        
+    <span class="comment">/**</span> <span class="comment">Test</span> <span class="comment">key</span> <span class="comment">attributes</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> testWeakKeyAttributes() {
+        <span class="keyword-directive">assert</span> NAME.getIndex()==0;
+        <span class="keyword-directive">assert</span> BORN.getIndex()==1;
+        <span class="keyword-directive">assert</span> WIFE.getIndex()==2;
+        <span class="keyword-directive">assert</span> CASH.getIndex()==3;
+      
+        <span class="keyword-directive">assert</span> NAME.getName().equals(<span class="character">&quot;</span><span class="character">name</span><span class="character">&quot;</span>);
+        <span class="keyword-directive">assert</span> BORN.getName().equals(<span class="character">&quot;</span><span class="character">born</span><span class="character">&quot;</span>);
+        <span class="keyword-directive">assert</span> WIFE.getName().equals(<span class="character">&quot;</span><span class="character">wife</span><span class="character">&quot;</span>);
+        <span class="keyword-directive">assert</span> CASH.getName().equals(<span class="character">&quot;</span><span class="character">cash</span><span class="character">&quot;</span>);
+    }        
+}
+         </pre>
+        
+        
+        
+        <br>
+        <h2 id="how">My first Ujo object</h2>
         How to write the first UJO object? The fastest way is to use some abstract UJO implementation from this project and via few code lines we can make quickly 
         and easily our own implementation, too. Here is an example - the implementation of the <i>Person</i> class by an abstract <a href="#Changes">AbstractUjo</a> class.
         
