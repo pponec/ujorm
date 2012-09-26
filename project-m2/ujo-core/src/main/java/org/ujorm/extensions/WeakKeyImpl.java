@@ -15,6 +15,7 @@
  */
 package org.ujorm.extensions;
 
+import org.ujorm.WeakKey;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.CompositeKey;

@@ -16,6 +16,7 @@
 
 package org.ujorm.extensions;
 
+import org.ujorm.WeakKey;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
