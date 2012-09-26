@@ -102,9 +102,9 @@ public class MyService {
         assert WIFE.getName().equals("wife");
         assert CASH.getName().equals("cash");
 
-        assert NAME.getType().equals(String.class);
-        assert BORN.getType().equals(Date.class);
-        assert WIFE.getType().equals(Boolean.class);
-        assert CASH.getType().equals(BigDecimal.class);
+        assert NAME.isTypeOf(String.class);
+        assert BORN.isTypeOf(Date.class);
+        assert WIFE.isTypeOf(Boolean.class);
+        assert CASH.isTypeOf(BigDecimal.class);
     }        
 }
