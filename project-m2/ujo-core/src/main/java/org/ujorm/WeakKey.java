@@ -26,6 +26,7 @@ import java.util.Map;
  *   <li>{@link Key#getDomainType()} - method return the result {@code Ujo.class} always </li>
  *   <li>{@link Key#add(org.ujorm.Key)} - method is not supported by the default implementation</li>
  *   <li>{@link Key#descending() } - result is not type of WeakKey</li>
+ *   <li>{@link org.ujorm.core.KeyRing} serializaton is not supported</li>
  * </ul>
  * , and some more methods are not fully type-safe.
  * On the other side the interface supports some operations with the {@link List} and {@link Map} interfaces.
@@ -69,6 +70,15 @@ import java.util.Map;
  *     }
  * } 
  * </pre>
+ * <h3>Where to use the WeakKey?</h3>
+ * <ul>
+ *     <li>the WeakKey can be useful on support any Map with a String key for better type-safe features</li>
+ *     <li>a Map implementation can be simply replaced by the List if you like</li>
+ *     <li>support to building URL parameters</li>
+ *     <li>Spring module provides a special class <code>AbstractAplicationContextAdapter</code> to get Spring services by the WeakKey, see <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-spring/src/test/java/org/ujorm/spring/AplicationContextAdapter.java?view=markup">the example</a></li>
+ *     <li>understanding the WeakKey serves as a great introduction to the Ujo architecture.</li>
+ * </ul>
+ * 
  * @author Pavel Ponec
  */
 public interface WeakKey<VALUE> extends Key<Ujo, VALUE> {

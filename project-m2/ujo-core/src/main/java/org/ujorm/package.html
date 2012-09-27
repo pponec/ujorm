@@ -40,15 +40,16 @@ document.body.appendChild(oLink);
         
         <h2 id="UJO2">What is UJO ?</h2>
         <a href="doc-files/UjoUmlFull.png" target="_top"><img src="doc-files/UjoUml.png" width="284" height="320" alt="UjoUml.png" style="margin: 0 0 10px 10px; border: 0; float: right;" ></a>
-        <span class="appl">Ujorm</span>  
-        provides objects with a different architecture from JavaBeans, 
-        where each property has its own static object with a generic type methods. 
-        The original idea was a toy with generic data types of Java 5.0 however over time it appears,
-        that the architecture has some exciting <strong>features</strong>:
+        
+        The <span class="appl">Ujorm core</span> (original name was <span class="appl">UJO Framework</span>) 
+        is an open source Java small library which providing non-traditional objects based on the key‑value architecture 
+        to open up new exciting opportunities for writing efficient code. 
+        The original idea was a toy with generic data types of Java 5.0 however over 
+        time it appears, that the architecture has many interesting <strong>features</strong>:
         <ul>
         <li>an easy object introspection without a heavy PropertyDescriptor implementation</li>
         <li>value type safe solution</li>
-        <li>a transfer of the UJO object keys (not values) by a collection</li>
+        <li>a transfer of the UJO object Keys (original clas same was Property) by a collection</li>
         <li>the core of the building has two interfaces for an easy implementation</li>
         <li>the <a href="orm/package-summary.html#ORM">object-relation mapping</a> (ORM) support</li>
         </ul>
@@ -126,6 +127,7 @@ document.body.appendChild(oLink);
            <li><a href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDomainType()">Key.getDomainType()</a> - method return the result {@code Ujo.class} always </li>
            <li><a href="http://ujorm.org/javadoc/org/ujorm/Key.html#add(org.ujorm.Key)">Key.add(org.ujorm.Key)</a> - method is not supported by the default implementation</li>
            <li><a href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending()">Key.descending()</a> - result is not type of WeakKey</li>
+           <li><a href="http://ujorm.org/javadoc/org/ujorm/core/KeyRing.html">KeyRing</a> serialization is not supported</li>
          </ul>
          , and some more methods are not fully type-safe.
          To create new keys use an instance of the factory class WeakKeyFactory. 
@@ -195,9 +197,18 @@ document.body.appendChild(oLink);
 }
         </pre>
         
-        <br>
+        <h3>Where to use the WeakKey?</h3>
+        <ul>
+            <li>the WeakKey can be useful on support any Map with a String key for better type-safe features</li>
+            <li>a Map implementation can be simply replaced by the List if you like</li>
+            <li>support to building URL parameters</li>
+            <li>Spring module provides a special class <code>AbstractAplicationContextAdapter</code> to get Spring services by the WeakKey, see <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-spring/src/test/java/org/ujorm/spring/AplicationContextAdapter.java?view=markup">the example</a></li>
+            <li>understanding the WeakKey serves as a great introduction to the Ujo architecture.</li>
+        </ul>
+        
         <h2 id="how">My first Ujo object</h2>
-        How to write the first UJO object? The fastest way is to use some abstract UJO implementation from this project and via few code lines we can make quickly 
+        Ujo interface is an envelope for any data source. Ujo object have got your own related Keys always.
+        So, how to write the first Ujo object? The fastest way is to use some abstract UJO implementation from this project and via few code lines we can make quickly 
         and easily our own implementation, too. Here is an example - the implementation of the <i>Person</i> class by an abstract <a href="#Changes">AbstractUjo</a> class.
         
         <h3>The class code</h3>
