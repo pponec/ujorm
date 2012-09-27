@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-gxt-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.30.RC2-SNAPSHOT</version>
+    <version>1.30.RC2</version>
     <name>ujo-gxt-core</name>
 
     <description>Support for GWT - client UJO objects.</description>
@@ -29,7 +29,7 @@
     </licenses>
 
     <properties>
-        <ujorm.version>1.30.RC2-SNAPSHOT</ujorm.version>
+        <ujorm.version>1.30.RC2</ujorm.version>
         <gwt.version>1.7.0</gwt.version>
         <gxt.version>2.1.1</gxt.version>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-orm</artifactId>
-            <version>1.30.RC2-SNAPSHOT</version>
+            <version>1.30.RC2</version>
        <!-- <scope>compile</scope> -->
         </dependency>
 
