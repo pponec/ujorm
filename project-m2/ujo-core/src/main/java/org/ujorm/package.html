@@ -1,5 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="en"><head>
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+    <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>package.html - UJO (en)</title>
         
         <link rel="stylesheet" type="text/css" href="doc-files/style.css" title="style">
@@ -59,7 +60,7 @@ document.body.appendChild(oLink);
         in addition. So what are the main <strong>advantages</strong>?
 
         <ul>
-        <li>the possibility to copy all or selected attributes from source to new object by a one statement (<a href="extensions/AbstractUjo.html#copyTo(org.ujorm.Ujo, org.ujorm.Key...)">method</a>)</li>
+        <li>the possibility to copy all or selected attributes from source to new object by a one statement (<a href="extensions/AbstractUjo.html#copyTo(org.ujorm.Ujo,org.ujorm.Key...)">method</a>)</li>
         <li>clone the object by a selected depth</li>
         <li>use a generic comparator</li>
         <li>find a property by its text name</li>
@@ -121,7 +122,7 @@ document.body.appendChild(oLink);
         <a href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a> interface without the generic domain type parameter for a common use.
          The WeakKey need not to use <a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo objects</a>, 
          because it works with objects of type <code>Map</code> and <code>List</code>.        
-         <p/>
+         <p>
          Note, the default implementation does not have the full support of several methods:
          <ul>
            <li><a href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDomainType()">Key.getDomainType()</a> - method return the result {@code Ujo.class} always </li>
@@ -216,7 +217,7 @@ document.body.appendChild(oLink);
         
 <pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> AbstractUjo {
-  <span class="java-keywords">private static final</span> KeyFactory<Person> f = <span class="java-layer-method">newFactory</span>(<span class="highlight">Person</span>.<span class="java-keywords">class</span>);
+  <span class="java-keywords">private static final</span> KeyFactory&lt;Person&gt; f = <span class="java-layer-method">newFactory</span>(<span class="highlight">Person</span>.<span class="java-keywords">class</span>);
 
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = f.<span class="java-layer-method">newKey</span>();
@@ -283,7 +284,7 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
             <li>to complement the generic data types to the right side of the expression according to the left side, or</li>
             <li>to switch off the <strong>-Xlint:unchecked</strong> parameter. The switched off parameter is implied to the IDE NetBeans setting.</li>
             <li>the class can be equipped an annotation <i>@SuppressWarnings("unchecked")</i>
-                <br />I've chosen this possibility myself, the code is getting clearer and in the case 
+                <br>I've chosen this possibility myself, the code is getting clearer and in the case 
                 of collision in the same line it´s possible to find it out easily.</li>
             <li>since version 0.72 is possible to use a type safe method <strong>newKey(name, type)</strong> pro building a Property object.</li>
         </ul>
@@ -515,10 +516,10 @@ model.<span class="java-layer-method">addRow</span>(<span class="java-keywords">
 <span class="java-block-comment">// Set a value:</span>
 model.<span class="java-layer-method">setValueAt</span>(<span class="java-string-literal">"Prokop"</span>, <span class="java-numeric-literals">0</span>, Person.NAME );<br>
 <span class="java-block-comment">// Get the last row of table:</span>
-Person person = model.<span class="java-layer-method">getRowLast</span>();<br />
+Person person = model.<span class="java-layer-method">getRowLast</span>();<br>
 <span class="java-block-comment">// Sort the model:</span>
 model.<span class="java-layer-method">sort</span>(Person.NAME); <span class="java-block-comment">// or descending:</span>
-model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-layer-method">descending()</span>);<br />
+model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-layer-method">descending()</span>);<br>
 </pre>
     
         <h3>Confrontation with the AbstractTableModel</h3>
@@ -552,7 +553,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         <h2 id="inheritance">Ujo inheritance</h2>
         An inheritance of the UJO clasess are supported along the the next examples:
         <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {
-  <span class="java-keywords">private static final</span> KeyFactory<Person> f = <span class="java-layer-method">newFactory</span>(<span class="highlight">PersonExt</span>.<span class="java-keywords">class</span>);
+  <span class="java-keywords">private static final</span> KeyFactory&lt;Person&gt; f = <span class="java-layer-method">newFactory</span>(<span class="highlight">PersonExt</span>.<span class="java-keywords">class</span>);
 
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Float&gt; WEIGHT = f.<span class="java-layer-method">newKey</span>();
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">PersonExt</span>,Date &gt; BORN   = f.<span class="java-layer-method">newKey</span>();
@@ -579,7 +580,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         The <i>ArrayUjo</i> solution provides the quicker implementation, the JavaBean object is the speediest.<br>
         <br>
         There are the results of a simple mensuration in the following table. 
-        <br />Environment: Windows XP system, Intel DuoCore 1.66 MHz processor, 1GB RAM, JRE 6.0, Ujorm <span style="font-weight: bold">0.80</span>.
+        <br>Environment: Windows XP system, Intel DuoCore 1.66 MHz processor, 1GB RAM, JRE 6.0, Ujorm <span style="font-weight: bold">0.80</span>.
         <br>
         The test description:
         <ul>
@@ -595,8 +596,8 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         <table style="text-align: left;" border="1" cellpadding="2" cellspacing="0">
              <tr valign="top">
                 <th style="text-align: left;">Implementation</th>
-                <th style="text-align: right;">Performance<br /><span style="font-weight: normal;">[sec per 5M loops]</span></th>
-                <th style="text-align: right; width: 100px;">Ratio<br /><span style="font-weight: normal;">[%]</span></th>
+                <th style="text-align: right;">Performance<br><span style="font-weight: normal;">[sec per 5M loops]</span></th>
+                <th style="text-align: right; width: 100px;">Ratio<br><span style="font-weight: normal;">[%]</span></th>
             </tr>
             <tr>
                 <td align="left">ArrayUjo</td>
@@ -644,9 +645,9 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         <table style="text-align: left;" border="1" cellpadding="2" cellspacing="0">
              <tr valign="top">
                 <th style="text-align: left;">Implementation</th>
-                <th style="text-align: right;">Time of serialization<br /><span style="font-weight: normal;"> [sec]</span></th>
-                <th style="text-align: right;">Time of deserialization<br /><span style="font-weight: normal;"> [sec]</span></th>
-                <th style="text-align: right;">Total ratio<br /><span style="font-weight: normal;">[%]</span></th>
+                <th style="text-align: right;">Time of serialization<br><span style="font-weight: normal;"> [sec]</span></th>
+                <th style="text-align: right;">Time of deserialization<br><span style="font-weight: normal;"> [sec]</span></th>
+                <th style="text-align: right;">Total ratio<br><span style="font-weight: normal;">[%]</span></th>
             </tr>
             <tr>
                 <td align="left">ArrayUjo</td>
@@ -680,7 +681,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
             </tr>
         </table>
         
-        <br />Conclusion: The XML serialization implemented in Ujorm is approximately six times faster 
+        <br>Conclusion: The XML serialization implemented in Ujorm is approximately six times faster 
         in comparison with the XMLEncoder persistence implemented in JRE 6.0.
         The UJO speed of serialization is slightly smaller than the speed of the great JAXB framework,
         however all UJO implementations got a the <span style="color: red; font-weight:bold;">shortest time of deserialization</span>.
@@ -723,7 +724,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         This Swing project is powered by the Ujorm. It is published under an open license on a home page <a href="http://jworksheet.ponec.net/">http://jworksheet.ponec.net/</a>.
         The <strong>jWorkSheet</strong> is an application for time tracking different projects.        
 
-        <br />You can study the usage of the UJO object persistence and its collaboration with a graphics component JTable on the source codes.
+        <br>You can study the usage of the UJO object persistence and its collaboration with a graphics component JTable on the source codes.
         The jWorkSheet application characteristics::<br>
         <ul>
             <li>all the persistence is realized by the Ujorm. It is used the saving into <strong>XML</strong> format in project, 
@@ -733,7 +734,7 @@ person.<span class="java-layer-method">writeValueString</span>(<span class="java
         </ul>
         The jWorkSheet project is written in Java 5.0, the development was realized by the <a href="http://www.netbeans.org/">NetBeans IDE</a>.
 
-        <br>&nbsp;</br>
+        <br>&nbsp;<br>
         <a href="http://pekiline.ponec.net/">PekiLine</a> - the desktop application manages your personal (English) vocabulary to learn.
         <ul>
             <li>the application can get an translation word from a <a href="http://www.google.com/dictionary">Google dictionary</a> including a pronunciation in case you are on-line</li>
