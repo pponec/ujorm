@@ -5,7 +5,7 @@
     <artifactId>ujo-gxt-crud</artifactId>
     <packaging>jar</packaging>
     <name>ujo-gxt-crud</name>
-    <version>1.30.RC2-SNAPSHOT</version>
+    <version>1.30.RC2</version>
 
     <description>Support for GWT (Create,Read,Update,Delete) - client UJO objects.
     </description>
@@ -30,7 +30,7 @@
     </licenses>
 
     <properties>
-        <ujorm.version>1.30.RC2-SNAPSHOT</ujorm.version>
+        <ujorm.version>1.30.RC2</ujorm.version>
         <gwt.version>2.2.0</gwt.version>
         <gxt.version>2.2.3</gxt.version>
         <maven.compiler.source>1.6</maven.compiler.source>
