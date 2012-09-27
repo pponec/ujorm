@@ -16,6 +16,9 @@
 
 package org.ujorm.core;
 
+import java.util.HashSet;
+import java.util.Set;
+import org.ujorm.Key;
 import org.ujorm.WeakKey;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -68,9 +71,19 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
         return p;
     }
 
-    /** No event on Create */
+    /** Test of unique key names, no registration to the UjoManagger. 
+     * @param list List of the Keys
+     * @param innerData innerDate for internal use
+     * @throws IllegalStateException Returns the exception in case of duplicity Key name.
+     */
     @Override
-    protected void onCreate(KeyList<Ujo> list, InnerDataStore<Ujo> innerData) {
-        // none
+    protected void onCreate(KeyList<Ujo> list, InnerDataStore<Ujo> innerData) throws IllegalStateException {
+        final Set<String> set = new HashSet<String>(list.size());        
+        for (Key<Ujo,?>  key : list) {
+            boolean unique = set.add(key.getName());
+            if (!unique) {
+                throw new IllegalStateException("The key name is not unique: " + key);
+            }
+        }
     }    
 }
