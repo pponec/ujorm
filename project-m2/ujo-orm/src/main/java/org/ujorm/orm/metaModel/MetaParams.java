@@ -42,7 +42,7 @@ import org.ujorm.orm.utility.OrmTools;
  */
 @Immutable
 final public class MetaParams extends AbstractMetaModel {
-    private static final Class CLASS = MetaParams.class;
+    private static final Class<MetaParams> CLASS = MetaParams.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaParams.class);
     
 

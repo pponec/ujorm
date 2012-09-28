@@ -65,7 +65,7 @@ import org.ujorm.orm.dialect.MySqlDialect;
  */
 @Immutable
 final public class MetaDatabase extends AbstractMetaModel implements Comparable<MetaDatabase> {
-    private static final Class CLASS = MetaDatabase.class;
+    private static final Class<MetaDatabase> CLASS = MetaDatabase.class;
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDatabase.class);

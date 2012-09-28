@@ -35,7 +35,7 @@ import org.ujorm.orm.annot.Column;
  */
 @Immutable
 public class MetaRelation2Many extends AbstractMetaModel {
-    private static final Class CLASS = MetaRelation2Many.class;
+    private static final Class<MetaRelation2Many> CLASS = MetaRelation2Many.class;
 
     /** Property Factory */
     private static final KeyFactory<MetaRelation2Many> fa = KeyFactory.CamelBuilder.get(CLASS);
