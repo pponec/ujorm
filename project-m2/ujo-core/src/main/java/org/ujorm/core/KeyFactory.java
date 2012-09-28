@@ -87,16 +87,12 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(KeyFactory.class);
-
     /** Generate property name using the cammel case. */
     protected static final boolean CAMEL_CASE = true;
-
     /** Requested modifier of property definitions. */
-    public static final int PROPERTY_MODIFIER = Modifier.STATIC|Modifier.PUBLIC|Modifier.FINAL;
-
+    public static final int PROPERTY_MODIFIER = Modifier.STATIC | Modifier.PUBLIC | Modifier.FINAL;
     /** Transient property list */
     transient private InnerDataStore<UJO> tmpStore;
-
     /** Property Store */
     private KeyList<UJO> propertyStore;
 
@@ -119,12 +115,12 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     @SuppressWarnings("unchecked")
     public KeyFactory(Class<?> holder, boolean propertyCamelCase, KeyList<?> abstractSuperProperties) {
         this.tmpStore = new InnerDataStore<UJO>(holder, propertyCamelCase);
-        if (abstractSuperProperties==null) {
+        if (abstractSuperProperties == null) {
             abstractSuperProperties = getSuperKeys();
         } else {
             assert abstractSuperProperties.getType().isAssignableFrom(holder) : "Type parameters is not child of the SuperProperites type: " + abstractSuperProperties.getTypeName();
         }
-        if (abstractSuperProperties!=null) {
+        if (abstractSuperProperties != null) {
             for (Key p : abstractSuperProperties) {
                 tmpStore.addProperty(p);
             }
@@ -141,24 +137,21 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 for (Field field : superClass.getDeclaredFields()) {
                     if (Modifier.isStatic(field.getModifiers())) {
                         try {
-                            if (r1==null) {
+                            if (r1 == null) {
                                 r1 = getFieldValue(KeyList.class, field);
                             }
-                            if (r2==null) {
+                            if (r2 == null) {
                                 r2 = getFieldValue(KeyFactory.class, field);
                             }
                         } catch (Exception e) {
-                            final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please"
-                                    , KeyList.class.getSimpleName()
-                                    , superClass
-                                    , getClass().getSimpleName());
-                           throw new IllegalArgumentException(msg, e);
+                            final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please", KeyList.class.getSimpleName(), superClass, getClass().getSimpleName());
+                            throw new IllegalArgumentException(msg, e);
                         }
                     }
                 }
                 return r1 != null ? r1 //
-                     : r2 != null ? r2.getKeys() //
-                     : null;
+                        : r2 != null ? r2.getKeys() //
+                        : null;
             } else {
                 try {
                     return ((Ujo) superClass.newInstance()).readKeys();
@@ -182,7 +175,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Add an new property for an internal use. */
-    protected boolean addKey(Property<?,?> p) {
+    protected boolean addKey(Property<?, ?> p) {
         checkLock();
         return tmpStore.addProperty(p);
     }
@@ -201,10 +194,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Get KeyRing */
     public KeyList<UJO> getKeys() {
-        if (propertyStore==null) {
+        if (propertyStore == null) {
             // Synchronize the factory:
             synchronized (tmpStore.holder) {
-                if (propertyStore==null) {
+                if (propertyStore == null) {
                     propertyStore = createKeyList();
                     onCreate(propertyStore, tmpStore);
                     tmpStore = (InnerDataStore<UJO>) (Object) InnerDataStore.EMPTY;
@@ -278,40 +271,38 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 return field;
             }
         }
-        final String msg = String.format("Can't get a field for the property index #%d - %s"
-                , p.getIndex()
-                , p.getName());
+        final String msg = String.format("Can't get a field for the property index #%d - %s", p.getIndex(), p.getName());
         throw new IllegalStateException(msg);
     }
 
     /** Create new Key */
-    public <T> Key<UJO,T> newKey() {
+    public <T> Key<UJO, T> newKey() {
         return createKey(null, null);
     }
 
     /** Create new Key */
-    public <T> Key<UJO,T> newKey(String name) {
+    public <T> Key<UJO, T> newKey(String name) {
         return createKey(name, null);
     }
 
     /** Create new Key with a default value */
-    public <T> Key<UJO,T> newKeyDefault(T defaultValue) {
+    public <T> Key<UJO, T> newKeyDefault(T defaultValue) {
         return createKey(null, defaultValue);
     }
 
     /** Create new Key */
-    public <T> Key<UJO,T> newKey(String name, T defaultValue) {
+    public <T> Key<UJO, T> newKey(String name, T defaultValue) {
         return createKey(name, defaultValue);
     }
 
     /** Create new Key for a value type class */
-    public <T> Key<UJO,T> newClassKey(String name, Class<?> defaultClassValue) {
+    public <T> Key<UJO, T> newClassKey(String name, Class<?> defaultClassValue) {
         return createKey(name, (T) defaultClassValue);
     }
 
     /** Add new Key for a value type class, index must be undefied */
-    public <P extends Property<UJO,?>> P add(P key) {
-        if (key.getIndex()>=0) {
+    public <P extends Property<UJO, ?>> P add(P key) {
+        if (key.getIndex() >= 0) {
             throw new IllegalArgumentException("Property index must be undefined");
         }
         addKey(key);
@@ -319,28 +310,28 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Common protected factory method */
-    protected <T> Key<UJO,T> createKey(String name, T defaultValue) {
-        final Property<UJO,T> p = Property.newInstance(name, null, defaultValue, tmpStore.size(), false);
+    protected <T> Key<UJO, T> createKey(String name, T defaultValue) {
+        final Property<UJO, T> p = Property.newInstance(name, null, defaultValue, tmpStore.size(), false);
         addKey(p);
         return p;
     }
 
     /** Create new Key */
-    public final <T> ListProperty<UJO,T> newListKey() {
+    public final <T> ListProperty<UJO, T> newListKey() {
         return newListKey(null);
     }
 
     /** Create new Key */
-    public <T> ListProperty<UJO,T> newListKey(String name) {
+    public <T> ListProperty<UJO, T> newListKey(String name) {
         checkLock();
-        final ListProperty<UJO,T> p = ListProperty.newListProperty(name, null, tmpStore.size(), false);
+        final ListProperty<UJO, T> p = ListProperty.newListProperty(name, null, tmpStore.size(), false);
         tmpStore.addProperty(p);
         return p;
     }
 
     /** Check if the class is locked */
     protected void checkLock() throws IllegalStateException {
-        if (propertyStore!=null) {
+        if (propertyStore != null) {
             throw new IllegalStateException(getClass().getSimpleName() + " is locked");
         }
     }
@@ -356,8 +347,6 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /* ================== STATIC METHOD ================== */
-
-
     /** Regurns array of generic parameters */
     /**
      *
@@ -366,21 +355,17 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      * @return type
      * @throws IllegalArgumentException
      */
-    @PackagePrivate static Class getGenericClass
-            ( final Field field
-            , final boolean typeResult
-            ) throws IllegalArgumentException {
+    @PackagePrivate
+    static Class getGenericClass(final Field field, final boolean typeResult) throws IllegalArgumentException {
         try {
             final ParameterizedType type = (ParameterizedType) field.getGenericType();
             final Type[] types = type.getActualTypeArguments();
             final Type result = types[typeResult
-                    ? types.length-1
-                    : 0
-                    ];
+                    ? types.length - 1
+                    : 0];
             return (result instanceof Class)
                     ? (Class) result
-                    :  Class.class
-                    ;
+                    : Class.class;
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "The generic scan failed for the field '%s'", field.getName());
             return typeResult
@@ -390,25 +375,19 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     // ================== INNER CLASS ==================
-
     /** A temporarry data store. */
     protected static final class InnerDataStore<UJO extends Ujo> {
 
         /** Empty constant */
         private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false);
-
         /** The Ujo type is serializad holder of the Fields*/
         private final Class<?> holder;
-
         /** Convert <strong>field names<strong> to a camelCase name.*/
         private final boolean camelCase;
-
         /** Transient property list */
-        private final List<Key<UJO,?>> propertyList;
-
+        private final List<Key<UJO, ?>> propertyList;
         /** Property annotations */
-        private final Map<Key<UJO,?>, Map<Class<? extends Annotation>,Annotation>> annotationsMap;
-
+        private final Map<Key<UJO, ?>, Map<Class<? extends Annotation>, Annotation>> annotationsMap;
         /** The Ujo type is serializad holder of the Fields*/
         private Class<?> type;
 
@@ -416,16 +395,16 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         public InnerDataStore(Class<?> holder, boolean propertyCamelCase) {
             this.holder = holder;
             this.camelCase = propertyCamelCase;
-            this.propertyList = new ArrayList<Key<UJO,?>>(32);
-            this.annotationsMap = new HashMap<Key<UJO,?>,Map<Class<? extends Annotation>,Annotation>>();
+            this.propertyList = new ArrayList<Key<UJO, ?>>(32);
+            this.annotationsMap = new HashMap<Key<UJO, ?>, Map<Class<? extends Annotation>, Annotation>>();
         }
 
         /** Add all annotation for required property. */
-        public void addAnnotations(Key<UJO,?> p, Field field) {
+        public void addAnnotations(Key<UJO, ?> p, Field field) {
             final Annotation[] annotations = field.getAnnotations();
-            Map<Class<? extends Annotation>,Annotation> annots = annotationsMap.get(field);
-            if (annots==null && annotations.length>0) {
-                annots = new HashMap<Class<? extends Annotation>,Annotation>(annotations.length);
+            Map<Class<? extends Annotation>, Annotation> annots = annotationsMap.get(field);
+            if (annots == null && annotations.length > 0) {
+                annots = new HashMap<Class<? extends Annotation>, Annotation>(annotations.length);
                 annotationsMap.put(p, annots);
             }
             for (Annotation annotation : annotations) {
@@ -439,7 +418,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /** Get all keys */
-        public Iterable<Key<UJO,?>> getProperties() {
+        public Iterable<Key<UJO, ?>> getProperties() {
             return propertyList;
         }
 
@@ -455,7 +434,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
         /** Returns a domain type. */
         public Class<?> getDomainType() {
-            if (type==null) {
+            if (type == null) {
                 type = KeyRing.getBaseType(propertyList.toArray(new Key[propertyList.size()]));
             }
             return holder;
@@ -474,8 +453,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             final List<Field> result = new LinkedList<Field>();
             for (int j = 0; j < fields.length; j++) {
                 final Field field = fields[j];
-                if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
-                &&  Key.class.isAssignableFrom(field.getType()) ){
+                if (field.getModifiers() == UjoManager.PROPERTY_MODIFIER
+                        && Key.class.isAssignableFrom(field.getType())) {
                     result.add(field);
                 }
             }
@@ -485,9 +464,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /**
          * Returns the Property annotations Set.
          */
-        @PackagePrivate Map<Class<? extends Annotation>,Annotation> getAnnotations(Key<UJO,?> p) {
-            Map<Class<? extends Annotation>,Annotation> result = annotationsMap.get(p);
-            if (result==null) {
+        @PackagePrivate
+        Map<Class<? extends Annotation>, Annotation> getAnnotations(Key<UJO, ?> p) {
+            Map<Class<? extends Annotation>, Annotation> result = annotationsMap.get(p);
+            if (result == null) {
                 result = Collections.emptyMap();
             }
             return result;
@@ -496,8 +476,9 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /**
          * Returns required annotation or {@code null}, if no annotatin was not found.
          */
-        public <A extends Annotation> A getAnnotation(Key<UJO,?> p, Class<A> annoType) {
-            final Map<Class<? extends Annotation>,Annotation> result = getAnnotations(p);
+        @SuppressWarnings("unchecked")
+        public <A extends Annotation> A getAnnotation(Key<UJO, ?> p, Class<A> annoType) {
+            final Map<Class<? extends Annotation>, Annotation> result = getAnnotations(p);
             return (A) result.get(annoType);
         }
     }
@@ -506,6 +487,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     public static final class Builder {
 
         /** Return an instance of the {@link KeyFactory} class */
+        @SuppressWarnings("unchecked")
         public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass) {
             return new KeyFactory(baseClass);
         }
@@ -514,10 +496,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
          * @param baseClass The domain class
          * @param superProperties Keys form an abstract super class
          */
+        @SuppressWarnings("unchecked")
         public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass, KeyList<?> superProperties) {
             return new KeyFactory(baseClass, false, superProperties);
         }
-   }
+    }
 
     /** The base factory */
     public static final class CamelBuilder {
@@ -527,6 +510,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
          * @param propertyCamelCase {@link #CAMEL_CASE}
          * @return Return an instance of the {@link KeyFactory} class
          */
+        @SuppressWarnings("unchecked")
         public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass) {
             return new KeyFactory(baseClass, CAMEL_CASE, null);
         }
@@ -536,11 +520,27 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
          * @param propertyCamelCase {@link #CAMEL_CASE}
          * @param superProperties Keys form an abstract super class
          */
+        @SuppressWarnings("unchecked")
         public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass, KeyList<?> superProperties) {
             return new KeyFactory(baseClass, CAMEL_CASE, superProperties);
         }
+    }
 
-   }
+    /** The base factory for the WeakKeyFactory implementation. */
+    public static final class WeakBuilder {
 
+        /** Default constructor with a CamelCase feature building.
+         * @param holder The class with a public static Keys.
+         */
+        public static WeakKeyFactory get(Class<?> holder) {
+            return new WeakKeyFactory(holder);
+        }
 
+        /** Default constructor with a CamelCase feature building.
+         * @param holder The class with a public static Keys.
+         */
+        public static WeakKeyFactory get(Class<?> holder, boolean propertyCamelCase) {
+            return new WeakKeyFactory(holder, propertyCamelCase);
+        }
+    }
 }
