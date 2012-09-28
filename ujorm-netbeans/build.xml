@@ -228,11 +228,11 @@ Implementation-Vendor: "Pavel Ponec"</echo>
             <fileset dir="${dist.javadoc.dir}" includes="**/*.map,**/*.dot"/>
         </delete>
           
-        <!-- Append CSS definition:
+        <!-- Append CSS definition: -->
         <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-            <filelist dir="${src.java.dir}/org/ujorm" files="style.css"/>
+            <filelist dir="${src.java.dir}/org/ujorm/doc-files/" files="style.css"/>
         </concat>
-        -->
+        
         <!-- Copy Image(s): -->
         <copy file="${src.java.dir}/org/ujorm/doc-files/ujo32.png" todir="${dist.javadoc.dir}/org/ujorm/doc-files/"/>
         <copy file="${src.java.dir}/org/ujorm/doc-files/UjoUml.png" todir="${dist.javadoc.dir}/org/ujorm/doc-files/"/>
