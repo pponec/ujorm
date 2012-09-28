@@ -29,7 +29,7 @@ import org.ujorm.orm.AbstractMetaModel;
  */
 @Immutable
 final public class MetaIndex extends AbstractMetaModel {
-    private static final Class CLASS = MetaIndex.class;
+    private static final Class<MetaIndex> CLASS = MetaIndex.class;
 
     /** Property Factory */
     private static final KeyFactory<MetaIndex> fa = KeyFactory.CamelBuilder.get(CLASS);

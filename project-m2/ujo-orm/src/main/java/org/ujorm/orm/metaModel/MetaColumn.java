@@ -45,7 +45,7 @@ import org.ujorm.orm.ao.UjoStatement;
  */
 @Immutable
 public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
-    private static final Class CLASS = MetaColumn.class;
+    private static final Class<MetaColumn> CLASS = MetaColumn.class;
 
     /** Property Factory */
     private static final KeyFactory<MetaColumn> fa = KeyFactory.CamelBuilder.get(CLASS);

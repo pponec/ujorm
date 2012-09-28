@@ -52,7 +52,7 @@ import org.ujorm.orm.ao.Orm2ddlPolicy;
  */
 @Immutable
 final public class MetaTable extends AbstractMetaModel implements TableWrapper {
-    private static final Class CLASS = MetaTable.class;
+    private static final Class<MetaTable> CLASS = MetaTable.class;
 
     /** Property Factory */
     private static final KeyFactory<MetaTable> fa = KeyFactory.CamelBuilder.get(CLASS);

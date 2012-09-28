@@ -31,7 +31,7 @@ import org.ujorm.orm.AbstractMetaModel;
  */
 @Immutable
 final public class MetaSelect extends AbstractMetaModel {
-    private static final Class CLASS = MetaSelect.class;
+    private static final Class<MetaSelect> CLASS = MetaSelect.class;
 
     /** Schema variable is replaced for a real schema name. */
     public static final String SCHEMA = "${SCHEMA}";

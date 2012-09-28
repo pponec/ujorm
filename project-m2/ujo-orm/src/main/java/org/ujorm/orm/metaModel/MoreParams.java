@@ -19,8 +19,6 @@ package org.ujorm.orm.metaModel;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.logger.UjoLogger;
-import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 
 /**
@@ -29,7 +27,7 @@ import org.ujorm.orm.AbstractMetaModel;
  */
 @Immutable
 final public class MoreParams extends AbstractMetaModel {
-    private static final Class CLASS = MoreParams.class;
+    private static final Class<MoreParams> CLASS = MoreParams.class;
 
     /** Property Factory */
     private static final KeyFactory<MoreParams> f = KeyFactory.CamelBuilder.get(CLASS);

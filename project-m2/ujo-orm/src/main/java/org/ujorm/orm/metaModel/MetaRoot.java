@@ -43,7 +43,7 @@ import org.ujorm.logger.UjoLoggerFactory;
  */
 @Immutable
 final public class MetaRoot extends AbstractMetaModel {
-    private static final Class CLASS = MetaRoot.class;
+    private static final Class<MetaRoot> CLASS = MetaRoot.class;
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaRoot.class);
 
     /** Property Factory */

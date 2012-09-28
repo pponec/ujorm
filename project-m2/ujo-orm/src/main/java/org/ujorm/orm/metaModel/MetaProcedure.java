@@ -39,7 +39,7 @@ import org.ujorm.orm.annot.Procedure;
  */
 @Immutable
 final public class MetaProcedure extends AbstractMetaModel {
-    private static final Class CLASS = MetaProcedure.class;
+    private static final Class<MetaProcedure> CLASS = MetaProcedure.class;
 
 
     /** Property Factory */

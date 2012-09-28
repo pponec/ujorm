@@ -34,7 +34,7 @@ import org.ujorm.orm.TypeService;
  */
 @Immutable
 final public class MetaPKey extends AbstractMetaModel {
-    private static final Class CLASS = MetaPKey.class;
+    private static final Class<MetaPKey> CLASS = MetaPKey.class;
 
     /** Property Factory */
     private static final KeyFactory<MetaPKey> fa = KeyFactory.CamelBuilder.get(CLASS);
