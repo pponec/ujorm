@@ -5,7 +5,7 @@
 # Required Release:
 RELEASE=1.30.RC2
 
-# Create builde:
+# Create the build:
 mvn clean install javadoc:jar source:jar -DskipTests -Pproduction
 cd "project-m2"
 
