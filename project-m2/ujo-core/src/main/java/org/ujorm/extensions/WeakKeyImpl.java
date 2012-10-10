@@ -15,12 +15,14 @@
  */
 package org.ujorm.extensions;
 
+import java.lang.reflect.Method;
 import org.ujorm.WeakKey;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.UjoManager;
 import org.ujorm.core.WeakKeyFactory;
 
 /**
@@ -118,6 +120,24 @@ public class WeakKeyImpl<VALUE>
         final Object result = i < list.size() ? list.get(i) : null;
         return result != null ? (VALUE) result : getDefault();
     }
+    
+    /**
+     * Returns an value from the Servlet Request.
+     * @param An object type of: javax.servlet.ServletRequest
+     * @return Returns object converted to a required type.
+     */
+    @Override
+    final public VALUE getRequestValue(Object servletReqest) throws IllegalArgumentException {
+        try {
+            final Method m = servletReqest.getClass().getMethod("getParameter", String.class);
+            final Object result = m.invoke(servletReqest, getName());
+            return result!=null
+                   ? (VALUE) UjoManager.getInstance().decodeValue(getType(), result.toString())
+                   : getDefault() ;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can't get parameter " + getName() + " from the servletRequest: " + servletReqest, e);
+        }
+    }    
 
     /** The WeakKeyImpl does not support chaining of the Keys. */
     @Override

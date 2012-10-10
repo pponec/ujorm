@@ -18,6 +18,7 @@ package org.ujorm;
 
 import java.util.List;
 import java.util.Map;
+import org.ujorm.core.WeakKeyFactory;
 
 /**
  * The WeakKey is a simplified Key interface without the generic parameter for the domain type.
@@ -121,6 +122,12 @@ public interface WeakKey<VALUE> extends Key<Ujo, VALUE> {
      * @see #getValue(java.util.List)
      */
     public VALUE of(List<? super VALUE> list);
-
     
+    /**
+     * Returns an value from the Servlet Request.
+     * @param An object type of: javax.servlet.ServletRequest
+     * @return Returns object converted to a required type.
+     */
+    public VALUE getRequestValue(Object servletReqest) throws IllegalArgumentException;    
+
 }
