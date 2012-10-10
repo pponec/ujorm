@@ -123,7 +123,7 @@ public class WeakKeyImpl<VALUE>
     
     /**
      * Returns an value from the Servlet Request.
-     * @param An object type of: javax.servlet.ServletRequest
+     * @param An object type of: javax.servlet.ServletRequest, where the {@code null} result is replaced for a default value
      * @return Returns object converted to a required type.
      */
     @Override
