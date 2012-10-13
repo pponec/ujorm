@@ -17,7 +17,7 @@ h3, h4 { color: #6981bf; }
 .java-block-comment {color: #737373}
 .java-string-literal {color: #99006b}
 .java-layer-method {font-family: Monospace; font-weight: bold}
-.java-keywords {color: #000099; font-family: Monospace; font-weight: bold}
+.java-keywords {color: #0000E6; font-family: Monospace;}
 .java-annotation {color: #32ae07;}
 
 .xml-attribute {color: #007c00}
