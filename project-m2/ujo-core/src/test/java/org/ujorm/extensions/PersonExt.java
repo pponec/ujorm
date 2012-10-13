@@ -27,8 +27,12 @@ import org.ujorm.implementation.map.MapUjoExt;
  */
 public class PersonExt extends MapUjoExt<PersonExt> {
     
-    public static final Key<PersonExt, Integer> ID = newProperty("id", Integer.class);
-    public static final ListKey<PersonExt, PersonExt> PERS = newListProperty("person", PersonExt.class);
+    public static final Key<PersonExt, Integer> ID = newKey("id");
+    public static final ListKey<PersonExt, PersonExt> PERS = newListKey("person");
+    
+    static {
+        init(PersonExt.class);
+    }
     
     public PersonExt(Integer id) {
         ID.setValue(this, id);

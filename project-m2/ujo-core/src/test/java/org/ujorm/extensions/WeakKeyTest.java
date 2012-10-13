@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.ujorm.core.KeyFactory;
 import static java.lang.Boolean.*;
 import static java.math.BigDecimal.*;
 
@@ -34,7 +35,7 @@ import static java.math.BigDecimal.*;
  */
 public class WeakKeyTest extends TestCase {
     
-    private static final WeakKeyFactory f = new WeakKeyFactory(WeakKeyTest.class); 
+    private static final WeakKeyFactory f = KeyFactory.WeakBuilder.get(WeakKeyTest.class);
     
     public static final WeakKey<String> NAME = f.newKey();
     public static final WeakKey<Date>   BORN = f.newKey();

@@ -143,6 +143,29 @@ public class UniUjoBaseTest extends MyTestCase {
         assertEquals("The exception " + IllegalArgumentException.class.getSimpleName() + " is expected.", null);
     }
 
+    /** Tesn an Interface */
+    public void testUniUjoInterface() throws Throwable {
+        
+        Long    o0 = new Long(Long.MAX_VALUE);
+        Integer o1 = new Integer(1);
+        String  o2 ="TEST";
+        Date    o3 = new Date();
+        Float   o4 = new Float(123456.456);
+        
+        UniUjoInterface ujo = new UniUjoImpl();
+        
+        UniUjoInterface.PRO_P0.setValue(ujo, o0);
+        UniUjoInterface.PRO_P1.setValue(ujo, o1);
+        UniUjoInterface.PRO_P2.setValue(ujo, o2);
+        UniUjoInterface.PRO_P3.setValue(ujo, o3);
+        UniUjoInterface.PRO_P4.addItem (ujo, o4);
+        
+        assertEquals(o0, UniUjoInterface.PRO_P0.of(ujo));
+        assertEquals(o1, UniUjoInterface.PRO_P1.of(ujo));
+        assertEquals(o2, UniUjoInterface.PRO_P2.of(ujo));
+        assertEquals(o3, UniUjoInterface.PRO_P3.of(ujo));
+        assertEquals(o4, UniUjoInterface.PRO_P4.of(ujo,0));
+    }
 
 
     /** Test of keys */

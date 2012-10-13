@@ -130,7 +130,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     /** Read Keys from the super class */
     protected final KeyList<?> getSuperKeys() {
         final Class<?> superClass = this.tmpStore.holder.getSuperclass();
-        if (Ujo.class.isAssignableFrom(superClass)) {
+        if (superClass!=null && Ujo.class.isAssignableFrom(superClass)) {
             if (Modifier.isAbstract(superClass.getModifiers())) {
                 KeyList<?> r1 = null;
                 KeyFactory<?> r2 = null;
@@ -482,9 +482,15 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             return (A) result.get(annoType);
         }
     }
+    
+    // --------------- BUILDERS ---------------
 
     /** The base factory */
     public static final class Builder {
+        
+        /** Private constructor */
+        private Builder() {            
+        }         
 
         /** Return an instance of the {@link KeyFactory} class */
         @SuppressWarnings("unchecked")
@@ -504,6 +510,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** The base factory */
     public static final class CamelBuilder {
+        
+        /** Private constructor */
+        private CamelBuilder() {            
+        }        
 
         /** Return an instance of the {@link KeyFactory} class
          * @param baseClass Base class
@@ -528,6 +538,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** The base factory for the WeakKeyFactory implementation. */
     public static final class WeakBuilder {
+        
+        /** Private constructor */
+        private WeakBuilder() {            
+        }
 
         /** Default constructor with a CamelCase feature building.
          * @param holder The class with a public static Keys.

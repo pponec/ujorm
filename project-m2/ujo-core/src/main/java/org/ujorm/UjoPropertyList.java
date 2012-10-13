@@ -22,6 +22,10 @@ import org.ujorm.core.annot.Immutable;
  * The immutable list of KeyProperties.
  * The UjoPropertyList class is a subset of the methods from class List&lt;Key&gt;.
  * Use the interface {@link KeyList} rather.
+ * <br>For a default conversion from KeyList use the statement
+ * <pre>
+ *    UjoPropertyList list = new UjoProperyListImpl(readKeys());
+ * </pre>
  * @param <UJO> Base Ujo implementation
  * @author Pavel Ponec
  * @deprecated Uset the interface {@link KeyList} rather
