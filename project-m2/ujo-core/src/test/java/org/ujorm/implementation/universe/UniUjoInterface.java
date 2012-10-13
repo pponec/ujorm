@@ -30,6 +30,6 @@ public interface UniUjoInterface extends Ujo {
     public static final ListKey<UniUjoInterface,Float> PRO_P4 = $factory.newListKey();
     
     /** Size of the all keys and lock internal factory. */
-    public static final int KEY_SIZE = $factory.lockAndSize();;
+    public static final int KEY_SIZE = $factory.lockAndSize();
 
 }

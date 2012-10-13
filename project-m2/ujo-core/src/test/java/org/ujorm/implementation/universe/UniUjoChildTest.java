@@ -47,7 +47,12 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals("proP2", UniUjoChild.PRO_P2.getName());
         assertEquals("proP3", UniUjoChild.PRO_P3.getName());
         assertEquals("proP4", UniUjoChild.PRO_P4.getName());
-
+        assertEquals("P5"   , UniUjoChild.PRO_P5.getName());
+        assertEquals("P6"   , UniUjoChild.PRO_P6.getName());
+        assertEquals("P7"   , UniUjoChild.PRO_P7.getName());
+        assertEquals("P8"   , UniUjoChild.PRO_P8.getName());
+        assertEquals("P9"   , UniUjoChild.PRO_P9.getName());
+           
         Long    o0 = new Long(Long.MAX_VALUE);
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
@@ -55,6 +60,7 @@ public class UniUjoChildTest extends MyTestCase {
         Float   o4 = new Float(123456.456);
 
         UniUjoChild ujb = new UniUjoChild();
+        assertEquals(10, ujb.readKeys().size());        
 
         UniUjoChild.PRO_P0.setValue(ujb, o0);
         UniUjoChild.PRO_P1.setValue(ujb, o1);
@@ -139,6 +145,57 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals(UniUjoBase.PRO_P3, props.get(3));
         assertEquals(UniUjoBase.PRO_P4, props.get(4));
     }
+    
+    
+    /**
+     * Test of readValue method, of class org.ujorm.mapImlp.AUnifiedDataObject.
+     */
+    public void testReadWriteChildImpl() throws Throwable {
+        System.out.println("testReadWriteChildImpl");
+
+        assertEquals("proP0", UniUjoChildImpl.PRO_P0.getName());
+        assertEquals("proP1", UniUjoChildImpl.PRO_P1.getName());
+        assertEquals("proP2", UniUjoChildImpl.PRO_P2.getName());
+        assertEquals("proP3", UniUjoChildImpl.PRO_P3.getName());
+        assertEquals("proP4", UniUjoChildImpl.PRO_P4.getName());
+        assertEquals("proP5", UniUjoChildImpl.PRO_P5.getName());
+        assertEquals("proP6", UniUjoChildImpl.PRO_P6.getName());
+        assertEquals("proP7", UniUjoChildImpl.PRO_P7.getName());
+        assertEquals("proP8", UniUjoChildImpl.PRO_P8.getName());
+        assertEquals("proP9", UniUjoChildImpl.PRO_P9.getName());
+        
+
+        Long    o0 = new Long(Long.MAX_VALUE);
+        Integer o1 = new Integer(1);
+        String  o2 ="TEST";
+        Date    o3 = new Date();
+        Float   o4 = new Float(123456.456);
+
+        UniUjoChildImpl ujb = new UniUjoChildImpl();
+        assertEquals(10, ujb.readKeys().size());
+
+        UniUjoChildImpl.PRO_P0.setValue(ujb, o0);
+        UniUjoChildImpl.PRO_P1.setValue(ujb, o1);
+        UniUjoChildImpl.PRO_P2.setValue(ujb, o2);
+        UniUjoChildImpl.PRO_P3.setValue(ujb, o3);
+        UniUjoChildImpl.PRO_P4.addItem (ujb, o4);
+        UniUjoChildImpl.PRO_P5.setValue(ujb, o0);
+        UniUjoChildImpl.PRO_P6.setValue(ujb, o1);
+        UniUjoChildImpl.PRO_P7.setValue(ujb, o2);
+        UniUjoChildImpl.PRO_P8.setValue(ujb, o3);
+        UniUjoChildImpl.PRO_P9.addItem (ujb, o4);
+
+        assertEquals(o0, UniUjoChildImpl.PRO_P0.of(ujb));
+        assertEquals(o1, UniUjoChildImpl.PRO_P1.of(ujb));
+        assertEquals(o2, UniUjoChildImpl.PRO_P2.of(ujb));
+        assertEquals(o3, UniUjoChildImpl.PRO_P3.of(ujb));
+        assertEquals(o4, UniUjoChildImpl.PRO_P4.of(ujb,0));
+        assertEquals(o0, UniUjoChildImpl.PRO_P5.of(ujb));
+        assertEquals(o1, UniUjoChildImpl.PRO_P6.of(ujb));
+        assertEquals(o2, UniUjoChildImpl.PRO_P7.of(ujb));
+        assertEquals(o3, UniUjoChildImpl.PRO_P8.of(ujb));
+        assertEquals(o4, UniUjoChildImpl.PRO_P9.of(ujb,0));
+    }    
 
     /** Test of keys */
     public void testDummy() throws Throwable {

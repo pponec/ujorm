@@ -146,6 +146,12 @@ public class UniUjoBaseTest extends MyTestCase {
     /** Tesn an Interface */
     public void testUniUjoInterface() throws Throwable {
         
+        assertEquals("proP0", UniUjoInterface.PRO_P0.getName());
+        assertEquals("proP1", UniUjoInterface.PRO_P1.getName());
+        assertEquals("proP2", UniUjoInterface.PRO_P2.getName());
+        assertEquals("proP3", UniUjoInterface.PRO_P3.getName());
+        assertEquals("proP4", UniUjoInterface.PRO_P4.getName());        
+        
         Long    o0 = new Long(Long.MAX_VALUE);
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
