@@ -23,6 +23,7 @@ document.body.appendChild(oLink);
               <li><a href="#UJO2">What is UJO?</a></li>
               <li><a href="#weakKey">Simplified Key</a></li>
               <li><a href="#how">My first Ujo object</a></li>
+              <li><a href="#keyFactory2Interface">The KeyFactory in the Interface</a></li>
               <li><a href="#defaultvalues">Default values</a></li>
               <li><a href="#ujoext">Interface UjoExt</a></li>
               <li><a href="#javabean">How to create the JavaBean?</a></li>
@@ -147,10 +148,36 @@ document.body.appendChild(oLink);
         f.lock(); <span class="comment">// Initialize all keys and lock them</span>
     }
     
-    <span class="comment">/**</span> <span class="comment">Sample</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">weak</span> <span class="comment">keys</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">List</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="comment">/** Sample how to use weak keys with a Map. */</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> testWeakKeys2Map() {
+        Map&lt;String,Object&gt; map = <span class="keyword-directive">new</span> HashMap&lt;String, Object&gt;();
+
+        <span class="keyword-directive">assert</span> NAME.of(map) == <span class="keyword-directive">null</span>;
+        <span class="keyword-directive">assert</span> BORN.of(map) == <span class="keyword-directive">null</span>;
+        <span class="keyword-directive">assert</span> WIFE.of(map) == Boolean.TRUE;
+        <span class="keyword-directive">assert</span> CASH.of(map) == BigDecimal.ZERO;
+
+        <span class="keyword-directive">final</span> String name = <span class="character">&quot;</span><span class="character">Lucy</span><span class="character">&quot;</span>;
+        <span class="keyword-directive">final</span> Boolean wife = <span class="keyword-directive">true</span>;
+        <span class="keyword-directive">final</span> Date today = <span class="keyword-directive">new</span> Date();
+        <span class="keyword-directive">final</span> BigDecimal cash = BigDecimal.TEN;
+
+        NAME.setValue(map, name);
+        BORN.setValue(map, today);
+        WIFE.setValue(map, wife);
+        CASH.setValue(map, cash);
+
+        <span class="keyword-directive">assert</span> NAME.of(map).equals(name);
+        <span class="keyword-directive">assert</span> BORN.of(map).equals(today);
+        <span class="keyword-directive">assert</span> WIFE.of(map).equals(wife);
+        <span class="keyword-directive">assert</span> CASH.of(map).equals(cash);
+    }
+        
+    <span class="comment">/** Similar sample how to use weak keys with a List. */</span>
     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> testWeakKeys2List() {
         List&lt;Object&gt; list = <span class="keyword-directive">new</span> ArrayList&lt;Object&gt;();
 
+        <span class="comment">// and the same code works for the List instance:</span>
         <span class="keyword-directive">assert</span> NAME.of(list) == <span class="keyword-directive">null</span>;
         <span class="keyword-directive">assert</span> BORN.of(list) == <span class="keyword-directive">null</span>;
         <span class="keyword-directive">assert</span> WIFE.of(list) == Boolean.TRUE;
@@ -170,12 +197,6 @@ document.body.appendChild(oLink);
         <span class="keyword-directive">assert</span> BORN.of(list).equals(today);
         <span class="keyword-directive">assert</span> WIFE.of(list).equals(wife);
         <span class="keyword-directive">assert</span> CASH.of(list).equals(cash);
-    }
-        
-    <span class="comment">/**</span> <span class="comment">Similar</span> <span class="comment">sample</span> <span class="comment">how</span> <span class="comment">to</span> <span class="comment">use</span> <span class="comment">weak</span> <span class="comment">keys</span> <span class="comment">with</span> <span class="comment">a</span> <span class="comment">Map</span><span class="comment">.</span> <span class="comment">*/</span>
-    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> testWeakKeys2Map() {
-        Map&lt;String,Object&gt; map = <span class="keyword-directive">new</span> HashMap&lt;String, Object&gt;();
-        <span class="comment">// and the same code works for the map instance too ...</span>
     }
         
     <span class="comment">/**</span> <span class="comment">Test</span> <span class="comment">key</span> <span class="comment">attributes</span> <span class="comment">*/</span>
@@ -215,8 +236,7 @@ document.body.appendChild(oLink);
         <h3>The class code</h3>
         The typical implementation of the <i>Person</i> class based on the <a href="core/AbstractUjo.html">AbstractUjo</a>:
         
-<pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> AbstractUjo {
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> AbstractUjo {
   <span class="java-keywords">private static final</span> KeyFactory&lt;Person&gt; f = <span class="java-layer-method">newFactory</span>(<span class="highlight">Person</span>.<span class="java-keywords">class</span>);
 
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
@@ -230,8 +250,7 @@ document.body.appendChild(oLink);
         
         or more easy implementation <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/QuickUjo.html">QuickUjo</a>:
         
-<pre class="pre"><span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> QuickUjo {<br> 
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> QuickUjo {<br> 
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,String &gt; NAME = <span class="java-layer-method">newKey</span>();
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = <span class="java-layer-method">newKey</span>();
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Double &gt; CASH = <span class="java-layer-method">newKey</span>();<br> 
@@ -312,7 +331,64 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
 </pre>
         All of these implementations are generally applicable to all the Ujo objects posterity.
         
-        
+   <h2 id="keyFactory2Interface">The KeyFactory in the Interface</h2>
+        In some cases can be useful to define Ujo Keys in an interface. See the next simple example how to do using the class KeyFactory:
+
+<pre class="pre"><span class="keyword-directive">public</span> <span class="keyword-directive highlight">interface</span> MyUjoInterface <span class="keyword-directive">extends</span> Ujo {
+
+    <span class="comment">/**</span> <span class="comment">Factory</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> KeyFactory&lt;MyUjoInterface&gt; $factory
+            = KeyFactory.CamelBuilder.get(MyUjoInterface.<span class="keyword-directive">class</span>);
+
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;MyUjoInterface,Long&gt;      PRO_P0 = $factory.newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;MyUjoInterface,Integer&gt;   PRO_P1 = $factory.newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;MyUjoInterface,String&gt;    PRO_P2 = $factory.newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> Key&lt;MyUjoInterface,Date&gt;      PRO_P3 = $factory.newKey();
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> ListKey&lt;MyUjoInterface,Float&gt; PRO_P4 = $factory.newListKey();
+
+    <span class="comment">/**</span> <span class="comment">Size</span> <span class="comment">of</span> <span class="comment">the</span> <span class="comment">all</span> <span class="comment">keys</span> <span class="comment">and</span> <span class="comment">lock</span> <span class="comment">internal</span> <span class="comment">factory</span><span class="comment">.</span> <span class="comment">*/</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> <span class="keyword-directive">int</span> KEY_SIZE = $factory.lockAndSize();
+
+}</pre>
+
+     The interface <code>MyUjoInterface</code> can be a child of another Ujo interface optionally,
+     however an implementation of multiple interfaces is not recommended due to the risk of duplicate Key indexes.
+     The next example shows a sample of a real implementation:
+
+<pre class="pre">
+<span class="keyword-directive">public</span> <span class="keyword-directive highlight">class</span> MyUjoImpl <span class="keyword-directive">implements</span> MyUjoInterface {
+    <span class="keyword-directive">private</span> Object[] data = <span class="keyword-directive">new</span> Object[KEY_SIZE];
+
+    <span class="comment">@Override</span>
+    <span class="keyword-directive">public</span> KeyList&lt;?&gt; readKeys() {
+        <span class="keyword-directive">return</span> $factory.getKeys();
+    }
+
+    <span class="comment">@Override</span>
+    <span class="keyword-directive">public</span> Object readValue(Key property) {
+        <span class="keyword-directive">return</span> data[property.getIndex()];
+    }
+
+    <span class="comment">@Override</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key property, Object value) {
+        data[property.getIndex()] = value;
+    }
+
+    <span class="comment">@Override</span>
+    <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, Key property, Object value) {
+        <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+    }
+
+    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">deprecated</span> <span class="comment">method</span> <span class="comment">will</span> <span class="comment">be</span> <span class="comment">removed</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">next</span> <span class="comment">Ujorm</span> <span class="comment">release</span> <span class="comment">*/</span>
+    <span class="comment">@Override</span>
+    <span class="keyword-directive">public</span> UjoPropertyList readProperties() {
+        <span class="keyword-directive">return</span> <span class="keyword-directive">new</span> UjoPropertyListImpl(readKeys());
+    }
+}
+</pre>
+
+     Note, that a method <code>readProperties()</code> can be removed in a next Ujorm release.
+
         <h2 id="ujoext">Interface UjoExt</h2>
         The most of information in this tutorial are related to a basic <a href="Ujo.html">Ujo</a> interface however since a version Ujorm 0.80 is available an extended interface 
         called UjoExt for an&nbsp;easier utilization in a source code. The extended features are described by a <a href="http://ujorm.org/presentation/">slide show</a> format in a different document
