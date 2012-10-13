@@ -113,12 +113,14 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      * @param abstractSuperProperties Pass a super keys fromo an abstract super class, if any.
      */
     @SuppressWarnings("unchecked")
-    public KeyFactory(Class<?> holder, boolean propertyCamelCase, KeyList<?> abstractSuperProperties) {
+    public KeyFactory(Class<?> holder, boolean propertyCamelCase, Iterable<? extends Key<?,?>> abstractSuperProperties) {
         this.tmpStore = new InnerDataStore<UJO>(holder, propertyCamelCase);
         if (abstractSuperProperties == null) {
-            abstractSuperProperties = getSuperKeys();
-        } else {
-            assert abstractSuperProperties.getType().isAssignableFrom(holder) : "Type parameters is not child of the SuperProperites type: " + abstractSuperProperties.getTypeName();
+            abstractSuperProperties = getSuperKeys(this.tmpStore.holder);
+        } else if (abstractSuperProperties instanceof KeyList) {
+            final KeyList<?> keyList = (KeyList<?>) abstractSuperProperties;
+            assert keyList.getType().isAssignableFrom(holder) 
+                    : "Type parameters is not child of the SuperProperites type: " + keyList.getTypeName();
         }
         if (abstractSuperProperties != null) {
             for (Key p : abstractSuperProperties) {
@@ -127,40 +129,60 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
     }
 
-    /** Read Keys from the super class */
-    protected final KeyList<?> getSuperKeys() {
-        final Class<?> superClass = this.tmpStore.holder.getSuperclass();
-        if (superClass!=null && Ujo.class.isAssignableFrom(superClass)) {
-            if (Modifier.isAbstract(superClass.getModifiers())) {
-                KeyList<?> r1 = null;
-                KeyFactory<?> r2 = null;
-                for (Field field : superClass.getDeclaredFields()) {
-                    if (Modifier.isStatic(field.getModifiers())) {
-                        try {
-                            if (r1 == null) {
-                                r1 = getFieldValue(KeyList.class, field);
-                            }
-                            if (r2 == null) {
-                                r2 = getFieldValue(KeyFactory.class, field);
-                            }
-                        } catch (Exception e) {
-                            final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please", KeyList.class.getSimpleName(), superClass, getClass().getSimpleName());
-                            throw new IllegalArgumentException(msg, e);
-                        }
-                    }
-                }
-                return r1 != null ? r1 //
-                        : r2 != null ? r2.getKeys() //
-                        : null;
-            } else {
-                try {
-                    return ((Ujo) superClass.newInstance()).readKeys();
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Can't create instance of " + superClass, e);
+    /** Read Keys from the super class of the current hodler
+     * @param holder The current holder of the key fields
+     * @return Keys from the holder super class 
+     */
+    protected final Iterable<? extends Key<?,?>> getSuperKeys(Class<?> holder) {
+        if (holder.isInterface()) {
+            final List<Key<?,?>> keyList = new ArrayList<Key<?,?>>();
+            for (Class<?> types : holder.getInterfaces()) {
+                for (Key<?, ?> key : readKeys(types)) {
+                   keyList.add(key);   
                 }
             }
+            return keyList;
+        } 
+        final Class<?> superClass = holder.getSuperclass();
+        if (Ujo.class.isAssignableFrom(superClass)) {
+            return readKeys(superClass);
         }
         return null;
+    }
+
+    /** Read Keys from the super class or interface
+     * @param superClass A super class or interface
+     * @return Not null value always
+     */
+    private Iterable<? extends Key<?,?>> readKeys(final Class<?> superClass) throws IllegalArgumentException {
+        if (Modifier.isAbstract(superClass.getModifiers())) {
+            KeyList<?> r1 = null;
+            KeyFactory<?> r2 = null;
+            for (Field field : superClass.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers())) {
+                    try {
+                        if (r1 == null) {
+                            r1 = getFieldValue(KeyList.class, field);
+                        }
+                        if (r2 == null) {
+                            r2 = getFieldValue(KeyFactory.class, field);
+                        }
+                    } catch (Exception e) {
+                        final String msg = String.format("Pass the %s attribute of the superlass %s to the constructor of the class %s, please", KeyList.class.getSimpleName(), superClass, getClass().getSimpleName());
+                        throw new IllegalArgumentException(msg, e);
+                    }
+                }
+            }
+            return r1 != null ? r1 //
+                    : r2 != null ? r2.getKeys() //
+                    : InnerDataStore.EMPYT_KEYS;
+        } else {
+            try {
+                return ((Ujo) superClass.newInstance()).readKeys();
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Can't create instance of " + superClass, e);
+            }
+        }
     }
 
     /** Returns a field value */
@@ -378,6 +400,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     /** A temporarry data store. */
     protected static final class InnerDataStore<UJO extends Ujo> {
 
+        /** Empty Key List */
+        private static final Iterable<? extends Key<?,?>> EMPYT_KEYS = Collections.emptyList();
         /** Empty constant */
         private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false);
         /** The Ujo type is serializad holder of the Fields*/
