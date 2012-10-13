@@ -16,30 +16,32 @@ import org.ujorm.core.UjoPropertyListImpl;
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class UniUjoImpl implements UniUjoInterface {
-    
+public class UniUjoImpl implements UniUjoInterface {    
     private Object[] data = new Object[KEY_SIZE];
 
-    public Object readValue(Key property) {
-        return data[property.getIndex()];
-    }
-
-    public void writeValue(Key property, Object value) {
-        data[property.getIndex()] = value;
-    }
-
+    @Override
     public KeyList<?> readKeys() {
         return $factory.getKeys();
     }
 
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
+    @Override
+    public Object readValue(Key property) {
+        return data[property.getIndex()];
     }
 
+    @Override
+    public void writeValue(Key property, Object value) {
+        data[property.getIndex()] = value;
+    }
+
+    @Override
     public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
     }
 
-
-
+    /** The deprecated method will be removed in the next Ujorm release */
+    @Override
+    public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
+    }
 }
