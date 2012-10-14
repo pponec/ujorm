@@ -18,8 +18,7 @@ import org.ujorm.core.KeyFactory;
  * @author Pavel Ponec
  */
 public interface UniUjoInterfaceChild extends UniUjoInterface {
-
-    /** Factory */
+    /** The factory will be an immutable object after locking */
     public static final KeyFactory<UniUjoInterfaceChild> $factory2
             = KeyFactory.CamelBuilder.get(UniUjoInterfaceChild.class);
     
