@@ -114,16 +114,21 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public KeyFactory(Class<?> holder, boolean propertyCamelCase, Iterable<? extends Key<?,?>> abstractSuperProperties) {
-        this.tmpStore = new InnerDataStore<UJO>(holder, propertyCamelCase);
-        if (abstractSuperProperties == null) {
-            abstractSuperProperties = getSuperKeys(this.tmpStore.holder);
-        } else if (abstractSuperProperties instanceof KeyList) {
-            final KeyList<?> keyList = (KeyList<?>) abstractSuperProperties;
-            assert keyList.getType().isAssignableFrom(holder) 
+        this.tmpStore = new InnerDataStore<UJO>(holder, propertyCamelCase, abstractSuperProperties);
+    }
+
+    /** Get a KeyList from a super class or interfaces  */
+    private void createSuperKeys() {
+        Iterable<? extends Key<?,?>> superKeys = tmpStore.superKeys;
+        if (superKeys == null) {
+            superKeys = getSuperKeys(this.tmpStore.holder);
+        } else if (superKeys instanceof KeyList) {
+            final KeyList<?> keyList = (KeyList<?>) superKeys;
+            assert keyList.getType().isAssignableFrom(tmpStore.holder)
                     : "Type parameters is not child of the SuperProperites type: " + keyList.getTypeName();
         }
-        if (abstractSuperProperties != null) {
-            for (Key p : abstractSuperProperties) {
+        if (superKeys != null) {
+            for (Key p : superKeys) {
                 tmpStore.addProperty(p);
             }
         }
@@ -215,13 +220,19 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Get KeyRing */
-    public KeyList<UJO> getKeys() {
+    public KeyList<UJO> getKeys() throws IllegalStateException {
         if (propertyStore == null) {
             // Synchronize the factory:
             synchronized (tmpStore.holder) {
                 if (propertyStore == null) {
-                    propertyStore = createKeyList();
-                    onCreate(propertyStore, tmpStore);
+                    try {
+                        propertyStore = createKeyList();
+                        onCreate(propertyStore, tmpStore);
+                    } catch (Throwable e) {
+                        final String msg = "Can't create the KeyFactory for the " + tmpStore.holder;
+                        LOGGER.log(Level.SEVERE, msg, e);
+                        throw new IllegalStateException(msg, e);
+                    }
                     tmpStore = (InnerDataStore<UJO>) (Object) InnerDataStore.EMPTY;
                 }
             }
@@ -231,6 +242,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Create a property List */
     protected KeyList<UJO> createKeyList() throws IllegalStateException {
+        createSuperKeys();
         final List<Field> fields = tmpStore.getFields();
         try {
             for (Key<UJO, ?> p : tmpStore.getProperties()) {
@@ -403,7 +415,9 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         /** Empty Key List */
         private static final Iterable<? extends Key<?,?>> EMPYT_KEYS = Collections.emptyList();
         /** Empty constant */
-        private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false);
+        private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false, null);
+        /** External properties */
+        private final Iterable<? extends Key<?,?>> superKeys;
         /** The Ujo type is serializad holder of the Fields*/
         private final Class<?> holder;
         /** Convert <strong>field names<strong> to a camelCase name.*/
@@ -416,9 +430,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         private Class<?> type;
 
         /** Constructor */
-        public InnerDataStore(Class<?> holder, boolean propertyCamelCase) {
+        public InnerDataStore(Class<?> holder, boolean propertyCamelCase, Iterable<? extends Key<?,?>> abstractSuperKeys) {
             this.holder = holder;
             this.camelCase = propertyCamelCase;
+            this.superKeys = abstractSuperKeys;
             this.propertyList = new ArrayList<Key<UJO, ?>>(32);
             this.annotationsMap = new HashMap<Key<UJO, ?>, Map<Class<? extends Annotation>, Annotation>>();
         }
