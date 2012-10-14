@@ -43,9 +43,7 @@ import org.ujorm.logger.UjoLoggerFactory;
  * Serializable property factory is the best tool of Ujorm to create Property implementations.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
- * <span class="java-keywords">import</span> org.ujorm.*;
  * <span class="keyword-directive">public class</span> Person <span class="keyword-directive">implements</span> Ujo {
- *
  *     <span class="keyword-directive">private static final</span> KeyFactory&lt;Person&gt; factory
  *             = KeyFactory.CamelBuilder.get(Person.<span class="keyword-directive">class</span>);
  *
@@ -80,7 +78,12 @@ import org.ujorm.logger.UjoLoggerFactory;
  *     }
  * }
  * </pre>
-
+ * 
+ * <h3>Using the KeyFactory in interfaces</h3>
+ * In some cases can be useful to define Ujo Keys in an interface. 
+ * See the <a href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#keyFactory2Interface">next simple example</a>
+ * how to design the inteface using the class KeyFactory.
+ *
  * @author Pavel Ponec
  */
 public class KeyFactory<UJO extends Ujo> implements Serializable {
