@@ -23,7 +23,7 @@ document.body.appendChild(oLink);
               <li><a href="#UJO2">What is UJO?</a></li>
               <li><a href="#weakKey">Simplified Key</a></li>
               <li><a href="#how">My first Ujo object</a></li>
-              <li><a href="#keyFactory2Interface">The KeyFactory in the Interface</a></li>
+              <li><a href="#keyFactory2Interface">Using the KeyFactory in interfaces</a></li>
               <li><a href="#defaultvalues">Default values</a></li>
               <li><a href="#ujoext">Interface UjoExt</a></li>
               <li><a href="#javabean">How to create the JavaBean?</a></li>
@@ -118,9 +118,10 @@ document.body.appendChild(oLink);
         
         <br>
         <h2 id="weakKey">Simplified Key</h2>
-        The 
-        <a href="http://ujorm.org/javadoc/org/ujorm/WeakKey.html">WeakKey</a> is a simplified 
-        <a href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a> interface without the generic domain type parameter for a common use.
+        The interface
+        <a href="http://ujorm.org/javadoc/org/ujorm/WeakKey.html">WeakKey</a> is a simplified
+        <a href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a> interface without the generic domain type parameter
+        and it is intended for a common use.
          The WeakKey need not to use <a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo objects</a>, 
          because it works with objects of type <code>Map</code> and <code>List</code>.        
          <p>
@@ -333,12 +334,11 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
 </pre>
         All of these implementations are generally applicable to all the Ujo objects posterity.
         
-   <h2 id="keyFactory2Interface">The KeyFactory in the Interface</h2>
-        In some cases can be useful to define Ujo Keys in an interface. See the next simple example how to do using the class KeyFactory:
+   <h2 id="keyFactory2Interface">Using the KeyFactory in interfaces</h2>
+        In some cases can be useful to define Ujo Keys in an interface. See the next simple example how to design the inteface using the class KeyFactory:
 
 <pre class="pre"><span class="keyword-directive">public</span> <span class="keyword-directive highlight">interface</span> MyUjoInterface <span class="keyword-directive">extends</span> Ujo {
-
-    <span class="comment">/**</span> <span class="comment">Factory</span> <span class="comment">*/</span>
+    <span class="comment">/** The factory will be an immutable object after locking */</span>
     <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">final</span> KeyFactory&lt;MyUjoInterface&gt; $factory
             = KeyFactory.CamelBuilder.get(MyUjoInterface.<span class="keyword-directive">class</span>);
 
@@ -381,8 +381,7 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
     }
 
-    <span class="comment">/**</span> <span class="comment">The</span> <span class="comment">deprecated</span> <span class="comment">method</span> <span class="comment">will</span> <span class="comment">be</span> <span class="comment">removed</span> <span class="comment">in</span> <span class="comment">the</span> <span class="comment">next</span> <span class="comment">Ujorm</span> <span class="comment">release</span> <span class="comment">*/</span>
-    <span class="comment">@Override</span>
+    <span class="comment">/** The deprecated method will be removed in the next Ujo release */</span>
     <span class="keyword-directive">public</span> UjoPropertyList readProperties() {
         <span class="keyword-directive">return</span> <span class="keyword-directive">new</span> UjoPropertyListImpl(readKeys());
     }
