@@ -198,7 +198,11 @@ document.body.appendChild(oLink);
         <span class="keyword-directive">assert</span> WIFE.of(list).equals(wife);
         <span class="keyword-directive">assert</span> CASH.of(list).equals(cash);
     }
-        
+}</pre>
+
+         The next example shows some interesting features of the Key object.
+
+<pre class="pre">
     <span class="comment">/**</span> <span class="comment">Test</span> <span class="comment">key</span> <span class="comment">attributes</span> <span class="comment">*/</span>
     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> testWeakKeyAttributes() {
         <span class="keyword-directive">assert</span> NAME.getIndex()==0;
@@ -211,13 +215,11 @@ document.body.appendChild(oLink);
         <span class="keyword-directive">assert</span> WIFE.getName().equals(<span class="character">&quot;</span><span class="character">wife</span><span class="character">&quot;</span>);
         <span class="keyword-directive">assert</span> CASH.getName().equals(<span class="character">&quot;</span><span class="character">cash</span><span class="character">&quot;</span>);
 
-        <span class="keyword-directive">assert</span> NAME.isTypeOf(String.<span class="keyword-directive">class</span>);
+        <span class="keyword-directive">assert</span> NAME.isTypeOf(CharSequence.<span class="keyword-directive">class</span>);
         <span class="keyword-directive">assert</span> BORN.isTypeOf(Date.<span class="keyword-directive">class</span>);
         <span class="keyword-directive">assert</span> WIFE.isTypeOf(Boolean.<span class="keyword-directive">class</span>);
         <span class="keyword-directive">assert</span> CASH.isTypeOf(BigDecimal.<span class="keyword-directive">class</span>);
-    }        
-}
-        </pre>
+    }</pre>
         
         <h3>Where to use the WeakKey?</h3>
         <ul>
