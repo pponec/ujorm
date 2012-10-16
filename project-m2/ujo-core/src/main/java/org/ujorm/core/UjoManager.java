@@ -216,7 +216,7 @@ public class UjoManager implements Comparator<Key> {
     @PackagePrivate void register (KeyList list, KeyFactory.InnerDataStore data) {
         this.propertiesCache.put(data.getDomainType(), list);
 
-        final Iterable<Key<?,?>> it = data.getProperties();
+        final Iterable<Key<?,?>> it = data.getKeys();
         for (Key ujoProp : it) {
 
             // set the transient cache:
