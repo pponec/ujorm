@@ -52,6 +52,18 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals("P7"   , UniUjoChild.PRO_P7.getName());
         assertEquals("P8"   , UniUjoChild.PRO_P8.getName());
         assertEquals("P9"   , UniUjoChild.PRO_P9.getName());
+        //
+        assertEquals(0, UniUjoChild.PRO_P0.getIndex());
+        assertEquals(1, UniUjoChild.PRO_P1.getIndex());
+        assertEquals(2, UniUjoChild.PRO_P2.getIndex());
+        assertEquals(3, UniUjoChild.PRO_P3.getIndex());
+        assertEquals(4, UniUjoChild.PRO_P4.getIndex());
+        assertEquals(5, UniUjoChild.PRO_P5.getIndex());
+        assertEquals(6, UniUjoChild.PRO_P6.getIndex());
+        assertEquals(7, UniUjoChild.PRO_P7.getIndex());
+        assertEquals(8, UniUjoChild.PRO_P8.getIndex());
+        assertEquals(9, UniUjoChild.PRO_P9.getIndex());
+        
            
         Long    o0 = new Long(Long.MAX_VALUE);
         Integer o1 = new Integer(1);
@@ -163,8 +175,18 @@ public class UniUjoChildTest extends MyTestCase {
         assertEquals("proP7", UniUjoChildImpl.PRO_P7.getName());
         assertEquals("proP8", UniUjoChildImpl.PRO_P8.getName());
         assertEquals("proP9", UniUjoChildImpl.PRO_P9.getName());
-        
-
+        //
+        assertEquals(0, UniUjoChildImpl.PRO_P0.getIndex());
+        assertEquals(1, UniUjoChildImpl.PRO_P1.getIndex());
+        assertEquals(2, UniUjoChildImpl.PRO_P2.getIndex());
+        assertEquals(3, UniUjoChildImpl.PRO_P3.getIndex());
+        assertEquals(4, UniUjoChildImpl.PRO_P4.getIndex());
+        assertEquals(5, UniUjoChildImpl.PRO_P5.getIndex());
+        assertEquals(6, UniUjoChildImpl.PRO_P6.getIndex());
+        assertEquals(7, UniUjoChildImpl.PRO_P7.getIndex());
+        assertEquals(8, UniUjoChildImpl.PRO_P8.getIndex());
+        assertEquals(9, UniUjoChildImpl.PRO_P9.getIndex());
+                
         Long    o0 = new Long(Long.MAX_VALUE);
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
