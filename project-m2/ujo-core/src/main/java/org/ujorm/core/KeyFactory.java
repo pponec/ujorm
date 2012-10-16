@@ -247,14 +247,19 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     protected KeyList<UJO> createKeyList() throws IllegalStateException {
         createSuperKeys();
         final List<Field> fields = tmpStore.getFields();
+        int index = -1;
         try {
             for (Key<UJO, ?> p : tmpStore.getProperties()) {
+                index++;
                 if (p instanceof Property) {
                     final Property pr = (Property) p;
                     if (PropertyModifier.isLock(pr)) {
                         continue;
                     }
-                    Field field = findField(p, fields);
+                    if (p.getIndex()<=Property.UNDEFINED_INDEX) {
+                        PropertyModifier.setIndex(index, pr, false);
+                    }
+                    final Field field = findField(p, fields);
                     if (p.getName() == null) {
                         PropertyModifier.setName(createKeyName(field, this.tmpStore.camelCase), pr);
                     }
@@ -348,7 +353,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Common protected factory method */
     protected <T> Key<UJO, T> createKey(String name, T defaultValue) {
-        final Property<UJO, T> p = Property.newInstance(name, null, defaultValue, tmpStore.size(), false);
+        final Property<UJO, T> p = Property.newInstance(name, null, defaultValue, Property.UNDEFINED_INDEX, false);
         addKey(p);
         return p;
     }

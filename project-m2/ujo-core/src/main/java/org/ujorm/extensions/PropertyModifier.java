@@ -58,12 +58,18 @@ public class PropertyModifier {
             property.init(name, null, null, null, Property.UNDEFINED_INDEX, false);
         }
     }
-
+    
     /** Set the new index and lock the property if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setIndex(int anIndex, Property property) {
+        setIndex(anIndex, property, true);
+    }    
+
+    /** Set the new index */
+    @SuppressWarnings("unchecked")
+    public static void setIndex(int anIndex, Property property, boolean lock) {
         if (!property.isLock() && property.getIndex()!=anIndex) {
-            property.init(null, null, null, null, anIndex, true);
+            property.init(null, null, null, null, anIndex, lock);
         }
     }
 
