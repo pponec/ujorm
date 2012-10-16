@@ -118,10 +118,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     @SuppressWarnings("unchecked")
     public KeyFactory(Class<?> holder, boolean propertyCamelCase, Iterable<? extends Key<?,?>> abstractSuperProperties) {
         this.tmpStore = new InnerDataStore<UJO>(holder, propertyCamelCase, abstractSuperProperties);
+        this.tmpStore.insertSuperKeys(createSuperKeys());
     }
 
     /** Get a KeyList from a super class or interfaces  */
-    private void createSuperKeys() {
+    private Iterable<? extends Key<?,?>> createSuperKeys() {
         Iterable<? extends Key<?,?>> superKeys = tmpStore.superKeys;
         if (superKeys == null) {
             superKeys = getSuperKeys(this.tmpStore.holder);
@@ -130,11 +131,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             assert keyList.getType().isAssignableFrom(tmpStore.holder)
                     : "Type parameters is not child of the SuperProperites type: " + keyList.getTypeName();
         }
-        if (superKeys != null) {
-            for (Key p : superKeys) {
-                tmpStore.addProperty(p);
-            }
-        }
+        
+        return superKeys != null
+             ? superKeys
+             : InnerDataStore.EMPYT_KEYS;
     }
 
     /** Read Keys from the super class of the current hodler
@@ -207,7 +207,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     /** Add an new property for an internal use. */
     protected boolean addKey(Property<?, ?> p) {
         checkLock();
-        return tmpStore.addProperty(p);
+        return tmpStore.addKey(p);
     }
 
     /** Lock the property factory */
@@ -245,11 +245,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Create a property List */
     protected KeyList<UJO> createKeyList() throws IllegalStateException {
-        createSuperKeys();
+        //tmpStore.insertSuperKeys(createSuperKeys()); // TODO
         final List<Field> fields = tmpStore.getFields();
         int index = -1;
         try {
-            for (Key<UJO, ?> p : tmpStore.getProperties()) {
+            for (Key<UJO, ?> p : tmpStore.getKeys()) {
                 index++;
                 if (p instanceof Property) {
                     final Property pr = (Property) p;
@@ -367,7 +367,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     public <T> ListProperty<UJO, T> newListKey(String name) {
         checkLock();
         final ListProperty<UJO, T> p = ListProperty.newListProperty(name, null, tmpStore.size(), false);
-        tmpStore.addProperty(p);
+        tmpStore.addKey(p);
         return p;
     }
 
@@ -460,12 +460,23 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /** Add property to a list */
-        public boolean addProperty(Key p) {
+        public boolean addKey(Key p) {
             return propertyList.add(p);
         }
+        
+        /** Insrt property to a list */
+        public void insertSuperKeys(Iterable<? extends Key<?,?>> keys) {
+            final List<Key<UJO,?>> result = new ArrayList<Key<UJO, ?>>(propertyList.size());
+            for (Key key : keys) {
+                result.add(key);                                
+            }
+            propertyList.addAll(0, result);
+        }
+
+        
 
         /** Get all keys */
-        public Iterable<Key<UJO, ?>> getProperties() {
+        public Iterable<Key<UJO, ?>> getKeys() {
             return propertyList;
         }
 
