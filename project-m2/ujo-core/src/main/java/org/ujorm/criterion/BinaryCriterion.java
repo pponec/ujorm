@@ -80,23 +80,18 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
         return true;
     }
 
+    /** Print the conditon in a human reading format. */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        printNode(crn1, result);
+        boolean parentheses = operator!=BinaryOperator.AND;
+        if (parentheses) result.append('(');        
+        result.append(crn1);
         result.append(' ').append(operator.name()).append(' ');
-        printNode(crn2, result);
+        result.append(crn2);
+        if (parentheses) result.append(')');        
 
         return  result.toString();
-    }
-
-    /** Print simple node */
-    private void printNode(final Criterion cn, final StringBuilder out) {
-        boolean parentheses = cn.getOperator()!=BinaryOperator.AND;
-        if (parentheses) out.append('(');
-        out.append(cn);
-        if (parentheses) out.append(')');
-    }
-    
+    }    
     
 }
