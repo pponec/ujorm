@@ -62,7 +62,7 @@
     <!-- The default prfile is "production" -->
     <profiles>
         <profile>
-            <id>commin</id>
+            <id>common</id>
             <activation>
                <activeByDefault>true</activeByDefault>
             </activation>
@@ -95,6 +95,7 @@
                 <module>project-m2/ujo-core</module>
                 <module>project-m2/ujo-orm</module>
                 <module>project-m2/ujo-spring</module>
+                <module>project-m2/ujo-wicket</module>
             </modules>
         </profile>
     </profiles>
