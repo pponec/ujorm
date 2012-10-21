@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-samples</artifactId>
-    <version>1.30</version>
+    <version>1.31-SNAPSHOT</version>
     <name>Main UJO Samples</name>
     <packaging>pom</packaging>
     <description>Ujorm Sample Projects</description>
