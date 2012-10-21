@@ -1,7 +1,7 @@
 The Ujorm release notes
 *******************************
 
-release 1.30 (2012-10-06)
+release 1.30 (2012-10-21)
 + maven project GroupId is renamed to the Ujorm
 + the interface UjoProperty is renamed to the Key and the original interface is deprecated now
 + static factory methods for Key implementations does not contain original Class arument due the attribute is taken by a Java reflection now
@@ -16,6 +16,7 @@ release 1.30 (2012-10-06)
 + the class TypeService is replaced with a new interface ITypeService for better type-safe specification by Java generics.
 + small bug-fix for the exception: SQLException: You cannot set autocommit during a managed transaction
 + the AroundServiceTransaction class calls a rollback for an exception event case
++ the implementaton of the method BinaryCriterion.toString() is fixed
 + JavaDoc is fixed
 + impotant migration notes: replace all texts "UjoProperty" for the target "Key" in your project and fix all deprecated methods
 
