@@ -70,6 +70,7 @@
                 <module>project-m2/ujo-core</module>
                 <module>project-m2/ujo-orm</module>
                 <module>project-m2/ujo-spring</module>
+                <module>project-m2/ujo-wicket</module>
                 <module>project-m2/ujo-gxt-core</module>
                 <!--
                 <module>project-m2/ujo-gxt-crud</module>
