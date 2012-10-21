@@ -5,7 +5,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-wicket</artifactId>
     <packaging>jar</packaging>
-    <version>1.30</version>
+    <version>1.31-SNAPSHOT</version>
     <url>http://ujorm.org</url>
     <name>ujo-wicket</name>
     <description>The Ujo-Wicket is designed for supprot a Wicket framework applications.</description>
