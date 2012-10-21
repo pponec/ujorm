@@ -40,6 +40,7 @@
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
                     <include>**/*.txt</include>
+                    <include>**/*.html</include>
                 </includes>
                 <directory>src/main/java</directory>
                 <filtering>true</filtering>
