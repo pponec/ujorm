@@ -17,6 +17,7 @@ release 1.30 (2012-10-21)
 + small bug-fix for the exception: SQLException: You cannot set autocommit during a managed transaction
 + the AroundServiceTransaction class calls a rollback for an exception event case
 + the implementaton of the method BinaryCriterion.toString() is fixed
++ new module called ujo-wicket to provide a Wicket model for Ujo objects
 + JavaDoc is fixed
 + impotant migration notes: replace all texts "UjoProperty" for the target "Key" in your project and fix all deprecated methods
 
