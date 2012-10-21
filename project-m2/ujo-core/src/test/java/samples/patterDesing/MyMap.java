@@ -15,8 +15,8 @@ import java.util.Map;
 
 public class MyMap {
     
-    public static final Key<String> NAME = new Property<String>();
-    public static final Key<Integer> AGE = new Property<Integer>();
+    public static final Property<String> NAME = new Property<String>();
+    public static final Property<Integer> AGE = new Property<Integer>();
     private Map<Property, Object> data = new HashMap<Property, Object>();
     
     protected Object readValue(Property key) {
