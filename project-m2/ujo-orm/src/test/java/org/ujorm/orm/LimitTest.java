@@ -81,7 +81,7 @@ public class LimitTest extends TestCase {
 
         XOrder order = new XOrder();
         XOrder.CREATED.setValue(order, new Date());
-        XOrder.DESCR.setValue(order, name);
+        XOrder.NOTE.setValue(order, name);
         XOrder.COLOR.setValue(order, Color.BLUE);
 
         XItem item1 = new XItem();
@@ -125,7 +125,7 @@ public class LimitTest extends TestCase {
 
         Session session = getHandler().getSession();
         Criterion<XOrder> crit = Criterion.where(XOrder.ID, GE, 0L);
-        Query<XOrder> query = session.createQuery(crit).orderBy(XOrder.DESCR);
+        Query<XOrder> query = session.createQuery(crit).orderBy(XOrder.NOTE);
 
         // ------ BASE ------
 
@@ -144,7 +144,7 @@ public class LimitTest extends TestCase {
         // ------ LIMIT ------
 
         expected = limit;
-        query = session.createQuery(crit).setLimit(limit).orderBy(XOrder.DESCR);
+        query = session.createQuery(crit).setLimit(limit).orderBy(XOrder.NOTE);
         myCount = query.getLimitedCount();
         assertEquals(expected, myCount);
         //
@@ -159,7 +159,7 @@ public class LimitTest extends TestCase {
         // ------ OFFSET ------
 
         expected = count - offset;
-        query = session.createQuery(crit).setOffset(offset).orderBy(XOrder.DESCR);
+        query = session.createQuery(crit).setOffset(offset).orderBy(XOrder.NOTE);
         myCount = query.getLimitedCount();
         assertEquals(expected, myCount);
         //
@@ -173,7 +173,7 @@ public class LimitTest extends TestCase {
         // ------ LIMIT + OFFSET (1) ------
 
         expected = limit;
-        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.DESCR);
+        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.NOTE);
         myCount = query.getLimitedCount();
         assertEquals(expected, myCount);
         //
@@ -189,7 +189,7 @@ public class LimitTest extends TestCase {
 
         limit = 10;
         expected = count-offset;
-        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.DESCR);
+        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.NOTE);
         myCount = query.getLimitedCount();
         assertEquals(expected, myCount);
         //
@@ -205,7 +205,7 @@ public class LimitTest extends TestCase {
 
         offset = 20;
         expected = 0;
-        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.DESCR);
+        query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.NOTE);
         myCount = query.getLimitedCount();
         assertEquals(expected, myCount);
         //

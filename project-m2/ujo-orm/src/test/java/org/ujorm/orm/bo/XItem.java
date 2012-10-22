@@ -30,14 +30,14 @@ public class XItem extends OrmTable<XItem> {
 
     /** Unique key */
     @Column(pk = true)
-    public static final Key<XItem,Long> ID = newProperty(Long.class);
+    public static final Key<XItem,Long> ID = newKey();
     /** User key */
-    public static final Key<XItem,Integer> USER_ID = newProperty(Integer.class);
+    public static final Key<XItem,Integer> USER_ID = newKey();
     /** Description of XItem */
-    public static final Key<XItem,String> NOTE = newProperty(String.class);
+    public static final Key<XItem,String> NOTE = newKey();
     /** A reference to common XOrder */
     @Column(name="fk_order")
-    public static final Key<XItem,XOrder> ORDER = newProperty(XOrder.class);
+    public static final Key<XItem,XOrder> ORDER = newKey();
     /** A composed (indirect) property provides a 'created' attribute of the XOrder */
     public static final Key<XItem,Date> $ORDER_DATE = XItem.ORDER.add(XOrder.CREATED);
 
