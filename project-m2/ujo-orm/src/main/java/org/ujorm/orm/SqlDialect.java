@@ -813,7 +813,7 @@ abstract public class SqlDialect {
     }
 
     /** Print SQL ORDER BY */
-    public void printSelectOrder(Query query, Appendable out) throws IOException {
+    protected void printSelectOrder(Query query, Appendable out) throws IOException {
         
         out.append(" ORDER BY ");
         final List<Key> props = query.getOrderBy();
