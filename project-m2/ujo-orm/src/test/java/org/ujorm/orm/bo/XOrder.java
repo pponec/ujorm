@@ -50,8 +50,8 @@ public class XOrder extends OrmTable<XOrder> {
     /** User key */
     public static final Key<XOrder, Integer> USER_ID = newKey();
     /** Description of the Order */
-    @Column(type = DbType.VARCHAR, name = "DESCR", mandatory = true, index="idx_description") //
-    public static final Key<XOrder, String> DESCR = newKey();
+    @Column(type = DbType.VARCHAR, name = "NOTE", mandatory = true, index="idx_description") //
+    public static final Key<XOrder, String> NOTE = newKey();
     /** Favorite Color */
     public static final Key<XOrder, Color> COLOR = newKey(Color.WHITE);
     /** Date of creation */
@@ -87,11 +87,11 @@ public class XOrder extends OrmTable<XOrder> {
     }
 
     public String getNote() {
-        return get(DESCR);
+        return get(NOTE);
     }
 
     public void setNote(String note) {
-        set(DESCR, note);
+        set(NOTE, note);
     }
 
     public Date getCreated() {

@@ -30,17 +30,17 @@ public class XCustomer extends OrmTable<XCustomer> {
 
     /** Unique key */
     @Column(pk = true, converter=TypeService.class)
-    public static final Key<XCustomer, Long> ID = newProperty(Long.class);
+    public static final Key<XCustomer, Long> ID = newKey();
     /** Personal Numbr */
-    public static final Key<XCustomer, Integer> PIN = newProperty(Integer.class);
+    public static final Key<XCustomer, Integer> PIN = newKey();
     /** Firstname */
     @Column(uniqueIndex="idx_xcustomer_full_name")
-    public static final Key<XCustomer, String> FIRSTNAME = newProperty(String.class);
+    public static final Key<XCustomer, String> FIRSTNAME = newKey();
     /** Lastanme */
     @Column(uniqueIndex="idx_xcustomer_full_name")
-    public static final Key<XCustomer, String> LASTNAME = newProperty(String.class);
+    public static final Key<XCustomer, String> LASTNAME = newKey();
     /** Date of creation */
-    public static final Key<XCustomer, Date> CREATED = newProperty(Date.class);
+    public static final Key<XCustomer, Date> CREATED = newKey();
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {

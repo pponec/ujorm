@@ -39,16 +39,16 @@ public class OrderSample extends OrmTable<OrderSample> implements Serializable {
 
     /** Unique key */
     @Column(pk=true)
-    public static final Key<OrderSample,Long> ID = newProperty("id", Long.class);
+    public static final Key<OrderSample,Long> ID = newKey("id");
     /** Order state, default is ACTIVE */
     public static final Key<OrderSample,State> STATE = newKey("state", State.ACTIVE);
     /** User key */
-    public static final Key<OrderSample,Integer> USER_ID = newProperty("usrId", Integer.class);
+    public static final Key<OrderSample,Integer> USER_ID = newKey("usrId");
     /** Description of the Order */
     @Column(type=DbType.VARCHAR, name="DESCR", mandatory=true)
-    public static final Key<OrderSample,String> NOTE = newProperty("description", String.class);
+    public static final Key<OrderSample,String> NOTE = newKey("description");
     /** Date of creation */
-    public static final Key<OrderSample,Date> CREATED = newProperty("created", Date.class);
+    public static final Key<OrderSample,Date> CREATED = newKey("created");
     
 
     // --- An optional implementation of commonly used setters and getters ---
