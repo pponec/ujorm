@@ -17,8 +17,8 @@ package org.ujorm.wicket;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 
 public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
@@ -103,4 +103,23 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
     public static <UJO extends Ujo, T> KeyModel<UJO, T> of(IModel<UJO> parent, KeyRing<UJO> property) {
         return (KeyModel<UJO, T>) of(parent.getObject(), property.getFirstKey());
     }
+    
+    /**
+     * Create a Wicket model from a domain model type of Ujo or JavaBean.
+     * @param <T> The Model object type
+     * @param bo A model business object
+     * @param property Property expression for property access
+     * @return An instance type of PropertyModel or KeyModel according to the [@code bo} parameter type. 
+     * @throws IllegalArgumentException 
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> IModel<T> of(Object bo, String property) throws IllegalArgumentException {
+        if (bo instanceof Ujo) {
+            final Ujo ubo = (Ujo) bo;
+            final Key key = ubo.readKeys().find(property);
+            return (IModel<T>) KeyModel.of(ubo, key);
+        } else {
+            return new PropertyModel<T>(bo, property);
+        }
+    }    
 }
