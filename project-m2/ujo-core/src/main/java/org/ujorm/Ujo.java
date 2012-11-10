@@ -94,7 +94,7 @@ public interface Ujo {
      *
      * <br>An index property in the array UJO must be unique a continuous, an order of property array depends on an implementation of UJO object.
      * @see Key#isDirect()
-     * @deprecated Use the method {@link #readKeys()} instead of. The defauult implementation is: {@code new UjoPropertyList(readKeys())}
+     * @deprecated Use the method {@link #readKeys()} instead of. The defauult implementation is: {@code new UjoPropertyListImpl(readKeys())}
      */
     @Deprecated
     public UjoPropertyList readProperties();

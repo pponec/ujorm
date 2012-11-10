@@ -171,13 +171,12 @@ Released   : 20080129
               Note the implementation is valid also for <strong>all subclasses</strong> of the Person class.
               The simple example:</p>
               
-<pre class="pre"><span class="keyword-directive">import</span> java.util.HashMap;
-<span class="keyword-directive">import</span> org.ujorm.*;
+<pre class="pre"><span class="keyword-directive">import</span> org.ujorm.*;
 <span class="keyword-directive">import</span> org.ujorm.core.*;
 
-@SuppressWarnings(<span class="character">&quot;</span><span class="character">unchecked</span><span class="character">&quot;</span>)
 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">implements</span> Ujo {
-  <span class="java-keywords">private static final</span> KeyFactory f = KeyFactory.CamelBuilder.<span class="java-layer-method">get</span>(Person.<span class="java-keywords">class</span>);
+  <span class="java-keywords">private static final</span> KeyFactory&lt;Person&gt; f
+      = KeyFactory.CamelBuilder.<span class="java-layer-method">get</span>(Person.<span class="java-keywords">class</span>);
     
   <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
   <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE = f.<span class="java-layer-method">newKey</span>();
@@ -185,6 +184,7 @@ Released   : 20080129
   
   <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the Ujo implementation ---</span></span>
   <span class="keyword-directive">private</span> Object[] data = <span class="keyword-directive">new</span> Object[f.<span class="java-layer-method">lockAndSize</span>()];
+
   <span class="keyword-directive">public</span> Object <span class="java-layer-method">readValue</span>(Key key) {
     <span class="java-keywords">return</span> data[key.<span class="java-layer-method">getIndex</span>()];
   }
@@ -196,7 +196,8 @@ Released   : 20080129
   }
   <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="java-layer-method">readAuthorization</span>(UjoAction action, Key key, Object value) {
     <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
-  } <span style="background-color: #fbf1f1"><span class="comment">// --- The end of the Ujo implementation ---</span></span>
+  } <span style="background-color: #fbf1f1">
+  <span class="comment">// --- The end of the Ujo implementation ---</span></span>
 
 
   <span class="comment">/** Sample method, how to add a new cash */</span>
@@ -205,6 +206,12 @@ Released   : 20080129
     CASH.<span class="java-layer-method">setValue</span>(<span class="keyword-directive">this</span>, newPrice);
   }
 }</pre>
+<!--
+    @Deprecated public UjoPropertyList readProperties() {
+        return new UjoPropertyListImpl(readKeys());
+    }
+-->
+
 <p>Compare the both samples with a <a href="sample/PersonBean.html">sample code of a JavaBean</a> object.
 If we exclude all imports from the code then the <strong>Ujo implementation</strong> have got slightly less code lines in compare to JavaBeans.
 However the more keys gives significantly the better effect in favour of the Ujo implementation.
