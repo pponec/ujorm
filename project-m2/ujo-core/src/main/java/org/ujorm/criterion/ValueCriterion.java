@@ -259,12 +259,13 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     @Override
     public String toString() {
-
+        final StringBuilder out = new StringBuilder(256).append('(');
+        
         if (operator==Operator.XSQL) {
-            return value.toString();
+            out.append(value);
+            return out.append(')').toString();
         }
 
-        StringBuilder out = new StringBuilder();
         if (operator!=Operator.XFIXED) {
             out
             .append(property)
@@ -274,7 +275,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
         }
 
         printValue(value, out);
-        return out.toString();
+        return out.append(')').toString();
     }
 
     /** Print an Ujo value
