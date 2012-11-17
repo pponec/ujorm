@@ -98,7 +98,7 @@ public class UjoPropertyRow extends QuickUjoMid<UjoPropertyRow> {
         if (aProperty==P_NAME)    { return property.getName(); }
         if (aProperty==P_TYPE)    { return property.getType(); }
         if (aProperty==P_DEFAULT) { return property.getDefault(); }
-        if (aProperty==P_VALUE)   { return property.getValue(content); }
+        if (aProperty==P_VALUE)   { return property.of(content); }
         if (aProperty==P_TEXT)    { return UjoManager.getInstance().getText(content, property, new UjoActionImpl(this)); }
         if (aProperty==P_TYPENAME){
             final String result = property.getType().getName();

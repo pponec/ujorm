@@ -155,16 +155,16 @@ public class QuickUjoBaseTest extends MyTestCase {
             QuickUjoImpl.PRO_P3.setValue(ujb, o3);
             QuickUjoImpl.PRO_P4.setValue(ujb, o4);
             
-            assertEquals(o0, QuickUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, QuickUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, QuickUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, QuickUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, QuickUjoImpl.PRO_P4.getValue(ujb));
-            assertEquals(o0, QuickUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, QuickUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, QuickUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, QuickUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, QuickUjoImpl.PRO_P4.getValue(ujb));
+            assertEquals(o0, QuickUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, QuickUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, QuickUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, QuickUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, QuickUjoImpl.PRO_P4.of(ujb));
+            assertEquals(o0, QuickUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, QuickUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, QuickUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, QuickUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, QuickUjoImpl.PRO_P4.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         
@@ -198,16 +198,16 @@ public class QuickUjoBaseTest extends MyTestCase {
             QuickUjoImplChild.PRO_P8.setValue(ujb, o3);
             QuickUjoImplChild.PRO_P9.setValue(ujb, o4);
             
-            assertEquals(o0, QuickUjoImplChild.PRO_P0.getValue(ujb));
-            assertEquals(o1, QuickUjoImplChild.PRO_P1.getValue(ujb));
-            assertEquals(o2, QuickUjoImplChild.PRO_P2.getValue(ujb));
-            assertEquals(o3, QuickUjoImplChild.PRO_P3.getValue(ujb));
-            assertEquals(o4, QuickUjoImplChild.PRO_P4.getValue(ujb));
-            assertEquals(o0, QuickUjoImplChild.PRO_P5.getValue(ujb));
-            assertEquals(o1, QuickUjoImplChild.PRO_P6.getValue(ujb));
-            assertEquals(o2, QuickUjoImplChild.PRO_P7.getValue(ujb));
-            assertEquals(o3, QuickUjoImplChild.PRO_P8.getValue(ujb));
-            assertEquals(o4, QuickUjoImplChild.PRO_P9.getValue(ujb));
+            assertEquals(o0, QuickUjoImplChild.PRO_P0.of(ujb));
+            assertEquals(o1, QuickUjoImplChild.PRO_P1.of(ujb));
+            assertEquals(o2, QuickUjoImplChild.PRO_P2.of(ujb));
+            assertEquals(o3, QuickUjoImplChild.PRO_P3.of(ujb));
+            assertEquals(o4, QuickUjoImplChild.PRO_P4.of(ujb));
+            assertEquals(o0, QuickUjoImplChild.PRO_P5.of(ujb));
+            assertEquals(o1, QuickUjoImplChild.PRO_P6.of(ujb));
+            assertEquals(o2, QuickUjoImplChild.PRO_P7.of(ujb));
+            assertEquals(o3, QuickUjoImplChild.PRO_P8.of(ujb));
+            assertEquals(o4, QuickUjoImplChild.PRO_P9.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         

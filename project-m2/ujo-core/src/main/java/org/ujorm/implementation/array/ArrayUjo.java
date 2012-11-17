@@ -87,12 +87,12 @@ public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable 
     abstract public int readPropertyCount();
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * {@link Property#setValue(Ujo,Object)}
+     * {@link Key#setValue(Ujo,Object)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
-     * @see Property#setValue(Ujo,Object)
+     * @see Key#setValue(Ujo,Object)
      */
 
     @Override
@@ -103,12 +103,12 @@ public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable 
     
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * {@link Property#getValue(Ujo)}
+     * {@link Key#of(Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
-     * @see Property#getValue(Ujo)
+     * @see Key#of(Ujo)
      */    
     @Override
     public Object readValue(final Key property) {

@@ -21,7 +21,7 @@ public class Person extends MapUjo {
     }
     
     public String getName() {
-        return NAME.getValue(this);
+        return NAME.of(this);
     }
     
     public void setAge(Integer age) {
@@ -29,6 +29,6 @@ public class Person extends MapUjo {
     }
     
     public Integer getAge() {
-        return AGE.getValue(this);
+        return AGE.of(this);
     }
 }

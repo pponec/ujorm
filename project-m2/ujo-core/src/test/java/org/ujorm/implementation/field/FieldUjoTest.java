@@ -59,16 +59,16 @@ public class FieldUjoTest extends MyTestCase {
             FieldUjoImpl.PRO_P3.setValue(ujb, o3);
             FieldUjoImpl.PRO_P4.setValue(ujb, o4);
             
-            assertEquals(o0, FieldUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, FieldUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, FieldUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, FieldUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, FieldUjoImpl.PRO_P4.getValue(ujb));
-            assertEquals(o0, FieldUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, FieldUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, FieldUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, FieldUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, FieldUjoImpl.PRO_P4.getValue(ujb));
+            assertEquals(o0, FieldUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, FieldUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, FieldUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, FieldUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, FieldUjoImpl.PRO_P4.of(ujb));
+            assertEquals(o0, FieldUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, FieldUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, FieldUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, FieldUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, FieldUjoImpl.PRO_P4.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         
@@ -103,16 +103,16 @@ public class FieldUjoTest extends MyTestCase {
             FieldUjoImplChild.PRO_P8.setValue(ujb, o3);
             FieldUjoImplChild.PRO_P9.setValue(ujb, o4);
             
-            assertEquals(o0, FieldUjoImplChild.PRO_P0.getValue(ujb));
-            assertEquals(o1, FieldUjoImplChild.PRO_P1.getValue(ujb));
-            assertEquals(o2, FieldUjoImplChild.PRO_P2.getValue(ujb));
-            assertEquals(o3, FieldUjoImplChild.PRO_P3.getValue(ujb));
-            assertEquals(o4, FieldUjoImplChild.PRO_P4.getValue(ujb));
-            assertEquals(o0, FieldUjoImplChild.PRO_P5.getValue(ujb));
-            assertEquals(o1, FieldUjoImplChild.PRO_P6.getValue(ujb));
-            assertEquals(o2, FieldUjoImplChild.PRO_P7.getValue(ujb));
-            assertEquals(o3, FieldUjoImplChild.PRO_P8.getValue(ujb));
-            assertEquals(o4, FieldUjoImplChild.PRO_P9.getValue(ujb));
+            assertEquals(o0, FieldUjoImplChild.PRO_P0.of(ujb));
+            assertEquals(o1, FieldUjoImplChild.PRO_P1.of(ujb));
+            assertEquals(o2, FieldUjoImplChild.PRO_P2.of(ujb));
+            assertEquals(o3, FieldUjoImplChild.PRO_P3.of(ujb));
+            assertEquals(o4, FieldUjoImplChild.PRO_P4.of(ujb));
+            assertEquals(o0, FieldUjoImplChild.PRO_P5.of(ujb));
+            assertEquals(o1, FieldUjoImplChild.PRO_P6.of(ujb));
+            assertEquals(o2, FieldUjoImplChild.PRO_P7.of(ujb));
+            assertEquals(o3, FieldUjoImplChild.PRO_P8.of(ujb));
+            assertEquals(o4, FieldUjoImplChild.PRO_P9.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         

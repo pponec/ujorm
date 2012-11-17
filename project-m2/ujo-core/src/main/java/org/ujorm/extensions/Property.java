@@ -209,14 +209,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
     
     /**
-     * It is a basic method for getting an appropriate type safe value from an MapUjo object. 
-     * <br>For the getting value is used internally a method 
-     *     {@link AbstractUjo#readValue(org.ujorm.Key)}
-     * </a>.
-     * <br>Note: this method replaces the value of <strong>null</strong> for default
-     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
-     * @return Returns a type safe value from the ujo object.
-     * @see AbstractUjo#readValue(Key)
+     * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
+     * @see #of(Ujo)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -225,8 +219,14 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
     
     /**
-     * A shortcut for the method getValue(Ujo).
-     * @see #getValue(Ujo)
+     * It is a basic method for getting an appropriate type safe value from an Ujo object.
+     * <br>For the getting value is used internally a method
+     *     {@link AbstractUjo#readValue(org.ujorm.Key)}
+     * </a>.
+     * <br>Note: this method replaces the value of <strong>null</strong> for default
+     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
+     * @return Returns a type safe value from the ujo object.
+     * @see AbstractUjo#readValue(Key)
      */
     @SuppressWarnings("unchecked")
     @Override

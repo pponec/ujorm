@@ -78,12 +78,12 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * {@link Property#setValue(org.ujorm.Ujo, java.lang.Object) }
+     * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
      * <br>NOTE: If property is an incorrect then no exception is throwed.
      *
-     * @see Property#setValue(Ujo,Object)
+     * @see Key#setValue(Ujo,Object)
      */
     public void writeValue(final Key property, final Object value) {
         assert UjoManager.assertDirectAssign(property, value);
@@ -92,12 +92,12 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
-     * {@link Property#getValue(org.ujorm.Ujo)}
+     * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
      * <br>NOTE: If property is an incorrect then method returns a null value.
      *
-     * @see Property#getValue(org.ujorm.Ujo)
+     * @see Key#of(org.ujorm.Ujo)
      */
     @Override
     public Object readValue(final Key property) {

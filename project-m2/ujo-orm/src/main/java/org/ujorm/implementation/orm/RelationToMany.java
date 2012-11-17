@@ -58,7 +58,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
     }
 
     /**
-     * A shortcut for the method of(Ujo).
+     * An alias for the method of(Ujo).
      * The {@code null} value is not replaced for a default one.
      * @see #of(Ujo)
      */

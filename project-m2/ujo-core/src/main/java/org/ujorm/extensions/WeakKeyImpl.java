@@ -68,20 +68,21 @@ public class WeakKeyImpl<VALUE>
     }
 
     /**
-     * It is an extended method for getting an appropriate type safe value from a common Map object.
-     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
-     * @return Returns a type safe value from the map object.
+     * An alias for the method {@link #of(java.util.Map) } .
+     * @see #getValue(java.util.Map)
      */
     @Override
     final public VALUE getValue(Map<String, ? super VALUE> map) {
         return of(map);
     }
 
-    /**
-     * A shortcut for the method {@link #getValue(java.util.Map) } .
-     * @see #getValue(java.util.Map)
+   /**
+     * It is an extended method for getting an appropriate type safe value from a common Map object.
+     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
+     * @return Returns a type safe value from the map object.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public VALUE of(Map<String, ? super VALUE> map) {
         final Object result = map.get(getName());
         return result != null ? (VALUE) result : getDefault();
@@ -127,6 +128,7 @@ public class WeakKeyImpl<VALUE>
      * @return Returns object converted to a required type.
      */
     @Override
+    @SuppressWarnings("unchecked")
     final public VALUE getRequestValue(Object servletReqest) throws IllegalArgumentException {
         try {
             final Method m = servletReqest.getClass().getMethod("getParameter", String.class);

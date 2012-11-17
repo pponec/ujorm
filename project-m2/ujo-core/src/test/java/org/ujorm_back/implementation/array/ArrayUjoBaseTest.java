@@ -91,16 +91,16 @@ public class ArrayUjoBaseTest extends MyTestCase {
             ArrayUjoImpl.PRO_P3.setValue(ujb, o3);
             ArrayUjoImpl.PRO_P4.setValue(ujb, o4);
             
-            assertEquals(o0, ArrayUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, ArrayUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, ArrayUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, ArrayUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, ArrayUjoImpl.PRO_P4.getValue(ujb));
-            assertEquals(o0, ArrayUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, ArrayUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, ArrayUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, ArrayUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, ArrayUjoImpl.PRO_P4.getValue(ujb));
+            assertEquals(o0, ArrayUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, ArrayUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, ArrayUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, ArrayUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, ArrayUjoImpl.PRO_P4.of(ujb));
+            assertEquals(o0, ArrayUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, ArrayUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, ArrayUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, ArrayUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, ArrayUjoImpl.PRO_P4.of(ujb));
         }
         printTime("A1:TIME: ", time1);
     }
@@ -132,16 +132,16 @@ public class ArrayUjoBaseTest extends MyTestCase {
             ArrayUjoImplChild.PRO_P8.setValue(ujb, o3);
             ArrayUjoImplChild.PRO_P9.setValue(ujb, o4);
             
-            assertEquals(o0, ArrayUjoImplChild.PRO_P0.getValue(ujb));
-            assertEquals(o1, ArrayUjoImplChild.PRO_P1.getValue(ujb));
-            assertEquals(o2, ArrayUjoImplChild.PRO_P2.getValue(ujb));
-            assertEquals(o3, ArrayUjoImplChild.PRO_P3.getValue(ujb));
-            assertEquals(o4, ArrayUjoImplChild.PRO_P4.getValue(ujb));
-            assertEquals(o0, ArrayUjoImplChild.PRO_P5.getValue(ujb));
-            assertEquals(o1, ArrayUjoImplChild.PRO_P6.getValue(ujb));
-            assertEquals(o2, ArrayUjoImplChild.PRO_P7.getValue(ujb));
-            assertEquals(o3, ArrayUjoImplChild.PRO_P8.getValue(ujb));
-            assertEquals(o4, ArrayUjoImplChild.PRO_P9.getValue(ujb));
+            assertEquals(o0, ArrayUjoImplChild.PRO_P0.of(ujb));
+            assertEquals(o1, ArrayUjoImplChild.PRO_P1.of(ujb));
+            assertEquals(o2, ArrayUjoImplChild.PRO_P2.of(ujb));
+            assertEquals(o3, ArrayUjoImplChild.PRO_P3.of(ujb));
+            assertEquals(o4, ArrayUjoImplChild.PRO_P4.of(ujb));
+            assertEquals(o0, ArrayUjoImplChild.PRO_P5.of(ujb));
+            assertEquals(o1, ArrayUjoImplChild.PRO_P6.of(ujb));
+            assertEquals(o2, ArrayUjoImplChild.PRO_P7.of(ujb));
+            assertEquals(o3, ArrayUjoImplChild.PRO_P8.of(ujb));
+            assertEquals(o4, ArrayUjoImplChild.PRO_P9.of(ujb));
         }
         
         printTime("A2:TIME: ", time1);

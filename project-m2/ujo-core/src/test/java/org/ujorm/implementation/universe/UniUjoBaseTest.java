@@ -101,15 +101,15 @@ public class UniUjoBaseTest extends MyTestCase {
             UniUjoBase.PRO_P3.setValue(ujb, o3);
             UniUjoBase.PRO_P4.addItem (ujb, o4);
             
-            assertEquals(o0, UniUjoBase.PRO_P0.getValue(ujb));
-            assertEquals(o1, UniUjoBase.PRO_P1.getValue(ujb));
-            assertEquals(o2, UniUjoBase.PRO_P2.getValue(ujb));
-            assertEquals(o3, UniUjoBase.PRO_P3.getValue(ujb));
+            assertEquals(o0, UniUjoBase.PRO_P0.of(ujb));
+            assertEquals(o1, UniUjoBase.PRO_P1.of(ujb));
+            assertEquals(o2, UniUjoBase.PRO_P2.of(ujb));
+            assertEquals(o3, UniUjoBase.PRO_P3.of(ujb));
             assertEquals(o4, UniUjoBase.PRO_P4.getItem(ujb,0));
-            assertEquals(o0, UniUjoBase.PRO_P0.getValue(ujb));
-            assertEquals(o1, UniUjoBase.PRO_P1.getValue(ujb));
-            assertEquals(o2, UniUjoBase.PRO_P2.getValue(ujb));
-            assertEquals(o3, UniUjoBase.PRO_P3.getValue(ujb));
+            assertEquals(o0, UniUjoBase.PRO_P0.of(ujb));
+            assertEquals(o1, UniUjoBase.PRO_P1.of(ujb));
+            assertEquals(o2, UniUjoBase.PRO_P2.of(ujb));
+            assertEquals(o3, UniUjoBase.PRO_P3.of(ujb));
             assertEquals(o4, UniUjoBase.PRO_P4.getItem(ujb,0));
         }
         printTime("A1:TIME: ", time1);

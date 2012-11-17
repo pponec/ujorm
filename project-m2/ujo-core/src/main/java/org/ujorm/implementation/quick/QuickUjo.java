@@ -51,7 +51,7 @@ public abstract class QuickUjo extends AbstractUjo implements Serializable {
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 754967L;
 
-    /** {@see Property#UNDEFINED_INDEX} */
+    /** {@see Key#UNDEFINED_INDEX} */
     private static final int UNDEFINED_INDEX = -1;
        
     /** Constructor */

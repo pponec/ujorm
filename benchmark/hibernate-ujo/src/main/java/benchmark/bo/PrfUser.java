@@ -39,7 +39,7 @@ public class PrfUser extends QuickUjo {
 
     // Setters and Getters:
     public Long getId() {
-        return id.of(this);  // Note: the of() method is an alias for getValue()
+        return id.of(this);
     }
 
     public void setId(Long anId) {

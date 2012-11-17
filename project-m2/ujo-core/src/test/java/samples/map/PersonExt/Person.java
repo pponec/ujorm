@@ -27,7 +27,7 @@ public class Person extends MapUjoExt<Person> {
   }
   
   public void addCash_old(double cash) {
-    double newPrice = CASH.getValue(this) + cash;
+    double newPrice = CASH.of(this) + cash;
     CASH.setValue(this, newPrice);
   }  
 }

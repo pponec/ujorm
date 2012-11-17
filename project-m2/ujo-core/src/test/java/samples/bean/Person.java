@@ -79,9 +79,9 @@ public class Person extends MapUjo {
         Person.AGE.setValue(person, 31);
         
         // Reading:
-        String  name = Person.NAME.getValue(person);
-        Boolean male = Person.MALE.getValue(person);
-        Integer age  = Person.AGE .getValue(person);
+        String  name = Person.NAME.of(person);
+        Boolean male = Person.MALE.of(person);
+        Integer age  = Person.AGE .of(person);
         
         return person;
         

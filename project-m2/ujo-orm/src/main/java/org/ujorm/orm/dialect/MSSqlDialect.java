@@ -524,7 +524,7 @@ public class MSSqlDialect extends SqlDialect {
     public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
         if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
             //TODO : probably MAX_ALLOWED_SIZE is used to all types not only for BLOB
-            if ((column.getType().equals(Blob.class)) && (MetaColumn.MAX_LENGTH.getValue(column) > MSSQL_MAX_ALLOWED_SIZE)) {
+            if ((column.getType().equals(Blob.class)) && (MetaColumn.MAX_LENGTH.of(column) > MSSQL_MAX_ALLOWED_SIZE)) {
 
                 String name = aName != null ? aName : MetaColumn.NAME.of(column);
                 out.append(name);

@@ -58,8 +58,8 @@ public class Person extends AbstractUjo {
         Person.HEIGHT.setValue(person, 183);
 
 // Reading:
-        String name = Person.NAME.getValue(person);
-        Boolean male = Person.MALE.getValue(person);
-        Integer height = Person.HEIGHT.getValue(person);
+        String name = Person.NAME.of(person);
+        Boolean male = Person.MALE.of(person);
+        Integer height = Person.HEIGHT.of(person);
     }
 }

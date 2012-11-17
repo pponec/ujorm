@@ -135,11 +135,19 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
     /** Get a value from an Cujo object by a chain of keys.
      * If a value  (not getLastPartialProperty) is null, then the result is null.
      */
+    final public VALUE of(final UJO ujo) {
+        final Cujo u = getSemifinalValue(ujo);
+        return u!=null ? getLastPartialProperty().getValue(u) : null ;
+    }
+
+    /**
+     * An alias for the method getValue(Cujo) .
+     * @see #getValue(Cujo)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public VALUE getValue(final UJO ujo) {
-        final Cujo u = getSemifinalValue(ujo);
-        return  u!=null ? getLastPartialProperty().getValue(u) : null ;
+        return of(ujo);
     }
 
     @Override
@@ -222,14 +230,6 @@ final public class CPathProperty<UJO extends Cujo, VALUE> implements CujoPropert
     @Override
     public int hashCode() {
         return this.getName().hashCode();
-    }
-
-    /**
-     * A shortcut for the method getValue(Cujo) .
-     * @see #getValue(Cujo)
-     */
-    final public VALUE of(final UJO ujo) {
-        return getValue(ujo);
     }
 
     @Override
