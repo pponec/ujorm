@@ -56,6 +56,7 @@ public class CriterionDialectTest extends TestCase {
         user.setCreated(new Date());        
         //
         final Session session = new OrmHandler(XDatabase.class).createSession();
+        session.delete(XItem.ID.forAll());
         session.delete(XOrder.ID.forAll());
         session.save(user);
         session.commit();        
@@ -81,6 +82,7 @@ public class CriterionDialectTest extends TestCase {
         user.setCreated(new Date());        
         //
         final Session session = new OrmHandler(XDatabase.class).createSession();
+        session.delete(XItem.ID.forAll());
         session.delete(XOrder.ID.forAll());
         session.save(user);
         session.commit();        

@@ -89,17 +89,17 @@ public interface WeakKey<VALUE> extends Key<Ujo, VALUE> {
      */
     public void setValue(Map<String,? super VALUE> map, VALUE value);
 
-   /**
-     * It is an extended method for getting an appropriate type safe value from a common Map object.
-     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
-     * @return Returns a type safe value from the map object.
+    /**
+     * An alias for the method {@link #of(java.util.Map) } .
+     * @see #getValue(java.util.Map)
      */
     public VALUE getValue(Map<String,? super VALUE> map);
 
 
-    /**
-     * A shortcut for the method {@link #getValue(java.util.Map) } .
-     * @see #getValue(java.util.Map)
+   /**
+     * It is an extended method for getting an appropriate type safe value from a common Map object.
+     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
+     * @return Returns a type safe value from the map object.
      */
     public VALUE of(Map<String,? super VALUE> map);
 
@@ -109,17 +109,16 @@ public interface WeakKey<VALUE> extends Key<Ujo, VALUE> {
      */
     public void setValue(List<? super VALUE> list, VALUE value);
 
-   /**
-     * It is an extended method for getting an appropriate type safe value from a common Map object.
-     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
-     * @return Returns a type safe value from the map object.
+    /**
+     * An alias for the method {@link #of(java.util.List) } .
+     * @see #getValue(java.util.List)
      */
     public VALUE getValue(List<? super VALUE> list);
 
-
     /**
-     * A shortcut for the method {@link #getValue(java.util.List) } .
-     * @see #getValue(java.util.List)
+     * It is an extended method for getting an appropriate type safe value from a common Map object.
+     * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
+     * @return Returns a type safe value from the map object.
      */
     public VALUE of(List<? super VALUE> list);
     

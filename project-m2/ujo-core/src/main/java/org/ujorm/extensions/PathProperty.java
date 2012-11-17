@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import org.ujorm.CompositeKey;
 import org.ujorm.CompositeProperty;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
@@ -167,25 +167,34 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         Ujo result = ujo;
         for (int i=0; i<keys.length-1; i++) {
             if (result==null) { return result; }
-            result = (Ujo) keys[i].getValue(result);
+            result = (Ujo) keys[i].of(result);
         }
         return result;
     }
 
-    /** Get a value from an Ujo object by a chain of keys.
-     * If a value  (not getLastPartialProperty) is null, then the result is null.
+    /**
+     * An alias for the method of(Ujo) .
+     * @see #of(Ujo)
      */
     @SuppressWarnings("unchecked")
     @Override
     public VALUE getValue(final UJO ujo) {
-        final Ujo u = getSemifinalValue(ujo);
-        return  u!=null ? getLastPartialProperty().of(u) : null ;
+        return of(ujo);
     }
 
     @Override
     public void setValue(final UJO ujo, final VALUE value) {
         final Ujo u = getSemifinalValue(ujo);
         getLastPartialProperty().setValue(u, value);
+    }
+
+    /** Get a value from an Ujo object by a chain of keys.
+     * If a value  (not getLastPartialProperty) is null, then the result is null.
+     */
+    @Override
+    final public VALUE of(final UJO ujo) {
+        final Ujo u = getSemifinalValue(ujo);
+        return  u!=null ? getLastPartialProperty().of(u) : null ;
     }
 
     @Override
@@ -202,7 +211,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
     public boolean isDefault(UJO ujo) {
-        VALUE value = getValue(ujo);
+        VALUE value = of(ujo);
         VALUE defaultValue = getDefault();
         final boolean result
         =  value==defaultValue
@@ -235,7 +244,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     public boolean equals(final UJO ujo, final VALUE value) {
-        Object myValue = getValue(ujo);
+        Object myValue = of(ujo);
         if (myValue==value) { return true; }
         
         final boolean result
@@ -273,15 +282,6 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         return this.getName().hashCode();
     }
 
-    /**
-     * A shortcut for the method getValue(Ujo) .
-     * @see #getValue(Ujo)
-     */
-    @Override
-    final public VALUE of(final UJO ujo) {
-        return getValue(ujo);
-    }
-    
     @Override
     public String toString() {
         return getName();

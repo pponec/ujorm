@@ -58,16 +58,16 @@ public class MapUjoTest extends MyTestCase {
             MapUjoImpl.PRO_P3.setValue(ujb, o3);
             MapUjoImpl.PRO_P4.setValue(ujb, o4);
             
-            assertEquals(o0, MapUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, MapUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, MapUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, MapUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, MapUjoImpl.PRO_P4.getValue(ujb));
-            assertEquals(o0, MapUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, MapUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, MapUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, MapUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, MapUjoImpl.PRO_P4.getValue(ujb));
+            assertEquals(o0, MapUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, MapUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, MapUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, MapUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, MapUjoImpl.PRO_P4.of(ujb));
+            assertEquals(o0, MapUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, MapUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, MapUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, MapUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, MapUjoImpl.PRO_P4.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         
@@ -101,16 +101,16 @@ public class MapUjoTest extends MyTestCase {
             MapUjoImplChild.PRO_P8.setValue(ujb, o3);
             MapUjoImplChild.PRO_P9.setValue(ujb, o4);
             
-            assertEquals(o0, MapUjoImplChild.PRO_P0.getValue(ujb));
-            assertEquals(o1, MapUjoImplChild.PRO_P1.getValue(ujb));
-            assertEquals(o2, MapUjoImplChild.PRO_P2.getValue(ujb));
-            assertEquals(o3, MapUjoImplChild.PRO_P3.getValue(ujb));
-            assertEquals(o4, MapUjoImplChild.PRO_P4.getValue(ujb));
-            assertEquals(o0, MapUjoImplChild.PRO_P5.getValue(ujb));
-            assertEquals(o1, MapUjoImplChild.PRO_P6.getValue(ujb));
-            assertEquals(o2, MapUjoImplChild.PRO_P7.getValue(ujb));
-            assertEquals(o3, MapUjoImplChild.PRO_P8.getValue(ujb));
-            assertEquals(o4, MapUjoImplChild.PRO_P9.getValue(ujb));
+            assertEquals(o0, MapUjoImplChild.PRO_P0.of(ujb));
+            assertEquals(o1, MapUjoImplChild.PRO_P1.of(ujb));
+            assertEquals(o2, MapUjoImplChild.PRO_P2.of(ujb));
+            assertEquals(o3, MapUjoImplChild.PRO_P3.of(ujb));
+            assertEquals(o4, MapUjoImplChild.PRO_P4.of(ujb));
+            assertEquals(o0, MapUjoImplChild.PRO_P5.of(ujb));
+            assertEquals(o1, MapUjoImplChild.PRO_P6.of(ujb));
+            assertEquals(o2, MapUjoImplChild.PRO_P7.of(ujb));
+            assertEquals(o3, MapUjoImplChild.PRO_P8.of(ujb));
+            assertEquals(o4, MapUjoImplChild.PRO_P9.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         

@@ -50,7 +50,7 @@ public class PrfOrder extends QuickUjo {
 
     // Setters and Getters:
     public Date getDateDeleted() {
-        return dateDeleted.of(this); // Note: the of() method is an alias for getValue()
+        return dateDeleted.of(this);
     }
 
     public void setDateDeleted(Date aDateDeleted) {

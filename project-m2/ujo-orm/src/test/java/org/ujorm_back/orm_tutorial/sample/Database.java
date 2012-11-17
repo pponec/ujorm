@@ -29,7 +29,7 @@ import org.ujorm.orm.dialect.*;
  * A class mapping to a database (sample of usage)
  * @hidden
  */
-@Db(schema="db1", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+@Db(schema="db_back3", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db_back3")
 //@Db(schema="db1", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:~/ujorm/db1")
 //@Db(schema="db1", dialect=PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/db1")
 //@Db(schema="db1", dialect=MySqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:mysql://127.0.0.1:3306/")

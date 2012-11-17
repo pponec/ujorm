@@ -44,7 +44,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
     }
 
     /**
-     * A shortcut for the method of(Ujo).
+     * An alias for the method of(Ujo).
      * @see #of(Ujo)
      */
     @SuppressWarnings("unchecked")

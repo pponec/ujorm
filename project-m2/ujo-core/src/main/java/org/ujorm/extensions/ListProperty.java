@@ -47,33 +47,33 @@ public class ListProperty<UJO extends Ujo, ITEM>
     /** Returns a count of Items. If a property value is null, method returns 0. */
     @Override
     public int getItemCount(final UJO ujo) {
-        List<ITEM> list = getValue(ujo);
+        List<ITEM> list = of(ujo);
         return list!=null ? list.size() : 0 ;
     }
 
     /**
-     * Returns a value of property. The result is the same, like Ujo#getValue(UjoPropertyList) .get(index) .
+     * Returns a value of property. The result is the same, like Ujo#of(UjoPropertyList) .get(index) .
      */
     @Override
     public ITEM getItem(final UJO ujo, final int index) {
-        return getValue(ujo).get(index);
+        return of(ujo).get(index);
     }
 
     /**
      * The alias for {@link #getItem(org.ujorm.Ujo, int) }.
-     * @return Returns a value of property. The result is the same, like Ujo#getValue(UjoPropertyList) .get(index) .
+     * @return Returns a value of property. The result is the same, like Ujo#of(UjoPropertyList) .get(index) .
      */
     @Override
     public ITEM of(final UJO ujo, final int index) {
-        return getValue(ujo).get(index);
+        return of(ujo).get(index);
     }
 
-    /** Set a property item value. The action is the same, like Ujo#getValue(UjoPropertyList) .set(indexm, value).
+    /** Set a property item value. The action is the same, like Ujo#of(UjoPropertyList) .set(indexm, value).
      * @return the element previously at the specified position.
      */
     @Override
     public ITEM setItem(final UJO ujo, final int index, final ITEM value) {
-        return getValue(ujo).set(index, value);
+        return of(ujo).set(index, value);
     }
 
     /** Add an Item value to a List property. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
@@ -98,7 +98,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
      */
     @Override
     public boolean removeItem(UJO ujo, ITEM value) {
-        List<ITEM> list = getValue(ujo);
+        List<ITEM> list = of(ujo);
         return list!=null && list.remove(value);
     }
 
@@ -110,7 +110,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     @SuppressWarnings("unchecked")
     @Override
     public List<ITEM> getList(final UJO ujo) {
-        List<ITEM> result = getValue(ujo);
+        List<ITEM> result = of(ujo);
         if (result==null) {
             try {
                 result = getType().isInterface()
@@ -128,7 +128,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     /** Sort a list by its keys. */
     @SuppressWarnings("unchecked")
     public void sort(UJO ujo, Key ... keys) {
-        List<ITEM> list = getValue(ujo);
+        List<ITEM> list = of(ujo);
         if ( list!=null) {
             new UjoComparator(keys).sort(list);
         }
@@ -137,7 +137,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     /** Indicates whether a list of items is null or empty. */
     @Override
     public boolean isDefault(UJO ujo) {
-        List<ITEM> list = getValue(ujo);
+        List<ITEM> list = of(ujo);
         return list==null || list.isEmpty();
     }
 

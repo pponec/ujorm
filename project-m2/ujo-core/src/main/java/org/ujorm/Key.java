@@ -62,7 +62,13 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     
     /**
-     * It is a basic method for getting an appropriate type safe value from an Ujo object. 
+     * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
+     * @see #of(Ujo)
+     */
+    public VALUE getValue(UJO ujo);    
+
+    /**
+     * It is a basic method for getting an appropriate type safe value from an Ujo object.
      * <br>The method calls a method
      * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
      * always.
@@ -70,14 +76,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @param ujo If a NULL parameter is used then an exception NullPointerException is throwed.
      * @return Returns a type safe value from the ujo object.
      * @see Ujo#readValue(Key)
-     * @see #of(org.ujorm.Ujo) 
-     */
-    public VALUE getValue(UJO ujo);
-    
-    
-    /**
-     * A shortcut for the method getValue(Ujo) .
-     * @see #getValue(Ujo)
+     * @see #getValue(org.ujorm.Ujo)
      */
     public VALUE of(UJO ujo);
     

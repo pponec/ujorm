@@ -230,7 +230,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
             if (!isRelations() && pc.p1.isTypeOf(Ujo.class)) {
                 continue;
             }
-            Object value = pc.p1.getValue(ujo);
+            Object value = pc.p1.of(ujo);
 
             if (value == null) {
                 // No conversion

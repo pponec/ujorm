@@ -72,9 +72,9 @@ public class PropertyGroupTest extends TestCase {
 
         assertEquals(props1.size(), props2.size());
         assertSame(props1.getFirstProperty(), props2.getFirstProperty());
-        assertSame(props1.getFirstProperty().getValue(ujo), props2.getFirstProperty().getValue(ujo));
+        assertSame(props1.getFirstProperty().of(ujo), props2.getFirstProperty().of(ujo));
         assertSame(props1.getLastProperty(), props2.getLastProperty());
-        assertSame(props1.getLastProperty().getValue(ujo), props2.getLastProperty().getValue(ujo));
+        assertSame(props1.getLastProperty().of(ujo), props2.getLastProperty().of(ujo));
         assertTrue(props2.contains(props1.getFirstProperty()));
         assertFalse(props2.contains(UjoCSV.P2));
         assertTrue(props2.equals(props1));

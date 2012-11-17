@@ -111,7 +111,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /**
      * GetValue from the result set by position
-     * It must be the same implementation as {@link #getValue(org.ujorm.orm.metaModel.MetaColumn, java.sql.CallableStatement, int)}.
+     * It must be the same implementation as {@link #of(org.ujorm.orm.metaModel.MetaColumn, java.sql.CallableStatement, int)}.
      * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs The ResultSet instance
      * @param c Catabase column index starting at #1
@@ -159,7 +159,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
     /**
      * GetValue from the <b>stored precedure</b> by position.
-     * It must be the same implementation as {@link #getValue(org.ujorm.orm.metaModel.MetaColumn, java.sql.ResultSet, int)}.
+     * It must be the same implementation as {@link #of(org.ujorm.orm.metaModel.MetaColumn, java.sql.ResultSet, int)}.
      * @param mColumn Meta-model column, where the {@link MetaColumn#getTypeCode() typeCode} must be assigned before.
      * @param rs The CallableStatement instance
      * @param c Catabase column index starting at #1

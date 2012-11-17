@@ -119,7 +119,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             return (Boolean) value;
         }
         Object value2 = value instanceof Key
-            ? ((Key)value).getValue(ujo)
+            ? ((Key)value).of(ujo)
             : value
             ;
         boolean caseInsensitve = true;
@@ -135,7 +135,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
                     ? (Pattern) value2 
                     : Pattern.compile(value2.toString())
                     ;
-                Object val1 = property.getValue(ujo);
+                Object val1 = property.of(ujo);
                 boolean result2 = val1!=null && p.matcher(val1.toString()).matches();
                 return operator==Operator.REGEXP ? result2 : !result2 ;
             case STARTS:
@@ -187,7 +187,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
         
         Comparable val2 = (Comparable) value2;
         if (null== val2)  {return false; }
-        Comparable val1 = (Comparable) property.getValue(ujo);
+        Comparable val1 = (Comparable) property.of(ujo);
         if (null== val1)  {return false; }
         int result = compare(val1, val2);
         

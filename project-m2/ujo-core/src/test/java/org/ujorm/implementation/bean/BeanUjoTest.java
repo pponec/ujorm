@@ -58,16 +58,16 @@ public class BeanUjoTest extends MyTestCase {
         BeanUjoImpl.PRO_P3.setValue(ujb, o3);
         BeanUjoImpl.PRO_P4.setValue(ujb, o4);
         
-        assertEquals(o0, BeanUjoImpl.PRO_P0.getValue(ujb));
-        assertEquals(o1, BeanUjoImpl.PRO_P1.getValue(ujb));
-        assertEquals(o2, BeanUjoImpl.PRO_P2.getValue(ujb));
-        assertEquals(o3, BeanUjoImpl.PRO_P3.getValue(ujb));
-        assertEquals(o4, BeanUjoImpl.PRO_P4.getValue(ujb));
-        assertEquals(o0, BeanUjoImpl.PRO_P0.getValue(ujb));
-        assertEquals(o1, BeanUjoImpl.PRO_P1.getValue(ujb));
-        assertEquals(o2, BeanUjoImpl.PRO_P2.getValue(ujb));
-        assertEquals(o3, BeanUjoImpl.PRO_P3.getValue(ujb));
-        assertEquals(o4, BeanUjoImpl.PRO_P4.getValue(ujb));
+        assertEquals(o0, BeanUjoImpl.PRO_P0.of(ujb));
+        assertEquals(o1, BeanUjoImpl.PRO_P1.of(ujb));
+        assertEquals(o2, BeanUjoImpl.PRO_P2.of(ujb));
+        assertEquals(o3, BeanUjoImpl.PRO_P3.of(ujb));
+        assertEquals(o4, BeanUjoImpl.PRO_P4.of(ujb));
+        assertEquals(o0, BeanUjoImpl.PRO_P0.of(ujb));
+        assertEquals(o1, BeanUjoImpl.PRO_P1.of(ujb));
+        assertEquals(o2, BeanUjoImpl.PRO_P2.of(ujb));
+        assertEquals(o3, BeanUjoImpl.PRO_P3.of(ujb));
+        assertEquals(o4, BeanUjoImpl.PRO_P4.of(ujb));
         
     }
 
@@ -102,16 +102,16 @@ public class BeanUjoTest extends MyTestCase {
             BeanUjoImpl.PRO_P3.setValue(ujb, o3);
             BeanUjoImpl.PRO_P4.setValue(ujb, o4);
             
-            assertEquals(o0, BeanUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, BeanUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, BeanUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, BeanUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, BeanUjoImpl.PRO_P4.getValue(ujb));
-            assertEquals(o0, BeanUjoImpl.PRO_P0.getValue(ujb));
-            assertEquals(o1, BeanUjoImpl.PRO_P1.getValue(ujb));
-            assertEquals(o2, BeanUjoImpl.PRO_P2.getValue(ujb));
-            assertEquals(o3, BeanUjoImpl.PRO_P3.getValue(ujb));
-            assertEquals(o4, BeanUjoImpl.PRO_P4.getValue(ujb));
+            assertEquals(o0, BeanUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, BeanUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, BeanUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, BeanUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, BeanUjoImpl.PRO_P4.of(ujb));
+            assertEquals(o0, BeanUjoImpl.PRO_P0.of(ujb));
+            assertEquals(o1, BeanUjoImpl.PRO_P1.of(ujb));
+            assertEquals(o2, BeanUjoImpl.PRO_P2.of(ujb));
+            assertEquals(o3, BeanUjoImpl.PRO_P3.of(ujb));
+            assertEquals(o4, BeanUjoImpl.PRO_P4.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         
@@ -145,16 +145,16 @@ public class BeanUjoTest extends MyTestCase {
             BeanUjoImplChild.PRO_P8.setValue(ujb, o3);
             BeanUjoImplChild.PRO_P9.setValue(ujb, o4);
             
-            assertEquals(o0, BeanUjoImplChild.PRO_P0.getValue(ujb));
-            assertEquals(o1, BeanUjoImplChild.PRO_P1.getValue(ujb));
-            assertEquals(o2, BeanUjoImplChild.PRO_P2.getValue(ujb));
-            assertEquals(o3, BeanUjoImplChild.PRO_P3.getValue(ujb));
-            assertEquals(o4, BeanUjoImplChild.PRO_P4.getValue(ujb));
-            assertEquals(o0, BeanUjoImplChild.PRO_P5.getValue(ujb));
-            assertEquals(o1, BeanUjoImplChild.PRO_P6.getValue(ujb));
-            assertEquals(o2, BeanUjoImplChild.PRO_P7.getValue(ujb));
-            assertEquals(o3, BeanUjoImplChild.PRO_P8.getValue(ujb));
-            assertEquals(o4, BeanUjoImplChild.PRO_P9.getValue(ujb));
+            assertEquals(o0, BeanUjoImplChild.PRO_P0.of(ujb));
+            assertEquals(o1, BeanUjoImplChild.PRO_P1.of(ujb));
+            assertEquals(o2, BeanUjoImplChild.PRO_P2.of(ujb));
+            assertEquals(o3, BeanUjoImplChild.PRO_P3.of(ujb));
+            assertEquals(o4, BeanUjoImplChild.PRO_P4.of(ujb));
+            assertEquals(o0, BeanUjoImplChild.PRO_P5.of(ujb));
+            assertEquals(o1, BeanUjoImplChild.PRO_P6.of(ujb));
+            assertEquals(o2, BeanUjoImplChild.PRO_P7.of(ujb));
+            assertEquals(o3, BeanUjoImplChild.PRO_P8.of(ujb));
+            assertEquals(o4, BeanUjoImplChild.PRO_P9.of(ujb));
         }
         long time2 = System.currentTimeMillis();
         
