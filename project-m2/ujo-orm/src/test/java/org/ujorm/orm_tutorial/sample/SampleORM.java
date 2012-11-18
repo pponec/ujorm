@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
-import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
@@ -72,6 +72,7 @@ public class SampleORM {
             sample.useSelectItems_4();
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
+            sample.useSelectItems_6();
             sample.useOptimizedSelect();
             sample.useNativeCriterion();
             sample.useReloading();
@@ -402,6 +403,14 @@ public class SampleORM {
 
         for (Item item : session.createQuery(Item.ORDER.whereIn(orderA, orderB))) {
             System.out.println("Item: " + item);
+        }
+    }
+
+    /** Select one items without Order */
+    public void useSelectItems_6() {
+        Query<Item> items = session.createQuery(Item.ORDER.add(Order.CUSTOMER).whereNull());
+        for (Item item : items) {
+            System.out.println("ITEM WITHOUT ORDER: " + item);
         }
     }
 

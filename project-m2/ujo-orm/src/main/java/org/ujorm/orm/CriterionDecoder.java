@@ -23,15 +23,15 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.ujorm.Key;
 import org.ujorm.CompositeKey;
+import org.ujorm.Key;
+import org.ujorm.criterion.BinaryCriterion;
+import org.ujorm.criterion.Criterion;
+import org.ujorm.criterion.Operator;
+import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaTable;
-import org.ujorm.criterion.Criterion;
-import org.ujorm.criterion.BinaryCriterion;
-import org.ujorm.criterion.ValueCriterion;
-import org.ujorm.criterion.Operator;
 
 /**
  * SQL Criterion Decoder.
@@ -47,6 +47,7 @@ public class CriterionDecoder {
     final private List<Key> orderBy;
     final private StringBuilder sql;
     final private List<ValueCriterion> values;
+    final private List<ValueCriterion> nullValues;
     final private Set<MetaTable> tables;
 
     public CriterionDecoder(Criterion e, MetaTable ormTable) {
@@ -63,6 +64,7 @@ public class CriterionDecoder {
         this.handler = database.getOrmHandler();
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ValueCriterion>();
+        this.nullValues = new ArrayList<ValueCriterion>();
         this.tables = new HashSet<MetaTable>();
 
         if (this.criterion!=null) {
@@ -80,9 +82,12 @@ public class CriterionDecoder {
         if (c.isBinary()) {
             unpackBinary((BinaryCriterion)c);
         } else try {
-            ValueCriterion value = dialect.printCriterion((ValueCriterion) c, sql);
-            if (value!=null) {
-                values.add(value);
+            final ValueCriterion origCriterion = (ValueCriterion) c;
+            final ValueCriterion newCriterion = dialect.printCriterion(origCriterion, sql);
+            if (newCriterion!=null) {
+                values.add(newCriterion);
+            } else if (origCriterion != null) {
+                nullValues.add(origCriterion);
             }
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
@@ -239,18 +244,23 @@ public class CriterionDecoder {
     protected Key[] getPropertyRelations() {
         Set<Key> result = new HashSet<Key>();
         ArrayList<Key> dirs = new ArrayList<Key>();
+        ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>(values.size() + nullValues.size());
+        allValues.addAll(values);
+        allValues.addAll(nullValues);
 
-        for (ValueCriterion value : values) {
+        for (ValueCriterion value : allValues) {
             Key p1 = value.getLeftNode();
-            Object      p2 = value.getRightNode();
+            Object p2 = value.getRightNode();
 
-            if (!p1.isDirect()) {
-                ((CompositeKey) p1).exportKeys(dirs);
-                dirs.remove(dirs.size()-1); // remove the last direct property
-            }
-            if (p2 instanceof CompositeKey) {
-                ((CompositeKey) p2).exportKeys(dirs);
-                dirs.remove(dirs.size()-1); // remove the last direct property
+            if (p1 != null) {
+                if (!p1.isDirect()) {
+                    ((CompositeKey) p1).exportKeys(dirs);
+                    dirs.remove(dirs.size()-1); // remove the last direct property
+                }
+                if (p2 instanceof CompositeKey) {
+                    ((CompositeKey) p2).exportKeys(dirs);
+                    dirs.remove(dirs.size()-1); // remove the last direct property
+                }
             }
         }
 
