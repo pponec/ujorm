@@ -18,9 +18,9 @@ package org.ujorm.implementation.orm;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.ujorm.UjoAction;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
+import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.extensions.Property;
@@ -176,7 +176,6 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
         throw new NullPointerException("Can't get FK form the property '"+property+"' due the missing Session");
     }
 
-
     // ===== STATIC METHODS: Key Facotory =====
 
     /** Create a factory with a cammel-case Key name generator.
@@ -194,8 +193,6 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     protected static <UJO extends Ujo> KeyFactory<UJO> newFactory(Class<? extends UJO> ujoClass) {
         return new OrmKeyFactory(ujoClass, true);
     }
-
-    // --------- STATIC METHODS -------------------
 
     /** A PropertyIterator Factory creates an new property and assign a next index.
      * @hidden
@@ -374,6 +371,5 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty() {
         return newProperty(null, null, null, UNDEFINED_INDEX, false);
     }
-
 
 }
