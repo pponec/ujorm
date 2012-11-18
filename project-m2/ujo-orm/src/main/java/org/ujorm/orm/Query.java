@@ -559,7 +559,19 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
             result.append('(').append(table.getType().getSimpleName()).append(") ");
         }
         if (criterion!=null) {
+            result.append(" criterion: ");
             result.append(criterion);
+        }
+
+        if (orderBy!=null && orderBy.size() > 0) {
+            result.append(" | ordered by: ");
+            for (Key<UJO, ?> ujoProperty : orderBy) {
+                result.append(ujoProperty)
+                      .append(" ")
+                      .append(ujoProperty.isAscending() ? "ASC" : "DESC")
+                      .append(", ")
+                      ;
+            }
         }
 
         return result.length()>0
