@@ -65,8 +65,12 @@ public class CriterionDecoder {
         this.values = new ArrayList<ValueCriterion>();
         this.tables = new HashSet<MetaTable>();
 
-        if (criterion!=null) {
-            unpack(criterion);
+        if (this.criterion!=null) {
+            unpack(this.criterion);
+        }
+
+        if (this.criterion!=null
+        ||  this.orderBy!=null) {
             writeRelations();
         }
     }
