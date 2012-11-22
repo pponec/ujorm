@@ -25,8 +25,14 @@ public enum CheckReport {
 
     /** Skip the check test. */
     SKIP,
+    /** Skip the check test and Quote all SQL columns, tables and alias names. 
+     * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
+     */    
+    QUOTE_SQL_NAMES,
     /** Log a WARNING with the conflict message. */
     WARNING,
-    /** Throw an EXCEPTION with the conflict message. */
+    /** Throw an EXCEPTION with the conflict message. 
+     * This is the default option.
+     */
     EXCEPTION;
 }

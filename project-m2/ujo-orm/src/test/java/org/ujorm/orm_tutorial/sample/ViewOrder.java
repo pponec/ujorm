@@ -17,8 +17,8 @@
 package org.ujorm.orm_tutorial.sample;
 
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.View;
 
 /**

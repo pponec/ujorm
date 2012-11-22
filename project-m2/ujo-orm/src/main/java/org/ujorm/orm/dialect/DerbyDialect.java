@@ -16,7 +16,6 @@
 package org.ujorm.orm.dialect;
 
 import java.io.IOException;
-import java.util.List;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -44,7 +43,7 @@ public class DerbyDialect extends SqlDialect {
     @Override
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
         out.append("CREATE SCHEMA ");
-        out.append(schema);
+        printQuotedName(schema, out);
         return out;
     }
 

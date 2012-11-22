@@ -115,7 +115,7 @@ public class OracleDialect extends PostgreSqlDialect {
     public Appendable printColumnDeclaration_2(MetaColumn column, String aName, Appendable out) throws IOException {
 
         String name = aName!=null ? aName : MetaColumn.NAME.of(column);
-        out.append(name);
+        printQuotedName(name, out);
         out.append(' ');
         out.append(getColumnType(column));
 

@@ -31,6 +31,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.criterion.Operator.*;
+import org.ujorm.orm.ao.CheckReport;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -117,9 +118,9 @@ public class SampleORM {
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
-            params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
-            params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
+            params.set(MetaParams.CHECK_KEYWORDS, CheckReport.QUOTE_SQL_NAMES);
+            params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             handler.config(params);
         }
 
@@ -278,6 +279,10 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
+        if (session.getParameters().isQuotedSqlNames()) {
+            return; // Columns must be quoted
+        }
+        
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
 
         long minimalOrderId = 0L;
@@ -304,6 +309,10 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectWithNativeSQL() {
+        if (session.getParameters().isQuotedSqlNames()) {
+            return; // Columns must be quoted
+        }        
+        
         final Long excludedId = -7L;
         SqlParameters sql = new SqlParameters().setSqlStatement
                 ( "SELECT * FROM ("
@@ -433,6 +442,9 @@ public class SampleORM {
 
     /** Select all items with a description with the 'table' insensitive text. */
     public void useNativeCriterion() {
+        if (session.getParameters().isQuotedSqlNames()) {
+            return;  // Columns must be quoted
+        }        
 
         Criterion<Order> crn = Order.STATE.forSql("ord_order_alias.id>0")
              .and(Order.CREATED.where(LE, new Date()));

@@ -22,17 +22,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.implementation.orm.RelationToOne;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.DbType;
-import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.ITypeService;
+import org.ujorm.orm.OrmUjo;
+import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
@@ -345,9 +346,12 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** Print a full 'alias' name of foreign column by index */
     public void printForeignColumnFullName(int index, Appendable out) throws IOException {
         MetaTable table = TABLE.of(this);
-        out.append(table.getAlias());
+        SqlDialect dialect = TABLE.of(this)
+                .getDatabase()
+                .getDialect();
+        dialect.printQuotedName(table.getAlias(), out);
         out.append('.');
-        out.append(getForeignColumnNames()[index]);
+        dialect.printQuotedName(getForeignColumnNames()[index], out);
     }
 
     /** A TypeCode

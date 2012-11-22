@@ -36,7 +36,7 @@ public class HsqldbDialect extends H2Dialect {
     @Override
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
         out.append("CREATE SCHEMA ");
-        out.append(schema);
+        printQuotedName(schema, out);
         out.append(" AUTHORIZATION DBA");
         return out;
     }
