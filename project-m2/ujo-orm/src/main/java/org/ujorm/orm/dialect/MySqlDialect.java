@@ -40,7 +40,7 @@ public class MySqlDialect extends SqlDialect {
         return "com.mysql.jdbc.Driver";
     }
 
-    /** Print an SQL DELETE statement. */
+   /** Print an SQL DELETE statement. */
     @Override
     public Appendable printDelete
         ( MetaTable table
@@ -62,7 +62,8 @@ public class MySqlDialect extends SqlDialect {
             
         } else {
             String fullTableName = printFullTableName(table, new StringBuilder(64)).toString();
-            String where = decoder.getWhere().replace(table.getAlias()+'.', fullTableName+'.');
+            String tableAlias = getQuotedName(table.getAlias());
+            String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');            
             //
             out.append("DELETE FROM ");
             out.append(fullTableName);
@@ -156,7 +157,7 @@ public class MySqlDialect extends SqlDialect {
      * {@inheritDoc}
      */
     @Override
-    public Appendable printQuotedName(CharSequence name, Appendable sql) throws IOException {
+    public Appendable printQuotedNameAlways(CharSequence name, Appendable sql) throws IOException {
         sql.append('`'); // quotation start character based on SQL dialect
         sql.append(name);
         sql.append('`'); // quotation end character based on SQL dialect

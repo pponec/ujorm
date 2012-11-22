@@ -61,7 +61,7 @@ public class MSSqlDialect extends SqlDialect {
     @Override
     public Appendable printUpdate(MetaTable table, List<MetaColumn> changedColumns, CriterionDecoder decoder, Appendable out) throws IOException {
         out.append("UPDATE ");
-        out.append(table.getAlias());
+        printQuotedName(table.getAlias(), out);
         out.append("\n\tSET ");
 
         for (int i = 0; i < changedColumns.size(); i++) {
@@ -70,7 +70,7 @@ public class MSSqlDialect extends SqlDialect {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i == 0 ? "" : ", ");
-            out.append(MetaColumn.NAME.of(ormColumn));
+            printQuotedName(MetaColumn.NAME.of(ormColumn), out);
             out.append("=?");
         }
         out.append("\n\tFROM ");
@@ -84,15 +84,15 @@ public class MSSqlDialect extends SqlDialect {
     @Override
     public Appendable printDelete(MetaTable table, CriterionDecoder decoder, Appendable out) throws IOException {
         out.append("DELETE ");
-        out.append(table.getAlias());
+        printQuotedName(table.getAlias(), out);
         out.append("\n\tFROM ");
         Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
         getTablesFromCriterion(decoder, table, tables);
         printTablesWithAlias(tables.values(), out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
-
-        return out;
+        
+        return out;    
     }
 
     /** Print a full SQL column alias name by sample: <TABLE>_<ALIAS_COLUMN> */
@@ -126,9 +126,9 @@ public class MSSqlDialect extends SqlDialect {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
 
-                    out.append(MetaColumn.TABLE.of(column).getAlias());
+                    printQuotedName(MetaColumn.TABLE.of(column).getAlias(), out);
                     out.append('.');
-                    out.append(column.getForeignColumnName(i));
+                    printQuotedName(column.getForeignColumnName(i), out);
 
                     out.append(" AS ");
                     printColumnUnderAlias(column, out);
@@ -408,7 +408,7 @@ public class MSSqlDialect extends SqlDialect {
         out.append(schema);
         out.append("') ");
         out.append("BEGIN CREATE DATABASE ");
-        out.append(schema);
+        printQuotedName(schema, out);
         out.append(" END ");
         return out;
     }
@@ -424,13 +424,15 @@ public class MSSqlDialect extends SqlDialect {
         final String tableName = MetaTable.NAME.of(table);
 
         if (isFilled(tableSchema)) {
-            out.append((printSymbolSchema && table.isDefaultSchema())
-                    ? DEFAULT_SCHEMA_SYMBOL
-                    : tableSchema);
+            if (printSymbolSchema && table.isDefaultSchema()) {
+                out.append(DEFAULT_SCHEMA_SYMBOL);
+            } else {
+                printQuotedName(tableSchema, out);
+            }
             out.append('.');
         }
         out.append("dbo.");
-        out.append(tableName);
+        printQuotedName(tableName, out);
         return out;
     }
 
@@ -447,15 +449,16 @@ public class MSSqlDialect extends SqlDialect {
         }
         out.append("dbo.");
 
-        MetaColumn pkType = new MetaColumn(db.getParams().getConverter(null));
+        final MetaColumn pkType = new MetaColumn(db.getParams().getConverter(null));
         MetaColumn.DB_TYPE.setValue(pkType, DbType.BIGINT);
 
-        out.append(getSeqTableModel().getTableName()
-                + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
-                + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
-                + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
-                + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
-                + "\n\t)");
+        printQuotedName(getSeqTableModel().getTableName(), out);
+        out.append ( ""
+            + "\n\t( " + getQuotedName(getSeqTableModel().getId()) + " VARCHAR(96) NOT NULL PRIMARY KEY"
+            + "\n\t, " + getQuotedName(getSeqTableModel().getSequence()) + " " + getColumnType(pkType) + " DEFAULT " + cache + " NOT NULL"
+            + "\n\t, " + getQuotedName(getSeqTableModel().getCache()) + " INT DEFAULT " + cache + " NOT NULL"
+            + "\n\t, " + getQuotedName(getSeqTableModel().getMaxValue()) + " " + getColumnType(pkType) + " DEFAULT 0 NOT NULL"
+            + "\n\t)");
         return out;
     }
 
@@ -463,11 +466,11 @@ public class MSSqlDialect extends SqlDialect {
     protected Appendable printSequenceTableName(final UjoSequencer sequence, final Appendable out) throws IOException {
         String schema = sequence.getDatabaseSchema();
         if (isFilled(schema)) {
-            out.append(schema);
+            printQuotedNameAlways(schema, out);
             out.append('.');
         }
         out.append("dbo.");
-        out.append(getSeqTableModel().getTableName());
+        printQuotedNameAlways(getSeqTableModel().getTableName(), out);
         return out;
     }
 
@@ -527,7 +530,7 @@ public class MSSqlDialect extends SqlDialect {
             if ((column.getType().equals(Blob.class)) && (MetaColumn.MAX_LENGTH.of(column) > MSSQL_MAX_ALLOWED_SIZE)) {
 
                 String name = aName != null ? aName : MetaColumn.NAME.of(column);
-                out.append(name);
+                printQuotedName(name, out);
                 out.append(' ');
                 out.append(getColumnType(column));
 
@@ -580,7 +583,7 @@ public class MSSqlDialect extends SqlDialect {
      * {@inheritDoc}
      */
     @Override
-    public Appendable printQuotedName(CharSequence name, Appendable sql) throws IOException {
+    public Appendable printQuotedNameAlways(CharSequence name, Appendable sql) throws IOException {
         sql.append('['); // quotation start character based on SQL dialect
         sql.append(name);
         sql.append(']'); // quotation end character based on SQL dialect
