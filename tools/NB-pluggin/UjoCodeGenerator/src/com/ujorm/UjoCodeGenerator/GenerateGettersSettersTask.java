@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2012 Martin Mahr
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.ujorm.UjoCodeGenerator;
 
 import com.sun.source.tree.AnnotationTree;
@@ -33,6 +48,7 @@ import org.openide.DialogDisplayer;
  */
 public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> {
 
+    private static final StringService stringService = new StringService();
     private List<VariableTree> ujoMembers = new ArrayList<VariableTree>();
     private List<MethodTree> methods = new ArrayList<MethodTree>();
     private WorkingCopy workingCopy;
@@ -46,6 +62,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param wc
      * @throws IOException 
      */
+    @Override
     public void run(WorkingCopy wc) throws IOException {
         workingCopy = wc;
         workingCopy.toPhase(JavaSource.Phase.RESOLVED);
@@ -74,7 +91,6 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 }
             }
         }
-
         showDialog();
     }
 
@@ -156,16 +172,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         assert clazz != null : "Clazz cannot be null";
         assert variable != null : "Variable cannot be null";
 
-        Name name = variable.getName();
         ParameterizedTypeTree type = (ParameterizedTypeTree) variable.getType();
         List<? extends Tree> typeArguments = type.getTypeArguments();
-
-
-        String variableName = name.toString().toLowerCase();
-        variableName = Character.toString(variableName.charAt(0)).toUpperCase() + variableName.substring(1);
-
-        //String getterName = "get" + variableName;
-        String getterName = getGetterName(variable);
+        String getterName = stringService.getGetterName(variable);
 
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
@@ -178,7 +187,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<TypeParameterTree>emptyList(),
                 Collections.<VariableTree>emptyList(),
                 Collections.<ExpressionTree>emptyList(),
-                "{\nreturn " + name.toString() + ".getValue(this);}\n",
+                "{\nreturn " + variable.getName() + ".of(this);}\n",
                 null);
 
         return treeMaker.addClassMember(clazz, newMethod);
@@ -195,15 +204,11 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         assert clazz != null : "Clazz cannot be null";
         assert variable != null : "Variable cannot be null";
 
-        Name name = variable.getName();
         ParameterizedTypeTree type = (ParameterizedTypeTree) variable.getType();
         List<? extends Tree> typeArguments = type.getTypeArguments();
-
-        String variableName = name.toString().toLowerCase();
-        variableName = Character.toString(variableName.charAt(0)).toUpperCase() + variableName.substring(1);
-
-        String methodName = "set" + variableName;
-
+        String methodName = stringService.getSetterName(variable);
+        String paramName = stringService.getParameterName(variable);
+        
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
                 Collections.<AnnotationTree>emptyList());
@@ -211,7 +216,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         VariableTree parameter =
                 treeMaker.Variable(
                 treeMaker.Modifiers(Collections.<Modifier>emptySet()),
-                name.toString().toLowerCase(),
+                paramName,
                 typeArguments.get(1),
                 null);
 
@@ -224,7 +229,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<ExpressionTree>emptyList(),
                 "{\n" + clazz.getSimpleName().toString()
                 + "."
-                + name.toString() + ".setValue(this, " + name.toString().toLowerCase() + ");}\n",
+                + variable.getName() + ".setValue(this, " + paramName + ");}\n",
                 null);
 
         return treeMaker.addClassMember(clazz, newMethod);
@@ -294,8 +299,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
     protected boolean getterExistsForVariable(VariableTree variable) {
         assert variable != null : "Variable cannot be null";
 
-        String getterName = getGetterName(variable);
-
+        String getterName = stringService.getGetterName(variable);
         return methodExists(getterName);
     }
 
@@ -308,7 +312,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
     protected boolean setterExistsForVariable(VariableTree variable) {
         assert variable != null : "Variable cannot be null";
 
-        String setterName = getSetterName(variable);
+        String setterName = stringService.getSetterName(variable);
 
         return methodExists(setterName);
     }
@@ -332,47 +336,6 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
     }
 
     /**
-     * Returns variable getter name.
-     *
-     * @param variable
-     * @return
-     */
-    private String getGetterName(VariableTree variable) {
-        assert variable != null : "Variable cannot be null";
-
-        return getVariableName("get", variable);
-    }
-
-    /**
-     * Returns variable setter name.
-     *
-     * @param variable
-     * @return
-     */
-    private String getSetterName(VariableTree variable) {
-        assert variable != null : "Variable cannot be null";
-
-        return getVariableName("set", variable);
-    }
-
-    /**
-     * Returns prexixed variable name in camel case format.
-     *
-     * @param prefix
-     * @param variable
-     * @return
-     */
-    private String getVariableName(String prefix, VariableTree variable) {
-        assert prefix != null : "Prefix cannot be null";
-        assert variable != null : "Variable cannot be null";
-
-        String variableName = variable.getName().toString().toLowerCase();
-        variableName = Character.toString(variableName.charAt(0)).toUpperCase() + variableName.substring(1);
-
-        return prefix + variableName;
-    }
-
-    /**
      * Shows dialog with available UJO properties.
      */
     private void showDialog() {
@@ -389,10 +352,11 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
             @Override
             public void actionPerformed(ActionEvent e) {
                 JList properties = propertiesChooser.getProperties();
-                List<String> selectedValuesList = properties.getSelectedValuesList();
+                //List<String> selectedValuesList = properties.getSelectedValuesList();
+                Object[] selectedValuesList = properties.getSelectedValues();
                 List<VariableTree> variables = new ArrayList<VariableTree>();
 
-                for (String value : selectedValuesList) {
+                for (Object value : selectedValuesList) {
                     for (VariableTree var : ujoMembers) {
                         if (var.getName().toString().equals(value)) {
                             variables.add(var);
