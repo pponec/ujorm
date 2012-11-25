@@ -21,7 +21,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 
 /**
- * String service
+ * Logger service
  * @author Pavel Ponec
  */
 final public class LoggerService {
