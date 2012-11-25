@@ -17,6 +17,7 @@ package com.ujorm.UjoCodeGenerator;
 
 import com.ujorm.UjoCodeGenerator.bo.KeyItem;
 import java.util.List;
+import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultListModel;
 
 /**
@@ -36,6 +37,8 @@ public class PropertiesChooser extends javax.swing.JPanel {
         
         initComponents();
         properties.setModel(defaultListModel);
+        cbGetters.getModel().setSelected(true);
+        cbSetters.getModel().setSelected(true);
     }
     
     /** Select all items */
@@ -50,6 +53,16 @@ public class PropertiesChooser extends javax.swing.JPanel {
         System.arraycopy(selects, 0, result, 0, selects.length);
         return result;
     }
+    
+    /** Are the Getters required ? */
+    public boolean isGettersRequired() {
+        return cbGetters.getModel().isSelected();
+    }
+
+    /** Are the Setters required ? */
+    public boolean isSettersRequired() {
+        return cbSetters.getModel().isSelected();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,27 +75,45 @@ public class PropertiesChooser extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         properties = new javax.swing.JList();
+        cbGetters = new javax.swing.JCheckBox();
+        cbSetters = new javax.swing.JCheckBox();
 
         jScrollPane1.setViewportView(properties);
+
+        cbGetters.setText("Getters"); // NOI18N
+
+        cbSetters.setText("Setters"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbSetters)
+                            .addComponent(cbGetters))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(cbGetters)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbSetters)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbGetters;
+    private javax.swing.JCheckBox cbSetters;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList properties;
     // End of variables declaration//GEN-END:variables
