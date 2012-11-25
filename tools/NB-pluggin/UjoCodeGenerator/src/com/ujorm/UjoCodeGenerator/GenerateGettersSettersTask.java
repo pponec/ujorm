@@ -358,7 +358,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         List<KeyItem> members = new ArrayList<KeyItem>();
 
         for (VariableTree var : ujoMembers) {            
-            final String comment = stringService.getInLineJavaDoc("", var, workingCopy);
+            final String comment = stringService.getInLineJavaDoc(var, workingCopy);
             members.add(new KeyItem(var, comment));                
         }
 
