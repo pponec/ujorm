@@ -150,10 +150,11 @@ final public class StringService {
     public void copyJavaDoc(Tree field, MethodTree method, WorkingCopy workingCopy) throws IllegalStateException {
         final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
         if (comments != null && comments.size()>0) {
-            try {
-                workingCopy.getTreeMaker().addComment(method, comments.get(0), true);
+            try {                
+                Comment comment = comments.get(0); // Comment.create(Comment.Style.JAVADOC, getInLineJavaDoc(field, workingCopy));
+                workingCopy.getTreeMaker().addComment(method, comment, true);
             } catch (Throwable e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "The copyJavaDoc method error", e);
             }
         }
     }
@@ -161,7 +162,7 @@ final public class StringService {
     /**
      * Get JavaDoc
      */
-    public String getInLineJavaDoc(String prefix, VariableTree field, WorkingCopy workingCopy) throws IllegalStateException {
+    public String getInLineJavaDoc(Tree field, WorkingCopy workingCopy) throws IllegalStateException {
         String result = "";
         try {
             final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
@@ -173,9 +174,6 @@ final public class StringService {
                 result = result.replace('\n', ' ');
                 result = result.replaceAll(" \\* ", " ");                
                 result = result.replaceAll("\\s+", " ");
-                if (result.length() > 0) {
-                    result = prefix + result;
-                }
             } 
         } catch (Throwable e) {
             LOGGER.log(Level.SEVERE, "getInLineJavaDoc method error", e);
