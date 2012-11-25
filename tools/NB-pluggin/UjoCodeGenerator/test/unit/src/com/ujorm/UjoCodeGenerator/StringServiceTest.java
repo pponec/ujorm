@@ -37,11 +37,7 @@ public class StringServiceTest {
     @AfterClass
     public static void tearDownClass() {
     }
-    
-    @Before
-    public void setUp() {
-    }
-    
+        
     @After
     public void tearDown() {
     }
