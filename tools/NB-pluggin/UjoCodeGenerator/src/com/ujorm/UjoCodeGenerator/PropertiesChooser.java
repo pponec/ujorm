@@ -15,35 +15,40 @@
  */
 package com.ujorm.UjoCodeGenerator;
 
+import com.ujorm.UjoCodeGenerator.bo.KeyItem;
 import java.util.List;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 
 /**
  *
  * @author Martin Mahr <mahr@effectiva.cz>
  */
 public class PropertiesChooser extends javax.swing.JPanel {
-    
-    private List<String> data;
-
     /**
      * Creates new form PropertiesChooser
      */
-    public PropertiesChooser(List<String> data) {
+    public PropertiesChooser(List<KeyItem> data) {
         
-        DefaultListModel defaultListModel = new DefaultListModel();
-        
-        for (String item: data){
+        DefaultListModel defaultListModel = new DefaultListModel();        
+        for (KeyItem item : data){
             defaultListModel.addElement(item);
         }
         
         initComponents();
         properties.setModel(defaultListModel);
     }
+    
+    /** Select all items */
+    public void selectAll() {
+        properties.setSelectionInterval(0, properties.getModel().getSize() - 1);
+    }
 
-    public JList getProperties() {
-        return properties;
+    /** Return selected properties */
+    public KeyItem[] getSeletedProperties() {
+        Object[] selects = properties.getSelectedValues();
+        KeyItem[] result = new KeyItem[selects.length];
+        System.arraycopy(selects, 0, result, 0, selects.length);
+        return result;
     }
 
     /**
@@ -64,9 +69,9 @@ public class PropertiesChooser extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
