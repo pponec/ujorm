@@ -25,6 +25,7 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
+import com.ujorm.UjoCodeGenerator.bo.KeyItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 import javax.swing.JList;
 import org.netbeans.api.java.source.CancellableTask;
@@ -49,11 +49,13 @@ import org.openide.DialogDisplayer;
 public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> {
 
     private static final StringService stringService = new StringService();
+    /** List of Method model */
     private List<VariableTree> ujoMembers = new ArrayList<VariableTree>();
     private List<MethodTree> methods = new ArrayList<MethodTree>();
     private WorkingCopy workingCopy;
     private TreeMaker treeMaker;
     private ClassTree clazz = null;
+    private boolean copyJavaDoc = true;
     PropertiesChooser propertiesChooser = null;
 
     /**
@@ -63,7 +65,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @throws IOException 
      */
     @Override
-    public void run(WorkingCopy wc) throws IOException {
+    public void run(WorkingCopy wc) throws IOException {        
         workingCopy = wc;
         workingCopy.toPhase(JavaSource.Phase.RESOLVED);
         treeMaker = workingCopy.getTreeMaker();
@@ -100,9 +102,10 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param member 
      */
     protected void addVariableToGenerate(VariableTree member) {
-        assert member != null : "Member cannot be null";
+        assert member != null : "Member must not be null";
         
-        if (!getterExistsForVariable(member) || !setterExistsForVariable(member)) {
+        if (!getterExistsForVariable(member) 
+        ||  !setterExistsForVariable(member)) {
             ujoMembers.add(member);
         }
     }
@@ -112,12 +115,13 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * 
      * @param variables 
      */
-    private void generateCode(List<VariableTree> variables) {
-        assert variables != null : "Variables cannot be null";
+    private void generateCode(KeyItem[] items) {
+        assert items != null : "Variables cannot be null";
         
         ClassTree modifiedClass = clazz;
 
-        for (VariableTree variable : variables) {
+        for (KeyItem item : items) {
+            VariableTree variable = item.getVariableTree();
             modifiedClass = generateGetter(variable, modifiedClass);
             modifiedClass = generateSetter(variable, modifiedClass);
         }
@@ -179,7 +183,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
                 Collections.<AnnotationTree>emptyList());
-
+        
         MethodTree newMethod =
                 treeMaker.Method(methodModifiers,
                 getterName,
@@ -189,6 +193,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<ExpressionTree>emptyList(),
                 "{\nreturn " + variable.getName() + ".of(this);}\n",
                 null);
+        copyJavaDoc(type, newMethod);
 
         return treeMaker.addClassMember(clazz, newMethod);
     }
@@ -231,6 +236,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 + "."
                 + variable.getName() + ".setValue(this, " + paramName + ");}\n",
                 null);
+        copyJavaDoc(type, newMethod);
 
         return treeMaker.addClassMember(clazz, newMethod);
     }
@@ -280,8 +286,8 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 final String variableTypeName = type.getType().toString();
 
                 if (variableTypeName.equals("Key")
-                        || variableTypeName.equals("UjoProperty")
-                        || variableTypeName.equals("Property")) {
+                ||  variableTypeName.equals("UjoProperty")
+                ||  variableTypeName.equals("Property")) {
                     return true;
                 }
             }
@@ -339,34 +345,29 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * Shows dialog with available UJO properties.
      */
     private void showDialog() {
-        List<String> members = new ArrayList<String>();
+        List<KeyItem> members = new ArrayList<KeyItem>();
 
-        for (VariableTree var : ujoMembers) {
-            members.add(var.getName().toString());
+        for (VariableTree var : ujoMembers) {            
+            final String comment = stringService.getInLineJavaDoc("", var, workingCopy);
+            members.add(new KeyItem(var, comment));                
         }
 
         propertiesChooser = new PropertiesChooser(members);
-        propertiesChooser.getProperties().setSelectionInterval(0, members.size() - 1);
+        propertiesChooser.selectAll();
 
         DialogDescriptor dialogDescriptor = new DialogDescriptor(propertiesChooser, "Select properties", true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JList properties = propertiesChooser.getProperties();
-                //List<String> selectedValuesList = properties.getSelectedValuesList();
-                Object[] selectedValuesList = properties.getSelectedValues();
-                List<VariableTree> variables = new ArrayList<VariableTree>();
-
-                for (Object value : selectedValuesList) {
-                    for (VariableTree var : ujoMembers) {
-                        if (var.getName().toString().equals(value)) {
-                            variables.add(var);
-                        }
-                    }
-                }
-
-                generateCode(variables);
+                generateCode(propertiesChooser.getSeletedProperties());
             }
         });
         DialogDisplayer.getDefault().notify(dialogDescriptor);
+    }
+
+    /** Copy JavaDoc */
+    private void copyJavaDoc(Tree field, MethodTree method) throws IllegalStateException {
+        if (copyJavaDoc) {
+            stringService.copyJavaDoc(field, method, workingCopy);
+        }
     }
 }

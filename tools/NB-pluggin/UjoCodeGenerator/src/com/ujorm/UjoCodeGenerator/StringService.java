@@ -15,7 +15,12 @@
  */
 package com.ujorm.UjoCodeGenerator;
 
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import java.util.List;
+import org.netbeans.api.java.source.Comment;
+import org.netbeans.api.java.source.WorkingCopy;
 
 /**
  * String service
@@ -135,5 +140,46 @@ final public class StringService {
         }
         return true;
     }
+    
+    /** Copy JavaDoc */
+    public void copyJavaDoc(Tree field, MethodTree method, WorkingCopy workingCopy) throws IllegalStateException {
+        final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
+        if (comments != null && comments.size()>0) {
+            try {
+                workingCopy.getTreeMaker().addComment(method, comments.get(0), true);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Get JavaDoc
+     */
+    public String getInLineJavaDoc(String prefix, VariableTree field, WorkingCopy workingCopy) throws IllegalStateException {
+        String result = "";
+        try {
+            final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
+            if (comments != null && !comments.isEmpty()) {
+                result = comments.get(0).getText().trim();
+                if (comments.get(0).isDocComment()) {
+                    result = result.substring(3, result.length()-2).trim();
+                }
+                result = result.replace('\n', ' ');
+                result = result.replaceAll(" \\* ", " ");
+                while (result.indexOf("  ") > 0) {
+                    result = result.replaceAll("  ", " ");
+                }
+                if (result.length()>0) {
+                    result = prefix + result;                    
+                }
+            } 
+        } catch (Throwable e) {
+            // TODO: LogIt:
+            result = "";
+        }
+        return result;
+    }
+    
     
 }
