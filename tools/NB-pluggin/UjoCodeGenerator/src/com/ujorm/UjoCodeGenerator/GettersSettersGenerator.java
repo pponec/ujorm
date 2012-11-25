@@ -27,7 +27,7 @@ import org.netbeans.spi.editor.codegen.CodeGenerator;
 import org.openide.util.Lookup;
 
 /**
- * 
+ * Getters and Setters Generator
  * @author Martin Mahr <mahr@effectiva.cz>
  */
 public class GettersSettersGenerator implements CodeGenerator {
@@ -46,6 +46,7 @@ public class GettersSettersGenerator implements CodeGenerator {
     @MimeRegistration(mimeType = "text/x-java", service = CodeGenerator.Factory.class)
     public static class Factory implements CodeGenerator.Factory {
 
+        @Override
         public List<? extends CodeGenerator> create(Lookup context) {
             return Collections.singletonList(new GettersSettersGenerator(context));
         }
@@ -54,6 +55,7 @@ public class GettersSettersGenerator implements CodeGenerator {
     /**
      * The name which will be inserted inside Insert Code dialog
      */
+    @Override
     public String getDisplayName() {
         return "UJO getters/setters";
     }

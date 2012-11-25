@@ -32,9 +32,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
-import javax.swing.JList;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
@@ -84,9 +84,6 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                     methods.add((MethodTree) member);
                     continue;
                 }
-            }
-
-            for (Tree member : clazz.getMembers()) {
                 if (isUjoStaticVariable(member)) {
                     addVariableToGenerate((VariableTree) member);
                     continue;
@@ -115,15 +112,19 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * 
      * @param variables 
      */
-    private void generateCode(KeyItem[] items) {
+    private void generateCode(KeyItem[] items, boolean getters, boolean setters) {
         assert items != null : "Variables cannot be null";
         
         ClassTree modifiedClass = clazz;
 
         for (KeyItem item : items) {
             VariableTree variable = item.getVariableTree();
-            modifiedClass = generateGetter(variable, modifiedClass);
-            modifiedClass = generateSetter(variable, modifiedClass);
+            if (getters) {
+                modifiedClass = generateGetter(variable, modifiedClass);                
+            }
+            if (setters) {
+                modifiedClass = generateSetter(variable, modifiedClass);
+            }
         }
 
         workingCopy.rewrite(clazz, modifiedClass);
@@ -279,12 +280,21 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         assert member != null : "Member cannot be null";
 
         if (Tree.Kind.VARIABLE == member.getKind()) {
-            VariableTree variable = (VariableTree) member;
+            final VariableTree variable = (VariableTree) member;            
+            final Set<Modifier> modifiers = variable.getModifiers().getFlags();
 
-            if (Tree.Kind.PARAMETERIZED_TYPE == variable.getType().getKind()) {
-                ParameterizedTypeTree type = (ParameterizedTypeTree) variable.getType();
+            if (Tree.Kind.PARAMETERIZED_TYPE == variable.getType().getKind()
+            &&  modifiers.contains(Modifier.PUBLIC)
+            &&  modifiers.contains(Modifier.STATIC)
+            &&  modifiers.contains(Modifier.FINAL)                    
+            ) {
+                final ParameterizedTypeTree type = (ParameterizedTypeTree) variable.getType();
+                if (type.getTypeArguments().size()!=2) {                    
+                    // Field must have got two generics exactly:
+                    return false;
+                }
+                
                 final String variableTypeName = type.getType().toString();
-
                 if (variableTypeName.equals("Key")
                 ||  variableTypeName.equals("UjoProperty")
                 ||  variableTypeName.equals("Property")) {
@@ -358,7 +368,11 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         DialogDescriptor dialogDescriptor = new DialogDescriptor(propertiesChooser, "Select properties", true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                generateCode(propertiesChooser.getSeletedProperties());
+                generateCode
+                        ( propertiesChooser.getSeletedProperties()
+                        , propertiesChooser.isGettersRequired()
+                        , propertiesChooser.isSettersRequired()
+                        );
             }
         });
         DialogDisplayer.getDefault().notify(dialogDescriptor);
