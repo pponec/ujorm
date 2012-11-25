@@ -207,4 +207,20 @@ final public class MetaParams extends AbstractMetaModel {
     public boolean isQuotedSqlNames() {
         return CheckReport.QUOTE_SQL_NAMES==CHECK_KEYWORDS.of(this);
     }
+    
+    /** Skip the check test and Quote all SQL columns, tables and alias names. 
+     * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
+     * @param quote Parameter {@code true} affects to an escapinng the database names,
+     * else the {@code false} value will affects to checked a database KeyWords in the names.
+     * @see #CHECK_KEYWORDS
+     * @see CheckReport#SKIP_AND_QUOTE_SQL_NAMES
+     */        
+    public void setQuotedSqlNames(boolean quote) {
+        CHECK_KEYWORDS.setValue(this, quote
+                ? CheckReport.QUOTE_SQL_NAMES
+                : CheckReport.EXCEPTION
+                );
+    }
+    
 }
+
