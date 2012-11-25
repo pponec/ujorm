@@ -19,6 +19,8 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.WorkingCopy;
 
@@ -27,6 +29,9 @@ import org.netbeans.api.java.source.WorkingCopy;
  * @author Pavel Ponec
  */
 final public class StringService {
+    
+    /** Common Logger */
+    private static final Logger LOGGER = Logger.getLogger(StringService.class.getName());   
     
     /**
      * Returns variable getter name.
@@ -166,16 +171,14 @@ final public class StringService {
                     result = result.substring(3, result.length()-2).trim();
                 }
                 result = result.replace('\n', ' ');
-                result = result.replaceAll(" \\* ", " ");
-                while (result.indexOf("  ") > 0) {
-                    result = result.replaceAll("  ", " ");
-                }
-                if (result.length()>0) {
-                    result = prefix + result;                    
+                result = result.replaceAll(" \\* ", " ");                
+                result = result.replaceAll("\\s+", " ");
+                if (result.length() > 0) {
+                    result = prefix + result;
                 }
             } 
         } catch (Throwable e) {
-            // TODO: LogIt:
+            LOGGER.log(Level.SEVERE, "getInLineJavaDoc method error", e);
             result = "";
         }
         return result;
