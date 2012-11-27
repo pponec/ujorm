@@ -17,10 +17,12 @@
 package org.ujorm.orm.dialect;
 
 import java.io.IOException;
+import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
+import org.ujorm.orm.metaModel.MetaTable;
 
 /** PostgreSQL (http://www.postgresql.org/) */
 public class PostgreSqlDialect extends SqlDialect {
@@ -97,5 +99,33 @@ public class PostgreSqlDialect extends SqlDialect {
             out.append(" OFFSET " + query.getOffset());
         }
     }
+
+    /** Print an SQL DELETE statement. */
+    @Override
+    public Appendable printDelete
+        ( MetaTable baseTable
+        , CriterionDecoder decoder
+        , Appendable out
+        ) throws IOException
+    {
+        out.append("DELETE FROM ");
+        MetaTable[] tables = decoder.getTables(baseTable);
+
+        for (int i=0; i<tables.length; ++i) {
+            if (i>0) {
+                out.append(i==1 ? " USING " : ", ");
+            }
+            printTableAliasDefinition(tables[i], out);
+        }
+
+        final String where = decoder.getWhere();
+        if (where.length()>0) {
+            out.append(" WHERE ");
+            out.append(where);
+        }
+
+        return out;
+    }
+
 
 }
