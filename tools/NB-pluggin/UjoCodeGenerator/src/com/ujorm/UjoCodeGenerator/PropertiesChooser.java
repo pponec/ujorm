@@ -24,31 +24,31 @@ import javax.swing.DefaultListModel;
  * @author Martin Mahr <mahr@effectiva.cz>
  */
 public class PropertiesChooser extends javax.swing.JPanel {
-    
+
     /** Static parameter */
     private static boolean paramGetters = true;
     /** Static parameter */
     private static boolean paramSetters = true;
     /** Static parameter */
     private static boolean paramJavaDoc = true;
-    
+
     /**
      * Creates new form PropertiesChooser
      */
     public PropertiesChooser(List<KeyItem> data) {
-        
-        DefaultListModel defaultListModel = new DefaultListModel();        
+
+        DefaultListModel defaultListModel = new DefaultListModel();
         for (KeyItem item : data){
             defaultListModel.addElement(item);
         }
-        
+
         initComponents();
         properties.setModel(defaultListModel);
         cbGetters.getModel().setSelected(paramGetters);
         cbSetters.getModel().setSelected(paramSetters);
         cbJavaDoc.getModel().setSelected(paramJavaDoc);
     }
-    
+
     /** Select all items */
     public void selectAll() {
         properties.setSelectionInterval(0, properties.getModel().getSize() - 1);
@@ -61,7 +61,7 @@ public class PropertiesChooser extends javax.swing.JPanel {
         System.arraycopy(selects, 0, result, 0, selects.length);
         return result;
     }
-    
+
     /** Are the Getters required ? */
     public boolean isGettersRequired() {
         final boolean result = cbGetters.getModel().isSelected();
@@ -109,8 +109,8 @@ public class PropertiesChooser extends javax.swing.JPanel {
         cbSetters.setToolTipText("Generate Setters according to Ujo Keys"); // NOI18N
 
         cbJavaDoc.setMnemonic('C');
-        cbJavaDoc.setText("Create JavaDoc for new methods"); // NOI18N
-        cbJavaDoc.setToolTipText("Generate JavaDoc according to Ujo Keys"); // NOI18N
+        cbJavaDoc.setText("Copy JavaDoc form Keys to new methods"); // NOI18N
+        cbJavaDoc.setToolTipText(""); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -119,18 +119,15 @@ public class PropertiesChooser extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbSetters)
                             .addComponent(cbGetters))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cbJavaDoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(cbJavaDoc)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,10 +136,9 @@ public class PropertiesChooser extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbSetters)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbJavaDoc)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbJavaDoc))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
