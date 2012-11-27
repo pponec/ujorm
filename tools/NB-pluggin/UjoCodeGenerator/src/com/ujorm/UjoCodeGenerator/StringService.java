@@ -29,10 +29,10 @@ import org.netbeans.api.java.source.WorkingCopy;
  * @author Pavel Ponec
  */
 final public class StringService {
-    
+
     /** Common Logger */
-    private static final Logger LOGGER = Logger.getLogger(StringService.class.getName());   
-    
+    private static final Logger LOGGER = Logger.getLogger(StringService.class.getName());
+
     /**
      * Returns variable getter name.
      *
@@ -65,7 +65,7 @@ final public class StringService {
         assert variable != null : "Variable cannot be null";
         return getSetterName(variable.getName().toString());
     }
-    
+
     /**
      * Returns variable setter name.
      *
@@ -76,7 +76,7 @@ final public class StringService {
         assert variable != null : "Variable cannot be null";
         return getVariableName("set", variable);
     }
-    
+
     /**
      * Returns variable setter name.
      *
@@ -87,7 +87,7 @@ final public class StringService {
         assert variable != null : "Variable cannot be null";
         return getParameterName(variable.getName().toString());
     }
-    
+
     /**
      * Returns variable setter name.
      *
@@ -98,7 +98,7 @@ final public class StringService {
         assert variable != null : "Variable cannot be null";
         return getVariableName("", variable);
     }
-    
+
     /**
      * Returns prexixed variable name in camel case format.
      *
@@ -106,13 +106,13 @@ final public class StringService {
      * @param variable
      * @return
      */
-    protected String getVariableName(String prefix, String variable) {        
+    protected String getVariableName(String prefix, String variable) {
         assert prefix != null : "Prefix cannot be null";
         assert variable != null : "Variable cannot be null";
-        
+
         final StringBuilder result = new StringBuilder(32);
-        result.append(prefix);        
-        
+        result.append(prefix);
+
         if (isUpperCase(variable)) {
             boolean lower = prefix.length()==0;
             for (int i = 0, max = variable.length(); i < max; i++) {
@@ -126,15 +126,15 @@ final public class StringService {
             }
         } else {
             if (prefix.length()==0) {
-                result.append(variable);                
+                result.append(variable);
             } else {
                 result.append(Character.toUpperCase(variable.charAt(0)));
                 result.append(variable.substring(1));
             }
         }
-        return result.toString();            
+        return result.toString();
     }
-    
+
     /** Returns true if the parameter is an Upper Case text only */
     protected boolean isUpperCase(String value) {
         for (int i = value.length()-1; i>=0; i--) {
@@ -145,17 +145,16 @@ final public class StringService {
         }
         return true;
     }
-    
+
     /** Copy JavaDoc */
-    public void copyJavaDoc(Tree field, MethodTree method, WorkingCopy workingCopy) throws IllegalStateException {
-        final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
-        if (comments != null && comments.size()>0) {
-            try {                
-                Comment comment = comments.get(0); // Comment.create(Comment.Style.JAVADOC, getInLineJavaDoc(field, workingCopy));
-                workingCopy.getTreeMaker().addComment(method, comment, true);
-            } catch (Throwable e) {
-                LOGGER.log(Level.SEVERE, "The copyJavaDoc method error", e);
+    public void copyJavaDoc(VariableTree variable, MethodTree newMethod, WorkingCopy workingCopy) {
+        try {
+            List<Comment> comments = workingCopy.getTreeUtilities().getComments(variable, true);
+            if (comments!=null && comments.size()>0) {
+                workingCopy.getTreeMaker().addComment(newMethod, comments.get(0), true);
             }
+        } catch (Throwable e) {
+            LOGGER.log(Level.WARNING, "Can't copy JavaDoc to the method: " + newMethod.getName(), e);
         }
     }
 
@@ -172,15 +171,15 @@ final public class StringService {
                     result = result.substring(3, result.length()-2).trim();
                 }
                 result = result.replace('\n', ' ');
-                result = result.replaceAll(" \\* ", " ");                
+                result = result.replaceAll(" \\* ", " ");
                 result = result.replaceAll("\\s+", " ");
-            } 
+            }
         } catch (Throwable e) {
             LOGGER.log(Level.SEVERE, "getInLineJavaDoc method error", e);
             result = "";
         }
         return result;
     }
-    
-    
+
+
 }
