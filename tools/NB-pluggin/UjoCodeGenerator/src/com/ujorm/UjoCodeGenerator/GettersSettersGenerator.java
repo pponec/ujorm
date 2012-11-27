@@ -17,6 +17,8 @@ package com.ujorm.UjoCodeGenerator;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -32,7 +34,10 @@ import org.openide.util.Lookup;
  */
 public class GettersSettersGenerator implements CodeGenerator {
 
-    JTextComponent textComp;
+    /** Common Logger */
+    private static final Logger LOGGER = Logger.getLogger(GettersSettersGenerator.class.getName());
+    /** Field from a context */
+    private JTextComponent textComp;
 
     /**
      *
@@ -69,15 +74,15 @@ public class GettersSettersGenerator implements CodeGenerator {
         try {
             Document doc = textComp.getDocument();
             JavaSource javaSource = JavaSource.forDocument(doc);
-            
             CancellableTask task = getModificationTask();
-            
+
             ModificationResult result = javaSource.runModificationTask(task);
             result.commit();
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error of method invoke()", e);
         }
     }
-    
+
     protected CancellableTask getModificationTask(){
         return new GenerateGettersSettersTask();
     }
