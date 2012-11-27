@@ -17,7 +17,6 @@ package com.ujorm.UjoCodeGenerator;
 
 import com.ujorm.UjoCodeGenerator.bo.KeyItem;
 import java.util.List;
-import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultListModel;
 
 /**
@@ -25,6 +24,14 @@ import javax.swing.DefaultListModel;
  * @author Martin Mahr <mahr@effectiva.cz>
  */
 public class PropertiesChooser extends javax.swing.JPanel {
+    
+    /** Static parameter */
+    private static boolean paramGetters = true;
+    /** Static parameter */
+    private static boolean paramSetters = true;
+    /** Static parameter */
+    private static boolean paramJavaDoc = true;
+    
     /**
      * Creates new form PropertiesChooser
      */
@@ -37,8 +44,9 @@ public class PropertiesChooser extends javax.swing.JPanel {
         
         initComponents();
         properties.setModel(defaultListModel);
-        cbGetters.getModel().setSelected(true);
-        cbSetters.getModel().setSelected(true);
+        cbGetters.getModel().setSelected(paramGetters);
+        cbSetters.getModel().setSelected(paramSetters);
+        cbJavaDoc.getModel().setSelected(paramJavaDoc);
     }
     
     /** Select all items */
@@ -56,12 +64,23 @@ public class PropertiesChooser extends javax.swing.JPanel {
     
     /** Are the Getters required ? */
     public boolean isGettersRequired() {
-        return cbGetters.getModel().isSelected();
+        final boolean result = cbGetters.getModel().isSelected();
+        paramGetters = result;
+        return result;
     }
 
     /** Are the Setters required ? */
     public boolean isSettersRequired() {
-        return cbSetters.getModel().isSelected();
+        final boolean result = cbSetters.getModel().isSelected();
+        paramSetters = result;
+        return result;
+    }
+
+    /** Are the Setters required ? */
+    public boolean isJavaDocRequired() {
+        final boolean result = cbJavaDoc.getModel().isSelected();
+        paramJavaDoc = result;
+        return result;
     }
 
     /**
@@ -77,12 +96,21 @@ public class PropertiesChooser extends javax.swing.JPanel {
         properties = new javax.swing.JList();
         cbGetters = new javax.swing.JCheckBox();
         cbSetters = new javax.swing.JCheckBox();
+        cbJavaDoc = new javax.swing.JCheckBox();
 
         jScrollPane1.setViewportView(properties);
 
+        cbGetters.setMnemonic('G');
         cbGetters.setText("Getters"); // NOI18N
+        cbGetters.setToolTipText("Generate Setters according to Ujo Keys"); // NOI18N
 
+        cbSetters.setMnemonic('S');
         cbSetters.setText("Setters"); // NOI18N
+        cbSetters.setToolTipText("Generate Setters according to Ujo Keys"); // NOI18N
+
+        cbJavaDoc.setMnemonic('C');
+        cbJavaDoc.setText("Create JavaDoc for new methods"); // NOI18N
+        cbJavaDoc.setToolTipText("Generate JavaDoc according to Ujo Keys"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -99,6 +127,10 @@ public class PropertiesChooser extends javax.swing.JPanel {
                             .addComponent(cbGetters))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(cbJavaDoc)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,11 +140,14 @@ public class PropertiesChooser extends javax.swing.JPanel {
                 .addComponent(cbSetters)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbJavaDoc)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbGetters;
+    private javax.swing.JCheckBox cbJavaDoc;
     private javax.swing.JCheckBox cbSetters;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList properties;

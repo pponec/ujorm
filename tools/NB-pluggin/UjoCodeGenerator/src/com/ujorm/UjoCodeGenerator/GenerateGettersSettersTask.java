@@ -49,13 +49,13 @@ import org.openide.DialogDisplayer;
 public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> {
 
     private static final StringService stringService = new StringService();
+    private static final Integer OK = 0;
     /** List of Method model */
     private List<VariableTree> ujoMembers = new ArrayList<VariableTree>();
     private List<MethodTree> methods = new ArrayList<MethodTree>();
     private WorkingCopy workingCopy;
     private TreeMaker treeMaker;
     private ClassTree clazz = null;
-    private boolean copyJavaDoc = true;
     PropertiesChooser propertiesChooser = null;
 
     /**
@@ -112,7 +112,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * 
      * @param variables 
      */
-    private void generateCode(KeyItem[] items, boolean getters, boolean setters) {
+    private void generateCode(KeyItem[] items, boolean getters, boolean setters, boolean javaDoc) {
         assert items != null : "Variables cannot be null";
         
         ClassTree modifiedClass = clazz;
@@ -120,10 +120,10 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         for (KeyItem item : items) {
             VariableTree variable = item.getVariableTree();
             if (getters) {
-                modifiedClass = generateGetter(variable, modifiedClass);                
+                modifiedClass = generateGetter(variable, modifiedClass, javaDoc);                
             }
             if (setters) {
-                modifiedClass = generateSetter(variable, modifiedClass);
+                modifiedClass = generateSetter(variable, modifiedClass, javaDoc);
             }
         }
 
@@ -137,12 +137,12 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param modifiedClass
      * @return
      */
-    protected ClassTree generateSetter(VariableTree variable, ClassTree modifiedClass) {
+    protected ClassTree generateSetter(VariableTree variable, ClassTree modifiedClass, boolean javaDoc) {
         assert variable != null : "Variable cannot be null";
         assert modifiedClass != null : "Modified class cannot be null";
 
         if (!setterExistsForVariable(variable)) {
-            modifiedClass = createSetter(modifiedClass, variable);
+            modifiedClass = createSetter(modifiedClass, variable, javaDoc);
         }
 
         return modifiedClass;
@@ -155,12 +155,12 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param modifiedClass
      * @return
      */
-    protected ClassTree generateGetter(VariableTree variable, ClassTree modifiedClass) {
+    protected ClassTree generateGetter(VariableTree variable, ClassTree modifiedClass, boolean javaDoc) {
         assert variable != null : "Variable cannot be null";
         assert modifiedClass != null : "Modified class cannot be null";
 
         if (!getterExistsForVariable(variable)) {
-            modifiedClass = createGetter(modifiedClass, variable);
+            modifiedClass = createGetter(modifiedClass, variable, javaDoc);
         }
 
         return modifiedClass;
@@ -173,7 +173,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param variable
      * @return
      */
-    private ClassTree createGetter(ClassTree clazz, VariableTree variable) {
+    private ClassTree createGetter(ClassTree clazz, VariableTree variable, boolean javaDoc) {
         assert clazz != null : "Clazz cannot be null";
         assert variable != null : "Variable cannot be null";
 
@@ -194,7 +194,10 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<ExpressionTree>emptyList(),
                 "{\nreturn " + variable.getName() + ".of(this);}\n",
                 null);
-        copyJavaDoc(type, newMethod);
+        
+        if (javaDoc) {
+            stringService.copyJavaDoc(type, newMethod, workingCopy);
+        }
 
         return treeMaker.addClassMember(clazz, newMethod);
     }
@@ -206,7 +209,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
      * @param variable
      * @return
      */
-    private ClassTree createSetter(ClassTree clazz, VariableTree variable) {
+    private ClassTree createSetter(ClassTree clazz, VariableTree variable, boolean javaDoc) {
         assert clazz != null : "Clazz cannot be null";
         assert variable != null : "Variable cannot be null";
 
@@ -237,7 +240,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 + "."
                 + variable.getName() + ".setValue(this, " + paramName + ");}\n",
                 null);
-        copyJavaDoc(type, newMethod);
+        if (javaDoc) {
+            stringService.copyJavaDoc(type, newMethod, workingCopy);
+        }
 
         return treeMaker.addClassMember(clazz, newMethod);
     }
@@ -368,20 +373,17 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         DialogDescriptor dialogDescriptor = new DialogDescriptor(propertiesChooser, "Select properties", true, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                generateCode
+                if (OK.equals(e.getSource())) {
+                    generateCode
                         ( propertiesChooser.getSeletedProperties()
                         , propertiesChooser.isGettersRequired()
                         , propertiesChooser.isSettersRequired()
-                        );
+                        , propertiesChooser.isJavaDocRequired()                        
+                        );                   
+                }
             }
         });
         DialogDisplayer.getDefault().notify(dialogDescriptor);
     }
 
-    /** Copy JavaDoc */
-    private void copyJavaDoc(Tree field, MethodTree method) throws IllegalStateException {
-        if (copyJavaDoc) {
-            stringService.copyJavaDoc(field, method, workingCopy);
-        }
-    }
 }

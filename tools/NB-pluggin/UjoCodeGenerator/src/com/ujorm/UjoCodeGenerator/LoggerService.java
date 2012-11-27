@@ -33,9 +33,8 @@ final public class LoggerService {
     private static final Logger LOGGER = Logger.getLogger(LoggerService.class.getName());   
 
     /** Show Message on Dialog display */
-    public static void displayLogMessage(String msg) {
-        displayLogMessage(msg, null);
-                
+    public static void displayLogMessage(Object msg) {
+        displayLogMessage(String.valueOf(msg), null);
     }
     
     /** Show Message on Dialog display */
