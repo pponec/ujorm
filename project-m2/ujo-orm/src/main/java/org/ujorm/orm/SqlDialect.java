@@ -38,7 +38,6 @@ import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
-import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaIndex;
@@ -70,7 +69,7 @@ abstract public class SqlDialect {
 
     /** The ORM handler */
     protected OrmHandler ormHandler;
-    
+
     /** Prints quoted name (identifier) to SQL */
     private Boolean quoteRequest;
 
@@ -153,7 +152,7 @@ abstract public class SqlDialect {
         printQuotedName(table.getAlias(), out);
         out.append('.');
         printQuotedName(MetaColumn.NAME.of(column.getModel()), out);
-        
+
         return out;
     }
 
@@ -383,11 +382,11 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print an SQL INSERT statement. 
+    /** Print an SQL INSERT statement.
      * @param bos Business object list
      * @param idxFrom Start index from list
      * @param idxTo Finished index from list (excluded)
-     * @see #isMultiRowInsertSupported() 
+     * @see #isMultiRowInsertSupported()
      */
     public Appendable printInsert(final List<? extends OrmUjo> bos, final int idxFrom, final int idxTo, final Appendable out) throws IOException {
 
@@ -481,7 +480,7 @@ abstract public class SqlDialect {
     {
         String fullTableName = printFullTableName(table, new StringBuilder(64)).toString();
         String tableAlias = printQuotedName(table.getAlias(), new StringBuilder(64)).toString();
- 
+
         String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');
         //
         out.append("DELETE FROM ");
@@ -514,7 +513,7 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Returns an SQL criterion template. The result is a tempate by the next sample: "{0}={1}" . 
+    /** Returns an SQL criterion template. The result is a tempate by the next sample: "{0}={1}" .
      * <br>See an example of the implementation:
      * <pre class="pre">
      * switch (crit.getOperator()) {
@@ -564,7 +563,7 @@ abstract public class SqlDialect {
                     ;
             case XSQL:
                 return "(" + crit.getRightNode() + ')' ;
-            case REGEXP: 
+            case REGEXP:
             case NOT_REGEXP:
             default:
                 throw new UnsupportedOperationException("Unsupported: " + crit.getOperator());
@@ -695,14 +694,14 @@ abstract public class SqlDialect {
                 out.append(crit.getOperator().name());
                 out.append(' ');
             }
-            
+
             StringBuilder columnName = new StringBuilder(256);
             String alias = column.getTable().getAlias();
             if (isFilled(alias)) {
                 printQuotedName(alias, columnName);
                 columnName.append('.');
             }
-            printQuotedName(column.getModel().getForeignColumnName(i), columnName);            
+            printQuotedName(column.getModel().getForeignColumnName(i), columnName);
             String f = MessageFormat.format(template, columnName, "?");
             out.append(f);
         }
@@ -731,7 +730,7 @@ abstract public class SqlDialect {
      */
     protected Appendable printSelectView(TableWrapper table, Query query, boolean count, Appendable out) throws IOException {
         final String userSql = query.getSqlParameters()!=null
-                ? query.getSqlParameters().getSqlStatement() 
+                ? query.getSqlParameters().getSqlStatement()
                 : null
                 ;
         final MetaSelect select = userSql!=null
@@ -791,9 +790,9 @@ abstract public class SqlDialect {
      */
     protected void printSelectTableBase(final Query query, final boolean count, final Appendable out) throws IOException {
         out.append("SELECT ");
-        
+
         if (count!=query.isDistinct()) {
-            out.append(count 
+            out.append(count
                 ? "COUNT(*)"
                 : "DISTINCT "
                 );
@@ -809,15 +808,16 @@ abstract public class SqlDialect {
             MetaTable[] tables = ed.getTables(query.getTableModel());
 
             for (int i=0; i<tables.length; ++i) {
-                MetaTable table = tables[i];
-                if (i>0) out.append(", ");
-                printTableAliasDefinition(table, out);
+                if (i>0) {
+                    out.append(", ");
+                }
+                printTableAliasDefinition(tables[i], out);
             }
 
-            final String sql = ed.getWhere();
-            if (sql.length()>0) {
+            final String where = ed.getWhere();
+            if (where.length()>0) {
                 out.append(" WHERE ");
-                out.append(sql);
+                out.append(where);
             }
         } else {
             printTableAliasDefinition(query.getTableModel(), out);
@@ -849,7 +849,7 @@ abstract public class SqlDialect {
 
     /** Print SQL ORDER BY */
     protected void printSelectOrder(Query query, Appendable out) throws IOException {
-        
+
         out.append(" ORDER BY ");
         final List<Key> props = query.getOrderBy();
         for (int i=0; i<props.size(); i++) {
@@ -1111,7 +1111,7 @@ abstract public class SqlDialect {
         }
         return sql;
     }
-    
+
     /**
      * Prints quoted name (identifier) to SQL always.
      * The default quated character is '"', however different SQL dialects must have got a different character-pairs.
