@@ -60,12 +60,12 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
 
     /**
      * Opens dialog with Ujo members list.
-     * 
+     *
      * @param wc
-     * @throws IOException 
+     * @throws IOException
      */
     @Override
-    public void run(WorkingCopy wc) throws IOException {        
+    public void run(WorkingCopy wc) throws IOException {
         workingCopy = wc;
         workingCopy.toPhase(JavaSource.Phase.RESOLVED);
         treeMaker = workingCopy.getTreeMaker();
@@ -95,13 +95,13 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
 
     /**
      * Adds member to list for generating getters and setters.
-     * 
-     * @param member 
+     *
+     * @param member
      */
     protected void addVariableToGenerate(VariableTree member) {
         assert member != null : "Member must not be null";
-        
-        if (!getterExistsForVariable(member) 
+
+        if (!getterExistsForVariable(member)
         ||  !setterExistsForVariable(member)) {
             ujoMembers.add(member);
         }
@@ -109,18 +109,18 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
 
     /**
      * Generates getters and setters for given members.
-     * 
-     * @param variables 
+     *
+     * @param variables
      */
     private void generateCode(KeyItem[] items, boolean getters, boolean setters, boolean javaDoc) {
         assert items != null : "Variables cannot be null";
-        
+
         ClassTree modifiedClass = clazz;
 
         for (KeyItem item : items) {
             VariableTree variable = item.getVariableTree();
             if (getters) {
-                modifiedClass = generateGetter(variable, modifiedClass, javaDoc);                
+                modifiedClass = generateGetter(variable, modifiedClass, javaDoc);
             }
             if (setters) {
                 modifiedClass = generateSetter(variable, modifiedClass, javaDoc);
@@ -184,7 +184,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
                 Collections.<AnnotationTree>emptyList());
-        
+
         MethodTree newMethod =
                 treeMaker.Method(methodModifiers,
                 getterName,
@@ -194,9 +194,8 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<ExpressionTree>emptyList(),
                 "{\nreturn " + variable.getName() + ".of(this);}\n",
                 null);
-        
         if (javaDoc) {
-            stringService.copyJavaDoc(type, newMethod, workingCopy);
+            stringService.copyJavaDoc(variable, newMethod, workingCopy);
         }
 
         return treeMaker.addClassMember(clazz, newMethod);
@@ -217,7 +216,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         List<? extends Tree> typeArguments = type.getTypeArguments();
         String methodName = stringService.getSetterName(variable);
         String paramName = stringService.getParameterName(variable);
-        
+
         ModifiersTree methodModifiers =
                 treeMaker.Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC),
                 Collections.<AnnotationTree>emptyList());
@@ -241,7 +240,7 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 + variable.getName() + ".setValue(this, " + paramName + ");}\n",
                 null);
         if (javaDoc) {
-            stringService.copyJavaDoc(type, newMethod, workingCopy);
+            stringService.copyJavaDoc(variable, newMethod, workingCopy);
         }
 
         return treeMaker.addClassMember(clazz, newMethod);
@@ -285,20 +284,20 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
         assert member != null : "Member cannot be null";
 
         if (Tree.Kind.VARIABLE == member.getKind()) {
-            final VariableTree variable = (VariableTree) member;            
+            final VariableTree variable = (VariableTree) member;
             final Set<Modifier> modifiers = variable.getModifiers().getFlags();
 
             if (Tree.Kind.PARAMETERIZED_TYPE == variable.getType().getKind()
             &&  modifiers.contains(Modifier.PUBLIC)
             &&  modifiers.contains(Modifier.STATIC)
-            &&  modifiers.contains(Modifier.FINAL)                    
+            &&  modifiers.contains(Modifier.FINAL)
             ) {
                 final ParameterizedTypeTree type = (ParameterizedTypeTree) variable.getType();
-                if (type.getTypeArguments().size()!=2) {                    
+                if (type.getTypeArguments().size()!=2) {
                     // Field must have got two generics exactly:
                     return false;
                 }
-                
+
                 final String variableTypeName = type.getType().toString();
                 if (variableTypeName.equals("Key")
                 ||  variableTypeName.equals("UjoProperty")
@@ -362,9 +361,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
     private void showDialog() {
         List<KeyItem> members = new ArrayList<KeyItem>();
 
-        for (VariableTree var : ujoMembers) {            
+        for (VariableTree var : ujoMembers) {
             final String comment = stringService.getInLineJavaDoc(var, workingCopy);
-            members.add(new KeyItem(var, comment));                
+            members.add(new KeyItem(var, comment));
         }
 
         propertiesChooser = new PropertiesChooser(members);
@@ -378,8 +377,8 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                         ( propertiesChooser.getSeletedProperties()
                         , propertiesChooser.isGettersRequired()
                         , propertiesChooser.isSettersRequired()
-                        , propertiesChooser.isJavaDocRequired()                        
-                        );                   
+                        , propertiesChooser.isJavaDocRequired()
+                        );
                 }
             }
         });
