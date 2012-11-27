@@ -10,14 +10,14 @@ import java.util.Date;
  *
  * @author ponec
  */
-public class Template {
+public class UjoStub {
     
     /** Object identifier */
-    public static final Key<Template, Long> ID = newKey();
+    public static final Key<UjoStub, Long> ID = newKey();
     /** Name of the object */
-    public static final Key<Template, String> NAME = newKey();
+    public static final Key<UjoStub, String> NAME = newKey();
     /** Birthday of the */
-    public static final Key<Template, Date> BIRTH_DAY = newKey();
+    public static final Key<UjoStub, Date> BIRTH_DAY = newKey();
 
     protected static <UJO,VALUE> Key<UJO, VALUE> newKey() {
         return new Key<UJO,VALUE>();
@@ -25,4 +25,20 @@ public class Template {
     
     // ---------- GENERATED METHODS ------------------
 
+    public Long getId() {
+        return ID.of(this);
+    }
+
+    public String getName() {
+        return NAME.of(this);
+    }
+
+    public Date getBirthDay() {
+        return BIRTH_DAY.of(this);
+    }
+
+    
+
+
+    
 }
