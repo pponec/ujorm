@@ -279,6 +279,12 @@ public class CriterionDecoder {
     }
 
     /** Returns all participated tables include the parameter table. */
+    public int getTableCount(MetaTable baseTable) {
+        return tables.size()
+            + (tables.contains(baseTable) ? 0 : 1);
+    }
+
+    /** Returns all participated tables include the parameter table. */
     public MetaTable[] getTables(MetaTable baseTable) {
         tables.add(baseTable);
         return tables.toArray(new MetaTable[tables.size()]);
@@ -289,7 +295,7 @@ public class CriterionDecoder {
         MetaTable[] result = getTables(baseTable);
         if (result.length>1 && result[0]!=baseTable) {
             Arrays.sort(result, new Comparator<MetaTable>() {
-                @Override public int compare(final MetaTable o1, final MetaTable o2) {                    
+                @Override public int compare(final MetaTable o1, final MetaTable o2) {
                     return o1==baseTable ? -1 : o2==baseTable ? 1 : 0;
                 }
             });

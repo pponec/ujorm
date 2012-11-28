@@ -468,9 +468,8 @@ abstract public class SqlDialect {
         }
         out.append("\n\tWHERE ");
 
-        MetaTable[] tables = decoder.getTables(table);
-        if (tables.length > 1) {
-            printQuotedName(MetaColumn.NAME.of(tables[0].getFirstPK()), out);
+        if (decoder.getTableCount(table) > 1) {
+            printQuotedName(MetaColumn.NAME.of(table.getFirstPK()), out);
             out.append(" IN (");
             printSelectTableBase(createSubQuery(table, decoder), false, out);
             out.append(")");
@@ -491,9 +490,8 @@ abstract public class SqlDialect {
         printTableAliasDefinition(table, out);
         out.append(" WHERE ");
 
-        MetaTable[] tables = decoder.getTables(table);
-        if (tables.length > 1) {
-            printQuotedName(MetaColumn.NAME.of(tables[0].getFirstPK()), out);
+        if (decoder.getTableCount(table) > 1) {
+            printQuotedName(MetaColumn.NAME.of(table.getFirstPK()), out);
             out.append(" IN (");
             printSelectTableBase(createSubQuery(table, decoder), false, out);
             out.append(")");

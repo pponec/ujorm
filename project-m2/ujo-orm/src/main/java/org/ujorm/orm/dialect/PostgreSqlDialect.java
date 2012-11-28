@@ -109,7 +109,7 @@ public class PostgreSqlDialect extends SqlDialect {
         ) throws IOException
     {
         out.append("DELETE FROM ");
-        MetaTable[] tables = decoder.getTables(baseTable);
+        MetaTable[] tables = decoder.getTablesSorted(baseTable);
 
         for (int i=0; i<tables.length; ++i) {
             if (i>0) {
