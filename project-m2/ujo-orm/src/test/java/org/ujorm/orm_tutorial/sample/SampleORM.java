@@ -26,12 +26,11 @@ import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.annot.Comment;
-import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
-import static org.ujorm.criterion.Operator.*;
 import org.ujorm.orm.ao.CheckReport;
+import static org.ujorm.criterion.Operator.*;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -85,6 +84,7 @@ public class SampleORM {
             sample.useStoredProcedure();
             sample.useUpdate();
             sample.useBatchUpdate();
+            sample.useExtendedUpdate();
             sample.usePesimisticUpdate();
             sample.useDelete();
             sample.useBatchDelete();
@@ -612,6 +612,22 @@ public class SampleORM {
         session.commit();
     }
 
+    /** The batch UPDATE of selected columns for required database rows for an extented condition. <br />
+     *  See the next example:
+     */
+    public void useExtendedUpdate() {
+        Order order = new Order();
+        // Activate the Change column management:
+        order.writeSession(session);
+        // Set a value(s) to the change:
+        order.setCreated(new Date());
+
+        Criterion<Item> crn = Item.ID.whereGt(0L)
+                .and(Item.ORDER.add(Order.NOTE).whereNull());
+        session.update(order, crn);
+        session.commit();
+    }
+
     /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
     public void usePesimisticUpdate() {
         Order order = session.createQuery(Order.ID.whereEq(1L))
@@ -641,8 +657,8 @@ public class SampleORM {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** How to use a batch DELETE? <br/>
-     *  The next example deletes all Items where Item.ID = 1
+    /** How to use a batch DELETE for an extended conditon? <br/>
+     *  See the next example:
      */
     public void useExtendedDelete() {
         Criterion<Item> crn = Item.ID.whereGt(0L)

@@ -467,7 +467,16 @@ abstract public class SqlDialect {
             out.append("=?");
         }
         out.append("\n\tWHERE ");
-        out.append(decoder.getWhere());
+
+        MetaTable[] tables = decoder.getTables(table);
+        if (tables.length > 1) {
+            printQuotedName(MetaColumn.NAME.of(tables[0].getFirstPK()), out);
+            out.append(" IN (");
+            printSelectTableBase(createSubQuery(table, decoder), false, out);
+            out.append(")");
+        } else {
+            out.append(decoder.getWhere());
+        }
         return out;
     }
 
@@ -478,25 +487,19 @@ abstract public class SqlDialect {
         , Appendable out
         ) throws IOException
     {
-        String fullTableName = printFullTableName(table, new StringBuilder(64)).toString();
-        String tableAlias = printQuotedName(table.getAlias(), new StringBuilder(64)).toString();
-
-        String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');
-        //
         out.append("DELETE FROM ");
-        out.append(fullTableName);
+        printTableAliasDefinition(table, out);
         out.append(" WHERE ");
 
-        List<MetaTable> tables = new ArrayList<MetaTable>(Arrays.asList(decoder.getTablesSorted(table)));
-        int size = tables.size();
-
-        if (size == 1) {
-            out.append(where);
-        } else if (size > 1) {
-            printQuotedName(MetaColumn.NAME.of(tables.get(0).getFirstPK()), out);
+        MetaTable[] tables = decoder.getTables(table);
+        if (tables.length > 1) {
+            printQuotedName(MetaColumn.NAME.of(tables[0].getFirstPK()), out);
             out.append(" IN (");
             printSelectTableBase(createSubQuery(table, decoder), false, out);
             out.append(")");
+        } else {
+            //String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');
+            out.append(decoder.getWhere());
         }
         return out;
     }
