@@ -15,7 +15,6 @@
  */
 package org.ujorm.orm.dialect;
 
-import java.io.IOException;
 import org.ujorm.orm.SqlDialect;
 
 /** H2 (http://www.h2database.com) */

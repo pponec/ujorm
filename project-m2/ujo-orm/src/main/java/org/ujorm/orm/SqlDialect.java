@@ -493,24 +493,20 @@ abstract public class SqlDialect {
         if (size == 1) {
             out.append(where);
         } else if (size > 1) {
-            // remove "main" from table
-            tables.remove(table);
-            size = tables.size();
-            // add others from table in to sub select
-            out.append("(SELECT 1 FROM ");
-            for (int i = 0; i < size; i++) {
-                if (i > 0) {
-                    out.append(", ");
-                }
-                fullTableName = printFullTableName(tables.get(i), new StringBuilder(64)).toString(); //
-                out.append(fullTableName);
-            }
-            out.append(" WHERE ");
-            out.append(decoder.getWhere());
+            printQuotedName(MetaColumn.NAME.of(tables.get(0).getFirstPK()), out);
+            out.append(" IN (");
+            printSelectTableBase(createSubQuery(table, decoder), false, out);
             out.append(")");
         }
-
         return out;
+    }
+
+    /** Create a subquery for the DELETE/UPDATE statement */
+    protected Query createSubQuery(MetaTable baseTable, CriterionDecoder decoder) {
+        final Query result = new Query(baseTable, decoder.getCriterion());
+        result.setDecoder(decoder);
+        result.setColumns(true);
+        return result;
     }
 
     /** Returns an SQL criterion template. The result is a tempate by the next sample: "{0}={1}" .
