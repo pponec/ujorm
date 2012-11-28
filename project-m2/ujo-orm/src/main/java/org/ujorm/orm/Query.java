@@ -28,6 +28,7 @@ import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.CompositeKey;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
@@ -106,7 +107,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Returns a database row count along a current limit and offset attribues.
-     * @see #getCount() 
+     * @see #getCount()
      */
     public long getLimitedCount() {
         long result = getCount();
@@ -127,8 +128,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return result;
     }
 
-    /** Returns a count of the items 
-     * @see #getLimitedCount() 
+    /** Returns a count of the items
+     * @see #getLimitedCount()
      */
     public long getCount() {
         final long result = session.getRowCount(this);
@@ -175,7 +176,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return criterion;
     }
 
-    /** Method builds and retuns a criterion decoder. 
+    /** Method builds and retuns a criterion decoder.
      * The new decoder is cached to a next order by change.
      */
     @SuppressWarnings("unchecked")
@@ -188,8 +189,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** If the attribute 'order by' is changed so the decoder must be clearder. */
     private void clearDecoder() {
-        decoder = null;
-        statementInfo = null;
+        setDecoder(null);
+    }
+
+    /** If the attribute 'order by' is changed so the decoder must be clearder. */
+    @PackagePrivate void setDecoder(CriterionDecoder decoder) {
+        this.decoder = decoder;
+        this.statementInfo = null;
     }
 
     /** Session */
@@ -239,8 +245,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * The method calls internally the next statement:
      * <pre>iterator().toList()</pre>
      * @see #iterator()
-     * @see OrmTools#loadLazyValues(java.lang.Iterable, int) 
-     * @see OrmTools#loadLazyValuesAsBatch(org.ujorm.orm.Query) 
+     * @see OrmTools#loadLazyValues(java.lang.Iterable, int)
+     * @see OrmTools#loadLazyValuesAsBatch(org.ujorm.orm.Query)
      */
     public List<UJO> list() {
         return iterator().toList();
@@ -249,7 +255,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Returns a unique result or null if no result item (database row) was found.
      * @throws NoSuchElementException Result is not unique.
      * @see #iterator()
-     * @see #exists() 
+     * @see #exists()
      */
     public UJO uniqueResult() throws NoSuchElementException {
         final UjoIterator<UJO> iterator = iterator();
@@ -430,7 +436,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         } else {
             String msg = "Property '" + table.getType().getSimpleName() + "." + property + "' is not a persistent table column";
             throw new IllegalStateException(msg);
-        }        
+        }
     }
 
     /** Has this Query an offset? */
@@ -477,7 +483,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * Set a limit and offset.
      * @param limit The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation.
      * @param offset Get the first row to retrieve (offset). Default value is 0.
-     * @see #setLimit(int) 
+     * @see #setLimit(int)
      * @see #setOffset(int)
      */
     public Query<UJO> setLimit(int limit, int offset) {
@@ -531,7 +537,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return lockRequest;
     }
 
-    /** Pessimistic lock request. A default value is false. 
+    /** Pessimistic lock request. A default value is false.
      * @see org.ujorm.orm.dialect.HsqldbDialect#printLockForSelect(org.ujorm.orm.Query, java.lang.Appendable) HsqldbDialect
      */
     public Query<UJO> setLockRequest(boolean lockRequest) {

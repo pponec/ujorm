@@ -18,7 +18,6 @@ package org.ujorm.orm_tutorial;
 
 import java.sql.Connection;
 import junit.framework.TestCase;
-//import org.ujorm.orm_tutorial.core.SampleCORE;
 import org.ujorm.orm_tutorial.sample.SampleORM;
 import org.ujorm.ujo_core.SampleCORE;
 
@@ -31,7 +30,7 @@ public class OrmTutorialTest extends TestCase {
     private static Connection conn = null;
     private static boolean noRunned = true;
     private static boolean noRunnedX = true;
-    
+
     public OrmTutorialTest(String testName) {
         super(testName);
     }

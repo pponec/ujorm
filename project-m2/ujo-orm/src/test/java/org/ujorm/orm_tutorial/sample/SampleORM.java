@@ -88,6 +88,7 @@ public class SampleORM {
             sample.usePesimisticUpdate();
             sample.useDelete();
             sample.useBatchDelete();
+            sample.useExtendedDelete();
             sample.useMetadata();
         } finally {
             sample.useCloseSession();
@@ -119,8 +120,8 @@ public class SampleORM {
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
-            params.set(MetaParams.CHECK_KEYWORDS, CheckReport.QUOTE_SQL_NAMES);
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
+            params.setQuotedSqlNames(false);
             handler.config(params);
         }
 
@@ -282,7 +283,7 @@ public class SampleORM {
         if (session.getParameters().isQuotedSqlNames()) {
             return; // Columns must be quoted
         }
-        
+
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
 
         long minimalOrderId = 0L;
@@ -311,8 +312,8 @@ public class SampleORM {
     public void useSelectWithNativeSQL() {
         if (session.getParameters().isQuotedSqlNames()) {
             return; // Columns must be quoted
-        }        
-        
+        }
+
         final Long excludedId = -7L;
         SqlParameters sql = new SqlParameters().setSqlStatement
                 ( "SELECT * FROM ("
@@ -444,7 +445,7 @@ public class SampleORM {
     public void useNativeCriterion() {
         if (session.getParameters().isQuotedSqlNames()) {
             return;  // Columns must be quoted
-        }        
+        }
 
         Criterion<Order> crn = Order.STATE.forSql("ord_order_alias.id>0")
              .and(Order.CREATED.where(LE, new Date()));
@@ -636,6 +637,17 @@ public class SampleORM {
      */
     public void useBatchDelete() {
         int count = session.delete(Item.ID.whereEq(1L));
+        session.commit();
+        System.out.println("There are DELETED rows: " + count);
+    }
+
+    /** How to use a batch DELETE? <br/>
+     *  The next example deletes all Items where Item.ID = 1
+     */
+    public void useExtendedDelete() {
+        Criterion<Item> crn = Item.ID.whereGt(0L)
+                .and(Item.ORDER.add(Order.NOTE).whereNull());
+        int count = session.delete(crn);
         session.commit();
         System.out.println("There are DELETED rows: " + count);
     }
