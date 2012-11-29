@@ -284,7 +284,9 @@ public class Session {
         return new Query<UJO>(table, criterion, this);
     }
 
-    /** Returns the first "basic" column of criterion. */
+    /** Returns the first "basic" column of criterion.
+     * @return Nullable result
+     */
     public MetaRelation2Many getBasicColumn(Criterion criterion) {
         while (criterion.isBinary()) {
             criterion = ((BinaryCriterion) criterion).getLeftNode();
@@ -362,7 +364,7 @@ public class Session {
 
     /** INSERT object into table using the <a href="http://en.wikipedia.org/wiki/Insert_%28SQL%29">Multirow inserts</a>.
      * @param bos List of the business object of the same class. If the list must not contain object of different types
-     * @param multiLimit Row limit for the one insert. 
+     * @param multiLimit Row limit for the one insert.
      *        If the value will be out of range <1,bos.size()> than the value will be corrected.
      *        If the list item count is greather than multi limit so insert will be separated by more multirow inserts.
      * @throws IllegalStateException
@@ -401,9 +403,9 @@ public class Session {
             }
 
             // 2. Assign primary key
-            table.assignPrimaryKey(bo, this); 
+            table.assignPrimaryKey(bo, this);
             // 3. Session must be assigned after assignPrimaryKey()
-            bo.writeSession(this); // 
+            bo.writeSession(this); //
         }
 
         // --------------- PERFORMANCE -------------------------------------
@@ -463,7 +465,7 @@ public class Session {
             // 2. Assigh Primary Key
             table.assignPrimaryKey(bo, this);
             // 3. Session must be assigned after assignPrimaryKey(). A bug was fixed thans to Pavel Slovacek
-            bo.writeSession(this); 
+            bo.writeSession(this);
             MetaDatabase db = MetaTable.DATABASE.of(table);
             sql = db.getDialect().printInsert(bo, out(128)).toString();
             LOGGER.log(Level.INFO, sql);
@@ -519,9 +521,8 @@ public class Session {
                 LOGGER.log(Level.WARNING, "No changes to update in the object: " + bo);
                 return result;
             }
-            final MetaTable ormTable = handler.findTableModel(bo.getClass());
-            final CriterionDecoder decoder = new CriterionDecoder(criterion, ormTable);
-            sql = db.getDialect().printUpdate(ormTable, changedColumns, decoder, out(64)).toString();
+            final CriterionDecoder decoder = new CriterionDecoder(criterion, table);
+            sql = db.getDialect().printUpdate(changedColumns, decoder, out(64)).toString();
             statement = getStatement(db, sql, true);
             statement.assignValues(bo, changedColumns);
             statement.assignValues(decoder);
@@ -611,7 +612,7 @@ public class Session {
         try {
             final MetaDatabase db = MetaTable.DATABASE.of(tableModel);
             final CriterionDecoder decoder = new CriterionDecoder(criterion, tableModel);
-            sql = db.getDialect().printDelete(tableModel, decoder, out(64)).toString();
+            sql = db.getDialect().printDelete(decoder, out(64)).toString();
             statement = getStatement(db, sql, true);
             statement.assignValues(decoder);
 
@@ -812,7 +813,7 @@ public class Session {
     final public Connection getFirstConnection() throws IllegalStateException {
         return getFirstConnection(true);
     }
-    
+
     /**
      * Get the first Connection where an autocommit is set to false.
      * @param databaseIndex The first database have got the index value: 0 .
@@ -1035,13 +1036,13 @@ public class Session {
         return params;
     }
 
-    /** The rollback is allowed only. 
-     * @return The result is {@code true} if an inner session attribute is true or 
+    /** The rollback is allowed only.
+     * @return The result is {@code true} if an inner session attribute is true or
      * a related transaction have got the status equals {link Status#STATUS_ROLLEDBACK}.
      */
     public boolean isRollbackOnly() {
-        return rollbackOnly 
-            || transaction!=null 
+        return rollbackOnly
+            || transaction!=null
             && transaction.getStatus()==Status.STATUS_ROLLEDBACK;
     }
 
@@ -1065,7 +1066,7 @@ public class Session {
 
     /** Reload values of the persistent object. <br>
      * Note: If the object has implemented the interface
-     * {@link ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded 
+     * {@link ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded
      * else a lazy initialization is loaded - for the first property depth.
      * @param ujo The persistent object to relading values.
      * @return The FALSE value means that the object is missing in the database.
@@ -1111,7 +1112,7 @@ public class Session {
 
         return true;
     }
-    
+
     /** Create the closed session */
     public static Session newClosedSession(OrmHandler handler) {
         Session result = new Session(handler);

@@ -49,15 +49,26 @@ public class CriterionDecoder {
     final private List<ValueCriterion> values;
     final private List<ValueCriterion> nullValues;
     final private Set<MetaTable> tables;
+    final private MetaTable baseTable;
 
-    public CriterionDecoder(Criterion e, MetaTable ormTable) {
-        this(e, ormTable.getDatabase(), null);
+    /**
+     * Constructor
+     * @param criterion Criterion non-null
+     * @param baseTable Base ORM table model
+     */
+    public CriterionDecoder(Criterion criterion, MetaTable baseTable) {
+        this(criterion, baseTable, null);
     }
 
     /**
-     * @param orderBy The order item list is not mandatory (can be null).
+     * Constructor
+     * @param criterion Criterion non-null
+     * @param baseTable Base ORM table model
+     * @param orderByItems The order item list is not mandatory (can be null).
      */
-    public CriterionDecoder(Criterion criterion, MetaDatabase database, List<Key> orderByItems) {
+    public CriterionDecoder(Criterion criterion, MetaTable baseTable, List<Key> orderByItems) {
+        final MetaDatabase database = baseTable.getDatabase();
+        this.baseTable = baseTable;
         this.criterion = criterion;
         this.dialect = database.getDialect();
         this.orderBy = orderByItems;
@@ -66,6 +77,7 @@ public class CriterionDecoder {
         this.values = new ArrayList<ValueCriterion>();
         this.nullValues = new ArrayList<ValueCriterion>();
         this.tables = new HashSet<MetaTable>();
+        this.tables.add(baseTable);
 
         if (this.criterion!=null) {
             unpack(this.criterion);
@@ -278,21 +290,24 @@ public class CriterionDecoder {
         return result.toArray(new Key[result.size()]);
     }
 
-    /** Returns all participated tables include the parameter table. */
-    public int getTableCount(MetaTable baseTable) {
-        return tables.size()
-            + (tables.contains(baseTable) ? 0 : 1);
+    /** Get Base Table */
+    public MetaTable getBaseTable() {
+        return baseTable;
     }
 
     /** Returns all participated tables include the parameter table. */
-    public MetaTable[] getTables(MetaTable baseTable) {
-        tables.add(baseTable);
+    public int getTableCount() {
+        return tables.size();
+    }
+
+    /** Returns all participated tables include the parameter table. */
+    public MetaTable[] getTables() {
         return tables.toArray(new MetaTable[tables.size()]);
     }
 
     /** Returns all participated tables include the parameter table. The 'baseTable' is on the first position always. */
-    public MetaTable[] getTablesSorted(final MetaTable baseTable) {
-        MetaTable[] result = getTables(baseTable);
+    public MetaTable[] getTablesSorted() {
+        final MetaTable[] result = getTables();
         if (result.length>1 && result[0]!=baseTable) {
             Arrays.sort(result, new Comparator<MetaTable>() {
                 @Override public int compare(final MetaTable o1, final MetaTable o2) {

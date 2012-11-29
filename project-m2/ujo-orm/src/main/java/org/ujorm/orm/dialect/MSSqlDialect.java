@@ -59,7 +59,8 @@ public class MSSqlDialect extends SqlDialect {
 
     /** Print an SQL UPDATE statement.  */
     @Override
-    public Appendable printUpdate(MetaTable table, List<MetaColumn> changedColumns, CriterionDecoder decoder, Appendable out) throws IOException {
+    public Appendable printUpdate(List<MetaColumn> changedColumns, CriterionDecoder decoder, Appendable out) throws IOException {
+        final MetaTable table = decoder.getBaseTable();
         out.append("UPDATE ");
         printQuotedName(table.getAlias(), out);
         out.append("\n\tSET ");
@@ -82,17 +83,18 @@ public class MSSqlDialect extends SqlDialect {
 
     /** Print an SQL DELETE statement. */
     @Override
-    public Appendable printDelete(MetaTable table, CriterionDecoder decoder, Appendable out) throws IOException {
+    public Appendable printDelete(CriterionDecoder decoder, Appendable out) throws IOException {
+        final MetaTable table = decoder.getBaseTable();
         out.append("DELETE ");
         printQuotedName(table.getAlias(), out);
         out.append("\n\tFROM ");
         Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
-        getTablesFromCriterion(decoder, table, tables);
+        getTablesFromCriterion(decoder, tables);
         printTablesWithAlias(tables.values(), out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
-        
-        return out;    
+
+        return out;
     }
 
     /** Print a full SQL column alias name by sample: <TABLE>_<ALIAS_COLUMN> */
@@ -241,7 +243,7 @@ public class MSSqlDialect extends SqlDialect {
         }
         if (query.getCriterion() != null) {
             CriterionDecoder ed = query.getDecoder();
-            getTablesFromCriterion(ed, query.getTableModel(), tables);
+            getTablesFromCriterion(ed, tables);
             printTablesWithAlias(tables.values(), out);
             String sql = ed.getWhere();
             if (!sql.isEmpty()) {
@@ -253,8 +255,8 @@ public class MSSqlDialect extends SqlDialect {
         }
     }
 
-    private void getTablesFromCriterion(CriterionDecoder ed, MetaTable metatable, Map<String, MetaTable> tables) {
-        MetaTable[] critTables = ed.getTables(metatable);
+    private void getTablesFromCriterion(CriterionDecoder ed, Map<String, MetaTable> tables) {
+        MetaTable[] critTables = ed.getTables();
         for (int i = 0; i < critTables.length; ++i) {
             MetaTable table = critTables[i];
             String alias = table.getAlias();
