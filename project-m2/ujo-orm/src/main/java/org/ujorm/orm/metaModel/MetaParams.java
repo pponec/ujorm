@@ -47,7 +47,7 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** Property Factory */
     private static final KeyFactory<MetaParams> f = KeyFactory.CamelBuilder.get(CLASS);
-    /** Session cache policy. 
+    /** Session cache policy.
      * The default value is PROTECTED_CACHE.
      * @see CachePolicy Parameter values */
     public static final Key<MetaParams,CachePolicy> CACHE_POLICY = f.newKey("cachePolicy", CachePolicy.PROTECTED_CACHE);
@@ -58,7 +58,7 @@ final public class MetaParams extends AbstractMetaModel {
      * The default value is the empty String. */
     public static final Key<MetaParams,String> TABLE_ALIAS_SUFFIX = f.newKey("tableAliasSuffix", "");
     /** Sequential cache parameter saves the number of requests to the following sequence when a insert statement into DB.
-     * The value of the parameter is used only when creating a new DB, indivuální ORM changes for each table 
+     * The value of the parameter is used only when creating a new DB, indivuální ORM changes for each table
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 100, the smallest possible value is 1. */
     public static final Key<MetaParams,Integer> SEQUENCE_CACHE = f.newKey("sequenceCache", 100);
@@ -67,7 +67,7 @@ final public class MetaParams extends AbstractMetaModel {
      * @see Orm2ddlPolicy Parameter values
      */
     public static final Key<MetaParams,Orm2ddlPolicy> ORM2DLL_POLICY = f.newKey("orm2ddlPolicy", Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
-    /** A policy for assigning an annotation table comment {@link org.ujorm.orm.annot.Comment} to database. 
+    /** A policy for assigning an annotation table comment {@link org.ujorm.orm.annot.Comment} to database.
      * The default value is ON_ANY_CHANGE.
      * @see CommentPolicy  Parameter values
      */
@@ -76,7 +76,7 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,File> SAVE_CONFIG_TO_FILE = f.newKey("saveConfigToFile");
     /** The instance of the parameter class {@see ITypeService} is used for conversion, reading and writting to/from the ResultSet.
      * You can specify a sybtype of the class for a commiono special fetures.
-     * @see org.ujorm.orm.annot.Column#converter() 
+     * @see org.ujorm.orm.annot.Column#converter()
      */
     public static final Key<MetaParams,Class<? extends ITypeService>> TYPE_SERVICE = f.newClassKey("typeService", TypeService.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model.
@@ -100,7 +100,7 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,Boolean> SEQUENCE_SCHEMA_SYMBOL = f.newKey("sequenceSchemaSymbol", false);
 
     /** Any action type or CREATE, UPDATE, DELETE on inheritance objects calls the same action to its 'parrent' object.
-     * If the mode is off than you must take care of all its parents in the code handy. 
+     * If the mode is off than you must take care of all its parents in the code handy.
      * The default falue is TRUE.<br />
      * Note: the parameter does not affect the opearations
      * {@link org.ujorm.orm.Session#update(org.ujorm.orm.OrmUjo, org.ujorm.criterion.Criterion) batch update} or
@@ -115,7 +115,7 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Integer> INSERT_MULTIROW_ITEM_LIMIT = f.newKey("insertMultirowItemLimit", 100);
 
-    /** The parameter contains the special parameters with for different use. 
+    /** The parameter contains the special parameters with for different use.
      * @see MoreParams
      */
     public static final Key<MetaParams,MoreParams> MORE_PARAMS = f.newKey("moreParams");
@@ -199,28 +199,28 @@ final public class MetaParams extends AbstractMetaModel {
         return MORE_PARAMS.of(this);
     }
 
-    /** Skip the check test and Quote all SQL columns, tables and alias names. 
+    /** Skip the check test and Quote all SQL columns, tables and alias names.
      * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
      * @see #CHECK_KEYWORDS
      * @see CheckReport#SKIP_AND_QUOTE_SQL_NAMES
-     */        
+     */
     public boolean isQuotedSqlNames() {
         return CheckReport.QUOTE_SQL_NAMES==CHECK_KEYWORDS.of(this);
     }
-    
-    /** Skip the check test and Quote all SQL columns, tables and alias names. 
+
+    /** Skip the check test and Quote all SQL columns, tables and alias names.
      * <br>NOTE: The change of the parameter value affects the native SQL statements in Ujorm views.
      * @param quote Parameter {@code true} affects to an escapinng the database names,
      * else the {@code false} value will affects to checked a database KeyWords in the names.
      * @see #CHECK_KEYWORDS
      * @see CheckReport#SKIP_AND_QUOTE_SQL_NAMES
-     */        
+     */
     public void setQuotedSqlNames(boolean quote) {
         CHECK_KEYWORDS.setValue(this, quote
                 ? CheckReport.QUOTE_SQL_NAMES
-                : CheckReport.EXCEPTION
+                : null // The default value
                 );
     }
-    
+
 }
 
