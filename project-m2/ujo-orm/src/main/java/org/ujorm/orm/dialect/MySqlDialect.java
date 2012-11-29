@@ -43,13 +43,12 @@ public class MySqlDialect extends SqlDialect {
    /** Print an SQL DELETE statement. */
     @Override
     public Appendable printDelete
-        ( MetaTable table
-        , CriterionDecoder decoder
+        ( CriterionDecoder decoder
         , Appendable out
         ) throws IOException
     {
-
-        MetaTable[] tables = decoder.getTablesSorted(table);
+        final MetaTable table = decoder.getBaseTable();
+        final MetaTable[] tables = decoder.getTablesSorted();
 
         if (tables.length>1) {
             out.append("DELETE FROM ");
@@ -59,11 +58,11 @@ public class MySqlDialect extends SqlDialect {
             }
             out.append(" WHERE ");
             out.append(decoder.getWhere());
-            
+
         } else {
             String fullTableName = printFullTableName(table, new StringBuilder(64)).toString();
             String tableAlias = getQuotedName(table.getAlias());
-            String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');            
+            String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');
             //
             out.append("DELETE FROM ");
             out.append(fullTableName);
@@ -110,7 +109,7 @@ public class MySqlDialect extends SqlDialect {
                 return "LONGTEXT";
             case BLOB:
                 return "LONGBLOB";
-                
+
             default:
                 return super.getColumnType(column);
         }
@@ -142,7 +141,7 @@ public class MySqlDialect extends SqlDialect {
             String statement = printColumnDeclaration(column, null, new StringBuilder()).toString();
             out.append(statement.replaceAll(pk, " "));
         } else if(column.isForeignKey()) {
-            printFKColumnsDeclaration(column, out); 
+            printFKColumnsDeclaration(column, out);
         } else {
             printColumnDeclaration(column, null, out);
         }

@@ -103,13 +103,12 @@ public class PostgreSqlDialect extends SqlDialect {
     /** Print an SQL DELETE statement. */
     @Override
     public Appendable printDelete
-        ( MetaTable baseTable
-        , CriterionDecoder decoder
+        ( CriterionDecoder decoder
         , Appendable out
         ) throws IOException
     {
         out.append("DELETE FROM ");
-        MetaTable[] tables = decoder.getTablesSorted(baseTable);
+        MetaTable[] tables = decoder.getTablesSorted();
 
         for (int i=0; i<tables.length; ++i) {
             if (i>0) {

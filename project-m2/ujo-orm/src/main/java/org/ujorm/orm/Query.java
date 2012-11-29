@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
+import org.ujorm.core.annot.PackagePrivate;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
-import org.ujorm.criterion.Criterion;
-import org.ujorm.CompositeKey;
-import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
@@ -182,7 +182,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     @SuppressWarnings("unchecked")
     final public CriterionDecoder getDecoder() {
         if (decoder==null) {
-            decoder = new CriterionDecoder(criterion, table.getDatabase(), (List)orderBy);
+            decoder = new CriterionDecoder(criterion, table, (List)orderBy);
         }
         return decoder;
     }

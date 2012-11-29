@@ -447,12 +447,12 @@ abstract public class SqlDialect {
 
     /** Print an SQL UPDATE statement.  */
     public Appendable printUpdate
-        ( MetaTable table
-        , List<MetaColumn> changedColumns
+        ( List<MetaColumn> changedColumns
         , CriterionDecoder decoder
         , Appendable out
         ) throws IOException
     {
+        final MetaTable table = decoder.getBaseTable();
         out.append("UPDATE ");
         printTableAliasDefinition(table, out);
         out.append("\n\tSET ");
@@ -468,10 +468,10 @@ abstract public class SqlDialect {
         }
         out.append("\n\tWHERE ");
 
-        if (decoder.getTableCount(table) > 1) {
+        if (decoder.getTableCount() > 1) {
             printQuotedName(MetaColumn.NAME.of(table.getFirstPK()), out);
             out.append(" IN (");
-            printSelectTableBase(createSubQuery(table, decoder), false, out);
+            printSelectTableBase(createSubQuery(decoder), false, out);
             out.append(")");
         } else {
             out.append(decoder.getWhere());
@@ -481,19 +481,19 @@ abstract public class SqlDialect {
 
     /** Print an SQL DELETE statement. */
     public Appendable printDelete
-        ( MetaTable table
-        , CriterionDecoder decoder
+        ( CriterionDecoder decoder
         , Appendable out
         ) throws IOException
     {
+        final MetaTable table = decoder.getBaseTable();
         out.append("DELETE FROM ");
         printTableAliasDefinition(table, out);
         out.append(" WHERE ");
 
-        if (decoder.getTableCount(table) > 1) {
+        if (decoder.getTableCount() > 1) {
             printQuotedName(MetaColumn.NAME.of(table.getFirstPK()), out);
             out.append(" IN (");
-            printSelectTableBase(createSubQuery(table, decoder), false, out);
+            printSelectTableBase(createSubQuery(decoder), false, out);
             out.append(")");
         } else {
             //String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');
@@ -503,7 +503,8 @@ abstract public class SqlDialect {
     }
 
     /** Create a subquery for the DELETE/UPDATE statement */
-    protected Query createSubQuery(MetaTable baseTable, CriterionDecoder decoder) {
+    protected Query createSubQuery(CriterionDecoder decoder) {
+        final MetaTable baseTable = decoder.getBaseTable();
         final Query result = new Query(baseTable, decoder.getCriterion());
         result.setDecoder(decoder);
         result.setColumns(true);
@@ -800,9 +801,8 @@ abstract public class SqlDialect {
         out.append("\n\tFROM ");
 
         if (query.getCriterion() != null) {
-            CriterionDecoder ed = query.getDecoder();
-
-            MetaTable[] tables = ed.getTables(query.getTableModel());
+            final CriterionDecoder ed = query.getDecoder();
+            final MetaTable[] tables = ed.getTables();
 
             for (int i=0; i<tables.length; ++i) {
                 if (i>0) {
