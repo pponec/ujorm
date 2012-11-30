@@ -30,6 +30,7 @@ import org.ujorm.orm.DbType;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
@@ -256,11 +257,11 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     private void getTablesFromCriterion(CriterionDecoder ed, Map<String, MetaTable> tables) {
-        MetaTable[] critTables = ed.getTables();
+        TableWrapper[] critTables = ed.getTables();
         for (int i = 0; i < critTables.length; ++i) {
-            MetaTable table = critTables[i];
+            TableWrapper table = critTables[i];
             String alias = table.getAlias();
-            tables.put(alias, table);
+            tables.put(alias, table.getModel());
         }
     }
 

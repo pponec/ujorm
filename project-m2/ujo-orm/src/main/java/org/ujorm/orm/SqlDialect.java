@@ -140,8 +140,11 @@ abstract public class SqlDialect {
     /** Print a SQL database and table name and an alias definition - by sample: SCHEMA.TABLE ALIAS */
     public void printTableAliasDefinition(final TableWrapper table, final Appendable out) throws IOException {
         printFullTableName(table.getModel(), out);
-        out.append(' ');
-         printQuotedName(table.getAlias(), out);
+        final String alias = table.getAlias();
+        if (isFilled(alias)) {
+            out.append(' ');
+            printQuotedName(alias, out);            
+        }
     }
 
 
@@ -802,7 +805,7 @@ abstract public class SqlDialect {
 
         if (query.getCriterion() != null) {
             final CriterionDecoder ed = query.getDecoder();
-            final MetaTable[] tables = ed.getTables();
+            final TableWrapper[] tables = ed.getTables();
 
             for (int i=0; i<tables.length; ++i) {
                 if (i>0) {

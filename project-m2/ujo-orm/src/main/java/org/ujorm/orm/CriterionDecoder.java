@@ -301,19 +301,20 @@ public class CriterionDecoder {
     }
 
     /** Returns all participated tables include the parameter table. */
-    public MetaTable[] getTables() {
-        return tables.toArray(new MetaTable[tables.size()]);
+    public TableWrapper[] getTables() {
+        return tables.toArray(new TableWrapper[tables.size()]);
     }
 
     /** Returns all participated tables include the parameter table. The 'baseTable' is on the first position always. */
-    public MetaTable[] getTablesSorted() {
-        final MetaTable[] result = getTables();
-        if (result.length>1 && result[0]!=baseTable) {
-            Arrays.sort(result, new Comparator<MetaTable>() {
-                @Override public int compare(final MetaTable o1, final MetaTable o2) {
-                    return o1==baseTable ? -1 : o2==baseTable ? 1 : 0;
+    public TableWrapper[] getTablesSorted() {
+        final TableWrapper[] result = getTables();
+        if (result.length > 1 && result[0] != baseTable) {
+            for (int i = result.length - 1; i >= 1; i--) {
+                if (result[i] == baseTable) {
+                    result[i] = result[0];
+                    result[0] = baseTable;
                 }
-            });
+            }
         }
         return result;
     }
