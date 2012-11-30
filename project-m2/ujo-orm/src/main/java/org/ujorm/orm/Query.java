@@ -612,9 +612,6 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @throws IllegalArgumentException The SQL parameters can be used for the VIEW only
      */
     public Query<UJO> setSqlParameters(SqlParameters sqlParameters) throws IllegalArgumentException {
-        if (table!=null && !table.isView()) {
-            throw new IllegalArgumentException("The SQL parameters can be used for the VIEW only");
-        }
         this.sqlParameters = sqlParameters;
         return this;
     }

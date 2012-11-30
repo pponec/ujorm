@@ -17,8 +17,12 @@
 package org.ujorm.orm.dialect;
 
 import java.io.IOException;
+import java.util.List;
+import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.TableWrapper;
+import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -47,30 +51,64 @@ public class MySqlDialect extends SqlDialect {
         , Appendable out
         ) throws IOException
     {
-        final MetaTable table = decoder.getBaseTable();
-        final MetaTable[] tables = decoder.getTablesSorted();
-
-        if (tables.length>1) {
-            out.append("DELETE FROM ");
-            for (int i = 0; i < tables.length; i++) {
-                if (i > 0) { out.append(", "); }
-                printTableAliasDefinition(tables[i], out);
-            }
-            out.append(" WHERE ");
-            out.append(decoder.getWhere());
-
-        } else {
-            String fullTableName = printFullTableName(table, new StringBuilder(64)).toString();
-            String tableAlias = getQuotedName(table.getAlias());
-            String where = decoder.getWhere().replace(tableAlias + '.', fullTableName + '.');
-            //
-            out.append("DELETE FROM ");
-            out.append(fullTableName);
-            out.append(" WHERE ");
-            out.append(where);
+        out.append("DELETE FROM ");
+        
+        final TableWrapper[] tables = decoder.getTablesSorted();
+        if (tables.length==1) {
+            tables[0] = new TableWrapperImpl(decoder.getBaseTable(), "");
         }
-        return out;
+        for (int i = 0; i < tables.length; i++) {
+            if (i > 0) { out.append(", "); }
+            printTableAliasDefinition(tables[i], out);
+        }
+        return printWhere(decoder, tables, out);
     }
+
+    @Override
+    public Appendable printUpdate
+            ( List<MetaColumn> changedColumns
+            , CriterionDecoder decoder
+            , Appendable out
+            ) throws IOException {
+        
+        final TableWrapper[] tables = decoder.getTablesSorted();
+        if (tables.length==1) {
+            tables[0] = new TableWrapperImpl(decoder.getBaseTable(), "");
+        }
+        
+        out.append("UPDATE ");
+        for (int i = 0; i < tables.length; i++) {
+            if (i > 0) { out.append(", "); }
+            printTableAliasDefinition(tables[i], out);
+        }
+        out.append("\n\tSET ");
+
+        for (int i=0; i<changedColumns.size(); i++) {
+            MetaColumn ormColumn = changedColumns.get(i);
+            if (ormColumn.isPrimaryKey()) {
+                throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
+            }
+            out.append(i==0 ? "" :  ", ");
+            printQuotedName(MetaColumn.NAME.of(ormColumn), out);
+            out.append("=?");
+        }
+        return printWhere(decoder, tables, out);
+    }
+
+    /** Print where condition for DELETE / UPDATE 
+     * TODO: FIX THE IMPLEMENTATION - probably in the CriterionDecoder class
+     */
+    protected Appendable printWhere(CriterionDecoder decoder, final TableWrapper[] tables, Appendable out) throws IOException {
+        out.append(" WHERE ");
+        String where = decoder.getWhere();
+        if (tables.length==1) {
+            String fullTableName = printFullTableName(decoder.getBaseTable(), new StringBuilder(64)).toString();
+            String tableAlias = getQuotedName(decoder.getBaseTable().getAlias());
+            where = where.replace(tableAlias + "\\.", fullTableName + '.');    
+        }
+        out.append(where);
+        return out;
+    }    
 
     @Override
     public Appendable printSequenceTable(MetaDatabase db, Appendable out) throws IOException {

@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -108,7 +109,7 @@ public class PostgreSqlDialect extends SqlDialect {
         ) throws IOException
     {
         out.append("DELETE FROM ");
-        MetaTable[] tables = decoder.getTablesSorted();
+        TableWrapper[] tables = decoder.getTablesSorted();
 
         for (int i=0; i<tables.length; ++i) {
             if (i>0) {
