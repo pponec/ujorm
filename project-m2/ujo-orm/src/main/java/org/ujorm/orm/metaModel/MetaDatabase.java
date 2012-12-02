@@ -197,7 +197,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (ADD_DB_MODEL) {
             // Add database relations:
             @SuppressWarnings("unchecked")
-            RelationToMany relation = new RelationToMany(SCHEMA.of(this), database.getClass());
+            String schemaKeyName = SCHEMA.of(this);
+            RelationToMany relation = new RelationToMany
+                    ( isFilled(schemaKeyName) 
+                    ? schemaKeyName 
+                    : RelationToMany.class.getSimpleName()
+                    , database.getClass());
             MetaTable table = new MetaTable(this, relation, null);
             table.setNotPersistent();
             TABLES.addItem(this, table);

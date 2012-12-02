@@ -16,6 +16,7 @@
 
 package org.ujorm.orm_tutorial.sample;
 
+import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.dialect.DerbyDialect;
 import java.util.ArrayList;
 import java.util.Date;
@@ -279,13 +280,12 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
-        if (session.getParameters().isQuotedSqlNames()) {
-            return; // Columns must be quoted
-        }        
-        if (DerbyDialect.class.isInstance(session.getDialect(ViewOrder.class))) {
-            return; // Derby DB must have got another SQL statement
-        }        
-        
+        // Some dialects must have got special SQL statements:
+        if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
+        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+            return; 
+        }
+
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
 
         long minimalOrderId = 0L;
@@ -312,11 +312,10 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectWithNativeSQL() {
-        if (session.getParameters().isQuotedSqlNames()) {
-            return; // Columns must be quoted
-        }
-        if (DerbyDialect.class.isInstance(session.getDialect(ViewOrder.class))) {
-            return; // Derby DB must have got another SQL statement
+        // Some dialects must have got special SQL statements:
+        if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
+        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+            return; 
         }
 
         final Long excludedId = -7L;
