@@ -159,8 +159,7 @@ public class SampleORM {
         System.out.println("item1: " + item1);
         System.out.println("item2: " + item2);
 
-        Transaction tr = session.beginTransaction();
-
+        final Transaction tr = session.beginTransaction();
         session.save(order);
         session.save(item1);
         session.save(item2);
