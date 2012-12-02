@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import javax.transaction.Status;
+import org.hibernate.dialect.Dialect;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
@@ -1118,6 +1119,21 @@ public class Session {
         return handler.findTableModel(ormType).getDatabase().getDialect();
     }
 
+    /** Returns true, if Corm type have got any from listed dialects
+     * @param ormType Entity type
+     * @param dialects Entity dialect type
+     * @return Returns true, if Corm type have got any from listed dialects
+     */
+    public boolean hasDialect(Class<? extends OrmUjo> ormType, Class<? extends SqlDialect> ... dialects) {
+        final SqlDialect dialect = handler.findTableModel(ormType).getDatabase().getDialect();
+        for (Class<? extends SqlDialect> dialectType : dialects) {
+            if (dialectType.isInstance(dialect)) {
+                return true;
+            }            
+        }
+        return false;
+    }
+    
     /** Create the closed session */
     public static Session newClosedSession(OrmHandler handler) {
         Session result = new Session(handler);
