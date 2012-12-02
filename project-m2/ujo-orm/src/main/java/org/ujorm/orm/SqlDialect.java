@@ -147,7 +147,6 @@ abstract public class SqlDialect {
         }
     }
 
-
     /** Print a full SQL column alias name by sample: TABLE_ALIAS.COLUMN */
     public Appendable printColumnAlias(final ColumnWrapper column, final Appendable out) throws IOException {
         final TableWrapper table = column.getTable();
@@ -656,7 +655,7 @@ abstract public class SqlDialect {
             }
             if (true) {
                 // Better performance:
-                String f = MessageFormat.format(template, column.getAliasName(), col2.getAliasName());
+                String f = MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2));
                 //String f=String.format(template, column.getAliasName(), col2.getAliasName());
                 out.append(f);
             }
@@ -666,18 +665,26 @@ abstract public class SqlDialect {
             for (Object o : os) {
                 sb.append(sb.length()>0 ? ",?" : "?");
             }
-            String f = MessageFormat.format(template, column.getAliasName(), sb.toString());
+            String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
             out.append(f);
             return crit;
         } else if (column.isForeignKey()) {
             printForeignKey(crit, column, template, out);
             return crit;
         } else {
-            String f = MessageFormat.format(template, column.getAliasName(), "?");
+            String f = MessageFormat.format(template, getAliasColumnName(column), "?");
             out.append(f);
             return crit;
         }
         return null;
+    }
+    
+    /** Returns quoted column name including the alias table */
+    protected String getAliasColumnName(MetaColumn column) throws IOException {
+        final String aliasName = column.getAliasName();
+        final Appendable out = new StringBuilder(aliasName.length() + 2);
+        printQuotedName(aliasName, out);
+        return out.toString();
     }
 
     /** Print all items of the foreign key */
