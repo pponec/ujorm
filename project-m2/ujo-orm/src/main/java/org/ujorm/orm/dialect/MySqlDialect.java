@@ -18,7 +18,6 @@ package org.ujorm.orm.dialect;
 
 import java.io.IOException;
 import java.util.List;
-import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.TableWrapper;
@@ -103,8 +102,8 @@ public class MySqlDialect extends SqlDialect {
         String where = decoder.getWhere();
         if (tables.length==1) {
             String fullTableName = printFullTableName(decoder.getBaseTable(), new StringBuilder(64)).toString();
-            String tableAlias = getQuotedName(decoder.getBaseTable().getAlias());
-            where = where.replace(tableAlias + "\\.", fullTableName + '.');    
+            String tableAlias = printQuotedName(decoder.getBaseTable().getAlias(), new StringBuilder(64)).toString();
+            where = where.replace(tableAlias + '.', fullTableName + '.');  
         }
         out.append(where);
         return out;
@@ -200,5 +199,5 @@ public class MySqlDialect extends SqlDialect {
         sql.append('`'); // quotation end character based on SQL dialect
         return sql;
     }
-
+    
 }

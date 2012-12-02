@@ -225,7 +225,7 @@ public class CriterionDecoder {
         for (Key property : relations) try {
             MetaColumn fk1 = (MetaColumn) handler.findColumnModel(property);
             List<MetaColumn> pk2 = fk1.getForeignColumns();
-            MetaTable tab2 =pk2.get(0).getTable();
+            MetaTable tab2 = pk2.get(0).getTable();
             //
             tables.add(MetaColumn.TABLE.of(fk1));
             tables.add(tab2);
