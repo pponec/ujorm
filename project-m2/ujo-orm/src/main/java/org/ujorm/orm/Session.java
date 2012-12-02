@@ -1112,6 +1112,11 @@ public class Session {
 
         return true;
     }
+    
+    /** Check dialecttype */
+    public final SqlDialect getDialect(Class<? extends OrmUjo> ormType) {
+        return handler.findTableModel(ormType).getDatabase().getDialect();
+    }
 
     /** Create the closed session */
     public static Session newClosedSession(OrmHandler handler) {

@@ -16,6 +16,7 @@
 
 package org.ujorm.orm_tutorial.sample;
 
+import org.ujorm.orm.dialect.DerbyDialect;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,6 @@ import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
-import org.ujorm.orm.ao.CheckReport;
 import static org.ujorm.criterion.Operator.*;
 
 /**
@@ -282,8 +282,11 @@ public class SampleORM {
     public void useSelectViewOrders() {
         if (session.getParameters().isQuotedSqlNames()) {
             return; // Columns must be quoted
-        }
-
+        }        
+        if (DerbyDialect.class.isInstance(session.getDialect(ViewOrder.class))) {
+            return; // Derby DB must have got another SQL statement
+        }        
+        
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
 
         long minimalOrderId = 0L;
@@ -312,6 +315,9 @@ public class SampleORM {
     public void useSelectWithNativeSQL() {
         if (session.getParameters().isQuotedSqlNames()) {
             return; // Columns must be quoted
+        }
+        if (DerbyDialect.class.isInstance(session.getDialect(ViewOrder.class))) {
+            return; // Derby DB must have got another SQL statement
         }
 
         final Long excludedId = -7L;
