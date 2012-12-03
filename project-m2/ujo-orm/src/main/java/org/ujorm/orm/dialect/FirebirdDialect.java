@@ -107,5 +107,16 @@ public class FirebirdDialect extends org.ujorm.orm.SqlDialect {
         return printInsertBySelect(bo, idxFrom, idxTo, "FROM RDB$DATABASE", out);
     }
 
-
+     /** This method does not quote due some errors. <br/>
+     * @param name Name (identifier) for quoting
+     * @param sql Target SQL for printing new quoted name
+     * @return SQL with printed quoted name
+     */
+    @Override
+    protected Appendable printQuotedNameAlways(final CharSequence name, final Appendable sql) throws IOException {
+        //sql.append('"'); // quotation start character based on SQL dialect
+        sql.append(name);
+        //sql.append('"'); // quotation end character based on SQL dialect
+        return sql;
+    }
 }
