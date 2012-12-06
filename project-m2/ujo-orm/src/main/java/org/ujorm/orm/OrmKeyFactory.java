@@ -42,7 +42,7 @@ public class OrmKeyFactory<UJO extends OrmUjo> extends KeyFactory<UJO> {
     /** Common protected factory method */
     @Override
     protected <T> Key<UJO,T> createKey(String name, T defaultValue) {
-        final OrmProperty<UJO,T> p = new OrmProperty(getTmpStore().size());
+        final OrmProperty<UJO,T> p = new OrmProperty(getTmpStore().size(), name, defaultValue);
         addKey(p);
         return p;
     }
