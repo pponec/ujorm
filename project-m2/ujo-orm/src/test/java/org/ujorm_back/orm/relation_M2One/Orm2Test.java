@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoIterator;
-import org.ujorm_back.orm.*;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.ao.CheckReport;
@@ -31,6 +30,8 @@ import org.ujorm.orm.utility.OrmTools;
 import org.ujorm_back.orm_tutorial.sample.MyProcedure;
 import org.ujorm_back.orm_tutorial.sample.ViewOrder;
 import org.ujorm.orm.*;
+import org.ujorm.orm.dialect.DerbyDialect;
+import org.ujorm.orm.dialect.FirebirdDialect;
 
 
 /**
@@ -201,6 +202,11 @@ public class Orm2Test extends TestCase {
      * by a special entity signed by the @View annotation.
      */
     public void useSelectViewOrders() {
+        // Some dialects must have got special SQL statements:
+        if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
+        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+            return; 
+        }
 
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, Operator.GE, 0L);
         Query<ViewOrder> orders = session.createQuery(crit);
