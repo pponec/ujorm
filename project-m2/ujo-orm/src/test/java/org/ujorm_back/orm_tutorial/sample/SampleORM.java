@@ -16,6 +16,8 @@
 
 package org.ujorm_back.orm_tutorial.sample;
 
+import org.ujorm.orm.dialect.DerbyDialect;
+import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -271,6 +273,12 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
+        // Some dialects must have got special SQL statements:
+        if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
+        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+            return; 
+        }        
+        
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
 
         long minimalOrderId = 0L;
@@ -297,6 +305,12 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectWithNativeSQL() {
+        // Some dialects must have got special SQL statements:
+        if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
+        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+            return; 
+        }
+        
         final Long excludedId = -7L;
         SqlParameters sql = new SqlParameters().setSqlStatement
                 ( "SELECT * FROM ("
