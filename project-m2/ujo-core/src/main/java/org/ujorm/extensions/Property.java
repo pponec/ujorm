@@ -171,6 +171,9 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         if (defaultValue != null && !type.isInstance(defaultValue)) {
             throw new IllegalArgumentException("Default value have not properly type in the " + this);
         }
+        if (this.domainType==null) {
+            throw new IllegalArgumentException("Domain type is missing for the property: " + name);
+        }
     }
       
     /** Name of Property */
@@ -394,7 +397,9 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     /** Returns the name of the Key including a simple domain class. Example: Person.id */
     @Override
     public final String toStringFull() {
-        return domainType.getSimpleName() + '.' + name;
+        return domainType!=null
+             ? domainType.getSimpleName() + '.' + name
+             : name ;
     }
 
     // --------- STATIC METHODS -------------------
@@ -442,7 +447,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value, int index) {
         @SuppressWarnings("unchecked")
         Class<VALUE> type = (Class) value.getClass();
-        return new Property<UJO, VALUE>(index).init(name, type, null, value, index, true);
+        return new Property<UJO, VALUE>(index).init(name, type, null, value, index, false);
     }
 
     /** A Property Factory where a property type is related from from default value.
