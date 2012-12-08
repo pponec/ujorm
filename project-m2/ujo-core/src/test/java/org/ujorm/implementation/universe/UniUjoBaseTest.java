@@ -137,7 +137,6 @@ public class UniUjoBaseTest extends MyTestCase {
         } catch (IllegalStateException e) {
             return;
         } catch (Throwable e) {
-            e.printStackTrace();
             return;
         }
         assertEquals("The exception " + IllegalArgumentException.class.getSimpleName() + " is expected.", null);

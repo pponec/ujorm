@@ -314,7 +314,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 return field;
             }
         }
-        final String msg = String.format("Can't get a field for the property index #%d - %s", p.getIndex(), p.getName());
+        final String msg = String.format("Can't get a field for the property index #%d - %s.%s"
+                , p.getIndex()
+                , tmpStore.holder.getSimpleName()
+                , p.getName());
         throw new IllegalStateException(msg);
     }
 
