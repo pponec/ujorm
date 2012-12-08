@@ -134,10 +134,10 @@ public class CriterionDecoder {
         return values.size();
     }
 
-    /** Returns direct column */
-    public MetaColumn getColumn(int i) {
-        Key p = values.get(i).getLeftNode();
-        MetaColumn ormColumn = (MetaColumn) handler.findColumnModel(p);
+    /** Returns direct column or throw an exception */
+    public MetaColumn getColumn(int i) throws IllegalArgumentException {
+        final Key p = values.get(i).getLeftNode();
+        final MetaColumn ormColumn = (MetaColumn) handler.findColumnModel(p, true);
         return ormColumn;
     }
 
@@ -223,9 +223,9 @@ public class CriterionDecoder {
 
         boolean andOperator = false;
         for (Key property : relations) try {
-            MetaColumn fk1 = (MetaColumn) handler.findColumnModel(property);
-            List<MetaColumn> pk2 = fk1.getForeignColumns();
-            MetaTable tab2 = pk2.get(0).getTable();
+            final MetaColumn fk1 = (MetaColumn) handler.findColumnModel(property, true);
+            final List<MetaColumn> pk2 = fk1.getForeignColumns();
+            final MetaTable tab2 = pk2.get(0).getTable();
             //
             tables.add(MetaColumn.TABLE.of(fk1));
             tables.add(tab2);
