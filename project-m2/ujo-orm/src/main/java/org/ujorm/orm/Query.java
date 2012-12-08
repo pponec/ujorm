@@ -380,7 +380,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         this.columns = new ArrayList<MetaColumn>(columns.length);
         final OrmHandler handler = getHandler();
         for (Key column : columns) {
-            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getDirectProperty(column));
+            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getDirectProperty(column), true);
             if (mc.getTable()!=table) {
                 throw new IllegalArgumentException("Base class doesn't contains the column: " + column);
             } else {

@@ -271,8 +271,8 @@ final public class OrmTools {
     @SuppressWarnings("unchecked")
     public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, Key<UJO, ? extends OrmUjo> property) {
 
-        List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
-        HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
+        final List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
+        final HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
         while (!property.isDirect()) {
             property = ((CompositeKey)property).getFirstKey();
         }
@@ -286,14 +286,14 @@ final public class OrmTools {
         if (result.isEmpty()) {
             return result;
         }
-        Session session = result.get(0).readSession();
-        MetaColumn column = (MetaColumn) session.getHandler().findColumnModel(property);
-        MetaColumn pkColumn = column.getForeignColumns().get(0);
-        Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType());
-        int limit = session.getParameters().get(MetaParams.MAX_ITEM_COUNT_4_IN);
-        int count = map.size();
-        List<Object> idList = new ArrayList(Math.min(limit, count));
-        Iterator<Object> keys = map.keySet().iterator();
+        final Session session = result.get(0).readSession();
+        final MetaColumn column = (MetaColumn) session.getHandler().findColumnModel(property, true);
+        final MetaColumn pkColumn = column.getForeignColumns().get(0);
+        final Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType());
+        final int limit = session.getParameters().get(MetaParams.MAX_ITEM_COUNT_4_IN);
+        final int count = map.size();
+        final List<Object> idList = new ArrayList(Math.min(limit, count));
+        final Iterator<Object> keys = map.keySet().iterator();
 
         for (int i = 1; i <= count; i++) {
             idList.add(keys.next());

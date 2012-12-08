@@ -316,7 +316,7 @@ public class OrmHandler {
             property = ((CompositeKey) property).getFirstKey();
         }
         try {
-            for (Field field : findColumnModel(property).getTableClass().getFields()) {
+            for (Field field : findColumnModel(property, true).getTableClass().getFields()) {
                 if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
                 &&  field.get(null) == property) {
                     return (T) field.getAnnotation(annotationClass);
@@ -332,11 +332,24 @@ public class OrmHandler {
      * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
      * @return Returns a related model or the NULL if no model was found.
      */
-    public MetaRelation2Many findColumnModel(Key pathProperty) {
+    final public MetaRelation2Many findColumnModel(Key pathProperty) {
+        return findColumnModel(pathProperty, false);
+    }
+    
+    /** Find a Relation/Column model of the paramemeter property.
+     * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
+     * @param throwException Throw the IllegalArgument exception of no Model was not found
+     * @return Returns a related model throw the IllegalArgumentException exception.
+     */
+    public MetaRelation2Many findColumnModel(Key pathProperty, boolean throwException) throws IllegalArgumentException {
         if (pathProperty!=null && !pathProperty.isDirect()) {
             pathProperty = ((CompositeKey)pathProperty).getLastKey();
         }
         final MetaRelation2Many result = propertyMap.get(pathProperty);
+        if (throwException && result == null) {
+            String propertyName = pathProperty != null ? pathProperty.toStringFull() : String.valueOf(pathProperty);
+            throw new IllegalArgumentException("The key " + propertyName + " have got no meta-model.");
+        }
         return result;
     }
 

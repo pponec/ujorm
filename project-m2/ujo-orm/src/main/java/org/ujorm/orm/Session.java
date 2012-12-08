@@ -286,7 +286,7 @@ public class Session {
     }
 
     /** Returns the first "basic" column of criterion.
-     * @return Nullable result
+     * @return Not null result
      */
     public MetaRelation2Many getBasicColumn(Criterion criterion) {
         while (criterion.isBinary()) {
@@ -302,7 +302,7 @@ public class Session {
             property = ((CompositeKey) property).getFirstKey();
         }
 
-        MetaRelation2Many result = handler.findColumnModel(property);
+        MetaRelation2Many result = handler.findColumnModel(property, true);
         return result;
     }
 
@@ -899,7 +899,7 @@ public class Session {
         , final boolean mandatory
         ) throws NoSuchElementException {
         assertOpenSession();
-        MetaColumn column = (MetaColumn) handler.findColumnModel(relatedProperty);
+        MetaColumn column = (MetaColumn) handler.findColumnModel(relatedProperty, true);
         List<MetaColumn> columns = column.getForeignColumns();
         if (columns.size() != 1) {
             throw new UnsupportedOperationException("There is supported only a one-column foreign key: " + column);
@@ -1056,12 +1056,13 @@ public class Session {
      * @throws IllegalStateException If a parameter property is not a foreign key.
      */
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> property) throws IllegalStateException {
-        MetaColumn column = (MetaColumn) handler.findColumnModel(property);
+        final MetaColumn column = (MetaColumn) handler.findColumnModel(property);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getProperty().of(ujo);
             return new ForeignKey(result);
         } else {
-            throw new IllegalStateException("The property '" + property + "' is not a foreign key");
+            final String propertyName = ujo.getClass().getSimpleName() + "." + property;
+            throw new IllegalStateException("The property '" + propertyName + "' is not a foreign key");
         }
     }
 

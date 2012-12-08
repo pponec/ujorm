@@ -618,9 +618,8 @@ abstract public class SqlDialect {
         Operator operator = crit.getOperator();
         Key property = crit.getLeftNode();
         Object right = crit.getRightNode();
-
         MetaColumn column = (MetaColumn) ormHandler.findColumnModel(property);
-
+        
         if (right==null ) {
             switch (operator) {
                 case EQ:
@@ -646,7 +645,7 @@ abstract public class SqlDialect {
             out.append( template );
         } else if (right instanceof Key) {
             final Key rightProperty = (Key) right;
-            final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty);
+            final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty, true);
 
             if (col2.isForeignKey()) {
                 throw new UnsupportedOperationException("Foreign key is not supported yet");
@@ -1137,5 +1136,5 @@ abstract public class SqlDialect {
         printQuotedNameAlways(name, result);
         return result.toString();
     }
-
+    
 }

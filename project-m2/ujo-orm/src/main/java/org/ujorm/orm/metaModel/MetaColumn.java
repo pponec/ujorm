@@ -225,7 +225,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         MetaTable table;
         if (TABLE_PROPERTY.of(this) instanceof RelationToOne) {
             RelationToOne rto = (RelationToOne) TABLE_PROPERTY.of(this);
-            MetaColumn mc = (MetaColumn) getHandler().findColumnModel(rto.getRelatedKey());
+            MetaColumn mc = (MetaColumn) getHandler().findColumnModel(rto.getRelatedKey(), true);
             result = new ArrayList<MetaColumn>(1);
             result.add(mc);
         } else {
