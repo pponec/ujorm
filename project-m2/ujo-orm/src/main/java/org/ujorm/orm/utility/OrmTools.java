@@ -1,12 +1,12 @@
 /*
  *  Copyright 2010 Pavel Ponec.
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 
 /**
- * Many useful methods for 
+ * Many useful methods for
  *  <ul>
  *  <li>BLOB/CLOB</li>
  *  <li>lazy loading</li>
@@ -254,13 +254,13 @@ final public class OrmTools {
      * {@link org.ujorm.orm.ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded, else a lazy initialization for first depth is done.
      * @param ujo The persistent object to relading values.
      * @return The FALSE value means that the object is missing in the database.
-     * @see Session#reload(org.ujorm.orm.OrmUjo) 
+     * @see Session#reload(org.ujorm.orm.OrmUjo)
      */
     public boolean reload(final OrmUjo ujo, final Session session) {
         return session.reload(ujo);
     }
 
-    /** Load lazy value for all items and required property by the one SQL statement.
+        /** Load lazy value for all items and required property by the one SQL statement.
      * @param ujos The parameter can be the
      *        {@link org.ujorm.orm.Query Query},
      *        {@link org.ujorm.core.UjoIterator UjoIterator} and some
@@ -318,7 +318,7 @@ final public class OrmTools {
     }
 
     /** Load lazy value for all items and all relation keys by the rule: a one SQL statement per relation property.
-     * @param query
+     * @param query An Ujorm query
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */

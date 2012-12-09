@@ -252,6 +252,26 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return iterator().toList();
     }
 
+    /** Create list and Load all lazy values for the current parameter
+     * recursively until optional depth.
+     *
+     * <br>Performance note: all lazy values are loaded using the one more SQL statement per one relation Key.
+     * The method can consume a lot of memory in dependence on the database row count and content of the Criteron.
+     *
+     * @param depth The object resursion depth where value 0 means: do not any lazy loading.
+     * level. The current release supports only values: 0 and 1.
+     * @see #iterator()
+     * @see OrmTools#loadLazyValues(java.lang.Iterable, int)
+     * @see OrmTools#loadLazyValuesAsBatch(org.ujorm.orm.Query)
+     */
+    public List<UJO> list(int depth) {
+        switch (depth) {
+            case 0: return list();
+            case 1: return OrmTools.loadLazyValuesAsBatch((Query) this);
+            default: throw new IllegalArgumentException("The method supports only two values 0 and 1 in the current release");
+        }
+    }
+
     /** Returns a unique result or null if no result item (database row) was found.
      * @throws NoSuchElementException Result is not unique.
      * @see #iterator()
