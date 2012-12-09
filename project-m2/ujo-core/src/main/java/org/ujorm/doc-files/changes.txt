@@ -1,5 +1,16 @@
 The Ujorm release notes
 *******************************
+release 1.31 (2012-12-09)
++ database statements UPDATE or DELETE supports entity relations in the Criterion - including batch mode
++ SQL entity and column names can be "quoted" optionally in the real SQL statements, for more information see the method: MetaParams.setQuotedSqlNames()
++ the one critical bug is fixed for some cases of the lazy loading
++ explicitly defined Key name created using a factory is fixed now
++ criterion for the NULL value with a relation Key is fixed.
++ there is fixed dependencies in the ujo-wicket module
++ new method Query.list(int depth) is implemented to easy fetch relation loading
++ an implementation of the Query.toString() method is improved
++ code cleaning is improved and new JavaDoc is written
++ there is available the new great plugging to NetBeans IDE to generate getters and setters easy for UJO - thanks to Martin Mahr
 
 release 1.30 (2012-10-21)
 + maven project GroupId is renamed to the Ujorm
