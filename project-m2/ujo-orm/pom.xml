@@ -54,6 +54,7 @@
                     <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
                     <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
                     <docfilessubdirs>true</docfilessubdirs>
+                    <encoding>UTF-8</encoding>                    
                 </configuration>
             </plugin>
 
