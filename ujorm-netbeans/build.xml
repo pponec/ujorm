@@ -141,13 +141,13 @@ Implementation-Vendor: "Pavel Ponec"</echo>
         
         <!-- Append CSS definition: -->
         <concat destfile="${dist.javadoc.dir}/stylesheet.css" append="true">
-            <filelist dir="${src.java.dir}/org/ujorm" files="style.css"/>
+            <filelist dir="${src.java.dir}/org/ujorm/doc-files/" files="style.css"/>
         </concat>
         <!-- Copy Image(s): -->
-        <copy file="${src.java.dir}/org/ujorm/ujo32.png" todir="${dist.javadoc.dir}/org/ujorm"/>
-        <copy file="${src.java.dir}/org/ujorm/UjoUml.png" todir="${dist.javadoc.dir}/org/ujorm"/>
-        <copy file="${src.java.dir}/org/ujorm/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujorm"/>
-        <copy file="Resource/changes.txt" todir="${dist.javadoc.dir}"/>
+        <copy file="${src.java.dir}/org/ujorm/doc-files/ujo32.png" todir="${dist.javadoc.dir}/org/ujorm/doc-files"/>
+        <copy file="${src.java.dir}/org/ujorm/doc-files/UjoUml.png" todir="${dist.javadoc.dir}/org/ujorm/doc-files"/>
+        <copy file="${src.java.dir}/org/ujorm/doc-files/UjoUmlFull.png" todir="${dist.javadoc.dir}/org/ujorm/doc-files"/>
+        <copy file="${src.java.dir}/org/ujorm/doc-files/changes.txt" todir="${dist.javadoc.dir}"/>
         
     </target>    
     
