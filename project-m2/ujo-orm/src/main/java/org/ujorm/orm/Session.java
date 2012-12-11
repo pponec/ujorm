@@ -28,27 +28,26 @@ import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import javax.transaction.Status;
-import org.hibernate.dialect.Dialect;
-import org.ujorm.logger.UjoLogger;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
-import org.ujorm.CompositeKey;
+import org.ujorm.core.annot.PackagePrivate;
+import org.ujorm.criterion.BinaryCriterion;
+import org.ujorm.criterion.Criterion;
+import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ao.CacheKey;
+import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaPKey;
 import org.ujorm.orm.metaModel.MetaParams;
+import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
-import org.ujorm.criterion.Criterion;
-import org.ujorm.criterion.BinaryCriterion;
-import org.ujorm.criterion.ValueCriterion;
-import org.ujorm.logger.UjoLoggerFactory;
-import org.ujorm.core.annot.PackagePrivate;
-import org.ujorm.orm.ao.CachePolicy;
-import org.ujorm.orm.metaModel.MetaProcedure;
 
 /**
  * The ORM session.
