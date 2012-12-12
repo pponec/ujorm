@@ -16,20 +16,19 @@
 
 package org;
 
-import org.bo.Item;
-import org.bo.MyProcedure;
-import org.bo.Order;
-import org.bo.ViewOrder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
-import org.ujorm.Ujo;
+import org.bo.Item;
+import org.bo.MyProcedure;
+import org.bo.Order;
+import org.bo.ViewOrder;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
-import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -76,6 +75,7 @@ public class SampleORM {
             sample.useSelectItems_4();
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
+            sample.useSelectItems_6();
             sample.useOptimizedSelect();
             sample.useNativeCriterion();
             sample.useReloading();
@@ -87,9 +87,11 @@ public class SampleORM {
             sample.useStoredProcedure();
             sample.useUpdate();
             sample.useBatchUpdate();
+            sample.useExtendedUpdate();
             sample.usePesimisticUpdate();
             sample.useDelete();
             sample.useBatchDelete();
+            sample.useExtendedDelete();
             sample.useMetadata();
         } finally {
             sample.useCloseSession();
@@ -120,9 +122,9 @@ public class SampleORM {
         boolean yesIWantToChangeDefaultParameters = true;
         if (yesIWantToChangeDefaultParameters) {
             MetaParams params = new MetaParams();
-            params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
-            params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
+            params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
+            params.setQuotedSqlNames(false);
             handler.config(params);
         }
 
@@ -160,8 +162,7 @@ public class SampleORM {
         System.out.println("item1: " + item1);
         System.out.println("item2: " + item2);
 
-        Transaction tr = session.beginTransaction();
-
+        final Transaction tr = session.beginTransaction();
         session.save(order);
         session.save(item1);
         session.save(item2);
@@ -409,6 +410,14 @@ public class SampleORM {
         }
     }
 
+    /** Select one items without Order */
+    public void useSelectItems_6() {
+        Query<Item> items = session.createQuery(Item.ORDER.add(Order.NOTE).whereNull());
+        for (Item item : items) {
+            System.out.println("ITEM WITHOUT ORDER: " + item);
+        }
+    }
+
     /** Create a SELECT for the one column only
      * with no duplicate rows for a better performance.
      */
@@ -594,6 +603,22 @@ public class SampleORM {
         session.commit();
     }
 
+    /** The batch UPDATE of selected columns for required database rows for an extented condition. <br />
+     *  See the next example:
+     */
+    public void useExtendedUpdate() {
+        Order order = new Order();
+        // Activate the Change column management:
+        order.writeSession(session);
+        // Set a value(s) to the change:
+        order.setCreated(new Date());
+
+        Criterion<Item> crn = Item.ID.whereGt(0L)
+                .and(Item.ORDER.add(Order.NOTE).whereNull());
+        session.update(order, crn);
+        session.commit();
+    }
+
     /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
     public void usePesimisticUpdate() {
         Order order = session.createQuery(Order.ID.whereEq(1L))
@@ -619,6 +644,17 @@ public class SampleORM {
      */
     public void useBatchDelete() {
         int count = session.delete(Item.ID.whereEq(1L));
+        session.commit();
+        System.out.println("There are DELETED rows: " + count);
+    }
+
+    /** How to use a batch DELETE for an extended conditon? <br/>
+     *  See the next example:
+     */
+    public void useExtendedDelete() {
+        Criterion<Item> crn = Item.ID.whereGt(0L)
+                .and(Item.ORDER.add(Order.NOTE).whereNull());
+        int count = session.delete(crn);
         session.commit();
         System.out.println("There are DELETED rows: " + count);
     }
