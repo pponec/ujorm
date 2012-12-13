@@ -299,9 +299,8 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 }
 
                 final String variableTypeName = type.getType().toString();
-                if (variableTypeName.equals("Key")
-                ||  variableTypeName.equals("UjoProperty")
-                ||  variableTypeName.equals("Property")) {
+                if (variableTypeName.contains("Key")
+                ||  variableTypeName.contains("Property")) {
                     return true;
                 }
             }
