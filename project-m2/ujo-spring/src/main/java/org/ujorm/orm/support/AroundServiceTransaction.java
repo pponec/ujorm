@@ -17,8 +17,8 @@ package org.ujorm.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-import org.ujorm.logger.UjoLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 
@@ -55,21 +55,19 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
             result = doCall(call);
         } catch (Exception e) {
             ex = e;
+            getSession().markForRolback();
         }
         if (decCalling()) {
             LOGGER.log(Level.FINEST, "Auto transaction ending (commit/rollback)");
-            //rolback and write warning if there was sql error
+            //rolback if there was error
             if (getSession().isRollbackOnly()) {
-                LOGGER.log(Level.WARNING, "Rolling back transaction becaouse has been mark as roll back only", ex);
+                LOGGER.log(Level.FINE, "Transaction rolling back because it has been marked as rollback-only");
                 rollback();
-                // if exception is not catched send it
+                // if exception is not caught send it
                 return doReturn(ex, result);
             } else {
-                if (ex==null) {
-                    commit(); // there was no sql error
-                } else {
-                    rollback();
-                }
+                //there was no error
+                commit();
                 return doReturn(ex, result);
             }
         } else {//this is not las aop call
