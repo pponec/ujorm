@@ -192,7 +192,9 @@ public class GenerateGettersSettersTask implements CancellableTask<WorkingCopy> 
                 Collections.<TypeParameterTree>emptyList(),
                 Collections.<VariableTree>emptyList(),
                 Collections.<ExpressionTree>emptyList(),
-                "{\nreturn " + variable.getName() + ".of(this);}\n",
+                "{\nreturn " 
+                + clazz.getSimpleName().toString()
+                + "."+ variable.getName() + ".of(this);}\n",
                 null);
         if (javaDoc) {
             stringService.copyJavaDoc(variable, newMethod, workingCopy);
