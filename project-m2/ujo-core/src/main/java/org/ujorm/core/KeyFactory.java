@@ -78,9 +78,9 @@ import org.ujorm.logger.UjoLoggerFactory;
  *     }
  * }
  * </pre>
- * 
+ *
  * <h3>Using the KeyFactory in interfaces</h3>
- * In some cases can be useful to define Ujo Keys in an interface. 
+ * In some cases can be useful to define Ujo Keys in an interface.
  * See the <a href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#keyFactory2Interface">next simple example</a>
  * how to design the inteface using the class KeyFactory.
  *
@@ -130,7 +130,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             assert keyList.getType().isAssignableFrom(tmpStore.holder)
                     : "Type parameters is not child of the SuperProperites type: " + keyList.getTypeName();
         }
-        
+
         return superKeys != null
              ? superKeys
              : InnerDataStore.EMPYT_KEYS;
@@ -138,18 +138,18 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Read Keys from the super class of the current hodler
      * @param holder The current holder of the key fields
-     * @return Keys from the holder super class 
+     * @return Keys from the holder super class
      */
     protected final Iterable<? extends Key<?,?>> getSuperKeys(Class<?> holder) {
         if (holder.isInterface()) {
             final List<Key<?,?>> keyList = new ArrayList<Key<?,?>>();
             for (Class<?> types : holder.getInterfaces()) {
                 for (Key<?, ?> key : readKeys(types)) {
-                   keyList.add(key);   
+                   keyList.add(key);
                 }
             }
             return keyList;
-        } 
+        }
         final Class<?> superClass = holder.getSuperclass();
         if (Ujo.class.isAssignableFrom(superClass)) {
             return readKeys(superClass);
@@ -301,9 +301,9 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                     lower = true;
                 }
             }
-            return result.toString();
+            return result.toString().intern();
         } else {
-            return field.getName();
+            return field.getName().intern();
         }
     }
 
@@ -467,7 +467,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         public boolean addKey(Key p) {
             return propertyList.add(p);
         }
-        
+
         /** Get all keys */
         public Iterable<Key<UJO, ?>> getKeys() {
             return propertyList;
@@ -535,15 +535,15 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             return (A) result.get(annoType);
         }
     }
-    
+
     // --------------- BUILDERS ---------------
 
     /** The base factory */
     public static final class Builder {
-        
+
         /** Private constructor */
-        private Builder() {            
-        }         
+        private Builder() {
+        }
 
         /** Return an instance of the {@link KeyFactory} class */
         @SuppressWarnings("unchecked")
@@ -563,10 +563,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** The base factory */
     public static final class CamelBuilder {
-        
+
         /** Private constructor */
-        private CamelBuilder() {            
-        }        
+        private CamelBuilder() {
+        }
 
         /** Return an instance of the {@link KeyFactory} class
          * @param baseClass Base class
@@ -591,9 +591,9 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** The base factory for the WeakKeyFactory implementation. */
     public static final class WeakBuilder {
-        
+
         /** Private constructor */
-        private WeakBuilder() {            
+        private WeakBuilder() {
         }
 
         /** Default constructor with a CamelCase feature building.
