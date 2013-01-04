@@ -86,7 +86,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * @see Key#setValue(Ujo,Object)
      */
     public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value, this);
         put(property, value);
     }
     

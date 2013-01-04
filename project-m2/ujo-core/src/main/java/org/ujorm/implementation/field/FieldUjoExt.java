@@ -77,7 +77,7 @@ abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoEx
     @SuppressWarnings("unchecked")
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value, this);
         ((ValueAgent) property).writeValue(this, value);
     }
     

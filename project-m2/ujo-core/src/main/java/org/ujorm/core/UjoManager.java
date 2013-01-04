@@ -49,40 +49,40 @@ import static org.ujorm.UjoAction.*;
  */
 public class UjoManager implements Comparator<Key> {
 
-    /** Requested modifier of property definitions. */
+    /** Requested modifier of key definitions. */
     public static final int PROPERTY_MODIFIER = KeyFactory.PROPERTY_MODIFIER;
-       
+
     /** UjoManager instance */
     protected static UjoManager instance = new UjoManager();
-    
+
     /** A keys cache. */
     final private HashMap<Class, KeyList> propertiesCache;
 
     /** A XML <strong>element body</strong> cache */
     private HashMap<Class, Key> xmlBodyCache;
-    
+
     /** A XML <strong>attribute</strong> cache. */
     private HashSet<Key> attributesCache = null;
 
     /** A transient <strong>attribute</strong> cache. */
     private HashSet<Key> transientCache = null;
-    
+
     /** Are keys reversed? */
     private Boolean arePropertiesReversed = null;
-    
+
     private UjoCoder coder;
-    
+
     /** Constructor. */
     public UjoManager() {
         this.propertiesCache = new HashMap<Class, KeyList>();
         this.coder = new UjoCoder();
     }
-    
+
     /** Get a default initialization */
     public static UjoManager getInstance() {
         return instance;
     }
-    
+
     /** Returns a reversed order of objects. */
     public void revertArray(Object[] array) {
         for (int left=0, right=array.length-1; left<right; left++, right--) {
@@ -91,7 +91,7 @@ public class UjoManager implements Comparator<Key> {
             array[right] = temp;
         }
     }
-    
+
     /** Are keys reversed by default? */
     public boolean isPropertiesReversed() {
         if (arePropertiesReversed==null) {
@@ -99,29 +99,29 @@ public class UjoManager implements Comparator<Key> {
         }
         return arePropertiesReversed;
     }
-    
+
     /** Returns true, if the class is abstract. */
     protected boolean isAbstract(Class type) {
         final boolean result = Modifier.isAbstract(type.getModifiers() );
         return result;
     }
-    
+
     /** Read an KeyList instance. The first result is cached. */
     public UjoPropertyList readProperties(Class type) {
         KeyList result = propertiesCache.get(type);
         if (result==null) {
             final Key[] ps = readPropertiesNocache(type, true);
-            result = ps.length==0 
+            result = ps.length==0
                     ? KeyRing.of(type, ps)
                     : KeyRing.of(ps);
-            
+
             // Save the result into buffer:
             propertiesCache.put(type, result);
         }
         return new UjoPropertyListImpl(result);
     }
-    
-    
+
+
     /**
      * Returns all direct keys (see an method Key.isDirect() for more information).
      * @param type Ujo class
@@ -131,9 +131,9 @@ public class UjoManager implements Comparator<Key> {
     @SuppressWarnings("unchecked")
     public Key[] readPropertiesNocache(Class type, boolean sorted) throws IllegalStateException {
         Key[] result;
-        ArrayList<Key> propertyList = new ArrayList<Key>(32);
+        ArrayList<Key> keyList = new ArrayList<Key>(32);
         Field field = null;
-        
+
         synchronized(type) {
             try {
                 final Field[] fields = type.getFields();
@@ -153,7 +153,7 @@ public class UjoManager implements Comparator<Key> {
                             throw new IllegalStateException(msg);
                         }
                         if (ujoProp.isDirect()) {
-                           propertyList.add(ujoProp);
+                           keyList.add(ujoProp);
 
                             if (ujoProp instanceof Property) {
                                 if (ujoProp.getName() == null) {
@@ -190,8 +190,8 @@ public class UjoManager implements Comparator<Key> {
             } catch (Exception e) {
                 throw new IllegalStateException(String.valueOf(field), e);
             }
-            
-            result = propertyList.toArray( new Key[propertyList.size()] );
+
+            result = keyList.toArray( new Key[keyList.size()] );
 
             if (sorted) {
                 // Reverse order:
@@ -208,7 +208,7 @@ public class UjoManager implements Comparator<Key> {
                     }
                 }
             }
-        }        
+        }
         return result;
     }
 
@@ -231,8 +231,8 @@ public class UjoManager implements Comparator<Key> {
             else if (xb!=null) { cacheXmlElementBody(data.getDomainType(), ujoProp); }
         }
     }
-    
-    /** Compare Ujo keys by index. An undefined property indexes (-1 are sorted to the end. */
+
+    /** Compare Ujo keys by index. An undefined key indexes (-1 are sorted to the end. */
     public int compare(final Key p1, final Key p2) {
         final int i1 = p1.getIndex()>=0 ? p1.getIndex() : Integer.MAX_VALUE;
         final int i2 = p2.getIndex()>=0 ? p2.getIndex() : Integer.MAX_VALUE;
@@ -253,12 +253,12 @@ public class UjoManager implements Comparator<Key> {
             }
         }
     }
-    
+
     /** Calculate a Hash Code. */
     public int getHash(Ujo ujo) {
         return getHash(ujo, ujo.readKeys());
     }
-    
+
     /** Calculate a Hash Code. */
     @SuppressWarnings("unchecked")
     public int getHash(Ujo ujo, KeyList<?> keys) {
@@ -271,7 +271,7 @@ public class UjoManager implements Comparator<Key> {
         }
         return result;
     }
-    
+
     /**
      * Test if Object o1 equalsUjo o2.
      *
@@ -287,7 +287,7 @@ public class UjoManager implements Comparator<Key> {
         }
         return o1.equals(o2);
     }
-    
+
     /**
      * Test if obj1 equalsUjo obj2. If obj1 object is Array, method call an equalsArray() method, else use en method equalsUjo().
      *
@@ -298,7 +298,7 @@ public class UjoManager implements Comparator<Key> {
     public boolean equalsUjo(final Ujo u1, final Ujo u2)  {
         return equalsUjo(u1, u2, u1!=null ? u1.readKeys() : null);
     }
-    
+
     /**
      * Test if obj1 equalsUjo obj2. If obj1 object is Array, method call an equalsArray() method, else use en method equalsUjo().
      *
@@ -316,9 +316,9 @@ public class UjoManager implements Comparator<Key> {
         }
         if (u1.getClass().equals(u2.getClass())) {
             for (int i=keys.size()-1; i>=0; i--) {
-                Key property = keys.get(i);
-                final Object o1 = property.of(u1);
-                final Object o2 = property.of(u2);
+                Key key = keys.get(i);
+                final Object o1 = key.of(u1);
+                final Object o2 = key.of(u2);
                 if (! equals(o1, o2)) {
                     return false;
                 }
@@ -351,7 +351,7 @@ public class UjoManager implements Comparator<Key> {
         }
         return array1.equals(array2);
     }
-    
+
     /**
      * Clone the UjoCloneable object. The Object and its items must have got a constructor with no parameters.
      * <br>Note: There are supported attributes
@@ -383,10 +383,10 @@ public class UjoManager implements Comparator<Key> {
         }
         try {
             Ujo result = (Ujo) ujo.getClass().newInstance();
-            for (Key property : ujo.readKeys()) {
-                Object value = ujo.readValue(property);
-                if (ujo.readAuthorization(action, property, value)) {
-                    
+            for (Key key : ujo.readKeys()) {
+                Object value = ujo.readValue(key);
+                if (ujo.readAuthorization(action, key, value)) {
+
                     if (value instanceof UjoCloneable) {
                         value = ((UjoCloneable)value).clone(depth, context);
                     } else if (value instanceof List) {
@@ -405,20 +405,20 @@ public class UjoManager implements Comparator<Key> {
                         System.arraycopy(value, 0, array, 0, Array.getLength(value));
                         value = array;
                     }
-                    result.writeValue(property, value);
+                    result.writeValue(key, value);
                 }
             }
             return result;
-            
+
         } catch (InstantiationException ex) { throw new IllegalStateException(ex);
         } catch (IllegalAccessException ex) { throw new IllegalStateException(ex);
         }
     }
-    
+
     /**
-     * Find a property by property name from parameter. Use rather the KeyList.findPropety(...).
+     * Find a key by key name from parameter. Use rather the KeyList.findPropety(...).
      * @param ujo An Ujo object
-     * @param name A property name.
+     * @param name A key name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @deprecated Use KeyList.findPropety(...)
      * @see KeyList#findDirectKey(org.ujorm.Ujo, java.lang.String, boolean)
@@ -432,11 +432,11 @@ public class UjoManager implements Comparator<Key> {
     {
         return ujo.readKeys().findDirectKey(ujo, name, UjoAction.DUMMY, true, throwException);
     }
-    
+
     /**
-     * Find a property by property name from parameter. Use rather the KeyList.findPropety(...).
+     * Find a key by key name from parameter. Use rather the KeyList.findPropety(...).
      * @param ujo An Ujo object
-     * @param name A property name.
+     * @param name A key name.
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
@@ -454,13 +454,13 @@ public class UjoManager implements Comparator<Key> {
         return ujo.readKeys().findDirectKey(ujo, name, action, result, throwException);
     }
 
-    /** Find <strong>indirect</strong> property by the name */
+    /** Find <strong>indirect</strong> key by the name */
     @SuppressWarnings("unchecked")
     public Key findIndirectProperty(Class ujoType, String names) {
         return findIndirectProperty(ujoType, names, true);
     }
 
-    /** Find <strong>indirect</strong> property by the name. Empty result can trhow NULL value if parameter throwException==false. */
+    /** Find <strong>indirect</strong> key by the name. Empty result can trhow NULL value if parameter throwException==false. */
     @SuppressWarnings("unchecked")
     public Key findIndirectProperty(Class ujoType, String names, boolean throwException) {
         return readProperties(ujoType).find(names, throwException);
@@ -473,7 +473,7 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /** Print a String representation. <br>
-     * Note: Very long property values are truncated to the 128 characters. */
+     * Note: Very long key values are truncated to the 128 characters. */
     @SuppressWarnings("unchecked")
     public String toString(Ujo ujo, KeyList keys) {
         final StringBuilder result = new StringBuilder(32);
@@ -481,20 +481,20 @@ public class UjoManager implements Comparator<Key> {
         final UjoAction action = new UjoActionImpl(ACTION_TO_STRING, this);
 
         for(int i=0, max = keys.size(); i<max; ++i) {
-            final Key property = keys.get(i);
-            if (!ujo.readAuthorization(action, property, this)) { continue; }
+            final Key key = keys.get(i);
+            if (!ujo.readAuthorization(action, key, this)) { continue; }
 
             // If the parameter is the List or another Ujo, then show a detail information:
-            boolean showInfo = property instanceof ListKey;
+            boolean showInfo = key instanceof ListKey;
             String textSeparator = "";
-            
+
             String value;
             try {
-                final Object objVal = property.of(ujo);
+                final Object objVal = key.of(ujo);
                 textSeparator = objVal instanceof CharSequence ? "\"" : "" ;
 
                 if (showInfo) {
-                    final int itemCount = ((ListKey)property).getItemCount(ujo);
+                    final int itemCount = ((ListKey)key).getItemCount(ujo);
                     value = String.valueOf(itemCount);
                 } else if (objVal instanceof Ujo) {
                     value = getFirstValue((Ujo)objVal, 10);
@@ -506,13 +506,13 @@ public class UjoManager implements Comparator<Key> {
                 value = e.getClass().getSimpleName();
             }
 
-            // Very long property value is truncated to the 128 characters.
+            // Very long key value is truncated to the 128 characters.
             if (value!=null && value.length()>128) {
                 value = value.substring(0, 128-3) + "...";
             }
 
             result.append(i==0 ? "[" : ", ");
-            result.append(property.getName());
+            result.append(key.getName());
             result.append(showInfo ? "[" : "=");
             result.append(textSeparator);
             result.append(value);
@@ -551,13 +551,13 @@ public class UjoManager implements Comparator<Key> {
                 : (p + "=" + coder.encodeValue(result, false));
         }
     }
-    
+
     /** Returns true, if text is not null and is not empty. */
     public static boolean isFilled(final CharSequence text) {
         return text!=null && text.length()>0;
     }
-    
-    /** Returns a Element body of the class or the null if no property was found. */
+
+    /** Returns a Element body of the class or the null if no key was found. */
     public final Key getXmlElementBody(final Class type) {
 
         if (propertiesCache.get(type)==null) {
@@ -572,40 +572,40 @@ public class UjoManager implements Comparator<Key> {
         return result;
     }
 
-    /** Is the property an XML attribute? */
-    public final boolean isXmlAttribute(final Key property) {
-        final boolean result 
+    /** Is the key an XML attribute? */
+    public final boolean isXmlAttribute(final Key key) {
+        final boolean result
             =  attributesCache!=null
-            && attributesCache.contains(property)
+            && attributesCache.contains(key)
             ;
         return result;
     }
 
-    /** Is the property an Transient? */
-    public final boolean isTransientProperty(final Key property) {
-        final boolean result = transientCache!=null && transientCache.contains(property);
+    /** Is the key an Transient? */
+    public final boolean isTransientProperty(final Key key) {
+        final boolean result = transientCache!=null && transientCache.contains(key);
         return result;
     }
 
     /**
      * Decode text value
-     * @param property Property is used for a result class
+     * @param key Property is used for a result class
      * @param aValue Text value to decode.
-     * @param type Optional subtype class of the property type.
+     * @param type Optional subtype class of the key type.
      * @return Instance of new result.
      */
-    public final Object decodeValue(final Key property, final String aValue, Class type) {
-        return coder.decodeValue(property, aValue, type);
+    public final Object decodeValue(final Key key, final String aValue, Class type) {
+        return coder.decodeValue(key, aValue, type);
     }
 
     /**
      * Decode text value
-     * @param property Property is used for a result class
+     * @param key Property is used for a result class
      * @param aValue Text value to decode.
      * @return Instance of new result.
      */
-    public final Object decodeValue(final Key property, final String aValue) {
-        return coder.decodeValue(property, aValue, null);
+    public final Object decodeValue(final Key key, final String aValue) {
+        return coder.decodeValue(key, aValue, null);
     }
 
     /**
@@ -623,7 +623,7 @@ public class UjoManager implements Comparator<Key> {
         return coder.encodeValue(value, regenerationTest);
     }
 
-    /** Mark a property to XML attribute in a cache. */
+    /** Mark a key to XML attribute in a cache. */
     @SuppressWarnings("unchecked")
     private void cacheXmlAttribute(final Key attribute) {
         if (attribute.isTypeOf(Ujo.class)
@@ -637,12 +637,12 @@ public class UjoManager implements Comparator<Key> {
         attributesCache.add(attribute);
     }
 
-    /** Mark a property to XML element in a cache. */
+    /** Mark a key to XML element in a cache. */
     @SuppressWarnings("unchecked")
-    private void cacheXmlElementBody(final Class type, final Key property) {
+    private void cacheXmlElementBody(final Class type, final Key key) {
 
-        if (property.isTypeOf(Ujo.class)
-        ||  property instanceof ListKey
+        if (key.isTypeOf(Ujo.class)
+        ||  key instanceof ListKey
         ){
             return;
         }
@@ -650,12 +650,12 @@ public class UjoManager implements Comparator<Key> {
             xmlBodyCache = new HashMap<Class, Key>(4);
         }
         Key old = xmlBodyCache.get(type);
-        if (old==null || old.getIndex()<property.getIndex()) {
-            xmlBodyCache.put(type, property);
+        if (old==null || old.getIndex()<key.getIndex()) {
+            xmlBodyCache.put(type, key);
         }
     }
 
-    /** Mark a property to transient attribute in a cache. */
+    /** Mark a key to transient attribute in a cache. */
     private void cacheTransientAttribute(final Key attribute) {
         if (transientCache==null) {
             transientCache = new HashSet<Key>();
@@ -664,34 +664,34 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /** An assignable test. */
-    static public boolean assertDirectAssign(final Key property, final Object value) throws IllegalArgumentException {
-        return assertDirect(property, value) 
-            && assertAssign(property, value)
-            ;
+    static public boolean assertDirectAssign(final Key key, final Object value, final Ujo ujo) throws IllegalArgumentException {
+        return assertDirect(key, value)
+            && assertAssign(key, value)
+            && assertUjoType(key, ujo);
     }
 
     /** An assignable test. */
-    static public boolean assertDirect(final Key property, final Object value) throws IllegalArgumentException {
-        if (!property.isDirect()) {
+    static public boolean assertDirect(final Key key, final Object value) throws IllegalArgumentException {
+        if (!key.isDirect()) {
             final String msg
-            = "The property \"" 
-            + property
+            = "The key \""
+            + key
             + "\" type of \""
-            + property.getType().getName()
+            + key.getType().getName()
             + "\" is not a direct type."
             ;
-            throw new IllegalArgumentException(msg);            
+            throw new IllegalArgumentException(msg);
         }
         return true;
     }
-    
-    
+
+
     /** An assignable test. */
-    static public boolean assertAssign(final Key property, final Object value) throws IllegalArgumentException {
-        final boolean result 
+    static public boolean assertAssign(final Key key, final Object value) throws IllegalArgumentException {
+        final boolean result
             =  value==null
             || value instanceof NoCheck
-            || property.getType().isInstance(value)
+            || key.getType().isInstance(value)
             ;
         if (!result) {
             final String msg
@@ -699,17 +699,36 @@ public class UjoManager implements Comparator<Key> {
             + value
             + "\""
             + (value!=null ? " (" + value.getClass().getName() + ')' : "")
-            + " can't be assiged to property \""
-            + property
+            + " can't be assiged to key \""
+            + key
             + "\" type of \""
-            + property.getType().getName()
+            + key.getType().getName()
             + "\"."
             ;
             throw new IllegalArgumentException(msg);
         }
         return result;
     }
-    
+
+    /** An assignable test. */
+    static public boolean assertUjoType(final Key key, final Ujo ujo) throws IllegalArgumentException {
+        final Class type = key.getDomainType();
+        final boolean result = type==null || type.isInstance(ujo);
+
+        if (!result) {
+            final String msg
+            = "The ujo \""
+            + ujo.getClass().getName()
+            + "\""
+            + " must by type of \""
+            + key.getDomainType()
+            + "\"."
+            ;
+            throw new IllegalArgumentException(msg);
+        }
+        return result;
+    }
+
     // ---------------------------------------------------------------------
 
     /** Set a value to an Ujo object by a selected keys. */
@@ -721,9 +740,9 @@ public class UjoManager implements Comparator<Key> {
             prop.setValue(ujo,value);
         }
     }
-    
-    
-    /** Set a value to an Ujo object by a chain of keys. 
+
+
+    /** Set a value to an Ujo object by a chain of keys.
      * <br>Type of value is checked in the runtime.
      */
     @SuppressWarnings("unchecked")
@@ -737,19 +756,19 @@ public class UjoManager implements Comparator<Key> {
         }
         setValue(ujo, lastProp, value);
         return ujo;
-    }    
-    
-    
-    /** Get a value from an Ujo object by a selected property.
+    }
+
+
+    /** Get a value from an Ujo object by a selected key.
      * If a not getLastPartialProperty value is null, then is throwded a NullPointe exception.
      * @deprecated Use a expression <code>prop.of(ujo)</code> rather.
      */
     @Deprecated  @SuppressWarnings("unchecked")
     public static Object getValue(final Ujo ujo, final Key prop) {
         return prop.of(ujo);
-    } 
-    
-    /** Get a value from an Ujo object by a chain of keys. 
+    }
+
+    /** Get a value from an Ujo object by a chain of keys.
      * If a not getLastPartialProperty value is null, then is throwded a NullPointe exception.
      */
     @SuppressWarnings("unchecked")
@@ -759,9 +778,9 @@ public class UjoManager implements Comparator<Key> {
             result = p.of((Ujo) result);
         }
         return (VALUE) result;
-    }    
+    }
 
-    
+
     /** UjoCoder */
     public UjoCoder getCoder() {
          return coder;
@@ -772,49 +791,49 @@ public class UjoManager implements Comparator<Key> {
          coder = ujoCoder;
     }
 
-    /** Get a text value from property */
+    /** Get a text value from key */
     @SuppressWarnings("unchecked")
-    public String getText(Ujo ujo, Key property, UjoAction action) {
+    public String getText(Ujo ujo, Key key, UjoAction action) {
 
-        if (property.isDirect()) {
+        if (key.isDirect()) {
             final String result = (ujo instanceof UjoTextable)
-                ? ((UjoTextable) ujo).readValueString(property, action)
-                : encodeValue(property.of(ujo), false);
+                ? ((UjoTextable) ujo).readValueString(key, action)
+                : encodeValue(key.of(ujo), false);
             return result;
         } else {
-            final CompositeKey pathProperty = (CompositeKey) property;
+            final CompositeKey pathProperty = (CompositeKey) key;
             final Key p = pathProperty.getLastKey();
-            final Ujo         u = pathProperty.getSemifinalValue(ujo);
+            final Ujo         u = pathProperty.getSemifinalValue(ujo, false);
             return getText(u, p, action);
         }
     }
 
     /**
-     * Set a text value by property. The method recognise an UjoTextable object.
+     * Set a text value by key. The method recognise an UjoTextable object.
      * @param ujo Ujo
-     * @param property Direct property
+     * @param key Direct key
      * @param value Value
      * @param type Subtype of value
      * @param action Context action
      */
     @SuppressWarnings("unchecked")
-    public void setText(Ujo ujo, Key property, String value, Class type, UjoAction action) {
+    public void setText(Ujo ujo, Key key, String value, Class type, UjoAction action) {
 
-        if (property.isDirect()) {
+        if (key.isDirect()) {
             if (ujo instanceof UjoTextable) {
-                ((UjoTextable) ujo).writeValueString(property, value, type, action!=null ? action : UjoAction.DUMMY);
+                ((UjoTextable) ujo).writeValueString(key, value, type, action!=null ? action : UjoAction.DUMMY);
             } else {
-                final Object o = decodeValue(property, value, type);
-                setValue(ujo, property, o);
+                final Object o = decodeValue(key, value, type);
+                setValue(ujo, key, o);
             }
         } else {
-            final CompositeKey pathProperty = (CompositeKey) property;
+            final CompositeKey pathProperty = (CompositeKey) key;
             final Key p = pathProperty.getLastKey();
-            final Ujo         u = pathProperty.getSemifinalValue(ujo);
+            final Ujo u = pathProperty.getSemifinalValue(ujo, false);
             setText(u, p, value, type, action);
         }
     }
-    
+
     /** Create a list of KeyList */
     @SuppressWarnings("unchecked")
     public List<UjoPropertyRow> createPropertyList(Ujo content, UjoAction action) {
@@ -830,14 +849,14 @@ public class UjoManager implements Comparator<Key> {
         }
         return result;
     }
-    
+
     /**
      * Copy selected keys from source to target.
      * @param source Source UJO
      * @param target Target UJO
      * @param action An action of source.
      * @param keys If the value is null, then all keys of source will be used.
-     */    
+     */
     public void copy(Ujo source, Ujo target, UjoAction action, Key... keys) {
         if (keys==null) {
             keys = source.readKeys().toArray();
@@ -856,17 +875,17 @@ public class UjoManager implements Comparator<Key> {
      * @param source Source UJO
      * @param target Target UJO
      * @param keys If the value is null, then all keys of source will be used.
-     */    
+     */
     public void copy(Ujo source, Ujo target, Key... keys) {
         copy(source, target, new UjoActionImpl(UjoAction.ACTION_COPY, this), keys);
     }
-    
-    
+
+
     /**
      * Copy ALL keys of the source to target. An action is ACTION_COPY, an context is UjoManager.
      * @param source Source UJO
      * @param target Target UJO
-     */    
+     */
     public void copy(Ujo source, Ujo target) {
         copy(source, target, (Key[]) null);
     }
@@ -874,42 +893,42 @@ public class UjoManager implements Comparator<Key> {
     /**
      * Get a Key field.
      * @param ujo Type of the Ujo object (Nonnull)
-     * @param property Required property (Nullable)
+     * @param key Required key (Nullable)
      * @return Returns null in case that result was not found
      * @throws IllegalAccessException Can't get fields.
      */
-    public Field getPropertyField(Ujo ujo, Key property) throws IllegalStateException {
-        return getPropertyField(ujo.getClass(), property, false);
+    public Field getPropertyField(Ujo ujo, Key key) throws IllegalStateException {
+        return getPropertyField(ujo.getClass(), key, false);
     }
 
     /**
      * Get a Key field.
      * @param type Type of the Ujo object (Nonnull)
-     * @param property Required property (Nullable)
+     * @param key Required key (Nullable)
      * @return Returns null in case that result was not found
      * @throws IllegalAccessException Can't get fields.
-     * @throws IllegalArgumentException The property 'property' is not found in the class 'type'.
+     * @throws IllegalArgumentException The 'key' is not found in the class 'type'.
      */
-    public Field getPropertyField(Class<?> type, Key property) throws IllegalStateException {
-        return getPropertyField(type, property, false);
+    public Field getPropertyField(Class<?> type, Key key) throws IllegalStateException {
+        return getPropertyField(type, key, false);
     }
-    
+
     /**
      * Get a Key field.
      * @param type Type of the Ujo object (Nonnull)
-     * @param property Required property (Nullable)
+     * @param key Required key (Nullable)
      * @param throwException in case the result is {@code null} than throw the exception {@link IllegalArgumentException}.
      * @return Nonnull value always.
      * @throws IllegalAccessException Can't get fields.
-     * @throws IllegalArgumentException The property 'property' is not found in the class 'type'.
+     * @throws IllegalArgumentException The key 'key' is not found in the class 'type'.
      */
-    public Field getPropertyField(Class<?> type, Key property, boolean throwException) throws IllegalStateException, IllegalArgumentException {
+    public Field getPropertyField(Class<?> type, Key key, boolean throwException) throws IllegalStateException, IllegalArgumentException {
         for (Field result : type.getFields()) {
             if (result.getModifiers() == UjoManager.PROPERTY_MODIFIER
             && Key.class.isAssignableFrom(result.getType())) {
                 try {
                     final Object p = result.get(null);
-                    if (p == property) {
+                    if (p == key) {
                         return result;
                     }
                 } catch (Exception e) {
@@ -919,8 +938,8 @@ public class UjoManager implements Comparator<Key> {
         }
         if (throwException) {
             final String msg = String.format
-                    ( "The property '%s' was not found in the class '%s'."
-                    , String.valueOf(property)
+                    ( "The key '%s' was not found in the class '%s'."
+                    , String.valueOf(key)
                     , type.getName());
             throw new IllegalArgumentException(msg);
         }
@@ -929,7 +948,7 @@ public class UjoManager implements Comparator<Key> {
 
     /** Check ujo keys to a unique name.
      * There is recommended to calll the method from static block after Key initialization.
-     * The beneficial side effect is loading a property cache.
+     * The beneficial side effect is loading a key cache.
      * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
      */
     protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalStateException {
@@ -949,13 +968,13 @@ public class UjoManager implements Comparator<Key> {
 
     /** Check ujo keys to a unique name.
      * There is recommended to calll the method from static block after Key initialization.
-     * The beneficial side effect is loading a property cache.
+     * The beneficial side effect is loading a key cache.
      * @throws java.lang.IllegalStateException If an duplicity is found than an exception is throwed.
      */
     public void checkUniqueProperties(final Class<? extends Ujo> type) throws IllegalStateException {
          getInstance().checkUniqueProperties(type, true);
     }
-    
+
     /** Regurns information about current library. */
     public static String projectInfo() {
         final String URL = "http://ujorm.org/";
@@ -965,12 +984,12 @@ public class UjoManager implements Comparator<Key> {
         String result
         = p.getSpecificationTitle()
         + CR
-        + "version "    
+        + "version "
         + projectVersion()
         + CR
-        + URL    
-        + CR    
-        ;    
+        + URL
+        + CR
+        ;
         return result;
     }
 
@@ -985,5 +1004,5 @@ public class UjoManager implements Comparator<Key> {
     public static void main(String[] args) {
         System.out.println(projectInfo());
     }
-    
+
 }

@@ -61,7 +61,7 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
      */
     @SuppressWarnings("unchecked")
     public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value, this);
         ((ValueAgent) property).writeValue(this, value);
     }
     

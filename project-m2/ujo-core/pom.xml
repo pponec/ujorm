@@ -17,7 +17,7 @@
             <timezone>+1</timezone>
         </contributor>
     </contributors>
-    
+
     <scm>
         <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-core/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
@@ -120,6 +120,15 @@
             <version>3.8.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!--
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>12.0</version>
+            <scope>test</scope>
+        </dependency>
+        -->
     </dependencies>
 
     <parent>
@@ -128,7 +137,7 @@
         <version>7</version>
     </parent>
     <!-- PROFILE(S) -->
-    
+
     <profiles>
         <profile>
             <id>production</id>
@@ -168,6 +177,6 @@
             </build>
         </profile>
      </profiles>
-    
+
 </project>
 

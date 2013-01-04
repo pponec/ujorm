@@ -17,9 +17,10 @@ package org.ujorm.implementation.array;
 
 import java.io.Serializable;
 import org.ujorm.Key;
-import org.ujorm.extensions.Property;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.AbstractUjoExt;
 import org.ujorm.extensions.ListProperty;
+import org.ujorm.extensions.Property;
 
 
 /**
@@ -31,18 +32,18 @@ import org.ujorm.extensions.ListProperty;
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, String &gt; NAME = newKey(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>, propertyCount++);
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Double &gt; CASH = newKey(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>, propertyCount++);
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Person&gt; CHILD = newKey(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>, propertyCount++);
- *    
+ *
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
  *    set(CHILD, <span class="java-keywords">new</span> Person());
  *    set(CHILD, NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">Jane</span><span class="java-string-literal">&quot;</span>);
  *    set(CHILD, CASH, 200d);
- *        
+ *
  *    String name = get(CHILD, NAME);
  *    <span class="java-keywords">double</span> cash = get(CHILD, CASH);
  *  }
  *}</pre>
- * 
+ *
  * @see Property
  * @author Pavel Ponec
  * @since UJO release 0.80
@@ -54,7 +55,7 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 977568L;
 
-    
+
     /** An Incrementator. Use a new counter for each subclass by sample:
      *<pre class="pre">
      * <span class="java-block-comment">&#47&#42&#42 An Incrementator. Use a new counter for each subclass. &#42&#47</span>
@@ -62,27 +63,27 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
      *</pre>
      */
     protected static final int propertyCount = 0;
-    
+
     /** Object data */
     protected Object[] data;
-    
+
     /** Constructor */
     public ArrayUjoExt() {
         data = initData();
     }
-    
+
     /** The method is called from top constructor. */
     protected Object[] initData() {
         return new Object[readPropertyCount()];
     }
-    
+
     /** Return a count of keys. */
     abstract public int readPropertyCount();
-    
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#setValue(org.ujorm.Ujo, java.lang.Object)
@@ -90,24 +91,24 @@ abstract public class ArrayUjoExt<UJO extends ArrayUjoExt> extends AbstractUjoEx
 
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);       
+        assert UjoManager.assertDirectAssign(property, value, this);
         data[property.getIndex()] = value;
     }
-    
+
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#of(org.ujorm.Ujo)
-     */    
+     */
     @Override
     public Object readValue(final Key property) {
         return data[property.getIndex()];
     }
-    
+
     // --------- STATIC METHODS -------------------
 
     /** Returns a new instance of property where the default value is null.
