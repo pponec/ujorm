@@ -565,7 +565,7 @@ public class Session {
         MetaTable table = handler.findTableModel(bo.getClass());
         table.assertChangeAllowed();
         MetaColumn PK = table.getFirstPK();
-        Criterion crn = Criterion.where(PK.getProperty(), PK.getValue(bo));
+        Criterion crn = Criterion.where(PK.getKey(), PK.getValue(bo));
         int result = delete(table, crn);
 
         if (true) {
@@ -677,7 +677,7 @@ public class Session {
         List<MetaColumn> keys = MetaPKey.COLUMNS.of(ormKey);
 
         for (MetaColumn ormColumn : keys) {
-            Criterion crn = Criterion.where(ormColumn.getProperty(), ormColumn.getValue(bo));
+            Criterion crn = Criterion.where(ormColumn.getKey(), ormColumn.getValue(bo));
             result = result != null
                     ? result.and(crn)
                     : crn;
@@ -779,8 +779,8 @@ public class Session {
         }
 
         Criterion crit = fColumn != null
-                ? Criterion.where(fColumn.getProperty(), value)
-                : Criterion.constant(table.getFirstPK().getProperty(), true);
+                ? Criterion.where(fColumn.getKey(), value)
+                : Criterion.constant(table.getFirstPK().getKey(), true);
         Query query = createQuery(crit, table.getType());
         UjoIterator result = UjoIterator.getInstance(query);
 
@@ -878,7 +878,7 @@ public class Session {
         final MetaColumn column = table.getFirstPK();
 
         UjoManager.getInstance().assertAssign(MetaColumn.TABLE_PROPERTY.of(column), id);
-        Criterion crn = Criterion.where(column.getProperty(), id);
+        Criterion crn = Criterion.where(column.getKey(), id);
         Query query = createQuery(crn);
 
         final OrmUjo result = query.uniqueResult();
@@ -915,7 +915,7 @@ public class Session {
         }
 
         // SELECT DB row:
-        Criterion<UJO> crn = Criterion.where(columns.get(0).getProperty(), id);
+        Criterion<UJO> crn = Criterion.where(columns.get(0).getKey(), id);
         UJO result = createQuery(crn).uniqueResult();
         if (mandatory && result==null) {
             throw new RuntimeException("Deleted object for key " + id);
@@ -1057,7 +1057,7 @@ public class Session {
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> property) throws IllegalStateException {
         final MetaColumn column = (MetaColumn) handler.findColumnModel(property);
         if (column!=null && column.isForeignKey()) {
-            final Object result = column.getForeignColumns().get(0).getProperty().of(ujo);
+            final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
             return new ForeignKey(result);
         } else {
             final String propertyName = ujo.getClass().getSimpleName() + "." + property;
@@ -1084,7 +1084,7 @@ public class Session {
 
         Criterion<OrmUjo> criterion = null;
         for (MetaColumn c : MetaPKey.COLUMNS.of(pkeys)) {
-            Criterion<OrmUjo> crn = Criterion.where(c.getProperty(), c.getValue(ujo));
+            Criterion<OrmUjo> crn = Criterion.where(c.getKey(), c.getValue(ujo));
             criterion = criterion!=null
                 ? criterion.and(crn)
                 : crn
@@ -1102,10 +1102,10 @@ public class Session {
 
             if (fk && c.isForeignKey()) {
                 // Copy the foreign key only (the workaround of lazy loading):
-                Key p = c.getProperty();
+                Key p = c.getKey();
                 ujo.writeValue(p, ((ExtendedOrmUjo)result).readFK(p));
             } else if (c.isColumn()) {
-                c.getProperty().copy(result, ujo);
+                c.getKey().copy(result, ujo);
             }
         }
         ujo.writeSession(this);
@@ -1113,7 +1113,7 @@ public class Session {
 
         return true;
     }
-    
+
     /** Check dialecttype */
     public final SqlDialect getDialect(Class<? extends OrmUjo> ormType) {
         return handler.findTableModel(ormType).getDatabase().getDialect();
@@ -1129,11 +1129,11 @@ public class Session {
         for (Class<? extends SqlDialect> dialectType : dialects) {
             if (dialectType.isInstance(dialect)) {
                 return true;
-            }            
+            }
         }
         return false;
     }
-    
+
     /** Create the closed session */
     public static Session newClosedSession(OrmHandler handler) {
         Session result = new Session(handler);

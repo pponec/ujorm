@@ -190,7 +190,7 @@ public class MSSqlDialect extends SqlDialect {
     protected void createRowOrderPart(Query query,  Appendable out, boolean asOrderAlias) throws IOException {
         out.append(", ROW_NUMBER() OVER (");
         if (query.getOrderBy().isEmpty()) {
-            MetaColumn column = query.getColumn(0);
+            MetaColumn column = query.getColumn(0).getModel();
             out.append(" ORDER BY ");
             if (asOrderAlias) {
                 printColumnOrderAlias(column, out);
@@ -323,7 +323,7 @@ public class MSSqlDialect extends SqlDialect {
         } else {
             // we have to order over some column...
             if (query.getOrderBy() == null || query.getOrderBy().isEmpty()) {
-                query.orderBy(query.getColumn(0).getProperty());
+                query.orderBy(query.getColumn(0).getKey());
             }
             StringBuilder innerPart = new StringBuilder(256);
             createInnerSelectPart(query, innerPart);

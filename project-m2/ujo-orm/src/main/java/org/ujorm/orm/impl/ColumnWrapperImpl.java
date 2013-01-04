@@ -16,6 +16,7 @@
 
 package org.ujorm.orm.impl;
 
+import org.ujorm.Key;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
@@ -25,13 +26,30 @@ import org.ujorm.orm.metaModel.MetaColumn;
  * @author Pavel Ponec
  */
 public class ColumnWrapperImpl implements ColumnWrapper {
-    
+
     private MetaColumn column;
     private TableWrapper table;
+    private Key key;
 
     public ColumnWrapperImpl(MetaColumn column, TableWrapper table) {
+        this(column, table, column.getKey());
+    }
+
+    public ColumnWrapperImpl(MetaColumn column, Key key) {
+        this(column, null, key);
+    }
+
+    /**
+     * Basic constructor
+     * @param column Mansatory column
+     * @param table Optional table
+     * @param key Optional Key
+     */
+    public ColumnWrapperImpl(MetaColumn column, TableWrapper table, Key key) {
+        assert column!=null : "The MetaColumn must not be null";
         this.column = column;
-        this.table = table;
+        this.table = table != null ? table : column.getTable();
+        this.key = key != null ? key : column.getKey();
     }
 
     public MetaColumn getModel() {
@@ -41,5 +59,38 @@ public class ColumnWrapperImpl implements ColumnWrapper {
     public TableWrapper getTable() {
         return table;
     }
+
+    /** Returns an original Key */
+    public Key getKey() {
+        return key;
+    }
+
+    /** Is it the direct Key? */
+    public boolean isDirectKey() {
+        return key.isDirect();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + (this.column != null ? this.column.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ColumnWrapper
+                && this.key.equals(((ColumnWrapper)obj).getKey())
+                ;
+    }
+
+    /** Returns the Key */
+    @Override
+    public String toString() {
+        return key.toStringFull();
+    }
+
+
+
 
 }

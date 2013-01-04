@@ -20,6 +20,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import org.ujorm.CompositeKey;
+import org.ujorm.Ujo;
+import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
@@ -66,7 +69,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
      */
     @Override
     public boolean hasNext() throws IllegalStateException {
-        
+
         if (!cursorReady) try {
             cursorReady = true;
             hasNext = rs.next();
@@ -107,13 +110,22 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             int colCount = query.getColumns().size();
 
             for (int i=0; i<colCount; i++) {
-                final MetaColumn column = query.getColumn(i);
+                final ColumnWrapper colWrap = query.getColumn(i);
+                final MetaColumn column = colWrap.getModel();
                 final int iCol = view ? rs.findColumn(MetaColumn.NAME.of(column)) : (i+1);
                 final Object value = column.getConverter().getValue(column, rs, iCol);
-                column.setValue(row, value);
+
+                if (colWrap.isDirectKey()) {
+                    column.setValue(row, value);
+                } else {
+                    final Object row2 = ((CompositeKey)colWrap.getKey()).getSemifinalValue(row, true);
+                    column.setValue((Ujo) row2, value);
+                }
             }
             row.writeSession(query.getSession());
-            if (initState) { initState=false; }
+            if (initState) {
+                initState = false;
+            }
             return row;
         } catch (Throwable e) {
             throw new UnsupportedOperationException("Query: " + query, e);

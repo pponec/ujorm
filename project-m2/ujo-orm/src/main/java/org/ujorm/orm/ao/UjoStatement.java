@@ -1,12 +1,12 @@
 /*
  *  Copyright 2010 Pavel Ponec
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,7 +68,7 @@ final public class UjoStatement extends UnsupportedOperationException implements
      */
     @SuppressWarnings("unchecked")
     public Object getDefaultValue(final MetaColumn column) {
-        return getDatabaseValue(column, column.getProperty().getDefault());
+        return getDatabaseValue(column, column.getKey().getDefault());
     }
 
     /** Returns a <b>any value</b> in a JDBC friendly type.
@@ -83,7 +83,7 @@ final public class UjoStatement extends UnsupportedOperationException implements
             if (value instanceof OrmUjo) {
                 final OrmUjo tableValue = (OrmUjo) value;
                 final MetaTable mt = column.getHandler().findTableModel(tableValue.getClass());
-                value = mt.getFirstPK().getProperty().of(tableValue);
+                value = mt.getFirstPK().getKey().of(tableValue);
             }
             column.getConverter().setValue(column, this, value, 1);
             return v;
@@ -550,12 +550,12 @@ final public class UjoStatement extends UnsupportedOperationException implements
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw this;
     }
-    
+
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         throw this;
     }
-    
+
     @Override
     public void clearParameters() throws SQLException {
     }

@@ -153,13 +153,13 @@ final public class MetaProcedure extends AbstractMetaModel {
 
     /** Is it an INPUT property ? */
     public boolean isInput(final MetaColumn column) {
-        boolean result = input[column.getProperty().getIndex()];
+        boolean result = input[column.getKey().getIndex()];
         return result;
     }
 
     /** Is it an OUTPUT property ? */
     public boolean isOutput(final MetaColumn column) {
-        int index = column.getProperty().getIndex();
+        int index = column.getKey().getIndex();
         final boolean result = index==0 || output[index];
         return result;
     }
@@ -181,7 +181,7 @@ final public class MetaProcedure extends AbstractMetaModel {
                 if (sb.length() > 0) {
                     sb.append(',');
                 }
-                sb.append(param.getProperty());
+                sb.append(param.getKey());
             }
         }
         sb.append(")");

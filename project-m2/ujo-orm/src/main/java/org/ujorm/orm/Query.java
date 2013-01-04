@@ -26,6 +26,7 @@ import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaTable;
@@ -40,7 +41,7 @@ import org.ujorm.orm.utility.OrmTools;
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     final private MetaTable table;
-    private List<MetaColumn> columns;
+    private List<ColumnWrapper> columns;
     private Session session;
     private Criterion<UJO> criterion;
     private boolean distinct;
@@ -68,7 +69,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      */
     public Query(final MetaTable table, final Criterion<UJO> criterion, final Session session) {
         this.table = table;
-        this.columns = MetaTable.COLUMNS.getList(table);
+        this.columns = (List<ColumnWrapper>) (Object) MetaTable.COLUMNS.getList(table);
         this.criterion = criterion;
         this.session = session;
 
@@ -182,7 +183,18 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     @SuppressWarnings("unchecked")
     final public CriterionDecoder getDecoder() {
         if (decoder==null) {
-            decoder = new CriterionDecoder(criterion, table, (List)orderBy);
+            final List<Key> relations = new ArrayList<Key>(16);
+            for (Key key : orderBy) {
+                if (!key.isDirect()) {
+                    relations.add(key);
+                }
+            }
+            for (ColumnWrapper column : columns) {
+                if (!column.isDirectKey()) {
+                    relations.add(column.getKey());
+                }
+            }
+            decoder = new CriterionDecoder(criterion, table, relations);
         }
         return decoder;
     }
@@ -209,12 +221,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Get Column List */
-    public List<MetaColumn> getColumns() {
+    public List<ColumnWrapper> getColumns() {
         return columns;
     }
 
     /** Get Column List */
-    public MetaColumn getColumn(int index) {
+    public ColumnWrapper getColumn(int index) {
         return columns.get(index);
     }
 
@@ -366,12 +378,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
     public Query<UJO> addColumn(Key<UJO,?> column) throws IllegalArgumentException {
-        final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(getDirectProperty(column));
+        final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(getLastProperty(column));
         if (mc==null) {
-            throw new IllegalArgumentException("Column " + column + " was not foud in the meta-model");
+            throw new IllegalArgumentException("Column " + column.toStringFull() + " was not foud in the meta-model");
         }
         if (!columns.contains(mc)) {
-           columns.add(mc);
+            columns.add(column.isDirect() ? mc : new ColumnWrapperImpl(mc, column));
         }
         return this;
     }
@@ -383,8 +395,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     */
     @SuppressWarnings("unchecked")
     public Query<UJO> setColumn(Key<UJO,?> column) throws IllegalArgumentException {
-        this.columns = new ArrayList<MetaColumn>();
-        return addColumn(getDirectProperty(column));
+        this.columns = new ArrayList<ColumnWrapper>();
+        return addColumn(column);
     }
 
    /** Set an list of required columns to reading from database table.
@@ -397,15 +409,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     */
     @SuppressWarnings("unchecked")
     public final Query<UJO> setColumns(boolean addPrimaryKey, Key... columns)  throws IllegalArgumentException {
-        this.columns = new ArrayList<MetaColumn>(columns.length);
+        this.columns = new ArrayList<ColumnWrapper>(columns.length);
         final OrmHandler handler = getHandler();
         for (Key column : columns) {
-            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getDirectProperty(column), true);
-            if (mc.getTable()!=table) {
-                throw new IllegalArgumentException("Base class doesn't contains the column: " + column);
-            } else {
-                this.columns.add(mc);
-            }
+            final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(column), true);
+            this.columns.add(column.isDirect() ? mc : new ColumnWrapperImpl(mc, column));
         }
         if (addPrimaryKey
         && !this.columns.contains(table.getFirstPK())) {
@@ -415,10 +423,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Only direct keys are supported */
-    private Key getDirectProperty(Key p) {
+    private Key getLastProperty(Key p) {
         return p.isDirect()
             ?  p
-            : ((CompositeKey)p).getFirstKey()
+            : ((CompositeKey)p).getLastKey()
             ;
     }
 

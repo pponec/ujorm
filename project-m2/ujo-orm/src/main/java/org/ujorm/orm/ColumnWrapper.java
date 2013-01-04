@@ -16,6 +16,7 @@
 
 package org.ujorm.orm;
 
+import org.ujorm.Key;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
@@ -29,5 +30,15 @@ public interface ColumnWrapper {
 
     /** Returns a unique table name in the one SQL statement. */
     public TableWrapper getTable();
+
+    /** Returns an original key */
+    public Key getKey();
+
+    /** Returns if key is Direct */
+    public boolean isDirectKey();
+
+    /** Method retuns the {@code true} value if two attribut Keys are the same */
+    @Override
+    public boolean equals(Object column);
 
 }

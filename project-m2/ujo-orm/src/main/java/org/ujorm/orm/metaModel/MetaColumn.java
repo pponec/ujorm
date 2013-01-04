@@ -151,7 +151,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     }
 
-    /** It is a DB column (either a value of a foreign key), 
+    /** It is a DB column (either a value of a foreign key),
      * not a relation to many.
      */
     @Override
@@ -282,7 +282,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
     public Object getValue(final OrmUjo bo) {
-        final Key property = getProperty();
+        final Key property = super.getKey();
         final Object result = property.of(bo);
         return result;
     }
@@ -290,7 +290,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
     public void setValue(final Ujo bo, Object value) {
-        final Key property = getProperty();
+        final Key property = super.getKey();
 
         if (isForeignKey()
         &&   value !=null
@@ -304,12 +304,6 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** Returns a Java Class of value */
     public Class getType() {
         return TABLE_PROPERTY.of(this).getType();
-    }
-
-    /** Returns a TABLE and COLUMN names. */
-    @Override
-    public String toString() {
-        return getFullName();
     }
 
     /** Returns a DB, TABLE and COLUMN name */
@@ -365,7 +359,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      * If the default value is an empty String than method returns false.
      */
     public boolean hasDefaultValue() {
-        final Object value = getProperty().getDefault();
+        final Object value = super.getKey().getDefault();
         boolean result = value instanceof String
             ?  ((String)value).length()>0
             : value!=null
