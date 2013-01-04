@@ -118,8 +118,13 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
                 if (colWrap.isDirectKey()) {
                     column.setValue(row, value);
                 } else {
-                    final Object row2 = ((CompositeKey)colWrap.getKey()).getSemifinalValue(row, true);
-                    column.setValue((Ujo) row2, value);
+                    final Ujo semiRow = ((CompositeKey)colWrap.getKey()).getSemifinalValue(row, true);
+                    column.setValue(semiRow, value);
+                    if (column.isPrimaryKey()) {
+                        // Assign the session on case the Primary Key of a related object is available:
+                        // Note: the ID must be the last column o the related object!
+                        row.writeSession(query.getSession());
+                    }
                 }
             }
             row.writeSession(query.getSession());

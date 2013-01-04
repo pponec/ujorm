@@ -153,7 +153,7 @@ public class JdbcStatement {
             final MetaColumn column = new MetaColumn(typeService);
 
             MetaColumn.TABLE.setValue(column, query.getTableModel());
-            MetaColumn.TABLE_PROPERTY.setValue(column, property);
+            MetaColumn.TABLE_KEY.setValue(column, property);
             query.getTableModel().getDatabase().changeDbType(column);
             query.getTableModel().getDatabase().changeDbLength(column);
             column.initTypeCode();
