@@ -76,7 +76,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      */
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value, this);
         data.put(property, value);
     }
 

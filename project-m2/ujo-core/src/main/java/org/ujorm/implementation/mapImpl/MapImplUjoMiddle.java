@@ -72,7 +72,7 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
-        assert UjoManager.assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value, this);
         property.setValue((UJO)this, value);
         return this;
     }

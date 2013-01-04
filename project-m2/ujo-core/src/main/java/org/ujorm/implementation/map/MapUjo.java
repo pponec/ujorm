@@ -73,7 +73,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      * @see Key#setValue(Ujo,Object)
      */
     public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value, this);
         data.put(property, value);
     }
     

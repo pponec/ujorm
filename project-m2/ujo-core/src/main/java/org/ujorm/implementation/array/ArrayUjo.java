@@ -12,14 +12,15 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.implementation.array;
 
 import java.io.Serializable;
 import org.ujorm.Key;
-import org.ujorm.extensions.Property;
+import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.ListProperty;
+import org.ujorm.extensions.Property;
 import org.ujorm.extensions.SuperAbstractUjo;
 
 /**
@@ -45,7 +46,7 @@ import org.ujorm.extensions.SuperAbstractUjo;
  *    }
  * }
  * </pre>
- * 
+ *
  * @see Property
  * @author Pavel Ponec
  * @composed 1 - * Property
@@ -53,7 +54,7 @@ import org.ujorm.extensions.SuperAbstractUjo;
  */
 @Deprecated
 public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable {
-    
+
 
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 977569L;
@@ -65,10 +66,10 @@ public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable 
      *</pre>
      */
     protected static final int propertyCount = 0;
-    
+
     /** Object data. Unauthorized writing is not allowed. */
     final private Object[] data;
-    
+
     /** Constructor */
     public ArrayUjo() {
         data = initData();
@@ -77,19 +78,19 @@ public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable 
     public ArrayUjo(Object[] data) {
         this.data = data;
     }
-    
+
     /** The method is called from top constructor. */
     protected Object[] initData() {
         return new Object[readPropertyCount()];
     }
-    
+
     /** Return a count of keys. */
     abstract public int readPropertyCount();
-    
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(Ujo,Object)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#setValue(Ujo,Object)
@@ -97,25 +98,25 @@ public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable 
 
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert readUjoManager().assertDirectAssign(property, value);       
+        assert UjoManager.assertDirectAssign(property, value, this);
         data[property.getIndex()] = value;
     }
-    
 
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#of(Ujo)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#of(Ujo)
-     */    
+     */
     @Override
     public Object readValue(final Key property) {
         return data[property.getIndex()];
     }
-    
-    
+
+
     // --------- STATIC METHODS -------------------
 
     /** Returns a new instance of property where the default value is null.
@@ -183,5 +184,5 @@ public abstract class ArrayUjo extends SuperAbstractUjo implements Serializable 
     protected static <UJO extends ArrayUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type, int index) {
         return ListProperty.newListProperty(name, type, index);
     }
-    
+
 }

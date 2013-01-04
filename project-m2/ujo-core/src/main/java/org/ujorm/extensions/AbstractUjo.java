@@ -44,7 +44,7 @@ import org.ujorm.core.UjoManager;
  *    }
  * }
  * </pre>
- * 
+ *
  * @see Property
  * @author Pavel Ponec
  * @composed 1 - * Property
@@ -52,10 +52,10 @@ import org.ujorm.core.UjoManager;
 //@deprecated Use the class {@link  QuickUKjo} rather or a better class {@link KeyFactory} to create new Keys.
 //@Deprecated
 public abstract class AbstractUjo extends SuperAbstractUjo implements Serializable {
-       
+
     /** Object data. Unauthorized writing is not allowed. */
     private final Object[] data;
-    
+
     /** Constructor */
     public AbstractUjo() {
         this.data = new Object[readKeys().size()];
@@ -64,11 +64,11 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
     public AbstractUjo(Object[] data) {
         this.data = data;
     }
-        
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(Ujo,Object)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#setValue(Ujo,Object)
@@ -76,19 +76,19 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
 
     @Override
     public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value);
+        assert UjoManager.assertDirectAssign(property, value, this);
         data[property.getIndex()] = value;
     }
-    
 
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#of(Ujo)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#of(Ujo)
-     */    
+     */
     @Override
     public Object readValue(final Key property) {
         assert property.isDirect() : "Property must be direct only.";
