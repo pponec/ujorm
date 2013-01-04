@@ -237,21 +237,21 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name) {
-        return new OrmProperty(UNDEFINED_INDEX, name, null);
+        return new OrmProperty(UNDEFINED_INDEX, name, null, null);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name, VALUE defaultValue) {
-        return new OrmProperty(UNDEFINED_INDEX, name, defaultValue);
+        return new OrmProperty(UNDEFINED_INDEX, name, defaultValue, null);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKeyDefault(VALUE defaultValue) {
-        return new OrmProperty(UNDEFINED_INDEX, null, defaultValue);
+        return new OrmProperty(UNDEFINED_INDEX, null, defaultValue, null);
     }
 
     // --------- STATIC METHODS -------------------
@@ -267,7 +267,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     , int index
     , boolean lock
     ) {
-        return (Property<UJO, VALUE>) new OrmProperty(index, name, defaultValue);
+        return (Property<UJO, VALUE>) new OrmProperty(index, name, defaultValue, null);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -286,7 +286,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key p) {
-        return (Property<UJO, VALUE>) new OrmProperty(UNDEFINED_INDEX, p.getName(), p.getDefault());
+        return (Property<UJO, VALUE>) new OrmProperty(UNDEFINED_INDEX, p.getName(), p.getDefault(), null);
     }
 
     // ------------- DEPRECATED METHODS ---------------------
@@ -347,7 +347,7 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     , int index
     , boolean lock
     ) {
-        return new OrmProperty(index, name, defaultValue);
+        return new OrmProperty(index, name, defaultValue, null);
     }
 
     /** A Property Factory creates new property and assigns a next property index.

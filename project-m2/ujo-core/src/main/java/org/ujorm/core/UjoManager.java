@@ -16,9 +16,6 @@
 
 package org.ujorm.core;
 
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.ListKey;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -28,11 +25,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import org.ujorm.Ujo;
-import org.ujorm.UjoAction;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.CompositeKey;
+import org.ujorm.ListKey;
+import org.ujorm.Ujo;
+import org.ujorm.UjoAction;
+import org.ujorm.UjoProperty;
+import org.ujorm.UjoPropertyList;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;

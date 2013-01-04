@@ -17,6 +17,7 @@ package org.ujorm.orm;
 
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.Validator;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmProperty;
 import org.ujorm.implementation.orm.RelationToMany;
@@ -41,8 +42,8 @@ public class OrmKeyFactory<UJO extends OrmUjo> extends KeyFactory<UJO> {
 
     /** Common protected factory method */
     @Override
-    protected <T> Key<UJO,T> createKey(String name, T defaultValue) {
-        final OrmProperty<UJO,T> p = new OrmProperty(getTmpStore().size(), name, defaultValue);
+    protected <T> Key<UJO,T> createKey(String name, T defaultValue, Validator<T> validator) {
+        final OrmProperty<UJO,T> p = new OrmProperty(getTmpStore().size(), name, defaultValue, validator);
         addKey(p);
         return p;
     }

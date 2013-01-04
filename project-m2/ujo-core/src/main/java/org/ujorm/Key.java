@@ -18,6 +18,7 @@ package org.ujorm;
 
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.validator.ValidationException;
 
 /**
  * This interface is a descriptor of the {@link Ujo} attribute. The property contains only property meta-data
@@ -56,9 +57,10 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * always.
      * @param ujo Related Ujo object
      * @param value A value to assign.
+     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void setValue(UJO ujo, VALUE value);
+    public void setValue(UJO ujo, VALUE value) throws ValidationException;
 
     
     /**
@@ -157,6 +159,9 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see org.ujorm.core.UjoComparator
      */
     public UjoProperty<UJO,VALUE> descending(boolean descending);
+    
+    /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
+    public Validator<VALUE> getValidator();    
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
@@ -178,5 +183,6 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     /** Returns the name of the Key including the simple domain class. Example: Person.id */
     public String toStringFull();
+    
 
 }

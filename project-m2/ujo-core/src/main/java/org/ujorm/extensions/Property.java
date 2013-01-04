@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.extensions;
 
@@ -21,14 +21,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.ujorm.CompositeKey;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
+import org.ujorm.Validator;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
+import org.ujorm.validator.ValidationException;
 
 /**
  * The main implementation of the interface Key.
@@ -47,11 +49,11 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     private String name;
     /** Property index, there are exist three indext ranges
      * <ul>
-     *     <li>index == UNDEFINED_INDEX 
+     *     <li>index == UNDEFINED_INDEX
      *     : an undefine index or a signal for auto-index action</li>
      *     <li>index &lt; UNDEFINED_INDEX
      *      : the discontinuous and ascending series of numbers that is generated using a special method</li>
-     *     <li>index &gt; UNDEFINED_INDEX 
+     *     <li>index &gt; UNDEFINED_INDEX
      *     : the continuous and ascending series of numbers usable as a pointer to an array. This is a final state</li>
      * </ul>
      */
@@ -64,6 +66,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     private VALUE defaultValue;
     /** Lock the property after initialization */
     private boolean lock;
+    /** Input Validator */
+    private Validator<VALUE> validator;
 
 
     /** A property seqeuncer for an index attribute
@@ -81,7 +85,13 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /** Protected constructor */
     protected Property(int index) {
+        this(index, null);
+    }
+
+    /** Protected constructor */
+    protected Property(int index, Validator<VALUE> validator) {
         this.index = index==UNDEFINED_INDEX ? _nextRawSequence() : index ;
+        this.validator = validator;
     }
 
     /**
@@ -175,13 +185,13 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
             throw new IllegalArgumentException("Domain type is missing for the property: " + name);
         }
     }
-      
+
     /** Name of Property */
     @Override
     final public String getName() {
         return name;
     }
-    
+
     /** Type of Property */
     @Override
     final public Class<VALUE> getType() {
@@ -199,18 +209,21 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     final public int getIndex() {
         return index;
     }
-    
+
     /**
-     * It is a basic method for setting an appropriate type safe value to an MapUjo object. 
-     * <br>For the setting value is used internally a method 
+     * It is a basic method for setting an appropriate type safe value to an MapUjo object.
+     * <br>For the setting value is used internally a method
      *     {@link AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object) }
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    final public void setValue(final UJO ujo, final VALUE value) {
+    final public void setValue(final UJO ujo, final VALUE value) throws ValidationException{
+        if (validator != null) {
+            validator.checkValue(value, this, ujo);
+        }
         ujo.writeValue(this, value);
     }
-    
+
     /**
      * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
      * @see #of(Ujo)
@@ -220,7 +233,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public final VALUE getValue(final UJO ujo) {
         return of(ujo);
     }
-    
+
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
      * <br>For the getting value is used internally a method
@@ -237,8 +250,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         final Object result = ujo.readValue(this);
         return result!= null ? (VALUE) result : defaultValue;
     }
-    
-    /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...). 
+
+    /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...).
      * If the default value is not modified, returns the <code>null<code>.
      */
     @Override
@@ -255,12 +268,12 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         if (lock) checkValidity();
         return (PROPERTY) this;
     }
-    
+
     /** Assing a value from the default value. */
     public void setValueFromDefault(UJO ujo) {
         setValue(ujo, defaultValue);
     }
-        
+
     /** Indicates whether a parameter value of the ujo "equal to" this default value. */
     @Override
     public boolean isDefault(UJO ujo) {
@@ -271,7 +284,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         ;
         return result;
     }
-    
+
     /**
      * Returns a true value, if the property contains more keys.
      * The composite property is excluded from from function Ujo.readKeys() by default.
@@ -310,6 +323,11 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return PathProperty.sort(this, !descending);
     }
 
+    /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
+    public Validator<VALUE> getValidator() {
+        return validator;
+    }
+
     /** Create new composite (indirect) instance.
      * @since 0.92
      */
@@ -334,7 +352,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
 
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
-     * 
+     *
      * @param ujo A basic Ujo.
      * @param value Null value is supported.
      * @return Accordance
@@ -343,7 +361,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public boolean equals(final UJO ujo, final VALUE value) {
         final Object myValue = of(ujo);
         if (myValue==value) { return true; }
-        
+
         final boolean result
         =  myValue!=null
         && value  !=null
@@ -366,7 +384,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public int compareTo(final Key p) {
         return index<p.getIndex() ? -1
              : index>p.getIndex() ?  1
-             : name.compareTo(p.getName()) 
+             : name.compareTo(p.getName())
              ;
     }
 
@@ -387,7 +405,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public CharSequence subSequence(int start, int end) {
         return name.subSequence(start, end);
     }
-    
+
     /** Returns a name of Property */
     @Override
     public final String toString() {
@@ -410,6 +428,14 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
         return new Property<UJO,VALUE>(index).init(name, type, null, value, index, lock);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
+        return new Property<UJO,VALUE>(index, validator).init(name, type, null, value, index, lock);
     }
 
 

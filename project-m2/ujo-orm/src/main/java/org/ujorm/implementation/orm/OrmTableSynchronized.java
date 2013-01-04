@@ -228,21 +228,21 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name) {
-        return new OrmProperty(UNDEFINED_INDEX, name, null);
+        return new OrmProperty(UNDEFINED_INDEX, name, null, null);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name, VALUE defaultValue) {
-        return new OrmProperty(UNDEFINED_INDEX, name, defaultValue);
+        return new OrmProperty(UNDEFINED_INDEX, name, defaultValue, null);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKeyDefault(VALUE defaultValue) {
-        return new OrmProperty(UNDEFINED_INDEX, null, defaultValue);
+        return new OrmProperty(UNDEFINED_INDEX, null, defaultValue, null);
     }
 
     // --------- STATIC METHODS -------------------
@@ -338,7 +338,7 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
     , int index
     , boolean lock
     ) {
-        return new OrmProperty(index, name, defaultValue);
+        return new OrmProperty(index, name, defaultValue, null);
     }
 
     /** A Property Factory creates new property and assigns a next property index.

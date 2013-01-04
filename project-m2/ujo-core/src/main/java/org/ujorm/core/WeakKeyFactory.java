@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.WeakKey;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
+import org.ujorm.Validator;
 import org.ujorm.extensions.WeakKeyImpl;
 
 /**
@@ -48,24 +49,24 @@ public class WeakKeyFactory extends KeyFactory<Ujo> {
     /** Create new Key */
     @Override
     public final <T> WeakKey<T> newKey() {
-        return createKey(null, null);
+        return createKey(null, null, null);
     }
     
     /** Create new Key with a default value */
     @Override
     public final <T> WeakKey<T> newKeyDefault(T defaultValue) {
-        return createKey(null, defaultValue);
+        return createKey(null, defaultValue, null);
     }
 
     /** Create new Key */
     @Override
     public final <T> WeakKey<T> newKey(String name) {
-        return createKey(name, null);
+        return createKey(name, null, null);
     }
 
     /** For internal use only: Create a new Key */
     @Override
-    protected <T> WeakKey<T> createKey(String name, T defaultValue) {
+    protected <T> WeakKey<T> createKey(String name, T defaultValue, Validator<T> validator) {
         final WeakKeyImpl<T> p = new WeakKeyImpl<T>(name, defaultValue, getTmpStore().size());
         addKey(p);
         return p;
