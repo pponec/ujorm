@@ -17,6 +17,7 @@
 package org.ujorm;
 
 import java.util.List;
+import org.ujorm.validator.ValidationException;
 
 /**
  * A <strong>CompositeKey</strong> interface is a composite of more Key objects.
@@ -43,12 +44,17 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
     public void exportKeys(List<Key> result);
 
     /**
-     * Set value
-     * @param ujo Base Ujo
-     * @param value Value
-     * @param createRelations create related UJO objects
+     * It is a basic method for setting an appropriate type safe value to an Ujo object.
+     * <br>The method calls a method
+     * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
+     * always.
+     * @param ujo Related Ujo object
+     * @param value A value to assign.
+     * @param createRelations create related UJO objects in case of the composite key
+     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    public void setValue(final UJO ujo, final VALUE value, boolean createRelations);
+    public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException;
 
     /** Get a semifinal value from an Ujo object by a chain of keys.
      * If any value (not getLastPartialProperty) is null, then the result is null.
