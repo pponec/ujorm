@@ -223,8 +223,8 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         List<MetaColumn> result;
 
         MetaTable table;
-        if (TABLE_PROPERTY.of(this) instanceof RelationToOne) {
-            RelationToOne rto = (RelationToOne) TABLE_PROPERTY.of(this);
+        if (TABLE_KEY.of(this) instanceof RelationToOne) {
+            RelationToOne rto = (RelationToOne) TABLE_KEY.of(this);
             MetaColumn mc = (MetaColumn) getHandler().findColumnModel(rto.getRelatedKey(), true);
             result = new ArrayList<MetaColumn>(1);
             result.add(mc);
@@ -287,7 +287,10 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return result;
     }
 
-    /** Returns a property value from a table */
+    /** Returns a property value from a table
+     * @param ujo Related Ujo object
+     * @param value A value to assign.
+     */
     @SuppressWarnings("unchecked")
     public void setValue(final Ujo bo, Object value) {
         final Key key = super.getKey();
@@ -295,7 +298,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         if (isForeignKey()
         &&   value !=null
         && !(value instanceof OrmUjo)) {
-           value = new ForeignKey(value);
+             value = new ForeignKey(value);
         }
 
         key.setValue(bo, value);
@@ -303,7 +306,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     /** Returns a Java Class of value */
     public Class getType() {
-        return TABLE_PROPERTY.of(this).getType();
+        return TABLE_KEY.of(this).getType();
     }
 
     /** Returns a DB, TABLE and COLUMN name */

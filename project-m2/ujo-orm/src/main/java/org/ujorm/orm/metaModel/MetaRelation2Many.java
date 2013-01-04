@@ -17,8 +17,8 @@
 package org.ujorm.orm.metaModel;
 
 import java.lang.reflect.Field;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
@@ -47,9 +47,9 @@ public class MetaRelation2Many extends AbstractMetaModel {
      * then the several names can be separated by a space or comma character.
      */
     public static final Key<MetaRelation2Many,String> NAME = fa.newKey("name", "");
-    /** Table property */
+    /** Table key */
     @Transient
-    public static final Key<MetaRelation2Many,Key> TABLE_PROPERTY = fa.newKey("tableProperty");
+    public static final Key<MetaRelation2Many,Key> TABLE_KEY = fa.newKey("tableProperty");
     /** DB table */
     @Transient
     public static final Key<MetaRelation2Many,MetaTable> TABLE = fa.newKey("table");
@@ -68,7 +68,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         if (true) {
             ID.setValue(this, tableProperty.getName());
             TABLE.setValue(this, table);
-            TABLE_PROPERTY.setValue(this, tableProperty);
+            TABLE_KEY.setValue(this, tableProperty);
         }
         if (column!=null) {
             changeDefault(this, NAME, column.name());
@@ -78,6 +78,8 @@ public class MetaRelation2Many extends AbstractMetaModel {
             changeDefault(this, NAME, NAME.of(param));
         }
         changeDefault(this, NAME, tableProperty.getName());
+
+        assert getKey().isDirect() : String.format("The key %s must be direct.", getKey().toStringFull());
     }
 
     /** It is a DB column (either a value of a foreign key),
@@ -94,7 +96,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
 
     /** Returns a column property */
     final public Key getKey() {
-        return TABLE_PROPERTY.of(this);
+        return TABLE_KEY.of(this);
     }
 
     /** Is it the direct Key? */
@@ -133,7 +135,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     /** Property name */
     @Override
     public String toString() {
-        return TABLE_PROPERTY.of(this).toStringFull();
+        return TABLE_KEY.of(this).toStringFull();
     }
 
 }

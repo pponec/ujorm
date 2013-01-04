@@ -877,7 +877,7 @@ public class Session {
         final MetaTable table = handler.findTableModel(tableType);
         final MetaColumn column = table.getFirstPK();
 
-        UjoManager.getInstance().assertAssign(MetaColumn.TABLE_PROPERTY.of(column), id);
+        UjoManager.getInstance().assertAssign(MetaColumn.TABLE_KEY.of(column), id);
         Criterion crn = Criterion.where(column.getKey(), id);
         Query query = createQuery(crn);
 
