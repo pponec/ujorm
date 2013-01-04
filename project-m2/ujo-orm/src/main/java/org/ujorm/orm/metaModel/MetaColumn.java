@@ -290,7 +290,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** Returns a property value from a table */
     @SuppressWarnings("unchecked")
     public void setValue(final Ujo bo, Object value) {
-        final Key property = super.getKey();
+        final Key key = super.getKey();
 
         if (isForeignKey()
         &&   value !=null
@@ -298,7 +298,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
            value = new ForeignKey(value);
         }
 
-        property.setValue(bo, value);
+        key.setValue(bo, value);
     }
 
     /** Returns a Java Class of value */
