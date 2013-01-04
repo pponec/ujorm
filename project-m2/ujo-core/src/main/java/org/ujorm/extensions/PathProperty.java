@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 package org.ujorm.extensions;
 
 import java.lang.reflect.Array;
@@ -34,9 +34,9 @@ import org.ujorm.criterion.Operator;
  * A <strong>PathProperty</strong> class is an composite of a Key objects.
  * The PathProperty class can be used wherever is used Key - with a one important <strong>exception</strong>:
  * do not send the PathProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included 
+ * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included
  * in the list returned by Ujo.readProperties().
- * 
+ *
  * @author Pavel Ponec
  * @since 0.81
  */
@@ -54,7 +54,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         this(keys.toArray(new Key[keys.size()]));
     }
 
-    /** The main constructor. It is recommended to use the factory method 
+    /** The main constructor. It is recommended to use the factory method
      * {@link #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)}
      * for better performance in some cases.
      * @see #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)
@@ -162,12 +162,25 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Ujo getSemifinalValue(UJO ujo) {
-
+    public Ujo getSemifinalValue(final UJO ujo, final boolean create) {
         Ujo result = ujo;
+        if (result==null) {
+            return result;
+        }
         for (int i=0; i<keys.length-1; i++) {
-            if (result==null) { return result; }
             result = (Ujo) keys[i].of(result);
+            if (result==null) {
+                if (create) {
+                    try {
+                       result = (Ujo) keys[i].getType().newInstance();
+                       keys[i].setValue(ujo, result);
+                   } catch (Throwable e) {
+                       throw new IllegalStateException("Can't create instance for the key: " + keys[i].toStringFull(), e);
+                   }
+                } else {
+                    return result;
+                }
+            }
         }
         return result;
     }
@@ -183,8 +196,13 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     @Override
-    public void setValue(final UJO ujo, final VALUE value) {
-        final Ujo u = getSemifinalValue(ujo);
+    final public void setValue(final UJO ujo, final VALUE value) {
+        setValue(ujo, value, false);
+    }
+
+    @Override
+    public void setValue(final UJO ujo, final VALUE value, boolean createRelations) {
+        final Ujo u = getSemifinalValue(ujo, createRelations);
         getLastPartialProperty().setValue(u, value);
     }
 
@@ -193,7 +211,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     final public VALUE of(final UJO ujo) {
-        final Ujo u = getSemifinalValue(ujo);
+        final Ujo u = getSemifinalValue(ujo, false);
         return  u!=null ? getLastPartialProperty().of(u) : null ;
     }
 
@@ -223,8 +241,8 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     @Override
     public void copy(final UJO from, final UJO to) {
-        final Ujo from2 = getSemifinalValue(from);
-        final Ujo to2 = getSemifinalValue(to);
+        final Ujo from2 = getSemifinalValue(from, false);
+        final Ujo to2 = getSemifinalValue(to, false);
         getLastPartialProperty().copy(from2, to2);
     }
 
@@ -234,10 +252,10 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     public boolean isTypeOf(final Class type) {
         return getLastKey().isTypeOf(type);
     }
-    
+
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
-     * 
+     *
      * @param ujo A basic Ujo.
      * @param value Null value is supported.
      * @return Accordance
@@ -246,7 +264,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     public boolean equals(final UJO ujo, final VALUE value) {
         Object myValue = of(ujo);
         if (myValue==value) { return true; }
-        
+
         final boolean result
         =  myValue!=null
         && value  !=null
@@ -309,7 +327,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     public CharSequence subSequence(int start, int end) {
         return getName().subSequence(start, end);
     }
-    
+
     /**
      * Method returns a false because this is a property of the another UJO class.
      * The composite property is excluded from from function Ujo.readProperties() by default.
@@ -394,7 +412,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     // ================ STATIC ================
-    
+
     /** Create a new instance of property with a new sort attribute value.
      * @hidden
      */
@@ -442,7 +460,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     /** Create new instance
-     * @hidden 
+     * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
         ( final Key<UJO1, UJO2> property1
@@ -453,7 +471,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     /** Create new instance
-     * @hidden 
+     * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
         ( final Key<UJO1, UJO2> property1
@@ -465,7 +483,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     /** Create new instance
-     * @hidden 
+     * @hidden
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... keys) {
@@ -586,7 +604,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     public Criterion<UJO> whereLe(VALUE value) {
         return Criterion.where(this, Operator.LE, value);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Criterion<UJO> forSql(String sqlCondition) {

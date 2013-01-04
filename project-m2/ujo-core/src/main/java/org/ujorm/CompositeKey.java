@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 package org.ujorm;
 
 import java.util.List;
@@ -24,9 +24,9 @@ import java.util.List;
  * do not send the CompositeKey object to methods Ujo.readValue(...) and Ujo.writeValue(...) directly!!!
  * <p/>There is prefered two methods UjoManager.setValue(...) / UjoManager.getValue(...)
  * to write and read a value instead of this - or use some type safe solution by UjoExt or a method of Key.
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included 
+ * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included
  * in the list returned by Ujo.readProperties().
- * 
+ *
  * @author Pavel Ponec
  * @since 0.81
  */
@@ -42,10 +42,20 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
     /** Export all <string>direct</strong> keys to the list from parameter. */
     public void exportKeys(List<Key> result);
 
+    /**
+     * Set value
+     * @param ujo Base Ujo
+     * @param value Value
+     * @param createRelations create related UJO objects
+     */
+    public void setValue(final UJO ujo, final VALUE value, boolean createRelations);
+
     /** Get a semifinal value from an Ujo object by a chain of keys.
      * If any value (not getLastPartialProperty) is null, then the result is null.
+     * @param ujo base Ujo object
+     * @param create create new instance of UJO object for a {@code null} case. Default value is {@code false}
      */
-    public Ujo getSemifinalValue(UJO ujo);
+    public Ujo getSemifinalValue(UJO ujo, boolean create);
 
     /** Get the first property of the current object. The result is direct property always.
      * @deprecated Uset the {@link #getLastKey()}.
