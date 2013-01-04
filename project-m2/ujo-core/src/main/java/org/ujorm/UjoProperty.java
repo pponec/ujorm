@@ -21,7 +21,7 @@ import org.ujorm.core.annot.Immutable;
 
 /**
  * This interface is a descriptor of the {@link Ujo} attribute. The property contains only property meta-data
- * and therefore the UjoPropertry implementation never contains business data. 
+ * and therefore the UjoPropertry implementation never contains business data.
  * Each instance of the Key must be located in the {@code public static final} field of some Ujo implementation.
  * The Key can't have a serializable feature never, because its instance is the unique for a related java field.
  * An appropriate solution solution for serialization is to use a decorator class KeyRing.

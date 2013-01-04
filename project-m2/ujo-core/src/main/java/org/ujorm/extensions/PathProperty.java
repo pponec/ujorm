@@ -95,7 +95,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         return keys[keys.length - 1];
     }
 
-    /** Get the first property of the current object. The result is direct property always. 
+    /** Get the first property of the current object. The result is direct property always.
      * <br>Use the getLastKey() method.
      */
     @Override
@@ -195,13 +195,13 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @SuppressWarnings("unchecked")
     @Override
-    public VALUE getValue(final UJO ujo) {
+    public VALUE getValue(final UJO ujo) throws ValidationException {
         return of(ujo);
     }
 
     /** {@inheritDoc} */
     @Override
-    final public void setValue(final UJO ujo, final VALUE value) throws ValidationException  {
+    final public void setValue(final UJO ujo, final VALUE value) throws ValidationException {
         setValue(ujo, value, false);
     }
 
@@ -391,7 +391,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
             }
         }
     }
-    
+
     /** Get the last key validator or return the {@code null} value if no validator was assigned */
     public Validator<VALUE> getValidator() {
         return getLastKey().getValidator();

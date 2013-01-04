@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 package org.ujorm;
 
 import org.ujorm.core.KeyRing;
@@ -27,7 +27,7 @@ import org.ujorm.validator.ValidationException;
  * The Key can't have a serializable feature never, because its instance is the unique for a related java field.
  * An appropriate solution solution for serialization is to use a decorator class KeyRing.
  * <br>See a <a href="package-summary.html#UJO">general information</a> about current framework or see some implementations.
- * 
+ *
  * @author Pavel Ponec
  * @see Ujo
  * @opt attributes
@@ -37,7 +37,7 @@ import org.ujorm.validator.ValidationException;
 @Immutable
 @SuppressWarnings("deprecation")
 public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<UJO,VALUE> {
-    
+
     /** Returns a name of Property. */
     public String getName();
 
@@ -46,13 +46,13 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     /** Returns a class of the domain Ujo object. */
     public Class<UJO> getDomainType();
-    
-    /** Returns a domain class of the property. */
-    // public Class<UJO> getDomain(); // TODO
+
+    /** Returns a container of the Key field. */
+    // public Class<?> getContainerType(); // TODO (?)
 
     /**
-     * It is a basic method for setting an appropriate type safe value to an Ujo object. 
-     * <br>The method calls a method 
+     * It is a basic method for setting an appropriate type safe value to an Ujo object.
+     * <br>The method calls a method
      * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
      * always.
      * @param ujo Related Ujo object
@@ -62,12 +62,25 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      */
     public void setValue(UJO ujo, VALUE value) throws ValidationException;
 
-    
+    /**
+     * TODO: Is it really the good idea to extend the interface with this method ?
+     * It is a basic method for setting an appropriate type safe value to an Ujo object.
+     * <br>The method calls a method
+     * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
+     * always.
+     * @param ujo Related Ujo object
+     * @param value A value to assign.
+     * @param createRelations create related UJO objects in case of the composite key
+     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
+     */
+//    public void setValue(UJO ujo, VALUE value, boolean createRelations) throws ValidationException;
+
     /**
      * A shortcut for the method {@link #of(org.ujorm.Ujo)}.
      * @see #of(Ujo)
      */
-    public VALUE getValue(UJO ujo);    
+    public VALUE getValue(UJO ujo);
 
     /**
      * It is a basic method for getting an appropriate type safe value from an Ujo object.
@@ -81,7 +94,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #getValue(org.ujorm.Ujo)
      */
     public VALUE of(UJO ujo);
-    
+
 
 //    /**
 //     * Similar function like getValue(UJO), however in case a null parameter is used so the result value is null and no NullPointerExeption is throwed.
@@ -92,14 +105,14 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 //    public VALUE takeFrom(UJO ujo);
 
     /** Returns a property index or value -1 if the property index is not defined.
-     * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used 
+     * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used
      * <br>for a sorting of Keys in a method <code>UjoManager.readProperties(Class type)</code> .
      * @see org.ujorm.implementation.array.ArrayUjo
      * @see org.ujorm.core.UjoManager#readProperties(Class)
      */
     public int getIndex();
-    
-    /** Method returns a default value for substitution of the <code>null</code> value for the current property. 
+
+    /** Method returns a default value for substitution of the <code>null</code> value for the current property.
      * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
      * @see Ujo#readValue(Key)
      */
@@ -108,7 +121,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     /** Indicates whether a parameter value of the ujo "equal to" this property default value. */
     public boolean isDefault(UJO ujo);
-    
+
     /**
      * Returns true, if the property value equals to a parameter value. The property value can be null.
      *
@@ -134,16 +147,16 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @since 0.81
      */
     public boolean isDirect();
-    
+
     /** Returns true if the property type is a type or subtype of the parameter class. */
     public boolean isTypeOf(Class type);
 
-    /** A flag for an ascending direction of sorting. It is recommended that the default result was true. 
+    /** A flag for an ascending direction of sorting. It is recommended that the default result was true.
      * @since 0.85
      * @see org.ujorm.core.UjoComparator
      */
     public boolean isAscending();
-    
+
     /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
      * @since 0.85
@@ -159,9 +172,9 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see org.ujorm.core.UjoComparator
      */
     public UjoProperty<UJO,VALUE> descending(boolean descending);
-    
+
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
-    public Validator<VALUE> getValidator();    
+    public Validator<VALUE> getValidator();
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
@@ -183,6 +196,6 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 
     /** Returns the name of the Key including the simple domain class. Example: Person.id */
     public String toStringFull();
-    
+
 
 }
