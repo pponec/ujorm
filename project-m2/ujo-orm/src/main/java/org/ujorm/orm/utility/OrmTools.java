@@ -299,7 +299,7 @@ final public class OrmTools {
             idList.add(keys.next());
 
             if (i % limit == 0 || i == count) {
-                query.setCriterion(Criterion.whereIn(pkColumn.getProperty(), idList));
+                query.setCriterion(Criterion.whereIn(pkColumn.getKey(), idList));
                 for (OrmUjo u : query) {
                     map.put(pkColumn.getValue(u), u);
                 }
@@ -328,7 +328,7 @@ final public class OrmTools {
         List<MetaColumn> columns = MetaTable.COLUMNS.getList(query.getTableModel());
         for (MetaColumn col : columns) {
             if (col.isForeignKey()) {
-                loadLazyValuesAsBatch(result, col.getProperty());
+                loadLazyValuesAsBatch(result, col.getKey());
             }
         }
         return result;
@@ -352,10 +352,10 @@ final public class OrmTools {
             if (pKey.getCount()!=1) {
                 throw new IllegalStateException("There supported only objects with a one primary keys");
             }
-            final Criterion c = pKey.getFirstColumn().getProperty().whereIn(primaryKeys);
+            final Criterion c = pKey.getFirstColumn().getKey().whereIn(primaryKeys);
             result = result!=null ? result.or(c) : c;
         }
-        return result!=null ? result : table.getFirstPK().getProperty().forNone();
+        return result!=null ? result : table.getFirstPK().getKey().forNone();
     }
 
 

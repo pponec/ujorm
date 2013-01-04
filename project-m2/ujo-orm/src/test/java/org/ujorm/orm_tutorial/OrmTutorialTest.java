@@ -57,7 +57,6 @@ public class OrmTutorialTest extends TestCase {
 //        }
 //    }
 
-
     /**
      * Test of getItemCount method, of class AbstractPropertyList.
      */

@@ -16,8 +16,6 @@
 
 package org.ujorm.orm_tutorial.sample;
 
-import org.ujorm.orm.dialect.FirebirdDialect;
-import org.ujorm.orm.dialect.DerbyDialect;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,10 +26,13 @@ import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.*;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.orm.dialect.DerbyDialect;
+import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.criterion.Operator.*;
+import static org.ujorm.Checks.*;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -75,6 +76,7 @@ public class SampleORM {
             sample.useSelectItems_5b();
             sample.useSelectItems_6();
             sample.useOptimizedSelect();
+            sample.useFetchLoading();
             sample.useNativeCriterion();
             sample.useReloading();
             sample.useLimitAndOffset();
@@ -283,7 +285,7 @@ public class SampleORM {
         // Some dialects must have got special SQL statements:
         if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
         ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
-            return; 
+            return;
         }
 
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
@@ -315,7 +317,7 @@ public class SampleORM {
         // Some dialects must have got special SQL statements:
         if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
         ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
-            return; 
+            return;
         }
 
         final Long excludedId = -7L;
@@ -442,6 +444,21 @@ public class SampleORM {
             // Other columns have got the default value always:
             assert item.getId() == Item.ID.getDefault();
             assert item.getOrder() == Item.ORDER.getDefault();
+        }
+    }
+
+    /** Fetch column from related tables */
+    public void useFetchLoading() {
+        Query<Item> items = session.createQuery(Item.ID.whereNeq(0L));
+        Key<Item, Date> orderCreated = Item.ORDER.add(Order.CREATED);
+        items.setColumns(true, orderCreated);
+
+        for (Item item : items.list()) {
+            checkNotNull(item.getId()); // the argument 'addPrimaryKey' was true
+            checkNotNull(item.get(orderCreated));
+         // checkNotNull(item.get(Item.ORDER.add(Order.ID))); // TODO FixIT (?)
+            checkTheNull(item.get(Item.NOTE));
+            checkTheNull(item.get(Item.ORDER.add(Order.NOTE))); // Eeach lazy Order has a not-null NOTE!
         }
     }
 
@@ -699,4 +716,5 @@ public class SampleORM {
             session.close();
         }
     }
+
 }

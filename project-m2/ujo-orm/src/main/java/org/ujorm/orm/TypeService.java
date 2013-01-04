@@ -304,7 +304,7 @@ public class TypeService implements ITypeService<Object,Object> {
         }
 
         final Class type = column.getType();
-        Object testValue = column.getProperty().getDefault();
+        Object testValue = column.getKey().getDefault();
         if (testValue != null) {
             // It is OK;
         } else if (type.isEnum()) {
@@ -317,7 +317,7 @@ public class TypeService implements ITypeService<Object,Object> {
 
         // Column type code may not be intializad:
         if (!column.readOnly() && column.getTypeCode()==UNDEFINED) {
-            column.initTypeCode(); 
+            column.initTypeCode();
         }
 
         // Convert the testValue using current TypeService implementation:

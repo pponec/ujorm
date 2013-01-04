@@ -177,7 +177,7 @@ public class OrmHandler {
 
     /** Is the parameter a persistent property? */
     public boolean isPersistent(Key property) {
-        
+
         final boolean resultFalse
         =  property.isTypeOf(List.class)
         || UjoManager.getInstance().isTransientProperty(property)
@@ -292,7 +292,7 @@ public class OrmHandler {
     /** Map a property to the table */
     @SuppressWarnings("unchecked")
     public void addColumnModel(MetaRelation2Many column) {
-        Key property = column.getProperty();
+        Key property = column.getKey();
         MetaRelation2Many oldColumn = findColumnModel(property);
 
         if (oldColumn == null) {
@@ -335,7 +335,7 @@ public class OrmHandler {
     final public MetaRelation2Many findColumnModel(Key pathProperty) {
         return findColumnModel(pathProperty, false);
     }
-    
+
     /** Find a Relation/Column model of the paramemeter property.
      * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
      * @param throwException Throw the IllegalArgument exception of no Model was not found

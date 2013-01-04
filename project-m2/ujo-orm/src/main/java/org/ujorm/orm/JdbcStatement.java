@@ -86,7 +86,7 @@ public class JdbcStatement {
         ps.execute();
     }
 
-    /** Run INSERT, UPDATE or DELETE. 
+    /** Run INSERT, UPDATE or DELETE.
      * @return The row count for SQL Data Manipulation Language (DML) statements
      */
     public int executeUpdate() throws SQLException {
@@ -122,7 +122,7 @@ public class JdbcStatement {
     public void assignValues(OrmUjo table, List<MetaColumn> columns) throws SQLException {
         for (MetaColumn column : columns) {
             if (column.isForeignKey()) {
-                Key property = column.getProperty();
+                Key property = column.getKey();
                 Object value = table!=null ? property.of(table) : null ;
                 assignValues((OrmUjo) value, column.getForeignColumns());
             } else if (column.isColumn()) {
@@ -215,7 +215,7 @@ public class JdbcStatement {
     @SuppressWarnings("unchecked")
     public void assignValue(final OrmUjo table, final MetaColumn column) throws SQLException {
 
-        final Key property = column.getProperty();
+        final Key property = column.getKey();
         final Object value = table!=null ? property.of(table) : null ;
 
         assignValue(column, value, table);
@@ -230,7 +230,7 @@ public class JdbcStatement {
         , final OrmUjo bo
         ) throws SQLException {
 
-        final Key property = column.getProperty();
+        final Key property = column.getKey();
 
         if (logValues) {
             if (bo != null) {
@@ -250,7 +250,7 @@ public class JdbcStatement {
                 column.getConverter().setValue(column, ps, value, parameterPointer);
             }
         } catch (Throwable e) {
-            String textValue = bo!=null 
+            String textValue = bo!=null
                 ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)
                 : UjoManager.getInstance().encodeValue(value, false)
                 ;
@@ -274,10 +274,10 @@ public class JdbcStatement {
         Object value = null;
 
         for (MetaColumn metaParam : MetaProcedure.PARAMETERS.getList(procedure)) {
-            final Key property = metaParam.getProperty();
+            final Key property = metaParam.getKey();
 
             if (!property.isTypeOf(Void.class)) try {
-                
+
                 ++parameterPointer;
                 int sqlType = MetaColumn.DB_TYPE.of(metaParam).getSqlType();
 
@@ -319,7 +319,7 @@ public class JdbcStatement {
                 if (procedure.isOutput(c)) {
                     final Object value = c.getConverter().getValue(c, ps, ++i);
                     c.setValue(bo, value);
-                } 
+                }
                 else if (procedure.isInput(c)) {
                     ++i;
                 }
@@ -361,5 +361,5 @@ public class JdbcStatement {
             return super.toString();
         }
     }
-    
+
 }

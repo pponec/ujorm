@@ -73,7 +73,7 @@ final public class MetaPKey extends AbstractMetaModel {
         if (count==1) {
 
             MetaColumn column = COLUMNS.getItem(this, 0);
-            Key property = column.getProperty();
+            Key property = column.getKey();
             if (property.of(bo)!=null) {
                 return false;
             }
@@ -92,7 +92,7 @@ final public class MetaPKey extends AbstractMetaModel {
         } else {
             for (int i = 0; i < count; i++) {
                 final MetaColumn column = COLUMNS.getItem(this, i);
-                final Key property = column.getProperty();
+                final Key property = column.getKey();
                 if (property.of(bo) == null) {
                     String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
                     throw new IllegalArgumentException(msg);

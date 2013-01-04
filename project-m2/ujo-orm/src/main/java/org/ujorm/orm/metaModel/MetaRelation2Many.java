@@ -59,9 +59,9 @@ public class MetaRelation2Many extends AbstractMetaModel {
 
     public MetaRelation2Many() {
     }
-    
+
     public MetaRelation2Many(MetaTable table, Key tableProperty, MetaRelation2Many param) {
-        
+
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
@@ -80,7 +80,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         changeDefault(this, NAME, tableProperty.getName());
     }
 
-    /** It is a DB column (either a value of a foreign key), 
+    /** It is a DB column (either a value of a foreign key),
      * not a relation to many.
      */
     public boolean isColumn() {
@@ -93,13 +93,18 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns a column property */
-    final public Key getProperty() {
+    final public Key getKey() {
         return TABLE_PROPERTY.of(this);
+    }
+
+    /** Is it the direct Key? */
+    final public boolean isDirectKey() {
+        return true;
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
     final public boolean isTypeOf(Class type) {
-        return getProperty().isTypeOf(type);
+        return getKey().isTypeOf(type);
     }
 
     final public MetaTable getTable() {
@@ -115,7 +120,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
     /** Get property value */
     @SuppressWarnings("unchecked")
     final public Object getValue(Ujo ujo) {
-        final Object result = getProperty().of(ujo);
+        final Object result = getKey().of(ujo);
         return result;
     }
 
@@ -125,10 +130,10 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return result;
     }
 
-    /** Column name. */
+    /** Property name */
     @Override
     public String toString() {
-        return NAME.of(this);
+        return TABLE_PROPERTY.of(this).toStringFull();
     }
 
 }

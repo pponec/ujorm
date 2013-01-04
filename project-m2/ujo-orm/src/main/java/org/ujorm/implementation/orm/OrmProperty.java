@@ -61,13 +61,14 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                 result = mySession.loadInternal(this, ((ForeignKey) result).getValue(), true);
                 ujo.writeValue(this, result);
             } else if (result != null
-                    && mySession != null
-                    && mySession != ((OrmUjo) result).readSession()) {
+                && mySession != null
+                && mySession != ((OrmUjo) result).readSession()
+            ) {
                 // Write the current session to a related object:
                 ((OrmUjo) result).writeSession(mySession);
             }
         }
-        return result != null 
+        return result != null
                 ? (VALUE) result
                 : getDefault();
     }
