@@ -16,6 +16,7 @@
 package org.ujorm.implementation.orm;
 
 import org.ujorm.Ujo;
+import org.ujorm.Validator;
 import org.ujorm.extensions.Property;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
@@ -31,8 +32,8 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
         super(index);
     }
 
-    public OrmProperty(int index, String name, VALUE defaultValue) {
-        super(index);
+    public OrmProperty(int index, String name, VALUE defaultValue, Validator<VALUE> validator) {
+        super(index, validator);
         init(name, null, null, defaultValue, index, false);
     }
 

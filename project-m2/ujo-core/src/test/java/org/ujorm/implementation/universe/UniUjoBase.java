@@ -13,6 +13,7 @@ import java.util.Date;
 import org.ujorm.*;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoPropertyListImpl;
+import static org.ujorm.Validator.Build.*;
 
 /**
  * An UnifiedDataObject Imlpementation
@@ -21,17 +22,17 @@ import org.ujorm.core.UjoPropertyListImpl;
 public class UniUjoBase implements Ujo {
 
     /** Factory */
-    private static final KeyFactory<UniUjoBase> factory
+    private static final KeyFactory<UniUjoBase> f
             = KeyFactory.CamelBuilder.get(UniUjoBase.class);
     
-    public static final Key<UniUjoBase,Long>      PRO_P0 = factory.newKey();
-    public static final Key<UniUjoBase,Integer>   PRO_P1 = factory.newKey();
-    public static final Key<UniUjoBase,String>    PRO_P2 = factory.newKey();
-    public static final Key<UniUjoBase,Date>      PRO_P3 = factory.newKey();
-    public static final ListKey<UniUjoBase,Float> PRO_P4 = factory.newListKey();
-
+    public static final Key<UniUjoBase,Long>      PRO_P0 = f.newKey(notNull());
+    public static final Key<UniUjoBase,Integer>   PRO_P1 = f.newKey(between(0, 10));
+    public static final Key<UniUjoBase,String>    PRO_P2 = f.newKey(regexp("T.*T"));
+    public static final Key<UniUjoBase,Date>      PRO_P3 = f.newKey(past());
+    public static final ListKey<UniUjoBase,Float> PRO_P4 = f.newListKey();
+    
     // Lock the Key factory
-    static { factory.lock(); }
+    static { f.lock(); }
 
     /** Data */
     protected Object[] data;
@@ -39,7 +40,7 @@ public class UniUjoBase implements Ujo {
     /** Return all direct Keys (an implementation from hhe Ujo API) */
     @Override
     public KeyList<?> readKeys() {
-        return factory.getKeys();
+        return f.getKeys();
     }
 
     @Override

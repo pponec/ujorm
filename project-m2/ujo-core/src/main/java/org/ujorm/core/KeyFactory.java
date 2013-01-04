@@ -28,9 +28,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.Ujo;
+import org.ujorm.Validator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.AbstractCollectionProperty;
 import org.ujorm.extensions.ListProperty;
@@ -323,27 +324,47 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Create new Key */
     public <T> Key<UJO, T> newKey() {
-        return createKey(null, null);
+        return createKey(null, null, null);
     }
 
     /** Create new Key */
     public <T> Key<UJO, T> newKey(String name) {
-        return createKey(name, null);
+        return createKey(name, null, null);
     }
 
     /** Create new Key with a default value */
     public <T> Key<UJO, T> newKeyDefault(T defaultValue) {
-        return createKey(null, defaultValue);
+        return createKey(null, defaultValue, null);
+    }
+
+    /** Create new Key */
+    public <T> Key<UJO, T> newKey(Validator<T> validator) {
+        return createKey(null, null, validator);
     }
 
     /** Create new Key */
     public <T> Key<UJO, T> newKey(String name, T defaultValue) {
-        return createKey(name, defaultValue);
+        return createKey(name, defaultValue, null);
+    }
+
+    /** Create new Key */
+    public <T> Key<UJO, T> newKey(String name, Validator<T> validator) {
+        return createKey(name, null, validator);
+    }
+
+    /** Create new Key with a default value */
+    public <T> Key<UJO, T> newKeyDefault(T defaultValue, Validator<T> validator) {
+        return createKey(null, defaultValue, validator);
+    }
+
+    /** Create new Key */
+    public <T> Key<UJO, T> newKey(String name, T defaultValue, Validator<T> validator) {
+        return createKey(name, defaultValue, validator);
     }
 
     /** Create new Key for a value type class */
     public <T> Key<UJO, T> newClassKey(String name, Class<?> defaultClassValue) {
-        return createKey(name, (T) defaultClassValue);
+        return createKey(name, (T) defaultClassValue, null);
     }
 
     /** Add new Key for a value type class, index must be undefied */
@@ -356,8 +377,8 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Common protected factory method */
-    protected <T> Key<UJO, T> createKey(String name, T defaultValue) {
-        final Property<UJO, T> p = Property.newInstance(name, null, defaultValue, Property.UNDEFINED_INDEX, false);
+    protected <T> Key<UJO, T> createKey(String name, T defaultValue, Validator<T> validator) {
+        final Property<UJO, T> p = Property.newInstance(name, null, defaultValue, Property.UNDEFINED_INDEX, validator, false);
         addKey(p);
         return p;
     }

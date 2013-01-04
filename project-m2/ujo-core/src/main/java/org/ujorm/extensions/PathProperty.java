@@ -26,9 +26,11 @@ import org.ujorm.CompositeProperty;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
+import org.ujorm.Validator;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.validator.ValidationException;
 
 /**
  * A <strong>PathProperty</strong> class is an composite of a Key objects.
@@ -93,8 +95,11 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         return keys[keys.length - 1];
     }
 
-    /** Get the first property of the current object. The result is direct property always. */
+    /** Get the first property of the current object. The result is direct property always. 
+     * <br>Use the getLastKey() method.
+     */
     @Override
+    @Deprecated
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty() {
         return getLastKey();
     }
@@ -102,7 +107,6 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     @Override
-    @Deprecated
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey() {
         Key result = keys[keys.length - 1];
         return result.isDirect()
@@ -195,13 +199,14 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         return of(ujo);
     }
 
+    /** {@inheritDoc} */
     @Override
-    final public void setValue(final UJO ujo, final VALUE value) {
+    final public void setValue(final UJO ujo, final VALUE value) throws ValidationException  {
         setValue(ujo, value, false);
     }
 
     @Override
-    public void setValue(final UJO ujo, final VALUE value, boolean createRelations) {
+    public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException {
         final Ujo u = getSemifinalValue(ujo, createRelations);
         getLastPartialProperty().setValue(u, value);
     }
@@ -385,6 +390,11 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
                 ((PathProperty)p).exportKeys(result);
             }
         }
+    }
+    
+    /** Get the last key validator or return the {@code null} value if no validator was assigned */
+    public Validator<VALUE> getValidator() {
+        return getLastKey().getValidator();
     }
 
     /** Create new composite (indirect) instance.

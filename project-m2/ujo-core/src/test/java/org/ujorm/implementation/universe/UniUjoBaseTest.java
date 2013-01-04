@@ -58,7 +58,7 @@ public class UniUjoBaseTest extends MyTestCase {
         Integer o1 = new Integer(1);
         String  o2 ="TEST";
         Date    o3 = new Date();
-        Float   o4 = new Float(123456.456);
+        Float   o4 = new Float(123456.456); 
         
         UniUjoBase ujb = new UniUjoBase();
         
