@@ -58,20 +58,20 @@ abstract public class AbstractMetaModel extends AbstractUjo {
         }
 
         this.readOnly = true; // <<<<<< LOCK THE OBJECT !!!
-        
-        if (recurse) for (Key p : readKeys()) {
 
-            Object value = p.of(this);
-            if (value instanceof AbstractMetaModel) {
-                ((AbstractMetaModel) value).setReadOnly(recurse);
-            }
+        if (recurse) {
+            for (Key p : readKeys()) {
 
-            else if (p instanceof ListKey) {
-               if ( AbstractMetaModel.class.isAssignableFrom( ((ListKey)p).getItemType())) {
-                    for (AbstractMetaModel m : ((ListKey<AbstractMetaModel,AbstractMetaModel>)p).getList(this) ) {
-                        m.setReadOnly(recurse);
+                final Object value = p.of(this);
+                if (value instanceof AbstractMetaModel) {
+                    ((AbstractMetaModel) value).setReadOnly(recurse);
+                } else if (p instanceof ListKey) {
+                    if (AbstractMetaModel.class.isAssignableFrom(((ListKey) p).getItemType())) {
+                        for (AbstractMetaModel m : ((ListKey<AbstractMetaModel, AbstractMetaModel>) p).getList(this)) {
+                            m.setReadOnly(recurse);
+                        }
                     }
-               }
+                }
             }
         }
     }

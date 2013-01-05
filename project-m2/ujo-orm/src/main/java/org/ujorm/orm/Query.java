@@ -382,8 +382,13 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (mc==null) {
             throw new IllegalArgumentException("Column " + column.toStringFull() + " was not foud in the meta-model");
         }
-        if (!columns.contains(mc)) {
-            columns.add(column.isDirect() ? mc : new ColumnWrapperImpl(mc, column));
+        final ColumnWrapper wColumn = column.isDirect() ? mc : new ColumnWrapperImpl(mc, column);
+        if (!columns.contains(wColumn)) {
+            if (columns.getClass()!=ArrayList.class) {
+                // Original column list is an immutable object originaly:
+                columns = new ArrayList<ColumnWrapper>(columns);
+            }
+            columns.add(wColumn);
         }
         return this;
     }
