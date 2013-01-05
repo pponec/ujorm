@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujorm.core;
 
 import java.io.BufferedReader;
@@ -47,13 +46,10 @@ final public class RingBuffer implements CharSequence {
 
     /** The UTF-8 Charset */
     public static final Charset UTF8 = Charset.forName("UTF-8");
-
     /** The string content (buffer)*/
     private final char[] b;
-
     /** Length */
     public final int length;
-
     /** Start of the string */
     private int pos = 0;
 
@@ -64,8 +60,8 @@ final public class RingBuffer implements CharSequence {
     }
 
     final public void add(char c) {
-       b[pos] = c;
-       pos = ++pos % this.length;
+        b[pos] = c;
+        pos = ++pos % this.length;
     }
 
     /** The equals test */
@@ -74,35 +70,40 @@ final public class RingBuffer implements CharSequence {
     }
 
     /** The equals test */
+    @SuppressWarnings("empty-statement")
     public boolean equals(char[] s) {
-       int i;
-       for(i=0; i<this.length && s[i]==b[(pos + i) % length]; i++) {}
-       return (i==length);
+        int i;
+        for (i = 0; i < this.length && s[i] == b[(pos + i) % length]; i++);
+        return (i == length);
     }
 
     /** Returns a character from position 'i' */
     @Override
     public char charAt(int i) {
-       return b[(pos + i) % length];
+        return b[(pos + i) % length];
     }
 
     /** Export to the String. */
     @Override
     public String toString() {
-       char[] t = new char[length];
-       for(int i=0; i<this.length; i++) t[i] = b[(pos + i) % length];
-       return (new String(t));
+        char[] t = new char[length];
+        for (int i = 0; i < this.length; i++) {
+            t[i] = b[(pos + i) % length];
+        }
+        return (new String(t));
     }
 
     /** Export to the String */
     public String substring(int begIndex, int endIndex) {
-       int i;
-       if (endIndex<=begIndex) return "" ;
-       char[] t = new char[endIndex - begIndex];
-       for(i=begIndex; i<endIndex; i++) {
-           t[i-begIndex] = b[(pos + i) % length];
-       }
-       return (new String(t));
+        int i;
+        if (endIndex <= begIndex) {
+            return "";
+        }
+        char[] t = new char[endIndex - begIndex];
+        for (i = begIndex; i < endIndex; i++) {
+            t[i - begIndex] = b[(pos + i) % length];
+        }
+        return new String(t);
     }
 
     /** Length of the String */
@@ -118,7 +119,7 @@ final public class RingBuffer implements CharSequence {
     }
 
     // ============ STATIC METHODS ============
-
+    
     /**
      * Find a word betveen beg and end text from current cursor and TRIM the result.
      * The method is designed for a very large data source (a character stream).
@@ -138,6 +139,7 @@ final public class RingBuffer implements CharSequence {
     public static String findWord(final Reader reader, final String beg, final String end) throws IOException {
         return findWordNoTrim(reader, beg, end).trim();
     }
+
     /**
      * Find a word betveen beg and end text from the source start and trim the result.
      * The method is designed for a very large data source (a character stream).
@@ -172,7 +174,6 @@ final public class RingBuffer implements CharSequence {
         return findWordNoTrim(createReader(source), beg, end);
     }
 
-
     /**
      * Find a word betveen beg and end text from current cursor.
      * The method is designed for a very large data source (a character stream).
@@ -184,7 +185,7 @@ final public class RingBuffer implements CharSequence {
      */
     public static String findWordNoTrim(final Reader reader, final String beg, final String end) throws IOException {
         final StringBuilder result = new StringBuilder();
-        boolean secondState = beg==null || beg.length()==0;
+        boolean secondState = beg == null || beg.length() == 0;
         char[] border = (secondState ? end : beg).toCharArray();
         RingBuffer ring = new RingBuffer(border.length);
 
@@ -241,5 +242,4 @@ final public class RingBuffer implements CharSequence {
         final InputStreamReader reader = new InputStreamReader(url.openStream(), charset);
         return reader;
     }
-
 }
