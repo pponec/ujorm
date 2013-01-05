@@ -19,8 +19,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 
 /**

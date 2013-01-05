@@ -35,7 +35,11 @@ import org.ujorm.orm.metaModel.MetaColumn;
  */
 final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
 
+    /** Base query */
     private final Query query;
+    /** Query columns */
+    private final ColumnWrapper[] queryColumns;
+    /** Result set */
     private final ResultSet rs;
     /** If the statemtnt is null then is a sign that it is closed. */
     private PreparedStatement statement;
@@ -54,6 +58,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
     public ResultSetIterator(Query query) throws IllegalStateException {
         try {
             this.query = query;
+            this.queryColumns = query.getColumnArray();
             this.statement = query.getStatement();
             this.rs = statement.executeQuery();
             this.view = query.getTableModel().isSelectModel();
@@ -110,7 +115,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
             int colCount = query.getColumns().size();
 
             for (int i=0; i<colCount; i++) {
-                final ColumnWrapper colWrap = query.getColumn(i);
+                final ColumnWrapper colWrap = queryColumns[i];
                 final MetaColumn column = colWrap.getModel();
                 final int iCol = view ? rs.findColumn(MetaColumn.NAME.of(column)) : (i+1);
                 final Object value = column.getConverter().getValue(column, rs, iCol);
