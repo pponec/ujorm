@@ -123,7 +123,20 @@ public class ValidatorTest extends MyTestCase {
         assertAssign(false, ValidBo.MAX_10, 30.0001);
         assertAssign(true , ValidBo.MAX_10, null);
         //
-        assertAssign(true , ValidBo.MIN_10, 10.0);
+        assertAssign(true , ValidBo.FORBIDDEN_1_3, 0);
+        assertAssign(false, ValidBo.FORBIDDEN_1_3, 1);
+        assertAssign(true , ValidBo.FORBIDDEN_1_3, 2);
+        assertAssign(false, ValidBo.FORBIDDEN_1_3, 3);
+        assertAssign(true , ValidBo.FORBIDDEN_1_3, 4);
+        assertAssign(true , ValidBo.FORBIDDEN_1_3, null);
+        //
+        assertAssign(false, ValidBo.REQUIRED_1_3, 0);
+        assertAssign(true , ValidBo.REQUIRED_1_3, 1);
+        assertAssign(false, ValidBo.REQUIRED_1_3, 2);
+        assertAssign(true , ValidBo.REQUIRED_1_3, 3);
+        assertAssign(false, ValidBo.REQUIRED_1_3, 4);
+        assertAssign(true , ValidBo.REQUIRED_1_3, null);
+        //
         assertAssign(true , ValidBo.MIN_10, 20.0);
         assertAssign(false, ValidBo.MIN_10, 9.9);
         assertAssign(false, ValidBo.MIN_10, 0.1);

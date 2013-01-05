@@ -62,9 +62,7 @@ public class ComparableValidator<VALUE extends Comparable> extends AbstractValid
                     , getLocalizationKey()
                     , getDefaultTemplate()
                     , service.map
-                    ( INPUT, input
-                    , KEY, key
-                    , LIMIT, limit
+                    ( LIMIT, limit
                     , MAX, max
                     ))
                     : null;
