@@ -519,7 +519,7 @@ On the second example is an extended solution.
 
 The most of Ujorm Validators allows the <strong>null</strong> value,
 however there is possible to join one validator with another one, see the key name "CASH" for example how to do it.
-There are three methods to create a non-null validator: Build.notNull(), Bulid.notEmpty() and Build.notBlank().
+There are four methods to create a non-null validator: Build.notNull(), Bulid.notEmpty(), Build.notBlank() and Build.readOnly().
 
 <h4 id="userValidator">Create a user validator</h4>
 The simple way to make your own validator is to create a child of the AbstractValidator and overwrite the method: validate(...).

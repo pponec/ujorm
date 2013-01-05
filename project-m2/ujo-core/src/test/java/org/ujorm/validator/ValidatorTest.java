@@ -207,7 +207,7 @@ public class ValidatorTest extends MyTestCase {
         assertAssign(true , ValidBo.MAIL, null);
         //
         assertAssign(false, ValidBo.READ_ONLY, "text");
-        assertAssign(false, ValidBo.READ_ONLY, null);
+        assertAssign(false, ValidBo.READ_ONLY, null);  // !!!
         assertAssign(true , ValidBo.ALL_ALLOWED, "text");
         assertAssign(true , ValidBo.ALL_ALLOWED, null);
         //
