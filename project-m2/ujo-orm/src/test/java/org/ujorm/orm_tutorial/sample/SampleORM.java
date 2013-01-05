@@ -31,8 +31,8 @@ import org.ujorm.orm.dialect.FirebirdDialect;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
-import static org.ujorm.criterion.Operator.*;
 import static org.ujorm.Checks.*;
+import static org.ujorm.criterion.Operator.*;
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -451,14 +451,27 @@ public class SampleORM {
     public void useFetchLoading() {
         Query<Item> items = session.createQuery(Item.ID.whereNeq(0L));
         Key<Item, Date> orderCreated = Item.ORDER.add(Order.CREATED);
-        items.setColumns(true, orderCreated);
 
+        // Fetch the Order's CREATED column (and the primary key):
+        items.setColumns(true, orderCreated);
         for (Item item : items.list()) {
-            checkNotNull(item.getId()); // the argument 'addPrimaryKey' was true
-            checkNotNull(item.get(orderCreated));
-         // checkNotNull(item.get(Item.ORDER.add(Order.ID))); // TODO FixIT (?)
-            checkTheNull(item.get(Item.NOTE));
-            checkTheNull(item.get(Item.ORDER.add(Order.NOTE))); // Eeach lazy Order has a not-null NOTE!
+            expectNull(false, item.getId()); // due the request: addPrimaryKey
+            expectNull(false, item.get(orderCreated));
+            expectNull(false, item.get(Item.ORDER));
+         // checkNull(false , item.get(Item.ORDER.add(Order.ID))); // TODO FixIT (?)
+            expectNull(true , item.get(Item.NOTE));
+            expectNull(true , item.get(Item.ORDER.add(Order.NOTE))); // Eeach lazy Order has a not-null NOTE!
+        }
+
+        // Fetch all the Order columns:
+        items.setColumns(true, Item.ORDER);
+        for (Item item : items.list()) {
+            expectNull(false, item.getId()); // due the request: addPrimaryKey
+            expectNull(true , item.get(Item.NOTE));
+            expectNull(false, item.get(Item.ORDER));
+            expectNull(false, item.get(orderCreated));
+            expectNull(false, item.get(Item.ORDER.add(Order.ID)));
+            expectNull(false, item.get(Item.ORDER.add(Order.NOTE)));
         }
     }
 

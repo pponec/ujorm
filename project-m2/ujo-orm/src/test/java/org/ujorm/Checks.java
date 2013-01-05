@@ -24,38 +24,24 @@ public final class Checks {
     /**
      * Check the {@code not-null} value
      */
-    public static <T extends Object> void checkNotNull(T t) throws IllegalArgumentException {
-        checkNotNull(t, null);
-    }
-
-    /**
-     * Check the {@code not-null} value
-     */
-    public static <T extends Object> void checkNotNull(T t, String message, Object... args) throws IllegalArgumentException {
-        if (t == null) {
-            if (message == null || message.isEmpty()) {
-                message = "Argument must be not null";
-            }
-            throw new IllegalArgumentException(String.format(message, args));
-        }
+    public static <T extends Object> void expectNull(boolean expectedNull, T t) throws IllegalArgumentException {
+        expectNull(expectedNull, t, null);
     }
 
     /**
      * Check the {@code null} value
      */
-    public static <T extends Object> void checkTheNull(T t) throws IllegalArgumentException {
-        checkNull(t, null);
-    }
-
-    /**
-     * Check the {@code null} value
-     */
-    public static <T extends Object> void checkNull(T t, String message, Object... args) throws IllegalArgumentException {
-        if (t != null) {
+    public static <T extends Object> void expectNull(boolean expectedNull, T t, String message, Object... args) throws IllegalArgumentException {
+        boolean ok = (t == null) == expectedNull;
+        if (!ok) {
             if (message == null || message.isEmpty()) {
-                message = "Argument must be null but the value is: " + t;
+                message = expectedNull
+                        ? ("Argument must be null but the value is: " + t)
+                        : ("Argument must be not null")
+                        ;
             }
             throw new IllegalArgumentException(String.format(message, args));
         }
     }
+
 }

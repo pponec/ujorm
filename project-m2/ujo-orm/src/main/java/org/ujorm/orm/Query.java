@@ -40,12 +40,21 @@ import org.ujorm.orm.utility.OrmTools;
  */
 public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
+    /** The base table */
     final private MetaTable table;
-    private List<ColumnWrapper> columns;
+    /** Modified columns, the default value is the {@code null}.
+     * @see #getDefaultColumns()
+     */
+    private ArrayList<ColumnWrapper> columns;
+    /** Database session */
     private Session session;
+    /** Data constraint */
     private Criterion<UJO> criterion;
+    /** Select distinct */
     private boolean distinct;
+    /** An internal decoder */
     private CriterionDecoder decoder;
+    /** An internal info */
     private String statementInfo;
 
     /** A list of keys to sorting */
@@ -69,7 +78,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      */
     public Query(final MetaTable table, final Criterion<UJO> criterion, final Session session) {
         this.table = table;
-        this.columns = (List<ColumnWrapper>) (Object) MetaTable.COLUMNS.getList(table);
+        this.columns = null;
         this.criterion = criterion;
         this.session = session;
 
@@ -166,7 +175,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     public Query<UJO> setCriterion(Criterion<UJO> criterion) {
         this.criterion = criterion != null
             ? criterion
-            : ((Criterion<UJO>) (Object) Criterion.where(true))
+            : ((Criterion<UJO>) (Criterion) Criterion.where(true))
             ;
         clearDecoder();
         return this;
@@ -189,7 +198,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                     relations.add(key);
                 }
             }
-            for (ColumnWrapper column : columns) {
+            for (ColumnWrapper column : getColumns()) {
                 if (!column.isDirectKey()) {
                     relations.add(column.getKey());
                 }
@@ -220,14 +229,25 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return table;
     }
 
-    /** Get Column List */
+    /** Get Column Collection */
     public List<ColumnWrapper> getColumns() {
-        return columns;
+        return columns!=null
+                ? columns
+                : getDefaultColumns();
     }
 
-    /** Get Column List */
-    public ColumnWrapper getColumn(int index) {
-        return columns.get(index);
+    /** Returns all direct columns of the base table. */
+    protected List<ColumnWrapper> getDefaultColumns() {
+        return (List<ColumnWrapper>) (List) MetaTable.COLUMNS.getList(table);
+    }
+
+    /** Create a new column List. */
+    public ColumnWrapper[] getColumnArray() {
+        final Collection<ColumnWrapper> resColumns = getColumns();
+        final ColumnWrapper[] result = resColumns.toArray(new ColumnWrapper[resColumns.size()]);
+
+        // TODO: move the primary keys of the relations to the end.
+        return result;
     }
 
     /** Create a new iterator by the query. The result iterator can be used
@@ -378,18 +398,16 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
     public Query<UJO> addColumn(Key<UJO,?> column) throws IllegalArgumentException {
+        clearDecoder();
         final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(getLastProperty(column));
         if (mc==null) {
             throw new IllegalArgumentException("Column " + column.toStringFull() + " was not foud in the meta-model");
         }
         final ColumnWrapper wColumn = column.isDirect() ? mc : new ColumnWrapperImpl(mc, column);
-        if (!columns.contains(wColumn)) {
-            if (columns.getClass()!=ArrayList.class) {
-                // Original column list is an immutable object originaly:
-                columns = new ArrayList<ColumnWrapper>(columns);
-            }
-            columns.add(wColumn);
+        if (columns==null) {
+            columns = new ArrayList<ColumnWrapper>(getDefaultColumns());
         }
+        addMissingColumn(wColumn, true);
         return this;
     }
 
@@ -399,32 +417,56 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
     @SuppressWarnings("unchecked")
-    public Query<UJO> setColumn(Key<UJO,?> column) throws IllegalArgumentException {
-        this.columns = new ArrayList<ColumnWrapper>();
-        return addColumn(column);
+    public Query<UJO> setColumn(Key<UJO, ?> column) throws IllegalArgumentException {
+        return setColumns(false, column);
     }
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
     * <br/>WARNING: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
-    * @param columns A Property list to select. A composite Property is allowed however only the first item will be used.
+    * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
     @SuppressWarnings("unchecked")
     public final Query<UJO> setColumns(boolean addPrimaryKey, Key... columns)  throws IllegalArgumentException {
-        this.columns = new ArrayList<ColumnWrapper>(columns.length);
+        clearDecoder();
+        this.columns = new ArrayList<ColumnWrapper>(columns.length + 3);
         final OrmHandler handler = getHandler();
         for (Key column : columns) {
             final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(column), true);
-            this.columns.add(column.isDirect() ? mc : new ColumnWrapperImpl(mc, column));
+            final ColumnWrapper cw = column.isDirect() ? mc : new ColumnWrapperImpl(mc, column);
+            addMissingColumn(cw, true);
         }
-        if (addPrimaryKey
-        && !this.columns.contains(table.getFirstPK())) {
-            this.columns.add(table.getFirstPK());
+        if (addPrimaryKey) {
+            addMissingColumn(table.getFirstPK(), false);
         }
         return this;
+    }
+
+    /** Add a missing column. The method is for an internal use.
+     * @param column Add the column for case it is missing in the column list
+     * @param addChilds Add all childs of the <strong>foreign key</strong>.
+     */
+    protected void addMissingColumn(ColumnWrapper column, boolean addChilds) {
+        final int hashCode = column.hashCode();
+        for (final ColumnWrapper c : columns) {
+            if (c.hashCode()==hashCode && column.equals(c)) {
+                return; // The same column is assigned
+            }
+        }
+        columns.add(column);
+        if (addChilds) {
+            final MetaColumn model = column.getModel();
+            if (model.isForeignKey()) {
+                for (ColumnWrapper columnWrapper : model.getForeignTable().getColumns()) {
+                    final Key myKey = column.getKey().add(columnWrapper.getKey());
+                    final ColumnWrapper cw = new ColumnWrapperImpl(columnWrapper.getModel(), myKey);
+                    addMissingColumn(column, false);
+                }
+            }
+        }
     }
 
     /** Only direct keys are supported */

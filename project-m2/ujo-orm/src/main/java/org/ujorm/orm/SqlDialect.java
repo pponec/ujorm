@@ -24,6 +24,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -141,7 +142,7 @@ abstract public class SqlDialect {
         final String alias = table.getAlias();
         if (isFilled(alias)) {
             out.append(' ');
-            printQuotedName(alias, out);            
+            printQuotedName(alias, out);
         }
     }
 
@@ -575,7 +576,7 @@ abstract public class SqlDialect {
      * @param out Table columns output.
      * @throws java.io.IOException
      */
-    public void printTableColumns(List<? extends ColumnWrapper> columns, Appendable values, Appendable out) throws IOException {
+    public void printTableColumns(Collection<? extends ColumnWrapper> columns, Appendable values, Appendable out) throws IOException {
         String separator = "";
         boolean select = values==null; // SELECT
         for (ColumnWrapper wColumn : columns) {
@@ -619,7 +620,7 @@ abstract public class SqlDialect {
         Key property = crit.getLeftNode();
         Object right = crit.getRightNode();
         MetaColumn column = (MetaColumn) ormHandler.findColumnModel(property);
-        
+
         if (right==null ) {
             switch (operator) {
                 case EQ:
@@ -675,7 +676,7 @@ abstract public class SqlDialect {
         }
         return null;
     }
-    
+
     /** Returns quoted column name including the alias table */
     protected String getAliasColumnName(MetaColumn column) throws IOException {
         final String aliasName = column.getAliasName();
@@ -1136,5 +1137,5 @@ abstract public class SqlDialect {
         printQuotedNameAlways(name, result);
         return result.toString();
     }
-    
+
 }

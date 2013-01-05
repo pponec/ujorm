@@ -52,7 +52,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
      */
     @SuppressWarnings("unchecked")
     public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {
-        super((Class<UjoIterator<ITEM>>) (Object) UjoIterator.class);
+        super((Class<UjoIterator<ITEM>>) (Class) UjoIterator.class);
         initItemType(itemType);
         init(name, null, null, null, index, lock);
     }
