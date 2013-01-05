@@ -60,14 +60,14 @@ public class ValidatorFactory {
     }
 
     /** Check the not {@code null} and not empty value type of String. Method <strong>is not</strong> type save!
-     * @see EmptyStringValidator
+     * @see NotEmptyValidator
      */
     public static Validator notEmpty() {
         return NOT_EMPTY;
     }
 
     /** Input value is valid if the trimmed String length is great than zero. Method <strong>is not</strong> type save!
-     * @see EmptyStringValidator
+     * @see NotEmptyValidator
      */
     public static Validator notBlank() {
         return NOT_BLANK;
@@ -75,8 +75,8 @@ public class ValidatorFactory {
 
     /** Not null and not empty. The method is type safe!
      * @param type Argument type can be the CharSequence or the Collection
-     * @see EmptyStringValidator
-     * @see EmptyCollectionValidator
+     * @see NotEmptyValidator
+     * @see NotEmptyCollectionValidator
      */
     public static <T> Validator<T> notEmpty(Class<T> type) {
         if (CharSequence.class.isAssignableFrom(type)) {
@@ -97,24 +97,38 @@ public class ValidatorFactory {
     }
 
     /** Value from min (inxlusive) to max (inxlusive)
-     * @see BetweenValidator
+     * @see RangeValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> range(VALUE min, VALUE max) {
         return new RangeValidator(min, max);
     }
 
     /** Value from min (inclusive)
-     * @see NotNullValidator
+     * @see ComparableValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> min(VALUE min) {
         return new ComparableValidator(min, false);
     }
 
     /** Value from to max (inclusive)
-     * @see NotNullValidator
+     * @see ComparableValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> max(VALUE max) {
         return new ComparableValidator(max, true);
+    }
+
+    /** Validator compares an input value with a set of constants by the hashCode() and equals() methods.
+     * @see ConstantsValidator
+     */
+    public static <VALUE> Validator<VALUE> required(VALUE... requiredSet) {
+        return new ConstantsValidator(false, requiredSet);
+    }
+
+    /** Validator compares an input value with a set of constants by the hashCode() and equals() methods.
+     * @see ConstantsValidator
+     */
+    public static <VALUE> Validator<VALUE> forbidden(VALUE... forbiddenSet) {
+        return new ConstantsValidator<VALUE>(true, forbiddenSet);
     }
 
     /** Match the input value to the simple email pattern.

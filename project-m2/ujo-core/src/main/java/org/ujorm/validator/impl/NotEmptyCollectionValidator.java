@@ -22,7 +22,7 @@ import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.ValidationError;
 
 /**
- * Not Null alidator
+ * Not empty Collection validator
  * @author Pavel Ponec
  */
 public class NotEmptyCollectionValidator<VALUE extends Collection> extends AbstractValidator<VALUE> {

@@ -33,6 +33,8 @@ public class ValidBo extends AbstractUjo {
     public static final Key<ValidBo, String> NOT_BLANK = f.newKey(notBlank());
     public static final Key<ValidBo, Double> MAX_10 = f.newKey(max(10.0));
     public static final Key<ValidBo, Double> MIN_10 = f.newKey(min(10.0));
+    public static final Key<ValidBo, Integer> FORBIDDEN_1_3 = f.newKey(forbidden(1, 3));
+    public static final Key<ValidBo, Integer> REQUIRED_1_3 = f.newKey(required(1, 3));
     public static final Key<ValidBo, String> LENGTH_MIN_3 = f.newKey(length(3));
     public static final Key<ValidBo, String> LENGTH_2_4 = f.newKey(length(2,4));
     public static final Key<ValidBo, Integer> BETWEEN_1_10 = f.newKey(between(1, 10));
