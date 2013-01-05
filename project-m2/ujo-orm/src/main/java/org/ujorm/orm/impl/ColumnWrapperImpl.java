@@ -70,18 +70,22 @@ public class ColumnWrapperImpl implements ColumnWrapper {
         return key.isDirect();
     }
 
+    /** Two models are the same if its key names are the same for the same domain type. */
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + (this.column != null ? this.column.hashCode() : 0);
-        return hash;
+    public boolean equals(Object relation) {
+        if (relation instanceof ColumnWrapper) {
+            final Key argKey = ((ColumnWrapper) relation).getKey();
+            return getKey().getName().equals(argKey.getName())
+                && getKey().getDomainType() == argKey.getDomainType();
+        } else {
+            return false;
+        }
     }
 
+    /** The hashCode form the Key name */
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof ColumnWrapper
-                && this.key.equals(((ColumnWrapper)obj).getKey())
-                ;
+    public int hashCode() {
+        return getKey().getName().hashCode();
     }
 
     /** Returns the Key */

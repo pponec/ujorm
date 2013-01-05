@@ -25,6 +25,7 @@ import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.orm.AbstractMetaModel;
+import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.annot.Column;
@@ -136,6 +137,23 @@ public class MetaRelation2Many extends AbstractMetaModel {
     @Override
     public String toString() {
         return TABLE_KEY.of(this).toStringFull();
+    }
+
+    /** Two models are the same if its key names are the same for the same domain type. */
+    @Override
+    public boolean equals(Object relation) {
+        if (relation instanceof ColumnWrapper) {
+            final Key argKey = ((ColumnWrapper) relation).getKey();
+            return getKey().getName().equals(argKey.getName())
+                && getKey().getDomainType() == argKey.getDomainType();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getKey().getName().hashCode();
     }
 
 }
