@@ -64,6 +64,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
             } else if (result != null
                 && mySession != null
                 && mySession != ((OrmUjo) result).readSession()
+                // A sesssion will be written to a result in case missing primary key too - due more relations
             ) {
                 // Write the current session to a related object:
                 ((OrmUjo) result).writeSession(mySession);

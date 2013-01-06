@@ -242,11 +242,10 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Create a new column List. */
+    @SuppressWarnings("empty-statement")
     public ColumnWrapper[] getColumnArray() {
         final Collection<ColumnWrapper> resColumns = getColumns();
         final ColumnWrapper[] result = resColumns.toArray(new ColumnWrapper[resColumns.size()]);
-
-        // TODO: move the primary keys of the relations to the end.
         return result;
     }
 

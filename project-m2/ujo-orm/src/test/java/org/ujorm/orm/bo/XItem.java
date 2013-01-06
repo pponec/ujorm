@@ -17,8 +17,8 @@ package org.ujorm.orm.bo;
 
 import java.util.Date;
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 
 /**
  * The column mapping to DB table ITEM (a sample of usage).
@@ -38,8 +38,13 @@ public class XItem extends OrmTable<XItem> {
     /** A reference to common XOrder */
     @Column(name="fk_order")
     public static final Key<XItem,XOrder> ORDER = newKey();
+    //
     /** A composed (indirect) property provides a 'created' attribute of the XOrder */
     public static final Key<XItem,Date> $ORDER_DATE = XItem.ORDER.add(XOrder.CREATED);
+    /** A composed (indirect) property provides an 'name' attribute of the XOrder */
+    public static final Key<XItem,String> $ORDER_NOTE = XItem.ORDER.add(XOrder.NOTE);
+    /** A composed (indirect) property provides an 'name' attribute of the XOrder */
+    public static final Key<XItem,String> $CUST_FIRSTNAME = XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.FIRSTNAME);
 
     // --- An optional implementation of commonly used setters and getters ---
 

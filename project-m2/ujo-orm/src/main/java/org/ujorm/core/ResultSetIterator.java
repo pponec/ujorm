@@ -125,11 +125,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
                 } else {
                     final Ujo semiRow = ((CompositeKey)colWrap.getKey()).getSemifinalValue(row, true);
                     column.setValue(semiRow, value);
-                    if (column.isPrimaryKey()) {
-                        // Assign the session on case the Primary Key of a related object is available:
-                        // Note: the ID must be the last column o the related object!
-                        row.writeSession(query.getSession());
-                    }
+                    // A session of the related object will be assigned using the OrmProperty later.
                 }
             }
             row.writeSession(query.getSession());
