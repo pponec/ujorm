@@ -48,70 +48,6 @@ public class LimitTest extends TestCase {
         super.tearDown();
     }
 
-    // ---------- TOOLS -----------------------
-
-    static protected OrmHandler getHandler() {
-        if (handler == null) {
-            handler = new OrmHandler();
-            handler.loadDatabase(XDatabase.class);
-        }
-        return handler;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void deleteAllOrders() {
-
-        Session session = getHandler().getSession();
-        Criterion crit;
-        int count;
-        //
-        crit = Criterion.constant(XItem.ID, true);
-        count = session.delete(crit);
-        //
-        crit = Criterion.constant(XOrder.ID, true);
-        count = session.delete(crit);
-        //
-        crit = Criterion.constant(XCustomer.ID, true);
-        count = session.delete(crit);
-    }
-
-    protected void createOrder(String name) {
-
-        Session session = getHandler().getSession();
-
-        XOrder order = new XOrder();
-        XOrder.CREATED.setValue(order, new Date());
-        XOrder.NOTE.setValue(order, name);
-        XOrder.COLOR.setValue(order, Color.BLUE);
-
-        XItem item1 = new XItem();
-        XItem.NOTE.setValue(item1, name + "-1");
-        XItem.ORDER.setValue(item1, order);
-
-        XItem item2 = new XItem();
-        XItem.NOTE.setValue(item2, name + "-2");
-        XItem.ORDER.setValue(item2, order);
-
-        XItem item3 = new XItem();
-        XItem.NOTE.setValue(item3, name + "-3");
-        XItem.ORDER.setValue(item3, order);
-
-        session.save(order);
-        session.save(item1);
-        session.save(item2);
-        session.save(item3);
-
-        session.commit();
-    }
-
-    /** Remove all orders and create orders by parameter. */
-    protected void createOrders(long count) {
-        deleteAllOrders();
-        for (int i = 0; i < count; i++) {
-            createOrder(""+i);
-        }
-    }
-
     // ---------- TESTS -----------------------
 
     @SuppressWarnings("deprecation")
@@ -188,7 +124,7 @@ public class LimitTest extends TestCase {
         // ------ LIMIT + OFFSET (2) ------
 
         limit = 10;
-        expected = count-offset;
+        expected = count - offset;
         query = session.createQuery(crit).setLimit(limit).setOffset(offset).orderBy(XOrder.NOTE);
         myCount = query.getLimitedCount();
         assertEquals(expected, myCount);
@@ -222,8 +158,69 @@ public class LimitTest extends TestCase {
 
     }
 
+    // ---------- TOOLS -----------------------
 
-    // -----------------------------------------------------
+    static protected OrmHandler getHandler() {
+        if (handler == null) {
+            handler = new OrmHandler();
+            handler.loadDatabase(XDatabase.class);
+        }
+        return handler;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void deleteAllOrders() {
+
+        Session session = getHandler().getSession();
+        Criterion crit;
+        int count;
+        //
+        crit = Criterion.constant(XItem.ID, true);
+        count = session.delete(crit);
+        //
+        crit = Criterion.constant(XOrder.ID, true);
+        count = session.delete(crit);
+        //
+        crit = Criterion.constant(XCustomer.ID, true);
+        count = session.delete(crit);
+    }
+
+    protected void createOrder(String name) {
+
+        Session session = getHandler().getSession();
+
+        XOrder order = new XOrder();
+        XOrder.CREATED.setValue(order, new Date());
+        XOrder.NOTE.setValue(order, name);
+        XOrder.COLOR.setValue(order, Color.BLUE);
+
+        XItem item1 = new XItem();
+        XItem.NOTE.setValue(item1, name + "-1");
+        XItem.ORDER.setValue(item1, order);
+
+        XItem item2 = new XItem();
+        XItem.NOTE.setValue(item2, name + "-2");
+        XItem.ORDER.setValue(item2, order);
+
+        XItem item3 = new XItem();
+        XItem.NOTE.setValue(item3, name + "-3");
+        XItem.ORDER.setValue(item3, order);
+
+        session.save(order);
+        session.save(item1);
+        session.save(item2);
+        session.save(item3);
+
+        session.commit();
+    }
+
+    /** Remove all orders and create orders by parameter. */
+    protected void createOrders(long count) {
+        deleteAllOrders();
+        for (int i = 0; i < count; i++) {
+            createOrder("" + i);
+        }
+    }
 
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());

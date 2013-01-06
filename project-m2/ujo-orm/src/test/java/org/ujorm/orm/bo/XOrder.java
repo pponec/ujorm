@@ -22,10 +22,10 @@ import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;
-import org.ujorm.orm.DbType;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.DbType;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.utility.OrmTools;
 
@@ -41,7 +41,7 @@ public class XOrder extends OrmTable<XOrder> {
         ACTIVE,
         DELETED
     }
-    
+
     /** Unique key */
     @Column(pk = true)
     public static final Key<XOrder, Long> ID = newKey();
@@ -65,7 +65,7 @@ public class XOrder extends OrmTable<XOrder> {
     /** Reference to Items */
     public static final RelationToMany<XOrder, XItem> ITEMS = newRelation();
     /** Customer */
-    @Column(name="fk_customer") 
+    @Column(name="fk_customer")
     public static final Key<XOrder, XCustomer> CUSTOMER = newKey();
     //@Column(mandatory=true) public static final Key<XOrder, Integer> NEW_COLUMN = newKey(777);
 
@@ -137,4 +137,13 @@ public class XOrder extends OrmTable<XOrder> {
     public UjoIterator<XItem> getItems() {
         return get(ITEMS);
     }
+
+    public XCustomer getCustomer() {
+        return get(CUSTOMER);
+    }
+
+    public void setCustomer(XCustomer customer) {
+        set(CUSTOMER, customer);
+    }
+
 }
