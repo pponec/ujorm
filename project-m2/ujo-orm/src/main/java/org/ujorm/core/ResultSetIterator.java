@@ -123,7 +123,7 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
                 if (colWrap.isDirectKey()) {
                     column.setValue(row, value);
                 } else {
-                    final Ujo semiRow = ((CompositeKey)colWrap.getKey()).getSemifinalValue(row, true);
+                    final Ujo semiRow = ((CompositeKey)colWrap.getKey()).getSemiValue(row, true);
                     column.setValue(semiRow, value);
                     // A session of the related object will be assigned using the OrmProperty later.
                 }
