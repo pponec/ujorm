@@ -17,11 +17,11 @@ package org.ujorm.orm;
 
 import java.awt.Color;
 import java.util.Date;
+import java.util.List;
 import junit.framework.TestCase;
 import org.ujorm.Key;
 import org.ujorm.criterion.*;
 import org.ujorm.orm.bo.*;
-import org.ujorm.orm_tutorial.sample.Customer;
 import static org.ujorm.criterion.Operator.*;
 
 /**
@@ -55,15 +55,15 @@ public class FetchTest extends TestCase {
 
         Key<XItem,?> fetchColumn = null;
         int count = 0;
-        for (XItem xItem : query) {
-            Object orderFk = xItem.readValue(XItem.ORDER);
+        for (XItem item : query) {
+            Object orderFk = item.readValue(XItem.ORDER);
             assertTrue("Order must be a foreign key", orderFk instanceof ForeignKey);
-            assertTrue(xItem.get(XItem.ORDER) instanceof XOrder);
-            assertNotNull(xItem.get(XItem.ID));
-            assertNotNull(xItem.get(XItem.NOTE));
-            assertNotNull(xItem.get(XItem.$ORDER_NOTE));
+            assertTrue(item.get(XItem.ORDER) instanceof XOrder);
+            assertNotNull(item.get(XItem.ID));
+            assertNotNull(item.get(XItem.NOTE));
+            assertNotNull(item.get(XItem.$ORDER_NOTE));
             //
-            assertNotNull(xItem.readSession());
+            assertNotNull(item.readSession());
             ++count;
         }
         assertTrue("The one loop at least", count>0);
@@ -72,15 +72,15 @@ public class FetchTest extends TestCase {
 
         fetchColumn = XItem.NOTE;
         query.setColumn(fetchColumn);
-        for (XItem xItem : query) {
-            Object orderFk = xItem.readValue(XItem.ORDER);
+        for (XItem item : query) {
+            Object orderFk = item.readValue(XItem.ORDER);
             assertTrue("Order must be null", orderFk == null);
-            assertTrue(xItem.get(XItem.ORDER) == null);
-            assertNull(xItem.get(XItem.ID));
-            assertNotNull(xItem.get(fetchColumn));
-            assertNull(xItem.get(XItem.$ORDER_NOTE));
+            assertTrue(item.get(XItem.ORDER) == null);
+            assertNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNull(item.get(XItem.$ORDER_NOTE));
             //
-            assertNotNull(xItem.readSession());
+            assertNotNull(item.readSession());
             break; // The one loop is sufficient.
         }
 
@@ -88,15 +88,15 @@ public class FetchTest extends TestCase {
 
         fetchColumn = XItem.NOTE;
         query.setColumns(true, fetchColumn);
-        for (XItem xItem : query) {
-            Object orderFk = xItem.readValue(XItem.ORDER);
+        for (XItem item : query) {
+            Object orderFk = item.readValue(XItem.ORDER);
             assertTrue("Order must be null", orderFk == null);
-            assertTrue(xItem.get(XItem.ORDER) == null);
-            assertNotNull(xItem.get(XItem.ID));
-            assertNotNull(xItem.get(fetchColumn));
-            assertNull(xItem.get(XItem.$ORDER_NOTE));
+            assertTrue(item.get(XItem.ORDER) == null);
+            assertNotNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNull(item.get(XItem.$ORDER_NOTE));
             //
-            assertNotNull(xItem.readSession());
+            assertNotNull(item.readSession());
             break; // The one loop is sufficient.
         }
 
@@ -104,19 +104,19 @@ public class FetchTest extends TestCase {
 
         fetchColumn = XItem.ORDER.add(XOrder.NOTE);
         query.setColumn(fetchColumn);
-        for (XItem xItem : query) {
-            Object orderFk = xItem.readValue(XItem.ORDER);
+        for (XItem item : query) {
+            Object orderFk = item.readValue(XItem.ORDER);
             assertTrue("Order instance", orderFk instanceof XOrder);
-            assertNull(xItem.get(XItem.ORDER.add(XOrder.CUSTOMER)));
-            assertNull(xItem.get(XItem.ID));
-            assertNotNull(xItem.get(fetchColumn));
-            assertNull(xItem.get(XItem.ORDER.add(XOrder.ID)));
-            assertNull(xItem.get(XItem.$ORDER_DATE));
+            assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
+            assertNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNull(item.get(XItem.ORDER.add(XOrder.ID)));
+            assertNull(item.get(XItem.$ORDER_DATE));
             //
-            assertNotNull(xItem.readSession());
-            assertNotNull(xItem.getOrder().readSession());
-            assertEquals(0, xItem.readChangedProperties(false).length);
-            assertEquals(0, xItem.getOrder().readChangedProperties(false).length);
+            assertNotNull(item.readSession());
+            assertNotNull(item.getOrder().readSession());
+            assertEquals(0, item.readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().readChangedProperties(false).length);
             break; // The one loop is sufficient.
         }
 
@@ -124,26 +124,25 @@ public class FetchTest extends TestCase {
 
         fetchColumn = XItem.ORDER.add(XOrder.NOTE);
         query.setColumns(true, fetchColumn);
-        for (XItem xItem : query) {
-            Object orderFk = xItem.readValue(XItem.ORDER);
+        for (XItem item : query) {
+            Object orderFk = item.readValue(XItem.ORDER);
             assertTrue("Order instance", orderFk instanceof XOrder);
-            assertNull(xItem.get(XItem.ORDER.add(XOrder.CUSTOMER)));
-            assertNotNull(xItem.get(XItem.ID));
-            assertNotNull(xItem.get(fetchColumn));
-            assertNull(xItem.get(XItem.ORDER.add(XOrder.ID))); // TODO: fix it or documented it ?
-            assertNull(xItem.get(XItem.$ORDER_DATE));
+            assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
+            assertNotNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNull(item.get(XItem.ORDER.add(XOrder.ID))); // TODO: fix it or documented it ?
+            assertNull(item.get(XItem.$ORDER_DATE));
             //
-            assertNotNull(xItem.readSession());
-            assertNotNull(xItem.getOrder().readSession());
-            assertEquals(0, xItem.readChangedProperties(false).length);
-            assertEquals(0, xItem.getOrder().readChangedProperties(false).length);
+            assertNotNull(item.readSession());
+            assertNotNull(item.getOrder().readSession());
+            assertEquals(0, item.readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().readChangedProperties(false).length);
             break; // The one loop is sufficient.
         }
 
-
         // ------ TEST OF RELATION 'CUSTOMER' ------
 
-        if (true) {
+        if (!true) {
             // TODO: fix the last test !!!
             session.close();
             return;
@@ -151,26 +150,26 @@ public class FetchTest extends TestCase {
 
         fetchColumn = XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.FIRSTNAME);
         query.setColumn(fetchColumn);
-        for (XItem xItem : query) {
-            Object orderFk = xItem.readValue(XItem.ORDER);
-            assertTrue("Order instance", orderFk instanceof XOrder);
-            orderFk = xItem.getOrder().readValue(XOrder.CUSTOMER);
-            assertTrue("Order instance", orderFk instanceof Customer);
-            assertNotNull(xItem.get(XItem.ORDER.add(XOrder.CUSTOMER)));
-            assertNull(xItem.get(XItem.ID));
-            assertNotNull(xItem.get(fetchColumn));
-            assertNull(xItem.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.ID))); // FIX IT ?
-            assertNull(xItem.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.LASTNAME)));
+        List<XItem> items = query.list();
+        for (XItem item : query) {
+            Object objectFk = item.readValue(XItem.ORDER);
+            assertTrue("Order instance", objectFk instanceof XOrder);
+            objectFk = item.getOrder().readValue(XOrder.CUSTOMER);
+            assertTrue("Order instance", objectFk instanceof XCustomer);
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
+            assertNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.ID))); // FIX IT ?
+            assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.LASTNAME)));
             //
-            assertNotNull(xItem.readSession());
-            assertNotNull(xItem.getOrder().readSession());
-            assertNotNull(xItem.getOrder().getCustomer().readSession());
-            assertEquals(0, xItem.readChangedProperties(false).length);
-            assertEquals(0, xItem.getOrder().readChangedProperties(false).length);
-            assertEquals(0, xItem.getOrder().getCustomer().readChangedProperties(false).length);
+            assertNotNull(item.readSession());
+            assertNotNull(item.getOrder().readSession());
+            assertNotNull(item.getOrder().getCustomer().readSession());
+            assertEquals(0, item.readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().getCustomer().readChangedProperties(false).length);
             break; // The one loop is sufficient.
         }
-
 
         // ------ CLOSE ------
         session.close();
