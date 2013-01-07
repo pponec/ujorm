@@ -60,7 +60,9 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                     throw new IllegalStateException("The Session was not assigned.");
                 }
                 result = mySession.loadInternal(this, ((ForeignKey) result).getValue(), true);
+                ujo.writeSession(null); // Replacing of the foreign key is not a property change
                 ujo.writeValue(this, result);
+                ujo.writeSession(mySession); // Restore the Session
             } else if (result != null
                 && mySession != null
                 && mySession != ((OrmUjo) result).readSession()
