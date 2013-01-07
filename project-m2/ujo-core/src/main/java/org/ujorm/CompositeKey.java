@@ -56,12 +56,22 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
      */
     public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException;
 
-    /** Get a semifinal value from an Ujo object by a chain of keys.
-     * If any value (not getLastPartialProperty) is null, then the result is null.
+    /** Get a penultimate value of a composite key.
+     * If any value is {@code null}, then the result is {@code null}.
+     * If the Composite key is a direct key than the ujo argument is send to the method result.
      * @param ujo base Ujo object
-     * @param create create new instance of UJO object for a {@code null} case. Default value is {@code false}
+     * @deprecated Use the method {@link #getSemiValue(org.ujorm.Ujo, boolean)} rather
      */
-    public Ujo getSemifinalValue(UJO ujo, boolean create);
+    public Ujo getSemifinalValue(UJO ujo);
+
+    /** Get a penultimate value of this composite key.
+     * If any value is {@code null}, then the result is {@code null}.
+     * If the Composite key is a direct key than the ujo argument is send to the method result.
+     * @param ujo base Ujo object
+     * @param create create new instance of a related UJO object for an undefined ({@code null} case.
+     * During the assigning the new relations are <strong>disabled</strong> all validators.
+     */
+    public Ujo getSemiValue(UJO ujo, boolean create);
 
     /** Get the first property of the current object. The result is direct property always.
      * @deprecated Uset the {@link #getLastKey()}.
