@@ -19,15 +19,15 @@ package org.ujorm.orm.relation_M2One;
 import java.util.Date;
 import java.util.logging.*;
 import junit.framework.TestCase;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
-import org.ujorm.orm.*;
-import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.criterion.*;
+import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.dialect.DerbyDialect;
 import org.ujorm.orm.dialect.FirebirdDialect;
+import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.orm_tutorial.sample.MyProcedure;
@@ -38,7 +38,7 @@ import org.ujorm.orm_tutorial.sample.ViewOrder;
  * --------------------------------------- <br>
  * Learn the basic skills in 15 minutes by a live Java code.
  * The next several methods demonstrate the use of statements:
- *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE 
+ *     CREATE TABLE, INSERT, SELECT, UPDATE or DELETE
  * and show how to use a meta-model.
  *
  * Copyright 2010, Pavel Ponec
@@ -204,9 +204,9 @@ public class Orm2Test extends TestCase {
         // Some dialects must have got special SQL statements:
         if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
         ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
-            return; 
+            return;
         }
-        
+
         Criterion<ViewOrder> crit = Criterion.where(ViewOrder.ID, Operator.GE, 0L);
         Query<ViewOrder> orders = session.createQuery(crit);
         System.out.println("VIEW-ORDER COUNT: " + orders.getCount());
@@ -312,7 +312,7 @@ public class Orm2Test extends TestCase {
     public void useIteratorSkip() {
         Criterion<Item> crit = Criterion.where(Item.note, Operator.NOT_EQ, "XXXXX");
         UjoIterator<Item> items = session.createQuery(crit).iterator();
-        
+
         boolean skip = items.skip(1);
         if (items.hasNext()) {
             Item item = items.next();
@@ -374,11 +374,11 @@ public class Orm2Test extends TestCase {
     /** Call a database stored procedure:
      * <code>
      * CREATE OR REPLACE FUNCTION db1.ujorm_test2(integer)
-     * RETURNS refcursor AS 'DECLARE mycurs refcursor;  
-     * BEGIN 
-     *    OPEN mycurs FOR SELECT 11, 12; 
-     *    RETURN mycurs; 
-     * END;' 
+     * RETURNS refcursor AS 'DECLARE mycurs refcursor;
+     * BEGIN
+     *    OPEN mycurs FOR SELECT 11, 12;
+     *    RETURN mycurs;
+     * END;'
      * LANGUAGE plpgsql
      * </code>
      * Note: the source code is an aarly implementation prototype. <br>
@@ -443,7 +443,7 @@ public class Orm2Test extends TestCase {
         System.out.println(msg);
     }
 
-    /** Close Ujorm session to clear a session cache 
+    /** Close Ujorm session to clear a session cache
      * and database connection(s).
      */
     public void useCloseSession() {

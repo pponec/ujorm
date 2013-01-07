@@ -51,9 +51,9 @@ public class FetchTest extends TestCase {
         Criterion<XItem> crit = Criterion.where(XItem.ID, GE, 0L);
         Query<XItem> query = session.createQuery(crit);
 
-        // ------ TEST OF BASE ------
+        // ------ LAZY LOADING TEST ------
 
-        Key<XItem,?> fetchColumn = null;
+        Key<XItem, ?> fetchColumn = null;
         int count = 0;
         for (XItem item : query) {
             Object orderFk = item.readValue(XItem.ORDER);
@@ -66,9 +66,9 @@ public class FetchTest extends TestCase {
             assertNotNull(item.readSession());
             ++count;
         }
-        assertTrue("The one loop at least", count>0);
+        assertTrue("The one loop at least", count > 0);
 
-        // ------ TEST OF BASE ------
+        // ------ ONE COLUMN TEST ------
 
         fetchColumn = XItem.NOTE;
         query.setColumn(fetchColumn);
@@ -84,7 +84,7 @@ public class FetchTest extends TestCase {
             break; // The one loop is sufficient.
         }
 
-        // ------ TEST OF BASE ------
+        // ------ TWO COLUMNS TEST ------
 
         fetchColumn = XItem.NOTE;
         query.setColumns(true, fetchColumn);
@@ -100,7 +100,7 @@ public class FetchTest extends TestCase {
             break; // The one loop is sufficient.
         }
 
-        // ------ TEST OF RELATION 'ORDER' ------
+        // ------ FETCH THE COLUMN 'XOrder.NOTE' ------
 
         fetchColumn = XItem.ORDER.add(XOrder.NOTE);
         query.setColumn(fetchColumn);
@@ -120,7 +120,7 @@ public class FetchTest extends TestCase {
             break; // The one loop is sufficient.
         }
 
-        // ------ TEST OF RELATION 'ORDER' ------
+        // ------ FETCH THE COLUMN 'XOrder.NOTE' + 'ID' ------
 
         fetchColumn = XItem.ORDER.add(XOrder.NOTE);
         query.setColumns(true, fetchColumn);
@@ -140,17 +140,37 @@ public class FetchTest extends TestCase {
             break; // The one loop is sufficient.
         }
 
-        // ------ TEST OF RELATION 'CUSTOMER' ------
+        // ------ FETCH THE ALL COLUMNS OF 'XOrder' ------
 
-        if (!true) {
-            // TODO: fix the last test !!!
-            session.close();
-            return;
+        fetchColumn = XItem.ORDER;
+        query.setColumns(true, fetchColumn);
+        query.list();
+        query.getColumns();
+        for (XItem item : query) {
+            Object objectFk = item.readValue(XItem.ORDER);
+            assertTrue("Order instance", objectFk instanceof XOrder);
+            XOrder order = item.get(XItem.ORDER);
+            objectFk = order.readValue(XOrder.CUSTOMER);
+            assertTrue("Order instance", objectFk instanceof ForeignKey);
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
+            assertNotNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.ID)));
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.CREATED)));
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.NOTE)));
+            assertNotNull(item.get(XItem.$ORDER_DATE));
+            //
+            assertNotNull(item.readSession());
+            assertNotNull(item.getOrder().readSession());
+            assertEquals(0, item.readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().readChangedProperties(false).length);
+            break; // The one loop is sufficient.
         }
+
+        // ------ FETCH THE ONE COLUMN 'XCustomer.FIRSTNAME' ------
 
         fetchColumn = XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.FIRSTNAME);
         query.setColumn(fetchColumn);
-        List<XItem> items = query.list();
         for (XItem item : query) {
             Object objectFk = item.readValue(XItem.ORDER);
             assertTrue("Order instance", objectFk instanceof XOrder);
@@ -159,8 +179,33 @@ public class FetchTest extends TestCase {
             assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
             assertNull(item.get(XItem.ID));
             assertNotNull(item.get(fetchColumn));
-            assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.ID))); // FIX IT ?
+            assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.ID)));
             assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.LASTNAME)));
+            //
+            assertNotNull(item.readSession());
+            assertNotNull(item.getOrder().readSession());
+            assertNotNull(item.getOrder().getCustomer().readSession());
+            assertEquals(0, item.readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().getCustomer().readChangedProperties(false).length);
+            break; // The one loop is sufficient.
+        }
+
+        // ------ FETCH THE ALL COLUMNS OF THE 'XCustomer' ------
+
+        fetchColumn = XItem.ORDER.add(XOrder.CUSTOMER);
+        query.setColumn(fetchColumn);
+        for (XItem item : query) {
+            Object objectFk = item.readValue(XItem.ORDER);
+            assertTrue("Order instance", objectFk instanceof XOrder);
+            objectFk = item.getOrder().readValue(XOrder.CUSTOMER);
+            assertTrue("Order instance", objectFk instanceof XCustomer);
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
+            assertNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.ID)));
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.LASTNAME)));
+            assertNotNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.FIRSTNAME)));
             //
             assertNotNull(item.readSession());
             assertNotNull(item.getOrder().readSession());
@@ -215,7 +260,7 @@ public class FetchTest extends TestCase {
 
         XOrder order = new XOrder();
         XOrder.CREATED.setValue(order, new Date());
-        XOrder.NOTE.setValue(order, name);
+        XOrder.NOTE.setValue(order, "Note_" + name);
         XOrder.COLOR.setValue(order, Color.BLUE);
         XOrder.CUSTOMER.setValue(order, customer);
 

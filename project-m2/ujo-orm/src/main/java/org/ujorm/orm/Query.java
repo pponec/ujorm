@@ -455,16 +455,19 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 return; // The same column is assigned
             }
         }
-        columns.add(column);
         if (addChilds) {
             final MetaColumn model = column.getModel();
             if (model.isForeignKey()) {
                 for (ColumnWrapper columnWrapper : model.getForeignTable().getColumns()) {
                     final Key myKey = column.getKey().add(columnWrapper.getKey());
                     final ColumnWrapper cw = new ColumnWrapperImpl(columnWrapper.getModel(), myKey);
-                    addMissingColumn(column, false);
+                    addMissingColumn(cw, false);
                 }
+            } else {
+               columns.add(column);
             }
+        } else {
+            columns.add(column);
         }
     }
 
