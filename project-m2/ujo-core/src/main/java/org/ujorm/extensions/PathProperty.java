@@ -161,30 +161,40 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
         return keys[0].getDomainType();
     }
 
-    /** Get a semifinal value from an Ujo object by a chain of keys.
+    /** Get a penultimate value of a composite key.
      * If any value (not getLastPartialProperty) is null, then the result is null.
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Ujo getSemifinalValue(final UJO ujo, final boolean create) {
-        Ujo result = ujo;
-        if (result==null) {
-            return result;
+    final public Ujo getSemifinalValue(final UJO ujo) {
+        return getSemiValue(ujo, false);
+    }
+
+    /** Get a penultimate value of a composite key.
+     * If any value (not getLastPartialProperty) is null, then the result is null.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public Ujo getSemiValue(final UJO ujo, final boolean create) {
+        if (ujo==null) {
+            return ujo;
         }
-        for (int i=0; i<keys.length-1; i++) {
-            result = (Ujo) keys[i].of(result);
-            if (result==null) {
+        Ujo result = ujo;
+        for (int i = 0, max = keys.length - 1; i < max; i++) {
+            Ujo value = (Ujo) keys[i].of(result);
+            if (value==null) {
                 if (create) {
                     try {
-                       result = (Ujo) keys[i].getType().newInstance();
-                       keys[i].setValue(ujo, result);
+                       value = (Ujo) keys[i].getType().newInstance();
+                       result.writeValue(keys[i], value);
                    } catch (Throwable e) {
-                       throw new IllegalStateException("Can't create instance for the key: " + keys[i].toStringFull(), e);
+                       throw new IllegalStateException("Can't create new instance for the key: " + keys[i].toStringFull(), e);
                    }
                 } else {
-                    return result;
+                    return value;
                 }
             }
+            result = value;
         }
         return result;
     }
@@ -207,7 +217,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
 
     @Override
     public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException {
-        final Ujo u = getSemifinalValue(ujo, createRelations);
+        final Ujo u = getSemiValue(ujo, createRelations);
         getLastPartialProperty().setValue(u, value);
     }
 
@@ -216,7 +226,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @Override
     final public VALUE of(final UJO ujo) {
-        final Ujo u = getSemifinalValue(ujo, false);
+        final Ujo u = getSemiValue(ujo, false);
         return  u!=null ? getLastPartialProperty().of(u) : null ;
     }
 
@@ -246,8 +256,8 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     @Override
     public void copy(final UJO from, final UJO to) {
-        final Ujo from2 = getSemifinalValue(from, false);
-        final Ujo to2 = getSemifinalValue(to, false);
+        final Ujo from2 = getSemiValue(from, false);
+        final Ujo to2 = getSemiValue(to, false);
         getLastPartialProperty().copy(from2, to2);
     }
 
