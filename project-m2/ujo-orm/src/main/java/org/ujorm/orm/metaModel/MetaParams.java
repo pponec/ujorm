@@ -79,6 +79,10 @@ final public class MetaParams extends AbstractMetaModel {
      * @see org.ujorm.orm.annot.Column#converter()
      */
     public static final Key<MetaParams,Class<? extends ITypeService>> TYPE_SERVICE = f.newClassKey("typeService", TypeService.class);
+    /** The instance of the parameter class {@see MetaDbService} is used for creating and validaton a database according to the meta-model.
+     * You can overwrite some method for youre ieas.
+     */
+    public static final Key<MetaParams,Class<? extends MetaDbService>> META_DB_SERVICE = f.newClassKey("metaDbService", MetaDbService.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model.
      * The default value is EXCEPTION.
      * @see CheckReport Parameter values
