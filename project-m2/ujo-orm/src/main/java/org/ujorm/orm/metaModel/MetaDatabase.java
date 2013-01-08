@@ -20,41 +20,39 @@ import java.awt.Color;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.logging.Level;
-import org.ujorm.logger.UjoLogger;
-import javax.sql.DataSource;
-import org.ujorm.UjoAction;
-import org.ujorm.Key;
-import org.ujorm.core.annot.Transient;
-import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.orm.AbstractMetaModel;
-import org.ujorm.orm.DbType;
-import org.ujorm.implementation.orm.RelationToMany;
 import java.sql.*;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import org.ujorm.Key;
 import org.ujorm.ListKey;
+import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.core.annot.Transient;
+import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.extensions.StringWrapper;
+import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.AbstractMetaModel;
+import org.ujorm.orm.BytesWrapper;
 import org.ujorm.orm.DbProcedure;
-import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.DbType;
 import org.ujorm.orm.JdbcStatement;
+import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
-import org.ujorm.orm.BytesWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.ao.UjoStatement;
-import org.ujorm.orm.dialect.MySqlDialect;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
@@ -324,17 +322,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
     }
 
-    /** Returns a native database identifirer. */
-    private String dbIdentifier(final String name, final DatabaseMetaData dmd) throws SQLException {
-        if (dmd.storesUpperCaseIdentifiers()) {
-            return name.toUpperCase();
-        }
-        if (dmd.storesLowerCaseIdentifiers()) {
-            return name.toLowerCase();
-        }
-        return name;
-    }
-
     /** Returns a full count of the database tables (views are excluded) */
     private int getTableTotalCount() {
         int tableCount = 0;
@@ -346,167 +333,20 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         return tableCount;
     }
 
-    /** Find database table or columns to modify.
-     * @param conn Database connection
-     * @param newTables Output parameter
-     * @param newColumns Output parameter
-     */
-    @SuppressWarnings("LoggerStringConcat")
-    private boolean isModelChanged(Connection conn
-        , List<MetaTable>  newTables
-        , List<MetaColumn> newColumns
-        , List<MetaIndex>  newIndexes
-        ) throws SQLException {
-        newTables.clear();
-        newColumns.clear();
-        newIndexes.clear();
-
-        final DatabaseMetaData dmd = conn.getMetaData();
-        final boolean catalog = getDialect() instanceof MySqlDialect;
-        final String column = null;
-
-        for (MetaTable table : TABLES.of(this)) {
-            if (table.isTable()) {
-
-                // ---------- CHECK TABLE COLUMNS ----------
-
-                final Set<String> items = new HashSet<String>(32);
-                final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dmd);
-                ResultSet rs = dmd.getColumns
-                    ( catalog ? schema : null
-                    , catalog ? null  : schema
-                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
-                    , column
-                    );
-                while(rs.next()) {
-                    items.add(rs.getString("COLUMN_NAME").toUpperCase());
-                    if (false && LOGGER.isLoggable(Level.INFO)) {
-                        // Debug message:
-                        String msg = "DB column: "
-                                   + rs.getString("TABLE_CAT") + "."
-                                   + rs.getString("TABLE_SCHEM") + "."
-                                   + rs.getString("TABLE_NAME") + "."
-                                   + rs.getString("COLUMN_NAME")
-                                   ;
-                        LOGGER.log(Level.INFO, msg);
-                    }
-                }
-                rs.close();
-
-                boolean tableExists = items.size()>0;
-                if (tableExists) {
-                    // create columns:
-                    for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
-
-                        boolean exists = items.contains(MetaColumn.NAME.of(mc).toUpperCase());
-                        if (!exists) {
-                            LOGGER.log(Level.INFO, "New DB column: " + mc.getFullName());
-                            newColumns.add(mc);
-                        }
-                    }
-                } else {
-                    LOGGER.log(Level.INFO, "New DB table: " + MetaTable.NAME.of(table));
-                    newTables.add(table);
-                }
-
-                // ---------- CHECK INDEXES ----------
-
-                items.clear();
-                if (tableExists) {
-                    rs = dmd.getIndexInfo
-                    ( catalog ? schema : null
-                    , catalog ? null : schema
-                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
-                    , false // unique
-                    , false // approximate
-                    );
-                    while(rs.next()) {
-                        String name = rs.getString("INDEX_NAME");
-                        if (name!=null) {
-                           items.add(name.toUpperCase());
-                        }
-                    }
-                    rs.close();
-                }
-                for (MetaIndex index : table.getIndexCollection()) {
-                    boolean exists = items.contains(MetaIndex.NAME.of(index).toUpperCase());
-                    if (!exists) {
-                        LOGGER.log(Level.INFO, "New DB index: " + index);
-                        newIndexes.add(index);
-                    }
-                }
-            }
-        }
-
-        boolean result = !newTables.isEmpty()
-                      || !newColumns.isEmpty()
-                      || !newIndexes.isEmpty()
-                       ;
-        return result;
-    }
 
     /** Create DB */
     public void create(Session session) {
         MetaDbService service = createService();
         Connection conn = session.getConnection(this, true);
-        Statement stat = null;
-        StringBuilder sql = new StringBuilder(256);
         List<MetaTable> tables = new ArrayList<MetaTable>();
         List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
         List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
         List<MetaIndex> indexes = new ArrayList<MetaIndex>();
         boolean createSequenceTable = false;
         int tableTotalCount = getTableTotalCount();
-        boolean anyChange = false;
 
         try {
-            stat = conn.createStatement();
-
-            if (isSequenceTableRequired()) {
-                PreparedStatement ps = null;
-                ResultSet rs = null;
-                Throwable exception = null;
-                String logMsg = "";
-
-                try {
-                    getDialect().printSequenceCurrentValue(findFirstSequencer(), sql);
-                    ps = conn.prepareStatement(sql.toString());
-                    ps.setString(1, "-");
-                    rs = ps.executeQuery();
-                } catch (Throwable e) {
-                    exception = e;
-                }
-
-                if (exception!=null) {
-                    switch (ORM2DLL_POLICY.of(this)) {
-                        case VALIDATE:
-                        case WARNING:
-                            throw new IllegalStateException(logMsg, exception);
-                        case CREATE_DDL:
-                        case CREATE_OR_UPDATE_DDL:
-                        case INHERITED:
-                            createSequenceTable = true;
-                    }
-                }
-
-                if (LOGGER.isLoggable(Level.INFO)) {
-                    logMsg = "Table ''{0}'' {1} available on the database ''{2}''.";
-                    logMsg = MessageFormat.format(logMsg
-                           , getDialect().getSeqTableModel().getTableName()
-                           , exception!=null ? "is not" : "is"
-                           , getId()
-                           );
-                    LOGGER.log(Level.INFO, logMsg);
-                }
-
-                try {
-                    if (exception!=null) {
-                        conn.rollback();
-                    }
-                } finally {
-                   close(null, ps, rs, false);
-                }
-            }
+            createSequenceTable = service.initialize(conn);
 
             boolean ddlOnly = false;
             switch (ORM2DLL_POLICY.of(this)) {
@@ -516,7 +356,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 case VALIDATE:
                 case WARNING:
                 case INHERITED:
-                    boolean change = isModelChanged(conn, tables, newColumns, indexes);
+                    boolean change = service.isModelChanged(conn, tables, newColumns, indexes);
                     if (change && ddlOnly) {
                         if (tables.size()<tableTotalCount) {
                             // This is a case of the PARTIAL DDL
@@ -534,19 +374,19 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             // 1. CheckReport keywords:
             service.checkReportKeywords(conn, tables, newColumns, indexes);
             // 2. Create schemas:
-            service.createSchema(tableTotalCount, tables, sql, stat, conn);
+            service.createSchema(tableTotalCount, tables, conn);
             // 3. Create tables:
-            anyChange = service.createTable(tables, sql, stat, foreignColumns) || anyChange;
+            service.createTable(tables, foreignColumns);
             // 4. Create new columns:
-            anyChange = service.createNewColumn(newColumns, sql, stat, foreignColumns) || anyChange;
+            service.createNewColumn(newColumns, foreignColumns);
             // 5. Create Indexes:
-            anyChange = service.changeIndex(indexes, sql, stat) || anyChange;
+            service.changeIndex(indexes);
             // 6. Create Foreign Keys:
-            anyChange = service.createForeignKey(foreignColumns, sql, stat) || anyChange;
+            service.createForeignKey(foreignColumns);
             // 7. Create SEQUENCE table:
-            service.createSequenceTable(createSequenceTable, sql, stat);
+            service.createSequenceTable(createSequenceTable);
             // 8. Create table comment for the all tables:
-            service.createTableComments(tables, anyChange, stat, sql);
+            service.createTableComments(tables);
             // 9. Commit:
             conn.commit();
 
@@ -556,7 +396,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             } catch (SQLException ex) {
                 LOGGER.log(Level.WARNING, "Can't rollback DB" + getId(), ex);
             }
-            throw new IllegalArgumentException(Session.SQL_ILLEGAL + sql, e);
+            throw new IllegalArgumentException(Session.SQL_ILLEGAL + service.getSql(), e);
         }
     }
 
@@ -627,7 +467,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public MetaParams getParams() {
         return ormHandler.getParameters();
     }
-
 
     /** Returns an ID of the MetaDatabase. */
     public String getId() {
@@ -736,16 +575,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         if (OrmTools.isFilled(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
             if (MetaProcedure.ID.equals(procedure, id)) {
                 return procedure;
-            }
-        }
-        return null;
-    }
-
-    /** Find the first sequence of the database or returns null if no sequence was not found. */
-    private UjoSequencer findFirstSequencer() {
-        for (MetaTable table : TABLES.of(this)) {
-            if (table.isTable()) {
-                return table.getSequencer();
             }
         }
         return null;
