@@ -17,12 +17,16 @@ package org.ujorm.orm.metaModel;
 
 import java.io.IOException;
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.UjoSequencer;
+import org.ujorm.orm.dialect.MySqlDialect;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
@@ -34,7 +38,14 @@ public class MetaDbService {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDbService.class);
+    /** Meta Database from constructor */
     protected MetaDatabase db;
+    /** SQL Buffer */
+    final protected StringBuilder sql = new StringBuilder(256);
+    /** DB Statement for common use */
+    protected Statement stat = null;
+    /** There is a database change */
+    protected boolean anyChange = false;
 
     /** Set the meta Database */
     public MetaDatabase getMetaDatabase() {
@@ -44,6 +55,175 @@ public class MetaDbService {
     /** Get the meta Database */
     public void setMetaDatabase(MetaDatabase metaDatabase) {
         this.db = metaDatabase;
+    }
+
+    /** SQL Buffer */
+    public StringBuilder getSql() {
+        return sql;
+    }
+
+    /** Find database table or columns to modify.
+     * @param conn Database connection
+     * @param newTables Output parameter
+     * @param newColumns Output parameter
+     */
+    @SuppressWarnings("LoggerStringConcat")
+    public boolean isModelChanged(Connection conn
+        , List<MetaTable>  newTables
+        , List<MetaColumn> newColumns
+        , List<MetaIndex>  newIndexes
+        ) throws SQLException {
+        newTables.clear();
+        newColumns.clear();
+        newIndexes.clear();
+
+        final DatabaseMetaData dmd = conn.getMetaData();
+        final boolean catalog = db.getDialect() instanceof MySqlDialect;
+        final String column = null;
+
+        for (MetaTable table : TABLES.of(db)) {
+            if (table.isTable()) {
+
+                // ---------- CHECK TABLE COLUMNS ----------
+
+                final Set<String> items = new HashSet<String>(32);
+                final String schema = dbIdentifier(MetaTable.SCHEMA.of(table),dmd);
+                ResultSet rs = dmd.getColumns
+                    ( catalog ? schema : null
+                    , catalog ? null  : schema
+                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                    , column
+                    );
+                while(rs.next()) {
+                    items.add(rs.getString("COLUMN_NAME").toUpperCase());
+                    if (false && LOGGER.isLoggable(Level.INFO)) {
+                        // Debug message:
+                        String msg = "DB column: "
+                                   + rs.getString("TABLE_CAT") + "."
+                                   + rs.getString("TABLE_SCHEM") + "."
+                                   + rs.getString("TABLE_NAME") + "."
+                                   + rs.getString("COLUMN_NAME")
+                                   ;
+                        LOGGER.log(Level.INFO, msg);
+                    }
+                }
+                rs.close();
+
+                boolean tableExists = items.size()>0;
+                if (tableExists) {
+                    // create columns:
+                    for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
+
+                        boolean exists = items.contains(MetaColumn.NAME.of(mc).toUpperCase());
+                        if (!exists) {
+                            LOGGER.log(Level.INFO, "New DB column: " + mc.getFullName());
+                            newColumns.add(mc);
+                        }
+                    }
+                } else {
+                    LOGGER.log(Level.INFO, "New DB table: " + MetaTable.NAME.of(table));
+                    newTables.add(table);
+                }
+
+                // ---------- CHECK INDEXES ----------
+
+                items.clear();
+                if (tableExists) {
+                    rs = dmd.getIndexInfo
+                    ( catalog ? schema : null
+                    , catalog ? null : schema
+                    , dbIdentifier(MetaTable.NAME.of(table),dmd)
+                    , false // unique
+                    , false // approximate
+                    );
+                    while(rs.next()) {
+                        String name = rs.getString("INDEX_NAME");
+                        if (name!=null) {
+                           items.add(name.toUpperCase());
+                        }
+                    }
+                    rs.close();
+                }
+                for (MetaIndex index : table.getIndexCollection()) {
+                    boolean exists = items.contains(MetaIndex.NAME.of(index).toUpperCase());
+                    if (!exists) {
+                        LOGGER.log(Level.INFO, "New DB index: " + index);
+                        newIndexes.add(index);
+                    }
+                }
+            }
+        }
+
+        boolean result = !newTables.isEmpty()
+                      || !newColumns.isEmpty()
+                      || !newIndexes.isEmpty()
+                       ;
+        return result;
+    }
+
+    /** Returns a native database identifirer. */
+    protected String dbIdentifier(final String name, final DatabaseMetaData dmd) throws SQLException {
+        if (dmd.storesUpperCaseIdentifiers()) {
+            return name.toUpperCase();
+        }
+        if (dmd.storesLowerCaseIdentifiers()) {
+            return name.toLowerCase();
+        }
+        return name;
+    }
+
+    // =================================================
+
+    /** 0. Initialization */
+    public boolean initialize(Connection conn) throws Exception {
+        this.stat = conn.createStatement();
+        boolean createSequenceTable = false;
+        if (db.isSequenceTableRequired()) {
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            Throwable exception = null;
+            String logMsg = "";
+
+            try {
+                db.getDialect().printSequenceCurrentValue(findFirstSequencer(), sql);
+                ps = conn.prepareStatement(sql.toString());
+                ps.setString(1, "-");
+                rs = ps.executeQuery();
+            } catch (Throwable e) {
+                exception = e;
+            }
+
+            if (exception!=null) {
+                switch (ORM2DLL_POLICY.of(db)) {
+                    case VALIDATE:
+                    case WARNING:
+                        throw new IllegalStateException(logMsg, exception);
+                    case CREATE_DDL:
+                    case CREATE_OR_UPDATE_DDL:
+                    case INHERITED:
+                        createSequenceTable = true;
+                }
+            }
+
+            if (LOGGER.isLoggable(Level.INFO)) {
+                logMsg = "Table ''{0}'' {1} available on the database ''{2}''.";
+                logMsg = MessageFormat.format(logMsg
+                       , db.getDialect().getSeqTableModel().getTableName()
+                       , exception!=null ? "is not" : "is"
+                       , db.getId()
+                       );
+                LOGGER.log(Level.INFO, logMsg);
+            }
+
+            try {
+                if (exception!=null) {
+                    conn.rollback();
+                }
+            } finally {
+               close(null, ps, rs, false);
+            }
+        }
+        return createSequenceTable;
     }
 
     /** 1. CheckReport keywords: */
@@ -70,7 +250,7 @@ public class MetaDbService {
     }
 
     /** 2. Create schemas: */
-    public void createSchema(int tableTotalCount, List<MetaTable> tables, StringBuilder sql, Statement stat, Connection conn) throws SQLException, IOException {
+    public void createSchema(int tableTotalCount, List<MetaTable> tables, Connection conn) throws SQLException, IOException {
         if (tableTotalCount == tables.size()) {
             for (String schema : db.getSchemas(tables)) {
                 sql.setLength(0);
@@ -88,27 +268,24 @@ public class MetaDbService {
     }
 
     /** 3. Create tables: */
-    public boolean createTable(List<MetaTable> tables, StringBuilder sql, Statement stat, List<MetaColumn> foreignColumns) throws Exception {
-        boolean anyChange = false;
+    public void createTable(List<MetaTable> tables, List<MetaColumn> foreignColumns) throws Exception {
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 sql.setLength(0);
                 db.getDialect().printTable(table, sql);
-                executeUpdate(sql, stat, table);
+                executeUpdate(sql, table);
                 foreignColumns.addAll(table.getForeignColumns());
                 anyChange = true;
             }
         }
-        return anyChange;
     }
 
     /** 4. Create new columns: */
-    public boolean createNewColumn(List<MetaColumn> newColumns, StringBuilder sql, Statement stat, List<MetaColumn> foreignColumns) throws Exception {
-        boolean anyChange = false;
+    public void createNewColumn(List<MetaColumn> newColumns, List<MetaColumn> foreignColumns) throws Exception {
         for (MetaColumn column : newColumns) {
             sql.setLength(0);
             db.getDialect().printAlterTableAddColumn(column, sql);
-            executeUpdate(sql, stat, column.getTable());
+            executeUpdate(sql, column.getTable());
             anyChange = true;
 
             // Pick up the foreignColumns:
@@ -116,49 +293,44 @@ public class MetaDbService {
                 foreignColumns.add(column);
             }
         }
-        return anyChange;
     }
 
     /** 5. Create Indexes: */
-    public boolean changeIndex(List<MetaIndex> indexes, StringBuilder sql, Statement stat) throws Exception {
-        boolean anyChange = false;
+    public void changeIndex(List<MetaIndex> indexes) throws Exception {
         for (MetaIndex index : indexes) {
             sql.setLength(0);
             db.getDialect().printIndex(index, sql);
-            executeUpdate(sql, stat, MetaIndex.TABLE.of(index));
+            executeUpdate(sql, MetaIndex.TABLE.of(index));
             anyChange = true;
         }
-        return anyChange;
     }
 
     /** 6. Create Foreign Keys: */
-    public boolean createForeignKey(List<MetaColumn> foreignColumns, StringBuilder sql, Statement stat) throws Exception {
-        boolean anyChange = false;
+    public void createForeignKey(List<MetaColumn> foreignColumns) throws Exception {
         for (MetaColumn column : foreignColumns) {
             if (column.isForeignKey()) {
                 sql.setLength(0);
                 MetaTable table = MetaColumn.TABLE.of(column);
                 db.getDialect().printForeignKey(column, table, sql);
-                executeUpdate(sql, stat, column.getTable());
+                executeUpdate(sql, column.getTable());
                 anyChange = true;
             }
         }
-        return anyChange;
     }
 
     /** 7. Create SEQUENCE table: */
-    public void createSequenceTable(boolean createSequenceTable, StringBuilder sql, Statement stat) throws Exception {
+    public void createSequenceTable(boolean createSequenceTable) throws Exception {
         if (createSequenceTable) {
             sql.setLength(0);
             db.getDialect().printSequenceTable(db, sql);
             final MetaTable table = new MetaTable();
             MetaTable.ORM2DLL_POLICY.setValue(table, MetaParams.ORM2DLL_POLICY.getDefault());
-            executeUpdate(sql, stat, table);
+            executeUpdate(sql, table);
         }
     }
 
     /** 8. Create table comment for the all tables: */
-    public void createTableComments(List<MetaTable> tables, boolean anyChange, Statement stat, StringBuilder sql) throws Exception {
+    public void createTableComments(List<MetaTable> tables) throws Exception {
         @SuppressWarnings("unchecked")
         final List<MetaTable> cTables;
         switch (MetaParams.COMMENT_POLICY.of(db.getParams())) {
@@ -169,7 +341,7 @@ public class MetaDbService {
                 cTables = TABLES.getList(db);
                 break;
             case ON_ANY_CHANGE:
-                cTables = anyChange ? TABLES.getList(db) : (List)Collections.emptyList();
+                cTables = isAnyChange() ? TABLES.getList(db) : (List)Collections.emptyList();
                 break;
             case NEVER:
                 cTables = Collections.emptyList();
@@ -178,12 +350,12 @@ public class MetaDbService {
                 throw new IllegalStateException("Unsupported parameter");
         }
         if (!cTables.isEmpty()) {
-            createTableComments(cTables, stat, sql);
+            createTableComments(cTables, sql);
         }
     }
 
     /** Create table and column comments. An error in this method does not affect the rest of all transaction.  */
-    protected void createTableComments(List<MetaTable> cTables, Statement stat, StringBuilder out) {
+    protected void createTableComments(List<MetaTable> cTables, StringBuilder out) {
         try {
             for (MetaTable table : cTables) {
                 switch (MetaTable.ORM2DLL_POLICY.of(table)) {
@@ -194,7 +366,7 @@ public class MetaDbService {
                                 out.setLength(0);
                                 Appendable sql = db.getDialect().printComment(table, out);
                                 if (sql.toString().length() > 0) {
-                                    executeUpdate(sql, stat, table);
+                                    executeUpdate(sql, table);
                                 }
                             }
                             for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
@@ -202,7 +374,7 @@ public class MetaDbService {
                                     out.setLength(0);
                                     Appendable sql = db.getDialect().printComment(column, out);
                                     if (sql.toString().length() > 0) {
-                                        executeUpdate(sql, stat, table);
+                                        executeUpdate(sql, table);
                                     }
                                 }
                             }
@@ -233,7 +405,7 @@ public class MetaDbService {
     }
 
     /** Check missing database table, index, or column */
-    protected void executeUpdate(final Appendable sql, final Statement stat, final MetaTable table) throws IllegalStateException, SQLException {
+    protected void executeUpdate(final Appendable sql, final MetaTable table) throws IllegalStateException, SQLException {
 
        boolean validateCase = false;
        switch (table.getOrm2ddlPolicy()) {
@@ -261,5 +433,21 @@ public class MetaDbService {
                LOGGER.log(Level.INFO, sql.toString());
        }
     }
+
+    /** Find the first sequence of the database or returns null if no sequence was not found. */
+    protected UjoSequencer findFirstSequencer() {
+        for (MetaTable table : TABLES.of(db)) {
+            if (table.isTable()) {
+                return table.getSequencer();
+            }
+        }
+        return null;
+    }
+
+    /** Has the database any change? */
+    protected boolean isAnyChange() {
+        return anyChange;
+    }
+
 
 }
