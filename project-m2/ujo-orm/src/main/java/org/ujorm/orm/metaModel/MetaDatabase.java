@@ -471,8 +471,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     public void create(Session session) {
         Connection conn = session.getConnection(this, true);
         Statement stat = null;
-        StringBuilder out = new StringBuilder(256);
-        Appendable sql = out;
+        StringBuilder sql = new StringBuilder(256);
         List<MetaTable> tables = new ArrayList<MetaTable>();
         List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
         List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
@@ -491,7 +490,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 String logMsg = "";
 
                 try {
-                    sql = getDialect().printSequenceCurrentValue(findFirstSequencer(), out);
+                    getDialect().printSequenceCurrentValue(findFirstSequencer(), sql);
                     ps = conn.prepareStatement(sql.toString());
                     ps.setString(1, "-");
                     rs = ps.executeQuery();
@@ -575,26 +574,26 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             }
 
             // 2. Create schemas:
-            if (tableTotalCount==tables.size()) for (String schema : getSchemas(tables)) { // TODO
-                out.setLength(0);
-                sql = getDialect().printCreateSchema(schema, out);
-                if (isFilled(sql)) {
-                    try {
-                       stat.executeUpdate(sql.toString());
-                    } catch (SQLException e) {
-                       LOGGER.log(Level.INFO, "{0}: {1}; {2}", new Object[]{e.getClass().getName(), sql.toString(), e.getMessage()});
-                       conn.rollback();
+            if (tableTotalCount == tables.size()) {
+                for (String schema : getSchemas(tables)) {
+                    sql.setLength(0);
+                    getDialect().printCreateSchema(schema, sql);
+                    if (isFilled(sql)) {
+                        try {
+                            stat.executeUpdate(sql.toString());
+                        } catch (SQLException e) {
+                            LOGGER.log(Level.INFO, "{0}: {1}; {2}", new Object[]{e.getClass().getName(), sql.toString(), e.getMessage()});
+                            conn.rollback();
+                        }
                     }
                 }
             }
 
             // 3. Create tables:
-            int tableCount = 0;
             for (MetaTable table : tables) {
                 if (table.isTable()) {
-                    tableCount++;
-                    out.setLength(0);
-                    sql = getDialect().printTable(table, out);
+                    sql.setLength(0);
+                    getDialect().printTable(table, sql);
                     executeUpdate(sql, stat, table);
                     foreignColumns.addAll(table.getForeignColumns());
                     anyChange = true;
@@ -603,8 +602,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
             // 4. Create new columns:
             for (MetaColumn column : newColumns) {
-                out.setLength(0);
-                sql = getDialect().printAlterTableAddColumn(column, out);
+                sql.setLength(0);
+                getDialect().printAlterTableAddColumn(column, sql);
                 executeUpdate(sql, stat, column.getTable());
                 anyChange = true;
 
@@ -616,8 +615,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
             // 5. Create Indexes:
             for (MetaIndex index : indexes) {
-                out.setLength(0);
-                sql = getDialect().printIndex(index, out);
+                sql.setLength(0);
+                getDialect().printIndex(index, sql);
                 executeUpdate(sql, stat, MetaIndex.TABLE.of(index));
                 anyChange = true;
             }
@@ -625,9 +624,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             // 6. Create Foreign Keys:
             for (MetaColumn column : foreignColumns) {
                 if (column.isForeignKey()) {
-                    out.setLength(0);
+                    sql.setLength(0);
                     MetaTable table = MetaColumn.TABLE.of(column);
-                    sql = getDialect().printForeignKey(column, table, out);
+                    getDialect().printForeignKey(column, table, sql);
                     executeUpdate(sql, stat, column.getTable());
                     anyChange = true;
                 }
@@ -635,8 +634,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
             // 7. Create SEQUENCE table;
             if (createSequenceTable) {
-                out.setLength(0);
-                sql = getDialect().printSequenceTable(this, out);
+                sql.setLength(0);
+                getDialect().printSequenceTable(this, sql);
                 final MetaTable table = new MetaTable();
                 MetaTable.ORM2DLL_POLICY.setValue(table, MetaParams.ORM2DLL_POLICY.getDefault());
                 executeUpdate(sql, stat, table);
@@ -662,8 +661,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                     throw new IllegalStateException("Unsupported parameter");
             }
             if (!cTables.isEmpty()) {
-                sql = out;
-                createTableComments(cTables, stat, out);
+                createTableComments(cTables, stat, sql);
             }
             conn.commit();
 
