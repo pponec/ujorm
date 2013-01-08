@@ -97,11 +97,20 @@ public class OrmHandler {
       * On a multi-thread application use a method {@link #createSession()} rather.
       * @see #createSession()
       */
-    public Session getSession() {
+    public Session getDefaultSession() {
         if (session==null) {
             session = createSession();
         }
         return session;
+    }
+
+     /** Get a <strong>default</strong> Session of the OrmHandler.
+      * On a multi-thread application use a method {@link #createSession()} rather.
+      * @see #createSession()
+      * @deprecated Method was replaced by the name {@link #getDefaultSession() }
+      */
+    public Session getSession() {
+        return getDefaultSession();
     }
 
     /** Create new session */
@@ -256,7 +265,7 @@ public class OrmHandler {
                 case CREATE_DDL:
                 case CREATE_OR_UPDATE_DDL:
                 case VALIDATE:
-                    dbModel.create(getSession());
+                    dbModel.create(getDefaultSession());
             }
         }
     }
