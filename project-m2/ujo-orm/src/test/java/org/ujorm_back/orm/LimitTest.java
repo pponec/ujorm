@@ -64,7 +64,7 @@ public class LimitTest extends TestCase {
     @SuppressWarnings("unchecked")
     protected void deleteAllOrders() {
 
-        Session session = getHandler().getSession();
+        Session session = getHandler().getDefaultSession();
         Criterion crit;
         int count;
         //
@@ -80,7 +80,7 @@ public class LimitTest extends TestCase {
 
     protected void createOrder(String name) {
 
-        Session session = getHandler().getSession();
+        Session session = getHandler().getDefaultSession();
 
         XOrder order = new XOrder();
         XOrder.CREATED.setValue(order, new Date());
@@ -126,7 +126,7 @@ public class LimitTest extends TestCase {
 
         createOrders(count);
 
-        Session session = getHandler().getSession();
+        Session session = getHandler().getDefaultSession();
         Criterion<XOrder> crit = Criterion.where(XOrder.ID, GE, 0L);
         Query<XOrder> query = session.createQuery(crit).orderBy(XOrder.DESCR);
 

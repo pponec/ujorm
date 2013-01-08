@@ -17,7 +17,6 @@ package org.ujorm.orm;
 
 import java.awt.Color;
 import java.util.Date;
-import java.util.List;
 import junit.framework.TestCase;
 import org.ujorm.Key;
 import org.ujorm.criterion.*;
@@ -44,10 +43,10 @@ public class FetchTest extends TestCase {
     // ---------- TESTS -----------------------
 
     @SuppressWarnings("deprecation")
-    public void testFetch_1() {
+    public void testFetch() {
         createOrders(1);
 
-        Session session = getHandler().getSession();
+        Session session = getHandler().createSession();
         Criterion<XItem> crit = Criterion.where(XItem.ID, GE, 0L);
         Query<XItem> query = session.createQuery(crit);
 
@@ -218,7 +217,38 @@ public class FetchTest extends TestCase {
 
         // ------ CLOSE ------
         session.close();
+    }
 
+    @SuppressWarnings("deprecation")
+    public void TODO_testFetch_extended() {
+        createOrders(1);
+
+        Session session = getHandler().createSession();
+        Criterion<XItem> crit = Criterion.where(XItem.ID, GE, 0L);
+        Query<XItem> query = session.createQuery(crit);
+
+        // ------ FETCH THE COLUMN 'XOrder.NOTE' + 'ID' ------
+
+        Key<XItem, ?> fetchColumn = XItem.ORDER.add(XOrder.NOTE);
+        query.addColumn(fetchColumn);
+        for (XItem item : query) {
+            Object orderFk = item.readValue(XItem.ORDER);
+            assertTrue("Order instance", orderFk instanceof XOrder);
+            assertNull(item.get(XItem.ORDER.add(XOrder.CUSTOMER)));
+            assertNotNull(item.get(XItem.ID));
+            assertNotNull(item.get(fetchColumn));
+            assertNull(item.get(XItem.ORDER.add(XOrder.ID))); // TODO: fix it or documented it ?
+            assertNull(item.get(XItem.$ORDER_DATE));
+            //
+            assertNotNull(item.readSession());
+            assertNotNull(item.getOrder().readSession());
+            assertEquals(0, item.readChangedProperties(false).length);
+            assertEquals(0, item.getOrder().readChangedProperties(false).length);
+            break; // The one loop is sufficient.
+        }
+
+        // ------ CLOSE ------
+        session.close();
     }
 
     // ---------- TOOLS -----------------------
@@ -232,9 +262,8 @@ public class FetchTest extends TestCase {
     }
 
     @SuppressWarnings("unchecked")
-    protected void deleteAllOrders() {
+    protected void deleteAllOrders(Session session) {
 
-        Session session = getHandler().getSession();
         Criterion crit;
         int count;
         //
@@ -248,9 +277,7 @@ public class FetchTest extends TestCase {
         count = session.delete(crit);
     }
 
-    protected void createOrder(String name) {
-
-        Session session = getHandler().getSession();
+    protected void createOrder(String name, Session session) {
 
         XCustomer customer = new XCustomer();
         XCustomer.FIRSTNAME.setValue(customer, "Lucy");
@@ -287,9 +314,10 @@ public class FetchTest extends TestCase {
 
     /** Remove all orders and create orders by parameter. */
     protected void createOrders(long count) {
-        deleteAllOrders();
+        Session session = getHandler().createSession();
+        deleteAllOrders(session);
         for (int i = 0; i < count; i++) {
-            createOrder("" + i);
+            createOrder("" + i, session);
         }
     }
 

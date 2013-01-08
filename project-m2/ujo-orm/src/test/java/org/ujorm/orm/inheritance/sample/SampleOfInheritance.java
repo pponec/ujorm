@@ -53,7 +53,7 @@ public class SampleOfInheritance {
         customer.setCompany("ABC");
         customer.setDiscount(10);
         //
-        Session session = handler.getSession();
+        Session session = handler.getDefaultSession();
         // session.save(customer.getUser()); // Since Ujorm 1.20 the statement is not necessary.
         session.save(customer);
         session.commit();
@@ -71,7 +71,7 @@ public class SampleOfInheritance {
         cn2 = Criterion.where(Customer.company, "ABC");
         crit = cn1.and(cn2);
 
-        Session session = handler.getSession();
+        Session session = handler.getDefaultSession();
         Query<Customer> customers = session.createQuery(crit);
 
         for (IUser user : customers) {
@@ -88,7 +88,7 @@ public class SampleOfInheritance {
         cn2 = Criterion.where(Customer.company, "ABC");
         crit = cn1.or(cn2);
 
-        Session session = handler.getSession();
+        Session session = handler.getDefaultSession();
         Query<Customer> customers = session.createQuery(crit);
         customers.setDistinct();
 
@@ -116,7 +116,7 @@ public class SampleOfInheritance {
      * a database connection(s)
      */
     public void useCloseSession() {
-        handler.getSession().close();
+        handler.getDefaultSession().close();
     }
 
     /** Run the tutorial */

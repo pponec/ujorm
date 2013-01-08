@@ -69,7 +69,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDatabase.class);
-    /** Add a DB relation into table models. The {@code true} value allows to use a property RelationToMany of Database model 
+    /** Add a DB relation into table models. The {@code true} value allows to use a property RelationToMany of Database model
      * by the same way as a RelationToMany on any persistent table. A sample of the use:
      * <pre class="pre">
      * for (Order order: database.get(Database.ORDER)) {
@@ -199,8 +199,8 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             @SuppressWarnings("unchecked")
             String schemaKeyName = SCHEMA.of(this);
             RelationToMany relation = new RelationToMany
-                    ( isFilled(schemaKeyName) 
-                    ? schemaKeyName 
+                    ( isFilled(schemaKeyName)
+                    ? schemaKeyName
                     : RelationToMany.class.getSimpleName()
                     , database.getClass());
             MetaTable table = new MetaTable(this, relation, null);
@@ -862,7 +862,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Returns a default handler session. It is a session of the first database. */
     public Session getDefaultSession() {
-        return ormHandler.getSession();
+        return ormHandler.getDefaultSession();
     }
 
     /** Get all table schemas */
