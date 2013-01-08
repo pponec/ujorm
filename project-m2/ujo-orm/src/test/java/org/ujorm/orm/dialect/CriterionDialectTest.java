@@ -53,13 +53,13 @@ public class CriterionDialectTest extends TestCase {
         XOrder user = new XOrder();
         user.setId(1L);
         user.setNote("test");
-        user.setCreated(new Date());        
+        user.setCreated(new Date());
         //
         final Session session = new OrmHandler(XDatabase.class).createSession();
         session.delete(XItem.ID.forAll());
         session.delete(XOrder.ID.forAll());
         session.save(user);
-        session.commit();        
+        session.commit();
         //
         final Criterion<XOrder> crnA, crnB, crnC, criterion;
         crnA = XOrder.ID.whereNotNull();
@@ -68,24 +68,24 @@ public class CriterionDialectTest extends TestCase {
         criterion = crnA.and(crnB.or(crnC));
         //
         long count = session.createQuery(criterion).getCount();
-        assertEquals(1L, count);    
+        assertEquals(1L, count);
         //
         String result = getWhere(session.createQuery(criterion));
         assertEquals("WHERE x_ord_order.ID IS NOT NULL AND  (x_ord_order.ID>? OR x_ord_order.ID<?)", result);
     }
-    
-    
+
+
     public void testRollbackTranactionB() throws IOException {
         XOrder user = new XOrder();
         user.setId(1L);
         user.setNote("test");
-        user.setCreated(new Date());        
+        user.setCreated(new Date());
         //
         final Session session = new OrmHandler(XDatabase.class).createSession();
         session.delete(XItem.ID.forAll());
         session.delete(XOrder.ID.forAll());
         session.save(user);
-        session.commit();        
+        session.commit();
         //
         final Criterion<XOrder> crnA, crnB, crnC, criterion;
         crnA = XOrder.CREATED.whereNotNull().and(XOrder.CREATED.whereLt(new Date()));
@@ -94,24 +94,22 @@ public class CriterionDialectTest extends TestCase {
         criterion = crnA.and(crnB.or(crnC));
         //
         long count = session.createQuery(criterion).getCount();
-        assertEquals(1L, count);    
+        assertEquals(1L, count);
         //
         String result = getWhere(session.createQuery(criterion));
         assertEquals("WHERE x_ord_order.CREATED IS NOT NULL AND x_ord_order.CREATED<? "
                 + "AND  (x_ord_order.NOTE=? OR x_ord_order.ID IS NOT NULL AND  (x_ord_order.ID<? OR x_ord_order.ID>?) )", result);
     }
-    
-    
-    
+
     // -----------------------------------------------------
-    
+
     /** Returns SQL Statement */
     private String getWhere(Query<XOrder> query) throws IOException {
         final String result = getStatement(query);
-        int i = 1 + result.lastIndexOf(" WHERE ");                
+        int i = 1 + result.lastIndexOf(" WHERE ");
         return result.substring(i).trim();
     }
-    
+
     /** Returns SQL Statement */
     private String getStatement(Query<XOrder> query) throws IOException {
         final Criterion<XOrder> criterion = query.getCriterion();
@@ -119,13 +117,10 @@ public class CriterionDialectTest extends TestCase {
         final SqlDialect dialect = session.getHandler().getDatabases().get(0).getDialect();
         final MetaTable table = session.getHandler().findTableModel(XOrder.class);
         final String result = dialect.printSelect(table, query, false, new StringBuilder()).toString();
-                
+
         return result;
-
     }
-    
 
-    
     // -----------------------------------------------------
 
     public static void main(java.lang.String[] argList) {

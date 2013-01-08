@@ -34,7 +34,6 @@ import java.sql.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +55,7 @@ import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.ao.UjoStatement;
 import org.ujorm.orm.dialect.MySqlDialect;
+import org.ujorm.orm.utility.OrmTools;
 
 /**
  * A logical database description.
@@ -199,7 +199,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             @SuppressWarnings("unchecked")
             String schemaKeyName = SCHEMA.of(this);
             RelationToMany relation = new RelationToMany
-                    ( isFilled(schemaKeyName)
+                    ( OrmTools.isFilled(schemaKeyName)
                     ? schemaKeyName
                     : RelationToMany.class.getSimpleName()
                     , database.getClass());
@@ -207,6 +207,17 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             table.setNotPersistent();
             TABLES.addItem(this, table);
             ormHandler.addTableModel(table);
+        }
+    }
+
+    /** Create a service method */
+    protected MetaDbService createService() throws IllegalStateException {
+        try {
+            final MetaDbService result = getParams().get(MetaParams.META_DB_SERVICE).newInstance();
+            result.setMetaDatabase(this);
+            return result;
+        } catch (Throwable e) {
+            throw new IllegalStateException("Can't create an instance of: " + MetaDbService.class, e);
         }
     }
 
@@ -310,39 +321,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             return maxLenght;
         } catch (SQLException e) {
             throw new IllegalArgumentException(e);
-        }
-    }
-
-    /** Create table and column comments. An error in this method does not affect the rest of all transaction.  */
-    private void createTableComments(List<MetaTable> cTables, Statement stat, StringBuilder out) {
-        try {
-            for (MetaTable table : cTables) {
-                switch (MetaTable.ORM2DLL_POLICY.of(table)) {
-                    case CREATE_DDL:
-                    case CREATE_OR_UPDATE_DDL:
-                        if (table.isTable()) {
-                            if (table.isCommented()) {
-                                out.setLength(0);
-                                Appendable sql = getDialect().printComment(table, out);
-                                if (sql.toString().length() > 0) {
-                                    executeUpdate(sql, stat, table);
-                                }
-                            }
-                            for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
-                                if (column.isCommented()) {
-                                    out.setLength(0);
-                                    Appendable sql = getDialect().printComment(column, out);
-                                    if (sql.toString().length() > 0) {
-                                        executeUpdate(sql, stat, table);
-                                    }
-                                }
-                            }
-                        }
-                    default:
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error on table comment: {0}", out);
         }
     }
 
@@ -469,6 +447,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Create DB */
     public void create(Session session) {
+        MetaDbService service = createService();
         Connection conn = session.getConnection(this, true);
         Statement stat = null;
         StringBuilder sql = new StringBuilder(256);
@@ -553,116 +532,22 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             // ================================================
 
             // 1. CheckReport keywords:
-            switch (MetaParams.CHECK_KEYWORDS.of(getParams())) {
-                case WARNING:
-                case EXCEPTION:
-                    Set<String> keywords = getDialect().getKeywordSet(conn);
-                    for (MetaTable table : tables) {
-                        if (table.isTable()) {
-                            checkKeyWord(MetaTable.NAME.of(table), table, keywords);
-                            for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
-                                checkKeyWord(MetaColumn.NAME.of(column), table, keywords);
-                            }
-                        }
-                    }
-                    for (MetaColumn column : newColumns) {
-                        checkKeyWord(MetaColumn.NAME.of(column), column.getTable(), keywords);
-                    }
-                    for (MetaIndex index : indexes) {
-                        checkKeyWord(MetaIndex.NAME.of(index), MetaIndex.TABLE.of(index), keywords);
-                    }
-            }
-
+            service.checkReportKeywords(conn, tables, newColumns, indexes);
             // 2. Create schemas:
-            if (tableTotalCount == tables.size()) {
-                for (String schema : getSchemas(tables)) {
-                    sql.setLength(0);
-                    getDialect().printCreateSchema(schema, sql);
-                    if (isFilled(sql)) {
-                        try {
-                            stat.executeUpdate(sql.toString());
-                        } catch (SQLException e) {
-                            LOGGER.log(Level.INFO, "{0}: {1}; {2}", new Object[]{e.getClass().getName(), sql.toString(), e.getMessage()});
-                            conn.rollback();
-                        }
-                    }
-                }
-            }
-
+            service.createSchema(tableTotalCount, tables, sql, stat, conn);
             // 3. Create tables:
-            for (MetaTable table : tables) {
-                if (table.isTable()) {
-                    sql.setLength(0);
-                    getDialect().printTable(table, sql);
-                    executeUpdate(sql, stat, table);
-                    foreignColumns.addAll(table.getForeignColumns());
-                    anyChange = true;
-                }
-            }
-
+            anyChange = service.createTable(tables, sql, stat, foreignColumns) || anyChange;
             // 4. Create new columns:
-            for (MetaColumn column : newColumns) {
-                sql.setLength(0);
-                getDialect().printAlterTableAddColumn(column, sql);
-                executeUpdate(sql, stat, column.getTable());
-                anyChange = true;
-
-                // Pick up the foreignColumns:
-                if (column.isForeignKey()) {
-                    foreignColumns.add(column);
-                }
-            }
-
+            anyChange = service.createNewColumn(newColumns, sql, stat, foreignColumns) || anyChange;
             // 5. Create Indexes:
-            for (MetaIndex index : indexes) {
-                sql.setLength(0);
-                getDialect().printIndex(index, sql);
-                executeUpdate(sql, stat, MetaIndex.TABLE.of(index));
-                anyChange = true;
-            }
-
+            anyChange = service.changeIndex(indexes, sql, stat) || anyChange;
             // 6. Create Foreign Keys:
-            for (MetaColumn column : foreignColumns) {
-                if (column.isForeignKey()) {
-                    sql.setLength(0);
-                    MetaTable table = MetaColumn.TABLE.of(column);
-                    getDialect().printForeignKey(column, table, sql);
-                    executeUpdate(sql, stat, column.getTable());
-                    anyChange = true;
-                }
-            }
-
-            // 7. Create SEQUENCE table;
-            if (createSequenceTable) {
-                sql.setLength(0);
-                getDialect().printSequenceTable(this, sql);
-                final MetaTable table = new MetaTable();
-                MetaTable.ORM2DLL_POLICY.setValue(table, MetaParams.ORM2DLL_POLICY.getDefault());
-                executeUpdate(sql, stat, table);
-            }
-
+            anyChange = service.createForeignKey(foreignColumns, sql, stat) || anyChange;
+            // 7. Create SEQUENCE table:
+            service.createSequenceTable(createSequenceTable, sql, stat);
             // 8. Create table comment for the all tables:
-            @SuppressWarnings("unchecked")
-            final List<MetaTable> cTables;
-            switch (MetaParams.COMMENT_POLICY.of(ormHandler.getParameters())) {
-                case FOR_NEW_OBJECT:
-                    cTables = tables;
-                    break;
-                case ALWAYS:
-                    cTables = TABLES.getList(this);
-                    break;
-                case ON_ANY_CHANGE:
-                    cTables = anyChange ? TABLES.getList(this) : (List)Collections.emptyList();
-                    break;
-                case NEVER:
-                    cTables = Collections.emptyList();
-                    break;
-                default:
-                    throw new IllegalStateException("Unsupported parameter");
-            }
-            if (!cTables.isEmpty()) {
-                createTableComments(cTables, stat, sql);
-            }
+            service.createTableComments(tables, anyChange, stat, sql);
+            // 9. Commit:
             conn.commit();
 
         } catch (Throwable e) {
@@ -673,36 +558,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             }
             throw new IllegalArgumentException(Session.SQL_ILLEGAL + sql, e);
         }
-    }
-
-    /** Check missing database table, index, or column */
-    private void executeUpdate(final Appendable sql, final Statement stat, final MetaTable table) throws IllegalStateException, SQLException {
-
-       boolean validateCase = false;
-       switch (table.getOrm2ddlPolicy()) {
-           case INHERITED:
-               throw new IllegalStateException("An internal error due the DDL policy: " + table.getOrm2ddlPolicy());
-           case DO_NOTHING:
-               return;
-           case VALIDATE:
-               validateCase = true;
-           case WARNING:
-               String msg = "A database validation (caused by the parameter "
-                          + MetaTable.ORM2DLL_POLICY
-                          + ") have found an inconsistency. "
-                          + "There is required a database change: "
-                          + sql
-                          ;
-               if (validateCase) {
-                   throw new IllegalStateException(msg);
-               } else {
-                   LOGGER.log(Level.WARNING, msg);
-               }
-
-           default:
-               stat.executeUpdate(sql.toString());
-               LOGGER.log(Level.INFO, sql.toString());
-       }
     }
 
     /** Close a connection, statement and a result set. */
@@ -730,23 +585,6 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
                 throw new IllegalStateException(msg, e);
             } else {
                 LOGGER.log(Level.SEVERE, msg, e);
-            }
-        }
-    }
-
-    /** Check the keyword */
-    protected void checkKeyWord(String word, MetaTable table, Set<String> keywords) throws Exception {
-        if (keywords.contains(word.toUpperCase())) {
-            String msg = "The database table or column called '" + word
-                + "' is a SQL keyword. See the class: "
-                + table.getType().getName()
-                + ".\nNOTE: the keyword checking can be disabled by the Ujorm parameter: " + MetaParams.CHECK_KEYWORDS
-                ;
-            switch (MetaParams.CHECK_KEYWORDS.of(getParams())) {
-                case EXCEPTION:
-                    throw new IllegalArgumentException(msg);
-                case WARNING:
-                    LOGGER.log(Level.WARNING, msg);
             }
         }
     }
@@ -864,12 +702,12 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Get all table schemas */
-    private Set<String> getSchemas(List<MetaTable> tables) {
+    public Set<String> getSchemas(List<MetaTable> tables) {
         final Set<String> result = new HashSet<String>();
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 String schema = MetaTable.SCHEMA.of(table);
-                if (isFilled(schema)) {
+                if (OrmTools.isFilled(schema)) {
                     result.add(schema);
                 }
             }
@@ -882,7 +720,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     MetaTable findTable(String id) {
 
-        if (isFilled(id)) for (MetaTable table : TABLES.getList(this)) {
+        if (OrmTools.isFilled(id)) for (MetaTable table : TABLES.getList(this)) {
             if (MetaTable.ID.equals(table, id)) {
                 return table;
             }
@@ -895,7 +733,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
      */
     MetaProcedure findProcedure(String id) {
 
-        if (isFilled(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
+        if (OrmTools.isFilled(id)) for (MetaProcedure procedure : PROCEDURES.getList(this)) {
             if (MetaProcedure.ID.equals(procedure, id)) {
                 return procedure;
             }

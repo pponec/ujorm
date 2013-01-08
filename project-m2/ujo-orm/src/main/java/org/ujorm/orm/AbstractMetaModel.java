@@ -18,13 +18,13 @@ package org.ujorm.orm;
 
 import java.util.Collections;
 import java.util.List;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
+import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.AbstractUjo;
-
+import org.ujorm.orm.utility.OrmTools;
 
 /**
  * Abstract Metamodel
@@ -96,7 +96,7 @@ abstract public class AbstractMetaModel extends AbstractUjo {
     , final Key<UJO, VALUE> property
     , final VALUE value
     ) {
-        if (property.isDefault(ujo) && isFilled(value)) {
+        if (property.isDefault(ujo) && OrmTools.isFilled(value)) {
             property.setValue(ujo, value);
         }
     }
@@ -108,21 +108,6 @@ abstract public class AbstractMetaModel extends AbstractUjo {
             return !property.isDefault(this);
         }
         return super.readAuthorization(action, property, value);
-    }
-
-    /** Returns true, if the argument text is not null and not empty. */
-    protected boolean isFilled(final CharSequence text) {
-        final boolean result = text!=null && text.length()>0;
-        return result;
-    }
-
-    /** Returns true, if the argument text is not null and not empty. */
-    protected boolean isFilled(final Object value) {
-        final boolean result = value instanceof CharSequence
-            ? isFilled((CharSequence)value)
-            : value!=null
-            ;
-        return result;
     }
 
     /** Getter based on one Key */

@@ -40,6 +40,7 @@ import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
+import org.ujorm.orm.utility.OrmTools;
 
 
 /**
@@ -236,7 +237,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             throw new IllegalArgumentException("Argument is not type of " + type);
         }
     }
-    
+
     /** Returns a new instance or the BO. */
     public OrmUjo createBO() throws InstantiationException, IllegalAccessException {
         final OrmUjo result = getType().newInstance();
@@ -279,7 +280,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return VIEW.of(this);
     }
 
-    /** Is the instance a database persistent table? 
+    /** Is the instance a database persistent table?
      * The false value means that the object is a relation model or a view.
      */
     public boolean isTable() {
@@ -328,7 +329,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Finds the first column by ID or returns null. The method is for internal use only. */
     MetaColumn findColumn(String id) {
 
-        if (isFilled(id)) for (MetaColumn column : COLUMNS.of(this)) {
+        if (OrmTools.isFilled(id)) for (MetaColumn column : COLUMNS.of(this)) {
             if (MetaColumn.ID.equals(column, id)) {
                 return column;
             }
@@ -339,7 +340,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Finds the first relation by ID or returns null. The method is for internal use only. */
     MetaRelation2Many findRelation(String id) {
 
-        if (isFilled(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
+        if (OrmTools.isFilled(id)) for (MetaRelation2Many relation : RELATIONS.of(this)) {
             if (MetaRelation2Many.ID.equals(relation, id)) {
                 return relation;
             }
@@ -415,7 +416,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             throw new IllegalStateException(msg);
         }
     }
-    
+
     /** Returns Orm2DDl policy */
     public Orm2ddlPolicy getOrm2ddlPolicy() {
         return ORM2DLL_POLICY.of(this);

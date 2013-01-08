@@ -369,4 +369,13 @@ final public class OrmTools {
         return collection!=null && !collection.isEmpty();
     }
 
+    /** Returns true, if the argument text is not null and not empty. */
+    public static boolean isFilled(final Object value) {
+        final boolean result = value instanceof CharSequence
+            ? isFilled((CharSequence)value)
+            : value!=null
+            ;
+        return result;
+    }
+
 }
