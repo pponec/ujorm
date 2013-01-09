@@ -157,7 +157,7 @@ public class UjoManager implements Comparator<Key> {
 
                             if (ujoProp instanceof Property) {
                                 if (ujoProp.getName() == null) {
-                                    PropertyModifier.setName(field.getName(), (Property) ujoProp);
+                                    PropertyModifier.setName(field.getName().intern(), (Property) ujoProp);
                                 }
                                 if (ujoProp.getType() == null) {
                                     PropertyModifier.setType(KeyFactory.getGenericClass(field, true), (Property) ujoProp);
