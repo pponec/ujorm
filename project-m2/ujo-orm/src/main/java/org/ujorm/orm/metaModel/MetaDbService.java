@@ -31,8 +31,10 @@ import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
 /**
- * S service method for the metaDatabase
+ * A service method for the MetaDatabase class.
+ * The service class can be overriten
  * @author Pavel Ponec
+ * @see MetaParams#META_DB_SERVICE
  */
 public class MetaDbService {
 
