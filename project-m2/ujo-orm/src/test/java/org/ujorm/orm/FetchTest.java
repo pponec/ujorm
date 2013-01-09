@@ -48,7 +48,7 @@ public class FetchTest extends TestCase {
 
         Session session = getHandler().createSession();
         Criterion<XItem> crit = Criterion.where(XItem.ID, GE, 0L);
-        Query<XItem> query = session.createQuery(crit);
+        Query<XItem> query = session.createQuery(crit).setLimit(1);
 
         // ------ LAZY LOADING TEST ------
 
@@ -65,7 +65,7 @@ public class FetchTest extends TestCase {
             assertNotNull(item.readSession());
             ++count;
         }
-        assertTrue("The one loop at least", count > 0);
+        assertTrue("The one loop at least", count == 1);
 
         // ------ ONE COLUMN TEST ------
 
@@ -80,7 +80,6 @@ public class FetchTest extends TestCase {
             assertNull(item.get(XItem.$ORDER_NOTE));
             //
             assertNotNull(item.readSession());
-            break; // The one loop is sufficient.
         }
 
         // ------ TWO COLUMNS TEST ------
@@ -96,7 +95,6 @@ public class FetchTest extends TestCase {
             assertNull(item.get(XItem.$ORDER_NOTE));
             //
             assertNotNull(item.readSession());
-            break; // The one loop is sufficient.
         }
 
         // ------ FETCH THE COLUMN 'XOrder.NOTE' ------
@@ -116,7 +114,6 @@ public class FetchTest extends TestCase {
             assertNotNull(item.getOrder().readSession());
             assertEquals(0, item.readChangedProperties(false).length);
             assertEquals(0, item.getOrder().readChangedProperties(false).length);
-            break; // The one loop is sufficient.
         }
 
         // ------ FETCH THE COLUMN 'XOrder.NOTE' + 'ID' ------
@@ -136,7 +133,6 @@ public class FetchTest extends TestCase {
             assertNotNull(item.getOrder().readSession());
             assertEquals(0, item.readChangedProperties(false).length);
             assertEquals(0, item.getOrder().readChangedProperties(false).length);
-            break; // The one loop is sufficient.
         }
 
         // ------ FETCH THE ALL COLUMNS OF 'XOrder' ------
