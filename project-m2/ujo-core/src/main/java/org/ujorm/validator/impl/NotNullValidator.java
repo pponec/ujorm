@@ -26,6 +26,9 @@ import org.ujorm.validator.ValidationError;
  */
 public class NotNullValidator<VALUE extends Object> extends AbstractValidator<VALUE> {
 
+    /** The default instance of the validator */
+    public static final NotNullValidator NOT_NULL = new NotNullValidator();
+
     public NotNullValidator() {
     }
 
@@ -48,7 +51,7 @@ public class NotNullValidator<VALUE extends Object> extends AbstractValidator<VA
      */
     @Override
     protected String getDefaultTemplate() {
-        return service.template("An attribute ", KEY, " must not be null");
+        return service.template("An attribute ", KEY, " must be not null");
     }
 
     /** @return Returns: "ujorm.org.notNull" */

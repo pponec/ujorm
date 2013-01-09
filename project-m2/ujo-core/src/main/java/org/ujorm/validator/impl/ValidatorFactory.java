@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.criterion.Criterion;
+import static org.ujorm.validator.impl.NotNullValidator.*;
 
 /**
  * Input Validator Factory.
@@ -29,16 +30,19 @@ import org.ujorm.criterion.Criterion;
  */
 public class ValidatorFactory {
 
-    /** Default Not Null Validator */
-    public static final NotNullValidator NOT_NULL = new NotNullValidator();
-
-    /** Empty String validator */
-    public static final NotEmptyValidator<CharSequence> NOT_EMPTY = new NotEmptyValidator<CharSequence>(false);
-
-    /** Blank String validator */
-    public static final NotEmptyValidator<CharSequence> NOT_BLANK = new NotEmptyValidator<CharSequence>(true);
-
-
+    /** A modifier of the validator */
+    public static enum CheckType {
+        /** The nullable value is allowed (the default option) */
+        NULLABLE,
+        /** Only notnull value is allowed */
+        MANDATORY;
+    }
+    /** The nullable value is allowed (the default option) */
+    public static final CheckType NULLABLE = CheckType.NULLABLE;
+    /** Only notnull value is allowed */
+    public static final CheckType MANDATORY = CheckType.MANDATORY;
+    /** An alias for the {@link #MANDATORY} option */
+    public static final CheckType NOTNULL = CheckType.MANDATORY;
 
     /** A child class can add new method only,
      * because the current method have hot static modifications. */
@@ -63,14 +67,14 @@ public class ValidatorFactory {
      * @see NotEmptyValidator
      */
     public static Validator notEmpty() {
-        return NOT_EMPTY;
+        return NotEmptyValidator.NOT_EMPTY;
     }
 
     /** Input value is valid if the trimmed String length is great than zero. Method <strong>is not</strong> type save!
      * @see NotEmptyValidator
      */
     public static Validator notBlank() {
-        return NOT_BLANK;
+        return NotEmptyValidator.NOT_BLANK;
     }
 
     /** Not null and not empty. The method is type safe!
@@ -80,7 +84,7 @@ public class ValidatorFactory {
      */
     public static <T> Validator<T> notEmpty(Class<T> type) {
         if (CharSequence.class.isAssignableFrom(type)) {
-            return (Validator<T>) NOT_EMPTY;
+            return (Validator<T>) NotEmptyValidator.NOT_EMPTY;
         }
         if (Collection.class.isAssignableFrom(type)) {
             return new NotEmptyCollectionValidator();
@@ -96,11 +100,27 @@ public class ValidatorFactory {
         return new BetweenValidator(min, max);
     }
 
+    /** Value from min (inxlusive) to max (exclusive)
+     * @see BetweenValidator
+     */
+    public static <VALUE extends Comparable> Validator<VALUE> between(CheckType type, VALUE min, VALUE max) {
+        final Validator<VALUE> result = between(min, max);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
+    }
+
     /** Value from min (inxlusive) to max (inxlusive)
      * @see RangeValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> range(VALUE min, VALUE max) {
         return new RangeValidator(min, max);
+    }
+
+    /** Value from min (inxlusive) to max (inxlusive)
+     * @see RangeValidator
+     */
+    public static <VALUE extends Comparable> Validator<VALUE> range(CheckType type, VALUE min, VALUE max) {
+        final Validator<VALUE> result = range(min, max);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 
     /** Value from min (inclusive)
@@ -110,11 +130,27 @@ public class ValidatorFactory {
         return new ComparableValidator(min, false);
     }
 
+    /** Value from min (inclusive)
+     * @see ComparableValidator
+     */
+    public static <VALUE extends Comparable> Validator<VALUE> min(CheckType type, VALUE min) {
+        final Validator<VALUE> result = min(min);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
+    }
+
     /** Value from to max (inclusive)
      * @see ComparableValidator
      */
     public static <VALUE extends Comparable> Validator<VALUE> max(VALUE max) {
         return new ComparableValidator(max, true);
+    }
+
+    /** Value from to max (inclusive)
+     * @see ComparableValidator
+     */
+    public static <VALUE extends Comparable> Validator<VALUE> max(CheckType type, VALUE max) {
+        final Validator<VALUE> result = max(max);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 
     /** Validator compares an input value with a set of constants by the hashCode() and equals() methods.
@@ -127,8 +163,24 @@ public class ValidatorFactory {
     /** Validator compares an input value with a set of constants by the hashCode() and equals() methods.
      * @see ConstantsValidator
      */
+    public static <VALUE> Validator<VALUE> required(CheckType type, VALUE... requiredSet) {
+        final Validator<VALUE> result = required(requiredSet);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
+    }
+
+    /** Validator compares an input value with a set of constants by the hashCode() and equals() methods.
+     * @see ConstantsValidator
+     */
     public static <VALUE> Validator<VALUE> forbidden(VALUE... forbiddenSet) {
-        return new ConstantsValidator<VALUE>(true, forbiddenSet);
+        return new ConstantsValidator(true, forbiddenSet);
+    }
+
+    /** Validator compares an input value with a set of constants by the hashCode() and equals() methods.
+     * @see ConstantsValidator
+     */
+    public static <VALUE> Validator<VALUE> forbidden(CheckType type, VALUE... forbiddenSet) {
+        final Validator<VALUE> result = forbidden(forbiddenSet);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 
     /** Match the input value to the simple email pattern.
@@ -137,6 +189,14 @@ public class ValidatorFactory {
      */
     public static Validator<String> email() {
         return regexp(PatternValidator.EMAIL);
+    }
+
+    /** Match the input value to the simple email pattern.
+     * For a better regular expression see the <a href="http://ex-parrot.com/~pdw/Mail-RFC822-Address.html">next link</a>.
+     * @see PatternValidator
+     */
+    public static Validator<String> email(CheckType type) {
+        return regexp(type, PatternValidator.EMAIL);
     }
 
     /** Match the input value to pattern
@@ -149,8 +209,16 @@ public class ValidatorFactory {
     /** Match the input value to pattern
      * @see PatternValidator
      */
-    public static Validator<String> regexp(Pattern pattern) {
-        return new PatternValidator(pattern);
+    public static Validator<String> regexp(CheckType type, String pattern) {
+        return regexp(type, Pattern.compile(pattern));
+    }
+
+    /** Match the input value to pattern
+     * @see PatternValidator
+     */
+    public static Validator<String> regexp(CheckType type, Pattern pattern) {
+        final Validator<String> result = new PatternValidator(pattern);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 
     /** Check the date is in the future in compare to a local time
@@ -160,11 +228,27 @@ public class ValidatorFactory {
         return new DateValidator<VALUE>(false);
     }
 
+    /** Check the date is in the future in compare to a local time
+     * @see DateValidator
+     */
+    public static <VALUE extends Date> Validator<VALUE> future(CheckType type) {
+        final Validator<VALUE> result = future();
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
+    }
+
     /** Check the date is in the past or equals to now in compare to the local time
      * @see NotNullValidator
      */
     public static <VALUE extends Date> Validator<VALUE> past() {
         return new DateValidator<VALUE>(true);
+    }
+
+    /** Check the date is in the past or equals to now in compare to the local time
+     * @see NotNullValidator
+     */
+    public static <VALUE extends Date> Validator<VALUE> past(CheckType type) {
+        final Validator<VALUE> result = past();
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 
     /** Check the maximal length of the String.
@@ -176,6 +260,16 @@ public class ValidatorFactory {
         return new LengthValidator<String>(max);
     }
 
+    /** Check the maximal length of the String.
+     * The {@code null} value is allowed.
+     * @param max String maximal length (inclusive)
+     * @see StringLengthValidator
+     */
+    public static Validator<String> length(CheckType type, int max) {
+        final Validator<String> result = length(max);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
+    }
+
     /** Check the minimal and maximal length of the String.
      * The {@code null} value is allowed.
      * @param min String minimal length (inclusive)
@@ -184,6 +278,17 @@ public class ValidatorFactory {
      */
     public static Validator<String> length(int min, int max) {
         return new LengthValidator<String>(min, max);
+    }
+
+    /** Check the minimal and maximal length of the String.
+     * The {@code null} value is allowed.
+     * @param min String minimal length (inclusive)
+     * @param max String maximal length (inclusive)
+     * @see StringLengthValidator
+     */
+    public static Validator<String> length(CheckType type, int min, int max) {
+        final Validator<String> result = length(min, max);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 
     /** Check the maximal length of the String
@@ -197,7 +302,7 @@ public class ValidatorFactory {
         return new LengthValidator<String>(min, max);
     }
 
-    /** The validator allows to read only default values. No value is allowed. */
+    /** The validator allows to read only default values. No value is allowed including the {@code null} value. */
     public static Validator readOnly() {
         return new ReadOnlyValidator<String>(true);
     }
@@ -214,5 +319,15 @@ public class ValidatorFactory {
      */
     public static <VALUE extends Ujo> Validator<VALUE> relation(Criterion<VALUE> criterion) {
         return new CriterionValidator<VALUE>(criterion);
+    }
+
+    /** Check a content of another related Ujo object using the Criterion.
+     * <br>Note 1: this result is not serialiable object, because the Criterion is not serializable
+     * <br>Note 2: a static field type of Key is Serializable allways, including the CriterionValidator inside.
+     * @see CriterionValidator
+     */
+    public static <VALUE extends Ujo> Validator<VALUE> relation(CheckType type, Criterion<VALUE> criterion) {
+        Validator<VALUE> result = relation(criterion);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
 }
