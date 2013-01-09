@@ -228,11 +228,159 @@ public class ValidatorTest extends MyTestCase {
         assertAssign(true , ValidBo.COMPOSITE_OR, null);
     }
 
+    /** Test of readValue method, */
+    public void testMayAssignsLegal() {
+        assertAssignLeg(true , ValidMandatory.NOTNULL, "");
+        assertAssignLeg(true , ValidMandatory.NOTNULL, "TEXT");
+        assertAssignLeg(false, ValidMandatory.NOTNULL, null);
+        //
+        assertAssignLeg(true , ValidMandatory.NOT_EMPTY, " ");
+        assertAssignLeg(true , ValidMandatory.NOT_EMPTY, "TEXT");
+        assertAssignLeg(false, ValidMandatory.NOT_EMPTY, "");
+        assertAssignLeg(false, ValidMandatory.NOT_EMPTY, null);
+        //
+        assertAssignLeg(false, ValidMandatory.NOT_BLANK, " ");
+        assertAssignLeg(false, ValidMandatory.NOT_BLANK, "  ");
+        assertAssignLeg(false, ValidMandatory.NOT_BLANK, "\t");
+        assertAssignLeg(true , ValidMandatory.NOT_BLANK, "TEXT");
+        assertAssignLeg(false, ValidMandatory.NOT_BLANK, "");
+        assertAssignLeg(false, ValidMandatory.NOT_BLANK, null);
+        //
+        assertAssignLeg(true , ValidMandatory.MAX_10, -1.0);
+        assertAssignLeg(true , ValidMandatory.MAX_10, 0.0);
+        assertAssignLeg(true , ValidMandatory.MAX_10, 9.99);
+        assertAssignLeg(true , ValidMandatory.MAX_10, 10.0);
+        assertAssignLeg(false, ValidMandatory.MAX_10, 10.0001);
+        assertAssignLeg(false, ValidMandatory.MAX_10, 20.0);
+        assertAssignLeg(false, ValidMandatory.MAX_10, 30.0001);
+        assertAssignLeg(false, ValidMandatory.MAX_10, null);
+        //
+        assertAssignLeg(true , ValidMandatory.FORBIDDEN_1_3, 0);
+        assertAssignLeg(false, ValidMandatory.FORBIDDEN_1_3, 1);
+        assertAssignLeg(true , ValidMandatory.FORBIDDEN_1_3, 2);
+        assertAssignLeg(false, ValidMandatory.FORBIDDEN_1_3, 3);
+        assertAssignLeg(true , ValidMandatory.FORBIDDEN_1_3, 4);
+        assertAssignLeg(false, ValidMandatory.FORBIDDEN_1_3, null);
+        //
+        assertAssignLeg(false, ValidMandatory.REQUIRED_1_3, 0);
+        assertAssignLeg(true , ValidMandatory.REQUIRED_1_3, 1);
+        assertAssignLeg(false, ValidMandatory.REQUIRED_1_3, 2);
+        assertAssignLeg(true , ValidMandatory.REQUIRED_1_3, 3);
+        assertAssignLeg(false, ValidMandatory.REQUIRED_1_3, 4);
+        assertAssignLeg(false, ValidMandatory.REQUIRED_1_3, null);
+        //
+        assertAssignLeg(true , ValidMandatory.MIN_10, 20.0);
+        assertAssignLeg(false, ValidMandatory.MIN_10, 9.9);
+        assertAssignLeg(false, ValidMandatory.MIN_10, 0.1);
+        assertAssignLeg(false, ValidMandatory.MIN_10, null);
+        //
+        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "");
+        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "1");
+        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "12");
+        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "123");
+        assertAssignLeg(false, ValidMandatory.LENGTH_MIN_3, "1234");
+        assertAssignLeg(false, ValidMandatory.LENGTH_MIN_3, null);
+        //
+        assertAssignLeg(false, ValidMandatory.LENGTH_2_4, "");
+        assertAssignLeg(false, ValidMandatory.LENGTH_2_4, "1");
+        assertAssignLeg(true , ValidMandatory.LENGTH_2_4, "12");
+        assertAssignLeg(true , ValidMandatory.LENGTH_2_4, "123");
+        assertAssignLeg(true , ValidMandatory.LENGTH_2_4, "1234");
+        assertAssignLeg(false, ValidMandatory.LENGTH_2_4, "12345");
+        assertAssignLeg(false, ValidMandatory.LENGTH_2_4, null);
+        //
+        assertAssignLeg(false, ValidMandatory.BETWEEN_1_10, 0);
+        assertAssignLeg(true , ValidMandatory.BETWEEN_1_10, 9);
+        assertAssignLeg(false, ValidMandatory.BETWEEN_1_10, 10); // !!!
+        assertAssignLeg(false, ValidMandatory.BETWEEN_1_10, 11);
+        assertAssignLeg(false, ValidMandatory.BETWEEN_1_10, null);
+        //
+        assertAssignLeg(false, ValidMandatory.RANGE_1_10, 0);
+        assertAssignLeg(true , ValidMandatory.RANGE_1_10, 9);
+        assertAssignLeg(true , ValidMandatory.RANGE_1_10, 10); // !!!
+        assertAssignLeg(false, ValidMandatory.RANGE_1_10, 11);
+        assertAssignLeg(false, ValidMandatory.RANGE_1_10, null);
+        //
+        assertAssignLeg(false, ValidMandatory.CRN_CODE_3, new Relation(0));
+        assertAssignLeg(true , ValidMandatory.CRN_CODE_3, new Relation(3));
+        assertAssignLeg(false, ValidMandatory.CRN_CODE_3, new Relation(4));
+        assertAssignLeg(false, ValidMandatory.CRN_CODE_3, null);
+        //
+        assertAssignLeg(false, ValidMandatory.FUTURE, getNextDate(-1));
+        assertAssignLeg(false, ValidMandatory.FUTURE, getNextDate(0));
+        assertAssignLeg(true , ValidMandatory.FUTURE, getNextDate(10));
+        assertAssignLeg(false, ValidMandatory.FUTURE, null);
+        //
+        assertAssignLeg(true , ValidMandatory.PAST, getNextDate(-1));
+        assertAssignLeg(true , ValidMandatory.PAST, getNextDate(0));
+        assertAssignLeg(false, ValidMandatory.PAST, getNextDate(10));
+        assertAssignLeg(false, ValidMandatory.PAST, null);
+        //
+        assertAssignLeg(true , ValidMandatory.REG_EXP, "TEST");
+        assertAssignLeg(false, ValidMandatory.REG_EXP, "TES_");
+        assertAssignLeg(false, ValidMandatory.REG_EXP, null);
+        //
+        assertAssignLeg(true , ValidMandatory.MAIL, "abc@ujorm.net");
+        assertAssignLeg(true , ValidMandatory.MAIL, "a.b@u.net");
+        assertAssignLeg(true , ValidMandatory.MAIL, "a@u.net");
+        assertAssignLeg(true , ValidMandatory.MAIL, "a@info.ujorm.net");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a@ujorm.n");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a@ujorm");
+        assertAssignLeg(false, ValidMandatory.MAIL, "@ujorm.ne");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a@.ne");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a@ne.");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a@u.");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a b@ujorm.net");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a.b@uj rm.net");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a.b@ujorm.n t");
+        assertAssignLeg(false, ValidMandatory.MAIL, "@abc@ujorm.net");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a@ujorm.net@");
+        assertAssignLeg(false, ValidMandatory.MAIL, "a@@ujorm.net");
+        assertAssignLeg(false, ValidMandatory.MAIL, null);
+        //
+        assertAssignLeg(false, ValidMandatory.READ_ONLY, "text");
+        assertAssignLeg(false, ValidMandatory.READ_ONLY, null);  // !!!
+        assertAssignLeg(true , ValidMandatory.ALL_ALLOWED, "text");
+        assertAssignLeg(true , ValidMandatory.ALL_ALLOWED, null);
+        //
+        assertAssignLeg(false, ValidMandatory.COMPOSITE_AND, -1);
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_AND,  0);
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_AND,  1);
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_AND,  9);
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_AND, 10);
+        assertAssignLeg(false, ValidMandatory.COMPOSITE_AND, 11);
+        assertAssignLeg(false, ValidMandatory.COMPOSITE_AND, null);
+        //
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_OR, -1);
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_OR,  0);
+        assertAssignLeg(false, ValidMandatory.COMPOSITE_OR,  1);
+        assertAssignLeg(false, ValidMandatory.COMPOSITE_OR,  9);
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_OR, 10);
+        assertAssignLeg(true , ValidMandatory.COMPOSITE_OR, 11);
+        assertAssignLeg(false, ValidMandatory.COMPOSITE_OR, null);
+    }
+
     /** Method to test Validators */
     private <T> void assertAssign(boolean expected, Key<ValidBo,T> key, T value) {
         boolean result;
         String resultMsg;
         final ValidBo ujo = new ValidBo();
+        try {
+            key.setValue(ujo, value);
+            result = true;
+            resultMsg = "Invalid assignment!";
+        } catch (ValidationException e) {
+            result = false;
+            resultMsg = e.getMessage();
+        }
+        assertTrue(resultMsg, expected==result);
+    }
+
+    /** Method to test Validators */
+    private <T> void assertAssignLeg(boolean expected, Key<ValidMandatory,T> key, T value) {
+        boolean result;
+        String resultMsg;
+        final ValidMandatory ujo = new ValidMandatory();
         try {
             key.setValue(ujo, value);
             result = true;

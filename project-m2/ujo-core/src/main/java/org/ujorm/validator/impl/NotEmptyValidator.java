@@ -27,6 +27,12 @@ import org.ujorm.validator.ValidationError;
  */
 public class NotEmptyValidator<VALUE extends CharSequence> extends AbstractValidator<VALUE> {
 
+    /** Empty String validator */
+    public static final NotEmptyValidator<CharSequence> NOT_EMPTY = new NotEmptyValidator<CharSequence>(false);
+    /** Blank String Validator */
+    public static final NotEmptyValidator<CharSequence> NOT_BLANK = new NotEmptyValidator<CharSequence>(true);
+
+
     /** The CharSequence is trimmed */
     public static final MessageArg<Boolean> TRIM = new MessageArg<Boolean>("TRIM");
 
