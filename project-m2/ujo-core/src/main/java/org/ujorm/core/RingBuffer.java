@@ -15,12 +15,12 @@
  */
 package org.ujorm.core;
 
-import java.io.BufferedReader;
 import java.io.CharArrayReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
@@ -119,7 +119,27 @@ final public class RingBuffer implements CharSequence {
     }
 
     // ============ STATIC METHODS ============
-    
+
+    /**
+     * Find a word betveen beg and end text from current cursor and TRIM the result.
+     * The method is designed for a very large data source (a character stream).
+     * <br/>
+     * Sample:
+     * <pre>
+     *    String text = "xxx ${abc} def";
+     *    String word = RingBuffer.findWord(text, "${", "}");
+     *    assert "abc".equals(word)
+     * </pre>
+     * @param inputUtf8 A data stream in the UTF-8 format.
+     * @param beg Start tag (text) where the empty value means find end from the current cursor.
+     * @param end End tag (text) must not be empty.
+     * @return Return a result between beg and end tags (texts). The result is newer NULL.
+     * @throws IOException
+     */
+    public static String findWord(final InputStream inputUtf8, final String beg, final String end) throws IOException {
+        return findWord(createReader(inputUtf8, UTF8), beg, end);
+    }
+
     /**
      * Find a word betveen beg and end text from current cursor and TRIM the result.
      * The method is designed for a very large data source (a character stream).
@@ -223,8 +243,7 @@ final public class RingBuffer implements CharSequence {
 
     /** Create Reader */
     public static Reader createReader(File file, Charset charset) throws FileNotFoundException {
-        final InputStreamReader reader = new InputStreamReader(new FileInputStream(file), charset);
-        return new BufferedReader(reader);
+        return createReader(new FileInputStream(file), charset);
     }
 
     /** Create Reader */
@@ -239,7 +258,11 @@ final public class RingBuffer implements CharSequence {
 
     /** Create Reader */
     public static Reader createReader(URL url, Charset charset) throws IOException {
-        final InputStreamReader reader = new InputStreamReader(url.openStream(), charset);
-        return reader;
+        return createReader(url.openStream(), charset);
     }
+    /** Create Reader */
+    public static Reader createReader(InputStream is, Charset charset) {
+        return new InputStreamReader(is, charset);
+    }
+
 }
