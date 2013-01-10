@@ -98,6 +98,19 @@ public class RingBufferTest extends TestCase {
         assertEquals("", word);
     }
 
+    /**
+     * Test of add method, of class RingBuffer.
+     */
+    public void testFindWord_4() throws IOException {
+        String text = "xxyAy ${abc} def";
+        String word1 = RingBuffer.findWord(text, "x", "x");
+        assertEquals("", word1);
+        String word2 = RingBuffer.findWord(text, "y", "y");
+        assertEquals("A", word2);
+        String word3 = RingBuffer.findWord(text, "${", "}");
+        assertEquals("abc", word3);
+    }
+
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }

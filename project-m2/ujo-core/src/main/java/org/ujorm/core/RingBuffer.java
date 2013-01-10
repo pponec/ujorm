@@ -211,11 +211,7 @@ final public class RingBuffer implements CharSequence {
 
         int c;
         while ((c = reader.read()) != -1) {
-
             ring.add((char) c);
-            if (secondState) {
-                result.append((char) c);
-            }
 
             if (ring.equals(border)) {
                 if (secondState) {
@@ -225,14 +221,10 @@ final public class RingBuffer implements CharSequence {
                     border = end.toCharArray();
                     ring = new RingBuffer(border.length);
                 }
+            } else if (secondState) {
+                result.append((char) c);
             }
         }
-
-        // Remove the finish tag.
-        if (result.length() > end.length()) {
-            result.setLength(result.length() - end.length());
-        }
-
         return result.toString();
     }
 
