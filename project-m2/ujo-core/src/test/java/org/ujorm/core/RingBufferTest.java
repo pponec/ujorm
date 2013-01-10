@@ -103,12 +103,18 @@ public class RingBufferTest extends TestCase {
      */
     public void testFindWord_4() throws IOException {
         String text = "xxyAy ${abc} def";
+
         String word1 = RingBuffer.findWord(text, "x", "x");
         assertEquals("", word1);
+
         String word2 = RingBuffer.findWord(text, "y", "y");
         assertEquals("A", word2);
+
         String word3 = RingBuffer.findWord(text, "${", "}");
         assertEquals("abc", word3);
+
+        String word4 = RingBuffer.findWord(text, "e", "f");
+        assertEquals("", word4);
     }
 
     public static void main(java.lang.String[] argList) {
