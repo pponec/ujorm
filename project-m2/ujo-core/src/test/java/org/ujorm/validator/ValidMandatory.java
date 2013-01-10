@@ -48,6 +48,8 @@ public class ValidMandatory extends AbstractUjo {
     public static final Key<ValidMandatory, String> ALL_ALLOWED = f.newKey(allAllowed());
     public static final Key<ValidMandatory, Integer> COMPOSITE_AND = f.newKey(min(0).and(max(10)).and(notNull()));
     public static final Key<ValidMandatory, Integer> COMPOSITE_OR = f.newKey(max(0).or(min(10)).and(notNull()));
+    public static final Key<ValidMandatory, Number> NUMBER_TYPE = f.newKey(type(MANDATORY));
+    public static final Key<ValidMandatory, Number> NUMBER_TYPE_EXPL = f.newKey(type(MANDATORY, Number.class));
 
     static {
         f.lock();

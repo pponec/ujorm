@@ -327,7 +327,30 @@ public class ValidatorFactory {
      * @see CriterionValidator
      */
     public static <VALUE extends Ujo> Validator<VALUE> relation(CheckType type, Criterion<VALUE> criterion) {
-        Validator<VALUE> result = relation(criterion);
+        final Validator<VALUE> result = relation(criterion);
         return type == MANDATORY ? NOT_NULL.and(result) : result;
     }
+
+    /** Check the type of value along a Key, where the Key argument in the test time is mandatory. */
+    public static Validator type() {
+        return new TypeValidator();
+    }
+
+    /** Check the type of value along a Key, where the Key argument in the test time is mandatory. */
+    public static Validator type(CheckType type) {
+        final Validator result = type();
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
+    }
+
+    /** Check the type of value along a Key, where the Key argument in the test time is mandatory. */
+    public static <VALUE extends Object> Validator<VALUE> type(Class<VALUE> type) {
+        return new TypeValidator<VALUE>(type);
+    }
+
+    /** Check the type of value along a Key, where the Key argument in the test time is mandatory. */
+    public static <VALUE extends Object> Validator<VALUE> type(CheckType type, Class<VALUE> classType) {
+        final Validator<VALUE> result = type(classType);
+        return type == MANDATORY ? NOT_NULL.and(result) : result;
+    }
+
 }

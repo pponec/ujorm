@@ -48,6 +48,8 @@ public class ValidBo extends AbstractUjo {
     public static final Key<ValidBo, String> ALL_ALLOWED = f.newKey(allAllowed());
     public static final Key<ValidBo, Integer> COMPOSITE_AND = f.newKey(min(0).and(max(10)));
     public static final Key<ValidBo, Integer> COMPOSITE_OR = f.newKey(max(0).or(min(10)));
+    public static final Key<ValidBo, Number> NUMBER_TYPE = f.newKey(type());
+    public static final Key<ValidBo, Number> NUMBER_TYPE_EXPL = f.newKey(type(Number.class));
 
     static {
         f.lock();

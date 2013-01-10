@@ -7,6 +7,7 @@
 
 package org.ujorm.validator;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -226,6 +227,20 @@ public class ValidatorTest extends MyTestCase {
         assertAssign(true , ValidBo.COMPOSITE_OR, 10);
         assertAssign(true , ValidBo.COMPOSITE_OR, 11);
         assertAssign(true , ValidBo.COMPOSITE_OR, null);
+        //
+        assertAssign(true , ValidBo.NUMBER_TYPE, 1);
+        assertAssign(true , ValidBo.NUMBER_TYPE, BigDecimal.ONE);
+        assertAssign(true , ValidBo.NUMBER_TYPE, 2.99);
+        assertAssign(true , ValidBo.NUMBER_TYPE, null);
+        //sertAssign(false, ValidBo.NUMBER_TYPE, (Number)(Object)"wrong");
+        //sertAssign(false, ValidBo.NUMBER_TYPE, (Number)(Object)new Date());
+        //
+        assertAssign(true , ValidBo.NUMBER_TYPE_EXPL, 1);
+        assertAssign(true , ValidBo.NUMBER_TYPE_EXPL, BigDecimal.ONE);
+        assertAssign(true , ValidBo.NUMBER_TYPE_EXPL, 2.99);
+        assertAssign(true , ValidBo.NUMBER_TYPE_EXPL, null);
+        //sertAssign(false, ValidBo.NUMBER_TYPE_EXPL, (Number)(Object)"wrong");
+        //sertAssign(false, ValidBo.NUMBER_TYPE_EXPL, (Number)(Object)new Date());
     }
 
     /** Test of readValue method, */
@@ -358,6 +373,20 @@ public class ValidatorTest extends MyTestCase {
         assertAssignLeg(true , ValidMandatory.COMPOSITE_OR, 10);
         assertAssignLeg(true , ValidMandatory.COMPOSITE_OR, 11);
         assertAssignLeg(false, ValidMandatory.COMPOSITE_OR, null);
+        //
+        assertAssignLeg(true , ValidMandatory.NUMBER_TYPE, 1);
+        assertAssignLeg(true , ValidMandatory.NUMBER_TYPE, BigDecimal.ONE);
+        assertAssignLeg(true , ValidMandatory.NUMBER_TYPE, 2.99);
+        assertAssignLeg(false, ValidMandatory.NUMBER_TYPE, null);
+        //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE, (Number)(Object)"wrong");
+        //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE, (Number)(Object)new Date());
+        //
+        assertAssignLeg(true , ValidMandatory.NUMBER_TYPE_EXPL, 1);
+        assertAssignLeg(true , ValidMandatory.NUMBER_TYPE_EXPL, BigDecimal.ONE);
+        assertAssignLeg(true , ValidMandatory.NUMBER_TYPE_EXPL, 2.99);
+        assertAssignLeg(false, ValidMandatory.NUMBER_TYPE_EXPL, null);
+        //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE_EXPL, (Number)(Object)"wrong");
+        //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE_EXPL, (Number)(Object)new Date());
     }
 
     /** Method to test Validators */
