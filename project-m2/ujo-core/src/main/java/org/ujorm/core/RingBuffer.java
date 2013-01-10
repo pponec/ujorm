@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2011 Pavel Ponec
+ *  Copyright 2001-2013 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ final public class RingBuffer implements CharSequence {
         for (int i = 0; i < this.length; i++) {
             t[i] = b[(pos + i) % length];
         }
-        return (new String(t));
+        return new String(t);
     }
 
     /** Export to the String */
