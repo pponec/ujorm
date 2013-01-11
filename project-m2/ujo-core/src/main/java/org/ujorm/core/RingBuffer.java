@@ -222,7 +222,11 @@ final public class RingBuffer implements CharSequence {
 
             if (ring.equals(border)) {
                 if (secondState) {
-                    break;
+                    // Remove a part of the the finish tag:
+                    if (border.length>1 && result.length()>0) {
+                        result.setLength(result.length() - border.length + 1);
+                    }
+                    return result.toString();
                 } else {
                     secondState = true;
                     border = end.toCharArray();
@@ -232,11 +236,7 @@ final public class RingBuffer implements CharSequence {
                 result.append((char) c);
             }
         }
-        // Remove a part of the the finish tag:
-        if (border.length>1 && result.length()>0) {
-            result.setLength(result.length() - border.length + 1);
-        }
-        return result.toString();
+        return "";
     }
 
     /** Create Reader from the UTF-8 encode source */

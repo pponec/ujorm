@@ -93,9 +93,13 @@ public class RingBufferTest extends TestCase {
      * Test of add method, of class RingBuffer.
      */
     public void testFindWord_3() throws IOException {
-        String text = "xxx abc def";
+        String text = "xxx-abc-123-def";
+
         String word = RingBuffer.findWord(text, "ABC", "DEF");
         assertEquals("", word);
+
+        String word2 = RingBuffer.findWord(text, "abc", "DEF");
+        assertEquals("", word2);
     }
 
     /**
