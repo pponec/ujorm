@@ -393,6 +393,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set the one column to reading from database table.
     * Other columns will return a default value, no exception will be throwed.
+    * <br/>WARNING: assigning an column from a view is forbidden.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
@@ -412,6 +413,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set the one column to reading from database table.
     * Other columns will return a default value, no exception will be throwed.
+    * <br/>WARNING: assigning an column from a view is forbidden.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #addColumn(org.ujorm.Key) addColumn(Property)
     */
@@ -422,7 +424,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
-    * <br/>WARNING: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br/>WARNING 2: assigning an column from a view is forbidden.
     * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
     * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
