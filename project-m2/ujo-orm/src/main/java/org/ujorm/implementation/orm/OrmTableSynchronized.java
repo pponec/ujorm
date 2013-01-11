@@ -84,7 +84,6 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
         super.writeValue(property, value);
     }
 
-
     /** A method for an internal use only. */
     @Override
     synchronized public Object readValue(final Key property) {
