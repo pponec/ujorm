@@ -93,7 +93,7 @@ public class RingBufferTest extends TestCase {
      * Test of add method, of class RingBuffer.
      */
     public void testFindWord_3() throws IOException {
-        String text = "xxx ${abc} def";
+        String text = "xxx abc def";
         String word = RingBuffer.findWord(text, "ABC", "DEF");
         assertEquals("", word);
     }
@@ -102,19 +102,54 @@ public class RingBufferTest extends TestCase {
      * Test of add method, of class RingBuffer.
      */
     public void testFindWord_4() throws IOException {
-        String text = "xxyAy ${abc} def";
+        Reader reader = RingBuffer.createReader("xxxAx ${abc} xex");
 
-        String word1 = RingBuffer.findWord(text, "x", "x");
+        String word1 = RingBuffer.findWord(reader, "x", "x");
         assertEquals("", word1);
 
-        String word2 = RingBuffer.findWord(text, "y", "y");
+        String word2 = RingBuffer.findWord(reader, "x", "x");
         assertEquals("A", word2);
 
-        String word3 = RingBuffer.findWord(text, "${", "}");
+        String word3 = RingBuffer.findWord(reader, "${", "}");
         assertEquals("abc", word3);
 
-        String word4 = RingBuffer.findWord(text, "e", "f");
-        assertEquals("", word4);
+        String word4 = RingBuffer.findWord(reader, "x", "x");
+        assertEquals("e", word4);
+    }
+
+    /**
+     * Test of add method, of class RingBuffer.
+     */
+    public void testFindWord_5() throws IOException {
+        Reader reader = RingBuffer.createReader("{{}}{{A}} {{abc}} {{def}}");
+
+        String word1 = RingBuffer.findWord(reader, "{{", "}}");
+        assertEquals("", word1);
+
+        String word2 = RingBuffer.findWord(reader, "{{", "}}");
+        assertEquals("A", word2);
+
+        String word3 = RingBuffer.findWord(reader, "{{", "}}");
+        assertEquals("abc", word3);
+
+        String word4 = RingBuffer.findWord(reader, "{{", "}}");
+        assertEquals("def", word4);
+    }
+
+    /**
+     * Test of add method, of class RingBuffer.
+     */
+    public void testFindWord_6() throws IOException {
+        Reader reader = RingBuffer.createReader("abcabccabcee");
+
+        String word1 = RingBuffer.findWord(reader, "", "c");
+        assertEquals("ab", word1);
+
+        String word2 = RingBuffer.findWord(reader, "", "cc");
+        assertEquals("ab", word2);
+
+        String word3 = RingBuffer.findWord(reader, "", "ee");
+        assertEquals("abc", word3);
     }
 
     public static void main(java.lang.String[] argList) {
