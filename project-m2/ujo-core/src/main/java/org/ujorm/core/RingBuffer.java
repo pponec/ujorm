@@ -53,8 +53,15 @@ final public class RingBuffer implements CharSequence {
     /** Start of the string */
     private int pos = 0;
 
-    /** Creates new RingBuffer */
-    public RingBuffer(int length) {
+    /**
+     * Creates new RingBuffer
+     * @param length Length of buffer form 1 to Integer.MAX_INT.
+     * @throws IllegalArgumentException If the length is smaller than the one.
+     */
+    public RingBuffer(int length) throws IllegalArgumentException {
+        if (length <= 0) {
+            throw new IllegalArgumentException("The RingBufer must not be empty");
+        }
         this.b = new char[length];
         this.length = length;
     }
@@ -198,8 +205,8 @@ final public class RingBuffer implements CharSequence {
      * Find a word betveen beg and end text from current cursor.
      * The method is designed for a very large data source (a character stream).
      * @param reader A data source
-     * @param beg Start tag (text) where the empty value means find end from the current cursor.
-     * @param end End tag (text) must not be empty.
+     * @param beg Start tag (text) where the empty or {@code null} value means find end from the current cursor.
+     * @param end End tag (text) must not be empty and must not be {@code null}.
      * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
