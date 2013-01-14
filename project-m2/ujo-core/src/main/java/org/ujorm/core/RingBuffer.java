@@ -51,7 +51,7 @@ final public class RingBuffer implements CharSequence {
     /** Length */
     public final int length;
     /** Start of the string */
-    private int pos = 0;
+    private int pos;
 
     /**
      * Creates new RingBuffer
@@ -62,8 +62,8 @@ final public class RingBuffer implements CharSequence {
         if (length <= 0) {
             throw new IllegalArgumentException("The RingBufer must not be empty");
         }
-        this.b = new char[length];
         this.length = length;
+        this.b = new char[length];
     }
 
     final public void add(char c) {
@@ -81,7 +81,7 @@ final public class RingBuffer implements CharSequence {
     public boolean equals(char[] s) {
         int i;
         for (i = 0; i < this.length && s[i] == b[(pos + i) % length]; i++);
-        return (i == length);
+        return i == length;
     }
 
     /** Returns a character from position 'i' */
@@ -168,6 +168,25 @@ final public class RingBuffer implements CharSequence {
     }
 
     /**
+     * Find a word from current cursor betveen a penultimate and the last tag.
+     * The method is designed for a very large data source (a character stream).
+     * <br/>
+     * Sample:
+     * <pre>
+     *    String text = "xxx ${abc} def";
+     *    String word = RingBuffer.findWord(text, "${", "}");
+     *    assert "abc".equals(word)
+     * </pre>
+     * @param reader A data source
+     * @param tags a not-null and not-empty text values
+     * @return Return a text before the last tag. The result is newer NULL.
+     * @throws IOException
+     */
+    public static String findWord(final Reader reader, final String... tag) throws IOException {
+        return findWordNoTrim(reader, tag).trim();
+    }
+
+    /**
      * Find a word betveen beg and end text from the source start and trim the result.
      * The method is designed for a very large data source (a character stream).
      * <br/>
@@ -210,10 +229,39 @@ final public class RingBuffer implements CharSequence {
      * @return Return a result between beg and end tags (texts). The result is newer NULL.
      * @throws IOException
      */
-    public static String findWordNoTrim(final Reader reader, final String beg, final String end) throws IOException {
+    public static String findWordNoTrim(final Reader reader, String beg, String end) throws IOException {
+        boolean begEmpty = beg == null || beg.length()==0;
+        boolean endEmpty = end == null || end.length()==0;
+
+        if (begEmpty && endEmpty) {
+            return "";
+        }
+        if (begEmpty) {
+            return findWordNoTrim(reader, end);
+        }
+        if (endEmpty) {
+            findWordNoTrim(reader, beg);
+            return "";
+        }
+        return findWordNoTrim(reader, new String[]{beg, end});
+    }
+
+    /**
+     * Find a word from current cursor betveen a penultimate and the last tag.
+     * The method is designed for a very large data source (a character stream).
+     * @param reader A data source
+     * @param tags a not-null and not-empty text values
+     * @return Return a text before the last tag. The result is newer NULL.
+     * @throws IOException
+     */
+    @SuppressWarnings("empty-statement")
+    public static String findWordNoTrim(final Reader reader, final String... tags) throws IOException {
+        if (tags.length == 0) {
+            return "";
+        }
         final StringBuilder result = new StringBuilder(64);
-        boolean secondState = beg == null || beg.length() == 0;
-        char[] border = (secondState ? end : beg).toCharArray();
+        int i = 0, last = tags.length - 1;
+        char[] border = tags[i].toCharArray();
         RingBuffer ring = new RingBuffer(border.length);
 
         int c;
@@ -221,21 +269,20 @@ final public class RingBuffer implements CharSequence {
             ring.add((char) c);
 
             if (ring.equals(border)) {
-                if (secondState) {
+                if (i==last) {
                     // Remove a part of the the finish tag:
                     if (border.length>1 && result.length()>0) {
                         result.setLength(result.length() - border.length + 1);
                     }
                     return result.toString();
                 } else {
-                    if (end==null || end.length()==0) {
+                    border = tags[++i].toCharArray();
+                    if (border.length==0) {
                         break;
                     }
-                    secondState = true;
-                    border = end.toCharArray();
                     ring = new RingBuffer(border.length);
                 }
-            } else if (secondState) {
+            } else if (i==last) {
                 result.append((char) c);
             }
         }
