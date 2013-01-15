@@ -78,6 +78,10 @@ public class Session {
     private Map<CacheKey, OrmUjo> cache;
     /** The rollback is allowed only */
     private boolean rollbackOnly = false;
+    /** Enable a lazy-loading of related Ujo object.
+     * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
+     */
+    private boolean lazyLoadingEnabled;
     /** Closed session */
     private boolean closed = false;
     /** Transaction */
@@ -87,6 +91,7 @@ public class Session {
     Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
+        this.lazyLoadingEnabled = MetaParams.LAZY_LOADING_ENABLED.of(params);
         clearCache(MetaParams.CACHE_POLICY.of(params));
     }
 
@@ -1139,6 +1144,20 @@ public class Session {
         Session result = new Session(handler);
         result.close();
         return result;
+    }
+
+    /** Enable a lazy-loading of related Ujo object.
+     * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
+     * @return the lazyLoadingEnabled */
+    public boolean isLazyLoadingEnabled() {
+        return lazyLoadingEnabled;
+    }
+
+    /** Enable a lazy-loading of related Ujo object.
+     * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
+     * @param lazyLoadingEnabled the lazyLoadingEnabled to set */
+    public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
+        this.lazyLoadingEnabled = lazyLoadingEnabled;
     }
 
 }

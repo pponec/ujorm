@@ -59,6 +59,9 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                 if (mySession == null) {
                     throw new IllegalStateException("The Session was not assigned.");
                 }
+                if (!mySession.isLazyLoadingEnabled()) {
+                    throw new IllegalStateException("The lazy loading is disabled in the current Session.");
+                }
                 result = mySession.loadInternal(this, ((ForeignKey) result).getValue(), true);
                 ujo.writeSession(null); // Replacing of the foreign key is not a property change
                 ujo.writeValue(this, result);
