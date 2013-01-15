@@ -323,7 +323,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Returns a full count of the database tables (views are excluded) */
-    private int getTableTotalCount() {
+    public int getTableTotalCount() {
         int tableCount = 0;
         for (MetaTable metaTable : TABLES.getList(this)) {
             if (metaTable.isTable()) {
@@ -333,71 +333,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         return tableCount;
     }
 
-
     /** Create DB */
     public void create(Session session) {
-        MetaDbService service = createService();
-        Connection conn = session.getConnection(this, true);
-        List<MetaTable> tables = new ArrayList<MetaTable>();
-        List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
-        List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
-        List<MetaIndex> indexes = new ArrayList<MetaIndex>();
-        boolean createSequenceTable = false;
-        int tableTotalCount = getTableTotalCount();
-
-        try {
-            createSequenceTable = service.initialize(conn);
-
-            boolean ddlOnly = false;
-            switch (ORM2DLL_POLICY.of(this)) {
-                case CREATE_DDL:
-                    ddlOnly = true;
-                case CREATE_OR_UPDATE_DDL:
-                case VALIDATE:
-                case WARNING:
-                case INHERITED:
-                    boolean change = service.isModelChanged(conn, tables, newColumns, indexes);
-                    if (change && ddlOnly) {
-                        if (tables.size()<tableTotalCount) {
-                            // This is a case of the PARTIAL DDL
-                            return;
-                        }
-                    }
-                    break;
-                case DO_NOTHING:
-                default:
-                    return;
-            }
-
-            // ================================================
-
-            // 1. CheckReport keywords:
-            service.checkReportKeywords(conn, tables, newColumns, indexes);
-            // 2. Create schemas:
-            service.createSchema(tableTotalCount, tables, conn);
-            // 3. Create tables:
-            service.createTable(tables, foreignColumns);
-            // 4. Create new columns:
-            service.createNewColumn(newColumns, foreignColumns);
-            // 5. Create Indexes:
-            service.changeIndex(indexes);
-            // 6. Create Foreign Keys:
-            service.createForeignKey(foreignColumns);
-            // 7. Create SEQUENCE table:
-            service.createSequenceTable(createSequenceTable);
-            // 8. Create table comment for the all tables:
-            service.createTableComments(tables);
-            // 9. Commit:
-            conn.commit();
-
-        } catch (Throwable e) {
-            try {
-                conn.rollback();
-            } catch (SQLException ex) {
-                LOGGER.log(Level.WARNING, "Can't rollback DB" + getId(), ex);
-            }
-            throw new IllegalArgumentException(Session.SQL_ILLEGAL + service.getSql(), e);
-        }
+        createService().create(session);
     }
 
     /** Close a connection, statement and a result set. */
