@@ -18,6 +18,7 @@ package org.ujorm.orm.metaModel;
 import java.io.IOException;
 import java.sql.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.Session;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.dialect.MySqlDialect;
 import org.ujorm.orm.utility.OrmTools;
@@ -49,6 +51,72 @@ public class MetaDbService {
     /** There is a database change */
     protected boolean anyChange = false;
 
+    /** Create DB */
+    public void create(Session session) {
+        Connection conn = session.getConnection(db, true);
+        List<MetaTable> tables = new ArrayList<MetaTable>();
+        List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
+        List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
+        List<MetaIndex> indexes = new ArrayList<MetaIndex>();
+        boolean createSequenceTable = false;
+        int tableTotalCount = db.getTableTotalCount();
+
+        try {
+            createSequenceTable = initialize(conn);
+
+            boolean ddlOnly = false;
+            switch (ORM2DLL_POLICY.of(db)) {
+                case CREATE_DDL:
+                    ddlOnly = true;
+                case CREATE_OR_UPDATE_DDL:
+                case VALIDATE:
+                case WARNING:
+                case INHERITED:
+                    boolean change = isModelChanged(conn, tables, newColumns, indexes);
+                    if (change && ddlOnly) {
+                        if (tables.size()<tableTotalCount) {
+                            // This is a case of the PARTIAL DDL
+                            return;
+                        }
+                    }
+                    break;
+                case DO_NOTHING:
+                default:
+                    return;
+            }
+
+            // ================================================
+
+            // 1. CheckReport keywords:
+            checkReportKeywords(conn, tables, newColumns, indexes);
+            // 2. Create schemas:
+            createSchema(tableTotalCount, tables, conn);
+            // 3. Create tables:
+            createTable(tables, foreignColumns);
+            // 4. Create new columns:
+            createNewColumn(newColumns, foreignColumns);
+            // 5. Create Indexes:
+            changeIndex(indexes);
+            // 6. Create Foreign Keys:
+            createForeignKey(foreignColumns);
+            // 7. Create SEQUENCE table:
+            createSequenceTable(createSequenceTable);
+            // 8. Create table comment for the all tables:
+            createTableComments(tables);
+            // 9. Commit:
+            conn.commit();
+
+        } catch (Throwable e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                LOGGER.log(Level.WARNING, "Can't rollback DB" + db.getId(), ex);
+            }
+            throw new IllegalArgumentException(Session.SQL_ILLEGAL + getSql(), e);
+        }
+    }
+
+
     /** Set the meta Database */
     public MetaDatabase getMetaDatabase() {
         return db;
@@ -70,7 +138,7 @@ public class MetaDbService {
      * @param newColumns Output parameter
      */
     @SuppressWarnings("LoggerStringConcat")
-    public boolean isModelChanged(Connection conn
+    protected boolean isModelChanged(Connection conn
         , List<MetaTable>  newTables
         , List<MetaColumn> newColumns
         , List<MetaIndex>  newIndexes
@@ -177,7 +245,7 @@ public class MetaDbService {
     // =================================================
 
     /** 0. Initialization */
-    public boolean initialize(Connection conn) throws Exception {
+    protected boolean initialize(Connection conn) throws Exception {
         this.stat = conn.createStatement();
         boolean createSequenceTable = false;
         if (db.isSequenceTableRequired()) {
@@ -229,7 +297,7 @@ public class MetaDbService {
     }
 
     /** 1. CheckReport keywords: */
-    public void checkReportKeywords(Connection conn, List<MetaTable> tables, List<MetaColumn> newColumns, List<MetaIndex> indexes) throws Exception {
+    protected void checkReportKeywords(Connection conn, List<MetaTable> tables, List<MetaColumn> newColumns, List<MetaIndex> indexes) throws Exception {
         switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
             case WARNING:
             case EXCEPTION:
@@ -252,7 +320,7 @@ public class MetaDbService {
     }
 
     /** 2. Create schemas: */
-    public void createSchema(int tableTotalCount, List<MetaTable> tables, Connection conn) throws SQLException, IOException {
+    protected void createSchema(int tableTotalCount, List<MetaTable> tables, Connection conn) throws SQLException, IOException {
         if (tableTotalCount == tables.size()) {
             for (String schema : db.getSchemas(tables)) {
                 sql.setLength(0);
@@ -270,7 +338,7 @@ public class MetaDbService {
     }
 
     /** 3. Create tables: */
-    public void createTable(List<MetaTable> tables, List<MetaColumn> foreignColumns) throws Exception {
+    protected void createTable(List<MetaTable> tables, List<MetaColumn> foreignColumns) throws Exception {
         for (MetaTable table : tables) {
             if (table.isTable()) {
                 sql.setLength(0);
@@ -283,7 +351,7 @@ public class MetaDbService {
     }
 
     /** 4. Create new columns: */
-    public void createNewColumn(List<MetaColumn> newColumns, List<MetaColumn> foreignColumns) throws Exception {
+    protected void createNewColumn(List<MetaColumn> newColumns, List<MetaColumn> foreignColumns) throws Exception {
         for (MetaColumn column : newColumns) {
             sql.setLength(0);
             db.getDialect().printAlterTableAddColumn(column, sql);
@@ -308,7 +376,7 @@ public class MetaDbService {
     }
 
     /** 6. Create Foreign Keys: */
-    public void createForeignKey(List<MetaColumn> foreignColumns) throws Exception {
+    protected void createForeignKey(List<MetaColumn> foreignColumns) throws Exception {
         for (MetaColumn column : foreignColumns) {
             if (column.isForeignKey()) {
                 sql.setLength(0);
@@ -321,7 +389,7 @@ public class MetaDbService {
     }
 
     /** 7. Create SEQUENCE table: */
-    public void createSequenceTable(boolean createSequenceTable) throws Exception {
+    protected void createSequenceTable(boolean createSequenceTable) throws Exception {
         if (createSequenceTable) {
             sql.setLength(0);
             db.getDialect().printSequenceTable(db, sql);
@@ -332,7 +400,7 @@ public class MetaDbService {
     }
 
     /** 8. Create table comment for the all tables: */
-    public void createTableComments(List<MetaTable> tables) throws Exception {
+    protected void createTableComments(List<MetaTable> tables) throws Exception {
         @SuppressWarnings("unchecked")
         final List<MetaTable> cTables;
         switch (MetaParams.COMMENT_POLICY.of(db.getParams())) {
