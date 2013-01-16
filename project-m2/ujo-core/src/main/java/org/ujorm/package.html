@@ -498,8 +498,9 @@ On the second example is an extended solution.
 
 <h4 id="validatorOnTheKey">Validator on the Key</h4>
     Any Validator imlementation can be assigned to an immutable Ujo-key.
-    In this case any writing event on the key will be checked by the assigned Validator.
-    According the rule it as clear, that the default Key <strong>value</strong> can not be validated similar as any value written out from the key.
+    In this case any event of writting on the key will be checked by the assigned Validator.
+    The default Key value is not be validated similar
+    as any value written out from the Key because the value is not written using the Key.
     See some examples to building the key:
 
     <pre class="pre">
