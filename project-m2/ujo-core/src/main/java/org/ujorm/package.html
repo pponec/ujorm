@@ -463,10 +463,11 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
 If the validation check is correct, then the method Validator.validate(..) returns the NULL value, else the method returns an instance of the ValidationError class.
 Each the instance of the class ValidationError provides the default validation message and offers tools to create a localized message using a user template with named parameters
 with the format: <strong>${argument,format}</strong>, where the optional <strong>format</strong> phrase have got the same syntax as the tool {@link java.util.Formatter}.
-Each Ujorm validator contains at least two argument values:
+Each Ujorm validator contains at least three argument values:
 <ul>
     <li>${INPUT} - the input value</li>
     <li>${KEY} - the Ujo-key instance passed to the <strong>validate()</strong> method as a nullable argument.</li>
+    <li>${MARK} - this sequence is replaced for the two-character mark: "${"</li>
 </ul>
 
 On the second example is an extended solution.
