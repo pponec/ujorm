@@ -30,7 +30,8 @@ document.body.appendChild(oLink);
               <li><a href="#javabean">The JavaBean implements Ujo</a></li>
               <li><a href="#xml">XML serialization</a></li>
               <li><a href="#tablemodel">Support of the JTable component</a></li>
-              <li><a href="#ORM">Support the object-relation mapping (ORM)</a></li>
+              <li><a href="#RingBuffer">Stream searching</a></li>
+              <li><a href="#ORM">Object-relation mapping (ORM)</a></li>
               <li><a href="#inheritance">UJO inheritance</a></li>
               <li><a href="#performance">Performance</a></li>
               <li><a href="#possibilities">Other possibilities of usage?</a></li>
@@ -779,6 +780,23 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         All of these methods in the UjoTableModel class you´ll get implemented yet.
         A name of the column and corresponding class are taken straightly from the <i>Key</i> object, a column list inputs in constructor.
 
+        <h2 id="RingBuffer">Stream searching</h2>
+        Framework provides a special tool for fast searching in a stream using the class RingBuffer.
+        The static methods of this class allow you to search the contents placed between the two texts.
+        See the next sample:
+        <pre class="pre">
+
+    <span class="keyword-directive">final</span> Reader reader = RingBuffer.<span class="ST0">createReader</span>(<span class="character">&quot;</span><span class="character">xxx ${abc} ${def} zzz</span><span class="character">&quot;</span>);
+
+    String word1 = RingBuffer.<span class="ST0">findWord</span>(reader, <span class="character">&quot;</span><span class="character">${</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">}</span><span class="character">&quot;</span>);
+    <span class="ST0">assertEquals</span>(<span class="character">&quot;</span><span class="character">abc</span><span class="character">&quot;</span>, word1);
+
+    String word2 = RingBuffer.<span class="ST0">findWord</span>(reader, <span class="character">&quot;</span><span class="character">${</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">}</span><span class="character">&quot;</span>);
+    <span class="ST0">assertEquals</span>(<span class="character">&quot;</span><span class="character">def</span><span class="character">&quot;</span>, word2);
+
+    String word3 = RingBuffer.<span class="ST0">findWord</span>(reader, <span class="character">&quot;</span><span class="character">${</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">}</span><span class="character">&quot;</span>);
+    <span class="ST0">assertEquals</span>(<span class="character">&quot;&quot;</span>, word3);
+        </pre>
 
         <h2 id="ORM">Object-relation mapping (ORM)</h2>
         The <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">object-relation mapping</a> (ORM) is a bridge between the object word

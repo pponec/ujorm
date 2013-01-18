@@ -89,6 +89,19 @@ public class RingBufferTest extends TestCase {
         assertEquals("", word);
     }
 
+    public void testFindWord_2b() throws IOException {
+        final Reader reader = RingBuffer.createReader("xxx ${abc} ${def} zzz");
+
+        String word1 = RingBuffer.findWord(reader, "${", "}");
+        assertEquals("abc", word1);
+
+        String word2 = RingBuffer.findWord(reader, "${", "}");
+        assertEquals("def", word2);
+
+        String word3 = RingBuffer.findWord(reader, "${", "}");
+        assertEquals("", word3);
+    }
+
     /**
      * Test of add method, of class RingBuffer.
      */
