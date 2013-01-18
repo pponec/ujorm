@@ -448,9 +448,9 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
         There is an short example how to use the Ujorm Validator:
 <pre class="pre">
     Integer maxValidValue = 10;
-    Integer wrongValue = 120;
+    Integer <span class="highlight">wrongValue</span> = 120;
     Validator&lt;Integer&gt; maxValidator = Validator.<span class="ST0">Build</span>.<span class="ST0">max</span>(maxValidValue);
-    ValidationError error = maxValidator.validate(wrongValue, <span class="keyword-directive">null</span>, <span class="keyword-directive">null</span>);
+    ValidationError error = maxValidator.validate(<span class="highlight">wrongValue</span>, <span class="keyword-directive">null</span>, <span class="keyword-directive">null</span>);
 
     <span class="comment">// Get the localized message using a template::</span>
     String myTemplate = <span class="character">"My input must not be great then ${LIMIT}."</span>;
@@ -478,10 +478,10 @@ On the second example is an extended solution.
     ...
     Integer minValidValue = 1;
     Integer maxValidValue = 9;
-    Integer wrongValue = 130;
+    Integer <span class="highlight">wrongValue</span> = 130;
 
     Validator&lt;Integer&gt; rangeValidator = Validator.<span class="ST0">Build</span>.<span class="ST0">range</span>(minValidValue, maxValidValue);
-    ValidationError error = rangeValidator.validate(wrongValue, ValidBo.<span class="ST1">CODE</span>, <span class="keyword-directive">null</span>);
+    ValidationError error = rangeValidator.validate(<span class="highlight">wrongValue</span>, ValidBo.<span class="ST1">CODE</span>, <span class="keyword-directive">null</span>);
     <span class="comment">//</span>
     String expectedDefaultMesage = <span class="character">&quot;</span><span class="character">An attribute ValidBo.code must be between 1 and 9 (including)</span><span class="character">&quot;</span>
             + <span class="character">&quot;</span><span class="character">, but the input is: 130</span><span class="character">&quot;</span>;
@@ -781,11 +781,10 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         A name of the column and corresponding class are taken straightly from the <i>Key</i> object, a column list inputs in constructor.
 
         <h2 id="RingBuffer">Stream searching</h2>
-        Framework provides a special tool for a very fast searching of texts in a stream using the class RingBuffer.
+        Framework provides a special tool for a very fast searching in a stream using the class RingBuffer.
         The static methods of this class allow you to search the contents placed between the two texts.
         See the next sample:
         <pre class="pre">
-
     <span class="keyword-directive">final</span> Reader reader = RingBuffer.<span class="ST0">createReader</span>(<span class="character">&quot;</span><span class="character">xxx ${abc} ${def} zzz</span><span class="character">&quot;</span>);
 
     String word1 = RingBuffer.<span class="ST0">findWord</span>(reader, <span class="character">&quot;</span><span class="character">${</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">}</span><span class="character">&quot;</span>);
@@ -795,8 +794,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
     <span class="ST0">assertEquals</span>(<span class="character">&quot;</span><span class="character">def</span><span class="character">&quot;</span>, word2);
 
     String word3 = RingBuffer.<span class="ST0">findWord</span>(reader, <span class="character">&quot;</span><span class="character">${</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">}</span><span class="character">&quot;</span>);
-    <span class="ST0">assertEquals</span>(<span class="character">&quot;&quot;</span>, word3);
-        </pre>
+    <span class="ST0">assertEquals</span>(<span class="character">&quot;&quot;</span>, word3);</pre>
 
         <h2 id="ORM">Object-relation mapping (ORM)</h2>
         The <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">object-relation mapping</a> (ORM) is a bridge between the object word
@@ -822,7 +820,6 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
   <span class="java-annotation">@</span>Override <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
       <span class="java-keywords">return</span> f.<span class="java-layer-method">getKeys</span>();
   }
-
 }</pre>
 
         Or the similar example <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/QuickUjo.html">QuickUjo</a>:
