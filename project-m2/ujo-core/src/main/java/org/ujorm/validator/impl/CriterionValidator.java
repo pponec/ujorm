@@ -37,7 +37,7 @@ public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VAL
     protected CriterionValidator(Criterion<VALUE> crn) {
         this.crn = crn;
     }
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || crn.evaluate(input);

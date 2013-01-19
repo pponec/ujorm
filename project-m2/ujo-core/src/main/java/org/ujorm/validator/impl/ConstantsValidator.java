@@ -55,7 +55,7 @@ public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
         }
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || ( forbidden

@@ -48,7 +48,7 @@ public class BetweenValidator<VALUE extends Comparable> extends AbstractValidato
         this.max = max;
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input
             , Key<UJO, VALUE> key
             , UJO bo

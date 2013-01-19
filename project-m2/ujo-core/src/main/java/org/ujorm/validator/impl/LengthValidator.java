@@ -57,7 +57,7 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
         this.max = max;
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
         final int length = input != null ? input.length() : min;
         final boolean failed = length < min || length > max;

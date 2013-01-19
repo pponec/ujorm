@@ -42,7 +42,7 @@ public class TypeValidator<VALUE extends Object> extends AbstractValidator<VALUE
     }
 
     /**
-     * {@Inherited}
+     * {@inheritDoc}
      * @param input Input value
      * @param key Key is the mandatory argument for this object!
      * @param bo domain objects

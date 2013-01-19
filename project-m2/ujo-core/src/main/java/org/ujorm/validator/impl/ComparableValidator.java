@@ -47,7 +47,7 @@ public class ComparableValidator<VALUE extends Comparable> extends AbstractValid
         this.max = maxLimit;
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || ( max

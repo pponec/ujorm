@@ -48,7 +48,7 @@ public class NotEmptyValidator<VALUE extends CharSequence> extends AbstractValid
         this.trim = trim;
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean failed = input==null
                     || 0 == (trim
