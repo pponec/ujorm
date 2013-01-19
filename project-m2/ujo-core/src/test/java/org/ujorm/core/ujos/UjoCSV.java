@@ -10,17 +10,24 @@
 package org.ujorm.core.ujos;
 
 import org.ujorm.Key;
-import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.core.KeyFactory;
+import org.ujorm.extensions.AbstractUjo;
 
 /**
- *
+ * UjoCSV
  * @author Pavel Ponec
  */
-public class UjoCSV extends MapUjo{
+public class UjoCSV extends AbstractUjo {
+    
+    private static final KeyFactory<UjoCSV> f = newFactory(UjoCSV.class);
 
-    public static final Key<UjoCSV, String> P1 = newProperty("P1", String.class);
-    public static final Key<UjoCSV, String> P2 = newProperty("P2", String.class);
-    public static final Key<UjoCSV, String> P3 = newProperty("P3", String.class);
+    public static final Key<UjoCSV, String> P1 = f.newKey();
+    public static final Key<UjoCSV, String> P2 = f.newKey();
+    public static final Key<UjoCSV, String> P3 = f.newKey();
+    
+    static {
+        f.lock();
+    }
     
     // ---------------------------
     

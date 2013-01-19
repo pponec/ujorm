@@ -48,7 +48,8 @@ public class OrmKeyFactory<UJO extends OrmUjo> extends KeyFactory<UJO> {
         return p;
     }
 
-    /** A PropertyIterator Factory creates an new property and assign a next index.
+    /** A KeyIterator Factory creates an new key and assign a next index.
+     * @return RelationToMany
      * @hidden
      */
     public <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation() {

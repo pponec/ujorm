@@ -45,6 +45,19 @@ public class PropertyStoreTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
+    
+    /**
+     * Test of getType method, of class KeyRing.
+     */
+    public void testKeyName() {
+        assertEquals("P1", UjoCSV.P1.getName());
+        assertEquals("P2", UjoCSV.P2.getName());
+        assertEquals("P3", UjoCSV.P3.getName());
+        //
+        assertEquals("P1", UjoCSV.P1.toString());
+        assertEquals("P2", UjoCSV.P2.toString());
+        assertEquals("P3", UjoCSV.P3.toString());
+    }    
 
     /**
      * Test of getType method, of class KeyRing.

@@ -66,7 +66,7 @@ public class ValidatorTest extends MyTestCase {
         Validator<Integer> rangeValidator = Validator.Build.range(minValidValue, maxValidValue);
         ValidationError error = rangeValidator.validate(wrongValue, ValidBo.CODE, null);
         //
-        String expectedDefaultMesage = "An attribute ValidBo.code must be between 1 and 9 (including)"
+        String expectedDefaultMesage = "An attribute ValidBo.CODE must be between 1 and 9 (including)"
                 + ", but the input is: 130";
         assertEquals(expectedDefaultMesage, error.getDefaultMessage());
         //

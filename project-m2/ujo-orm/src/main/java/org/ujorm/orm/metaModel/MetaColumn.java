@@ -211,15 +211,16 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     @SuppressWarnings("unchecked")
     public List<MetaColumn> getForeignColumns() {
         if (relatedModel==null) {
-            assignForeignColumns();
+            relatedModel = createForeignColumns();
         }
         return relatedModel;
     }
 
-
-    /** Returns an original foreign columns in case a foreign column. */
+    /** Returns an original foreign columns in case a foreign column.
+     * @return Returns an original foreign columns in case a foreign column.
+     * @throws IllegalStateException The relation column have no foreign keys! */
     @SuppressWarnings("unchecked")
-    private void assignForeignColumns() {
+    private List<MetaColumn> createForeignColumns() throws IllegalStateException {
         List<MetaColumn> result;
 
         MetaTable table;
@@ -237,7 +238,10 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                 result = Collections.emptyList();
             }
         }
-        relatedModel = result;
+        if (result.isEmpty()) {
+            throw new IllegalStateException("The relation column " + this + " have no foreign keys!");
+        }
+        return result;
     }
 
     /** Returns names of foreign columns.
