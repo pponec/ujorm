@@ -1,5 +1,14 @@
 The Ujorm release notes
 *******************************
+release 1.32 (2013-01-20)
++ many Ujo Validators are available now in the CORE module for common use
++ the one database request loading for relations is supported using the database Query object API
++ lazy loading can be disabled by default for each Query now
++ CSV import tool can check a content of the header in the reading time
++ the RingBuffer tool was extended for new useful methods
++ more checkpoints, code cleaning and jUnit tests are done
++ documentation was extended
+
 release 1.31 (2012-12-09)
 + database statements UPDATE or DELETE supports entity relations in the Criterion - including batch mode
 + SQL entity and column names can be "quoted" optionally in the real SQL statements, for more information see the method: MetaParams.setQuotedSqlNames()
