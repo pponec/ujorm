@@ -263,7 +263,11 @@ public class TypeService implements ITypeService<Object,Object> {
                 return o;
             }
         }
-        throw new IllegalArgumentException("No enum key " + mColumn.getType() + "." + key);
+        String msg = String.format("No enum was found for the key %s type of %s using the value: '%s'."
+                , mColumn
+                , mColumn.getType().getSimpleName()
+                , key );
+        throw new IllegalArgumentException(msg);
     }
 
     /** Create the new StringWrapper by the KEY. */

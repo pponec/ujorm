@@ -111,10 +111,9 @@ final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
         try {
             cursorReady = false; // switch off the cursor flag.
             @SuppressWarnings("unchecked")
-            T row = (T) query.getTableModel().createBO();
-            int colCount = query.getColumns().size();
+            final T row = (T) query.getTableModel().createBO();
 
-            for (int i=0; i<colCount; i++) {
+            for (int i=0, max=queryColumns.length; i<max; i++) {
                 final ColumnWrapper colWrap = queryColumns[i];
                 final MetaColumn column = colWrap.getModel();
                 final int iCol = view ? rs.findColumn(MetaColumn.NAME.of(column)) : (i+1);

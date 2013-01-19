@@ -17,9 +17,9 @@
 package org.ujorm.implementation.orm;
 
 import org.ujorm.Key;
-import org.ujorm.extensions.Property;
 import org.ujorm.orm.ExtendedOrmUjo;
-import org.ujorm.orm.OrmUjo;
+
+
 
 /**
  * Foreign key property
