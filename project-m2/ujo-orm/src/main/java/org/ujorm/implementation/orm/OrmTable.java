@@ -180,18 +180,16 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
 
     /** Create a factory with a cammel-case Key name generator.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
-     * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newCamelFactory
      */
-    protected static <UJO extends Ujo> KeyFactory<UJO> newCamelFactory(Class<? extends UJO> ujoClass) {
-        return new OrmKeyFactory(ujoClass, false);
+    protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newCamelFactory(Class<? extends UJO> ujoClass) {
+        return (FACTORY) new OrmKeyFactory(ujoClass, true);
     }
 
-    /** Create a base factory with a cammel-case Key name generator.
+    /** Create a base factory Key name generator where property name is the same as its field name.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
-     * <br>In case of OrmUjo the method is called by a Ujorm framework, so the newCamelFactory
      */
-    protected static <UJO extends Ujo> KeyFactory<UJO> newFactory(Class<? extends UJO> ujoClass) {
-        return new OrmKeyFactory(ujoClass, true);
+    protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newFactory(Class<? extends UJO> ujoClass) {
+        return (FACTORY) new OrmKeyFactory(ujoClass, false);
     }
 
     /** A PropertyIterator Factory creates an new property and assign a next index.
