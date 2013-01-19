@@ -47,7 +47,7 @@ public class PatternValidator<VALUE extends String> extends AbstractValidator<VA
         this.mail = EMAIL.endsWith(pattern.pattern());
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || pattern.matcher(input).matches();

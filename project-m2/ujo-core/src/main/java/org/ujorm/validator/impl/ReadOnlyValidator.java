@@ -40,7 +40,7 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
         this.readOnly = readOnly;
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
         final boolean failed = readOnly;
         return failed ? new ValidationError

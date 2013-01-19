@@ -46,7 +46,7 @@ public class DateValidator<VALUE extends Date> extends AbstractValidator<VALUE> 
         this.pastWord = past ? "past" : "future";
     }
 
-    /** {@Inherited} */
+    /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
 
             final Long now = System.currentTimeMillis();
