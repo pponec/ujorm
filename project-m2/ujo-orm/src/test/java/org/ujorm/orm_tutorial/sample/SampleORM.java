@@ -76,7 +76,7 @@ public class SampleORM {
             sample.useSelectItems_5b();
             sample.useSelectItems_6();
             sample.useOptimizedSelect();
-            sample.useFetchLoading();
+            sample.useOneRequestLoading();
             sample.useNativeCriterion();
             sample.useReloading();
             sample.useLimitAndOffset();
@@ -448,7 +448,7 @@ public class SampleORM {
     }
 
     /** Fetch column from related tables */
-    public void useFetchLoading() {
+    public void useOneRequestLoading() {
         Query<Item> items = session.createQuery(Item.ID.whereNeq(0L));
         Key<Item, Date> orderCreated = Item.ORDER.add(Order.CREATED);
 
