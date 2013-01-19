@@ -34,6 +34,10 @@ import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.criterion.Operator.*;
+import org.ujorm.orm.dialect.DerbyDialect;
+import org.ujorm.orm.dialect.FirebirdDialect;
+import static org.Checks.*;
+
 
 /**
  * The tutorial in the class for the Ujorm <br>
@@ -75,8 +79,8 @@ public class SampleORM {
             sample.useSelectItems_4();
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
-            sample.useSelectItems_6();
             sample.useOptimizedSelect();
+            sample.useOneRequestLoading();
             sample.useNativeCriterion();
             sample.useReloading();
             sample.useLimitAndOffset();
@@ -282,6 +286,12 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectViewOrders() {
+        // Some dialects must have got special SQL statements:
+        if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
+        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+            return;
+        }
+
         Criterion<ViewOrder> crit = ViewOrder.ITEM_COUNT.whereGt(0);
 
         long minimalOrderId = 0L;
@@ -308,6 +318,12 @@ public class SampleORM {
      * @see Query#setSqlParameters(java.lang.Object[])
      */
     public void useSelectWithNativeSQL() {
+        // Some dialects must have got special SQL statements:
+        if (session.hasDialect(ViewOrder.class, DerbyDialect.class, FirebirdDialect.class)
+        ||  session.getParameters().isQuotedSqlNames()){ // Columns must be quoted
+            return;
+        }
+
         final Long excludedId = -7L;
         SqlParameters sql = new SqlParameters().setSqlStatement
                 ( "SELECT * FROM ("
@@ -410,14 +426,6 @@ public class SampleORM {
         }
     }
 
-    /** Select one items without Order */
-    public void useSelectItems_6() {
-        Query<Item> items = session.createQuery(Item.ORDER.add(Order.NOTE).whereNull());
-        for (Item item : items) {
-            System.out.println("ITEM WITHOUT ORDER: " + item);
-        }
-    }
-
     /** Create a SELECT for the one column only
      * with no duplicate rows for a better performance.
      */
@@ -435,8 +443,38 @@ public class SampleORM {
         }
     }
 
+    /** Fetch column from related tables */
+    public void useOneRequestLoading() {
+        Query<Item> items = session.createQuery(Item.ID.whereNeq(0L));
+        Key<Item, Date> orderCreated = Item.ORDER.add(Order.CREATED);
+
+        // Fetch the Order's CREATED column (and the primary key):
+        items.setColumns(true, orderCreated);
+        for (Item item : items.list()) {
+            expectNull(false, item.getId()); // due the request: addPrimaryKey
+            expectNull(false, item.get(orderCreated));
+            expectNull(false, item.get(Item.ORDER));
+            expectNull(true , item.get(Item.NOTE));
+            expectNull(true , item.get(Item.ORDER.add(Order.NOTE))); // Eeach lazy Order has a not-null NOTE!
+        }
+
+        // Fetch all the Order columns:
+        items.setColumns(true, Item.ORDER);
+        for (Item item : items.list()) {
+            expectNull(false, item.getId()); // due the request: addPrimaryKey
+            expectNull(true , item.get(Item.NOTE));
+            expectNull(false, item.get(Item.ORDER));
+            expectNull(false, item.get(orderCreated));
+            expectNull(false, item.get(Item.ORDER.add(Order.ID)));
+            expectNull(false, item.get(Item.ORDER.add(Order.NOTE)));
+        }
+    }
+
     /** Select all items with a description with the 'table' insensitive text. */
     public void useNativeCriterion() {
+        if (session.getParameters().isQuotedSqlNames()) {
+            return;  // Columns must be quoted
+        }
 
         Criterion<Order> crn = Order.STATE.forSql("ord_order_alias.id>0")
              .and(Order.CREATED.where(LE, new Date()));
