@@ -81,8 +81,8 @@ Implementation-Vendor: "Pavel Ponec"</echo>
                        encoding="UTF-8"
                        byline="true" />
         <replaceregexp file="build/read-me.html" 
-                       match="\$\{year\}"
-                       replace="${year}"
+                       match="\$\{copyrightYear\}"
+                       replace="${copyrightYear}"
                        flags="g"
                        encoding="UTF-8"
                        byline="true" />
