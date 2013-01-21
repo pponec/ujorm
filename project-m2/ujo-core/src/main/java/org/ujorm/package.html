@@ -29,6 +29,7 @@ document.body.appendChild(oLink);
               <li><a href="#ujoext">Extended Ujo</a></li>
               <li><a href="#javabean">The JavaBean implements Ujo</a></li>
               <li><a href="#xml">XML serialization</a></li>
+              <li><a href="#csv">CSV serialization</a></li>
               <li><a href="#tablemodel">Support of the JTable component</a></li>
               <li><a href="#RingBuffer">Stream searching</a></li>
               <li><a href="#ORM">Object-relation mapping (ORM)</a></li>
@@ -737,6 +738,25 @@ The solution is to use an annotation <strong>@XmlAttribute</strong> by next samp
           <li>if a property has an annotation XmlAttribute so the XmlElementBody is ignored.</li>
         </ul>
 
+        <h2 id="csv">CSV serialization</h2>
+
+The Ujorm support a CSV serialization and deserializationm, see the simple example:
+<pre class="pre">
+UjoManagerCSV manager = UjoManagerCSV.<span class="ST0">getInstance</span>(UjoCSV.<span class="keyword-directive">class</span>);
+ByteArrayOutputStream out = <span class="keyword-directive">new</span> ByteArrayOutputStream();
+
+<span class="comment">// Save the ujoList to an outputStream:</span>
+manager.saveCSV(out, UjoManagerCSV.<span class="ST1">UTF_8</span>, <span class="ST2">ujoList</span>, <span class="character">&quot;</span><span class="character">CSV-Context</span><span class="character">&quot;</span>);
+
+<span class="comment">// Restore original objects from the byte array:</span>
+InputStream is = <span class="keyword-directive">new</span> ByteArrayInputStream(out.toByteArray());
+List&lt;UjoCSV&gt; result = manager.loadCSV(<span class="keyword-directive">new</span> Scanner(is), <span class="character">&quot;</span><span class="character">CSV-Context</span><span class="character">&quot;</span>);
+
+<span class="comment">// Check the first objects</span>
+<span class="ST0">assertEquals</span>(<span class="ST2">ujoList</span>.get(0), result.get(0));
+</pre>
+
+Eeach Ujo object can disable some columns by a method "readAuthorization(..)" and an operation context (the String "CSV-Context" for the example above).
 
         <h2 id="tablemodel">Support of the JTable component</h2>
         The Ujorm contains a support for the UJO object list displaying in the JTable. For simple editable table creating it´s not necessary
@@ -961,10 +981,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
         <ul>
             <li>you can save all the hierarchy of UJO objects in XML format by the help of the UjoManagerXML class. For another information see the UjoXml class.</li>
             <li>UJO object can be saved in the <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">PropertyResourceBundle</a> format.</li>
-            <li>UJO object will be possible to save in CSV format in some future version.</li>
-            <li>The usage of UJO objects in the framework Cayenne (solution for the <a href="http://pt.wikipedia.org/wiki/ORM">ORM</a>).
-                The Cayenne works with persistent classes analogous to implementation MapUjo. Because the persistent objects are created by pattern,
-                the pattern can be change easily in that way, it will implement the <i>Ujo</i> interface. </li>
+            <li>see the <a href="orm/package-summary.html#ORM">ORM module</a> for more information about relation databases</li>
         </ul>
 
 

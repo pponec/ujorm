@@ -9,11 +9,13 @@ package org.ujorm.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
+import static org.ujorm.core.ujos.UjoCSV.*;
 
 /**
  *
@@ -48,23 +50,24 @@ public class UjoManagerCSVTest extends MyTestCase {
      */
     public void testSaveCSV() throws Exception {
         System.out.println("saveCSV");
-        //
-        UjoCSV.P1.setValue(ujo, "A");
-        UjoCSV.P2.setValue(ujo, "B");
-        UjoCSV.P3.setValue(ujo, "C");
-        //
-        ByteArrayOutputStream out = createOS("F1");
-        manager.saveCSV(out, null, ujoList, context);
-        out.close();
 
-        ByteArrayInputStream is = createIS(out);
-        List<UjoCSV> list2 = manager.loadCSV(new Scanner(is), context);
+        ujo.set(P1, "A");
+        ujo.set(P2, "B");
+        ujo.set(P3, "C");
 
-        assertEquals(ujoList.size(), list2.size());
+        UjoManagerCSV manager = UjoManagerCSV.getInstance(UjoCSV.class);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        UjoCSV u1 = ujoList.get(0);
-        UjoCSV u2 = list2.get(0);
-        assertEquals(u1, u2);
+        // Save the ujoList to an outputStream:
+        manager.saveCSV(out, UjoManagerCSV.UTF_8, ujoList, "CSV-Context");
+
+        // Restore original objects from the byte array:
+        InputStream is = new ByteArrayInputStream(out.toByteArray());
+        List<UjoCSV> result = manager.loadCSV(new Scanner(is), "CSV-Context");
+
+        // Check the first objects
+        assertEquals(ujoList.get(0), result.get(0));
+        assertEquals(ujoList.size(), result.size());
 
         // PrintIt
         // System.out.print("-----\n" + out.toString("utf-8") + "\n-----\n");
@@ -73,15 +76,15 @@ public class UjoManagerCSVTest extends MyTestCase {
     public void testSaveCSV2() throws Exception {
         System.out.println("saveCSV-2");
         //
-        UjoCSV.P1.setValue(ujo, "");
-        UjoCSV.P2.setValue(ujo, "");
-        UjoCSV.P3.setValue(ujo, "");
+        ujo.set(P1, "");
+        ujo.set(P2, "");
+        ujo.set(P3, "");
         //
-        ByteArrayOutputStream out = createOS("F1");
+        ByteArrayOutputStream out = createOutputStream();
         manager.saveCSV(out, null, ujoList, context);
         out.close();
 
-        ByteArrayInputStream is = createIS(out);
+        ByteArrayInputStream is = createInputStream(out);
         List<UjoCSV> list2 = manager.loadCSV(new Scanner(is), context);
 
         assertEquals(ujoList.size(), list2.size());
@@ -102,11 +105,11 @@ public class UjoManagerCSVTest extends MyTestCase {
         UjoCSV.P2.setValue(ujo, "\"");
         UjoCSV.P3.setValue(ujo, "\"-;-\"\"");
         //
-        ByteArrayOutputStream out = createOS("F1");
+        ByteArrayOutputStream out = createOutputStream();
         manager.saveCSV(out, null, ujoList, context);
         out.close();
 
-        ByteArrayInputStream is = createIS(out);
+        ByteArrayInputStream is = createInputStream(out);
         List<UjoCSV> list2 = manager.loadCSV(new Scanner(is), context);
 
         assertEquals(ujoList.size(), list2.size());
@@ -124,11 +127,11 @@ public class UjoManagerCSVTest extends MyTestCase {
         //
         ujoList.clear();
         //
-        ByteArrayOutputStream out = createOS("F1");
+        ByteArrayOutputStream out = createOutputStream();
         manager.saveCSV(out, null, ujoList, context);
         out.close();
 
-        ByteArrayInputStream is = createIS(out);
+        ByteArrayInputStream is = createInputStream(out);
         List<UjoCSV> list2 = manager.loadCSV(new Scanner(is), context);
 
         assertEquals(ujoList.size(), list2.size());
@@ -145,14 +148,14 @@ public class UjoManagerCSVTest extends MyTestCase {
         UjoCSV.P2.setValue(ujo, "B");
         UjoCSV.P3.setValue(ujo, "C");
         //
-        ByteArrayOutputStream out = createOS("F1");
+        ByteArrayOutputStream out = createOutputStream();
         UjoManagerCSV manager5 = UjoManagerCSV.getInstance(UjoCSV.class);
         manager5.setHeaderContent("Ah Bh Ch");
 
         manager5.saveCSV(out, null, ujoList, context);
         out.close();
 
-        ByteArrayInputStream is = createIS(out);
+        ByteArrayInputStream is = createInputStream(out);
         List<UjoCSV> list2 = manager5.loadCSV(new Scanner(is), context);
 
         assertEquals(ujoList.size(), list2.size());
@@ -166,7 +169,7 @@ public class UjoManagerCSVTest extends MyTestCase {
 
         try {
             manager5.setHeaderContent("wrong header");
-            ByteArrayInputStream is2 = createIS(out);
+            ByteArrayInputStream is2 = createInputStream(out);
             List<UjoCSV> list2b = manager5.loadCSV(new Scanner(is2), context);
             assertTrue("Wrong header", false);
         } catch (IllegalStateException e) {
@@ -176,12 +179,12 @@ public class UjoManagerCSVTest extends MyTestCase {
 
     // ------------------------------------------------
 
-    public ByteArrayOutputStream createOS(String file) {
+    public ByteArrayOutputStream createOutputStream() {
         ByteArrayOutputStream result = new ByteArrayOutputStream(8000*1000);
         return result;
     }
 
-    public ByteArrayInputStream createIS(ByteArrayOutputStream data) {
+    public ByteArrayInputStream createInputStream(ByteArrayOutputStream data) {
         ByteArrayInputStream result = new ByteArrayInputStream(data.toByteArray());
         return result;
     }
