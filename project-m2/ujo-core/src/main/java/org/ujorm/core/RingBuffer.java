@@ -70,24 +70,45 @@ final public class RingBuffer implements CharSequence {
         b[pos] = c;
         pos = ++pos % this.length;
     }
-
-    /** The equals test */
-    public boolean equals(String s) {
-        return equals(s.toCharArray());
+    
+    /** Returns a character from position 'i' */
+    @Override
+    public char charAt(int i) {
+        return b[(pos + i) % length];
     }
 
     /** The equals test */
+    @Override
+    @SuppressWarnings("empty-statement")
+    public boolean equals(Object s) {
+        return s instanceof CharSequence
+                ? equals((CharSequence) s)
+                : false ;        
+    }    
+
+    /** The equals test
+     * @param s The nullable argument
+     * @return return true if the toString() result have got the same content
+     */
+    @SuppressWarnings("empty-statement")
+    public boolean equals(CharSequence s) {
+        if (s==null || s.length()!=this.length) {
+            return false;
+        }
+        int i;
+        for (i = 0; i < this.length && s.charAt(i) == b[(pos + i) % length]; i++);
+        return i == length;
+    }
+
+    /** The equals test
+     * @param s The not-null byte must have got <strong>the same length</strong> as the buffer.
+     * @return return true if the toString() result have got the same content
+     */
     @SuppressWarnings("empty-statement")
     public boolean equals(char[] s) {
         int i;
         for (i = 0; i < this.length && s[i] == b[(pos + i) % length]; i++);
         return i == length;
-    }
-
-    /** Returns a character from position 'i' */
-    @Override
-    public char charAt(int i) {
-        return b[(pos + i) % length];
     }
 
     /** Export to the String. */
