@@ -54,13 +54,14 @@ public class RingBufferTest extends TestCase {
         s.add('a');
         s.add('b');
         s.add('c');
-        
+
         //
-        assertFalse(s.equals("a"));
-        assertFalse(s.equals("ab"));
-        assertTrue (s.equals("abc"));
-        assertFalse(s.equals("abcd"));
-                
+        assertFalse(s.equalsSequence(null));
+        assertFalse(s.equalsSequence("a"));
+        assertFalse(s.equalsSequence("ab"));
+        assertTrue (s.equalsSequence("abc"));
+        assertFalse(s.equalsSequence("abcd"));
+
         //
         assertEquals("abc", s.toString());
         assertEquals("bc", s.substring(1, 3));

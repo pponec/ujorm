@@ -70,44 +70,41 @@ final public class RingBuffer implements CharSequence {
         b[pos] = c;
         pos = ++pos % this.length;
     }
-    
+
     /** Returns a character from position 'i' */
     @Override
     public char charAt(int i) {
         return b[(pos + i) % length];
     }
 
-    /** The equals test */
+    /** The method tests if the current object equals to an argument. */
     @Override
-    @SuppressWarnings("empty-statement")
-    public boolean equals(Object s) {
-        return s instanceof CharSequence
-                ? equals((CharSequence) s)
-                : false ;        
-    }    
-
-    /** The equals test
-     * @param s The nullable argument
-     * @return return true if the toString() result have got the same content
-     */
-    @SuppressWarnings("empty-statement")
-    public boolean equals(CharSequence s) {
-        if (s==null || s.length()!=this.length) {
-            return false;
+    public boolean equals(final Object s) {
+        if (s instanceof RingBuffer) {
+            final RingBuffer r = (RingBuffer)s;
+            return r.length()==this.length
+                && equalsInternal(r);
         }
-        int i;
-        for (i = 0; i < this.length && s.charAt(i) == b[(pos + i) % length]; i++);
-        return i == length;
+        return false;
     }
 
-    /** The equals test
-     * @param s The not-null byte must have got <strong>the same length</strong> as the buffer.
-     * @return return true if the toString() result have got the same content
+    /** The method compare an argument type of CharSequence */
+    public boolean equalsSequence(final CharSequence s) {
+        return s != null
+            && s.length() == this.length
+            && equalsInternal(s)
+            ;
+    }
+
+    /** The equals test for an internal use only.
+     * @param s Sequence must not be the {@code null] and must have got the <strong>same length</strong> as the RingBuffer
+     * @return Returns true, ir the sequence equalsTo this object.
+     * @throws IndexOutOfBoundsException if the argument have not the same length
      */
     @SuppressWarnings("empty-statement")
-    public boolean equals(char[] s) {
+    protected boolean equalsInternal(final CharSequence s) throws IndexOutOfBoundsException {
         int i;
-        for (i = 0; i < this.length && s[i] == b[(pos + i) % length]; i++);
+        for (i = 0; i < this.length && s.charAt(i) == b[(pos + i) % length]; i++);
         return i == length;
     }
 
@@ -282,26 +279,26 @@ final public class RingBuffer implements CharSequence {
         }
         final StringBuilder result = new StringBuilder(64);
         int i = 0, last = tags.length - 1;
-        char[] border = tags[i].toCharArray();
-        RingBuffer ring = new RingBuffer(border.length);
+        String tag = tags[i];
+        RingBuffer ring = new RingBuffer(tag.length());
 
         int c;
         while ((c = reader.read()) != -1) {
             ring.add((char) c);
 
-            if (ring.equals(border)) {
+            if (ring.equalsInternal(tag)) {
                 if (i==last) {
                     // Remove a part of the the finish tag:
-                    if (border.length>1 && result.length()>0) {
-                        result.setLength(result.length() - border.length + 1);
+                    if (ring.length>1 && result.length()>0) {
+                        result.setLength(result.length() - ring.length + 1);
                     }
                     return result.toString();
                 } else {
-                    border = tags[++i].toCharArray();
-                    if (border.length==0) {
+                    tag = tags[++i];
+                    if (tag.length()==0) {
                         break;
                     }
-                    ring = new RingBuffer(border.length);
+                    ring = new RingBuffer(tag.length());
                 }
             } else if (i==last) {
                 result.append((char) c);
