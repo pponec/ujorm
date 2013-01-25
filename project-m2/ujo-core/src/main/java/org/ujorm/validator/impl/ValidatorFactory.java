@@ -63,6 +63,13 @@ public class ValidatorFactory {
         return NOT_NULL;
     }
 
+    /** An alias fo the {@link #notNull() }
+     * @see NotNullValidator
+     */
+    public static Validator mandatory() {
+        return NOT_NULL;
+    }
+
     /** Check the not {@code null} and not empty value type of String. Method <strong>is not</strong> type save!
      * @see NotEmptyValidator
      */
