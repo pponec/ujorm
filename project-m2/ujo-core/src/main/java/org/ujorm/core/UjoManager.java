@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +41,7 @@ import org.ujorm.core.annot.XmlElementBody;
 import org.ujorm.extensions.*;
 import org.ujorm.implementation.array.ArrayUjo;
 import org.ujorm.swing.UjoPropertyRow;
+import org.ujorm.validator.ValidationError;
 import static org.ujorm.UjoAction.*;
 
 /**
@@ -556,6 +558,33 @@ public class UjoManager implements Comparator<Key> {
     public static boolean isFilled(final CharSequence text) {
         return text!=null && text.length()>0;
     }
+
+    /** Validate the argument using all keys from the object. */
+    public static List<ValidationError> validate(final Ujo ujo) {
+        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
+        for (Key key : ujo.readKeys()) {
+            final ValidationError err = key.getValidator().validate(key.of(ujo), key, ujo);
+            if (err!=null) {
+                result.add(err);
+            }
+        }
+        return result;
+    }
+
+    /** Validate the argument using all keys from the collection. */
+    public static List<ValidationError> validate(final Collection<Ujo> ujos) {
+        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
+        for (Ujo ujo : ujos) {
+            for (Key key : ujo.readKeys()) {
+                final ValidationError err = key.getValidator().validate(key.of(ujo), key, ujo);
+                if (err!=null) {
+                    result.add(err);
+                }
+            }
+        }
+        return result;
+    }
+
 
     /** Returns a Element body of the class or the null if no key was found. */
     public final Key getXmlElementBody(final Class type) {

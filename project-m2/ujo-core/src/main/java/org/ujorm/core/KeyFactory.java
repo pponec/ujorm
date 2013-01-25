@@ -610,6 +610,34 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
     }
 
+    /** The factory for creating Key where a validator is off */
+    public static final class NoCheckBuilder {
+
+        /** Private constructor */
+        private NoCheckBuilder() {
+        }
+
+        /** Return an instance of the {@link KeyFactory} class
+         * @param baseClass Base class
+         * @param propertyCamelCase {@link #CAMEL_CASE}
+         * @return Return an instance of the {@link KeyFactory} class
+         */
+        @SuppressWarnings("unchecked")
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass) {
+            return new NoCheckedKeyFactory(baseClass, CAMEL_CASE, null);
+        }
+
+        /** Return an instance of the {@link KeyFactory} class.
+         * @param baseClass The domain class
+         * @param propertyCamelCase {@link #CAMEL_CASE}
+         * @param superKeys Keys form an abstract super class
+         */
+        @SuppressWarnings("unchecked")
+        public static <UJO extends Ujo> KeyFactory<UJO> get(Class<? extends UJO> baseClass, KeyList<?> superKeys) {
+            return new NoCheckedKeyFactory(baseClass, CAMEL_CASE, superKeys);
+        }
+    }
+
     /** The base factory for the WeakKeyFactory implementation. */
     public static final class WeakBuilder {
 

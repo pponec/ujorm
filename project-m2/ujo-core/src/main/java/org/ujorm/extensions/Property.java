@@ -217,7 +217,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
     @Override
-    final public void setValue(final UJO ujo, final VALUE value) throws ValidationException{
+    public void setValue(final UJO ujo, final VALUE value) throws ValidationException{
         if (validator != null) {
             validator.checkValue(value, this, ujo);
         }
@@ -234,7 +234,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
      * @see AbstractUjo#writeValue(org.ujorm.Key, java.lang.Object)
      */
-    final public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException{
+    public final void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException{
         setValue(ujo, value);
     }
 
