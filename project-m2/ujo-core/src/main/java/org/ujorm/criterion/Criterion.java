@@ -12,10 +12,11 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 package org.ujorm.criterion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -74,7 +75,7 @@ import org.ujorm.Ujo;
  * @author Pavel Ponec
  * @composed 1 - 1 AbstractOperator
  */
-public abstract class Criterion<UJO extends Ujo> {
+public abstract class Criterion<UJO extends Ujo> implements Serializable {
 
     /** Apply the criterion to the UJO object
      * @return Returns the value {@code true} in case the ujo object satisfies the condition.
@@ -121,7 +122,7 @@ public abstract class Criterion<UJO extends Ujo> {
         if (!evaluate(ujo)) {
             final String msg = parameters!=null && parameters.length>0
                     ? String.format(message, parameters)
-                    : message 
+                    : message
                     ;
             throw new IllegalArgumentException(msg);
         }
