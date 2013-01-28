@@ -165,14 +165,14 @@
             <scope>test</scope>
         </dependency>
 
-
         <!-- microsoft -.->
         <dependency>
-            <groupId>ms</groupId>
-            <artifactId>jdbc</artifactId>
-            <version>4</version>
+            <groupId>com.microsoft.sqlserver.jdbc</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>4.0</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
-
         <!-.- end microsoft -->
 
         <!-- Oracle -.->
