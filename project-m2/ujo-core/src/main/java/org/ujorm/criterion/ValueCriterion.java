@@ -17,28 +17,31 @@
 
 package org.ujorm.criterion;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.regex.Pattern;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoCoder;
+import org.ujorm.core.UjoManager;
 
 /**
  * The value criterion implementation.
  * @since 0.90
  * @author Pavel Ponec
  */
-public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
+public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements Serializable {
 
     /** True constant criterion */
     public static final Criterion<Ujo> TRUE  = new ValueCriterion<Ujo>(true);
     /** False constant criterion */
     public static final Criterion<Ujo> FALSE = new ValueCriterion<Ujo>(false);
-    
-    final private Key property;
-    final private Operator    operator;
-    final protected Object    value;
-    
+
+    private Key key;
+    private Operator operator;
+    protected Object value;
+
     /** Creante an Criterion constant */
     public ValueCriterion(boolean value) {
         this(null, Operator.XFIXED, value);
@@ -46,19 +49,19 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
     /** An undefined operator (null) is replaced by EQ. */
     public ValueCriterion(Key<UJO,? extends Object> property, Operator operator, Key<UJO,Object> value) {
-        this(property, operator, (Object) value);    
+        this(property, operator, (Object) value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(Key<UJO,? extends Object> property, Operator operator, Object value) {
+    public ValueCriterion(Key<UJO,? extends Object> key, Operator operator, Object value) {
 
-        if (property==null) {
+        if (key==null) {
             value = (Boolean) value; // Type test for the CriterionConstant.
         }
         if (operator==null) {
             operator = Operator.EQ;  // The default operator.
         }
-        
+
         // A validation test:
         switch (operator) {
             case EQUALS_CASE_INSENSITIVE:
@@ -68,7 +71,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS:
             case CONTAINS_CASE_INSENSITIVE:
-                 makeCharSequenceTest(property);
+                 makeCharSequenceTest(key);
                  makeCharSequenceTest(value);
                  break;
             case IN:
@@ -84,15 +87,15 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
                  break;
         }
 
-        this.property = property;
-        this.value    = value;
+        this.key = key;
+        this.value = value;
         this.operator = operator;
     }
 
     /** Returns the left node of the parrent */
     @Override
     public final Key getLeftNode() {
-        return property;
+        return key;
     }
 
     /** Returns the right node of the parrent */
@@ -123,19 +126,19 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             : value
             ;
         boolean caseInsensitve = true;
-        
+
         switch (operator) {
             case EQ:
             case NOT_EQ:
-                boolean result = property.equals(ujo, value2);
+                boolean result = key.equals(ujo, value2);
                 return operator==Operator.EQ ? result : !result ;
             case REGEXP:
             case NOT_REGEXP:
-                Pattern p = value2 instanceof Pattern 
-                    ? (Pattern) value2 
+                Pattern p = value2 instanceof Pattern
+                    ? (Pattern) value2
                     : Pattern.compile(value2.toString())
                     ;
-                Object val1 = property.of(ujo);
+                Object val1 = key.of(ujo);
                 boolean result2 = val1!=null && p.matcher(val1.toString()).matches();
                 return operator==Operator.REGEXP ? result2 : !result2 ;
             case STARTS:
@@ -146,7 +149,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             case STARTS_CASE_INSENSITIVE:
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS_CASE_INSENSITIVE: {
-                Object object = property.of(ujo);
+                Object object = key.of(ujo);
                 if (object==value2              ) { return true ; }
                 if (object==null || value2==null) { return false; }
 
@@ -178,19 +181,19 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
                  caseInsensitve = false; // match result
             case IN:
                 for(Object o : (Object[]) value2) {
-                    if (property.equals(ujo, o)) {
+                    if (key.equals(ujo, o)) {
                         return caseInsensitve;
                     }
                 }
                 return !caseInsensitve;
         }
-        
+
         Comparable val2 = (Comparable) value2;
         if (null== val2)  {return false; }
-        Comparable val1 = (Comparable) property.of(ujo);
+        Comparable val1 = (Comparable) key.of(ujo);
         if (null== val1)  {return false; }
         int result = compare(val1, val2);
-        
+
         switch (operator) {
             case LT: return result< 0;
             case LE: return result<=0;
@@ -238,7 +241,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
         if (o2==null) { return -1; }
         return o1.compareTo(o2);
     }
-        
+
     /** Is the operator insensitive. */
     public boolean isInsensitive() {
         switch (operator) {
@@ -251,7 +254,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
                  return false;
         }
     }
-    
+
     /** Is the operator have got value XFIXED or XSQL ? */
     public final boolean isConstant() {
         return operator==Operator.XFIXED || operator==Operator.XSQL;
@@ -260,7 +263,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
     @Override
     public String toString() {
         final StringBuilder out = new StringBuilder(256).append('(');
-        
+
         if (operator==Operator.XSQL) {
             out.append(value);
             return out.append(')').toString();
@@ -268,7 +271,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
         if (operator!=Operator.XFIXED) {
             out
-            .append(property)
+            .append(key)
             .append(' ')
             .append(operator.name())
             .append(' ');
@@ -296,9 +299,10 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
             out.append(']');
         } else {
             if (value instanceof CharSequence) {
-                out.append('"')
+                String quotation = value instanceof Key ? "" : "\"";
+                out.append(quotation)
                    .append(value)
-                   .append('"')
+                   .append(quotation)
                    ;
             } else {
                 out.append(
@@ -308,6 +312,42 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> {
                     : new UjoCoder().encodeValue(value, false)
                 );
             }
+        }
+    }
+
+    // -------------- SERIALIZATION METHOD(S) --------------
+
+    /** Serialization method */
+    @SuppressWarnings("unused")
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        boolean valueIsKey = value instanceof Key;
+
+        out.writeObject(key.getDomainType());
+        out.writeObject(key.getName());
+        out.writeObject(operator);
+        out.writeBoolean(valueIsKey);
+
+        if (valueIsKey) {
+            Key kVal = (Key) value;
+            out.writeObject(kVal.getDomainType());
+            out.writeObject(kVal.getName());
+        } else {
+            out.writeObject(value);
+        }
+    }
+
+    /** Deserialization method */
+    @SuppressWarnings("unused")
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        final Class domain = (Class) in.readObject();
+        final String name = (String) in.readObject();
+        key = UjoManager.getInstance().readProperties(domain).find(name);
+        operator = (Operator) in.readObject();
+        boolean valueIsKey = in.readBoolean();
+        value = in.readObject();
+        if (valueIsKey) {
+            final String nameVal = (String) in.readObject();
+            value = UjoManager.getInstance().readProperties((Class)value).find(nameVal);
         }
     }
 

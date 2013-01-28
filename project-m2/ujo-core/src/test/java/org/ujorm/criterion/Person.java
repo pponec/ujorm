@@ -29,6 +29,7 @@ public class Person extends MapUjoExt<Person> {
     public static final Key<Person, Boolean> MALE = newKey("Male", false);
     public static final Key<Person, Double> CASH = newKey("Cash", 0d);
     public static final Key<Person, Person> MOTHER = newKey("Mother");
+    public static final Key<Person, String> ADDRESS = newKey("Address");
 
     static { init(Person.class); }
 
