@@ -38,16 +38,16 @@ import org.ujorm.orm.metaModel.MetaTable;
  */
 public class CriterionDecoder {
 
-    final private OrmHandler handler;
-    final private SqlDialect dialect;
+    final protected OrmHandler handler;
+    final protected SqlDialect dialect;
 
-    final private Criterion criterion;
-    final private List<Key> orderBy;
-    final private StringBuilder sql;
-    final private List<ValueCriterion> values;
-    final private List<ValueCriterion> nullValues;
-    final private Set<MetaTable> tables;
-    final private MetaTable baseTable;
+    final protected Criterion criterion;
+    final protected List<Key> orderBy;
+    final protected StringBuilder sql;
+    final protected List<ValueCriterion> values;
+    final protected List<ValueCriterion> nullValues;
+    final protected Set<MetaTable> tables;
+    final protected MetaTable baseTable;
 
     /**
      * Constructor
@@ -88,7 +88,7 @@ public class CriterionDecoder {
     }
 
     /** Unpack criterion. */
-    protected final void unpack(final Criterion c) {
+    protected void unpack(final Criterion c) {
         if (c.isBinary()) {
             unpackBinary((BinaryCriterion)c);
         } else try {
@@ -211,7 +211,7 @@ public class CriterionDecoder {
 
     /** Writer a relation conditions: */
     @SuppressWarnings("unchecked")
-    protected final void writeRelations() {
+    protected void writeRelations() {
         Key[] relations = getPropertyRelations();
 
         boolean parenthesis = sql.length()>0 && relations.length>0;
