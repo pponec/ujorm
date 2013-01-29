@@ -211,9 +211,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     /** Create a service method */
     protected MetaDbService createService() throws IllegalStateException {
         try {
-            final MetaDbService result = getParams().get(MetaParams.META_DB_SERVICE).newInstance();
-            result.setMetaDatabase(this);
-            return result;
+            return getParams().get(MetaParams.META_DB_SERVICE).newInstance();
         } catch (Throwable e) {
             throw new IllegalStateException("Can't create an instance of: " + MetaDbService.class, e);
         }
@@ -335,7 +333,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Create DB */
     public void create(Session session) {
-        createService().create(session);
+        createService().create(this, session);
     }
 
     /** Close a connection, statement and a result set. */

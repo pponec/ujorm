@@ -52,7 +52,8 @@ public class MetaDbService {
     protected boolean anyChange = false;
 
     /** Create DB */
-    public void create(Session session) {
+    public void create(MetaDatabase metaDatabase, Session session) {
+        this.db = metaDatabase;
         Connection conn = session.getConnection(db, true);
         List<MetaTable> tables = new ArrayList<MetaTable>();
         List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
@@ -114,17 +115,6 @@ public class MetaDbService {
             }
             throw new IllegalArgumentException(Session.SQL_ILLEGAL + getSql(), e);
         }
-    }
-
-
-    /** Set the meta Database */
-    public MetaDatabase getMetaDatabase() {
-        return db;
-    }
-
-    /** Get the meta Database */
-    public void setMetaDatabase(MetaDatabase metaDatabase) {
-        this.db = metaDatabase;
     }
 
     /** SQL Buffer */
@@ -366,7 +356,7 @@ public class MetaDbService {
     }
 
     /** 5. Create Indexes: */
-    public void changeIndex(List<MetaIndex> indexes) throws Exception {
+    protected void changeIndex(List<MetaIndex> indexes) throws Exception {
         for (MetaIndex index : indexes) {
             sql.setLength(0);
             db.getDialect().printIndex(index, sql);
