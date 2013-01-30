@@ -75,6 +75,7 @@ public class SampleORM {
             sample.useSelectItems_5();
             sample.useSelectItems_5b();
             sample.useSelectItems_6();
+            sample.useSelectItems_7();
             sample.useOptimizedSelect();
             sample.useOneRequestLoading();
             sample.useNativeCriterion();
@@ -428,6 +429,13 @@ public class SampleORM {
         for (Item item : items) {
             System.out.println("ITEM WITHOUT ORDER: " + item);
         }
+    }
+
+    /** Using IN phrase for a list of Ujo objects. */
+    public void useSelectItems_7() {
+        List<Order> orders = session.createQuery(Order.ID.forAll()).setLimit(1).list();
+        List<Item> items = session.createQuery(Item.ORDER.whereIn(orders)).list();
+        assert items.size()>0 : "The result have got two Items";
     }
 
     /** Create a SELECT for the one column only
