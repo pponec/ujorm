@@ -184,13 +184,13 @@ public class JdbcStatement {
             if (column.isForeignKey()) {
                 List<MetaColumn> fc = column.getForeignColumns();
 
-                if (value instanceof OrmUjo[]) {
-                    final OrmUjo[] ujoValues = (OrmUjo[]) value;
+                if (value instanceof Object[]) {
+                    final Object[] ujoValues = (Object[]) value;
                     final Object[] rValues = new Object[ujoValues.length];
                     final MetaColumn rColumn = fc.get(0); // only one PK is supported
 
                     for (int j=0; j<ujoValues.length; j++) {
-                        final OrmUjo bo = ujoValues[j];
+                        final OrmUjo bo = (OrmUjo) ujoValues[j];
                         final Object rValue = rColumn.getValue(bo);
                         rValues[j] = rValue;
                     }
@@ -236,7 +236,9 @@ public class JdbcStatement {
             if (bo != null) {
                 logValue(bo, property);
             } else {
-                String textValue = UjoManager.getInstance().encodeValue(value, false);
+                String textValue = value instanceof Object[]
+                        ? arrayToString( (Object[]) value)
+                        : UjoManager.getInstance().encodeValue(value, false) ;
                 logValue(textValue, property);
             }
         }
@@ -351,6 +353,21 @@ public class JdbcStatement {
     /** Returns prepared statement - for internal use only */
     PreparedStatement getPreparedStatement() {
         return ps;
+    }
+
+    /** Vizualizuje první tři znaky pole */
+    private String arrayToString(final Object[] vals) {
+        final StringBuilder sb = new StringBuilder(128);
+        final int max = Math.min(3, vals.length);
+        for (int i = 0; i < max; i++) {
+            sb.append(sb.length()==0 ? '[' : ',');
+            sb.append(vals[i]);
+        }
+        if (max < vals.length) {
+            sb.append(", ...");
+        }
+        sb.append(']');
+        return sb.toString();
     }
 
     @Override
