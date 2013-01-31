@@ -453,13 +453,13 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
     Validator&lt;Integer&gt; maxValidator = Validator.<span class="ST0">Build</span>.<span class="ST0">max</span>(maxValidValue);
     ValidationError error = maxValidator.validate(<span class="highlight">wrongValue</span>, <span class="keyword-directive">null</span>, <span class="keyword-directive">null</span>);
 
-    <span class="comment">// Get the localized message using a template::</span>
-    String myTemplate = <span class="character">"My input must not be great then ${LIMIT}."</span>;
-    String message = error.getMessage(myTemplate);
-    <span class="ST0">assertEquals</span>(<span class="character">"My input must not be great then 10."</span>, message);
-
-    <span class="comment">// Or get the default message:</span>
+    <span class="comment">// Get the default message:</span>
     String defaultMessage = error.getDefaultMessage();
+
+    <span class="comment">// Or get a <strong>localized</strong> message using your template:</span>
+    String template = <span class="character">"My input ${INPUT} must be up to ${LIMIT}."</span>;
+    String myMessage = error.getMessage(template);
+    <span class="ST0">assertEquals</span>(<span class="character">"My input <span class="highlight">120</span> must be up to 10."</span>, myMessage);
 </pre>
 
 If the validation check is correct, then the method Validator.validate(..) returns the NULL value, else the method returns an instance of the ValidationError class.
