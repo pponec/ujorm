@@ -314,8 +314,16 @@ public class ValidatorFactory {
         return new ReadOnlyValidator<String>(true);
     }
 
-    /** It is a logical empty validator. Each value is allowed. */
+
+    /** It is a logical empty validator. Each value is allowed.
+     * @deprecated Uset the {@link #everything()} */
+    @Deprecated
     public static Validator allAllowed() {
+        return new ReadOnlyValidator<String>(false);
+    }
+    
+    /** It is a logical empty validator. Each value is allowed. */
+    public static Validator everything() {
         return new ReadOnlyValidator<String>(false);
     }
 

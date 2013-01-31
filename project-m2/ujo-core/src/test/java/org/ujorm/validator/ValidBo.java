@@ -45,7 +45,7 @@ public class ValidBo extends AbstractUjo {
     public static final Key<ValidBo, String> REG_EXP = f.newKey(regexp("T.*T"));
     public static final Key<ValidBo, String> MAIL = f.newKey(email());
     public static final Key<ValidBo, String> READ_ONLY = f.newKey(readOnly());
-    public static final Key<ValidBo, String> ALL_ALLOWED = f.newKey(allAllowed());
+    public static final Key<ValidBo, String> ALL_ALLOWED = f.newKey(everything());
     public static final Key<ValidBo, Integer> COMPOSITE_AND = f.newKey(min(0).and(max(10)));
     public static final Key<ValidBo, Integer> COMPOSITE_OR = f.newKey(max(0).or(min(10)));
     public static final Key<ValidBo, Number> NUMBER_TYPE = f.newKey(type());
