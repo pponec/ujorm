@@ -96,4 +96,14 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
         return KEY_PREFIX + "maxStringLength";
     }
 
+    /** String minimal length (inclusive) */
+    public int getMinLength() {
+        return min;
+    }
+
+    /** String maximal length (inclusive) */
+    public int getMaxLength() {
+        return max;
+    }
+
 }

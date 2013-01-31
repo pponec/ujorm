@@ -35,7 +35,7 @@ public class ValidMandatory extends AbstractUjo {
     public static final Key<ValidMandatory, Double> MIN_10 = f.newKey(min(MANDATORY, 10.0));
     public static final Key<ValidMandatory, Integer> FORBIDDEN_1_3 = f.newKey(forbidden(MANDATORY, 1, 3));
     public static final Key<ValidMandatory, Integer> REQUIRED_1_3 = f.newKey(required(MANDATORY, 1, 3));
-    public static final Key<ValidMandatory, String> LENGTH_MIN_3 = f.newKey(length(MANDATORY, 3));
+    public static final Key<ValidMandatory, String> LENGTH_MAX_3 = f.newKey(length(MANDATORY, 3));
     public static final Key<ValidMandatory, String> LENGTH_2_4 = f.newKey(length(MANDATORY, 2,4));
     public static final Key<ValidMandatory, Integer> BETWEEN_1_10 = f.newKey(between(MANDATORY, 1, 10));
     public static final Key<ValidMandatory, Integer> RANGE_1_10 = f.newKey(range(MANDATORY, 1, 10));
