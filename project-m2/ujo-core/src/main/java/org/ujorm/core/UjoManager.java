@@ -123,7 +123,6 @@ public class UjoManager implements Comparator<Key> {
         return new UjoPropertyListImpl(result);
     }
 
-
     /**
      * Returns all direct keys (see an method Key.isDirect() for more information).
      * @param type Ujo class
