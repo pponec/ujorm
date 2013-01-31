@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.Validator;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
@@ -38,6 +39,7 @@ import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.UjoStatement;
+import org.ujorm.validator.ValidatorUtils;
 
 /**
  * Database column metadata
@@ -127,6 +129,12 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             changeDefault(this, UNIQUE_INDEX,column.uniqueIndex());
             changeDefault(this, CONSTRAINT_NAME, column.constraintName());
             changeDefault(this, CONVERTER  , column.converter());
+        }
+        
+        final Validator validator = tableProperty.getValidator();
+        if (validator != null) {
+            changeDefault(this, MANDATORY , ValidatorUtils.isMandatoryValidator(validator));
+            changeDefault(this, MAX_LENGTH, ValidatorUtils.getMaxLength(validator));
         }
 
         // Assign Comments:
