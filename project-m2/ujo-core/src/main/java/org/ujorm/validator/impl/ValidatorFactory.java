@@ -316,7 +316,7 @@ public class ValidatorFactory {
 
 
     /** It is a logical empty validator. Each value is allowed.
-     * @deprecated Uset the {@link #everything()} */
+     * @deprecated Use the {@link #everything()} method rather */
     @Deprecated
     public static Validator allAllowed() {
         return new ReadOnlyValidator<String>(false);
