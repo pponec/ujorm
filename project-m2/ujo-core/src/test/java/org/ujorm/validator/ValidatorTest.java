@@ -43,17 +43,17 @@ public class ValidatorTest extends MyTestCase {
         Validator<Integer> maxValidator = Validator.Build.max(maxValidValue);
         ValidationError error = maxValidator.validate(wrongValue, null, null);
 
-        // Check the localized message using a template:
-        String myTemplate = "My input must not be great than ${LIMIT}.";
-        String message = error.getMessage(myTemplate);
-        assertEquals("My input must not be great than 10.", message);
-
         // Or check the default message:
         String expectedMesage = "An attribute ''"
-                + " must be less than or equals to the 10"
-                + ", but the input is: 120";
+                + " must be less than or equals to the 10,"
+                + " but the input is: 120";
         String defaultMessage = error.getDefaultMessage();
         assertEquals(expectedMesage, defaultMessage);
+
+        // Check the localized message using a template:
+        String template = "My input ${INPUT} must be up to ${LIMIT}.";
+        String myMessage = error.getMessage(template);
+        assertEquals("My input 120 must be up to 10.", myMessage);
     }
 
     /** Check the input must be in a range from 1 to 10 */
