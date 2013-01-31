@@ -143,12 +143,12 @@ public class ValidatorTest extends MyTestCase {
         assertAssign(false, ValidBo.MIN_10, 0.1);
         assertAssign(true , ValidBo.MIN_10, null);
         //
-        assertAssign(true , ValidBo.LENGTH_MIN_3, "");
-        assertAssign(true , ValidBo.LENGTH_MIN_3, "1");
-        assertAssign(true , ValidBo.LENGTH_MIN_3, "12");
-        assertAssign(true , ValidBo.LENGTH_MIN_3, "123");
-        assertAssign(false, ValidBo.LENGTH_MIN_3, "1234");
-        assertAssign(true , ValidBo.LENGTH_MIN_3, null);
+        assertAssign(true , ValidBo.LENGTH_MAX_3, "");
+        assertAssign(true , ValidBo.LENGTH_MAX_3, "1");
+        assertAssign(true , ValidBo.LENGTH_MAX_3, "12");
+        assertAssign(true , ValidBo.LENGTH_MAX_3, "123");
+        assertAssign(false, ValidBo.LENGTH_MAX_3, "1234");
+        assertAssign(true , ValidBo.LENGTH_MAX_3, null);
         //
         assertAssign(false, ValidBo.LENGTH_2_4, "");
         assertAssign(false, ValidBo.LENGTH_2_4, "1");
@@ -289,12 +289,12 @@ public class ValidatorTest extends MyTestCase {
         assertAssignLeg(false, ValidMandatory.MIN_10, 0.1);
         assertAssignLeg(false, ValidMandatory.MIN_10, null);
         //
-        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "");
-        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "1");
-        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "12");
-        assertAssignLeg(true , ValidMandatory.LENGTH_MIN_3, "123");
-        assertAssignLeg(false, ValidMandatory.LENGTH_MIN_3, "1234");
-        assertAssignLeg(false, ValidMandatory.LENGTH_MIN_3, null);
+        assertAssignLeg(true , ValidMandatory.LENGTH_MAX_3, "");
+        assertAssignLeg(true , ValidMandatory.LENGTH_MAX_3, "1");
+        assertAssignLeg(true , ValidMandatory.LENGTH_MAX_3, "12");
+        assertAssignLeg(true , ValidMandatory.LENGTH_MAX_3, "123");
+        assertAssignLeg(false, ValidMandatory.LENGTH_MAX_3, "1234");
+        assertAssignLeg(false, ValidMandatory.LENGTH_MAX_3, null);
         //
         assertAssignLeg(false, ValidMandatory.LENGTH_2_4, "");
         assertAssignLeg(false, ValidMandatory.LENGTH_2_4, "1");
@@ -388,6 +388,42 @@ public class ValidatorTest extends MyTestCase {
         //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE_EXPL, (Number)(Object)"wrong");
         //sertAssignLeg(false, ValidMandatory.NUMBER_TYPE_EXPL, (Number)(Object)new Date());
     }
+    
+    
+    /** Test of readValue method, */
+    public void testMandatory() {
+        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidBo.NOT_NULL.getValidator()));
+        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidBo.NOT_EMPTY.getValidator()));
+        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidBo.NOT_BLANK.getValidator()));
+        //
+        assertEquals(false, ValidatorUtils.isMandatoryValidator(ValidBo.BETWEEN_1_10.getValidator()));
+        assertEquals(false, ValidatorUtils.isMandatoryValidator(ValidBo.MAIL.getValidator()));
+        assertEquals(false, ValidatorUtils.isMandatoryValidator(ValidBo.FORBIDDEN_1_3.getValidator()));
+        //
+        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.BETWEEN_1_10.getValidator()));
+        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.MAIL.getValidator()));
+        assertEquals(true, ValidatorUtils.isMandatoryValidator(ValidMandatory.FORBIDDEN_1_3.getValidator()));
+    }
+    
+    /** Test of readValue method, */
+    public void testMaxLength() {
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.NOT_NULL.getValidator()));
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.NOT_EMPTY.getValidator()));
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.NOT_BLANK.getValidator()));
+        //
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.BETWEEN_1_10.getValidator()));
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.MAIL.getValidator()));
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidBo.FORBIDDEN_1_3.getValidator()));
+        //
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidMandatory.BETWEEN_1_10.getValidator()));
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidMandatory.MAIL.getValidator()));
+        assertEquals(-1, ValidatorUtils.getMaxLength(ValidMandatory.FORBIDDEN_1_3.getValidator()));        
+        //
+        assertEquals(4, ValidatorUtils.getMaxLength(ValidBo.LENGTH_2_4.getValidator()));
+        assertEquals(3, ValidatorUtils.getMaxLength(ValidBo.LENGTH_MAX_3.getValidator()));
+        assertEquals(4, ValidatorUtils.getMaxLength(ValidMandatory.LENGTH_2_4.getValidator()));
+        assertEquals(3, ValidatorUtils.getMaxLength(ValidMandatory.LENGTH_MAX_3.getValidator()));
+    }    
 
     /** Method to test Validators */
     private <T> void assertAssign(boolean expected, Key<ValidBo,T> key, T value) {

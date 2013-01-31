@@ -17,7 +17,6 @@ package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.MessageArg;
 import org.ujorm.validator.ValidationError;
 
@@ -25,7 +24,7 @@ import org.ujorm.validator.ValidationError;
  * The Not Null validator, the correct result have an not null input text with a (trimmed) lenght more than zero.
  * @author Pavel Ponec
  */
-public class NotEmptyValidator<VALUE extends CharSequence> extends AbstractValidator<VALUE> {
+public class NotEmptyValidator<VALUE extends CharSequence> extends NotNullValidator<VALUE> {
 
     /** Empty String validator */
     public static final NotEmptyValidator<CharSequence> NOT_EMPTY = new NotEmptyValidator<CharSequence>(false);
@@ -49,6 +48,7 @@ public class NotEmptyValidator<VALUE extends CharSequence> extends AbstractValid
     }
 
     /** {@inheritDoc} */
+    @Override
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean failed = input==null
                     || 0 == (trim
@@ -76,8 +76,8 @@ public class NotEmptyValidator<VALUE extends CharSequence> extends AbstractValid
         return service.template("The text attribute ", KEY, " must not be empty");
     }
 
-
     /** @return Returns: "ujorm.org.notEmpty" */
+    @Override
     public String getLocalizationKey() {
         return KEY_PREFIX + "notEmpty";
     }

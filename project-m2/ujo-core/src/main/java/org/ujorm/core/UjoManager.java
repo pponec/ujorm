@@ -43,6 +43,7 @@ import org.ujorm.implementation.array.ArrayUjo;
 import org.ujorm.swing.UjoPropertyRow;
 import org.ujorm.validator.ValidationError;
 import static org.ujorm.UjoAction.*;
+import org.ujorm.validator.ValidatorUtils;
 
 /**
  * General Ujo Manager
@@ -560,30 +561,13 @@ public class UjoManager implements Comparator<Key> {
 
     /** Validate the argument using all keys from the object. */
     public static List<ValidationError> validate(final Ujo ujo) {
-        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
-        for (Key key : ujo.readKeys()) {
-            final ValidationError err = key.getValidator().validate(key.of(ujo), key, ujo);
-            if (err!=null) {
-                result.add(err);
-            }
-        }
-        return result;
+        return ValidatorUtils.validate(ujo);
     }
 
     /** Validate the argument using all keys from the collection. */
     public static List<ValidationError> validate(final Collection<Ujo> ujos) {
-        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
-        for (Ujo ujo : ujos) {
-            for (Key key : ujo.readKeys()) {
-                final ValidationError err = key.getValidator().validate(key.of(ujo), key, ujo);
-                if (err!=null) {
-                    result.add(err);
-                }
-            }
-        }
-        return result;
+        return ValidatorUtils.validate(ujos);
     }
-
 
     /** Returns a Element body of the class or the null if no key was found. */
     public final Key getXmlElementBody(final Class type) {
