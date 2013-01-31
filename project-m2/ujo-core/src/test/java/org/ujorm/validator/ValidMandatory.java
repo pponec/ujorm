@@ -45,7 +45,7 @@ public class ValidMandatory extends AbstractUjo {
     public static final Key<ValidMandatory, String> REG_EXP = f.newKey(regexp(MANDATORY, "T.*T"));
     public static final Key<ValidMandatory, String> MAIL = f.newKey(email(MANDATORY));
     public static final Key<ValidMandatory, String> READ_ONLY = f.newKey(readOnly());
-    public static final Key<ValidMandatory, String> ALL_ALLOWED = f.newKey(allAllowed());
+    public static final Key<ValidMandatory, String> ALL_ALLOWED = f.newKey(everything());
     public static final Key<ValidMandatory, Integer> COMPOSITE_AND = f.newKey(min(0).and(max(10)).and(notNull()));
     public static final Key<ValidMandatory, Integer> COMPOSITE_OR = f.newKey(max(0).or(min(10)).and(notNull()));
     public static final Key<ValidMandatory, Number> NUMBER_TYPE = f.newKey(type(MANDATORY));

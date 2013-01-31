@@ -40,6 +40,12 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
     /** Localizatioln Key Prefix */
     public static final String KEY_PREFIX = Ujo.class.getPackage().getName() + '.';
 
+    /** Check the value without context */
+    public <UJO extends Ujo> void checkValue(VALUE input) throws ValidationException {
+        checkValue(input, null, null);
+    }
+
+    /** Check the value with a context */
     public <UJO extends Ujo> void checkValue(VALUE input, Key<UJO, VALUE> key, UJO bo) throws ValidationException {
         final ValidationError result = validate(input, key, bo);
         if (result!=null) {
