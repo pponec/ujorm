@@ -76,7 +76,7 @@ public class MSSqlDialect extends SqlDialect {
             out.append("=?");
         }
         out.append("\n\tFROM ");
-        printTableAliasDefinition(table, out);
+        printTableAliasDefinition( decoder, out);
         out.append("\n\tWHERE ");
         out.append(decoder.getWhere());
         return out;
@@ -89,9 +89,7 @@ public class MSSqlDialect extends SqlDialect {
         out.append("DELETE ");
         printQuotedName(table.getAlias(), out);
         out.append("\n\tFROM ");
-        Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
-        getTablesFromCriterion(decoder, tables);
-        printTablesWithAlias(tables.values(), out);
+        printTableAliasDefinition(decoder, out);
         out.append(" WHERE ");
         out.append(decoder.getWhere());
 
@@ -593,4 +591,10 @@ public class MSSqlDialect extends SqlDialect {
         return sql;
     }
 
+    /** Print table alias definition */
+    protected void printTableAliasDefinition(CriterionDecoder decoder, Appendable out) throws IOException {
+        Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
+        getTablesFromCriterion(decoder, tables);
+        printTablesWithAlias(tables.values(), out);
+    }
 }
