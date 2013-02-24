@@ -42,8 +42,8 @@
         <module>ujo-orm</module>
         <module>ujo-spring</module>
         <module>ujo-wicket</module>
-        <module>ujo-gxt-core</module>
         <!--
+        <module>ujo-gxt-core</module>
         <module>ujo-gxt-crud</module>
         -->
     </modules>
