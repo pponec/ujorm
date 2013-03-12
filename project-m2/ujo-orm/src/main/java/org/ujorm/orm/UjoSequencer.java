@@ -37,6 +37,14 @@ public class UjoSequencer {
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSequencer.class);
 
+    /** DB field: seqLimit */
+    public static final int SEQ_LIMIT = 1;
+    /** DB field: maxValue */
+    public static final int SEQ_MAX_VALUE = 1 + SEQ_LIMIT;
+    /** DB field: step */
+    public static final int SEQ_STEP = 1 + SEQ_MAX_VALUE;
+
+
     /** Basic table. */
     final protected MetaTable table;
     /** Current sequence value */
@@ -96,9 +104,9 @@ public class UjoSequencer {
                 statement.setString(1, tableName);
                 res = statement.executeQuery();
                 res.next();
-                seqLimit = res.getLong(1);
-                int step = res.getInt(2);
-                maxValue = res.getLong(3);
+                seqLimit = res.getLong(SEQ_LIMIT);
+                int step = res.getInt(SEQ_MAX_VALUE);
+                maxValue = res.getLong(SEQ_MAX_VALUE);
                 sequence = (seqLimit - step) + 1; // Get the last assigned number + 1;
 
                 if (maxValue!=0L) {
