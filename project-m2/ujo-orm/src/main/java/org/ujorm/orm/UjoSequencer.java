@@ -39,10 +39,10 @@ public class UjoSequencer {
 
     /** DB field: seqLimit */
     public static final int SEQ_LIMIT = 1;
-    /** DB field: maxValue */
-    public static final int SEQ_MAX_VALUE = 1 + SEQ_LIMIT;
     /** DB field: step */
-    public static final int SEQ_STEP = 1 + SEQ_MAX_VALUE;
+    public static final int SEQ_STEP = 1 + SEQ_LIMIT;
+    /** DB field: maxValue */
+    public static final int SEQ_MAX_VALUE = 1 + SEQ_STEP;
 
 
     /** Basic table. */
@@ -105,7 +105,7 @@ public class UjoSequencer {
                 res = statement.executeQuery();
                 res.next();
                 seqLimit = res.getLong(SEQ_LIMIT);
-                int step = res.getInt(SEQ_MAX_VALUE);
+                int step = res.getInt(SEQ_STEP);
                 maxValue = res.getLong(SEQ_MAX_VALUE);
                 sequence = (seqLimit - step) + 1; // Get the last assigned number + 1;
 

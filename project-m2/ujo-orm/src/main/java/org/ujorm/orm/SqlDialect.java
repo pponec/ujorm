@@ -975,7 +975,7 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the current cache. */
+    /** Print SQL CURRENT SEQUENCE VALUE. Returns a current sequence, cache and the maxValue. */
     public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
         final SeqTableModel tm = getSeqTableModel();
 
