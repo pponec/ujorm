@@ -331,6 +331,7 @@ public class Session {
 
     /** INSERT or UPDATE object into table. */
     public void saveOrUpdate(final OrmUjo bo) throws IllegalStateException {
+        checkNotNull(bo, "saveOrUpdate");
         if (bo.readSession() == null) {
             save(bo);
         } else {
@@ -460,6 +461,7 @@ public class Session {
 
     /** INSERT object into table. */
     public void save(final OrmUjo bo) throws IllegalStateException {
+        checkNotNull(bo, "save");
         JdbcStatement statement = null;
         String sql = "";
 
@@ -509,6 +511,7 @@ public class Session {
      * @return The row count.
      */
     private int update(OrmUjo bo, Criterion criterion, boolean singleObject) {
+        checkNotNull(bo, "update");
 
         int result = 0;
         JdbcStatement statement = null;
@@ -567,6 +570,7 @@ public class Session {
      * @return Returns a number of the removing is OK.
      */
     public int delete(final OrmUjo bo) {
+        checkNotNull(bo, "delete");
         MetaTable table = handler.findTableModel(bo.getClass());
         table.assertChangeAllowed();
         MetaColumn PK = table.getFirstPK();
@@ -1159,5 +1163,16 @@ public class Session {
     public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
         this.lazyLoadingEnabled = lazyLoadingEnabled;
     }
-
+    
+    /**
+     * Check the Ujo object to not null.
+     * @param ujo
+     * @param action
+     * @throws IllegalArgumentException Throw the exception if a ujo argument is {@code null}.
+     */
+    protected void checkNotNull(OrmUjo ujo, String action) throws IllegalArgumentException {
+        if (ujo==null) {
+            throw new IllegalArgumentException("A null object can't be used for the action: " + action);
+        }        
+    }
 }
