@@ -79,6 +79,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
             }
         } finally {
             if (localSession.getTransaction() == null) {
+                localSession.close();
                 session.remove();
             }
         }
