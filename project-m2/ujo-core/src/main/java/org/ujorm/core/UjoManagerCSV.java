@@ -13,9 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.ujorm.core;
 
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,22 +50,22 @@ import org.ujorm.UjoAction;
 public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
     /** Quotation */
-    final private char quotation = '"' ;
+    final private char quotation = '"';
     /** CSV Separator */
-    private char separator = ';' ;
+    private char separator = ';';
     /** New Line */
     private String newLine = System.getProperty("line.separator");
     /** Enable to print a CSV header */
     private boolean printHeader = true;
     /** Print or validate the CSV Header content */
-    private String headerContent;
+    private CharSequence[] headerContent = new CharSequence[0];
 
     /**
      * Creates a new instance of UjoManagerCSV
-     * @param ujoClass   Exported Ujo Class
+     * @param ujoClass Exported Ujo Class
      * @param keys Exported keys of class, if value is null than all keys are used.
      */
-    public UjoManagerCSV(Class<UJO> ujoClass, Key ... keys) {
+    public UjoManagerCSV(Class<UJO> ujoClass, Key... keys) {
         super(ujoClass, keys);
     }
 
@@ -90,7 +90,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @throws java.lang.IllegalAccessException
      */
     public void saveCSV(OutputStream out, Charset cs, List<UJO> ujoList, Object context) throws IOException, InstantiationException, IllegalAccessException {
-        final Writer writer = new OutputStreamWriter(out, cs!=null ? cs : UTF_8);
+        final Writer writer = new OutputStreamWriter(out, cs != null ? cs : UTF_8);
         try {
             saveCSV(writer, ujoList, context);
         } finally {
@@ -103,8 +103,8 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     public void saveCSV(Writer out, List<UJO> ujoList, Object context)
             throws IOException, InstantiationException, IllegalAccessException {
         if (printHeader) {
-            if (UjoManager.isFilled(headerContent)) {
-                out.write(headerContent);
+            if (isHeaderFilled()) {
+                printHeaders(out);
             } else {
                 UJO ujo = ujoList.size() > 0 ? ujoList.get(0) : getUjoClass().newInstance();
                 boolean printSepar = false;
@@ -130,7 +130,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             boolean printSepar = false;
             for (Key p : getProperties()) {
                 UjoAction action = new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context);
-                final String value  = getText(ujo, p, UNDEFINED, action);
+                final String value = getText(ujo, p, UNDEFINED, action);
                 if (ujo.readAuthorization(action, p, value)
                 && !getUjoManager().isTransientProperty(p)
                 ){
@@ -186,8 +186,8 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         List<UJO> result = new ArrayList<UJO>(128);
         StringBuilder value = new StringBuilder(32);
         boolean readHeader = printHeader;
-        boolean inside   = false;
-        int lineCounter  = 0;
+        boolean inside = false;
+        int lineCounter = 0;
         UjoAction action = new UjoActionImpl(context);
 
         while (inp.hasNextLine()) {
@@ -195,8 +195,8 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             ++lineCounter;
 
             if (readHeader) {
-                if (UjoManager.isFilled(headerContent)
-                && !line.startsWith(this.headerContent)) {
+                if (isHeaderFilled()
+                && !line.startsWith(getHeaderContent())) {
                     throw new IllegalStateException("The import header must start with the: " + headerContent);
                 }
                 readHeader = false;
@@ -206,13 +206,13 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             result.add(ujo);
             int propPointer = 0;  // Property Pointer
 
-            for (int i=0; i<line.length(); i++) {
+            for (int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
 
                 if (inside) { // Inside a quotation
-                    if (c==quotation) {
-                        int next = i+1;
-                        if (next<line.length() && line.charAt(next)=='"' ) {
+                    if (c == quotation) {
+                        int next = i + 1;
+                        if (next < line.length() && line.charAt(next) == '"') {
                             i++;
                         } else {
                             inside = false;
@@ -222,9 +222,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                     value.append(c);
 
                 } else { // Outside a quotation
-                    if (c==separator) {
+                    if (c == separator) {
                         writeValue(ujo, value, propPointer++, lineCounter, action);
-                    } else if (c==quotation) {
+                    } else if (c == quotation) {
                         inside = true;
                     } else {
                         value.append(c);
@@ -259,9 +259,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         ){
             out.write(quotation);
 
-            for (int i=0; i<value.length(); i++) {
+            for (int i = 0; i < value.length(); i++) {
                 char c = value.charAt(i);
-                if (c==quotation) {
+                if (c == quotation) {
                     out.write(quotation);
                 }
                 out.write(c);
@@ -304,25 +304,45 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         return this;
     }
 
-    /** CSV header content:
-     * <ul>
-     *   <li>{@code null} - use a default header to print or skip the check in parsing time</li>
-     *   <li>empty string - the sama as the {@code null} value</li>
-     *   <li>other string - use the value to print a header or check the a start header line in a reading time</li>
-     * </ul>
-     */
-    public String getHeaderContent() {
-        return headerContent;
+    /** PrintHeaders text with separators */
+    protected void printHeaders(Writer out) throws IOException {
+        for (int i = 0; i < headerContent.length; i++) {
+            if (i > 0) {
+                out.append(this.separator);
+            }
+            out.append(headerContent[i]);
+        }
+    }
+
+    /** Is a header is filled */
+    protected boolean isHeaderFilled() {
+        return getHeaderContent().length() > 0;
     }
 
     /** CSV header content:
      * <ul>
-     *   <li>{@code null} - use a default header to print or skip the check in parsing time</li>
-     *   <li>empty string - the sama as the {@code null} value</li>
-     *   <li>other string - use the value to print a header or check the a start header line in a reading time</li>
+     * <li>empty string - use a default header to print or skip the check in parsing time</li>
+     * <li>other string - use the value to print a header or check the a start header line in a reading time</li>
      * </ul>
      */
-    public void setHeaderContent(String headerContent) {
+    public String getHeaderContent() {
+        try {
+            final CharArrayWriter out = new CharArrayWriter(256);
+            printHeaders(out);
+            return out.toString();
+        } catch (IOException e) {
+            throw new IllegalStateException("getHeaderContent failed", e);
+        }
+    }
+
+    /** CSV header content:
+     * <ul>
+     * <li>empty string - the sama as the {@code null} value</li>
+     * <li>other string - use the value to print a header or check the a start header line in a reading time</li>
+     * </ul>
+     * @param headerContent a String or Key arguments
+     */
+    public void setHeaderContent(CharSequence... headerContent) {
         this.headerContent = headerContent;
     }
 
@@ -334,10 +354,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     }
 
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key ... keys) {
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key... keys) {
         return new UjoManagerCSV<UJO>(ujoClass, keys);
     }
-
-
 }
-

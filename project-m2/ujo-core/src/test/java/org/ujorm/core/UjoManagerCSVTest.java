@@ -150,7 +150,7 @@ public class UjoManagerCSVTest extends MyTestCase {
         //
         ByteArrayOutputStream out = createOutputStream();
         UjoManagerCSV manager5 = UjoManagerCSV.getInstance(UjoCSV.class);
-        manager5.setHeaderContent("Ah Bh Ch");
+        manager5.setHeaderContent("Ah","Bh","Ch");
 
         manager5.saveCSV(out, null, ujoList, context);
         out.close();
