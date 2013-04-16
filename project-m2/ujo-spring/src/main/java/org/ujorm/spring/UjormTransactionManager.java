@@ -67,7 +67,10 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     /** Begin a new transaction with semantics according to the given transaction */
     protected void doEnd(boolean commit, Session localSession) throws TransactionException {
         if (localSession.isClosed()) {
-            throw new TransactionException("Transaction is closed") {};
+            final String msg = "Transaction is closed, can't be " + (commit ? "commited" : "rollbacked");
+            throw new TransactionException(msg) {
+                private static final long serialVersionUID = 1L;
+            };
         }
         try {
             if (commit) {
@@ -79,8 +82,8 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
             }
         } finally {
             if (localSession.getTransaction() == null) {
-                localSession.close();
                 session.remove();
+                localSession.close();
             }
         }
     }
