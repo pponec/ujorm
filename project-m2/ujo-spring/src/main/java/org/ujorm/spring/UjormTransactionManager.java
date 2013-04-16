@@ -76,9 +76,12 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
             if (commit) {
                LOGGER.log(Level.FINEST, "Auto transaction ending with the Commit");
                localSession.commitTransaction();
-            } else {
+            } else try {
                LOGGER.log(Level.FINEST, "Auto transaction ending with the Rollback");
                localSession.rollbackTransaction();
+            } catch (Exception e) {
+               // The rollback exception must not be thrown, because the original one could be overlapped.
+               LOGGER.log(Level.SEVERE, "Rollback failed", e);
             }
         } finally {
             if (localSession.getTransaction() == null) {
