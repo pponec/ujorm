@@ -48,7 +48,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     /** Return a transaction object for the current transaction state. */
     @Override
     protected Object doGetTransaction() throws TransactionException {
-        LOGGER.log(Level.INFO, "getTransaction returning new Object");
+        LOGGER.log(Level.FINEST, "GetTransaction is running");
         return dummy;
     }
 
@@ -73,11 +73,14 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
             };
         }
         try {
+            if (LOGGER.isLoggable(Level.FINEST)) {
+               LOGGER.log(Level.FINEST
+                       , "Transaction is finished using the " 
+                       + (commit ? "Commit" : "Rollback"));
+            }            
             if (commit) {
-               LOGGER.log(Level.FINEST, "Auto transaction ending with the Commit");
                localSession.commitTransaction();
             } else try {
-               LOGGER.log(Level.FINEST, "Auto transaction ending with the Rollback");
                localSession.rollbackTransaction();
             } catch (Exception e) {
                // The rollback exception must not be thrown, because the original one could be overlapped.
@@ -105,7 +108,6 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     /** Perform an actual rollback of the given transaction. */
     @Override
     protected void doRollback(DefaultTransactionStatus dts) throws TransactionException {
-        LOGGER.log(Level.WARNING, "rolling back transaction");
         doEnd(false, getLocalSession());
     }
 
