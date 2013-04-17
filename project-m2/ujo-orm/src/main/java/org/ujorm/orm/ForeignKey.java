@@ -38,9 +38,10 @@ public class ForeignKey implements NoCheck, Serializable {
         return value;
     }
 
+    /** Returns a String of the value only */
     @Override
     public String toString() {
-        return String.valueOf(value) + ' ' + (value !=null ? value.getClass().getSimpleName() : "");
+        return String.valueOf(value);
     }
 
     @Override
