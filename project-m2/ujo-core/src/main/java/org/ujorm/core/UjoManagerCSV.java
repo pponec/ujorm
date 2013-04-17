@@ -335,15 +335,25 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         }
     }
 
-    /** CSV header content:
-     * <ul>
-     * <li>empty string - the sama as the {@code null} value</li>
-     * <li>other string - use the value to print a header or check the a start header line in a reading time</li>
-     * </ul>
+    /** CSV header content items will be separated by the required character.
+     * No character of the content will be escaped.
+     * The empty text or {@code null} value means the undefined header.
      * @param headerContent a String or Key arguments
      */
     public void setHeaderContent(CharSequence... headerContent) {
         this.headerContent = headerContent;
+    }
+    
+    /** Assign the entire content of the CSV where no characte is escaped.
+     * The empty text or {@code null} value means the undefined header.
+     * @param headerContent a String or Key arguments
+     */
+    public void setHeaderContent(String headerContent) {
+        if (headerContent == null) {
+            headerContent = "";
+        }
+        final CharSequence[] params = {headerContent};
+        setHeaderContent(params);
     }
 
     // -------------- STATIC ----------------
