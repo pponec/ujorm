@@ -507,6 +507,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         }
 
         /** Returns a domain type. */
+        @SuppressWarnings("unchecked")
         public Class<?> getDomainType() {
             if (type == null) {
                 type = KeyRing.getBaseType(propertyList.toArray(new Key[propertyList.size()]));

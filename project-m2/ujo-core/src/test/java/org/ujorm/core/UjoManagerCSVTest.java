@@ -10,6 +10,7 @@ package org.ujorm.core;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -60,6 +61,10 @@ public class UjoManagerCSVTest extends MyTestCase {
 
         // Save the ujoList to an outputStream:
         manager.saveCSV(out, UjoManagerCSV.UTF_8, ujoList, "CSV-Context");
+
+        String outputExpected = MessageFormat.format("P1;P2;P3{0}A;B;C", System.getProperty("line.separator"));
+        String output = new String(out.toByteArray(), "utf-8").trim();
+        assertEquals(outputExpected, output);
 
         // Restore original objects from the byte array:
         InputStream is = new ByteArrayInputStream(out.toByteArray());
