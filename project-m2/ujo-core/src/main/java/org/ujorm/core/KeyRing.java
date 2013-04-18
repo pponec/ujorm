@@ -46,7 +46,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Property Separator */
     protected static final char PROPERTY_SEPARATOR = '.';
     /** A text to mark a descending sort of a property in a deserializaton proccess. */
-    protected static final String DESCENDING_SYMBOL = String.valueOf(PROPERTY_SEPARATOR) + PROPERTY_SEPARATOR;
+    protected static final String DESCENDING_SYMBOL = "" + PROPERTY_SEPARATOR + PROPERTY_SEPARATOR;
     /** The the domain class of reelated Keys. The value can be {@code null} if the Key array is empty. */
     private Class<UJO> type;
     /** Property size */
@@ -396,15 +396,31 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     // -------------- STATIC METHOD(S) --------------
 
-    /** Create a new instance, the parameters is cloned. */
+    /** Create a new instance, the parameters is cloned.
+     * @param domainClass Mandatory doomain class
+     * @param keys Nullable value
+     * @return If the keys are {@code null}, than the result is the {@code null} too.
+     */
+    @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Key<? super UJO, ?>... keys) {
-        Key[] ps = new Key[keys.length];
+        if (keys == null) {
+            return null;
+        }
+        final Key[] ps = new Key[keys.length];
         System.arraycopy(keys, 0, ps, 0, ps.length);
         return new KeyRing<UJO>(domainClass, ps);
     }
 
-    /** Create a new instance */
+    /** Create a new instance
+     * @param domainClass Mandatory doomain class
+     * @param keys Nullable value
+     * @return If the keys are {@code null}, than the result is the {@code null} too.
+     */
+    @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Collection<Key<? super UJO, ?>> keys) {
+        if (keys == null) {
+            return null;
+        }
         final Key[] ps = new Key[keys.size()];
         int i = 0;
         for (Key<? super UJO, ?> p : keys) {
@@ -424,7 +440,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /** Returns the Common Base Type or value {code null}, of keys are empty.
-     * @return If any property is from athe child domain clas, than the farthest child is returned.
+     * @return If any key is from a child domain class, than the farthest child is returned.
      */
     @PackagePrivate static <UJO extends Ujo> Class<UJO> getBaseType(Key<UJO, ?>... keys) {
         Class<UJO> result = null;

@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import java.util.PropertyResourceBundle;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.UjoAction;
 
 /**
@@ -51,6 +52,13 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     /**
      * Creates a new instance of UjoManagerRBundle
      */
+    public UjoManagerRBundle(KeyList<UJO> keys) {
+        super(keys.getType(), keys);
+    }
+
+    /**
+     * Creates a new instance of UjoManagerRBundle
+     */
     public UjoManagerRBundle(Class<UJO> ujoClass, Key ... keys) {
         super(ujoClass, keys);
     }
@@ -74,7 +82,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     public void saveResourceBundle(OutputStream out, UJO ujo, String header, Object context) throws IOException {
         java.util.Properties props = new java.util.Properties();
         UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_EXPORT, context);
-        for (Key prop : getProperties()) {
+        for (Key prop : getKeys()) {
 
             final Object valueObj = prop.of(ujo);
             final String valueStr = getText(ujo, prop, valueObj, action);

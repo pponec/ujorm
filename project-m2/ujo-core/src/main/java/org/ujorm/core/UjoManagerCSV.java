@@ -27,12 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 
 /**
  * A Manager for CSV import / export.
- * If you need take a control of a non UJO property object serialization then use a UjoTextable object list.
+ * If you need take a control of a non UJO Key object serialization then use a UjoTextable object list.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  *  List&lt;Person&gt; people = <span class="java-keywords">new</span> ArrayList&lt;Person&gt;(<span class="java-numeric-literals">0</span>);
@@ -65,12 +66,30 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @param ujoClass Exported Ujo Class
      * @param keys Exported keys of class, if value is null than all keys are used.
      */
+    public UjoManagerCSV(KeyList<UJO> keys) {
+        super(keys.getType(), keys);
+    }
+    /**
+     * Creates a new instance of UjoManagerCSV
+     * @param ujoClass Exported Ujo Class
+     * @param keys Exported keys of class, if value is null than all keys are used.
+     */
+    public UjoManagerCSV(Class<UJO> ujoClass, KeyList<UJO> keys) {
+        super(ujoClass, keys);
+    }
+
+    /**
+     * Creates a new instance of UjoManagerCSV
+     * @param ujoClass Exported Ujo Class
+     * @param keys Exported keys of class, if value is null than all keys are used.
+     */
     public UjoManagerCSV(Class<UJO> ujoClass, Key... keys) {
         super(ujoClass, keys);
     }
 
     /** Save Ujo into CSV format by codepage UTF-8. */
-    public void saveCSV(File file, List<UJO> ujoList, Object context) throws IOException, InstantiationException, IllegalAccessException {
+    public void saveCSV(File file, List<UJO> ujoList, Object context)
+            throws IOException, InstantiationException, IllegalAccessException {
         final OutputStream os = getOutputStream(file);
         try {
             saveCSV(os, UTF_8, ujoList, context);
@@ -106,10 +125,11 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             if (isHeaderFilled()) {
                 printHeaders(out);
             } else {
-                UJO ujo = ujoList.size() > 0 ? ujoList.get(0) : getUjoClass().newInstance();
+                UJO ujo = ujoList.size()>0 
+                        ? ujoList.get(0)
+                        : getUjoClass().newInstance();
                 boolean printSepar = false;
-                for (Key p : getProperties()) {
-
+                for (Key p : getKeys()) {
                     if (!getUjoManager().isTransientProperty(p)
                     && (ujo == null
                     || ujo.readAuthorization(new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context), p, null))
@@ -128,7 +148,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
         for (UJO ujo : ujoList) {
             boolean printSepar = false;
-            for (Key p : getProperties()) {
+            for (Key p : getKeys()) {
                 UjoAction action = new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context);
                 final String value = getText(ujo, p, UNDEFINED, action);
                 if (ujo.readAuthorization(action, p, value)
@@ -147,7 +167,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     }
 
     /**
-     * Header label for a required Property. You can overwrite the method in case you want to localize header titles.
+     * Header label for a required Key. You can overwrite the method in case you want to localize header titles.
      * @param p Property
      * @return Default implementation returns <code>Key.getName()</code> .
      */
@@ -204,7 +224,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             }
             UJO ujo = (UJO) getUjoClass().newInstance();
             result.add(ujo);
-            int propPointer = 0;  // Property Pointer
+            int keyPointer = 0;  // Key pointer
 
             for (int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
@@ -223,7 +243,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
                 } else { // Outside a quotation
                     if (c == separator) {
-                        writeValue(ujo, value, propPointer++, lineCounter, action);
+                        writeValue(ujo, value, keyPointer++, lineCounter, action);
                     } else if (c == quotation) {
                         inside = true;
                     } else {
@@ -231,7 +251,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
                     }
                 }
             }
-            writeValue(ujo, value, propPointer++, lineCounter, action);
+            writeValue(ujo, value, keyPointer++, lineCounter, action);
         }
         return result;
     }
@@ -240,14 +260,17 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     protected void writeValue
     ( final UJO ujo
     , final StringBuilder value
-    , final int propPointer
+    , final int keyPointer
     , final int lineCounter
     , final UjoAction action
     ) throws IllegalArgumentException {
-        if (propPointer>=getProperties().length) {
-            throw new IllegalArgumentException("Too many columns on the row: " + lineCounter + " value: " + value.toString());
+        if (keyPointer >= getKeys().size()) {
+            throw new IllegalArgumentException("Too many columns on the row: "
+                    + lineCounter
+                    + " value: "
+                    + value.toString());
         }
-        setText(ujo, getProperties()[propPointer], null, value.toString(), action);
+        setText(ujo, getKeys().get(keyPointer), null, value.toString(), action);
         value.setLength(0);
     }
 
@@ -360,7 +383,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
     /** Create new instance */
     public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass) {
-        return getInstance(ujoClass, (Key[]) null);
+        return new UjoManagerCSV<UJO>(ujoClass, (KeyList<UJO>) null);
     }
 
     /** Create new instance */

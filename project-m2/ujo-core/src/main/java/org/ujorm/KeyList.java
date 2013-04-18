@@ -91,7 +91,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
     /** Get the last Property */
     public Key<UJO,?> getLastKey();
     
-    /** The the domain class of reelated Keys.
+    /** The the domain class of related Keys.
      * The value can be {@code null} if the Key array is empty. */
     public Class<UJO> getType();
 

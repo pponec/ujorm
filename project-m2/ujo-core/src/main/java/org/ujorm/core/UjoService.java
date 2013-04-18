@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
@@ -35,14 +36,14 @@ import org.ujorm.extensions.UjoTextable;
  */
 abstract public class UjoService<UJO extends Ujo> {
 
-    /** Undefined text VALUE */
+    /** Undefined text VALUE have got a <strong>unique instance</strong>. */
     public static final String UNDEFINED = new String("U");
     /** Charset UTF-8 */
     public static final Charset UTF_8 = Charset.forName("UTF-8");
     /** Basic UJO Class */
     final private Class<UJO> ujoClass;
     /** Keys */
-    private Key[] keys;
+    private KeyList<UJO> keys;
     /** Is ujoClass textable */
     final private boolean textable;
     /** Special UjoManager. Value null means a DEFAULT value */
@@ -50,11 +51,20 @@ abstract public class UjoService<UJO extends Ujo> {
 
     /** Creates a new instance of UjoService */
     public UjoService(Class<UJO> ujoClass) {
-        this(ujoClass, (Key[]) null);
+        this(ujoClass, (KeyRing<UJO>) null);
+    }
+
+    /** Creates a new instance of the UjoService
+     * @deprecated Use rather constructor {@link #UjoService(java.lang.Class, org.ujorm.core.KeyRing)}
+     */
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    public UjoService(Class<UJO> ujoClass, Key... keys) {
+        this(ujoClass, KeyRing.of(ujoClass, keys));
     }
 
     /** Creates a new instance of UjoService */
-    public UjoService(Class<UJO> ujoClass, Key... keys) {
+    public UjoService(Class<UJO> ujoClass, KeyList<UJO> keys) {
         this.ujoClass = ujoClass;
         this.keys = keys;
         this.textable = UjoTextable.class.isAssignableFrom(ujoClass);
@@ -80,12 +90,26 @@ abstract public class UjoService<UJO extends Ujo> {
     }
 
     /** Get required keys */
-    public Key[] getProperties() {
+    @SuppressWarnings("unchecked")
+    public KeyList<UJO> getKeys() throws IllegalStateException {
         if (keys == null) {
-            keys = ujoManager.readProperties(getUjoClass()).toArray();
+            try {
+                keys = (KeyList<UJO>) getUjoClass().newInstance().readKeys();
+            } catch (Exception e) {
+                throw new IllegalStateException("New instance failed for the " + getUjoClass(), e);
+            }
         }
         return keys;
     }
+
+    /** Get required keys 
+     * @deprecated Use the method {@link #getKeys()}
+     */
+    @Deprecated
+    public Key[] getProperties() throws IllegalStateException {
+        return getKeys().toArray();
+    }
+
 
     /** Returns TEXT */
     public String getText(final UJO ujo, final Key<? super Ujo, ?> prop, final Object value, final UjoAction action) {
