@@ -17,8 +17,8 @@ package org.ujorm.transaction.config;
 
 import org.springframework.stereotype.Service;
 import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.metaModel.MetaParams;
-import org.ujorm.spring.OrmHandlerProvider;
 
 /** Build and configure database meta-model */
 @Service

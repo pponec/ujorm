@@ -49,7 +49,7 @@ import org.ujorm.orm.metaModel.MetaTable;
  * @assoc - - - AbstractMetaModel
  */
 @Immutable
-public class OrmHandler {
+public class OrmHandler implements OrmHandlerProvider {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmHandler.class);
@@ -418,6 +418,11 @@ public class OrmHandler {
     /** Returns a final meta-model in the XML format */
     public String getConfig() {
         return databases.toString();
+    }
+
+    /** Returns the same instance */
+    public OrmHandler getOrmHandler() {
+        return this;
     }
 
 }

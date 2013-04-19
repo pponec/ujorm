@@ -23,6 +23,7 @@ import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.Session;
 
 /**
@@ -40,8 +41,8 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     /** Dummy transaction object */
     final private Object dummy = new Object();
 
-    /** Assign OrmHandler Provider */
-    public void setOrmHandlerProvider(OrmHandlerProvider ormHandlerProvider) {
+    /** Assign a provider of the OrmHandler */
+    public void setOrmHandler(OrmHandlerProvider ormHandlerProvider) {
         this.handler = ormHandlerProvider.getOrmHandler();
     }
 
