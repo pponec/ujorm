@@ -42,7 +42,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     final private Object dummy = new Object();
 
     /** Assign a provider of the OrmHandler */
-    public void setOrmHandler(OrmHandlerProvider ormHandlerProvider) {
+    public void setOrmHandlerProvider(OrmHandlerProvider ormHandlerProvider) {
         this.handler = ormHandlerProvider.getOrmHandler();
     }
 
