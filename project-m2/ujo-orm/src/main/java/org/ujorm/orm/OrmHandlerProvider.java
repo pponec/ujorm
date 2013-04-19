@@ -13,9 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.spring;
-
-import org.ujorm.orm.OrmHandler;
+package org.ujorm.orm;
 
 /**
  * OrmHandler Provider
@@ -23,7 +21,7 @@ import org.ujorm.orm.OrmHandler;
  */
 public interface OrmHandlerProvider {
 
-    /** Create and configure new OrmHandler object */
+    /** Create instance and configure the OrmHandler object */
     public OrmHandler getOrmHandler();
 
 }
