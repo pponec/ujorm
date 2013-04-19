@@ -46,11 +46,11 @@ public interface OrmUjo extends Ujo {
     public void writeSession(Session session);
 
     /**
-     * Returns keys of changed values in time of <strong>not null session<strong>.
-     * The method is userful to a SQL UPDATE statement to manage only assigned values.
+     * Returns keys of changed values in a time when any <strong>session</strong> is assigned.
+     * The method is used by a SQL UPDATE statement to update assigned values only.
      * Implementation tip: create a new property type of {@link Set<Key>}
      * and in the method writeValue assing the current Key allways.
-     * @param clear True value clears all the property changes.
+     * @param clear True value clears all the key changes.
      * @return Key array of the modified values.
      */
     public Key[] readChangedProperties(boolean clear);

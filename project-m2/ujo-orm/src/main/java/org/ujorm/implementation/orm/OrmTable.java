@@ -94,8 +94,13 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
         super.writeValue(property, value);
     }
 
-    /** Returns a changed keys. The method is not the thread save.
-     * @param clear True value clears the property changes.
+    /**
+     * Returns keys of changed values in a time when any <strong>session</strong> is assigned.
+     * The method is used by a SQL UPDATE statement to update assigned values only.
+     * Implementation tip: create a new property type of {@link Set<Key>}
+     * and in the method writeValue assing the current Key allways.
+     * @param clear True value clears all the key changes.
+     * @return Key array of the modified values.
      */
     @Override
     public Key[] readChangedProperties(boolean clear) {
