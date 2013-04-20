@@ -426,7 +426,8 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return name;
     }
 
-    /** Returns the name of the Key including a simple domain class. Example: Person.id */
+    /** Returns the full name of the Key including a simple domain class. 
+     * <br />Example: Person.id */
     @Override
     public final String toStringFull() {
         return domainType!=null
@@ -434,6 +435,32 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
              : name ;
     }
 
+    /**
+     * Returns the full name of the Key including all atributes. 
+     * <br />Example: Person.id {index=0, ascending=false, ...}
+     * @param extended argumenta false calls the method {@link #toStringFull()} only.
+     * @return the full name of the Key including all atributes.
+     */
+    @Override
+    public String toStringFull(boolean extended) {
+        return  extended
+                ? toStringFull() + Property.printAttributes(this)
+                : toStringFull() ;
+    }
+    
+    /** Print  */
+    @PackagePrivate static String printAttributes(Key key) {
+        return " {index=" + key.getIndex()
+            + ", ascending=" + key.isAscending()
+            + ", direct=" + key.isDirect()
+            + ", default=" + key.getDefault()
+            + ", validator=" + (key.getValidator()!=null ? key.getValidator().getClass().getSimpleName() : null)
+            + ", type=" + key.getType()
+            + ", domainType=" + key.getDomainType()
+            + ", class=" + key.getClass().getName()
+            + "}" ;
+    }
+    
     // --------- STATIC METHODS -------------------
 
     /** Returns a new instance of property where the default value is null.

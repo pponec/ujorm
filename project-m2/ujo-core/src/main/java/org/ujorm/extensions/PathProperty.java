@@ -324,6 +324,19 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     public String toStringFull() {
         return getDomainType().getSimpleName() + '.' +  getName();
     }
+    
+    /**
+     * Returns the full name of the Key including all atributes. 
+     * <br />Example: Person.id {index=0, ascending=false, ...}
+     * @param extended argumenta false calls the method {@link #toStringFull()} only.
+     * @return the full name of the Key including all atributes.
+     */
+    @Override
+    public String toStringFull(boolean extended) {
+        return  extended
+                ? toStringFull() + Property.printAttributes(this)
+                : toStringFull() ;
+    }
 
     /** Length of the Name */
     @Override

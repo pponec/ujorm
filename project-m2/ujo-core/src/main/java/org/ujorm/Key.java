@@ -190,12 +190,20 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     @Override
     public int compareTo(Key p);
 
-    /** Returns the name of the Key. */
+    /** Returns the full name of the Key including a simple domain class. 
+     * <br />Example: Person.id */
     @Override
     public String toString();
 
-    /** Returns the name of the Key including the simple domain class. Example: Person.id */
+    /** Returns the full name of the Key including a simple domain class. Example: Person.id */
     public String toStringFull();
 
+    /**
+     * Returns the full name of the Key including all atributes. 
+     * <br />Example: Person.id {index=0, ascending=false, ...}
+     * @param extended argumenta false calls the method {@link #toStringFull()} only.
+     * @return the full name of the Key including all atributes.
+     */
+    public String toStringFull(boolean extended);
 
 }

@@ -76,7 +76,7 @@ final public class UjoLoggerFactory implements UjoLogger {
             result = new UjoLoggerBridge2Slf4j(name);
             if (showLog) {
                 showLog = false;
-                result.log(Level.INFO, "Ujorm logging is switched to the SLF4J.");
+                result.log(Level.FINEST, "Ujorm logging is switched to the SLF4J.");
             }
         } catch (Throwable e) {
             slf4jSupport = false;
