@@ -49,6 +49,9 @@ import org.ujorm.validator.ValidatorUtils;
 @Immutable
 public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
     private static final Class<MetaColumn> CLASS = MetaColumn.class;
+    
+    /** A constant for an auto index name */
+    public static final String AUTO_INDEX_NAME = "AUTO";
 
     /** Property Factory */
     private static final KeyFactory<MetaColumn> fa = KeyFactory.CamelBuilder.get(CLASS);
@@ -65,9 +68,11 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     /** DB Default value */
     public static final Key<MetaColumn,String> DEFAULT_VALUE = fa.newKey("default", "");
     /** A name of the non-unique database index for the column, where the same index can contain more columns.
+     * If the name is "AUTO" then automatic name based on column setting is generated.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
     public static final Key<MetaColumn,String> INDEX = fa.newKey("index", "");
     /** A name of the unique database index for the column, where the same index can contain more columns.
+     * If the name is "AUTO" then automatic name based on column setting is generated.
      * If a single column of the index is marked as unique, so the entire index will be unique. */
     public static final Key<MetaColumn,String> UNIQUE_INDEX = fa.newKey("uniqueIndex", "");
     /** A name of the constraint for the case a foreign key */

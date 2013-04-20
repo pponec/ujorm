@@ -30,14 +30,21 @@ final public class MoreParams extends AbstractMetaModel {
     private static final Class<MoreParams> CLASS = MoreParams.class;
 
     /** Property Factory */
-    private static final KeyFactory<MoreParams> f = KeyFactory.CamelBuilder.get(CLASS);
+    private static final KeyFactory<MoreParams> f = newFactory(CLASS);
+
     /** A default engine for the MySQL dialect. The default value of this parameter is: "ENGINE = InnoDB".
      * @see org.ujorm.orm.dialect.MySqlDialect#getEngine()
      */
     public static final Key<MoreParams,String> DIALECT_MYSQL_ENGINE_TYPE = f.newKey("DialectMySqlEngineType", "ENGINE = InnoDB");
 
-    /** Lock property factory */
-    static{f.lock();}
+    /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
+    public static final Key<MoreParams,Boolean> PRINT_All_JOINED_TABLES = f.newKey("printAllJoinedTables", false);
 
+    /** EFFECTIVA REQUEST: enable to unlock the immutable MetaTable model */
+    public static final Key<MoreParams,Boolean> ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL = f.newKey("enableToUnlockImmutableMeta-model", false);
+
+    static {
+        f.lock(); // Lock property factory
+    }
 
 }

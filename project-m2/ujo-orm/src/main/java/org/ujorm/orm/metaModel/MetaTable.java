@@ -34,6 +34,7 @@ import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.annot.Comment;
@@ -364,33 +365,71 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return sequencer;
     }
 
+    /** Create an Index For the Column */
+    public MetaIndex createIndexForColumn(String idxName, MetaColumn column) {
+        MetaIndex mIndex = new MetaIndex(idxName, this);
+        boolean isUniqueIndexExists = MetaColumn.UNIQUE_INDEX.of(column).length() > 0;
+        MetaIndex.UNIQUE.setValue(mIndex, isUniqueIndexExists);
+        return mIndex;
+    }
+    
+    /** Create an Index For the Column */
+    public String createIndexNameForColumn(MetaColumn column, boolean uniqueIndex) {
+        String metaIdxName;
+        if (uniqueIndex) {
+            metaIdxName = MetaColumn.UNIQUE_INDEX.of(column);
+        } else {
+            metaIdxName = MetaColumn.INDEX.of(column);
+        }
+        if (metaIdxName.length() == 0 && column.isForeignKey()) {
+            metaIdxName = "AUTO";
+        }
+        
+        assert metaIdxName.length() > 0;
+        
+        // automatic indexes ("AUTO" or foreign keys)
+        if (MetaColumn.AUTO_INDEX_NAME.equalsIgnoreCase(metaIdxName)) {
+            final SqlNameProvider nameProvider = getDatabase().getDialect().getNameProvider();
+            if (uniqueIndex) {
+                metaIdxName = nameProvider.getUniqueConstraintName(column);
+            } else {
+                metaIdxName = nameProvider.getIndexName(column);
+            }
+        }
+        return metaIdxName;
+    }
+    
     /** Create a new collection of the table indexes. */
     public Collection<MetaIndex> getIndexCollection() {
         Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
 
         for (MetaColumn column : COLUMNS.getList(this)) {
-            String[] idxs = {MetaColumn.INDEX.of(column), MetaColumn.UNIQUE_INDEX.of(column)};
-
-            for (int i=0; i<2; ++i) {
-                if (idxs[i].length()>0) {
-                    String upperIdx = idxs[i].toUpperCase();
-                    MetaIndex mIndex = mapIndex.get(upperIdx);
-                    if (mIndex==null) {
-                        mIndex = new MetaIndex(idxs[i], this);
-                        mapIndex.put(upperIdx, mIndex);
-                    }
-                    if (i==0) {
-                        MetaIndex.UNIQUE.setValue(mIndex, false);
-                    } else if (upperIdx.equalsIgnoreCase(idxs[0])) {
-                        break; // Ignore the same column in the index.
-                    }
-                    MetaIndex.COLUMNS.addItem(mIndex, column);
-                }
+            final String metaUdxName = MetaColumn.UNIQUE_INDEX.of(column);
+            final String metaIdxName = MetaColumn.INDEX.of(column);
+            final boolean indexExists = metaIdxName.length() > 0;
+            final boolean uniqueIndexExists = metaUdxName.length() > 0;
+            
+            if (indexExists || column.isForeignKey()) {
+                addIndex(column, mapIndex, false);
+            }
+            if (uniqueIndexExists) {
+                addIndex(column, mapIndex, true);
             }
         }
         return mapIndex.values();
     }
 
+    /** Add new index */
+    private void addIndex(MetaColumn column, Map<String, MetaIndex> mapIndex, boolean uniqueIndex) {
+        String idxName = createIndexNameForColumn(column, uniqueIndex);
+        MetaIndex mIndex = mapIndex.get(idxName);
+        if (mIndex == null) {
+            mIndex = createIndexForColumn(idxName, column);
+            mapIndex.put(idxName, mIndex);
+        }
+        MetaIndex.COLUMNS.addItem(mIndex, column);
+    }
+    
     /** Returns a parrent of the parameter or the null if no parent was not found.<br/>
      * The method provides a parent in case of emulated inheritance.
      */
@@ -434,4 +473,10 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return MetaTable.COLUMNS.getList(this);
     }
 
+    /** Unlock the meta-model, the method is for internal use only.
+     * The method must be enabled by parameter: {@link MoreParams#ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL}.
+     */
+    public void clearReadOnly() {
+        super.clearReadOnly(this.getDatabase().getOrmHandler());
+    }
 }

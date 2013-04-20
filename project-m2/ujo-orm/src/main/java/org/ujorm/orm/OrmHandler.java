@@ -260,13 +260,7 @@ public class OrmHandler implements OrmHandlerProvider {
         }
 
         for (MetaDatabase dbModel : getDatabases()) {
-            // Create DDL:
-            switch (MetaDatabase.ORM2DLL_POLICY.of(dbModel)) {
-                case CREATE_DDL:
-                case CREATE_OR_UPDATE_DDL:
-                case VALIDATE:
-                    dbModel.create(getDefaultSession());
-            }
+            dbModel.create(getDefaultSession());
         }
     }
 

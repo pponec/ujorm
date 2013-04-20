@@ -169,9 +169,10 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
 //                  ? ((ExtendedOrmUjo)value).readFK(key)
 //                  : new ForeignKey(key.of((Ujo)value));
 //      }
-        if (value instanceof ExtendedOrmUjo) {
-            return ((ExtendedOrmUjo) value).readFK(property);
-        }
+// Effectiva: toto se volá cyklicky a navíc se předává špatná property (z původního objektu místo z cizího), pak se vrací nesmysly
+//        if (value instanceof ExtendedOrmUjo) {
+//            return ((ExtendedOrmUjo) value).readFK(property);
+//        }
         if (session!=null) {
             final OrmUjo ujo = value instanceof OrmUjo
                     ? (OrmUjo) value
@@ -362,6 +363,13 @@ public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements Extended
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty
     ( VALUE value
     ) {
+        return newProperty(null, null, value, UNDEFINED_INDEX, false);
+    }
+
+    @Deprecated
+    protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newProperty
+    ( Class<VALUE> type
+      , VALUE value) {
         return newProperty(null, null, value, UNDEFINED_INDEX, false);
     }
 

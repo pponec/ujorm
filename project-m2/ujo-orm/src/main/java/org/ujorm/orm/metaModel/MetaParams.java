@@ -28,6 +28,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.ITypeService;
+import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.CheckReport;
@@ -88,6 +89,8 @@ final public class MetaParams extends AbstractMetaModel {
      * You can overwrite some method for youre ieas.
      */
     public static final Key<MetaParams,Class<? extends MetaDbService>> META_DB_SERVICE = f.newClassKey("metaDbService", MetaDbService.class);
+    /** Default SQL name provider for special names of database is called: {@link SqlNameProvider} */
+    public static final Key<MetaParams,Class<? extends SqlNameProvider>> SQL_NAME_PROVIDER = f.newClassKey("sqlNameProvider", SqlNameProvider.class);
     /** CheckReport a keyword in the database table or colum name inside the meta-model.
      * The default value is EXCEPTION.
      * @see CheckReport Parameter values

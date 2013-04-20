@@ -33,6 +33,9 @@ import org.ujorm.orm.metaModel.MoreParams;
  */
 public class MySqlDialect extends SqlDialect {
 
+    /** The Max length of VARCHAR database type */
+    public static final int VARCHAR_MAX_LENGTH = 21845;
+    
     @Override
     public String getJdbcUrl() {
         return "jdbc:mysql://127.0.0.1:3306/db1";
@@ -41,6 +44,15 @@ public class MySqlDialect extends SqlDialect {
     @Override
     public String getJdbcDriver() {
         return "com.mysql.jdbc.Driver";
+    }
+    
+    /** Does the database support a catalog? 
+     * The feature supports: MySqlDialect and MSSqlDialect. 
+     * @return The default value is  {@code true}.
+     */
+    @Override
+    public boolean isCatalog() {
+        return true;
     }
 
    /** Print an SQL DELETE statement. */
@@ -146,7 +158,10 @@ public class MySqlDialect extends SqlDialect {
                 return "LONGTEXT";
             case BLOB:
                 return "LONGBLOB";
-
+            case VARCHAR:
+                return column.getMaxLength() > VARCHAR_MAX_LENGTH 
+                        ? "TEXT"
+                        : super.getColumnType(column);
             default:
                 return super.getColumnType(column);
         }

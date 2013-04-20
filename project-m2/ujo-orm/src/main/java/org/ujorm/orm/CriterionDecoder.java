@@ -29,7 +29,9 @@ import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
+import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.orm.metaModel.MoreParams;
 
 /**
  * SQL Criterion Decoder.
@@ -48,6 +50,8 @@ public class CriterionDecoder {
     final protected List<ValueCriterion> nullValues;
     final protected Set<MetaTable> tables;
     final protected MetaTable baseTable;
+    /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
+    final protected boolean printAllJoinedTables;
 
     /**
      * Constructor
@@ -76,6 +80,7 @@ public class CriterionDecoder {
         this.nullValues = new ArrayList<ValueCriterion>();
         this.tables = new HashSet<MetaTable>();
         this.tables.add(baseTable);
+        this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
 
         if (this.criterion!=null) {
             unpack(this.criterion);
@@ -300,7 +305,32 @@ public class CriterionDecoder {
 
     /** Returns all participated tables include the parameter table. */
     public TableWrapper[] getTables() {
-        return tables.toArray(new TableWrapper[tables.size()]);
+        if (printAllJoinedTables) {
+            Set<MetaTable> result = new HashSet<MetaTable>();
+            result.addAll(tables);
+
+            //EFFECTIVA REQUEST: TR-1771: to enforce printing Ujorm joined tables
+            ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>(values.size() + nullValues.size());
+            allValues.addAll(values);
+            allValues.addAll(nullValues);
+            for (ValueCriterion value : allValues) {
+                Object o1 = value.getLeftNode();
+                Object o2 = value.getRightNode();
+                if (o1 instanceof Key) {
+                    MetaTable table = handler.findColumnModel((Key) o1).getTable();
+                    result.add(table);
+                }
+                if (o2 instanceof Key) {
+                    MetaTable table = handler.findColumnModel((Key) o2).getTable();
+                    result.add(table);
+                }
+            }
+
+            return result.toArray(new TableWrapper[result.size()]);
+        } else {
+            // The original Ujorm code:
+            return tables.toArray(new TableWrapper[tables.size()]);
+        }
     }
 
     /** Returns all participated tables include the parameter table. The 'baseTable' is on the first position always. */

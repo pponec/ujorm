@@ -158,9 +158,10 @@ public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo impleme
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
         }
-        if (value instanceof ExtendedOrmUjo) {
-            return ((ExtendedOrmUjo) value).readFK(property);
-        }
+// Effectiva: toto se volá cyklicky a navíc se předává špatná property (z původního objektu místo z cizího), pak se vrací nesmysly
+//        if (value instanceof ExtendedOrmUjo) {
+//            return ((ExtendedOrmUjo) value).readFK(property);
+//        }
         final Session session = readSession();
         if (session!=null) {
             final OrmUjo ujo = value instanceof OrmUjo
