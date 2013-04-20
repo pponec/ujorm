@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.Key;
+import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.CriterionDecoder;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.OrmUjo;
@@ -57,6 +58,16 @@ public class MSSqlDialect extends SqlDialect {
     public String getJdbcDriver() {
         return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
+    
+    
+    /** Does the database support a catalog? 
+     * The feature supports: MySqlDialect and MSSqlDialect. 
+     * @return The value is  {@code true}.
+     */
+    @Override
+    public boolean isCatalog() {
+        return true;
+    }    
 
     /** Print an SQL UPDATE statement.  */
     @Override
@@ -120,9 +131,10 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     /**  prints columns in "<TABLE>.<COLUMN_NAME> AS <TABLE>_<COLUMN_NAME>" format separated by comma */
-    protected void printTableColumnsWithUnderAliases(Collection<MetaColumn> columns, Appendable out) throws IOException {
+    protected void printTableColumnsWithUnderAliases(Collection<ColumnWrapper> columnWrappers, Appendable out) throws IOException {
         String separator = "";
-        for (MetaColumn column : columns) {
+        for (ColumnWrapper columnWrapper : columnWrappers) {
+            MetaColumn column = columnWrapper.getModel();
             if (column.isForeignKey()) {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
@@ -149,9 +161,10 @@ public class MSSqlDialect extends SqlDialect {
     }
 
     /** prints columns in <TABLE>_<COLUMN_NAME> separated by comma */
-    protected void printTableColumnsUnderAliases(Collection<MetaColumn> columns, Appendable out) throws IOException {
+    protected void printTableColumnsUnderAliases(Collection<ColumnWrapper> columnWrappers, Appendable out) throws IOException {
         String separator = "";
-        for (MetaColumn column : columns) {
+        for (ColumnWrapper columnWrapper : columnWrappers) {
+            MetaColumn column = columnWrapper.getModel();
             if (column.isForeignKey()) {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
@@ -277,15 +290,14 @@ public class MSSqlDialect extends SqlDialect {
     /** Outer part of select with sorting */
     protected void createOuterPart(String innerSelect, Query query, Appendable out) throws IOException {
         out.append("SELECT ");
-          //  printTableColumns(query.getColumns(), null, out);
-        Collection<MetaColumn> columns = query.getColumns();
+        Collection<ColumnWrapper> columnWrappers = query.getColumns();
         boolean first = true;
-        for (MetaColumn column : columns) {
+        for (ColumnWrapper columnWrapper : columnWrappers) {
+            MetaColumn column = columnWrapper.getModel();
             if (!first) {
                 out.append(", ");
             }
             printColumnUnderAlias(column, out);
-            //out.append(MetaColumn.NAME.of(column));
             first = false;
         }
 
@@ -360,6 +372,8 @@ public class MSSqlDialect extends SqlDialect {
                 return "DATETIME";
             case BOOLEAN:
                 return "TINYINT";
+            case VARCHAR:
+                return "NVARCHAR";
             default:
                 return super.getColumnType(column);
         }
@@ -493,6 +507,29 @@ public class MSSqlDialect extends SqlDialect {
         return out;
     }
 
+    @Override
+    public Appendable printDefaultConstraint(MetaColumn column, StringBuilder out) throws IOException {
+        if (!column.isMandatory() || column.hasDefaultValue()) {
+            MetaTable table = column.getTable();
+            out.append("ALTER TABLE ");
+            printFullTableName(table, out);
+            out.append(" ADD CONSTRAINT ");
+            String constName = getNameProvider().buildDefaultConstraintForDefaultValueName(column.getTable(), column);
+            out.append(constName);
+            // FIXME - something more general, this works only for simple number primary key
+            if (column.isPrimaryKey()) {
+                out.append(" DEFAULT 0 ");
+            } else if (column.hasDefaultValue()) {
+                printDefaultValue(column, out);
+            } else {
+                out.append(" DEFAULT NULL");
+            }
+            out.append(" FOR ");
+            out.append(MetaColumn.NAME.of(column));
+        }
+        return out;
+    }
+    
     /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
     @Override
     public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
@@ -528,7 +565,7 @@ public class MSSqlDialect extends SqlDialect {
     public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
         if (!MetaColumn.MAX_LENGTH.isDefault(column)) {
             //TODO : probably MAX_ALLOWED_SIZE is used to all types not only for BLOB
-            if ((column.getType().equals(Blob.class)) && (MetaColumn.MAX_LENGTH.of(column) > MSSQL_MAX_ALLOWED_SIZE)) {
+            if ((column.getType().equals(Blob.class) || MetaColumn.DB_TYPE.of(column).equals(DbType.VARCHAR)) && (MetaColumn.MAX_LENGTH.of(column) > MSSQL_MAX_ALLOWED_SIZE)) {
 
                 String name = aName != null ? aName : MetaColumn.NAME.of(column);
                 printQuotedName(name, out);
@@ -596,5 +633,5 @@ public class MSSqlDialect extends SqlDialect {
         Map<String, MetaTable> tables = new LinkedHashMap<String, MetaTable>();
         getTablesFromCriterion(decoder, tables);
         printTablesWithAlias(tables.values(), out);
-    }
+    }    
 }

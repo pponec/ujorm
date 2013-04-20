@@ -44,7 +44,6 @@ public class UjoSequencer {
     /** DB field: maxValue */
     public static final int SEQ_MAX_VALUE = 1 + SEQ_STEP;
 
-
     /** Basic table. */
     final protected MetaTable table;
     /** Current sequence value */
@@ -88,8 +87,7 @@ public class UjoSequencer {
                 if (i==0) {
                     // INSERT the new sequence:
                     out.setLength(0);
-                    final Integer cache = MetaParams.SEQUENCE_CACHE.of(getDatabase().getParams());
-                    sql = db.getDialect().printSequenceInit(this, cache, cache, out).toString();
+                    sql = db.getDialect().printSequenceInit(this, out).toString();
                     if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
                     statement = connection.prepareStatement(sql);
                     statement.setString(1, tableName);
@@ -98,15 +96,10 @@ public class UjoSequencer {
 
                 // SELECT UPDATE:
                 out.setLength(0);
-                sql = db.getDialect().printSequenceCurrentValue(this, out).toString();
-                if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
-                statement = connection.prepareStatement(sql);
-                statement.setString(1, tableName);
-                res = statement.executeQuery();
-                res.next();
-                seqLimit = res.getLong(SEQ_LIMIT);
-                int step = res.getInt(SEQ_STEP);
-                maxValue = res.getLong(SEQ_MAX_VALUE);
+                long[] sqMap = getCurrentDBSequence(connection);
+                seqLimit = sqMap[SEQ_LIMIT];
+                int step = (int) sqMap[SEQ_STEP];
+                maxValue = sqMap[SEQ_MAX_VALUE];
                 sequence = (seqLimit - step) + 1; // Get the last assigned number + 1;
 
                 if (maxValue!=0L) {
@@ -188,4 +181,37 @@ public class UjoSequencer {
         return true;
     }
 
+    /** Forces to reload sequence from db on next call for nextValue. */
+    public synchronized void reset() {
+        sequence = 0;
+        seqLimit = 0;
+        maxValue = 0;
+    }
+
+    /** Returns current db sequence for actual table.
+     * <br>The method have got a performance optimization. */
+    public long[] getCurrentDBSequence(Connection connection) throws Exception {
+        final MetaDatabase db = MetaTable.DATABASE.of(table);
+
+        StringBuilder sql = new StringBuilder(64);
+        String tableName = db.getDialect().printFullTableName(getTable(), true, sql).toString();
+
+        sql.setLength(0);
+        db.getDialect().printSequenceCurrentValue(this, sql);
+
+        PreparedStatement statement = connection.prepareStatement(sql.toString());
+        statement.setString(1, tableName);
+        ResultSet res = statement.executeQuery();
+
+        if (res.next()) {
+            long[] result = new long[1 + SEQ_MAX_VALUE];
+            result[SEQ_LIMIT] = res.getLong(SEQ_LIMIT);
+            result[SEQ_STEP] = res.getLong(SEQ_STEP);
+            result[SEQ_MAX_VALUE] = res.getLong(SEQ_MAX_VALUE);
+            return result;
+        } else {
+            return null;
+        }
+    }
+    
 }

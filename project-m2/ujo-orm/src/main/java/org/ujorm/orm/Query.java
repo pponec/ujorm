@@ -433,13 +433,27 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     */
     @SuppressWarnings("unchecked")
     public final Query<UJO> setColumns(boolean addPrimaryKey, Key... columns)  throws IllegalArgumentException {
+        return setColumns(addPrimaryKey, true, columns);
+    }
+
+   /** Set an list of required columns to reading from database table.
+    * Other columns (out of the list) will return a default value, no exception will be throwed.
+    * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br/>WARNING 2: assigning an column from a view is forbidden.
+    * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
+    * @param addChilds Add all childs of the all <strong>foreign keys</strong>.
+    * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
+    * @see #setColumn(org.ujorm.Key) setColumn(Property)
+    * @see #addColumn(org.ujorm.Key) addColumn(Property)
+    */
+    public final Query<UJO> setColumns(boolean addPrimaryKey, boolean addChilds, Key... columns) throws IllegalArgumentException {
         clearDecoder();
         this.columns = new ArrayList<ColumnWrapper>(columns.length + 3);
         final OrmHandler handler = getHandler();
         for (Key column : columns) {
             final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(column), true);
             final ColumnWrapper cw = column.isDirect() ? mc : new ColumnWrapperImpl(mc, column);
-            addMissingColumn(cw, true);
+            addMissingColumn(cw, addChilds);
         }
         if (addPrimaryKey) {
             addMissingColumn(table.getFirstPK(), false);

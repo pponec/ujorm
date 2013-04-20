@@ -27,7 +27,9 @@ import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
+import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.UjoSequencer;
+import org.ujorm.orm.dialect.MSSqlDialect;
 import org.ujorm.orm.dialect.MySqlDialect;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
@@ -138,7 +140,7 @@ public class MetaDbService {
         newIndexes.clear();
 
         final DatabaseMetaData dmd = conn.getMetaData();
-        final boolean catalog = db.getDialect() instanceof MySqlDialect;
+        final boolean catalog = isCatalog();
         final String column = null;
 
         for (MetaTable table : TABLES.of(db)) {
@@ -509,5 +511,16 @@ public class MetaDbService {
         return anyChange;
     }
 
+    protected SqlDialect getDialect() {
+        return db.getDialect();
+    }
+
+    /** Does the database support a catalog? 
+     * The feature supports: MySqlDialect and MSSqlDialect. 
+     * @return Result value is provided from a SqlDialog class.
+     */
+    final protected boolean isCatalog() {
+        return getDialect().isCatalog();
+    }
 
 }

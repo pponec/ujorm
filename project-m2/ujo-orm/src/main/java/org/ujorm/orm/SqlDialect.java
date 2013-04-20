@@ -24,6 +24,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +69,8 @@ abstract public class SqlDialect {
 
     /** The ORM handler */
     protected OrmHandler ormHandler;
+    /** The name provider */
+    private SqlNameProvider nameProvider;
 
     /** Prints quoted name (identifier) to SQL */
     private Boolean quoteRequest;
@@ -95,6 +98,14 @@ abstract public class SqlDialect {
     public InitialContext createJndiInitialContext(final MetaDatabase db) throws NamingException {
           return new InitialContext();
     }
+    
+    /** Does the database support a catalog? 
+     * The feature supports: MySqlDialect and MSSqlDialect. 
+     * @return The default value is  {@code false}.
+     */
+    public boolean isCatalog() {
+        return false;
+    }    
 
     /** Print SQL 'CREATE SCHEMA' */
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
@@ -178,10 +189,16 @@ abstract public class SqlDialect {
 
     /** Print a SQL sript to add a new column to the table */
     public Appendable printAlterTableAddColumn(MetaColumn column, Appendable out) throws IOException {
+        return printAlterTableColumn(column, true, out);
+    }
+
+    /** Print a SQL sript to add a new column to the table */
+    public Appendable printAlterTableColumn(MetaColumn column, boolean add, Appendable out) throws IOException {
         out.append("ALTER TABLE ");
         printFullTableName(column.getTable(), out);
-        out.append(" ADD COLUMN ");
-
+        out.append(add
+            ? " ADD COLUMN "
+            : " ALTER COLUMN ");
         if (column.isForeignKey()) {
             printFKColumnsDeclaration(column, out);
         } else {
@@ -190,14 +207,24 @@ abstract public class SqlDialect {
         if (column.hasDefaultValue()) {
             printDefaultValue(column, out);
         }
-
         return out;
     }
 
+    /** Print an DROP INDEX for the parameter column.
+     * @return More statements separated by the ';' charactes are enabled
+     */
+    public Appendable printDropIndex(final MetaIndex index, final Appendable out) throws IOException {
+        out.append("DROP INDEX ");
+        out.append(MetaIndex.NAME.of(index));
+        out.append(" ON ");
+        printFullTableName(MetaIndex.TABLE.of(index), out);
+        return out;
+    }
+    
     /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
     public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
         Object value = column.getJdbcFriendlyDefaultValue();
-        boolean isDefault = value!=null;
+        boolean isDefault = value != null;
         String quotMark = "";
         if (value instanceof String) {
             isDefault = ((String) value).length() > 0;
@@ -215,6 +242,45 @@ abstract public class SqlDialect {
         return out;
     }
 
+    /** Print Default Constraint */
+    public Appendable printDefaultConstraint(MetaColumn column, StringBuilder out) throws IOException {
+        if (column.hasDefaultValue()) {
+            MetaTable table = column.getTable();
+            out.append("ALTER TABLE ");
+            printFullTableName(table, out);
+            out.append(" ALTER COLUMN ");
+            printQuotedName(MetaColumn.NAME.of(column), out);
+            out.append(" SET ");
+            printDefaultValue(column, out);
+        }
+        return out;
+    }
+
+    /** Print Unique Constraint */
+    public Appendable printUniqueConstraint(List<MetaColumn> columns, StringBuilder out) throws IOException {
+        return printUniqueConstraint(out, columns.toArray(new MetaColumn[] {} ));
+    }
+
+    /** printUniqueConstraint */
+    public Appendable printUniqueConstraint(StringBuilder out, MetaColumn... columns) throws IOException {
+        assert columns.length > 0;
+        MetaTable table = columns[0].getTable();
+        out.append("ALTER TABLE ");
+        printFullTableName(table, out);
+        out.append(" ADD CONSTRAINT ");
+
+        out.append(getNameProvider().getUniqueConstraintName(columns));
+        out.append(" UNIQUE (");
+        String separator = "";
+        for (MetaColumn column : columns) {
+            out.append(separator);
+            printQuotedName(MetaColumn.NAME.of(column), out);
+            separator = ",";
+        }
+        out.append(")");
+        return out;
+    }
+
     /**
      * Print foreign key for the parameter column
      * @return More statements separated by the ';' charactes are enabled
@@ -228,7 +294,7 @@ abstract public class SqlDialect {
         out.append("ALTER TABLE ");
         printFullTableName(table, out);
         out.append("\n\tADD CONSTRAINT ");
-        printConstraintName(table, column, out);
+        getNameProvider().printConstraintName(table, column, out);
         out.append(" FOREIGN KEY ");
 
         for (int i=0; i<columnsSize; ++i) {
@@ -250,19 +316,6 @@ abstract public class SqlDialect {
         out.append(")");
         //out.append("\tON DELETE CASCADE");
         return out;
-    }
-
-    /** Print a constraint name */
-    protected void printConstraintName(final MetaTable table, final MetaColumn column, final Appendable out) throws IOException {
-        final String cn = column.getConstraintName();
-        if (isFilled(cn)) {
-            out.append(cn);
-        } else {
-            out.append("fk_");
-            out.append(MetaTable.NAME.of(table));
-            out.append("__"); // two characters before a column
-            out.append(MetaColumn.NAME.of(column));
-        }
     }
 
     /**
@@ -681,7 +734,7 @@ abstract public class SqlDialect {
     protected String getAliasColumnName(MetaColumn column) throws IOException {
         final String aliasName = column.getAliasName();
         final Appendable out = new StringBuilder(aliasName.length() + 2);
-        printQuotedName(aliasName, out);
+        out.append(aliasName);
         return out.toString();
     }
 
@@ -940,8 +993,15 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print SQL CREATE SEQUENCE (insert sequence row). No JDBC parameters. */
-    public Appendable printSequenceInit(final UjoSequencer sequence, long seq, int cache, final Appendable out) throws IOException {
+    /**
+     * Print SQL CREATE SEQUENCE (insert sequence row). No JDBC parameters.
+     */
+    public Appendable printSequenceInit(final UjoSequencer sequence, final Appendable out) throws IOException {
+        Integer cache = MetaParams.SEQUENCE_CACHE.of(sequence.getDatabase().getParams());
+        return printSequenceInitWithValues(sequence, cache, cache, out);
+    }
+
+    public Appendable printSequenceInitWithValues(final UjoSequencer sequence, long seq, int cache, final Appendable out) throws IOException {
         out.append("INSERT INTO ");
         printSequenceTableName(sequence, out);
         out.append(" (");
@@ -953,7 +1013,7 @@ abstract public class SqlDialect {
         out.append(",");
         printQuotedNameAlways(getSeqTableModel().getMaxValue(), out);
         out.append(") VALUES (?," + seq + "," + cache + ",0)");
-
+        
         return out;
     }
 
@@ -975,7 +1035,38 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print SQL CURRENT SEQUENCE VALUE. Returns a current sequence, cache and the maxValue. */
+    /** Print the next Sequence value */
+    public Appendable printSequenceNextValueWithValues(final UjoSequencer sequence, long seq, final Appendable out) throws IOException {
+        out.append("UPDATE ");
+        printSequenceTableName(sequence, out);
+        out.append(" SET ");
+        printQuotedNameAlways(getSeqTableModel().getSequence(), out);
+        out.append("=" + seq);
+        out.append(" WHERE ");
+        printQuotedNameAlways(getSeqTableModel().getId(), out);
+        out.append("=?");
+        return out;
+    }
+
+    /** Set sequence to the max value. */
+    public Appendable printSetMaxSequence(final UjoSequencer sequence, final Appendable out) throws IOException {
+        out.append("UPDATE ");
+        printSequenceTableName(sequence, out);
+        out.append(" SET ");
+        printQuotedNameAlways(getSeqTableModel().getSequence(), out);
+        out.append("=");
+        printQuotedNameAlways(getSeqTableModel().getMaxValue(), out);
+        out.append(" WHERE ");
+        printQuotedNameAlways(getSeqTableModel().getId(), out);
+        out.append("=?");
+        return out;
+    }
+
+    /**
+     * Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the.
+     * The SQL columns are allways selected in the order: sequence, cache, maxValue.
+     * current cache.
+     */
     public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {
         final SeqTableModel tm = getSeqTableModel();
 
@@ -991,6 +1082,32 @@ abstract public class SqlDialect {
         out.append(" WHERE ");
         printQuotedNameAlways(tm.getId(), out);
         out.append("=?");
+        
+        return out;
+    }
+    
+    /** Print SQL LIST ALL SEQUENCE IDs. */
+    public Appendable printSequenceListAllId(final UjoSequencer sequence, final Appendable out) throws IOException {
+        final SeqTableModel tm = getSeqTableModel();
+
+        out.append("SELECT ");
+        printQuotedNameAlways(tm.getId(), out);
+        out.append(" FROM ");
+        printSequenceTableName(sequence, out);
+        
+        return out;
+    }
+
+    /** Print SQL DELETE SEQUENCE BY ID. */
+    public Appendable printSequenceDeleteById(final UjoSequencer sequence, String id, final Appendable out) throws IOException {
+        final SeqTableModel tm = getSeqTableModel();
+
+        out.append("DELETE FROM ");
+        printSequenceTableName(sequence, out);
+        out.append(" WHERE ");
+        printQuotedNameAlways(tm.getId(), out);
+        out.append("=?");
+        
         return out;
     }
 
@@ -1138,4 +1255,61 @@ abstract public class SqlDialect {
         return result.toString();
     }
 
+    /** SQL Name Provider */
+    public String buildConstraintName(final MetaColumn column, final MetaTable table) {
+        final String cn = column.getConstraintName();
+        if (isFilled(cn)) {
+            return cn;
+        } else {
+            return getNameProvider().buildDefaultConstraintName(table, column);
+        }
+    }
+
+    public String buildPrimaryKeyOverColumn(MetaTable table, List<MetaColumn> columns) throws IOException {
+        String overColumn = "";
+        String separator = "";
+        for (MetaColumn col : columns) {
+            String name = MetaColumn.NAME.of(col);
+            overColumn += separator;
+            overColumn += name;
+            separator = ",";
+        }
+        return overColumn;
+    }
+
+    public Appendable printPrimaryKey(MetaColumn column, StringBuilder sql) throws Exception {
+        sql.append("ALTER TABLE ");
+        printFullTableName(column.getTable(), sql);
+        sql.append(" ADD ");
+        printPrimaryKeyConstraint(column.getTable(), Arrays.asList(column), sql);
+        return sql;
+    }
+
+    /** Prints primary key constraint */
+    protected void printPrimaryKeyConstraint(MetaTable table, List<MetaColumn> columns, Appendable out) throws IOException {
+        out.append(" CONSTRAINT ");
+        String pkName = getNameProvider().buildPrimaryKeyName(table, columns);
+        out.append(pkName);
+        out.append(" PRIMARY KEY ");
+        String pkOverColumn = buildPrimaryKeyOverColumn(table, columns);
+        out.append("(");
+        printQuotedName(pkOverColumn, out);
+        out.append(")");
+    }
+    
+    /**
+     * Returns a name provider
+     * @return Current SQL name provider
+     * @throws IllegalStateException A problem during creating an instance.
+     */
+    public SqlNameProvider getNameProvider() throws IllegalStateException {
+        if (nameProvider==null) {
+            try {
+                nameProvider = MetaParams.SQL_NAME_PROVIDER.of(ormHandler.getParameters()).newInstance();
+            } catch (Exception e) {
+                throw new IllegalStateException("Can't create an instance of the " + ormHandler.getParameters(), e);
+            }
+        }
+        return nameProvider;
+    }
 }

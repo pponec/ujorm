@@ -24,6 +24,8 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.orm.metaModel.MetaParams;
+import org.ujorm.orm.metaModel.MoreParams;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
@@ -41,6 +43,18 @@ abstract public class AbstractMetaModel extends AbstractUjo {
         return readOnly;
     }
 
+    /** Unlock the meta-model. the method is for internal use only.
+     * The method must be enabled by parameter: {@link MoreParams#ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL}.
+     */
+    protected void clearReadOnly(OrmHandler handler) {
+        final Key<MetaParams,Boolean> enabledKey = MetaParams.MORE_PARAMS.add(MoreParams.ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL);
+        if (enabledKey.of(handler.getParameters())) {
+            readOnly = false;
+        } else {
+            throw new UnsupportedOperationException("The method must be enabled by parameter: " + enabledKey.toStringFull());
+        }
+    }
+    
     /** Set a read-only state. */
     @SuppressWarnings("unchecked")
     public void setReadOnly(boolean recurse) {

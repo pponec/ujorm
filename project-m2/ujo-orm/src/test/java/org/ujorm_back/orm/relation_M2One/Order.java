@@ -49,7 +49,7 @@ public class Order extends OrmTable<Order> {
     public static final UjoProperty<Order, Long> id = newProperty(Long.class);
     /** Alternative Unique Key */
     @Column(length=10, uniqueIndex="sid_index")
-    public static final UjoProperty<Order,String> sid = newProperty(null, "");
+    public static final UjoProperty<Order,String> sid = newProperty(String.class, "");
     /** Order state, default is ACTIVE */
     public static final UjoProperty<Order, State> state = newProperty(State.ACTIVE);
     /** Date of creation */
