@@ -1,0 +1,131 @@
+/*
+ * Copyright 2013 ponec.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.ujorm.orm.template;
+
+import java.util.logging.*;
+import junit.framework.TestCase;
+import org.ujorm.Ujo;
+import org.ujorm.orm.*;
+import org.ujorm.orm.ao.CachePolicy;
+import org.ujorm.orm.metaModel.MetaParams;
+import org.ujorm.orm_tutorial.sample.*;
+
+/**
+ * AliasTableTest
+ * @author Pavel Ponec
+ */
+public class AliasTableTest extends TestCase {
+    
+    private static final String NO_SEPARATOR = null;
+    
+    public AliasTableTest(String testName) {
+        super(testName);
+    }
+    
+    /** Test of getTableModel method, of class AliasTable. */
+    public void testAlias_1() {
+        System.out.println("testAlias_1");
+        OrmHandler handler = createHandler();
+        
+        AliasTable<Order> order = AliasTable.of(Order.class, "a", handler);
+        AliasTable<Item> item = AliasTable.of(Item.class, "b", handler);
+        
+        String sqlExpected = "SELECT a.CREATED, b.NOTE "
+                + "FROM db1.ord_order a, db1.ord_item b "
+                + "WHERE a.ID = b.fk_order";
+        String sql 
+                = SELECT(order.column(Order.CREATED), item.column(Item.NOTE))
+                + FROM (order, item)
+                + WHERE(order.column(Order.ID), " = ", item.column(Item.ORDER));
+        System.out.println("sql: " + sql);
+        assertEquals(sqlExpected, sql);        
+    }
+    
+    /** Test of getTableModel method, of class AliasTable. */
+    public void testAlias_2() {
+        System.out.println("testAlias_2");
+        OrmHandler handler = createHandler();
+        
+        AliasTable<Order> order = AliasTable.of(Order.class, "a", handler);
+        AliasTable<Item> item = AliasTable.of(Item.class, "b", handler);
+        
+        String sqlExpected = "SELECT a.CREATED AS CREATED, b.NOTE AS NOTE "
+                + "FROM db1.ord_order a, db1.ord_item b "
+                + "WHERE b.fk_order = a.ID";
+        String sql = "SELECT " + order.columnAs(Order.CREATED) + ", " + item.columnAs(Item.NOTE)
+                + " FROM " + order + ", " + item
+                + " WHERE " + item.column(Item.ORDER) + " = " + order.column(Order.ID);
+        System.out.println("sql: " + sql);
+        assertEquals(sqlExpected, sql);        
+    }
+    
+    // ------------------------ TOOLS ---------------------------------
+    
+    protected String SELECT(Object... params) {
+        return "SELECT " + toText(", ", params);
+    }
+    
+    protected String FROM(Object... params) {
+        return " FROM " + toText(", ", params);
+    }
+    
+    protected String WHERE (Object... params) {
+        return " WHERE " + toText(NO_SEPARATOR, params);
+    }    
+    
+    protected String toText(String separator, Object... params) {
+        final StringBuilder sb = new StringBuilder(256);
+        for (Object par : params) {
+            if (separator != null && sb.length() > 0) {
+                sb.append(separator);
+            }
+            sb.append(par);
+        }
+        return sb.toString();
+    }
+
+    /** Before the first: create a meta-model.
+     * Database tables will be CREATED in the first time.
+     */
+    private OrmHandler createHandler() {
+
+        // Set the log level specifying which message levels will be logged by Ujorm:
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.FINE);
+
+        // Create new ORM Handler:
+        OrmHandler handler = new OrmHandler();
+
+        // There are prefered default properties for a production environment:
+        boolean yesIWantToChangeDefaultParameters = true;
+        if (yesIWantToChangeDefaultParameters) {
+            MetaParams params = new MetaParams();
+            params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
+            params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
+            params.set(MetaParams.CACHE_POLICY, CachePolicy.SOLID_CACHE);
+            handler.config(params);
+        }
+
+        boolean yesIWantToLoadExternalConfig = false;
+        if (yesIWantToLoadExternalConfig) {
+            java.net.URL config = getClass().getResource("/org/ujorm/orm/sample/config.xml");
+            handler.config(config, true);
+        }
+
+        handler.loadDatabase(Database.class);
+        return handler;
+    }
+    
+}
