@@ -31,6 +31,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaTable;
 
@@ -46,6 +47,7 @@ public class JdbcStatement {
     /** Prepared Statement */
     private final PreparedStatement ps;
     private final ITypeService typeService;
+    private final int logValueLengthLimit;
 
     /** Parameter pointer */
     private int parameterPointer = 0;
@@ -62,6 +64,7 @@ public class JdbcStatement {
         this.ps = ps;
         this.typeService = handler.getParameters().getConverter(null);
         logValues = LOGGER.isLoggable(Level.INFO);
+        logValueLengthLimit = Math.max(10, MetaParams.LOG_VALUE_LENGTH_LIMIT.of(handler.getParameters()));
         if (logValues) {
             values = new StringBuilder();
         }
@@ -346,7 +349,14 @@ public class JdbcStatement {
 
         values.append(parameterPointer == 0 ? "[" : ", ");
         values.append(textSeparator);
-        values.append(textValue);
+        if (textValue!=null && textValue.length() > logValueLengthLimit) {
+          values.append(textValue.subSequence(0, logValueLengthLimit));
+          values.append("...[");
+          values.append(textValue.length());
+          values.append(logValueLengthLimit < 20 ? "]" : " total characters]");
+        } else {
+          values.append(textValue);
+        }
         values.append(textSeparator);
     }
 
