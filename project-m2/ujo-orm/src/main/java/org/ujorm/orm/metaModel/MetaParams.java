@@ -141,6 +141,10 @@ final public class MetaParams extends AbstractMetaModel {
      * using a statement <code>SLF4JBridgeHandler.install()</code>;
      */
     public static final Key<MetaParams,Boolean> LOGBACK_LOGGING_SUPPORT = f.newKey("logbackLoggingSupport", false);
+    /** Logging JDBC arguments can be cropped using the next argument, default value 128 characters per value,
+     * the value {@link Integer.MAX_VALUE} means an unlimited.
+     */
+    public static final Key<MetaParams,Integer> LOG_VALUE_LENGTH_LIMIT = f.newKey("logValueLengthLimit", 128);
 
     /** An application context for initializaton of the customer componets of the meta-model. */
     @Transient
