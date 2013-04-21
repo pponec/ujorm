@@ -209,7 +209,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Create a service method */
-    protected MetaDbService createService() throws IllegalStateException {
+    public MetaDbService createService() throws IllegalStateException {
         try {
             return getParams().get(MetaParams.META_DB_SERVICE).newInstance();
         } catch (Throwable e) {
