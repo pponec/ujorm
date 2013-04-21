@@ -455,7 +455,7 @@ public class MetaDbService {
             String msg = "The database table or column called '" + word
                 + "' is a SQL keyword. See the class: "
                 + table.getType().getName()
-                + ".\nNOTE: the keyword checking can be disabled by the Ujorm parameter: " + MetaParams.CHECK_KEYWORDS
+                + ".\nNOTE: the keyword checking can be disabled by the Ujorm parameter: " + MetaParams.CHECK_KEYWORDS.toStringFull()
                 ;
             switch (MetaParams.CHECK_KEYWORDS.of(db.getParams())) {
                 case EXCEPTION:
