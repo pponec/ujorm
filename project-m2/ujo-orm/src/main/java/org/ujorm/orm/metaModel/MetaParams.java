@@ -107,7 +107,7 @@ final public class MetaParams extends AbstractMetaModel {
      * Value TRUE generate a special character "~" instead of default database schema in the sequence table.
      * The benefit of the special chatacter can be evaluated in the case of the renaming of the database schema.
      * In case of change of the parameter value is necessary to convert values in the database column 'ujorm_pk_support.id' by hand.
-     * The default value is FALSE.
+     * <br>NOTE: The default value is FALSE for backward compatibility, however for new projects is preferred value TRUE.
      */
     public static final Key<MetaParams,Boolean> SEQUENCE_SCHEMA_SYMBOL = f.newKey("sequenceSchemaSymbol", false);
 
