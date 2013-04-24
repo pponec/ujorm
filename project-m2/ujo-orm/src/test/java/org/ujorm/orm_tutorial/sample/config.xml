@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release UNDEFINED was created 2012/07/23 19:04 -->
+<!-- The Ujorm configuration file release 1.33-SNAPSHOT was created 2013/04/25 00:10 -->
 <body>
     <database id="Database">
         <schema>db1</schema>
@@ -110,29 +110,29 @@
             <alias>ord_customer_alias</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <column id="ID">
-                <name>ID</name>
+            <column id="id">
+                <name>id</name>
                 <primaryKey>true</primaryKey>
                 <dbType>BIGINT</dbType>
             </column>
-            <column id="PIN">
-                <name>PIN</name>
+            <column id="pin">
+                <name>pin</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="SURENAME">
-                <name>SURENAME</name>
+            <column id="surename">
+                <name>surename</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>
             </column>
-            <column id="LASTNAME">
-                <name>LASTNAME</name>
+            <column id="lastname">
+                <name>lastname</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>
             </column>
-            <column id="CREATED">
-                <name>CREATED</name>
+            <column id="created">
+                <name>created</name>
                 <dbType>TIMESTAMP</dbType>
             </column>
         </table>
@@ -175,7 +175,6 @@
         </procedure>
     </database>
     <parameters>
-        <cachePolicy>SOLID_CACHE</cachePolicy>
         <tableAliasSuffix>_alias</tableAliasSuffix>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
         <moreParams></moreParams>
