@@ -45,8 +45,8 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
     }
 
     /**
-     * An alias for the method of(Ujo).
-     * @see #of(Ujo)
+     * An alias for the method of(Ujo) with a lazy-loading features.<br>
+     * Note: if no session is available than lazy attributes provides the {@code null} value - since the release 1.33.
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -57,7 +57,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
         if (isTypeOf(OrmUjo.class)) {
             if (result instanceof ForeignKey) {
                 if (mySession == null) {
-                    throw new IllegalStateException("The Session was not assigned.");
+                    return null;
                 }
                 if (!mySession.isLazyLoadingEnabled()) {
                     throw new IllegalStateException("The lazy loading is disabled in the current Session.");
