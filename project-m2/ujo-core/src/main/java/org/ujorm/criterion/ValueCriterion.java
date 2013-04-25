@@ -315,6 +315,18 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
         }
     }
 
+    /**
+     * Find a Domain class
+     * @return returns Method returns the {@code Object.class} of no domain was found.
+     */
+    @Override
+    protected Class<?> findDomain() {
+        final Key key = getLeftNode();
+        final Class<?> result = key != null ? key.getDomainType() : null;
+        return result != null ? result : Object.class;
+    }
+
+
     // -------------- SERIALIZATION METHOD(S) --------------
 
     /** Serialization method */

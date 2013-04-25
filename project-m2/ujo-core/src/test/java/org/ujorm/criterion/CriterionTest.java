@@ -163,6 +163,28 @@ public class CriterionTest extends MyTestCase {
         assertEquals(expected.evaluate(person), result.evaluate(person));
     }
 
+    /** Serialization 3 */
+    @SuppressWarnings("unchecked")
+    public void testToStringFull() throws IOException, ClassNotFoundException {
+        System.out.println("testToStringFull");
+        String expected;
+
+        final Criterion<User> crn1, crn2, crn3;
+
+        crn1 = User.LOGIN.whereEq("myLogin");
+        crn2 = (Criterion<User>)(Criterion)User.NAME.whereEq("Pavel");
+        crn3 = crn2.and(crn1);
+
+        expected = "User(login EQ \"myLogin\")";
+        assertEquals(expected, crn1.toStringFull());
+        //
+        expected = "Person(name EQ \"Pavel\")";
+        assertEquals(expected, crn2.toStringFull());
+        //
+        expected = "User(name EQ \"Pavel\") AND (login EQ \"myLogin\")";
+        assertEquals(expected, crn3.toStringFull());
+    }
+
 
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());

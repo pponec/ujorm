@@ -16,22 +16,25 @@
 package org.ujorm.criterion;
 
 import org.ujorm.Key;
-import org.ujorm.implementation.map.MapUjoExt;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.PathProperty;
+import org.ujorm.implementation.array.ArrayUjoExt;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class Person extends MapUjoExt<Person> {
+public class Person extends ArrayUjoExt<Person> {
 
-    public static final Key<Person, String> NAME = newKey("Name");
-    public static final Key<Person, Boolean> MALE = newKey("Male", false);
-    public static final Key<Person, Double> CASH = newKey("Cash", 0d);
-    public static final Key<Person, Person> MOTHER = newKey("Mother");
-    public static final Key<Person, String> ADDRESS = newKey("Address");
+    protected static final KeyFactory<Person> f = KeyFactory.Builder.get(Person.class);
 
-    static { init(Person.class); }
+    public static final Key<Person, String> NAME = f.newKey("name");
+    public static final Key<Person, Boolean> MALE = f.newKey("male", false);
+    public static final Key<Person, Double> CASH = f.newKey("cash", 0d);
+    public static final Key<Person, Person> MOTHER = f.newKey("mother");
+    public static final Key<Person, String> ADDRESS = f.newKey("address");
+
+    static { f.lock(); }
 
 
     public void init() {
@@ -73,5 +76,10 @@ public class Person extends MapUjoExt<Person> {
         Double cash2 = get(MOTHER, MOTHER, CASH);
 
         System.out.println(name + " " + cash);
+    }
+
+    @Override
+    public int readPropertyCount() {
+        return f.lockAndSize();
     }
 }
