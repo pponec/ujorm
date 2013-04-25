@@ -167,6 +167,18 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
         return false;
     }
 
+    /** Print the Criteron including the main domain name along the example: Order(id EQ 1)  */
+    public String toStringFull() {
+        Class domain = findDomain();
+        return domain.getSimpleName() + this;
+    }
+
+    /**
+     * Find a Domain class
+     * @return returns Method returns the {@code Object.class} of no domain was found.
+     */
+    abstract protected Class findDomain();
+
     // ------ STATIC FACTORY --------
 
     /**
