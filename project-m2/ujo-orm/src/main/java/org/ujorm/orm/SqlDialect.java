@@ -24,7 +24,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -71,6 +70,8 @@ abstract public class SqlDialect {
     protected OrmHandler ormHandler;
     /** The name provider */
     private SqlNameProvider nameProvider;
+    /** Extended dialect */
+    private SqlDialectEx extentedDialect;
 
     /** Prints quoted name (identifier) to SQL */
     private Boolean quoteRequest;
@@ -209,17 +210,6 @@ abstract public class SqlDialect {
         }
         return out;
     }
-
-    /** Print an DROP INDEX for the parameter column.
-     * @return More statements separated by the ';' charactes are enabled
-     */
-    public Appendable printDropIndex(final MetaIndex index, final Appendable out) throws IOException {
-        out.append("DROP INDEX ");
-        out.append(MetaIndex.NAME.of(index));
-        out.append(" ON ");
-        printFullTableName(MetaIndex.TABLE.of(index), out);
-        return out;
-    }
     
     /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
     public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
@@ -253,31 +243,6 @@ abstract public class SqlDialect {
             out.append(" SET ");
             printDefaultValue(column, out);
         }
-        return out;
-    }
-
-    /** Print Unique Constraint */
-    public Appendable printUniqueConstraint(List<MetaColumn> columns, StringBuilder out) throws IOException {
-        return printUniqueConstraint(out, columns.toArray(new MetaColumn[] {} ));
-    }
-
-    /** printUniqueConstraint */
-    public Appendable printUniqueConstraint(StringBuilder out, MetaColumn... columns) throws IOException {
-        assert columns.length > 0;
-        MetaTable table = columns[0].getTable();
-        out.append("ALTER TABLE ");
-        printFullTableName(table, out);
-        out.append(" ADD CONSTRAINT ");
-
-        out.append(getNameProvider().getUniqueConstraintName(columns));
-        out.append(" UNIQUE (");
-        String separator = "";
-        for (MetaColumn column : columns) {
-            out.append(separator);
-            printQuotedName(MetaColumn.NAME.of(column), out);
-            separator = ",";
-        }
-        out.append(")");
         return out;
     }
 
@@ -1012,7 +977,7 @@ abstract public class SqlDialect {
         printQuotedNameAlways(getSeqTableModel().getCache(), out);
         out.append(",");
         printQuotedNameAlways(getSeqTableModel().getMaxValue(), out);
-        out.append(") VALUES (?," + seq + "," + cache + ",0)");
+        out.append(") VALUES (?," + seq).append("," + cache).append(",0)");
         
         return out;
     }
@@ -1029,19 +994,6 @@ abstract public class SqlDialect {
         printQuotedNameAlways(getSeqTableModel().getSequence(), out);
         out.append("+");
         printQuotedNameAlways(getSeqTableModel().getCache(), out);
-        out.append(" WHERE ");
-        printQuotedNameAlways(getSeqTableModel().getId(), out);
-        out.append("=?");
-        return out;
-    }
-
-    /** Print the next Sequence value */
-    public Appendable printSequenceNextValueWithValues(final UjoSequencer sequence, long seq, final Appendable out) throws IOException {
-        out.append("UPDATE ");
-        printSequenceTableName(sequence, out);
-        out.append(" SET ");
-        printQuotedNameAlways(getSeqTableModel().getSequence(), out);
-        out.append("=" + seq);
         out.append(" WHERE ");
         printQuotedNameAlways(getSeqTableModel().getId(), out);
         out.append("=?");
@@ -1086,18 +1038,6 @@ abstract public class SqlDialect {
         return out;
     }
     
-    /** Print SQL LIST ALL SEQUENCE IDs. */
-    public Appendable printSequenceListAllId(final UjoSequencer sequence, final Appendable out) throws IOException {
-        final SeqTableModel tm = getSeqTableModel();
-
-        out.append("SELECT ");
-        printQuotedNameAlways(tm.getId(), out);
-        out.append(" FROM ");
-        printSequenceTableName(sequence, out);
-        
-        return out;
-    }
-
     /** Print SQL DELETE SEQUENCE BY ID. */
     public Appendable printSequenceDeleteById(final UjoSequencer sequence, String id, final Appendable out) throws IOException {
         final SeqTableModel tm = getSeqTableModel();
@@ -1255,48 +1195,6 @@ abstract public class SqlDialect {
         return result.toString();
     }
 
-    /** SQL Name Provider */
-    public String buildConstraintName(final MetaColumn column, final MetaTable table) {
-        final String cn = column.getConstraintName();
-        if (isFilled(cn)) {
-            return cn;
-        } else {
-            return getNameProvider().buildDefaultConstraintName(table, column);
-        }
-    }
-
-    public String buildPrimaryKeyOverColumn(MetaTable table, List<MetaColumn> columns) throws IOException {
-        String overColumn = "";
-        String separator = "";
-        for (MetaColumn col : columns) {
-            String name = MetaColumn.NAME.of(col);
-            overColumn += separator;
-            overColumn += name;
-            separator = ",";
-        }
-        return overColumn;
-    }
-
-    public Appendable printPrimaryKey(MetaColumn column, StringBuilder sql) throws Exception {
-        sql.append("ALTER TABLE ");
-        printFullTableName(column.getTable(), sql);
-        sql.append(" ADD ");
-        printPrimaryKeyConstraint(column.getTable(), Arrays.asList(column), sql);
-        return sql;
-    }
-
-    /** Prints primary key constraint */
-    protected void printPrimaryKeyConstraint(MetaTable table, List<MetaColumn> columns, Appendable out) throws IOException {
-        out.append(" CONSTRAINT ");
-        String pkName = getNameProvider().buildPrimaryKeyName(table, columns);
-        out.append(pkName);
-        out.append(" PRIMARY KEY ");
-        String pkOverColumn = buildPrimaryKeyOverColumn(table, columns);
-        out.append("(");
-        printQuotedName(pkOverColumn, out);
-        out.append(")");
-    }
-    
     /**
      * Returns a name provider
      * @return Current SQL name provider
@@ -1311,5 +1209,13 @@ abstract public class SqlDialect {
             }
         }
         return nameProvider;
+    }
+
+    /** Get Exted dialect */
+    public SqlDialectEx getExtentedDialect() {
+        if (extentedDialect == null) {
+            extentedDialect = new SqlDialectEx(this);
+        }
+        return extentedDialect;
     }
 }

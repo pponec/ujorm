@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2013 Effectiva Solutions company
+ *  Copyright 2013-2013 Effectiva Solutions company
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,18 +34,19 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.UjoSequencer;
-import static org.ujorm.orm.ao.CheckReport.EXCEPTION;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.dialect.MSSqlDialect;
 import org.ujorm.orm.dialect.MySqlDialect;
+import static org.ujorm.orm.ao.CheckReport.EXCEPTION;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
 /**
  * A service method for the MetaDatabase class.
  * The service class can be overriten
- * @author Pavel Ponec
+ * @author Effectiva Solutions company
  * @see MetaParams#META_DB_SERVICE
  */
+@SuppressWarnings("unchecked")
 public class MetaDbServiceEx extends MetaDbService {
 
     public static final String COLUMN_DEF_DEFAULT_VALUE = "COLUMN_DEF";
@@ -288,7 +289,7 @@ public class MetaDbServiceEx extends MetaDbService {
                                 mappedIndex.get(MetaIndex.COLUMNS).add(mappedColumn);
                                 // DROP indexu
                                 sql = new StringBuilder();
-                                getDialect().printDropIndex(mappedIndex, sql);
+                                getDialectEx().printDropIndex(mappedIndex, sql);
                                 msg = "  REPAIR: Dropping index '" + indexName + "' to table '" + mappedTable.getAlias() + "' with SQL:\n" + sql;
                                 LOGGER.log(Level.INFO, msg);
                                 executeUpdate(sql, mappedTable);
@@ -500,7 +501,7 @@ public class MetaDbServiceEx extends MetaDbService {
                     if (repairDB) {
                         StringBuilder sql = new StringBuilder();
                         MetaTable table = mappedColumn.getTable();
-                        getDialect().printPrimaryKey(mappedColumn, sql);
+                        getDialectEx().printPrimaryKey(mappedColumn, sql);
                         msg = "  REPAIR: Adding primary key '" + pkeyName + "' on column '" + columnName + "' in table '" + mappedTable.getAlias() + "' with SQL:\n" + sql;
                         LOGGER.log(Level.INFO, msg);
                         executeUpdate(sql, table);
@@ -526,7 +527,7 @@ public class MetaDbServiceEx extends MetaDbService {
         }
         for (MetaColumn mappedColumn : mappedFKeyColumns) {
             String columnName = mappedColumn.get(MetaColumn.NAME).toUpperCase();
-            String fkeyName = getDialect().buildConstraintName(mappedColumn, mappedTable);
+            String fkeyName = getDialectEx().buildConstraintName(mappedColumn, mappedTable);
             LOGGER.log(Level.INFO, "  Checking foreign key '" + fkeyName + "' on column " + columnName + " ...");
             if (!dbFKeyColumns.containsKey(fkeyName.toUpperCase())) {
                 // !!! MISSING FOREIGN KEY
@@ -585,7 +586,7 @@ public class MetaDbServiceEx extends MetaDbService {
                     messages.add(msg);
                     if (repairDB) {
                         StringBuilder sql = new StringBuilder();
-                        getDialect().printUniqueConstraint(MetaIndex.COLUMNS.of(mappedIndex), sql);
+                        getDialectEx().printUniqueConstraint(MetaIndex.COLUMNS.of(mappedIndex), sql);
                         msg = "  REPAIR: Adding unique index '" + indexName + "' to table '" + mappedTable.getAlias() + "' with SQL:\n" + sql;
                         LOGGER.log(Level.INFO, msg);
                         executeUpdate(sql, mappedTable);
@@ -653,7 +654,7 @@ public class MetaDbServiceEx extends MetaDbService {
                         sql = new StringBuilder();
                         int step = (int) sqMap[UjoSequencer.SEQ_STEP];
                         ujormMaxId = ((tableMaxID / step) + 1) * step;
-                        getDialect().printSequenceNextValueWithValues(mappedTable.getSequencer(), ujormMaxId, sql);
+                        getDialectEx().printSequenceNextValueWithValues(mappedTable.getSequencer(), ujormMaxId, sql);
 
                         msg = "  REPAIR: Updating sequence for table '" + mappedTable.getAlias() + "' with new ujormMaxId = '" + ujormMaxId + "' with SQL:\n" + sql;
                         LOGGER.log(Level.INFO, msg);
@@ -673,7 +674,7 @@ public class MetaDbServiceEx extends MetaDbService {
         LOGGER.log(Level.INFO, "Checking ujorm_pk_support for invalid sequences ...");
 
         StringBuilder sql = new StringBuilder();
-        getDialect().printSequenceListAllId(findFirstSequencer(), sql);
+        getDialectEx().printSequenceListAllId(findFirstSequencer(), sql);
         // get from db
         ResultSet res = conn.prepareStatement(sql.toString()).executeQuery();
         while (res.next()) {
@@ -695,7 +696,6 @@ public class MetaDbServiceEx extends MetaDbService {
                 }
             }
         }
-
         return messages;
     }
 
