@@ -438,9 +438,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
+    * <br/>NOTE 1: there is strongly preferred to sort the keys from direct to the relations (along a count of the relations in the key).
+    * <br/>NOTE 2: an entity relation column cleans related foreign key. For exmample use the set Item[order.id, order.date] instead of Item[order, order.date]
     * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * <br/>WARNING 2: assigning an column from a view is forbidden.
-    * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
+    * @param addPrimaryKey If the column list doesn't contain a primary key of the base Entity then the one will be included.
     * @param addChilds Add all childs of the all <strong>foreign keys</strong>.
     * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
