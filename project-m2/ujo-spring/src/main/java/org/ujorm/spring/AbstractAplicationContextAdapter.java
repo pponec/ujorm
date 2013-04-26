@@ -18,10 +18,10 @@ package org.ujorm.spring;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.ujorm.Ujo;
-import org.ujorm.UjoAction;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.Ujo;
+import org.ujorm.UjoAction;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.UjoPropertyListImpl;
 

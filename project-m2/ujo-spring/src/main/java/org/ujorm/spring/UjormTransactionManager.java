@@ -76,7 +76,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
         try {
             if (LOGGER.isLoggable(Level.FINEST)) {
                LOGGER.log(Level.FINEST
-                       , "Transaction is finished using the " 
+                       , "Transaction is finished on the "
                        + (commit ? "Commit" : "Rollback"));
             }            
             if (commit) {
