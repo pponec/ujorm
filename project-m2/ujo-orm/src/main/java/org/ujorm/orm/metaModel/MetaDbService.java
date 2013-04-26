@@ -28,9 +28,8 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 import org.ujorm.orm.SqlDialect;
+import org.ujorm.orm.SqlDialectEx;
 import org.ujorm.orm.UjoSequencer;
-import org.ujorm.orm.dialect.MSSqlDialect;
-import org.ujorm.orm.dialect.MySqlDialect;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
@@ -61,11 +60,10 @@ public class MetaDbService {
         List<MetaColumn> newColumns = new ArrayList<MetaColumn>();
         List<MetaColumn> foreignColumns = new ArrayList<MetaColumn>();
         List<MetaIndex> indexes = new ArrayList<MetaIndex>();
-        boolean createSequenceTable = false;
         int tableTotalCount = db.getTableTotalCount();
 
         try {
-            createSequenceTable = initialize(conn);
+            final boolean createSequenceTable = initialize(conn);
 
             boolean ddlOnly = false;
             switch (ORM2DLL_POLICY.of(db)) {
@@ -513,6 +511,11 @@ public class MetaDbService {
 
     protected SqlDialect getDialect() {
         return db.getDialect();
+    }
+
+    /** Returns an extended dialect */
+    protected SqlDialectEx getDialectEx() {
+        return db.getDialect().getExtentedDialect();
     }
 
     /** Does the database support a catalog? 
