@@ -60,7 +60,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 public class Session {
 
     /** Common title to print the SQL VALUES */
-    private static final String SQL_VALUES = "SQL VALUES: ";
+    private static final String SQL_VALUES = "-- SQL VALUES: ";
     /** Exception SQL message prefix */
     public static final String SQL_ILLEGAL = "ILLEGAL SQL: ";
     /** Logger */
@@ -536,7 +536,7 @@ public class Session {
             statement.assignValues(decoder);
 
             if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(Level.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute update statement
             bo.writeSession(this);
@@ -652,7 +652,7 @@ public class Session {
             statement.assignValues(procedure);
 
             if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+                LOGGER.log(Level.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
             }
             statement.execute(); // execute call statement
             statement.loadValues(procedure);
@@ -747,7 +747,7 @@ public class Session {
             result.assignValues(query);
 
             if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + SQL_VALUES + result.getAssignedValues());
+                LOGGER.log(Level.INFO, sql + " " + SQL_VALUES + result.getAssignedValues());
             }
             return result;
 
