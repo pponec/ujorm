@@ -17,7 +17,7 @@
 package org;
 import org.ujorm.*;
 
-/** Person BO */
+/** Person BO. */
 public class Person extends org.ujorm.implementation.map.MapUjoExt<Person> {
 
   public static final Key<Person,Integer> ID        = newKey("ID");
