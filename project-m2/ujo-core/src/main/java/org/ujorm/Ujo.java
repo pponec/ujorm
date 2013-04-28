@@ -22,10 +22,10 @@ package org.ujorm;
  * Ujo is a basic inteface of the <strong>Ujorm</strong> together with an interface <code>Key</code> .
  * <p>Basic two methods are <code>writeProperty(..)</code> and <code>readProperty(..)</code> for a manipulation with a value;
  * next method <code>readAuthorization(..)</code> recommends an authorizaton for a required action, selected Property and context;
- * the last method returns all keys of current UJO object.</p>
+ * the last method returns all keys of current UJO object...</p>
  * See a <a href="package-summary.html#UJO">general prologue</a> for more information or see some implementations.
  *
- *<p>The fastest way to use the interface is to extend an abstract parrent:</p>
+ *<p>The fastest way to use the interface is to extend an abstract parrent:.</p>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujorm.core.*;
  * <span class="java-keywords">public class</span> Person <span class="java-keywords">extends</span> AbstractUjo {
