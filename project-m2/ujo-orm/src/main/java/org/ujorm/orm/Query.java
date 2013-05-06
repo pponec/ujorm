@@ -399,7 +399,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     */
     public Query<UJO> addColumn(Key<UJO,?> column) throws IllegalArgumentException {
         clearDecoder();
-        final MetaColumn mc = (MetaColumn) getHandler().findColumnModel(getLastProperty(column));
+        final MetaColumn mc = getHandler().findColumnModel(getLastProperty(column));
         if (mc==null) {
             throw new IllegalArgumentException("Column " + column.toStringFull() + " was not foud in the meta-model");
         }

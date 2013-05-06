@@ -637,7 +637,7 @@ abstract public class SqlDialect {
         Operator operator = crit.getOperator();
         Key property = crit.getLeftNode();
         Object right = crit.getRightNode();
-        MetaColumn column = (MetaColumn) ormHandler.findColumnModel(property);
+        MetaColumn column = ormHandler.findColumnModel(property);
 
         if (right==null ) {
             switch (operator) {
