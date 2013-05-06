@@ -332,19 +332,25 @@ public class OrmHandler implements OrmHandlerProvider {
     }
 
     /** Find a Relation/Column model of the paramemeter property.
+     * The column result is type of {@link MetaColumn}.
      * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
-     * @return Returns a related model or the NULL if no model was found.
+     * @return Returns an object type of {@link MetaColumn} for database column
+     * or a related model type of {@link MetaRelation2Many}
+     * or the NULL if no model was found.
      */
-    final public MetaRelation2Many findColumnModel(Key pathProperty) {
+    final public <T extends MetaRelation2Many> T findColumnModel(Key pathProperty) {
         return findColumnModel(pathProperty, false);
     }
 
     /** Find a Relation/Column model of the paramemeter property.
+     * The column result is type of {@link MetaColumn}.
      * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
      * @param throwException Throw the IllegalArgument exception of no Model was not found
-     * @return Returns a related model throw the IllegalArgumentException exception.
+     * @return Returns an object type of {@link MetaColumn} for database column
+     * or a related model type of {@link MetaRelation2Many}
+     * or the NULL if no model was found.
      */
-    public MetaRelation2Many findColumnModel(Key pathProperty, boolean throwException) throws IllegalArgumentException {
+    public <T extends MetaRelation2Many> T findColumnModel(Key pathProperty, boolean throwException) throws IllegalArgumentException {
         if (pathProperty!=null && !pathProperty.isDirect()) {
             pathProperty = ((CompositeKey)pathProperty).getLastKey();
         }
@@ -353,7 +359,7 @@ public class OrmHandler implements OrmHandlerProvider {
             String propertyName = pathProperty != null ? pathProperty.toStringFull() : String.valueOf(pathProperty);
             throw new IllegalArgumentException("The key " + propertyName + " have got no meta-model.");
         }
-        return result;
+        return (T) result;
     }
 
     /** Find a table model by the dbClass.

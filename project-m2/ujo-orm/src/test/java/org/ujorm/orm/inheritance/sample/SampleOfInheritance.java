@@ -98,7 +98,7 @@ public class SampleOfInheritance {
 
     /** Print some meta-data of the property Order.note. */
     public void printMetadata() {
-        MetaColumn col = (MetaColumn) handler.findColumnModel(Customer.discount);
+        MetaColumn col = handler.findColumnModel(Customer.discount);
 
         String msg = "** METADATA OF COLUMN: " + Customer.discount.toString() + '\n'
             + "DB name: " + col.getFullName()  + '\n'

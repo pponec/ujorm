@@ -1064,7 +1064,7 @@ public class Session {
      * @throws IllegalStateException If a parameter property is not a foreign key.
      */
     public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> property) throws IllegalStateException {
-        final MetaColumn column = (MetaColumn) handler.findColumnModel(property);
+        final MetaColumn column = handler.findColumnModel(property);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
             return new ForeignKey(result);
