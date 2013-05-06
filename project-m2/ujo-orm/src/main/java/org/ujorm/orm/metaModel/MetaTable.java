@@ -398,9 +398,22 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         }
         return metaIdxName;
     }
-    
+
     /** Create a new collection of the table indexes. */
     public Collection<MetaIndex> getIndexCollection() {
+        final boolean extendedStrategy = MetaParams.MORE_PARAMS
+        .add(MoreParams.EXTENTED_INDEX_NAME_STRATEGY)
+        .of(DATABASE.of(this).getOrmHandler().getParameters());
+
+        return extendedStrategy
+             ? getIndexCollectionExtended()
+             : getIndexCollectionOriginal() ;
+    }
+    
+    /** Create a new collection of the table indexes.<br/>
+     * The extended index name strategy.
+     */
+    private Collection<MetaIndex> getIndexCollectionExtended() {
         Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
 
         for (MetaColumn column : COLUMNS.getList(this)) {
@@ -414,6 +427,35 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             }
             if (uniqueIndexExists) {
                 addIndex(column, mapIndex, true);
+            }
+        }
+        return mapIndex.values();
+    }
+
+    /** Create a new collection of the table indexes.<br/>
+     * <br>The original Ujorm solution.
+     */
+    private Collection<MetaIndex> getIndexCollectionOriginal() {
+        Map<String,MetaIndex> mapIndex = new HashMap<String,MetaIndex>();
+
+        for (MetaColumn column : COLUMNS.getList(this)) {
+            String[] idxs = {MetaColumn.INDEX.of(column), MetaColumn.UNIQUE_INDEX.of(column)};
+
+            for (int i=0; i<2; ++i) {
+                if (idxs[i].length()>0) {
+                    String upperIdx = idxs[i].toUpperCase();
+                    MetaIndex mIndex = mapIndex.get(upperIdx);
+                    if (mIndex==null) {
+                        mIndex = new MetaIndex(idxs[i], this);
+                        mapIndex.put(upperIdx, mIndex);
+                    }
+                    if (i==0) {
+                        MetaIndex.UNIQUE.setValue(mIndex, false);
+                    } else if (upperIdx.equalsIgnoreCase(idxs[0])) {
+                        break; // Ignore the same column in the index.
+                    }
+                    MetaIndex.COLUMNS.addItem(mIndex, column);
+                }
             }
         }
         return mapIndex.values();
