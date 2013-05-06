@@ -43,6 +43,9 @@ final public class MoreParams extends AbstractMetaModel {
     /** EFFECTIVA REQUEST: enable to unlock the immutable MetaTable model */
     public static final Key<MoreParams,Boolean> ENABLE_TO_UNLOCK_IMMUTABLE_METAMODEL = f.newKey("enableToUnlockImmutableMeta-model", false);
 
+    /** EFFECTIVA REQUEST: an extended index name strategy where the default value is {@code false} */
+    public static final Key<MoreParams,Boolean> EXTENTED_INDEX_NAME_STRATEGY = f.newKey("extentedIndexNameStrategy", false);
+
     static {
         f.lock(); // Lock property factory
     }
