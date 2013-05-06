@@ -28,6 +28,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.ITypeService;
+import org.ujorm.orm.InitializationBatch;
 import org.ujorm.orm.SqlNameProvider;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.ao.CachePolicy;
@@ -80,6 +81,11 @@ final public class MetaParams extends AbstractMetaModel {
     public static final Key<MetaParams,CommentPolicy> COMMENT_POLICY = f.newKey("commentPolicy", CommentPolicy.ON_ANY_CHANGE);
     /** Framework can save the final configuration file to a new file for an external use. If this parameter is null than the save action is skipped. */
     public static final Key<MetaParams,File> SAVE_CONFIG_TO_FILE = f.newKey("saveConfigToFile");
+    /** An inicializaton batch implementation can be called after building the ORM meta-model.
+     * Default value means: run no batch.
+     * @see InitializationBatch
+     */
+    public static final Key<MetaParams,Class<? extends InitializationBatch>> INITIALIZATION_BATCH = f.newClassKey("initializationBatch", InitializationBatch.class);
     /** The instance of the parameter class {@see ITypeService} is used for conversion, reading and writting to/from the ResultSet.
      * You can specify a sybtype of the class for a commiono special fetures.
      * @see org.ujorm.orm.annot.Column#converter()
