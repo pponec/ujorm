@@ -5,27 +5,27 @@
 ###################################################################
 
 # Required Release (example: RELEASE=1.30):
-RELEASE=$( cd project-m2/ujo-core; $M2/mvn help:evaluate -Dexpression=project.version | grep -v "\[" )
+RELEASE=$( cd project-m2/ujo-core; mvn help:evaluate -Dexpression=project.version | grep -v "\[" )
 echo RELEASE=${RELEASE}
 
 # Deploy URL:
 URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 
 # Create the build:
-echo $M2/mvn clean install javadoc:jar source:jar -DskipTests -Pproduction
+mvn clean install javadoc:jar source:jar -DskipTests -Pproduction
 cd "project-m2"
 
 # For all artefact SIGN and DEPLOY:
-for ARTEFACT in ujo-core ujo-orm 
+for ARTEFACT in ujo-core ujo-orm ujo-spring ujo-wicket
 do
     (
 	echo ARTEFACT=$ARTEFACT
 	cd $ARTEFACT/target
 	cp ../pom.xml $ARTEFACT-$RELEASE.pom
 
-echo	$M2/mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE.jar
-echo	$M2/mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE-sources.jar -Dclassifier=sources
-	$M2/mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE-javadoc.jar -Dclassifier=javadoc
+	mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE.jar
+	mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE-sources.jar -Dclassifier=sources
+	mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE-javadoc.jar -Dclassifier=javadoc
     )
 done
 
