@@ -262,6 +262,20 @@ public class OrmHandler implements OrmHandlerProvider {
         for (MetaDatabase dbModel : getDatabases()) {
             dbModel.create(getDefaultSession());
         }
+
+        // Run an initializaton batch:
+        if (!MetaParams.INITIALIZATION_BATCH.isDefault(params)) {
+            final Class<?> batchClass = MetaParams.INITIALIZATION_BATCH.of(params);
+            try {
+                LOGGER.log(Level.INFO, "The initializaton batch is running: " + batchClass.getName());
+                final InitializationBatch batch = (InitializationBatch) batchClass.newInstance();
+                batch.run(this);
+            } catch (Exception e) {
+                final String msg = "The batch failed: " + batchClass.getSimpleName();
+                LOGGER.log(Level.SEVERE, msg, e);
+                throw new IllegalStateException(msg, e);
+            }
+        }
     }
 
     /** Create an instance from the class */
