@@ -168,6 +168,13 @@ public class SampleORM {
         session.save(item1);
         session.save(item2);
 
+        for (int i = 0; i < 10; i++) {
+            Item item3 = new Item();
+            item3.setOrder(order);
+            item3.setNote("Green window " + i);
+            session.save(item3);
+        }
+
         if (true) {
             tr.commit();
         } else {
