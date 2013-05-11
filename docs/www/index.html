@@ -231,15 +231,13 @@ Note how two Criterions can be joined to a binary tree:
     And how to get meta-data for a 'description' property of the Order?
 <pre name="code" class="java">
   MetaColumn col = ormHandler.findColumnModel(Order.NOTE);
-
   String msg
       = "DB name: " + col.getFullName()  + '\n'
       + "Comment: " + col.getComment()   + '\n'
       + "Length : " + col.getMaxLength() + '\n'
       + "NotNull: " + col.isMandatory()  + '\n'
       + "Primary: " + col.isPrimaryKey() + '\n'
-      + "Dialect: " + col.getDialectName()
-      ;
+      + "Dialect: " + col.getDialectName();
   System.out.println(msg);
 </pre>
 Prints the text report on the console output:
