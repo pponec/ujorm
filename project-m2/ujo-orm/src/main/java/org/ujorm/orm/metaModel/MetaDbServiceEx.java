@@ -620,7 +620,7 @@ public class MetaDbServiceEx extends MetaDbService {
                 LOGGER.log(Level.INFO, "  Table max id = " + tableMaxID);
 
                 // UJORM MAX ID
-                long[] sqMap = mappedTable.getSequencer().getCurrentDBSequence(conn);
+                long[] sqMap = mappedTable.getSequencer().getCurrentDBSequence(conn, null);
                 Long ujormMaxId = sqMap != null ? sqMap[UjoSequencer.SEQ_LIMIT] : null; // returns X as limit (last assigned number), "X+1" will be next assigned ID
                 LOGGER.log(Level.INFO, "  Ujorm max id = " + ujormMaxId);
 

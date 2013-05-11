@@ -73,13 +73,14 @@ public class UjoSequencer {
             try {
                 connection = session.getSeqConnection(db);
                 String tableName = db.getDialect().printFullTableName(getTable(), true, out).toString();
-                out.setLength(0);
 
                 // UPDATE the next sequence:
                 out.setLength(0);
                 sql = db.getDialect().printSequenceNextValue(this, out).toString();
                 
-                if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
+                if (LOGGER.isLoggable(Level.INFO)) { 
+                    LOGGER.log(Level.INFO, sql + "; [" + tableName + ']');
+                }
                 statement = connection.prepareStatement(sql);
                 statement.setString(1, tableName);
                 int i = statement.executeUpdate();
@@ -88,18 +89,19 @@ public class UjoSequencer {
                     // INSERT the new sequence:
                     out.setLength(0);
                     sql = db.getDialect().printSequenceInit(this, out).toString();
-                    if (LOGGER.isLoggable(Level.INFO)) { LOGGER.log(Level.INFO, sql + "; ["+tableName+']'); }
+                    if (LOGGER.isLoggable(Level.INFO)) { 
+                        LOGGER.log(Level.INFO, sql + "; ["+tableName+']');
+                    }
                     statement = connection.prepareStatement(sql);
                     statement.setString(1, tableName);
                     statement.executeUpdate();
                 }
 
                 // SELECT UPDATE:
-                out.setLength(0);
-                long[] sqMap = getCurrentDBSequence(connection);
-                seqLimit = sqMap[SEQ_LIMIT];
-                int step = (int) sqMap[SEQ_STEP];
-                maxValue = sqMap[SEQ_MAX_VALUE];
+                long[] seqMap = getCurrentDBSequence(connection, out);
+                seqLimit = seqMap[SEQ_LIMIT];
+                int step = (int) seqMap[SEQ_STEP];
+                maxValue = seqMap[SEQ_MAX_VALUE];
                 sequence = (seqLimit - step) + 1; // Get the last assigned number + 1;
 
                 if (maxValue!=0L) {
@@ -110,6 +112,7 @@ public class UjoSequencer {
                             throw new IllegalStateException(msg);
                         }
                         statement.close();
+                        out.setLength(0);
                         sql = db.getDialect().printSequenceNextValue(this, out).toString();
                         if (LOGGER.isLoggable(Level.INFO)) {
                             LOGGER.log(Level.INFO, sql + "; [" + tableName + ']');
@@ -188,13 +191,22 @@ public class UjoSequencer {
         maxValue = 0;
     }
 
-    /** Returns current db sequence for actual table.
-     * <br>The method have got a performance optimization. */
-    public long[] getCurrentDBSequence(Connection connection) throws Exception {
+    /** Returns current db sequence for an actual table with a performance optimizations.
+     * @param connection Connection
+     * @param sql Temporarry buffer for a better performance. The value can be {@code null} a not null will be cleaned allways.
+     * @return Returns current db sequence for an actual table with a value order:
+     * <br/>[SEQ_LIMIT, SEQ_STEP, SEQ_MAX_VALUE].
+     * <br/>If no sequence is found then the method returns the value {@code null}.
+     * @throws Exception
+     */
+    public long[] getCurrentDBSequence(final Connection connection, StringBuilder sql) throws Exception {
+        if (sql != null) {
+            sql.setLength(0);
+        } else {
+            sql = new StringBuilder(64);
+        }
         final MetaDatabase db = MetaTable.DATABASE.of(table);
-
-        StringBuilder sql = new StringBuilder(64);
-        String tableName = db.getDialect().printFullTableName(getTable(), true, sql).toString();
+        final String tableName = db.getDialect().printFullTableName(getTable(), true, sql).toString();
 
         sql.setLength(0);
         db.getDialect().printSequenceCurrentValue(this, sql);
