@@ -1,14 +1,18 @@
 The Ujorm release notes
 *******************************
 
-release 1.33 (2013-05-01)
+release 1.34 (2013-05-11)
 + the new UjormTransactionManager implementation is ready to easy using
 + Criterion object is serializable
 + new method Criterion.toStringFull() prints the condition including a domain name by example: Person(id EQ 3)
 + new method to print all information about the Key.toStringFull(true)
 + CSV parser and creator have got extended API
 + the AliasTable class - the support for building SQL scripts (not finished)
++ new ORM parameter MetaParams.INITIALIZATION_BATCH can specify a user initicialization code
 + very much small changes, JavaDoc information and code cleaning is done
+
+release 1.33 (2013-04-28)
++ the release candidate
 
 release 1.32 (2013-01-20)
 + many Ujo Validators are available now in the CORE module for common use
