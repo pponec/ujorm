@@ -230,8 +230,7 @@ Note how two Criterions can be joined to a binary tree:
     where both parameters are passed by a 'question mark' notation for a better security.
     And how to get meta-data for a 'description' property of the Order?
 <pre name="code" class="java">
-  MetaColumn col = (MetaColumn)
-       ormHandler.findColumnModel( Order.NOTE );
+  MetaColumn col = ormHandler.findColumnModel(Order.NOTE);
 
   String msg
       = "DB name: " + col.getFullName()  + '\n'
