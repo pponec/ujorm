@@ -50,7 +50,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.6.1</version>
+                <version>2.9</version>
                 <configuration>
                     <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
                     <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
