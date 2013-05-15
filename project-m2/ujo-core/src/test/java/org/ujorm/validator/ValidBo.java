@@ -18,6 +18,7 @@ import static org.ujorm.validator.impl.ValidatorFactory.*;
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
+@SuppressWarnings("unchecked")
 public class ValidBo extends AbstractUjo {
 
     /** Factory */

@@ -23,14 +23,14 @@ public class ValidMandatory extends AbstractUjo {
     /** Factory */
     private static final KeyFactory<ValidMandatory> f = newFactory(ValidMandatory.class);
     /** Documentation: */
-    public static final Key<ValidMandatory, Long> PID = f.newKey(notNull());
+    public static final Key<ValidMandatory, Long> PID = f.newKey(notNull(Long.class));
     public static final Key<ValidMandatory, Integer> CODE = f.newKey(between(MANDATORY, 0, 10));
     public static final Key<ValidMandatory, String> NAME = f.newKey(regexp(MANDATORY, "T.*T"));
     public static final Key<ValidMandatory, Double> CASH = f.newKey(min(MANDATORY, 0.0));
     /** Test Properties: */
-    public static final Key<ValidMandatory, String> NOTNULL = f.newKey(notNull());
-    public static final Key<ValidMandatory, String> NOT_EMPTY = f.newKey(notEmpty());
-    public static final Key<ValidMandatory, String> NOT_BLANK = f.newKey(notBlank());
+    public static final Key<ValidMandatory, String> NOTNULL = f.newKey(notNull(String.class));
+    public static final Key<ValidMandatory, String> NOT_EMPTY = f.newKey(notEmpty(String.class));
+    public static final Key<ValidMandatory, String> NOT_BLANK = f.newKey(notBlank(String.class));
     public static final Key<ValidMandatory, Double> MAX_10 = f.newKey(max(MANDATORY, 10.0));
     public static final Key<ValidMandatory, Double> MIN_10 = f.newKey(min(MANDATORY, 10.0));
     public static final Key<ValidMandatory, Integer> FORBIDDEN_1_3 = f.newKey(forbidden(MANDATORY, 1, 3));
@@ -44,10 +44,10 @@ public class ValidMandatory extends AbstractUjo {
     public static final Key<ValidMandatory, Date> PAST = f.newKey(past(MANDATORY));
     public static final Key<ValidMandatory, String> REG_EXP = f.newKey(regexp(MANDATORY, "T.*T"));
     public static final Key<ValidMandatory, String> MAIL = f.newKey(email(MANDATORY));
-    public static final Key<ValidMandatory, String> READ_ONLY = f.newKey(readOnly());
-    public static final Key<ValidMandatory, String> ALL_ALLOWED = f.newKey(everything());
-    public static final Key<ValidMandatory, Integer> COMPOSITE_AND = f.newKey(min(0).and(max(10)).and(notNull()));
-    public static final Key<ValidMandatory, Integer> COMPOSITE_OR = f.newKey(max(0).or(min(10)).and(notNull()));
+    public static final Key<ValidMandatory, String> READ_ONLY = f.newKey(readOnly(String.class));
+    public static final Key<ValidMandatory, String> ALL_ALLOWED = f.newKey(everything(String.class));
+    public static final Key<ValidMandatory, Integer> COMPOSITE_AND = f.newKey(min(0).and(max(10)).and(notNull(Integer.class)));
+    public static final Key<ValidMandatory, Integer> COMPOSITE_OR = f.newKey(max(0).or(min(10)).and(notNull(Integer.class)));
     public static final Key<ValidMandatory, Number> NUMBER_TYPE = f.newKey(type(MANDATORY));
     public static final Key<ValidMandatory, Number> NUMBER_TYPE_EXPL = f.newKey(type(MANDATORY, Number.class));
 
