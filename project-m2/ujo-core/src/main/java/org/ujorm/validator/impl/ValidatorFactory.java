@@ -28,6 +28,7 @@ import static org.ujorm.validator.impl.NotNullValidator.*;
  * @author Pavel Ponec
  * @see Validator
  */
+@SuppressWarnings("unchecked")
 public class ValidatorFactory {
 
     /** A modifier of the validator */
@@ -50,9 +51,10 @@ public class ValidatorFactory {
     }
 
     /** Not null
+     * @param valueType Argument to clean a type checking only
      * @see NotNullValidator
      */
-    public static <T extends Object> Validator<T> notNull(Class<T> type) {
+    public static <T> Validator<T> notNull(Class<T> valueType) {
         return NOT_NULL;
     }
 
@@ -63,7 +65,15 @@ public class ValidatorFactory {
         return NOT_NULL;
     }
 
-    /** An alias fo the {@link #notNull() }
+    /** An alias for the {@link #notNull()} method.
+     * @param valueType Argument to clean a type checking only
+     * @see NotNullValidator
+     */
+    public static <T> Validator<T> mandatory(Class<T> valueType) {
+        return NOT_NULL;
+    }
+
+    /** An alias for the {@link #notNull()} method.
      * @see NotNullValidator
      */
     public static Validator mandatory() {
@@ -78,6 +88,14 @@ public class ValidatorFactory {
     }
 
     /** Input value is valid if the trimmed String length is great than zero. Method <strong>is not</strong> type save!
+     * @param valueType Argument to clean a type checking only
+     * @see NotEmptyValidator
+     */
+    public static <T extends CharSequence> Validator<T> notBlank(Class<T> valueType) {
+        return (Validator<T>) NotEmptyValidator.NOT_BLANK;
+    }
+
+    /** Input value is valid if the trimmed String length is great than zero. Method <strong>is not</strong> type save!
      * @see NotEmptyValidator
      */
     public static Validator notBlank() {
@@ -85,18 +103,18 @@ public class ValidatorFactory {
     }
 
     /** Not null and not empty. The method is type safe!
-     * @param type Argument type can be the CharSequence or the Collection
+     * @param typeValue Argument to clean a type checking can be type of CharSequence or the Collection only.
      * @see NotEmptyValidator
      * @see NotEmptyCollectionValidator
      */
-    public static <T> Validator<T> notEmpty(Class<T> type) {
-        if (CharSequence.class.isAssignableFrom(type)) {
+    public static <T> Validator<T> notEmpty(Class<T> typeValue) {
+        if (CharSequence.class.isAssignableFrom(typeValue)) {
             return (Validator<T>) NotEmptyValidator.NOT_EMPTY;
         }
-        if (Collection.class.isAssignableFrom(type)) {
+        if (Collection.class.isAssignableFrom(typeValue)) {
             return new NotEmptyCollectionValidator();
         } else {
-            throw new IllegalArgumentException("The notEmpty() method does not support argument type: " + type.getName());
+            throw new IllegalArgumentException("The notEmpty() method does not support argument type: " + typeValue.getName());
         }
     }
 
@@ -295,7 +313,9 @@ public class ValidatorFactory {
      */
     public static Validator<String> length(CheckType type, int min, int max) {
         final Validator<String> result = length(min, max);
-        return type == MANDATORY ? NOT_NULL.and(result) : result;
+        return type == MANDATORY 
+             ? NOT_NULL.and(result)
+             : result;
     }
 
     /** Check the maximal length of the String
@@ -311,9 +331,15 @@ public class ValidatorFactory {
 
     /** The validator allows to read only default values. No value is allowed including the {@code null} value. */
     public static Validator readOnly() {
-        return new ReadOnlyValidator<String>(true);
+        return new ReadOnlyValidator(true);
     }
 
+    /** The validator allows to read only default values. No value is allowed including the {@code null} value.
+     * @param valueType Argument to clean a type checking only
+     */
+    public static <T> Validator<T> readOnly(Class<T> valueType) {
+        return new ReadOnlyValidator<T>(true);
+    }
 
     /** It is a logical empty validator. Each value is allowed.
      * @deprecated Use the {@link #everything()} method rather */
@@ -323,8 +349,13 @@ public class ValidatorFactory {
     }
     
     /** It is a logical empty validator. Each value is allowed. */
+    public static <T> Validator<T> everything(Class<T> valueTYpe) {
+        return new ReadOnlyValidator(false);
+    }
+
+    /** It is a logical empty validator. Each value is allowed. */
     public static Validator everything() {
-        return new ReadOnlyValidator<String>(false);
+        return new ReadOnlyValidator(false);
     }
 
     /** Check a content of another related Ujo object using the Criterion.
