@@ -61,8 +61,26 @@ public class T001a_Test extends MyTestCase {
         assertEquals(person, person2);
     }
     
-    
-    
+    /**
+     * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
+     */
+    public void testEncodedXML() throws Exception {
+        System.out.println("testPrintXML: " + suite().toString());
+        CharArrayWriter writer = new CharArrayWriter(256);
+        String ENCODE = "windows-1250";
+        String personName = "ÁĚŠČŘŽÝÁÍÉ-áěščřžýáíé";
+        //
+        UPerson person = createPerson();
+        UPerson.NAME.setValue(person, personName);
+        UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
+        String xmlContent = writer.toString().replace("UTF-8", ENCODE);
+        ByteArrayInputStream is = new ByteArrayInputStream(xmlContent.getBytes(ENCODE));
+        UPerson person2 = UjoManagerXML.getInstance().parseXML(is, UPerson.class, false);
+
+        assertEquals(personName, UPerson.NAME.of(person2));
+        assertEquals(person, person2);
+    }
+        
     protected UPerson createPerson() {
         UPerson result = new UPerson();
         UPerson.NAME.setValue(result, "Pavel");
