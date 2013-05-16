@@ -22,10 +22,10 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class AtrPerson extends MapUjo  {
     
-    public static final Key<AtrPerson, String>  NAME = newProperty("Name", String.class );
+    public static final Key<AtrPerson, String>  NAME = newKey("Name");
     @XmlElementBody
-    public static final Key<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final Key<AtrPerson, Date>   BIRTH = newProperty("Birth", Date.class  );
-    public static final ListKey<AtrPerson, AtrPerson> CHILDS = newListProperty("Child", AtrPerson.class);
+    public static final Key<AtrPerson, Boolean> MALE = newKey("Male");
+    public static final Key<AtrPerson, Date>   BIRTH = newKey("Birth");
+    public static final ListKey<AtrPerson, AtrPerson> CHILDS = newListKey("Child");
      
 }
