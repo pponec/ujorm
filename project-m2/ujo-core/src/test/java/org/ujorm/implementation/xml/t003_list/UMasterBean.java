@@ -10,16 +10,16 @@
 package org.ujorm.implementation.xml.t003_list;
 
 import org.ujorm.ListKey;
-import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.implementation.quick.QuickUjo;
 
 /**
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class UMasterBean extends MapUjo  {
+public class UMasterBean extends QuickUjo  {
     
-    public static final ListKey<UMasterBean, UItemBean> P0_L1ST  = newListProperty("itemA", UItemBean.class );
+    public static final ListKey<UMasterBean, UItemBean> P0_L1ST  = newListKey("itemA");
     //public static final ListKey<UMasterBean, UItemBean> P1_L1ST  = newPropertyList("itemB", UItemBean.class );
-    
+
     
 }

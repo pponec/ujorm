@@ -10,7 +10,6 @@ package org.ujorm.implementation.xml.t008_array;
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.util.Calendar;
-import java.util.Date;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoManagerXML;

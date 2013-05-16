@@ -12,18 +12,18 @@ package org.ujorm.implementation.xml.t007_body;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.annot.XmlElementBody;
-import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.implementation.quick.QuickUjo;
 
 
 /**
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class AtrPerson2 extends MapUjo  {
+public class AtrPerson2 extends QuickUjo  {
     
     @XmlElementBody
-    public static final Key<AtrPerson2, String>  NAME = newProperty("Name", String.class );
-    public static final Key<AtrPerson2, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final Key<AtrPerson2, Date>   BIRTH = newProperty("Birth", Date.class  );
-     
+    public static final Key<AtrPerson2, String>  NAME = newKey("Name");
+    public static final Key<AtrPerson2, Boolean> MALE = newKey("Male");
+    public static final Key<AtrPerson2, Date>   BIRTH = newKey("Birth");
+
 }

@@ -11,18 +11,18 @@ package org.ujorm.implementation.xml.test2;
 
 import org.ujorm.ListKey;
 import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.implementation.quick.QuickUjo;
 
 
 /**
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class TXmlUjoRoot_2 extends MapUjo  {
+public class TXmlUjoRoot_2 extends QuickUjo  {
 
-    //public static final UjoPropertyImpl<TXmlUjoRoot_2,Object[]>   PRO_P4 = newProperty("ObjArray", Object[].class);
+    //public static final UjoPropertyImpl<TXmlUjoRoot_2,Object[]>   PRO_P4 = newKey("ObjArray");
     
-    //public static final UjoPropertyList<TXmlUjoRoot_2, Integer> PRO_P5 = newListProperty("List", Integer.class);
-    public static final ListKey<TXmlUjoRoot_2, Integer> PRO_P5 = newListProperty("List", Integer.class);
+    //public static final UjoPropertyList<TXmlUjoRoot_2, Integer> PRO_P5 = newListKey("List");
+    public static final ListKey<TXmlUjoRoot_2, Integer> PRO_P5 = newListKey("List");
 
-    
 }

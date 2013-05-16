@@ -10,7 +10,6 @@ package org.ujorm.implementation.xml;
 import java.io.CharArrayWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import junit.framework.*;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.implementation.map.MapUjo;

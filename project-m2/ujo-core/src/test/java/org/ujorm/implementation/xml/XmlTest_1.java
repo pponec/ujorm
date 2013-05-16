@@ -8,14 +8,11 @@
 package org.ujorm.implementation.xml;
 
 import java.io.CharArrayWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import junit.framework.*;
-import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.implementation.array.ArrayUjo;
 import org.ujorm.implementation.map.MapUjo;
 
 /**

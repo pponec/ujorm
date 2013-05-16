@@ -11,24 +11,30 @@ package org.ujorm.implementation.map;
 
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 
 /**
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
 public class MapUjoImpl extends MapUjo {
+
+    private static final KeyFactory<MapUjoImpl> f = KeyFactory.Builder.get(MapUjoImpl.class);
     
     /** (Long) */
-    public static final Key<MapUjoImpl,Long>    PRO_P0 = newProperty("P0", Long.class);
+    public static final Key<MapUjoImpl,Long>    PRO_P0 = f.newKey("P0");
     /** (Integer) */
-    public static final Key<MapUjoImpl,Integer> PRO_P1 = newProperty("P1", Integer.class);
+    public static final Key<MapUjoImpl,Integer> PRO_P1 = f.newKey("P1");
     /** (String) */
-    public static final Key<MapUjoImpl,String>  PRO_P2 = newProperty("P2", String.class);
+    public static final Key<MapUjoImpl,String>  PRO_P2 = f.newKey("P2");
     /** (Date) */
-    public static final Key<MapUjoImpl,Date>    PRO_P3 = newProperty("P3", Date.class);
+    public static final Key<MapUjoImpl,Date>    PRO_P3 = f.newKey("P3");
     /** (Float) */
-    public static final Key<MapUjoImpl,Float>   PRO_P4 = newProperty("P4", Float.class);
-    
+    public static final Key<MapUjoImpl,Float>   PRO_P4 = f.newKey("P4");
+
+    static {
+        f.lock();
+    }
     
     /** Creates a new instance of UnifiedDataObjectImlp */
     public MapUjoImpl() {

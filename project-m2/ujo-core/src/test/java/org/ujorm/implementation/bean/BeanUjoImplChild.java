@@ -18,15 +18,15 @@ import org.ujorm.core.UjoManager;
 public class BeanUjoImplChild extends BeanUjoImpl {
     
     /** (Long) */
-    public static final BeanProperty<BeanUjoImplChild,Long>    PRO_P5 = newProperty("P5", Long.class);
+    public static final BeanProperty<BeanUjoImplChild,Long>    PRO_P5 = newKey("P5");
     /** (Integer) */
-    public static final BeanProperty<BeanUjoImplChild,Integer> PRO_P6 = newProperty("P6", Integer.class);
+    public static final BeanProperty<BeanUjoImplChild,Integer> PRO_P6 = newKey("P6");
     /** (String) */
-    public static final BeanProperty<BeanUjoImplChild,String>  PRO_P7 = newProperty("P7", String.class);
+    public static final BeanProperty<BeanUjoImplChild,String>  PRO_P7 = newKey("P7");
     /** (Date) */
-    public static final BeanProperty<BeanUjoImplChild,Date>    PRO_P8 = newProperty("P8", Date.class);
+    public static final BeanProperty<BeanUjoImplChild,Date>    PRO_P8 = newKey("P8");
     /** (Float) */
-    public static final BeanProperty<BeanUjoImplChild,Float>   PRO_P9 = newProperty("P9", Float.class);    
+    public static final BeanProperty<BeanUjoImplChild,Float>   PRO_P9 = newKey("P9");
     /** Verify unique constants */
     static{init(BeanUjoImplChild.class,true);}
     
