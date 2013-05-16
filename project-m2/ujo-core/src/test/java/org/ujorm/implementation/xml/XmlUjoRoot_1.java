@@ -20,11 +20,15 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class XmlUjoRoot_1 extends MapUjo  {
     
-    public static final Key<XmlUjoRoot_1,Long>       PRO_P0 = newProperty("P0", Long.class);
-    public static final Key<XmlUjoRoot_1,XmlUjoItem> PRO_P1 = newProperty("P1", XmlUjoItem.class);
-    public static final Key<XmlUjoRoot_1,String>     PRO_P2 = newProperty("P2", String.class);
-    public static final Key<XmlUjoRoot_1, Ujo>       PRO_P3 = newProperty("P3", Ujo.class);
-    public static final Key<XmlUjoRoot_1,Object[]>   PRO_P4 = newProperty("ARRAY_OBJ", Object[].class);
-    public static final Key<XmlUjoRoot_1,ArrayList>  PRO_P5 = newProperty("LIST", ArrayList.class);
-    
+    public static final Key<XmlUjoRoot_1,Long>       PRO_P0 = newKey("P0");
+    public static final Key<XmlUjoRoot_1,XmlUjoItem> PRO_P1 = newKey("P1");
+    public static final Key<XmlUjoRoot_1,String>     PRO_P2 = newKey("P2");
+    public static final Key<XmlUjoRoot_1, Ujo>       PRO_P3 = newKey("P3");
+    public static final Key<XmlUjoRoot_1,Object[]>   PRO_P4 = newKey("ARRAY_OBJ");
+    public static final Key<XmlUjoRoot_1,ArrayList>  PRO_P5 = newKey("LIST");
+
+    static {
+        init(XmlUjoRoot_1.class);
+    }
+
 }

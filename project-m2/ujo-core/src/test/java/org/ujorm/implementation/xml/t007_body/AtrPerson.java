@@ -13,19 +13,19 @@ import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.annot.XmlElementBody;
-import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.implementation.quick.QuickUjo;
 
 
 /**
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class AtrPerson extends MapUjo  {
+public class AtrPerson extends QuickUjo  {
     
     public static final Key<AtrPerson, String>  NAME = newKey("Name");
     @XmlElementBody
     public static final Key<AtrPerson, Boolean> MALE = newKey("Male");
     public static final Key<AtrPerson, Date>   BIRTH = newKey("Birth");
     public static final ListKey<AtrPerson, AtrPerson> CHILDS = newListKey("Child");
-     
+
 }

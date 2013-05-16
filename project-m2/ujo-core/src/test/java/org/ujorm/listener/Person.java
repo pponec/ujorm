@@ -25,8 +25,8 @@ import org.ujorm.implementation.registrar.*;
  */
 public class Person extends RegistrarUjoExt<Person> {
     
-    public static final Key<Person,Integer> ID  = newProperty("id", 0);
-    public static final Key<Person,String> NAME = newProperty("name", "");
-    public static final Key<Person,Double> CASH = newProperty("cash", 0.0);
+    public static final Key<Person,Integer> ID  = newKey("id", 0);
+    public static final Key<Person,String> NAME = newKey("name", "");
+    public static final Key<Person,Double> CASH = newKey("cash", 0.0);
 
 }

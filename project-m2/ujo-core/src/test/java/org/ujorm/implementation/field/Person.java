@@ -29,8 +29,7 @@ public class Person extends FieldUjo {
     private Long cash;
     private List<Person> childs;
     
-    public static FieldProperty<Person,Long> CASH 
-        = newProperty("CASH", Long.class
+    public static FieldProperty<Person,Long> CASH = newKey("CASH"
         , new ValueAgent<Person,Long>() {
         public void writeValue(
             Person ujo, Long value) { 
@@ -42,7 +41,7 @@ public class Person extends FieldUjo {
     });    
     
     public static FieldPropertyList<Person,Person> CHILDS 
-        = newListProperty("CHILDS", Person.class
+        = newListKey("CHILDS"
         , new ValueAgent<Person,List<Person>>() {
         public void writeValue(Person ujo, List<Person> value) {
             ujo.childs = value; 

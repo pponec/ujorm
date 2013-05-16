@@ -17,15 +17,15 @@ import java.util.Date;
 public class BeanUjoImpl extends BeanUjo {
     
     /** (Long) */
-    public static final BeanProperty<BeanUjoImpl,Long>    PRO_P0 = newProperty("P0", Long.class);
+    public static final BeanProperty<BeanUjoImpl,Long>    PRO_P0 = newKey("P0");
     /** (Integer) */
-    public static final BeanProperty<BeanUjoImpl,Integer> PRO_P1 = newProperty("P1", Integer.class);
+    public static final BeanProperty<BeanUjoImpl,Integer> PRO_P1 = newKey("P1");
     /** (String) */
-    public static final BeanProperty<BeanUjoImpl,String>  PRO_P2 = newProperty("P2", String.class);
+    public static final BeanProperty<BeanUjoImpl,String>  PRO_P2 = newKey("P2");
     /** (Date) */
-    public static final BeanProperty<BeanUjoImpl,Date>    PRO_P3 = newProperty("P3", Date.class);
+    public static final BeanProperty<BeanUjoImpl,Date>    PRO_P3 = newKey("P3");
     /** (Float) */
-    public static final BeanProperty<BeanUjoImpl,Float>   PRO_P4 = newProperty("P4", Float.class);    
+    public static final BeanProperty<BeanUjoImpl,Float>   PRO_P4 = newKey("P4");
     /** Verify unique constants */
     static{init(BeanUjoImpl.class,true);}
     

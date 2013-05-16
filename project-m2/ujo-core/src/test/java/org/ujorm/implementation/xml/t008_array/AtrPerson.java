@@ -11,18 +11,18 @@ package org.ujorm.implementation.xml.t008_array;
 
 import org.ujorm.Key;
 import org.ujorm.ListKey;
-import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.implementation.quick.QuickUjo;
 
 
 /**
  * An UnifiedDataObject Imlpementation
  * @author Pavel Ponec
  */
-public class AtrPerson extends MapUjo  {
+public class AtrPerson extends QuickUjo  {
     
-    public static final Key<AtrPerson, String>  NAME = newProperty("Name", String.class );
-    public static final Key<AtrPerson, Boolean> MALE = newProperty("Male", Boolean.class);
-    public static final Key<AtrPerson, java.sql.Date>   BIRTH = newProperty("Birth", java.sql.Date.class  );
-    public static final ListKey<AtrPerson, Integer> NUMBERS = newListProperty("Child", Integer.class);
-     
+    public static final Key<AtrPerson, String>  NAME = newKey("Name");
+    public static final Key<AtrPerson, Boolean> MALE = newKey("Male");
+    public static final Key<AtrPerson, java.sql.Date>   BIRTH = newKey("Birth");
+    public static final ListKey<AtrPerson, Integer> NUMBERS = newListKey("Child");
+
 }

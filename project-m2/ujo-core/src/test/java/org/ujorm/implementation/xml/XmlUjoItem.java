@@ -19,10 +19,14 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class XmlUjoItem extends MapUjo  {
     
-    public static final Key<XmlUjoItem,Long>    PRO_P0 = newProperty("P0", Long.class);
-    public static final Key<XmlUjoItem,Integer> PRO_P1 = newProperty("P1", Integer.class);
-    public static final Key<XmlUjoItem,String>  PRO_P2 = newProperty("P2", String.class);
-    public static final Key<XmlUjoItem,Date>    PRO_P3 = newProperty("P3", Date.class);
-    public static final Key<XmlUjoItem,Float>   PRO_P4 = newProperty("P4", Float.class);
+    public static final Key<XmlUjoItem,Long>    PRO_P0 = newKey("P0");
+    public static final Key<XmlUjoItem,Integer> PRO_P1 = newKey("P1");
+    public static final Key<XmlUjoItem,String>  PRO_P2 = newKey("P2");
+    public static final Key<XmlUjoItem,Date>    PRO_P3 = newKey("P3");
+    public static final Key<XmlUjoItem,Float>   PRO_P4 = newKey("P4");
+
+    static {
+        init(XmlUjoItem.class);
+    }
     
 }
