@@ -21,9 +21,9 @@ import org.ujorm.implementation.map.MapUjo;
  */
 public class AtrPerson3 extends MapUjo  {
     
-    public static final Key<AtrPerson3, String>  NAME = newProperty("Name", String.class );
-    public static final Key<AtrPerson3, Boolean> MALE = newProperty("Male", Boolean.class);
+    public static final Key<AtrPerson3, String>  NAME = newKey("Name");
+    public static final Key<AtrPerson3, Boolean> MALE = newKey("Male");
     @XmlElementBody
-    public static final Key<AtrPerson3, Date>   BIRTH = newProperty("Birth", Date.class  );
+    public static final Key<AtrPerson3, Date>   BIRTH = newKey("Birth");
      
 }
