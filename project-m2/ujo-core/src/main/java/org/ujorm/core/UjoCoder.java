@@ -230,7 +230,7 @@ public class UjoCoder {
                 }
             }
             if (Boolean.class==type) {
-                final Boolean result = Boolean.valueOf(aValue);
+                final Boolean result = Boolean.valueOf(aValue) || "1".equals(aValue);
                 return result;
             }
             if (Character.class==type) {
