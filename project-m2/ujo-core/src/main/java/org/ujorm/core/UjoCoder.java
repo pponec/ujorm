@@ -30,9 +30,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
+import org.ujorm.Ujo;
+import org.ujorm.extensions.StringWrapper;
 
 /**
  * A tool for encoding an object to a text and a text back to the object.
@@ -107,7 +108,9 @@ public class UjoCoder {
             result = ((File) value).getPath();
         } else if (value instanceof Dimension) {
             result = ((Dimension) value).width + "," + ((Dimension) value).height;
-        } else if (value instanceof Enum) {
+        } else if (value instanceof StringWrapper) {            
+            result = ((StringWrapper) value).exportToString();
+        } else if (value instanceof Enum) {            
             result = ((Enum) value).name();
         } else if (value instanceof Rectangle) {
             Rectangle r = (Rectangle) value;
@@ -255,8 +258,19 @@ public class UjoCoder {
                 return result;
             }
             if (type.isEnum()) {
-                final Enum result = Enum.valueOf(type, aValue);
-                return result;
+                if (StringWrapper.class.isAssignableFrom(type)) {
+                    for (Object en : type.getEnumConstants()) {
+                        if (aValue.equals(((StringWrapper)en).exportToString())) {
+                            return en;
+                        }
+                    }
+                    final String msg = String.format
+                            ( "I have found no item for value '%s' in the %s"
+                            , aValue, type);
+                    throw new IllegalArgumentException(msg);
+                } else {
+                    return Enum.valueOf(type, aValue);
+                }
             }
             if (Dimension.class.isAssignableFrom(type)) {
                 StringTokenizer st = new StringTokenizer(aValue, ",");
