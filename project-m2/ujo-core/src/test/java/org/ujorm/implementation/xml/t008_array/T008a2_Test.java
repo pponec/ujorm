@@ -18,21 +18,21 @@ import org.ujorm.core.UjoManagerXML;
  *
  * @author Pavel Ponec
  */
-public class T008a1_Test extends MyTestCase {
+public class T008a2_Test extends MyTestCase {
     
-    public T008a1_Test(String testName) {
+    public T008a2_Test(String testName) {
         super(testName);
     }
     
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(T008a1_Test.class);
+        TestSuite suite = new TestSuite(T008a2_Test.class);
         return suite;
     }
     
     /**
      * Test of printProperties method, of class org.apache.person.implementation.imlXML.XmlUjo.
      */
-    public void testPrintXML() throws Exception {
+    public void x_testPrintXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
         CharArrayWriter writer = new CharArrayWriter(256);
         try {
@@ -48,14 +48,23 @@ public class T008a1_Test extends MyTestCase {
     
     /**
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
+     * TODO.pop: to implement the nextfeature:
      */
-    public void testRestoreXML() throws Exception {
+    public void X_testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
         CharArrayWriter writer = new CharArrayWriter(256);
         //
         AtrPerson person = createPerson();
         UjoManagerXML.getInstance().saveXML(writer, person, null, "TEST");
-        ByteArrayInputStream is = new ByteArrayInputStream(writer.toString().getBytes("UTF-8"));        
+        
+        /** Replace numbers to elements */
+        String body = writer.toString()
+                .replace("<Child>10,20,30,40</Child>"
+                , "<Child>10</Child>"
+                + "<Child>20</Child>"
+                + "<Child>30</Child>"
+                + "<Child>40</Child>");
+        ByteArrayInputStream is = new ByteArrayInputStream(body.toString().getBytes("UTF-8"));        
         AtrPerson person2 = UjoManagerXML.getInstance().parseXML(is, AtrPerson.class, false);
         
         int size1 = AtrPerson.NUMBERS.of(person).size();
@@ -84,6 +93,5 @@ public class T008a1_Test extends MyTestCase {
     
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
-    }
-    
+    }    
 }
