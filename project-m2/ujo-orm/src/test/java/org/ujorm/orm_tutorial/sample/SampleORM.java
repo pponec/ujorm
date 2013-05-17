@@ -107,6 +107,9 @@ public class SampleORM {
 
     /** The session contains a cache and database connections. */
     private Session session;
+    
+    /** Temporary field */
+    private Long anyOrderId;
 
     /** Before the first: create a meta-model.
      * Database tables will be CREATED in the first time.
@@ -180,6 +183,8 @@ public class SampleORM {
         } else {
             tr.rollback();
         }
+        // Save the identifier:
+        anyOrderId = order.getId();
     }
 
     /** Batch insert by a multi row insert statement. */
@@ -373,7 +378,7 @@ public class SampleORM {
     /** Select one Order by ID and print its Items by a criterion */
     public void useSelectItems_2() {
 
-        Order orderValue = session.load(Order.class, 1L);
+        Order orderValue = session.load(Order.class, anyOrderId);
         Query<Item> items = session.createQuery(Item.ORDER.whereEq(orderValue));
 
         for (Item item : items) {
@@ -386,7 +391,7 @@ public class SampleORM {
      * by a 'one to many' relation property
      */
     public void useSelectItems_3() {
-        Order order = session.load(Order.class, 1L);
+        Order order = session.load(Order.class, anyOrderId);
 
         for (Item item : order.getItems()) {
             Order order2 = item.getOrder();
@@ -507,7 +512,7 @@ public class SampleORM {
 
     /** How to reload the object property values from the database ? */
     public void useReloading() {
-        Order order = new Order(1L);
+        Order order = new Order(anyOrderId);
 
         boolean result = session.reload(order);
         System.out.println("Reloading result: " + result + " for Order: " + order);
@@ -640,7 +645,7 @@ public class SampleORM {
 
     /** Using the database UPDATE */
     public void useUpdate() {
-        Order order = session.load(Order.class, 1L);
+        Order order = session.load(Order.class, anyOrderId);
         order.setCreated(new Date());
 
         session.update(order);
@@ -657,7 +662,7 @@ public class SampleORM {
         // Set a value(s) to the change:
         order.setCreated(new Date());
 
-        session.update(order, Order.ID.whereGe(1L));
+        session.update(order, Order.ID.whereGe(anyOrderId));
         session.commit();
     }
 
@@ -679,7 +684,7 @@ public class SampleORM {
 
     /** Using the pesimistic database UPDATE by the method: setLockRequest(). */
     public void usePesimisticUpdate() {
-        Order order = session.createQuery(Order.ID.whereEq(1L))
+        Order order = session.createQuery(Order.ID.whereEq(anyOrderId))
             .setLockRequest()
             .uniqueResult()
             ;
@@ -701,7 +706,7 @@ public class SampleORM {
      *  The next example deletes all Items where Item.ID = 1
      */
     public void useBatchDelete() {
-        int count = session.delete(Item.ID.whereEq(1L));
+        int count = session.delete(Item.ID.whereEq(anyOrderId));
         session.commit();
         System.out.println("There are DELETED rows: " + count);
     }
