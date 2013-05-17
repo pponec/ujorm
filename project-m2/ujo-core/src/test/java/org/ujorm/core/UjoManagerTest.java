@@ -321,6 +321,50 @@ public class UjoManagerTest extends MyTestCase {
     }
     
     /**
+     * Sample EnumWrapper test
+     */
+    public void testEnumWrapper() {
+        Class type = SampleEnumWrapper.class;
+        UjoManager manager = UjoManager.getInstance();
+        SampleEnumWrapper expected;
+        SampleEnumWrapper result  ;
+
+        expected = SampleEnumWrapper.ONE;
+        result   = (SampleEnumWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("1", expected, result);
+
+        expected = SampleEnumWrapper.TWO;
+        result   = (SampleEnumWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("2", expected, result);
+        
+        expected = null;
+        result   = (SampleEnumWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("3", expected, result);
+    }
+    
+    /**
+     * Sample NumberWrapper test
+     */
+    public void testNumberWrapper() {
+        Class type = SampleNumberWrapper.class;
+        UjoManager manager = UjoManager.getInstance();
+        SampleNumberWrapper expected;
+        SampleNumberWrapper result  ;
+
+        expected = new SampleNumberWrapper("1.01");
+        result   = (SampleNumberWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("1", expected.getNumber(), result.getNumber());
+
+        expected = new SampleNumberWrapper("2.23");
+        result   = (SampleNumberWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("2", expected.getNumber(), result.getNumber());
+        
+        expected = null;
+        result   = (SampleNumberWrapper) manager.decodeValue(type, manager.encodeValue(expected, false));
+        assertEquals("3", expected, result);
+    }
+    
+    /**
      * CLAS test
      */
     public void testClass() {
