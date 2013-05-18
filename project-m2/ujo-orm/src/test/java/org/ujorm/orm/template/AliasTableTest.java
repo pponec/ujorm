@@ -39,14 +39,14 @@ public class AliasTableTest extends TestCase {
         System.out.println("testAlias_1");
         OrmHandler handler = createHandler();
         
-        AliasTable<Order> order = AliasTable.of(Order.class, "a", handler);
-        AliasTable<Item> item = AliasTable.of(Item.class, "b", handler);
+        AliasTable<Order> order = AliasTable.of(Order.class, "order", handler);
+        AliasTable<Item> item = AliasTable.of(Item.class, "item", handler);
         
-        String sqlExpected = "SELECT a.CREATED, b.NOTE "
-                + "FROM db1.ord_order a, db1.ord_item b "
-                + "WHERE a.ID = b.fk_order";
+        String sqlExpected = "SELECT order.CREATED, item.NOTE "
+                + "FROM db1.ord_order order, db1.ord_item item "
+                + "WHERE order.ID = item.fk_order";
         String sql 
-                = SELECT(order.column(Order.CREATED), item.column(Item.NOTE))
+                = SELECT(order.column(Order.CREATED), item.column(Item.NOTE) )
                 + FROM (order, item)
                 + WHERE(order.column(Order.ID), " = ", item.column(Item.ORDER));
         System.out.println("sql: " + sql);
