@@ -24,13 +24,32 @@ import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
- * The class for building any SQL statement using Ujorm Keys
+ * The class for building any SQL statement using Ujorm Keys.
+ * <br>Example:
+ * <pre class="pre">{@code 
+ * import static org.ujorm.orm.template.AliasTable.Build.*;
+ * public void example() {
+ *     OrmHandler handler = createHandler();
+ *     AliasTable<Order> order = AliasTable.of(Order.class, "a", handler);
+ *     AliasTable<Item> item = AliasTable.of(Item.class, "b", handler);
+ *      
+ *     String sql 
+ *             = SELECT(order.column(Order.CREATED), item.column(Item.NOTE))
+ *             + FROM (order, item)
+ *             + WHERE(order.column(Order.ID), " = ", item.column(Item.ORDER));
+ * 
+ *     String sqlExpected = "SELECT a.CREATED, b.NOTE "
+ *             + "FROM db1.ord_order a, db1.ord_item b "
+ *             + "WHERE a.ID = b.fk_order";
+ * 
+ *     assertEquals(sqlExpected, sql);        
+ * }}<pre>
  *
  * @author Pavel Ponec
  */
 @Immutable
 public class AliasTable<UJO extends OrmUjo> {
-    
+
     /** Default handler */
     private final OrmHandler handler;
     /** Meta table */
@@ -155,4 +174,41 @@ public class AliasTable<UJO extends OrmUjo> {
     public static <UJO extends OrmUjo> AliasTable<UJO> of(Class<UJO> table, OrmHandler handler) {
         return new AliasTable<UJO>(handler.findTableModel(table), handler);
     }
+    
+    // ------------ STATIC TOOLS ------------
+    
+    /** Static building methods. */
+    public static final class Build {
+
+        /** No text separator */
+        private static final String NO_SEPARATOR = null;
+
+        /** Build SQL SELECT statement */
+        public static String SELECT(Object... params) {
+            return "SELECT " + toText(", ", params);
+        }
+
+        /** Build SQL FROM phrase */
+        public static String FROM(Object... params) {
+            return " FROM " + toText(", ", params);
+        }
+
+        /** Build SQL WHERE phrase */
+        public static String WHERE(Object... params) {
+            return " WHERE " + toText(NO_SEPARATOR, params);
+        }
+
+        /** Build any text with the required separator */
+        public static String toText(String separator, Object... params) {
+            final StringBuilder sb = new StringBuilder(256);
+            for (Object par : params) {
+                if (separator != null && sb.length() > 0) {
+                    sb.append(separator);
+                }
+                sb.append(par);
+            }
+            return sb.toString();
+        }
+    }    
+    
 }
