@@ -17,6 +17,7 @@ package org.ujorm.validator.impl;
 
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.Validator;
 import org.ujorm.validator.AbstractValidator;
 import org.ujorm.validator.MessageArg;
 import org.ujorm.validator.ValidationError;
@@ -77,5 +78,10 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
     public boolean isReadOnly() {
         return readOnly;
     }    
-
+    
+    /** Check if the validator is type of read-only */
+    public static boolean isReadOnly(Validator<?> validator) {
+        return validator instanceof ReadOnlyValidator 
+            && ((ReadOnlyValidator)validator).readOnly;
+    }    
 }
