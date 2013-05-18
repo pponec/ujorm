@@ -30,7 +30,7 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
     /** Sign to read only / all enabled */
     public static final MessageArg<Boolean> READ_ONLY = new MessageArg<Boolean>("READ_ONLY");
 
-    /** Sign to read only / all enabled */
+    /** Sign to a state read-only / all enabled */
     private final boolean readOnly;
 
     /** Constructor
@@ -72,5 +72,10 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
     public String getLocalizationKey() {
         return KEY_PREFIX + (readOnly ? "readOnly" : "allEnabledt");
     }
+
+    /** Sign to a state read-only / all enabled */
+    public boolean isReadOnly() {
+        return readOnly;
+    }    
 
 }
