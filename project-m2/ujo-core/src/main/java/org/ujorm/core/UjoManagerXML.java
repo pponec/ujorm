@@ -235,7 +235,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
      * @param listType  Is NOT mandatory attribute (can be null).
      * @param value
      * @param writer
-     * @param actionExport
+     * @param simpleProperty Item is not type Ujo
      * @throws java.io.IOException
      */
     private void printProperty
@@ -272,7 +272,23 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
         
         writer.write('>');
-        printValue2XML(writer, Object.class, value, ujo, property, simpleProperty);
+        if (simpleProperty && property instanceof ListKey) {
+            List valueList = (List) value;
+            for (int i = 0, max = valueList.size(); i < max; i++) {
+                if (i>0) {
+                    writer.write("</");
+                    writer.write(property.getName());
+                    writer.write('>');
+                    writeNewLine(writer);
+                    writer.write('<');
+                    writer.write(property.getName());
+                    writer.write('>');
+                }                
+                printText2Xml(writer, getUjoManager().encodeValue(valueList.get(i), false));
+            }
+        } else {
+           printValue2XML(writer, Object.class, value, ujo, property, simpleProperty);
+        }
         writer.write("</");
         writer.write(property.getName());
         writer.write('>');
