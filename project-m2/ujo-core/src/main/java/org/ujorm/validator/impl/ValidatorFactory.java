@@ -343,8 +343,7 @@ public class ValidatorFactory {
     
     /** Check if the validator is type of read-only */
     public static boolean isReadOnly(Validator<?> validator) {
-        return validator instanceof ReadOnlyValidator 
-                && ((ReadOnlyValidator)validator).isReadOnly();
+        return ReadOnlyValidator.isReadOnly(validator);
     }
 
     /** It is a logical empty validator. Each value is allowed.
