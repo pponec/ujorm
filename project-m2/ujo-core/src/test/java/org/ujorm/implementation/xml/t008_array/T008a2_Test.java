@@ -50,7 +50,7 @@ public class T008a2_Test extends MyTestCase {
      * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
      * TODO.pop: to implement the nextfeature:
      */
-    public void X_testRestoreXML() throws Exception {
+    public void testRestoreXML() throws Exception {
         System.out.println("testPrintXML: " + suite().toString());
         CharArrayWriter writer = new CharArrayWriter(256);
         //
@@ -72,10 +72,11 @@ public class T008a2_Test extends MyTestCase {
         assertEquals(size1, size2);
         assertEquals(10, AtrPerson.NUMBERS.getItem(person , 0).intValue());
         assertEquals(10, AtrPerson.NUMBERS.getItem(person2, 0).intValue());
+        assertEquals(20, AtrPerson.NUMBERS.getItem(person , 1).intValue());
+        assertEquals(20, AtrPerson.NUMBERS.getItem(person2, 1).intValue());
         assertEquals(person, person2);
     }
-    
-    
+
     @SuppressWarnings("deprecation")
     protected AtrPerson createPerson() {
         AtrPerson result = new AtrPerson();

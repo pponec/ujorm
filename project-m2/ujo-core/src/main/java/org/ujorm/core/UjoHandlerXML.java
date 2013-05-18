@@ -16,20 +16,19 @@
 
 package org.ujorm.core;
 
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
+import org.ujorm.Ujo;
+import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import org.ujorm.Ujo;
-import org.ujorm.ListKey;
-import org.ujorm.UjoAction;
 
 /** Use an subclass on your own risk.
  * <br>Use an API of UjoManagerXML insted of. */
@@ -53,7 +52,8 @@ final class UjoHandlerXML extends DefaultHandler {
     // -- Temporarry fields --
     protected String  $elementName  = null;
     protected Class   $elementType  = null;
-    protected Key     $property = null;
+    protected Key     $property     = null;
+    protected ListKey $propertyList = null;
     protected Class   $listType     = null;
     protected Class   $itemType     = null;
     protected Element $parentObj    = null;
@@ -101,13 +101,14 @@ final class UjoHandlerXML extends DefaultHandler {
     , String qualifiedName
     , Attributes attribs
     ) throws SAXException {
-
+        
         addBodyText($value);
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
         $parentObj   = lastElement<0 ? new Element() : getLastElement() ;
         $property    = $parentObj.isUjo()
                      ? $parentObj.ujo.readKeys().findDirectKey($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
-		             : null ;
+                     : null ;
+        $propertyList = $property instanceof ListKey ? (ListKey) $property : null;       
         $elementType = $parentObj.isRoot() ? rootType : null ;
         $listType    = null;
         $itemType    = null;
@@ -139,7 +140,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 throw new IllegalStateException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
             }
             $elementType = $parentObj.isUjo()
-            ? ($property instanceof ListKey ? ((ListKey)$property).getItemType() : $property.getType())
+            ? ($propertyList != null ? $propertyList.getItemType() : $property.getType())
             : ($parentObj.itemType)
             ;
         }
@@ -147,10 +148,9 @@ final class UjoHandlerXML extends DefaultHandler {
         if ($elementType==null) {
             throw new IllegalStateException("Tag <" + $elementName + "> can't find class.");
         } else try {
-
             boolean isUJO = UjoTextable.class.isAssignableFrom($elementType);
             boolean isList = List.class.isAssignableFrom($elementType);
-            if (isUJO || isList){
+            if (isUJO || isList) {
                 $elementCont = true;
                 Object container = $elementType.newInstance(); // UjoContainer
 
@@ -165,12 +165,12 @@ final class UjoHandlerXML extends DefaultHandler {
                 if ($parentObj.isUjo()) {
                     Ujo ujoParent = $parentObj.ujo;
 
-                    if ($property instanceof ListKey) {
-                        List list = (List) $property.of(ujoParent);
+                    if ($propertyList != null) {
+                        List list = (List) $propertyList.of(ujoParent);
                         if (list==null) {
                             if ($listType==null 
                             ||  $listType.isInterface()) {
-                                list = ((ListKey)$property).getList(ujoParent);
+                                list = $propertyList.getList(ujoParent);
                             } else {
                                 list = (List) $listType.newInstance();
                                 ujoParent.writeValue($property, list);
@@ -186,8 +186,8 @@ final class UjoHandlerXML extends DefaultHandler {
                 }
             }
 
-        } catch (Exception ex) {
-            throw new IllegalArgumentException( "Can't create instance of " + $elementType, ex );
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can't create instance of " + $elementType, e);
         }
     }
 
@@ -199,7 +199,7 @@ final class UjoHandlerXML extends DefaultHandler {
     , String qualifiedName
     ) throws SAXException {
         // String elementName = simpleName.length()!=0 ? simpleName : qualifiedName ;
-
+        
         if ($elementCont) {
 
             addBodyText($value);
@@ -210,7 +210,17 @@ final class UjoHandlerXML extends DefaultHandler {
             }
         } else if ($parentObj.ujo instanceof UjoTextable) {
             // Vrite Value:
-            ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);
+            if ($propertyList != null) {
+                List oldValue = (List) $parentObj.ujo.readValue($property); // The original solution for a back compatibility
+                if (oldValue != null) {                    
+                   final Object value = ujoManager.decodeValue($elementType, $value.toString());
+                   oldValue.add(value);
+                } else {
+                   ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);                    
+                }                        
+            } else {
+               ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);
+            }
             $value.setLength(0);
             $elementCont = true;
         } else if ($parentObj.isList()) {
