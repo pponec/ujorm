@@ -22,15 +22,14 @@ import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm_tutorial.sample.*;
+import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
  * AliasTableTest
  * @author Pavel Ponec
  */
 public class AliasTableTest extends TestCase {
-    
-    private static final String NO_SEPARATOR = null;
-    
+        
     public AliasTableTest(String testName) {
         super(testName);
     }
@@ -74,29 +73,6 @@ public class AliasTableTest extends TestCase {
     
     // ------------------------ TOOLS ---------------------------------
     
-    protected String SELECT(Object... params) {
-        return "SELECT " + toText(", ", params);
-    }
-    
-    protected String FROM(Object... params) {
-        return " FROM " + toText(", ", params);
-    }
-    
-    protected String WHERE (Object... params) {
-        return " WHERE " + toText(NO_SEPARATOR, params);
-    }    
-    
-    protected String toText(String separator, Object... params) {
-        final StringBuilder sb = new StringBuilder(256);
-        for (Object par : params) {
-            if (separator != null && sb.length() > 0) {
-                sb.append(separator);
-            }
-            sb.append(par);
-        }
-        return sb.toString();
-    }
-
     /** Before the first: create a meta-model.
      * Database tables will be CREATED in the first time.
      */
