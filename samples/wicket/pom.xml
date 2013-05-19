@@ -20,7 +20,7 @@
         </license>
     </licenses>
     <properties>
-        <ujorm.version>1.34</ujorm.version>
+        <ujorm.version>1.35</ujorm.version>
         <wicket.version>6.7.0</wicket.version>
         <jetty.version>6.1.26</jetty.version>
         <slf4j.version>1.6.4</slf4j.version>
