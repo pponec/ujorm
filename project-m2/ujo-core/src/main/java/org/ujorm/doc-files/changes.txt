@@ -1,6 +1,14 @@
 The Ujorm release notes
 *******************************
 
+release 1.35 (2013-05-20
++ an API of the ValidatorFactory class is extended
++ the data type StringWrapper is supported in the XML serialization including Enum types
++ che class UjoCoder considers the value of 1 for the true value
++ new method ValidatorFactory.isReadOnly() checks if the validator is type of read-only
++ a Ujorm Key type of List is exported and parsed to the XML file as a collection separated tags, however the original solution is supported in a parsing time
++ the class AliasTable for building free SQL statements is extended
+
 release 1.34 (2013-05-11)
 + the new Ujorm TransactionManager implementation is ready to use
 + Criterion object is serializable now
