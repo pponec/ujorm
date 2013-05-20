@@ -226,6 +226,17 @@ public class QuickUjoBaseTest extends MyTestCase {
         assertEquals(QuickUjoImpl.PRO_P3, props.get(3));
         assertEquals(QuickUjoImpl.PRO_P4, props.get(4));
     }
+
+    /** A compilation test of API Key class */
+    public void textPathPropertyCompilation() {
+        QuickUjoCompany company = new QuickUjoCompany();
+        QuickUjoCompany.DIRECTOR.setValue(company, new QuickUjoImplChild());
+
+        Integer compDir1 = QuickUjoCompany.DIRECTOR.add(QuickUjoImplChild.PRO_P6).of(company);
+        Integer compDir2 = QuickUjoCompany.DIRECTOR.add(QuickUjoImplChild.PRO_P1).of(company);
+
+        assertEquals(compDir1, compDir2);
+    }
     
     
     public static void main(java.lang.String[] argList) {

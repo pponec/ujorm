@@ -347,7 +347,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? extends VALUE, VALUE_PAR> property) {
+    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? super VALUE, VALUE_PAR> property) {
         return PathProperty.newInstance((Key)this, property);
     }
 
