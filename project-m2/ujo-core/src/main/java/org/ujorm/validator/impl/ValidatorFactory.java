@@ -341,11 +341,6 @@ public class ValidatorFactory {
         return new ReadOnlyValidator<T>(true);
     }
     
-    /** Check if the validator is type of read-only */
-    public static boolean isReadOnly(Validator<?> validator) {
-        return ReadOnlyValidator.isReadOnly(validator);
-    }
-
     /** It is a logical empty validator. Each value is allowed.
      * @deprecated Use the {@link #everything()} method rather */
     @Deprecated
