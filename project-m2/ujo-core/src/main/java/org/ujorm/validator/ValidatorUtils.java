@@ -25,6 +25,7 @@ import org.ujorm.criterion.BinaryOperator;
 import org.ujorm.validator.impl.CompositeValidator;
 import org.ujorm.validator.impl.LengthValidator;
 import org.ujorm.validator.impl.NotNullValidator;
+import org.ujorm.validator.impl.ReadOnlyValidator;
 
 /**
  * Validator utils
@@ -57,6 +58,7 @@ public final class ValidatorUtils {
      * @param validators Result list of validators
      * @return return true if all operators are AND.
      */
+    @SuppressWarnings("unchecked")
     protected static boolean findValidators(Validator validator, Class<? extends Validator> requiredType, List<? extends Validator> validators) {
         boolean and = true;
         if (validator instanceof CompositeValidator) {
@@ -70,31 +72,48 @@ public final class ValidatorUtils {
         return and;
     }
     
-    /** Validate the argument using all keys from the object. */
+    /** Validate the argument using all keys from the collection
+     * where the ReadOnlyValidator validators are excluded.
+     * ujos Collection of the beans
+     */
+    @SuppressWarnings("unchecked")
     public static List<ValidationError> validate(final Ujo ujo) {
         final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
         for (Key key : ujo.readKeys()) {
-            final ValidationError err = key.getValidator().validate(key.of(ujo), key, ujo);
-            if (err!=null) {
+            final Validator validator = key.getValidator();
+            if (validator == null
+            ||  validator instanceof ReadOnlyValidator) {
+                continue;
+            }
+            final ValidationError err = validator.validate(key.of(ujo), key, ujo);
+            if (err != null) {
                 result.add(err);
             }
         }
         return result;
     }
 
-    /** Validate the argument using all keys from the collection. */
+    /** Validate the argument using all keys from the collection
+     * where the ReadOnlyValidator validators are excluded.
+     * ujos Collection of the beans
+     */
+    @SuppressWarnings("unchecked")
     public static List<ValidationError> validate(final Collection<Ujo> ujos) {
         final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
         for (Ujo ujo : ujos) {
             for (Key key : ujo.readKeys()) {
-                final ValidationError err = key.getValidator().validate(key.of(ujo), key, ujo);
-                if (err!=null) {
+                final Validator validator = key.getValidator();
+                if (validator == null
+                ||  validator instanceof ReadOnlyValidator) {
+                    continue;
+                }
+                final ValidationError err = validator.validate(key.of(ujo), key, ujo);
+                if (err != null) {
                     result.add(err);
                 }
             }
         }
         return result;
     }
-    
 
 }
