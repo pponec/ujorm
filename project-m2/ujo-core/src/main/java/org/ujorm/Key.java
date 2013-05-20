@@ -179,7 +179,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(Key<? extends VALUE, VALUE_PAR> property);
+    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(Key<? super VALUE, VALUE_PAR> property);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(UJO from, UJO to);

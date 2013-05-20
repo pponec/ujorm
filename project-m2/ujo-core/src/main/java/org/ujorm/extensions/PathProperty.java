@@ -425,7 +425,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? extends VALUE, VALUE_PAR> property) {
+    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? super VALUE, VALUE_PAR> property) {
 
         Key[] props = new Key[keys.length+1];
         System.arraycopy(keys, 0, props, 0, keys.length);

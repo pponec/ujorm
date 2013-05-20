@@ -16,8 +16,8 @@
 package org.ujorm.criterion;
 
 import org.ujorm.Key;
-import org.ujorm.implementation.map.MapUjoExt;
 import org.ujorm.extensions.PathProperty;
+import org.ujorm.implementation.map.MapUjoExt;
 
 /**
  *
