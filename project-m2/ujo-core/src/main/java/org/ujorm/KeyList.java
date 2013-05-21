@@ -25,7 +25,7 @@ import java.util.Iterator;
  * @author Pavel Ponec
  * @composed 1 - N Key
  */
-public interface KeyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
+public interface KeyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,Object>> {
 
     /**
      * Find (both direct or indirect) property by property name from parameter.
@@ -121,7 +121,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<UjoProperty<UJO,?>> {
      * in feature it will be replaced by the Key interface.
      */
     @Override
-    public Iterator<UjoProperty<UJO,?>> iterator();
+    public Iterator<UjoProperty<UJO,Object>> iterator();
 
     /** Returns or create UjoManager.
      * In your own implementation keep in a mind a simple serialization freature of the current object.
