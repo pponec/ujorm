@@ -85,8 +85,7 @@ public interface Ujo {
      * <br>An index property in the array UJO must be unique a continuous, an order of property array depends on an implementation of UJO object.
      * @see Key#isDirect()
      */
-    public KeyList<?> readKeys();
-
+    public <T extends Ujo> KeyList<T> readKeys();
 
     /** Returns all direct keys.
      * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).

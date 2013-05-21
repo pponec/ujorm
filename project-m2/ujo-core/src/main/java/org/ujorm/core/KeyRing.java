@@ -235,17 +235,16 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create Property Interator */
     @Override
-    public Iterator<UjoProperty<UJO, ?>> iterator() {
-        return new Iterator<UjoProperty<UJO, ?>>() {
-
+    public Iterator<UjoProperty<UJO, Object>> iterator() {
+        return new Iterator<UjoProperty<UJO, Object>>() {
             int i = -1;
 
             public boolean hasNext() {
                 return (i + 1) < size;
             }
 
-            public UjoProperty<UJO, ?> next() {
-                return (UjoProperty<UJO, ?>) get(++i);
+            public UjoProperty<UJO,Object> next() {
+                return (UjoProperty<UJO,Object>) get(++i);
             }
 
             /**

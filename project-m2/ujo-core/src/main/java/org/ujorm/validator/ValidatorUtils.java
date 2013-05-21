@@ -76,11 +76,10 @@ public final class ValidatorUtils {
      * where the ReadOnlyValidator validators are excluded.
      * ujos Collection of the beans
      */
-    @SuppressWarnings("unchecked")
     public static List<ValidationError> validate(final Ujo ujo) {
-        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
-        for (Key key : ujo.readKeys()) {
-            final Validator validator = key.getValidator();
+        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();        
+        for (Key<Ujo,Object> key : ujo.readKeys()) {
+            final Validator<Object> validator = key.getValidator();
             if (validator == null
             ||  validator instanceof ReadOnlyValidator) {
                 continue;
@@ -97,12 +96,11 @@ public final class ValidatorUtils {
      * where the ReadOnlyValidator validators are excluded.
      * ujos Collection of the beans
      */
-    @SuppressWarnings("unchecked")
     public static List<ValidationError> validate(final Collection<Ujo> ujos) {
         final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
         for (Ujo ujo : ujos) {
-            for (Key key : ujo.readKeys()) {
-                final Validator validator = key.getValidator();
+            for (Key<Ujo,Object> key : ujo.readKeys()) {
+                final Validator<Object> validator = key.getValidator();
                 if (validator == null
                 ||  validator instanceof ReadOnlyValidator) {
                     continue;
