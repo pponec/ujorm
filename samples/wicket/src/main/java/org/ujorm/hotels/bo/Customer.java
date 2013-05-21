@@ -7,11 +7,13 @@ package org.ujorm.hotels.bo;
 
 import org.ujorm.hotels.bo.enums.TitleEnum;
 import org.ujorm.Key;
+import org.ujorm.Validator;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import static org.ujorm.Validator.*;
 import static org.ujorm.Validator.Build.*;
 
 /** Common User */
@@ -31,14 +33,13 @@ abstract public class Customer extends OrmTable<Customer> {
     @Comment("Unique login")
     @Column(uniqueIndex=UNIQUE_LOGIN)
     public static final Key<Customer, String> LOGIN = f.newKey(length(MANDATORY, 3, 6));
-    /** Customer state (the true or null is required) */
+    /** Customer state (the true or null values are required) */
+    @Comment("Customer is allowed to login (the true or null values are required)")
     @Column(uniqueIndex=UNIQUE_LOGIN)
-    @Comment("Customer is allowed to login")
-    public static final Key<Customer, Boolean> ACTIVE = f.newKey(required(true));
-    /** Password login */
+    public static final Key<Customer, Boolean> ACTIVE = f.newKey(forbidden(false));
+    /** Password hash */
     @Comment("Password hash")
-    @Column(mandatory = true)
-    public static final Key<Customer, Long> PASSWORD_HASH = f.newKey();
+    public static final Key<Customer, Long> PASSWORD_HASH = f.newKey(notNull(Long.class));
     /** Title */
     @Comment("Title")
     @Column(mandatory = true)
