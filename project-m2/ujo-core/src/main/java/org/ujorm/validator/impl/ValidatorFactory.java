@@ -80,14 +80,14 @@ public class ValidatorFactory {
         return NOT_NULL;
     }
 
-    /** Check the not {@code null} and not empty value type of String. Method <strong>is not</strong> type save!
+    /** Check the not {@code null} value and not empty value type of a String. Method <strong>is not</strong> type save!
      * @see NotEmptyValidator
      */
     public static Validator notEmpty() {
         return NotEmptyValidator.NOT_EMPTY;
     }
 
-    /** Input value is valid if the trimmed String length is great than zero. Method <strong>is not</strong> type save!
+    /** Check the not {@code null} value and not empty value type of a trimmed String.
      * @param valueType Argument to clean a type checking only
      * @see NotEmptyValidator
      */

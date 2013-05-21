@@ -21,7 +21,7 @@ import org.ujorm.validator.MessageArg;
 import org.ujorm.validator.ValidationError;
 
 /**
- * The Not Null validator, the correct result have an not null input text with a (trimmed) lenght more than zero.
+ * The not {@code null} validator, the correct result have an not null input text with a (trimmed) length more than zero.
  * @author Pavel Ponec
  */
 public class NotEmptyValidator<VALUE extends CharSequence> extends NotNullValidator<VALUE> {
@@ -37,7 +37,6 @@ public class NotEmptyValidator<VALUE extends CharSequence> extends NotNullValida
 
     /** The CharSequence is trimmed */
     private final boolean trim;
-
 
     public NotEmptyValidator() {
         this(false);
