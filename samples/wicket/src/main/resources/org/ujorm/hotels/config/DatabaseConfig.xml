@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release 1.35 was created 2013/05/23 23:17 -->
+<body>
+    <database id="DatabaseMapping">
+        <schema>db1</schema>
+        <readOnly>false</readOnly>
+        <dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
+        <jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+        <jdbcDriver>org.h2.Driver</jdbcDriver>
+        <user>sa</user>
+        <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
+        <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+        <table id="CUSTOMER">
+            <name>demo_customer</name>
+            <alias>demo_customer</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>INT</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="LOGIN">
+                <name>LOGIN</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>6</maxLength>
+                <uniqueIndex>idx_unique_login</uniqueIndex>
+                <comment>Unique login</comment>
+            </column>
+            <column id="ACTIVE">
+                <name>ACTIVE</name>
+                <dbType>BOOLEAN</dbType>
+                <uniqueIndex>idx_unique_login</uniqueIndex>
+                <comment>Customer is allowed to login (the true or null values are required)</comment>
+            </column>
+            <column id="PASSWORD_HASH">
+                <name>PASSWORD_HASH</name>
+                <dbType>BIGINT</dbType>
+                <mandatory>true</mandatory>
+                <comment>Password hash</comment>
+            </column>
+            <column id="TITLE">
+                <name>TITLE</name>
+                <dbType>SMALLINT</dbType>
+                <mandatory>true</mandatory>
+                <comment>Title</comment>
+            </column>
+            <column id="FIRSTNAME">
+                <name>FIRSTNAME</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>60</maxLength>
+                <comment>Firstname</comment>
+            </column>
+            <column id="LASTNAME">
+                <name>LASTNAME</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>60</maxLength>
+                <comment>Lastname</comment>
+            </column>
+            <column id="EMAIL">
+                <name>EMAIL</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>128</maxLength>
+                <comment>Email</comment>
+            </column>
+        </table>
+        <table id="HOTEL">
+            <name>demo_hotel</name>
+            <alias>demo_hotel</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="ACTIVE">
+                <name>ACTIVE</name>
+                <dbType>BOOLEAN</dbType>
+                <comment>Hotel state (the true or null is required)</comment>
+            </column>
+            <column id="NAME">
+                <name>NAME</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>80</maxLength>
+                <index>idx_hotel_name</index>
+                <comment>Name of the Hotel</comment>
+            </column>
+            <column id="PRICE">
+                <name>PRICE</name>
+                <dbType>DECIMAL</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>8</maxLength>
+                <precision>2</precision>
+                <comment>Price per night in EUR</comment>
+            </column>
+            <column id="NOTE">
+                <name>NOTE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>256</maxLength>
+                <comment>Description of the hotel</comment>
+            </column>
+            <column id="CREATED">
+                <name>CREATED</name>
+                <dbType>TIMESTAMP</dbType>
+                <mandatory>true</mandatory>
+                <comment>Date of creation</comment>
+            </column>
+        </table>
+        <table id="RESERVATION" view="true">
+            <name>demo_reservation</name>
+            <alias>demo_reservation</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="HOTEL">
+                <name>HOTEL</name>
+                <dbType>BIGINT</dbType>
+                <mandatory>true</mandatory>
+                <comment>Relation to hotel</comment>
+            </column>
+            <column id="CUSTOMER">
+                <name>CUSTOMER</name>
+                <dbType>INT</dbType>
+                <mandatory>true</mandatory>
+                <comment>Relation to customer</comment>
+            </column>
+            <column id="DATE_FROM">
+                <name>DATE_FROM</name>
+                <dbType>TIMESTAMP</dbType>
+                <mandatory>true</mandatory>
+                <comment>Date from</comment>
+            </column>
+            <column id="DATE_TO">
+                <name>DATE_TO</name>
+                <dbType>TIMESTAMP</dbType>
+                <mandatory>true</mandatory>
+                <comment>Date to</comment>
+            </column>
+            <column id="RESERVATION_DATE">
+                <name>RESERVATION_DATE</name>
+                <dbType>TIMESTAMP</dbType>
+                <mandatory>true</mandatory>
+                <comment>Reservation date</comment>
+            </column>
+        </table>
+        <table id="db1">
+            <name>db1</name>
+            <alias>db1</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <relation2m id="CUSTOMER">
+                <name>CUSTOMER</name>
+            </relation2m>
+            <relation2m id="HOTEL">
+                <name>HOTEL</name>
+            </relation2m>
+            <relation2m id="RESERVATION">
+                <name>RESERVATION</name>
+            </relation2m>
+        </table>
+    </database>
+    <parameters>
+        <initializationBatch>org.ujorm.hotels.config.DataLoader</initializationBatch>
+        <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
+        <moreParams></moreParams>
+    </parameters>
+</body>
