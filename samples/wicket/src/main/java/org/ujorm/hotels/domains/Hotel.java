@@ -4,7 +4,7 @@
  * Author: Pavel Ponec
  */
 
-package org.ujorm.hotels.bo;
+package org.ujorm.hotels.domains;
 
 import java.math.BigDecimal;
 import java.util.Date;

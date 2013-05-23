@@ -16,13 +16,13 @@
 
 package org.ujorm.hotels.config;
 
-import org.ujorm.hotels.bo.Customer;
-import org.ujorm.hotels.bo.Hotel;
-import org.ujorm.hotels.bo.Reservation;
-import org.ujorm.orm.annot.Table;
+import org.ujorm.hotels.domains.Customer;
+import org.ujorm.hotels.domains.Hotel;
+import org.ujorm.hotels.domains.Reservation;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;
+import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.dialect.*;
 
@@ -39,19 +39,19 @@ import org.ujorm.orm.dialect.*;
 //@Db(schema= ""  , dialect=FirebirdDialect.class, user="sysdba", password="masterkey", jdbcUrl="jdbc:firebirdsql:localhost/3050:c:\\progra~1\\firebird\\db\\db1.fdb?lc_ctype=UTF8")
 //@Db(schema="db1", dialect=OracleDialect.class, user="sa", password="", jdbcUrl="jdbc:oracle:thin:@myhost:1521:orcl")
 //@Db(schema="db1", dialect=org.ujorm.orm.dialect.MSSqlDialect.class, user="sa", password="datamaster", jdbcUrl="jdbc:sqlserver://127.0.0.1:1433")
-public class Database extends OrmTable<Database> {
+public class DatabaseMapping extends OrmTable<DatabaseMapping> {
 
-    /** Customer order. The used annotation overwrites a database schema from the property schema. */
-    @Table("ord_order")
-    public static final RelationToMany<Database,Customer> CUSTOMER = newRelation();
+    /** Customer of the appliction. */
+    @Table("demo_customer")
+    public static final RelationToMany<DatabaseMapping,Customer> CUSTOMER = newRelation();
 
-    /** Items of the Customer order */
-    @Table("ord_item")
-    public static final RelationToMany<Database,Hotel> HOTEL = newRelation();
+    /** Hotel entity */
+    @Table("demo_hotel")
+    public static final RelationToMany<DatabaseMapping,Hotel> HOTEL = newRelation();
 
-    /** View to aggregate data. */
-    @View("ord_order")
-    public static final RelationToMany<Database,Reservation> RESERVATION = newRelation();
+    /** Reservaton (a relation type of many to many between Customers and Hotels. */
+    @View("demo_reservation")
+    public static final RelationToMany<DatabaseMapping,Reservation> RESERVATION = newRelation();
 
 
 }

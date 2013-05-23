@@ -3,9 +3,9 @@
  * License the Apache License, Version 2.0,
  * Author: Pavel Ponec
  */
-package org.ujorm.hotels.bo;
+package org.ujorm.hotels.domains;
 
-import org.ujorm.hotels.bo.enums.TitleEnum;
+import org.ujorm.hotels.domains.enums.TitleEnum;
 import org.ujorm.Key;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyFactory;

@@ -14,12 +14,12 @@
  *  limitations under the License.
  *  under the License.
  */
-package org.ujorm.hotels.bo.service;
+package org.ujorm.hotels.domains.service;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-import org.ujorm.hotels.bo.Customer;
+import org.ujorm.hotels.domains.Customer;
 
 /**
  * Data DataProvider
