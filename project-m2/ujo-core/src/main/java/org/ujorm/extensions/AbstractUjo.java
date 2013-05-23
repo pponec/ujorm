@@ -75,7 +75,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      */
 
     @Override
-    public void writeValue(final Key property, final Object value) {
+    public void writeValue(final Key<?,?> property, final Object value) {
         assert UjoManager.assertDirectAssign(property, value, this);
         data[property.getIndex()] = value;
     }
@@ -90,7 +90,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      * @see Key#of(Ujo)
      */
     @Override
-    public Object readValue(final Key property) {
+    public Object readValue(final Key<?,?> property) {
         assert property.isDirect() : "Property must be direct only.";
         return data[property.getIndex()];
     }
@@ -101,6 +101,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      * <br>In case of OrmUjo the method is called by a Ujorm framework
      */
+    @SuppressWarnings("unchecked")
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newCamelFactory(Class<? extends UJO> ujoClass) {
         return (FACTORY) KeyFactory.CamelBuilder.get(ujoClass);
     }
@@ -109,6 +110,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      * <br>In case of OrmUjo the method is called by a Ujorm framework
      */
+    @SuppressWarnings("unchecked")
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newFactory(Class<? extends UJO> ujoClass) {
         return (FACTORY) (KeyFactory) KeyFactory.Builder.get(ujoClass);
     }

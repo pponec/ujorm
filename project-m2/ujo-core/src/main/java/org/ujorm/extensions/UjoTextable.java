@@ -16,9 +16,9 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.UjoAction;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
+import org.ujorm.UjoAction;
 
 /**
  * The interface is reasonable for a text serialization and deserializaton of non UJO keys of a UJO object.
@@ -43,7 +43,7 @@ public interface UjoTextable extends Ujo {
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      */
-    public void writeValueString(Key property, String value, Class type, UjoAction action);
+    public void writeValueString(Key<?,?> property, String value, Class<?> type, UjoAction action);
     
     /**
      * Get an original value in a String format. If property type is a "container" type (Ujo, List, Object[]), method returns null,
@@ -54,6 +54,6 @@ public interface UjoTextable extends Ujo {
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      * @return If property type is "container" result is null.
      */
-    public String readValueString(Key property, UjoAction action);
+    public String readValueString(Key<?,?> property, UjoAction action);
     
 }

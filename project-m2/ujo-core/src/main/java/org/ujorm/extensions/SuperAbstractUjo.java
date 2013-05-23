@@ -16,12 +16,12 @@
 
 package org.ujorm.extensions;
 
+import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.core.*;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.Key;
 import org.ujorm.UjoPropertyList;
+import org.ujorm.core.*;
 
 /**
  * This is a simple abstract implementation of Ujo. <br>
@@ -40,7 +40,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @param ujoClass Ujo class
      */
     @SuppressWarnings("unchecked")
-    protected static final UjoPropertyList init(Class ujoClass) throws IllegalStateException {
+    protected static UjoPropertyList init(Class ujoClass) throws IllegalStateException {
         return init(ujoClass, false);
     }
 
