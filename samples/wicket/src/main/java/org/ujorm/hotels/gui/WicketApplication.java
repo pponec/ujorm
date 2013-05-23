@@ -2,6 +2,9 @@ package org.ujorm.hotels.gui;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Application object for your web application. If you want to run this
@@ -9,7 +12,16 @@ import org.apache.wicket.protocol.http.WebApplication;
  *
  * @see com.mycompany.Start#main(String[])
  */
-public class WicketApplication extends WebApplication {
+public class WicketApplication extends WebApplication implements ApplicationContextAware {
+
+
+    @SuppressWarnings("unused")
+    private ApplicationContext ctx;
+
+    @Override
+    protected void init() {
+        mountPage("/demoHotels", HomePage.class);
+    }
 
     /**
      * @see org.apache.wicket.Application#getHomePage()
@@ -19,13 +31,9 @@ public class WicketApplication extends WebApplication {
         return HomePage.class;
     }
 
-    /**
-     * @see org.apache.wicket.Application#init()
-     */
+    /** Assign a Spring application context */
     @Override
-    public void init() {
-        super.init();
-
-        // add your configuration here
+    public void setApplicationContext(ApplicationContext ctx) throws BeansException {
+        this.ctx = ctx;
     }
 }
