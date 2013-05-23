@@ -5,15 +5,30 @@
 	 version="2.4">
 
     <display-name>ujorm</display-name>
-     <!--
-          There are three means to configure Wickets configuration mode and they are
-          tested in the order given.
-          1) A system property: -Dwicket.configuration
-          2) servlet specific <init-param>
-          3) context specific <context-param>
-          The value might be either "development" (reloading when templates change)
-          or "deployment". If no configuration is found, "development" is the default.
-    -->
+
+    <!-- Loading SpringWebApplicationFactory -->
+    <servlet>
+        <servlet-name>wicket</servlet-name>
+        <servlet-class>org.apache.wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+            <param-name>applicationFactoryClassName</param-name>
+            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
+        </init-param>
+        <init-param>
+            <param-name>applicationBean</param-name>
+            <param-value>wicketApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- The SpringWebApplicationFactory will need access to a Spring Application context, configured like this... -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>wicket-ujorm</filter-name>
