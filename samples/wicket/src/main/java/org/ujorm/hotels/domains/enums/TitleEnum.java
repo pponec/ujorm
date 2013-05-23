@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package org.ujorm.hotels.bo.enums;
+package org.ujorm.hotels.domains.enums;
 
 /**
  *
