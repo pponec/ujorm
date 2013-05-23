@@ -22,20 +22,16 @@
             <param-name>applicationClassName</param-name>
             <param-value>org.ujorm.hotels.gui.WicketApplication</param-value>
         </init-param>
-        <!-- Deployment mode -.->
+        <!-- Deployment mode -->
         <init-param>
             <param-name>configuration</param-name>
             <param-value>deployment</param-value>
         </init-param>
-        <!-.-  -->
+        <!--  -->
     </filter>
     <filter-mapping>
         <filter-name>wicket-ujorm</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>    
 
 </web-app>
