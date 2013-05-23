@@ -25,7 +25,7 @@ public class UniUjoBase implements Ujo {
     private static final KeyFactory<UniUjoBase> f
             = KeyFactory.CamelBuilder.get(UniUjoBase.class);
     
-    public static final Key<UniUjoBase,Long>      PRO_P0 = f.newKey(notNull());
+    public static final Key<UniUjoBase,Long>      PRO_P0 = f.newKey(notNull(Long.class));
     public static final Key<UniUjoBase,Integer>   PRO_P1 = f.newKey(between(0, 10));
     public static final Key<UniUjoBase,String>    PRO_P2 = f.newKey(regexp("T.*T"));
     public static final Key<UniUjoBase,Date>      PRO_P3 = f.newKey(past());

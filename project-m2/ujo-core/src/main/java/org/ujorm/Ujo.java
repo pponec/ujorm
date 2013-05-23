@@ -63,7 +63,7 @@ public interface Ujo {
      * @see Key#getValue(org.ujorm.Ujo)
      * @see Key#isDirect()
      */
-    public Object readValue(Key property);
+    public Object readValue(Key<?,?> property);
     
     
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
@@ -76,7 +76,7 @@ public interface Ujo {
      * @see Key#setValue(Ujo,Object)
      * @see Key#isDirect()
      */
-    public void writeValue(Key property, Object value);
+    public void writeValue(Key<?,?> property, Object value);
     
     /** Returns all direct keys.
      * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).
@@ -112,6 +112,6 @@ public interface Ujo {
      * @return Returns a TRUE value in case the property is authorized successfully.
      * @see UjoAction
      */
-    public boolean readAuthorization(UjoAction action, Key property, Object value);
+    public boolean readAuthorization(UjoAction action, Key<?,?> property, Object value);
     
 }

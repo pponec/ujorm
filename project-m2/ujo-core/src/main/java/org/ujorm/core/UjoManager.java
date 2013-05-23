@@ -110,6 +110,7 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /** Read an KeyList instance. The first result is cached. */
+    @SuppressWarnings("unchecked")
     public UjoPropertyList readProperties(Class type) {
         KeyList result = propertiesCache.get(type);
         if (result==null) {
