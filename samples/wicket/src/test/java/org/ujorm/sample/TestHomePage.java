@@ -22,7 +22,5 @@ public class TestHomePage extends TestCase {
         tester.startPage(HomePage.class);
         //assert rendered page class
         tester.assertRenderedPage(HomePage.class);
-        //assert rendered label component
-        tester.assertLabel("north", "If you see this message wicket is properly configured and running");
     }
 }
