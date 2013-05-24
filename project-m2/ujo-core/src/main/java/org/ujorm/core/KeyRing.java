@@ -410,6 +410,21 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return new KeyRing<UJO>(domainClass, ps);
     }
 
+    /** Returns all direct properties form a domain class
+     * @param domainClass Mandatory doomain class
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass) {
+        try {
+            final KeyList result = domainClass.newInstance().readKeys();
+            return result instanceof KeyRing
+            ? (KeyRing) result
+            : of(domainClass, (Collection) result);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     /** Create a new instance
      * @param domainClass Mandatory doomain class
      * @param keys Nullable value
