@@ -61,7 +61,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Temporary configuration */
     private MetaRoot configuration;
     /** The default ORM session */
-    private Session session;
+    private Session defaultSession;
 
     /** Map a <strong>key</strong> to a database <strong>column model</strong> */
     private final HashMap<Key,MetaRelation2Many> propertyMap = new HashMap<Key,MetaRelation2Many> ();
@@ -98,10 +98,10 @@ public class OrmHandler implements OrmHandlerProvider {
       * @see #createSession()
       */
     public Session getDefaultSession() {
-        if (session==null) {
-            session = createSession();
+        if (defaultSession==null) {
+            defaultSession = createSession();
         }
-        return session;
+        return defaultSession;
     }
 
      /** Get a <strong>default</strong> Session of the OrmHandler.
@@ -266,14 +266,24 @@ public class OrmHandler implements OrmHandlerProvider {
         // Run an initializaton batch:
         if (!MetaParams.INITIALIZATION_BATCH.isDefault(params)) {
             final Class<?> batchClass = MetaParams.INITIALIZATION_BATCH.of(params);
+            Session session = null;
             try {
+                session = handler.createSession();
                 LOGGER.log(Level.INFO, "The initializaton batch is running: " + batchClass.getName());
                 final InitializationBatch batch = (InitializationBatch) batchClass.newInstance();
-                batch.run(this);
+                batch.run(session);
+                session.commit();
+                session.close();
             } catch (Exception e) {
-                final String msg = "The batch failed: " + batchClass.getSimpleName();
+                if (session != null) {
+                    session.rollback();
+                    session.close();
+                }
+                final String msg = "The batch failed: " + batchClass.getName();
                 LOGGER.log(Level.SEVERE, msg, e);
                 throw new IllegalStateException(msg, e);
+            } finally {
+
             }
         }
     }

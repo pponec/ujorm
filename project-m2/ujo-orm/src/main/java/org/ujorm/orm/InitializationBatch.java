@@ -16,19 +16,17 @@
 
 package org.ujorm.orm;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import org.ujorm.orm.metaModel.MetaColumn;
-
 /**
  * An inicializaton batch implementation can be called after building the ORM meta-model.
  */
 public interface InitializationBatch {
 
-    /** Inicializaton batch implementation can be called after building a meta-model. */
-    public void run(OrmHandler handler);
+    /**
+     * Inicializaton batch implementation can be called after building a meta-model.
+     * @param session A session ready to use, the session is commited in the parent method.
+     * @throws Exception Any exception causes the call session.rollback() method.
+     */
+    public void run(Session session) throws Exception;
 
 
 }
