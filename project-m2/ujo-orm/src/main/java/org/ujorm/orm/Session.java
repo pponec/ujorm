@@ -289,6 +289,17 @@ public class Session {
         return new Query<UJO>(table, criterion, this);
     }
 
+    /** Returns {@code true} if exists any database row with the required condition. */
+    final public <UJO extends OrmUjo> boolean exists(final Criterion<UJO> criterion) {
+        final MetaRelation2Many column = getBasicColumn(criterion);
+        final MetaTable table = MetaRelation2Many.TABLE.of(column);
+        final UJO result = new Query<UJO>(table, criterion, this)
+                .setColumn(column.getKey())
+                .setLimit(1)
+                .uniqueResult();
+        return result != null;
+    }
+
     /** Returns the first "basic" column of criterion.
      * @return Not null result
      */
