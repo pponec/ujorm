@@ -17,11 +17,11 @@
 package org.ujorm.orm.metaModel;
 
 import java.util.logging.Level;
-import org.ujorm.logger.UjoLogger;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.AbstractMetaModel;
 

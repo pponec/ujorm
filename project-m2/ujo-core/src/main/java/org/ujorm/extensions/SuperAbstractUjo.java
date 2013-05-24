@@ -71,7 +71,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see Key#isDirect()
      */
-    public KeyList readKeys() {
+    public KeyList<?> readKeys() {
         return readUjoManager().readProperties(getClass());
     }
 
