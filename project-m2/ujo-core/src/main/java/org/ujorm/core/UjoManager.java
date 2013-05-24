@@ -109,10 +109,18 @@ public class UjoManager implements Comparator<Key> {
         return result;
     }
 
-    /** Read an KeyList instance. The first result is cached. */
+    /** Read an KeyList instance. The first result is cached. 
+     * @deprecated Use the method {@link #readKeys(java.lang.Class) } instead of.
+     */
     @SuppressWarnings("unchecked")
     public UjoPropertyList readProperties(Class type) {
-        KeyList result = propertiesCache.get(type);
+        return new UjoPropertyListImpl(readKeys(type));
+    }
+
+    /** Read an KeyList instance. The first result is cached. */
+    @SuppressWarnings("unchecked")
+    public KeyList<?> readKeys(Class type) {
+        KeyList<?> result = propertiesCache.get(type);
         if (result==null) {
             final Key[] ps = readPropertiesNocache(type, true);
             result = ps.length==0
@@ -122,7 +130,7 @@ public class UjoManager implements Comparator<Key> {
             // Save the result into buffer:
             propertiesCache.put(type, result);
         }
-        return new UjoPropertyListImpl(result);
+        return result;
     }
 
     /**
@@ -966,7 +974,7 @@ public class UjoManager implements Comparator<Key> {
      */
     protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalStateException {
         final HashSet<String> names = new HashSet<String>(16);
-        if (enabled) for (UjoProperty property : readProperties(type)) {
+        if (enabled) for (Key property : readKeys(type)) {
             //final UjoProperty property = (UjoProperty) _property;
             if (!names.add(property.getName())) {
                 throw new IllegalStateException

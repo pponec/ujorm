@@ -10,10 +10,9 @@ package org.ujorm_back.implementation.xml.t002_tech;
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import junit.framework.*;
-import org.ujorm_back.MyTestCase;
-import org.ujorm.UjoProperty;
+import org.ujorm.Key;
 import org.ujorm.core.UjoManagerXML;
-import org.ujorm.UjoPropertyList;
+import org.ujorm_back.MyTestCase;
 
 /**
  *
@@ -58,9 +57,8 @@ public class T002b_Test extends MyTestCase {
     
     protected UTechnicalBean createPerson() {
         UTechnicalBean result = new UTechnicalBean();
-        UjoPropertyList props = result.readProperties();
         
-        for (UjoProperty prop : props) {
+        for (Key prop : result.readKeys()) {
             result.writeValue(prop, null);
         }
         return result;
