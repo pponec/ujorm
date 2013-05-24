@@ -300,6 +300,17 @@ public class Session {
         return result != null;
     }
 
+    /** Returns {@code true} if exists any database row with the required condition. */
+    final public <UJO extends OrmUjo> boolean exists(final Class<UJO> entity) {
+        final MetaTable table = handler.findTableModel(entity);
+        final MetaColumn column = table.getFirstPK();
+        final UJO result = new Query<UJO>(table, Criterion.forAll(column.getKey()), this)
+                .setColumn(column.getKey())
+                .setLimit(1)
+                .uniqueResult();
+        return result != null;
+    }
+
     /** Returns the first "basic" column of criterion.
      * @return Not null result
      */
