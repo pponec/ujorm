@@ -200,7 +200,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
         OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
-        for (Key property : ujoManager.readProperties(dbProperty.getItemType())) {
+        for (Key property : ujoManager.readKeys(dbProperty.getItemType())) {
 
             if (!ujoManager.isTransientProperty(property)) {
 

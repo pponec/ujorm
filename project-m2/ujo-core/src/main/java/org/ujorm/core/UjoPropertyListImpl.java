@@ -31,7 +31,7 @@ import org.ujorm.UjoPropertyList;
  * @deprecated Use the KeyRing indead of this.
  */
 @Deprecated
-final public class UjoPropertyListImpl extends KeyRing<Ujo> implements UjoPropertyList  {
+final public class UjoPropertyListImpl extends KeyRing implements UjoPropertyList  {
 
     /** An empty array of the UJO keys */
     final static public Key[] EMPTY = new Key[0];
