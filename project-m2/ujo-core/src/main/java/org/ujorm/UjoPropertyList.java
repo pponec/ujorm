@@ -32,7 +32,7 @@ import org.ujorm.core.annot.Immutable;
  */
 @Deprecated
 @Immutable
-public interface UjoPropertyList extends KeyList<Ujo> {
+public interface UjoPropertyList extends KeyList {
 
     /**
      * Find (both direct or indirect) property by property name from parameter.
