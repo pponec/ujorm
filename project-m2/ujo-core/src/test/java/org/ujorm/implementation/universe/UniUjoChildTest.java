@@ -10,8 +10,8 @@ package org.ujorm.implementation.universe;
 
 import java.util.Date;
 import junit.framework.*;
-import org.ujorm.MyTestCase;
 import org.ujorm.KeyList;
+import org.ujorm.MyTestCase;
 
 /**
  *

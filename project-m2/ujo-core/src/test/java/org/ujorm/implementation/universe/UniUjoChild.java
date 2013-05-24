@@ -13,7 +13,6 @@ import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
-import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 
 /**
@@ -38,7 +37,7 @@ public class UniUjoChild extends UniUjoBase {
      * @return Return all direct Keys (An implementation from hhe Ujo API)
      */
     @Override
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return f.getKeys();
     }
 

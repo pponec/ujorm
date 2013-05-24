@@ -20,7 +20,7 @@ public class UniUjoImpl implements UniUjoInterface {
     private Object[] data = new Object[KEY_SIZE];
 
     @Override
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return $factory.getKeys();
     }
 

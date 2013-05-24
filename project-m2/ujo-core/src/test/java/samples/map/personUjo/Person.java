@@ -6,10 +6,8 @@ package samples.map.personUjo;
 import java.util.HashMap;
 import org.ujorm.*;
 import org.ujorm.core.UjoManager;
-import org.ujorm.KeyList;
-import org.ujorm.extensions.Property;
-import org.ujorm.UjoAction;
 import org.ujorm.core.UjoPropertyListImpl;
+import org.ujorm.extensions.Property;
 
 public class Person implements Ujo {
 

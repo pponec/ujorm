@@ -28,7 +28,7 @@ public class UniUjoChildImpl implements UniUjoInterfaceChild {
         data[property.getIndex()] = value;
     }
 
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return $factory2.getKeys();
     }
 

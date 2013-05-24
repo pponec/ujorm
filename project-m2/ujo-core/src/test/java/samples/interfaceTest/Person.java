@@ -29,7 +29,7 @@ public class Person implements Ujo {
         data[property.getIndex()] = value;
     }
 
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return f.getKeys();
     }
 
