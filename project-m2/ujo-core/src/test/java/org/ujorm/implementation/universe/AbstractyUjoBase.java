@@ -33,21 +33,23 @@ abstract public class AbstractyUjoBase implements Ujo {
     public static final ListKey<AbstractyUjoBase,Float> PRO_P4 = f.newListKey();
 
     /** Create a list of key */
-    private static final KeyList<?> keys = f.getKeys();
+    private static final KeyList keys = f.getKeys();
 
     /** Data */
     protected Object[] data;
 
     /** Return all direct Keys (an implementation from hhe Ujo API) */
     @Override
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return keys;
     }
 
+    @Override
     public Object readValue(Key property) {
         return data==null ? data : data[property.getIndex()];
     }
 
+    @Override
     public void writeValue(Key property, Object value) {
         if (data==null) {
             data = new Object[readKeys().size()];
@@ -55,6 +57,7 @@ abstract public class AbstractyUjoBase implements Ujo {
         data[property.getIndex()] = value;
     }
 
+    @Override
     public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
     }

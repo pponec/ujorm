@@ -39,7 +39,7 @@ public class ImplUjoBase extends AbstractyUjoBase {
      * @return Return all direct Keys (An implementation from hhe Ujo API)
      */
     @Override
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return f.getKeys();
     }
 

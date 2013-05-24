@@ -40,15 +40,17 @@ public class MismuchUjoBase extends AbstractUjo {
     protected Object[] data;
 
     @Override
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return f.getKeys();
     }
 
-    public Object readValue(Key property) {
+    @Override
+    public Object readValue(Key<?,?> property) {
         return data==null ? data : data[property.getIndex()];
     }
 
-    public void writeValue(Key property, Object value) {
+    @Override
+    public void writeValue(Key<?,?> property, Object value) {
         if (data==null) {
             data = new Object[readKeys().size()];
         }

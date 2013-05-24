@@ -63,7 +63,7 @@ public class UPerson2 implements Ujo, UjoTextable  {
         return result;
     }
 
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         return readProperties();
     }
 

@@ -43,7 +43,7 @@ final class DummyUjo implements Ujo {
 
     /** Returns unsorted keys. */
     @Override
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         final Key[] ps = UjoManager.getInstance().readPropertiesNocache(getClass(), false);
         return KeyRing.of(DummyUjo.class, ps);
     }

@@ -79,7 +79,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
 
     /** The method must be implemented in the child class. */
     @Override
-    public KeyList<?> readKeys() {
+    public KeyList readKeys() {
         throw new UnsupportedOperationException("The implementation must be in the a child class");
     }
 
