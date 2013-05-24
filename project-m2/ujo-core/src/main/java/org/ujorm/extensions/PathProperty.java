@@ -24,6 +24,7 @@ import java.util.List;
 import org.ujorm.CompositeKey;
 import org.ujorm.CompositeProperty;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.Validator;
@@ -44,7 +45,7 @@ import org.ujorm.validator.ValidationException;
  */
 @Immutable
 @SuppressWarnings("deprecation")
-final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
+public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
 
     /** Array of <strong>direct</strong> keys */
     private final Key[] keys;
@@ -91,7 +92,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
 
     /** Get the last property of the current object. The result may not be the direct property. */
     @SuppressWarnings("unchecked")
-    public final <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastPartialProperty() {
+    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastPartialProperty() {
         return keys[keys.length - 1];
     }
 
@@ -205,7 +206,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
      */
     @SuppressWarnings("unchecked")
     @Override
-    public VALUE getValue(final UJO ujo) throws ValidationException {
+    final public VALUE getValue(final UJO ujo) throws ValidationException {
         return of(ujo);
     }
 
@@ -216,7 +217,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     }
 
     @Override
-    public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException {
+    final public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException {
         final Ujo u = getSemiValue(ujo, createRelations);
         getLastPartialProperty().setValue(u, value);
     }
@@ -264,7 +265,7 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
     /** Returns true if the property type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     @Override
-    public boolean isTypeOf(final Class type) {
+    final public boolean isTypeOf(final Class type) {
         return getLastKey().isTypeOf(type);
     }
 
@@ -433,6 +434,17 @@ final public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProp
 
         return new PathProperty(props);
     }
+
+    /** ListKey */
+    @SuppressWarnings("unchecked")
+    public <VALUE_PAR> ListKey<UJO, VALUE_PAR> add(ListKey<? super VALUE, VALUE_PAR> property) {
+        Key[] props = new Key[keys.length+1];
+        System.arraycopy(keys, 0, props, 0, keys.length);
+        props[keys.length] = property;
+
+        return new PathListProperty(props);
+    }
+
 
     /** Compare to another Key object by the index and name of the property.
      * @since 1.20
