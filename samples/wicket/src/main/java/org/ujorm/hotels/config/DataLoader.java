@@ -15,20 +15,25 @@
  */
 package org.ujorm.hotels.config;
 
+import org.ujorm.hotels.domains.Customer;
+import org.ujorm.hotels.domains.Hotel;
 import org.ujorm.orm.InitializationBatch;
-import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.Session;
 
 /**
- * Data loader
+ * Data loader from CSV files
  * @author ponec
  */
 public class DataLoader implements InitializationBatch {
 
     /** Load data from a CSV file */
     @Override
-    public void run(OrmHandler handler) {
-        System.out.println("TODO: INITIALIZATION");
+    public void run(Session session) throws Exception {
+        if (session.exists(Customer.class)) {
+            System.out.println("TODO: load customers");
+        }
+        if (session.exists(Hotel.class)) {
+            System.out.println("TODO: load hotels");
+        }
     }
-
-
 }
