@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoProperty;
 import org.ujorm.Validator;
@@ -350,6 +351,15 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? super VALUE, VALUE_PAR> property) {
         return PathProperty.newInstance((Key)this, property);
     }
+
+    /** Create new composite (indirect) instance for an object type of ListKey.
+     * @since 0.92
+     */
+    @SuppressWarnings("unchecked")
+    public <VALUE_PAR> ListKey<UJO, VALUE_PAR> add(ListKey<? super VALUE, VALUE_PAR> property) {
+        return new PathListProperty((Key)this, property);
+    }
+
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     @Override

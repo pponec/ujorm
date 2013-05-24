@@ -37,4 +37,9 @@ public class UItemBean extends QuickUjo  {
     public static final Key<UItemBean,byte[]>     PA_BYTES    = newProperty("bytes", byte[].class); // TODO.pop
     public static final Key<UItemBean,char[]>     PB_CHARS    = newProperty("chars", char[].class); // TODO.pop
     
+    /** Vrací Long */
+    public Long getLong() {
+        return P5_LONG.of(this);
+    }
+
 }

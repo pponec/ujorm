@@ -179,7 +179,12 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(Key<? super VALUE, VALUE_PAR> property);
+    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(Key<? super VALUE, VALUE_PAR> key);
+
+    /** Create new composite (indirect) instance of the {@link  Key}.
+     * @since 1.36
+     */
+    public <VALUE_PAR> ListKey<UJO, VALUE_PAR> add(ListKey<? super VALUE, VALUE_PAR> key);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(UJO from, UJO to);
@@ -190,12 +195,13 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     @Override
     public int compareTo(Key p);
 
-    /** Returns the full name of the Key including a simple domain class. 
-     * <br />Example: Person.id */
+    /** Returns the name of the Key without domain class.
+     * <br />Example: ID */
     @Override
     public String toString();
 
-    /** Returns the full name of the Key including a simple domain class. Example: Person.id */
+    /** Returns the full name of the Key including a simple domain class.
+     * <br />Example: Person.ID */
     public String toStringFull();
 
     /**

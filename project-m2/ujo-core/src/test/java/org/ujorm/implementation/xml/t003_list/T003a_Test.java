@@ -50,7 +50,22 @@ public class T003a_Test extends MyTestCase {
         
         assertEquals(person, person2);
     }
-    
+
+    /**
+     * Test of printProperties method, of class org.ujorm.person.implementation.imlXML.XmlUjo.
+     */
+    public void testPathProperty() throws Exception {
+        URootMasterBean masterBean = new URootMasterBean();
+        URootMasterBean.MASTER.setValue(masterBean, new UMasterBean());
+        assertEquals(0, URootMasterBean.MASTER.add(UMasterBean.P0_L1ST).getItemCount(masterBean));
+
+        URootMasterBean.MASTER.add(UMasterBean.P0_L1ST).addItem(masterBean, createItem());
+        URootMasterBean.MASTER.add(UMasterBean.P0_L1ST).addItem(masterBean, createItem());
+        assertEquals(2, URootMasterBean.MASTER.add(UMasterBean.P0_L1ST).getItemCount(masterBean));
+        assertEquals(2, URootMasterBean.MASTER.add(UMasterBean.P0_L1ST).getList(masterBean).size());
+        assertEquals(createItem().getLong(), URootMasterBean.MASTER.add(UMasterBean.P0_L1ST).getItem(masterBean, 0).getLong());
+    }
+
     
     protected UMasterBean createMaster() {
         UMasterBean masterBean = new UMasterBean();
