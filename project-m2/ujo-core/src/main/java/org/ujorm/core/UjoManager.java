@@ -32,7 +32,6 @@ import org.ujorm.KeyList;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.core.annot.Transient;
@@ -42,8 +41,8 @@ import org.ujorm.extensions.*;
 import org.ujorm.implementation.array.ArrayUjo;
 import org.ujorm.swing.UjoPropertyRow;
 import org.ujorm.validator.ValidationError;
-import static org.ujorm.UjoAction.*;
 import org.ujorm.validator.ValidatorUtils;
+import static org.ujorm.UjoAction.*;
 
 /**
  * General Ujo Manager
