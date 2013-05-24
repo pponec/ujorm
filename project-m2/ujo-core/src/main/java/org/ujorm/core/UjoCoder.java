@@ -36,7 +36,7 @@ import org.ujorm.Ujo;
 import org.ujorm.extensions.StringWrapper;
 
 /**
- * A tool for encoding an object to a text and a text back to the object.
+ * Ujorm converter to a String format and back.
  * @author Pavel Ponec
  */
 public class UjoCoder {
@@ -260,8 +260,11 @@ public class UjoCoder {
             }
             if (type.isEnum()) {
                 if (StringWrapper.class.isAssignableFrom(type)) {
+                    final int hash = aValue.hashCode();
                     for (Object en : type.getEnumConstants()) {
-                        if (aValue.equals(((StringWrapper)en).exportToString())) {
+                        final String exportedTxt = ((StringWrapper)en).exportToString();
+                        if (hash == exportedTxt.hashCode() 
+                        && aValue.equals(exportedTxt)) {
                             return en;
                         }
                     }
