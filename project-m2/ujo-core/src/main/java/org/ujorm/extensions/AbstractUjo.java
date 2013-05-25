@@ -26,6 +26,7 @@ import org.ujorm.core.UjoManager;
  * This is a very fast abstract implementation of <code>Ujo</code>.
  * For implementation define only a "public static final Key" constants and a "readPropertyCount()" method in a child class.
  * The code syntax is Java 1.5 complied.
+ * The class can be Serializable.
  * <br>All keys must be objects (no primitive types) in the current version of Ujorm.
  * <br>Features: very good performance, an order of keys from "<code>readKeys()</code>" method is guaranteed and independed on a Java implementation.
  * <h3>Sample of usage</h3>

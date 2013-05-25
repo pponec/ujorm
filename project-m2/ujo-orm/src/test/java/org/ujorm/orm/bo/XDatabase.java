@@ -16,10 +16,10 @@
 
 package org.ujorm.orm.bo;
 
-import org.ujorm.orm.annot.Table;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;
+import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.dialect.*;
 
 /**

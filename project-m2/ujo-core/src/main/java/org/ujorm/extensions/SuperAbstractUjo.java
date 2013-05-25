@@ -33,7 +33,6 @@ import org.ujorm.core.*;
  */
 public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable {
 
-
     /**
      * Initializa all keys. If the keys are unlocked than recalculate index
      * and set an undefined property name by its static field.

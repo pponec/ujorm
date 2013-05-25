@@ -35,7 +35,7 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
 /**
  * This abstract implementation of the OrmUjo interface is situable
  * for implementation the persistent entities.
- * <br>Instances of the OrmTable are serializable, but you need to know that only 
+ * <br>Instances of the OrmTable can be serializable, but you need to know that only
  * business data will be transferred, the session and property changes will not be passed.
  * <br>The sample of use:
  * <pre class="pre">

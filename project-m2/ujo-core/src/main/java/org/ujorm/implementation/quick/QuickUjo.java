@@ -16,16 +16,16 @@
 
 package org.ujorm.implementation.quick;
 
-import java.io.Serializable;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.extensions.AbstractUjo;
-import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ListProperty;
+import org.ujorm.extensions.Property;
 
 /**
  * This is a fast implementation of the <code>Ujo</code>.
  * For implementation define only a "public static final Key" constants call a static method init() from the static block located after the latest property.
+ * The class can be Serializable.
  * <br>All keys must be objects (no primitive types) in the current version of Ujorm.
  * <br>Features: good performance, simple code.
  * <h3>Sample of usage</h3>
@@ -46,10 +46,7 @@ import org.ujorm.extensions.ListProperty;
  * @author Pavel Ponec
  * @composed 1 - * Property
  */
-public abstract class QuickUjo extends AbstractUjo implements Serializable {
-
-    /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
-    private static final long serialVersionUID = 754967L;
+public abstract class QuickUjo extends AbstractUjo {
 
     /** {@see Key#UNDEFINED_INDEX} */
     private static final int UNDEFINED_INDEX = -1;

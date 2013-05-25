@@ -16,8 +16,8 @@
 
 package org.ujorm.orm;
 
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 
 /**
  * Extended ORM Ujo. Interface methods are not necessary to run the ORM.
