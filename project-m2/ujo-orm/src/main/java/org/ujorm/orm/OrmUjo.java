@@ -16,12 +16,13 @@
 
 package org.ujorm.orm;
 
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.implementation.orm.RelationToMany;
 
 /**
  * The OrmUjo is a basic interface of the persistent object in the ORM support.
+ * The class can be Serializable.
  * A class that implements the interface must have got a next special features:
  * <ul>
  *   <li>exactly one Key must be identified as the primary key. </li>

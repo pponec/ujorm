@@ -17,9 +17,9 @@ package org.ujorm_back.orm.bo;
 
 import java.util.Date;
 import org.ujorm.UjoProperty;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.TypeService;
+import org.ujorm.orm.annot.Column;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).

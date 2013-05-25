@@ -22,10 +22,10 @@ import java.util.Date;
 import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.Transient;
-import org.ujorm.orm.DbType;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.DbType;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.utility.OrmTools;
 

@@ -39,9 +39,4 @@ public class UniUjoImpl implements UniUjoInterface {
         return true;
     }
 
-    /** The deprecated method will be removed in the next Ujorm release */
-    @Override
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
-    }
 }
