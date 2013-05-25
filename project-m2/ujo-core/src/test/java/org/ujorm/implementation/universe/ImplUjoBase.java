@@ -43,9 +43,4 @@ public class ImplUjoBase extends AbstractyUjoBase {
         return f.getKeys();
     }
 
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
-    }
-
-
 }

@@ -10,9 +10,9 @@ package org.ujorm_back;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.*;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
-import org.ujorm.UjoPropertyList;
 import org.ujorm.extensions.UjoTextable;
 
 /**
@@ -51,11 +51,11 @@ abstract public class MyTestCase extends TestCase {
         if (expected==actual) { return; }
         assertEquals(expected.getClass(), expected.getClass());
         
-        UjoPropertyList properties = expected.readProperties();
+        KeyList properties = expected.readKeys();
         
         if (expected instanceof UjoTextable) {
             for (int i=properties.size()-1; i>=0; i--) {
-                UjoProperty property = properties.get(i);
+                Key property = properties.get(i);
                 String o1 = String.valueOf(((UjoTextable)expected).readValueString(property, null));
                 String o2 = String.valueOf(((UjoTextable)actual  ).readValueString(property, null));
                 assertEquals("Property \"" + property.getName() + "\"", o1, o2);
@@ -64,7 +64,7 @@ abstract public class MyTestCase extends TestCase {
        
         
         for (int i=properties.size()-1; i>=0; i--) {
-            UjoProperty<? super Ujo,?> property = properties.get(i);
+            Key<? super Ujo,?> property = properties.get(i);
             Object o1 = property.of(expected);
             Object o2 = property.of(actual);
             

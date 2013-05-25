@@ -331,7 +331,7 @@ public final class UjoTranslator<CUJO extends Cujo> {
                 try {
                     Object idValue = ((Cujo) value).get(pkPropertyName);
                     OrmUjo ormValue = (OrmUjo) pc.p1.getType().newInstance();
-                    Key p = ormValue.readProperties().find(pkPropertyName, true);
+                    Key p = ormValue.readKeys().find(pkPropertyName, true);
                     p.setValue(ormValue, idValue);
                     copyToServer((Cujo) value, ormValue);
                     value = ormValue;

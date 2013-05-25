@@ -83,12 +83,6 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
         throw new UnsupportedOperationException("The implementation must be in the a child class");
     }
 
-
-    @Override
-    final public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
-    }
-
     // ------------- STATIC METHODS -------------------
 
     @Override
