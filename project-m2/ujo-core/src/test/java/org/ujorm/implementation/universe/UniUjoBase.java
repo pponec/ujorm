@@ -61,10 +61,4 @@ public class UniUjoBase implements Ujo {
         return true;
     }
 
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
-    }
-
-
-
 }

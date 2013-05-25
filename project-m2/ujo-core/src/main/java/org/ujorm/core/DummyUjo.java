@@ -49,12 +49,6 @@ final class DummyUjo implements Ujo {
         return KeyRing.of(DummyUjo.class, ps);
     }
 
-    /** Returns unsorted keys. */
-    @SuppressWarnings("deprecation")
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
-    }
-    
     /** Is an order of keys reversed? */
     public Boolean isPropertiesReversed() {
         final KeyList props = readKeys();
