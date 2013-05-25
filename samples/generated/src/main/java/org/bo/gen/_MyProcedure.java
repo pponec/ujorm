@@ -4,7 +4,7 @@
  */
 package org.bo.gen;
 
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.orm.DbProcedure;
 import org.ujorm.orm.annot.Parameter;
 import org.ujorm.orm.annot.Procedure;
