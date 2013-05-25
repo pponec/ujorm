@@ -21,7 +21,7 @@ import org.bo.Item;
 import org.bo.MyProcedure;
 import org.bo.Order;
 import org.bo.ViewOrder;
-import org.ujorm.extensions.Property;
+import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Procedure;
