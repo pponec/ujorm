@@ -128,7 +128,14 @@ public class SampleORM {
             MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
-            params.setQuotedSqlNames(false);
+            params.setQuotedSqlNames(false);            
+            params.set(MetaParams.INITIALIZATION_BATCH, new InitializationBatch() {
+                @Override public void run(Session session) throws Exception {
+                    if (!session.exists(Customer.class)) {
+                        System.out.println("Create some customers, if you can.");
+                    }
+                }
+            });
             handler.config(params);
         }
 

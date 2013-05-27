@@ -53,8 +53,6 @@ public class OrmHandler implements OrmHandlerProvider {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmHandler.class);
-    /** Default handler */
-    private static OrmHandler handler = new OrmHandler();
 
     /** List of databases */
     private MetaRoot databases = new MetaRoot();
@@ -84,13 +82,6 @@ public class OrmHandler implements OrmHandlerProvider {
     public <UJO extends OrmUjo> OrmHandler(final Class<UJO> ... databaseModels) {
         this();
         loadDatabase(databaseModels);
-    }
-
-
-    /** A candidate to removing */
-    // @Deprecated
-    public static OrmHandler getInstance() {
-        return handler;
     }
 
      /** Get a <strong>default</strong> Session of the OrmHandler.
@@ -220,7 +211,7 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Load a meta-data, lock it and create database tables.
      * There is not allowed to make any change to the created meta-model.
      */
-    public synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
+    public final synchronized <UJO extends OrmUjo> void loadDatabase(final Class<UJO> ... databaseModel) {
 
         if (isReadOnly()) {
             throw new IllegalArgumentException("The meta-model is locked and can´t be changed.");
@@ -264,26 +255,24 @@ public class OrmHandler implements OrmHandlerProvider {
         }
 
         // Run an initializaton batch:
-        if (!MetaParams.INITIALIZATION_BATCH.isDefault(params)) {
-            final Class<?> batchClass = MetaParams.INITIALIZATION_BATCH.of(params);
+        final InitializationBatch batch = params.getInitializationBatch();
+        if (batch != null) {
             Session session = null;
             try {
-                session = handler.createSession();
-                LOGGER.log(Level.INFO, "The initializaton batch is running: " + batchClass.getName());
-                final InitializationBatch batch = (InitializationBatch) batchClass.newInstance();
+                session = createSession();
+                LOGGER.log(Level.INFO, "The initializaton batch is running: " + batch.getClass().getName());
                 batch.run(session);
                 session.commit();
                 session.close();
             } catch (Exception e) {
+                final String msg = "The batch failed: " + batch.getClass().getName();
+                LOGGER.log(Level.SEVERE, msg, e);
+                throw new IllegalStateException(msg, e);
+            } finally {
                 if (session != null) {
                     session.rollback();
                     session.close();
                 }
-                final String msg = "The batch failed: " + batchClass.getName();
-                LOGGER.log(Level.SEVERE, msg, e);
-                throw new IllegalStateException(msg, e);
-            } finally {
-
             }
         }
     }
