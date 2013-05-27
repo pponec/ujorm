@@ -161,6 +161,9 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** The type service cache */
     private final Map<Class, ITypeService> typeServices = new HashMap<Class, ITypeService>(2);
+    
+    /** Assign an initialization batch */
+    private InitializationBatch batch;
 
     public MetaParams() {
         MORE_PARAMS.setValue(this, new MoreParams());
@@ -243,6 +246,21 @@ final public class MetaParams extends AbstractMetaModel {
                 : null // The default value
                 );
     }
+        
+    /** Assign an initialization batch */
+    public void set(Key<MetaParams,Class<? extends InitializationBatch>> key, InitializationBatch batch) {
+        this.batch = batch;
+    }
 
+    /** Retunrs an instance of the initialization batch */
+    public InitializationBatch getInitializationBatch() throws IllegalStateException{
+        if (INITIALIZATION_BATCH.isDefault(this)) {
+            return this.batch;
+        } else try {
+            return INITIALIZATION_BATCH.of(this).newInstance(); 
+        } catch (Exception e) {
+            throw new IllegalStateException("Instance of the class failed: " + INITIALIZATION_BATCH.of(this));
+        }
+    }
 }
 
