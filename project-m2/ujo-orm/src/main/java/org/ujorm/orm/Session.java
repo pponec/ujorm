@@ -291,21 +291,21 @@ public class Session {
 
     /** Returns {@code true} if exists any database row with the required condition. */
     final public <UJO extends OrmUjo> boolean exists(final Criterion<UJO> criterion) {
-        final MetaRelation2Many column = getBasicColumn(criterion);
-        final MetaTable table = MetaRelation2Many.TABLE.of(column);
-        final UJO result = new Query<UJO>(table, criterion, this)
-                .setColumn(column.getKey())
-                .setLimit(1)
-                .uniqueResult();
-        return result != null;
+        final MetaTable table = MetaRelation2Many.TABLE.of(getBasicColumn(criterion));
+        return exists(table, criterion, table.getFirstPK().getKey());
     }
 
     /** Returns {@code true} if exists any database row for the required entity. */
     final public <UJO extends OrmUjo> boolean exists(final Class<UJO> entity) {
         final MetaTable table = handler.findTableModel(entity);
-        final MetaColumn column = table.getFirstPK();
-        final UJO result = new Query<UJO>(table, column.getKey().forAll(), this)
-                .setColumn(column.getKey())
+        final Key pk = table.getFirstPK().getKey();
+        return exists(table, pk.forAll(), pk);
+    }
+
+    /** Returns {@code true} if exists any database row for the required criterion. */
+    final protected <UJO extends OrmUjo> boolean exists( MetaTable table, Criterion<UJO> criterion, Key pk) {
+        final UJO result = new Query<UJO>(table, pk.forAll(), this)
+                .setColumn(pk)
                 .setLimit(1)
                 .uniqueResult();
         return result != null;

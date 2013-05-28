@@ -73,7 +73,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /**
      * Create new ORM query. A one from argument is mandatory.
      * @param table Table model is mandatory
-     * @param criterion If criterion is null, then a TRUE constant criterion is used.
+     * @param criterion If criterion is null, then the ForAll criterion is used.
      * @param session Session
      */
     public Query(final MetaTable table, final Criterion<UJO> criterion, final Session session) {
