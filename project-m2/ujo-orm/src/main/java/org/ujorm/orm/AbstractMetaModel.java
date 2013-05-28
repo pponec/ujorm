@@ -93,7 +93,7 @@ abstract public class AbstractMetaModel extends AbstractUjo {
     /** Test a read-only state */
     public boolean checkReadOnly(final boolean exception) throws UnsupportedOperationException {
         if (readOnly && exception) {
-            throw new UnsupportedOperationException("Object have got a read-only state");
+            throw new UnsupportedOperationException("The model have got a read-only state: " + getClass().getSimpleName());
         }
         return readOnly;
     }
