@@ -249,6 +249,7 @@ final public class MetaParams extends AbstractMetaModel {
         
     /** Assign an initialization batch */
     public void set(Key<MetaParams,Class<? extends InitializationBatch>> key, InitializationBatch batch) {
+        checkReadOnly(true);
         this.batch = batch;
     }
 
