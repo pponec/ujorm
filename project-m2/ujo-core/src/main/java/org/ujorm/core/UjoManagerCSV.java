@@ -390,4 +390,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key... keys) {
         return new UjoManagerCSV<UJO>(ujoClass, keys);
     }
+
+    /** Create new instance where the domain class is get from an array of the keys. */
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Key... keys) {
+        return new UjoManagerCSV<UJO>(KeyRing.getBaseType(keys), keys);
+    }
 }
