@@ -18,12 +18,11 @@ package org.ujorm.hotels.config;
 
 import org.ujorm.hotels.domains.Customer;
 import org.ujorm.hotels.domains.Hotel;
-import org.ujorm.hotels.domains.Reservation;
+import org.ujorm.hotels.domains.Booking;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;
 import org.ujorm.orm.annot.Table;
-import org.ujorm.orm.annot.View;
 import org.ujorm.orm.dialect.*;
 
 /**
@@ -41,17 +40,16 @@ import org.ujorm.orm.dialect.*;
 //@Db(schema="db1", dialect=org.ujorm.orm.dialect.MSSqlDialect.class, user="sa", password="datamaster", jdbcUrl="jdbc:sqlserver://127.0.0.1:1433")
 public class DatabaseMapping extends OrmTable<DatabaseMapping> {
 
-    /** Customer of the appliction. */
-    @Table("demo_customer")
-    public static final RelationToMany<DatabaseMapping,Customer> CUSTOMER = newRelation();
-
     /** Hotel entity */
     @Table("demo_hotel")
     public static final RelationToMany<DatabaseMapping,Hotel> HOTEL = newRelation();
 
-    /** Reservaton (a relation type of many to many between Customers and Hotels. */
-    @View("demo_reservation")
-    public static final RelationToMany<DatabaseMapping,Reservation> RESERVATION = newRelation();
+    /** Customer of the appliction. */
+    @Table("demo_customer")
+    public static final RelationToMany<DatabaseMapping,Customer> CUSTOMER = newRelation();
 
+    /** Booling (a relation between Customers and Hotels type of many to many. */
+    @Table("demo_booking")
+    public static final RelationToMany<DatabaseMapping,Booking> BOOKING = newRelation();
 
 }

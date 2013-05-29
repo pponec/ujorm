@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.35 was created 2013/05/23 23:17 -->
+<!-- The Ujorm configuration file release 1.36-SNAPSHOT was created 2013/05/29 02:04 -->
 <body>
     <database id="DatabaseMapping">
         <schema>db1</schema>
@@ -10,6 +10,76 @@
         <user>sa</user>
         <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
         <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+        <table id="HOTEL">
+            <name>demo_hotel</name>
+            <alias>demo_hotel</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>BIGINT</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="NAME">
+                <name>NAME</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>80</maxLength>
+                <index>idx_hotel_name</index>
+                <comment>Name of the Hotel</comment>
+            </column>
+            <column id="NOTE">
+                <name>NOTE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>256</maxLength>
+                <comment>Description of the hotel</comment>
+            </column>
+            <column id="CITY">
+                <name>CITY</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>256</maxLength>
+                <comment>City of address</comment>
+            </column>
+            <column id="STREET">
+                <name>STREET</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>256</maxLength>
+                <comment>Street of address</comment>
+            </column>
+            <column id="PHONE">
+                <name>PHONE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>16</maxLength>
+                <comment>Phone</comment>
+            </column>
+            <column id="STARS">
+                <name>STARS</name>
+                <dbType>INT</dbType>
+                <mandatory>true</mandatory>
+                <comment>Stars</comment>
+            </column>
+            <column id="HOME_PAGE">
+                <name>HOME_PAGE</name>
+                <dbType>VARCHAR</dbType>
+                <maxLength>256</maxLength>
+                <comment>URL to the HomePage</comment>
+            </column>
+            <column id="PRICE">
+                <name>PRICE</name>
+                <dbType>DECIMAL</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>8</maxLength>
+                <precision>2</precision>
+                <comment>Price per night in EUR</comment>
+            </column>
+            <column id="ACTIVE">
+                <name>ACTIVE</name>
+                <dbType>BOOLEAN</dbType>
+                <index>idx_hotel_name</index>
+                <comment>Hotel state (the true or null is required)</comment>
+            </column>
+        </table>
         <table id="CUSTOMER">
             <name>demo_customer</name>
             <alias>demo_customer</alias>
@@ -54,8 +124,8 @@
                 <maxLength>60</maxLength>
                 <comment>Firstname</comment>
             </column>
-            <column id="LASTNAME">
-                <name>LASTNAME</name>
+            <column id="SURENAME">
+                <name>SURENAME</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>60</maxLength>
@@ -69,54 +139,9 @@
                 <comment>Email</comment>
             </column>
         </table>
-        <table id="HOTEL">
-            <name>demo_hotel</name>
-            <alias>demo_hotel</alias>
-            <schema>db1</schema>
-            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <column id="ID">
-                <name>ID</name>
-                <primaryKey>true</primaryKey>
-                <dbType>BIGINT</dbType>
-                <comment>The Primary Key</comment>
-            </column>
-            <column id="ACTIVE">
-                <name>ACTIVE</name>
-                <dbType>BOOLEAN</dbType>
-                <comment>Hotel state (the true or null is required)</comment>
-            </column>
-            <column id="NAME">
-                <name>NAME</name>
-                <dbType>VARCHAR</dbType>
-                <mandatory>true</mandatory>
-                <maxLength>80</maxLength>
-                <index>idx_hotel_name</index>
-                <comment>Name of the Hotel</comment>
-            </column>
-            <column id="PRICE">
-                <name>PRICE</name>
-                <dbType>DECIMAL</dbType>
-                <mandatory>true</mandatory>
-                <maxLength>8</maxLength>
-                <precision>2</precision>
-                <comment>Price per night in EUR</comment>
-            </column>
-            <column id="NOTE">
-                <name>NOTE</name>
-                <dbType>VARCHAR</dbType>
-                <maxLength>256</maxLength>
-                <comment>Description of the hotel</comment>
-            </column>
-            <column id="CREATED">
-                <name>CREATED</name>
-                <dbType>TIMESTAMP</dbType>
-                <mandatory>true</mandatory>
-                <comment>Date of creation</comment>
-            </column>
-        </table>
-        <table id="RESERVATION" view="true">
-            <name>demo_reservation</name>
-            <alias>demo_reservation</alias>
+        <table id="BOOKING">
+            <name>demo_booking</name>
+            <alias>demo_booking</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
             <column id="ID">
@@ -129,12 +154,14 @@
                 <name>HOTEL</name>
                 <dbType>BIGINT</dbType>
                 <mandatory>true</mandatory>
+                <uniqueIndex>idx_booking</uniqueIndex>
                 <comment>Relation to hotel</comment>
             </column>
             <column id="CUSTOMER">
                 <name>CUSTOMER</name>
                 <dbType>INT</dbType>
                 <mandatory>true</mandatory>
+                <uniqueIndex>idx_booking</uniqueIndex>
                 <comment>Relation to customer</comment>
             </column>
             <column id="DATE_FROM">
@@ -161,19 +188,20 @@
             <alias>db1</alias>
             <schema>db1</schema>
             <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
-            <relation2m id="CUSTOMER">
-                <name>CUSTOMER</name>
-            </relation2m>
             <relation2m id="HOTEL">
                 <name>HOTEL</name>
             </relation2m>
-            <relation2m id="RESERVATION">
-                <name>RESERVATION</name>
+            <relation2m id="CUSTOMER">
+                <name>CUSTOMER</name>
+            </relation2m>
+            <relation2m id="BOOKING">
+                <name>BOOKING</name>
             </relation2m>
         </table>
     </database>
     <parameters>
-        <initializationBatch>org.ujorm.hotels.config.DataLoader</initializationBatch>
+        <initializationBatch>org.ujorm.hotels.config.ResourceDataLoader</initializationBatch>
+        <checkKeywords>QUOTE_SQL_NAMES</checkKeywords>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
         <moreParams></moreParams>
     </parameters>

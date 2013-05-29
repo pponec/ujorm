@@ -1,0 +1,17 @@
+* DEMO HOTELS
+* Data was loaded from the application "Sample Hotel Search" on the day 2013-05-25 from a
+* resource: http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
+*
+* License (http://api.hotelsbase.org/documentation.php):
+* Each page that uses hotelsbase data must link to hotelsbase.org, in any many you choose.
+* Hotelsbase (http://www.hotelbase.org/) is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+* Creative Commons License
+
+NAME;NOTE;CITY;STREET;PHONE;STARS;HOME_PAGE;PRICE;ACTIVE
+City Bell Hotel in the city center;City Bell Hotel in the city center is a in Prague,Czech Republic.;Prague;Belgická 10;420000000000;3;http://www.hotelsbase.org/hotels/122316/PragueCzech-Republic/City-Bell-Hotel-in-the-city-center.html;12;true
+Little Quarter Hostel;Little Quarter Hostel is a Hotel in Prague,Czech Republic.;Prague;Nerudova 21;420000000000;3;http://www.hotelsbase.org/hotels/182694/PragueCzech-Republic/Little-Quarter-Hostel.html;12;true
+Hotel Andel;Hotel Andel is a Hotel in Prague,Czech Republic.;Prague;Radlická 40;420000000000;3;http://www.hotelsbase.org/hotels/116853/PragueCzech-Republic/Hotel-Andel.html;16;true
+Hotel Ostas;Hotel Ostas is a Hotel in Prague,Czech Republic.;Prague;Orebitská 8;420000000000;3;http://www.hotelsbase.org/hotels/140961/PragueCzech-Republic/Hotel-Ostas.html;16;true
+Wellness Hotel Step;Wellness Hotel Step is a Hotel in Prague,Czech Republic.;Prague;Malletova 1141;420000000000;4;http://www.hotelsbase.org/hotels/287933/PragueCzech-Republic/Wellness-Hotel-Step.html;23;true
+EuroAgentur Hotel Jasmin;EuroAgentur Hotel Jasmin is a Hotel in Prague,Czech Republic.;Prague;Skloněná 515;1978785-48;3;http://www.hotelsbase.org/hotels/78645/PragueCzech-Republic/EuroAgentur-Hotel-Jasmin.html;20;true
+Little Town Budget Hotel;Little Town Budget Hotel is a Hotel in Prague,Czech Republic.;Prague;Malostranské náměstí 11/260;420000000000;2;http://www.hotelsbase.org/hotels/182715/PragueCzech-Republic/Little-Town-Budget-Hotel.html;15;true

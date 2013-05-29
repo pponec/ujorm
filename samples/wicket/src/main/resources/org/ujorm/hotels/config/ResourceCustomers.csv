@@ -1,0 +1,3 @@
+LOGIN;PASSWORD;ACTIVE;FIRSTNAME;SURENAME;EMAIL
+demo;demo;true;Jan;Demo;demo@ujorm.org
+test;test;true;Pavel;Test;test@ujorm.org

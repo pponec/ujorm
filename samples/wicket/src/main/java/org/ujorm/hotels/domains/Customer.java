@@ -5,19 +5,17 @@
  */
 package org.ujorm.hotels.domains;
 
-import org.ujorm.hotels.domains.enums.TitleEnum;
 import org.ujorm.Key;
-import org.ujorm.Validator;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Transient;
+import org.ujorm.hotels.domains.enums.TitleEnum;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.Validator.*;
 import static org.ujorm.Validator.Build.*;
 
 /** Common User */
-abstract public class Customer extends OrmTable<Customer> {
+public class Customer extends OrmTable<Customer> {
 
     /** Index name */
     private static final String UNIQUE_LOGIN = "idx_unique_login";
@@ -33,6 +31,9 @@ abstract public class Customer extends OrmTable<Customer> {
     @Comment("Unique login")
     @Column(uniqueIndex=UNIQUE_LOGIN)
     public static final Key<Customer, String> LOGIN = f.newKey(length(MANDATORY, 3, 6));
+    /** A form field only */
+    @Transient
+    public static final Key<Customer, String> PASSWORD = f.newKey(length(MANDATORY, 3, 1000));
     /** Customer state (the true or null values are required) */
     @Comment("Customer is allowed to login (the true or null values are required)")
     @Column(uniqueIndex=UNIQUE_LOGIN)
@@ -49,13 +50,10 @@ abstract public class Customer extends OrmTable<Customer> {
     public static final Key<Customer, String> FIRSTNAME = f.newKey(length(MANDATORY, 2, 60));
     /** Firstname */
     @Comment("Lastname")
-    public static final Key<Customer, String> LASTNAME = f.newKey(length(MANDATORY, 2, 60));
+    public static final Key<Customer, String> SURENAME = f.newKey(length(MANDATORY, 2, 60));
     /** Email */
     @Comment("Email")
     public static final Key<Customer, String> EMAIL = f.newKey(email(MANDATORY));    
-    /** A form field only */
-    @Transient
-    public static final Key<Customer, String> PASSWORD = f.newKey(length(MANDATORY, 3, 1000));
     
     static {
         f.lock();
@@ -126,12 +124,12 @@ abstract public class Customer extends OrmTable<Customer> {
     
     /** Firstname */
     public String getLastname() {
-        return LASTNAME.of(this);
+        return SURENAME.of(this);
     }
     
     /** Firstname */
     public void setLastname(String lastname) {
-        Customer.LASTNAME.setValue(this, lastname);
+        Customer.SURENAME.setValue(this, lastname);
     }
     
     /** Email */
