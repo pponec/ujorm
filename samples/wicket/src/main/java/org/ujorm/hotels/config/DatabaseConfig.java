@@ -18,6 +18,7 @@ package org.ujorm.hotels.config;
 import org.springframework.stereotype.Service;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
+import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.metaModel.MetaParams;
 
 /** Build and configure database meta-model */
@@ -35,7 +36,8 @@ public final class DatabaseConfig implements OrmHandlerProvider {
             final MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.LOG_METAMODEL_INFO, true);
-            params.set(MetaParams.INITIALIZATION_BATCH, DataLoader.class);
+            params.set(MetaParams.CHECK_KEYWORDS, CheckReport.QUOTE_SQL_NAMES);
+            params.set(MetaParams.INITIALIZATION_BATCH, ResourceDataLoader.class);
             handler.config(params);
         }
         // External Configuration:

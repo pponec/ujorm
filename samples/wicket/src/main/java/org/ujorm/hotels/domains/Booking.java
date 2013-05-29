@@ -8,39 +8,41 @@ package org.ujorm.hotels.domains;
 
 import java.util.Date;
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Column;
-import org.ujorm.implementation.orm.OrmTable;
-import org.ujorm.orm.annot.Comment;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
+import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
 
 /** Hotel */
-abstract public class Reservation extends OrmTable<Reservation> {
+public class Booking extends OrmTable<Booking> {
 
-    private static final String UNIQUE_HOTEL_NAME="idx_hotel_name";
+    private static final String UNIQUE_BOOKING_NAME="idx_booking";
     
     /** Factory */
-    private static final KeyFactory<Reservation> f = newFactory(Reservation.class);
+    private static final KeyFactory<Booking> f = newFactory(Booking.class);
 
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
-    public static final Key<Reservation, Long> ID = f.newKey();
+    public static final Key<Booking, Long> ID = f.newKey();
     /** Relation to hotel */
     @Comment("Relation to hotel")
-    public static final Key<Reservation, Hotel> HOTEL = f.newKey(notNull());
+    @Column(uniqueIndex=UNIQUE_BOOKING_NAME)
+    public static final Key<Booking, Hotel> HOTEL = f.newKey(notNull());
     /** Relation to customer */
     @Comment("Relation to customer")
-    public static final Key<Reservation, Customer> CUSTOMER = f.newKey(notNull());
+    @Column(uniqueIndex=UNIQUE_BOOKING_NAME)
+    public static final Key<Booking, Customer> CUSTOMER = f.newKey(notNull());
     /** Date from */
     @Comment("Date from")
-    public static final Key<Reservation, Date> DATE_FROM = f.newKey(mandatory());
+    public static final Key<Booking, Date> DATE_FROM = f.newKey(mandatory());
     /** Date to */
     @Comment("Date to")
-    public static final Key<Reservation, Date> DATE_TO = f.newKey(mandatory());
+    public static final Key<Booking, Date> DATE_TO = f.newKey(mandatory());
     /** Reservation date */
     @Comment("Reservation date")
-    public static final Key<Reservation, Date> RESERVATION_DATE = f.newKey(mandatory());
+    public static final Key<Booking, Date> RESERVATION_DATE = f.newKey(mandatory());
     
     static {
         f.lock();
@@ -57,7 +59,7 @@ abstract public class Reservation extends OrmTable<Reservation> {
     
     /** The Primary Key */
     public void setId(Long id) {
-        Reservation.ID.setValue(this, id);
+        Booking.ID.setValue(this, id);
     }
     
     /** Relation to hotel */
@@ -67,7 +69,7 @@ abstract public class Reservation extends OrmTable<Reservation> {
     
     /** Relation to hotel */
     public void setHotel(Hotel hotel) {
-        Reservation.HOTEL.setValue(this, hotel);
+        Booking.HOTEL.setValue(this, hotel);
     }
     
     /** Relation to customer */
@@ -77,7 +79,7 @@ abstract public class Reservation extends OrmTable<Reservation> {
     
     /** Relation to customer */
     public void setCustomer(Customer customer) {
-        Reservation.CUSTOMER.setValue(this, customer);
+        Booking.CUSTOMER.setValue(this, customer);
     }
     
     /** Date from */
@@ -87,7 +89,7 @@ abstract public class Reservation extends OrmTable<Reservation> {
     
     /** Date from */
     public void setDateFrom(Date dateFrom) {
-        Reservation.DATE_FROM.setValue(this, dateFrom);
+        Booking.DATE_FROM.setValue(this, dateFrom);
     }
     
     /** Date to */
@@ -97,7 +99,7 @@ abstract public class Reservation extends OrmTable<Reservation> {
     
     /** Date to */
     public void setDateTo(Date dateTo) {
-        Reservation.DATE_TO.setValue(this, dateTo);
+        Booking.DATE_TO.setValue(this, dateTo);
     }
     
     /** Reservation date */
@@ -107,7 +109,7 @@ abstract public class Reservation extends OrmTable<Reservation> {
     
     /** Reservation date */
     public void setReservationDate(Date reservationDate) {
-        Reservation.RESERVATION_DATE.setValue(this, reservationDate);
+        Booking.RESERVATION_DATE.setValue(this, reservationDate);
     }
     //</editor-fold>
     
