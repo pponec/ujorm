@@ -18,6 +18,10 @@
         </contributor>
     </contributors>
 
+    <properties>
+        <yworks.uml.path>${basedir}/../scripts/javadoc/doclets/yworks-uml-doclet-3.0_02-jdk1.5</yworks.uml.path>
+    </properties>
+
     <scm>
         <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-core/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2/ujo-core</connection>
@@ -45,6 +49,7 @@
 
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
@@ -57,6 +62,26 @@
                     <doctitle>Ujorm ${project.version} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
                     <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
+
+                    <!-- Doclet (yWorks UML Doclet) -->
+                    <doclet>ydoc.doclets.YStandard</doclet>
+                    <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
+                    <additionalparam>-link http://docs.oracle.com/javase/6/docs/api/ -umlautogen</additionalparam>
+
+                    <!-- Doclet (sudo apt-get install graphviz) -.->
+                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>org.umlgraph</groupId>
+                        <artifactId>umlgraph</artifactId>
+                        <version>5.6</version>
+                    </docletArtifact>
+                    <additionalparam>
+                        -inferrel -quiet -hide java.*
+                        -collpackages java.util.* -qualify
+                        -postfixpackage -nodefontsize 9
+                        -nodefontpackagesize 7
+                    </additionalparam>
+                    -->
                 </configuration>
             </plugin>
 
@@ -96,7 +121,6 @@
                     </archive>
                 </configuration>
             </plugin>
-
 
         </plugins>
     </build>
