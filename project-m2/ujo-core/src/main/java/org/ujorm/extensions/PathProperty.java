@@ -426,7 +426,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? super VALUE, VALUE_PAR> property) {
+    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> property) {
 
         Key[] props = new Key[keys.length+1];
         System.arraycopy(keys, 0, props, 0, keys.length);
@@ -437,7 +437,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
 
     /** ListKey */
     @SuppressWarnings("unchecked")
-    public <VALUE_PAR> ListKey<UJO, VALUE_PAR> add(ListKey<? super VALUE, VALUE_PAR> property) {
+    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> property) {
         Key[] props = new Key[keys.length+1];
         System.arraycopy(keys, 0, props, 0, keys.length);
         props[keys.length] = property;
