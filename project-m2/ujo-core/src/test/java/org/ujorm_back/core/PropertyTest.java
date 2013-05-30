@@ -9,6 +9,7 @@ package org.ujorm_back.core;
 
 import org.ujorm.UjoProperty;
 import java.util.ArrayList;
+import org.ujorm.Key;
 import org.ujorm_back.MyTestCase;
 import org.ujorm.extensions.PathProperty;
 import org.ujorm_back.extensions.PersonExt;
@@ -53,7 +54,7 @@ public class PropertyTest extends MyTestCase {
     public void testDescending_1() {
 
         boolean descending = false;
-        UjoProperty<PersonExt, Integer> id = PersonExt.ID;
+        Key<PersonExt, Integer> id = PersonExt.ID;
         assertEquals(descending, !id.isAscending());
 
         descending = true;
@@ -84,7 +85,7 @@ public class PropertyTest extends MyTestCase {
     public void testDescending_2() {
 
         boolean descending = false;
-        UjoProperty<PersonExt, Integer> id = new PathProperty<PersonExt, Integer>(PersonExt.ID);
+        Key<PersonExt, Integer> id = new PathProperty<PersonExt, Integer>(PersonExt.ID);
         assertEquals(descending, !id.isAscending());
 
         descending = true;

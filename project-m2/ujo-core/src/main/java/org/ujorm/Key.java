@@ -38,7 +38,7 @@ import org.ujorm.validator.ValidationException;
 @SuppressWarnings("deprecation")
 public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<UJO,VALUE> {
 
-    /** Returns a name of Property. */
+    /** Returns a name of the Key. */
     public String getName();
 
     /** Returns a class of the current property. */
@@ -163,7 +163,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public UjoProperty<UJO,VALUE> descending();
+    public Key<UJO,VALUE> descending();
 
     /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
@@ -171,7 +171,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
      */
-    public UjoProperty<UJO,VALUE> descending(boolean descending);
+    public Key<UJO,VALUE> descending(boolean descending);
 
     /** Get the ujorm key validator or return the {@code null} value if no validator was assigned */
     public Validator<VALUE> getValidator();
@@ -179,12 +179,12 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 0.92
      */
-    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(Key<? super VALUE, VALUE_PAR> key);
+    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 1.36
      */
-    public <VALUE_PAR> ListKey<UJO, VALUE_PAR> add(ListKey<? super VALUE, VALUE_PAR> key);
+    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(UJO from, UJO to);

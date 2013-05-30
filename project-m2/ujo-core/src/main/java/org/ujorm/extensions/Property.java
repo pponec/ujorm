@@ -324,7 +324,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public UjoProperty<UJO, VALUE> descending() {
+    public Key<UJO, VALUE> descending() {
         return descending(true);
     }
 
@@ -334,7 +334,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @see org.ujorm.core.UjoComparator
      */
     @Override
-    public UjoProperty<UJO, VALUE> descending(boolean descending) {
+    public Key<UJO, VALUE> descending(boolean descending) {
         return PathProperty.sort(this, !descending);
     }
 
@@ -348,7 +348,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <VALUE_PAR> CompositeKey<UJO, VALUE_PAR> add(final Key<? super VALUE, VALUE_PAR> property) {
+    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> property) {
         return PathProperty.newInstance((Key)this, property);
     }
 
@@ -356,7 +356,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
      * @since 0.92
      */
     @SuppressWarnings("unchecked")
-    public <VALUE_PAR> ListKey<UJO, VALUE_PAR> add(ListKey<? super VALUE, VALUE_PAR> property) {
+    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> property) {
         return new PathListProperty((Key)this, property);
     }
 
@@ -695,4 +695,4 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return Criterion.forNone(this);
     }
 
-}
+    }
