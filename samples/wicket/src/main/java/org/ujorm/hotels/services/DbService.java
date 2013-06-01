@@ -25,5 +25,8 @@ public interface DbService {
 
     /** Find a customer */
     public Customer getCustomer(String login);
+    
+    /** Get a hash from the text */
+    public long getHash(String text) throws IllegalStateException;    
 
 }

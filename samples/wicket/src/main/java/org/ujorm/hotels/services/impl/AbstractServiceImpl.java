@@ -16,9 +16,7 @@
 package org.ujorm.hotels.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.hotels.services.*;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
