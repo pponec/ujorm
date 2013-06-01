@@ -17,8 +17,6 @@ package org.ujorm.hotels.config;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.hotels.domains.Customer;
 import org.ujorm.hotels.domains.Hotel;
@@ -67,6 +65,7 @@ public class ResourceDataLoader implements InitializationBatch {
         UjoManagerCSV manager = UjoManagerCSV.getInstance
                 ( Customer.LOGIN
                 , Customer.PASSWORD
+                , Customer.PASSWORD_HASH
                 , Customer.ACTIVE
                 , Customer.FIRSTNAME
                 , Customer.SURENAME

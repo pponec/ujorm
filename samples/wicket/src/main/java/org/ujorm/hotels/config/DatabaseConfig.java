@@ -15,6 +15,8 @@
  */
 package org.ujorm.hotels.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
@@ -27,6 +29,9 @@ public final class DatabaseConfig implements OrmHandlerProvider {
 
     /** Database meta-model */
     final OrmHandler handler = new OrmHandler();
+    
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /** Initializa handler */
     public void init() {
@@ -38,6 +43,7 @@ public final class DatabaseConfig implements OrmHandlerProvider {
             params.set(MetaParams.LOG_METAMODEL_INFO, true);
             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.QUOTE_SQL_NAMES);
             params.set(MetaParams.INITIALIZATION_BATCH, ResourceDataLoader.class);
+            params.set(MetaParams.APPL_CONTEXT, applicationContext);
             handler.config(params);
         }
         // External Configuration:
