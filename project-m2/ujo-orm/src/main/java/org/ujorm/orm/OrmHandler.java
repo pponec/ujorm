@@ -231,7 +231,7 @@ public class OrmHandler implements OrmHandlerProvider {
         }
 
         // Lock the meta-model:
-        databases.setReadOnly(true);
+     databases.setReadOnly(true);
 
         // Log the meta-model:
         final Level level = MetaParams.LOG_METAMODEL_INFO.of(params)
@@ -239,7 +239,7 @@ public class OrmHandler implements OrmHandlerProvider {
             : Level.FINE ;
         if (LOGGER.isLoggable(level)) {
             final String msg = "DATABASE META-MODEL:\n" + getConfig();
-            LOGGER.log(level, msg);
+           LOGGER.log(level, msg);
         }
 
         // Export the meta-model into a XML file:
