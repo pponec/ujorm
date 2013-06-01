@@ -1,5 +1,6 @@
+"DATABASE META-MODEL:
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.36-SNAPSHOT was created 2013/05/29 02:04 -->
+<!-- The Ujorm configuration file release 1.36-SNAPSHOT was created 2013/06/01 21:31 -->
 <body>
     <database id="DatabaseMapping">
         <schema>db1</schema>
@@ -200,9 +201,11 @@
         </table>
     </database>
     <parameters>
-        <initializationBatch>org.ujorm.hotels.config.ResourceDataLoader</initializationBatch>
+        <initializationBatch>org.ujorm.hotels.config.demoData.ResourceLoader</initializationBatch>
         <checkKeywords>QUOTE_SQL_NAMES</checkKeywords>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
         <moreParams></moreParams>
     </parameters>
 </body>
+---
+"
