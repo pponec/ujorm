@@ -24,7 +24,7 @@
     <!-- The SpringWebApplicationFactory will need access to a Spring Application context, configured like this... -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:applicationContext.xml</param-value>
+        <param-value>classpath:org/ujorm/hotels/config/ApplicationContext.xml</param-value>
     </context-param>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 ponec.
+ * Copyright 2013 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.config;
+package org.ujorm.hotels.config.demoData;
 
 import java.util.List;
 import java.util.Scanner;
@@ -27,7 +27,7 @@ import org.ujorm.orm.Session;
  * Data loader from CSV resources
  * @author ponec
  */
-public class ResourceDataLoader implements InitializationBatch {
+public class ResourceLoader implements InitializationBatch {
 
     /** Load data from a CSV file */
     @Override

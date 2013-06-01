@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
  * @author Pavel Ponec
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/ApplicationContext.xml"})
 public class DbServiceImplTest {
     
     /** Has service */
