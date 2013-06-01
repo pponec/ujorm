@@ -138,11 +138,18 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,MoreParams> MORE_PARAMS = f.newKey("moreParams");
 
-    /** Set a logging level for a full meta-model information in the XML format.
+    /** Set a logging level for a full meta-model information in the XML format
+     * where the default parameter value is {@code true}.
      * The TRUE value means the INFO level and the FALSE value means the FINE logging level.
      */
-    public static final Key<MetaParams,Boolean> LOG_METAMODEL_INFO = f.newKey("metamodelLogInfo", true);
+    public static final Key<MetaParams,Boolean> LOG_METAMODEL_INFO = f.newKey("logMetamodelInfo", true);
 
+    /** Enable the loggin for a multi-value SQL statement INSERT including its values
+     * where the default parameter value is {@code false}.
+     * If JDBC driver does not support the multi-value statement, the parameter is ignored.
+     */
+    public static final Key<MetaParams,Boolean> LOG_SQL_MULTI_INSERT = f.newKey("logSqlMultiInsert", false);
+    
     /** Pamameter tries to install a brighe to the <a href="http://logback.qos.ch/">Logback</a> logging framework
      * using a statement <code>SLF4JBridgeHandler.install()</code>;
      */

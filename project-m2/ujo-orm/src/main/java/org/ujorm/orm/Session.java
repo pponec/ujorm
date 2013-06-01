@@ -445,15 +445,20 @@ public class Session {
         JdbcStatement statement = null;
         String sql = "";
         StringBuilder out = new StringBuilder(256);
+        final boolean logEnabled = MetaParams.LOG_SQL_MULTI_INSERT.of(params);
 
         try {
             while (idxFrom < idxTo) {
                 out.setLength(0);
                 sql = db.getDialect().printInsert(bos, idxFrom, idxTo, out).toString();
-                LOGGER.log(Level.INFO, sql);
+                if (logEnabled) {
+                    LOGGER.log(Level.INFO, sql);                    
+                }
                 statement = getStatement(db, sql, true);
                 statement.assignValues(bos, idxFrom, idxTo);
-                LOGGER.log(Level.FINE, SQL_VALUES + statement.getAssignedValues());
+                if (logEnabled && LOGGER.isLoggable(Level.FINE)) {
+                    LOGGER.log(Level.FINE, SQL_VALUES + statement.getAssignedValues());
+                }
                 statement.executeUpdate(); // execute insert statement
                 MetaDatabase.close(null, statement, null, true);
                 statement = null;
