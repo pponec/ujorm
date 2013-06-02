@@ -94,3 +94,35 @@ hr {
 table.datatable {
     width: 100%;
 }
+
+/** Wicket TABS */
+
+div.tabpanel div.tab-row ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 10px 10px 0;
+}
+
+div.tabpanel div.tab-row li {
+    float: left;
+    margin: 0px;
+    padding: 0px 10px 0px 6px;
+}
+
+div.tabpanel div.tab-row li.selected {
+    background-color: buttonface;
+}
+
+div.tabpanel div.tab-row {
+    background-color: buttonface;
+}
+
+div.tabpanel div.tab-panel {
+    clear: both;
+}
+
+div.tabpanel div.tab-row a {
+    display: block;
+    text-decoration: none;
+    white-space: nowrap;
+}
