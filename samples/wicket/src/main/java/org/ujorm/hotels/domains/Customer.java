@@ -19,10 +19,10 @@ public class Customer extends OrmTable<Customer> {
 
     /** Index name */
     private static final String UNIQUE_LOGIN = "idx_unique_login";
-    
+
     /** Factory */
     private static final KeyFactory<Customer> f = newFactory(Customer.class);
-    
+
     /** The Primary Key */
     @Comment("The Primary Key")
     @Column(pk = true)
@@ -53,8 +53,11 @@ public class Customer extends OrmTable<Customer> {
     public static final Key<Customer, String> SURENAME = f.newKey(length(MANDATORY, 2, 60));
     /** Email */
     @Comment("Email")
-    public static final Key<Customer, String> EMAIL = f.newKey(email(MANDATORY));    
-    
+    public static final Key<Customer, String> EMAIL = f.newKey(email(MANDATORY));
+    /** Administrator role sign */
+    @Comment("Administrator role sign")
+    public static final Key<Customer, Boolean> ADMIN = f.newKeyDefault(false);
+
     static {
         f.lock();
     }
@@ -66,92 +69,92 @@ public class Customer extends OrmTable<Customer> {
     public Integer getId() {
         return ID.of(this);
     }
-    
+
     /** The Primary Key */
     public void setId(Integer id) {
         Customer.ID.setValue(this, id);
     }
-    
+
     /** Unique login */
     public String getLogin() {
         return LOGIN.of(this);
     }
-    
+
     /** Unique login */
     public void setLogin(String login) {
         Customer.LOGIN.setValue(this, login);
     }
-    
+
     /** Customer state (the true or null is required) */
     public Boolean getActive() {
         return ACTIVE.of(this);
     }
-    
+
     /** Customer state (the true or null is required) */
     public void setActive(Boolean active) {
         Customer.ACTIVE.setValue(this, active);
     }
-    
+
     /** Password login */
     public Long getPasswordHash() {
         return PASSWORD_HASH.of(this);
     }
-    
+
     /** Password login */
     public void setPasswordHash(Long passwordHash) {
         Customer.PASSWORD_HASH.setValue(this, passwordHash);
     }
-    
+
     /** Title */
     public TitleEnum getTitle() {
         return TITLE.of(this);
     }
-    
+
     /** Title */
     public void setTitle(TitleEnum title) {
         Customer.TITLE.setValue(this, title);
     }
-    
+
     /** Firstname */
     public String getFirstname() {
         return FIRSTNAME.of(this);
     }
-    
+
     /** Firstname */
     public void setFirstname(String firstname) {
         Customer.FIRSTNAME.setValue(this, firstname);
     }
-    
+
     /** Firstname */
     public String getLastname() {
         return SURENAME.of(this);
     }
-    
+
     /** Firstname */
     public void setLastname(String lastname) {
         Customer.SURENAME.setValue(this, lastname);
     }
-    
+
     /** Email */
     public String getEmail() {
         return EMAIL.of(this);
     }
-    
+
     /** Email */
     public void setEmail(String email) {
         Customer.EMAIL.setValue(this, email);
     }
-    
+
     /** A form field only */
     public String getPassword() {
         return PASSWORD.of(this);
     }
-    
+
     /** A form field only */
     public void setPassword(String password) {
         Customer.PASSWORD.setValue(this, password);
     }
     //</editor-fold>
-    
-    
+
+
 }

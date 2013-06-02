@@ -70,6 +70,7 @@ public class ResourceLoader implements InitializationBatch {
                 , Customer.FIRSTNAME
                 , Customer.SURENAME
                 , Customer.EMAIL
+                , Customer.ADMIN
                 );
         return manager.loadCSV(scanner, "CSV import");
     }
