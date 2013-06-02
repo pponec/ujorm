@@ -54,13 +54,15 @@ h1, h2, h3, h4, a img, table, td, th {
     text-indent: 0;
 }
 
+h1, h2 {
+    color: #4e4ec9;
+}
+
 body {
     font-family: Arial, Verdana, sans-serif;
     padding: 2px 8px;
 }
-h2 {
-    color: blue;
-}
+
 table {
     border: 1px lightgray solid ;
 }
@@ -95,25 +97,31 @@ table.datatable {
     width: 100%;
 }
 
+/** Header */
+div.prologue {
+    font-style: italic;
+    color: gray;
+}
+
 /** Wicket TABS */
+div.tabpanel div.tab-row {
+    background-color: buttonface;
+    margin-top: 20px;
+}
 
 div.tabpanel div.tab-row ul {
     list-style: none outside none;
     margin: 0;
-    padding: 10px 10px 0;
+    padding: 5px 0px 0;
 }
 
 div.tabpanel div.tab-row li {
     float: left;
     margin: 0px;
-    padding: 0px 10px 0px 6px;
+    padding: 0px 10px 0px 10px;
 }
 
 div.tabpanel div.tab-row li.selected {
-    background-color: buttonface;
-}
-
-div.tabpanel div.tab-row {
     background-color: buttonface;
 }
 
