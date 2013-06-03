@@ -2,7 +2,7 @@ package org.ujorm.hotels.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
@@ -12,11 +12,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.ujorm.hotels.gui.about.AboutPanel;
 import org.ujorm.hotels.gui.booking.BookingPanel;
+import org.ujorm.hotels.gui.components.AjaxTabbedPanel;
 import org.ujorm.hotels.gui.customer.CustomerPanel;
 import org.ujorm.hotels.gui.hotel.HotelPanel;
 
 public class HomePage extends WebPage {
-
     private static final long serialVersionUID = 1L;
 
     public HomePage(final PageParameters parameters) {
@@ -71,6 +71,5 @@ public class HomePage extends WebPage {
           }
       };
     }
-
 
 }
