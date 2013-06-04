@@ -17,6 +17,7 @@ package org.ujorm.hotels.gui.components;
 
 import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
@@ -77,18 +78,11 @@ public class UjoAjaxTabbedPanel<T extends UjoTab>
     /** @{@inheritDoc } */
     @Override
     protected WebMarkupContainer newLink(String linkId, final int index) {
-        UjoTab cssClass = (UjoTab) getTabs().get(index);
-
-        return new UjoAjaxFallbackLink(linkId, cssClass.getCssClass()) {
-            private static final long serialVersionUID = 1L;
-
-            @Override public void onClick(AjaxRequestTarget target) {
-                setSelectedTab(index);
-                if (target != null) {
-                    target.add(UjoAjaxTabbedPanel.this);
-                }
-                onAjaxUpdate(target);
-            }
-        };
+        final WebMarkupContainer result = super.newLink(linkId, index);
+        final UjoTab cssClass = (UjoTab) getTabs().get(index);
+        if (cssClass != null) {
+            result.add(new AttributeAppender("class", cssClass));
+        }
+        return result;
     }
 }
