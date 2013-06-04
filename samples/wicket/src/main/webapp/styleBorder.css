@@ -1,0 +1,47 @@
+.north {
+    text-align: center;
+}
+
+.west {
+    float: left;
+    padding: 0px 10px 0px 0px;
+    width: 140px;
+}
+
+.center {
+    top: 10px;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+.east {
+    float: right;
+    padding: 0px 0px 0px 10px;
+    width: 140px;
+}
+
+.south {
+    padding-top: 10px;
+    text-align: center;
+    clear: both;
+}
+
+/* --- Customization --- */
+
+.east .input input {
+    width: 100%;
+}
+
+.right {
+    text-align: right;
+    white-space: nowrap;
+}
+
+table td {
+    padding: 2px;
+}
+
+table td {
+    padding: 1px 4px;
+}
+
