@@ -28,11 +28,9 @@ import org.apache.wicket.model.IModel;
  * @author PavelPonec
  */
 public class UjoAjaxTabbedPanel<T extends UjoTab>
-        extends org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel {
+        extends org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel<T> {
 
-    /**
-     * Tab Index Key
-     */
+    /** Tab Index Key */
     private String indexKey;
 
     /**
@@ -79,7 +77,7 @@ public class UjoAjaxTabbedPanel<T extends UjoTab>
     @Override
     protected WebMarkupContainer newLink(String linkId, final int index) {
         final WebMarkupContainer result = super.newLink(linkId, index);
-        final UjoTab cssClass = (UjoTab) getTabs().get(index);
+        final String cssClass = getTabs().get(index).getCssClass();
         if (cssClass != null) {
             result.add(new AttributeAppender("class", cssClass));
         }
