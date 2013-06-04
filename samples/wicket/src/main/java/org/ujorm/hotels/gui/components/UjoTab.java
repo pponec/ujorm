@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
  * @author ponec
  */
 public class UjoTab extends AbstractTab {
-    
+
     private final String cssClass;
     private final Class<? extends WebMarkupContainer> panel;
 
@@ -60,6 +60,5 @@ public class UjoTab extends AbstractTab {
             throw new IllegalStateException("Can't create an instance of the " + panel);
         }
     }
-
 
 }
