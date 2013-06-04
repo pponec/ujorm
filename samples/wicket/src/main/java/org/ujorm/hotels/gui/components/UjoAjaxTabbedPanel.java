@@ -17,18 +17,21 @@ package org.ujorm.hotels.gui.components;
 
 import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 /**
  * A child of Wicket AjaxTabbedPanel class can restore the last selected tab
  * from a session after a page reloading.
+ *
  * @author PavelPonec
  */
-public class AjaxTabbedPanel<T extends ITab>
-extends org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel {
+public class UjoAjaxTabbedPanel<T extends UjoTab>
+        extends org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel {
 
-    /** Tab Index Key */
+    /**
+     * Tab Index Key
+     */
     private String indexKey;
 
     /**
@@ -37,29 +40,55 @@ extends org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel {
      * @param id
      * @param tabs
      */
-    public AjaxTabbedPanel(final String id, final List<T> tabs) {
+    public UjoAjaxTabbedPanel(final String id, final List<T> tabs) {
         this(id, tabs, null);
     }
 
-    public AjaxTabbedPanel(final String id, final List<T> tabs, IModel<Integer> model) {
+    public UjoAjaxTabbedPanel(final String id, final List<T> tabs, IModel<Integer> model) {
         super(id, tabs, model);
         this.indexKey = getClass().getName() + ":" + getPath() + ".tabIndex.";
+        setSelectedTab(getDefaultSelectedTab());
     }
 
-    /** Save selected tab */
+
+    /**
+     * Save selected tab
+     */
     @Override
     protected void onAjaxUpdate(AjaxRequestTarget target) {
         setDefaultSelectedTab(getSelectedTab());
     }
 
-    /** Get Default selectedTab from Session */
-    protected int getDefaultSelectedTab() {
+    /**
+     * Get Default selectedTab from Session
+     */
+    protected final int getDefaultSelectedTab() {
         final Object result = getSession().getAttribute(indexKey);
-        return result instanceof Integer ? (Integer) result : 0 ;
+        return result instanceof Integer ? (Integer) result : 0;
     }
 
-    /** Save selected tab to a Session */
+    /**
+     * Save selected tab to a Session
+     */
     protected void setDefaultSelectedTab(Integer index) {
         getSession().setAttribute(indexKey, index);
+    }
+
+    /** @{@inheritDoc } */
+    @Override
+    protected WebMarkupContainer newLink(String linkId, final int index) {
+        UjoTab cssClass = (UjoTab) getTabs().get(index);
+
+        return new UjoAjaxFallbackLink(linkId, cssClass.getCssClass()) {
+            private static final long serialVersionUID = 1L;
+
+            @Override public void onClick(AjaxRequestTarget target) {
+                setSelectedTab(index);
+                if (target != null) {
+                    target.add(UjoAjaxTabbedPanel.this);
+                }
+                onAjaxUpdate(target);
+            }
+        };
     }
 }
