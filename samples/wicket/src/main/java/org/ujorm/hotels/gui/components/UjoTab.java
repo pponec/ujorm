@@ -51,7 +51,7 @@ public class UjoTab extends AbstractTab {
         return cssClass;
     }
 
-    /** @{@inheritDoc } */
+    /** @{inheritDoc } */
     @Override
     public WebMarkupContainer getPanel(String panelId) throws IllegalStateException {
         try {
