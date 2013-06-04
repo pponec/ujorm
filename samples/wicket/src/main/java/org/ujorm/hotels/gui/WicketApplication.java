@@ -14,7 +14,6 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class WicketApplication extends WebApplication implements ApplicationContextAware {
 
-
     @SuppressWarnings("unused")
     private ApplicationContext ctx;
 
