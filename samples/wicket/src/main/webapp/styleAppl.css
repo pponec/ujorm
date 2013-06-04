@@ -1,0 +1,21 @@
+div.tabpanel div.tab-row li a {
+    background-position: 10px 1px;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+}
+
+div.tabpanel div.tab-row li a.hotel {
+    background-image: url("images/icons/application_home.png");
+}
+
+div.tabpanel div.tab-row li a.booking {
+    background-image: url("images/icons/book_open.png");
+}
+
+div.tabpanel div.tab-row li a.customer {
+    background-image: url("images/icons/user.png");
+}
+
+div.tabpanel div.tab-row li a.about {
+    background-image: url("images/icons/help.png");
+}
