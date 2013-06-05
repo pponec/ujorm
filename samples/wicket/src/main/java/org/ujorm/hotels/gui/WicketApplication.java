@@ -17,9 +17,12 @@ package org.ujorm.hotels.gui;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.ujorm.spring.UjormTransactionManager;
 
 /**
  * Application object for your web application. If you want to run this
@@ -29,11 +32,12 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class WicketApplication extends WebApplication implements ApplicationContextAware {
 
-    @SuppressWarnings("unused")
+    /** Spring context */
     private ApplicationContext ctx;
 
     @Override
     protected void init() {
+        super.init();
         mountPage("/demoHotels", HomePage.class);
     }
 
@@ -49,5 +53,16 @@ public class WicketApplication extends WebApplication implements ApplicationCont
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         this.ctx = ctx;
+    }
+
+    /** Returns Spring Application context */
+    public ApplicationContext getSpringContext() {
+        return ctx;
+    }
+
+    /** Vreací OrmHandler */
+    public UjormTransactionManager getOrmManager() {
+        UjormTransactionManager result = ctx.getBean(UjormTransactionManager.class);
+        return result;
     }
 }

@@ -1,18 +1,17 @@
 /*
- *  Copyright 2012 pavel.
- * 
+ *  Copyright 2013 Pavel Ponec
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
- *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  under the License.
  */
 package org.ujorm.wicket.component.gridView;
 
@@ -23,8 +22,8 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.wicket.KeyModel;
 
@@ -77,8 +76,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, Key<UJO,T
      * @param property
      *            wicket property expression used by PropertyModel
      */
-    public KeyColumn(final UJO ujo, final Key<UJO,T> property) {
-        super(Model.of(property.getName()), property);
+    public KeyColumn(final Key<UJO,T> property) {
+        super(new Model(property.getName()));
         this.propertyExpression = KeyRing.of(property);
     }
 
@@ -112,5 +111,10 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, Key<UJO,T
      */
     public String getPropertyExpression() {
         return propertyExpression.toString();
+    }
+
+    /** A factory method */
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key) {
+        return new KeyColumn(key);
     }
 }
