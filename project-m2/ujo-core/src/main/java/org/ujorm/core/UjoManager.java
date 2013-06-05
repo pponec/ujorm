@@ -1005,7 +1005,7 @@ public class UjoManager implements Comparator<Key> {
         = p.getSpecificationTitle()
         + CR
         + "version "
-        + projectVersion()
+        + version()
         + CR
         + URL
         + CR
@@ -1014,11 +1014,17 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /** Regurns information about current library. */
-    public static String projectVersion() {
+    public static String version() {
         String result = Ujo.class.getPackage().getSpecificationVersion();
         return result!=null ? result : "UNDEFINED" ;
     }
 
+    /** Regurns information about current library.
+     * @deprecated Uset the method {@link #version()}.
+     */
+    public static String projectVersion() {
+        return version();
+    }
 
     /** Show an information about the framework */
     public static void main(String[] args) {
