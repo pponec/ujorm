@@ -99,9 +99,9 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
      * @return returns Method returns the {@code Object.class} of no domain was found.
      */
     @Override
-    protected Class<?> findDomain() {
-        final Class<?> c1 = getLeftNode().findDomain();
-        final Class<?> c2 = getRightNode().findDomain();
+    public Class<?> getDomain() {
+        final Class<?> c1 = getLeftNode().getDomain();
+        final Class<?> c2 = getRightNode().getDomain();
         return c2.isAssignableFrom(c1) ? c1 : c2;
     }
 }
