@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 No company.
+ * Copyright 2013 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- *
- * @author ponec
+ * Convenience class that takes care of common ITab functionality
+ * @author Pavel Ponec
  */
 public class UjoTab extends AbstractTab {
 
+    /** Name of the CSS class */
     private final String cssClass;
+    /** Default class for creating a panel of the tab */
     private final Class<? extends WebMarkupContainer> panel;
+
+    /** Model for constructor of the Tab components */
+    private IModel<?> tabModel;
 
     /** Constructor */
     public UjoTab(IModel<String> title, Class<? extends WebMarkupContainer> panel) {
@@ -46,18 +51,37 @@ public class UjoTab extends AbstractTab {
         this.panel = panel;
     }
 
+    /** Model for constructor of the Tab components */
+    public IModel<?> getTabModel() {
+        return tabModel;
+    }
+
+    /** Model for constructor of the Tab components */
+    public void setTabModel(IModel<?> tabModel) {
+        this.tabModel = tabModel;
+    }
+
     /** Get CSS class name */
     public String getCssClass() {
         return cssClass;
     }
 
-    /** @{inheritDoc } */
+    /** Create new instance of the {@code panel} class.
+     * You can owerwrite the method for a special requirements.
+     * <br/>Original documentation: @{inheritDoc}
+     */
     @Override
     public WebMarkupContainer getPanel(String panelId) throws IllegalStateException {
         try {
-            return panel.getConstructor(panelId.getClass()).newInstance(panelId);
+            return tabModel != null
+                 ? panel.getConstructor(String.class, IModel.class).newInstance(panelId, tabModel)
+                 : panel.getConstructor(String.class).newInstance(panelId) ;
         } catch(Throwable e) {
-            throw new IllegalStateException("Can't create an instance of the " + panel);
+            String msg = String.format
+                    ( "Can't create an instance of the class %s with %s constructor argument(s)."
+                    , panel.getName()
+                    , tabModel != null ? 2 : 1);
+            throw new IllegalStateException();
         }
     }
 
