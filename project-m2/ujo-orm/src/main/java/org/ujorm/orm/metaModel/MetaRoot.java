@@ -108,7 +108,7 @@ final public class MetaRoot extends AbstractMetaModel {
         final String result = new StringBuilder(128)
           .append(UjoManagerXML.XML_HEADER)
           .append("\n<!-- The Ujorm configuration file release ")
-          .append(UjoManager.projectVersion())
+          .append(UjoManager.version())
           .append(" was created ")
           .append(dFormat.format(new Date()))
           .append(" -->")

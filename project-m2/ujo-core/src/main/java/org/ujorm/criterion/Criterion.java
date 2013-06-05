@@ -160,6 +160,10 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
     abstract public Object getRightNode();
     /** Returns an operator */
     abstract public AbstractOperator getOperator();
+    /** Find a Domain class
+     * @return returns Method returns the {@code Object.class} of no domain was found.
+     */
+    abstract public Class<?> getDomain();
 
 
     /** Is the class a Binary criterion? */
@@ -169,15 +173,10 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
 
     /** Print the Criteron including the main domain name along the example: Order(id EQ 1)  */
     public String toStringFull() {
-        Class domain = findDomain();
+        Class domain = getDomain();
         return domain.getSimpleName() + this;
     }
 
-    /**
-     * Find a Domain class
-     * @return returns Method returns the {@code Object.class} of no domain was found.
-     */
-    abstract protected Class findDomain();
 
     // ------ STATIC FACTORY --------
 
