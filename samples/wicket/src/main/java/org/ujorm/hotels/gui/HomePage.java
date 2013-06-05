@@ -8,8 +8,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.ujorm.hotels.gui.about.AboutPanel;
 import org.ujorm.hotels.gui.booking.BookingPanel;
-import org.ujorm.hotels.gui.components.UjoAjaxTabbedPanel;
-import org.ujorm.hotels.gui.components.UjoTab;
+import org.ujorm.wicket.component.tabs.UjoAjaxTabbedPanel;
+import org.ujorm.wicket.component.tabs.UjoTab;
 import org.ujorm.hotels.gui.customer.CustomerPanel;
 import org.ujorm.hotels.gui.hotel.HotelPanel;
 
