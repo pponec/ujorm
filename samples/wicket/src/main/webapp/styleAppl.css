@@ -1,11 +1,11 @@
 div.tabpanel div.tab-row li a {
-    background-position: 10px 1px;
+    background-position: 7px 1px;
     background-repeat: no-repeat;
     padding-left: 30px;
 }
 
 div.tabpanel div.tab-row li a.hotel {
-    background-image: url("images/icons/application_home.png");
+    background-image: url("images/icons/house.png");
 }
 
 div.tabpanel div.tab-row li a.booking {
