@@ -15,7 +15,13 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.ujorm.hotels.domains.Hotel;
+import org.ujorm.wicket.component.gridView.KeyColumn;
 
 /**
  *
@@ -23,8 +29,21 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class HotelPanel extends Panel {
 
+    //@SpringBean private UjormTransactionManager manager;
+
     public HotelPanel(String id) {
         super(id);
+
+        final List<IColumn> columns = new ArrayList<IColumn>();
+        columns.add(KeyColumn.of(Hotel.ID));
+        columns.add(KeyColumn.of(Hotel.NAME));
+        columns.add(KeyColumn.of(Hotel.CITY));
+        columns.add(KeyColumn.of(Hotel.PRICE));
+        columns.add(KeyColumn.of(Hotel.CURRENCY));
+        columns.add(KeyColumn.of(Hotel.STARS));
+        columns.add(KeyColumn.of(Hotel.PHONE));
+
+        // add(new DefaultDataTable("datatable", columns, new HotelProvider(), 20));
     }
 
 }

@@ -52,6 +52,9 @@ public class Hotel extends OrmTable<Hotel> {
     /** Price per night in EUR */
     @Comment("Price per night in EUR")
     public static final Key<Hotel, BigDecimal> PRICE = f.newKey(min(MANDATORY, BigDecimal.ZERO));
+    /** Currency of the price */
+    @Comment("Currency of the price")
+    public static final Key<Hotel, String> CURRENCY = f.newKeyDefault("EUR", length(MANDATORY, 3));
     /** Hotel state, default is ACTIVE (the true or null is required) */
     @Comment("Hotel state (the true or null is required)")
     @Column(index=UNIQUE_HOTEL_NAME)
