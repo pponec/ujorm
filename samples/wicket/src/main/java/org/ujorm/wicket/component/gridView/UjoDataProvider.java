@@ -55,7 +55,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** Constructor */
     public UjoDataProvider(Criterion<T> criterion, Key<T,?> defaultSort) {
         this.criterion = criterion;
-        model = KeyRing.of((Class<T>)criterion.findDomain());
+        model = KeyRing.of((Class<T>)criterion.getDomain());
         if (defaultSort == null) {
             defaultSort = model.getFirstKey();
         }
