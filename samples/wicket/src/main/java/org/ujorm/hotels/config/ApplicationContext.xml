@@ -16,14 +16,16 @@
     <tx:annotation-driven transaction-manager="ujormTransactionManager"/>
 
     <!-- ORM Ujorm config -->
-    <bean name="ormConfigProvider" class="org.ujorm.hotels.config.DatabaseConfig" 
+    <bean name="ormConfigProvider" class="org.ujorm.hotels.config.DatabaseConfig"
           init-method="init" lazy-init="true" />
 
     <bean id="ujormTransactionManager" class="org.ujorm.spring.UjormTransactionManager">
         <property name="ormHandlerProvider" ref="ormConfigProvider"/>
     </bean>
 
-    <!-- Wicket config -->
-    <bean id="wicketApplication" class="org.ujorm.hotels.gui.WicketApplication" />
+    <!-- Wicket Application -->
+    <bean id="wicketApplicationSpringBean" class="org.ujorm.hotels.gui.WicketApplication">
+         <constructor-arg index="0" ref="ormConfigProvider"/>
+    </bean>
 
 </beans>

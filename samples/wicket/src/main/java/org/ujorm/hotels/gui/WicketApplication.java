@@ -17,12 +17,11 @@ package org.ujorm.hotels.gui;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.ujorm.spring.UjormTransactionManager;
+import org.ujorm.orm.OrmHandler;
+import org.ujorm.orm.OrmHandlerProvider;
 
 /**
  * Application object for your web application. If you want to run this
@@ -30,14 +29,21 @@ import org.ujorm.spring.UjormTransactionManager;
  *
  * @see com.mycompany.Start#main(String[])
  */
-public class WicketApplication extends WebApplication implements ApplicationContextAware {
+public class WicketApplication extends WebApplication
+implements ApplicationContextAware, OrmHandlerProvider {
 
     /** Spring context */
     private ApplicationContext ctx;
+    /** OrmHandler Provider */
+    private OrmHandlerProvider ormProvider;
+
+    public WicketApplication(OrmHandlerProvider ormProvider) {
+        this.ormProvider = ormProvider;
+    }
 
     @Override
     protected void init() {
-        super.init();
+        // getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         mountPage("/demoHotels", HomePage.class);
     }
 
@@ -60,9 +66,10 @@ public class WicketApplication extends WebApplication implements ApplicationCont
         return ctx;
     }
 
-    /** Vreací OrmHandler */
-    public UjormTransactionManager getOrmManager() {
-        UjormTransactionManager result = ctx.getBean(UjormTransactionManager.class);
-        return result;
+    /** Returns ORM handler */
+    @Override
+    public OrmHandler getOrmHandler() {
+         return ormProvider.getOrmHandler();
     }
+
 }

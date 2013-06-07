@@ -21,15 +21,15 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataT
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.domains.Hotel;
+import org.ujorm.hotels.gui.WicketApplication;
+import org.ujorm.orm.OrmHandler;
 import org.ujorm.wicket.component.gridView.KeyColumn;
 
 /**
- *
+ * HotelPanel tab
  * @author Pavel Ponec
  */
 public class HotelPanel extends Panel {
-
-    //@SpringBean private UjormTransactionManager manager;
 
     public HotelPanel(String id) {
         super(id);
@@ -43,7 +43,9 @@ public class HotelPanel extends Panel {
         columns.add(KeyColumn.of(Hotel.STARS));
         columns.add(KeyColumn.of(Hotel.PHONE));
 
-        // add(new DefaultDataTable("datatable", columns, new HotelProvider(), 20));
-    }
+        WicketApplication appl = (WicketApplication) getApplication();
+        OrmHandler handler = appl.getOrmHandler();
 
+        add(new DefaultDataTable("datatable", columns, new HotelProvider(), 20));
+    }
 }
