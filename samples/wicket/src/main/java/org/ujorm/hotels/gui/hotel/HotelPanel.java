@@ -43,9 +43,6 @@ public class HotelPanel extends Panel {
         columns.add(KeyColumn.of(Hotel.STARS));
         columns.add(KeyColumn.of(Hotel.PHONE));
 
-        WicketApplication appl = (WicketApplication) getApplication();
-        OrmHandler handler = appl.getOrmHandler();
-
         add(new DefaultDataTable("datatable", columns, new HotelProvider(), 20));
     }
 }

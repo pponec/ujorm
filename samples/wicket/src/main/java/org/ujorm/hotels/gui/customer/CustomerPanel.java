@@ -15,7 +15,13 @@
  */
 package org.ujorm.hotels.gui.customer;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.ujorm.hotels.domains.Customer;
+import org.ujorm.wicket.component.gridView.KeyColumn;
 
 /**
  *
@@ -25,6 +31,16 @@ public class CustomerPanel extends Panel {
 
     public CustomerPanel(String id) {
         super(id);
+
+        final List<IColumn> columns = new ArrayList<IColumn>();
+        columns.add(KeyColumn.of(Customer.LOGIN));
+        columns.add(KeyColumn.of(Customer.TITLE));
+        columns.add(KeyColumn.of(Customer.FIRSTNAME));
+        columns.add(KeyColumn.of(Customer.SURENAME));
+        columns.add(KeyColumn.of(Customer.EMAIL));
+        columns.add(KeyColumn.of(Customer.ADMIN));
+
+        add(new DefaultDataTable("datatable", columns, new CustomerProvider(), 20));
     }
 
 }
