@@ -25,13 +25,14 @@ import org.ujorm.hotels.gui.about.AboutPanel;
 import org.ujorm.hotels.gui.booking.BookingPanel;
 import org.ujorm.hotels.gui.customer.CustomerPanel;
 import org.ujorm.hotels.gui.hotel.HotelPanel;
+import org.ujorm.orm.OrmHandler;
 import org.ujorm.wicket.component.tabs.UjoAjaxTabbedPanel;
 import org.ujorm.wicket.component.tabs.UjoTab;
 
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    public HomePage(final PageParameters parameters) {
+    public HomePage(PageParameters parameters) {
         super(parameters);
 
         // create a list of ITab objects used to feed the tabbed panel
@@ -42,7 +43,9 @@ public class HomePage extends WebPage {
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoAjaxTabbedPanel("tabs", tabs));
 
-        // TODO Add your page's components here:
+        // Add your page's components here:
+        WicketApplication appl = (WicketApplication) getApplication();
+        OrmHandler handler = appl.getOrmHandler();
 
         // Footer:
        add(new Label("version", getApplication().getFrameworkSettings().getVersion()));

@@ -4,38 +4,29 @@
 	 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	 version="2.4">
 
-    <display-name>ujorm</display-name>
-
-    <!-- Loading SpringWebApplicationFactory -->
-    <servlet>
-        <servlet-name>wicket</servlet-name>
-        <servlet-class>org.apache.wicket.protocol.http.WicketServlet</servlet-class>
-        <init-param>
-            <param-name>applicationFactoryClassName</param-name>
-            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
-        </init-param>
-        <init-param>
-            <param-name>applicationBean</param-name>
-            <param-value>wicketApplication</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+    <display-name>DemoHotels</display-name>
 
     <!-- The SpringWebApplicationFactory will need access to a Spring Application context, configured like this... -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:org/ujorm/hotels/config/ApplicationContext.xml</param-value>
     </context-param>
+
+    <!-- Spring's context loader listener -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <filter>
+   <filter>
         <filter-name>wicket-ujorm</filter-name>
         <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.ujorm.hotels.gui.WicketApplication</param-value>
+            <param-name>applicationFactoryClassName</param-name>
+            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value> !!!
+        </init-param>
+        <init-param>
+            <param-name>applicationBean</param-name>
+            <param-value>wicketApplicationSpringBean</param-value>
         </init-param>
         <!-- Deployment mode -.->
         <init-param>

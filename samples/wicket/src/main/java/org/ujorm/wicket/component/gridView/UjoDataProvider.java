@@ -17,19 +17,18 @@ package org.ujorm.wicket.component.gridView;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import org.apache.wicket.Application;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.hotels.gui.WicketApplication;
+import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
-import org.ujorm.spring.UjormTransactionManager;
 
 /**
  * SortableDataProvider extended form the Ujorm
@@ -42,10 +41,8 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     protected Criterion<T> criterion;
     /** Domain model */
     protected KeyRing<T> model;
-    /** ORM transaction manager */
-    protected UjormTransactionManager transactionManager;
-    /** transaction state */
-    private boolean transaction = false;
+    /** OrmSession */
+    transient private Session ormSession ;
 
     /** Constructor */
     public UjoDataProvider(Criterion<T> criterion) {
@@ -90,27 +87,25 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
         return createQuery(criterion).getCount();
     }
 
-    /** Returns ORM Transaction Manager */
-    protected UjormTransactionManager getOrmManager() {
-        return ((WicketApplication)Application.get()).getOrmManager();
-    }
-
     /** Returns orm Session */
     protected Session getOrmSession() {
-        Session result = getOrmManager().getLocalSession();
-        if (!transaction) {
-            transaction = true;
-            result.beginTransaction();
+        if (ormSession == null) {
+            WebApplication application = WebApplication.get();
+            if (application instanceof OrmHandlerProvider) {
+                ormSession = ((OrmHandlerProvider) application).getOrmHandler().createSession();
+            } else {
+                throw new IllegalStateException("The WebApplication must to implement " + OrmHandlerProvider.class);
+            }
         }
-        return result;
+        return ormSession;
     }
 
     /** Commit and close transaction */
     @Override
     public void detach() {
-        if (transaction) {
-            transaction = false;
-            getOrmManager().getLocalSession().commit();
+        if (ormSession != null) {
+            ormSession.close();
+            ormSession = null;
         }
     }
 
@@ -122,16 +117,6 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** Get a bean Model */
     public KeyRing<T> getModel() {
         return model;
-    }
-
-    /** ORM transaction manager */
-    public UjormTransactionManager getTransactionManager() {
-        return transactionManager;
-    }
-
-    /** ORM transaction manager */
-    public void setTransactionManager(UjormTransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
     }
 
     /** Create a model */
