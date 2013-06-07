@@ -35,9 +35,9 @@ public class HotelPanel extends Panel {
         super(id);
 
         final List<IColumn> columns = new ArrayList<IColumn>();
-        columns.add(KeyColumn.of(Hotel.ID));
         columns.add(KeyColumn.of(Hotel.NAME));
         columns.add(KeyColumn.of(Hotel.CITY));
+        columns.add(KeyColumn.of(Hotel.STREET));
         columns.add(KeyColumn.of(Hotel.PRICE));
         columns.add(KeyColumn.of(Hotel.CURRENCY));
         columns.add(KeyColumn.of(Hotel.STARS));
