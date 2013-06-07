@@ -20,3 +20,14 @@ div.tabpanel div.tab-row li a.customer {
 div.tabpanel div.tab-row li a.about {
     background-image: url("images/icons/help.png");
 }
+
+/** Prologue */
+div.prologue {
+    color: silver;
+    font-style: italic;
+}
+
+div.prologue a {
+    text-decoration: none;
+    color: silver;
+}

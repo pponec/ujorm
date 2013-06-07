@@ -1,18 +1,4 @@
-a img, table, td, th {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    text-indent: 0;
-}
-
-h1, h2, h3, h4 {
-    color: #4e4ec9;
-}
-
-body {
-    font-family: Arial, Verdana, sans-serif;
-    padding: 2px 8px;
-}
+/** Table */
 
 table {
     border: 1px lightgray solid ;
@@ -46,12 +32,6 @@ hr {
 
 table.datatable {
     width: 100%;
-}
-
-/** Header */
-div.prologue {
-    font-style: italic;
-    color: gray;
 }
 
 /** Wicket TABS */
