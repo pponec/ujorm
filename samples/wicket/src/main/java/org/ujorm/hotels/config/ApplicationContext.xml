@@ -12,7 +12,7 @@
 
     <!-- Annotation-based configuration-->
     <context:annotation-config />
-    <context:component-scan base-package="org.ujorm.hotels.services.impl" />
+    <context:component-scan base-package="org.ujorm.hotels.services.impl;org.ujorm.hotels.gui" />
     <tx:annotation-driven transaction-manager="ujormTransactionManager"/>
 
     <!-- ORM Ujorm config -->
@@ -21,11 +21,6 @@
 
     <bean id="ujormTransactionManager" class="org.ujorm.spring.UjormTransactionManager">
         <property name="ormHandlerProvider" ref="ormConfigProvider"/>
-    </bean>
-
-    <!-- Wicket Application -->
-    <bean id="wicketApplicationSpringBean" class="org.ujorm.hotels.gui.WicketApplication">
-         <constructor-arg index="0" ref="ormConfigProvider"/>
     </bean>
 
 </beans>
