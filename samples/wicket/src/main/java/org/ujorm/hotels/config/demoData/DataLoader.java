@@ -22,6 +22,7 @@ import org.ujorm.hotels.domains.Customer;
 import org.ujorm.hotels.domains.Hotel;
 import org.ujorm.orm.InitializationBatch;
 import org.ujorm.orm.Session;
+import static org.ujorm.core.UjoService.*;
 
 /**
  * Data loader from CSV resources
@@ -42,7 +43,7 @@ public class DataLoader implements InitializationBatch {
 
     /** Get hotels from CSV file */
     private List<Hotel> getHotels() throws Exception {
-        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotels.csv"));
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotels.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
         UjoManagerCSV manager = UjoManagerCSV.getInstance
@@ -61,7 +62,7 @@ public class DataLoader implements InitializationBatch {
 
     /** Get hotels from CSV file */
     private List<Customer> getCustomers() throws Exception {
-        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomers.csv"));
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomers.csv"), UTF_8.name());
         UjoManagerCSV manager = UjoManagerCSV.getInstance
                 ( Customer.LOGIN
                 , Customer.PASSWORD

@@ -41,7 +41,8 @@ public final class DatabaseConfig implements OrmHandlerProvider {
         if (yesIWantToChangeDefaultParameters) {
             final MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
-            params.set(MetaParams.LOG_METAMODEL_INFO, true);
+            params.set(MetaParams.LOG_METAMODEL_INFO, !!! true);
+            params.set(MetaParams.LOG_SQL_MULTI_INSERT, false);
             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.QUOTE_SQL_NAMES);
             params.set(MetaParams.INITIALIZATION_BATCH, DataLoader.class);
             params.set(MetaParams.APPL_CONTEXT, applicationContext);

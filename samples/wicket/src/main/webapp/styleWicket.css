@@ -61,3 +61,11 @@ div.tabpanel div.tab-row a {
     text-decoration: none;
     white-space: nowrap;
 }
+
+/* Table Navigation */
+div.navigatorLabel {
+    display: none;
+}
+div.navigator {
+    text-align: right;
+}
