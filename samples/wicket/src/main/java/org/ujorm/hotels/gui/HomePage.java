@@ -48,7 +48,7 @@ public class HomePage extends WebPage {
         OrmHandler handler = appl.getOrmHandler();
 
         // Footer:
-       add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
+        // TODO ...
     }
 
 
