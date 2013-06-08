@@ -15,13 +15,9 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.domains.Hotel;
-import org.ujorm.wicket.component.gridView.KeyColumn;
+import org.ujorm.wicket.component.gridView.UjoDataProvider;
 
 /**
  * HotelPanel tab
@@ -32,15 +28,17 @@ public class HotelPanel extends Panel {
     public HotelPanel(String id) {
         super(id);
 
-        final List<IColumn> columns = new ArrayList<IColumn>();
-        columns.add(KeyColumn.of(Hotel.NAME));
-        columns.add(KeyColumn.of(Hotel.CITY));
-        columns.add(KeyColumn.of(Hotel.STREET));
-        columns.add(KeyColumn.of(Hotel.PRICE));
-        columns.add(KeyColumn.of(Hotel.CURRENCY));
-        columns.add(KeyColumn.of(Hotel.STARS));
-        columns.add(KeyColumn.of(Hotel.PHONE));
+        UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ID.forAll());
 
-        add(new DefaultDataTable("datatable", columns, new HotelProvider(), 10));
+        dataProvider.addColumn(Hotel.NAME);
+        dataProvider.addColumn(Hotel.CITY);
+        dataProvider.addColumn(Hotel.STREET);
+        dataProvider.addColumn(Hotel.PRICE);
+        dataProvider.addColumn(Hotel.CURRENCY);
+        dataProvider.addColumn(Hotel.STARS);
+        dataProvider.addColumn(Hotel.PHONE);
+        dataProvider.setSort(Hotel.NAME);
+
+        add(dataProvider.createDataTable("datatable", 10));
     }
 }
