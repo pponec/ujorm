@@ -17,9 +17,9 @@ package org.ujorm.hotels.gui;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 
@@ -29,41 +29,23 @@ import org.ujorm.orm.OrmHandlerProvider;
  *
  * @see com.mycompany.Start#main(String[])
  */
-public class WicketApplication extends WebApplication
-implements ApplicationContextAware, OrmHandlerProvider {
+@Component("wicketApplicationSpringBean")
+public class WicketApplication extends WebApplication implements OrmHandlerProvider {
 
-    /** Spring context */
-    private ApplicationContext ctx;
     /** OrmHandler Provider */
+    @Autowired
     private OrmHandlerProvider ormProvider;
-
-    public WicketApplication(OrmHandlerProvider ormProvider) {
-        this.ormProvider = ormProvider;
-    }
 
     @Override
     protected void init() {
-        // getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         mountPage("/demoHotels", HomePage.class);
     }
 
-    /**
-     * @see org.apache.wicket.Application#getHomePage()
-     */
+    /** {@inheritDoc { */
     @Override
     public Class<? extends WebPage> getHomePage() {
         return HomePage.class;
-    }
-
-    /** Assign a Spring application context */
-    @Override
-    public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        this.ctx = ctx;
-    }
-
-    /** Returns Spring Application context */
-    public ApplicationContext getSpringContext() {
-        return ctx;
     }
 
     /** Returns ORM handler */
