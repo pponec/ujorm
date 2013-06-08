@@ -26,7 +26,7 @@ import org.ujorm.hotels.gui.booking.BookingPanel;
 import org.ujorm.hotels.gui.customer.CustomerPanel;
 import org.ujorm.hotels.gui.hotel.HotelPanel;
 import org.ujorm.orm.OrmHandler;
-import org.ujorm.wicket.component.tabs.UjoAjaxTabbedPanel;
+import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 import org.ujorm.wicket.component.tabs.UjoTab;
 
 public class HomePage extends WebPage {
@@ -41,7 +41,7 @@ public class HomePage extends WebPage {
         tabs.add(new UjoTab("Booking", "booking", BookingPanel.class));
         tabs.add(new UjoTab("Customer", "customer", CustomerPanel.class));
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
-        add(new UjoAjaxTabbedPanel("tabs", tabs));
+        add(new UjoTabbedPanel("tabs", tabs));
 
         // Add your page's components here:
         WicketApplication appl = (WicketApplication) getApplication();

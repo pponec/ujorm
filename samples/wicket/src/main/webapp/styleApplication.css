@@ -1,6 +1,6 @@
 /* Tabs component */
 div.tab-panel {
-    margin: 5px;
+    margin: 40px 5px 5px;
     padding: 5px;
 }
 
@@ -38,4 +38,10 @@ div.prologue a {
     text-decoration: none;
     color: silver;
 }
+
+div.chapter-about {
+    margin: 2px 0 10px 0px;
+}
+
+
 
