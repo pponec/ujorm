@@ -30,7 +30,7 @@ import org.apache.wicket.model.Model;
  *
  * @author PavelPonec
  */
-public class UjoAjaxTabbedPanel<T extends UjoTab>
+public class UjoTabbedPanel<T extends UjoTab>
         extends org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel<T> {
 
     /** Tab Index Key */
@@ -40,11 +40,11 @@ public class UjoAjaxTabbedPanel<T extends UjoTab>
      * @param id
      * @param tabs
      */
-    public UjoAjaxTabbedPanel(final String id, final List<T> tabs) {
+    public UjoTabbedPanel(final String id, final List<T> tabs) {
         this(id, tabs, null);
     }
 
-    public UjoAjaxTabbedPanel(final String id, final List<T> tabs, IModel<Integer> model) {
+    public UjoTabbedPanel(final String id, final List<T> tabs, IModel<Integer> model) {
         super(id, tabs, model);
         this.indexKey = getClass().getName() + ":" + getPath() + ".tabIndex.";
         setSelectedTab(getDefaultSelectedTab());
