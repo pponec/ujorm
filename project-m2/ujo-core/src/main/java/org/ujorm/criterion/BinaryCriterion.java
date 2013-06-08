@@ -26,9 +26,14 @@ import org.ujorm.Ujo;
  */
 public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
 
+    /** Left Criterion */
     final private Criterion<UJO> crn1;
+    /** Right Criterion */
     final private Criterion<UJO> crn2;
+    /** Operator */
     final private BinaryOperator operator;
+    /** A domoain class of sub Criterions like a backup */
+    private Class<?> domain;
     
     public BinaryCriterion
         ( final Criterion<UJO> criterion1
@@ -94,14 +99,16 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
         return  result.toString();
     }
 
-    /**
-     * Find a Domain class
-     * @return returns Method returns the {@code Object.class} of no domain was found.
+    /** Find a domain class type of {@code Class<UJO>} from its keys.
+     * @return returns Method returns the {@code Ujo.class} instance if no domain was found.
      */
     @Override
     public Class<?> getDomain() {
-        final Class<?> c1 = getLeftNode().getDomain();
-        final Class<?> c2 = getRightNode().getDomain();
-        return c2.isAssignableFrom(c1) ? c1 : c2;
+        if (domain == null) {
+            final Class<?> c1 = getLeftNode().getDomain();
+            final Class<?> c2 = getRightNode().getDomain();
+            domain = c2.isAssignableFrom(c1) ? c1 : c2;
+        }
+        return domain;
     }
 }
