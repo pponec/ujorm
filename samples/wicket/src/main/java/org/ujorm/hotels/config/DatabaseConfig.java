@@ -18,7 +18,7 @@ package org.ujorm.hotels.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.ujorm.hotels.config.demoData.ResourceLoader;
+import org.ujorm.hotels.config.demoData.DataLoader;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.ao.CheckReport;
@@ -43,7 +43,7 @@ public final class DatabaseConfig implements OrmHandlerProvider {
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.LOG_METAMODEL_INFO, true);
             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.QUOTE_SQL_NAMES);
-            params.set(MetaParams.INITIALIZATION_BATCH, ResourceLoader.class);
+            params.set(MetaParams.INITIALIZATION_BATCH, DataLoader.class);
             params.set(MetaParams.APPL_CONTEXT, applicationContext);
             handler.config(params);
         }
