@@ -15,13 +15,9 @@
  */
 package org.ujorm.hotels.gui.customer;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.domains.Customer;
-import org.ujorm.wicket.component.gridView.KeyColumn;
+import org.ujorm.wicket.component.gridView.UjoDataProvider;
 
 /**
  *
@@ -32,16 +28,19 @@ public class CustomerPanel extends Panel {
     public CustomerPanel(String id) {
         super(id);
 
-        final List<IColumn> columns = new ArrayList<IColumn>();
-        columns.add(KeyColumn.of(Customer.LOGIN));
-        columns.add(KeyColumn.of(Customer.TITLE));
-        columns.add(KeyColumn.of(Customer.FIRSTNAME));
-        columns.add(KeyColumn.of(Customer.SURENAME));
-        columns.add(KeyColumn.of(Customer.EMAIL));
-        columns.add(KeyColumn.of(Customer.ADMIN));
-        columns.add(KeyColumn.of(Customer.ACTIVE));
+        UjoDataProvider<Customer> dataProvider = UjoDataProvider.of(Customer.ACTIVE.whereEq(true));
 
-        add(new DefaultDataTable("datatable", columns, new CustomerProvider(), 20));
+        dataProvider.addColumn(Customer.LOGIN);
+        dataProvider.addColumn(Customer.TITLE);
+        dataProvider.addColumn(Customer.FIRSTNAME);
+        dataProvider.addColumn(Customer.SURENAME);
+        dataProvider.addColumn(Customer.EMAIL);
+        dataProvider.addColumn(Customer.ADMIN);
+        dataProvider.addColumn(Customer.ACTIVE);
+        dataProvider.setSort(Customer.LOGIN);
+
+        add(dataProvider.createDataTable("datatable", 10));
+
     }
 
 }

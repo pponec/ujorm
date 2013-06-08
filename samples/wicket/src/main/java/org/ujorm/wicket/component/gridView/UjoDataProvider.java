@@ -16,12 +16,17 @@
 package org.ujorm.wicket.component.gridView;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
@@ -42,16 +47,23 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** Domain model */
     protected KeyRing<T> model;
     /** OrmSession */
-    transient private Session ormSession ;
+    transient private Session ormSession;
+    /** Transient table columns */
+    transient private List<IColumn<T, Key<T,?>>> columns = new ArrayList<IColumn<T, Key<T,?>>>();
 
-    /** Constructor */
+    /** Constructor
+     * @param criterion Condition to a database query
+     */
     public UjoDataProvider(Criterion<T> criterion) {
         this(criterion, null);
     }
 
-    /** Constructor */
+    /** Constructor
+     * @param criterion Condition to a database query
+     * @param defaultSort Default sorting can be assigned optionally
+     */
     public UjoDataProvider(Criterion<T> criterion, Key<T,?> defaultSort) {
-        this.criterion = criterion;
+        this.criterion = Args.notNull(criterion, "Criterion is mandatory");
         model = KeyRing.of((Class<T>)criterion.getDomain());
         if (defaultSort == null) {
             defaultSort = model.getFirstKey();
@@ -68,7 +80,9 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
      * sort order
      */
     final public void setSort(Key<T, ?> property) {
-        super.setSort(property.getName(), property.isAscending() ? SortOrder.ASCENDING : SortOrder.DESCENDING);
+        super.setSort(property.getName(), property.isAscending() 
+                ? SortOrder.ASCENDING
+                : SortOrder.DESCENDING);
     }
 
     /** Vrací klíč pro řazení */
@@ -123,6 +137,39 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     @Override
     public IModel<T> model(T object) {
         return new Model((Serializable)object);
+    }
+
+    /** Add table column */
+    public <V> boolean addColumn(IColumn<T, Key<T,V>> column) {
+        return columns.add((IColumn)column);
+    }
+
+    /** Add table column */
+    public <V> boolean addColumn(Key<T,V> column) {
+        IColumn<T, Key<T,V>> c = KeyColumn.of(column);
+        return addColumn(c);
+    }
+
+    /** Transient table columns */
+    public  List<IColumn<T, Key<T,?>>> getColumns() {
+        return columns;
+    }
+
+    /** Create AJAX-based DataTable */
+    public DataTable createDataTable( final String id, final int rowsPerPage) {
+        return new UjoDataTable(id, getColumns(), this, rowsPerPage);
+    }
+
+    // ============= STATIC METHOD =============
+
+    /** Factory for the class */
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
+        return new UjoDataProvider<T>(criterion, defaultSort);
+    }
+
+    /** Factory for the class */
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
+        return new UjoDataProvider<T>(criterion, null);
     }
 
 }
