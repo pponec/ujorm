@@ -21,8 +21,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataT
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.domains.Hotel;
-import org.ujorm.hotels.gui.WicketApplication;
-import org.ujorm.orm.OrmHandler;
 import org.ujorm.wicket.component.gridView.KeyColumn;
 
 /**
@@ -43,6 +41,6 @@ public class HotelPanel extends Panel {
         columns.add(KeyColumn.of(Hotel.STARS));
         columns.add(KeyColumn.of(Hotel.PHONE));
 
-        add(new DefaultDataTable("datatable", columns, new HotelProvider(), 20));
+        add(new DefaultDataTable("datatable", columns, new HotelProvider(), 10));
     }
 }
