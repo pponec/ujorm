@@ -160,8 +160,8 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
     abstract public Object getRightNode();
     /** Returns an operator */
     abstract public AbstractOperator getOperator();
-    /** Find a Domain class
-     * @return returns Method returns the {@code Object.class} of no domain was found.
+    /** Find a domain class type of {@code Class<UJO>} from its keys.
+     * @return returns Method returns the {@code Ujo.class} instance if no domain was found.
      */
     abstract public Class<?> getDomain();
 
