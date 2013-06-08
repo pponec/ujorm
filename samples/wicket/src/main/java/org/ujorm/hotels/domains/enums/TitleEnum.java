@@ -17,17 +17,31 @@
 
 package org.ujorm.hotels.domains.enums;
 
+import org.ujorm.extensions.StringWrapper;
+
 /**
  *
  * @author Pavel Ponec
  */
-public enum TitleEnum {
+public enum TitleEnum implements StringWrapper {
 
-    MR,
-    MRS,
-    CHILD,
-    INFANT,
-    UNDEFINED,
+    MR("mr"),
+    MRS("ms"),
+    CHILD("ch"),
+    INFANT("in"),
+    UNDEFINED("-"),
     ;
+
+    /** Short identifier */
+    private final String id;
+
+    private TitleEnum(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String exportToString() {
+        return id;
+    }
 
 }

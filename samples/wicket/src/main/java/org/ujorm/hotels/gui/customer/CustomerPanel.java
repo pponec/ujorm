@@ -39,6 +39,7 @@ public class CustomerPanel extends Panel {
         columns.add(KeyColumn.of(Customer.SURENAME));
         columns.add(KeyColumn.of(Customer.EMAIL));
         columns.add(KeyColumn.of(Customer.ADMIN));
+        columns.add(KeyColumn.of(Customer.ACTIVE));
 
         add(new DefaultDataTable("datatable", columns, new CustomerProvider(), 20));
     }

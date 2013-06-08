@@ -27,7 +27,7 @@ import org.ujorm.orm.Session;
  * Data loader from CSV resources
  * @author ponec
  */
-public class ResourceLoader implements InitializationBatch {
+public class DataLoader implements InitializationBatch {
 
     /** Load data from a CSV file */
     @Override
@@ -66,11 +66,12 @@ public class ResourceLoader implements InitializationBatch {
                 ( Customer.LOGIN
                 , Customer.PASSWORD
                 , Customer.PASSWORD_HASH
-                , Customer.ACTIVE
+                , Customer.TITLE
                 , Customer.FIRSTNAME
                 , Customer.SURENAME
                 , Customer.EMAIL
                 , Customer.ADMIN
+                , Customer.ACTIVE
                 );
         return manager.loadCSV(scanner, "CSV import");
     }
