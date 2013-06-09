@@ -30,6 +30,8 @@ import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
@@ -41,6 +43,10 @@ import org.ujorm.orm.Session;
  */
 public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, String> {
     private static final long serialVersionUID = 1L;
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoDataProvider.class);
+    /** Data size */
+    private Long size;
 
     /** Data criterion */
     protected Criterion<T> criterion;
@@ -91,14 +97,26 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
         return result.descending(!super.getSort().isAscending());
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<T> iterator(long first, long count) {
-        return createQuery(criterion).setLimit((int)(first + count), (int)first).addOrderBy(getSortKey()).iterator();
+        Iterator<T> result = createQuery(criterion)
+                .setLimit((int) count, first)
+                .addOrderBy(getSortKey()).iterator();
+        if (!result.hasNext()) {
+            size = first - 1;
+        }
+
+        return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long size() {
-        return createQuery(criterion).getCount();
+       if (size == null) {
+           size = createQuery(criterion).getCount();
+       }
+       return size;
     }
 
     /** Returns orm Session */
@@ -117,6 +135,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** Commit and close transaction */
     @Override
     public void detach() {
+        size = null;
         if (ormSession != null) {
             ormSession.close();
             ormSession = null;
