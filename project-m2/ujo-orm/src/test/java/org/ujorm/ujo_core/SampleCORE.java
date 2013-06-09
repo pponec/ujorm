@@ -65,7 +65,7 @@ public class SampleCORE {
             sample.selectFromDatabase();
 
         } catch (Exception e) {
-            Logger.getLogger(SampleCORE.class.getName()).log(UjoLogger.ERROR, "Sample CORE", e);
+            Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
         }
     }
 
@@ -245,14 +245,14 @@ public class SampleCORE {
 
     /** Create the new Ujorm session */
     private Session createSession() {
-        logSevere();
+        logErrors();
         
         OrmHandler handler = new OrmHandler(Database.class);
         return handler.createSession();
     }
 
     /** Set logging to the level SEVERE. */
-    private void logSevere() {
+    private void logErrors() {
         Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
     }
 
