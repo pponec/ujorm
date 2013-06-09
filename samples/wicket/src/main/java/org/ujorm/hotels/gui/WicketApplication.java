@@ -39,7 +39,7 @@ public class WicketApplication extends WebApplication implements OrmHandlerProvi
     @Override
     protected void init() {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-        mountPage("/demoHotels", HomePage.class);
+        mountPage("/demo", HomePage.class);
     }
 
     /** {@inheritDoc { */

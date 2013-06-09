@@ -140,13 +140,13 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     }
 
     /** Add table column */
-    public <V> boolean addColumn(IColumn<T, Key<T,V>> column) {
+    public <V> boolean addColumn(IColumn<T, V> column) {
         return columns.add((IColumn)column);
     }
 
     /** Add table column */
     public <V> boolean addColumn(Key<T,V> column) {
-        IColumn<T, Key<T,V>> c = KeyColumn.of(column);
+        final IColumn<T, Key<T,V>> c = KeyColumn.of(column);
         return addColumn(c);
     }
 
