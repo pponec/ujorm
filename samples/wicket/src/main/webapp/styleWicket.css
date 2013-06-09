@@ -69,3 +69,13 @@ div.navigatorLabel {
 div.navigator {
     text-align: right;
 }
+
+/* Sell items */
+td.logical {
+    text-align: center;
+}
+
+td.number {
+    text-align: right;
+    white-space: nowrap;
+}

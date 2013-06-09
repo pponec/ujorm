@@ -36,6 +36,7 @@ import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
+import org.ujorm.wicket.component.gridView.columns.*;
 
 /**
  * SortableDataProvider extended form the Ujorm
@@ -173,10 +174,18 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
         return columns.add((IColumn)column);
     }
 
-    /** Add table column */
+    /** Add table column according to column type */
     public <V> boolean addColumn(Key<T,V> column) {
-        final IColumn<T, Key<T,V>> c = KeyColumn.of(column);
-        return addColumn(c);
+        if (column.isTypeOf(Boolean.class)) {
+            return addColumn(new KeyColumnBoolean<T>((Key)column));
+        } 
+        if (column.isTypeOf(Number.class)) {
+            return addColumn(KeyColumn.of(column, "number"));
+        }
+        else {
+            final IColumn<T, Key<T,V>> c = KeyColumn.of(column);
+            return addColumn(c);
+        }
     }
 
     /** Transient table columns */
