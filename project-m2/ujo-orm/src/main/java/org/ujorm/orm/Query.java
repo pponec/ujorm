@@ -60,7 +60,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** A list of keys to sorting */
     private List<Key<UJO,?>> orderBy;
     /** Set the first row to retrieve. If not set, rows will be retrieved beginnning from row 0. */
-    private int offset = 0;
+    private long offset = 0;
     /** The max row count for the resultset. The value -1 means no change, value 0 means no limit (or a default value by the JDBC driver implementation. */
     private int limit = -1;
     /** Retrieves the number of result set rows that is the default fetch size of the Query objects */
@@ -537,11 +537,11 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Has this Query an offset? */
     public boolean isOffset() {
-        return offset>0;
+        return offset > 0;
     }
 
     /** Get the first row to retrieve (offset). Default value is 0. */
-    final public int getOffset() {
+    final public long getOffset() {
         return offset;
     }
 
@@ -582,7 +582,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      * @see #setLimit(int)
      * @see #setOffset(int)
      */
-    public Query<UJO> setLimit(int limit, int offset) {
+    public Query<UJO> setLimit(int limit, long offset) {
         this.limit = limit;
         this.offset = offset;
         return this;
