@@ -46,7 +46,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoDataProvider.class);
     /** Data size */
-    private Long size;
+    protected Long size;
 
     /** Data criterion */
     protected Criterion<T> criterion;
@@ -97,10 +97,15 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
         return result.descending(!super.getSort().isAscending());
     }
 
-    /** {@inheritDoc} */
+    /** Build a JDBC ResultSet allways.
+     * Overwrite the method for an optimization.<br>
+     */
     @Override
     public Iterator<T> iterator(long first, long count) {
-        Args.isTrue(count <= Integer.MAX_VALUE, "Hodnota parametru 'count' musí mít maximální hodnotu %s", Integer.MAX_VALUE);
+        Args.isTrue(count <= Integer.MAX_VALUE
+                , "The argument 'count' have got limit %s but the current value is %s"
+                , Integer.MAX_VALUE
+                , count);
 
         Iterator<T> result = createQuery(criterion)
                 .setLimit((int) count, first)
@@ -112,7 +117,10 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
         return result;
     }
 
-    /** {@inheritDoc} */
+    /** Method calculate the size using special SQL requst.
+     * Overwrite the method for an optimization.<br>
+     * Original documentation: {@inheritDoc}
+     */
     @Override
     public long size() {
        if (size == null) {
