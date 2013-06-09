@@ -100,6 +100,8 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** {@inheritDoc} */
     @Override
     public Iterator<T> iterator(long first, long count) {
+        Args.isTrue(count <= Integer.MAX_VALUE, "Hodnota parametru 'count' musí mít maximální hodnotu %s", Integer.MAX_VALUE);
+
         Iterator<T> result = createQuery(criterion)
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKey()).iterator();
