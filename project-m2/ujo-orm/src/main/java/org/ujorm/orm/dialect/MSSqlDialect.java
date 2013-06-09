@@ -307,10 +307,10 @@ public class MSSqlDialect extends SqlDialect {
         if (query.isLimit()) {
             out.append("WHERE MyInnerTable.RowNum ");
             // MS-SQL's first index is 1 !!!
-            int start = query.isOffset() ? (query.getOffset() + 1) : 1;
+            long start = query.isOffset() ? (query.getOffset() + 1) : 1;
             out.append("BETWEEN " + start + " AND ");
             // exclusive - between 1 and 2 returns 2 rows
-            int end = start + query.getLimit() - 1;
+            long end = start + query.getLimit() - 1;
             out.append(String.valueOf(end));
 
         } else if (query.isOffset()) {
