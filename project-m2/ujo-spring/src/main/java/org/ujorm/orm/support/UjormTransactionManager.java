@@ -16,7 +16,6 @@
 package org.ujorm.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
@@ -40,7 +39,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
 
     @Override
     protected Object doGetTransaction() throws TransactionException {
-        LOGGER.log(Level.INFO, "getTransaction returning new Object");
+        LOGGER.log(UjoLogger.INFO, "getTransaction returning new Object");
         //can not return null because it will not call commit
         return new Object();
     }
@@ -48,7 +47,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     @Override
     protected void doBegin(Object o, TransactionDefinition td) throws TransactionException {
         if (incCalling()) {
-            LOGGER.log(Level.FINEST, "Auto transaction registred/started");
+            LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
             ujoSessionFactory.setAutoTransaction(true);
             ujoSessionFactory.getDefaultSession().beginTransaction();
         }
@@ -58,21 +57,21 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     protected void doCommit(DefaultTransactionStatus dts) throws TransactionException {
         dts.isGlobalRollbackOnly();
         if (decCalling()) {
-            LOGGER.log(Level.FINEST, "Auto transaction ending (commit/rollback)");
+            LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
 
             if (ujoSessionFactory.getDefaultSession().isRollbackOnly()) {
-                LOGGER.log(Level.WARNING, "Rolling back transaction becaouse has been mark as roll back only");
+                LOGGER.log(UjoLogger.WARN, "Rolling back transaction becaouse has been mark as roll back only");
                 rollback(dts);
                 return;
             }
-            LOGGER.log(Level.INFO, "commiting transaction ...");
+            LOGGER.log(UjoLogger.INFO, "commiting transaction ...");
             ujoSessionFactory.getDefaultSession().commitTransaction();
         }
     }
 
     @Override
     protected void doRollback(DefaultTransactionStatus dts) throws TransactionException {
-        LOGGER.log(Level.WARNING, "rolling back transaction");
+        LOGGER.log(UjoLogger.WARN, "rolling back transaction");
 
         ujoSessionFactory.getDefaultSession().rollbackTransaction();
         deep = null;

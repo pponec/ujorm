@@ -235,8 +235,8 @@ public class OrmHandler implements OrmHandlerProvider {
 
         // Log the meta-model:
         final Level level = MetaParams.LOG_METAMODEL_INFO.of(params)
-            ? Level.INFO
-            : Level.FINE ;
+            ? UjoLogger.INFO
+            : UjoLogger.DEBUG;
         if (LOGGER.isLoggable(level)) {
             final String msg = "DATABASE META-MODEL:\n" + getConfig();
            LOGGER.log(level, msg);
@@ -260,13 +260,13 @@ public class OrmHandler implements OrmHandlerProvider {
             Session session = null;
             try {
                 session = createSession();
-                LOGGER.log(Level.INFO, "The initializaton batch is running: " + batch.getClass().getName());
+                LOGGER.log(UjoLogger.INFO, "The initializaton batch is running: " + batch.getClass().getName());
                 batch.run(session);
                 session.commit();
                 session.close();
             } catch (Exception e) {
                 final String msg = "The batch failed: " + batch.getClass().getName();
-                LOGGER.log(Level.SEVERE, msg, e);
+                LOGGER.log(UjoLogger.ERROR, msg, e);
                 throw new IllegalStateException(msg, e);
             } finally {
                 if (session != null) {

@@ -15,10 +15,10 @@
  */
 package org.ujorm.orm;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
 import org.ujorm.Ujo;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MetaTable;
 import org.ujorm.orm_tutorial.sample.*;
@@ -123,7 +123,7 @@ public class UjoSequencerTest extends TestCase {
     private OrmHandler createHandler(int sequenceCache) {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.ERROR);
 
         // Create new ORM Handler:
         OrmHandler result = new OrmHandler();

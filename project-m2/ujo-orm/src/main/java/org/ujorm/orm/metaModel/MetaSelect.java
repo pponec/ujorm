@@ -16,7 +16,6 @@
 
 package org.ujorm.orm.metaModel;
 
-import java.util.logging.Level;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.core.KeyFactory;
@@ -136,9 +135,9 @@ final public class MetaSelect extends AbstractMetaModel {
             }
         }
 
-        if (LOGGER.isLoggable(Level.INFO)) {
+        if (LOGGER.isLoggable(UjoLogger.INFO)) {
             final String msg = getClass().getSimpleName() + ": " + toString();
-            LOGGER.log(Level.INFO, msg);
+            LOGGER.log(UjoLogger.INFO, msg);
         }
     }
 

@@ -24,6 +24,7 @@ import org.ujorm.UjoProperty;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.criterion.*;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
@@ -103,7 +104,7 @@ public class Orm2Test extends TestCase {
      */
     public void loadMetaModel() {
 
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.TRACE);
         handler = new OrmHandler();
 
         boolean yesIWantToChangeDefaultParameters = true;

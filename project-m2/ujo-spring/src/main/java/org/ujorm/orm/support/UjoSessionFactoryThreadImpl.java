@@ -16,7 +16,6 @@
 package org.ujorm.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -52,13 +51,13 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
     private void doIncCalling() {
         if (incCalling()) {
             session = handler.createSession();
-            LOGGER.log(Level.FINEST, "opening Ujorm session");
+            LOGGER.log(UjoLogger.TRACE, "opening Ujorm session");
         }
     }
 
     private void doDecCalling() {
         if (decCalling()) {
-            LOGGER.log(Level.FINEST, "closing Ujorm session");
+            LOGGER.log(UjoLogger.TRACE, "closing Ujorm session");
             getSession().close();
         }
     }
@@ -112,7 +111,7 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
     public Session getDefaultSession() {
 
         if (!getAutoTransaction()) {
-            LOGGER.log(Level.WARNING, "geting session without autotransaction handling !!");
+            LOGGER.log(UjoLogger.WARN, "geting session without autotransaction handling !!");
         }
         return getSession();
     }

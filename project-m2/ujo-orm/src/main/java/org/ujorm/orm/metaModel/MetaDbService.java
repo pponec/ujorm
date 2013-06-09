@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
@@ -31,6 +30,7 @@ import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.SqlDialectEx;
 import org.ujorm.orm.UjoSequencer;
 import org.ujorm.orm.utility.OrmTools;
+import static org.ujorm.logger.UjoLogger.*;
 import static org.ujorm.orm.metaModel.MetaDatabase.*;
 
 /**
@@ -111,7 +111,7 @@ public class MetaDbService {
             try {
                 conn.rollback();
             } catch (SQLException ex) {
-                LOGGER.log(Level.WARNING, "Can't rollback DB" + db.getId(), ex);
+                LOGGER.log(WARN, "Can't rollback DB" + db.getId(), ex);
             }
             throw new IllegalArgumentException(Session.SQL_ILLEGAL + getSql(), e);
         }
@@ -156,7 +156,7 @@ public class MetaDbService {
                     );
                 while(rs.next()) {
                     items.add(rs.getString("COLUMN_NAME").toUpperCase());
-                    if (false && LOGGER.isLoggable(Level.INFO)) {
+                    if (false && LOGGER.isLoggable(INFO)) {
                         // Debug message:
                         String msg = "DB column: "
                                    + rs.getString("TABLE_CAT") + "."
@@ -164,7 +164,7 @@ public class MetaDbService {
                                    + rs.getString("TABLE_NAME") + "."
                                    + rs.getString("COLUMN_NAME")
                                    ;
-                        LOGGER.log(Level.INFO, msg);
+                        LOGGER.log(INFO, msg);
                     }
                 }
                 rs.close();
@@ -176,12 +176,12 @@ public class MetaDbService {
 
                         boolean exists = items.contains(MetaColumn.NAME.of(mc).toUpperCase());
                         if (!exists) {
-                            LOGGER.log(Level.INFO, "New DB column: " + mc.getFullName());
+                            LOGGER.log(INFO, "New DB column: " + mc.getFullName());
                             newColumns.add(mc);
                         }
                     }
                 } else {
-                    LOGGER.log(Level.INFO, "New DB table: " + MetaTable.NAME.of(table));
+                    LOGGER.log(INFO, "New DB table: " + MetaTable.NAME.of(table));
                     newTables.add(table);
                 }
 
@@ -207,7 +207,7 @@ public class MetaDbService {
                 for (MetaIndex index : table.getIndexCollection()) {
                     boolean exists = items.contains(MetaIndex.NAME.of(index).toUpperCase());
                     if (!exists) {
-                        LOGGER.log(Level.INFO, "New DB index: " + index);
+                        LOGGER.log(INFO, "New DB index: " + index);
                         newIndexes.add(index);
                     }
                 }
@@ -265,14 +265,14 @@ public class MetaDbService {
                 }
             }
 
-            if (LOGGER.isLoggable(Level.INFO)) {
+            if (LOGGER.isLoggable(INFO)) {
                 logMsg = "Table ''{0}'' {1} available on the database ''{2}''.";
                 logMsg = MessageFormat.format(logMsg
                        , db.getDialect().getSeqTableModel().getTableName()
                        , exception!=null ? "is not" : "is"
                        , db.getId()
                        );
-                LOGGER.log(Level.INFO, logMsg);
+                LOGGER.log(INFO, logMsg);
             }
 
             try {
@@ -319,7 +319,7 @@ public class MetaDbService {
                     try {
                         stat.executeUpdate(sql.toString());
                     } catch (SQLException e) {
-                        LOGGER.log(Level.INFO, "{0}: {1}; {2}", new Object[]{e.getClass().getName(), sql.toString(), e.getMessage()});
+                        LOGGER.log(INFO, "{0}: {1}; {2}", new Object[]{e.getClass().getName(), sql.toString(), e.getMessage()});
                         conn.rollback();
                     }
                 }
@@ -443,7 +443,7 @@ public class MetaDbService {
                 }
             }
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error on table comment: {0}", out);
+            LOGGER.log(ERROR, "Error on table comment: {0}", out);
         }
     }
 
@@ -459,7 +459,7 @@ public class MetaDbService {
                 case EXCEPTION:
                     throw new IllegalArgumentException(msg);
                 case WARNING:
-                    LOGGER.log(Level.WARNING, msg);
+                    LOGGER.log(WARN, msg);
             }
         }
     }
@@ -485,12 +485,12 @@ public class MetaDbService {
                if (validateCase) {
                    throw new IllegalStateException(msg);
                } else {
-                   LOGGER.log(Level.WARNING, msg);
+                   LOGGER.log(WARN, msg);
                }
 
            default:
                stat.executeUpdate(sql.toString());
-               LOGGER.log(Level.INFO, sql.toString());
+               LOGGER.log(INFO, sql.toString());
        }
     }
 

@@ -18,6 +18,7 @@ package org.ujorm.orm.template;
 import java.util.logging.*;
 import junit.framework.TestCase;
 import org.ujorm.Ujo;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.metaModel.MetaParams;
@@ -79,7 +80,7 @@ public class AliasTableTest extends TestCase {
     private OrmHandler createHandler() {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.FINE);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.DEBUG);
 
         // Create new ORM Handler:
         OrmHandler handler = new OrmHandler();

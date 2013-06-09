@@ -23,6 +23,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.*;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.*;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.dialect.DerbyDialect;
@@ -102,7 +103,7 @@ public class Orm2Test extends TestCase {
      */
     public void loadMetaModel() {
 
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.TRACE);
         handler = new OrmHandler();
 
         boolean yesIWantToChangeDefaultParameters = true;

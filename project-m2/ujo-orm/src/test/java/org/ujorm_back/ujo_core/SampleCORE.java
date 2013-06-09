@@ -17,12 +17,12 @@
 package org.ujorm_back.ujo_core;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.criterion.*;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Session;
 import org.ujorm_back.orm_tutorial.sample.Database;
@@ -66,7 +66,7 @@ public class SampleCORE {
             sample.selectFromDatabase();
 
         } catch (Exception e) {
-            Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
+            Logger.getLogger(SampleCORE.class.getName()).log(UjoLogger.ERROR, "Sample CORE", e);
         }
     }
 
@@ -254,7 +254,7 @@ public class SampleCORE {
 
     /** Set logging to the level SEVERE. */
     private void logSevere() {
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.ERROR);
     }
 
 }

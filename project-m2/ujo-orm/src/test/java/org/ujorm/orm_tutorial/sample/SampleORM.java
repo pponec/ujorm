@@ -117,7 +117,7 @@ public class SampleORM {
     public void createMetaModel() {
 
         // Set the log level specifying which message levels will be logged by Ujorm:
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.FINE);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.DEBUG);
 
         // Create new ORM Handler:
         handler = new OrmHandler();
