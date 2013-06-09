@@ -16,7 +16,6 @@
 package org.ujorm.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -47,7 +46,7 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
         Object result = null;
 
         if (incCalling()) {
-            LOGGER.log(Level.FINEST, "Auto transaction registred/started");
+            LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
             ujoSessionFactory.setAutoTransaction(true);
             beginTransaction();
         }
@@ -58,10 +57,10 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
             getSession().markForRolback();
         }
         if (decCalling()) {
-            LOGGER.log(Level.FINEST, "Auto transaction ending (commit/rollback)");
+            LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
             //rolback if there was error
             if (getSession().isRollbackOnly()) {
-                LOGGER.log(Level.FINE, "Transaction rolling back because it has been marked as rollback-only");
+                LOGGER.log(UjoLogger.DEBUG, "Transaction rolling back because it has been marked as rollback-only");
                 rollback();
                 // if exception is not caught send it
                 return doReturn(ex, result);

@@ -22,7 +22,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
@@ -63,7 +62,7 @@ public class JdbcStatement {
     public JdbcStatement(final PreparedStatement ps, final OrmHandler handler) {
         this.ps = ps;
         this.typeService = handler.getParameters().getConverter(null);
-        logValues = LOGGER.isLoggable(Level.INFO);
+        logValues = LOGGER.isLoggable(UjoLogger.INFO);
         logValueLengthLimit = Math.max(10, MetaParams.LOG_VALUE_LENGTH_LIMIT.of(handler.getParameters()));
         if (logValues) {
             values = new StringBuilder();

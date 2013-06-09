@@ -23,16 +23,15 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import org.ujorm.ListKey;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.logger.UjoLogger;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.core.annot.Immutable;
-import org.ujorm.orm.AbstractMetaModel;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.AbstractMetaModel;
 import org.ujorm.orm.utility.OrmTools;
 
 /**
@@ -97,7 +96,7 @@ final public class MetaRoot extends AbstractMetaModel {
             print(out);
             out.append("\n---\n");
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Can't export model into XML", ex);
+            LOGGER.log(UjoLogger.ERROR, "Can't export model into XML", ex);
         }
         return out.toString();
     }

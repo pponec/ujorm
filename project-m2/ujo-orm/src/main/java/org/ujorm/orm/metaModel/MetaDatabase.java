@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import org.ujorm.Key;
@@ -360,7 +359,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             if (throwExcepton) {
                 throw new IllegalStateException(msg, e);
             } else {
-                LOGGER.log(Level.SEVERE, msg, e);
+                LOGGER.log(UjoLogger.ERROR, msg, e);
             }
         }
     }
@@ -389,7 +388,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
             if (throwExcepton) {
                 throw new IllegalStateException(msg, e);
             } else {
-                LOGGER.log(Level.SEVERE, msg, e);
+                LOGGER.log(UjoLogger.ERROR, msg, e);
             }
         }
     }
@@ -425,7 +424,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         final List<String> jndi = JNDI.of(this);
         if (!jndi.isEmpty()) {
 
-            LOGGER.log(Level.FINE, "JNDI: {0}", jndi);
+            LOGGER.log(UjoLogger.DEBUG, "JNDI: {0}", jndi);
 
             InitialContext initContext = dialect.createJndiInitialContext(this);
             final int lastItem = jndi.size()-1;

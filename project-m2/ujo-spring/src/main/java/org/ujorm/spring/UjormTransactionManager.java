@@ -15,7 +15,6 @@
  */
 package org.ujorm.spring;
 
-import java.util.logging.Level;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -49,14 +48,14 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     /** Return a transaction object for the current transaction state. */
     @Override
     protected Object doGetTransaction() throws TransactionException {
-        LOGGER.log(Level.FINEST, "GetTransaction is running");
+        LOGGER.log(UjoLogger.TRACE, "GetTransaction is running");
         return dummy;
     }
 
     /** Begin a new transaction with semantics according to the given transaction */
     @Override
     protected void doBegin(Object tr, TransactionDefinition td) throws TransactionException {
-        LOGGER.log(Level.FINEST, "Auto transaction registred/started");
+        LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
         Session localSession = session.get();
         if (localSession == null) {
             localSession = handler.createSession();
@@ -74,8 +73,8 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
             };
         }
         try {
-            if (LOGGER.isLoggable(Level.FINEST)) {
-               LOGGER.log(Level.FINEST
+            if (LOGGER.isLoggable(UjoLogger.TRACE)) {
+               LOGGER.log(UjoLogger.TRACE
                        , "Transaction is finished on the "
                        + (commit ? "Commit" : "Rollback"));
             }            
@@ -85,7 +84,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
                localSession.rollbackTransaction();
             } catch (Exception e) {
                // The rollback exception must not be thrown, because the original one could be overlapped.
-               LOGGER.log(Level.SEVERE, "Rollback failed", e);
+               LOGGER.log(UjoLogger.ERROR, "Rollback failed", e);
             }
         } finally {
             if (localSession.getTransaction() == null) {
@@ -101,7 +100,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
         final Session localSession = getLocalSession();
         final boolean rollbackOnly = dts.isGlobalRollbackOnly() || localSession.isRollbackOnly();
         if (rollbackOnly) {
-            LOGGER.log(Level.WARNING, "Rolling back transaction becaouse has been mark as roll back only");
+            LOGGER.log(UjoLogger.WARN, "Rolling back transaction becaouse has been mark as roll back only");
         }
         doEnd(!rollbackOnly, localSession);
     }

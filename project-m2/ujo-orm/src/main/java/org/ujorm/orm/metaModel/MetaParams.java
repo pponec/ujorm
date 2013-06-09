@@ -19,7 +19,6 @@ package org.ujorm.orm.metaModel;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Immutable;
@@ -185,7 +184,7 @@ final public class MetaParams extends AbstractMetaModel {
             if (val<1) {
                 value = 1;
                 final String msg = "The smallest possible value of property '"+property+"' is 1, not " + val;
-                LOGGER.log(Level.WARNING, msg);
+                LOGGER.log(UjoLogger.WARN, msg);
             }
         }
         super.writeValue(property, value);

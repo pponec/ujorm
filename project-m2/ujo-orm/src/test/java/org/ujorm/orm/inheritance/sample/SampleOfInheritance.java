@@ -17,8 +17,9 @@ package org.ujorm.orm.inheritance.sample;
 
 import java.util.logging.*;
 import org.ujorm.Ujo;
-import org.ujorm.orm.*;
 import org.ujorm.criterion.*;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.orm.*;
 import org.ujorm.orm.inheritance.sample.bo.Customer;
 import org.ujorm.orm.inheritance.sample.bo.IUser;
 import org.ujorm.orm.inheritance.sample.bo.User;
@@ -38,7 +39,7 @@ public class SampleOfInheritance {
      */
     public void loadMetaModel() {
 
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.ALL);
+        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(UjoLogger.TRACE);
         handler.loadDatabase(Database.class);
     }
 

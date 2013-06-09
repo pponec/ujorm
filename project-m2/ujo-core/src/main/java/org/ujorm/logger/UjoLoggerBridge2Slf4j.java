@@ -27,15 +27,15 @@ import org.slf4j.LoggerFactory;
 final class UjoLoggerBridge2Slf4j implements UjoLogger {
 
     /** JUL SEVERE -&gt; */
-    private static final int ERROR = Level.SEVERE.intValue();
+    private static final int ERROR_LEVEL = Level.SEVERE.intValue();
     /** JUL WARNING -&gt; */
-    private static final int WARN = Level.WARNING.intValue();
+    private static final int WARN_LEVEL = Level.WARNING.intValue();
     /** JUL INFO -&gt; */
-    private static final int INFO = Level.INFO.intValue();
+    private static final int INFO_LEVEL = Level.INFO.intValue();
     /** JUL FINER,FINE  -&gt; */
-    private static final int DEBUG = Math.min(Level.FINER.intValue(), Level.FINE.intValue());
+    private static final int DEBUG_LEVEL = Math.min(Level.FINER.intValue(), Level.FINE.intValue());
     /** JUL FINEST  -&gt; */
-    private static final int TRACE = Level.FINEST.intValue();
+    private static final int TRACE_LEVEL = Level.FINEST.intValue();
 
     /** Logger */
     final Logger logger;
@@ -52,19 +52,19 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
 
     public boolean isLoggable(Level level) {
         final int levelId = level.intValue();
-        if (levelId>=ERROR) {
+        if (levelId >= ERROR_LEVEL) {
             return logger.isErrorEnabled();
         }
-        else if(levelId >= WARN) {
+        else if(levelId >= WARN_LEVEL) {
             return logger.isWarnEnabled();
         }
-        else if (levelId>=INFO) {
+        else if (levelId >= INFO_LEVEL) {
             return logger.isInfoEnabled();
         }
-        else if (levelId>=DEBUG) {
+        else if (levelId >= DEBUG_LEVEL) {
             return logger.isDebugEnabled();
         }
-        else /* if (levelId>=TRACE) */ {
+        else /* if (levelId >= TRACE_LEVEL) */ {
             return true;
         }
     }
@@ -78,19 +78,19 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
     public void log(Level level, String message, Throwable e) {
         final int levelId = level.intValue();
 
-        if (levelId>=ERROR) {
+        if (levelId >= ERROR_LEVEL) {
             logger.error(message, e);
         }
-        else if(levelId >= WARN) {
+        else if(levelId >= WARN_LEVEL) {
             logger.warn(message, e);
         }
-        else if (levelId>=INFO) {
+        else if (levelId >= INFO_LEVEL) {
             logger.info(message, e);
         }
-        else if (levelId>=DEBUG) {
+        else if (levelId >= DEBUG_LEVEL) {
             logger.debug(message, e);
         }
-        else /* if (levelId>=TRACE) */ {
+        else /* if (levelId >= TRACE) */ {
             logger.trace(message, e);
         }
     }
@@ -99,19 +99,19 @@ final class UjoLoggerBridge2Slf4j implements UjoLogger {
     public void log(Level level, String message, Object... params) {
         final int levelId = level.intValue();
 
-        if (levelId>=ERROR) {
+        if (levelId >= ERROR_LEVEL) {
             logger.error(message, params);
         }
-        else if(levelId >= WARN) {
+        else if(levelId >= WARN_LEVEL) {
             logger.warn(message, params);
         }
-        else if (levelId>=INFO) {
+        else if (levelId >= INFO_LEVEL) {
             logger.info(message, params);
         }
-        else if (levelId>=DEBUG) {
+        else if (levelId >= DEBUG_LEVEL) {
             logger.debug(message, params);
         }
-        else /* if (levelId>=TRACE) */ {
+        else /* if (levelId >= TRACE) */ {
             logger.trace(message, params);
         }
     }

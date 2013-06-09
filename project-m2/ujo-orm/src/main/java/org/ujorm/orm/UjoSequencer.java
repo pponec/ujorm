@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.metaModel.MetaDatabase;
@@ -78,8 +77,8 @@ public class UjoSequencer {
                 out.setLength(0);
                 sql = db.getDialect().printSequenceNextValue(this, out).toString();
                 
-                if (LOGGER.isLoggable(Level.INFO)) { 
-                    LOGGER.log(Level.INFO, sql + "; [" + tableName + ']');
+                if (LOGGER.isLoggable(UjoLogger.INFO)) { 
+                    LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
                 }
                 statement = connection.prepareStatement(sql);
                 statement.setString(1, tableName);
@@ -89,8 +88,8 @@ public class UjoSequencer {
                     // INSERT the new sequence:
                     out.setLength(0);
                     sql = db.getDialect().printSequenceInit(this, out).toString();
-                    if (LOGGER.isLoggable(Level.INFO)) { 
-                        LOGGER.log(Level.INFO, sql + "; ["+tableName+']');
+                    if (LOGGER.isLoggable(UjoLogger.INFO)) { 
+                        LOGGER.log(UjoLogger.INFO, sql + "; ["+tableName+']');
                     }
                     statement = connection.prepareStatement(sql);
                     statement.setString(1, tableName);
@@ -114,8 +113,8 @@ public class UjoSequencer {
                         statement.close();
                         out.setLength(0);
                         sql = db.getDialect().printSequenceNextValue(this, out).toString();
-                        if (LOGGER.isLoggable(Level.INFO)) {
-                            LOGGER.log(Level.INFO, sql + "; [" + tableName + ']');
+                        if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                            LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
                         }
                         statement = connection.prepareStatement(sql);
                         statement.setString(1, tableName);
@@ -129,7 +128,7 @@ public class UjoSequencer {
                             +   (Long.MAX_VALUE-step)
                             + " (Long.MAX_VALUE-step)"
                             ;
-                        LOGGER.log(Level.WARNING, msg);
+                        LOGGER.log(UjoLogger.WARN, msg);
                     }
                 }
                 connection.commit();
@@ -138,7 +137,7 @@ public class UjoSequencer {
                 if (connection!=null) try {
                     connection.rollback();
                 } catch (SQLException ex) {
-                    LOGGER.log(Level.WARNING, "Rollback fails");
+                    LOGGER.log(UjoLogger.WARN, "Rollback fails");
                 }
                 IllegalStateException exception = e instanceof IllegalStateException
                     ? (IllegalStateException) e

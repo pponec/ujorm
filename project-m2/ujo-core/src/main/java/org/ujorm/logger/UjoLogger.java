@@ -20,20 +20,33 @@ package org.ujorm.logger;
 import java.util.logging.Level;
 
 /**
- * Ujorm Logger Interface
+ * Ujorm Logger Interface.<br>
+ * The interface provides a level constants with name similar to the SLF4J, for example: UjoLogger.ERROR,  UjoLogger.DEBUG.
  * @author Pavel Ponec
  */
 public interface UjoLogger {
+
+    /** A level alias for the constant {@code SEVERE} from the class {@code java.util.logging.Level} */
+    public static final Level ERROR = Level.SEVERE;
+    /** A level alias for the constant {@code WARNING} from the class {@code java.util.logging.Level} */
+    public static final Level WARN = Level.WARNING;
+    /** A level alias for the constant {@code INFO} from the class {@code java.util.logging.Level} */
+    public static final Level INFO = Level.INFO;
+    /** A level alias for the constant {@code FINE} from the class {@code java.util.logging.Level} */
+    public static final Level DEBUG = Level.FINE;
+    /** A level alias for the constant {@code FINEST} from the class {@code java.util.logging.Level} */
+    public static final Level TRACE = Level.FINEST;
+
     
     /**
      * Check if a message of the given level would actually be logged
      * by this logger.  This check is based on the Loggers effective level,
      * which may be inherited from its parent.
      *
-     * @param	level	a message logging level
+     * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
      * @return	true if the given message level is currently being logged.
      */
-    public boolean isLoggable(Level INFO);
+    public boolean isLoggable(Level level);
 
     /**
      * Log a message, with no arguments.
@@ -42,7 +55,7 @@ public interface UjoLogger {
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param	level	One of the message level identifiers, e.g. SEVERE
+     * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
      * @param   msg	The string message (or a key in the message catalog)
      */
     public void log(Level level, String message);
@@ -59,7 +72,7 @@ public interface UjoLogger {
      * processed specially by output Formatters and is not treated
      * as a formatting parameter to the LogRecord message property.
      * <p>
-     * @param	level   One of the message level identifiers, e.g. SEVERE
+     * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
      * @param   msg	The string message (or a key in the message catalog)
      * @param   thrown  Throwable associated with log message.
      */
@@ -72,10 +85,10 @@ public interface UjoLogger {
      * level then a corresponding LogRecord is created and forwarded
      * to all the registered output Handler objects.
      * <p>
-     * @param	level   One of the message level identifiers, e.g. SEVERE
+     * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
      * @param   msg	The string message (or a key in the message catalog)
      * @param   params	array of parameters to the message
      */
-    public void log(Level SEVERE, String message, Object ... parameters);
+    public void log(Level level, String message, Object ... parameters);
 
 }

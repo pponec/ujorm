@@ -122,7 +122,7 @@ public class Session {
         if (transaction!=null) {
             transaction.commit();
         } else {
-            LOGGER.log(Level.WARNING, "Transaction is not running");
+            LOGGER.log(UjoLogger.WARN, "Transaction is not running");
             commit();
         }
     }
@@ -137,7 +137,7 @@ public class Session {
         if (transaction!=null) {
             transaction.rollback();
         } else {
-            LOGGER.log(Level.WARNING, "Transaction is not running");
+            LOGGER.log(UjoLogger.WARN, "Transaction is not running");
             rollback();
         }
     }
@@ -174,7 +174,7 @@ public class Session {
                 // Sort databases by a definition order:
                 Arrays.sort(databases);
             }
-            final Level fineLevel = Level.FINE;
+            final Level fineLevel = UjoLogger.DEBUG;
             for (int i=0; i<databases.length; ++i) {
                 database = databases[i];
                 final Connection conn = connections[0].get(database);
@@ -220,7 +220,7 @@ public class Session {
                     : null;
 
         } catch (Throwable e) {
-            LOGGER.log(Level.SEVERE, errMessage + database, e);
+            LOGGER.log(UjoLogger.ERROR, errMessage + database, e);
             throw new IllegalStateException(errMessage + database, e);
         }
         rollbackOnly = false;
@@ -249,7 +249,7 @@ public class Session {
                 result[i] = conn.setSavepoint();
             }
         } catch (Throwable e) {
-            LOGGER.log(Level.SEVERE, errMessage + database, e);
+            LOGGER.log(UjoLogger.ERROR, errMessage + database, e);
             throw new IllegalStateException(errMessage + database, e);
         }
         rollbackOnly = false;
@@ -402,7 +402,7 @@ public class Session {
         // ---------------- VALIDATIONS -----------------------------------
 
         if (bos==null || bos.isEmpty()) {
-            LOGGER.log(Level.INFO, "The multi insert list is empty");
+            LOGGER.log(UjoLogger.INFO, "The multi insert list is empty");
             return;
         }
         final MetaTable table = handler.findTableModel(bos.get(0).getClass());
@@ -452,12 +452,12 @@ public class Session {
                 out.setLength(0);
                 sql = db.getDialect().printInsert(bos, idxFrom, idxTo, out).toString();
                 if (logEnabled) {
-                    LOGGER.log(Level.INFO, sql);                    
+                    LOGGER.log(UjoLogger.INFO, sql);                    
                 }
                 statement = getStatement(db, sql, true);
                 statement.assignValues(bos, idxFrom, idxTo);
-                if (logEnabled && LOGGER.isLoggable(Level.FINE)) {
-                    LOGGER.log(Level.FINE, SQL_VALUES + statement.getAssignedValues());
+                if (logEnabled && LOGGER.isLoggable(UjoLogger.DEBUG)) {
+                    LOGGER.log(UjoLogger.DEBUG, SQL_VALUES + statement.getAssignedValues());
                 }
                 statement.executeUpdate(); // execute insert statement
                 MetaDatabase.close(null, statement, null, true);
@@ -502,10 +502,10 @@ public class Session {
             bo.writeSession(this);
             MetaDatabase db = MetaTable.DATABASE.of(table);
             sql = db.getDialect().printInsert(bo, out(128)).toString();
-            LOGGER.log(Level.INFO, sql);
+            LOGGER.log(UjoLogger.INFO, sql);
             statement = getStatement(db, sql, true);
             statement.assignValues(bo);
-            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
+            LOGGER.log(UjoLogger.INFO, SQL_VALUES + statement.getAssignedValues());
             // 4. Execute:
             statement.executeUpdate(); // execute insert statement
         } catch (Throwable e) {
@@ -553,7 +553,7 @@ public class Session {
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
-                LOGGER.log(Level.WARNING, "No changes to update in the object: " + bo);
+                LOGGER.log(UjoLogger.WARN, "No changes to update in the object: " + bo);
                 return result;
             }
             final CriterionDecoder decoder = new CriterionDecoder(criterion, table);
@@ -562,8 +562,8 @@ public class Session {
             statement.assignValues(bo, changedColumns);
             statement.assignValues(decoder);
 
-            if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
+            if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                LOGGER.log(UjoLogger.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute update statement
             bo.writeSession(this);
@@ -652,8 +652,8 @@ public class Session {
             statement = getStatement(db, sql, true);
             statement.assignValues(decoder);
 
-            if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + SQL_VALUES + statement.getAssignedValues());
+            if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                LOGGER.log(UjoLogger.INFO, sql + SQL_VALUES + statement.getAssignedValues());
             }
             result = statement.executeUpdate(); // execute delete statement
         } catch (Throwable e) {
@@ -678,8 +678,8 @@ public class Session {
             statement = getStatementCallable(db, sql, true);
             statement.assignValues(procedure);
 
-            if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
+            if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                LOGGER.log(UjoLogger.INFO, sql + " " + SQL_VALUES + statement.getAssignedValues());
             }
             statement.execute(); // execute call statement
             statement.loadValues(procedure);
@@ -735,11 +735,11 @@ public class Session {
 
         try {
             sql = db.getDialect().printSelect(table, query, true, out(128)).toString();
-            LOGGER.log(Level.INFO, sql);
+            LOGGER.log(UjoLogger.INFO, sql);
 
             statement = getStatement(db, sql, false);
             statement.assignValues(query);
-            LOGGER.log(Level.INFO, SQL_VALUES + statement.getAssignedValues());
+            LOGGER.log(UjoLogger.INFO, SQL_VALUES + statement.getAssignedValues());
 
             rs = statement.executeQuery(); // execute a select statement
             result = rs.next() ? rs.getLong(1) : 0;
@@ -773,8 +773,8 @@ public class Session {
             }
             result.assignValues(query);
 
-            if (LOGGER.isLoggable(Level.INFO)) {
-                LOGGER.log(Level.INFO, sql + " " + SQL_VALUES + result.getAssignedValues());
+            if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                LOGGER.log(UjoLogger.INFO, sql + " " + SQL_VALUES + result.getAssignedValues());
             }
             return result;
 
@@ -984,7 +984,7 @@ public class Session {
                         conn.close();
                     }
                 } catch (Throwable e) {
-                    LOGGER.log(Level.SEVERE, errMessage + db, e);
+                    LOGGER.log(UjoLogger.ERROR, errMessage + db, e);
                     if (exception == null) {
                         exception = e;
                         database = db;

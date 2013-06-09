@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -233,7 +232,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                         onCreate(propertyStore, tmpStore);
                     } catch (Throwable e) {
                         final String msg = "Can't create the KeyFactory for the " + tmpStore.holder;
-                        LOGGER.log(Level.SEVERE, msg, e);
+                        LOGGER.log(UjoLogger.ERROR, msg, e);
                         throw new IllegalStateException(msg, e);
                     }
                     tmpStore = (InnerDataStore<UJO>) (Object) InnerDataStore.EMPTY;
@@ -434,7 +433,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                     ? (Class) result
                     : Class.class;
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "The generic scan failed for the field '%s'", field.getName());
+            LOGGER.log(UjoLogger.WARN, "The generic scan failed for the field '%s'", field.getName());
             return typeResult
                     ? Object.class
                     : Ujo.class;

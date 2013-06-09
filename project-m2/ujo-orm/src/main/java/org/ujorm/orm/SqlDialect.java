@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.ujorm.Key;
@@ -1103,12 +1102,12 @@ abstract public class SqlDialect {
             assignKeywords(result, reader);
 
         } catch (Throwable e) {
-            LOGGER.log(Level.WARNING, "Can't read SQL keywords", e);
+            LOGGER.log(UjoLogger.WARN, "Can't read SQL keywords", e);
         } finally {
             if (reader!=null) try {
                 reader.close();
             } catch (IOException e) {
-                LOGGER.log(Level.WARNING, "Can't close reader", e);
+                LOGGER.log(UjoLogger.WARN, "Can't close reader", e);
             }
         }
         result.remove("");

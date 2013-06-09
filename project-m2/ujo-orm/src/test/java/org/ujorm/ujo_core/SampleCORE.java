@@ -65,7 +65,7 @@ public class SampleCORE {
             sample.selectFromDatabase();
 
         } catch (Exception e) {
-            Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
+            Logger.getLogger(SampleCORE.class.getName()).log(UjoLogger.ERROR, "Sample CORE", e);
         }
     }
 
