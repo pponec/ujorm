@@ -16,7 +16,7 @@
 package org.ujorm.hotels.gui.hotel;
 
 import org.apache.wicket.markup.html.panel.Panel;
-import org.ujorm.hotels.domains.Hotel;
+import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.gridView.UjoDataProvider;
 
 /**

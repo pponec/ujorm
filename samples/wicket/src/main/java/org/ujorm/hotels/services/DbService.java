@@ -15,7 +15,7 @@
  */
 package org.ujorm.hotels.services;
 
-import org.ujorm.hotels.domains.Customer;
+import org.ujorm.hotels.entity.Customer;
 
 /**
  * Common database service

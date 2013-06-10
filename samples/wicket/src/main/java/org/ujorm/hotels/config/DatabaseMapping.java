@@ -16,9 +16,9 @@
 
 package org.ujorm.hotels.config;
 
-import org.ujorm.hotels.domains.Booking;
-import org.ujorm.hotels.domains.Customer;
-import org.ujorm.hotels.domains.Hotel;
+import org.ujorm.hotels.entity.Booking;
+import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;

@@ -15,7 +15,7 @@
  *  under the License.
  */
 
-package org.ujorm.hotels.domains.enums;
+package org.ujorm.hotels.entity.enums;
 
 import org.ujorm.extensions.StringWrapper;
 

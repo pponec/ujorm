@@ -20,7 +20,7 @@ import java.security.MessageDigest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.core.UjoService;
-import org.ujorm.hotels.domains.Customer;
+import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.services.*;
 
 /**
