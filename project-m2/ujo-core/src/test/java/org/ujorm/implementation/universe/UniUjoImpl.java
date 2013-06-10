@@ -10,7 +10,6 @@
 package org.ujorm.implementation.universe;
 
 import org.ujorm.*;
-import org.ujorm.core.UjoPropertyListImpl;
 
 /**
  * An UnifiedDataObject Imlpementation

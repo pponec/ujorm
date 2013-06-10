@@ -16,9 +16,9 @@
 
 package org.ujorm.core;
 
-import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.UjoProperty;
 import org.ujorm.UjoPropertyList;

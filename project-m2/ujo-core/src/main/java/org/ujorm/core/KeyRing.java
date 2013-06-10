@@ -202,6 +202,11 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return get(0);
     }
 
+    /** Get The First value */
+    public Object getFirstValue(UJO ujo) {
+        return get(0).of(ujo);
+    }
+
     /** Get The Last Keys */
     @Override
     public Key<UJO, ?> getLastKey() {
