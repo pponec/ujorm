@@ -18,6 +18,7 @@ package org.ujorm.hotels.config.demoData;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.core.UjoManagerCSV;
+import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.orm.InitializationBatch;
@@ -33,6 +34,9 @@ public class DataLoader implements InitializationBatch {
     /** Load data from a CSV file */
     @Override
     public void run(Session session) throws Exception {
+        if (!session.exists(City.class)) {
+            session.save(getCities());
+        }
         if (!session.exists(Hotel.class)) {
             session.save(getHotels());
         }
@@ -42,14 +46,28 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
+    private List<Hotel> getCities() throws Exception {
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
+        while (!scanner.nextLine().isEmpty()){}
+
+        UjoManagerCSV manager = UjoManagerCSV.getInstance
+                ( City.ID
+                , City.CITY
+                , City.COUNTRY_CODE
+                , City.COUNTRY_NAME
+                );
+        return manager.loadCSV(scanner, "CSV import");
+    }
+
+    /** Get hotels from CSV file */
     private List<Hotel> getHotels() throws Exception {
-        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotels.csv"), UTF_8.name());
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
         UjoManagerCSV manager = UjoManagerCSV.getInstance
                 ( Hotel.NAME
                 , Hotel.NOTE
-                , Hotel.CITY
+                , Hotel.CITY.add(City.ID) // The value is a foreign key!
                 , Hotel.STREET
                 , Hotel.PHONE
                 , Hotel.STARS
@@ -62,7 +80,7 @@ public class DataLoader implements InitializationBatch {
 
     /** Get hotels from CSV file */
     private List<Customer> getCustomers() throws Exception {
-        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomers.csv"), UTF_8.name());
+        final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8.name());
         UjoManagerCSV manager = UjoManagerCSV.getInstance
                 ( Customer.LOGIN
                 , Customer.PASSWORD

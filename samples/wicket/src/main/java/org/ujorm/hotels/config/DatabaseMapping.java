@@ -17,6 +17,7 @@
 package org.ujorm.hotels.config;
 
 import org.ujorm.hotels.entity.Booking;
+import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.implementation.orm.OrmTable;
@@ -29,15 +30,15 @@ import org.ujorm.orm.dialect.*;
  * A class mapping to a database (sample of usage)
  * @hidden
  */
-@Db(schema="db1", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
-//@Db(schema="db1", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:~/ujorm/db1")
-//@Db(schema="db1", dialect=PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/db1")
-//@Db(schema="db1", dialect=MySqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:mysql://127.0.0.1:3306/")
-//@Db(schema="db1", dialect=DerbyDialect.class, user="sa", password="", jdbcUrl="jdbc:derby:C:\\temp\\derby-sample;create=true")
-//@Db(schema="db1", dialect=HsqldbDialect.class, user="sa", password="", jdbcUrl="jdbc:hsqldb:mem:db1")
+@Db(schema="demoHotels", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+//@Db(schema="demoHotels", dialect=H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:~/ujorm/db1")
+//@Db(schema="demoHotels", dialect=PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/db1")
+//@Db(schema="demoHotels", dialect=MySqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:mysql://127.0.0.1:3306/")
+//@Db(schema="demoHotels", dialect=DerbyDialect.class, user="sa", password="", jdbcUrl="jdbc:derby:C:\\temp\\derby-sample;create=true")
+//@Db(schema="demoHotels", dialect=HsqldbDialect.class, user="sa", password="", jdbcUrl="jdbc:hsqldb:mem:db1")
 //@Db(schema= ""  , dialect=FirebirdDialect.class, user="sysdba", password="masterkey", jdbcUrl="jdbc:firebirdsql:localhost/3050:c:\\progra~1\\firebird\\db\\db1.fdb?lc_ctype=UTF8")
-//@Db(schema="db1", dialect=OracleDialect.class, user="sa", password="", jdbcUrl="jdbc:oracle:thin:@myhost:1521:orcl")
-//@Db(schema="db1", dialect=org.ujorm.orm.dialect.MSSqlDialect.class, user="sa", password="datamaster", jdbcUrl="jdbc:sqlserver://127.0.0.1:1433")
+//@Db(schema="demoHotels", dialect=OracleDialect.class, user="sa", password="", jdbcUrl="jdbc:oracle:thin:@myhost:1521:orcl")
+//@Db(schema="demoHotels", dialect=org.ujorm.orm.dialect.MSSqlDialect.class, user="sa", password="datamaster", jdbcUrl="jdbc:sqlserver://127.0.0.1:1433")
 public class DatabaseMapping extends OrmTable<DatabaseMapping> {
 
     /** Hotel entity */
@@ -51,5 +52,9 @@ public class DatabaseMapping extends OrmTable<DatabaseMapping> {
     /** Booling (a relation between Customers and Hotels type of many to many. */
     @Table("demo_booking")
     public static final RelationToMany<DatabaseMapping,Booking> BOOKING = newRelation();
+
+    /** Booling (a relation between Customers and Hotels type of many to many. */
+    @Table("demo_city")
+    public static final RelationToMany<DatabaseMapping,City> CITY = newRelation();
 
 }

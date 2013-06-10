@@ -16,6 +16,7 @@
 package org.ujorm.hotels.gui.hotel;
 
 import org.apache.wicket.markup.html.panel.Panel;
+import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.gridView.UjoDataProvider;
 
@@ -31,7 +32,7 @@ public class HotelPanel extends Panel {
         UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ID.forAll());
 
         dataProvider.addColumn(Hotel.NAME);
-        dataProvider.addColumn(Hotel.CITY);
+        dataProvider.addColumn(Hotel.CITY.add(City.CITY)); // Relation
         dataProvider.addColumn(Hotel.STREET);
         dataProvider.addColumn(Hotel.PRICE);
         dataProvider.addColumn(Hotel.CURRENCY);

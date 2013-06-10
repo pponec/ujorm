@@ -1,6 +1,5 @@
-"DATABASE META-MODEL:
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.36-SNAPSHOT was created 2013/06/01 21:31 -->
+<!-- The Ujorm configuration file release 1.36-SNAPSHOT was created 2013/06/10 22:59 -->
 <body>
     <database id="DatabaseMapping">
         <schema>db1</schema>
@@ -38,9 +37,9 @@
             </column>
             <column id="CITY">
                 <name>CITY</name>
-                <dbType>VARCHAR</dbType>
-                <maxLength>256</maxLength>
-                <comment>City of address</comment>
+                <dbType>INT</dbType>
+                <mandatory>true</mandatory>
+                <comment>Relation to the City address</comment>
             </column>
             <column id="STREET">
                 <name>STREET</name>
@@ -73,6 +72,13 @@
                 <maxLength>8</maxLength>
                 <precision>2</precision>
                 <comment>Price per night in EUR</comment>
+            </column>
+            <column id="CURRENCY">
+                <name>CURRENCY</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>3</maxLength>
+                <comment>Currency of the price</comment>
             </column>
             <column id="ACTIVE">
                 <name>ACTIVE</name>
@@ -114,8 +120,9 @@
             </column>
             <column id="TITLE">
                 <name>TITLE</name>
-                <dbType>SMALLINT</dbType>
+                <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
+                <maxLength>2</maxLength>
                 <comment>Title</comment>
             </column>
             <column id="FIRSTNAME">
@@ -138,6 +145,11 @@
                 <mandatory>true</mandatory>
                 <maxLength>128</maxLength>
                 <comment>Email</comment>
+            </column>
+            <column id="ADMIN">
+                <name>ADMIN</name>
+                <dbType>BOOLEAN</dbType>
+                <comment>Administrator role sign</comment>
             </column>
         </table>
         <table id="BOOKING">
@@ -184,6 +196,40 @@
                 <comment>Reservation date</comment>
             </column>
         </table>
+        <table id="CITY">
+            <name>demo_city</name>
+            <alias>demo_city</alias>
+            <schema>db1</schema>
+            <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+            <column id="ID">
+                <name>ID</name>
+                <primaryKey>true</primaryKey>
+                <dbType>INT</dbType>
+                <comment>The Primary Key</comment>
+            </column>
+            <column id="CITY">
+                <name>CITY</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>256</maxLength>
+                <uniqueIndex>idx_unique_city</uniqueIndex>
+                <comment>City name</comment>
+            </column>
+            <column id="COUNTRY">
+                <name>COUNTRY</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>3</maxLength>
+                <comment>Two characters country code along the ISO 3166</comment>
+            </column>
+            <column id="COUNTRY_NAME">
+                <name>COUNTRY_NAME</name>
+                <dbType>VARCHAR</dbType>
+                <mandatory>true</mandatory>
+                <maxLength>50</maxLength>
+                <comment>Country name will be located in the another entity in a real application</comment>
+            </column>
+        </table>
         <table id="db1">
             <name>db1</name>
             <alias>db1</alias>
@@ -198,14 +244,15 @@
             <relation2m id="BOOKING">
                 <name>BOOKING</name>
             </relation2m>
+            <relation2m id="CITY">
+                <name>CITY</name>
+            </relation2m>
         </table>
     </database>
     <parameters>
-        <initializationBatch>org.ujorm.hotels.config.demoData.ResourceLoader</initializationBatch>
+        <initializationBatch>org.ujorm.hotels.config.demoData.DataLoader</initializationBatch>
         <checkKeywords>QUOTE_SQL_NAMES</checkKeywords>
         <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
         <moreParams></moreParams>
     </parameters>
 </body>
----
-"

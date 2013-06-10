@@ -1,0 +1,20 @@
+# Resource: http://en.wikipedia.org/wiki/List_of_countries_by_population (2013-06-10)
+
+ID;CITY;COUNTRY_CODE;COUNTRY_NAME
+-1;Beijing;CN;China
+-2;New Delhi;IN;India
+-3;Washington, D.C.;US;United States
+-4;Jakarta;ID;Indonesia
+-5;Brasília;BR;Brazil
+-6;Islamabad;PK;Pakistan
+-7;Abuja;NG;Nigeria
+-8;Dhaka;BD;Bangladesh
+-9;Moscow;RU;Russia
+-10;Tokyo;JP;Japan
+-11;Mexico City;MX;Mexico
+-12;Manila;PH;Philippines
+-13;Hanoi;VN;Vietnam
+-14;Addis Ababa;ET;Ethiopia
+-15;Cairo;EG;Egypt
+-16;Berlin;DE;Germany
+-81;Prague;CZ;Czech Republic

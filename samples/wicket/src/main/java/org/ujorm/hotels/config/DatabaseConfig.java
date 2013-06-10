@@ -51,7 +51,7 @@ public final class DatabaseConfig implements OrmHandlerProvider {
         // External Configuration:
         final boolean yesIWantToLoadExternalConfig = false;
         if (yesIWantToLoadExternalConfig) {
-            java.net.URL config = getClass().getResource("DatabaseConfig.xml");
+            java.net.URL config = getClass().getResource("DatabaseMappingFull.xml");
             handler.config(config, true);
         }
 

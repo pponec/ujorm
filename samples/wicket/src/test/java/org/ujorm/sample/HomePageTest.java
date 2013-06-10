@@ -2,6 +2,7 @@ package org.ujorm.sample;
 
 import junit.framework.TestCase;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -13,7 +14,7 @@ import org.ujorm.hotels.gui.WicketApplication;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:org/ujorm/hotels/config/ApplicationContext.xml"})
-public class TestHomePage extends TestCase {
+public class HomePageTest extends TestCase {
 
     private WicketTester tester;
 
@@ -22,7 +23,8 @@ public class TestHomePage extends TestCase {
         tester = new WicketTester(new WicketApplication());
     }
 
-    /** Empty test */    
+    /** Empty test */
+    @Test
     public void testDummy() {
     }
 
