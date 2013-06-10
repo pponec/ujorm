@@ -4,7 +4,7 @@
  * Author: Pavel Ponec
  */
 
-package org.ujorm.hotels.domains;
+package org.ujorm.hotels.entity;
 
 import java.math.BigDecimal;
 import org.ujorm.Key;

@@ -3,12 +3,12 @@
  * License the Apache License, Version 2.0,
  * Author: Pavel Ponec
  */
-package org.ujorm.hotels.domains;
+package org.ujorm.hotels.entity;
 
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Transient;
-import org.ujorm.hotels.domains.enums.TitleEnum;
+import org.ujorm.hotels.entity.enums.TitleEnum;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
