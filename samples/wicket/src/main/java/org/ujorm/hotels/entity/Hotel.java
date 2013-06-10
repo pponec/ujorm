@@ -33,10 +33,9 @@ public class Hotel extends OrmTable<Hotel> {
     /** Description of the hotel */
     @Comment("Description of the hotel")
     public static final Key<Hotel, String> NOTE = f.newKey(length(256));
-    /** Description of the Company */
-    /** City of address */
-    @Comment("City of address")
-    public static final Key<Hotel, String> CITY = f.newKey(length(256));
+    /** Relation to the City */
+    @Comment("Relation to the City address")
+    public static final Key<Hotel, City> CITY = f.newKey(mandatory(City.class));
     /** Street of address */
     @Comment("Street of address")
     public static final Key<Hotel, String> STREET = f.newKey(length(256));
@@ -99,12 +98,12 @@ public class Hotel extends OrmTable<Hotel> {
     }
 
     /** Description of the Company */
-    public String getCity() {
+    public City getCity() {
         return CITY.of(this);
     }
 
     /** Description of the Company */
-    public void setCity(String city) {
+    public void setCity(City city) {
         Hotel.CITY.setValue(this, city);
     }
 
