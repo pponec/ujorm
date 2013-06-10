@@ -28,6 +28,7 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
+import org.ujorm.extensions.PathProperty;
 import org.ujorm.extensions.UjoTextable;
 
 /**
@@ -44,7 +45,7 @@ abstract public class UjoService<UJO extends Ujo> {
     final private Class<UJO> ujoClass;
     /** Keys */
     private KeyList<UJO> keys;
-    /** Is ujoClass textable */
+    /** Is domain Ujo Class textable */
     final private boolean textable;
     /** Special UjoManager. Value null means a DEFAULT value */
     private UjoManager ujoManager = UjoManager.getInstance();
@@ -75,7 +76,7 @@ abstract public class UjoService<UJO extends Ujo> {
         return ujoClass;
     }
 
-    /** Returns a TRUE value if attribute <strong>ujoClass</strong> is textable. */
+    /** Returns a TRUE value if attribute <strong>ujoClass</strong> of domain class is textable. */
     final public boolean isTextable() {
         return textable;
     }
@@ -111,17 +112,23 @@ abstract public class UjoService<UJO extends Ujo> {
     }
 
 
-    /** Returns TEXT */
+    /** Returns TEXT where the method supports inderect Keys too.
+     * The relations doesn not support Textable Domains:
+     */
     public String getText(final UJO ujo, final Key<? super Ujo, ?> prop, final Object value, final UjoAction action) {
-        final String result = textable
+        final String result = textable && prop.isDirect()
                 ? ((UjoTextable) ujo).readValueString(prop, action)
                 : ujoManager.encodeValue(value != UNDEFINED ? value : prop.of(ujo), false);
         return result;
     }
 
-    /** Returns TEXT */
+    /** Assign TEXT where the method supports inderect Keys too */
     public void setText(final UJO ujo, final Key prop, final Class type, final String value, final UjoAction action) {
-        if (textable) {
+        if (!prop.isDirect()) {
+            final PathProperty pp = (PathProperty) prop;
+            final Object o = ujoManager.decodeValue(prop, value, type);
+            pp.setValue(ujo, o, true);            
+        } else if (textable) {
             ((UjoTextable) ujo).writeValueString(prop, value, type, action);
         } else {
             final Object o = ujoManager.decodeValue(prop, value, type);
