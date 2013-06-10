@@ -44,6 +44,15 @@ div.chapter-about {
     width: 600px;
 }
 
+h1, h2, h3, h4 {
+    font-family: inherit;
+}
+
+h1 {
+    text-shadow: 4px 4px 4px #aaa;
+    margin-left: 30px;
+}
+
 /* About Panel*/
 div.about h1,
 div.about h2,

@@ -44,11 +44,10 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
         this.cssOkClass = cssOkClass;
     }
 
-
     /** Create a Value component */
     @Override
     protected IModel<?> createValueModel(final UJO ujo) {
-        Object value = keySerializable.getFirstKey().of(ujo);
+        final Object value = keySerializable.getFirstValue(ujo);
         String result = value == null
                 ? ""
                 : Boolean.TRUE.equals(value)
@@ -62,9 +61,15 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
     protected void appendCssClass(Component value, UJO ujo) {
         super.appendCssClass(value, ujo);
 
-        if (cssOkClass != null) {
+        if (cssOkClass != null
+        &&  Boolean.TRUE.equals(keySerializable.getFirstValue(ujo))) {
             value.add(new AttributeAppender("class", new Model(cssOkClass), " "));
         }
+    }
+
+    /** Returns a CSS class of the {@code true} value */
+    public String getCssOkClass() {
+        return cssOkClass;
     }
     
 }

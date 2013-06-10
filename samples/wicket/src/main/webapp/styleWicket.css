@@ -1,3 +1,7 @@
+body {
+    font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 /** Table */
 
 table tr.odd {
@@ -18,8 +22,9 @@ th.sorted {
 }
 
 table.border {
-    border: 1px solid buttonface;
+    border: 1px none buttonface;
 }
+
 table.border th,
 table.border td {
     border-bottom: 1px solid buttonface;
@@ -73,6 +78,13 @@ div.navigator {
 /* Sell items */
 td.logical {
     text-align: center;
+}
+
+td.logical .ok {
+    color: rgba(0, 0, 0, 0);
+    background-image: url("images/icons/tick.png");
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 td.number {
