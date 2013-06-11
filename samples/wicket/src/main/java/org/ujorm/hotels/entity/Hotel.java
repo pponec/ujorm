@@ -67,103 +67,103 @@ public class Hotel extends OrmTable<Hotel> {
 
     //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
 
-    /** The Primary Key */
-    public Long getId() {
-        return ID.of(this);
-    }
-
-    /** The Primary Key */
-    public void setId(Long id) {
-        Hotel.ID.setValue(this, id);
-    }
-
-    /** Hotel state, default is ACTIVE (the true or null is required) */
-    public Boolean getActive() {
-        return ACTIVE.of(this);
-    }
-
-    /** Hotel state, default is ACTIVE (the true or null is required) */
-    public void setActive(Boolean active) {
-        Hotel.ACTIVE.setValue(this, active);
-    }
-
-    /** Description of the Company */
-    public String getName() {
-        return NAME.of(this);
-    }
-
-    /** Description of the Company */
-    public void setName(String name) {
-        Hotel.NAME.setValue(this, name);
-    }
-
-    /** Description of the Company */
-    public City getCity() {
-        return CITY.of(this);
-    }
-
-    /** Description of the Company */
-    public void setCity(City city) {
-        Hotel.CITY.setValue(this, city);
-    }
-
-    /** Street of address */
-    public String getStreet() {
-        return STREET.of(this);
-    }
-
-    /** Street of address */
-    public void setStreet(String street) {
-        Hotel.STREET.setValue(this, street);
-    }
-
-    /** Description of the Company */
-    public String getPhone() {
-        return PHONE.of(this);
-    }
-
-    /** Description of the Company */
-    public void setPhone(String phone) {
-        Hotel.PHONE.setValue(this, phone);
-    }
-
-    /** Stars */
-    public Integer getStars() {
-        return STARS.of(this);
-    }
-
-    /** Stars */
-    public void setStars(Integer stars) {
-        Hotel.STARS.setValue(this, stars);
-    }
-
-    /** URL to the HomePage */
-    public String getHomePage() {
-        return HOME_PAGE.of(this);
-    }
-
-    /** URL to the HomePage */
-    public void setHomePage(String homePage) {
-        Hotel.HOME_PAGE.setValue(this, homePage);
-    }
-
-    /** Price per night in EUR */
-    public BigDecimal getPrice() {
-        return PRICE.of(this);
-    }
-
-    /** Price per night in EUR */
-    public void setPrice(BigDecimal price) {
-        Hotel.PRICE.setValue(this, price);
-    }
-
-    public String getNote() {
-        return NOTE.of(this);
-    }
-
-    public void setNote(String note) {
-        Hotel.NOTE.setValue(this, note);
-    }
+//    /** The Primary Key */
+//    public Long getId() {
+//        return ID.of(this);
+//    }
+//
+//    /** The Primary Key */
+//    public void setId(Long id) {
+//        Hotel.ID.setValue(this, id);
+//    }
+//
+//    /** Hotel state, default is ACTIVE (the true or null is required) */
+//    public Boolean getActive() {
+//        return ACTIVE.of(this);
+//    }
+//
+//    /** Hotel state, default is ACTIVE (the true or null is required) */
+//    public void setActive(Boolean active) {
+//        Hotel.ACTIVE.setValue(this, active);
+//    }
+//
+//    /** Description of the Company */
+//    public String getName() {
+//        return NAME.of(this);
+//    }
+//
+//    /** Description of the Company */
+//    public void setName(String name) {
+//        Hotel.NAME.setValue(this, name);
+//    }
+//
+//    /** Description of the Company */
+//    public City getCity() {
+//        return CITY.of(this);
+//    }
+//
+//    /** Description of the Company */
+//    public void setCity(City city) {
+//        Hotel.CITY.setValue(this, city);
+//    }
+//
+//    /** Street of address */
+//    public String getStreet() {
+//        return STREET.of(this);
+//    }
+//
+//    /** Street of address */
+//    public void setStreet(String street) {
+//        Hotel.STREET.setValue(this, street);
+//    }
+//
+//    /** Description of the Company */
+//    public String getPhone() {
+//        return PHONE.of(this);
+//    }
+//
+//    /** Description of the Company */
+//    public void setPhone(String phone) {
+//        Hotel.PHONE.setValue(this, phone);
+//    }
+//
+//    /** Stars */
+//    public Integer getStars() {
+//        return STARS.of(this);
+//    }
+//
+//    /** Stars */
+//    public void setStars(Integer stars) {
+//        Hotel.STARS.setValue(this, stars);
+//    }
+//
+//    /** URL to the HomePage */
+//    public String getHomePage() {
+//        return HOME_PAGE.of(this);
+//    }
+//
+//    /** URL to the HomePage */
+//    public void setHomePage(String homePage) {
+//        Hotel.HOME_PAGE.setValue(this, homePage);
+//    }
+//
+//    /** Price per night in EUR */
+//    public BigDecimal getPrice() {
+//        return PRICE.of(this);
+//    }
+//
+//    /** Price per night in EUR */
+//    public void setPrice(BigDecimal price) {
+//        Hotel.PRICE.setValue(this, price);
+//    }
+//
+//    public String getNote() {
+//        return NOTE.of(this);
+//    }
+//
+//    public void setNote(String note) {
+//        Hotel.NOTE.setValue(this, note);
+//    }
     
     //</editor-fold>
 

@@ -52,8 +52,8 @@ public class DataLoader implements InitializationBatch {
 
         UjoManagerCSV manager = UjoManagerCSV.getInstance
                 ( City.ID
-                , City.CITY
-                , City.COUNTRY_CODE
+                , City.NAME
+                , City.COUNTRY
                 , City.COUNTRY_NAME
                 );
         return manager.loadCSV(scanner, "CSV import");
