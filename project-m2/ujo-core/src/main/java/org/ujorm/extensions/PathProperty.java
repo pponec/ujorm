@@ -119,6 +119,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     @Override
+    @Deprecated
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty() {
         return getFirstKey();
     }
@@ -126,7 +127,6 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     @Override
-    @Deprecated
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey() {
         Key result = keys[0];
         return result.isDirect()
@@ -454,6 +454,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
              : getIndex()>p.getIndex() ?  1
              : getName().compareTo(p.getName())
              ;
+    }
+
+    /** Returns a sequence of the direct keys */
+    public Key[] getSequenceOfDirectKeys() {
+        final Key[] result = new Key[this.keys.length];
+        System.arraycopy(this.keys, 0, result, 0, result.length);
+        return result;
     }
 
     // ================ STATIC ================
