@@ -18,7 +18,9 @@ package org.ujorm.orm;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.ujorm.CompositeKey;
@@ -26,6 +28,7 @@ import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.extensions.PathProperty;
 import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
@@ -393,7 +396,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set the one column to reading from database table.
     * Other columns will return a default value, no exception will be throwed.
-    * <br/>WARNING: assigning an column from a view is forbidden.
+    * <br/>WARNING 1: assigning an column from a view is forbidden.
+    * <br/>WARNING 2: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
+    * <br/>WARNING 3: assigning an column from a view is forbidden.
     * @param column A Property to select. A composite Property is allowed however only the first item will be used.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
     */
@@ -407,7 +412,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (columns==null) {
             columns = new ArrayList<ColumnWrapper>(getDefaultColumns());
         }
-        addMissingColumn(wColumn, true);
+        addMissingColumn(wColumn, true, true);
         return this;
     }
 
@@ -424,8 +429,6 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
-    * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
-    * <br/>WARNING 2: assigning an column from a view is forbidden.
     * @param addPrimaryKey If the column list does not contains a primary key then the one can be included.
     * @param columns A Key list including a compositer one to database select. The method does not check collumn duplicities.
     * @see #setColumn(org.ujorm.Key) setColumn(Property)
@@ -438,8 +441,6 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
    /** Set an list of required columns to reading from database table.
     * Other columns (out of the list) will return a default value, no exception will be throwed.
-    * <br/>NOTE 1: there is strongly preferred to sort the keys from direct to the relations (along a count of the relations in the key).
-    * <br/>NOTE 2: an entity relation column cleans related foreign key. For exmample use the set Item[order.id, order.date] instead of Item[order, order.date]
     * <br/>WARNING 1: the parameters are not type checked in compile time, use setColumn(..) and addColumn() for this feature.
     * <br/>WARNING 2: assigning an column from a view is forbidden.
     * @param addPrimaryKey If the column list doesn't contain a primary key of the base Entity then the one will be included.
@@ -450,15 +451,21 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     */
     public final Query<UJO> setColumns(boolean addPrimaryKey, boolean addChilds, Key... columns) throws IllegalArgumentException {
         clearDecoder();
+        if (columns.length > 1) {
+            // There is strongly preferred to sort the keys from direct to the relations (along a count of the relations in the key) due
+            // an entity relation column cleans related foreign key.
+            // For exmample use the set Item[order.id, order.date] instead of Item[order, order.date]
+            Arrays.sort(columns, INNER_KEY_COMPARATOR);
+        }
         this.columns = new ArrayList<ColumnWrapper>(columns.length + 3);
         final OrmHandler handler = getHandler();
         for (Key column : columns) {
             final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(column), true);
             final ColumnWrapper cw = column.isDirect() ? mc : new ColumnWrapperImpl(mc, column);
-            addMissingColumn(cw, addChilds);
+            addMissingColumn(cw, addChilds, false);
         }
         if (addPrimaryKey) {
-            addMissingColumn(table.getFirstPK(), false);
+            addMissingColumn(table.getFirstPK(), false, true);
         }
         return this;
     }
@@ -466,12 +473,15 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Add a missing column. The method is for an internal use.
      * @param column Add the column for case it is missing in the column list
      * @param addChilds Add all childs of the <strong>foreign key</strong>.
+     * @param checkDuplicities Check a duplicity column
      */
-    protected void addMissingColumn(ColumnWrapper column, boolean addChilds) {
+    protected void addMissingColumn(final ColumnWrapper column, final boolean addChilds, final boolean checkDuplicities) {
         final int hashCode = column.hashCode();
-        for (final ColumnWrapper c : columns) {
-            if (c.hashCode()==hashCode && column.equals(c)) {
-                return; // The same column is assigned
+        if (checkDuplicities) {
+            for (final ColumnWrapper c : columns) {
+                if (c.hashCode()==hashCode && column.equals(c)) {
+                    return; // The same column is assigned
+                }
             }
         }
         if (addChilds) {
@@ -480,7 +490,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                 for (ColumnWrapper columnWrapper : model.getForeignTable().getColumns()) {
                     final Key myKey = column.getKey().add(columnWrapper.getKey());
                     final ColumnWrapper cw = new ColumnWrapperImpl(columnWrapper.getModel(), myKey);
-                    addMissingColumn(cw, false);
+                    addMissingColumn(cw, false, true);
                 }
             } else {
                columns.add(column);
@@ -720,4 +730,22 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return setSqlParameters(new SqlParameters(parameters));
     }
 
+    // --------------- INNER CLASS ---------------
+
+    /** Compare two keys according to count of the KeyCount on sequence */
+    @PackagePrivate static final Comparator<Key> INNER_KEY_COMPARATOR = new Comparator<Key>() {
+            public int compare(final Key k1, final Key k2) {
+                if (k1.isDirect()) {
+                    return k2.isDirect() ? 0 : -1;
+                }
+                else if (k2.isDirect()) {
+                    return 1;
+                } else {
+                    final int c1 = ((PathProperty)k1).getDirectKeyCount();
+                    final int c2 = ((PathProperty)k2).getDirectKeyCount();
+                    return c1 == c2 ? 0
+                         : c1 < c2 ? -1 : 1;
+                }
+            }
+        };
 }

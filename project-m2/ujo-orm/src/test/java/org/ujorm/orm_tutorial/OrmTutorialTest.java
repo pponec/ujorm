@@ -16,7 +16,6 @@
 
 package org.ujorm.orm_tutorial;
 
-import java.sql.Connection;
 import junit.framework.TestCase;
 import org.ujorm.orm_tutorial.sample.SampleORM;
 import org.ujorm.ujo_core.SampleCORE;
