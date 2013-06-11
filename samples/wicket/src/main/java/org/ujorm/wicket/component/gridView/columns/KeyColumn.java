@@ -129,6 +129,11 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, Key<UJO,T
         return keySerializable.toString();
     }
 
+    /** Get the Key */
+    public Key<UJO,?> getKey() {
+        return keySerializable.getFirstKey();
+    }
+
     /** A factory method */
     public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key) {
         return new KeyColumn(key, null);

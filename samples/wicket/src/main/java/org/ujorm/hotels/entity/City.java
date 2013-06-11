@@ -28,10 +28,10 @@ public class City extends OrmTable<City> {
     /** City name */
     @Comment("City name")
     @Column(uniqueIndex=UNIQUE_CITY)
-    public static final Key<City, String> CITY = f.newKey(length(MANDATORY, 256));
+    public static final Key<City, String> NAME = f.newKey(length(MANDATORY, 256));
     /** Two characters country code along the ISO 3166 */
     @Comment("Two characters country code along the ISO 3166")
-    public static final Key<City, String> COUNTRY_CODE = f.newKey("COUNTRY", length(MANDATORY, 3));
+    public static final Key<City, String> COUNTRY = f.newKey("COUNTRY", length(MANDATORY, 3));
     /** Country name will be located in the another entity in a real application */
     @Comment("Country name will be located in the another entity in a real application")
     public static final Key<City, String> COUNTRY_NAME = f.newKey(length(MANDATORY, 50));
@@ -44,48 +44,48 @@ public class City extends OrmTable<City> {
 
     //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
 
-    /** The Primary Key */
-    public Integer getId() {
-        return ID.of(this);
-    }
 
-    /** The Primary Key */
-    public void setId(Integer id) {
-        City.ID.setValue(this, id);
-    }
-
-    /** City name */
-    public String getCity() {
-        return CITY.of(this);
-    }
-
-    /** City name */
-    public void setCity(String city) {
-        City.CITY.setValue(this, city);
-    }
-
-    /** Two characters country code along the ISO 3166 */
-    public String getCountryCode() {
-        return COUNTRY_CODE.of(this);
-    }
-
-    /** Two characters country code along the ISO 3166 */
-    public void setCountryCode(String countryCode) {
-        City.COUNTRY_CODE.setValue(this, countryCode);
-    }
-
-    /** Country name will be located in the another entity in a real application */
-    public String getCountryName() {
-        return COUNTRY_NAME.of(this);
-    }
-
-    /** Country name will be located in the another entity in a real application */
-    public void setCountryName(String countryName) {
-        City.COUNTRY_NAME.setValue(this, countryName);
-    }
+//    /** The Primary Key */
+//    public Integer getId() {
+//        return ID.of(this);
+//    }
+//
+//    /** The Primary Key */
+//    public void setId(Integer id) {
+//        City.ID.setValue(this, id);
+//    }
+//
+//    /** City name */
+//    public String getName() {
+//        return NAME.of(this);
+//    }
+//
+//    /** City name */
+//    public void setName(String name) {
+//        City.NAME.setValue(this, name);
+//    }
+//
+//    /** Two characters country code along the ISO 3166 */
+//    public String getCountry() {
+//        return COUNTRY.of(this);
+//    }
+//
+//    /** Two characters country code along the ISO 3166 */
+//    public void setCountry(String country) {
+//        City.COUNTRY.setValue(this, country);
+//    }
+//
+//    /** Country name will be located in the another entity in a real application */
+//    public String getCountryName() {
+//        return COUNTRY_NAME.of(this);
+//    }
+//
+//    /** Country name will be located in the another entity in a real application */
+//    public void setCountryName(String countryName) {
+//        City.COUNTRY_NAME.setValue(this, countryName);
+//    }
 
     //</editor-fold>
-
 
 
 }

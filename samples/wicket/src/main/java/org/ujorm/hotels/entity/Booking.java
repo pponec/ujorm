@@ -52,65 +52,65 @@ public class Booking extends OrmTable<Booking> {
 
     //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
     
-    /** The Primary Key */
-    public Long getId() {
-        return ID.of(this);
-    }
-    
-    /** The Primary Key */
-    public void setId(Long id) {
-        Booking.ID.setValue(this, id);
-    }
-    
-    /** Relation to hotel */
-    public Hotel getHotel() {
-        return HOTEL.of(this);
-    }
-    
-    /** Relation to hotel */
-    public void setHotel(Hotel hotel) {
-        Booking.HOTEL.setValue(this, hotel);
-    }
-    
-    /** Relation to customer */
-    public Customer getCustomer() {
-        return CUSTOMER.of(this);
-    }
-    
-    /** Relation to customer */
-    public void setCustomer(Customer customer) {
-        Booking.CUSTOMER.setValue(this, customer);
-    }
-    
-    /** Date from */
-    public Date getDateFrom() {
-        return DATE_FROM.of(this);
-    }
-    
-    /** Date from */
-    public void setDateFrom(Date dateFrom) {
-        Booking.DATE_FROM.setValue(this, dateFrom);
-    }
-    
-    /** Date to */
-    public Date getDateTo() {
-        return DATE_TO.of(this);
-    }
-    
-    /** Date to */
-    public void setDateTo(Date dateTo) {
-        Booking.DATE_TO.setValue(this, dateTo);
-    }
-    
-    /** Reservation date */
-    public Date getReservationDate() {
-        return RESERVATION_DATE.of(this);
-    }
-    
-    /** Reservation date */
-    public void setReservationDate(Date reservationDate) {
-        Booking.RESERVATION_DATE.setValue(this, reservationDate);
-    }
+//    /** The Primary Key */
+//    public Long getId() {
+//        return ID.of(this);
+//    }
+//
+//    /** The Primary Key */
+//    public void setId(Long id) {
+//        Booking.ID.setValue(this, id);
+//    }
+//
+//    /** Relation to hotel */
+//    public Hotel getHotel() {
+//        return HOTEL.of(this);
+//    }
+//
+//    /** Relation to hotel */
+//    public void setHotel(Hotel hotel) {
+//        Booking.HOTEL.setValue(this, hotel);
+//    }
+//
+//    /** Relation to customer */
+//    public Customer getCustomer() {
+//        return CUSTOMER.of(this);
+//    }
+//
+//    /** Relation to customer */
+//    public void setCustomer(Customer customer) {
+//        Booking.CUSTOMER.setValue(this, customer);
+//    }
+//
+//    /** Date from */
+//    public Date getDateFrom() {
+//        return DATE_FROM.of(this);
+//    }
+//
+//    /** Date from */
+//    public void setDateFrom(Date dateFrom) {
+//        Booking.DATE_FROM.setValue(this, dateFrom);
+//    }
+//
+//    /** Date to */
+//    public Date getDateTo() {
+//        return DATE_TO.of(this);
+//    }
+//
+//    /** Date to */
+//    public void setDateTo(Date dateTo) {
+//        Booking.DATE_TO.setValue(this, dateTo);
+//    }
+//
+//    /** Reservation date */
+//    public Date getReservationDate() {
+//        return RESERVATION_DATE.of(this);
+//    }
+//
+//    /** Reservation date */
+//    public void setReservationDate(Date reservationDate) {
+//        Booking.RESERVATION_DATE.setValue(this, reservationDate);
+//    }
     //</editor-fold>
     
 
