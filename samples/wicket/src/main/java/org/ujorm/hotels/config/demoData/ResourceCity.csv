@@ -1,6 +1,6 @@
 # Resource: http://en.wikipedia.org/wiki/List_of_countries_by_population (2013-06-10)
 
-ID;CITY;COUNTRY_CODE;COUNTRY_NAME
+ID;CITY;COUNTRY;COUNTRY_NAME
 -1;Beijing;CN;China
 -2;New Delhi;IN;India
 -3;Washington, D.C.;US;United States

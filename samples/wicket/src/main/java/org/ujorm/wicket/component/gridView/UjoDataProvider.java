@@ -30,8 +30,11 @@ import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.extensions.PathProperty;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
+import org.ujorm.orm.ColumnWrapper;
+import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
@@ -53,10 +56,10 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     protected Criterion<T> criterion;
     /** Domain model */
     protected KeyRing<T> model;
+    /** Visible table columns */
+    private List<IColumn<T, Key<T,?>>> columns = new ArrayList<IColumn<T, Key<T,?>>>();
     /** OrmSession */
     transient private Session ormSession;
-    /** Transient table columns */
-    transient private List<IColumn<T, Key<T,?>>> columns = new ArrayList<IColumn<T, Key<T,?>>>();
 
     /** Constructor
      * @param criterion Condition to a database query
@@ -107,15 +110,11 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
                 , "The argument 'count' have got limit %s but the current value is %s"
                 , Integer.MAX_VALUE
                 , count);
-
-        Iterator<T> result = createQuery(criterion)
+        Query<T> query = createQuery(criterion)
                 .setLimit((int) count, first)
-                .addOrderBy(getSortKey()).iterator();
-        if (!result.hasNext()) {
-            size = first - 1;
-        }
-
-        return result;
+                .addOrderBy(getSortKey());
+        fetchDatabaseColumns(query);
+        return query.iterator();
     }
 
     /** Method calculate the size using special SQL requst.
@@ -196,6 +195,34 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** Create AJAX-based DataTable */
     public DataTable createDataTable( final String id, final int rowsPerPage) {
         return new UjoDataTable(id, getColumns(), this, rowsPerPage);
+    }
+
+    /**
+     * The method reduces a lazy database requests from relational table columns.
+     * The current implementation assigns all direct keys/columns from domain entity and
+     * all required keys/columns from the IColumn object.
+     *
+     * <br/>Note: You can overwrite the method for a different behaviour.
+     */
+    protected void fetchDatabaseColumns(Query<T> query) {
+        final OrmHandler handler = query.getSession().getHandler();
+        final List<Key> keys = new ArrayList(query.getColumns().size() + 3);
+
+        for (ColumnWrapper c : query.getColumns()) {
+            keys.add(c.getKey());
+        }
+
+        for (IColumn<T, Key<T, ?>> iColumn : columns) {
+            if (iColumn instanceof KeyColumn) {
+                Key<T,?> key = ((KeyColumn) iColumn).getKey();
+                if (!key.isDirect()
+                && ((PathProperty)key).getDirectKeyCount() > 1
+                && handler.findColumnModel(key) != null) {
+                    keys.add(key);
+                }
+            }
+        }
+        query.setColumns(true, keys.toArray(new Key[keys.size()]));
     }
 
     // ============= STATIC METHOD =============

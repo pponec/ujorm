@@ -152,4 +152,10 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, Key<UJO,T
         }
     }
 
+    /** Domain class + key */
+    @Override
+    public String toString() {
+        return keySerializable.getFirstKey().toStringFull();
+    }
+
 }
