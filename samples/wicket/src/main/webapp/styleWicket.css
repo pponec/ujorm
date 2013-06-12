@@ -67,12 +67,17 @@ div.tabpanel div.tab-row a {
     white-space: nowrap;
 }
 
-/* Table Navigation */
-div.navigatorLabel {
-    display: none;
-}
+/* Table Navigator */
 div.navigator {
-    text-align: right;
+    text-align: left;
+}
+
+div.navigatorLabel {
+    float: right;
+}
+
+table.border tr.navigation td {
+    border-right: none;
 }
 
 /* Sell items */
