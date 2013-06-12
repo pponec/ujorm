@@ -76,7 +76,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /** Name of DB sequence. The value is not used by default,
      * however a special implementation of the UjoSequencer can do it. */
     public static final Key<MetaTable,String> SEQUENCE = fa.newKey("sequence", Table.NULL);
-    /** Is it a model of a database view or table ? */
+    /** Is the current object a model of a database view ? */
     @XmlAttribute
     public static final Key<MetaTable,Boolean> VIEW = fa.newKey("view", false);
     /** SQL SELECT statement */
@@ -275,7 +275,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         }
     }
 
-    /** Is the instance a database relation model? */
+    /** Is the current object a model of a database view ? */
     @Override
     public boolean isView() {
         return VIEW.of(this);

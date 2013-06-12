@@ -346,7 +346,7 @@ public class OrmHandler implements OrmHandlerProvider {
 
     /** Find a Relation/Column model of the paramemeter property.
      * The column result is type of {@link MetaColumn}.
-     * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
+     * @param pathProperty Parameter can be type of Key of CompositeKey (direct or indirect);
      * @return Returns an object type of {@link MetaColumn} for database column
      * or a related model type of {@link MetaRelation2Many}
      * or the NULL if no model was found.
