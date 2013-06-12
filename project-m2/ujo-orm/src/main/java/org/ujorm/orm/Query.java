@@ -742,8 +742,8 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
                     return k2.isComposite() ? -1 : 0;
                 }
                 else if (k2.isComposite()) {
-                    final int c1 = ((CompositeKey)k1).getDirectKeyCount();
-                    final int c2 = ((CompositeKey)k2).getDirectKeyCount();
+                    final int c1 = ((CompositeKey)k1).getCompositeCount();
+                    final int c2 = ((CompositeKey)k2).getCompositeCount();
                     return c1 == c2 ? 0
                          : c1 < c2 ? -1 : 1;
                 } else {

@@ -477,8 +477,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
         return result;
     }
 
-    /** Returns a count of items form the direct key sequence */
-    public int getDirectKeyCount() {
+    /** Returns a count of inner key items of this composite key */
+    public int getCompositeCount() {
         return this.keys.length;
     }
 

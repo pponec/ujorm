@@ -91,10 +91,10 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
     @Deprecated
     public void exportProperties(List<Key> result);
 
-    /** Returns a count of items form the direct key sequence 
+    /** Returns a count of inner key items of this composite key
      * @see #exportKeys(java.util.List)
      */
-    public int getDirectKeyCount();
+    public int getCompositeCount();
 
 
 }

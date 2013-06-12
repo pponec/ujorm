@@ -224,7 +224,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
             if (iColumn instanceof KeyColumn) {
                 Key<T,?> key = ((KeyColumn) iColumn).getKey();
                 if (key.isComposite()
-                && ((CompositeKey)key).getDirectKeyCount() > 1
+                && ((CompositeKey)key).getCompositeCount() > 1
                 && handler.findColumnModel(key) != null) {
                     keys.add(key);
                 }
