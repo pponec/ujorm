@@ -162,7 +162,7 @@ public class UjoManager implements Comparator<Key> {
                                 ;
                             throw new IllegalStateException(msg);
                         }
-                        if (ujoProp.isDirect()) {
+                        if (!ujoProp.isComposite()) {
                            keyList.add(ujoProp);
 
                             if (ujoProp instanceof Property) {
@@ -692,7 +692,7 @@ public class UjoManager implements Comparator<Key> {
 
     /** An assignable test. */
     static public boolean assertDirect(final Key key, final Object value) throws IllegalArgumentException {
-        if (!key.isDirect()) {
+        if (key.isComposite()) {
             final String msg
             = "The key \""
             + key
@@ -754,10 +754,10 @@ public class UjoManager implements Comparator<Key> {
     /** Set a value to an Ujo object by a selected keys. */
     @SuppressWarnings("unchecked")
     public static void setValue(final Ujo ujo, final Key prop, final Object value) {
-        if (prop.isDirect()) {
-            ujo.writeValue(prop, value);
-        } else {
+        if (prop.isComposite()) {
             prop.setValue(ujo,value);
+        } else {
+            ujo.writeValue(prop, value);
         }
     }
 
@@ -815,16 +815,16 @@ public class UjoManager implements Comparator<Key> {
     @SuppressWarnings("unchecked")
     public String getText(Ujo ujo, Key key, UjoAction action) {
 
-        if (key.isDirect()) {
-            final String result = (ujo instanceof UjoTextable)
-                ? ((UjoTextable) ujo).readValueString(key, action)
-                : encodeValue(key.of(ujo), false);
-            return result;
-        } else {
+        if (key.isComposite()) {
             final CompositeKey pathProperty = (CompositeKey) key;
             final Key p = pathProperty.getLastKey();
             final Ujo         u = pathProperty.getSemiValue(ujo, false);
             return getText(u, p, action);
+        } else {
+            final String result = (ujo instanceof UjoTextable)
+                ? ((UjoTextable) ujo).readValueString(key, action)
+                : encodeValue(key.of(ujo), false);
+            return result;
         }
     }
 
@@ -839,18 +839,18 @@ public class UjoManager implements Comparator<Key> {
     @SuppressWarnings("unchecked")
     public void setText(Ujo ujo, Key key, String value, Class type, UjoAction action) {
 
-        if (key.isDirect()) {
+        if (key.isComposite()) {
+            final CompositeKey pathProperty = (CompositeKey) key;
+            final Key p = pathProperty.getLastKey();
+            final Ujo u = pathProperty.getSemiValue(ujo, false);
+            setText(u, p, value, type, action);
+        } else {
             if (ujo instanceof UjoTextable) {
                 ((UjoTextable) ujo).writeValueString(key, value, type, action!=null ? action : UjoAction.DUMMY);
             } else {
                 final Object o = decodeValue(key, value, type);
                 setValue(ujo, key, o);
             }
-        } else {
-            final CompositeKey pathProperty = (CompositeKey) key;
-            final Key p = pathProperty.getLastKey();
-            final Ujo u = pathProperty.getSemiValue(ujo, false);
-            setText(u, p, value, type, action);
         }
     }
 

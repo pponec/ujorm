@@ -328,7 +328,7 @@ public class OrmHandler implements OrmHandlerProvider {
      * The property must be a public static final field in the related Ujo class.
      */
     public <T extends Annotation> T findAnnotation(Key property, Class<T> annotationClass) {
-        if (!property.isDirect()) {
+        if (property.isComposite()) {
             property = ((CompositeKey) property).getFirstKey();
         }
         try {
@@ -364,7 +364,7 @@ public class OrmHandler implements OrmHandlerProvider {
      * or the NULL if no model was found.
      */
     public <T extends MetaRelation2Many> T findColumnModel(Key pathProperty, boolean throwException) throws IllegalArgumentException {
-        if (pathProperty!=null && !pathProperty.isDirect()) {
+        if (pathProperty!=null && pathProperty.isComposite()) {
             pathProperty = ((CompositeKey)pathProperty).getLastKey();
         }
         final MetaRelation2Many result = propertyMap.get(pathProperty);

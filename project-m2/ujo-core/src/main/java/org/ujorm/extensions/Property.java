@@ -301,12 +301,24 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
 
     /**
-     * Returns a true value, if the property contains more keys.
-     * The composite property is excluded from from function Ujo.readKeys() by default.
+     * If the property is the direct property of the related UJO class then method returns the TRUE value.
+     * The return value false means, that property is type of {@link CompositeKey}.
+     * <br />
+     * Note: The composite keys are excluded from from function Ujo.readProperties() by default
+     * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
+     * @see CompositeKey
+     * @since 0.81
+     * @deprecated use rather a negation of the method {@link #isComposite() }
      */
-    @Override
+    @Deprecated
     public final boolean isDirect() {
-        return true;
+        return ! isComposite();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final boolean isComposite() {
+        return false;
     }
 
     /** A flag for a direction of sorting. This method returns true always.
@@ -462,7 +474,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @PackagePrivate static String printAttributes(Key key) {
         return " {index=" + key.getIndex()
             + ", ascending=" + key.isAscending()
-            + ", direct=" + key.isDirect()
+            + ", composite=" + key.isComposite()
             + ", default=" + key.getDefault()
             + ", validator=" + (key.getValidator()!=null ? key.getValidator().getClass().getSimpleName() : null)
             + ", type=" + key.getType()

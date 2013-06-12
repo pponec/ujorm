@@ -65,9 +65,9 @@ public class ColumnWrapperImpl implements ColumnWrapper {
         return key;
     }
 
-    /** Is it the direct Key? */
-    public boolean isDirectKey() {
-        return key.isDirect();
+    /** Is it a composite Key? */
+    public boolean isCompositeKey() {
+        return key.isComposite();
     }
 
     /** Two models are the same if its key names are the same for the same domain type. */

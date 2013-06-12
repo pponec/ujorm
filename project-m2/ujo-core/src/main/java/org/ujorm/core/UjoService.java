@@ -24,11 +24,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.extensions.PathProperty;
 import org.ujorm.extensions.UjoTextable;
 
 /**
@@ -116,7 +116,7 @@ abstract public class UjoService<UJO extends Ujo> {
      * The relations doesn not support Textable Domains:
      */
     public String getText(final UJO ujo, final Key<? super Ujo, ?> prop, final Object value, final UjoAction action) {
-        final String result = textable && prop.isDirect()
+        final String result = textable && !prop.isComposite()
                 ? ((UjoTextable) ujo).readValueString(prop, action)
                 : ujoManager.encodeValue(value != UNDEFINED ? value : prop.of(ujo), false);
         return result;
@@ -124,8 +124,8 @@ abstract public class UjoService<UJO extends Ujo> {
 
     /** Assign TEXT where the method supports inderect Keys too */
     public void setText(final UJO ujo, final Key prop, final Class type, final String value, final UjoAction action) {
-        if (!prop.isDirect()) {
-            final PathProperty pp = (PathProperty) prop;
+        if (prop.isComposite()) {
+            final CompositeKey pp = (CompositeKey) prop;
             final Object o = ujoManager.decodeValue(prop, value, type);
             pp.setValue(ujo, o, true);            
         } else if (textable) {

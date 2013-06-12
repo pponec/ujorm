@@ -71,10 +71,10 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     public PathProperty(Boolean ascending, Key... keys) {
         final ArrayList<Key> list = new ArrayList<Key>(keys.length + 3);
         for (Key property : keys) {
-            if (property.isDirect()) {
-                list.add(property);
-            } else {
+            if (property.isComposite()) {
                 ((CompositeKey)property).exportKeys(list);
+            } else {
+                list.add(property);
             }
         }
         if (list.isEmpty()) {
@@ -110,9 +110,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey() {
         Key result = keys[keys.length - 1];
-        return result.isDirect()
-            ? result
-            : ((PathProperty)result).getLastKey()
+        return result.isComposite()
+            ? ((CompositeKey)result).getLastKey()
+            : result
             ;
     }
 
@@ -129,9 +129,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey() {
         Key result = keys[0];
-        return result.isDirect()
-            ? result
-            : ((PathProperty)result).getFirstKey()
+        return result.isComposite()
+            ? ((CompositeKey)result).getFirstKey()
+            : result
             ;
     }
 
@@ -358,12 +358,25 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     }
 
     /**
-     * Method returns a false because this is a property of the another UJO class.
-     * The composite property is excluded from from function Ujo.readProperties() by default.
+     * If the property is the direct property of the related UJO class then method returns the TRUE value.
+     * The return value false means, that property is type of {@link CompositeKey}.
+     * <br />
+     * Note: The composite keys are excluded from from function Ujo.readProperties() by default
+     * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
+     * @see CompositeKey
+     * @since 0.81
+     * @deprecated use rather a negation of the method {@link #isComposite() }
      */
+    @Deprecated
     @Override
     public final boolean isDirect() {
-        return false;
+        return ! isComposite();
+    }
+
+    /** @{@inheritDoc} */
+    @Override
+    public final boolean isComposite() {
+        return true;
     }
 
     /** A flag for an ascending direction of order. For the result is significant only the last property.
@@ -406,14 +419,15 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     /** Export all <string>direct</strong> keys to the list from parameter. */
     @SuppressWarnings("unchecked")
     @Override
-    public void exportKeys(List<Key> result) {
+    public List<Key> exportKeys(final List<Key> result) {
         for (Key p : keys) {
-            if (p.isDirect()) {
-                result.add(p);
+            if (p.isComposite()) {
+                ((CompositeKey)p).exportKeys(result);
             } else {
-                ((PathProperty)p).exportKeys(result);
+                result.add(p);
             }
         }
+        return result;
     }
 
     /** Get the last key validator or return the {@code null} value if no validator was assigned */
@@ -478,9 +492,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
         if (property.isAscending()==ascending) {
             return (UjoProperty<UJO, VALUE>) property;
         }
-        return property.isDirect()
-            ? new PathProperty<UJO, VALUE>(new Key[]{property}, ascending)
-            : new PathProperty<UJO, VALUE>(ascending, property)
+        return property.isComposite()
+            ? new PathProperty<UJO, VALUE>(ascending, property)
+            : new PathProperty<UJO, VALUE>(new Key[]{property}, ascending)
             ;
     }
 
@@ -497,9 +511,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      * @hidden
      */
     public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final Key<UJO, VALUE> property) {
-        return property.isDirect()
-            ? new PathProperty<UJO, VALUE>(new Key[]{property}, property.isAscending())
-            : new PathProperty<UJO, VALUE>(property.isAscending(), property)
+        return property.isComposite()
+            ? new PathProperty<UJO, VALUE>(property.isAscending(), property)
+            : new PathProperty<UJO, VALUE>(new Key[]{property}, property.isAscending())
             ;
     }
 
@@ -510,9 +524,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
         ( final Key<UJO1, UJO2> property1
         , final Key<UJO2, VALUE> property2
         ) {
-        return property1.isDirect() && property2.isDirect()
-            ? new PathProperty<UJO1, VALUE>(new Key[]{property1,property2}, property2.isAscending())
-            : new PathProperty<UJO1, VALUE>(property2.isAscending(), property1, property2)
+        return property1.isComposite() || property2.isComposite()
+            ? new PathProperty<UJO1, VALUE>(property2.isAscending(), property1, property2)
+            : new PathProperty<UJO1, VALUE>(new Key[]{property1,property2}, property2.isAscending())
             ;
     }
 

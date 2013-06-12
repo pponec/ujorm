@@ -80,7 +80,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         }
         changeDefault(this, NAME, tableProperty.getName());
 
-        assert getKey().isDirect() : String.format("The key %s must be direct.", getKey().toStringFull());
+        assert !getKey().isComposite() : String.format("The key %s must be direct.", getKey().toStringFull());
     }
 
     /** It is a DB column (either a value of a foreign key),
@@ -100,9 +100,9 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return TABLE_KEY.of(this);
     }
 
-    /** Is it the direct Key? */
-    final public boolean isDirectKey() {
-        return true;
+    /** Is it newer the composite Key */
+    final public boolean isCompositeKey() {
+        return false;
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */

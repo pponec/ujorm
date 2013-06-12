@@ -145,8 +145,22 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
      * @see CompositeKey
      * @since 0.81
+     * @deprecated use rather a negation of the method {@link #isComposite() }
      */
+    @Deprecated
     public boolean isDirect();
+
+    /**
+     * The composite key is an instance of CompositeKey.
+     * It this key is the a direct key of a related UJO class then this method returns the TRUE value.
+     * All composite keys are excluded from from list {@link Ujo#readKeys()} by default
+     * <br />
+     * Note:
+     * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
+     * @see CompositeKey
+     * @since 1.36
+     */
+    public boolean isComposite();
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
     public boolean isTypeOf(Class type);

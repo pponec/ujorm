@@ -197,12 +197,12 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (decoder==null) {
             final List<Key> relations = new ArrayList<Key>(16);
             for (Key key : orderBy) {
-                if (!key.isDirect()) {
+                if (key.isComposite()) {
                     relations.add(key);
                 }
             }
             for (ColumnWrapper column : getColumns()) {
-                if (!column.isDirectKey()) {
+                if (column.isCompositeKey()) {
                     relations.add(column.getKey());
                 }
             }
@@ -408,7 +408,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (mc==null) {
             throw new IllegalArgumentException("Column " + column.toStringFull() + " was not foud in the meta-model");
         }
-        final ColumnWrapper wColumn = column.isDirect() ? mc : new ColumnWrapperImpl(mc, column);
+        final ColumnWrapper wColumn = column.isComposite() 
+                ? new ColumnWrapperImpl(mc, column)
+                : mc;
         if (columns==null) {
             columns = new ArrayList<ColumnWrapper>(getDefaultColumns());
         }
@@ -461,7 +463,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         final OrmHandler handler = getHandler();
         for (Key column : columns) {
             final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(column), true);
-            final ColumnWrapper cw = column.isDirect() ? mc : new ColumnWrapperImpl(mc, column);
+            final ColumnWrapper cw = column.isComposite() 
+                    ? new ColumnWrapperImpl(mc, column)
+                    : mc;
             addMissingColumn(cw, addChilds, false);
         }
         if (addPrimaryKey) {
@@ -502,10 +506,9 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
 
     /** Only direct keys are supported */
     private Key getLastProperty(Key p) {
-        return p.isDirect()
-            ?  p
-            : ((CompositeKey)p).getLastKey()
-            ;
+        return p.isComposite()
+            ? ((CompositeKey)p).getLastKey()
+            : p ;
     }
 
    /** Set an order of the rows by a SQL ORDER BY phrase.
@@ -735,16 +738,16 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     /** Compare two keys according to count of the KeyCount on sequence */
     @PackagePrivate static final Comparator<Key> INNER_KEY_COMPARATOR = new Comparator<Key>() {
             public int compare(final Key k1, final Key k2) {
-                if (k1.isDirect()) {
-                    return k2.isDirect() ? 0 : -1;
+                if (!k1.isComposite()) {
+                    return k2.isComposite() ? -1 : 0;
                 }
-                else if (k2.isDirect()) {
-                    return 1;
-                } else {
-                    final int c1 = ((PathProperty)k1).getDirectKeyCount();
-                    final int c2 = ((PathProperty)k2).getDirectKeyCount();
+                else if (k2.isComposite()) {
+                    final int c1 = ((CompositeKey)k1).getDirectKeyCount();
+                    final int c2 = ((CompositeKey)k2).getDirectKeyCount();
                     return c1 == c2 ? 0
                          : c1 < c2 ? -1 : 1;
+                } else {
+                    return 1;
                 }
             }
         };
