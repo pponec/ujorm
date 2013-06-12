@@ -273,7 +273,7 @@ final public class OrmTools {
 
         final List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
         final HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
-        while (!property.isDirect()) {
+        while (property.isComposite()) {
             property = ((CompositeKey)property).getFirstKey();
         }
         for (UJO u : ujos) {

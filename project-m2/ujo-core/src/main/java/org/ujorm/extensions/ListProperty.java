@@ -16,11 +16,11 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.ListKey;
 import java.util.ArrayList;
 import java.util.List;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 
 /**

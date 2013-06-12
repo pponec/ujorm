@@ -41,7 +41,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey();
 
     /** Export all <string>direct</strong> keys to the list from parameter. */
-    public void exportKeys(List<Key> result);
+    public List<Key> exportKeys(List<Key> result);
 
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
@@ -91,7 +91,10 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
     @Deprecated
     public void exportProperties(List<Key> result);
 
-
+    /** Returns a count of items form the direct key sequence 
+     * @see #exportKeys(java.util.List)
+     */
+    public int getDirectKeyCount();
 
 
 }

@@ -206,9 +206,7 @@ public class CriterionDecoder {
                 break;
             }
         }
-        while(result!=null
-        &&   !result.isDirect()
-        ){
+        while(result instanceof CompositeKey) {
             result = ((CompositeKey)result).getFirstKey();
         }
         return result;
@@ -268,7 +266,7 @@ public class CriterionDecoder {
             Object p2 = value.getRightNode();
 
             if (p1 != null) {
-                if (!p1.isDirect()) {
+                if (p1.isComposite()) {
                     ((CompositeKey) p1).exportKeys(dirs);
                     dirs.remove(dirs.size()-1); // remove the last direct property
                 }
@@ -282,7 +280,7 @@ public class CriterionDecoder {
         // Get relations from the 'order by':
         if (orderBy!=null) {
             for (Key p1 : orderBy) {
-                if (!p1.isDirect()) {
+                if (p1.isComposite()) {
                     ((CompositeKey) p1).exportKeys(dirs);
                     dirs.remove(dirs.size()-1); // remove the last direct property
                 }

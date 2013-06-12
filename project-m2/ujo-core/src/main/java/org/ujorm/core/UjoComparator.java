@@ -148,7 +148,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
             }
             sb.append(property.getName());
             sb.append("[");
-            sb.append(property.isDirect() ? "ASC" : "DESC");
+            sb.append(property.isAscending() ? "ASC" : "DESC");
             sb.append("]");
         }
         return sb.toString();

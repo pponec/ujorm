@@ -87,7 +87,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      * @see Key#of(Ujo)
      */
     public Object readValue(final Key property) {
-        assert property.isDirect() : "Property must be direct only.";
+        assert !property.isComposite() : "Property must be direct only.";
         return data.get(property);
     }
     

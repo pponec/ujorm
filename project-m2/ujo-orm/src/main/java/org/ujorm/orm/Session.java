@@ -324,7 +324,7 @@ public class Session {
             return null;
         }
         Key property = exprValue.getLeftNode();
-        while (!property.isDirect()) {
+        while (property.isComposite()) {
             property = ((CompositeKey) property).getFirstKey();
         }
 

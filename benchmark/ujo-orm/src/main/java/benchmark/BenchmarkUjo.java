@@ -266,9 +266,8 @@ public class BenchmarkUjo {
 
     /** Test */
     public static void main(String[] args) {
+        final BenchmarkUjo sample = newInstance(args);
         try {
-            BenchmarkUjo sample = newInstance(args);
-
             sample.loadMetaModel();
             sample.useInsert();
             sample.useSingleSelect();
@@ -281,7 +280,7 @@ public class BenchmarkUjo {
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
-            OrmHandler.getInstance().getSession().close();
+            sample.closeSession();
         }
     }
 
@@ -311,5 +310,12 @@ public class BenchmarkUjo {
             sb.append(par);
         }
         System.out.println(INFO + " (" + sb + ")");
+    }
+
+    /** Close the ORM session. */
+    public void closeSession() {
+        if (session != null) {
+            session.close();
+        }
     }
 }

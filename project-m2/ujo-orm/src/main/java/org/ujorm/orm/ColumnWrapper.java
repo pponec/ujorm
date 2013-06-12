@@ -34,8 +34,8 @@ public interface ColumnWrapper {
     /** Returns an original key */
     public Key getKey();
 
-    /** Returns if key is Direct */
-    public boolean isDirectKey();
+    /** Returns if key is type of {@link org.ujorm.CompositeKey} */
+    public boolean isCompositeKey();
 
     /** Method retuns the {@code true} value if two attribut Keys are the same */
     @Override

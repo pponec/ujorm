@@ -92,7 +92,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      */
     @Override
     public Object readValue(final Key<?,?> property) {
-        assert property.isDirect() : "Property must be direct only.";
+        assert !property.isComposite() : "Property must be direct only.";
         return data[property.getIndex()];
     }
 

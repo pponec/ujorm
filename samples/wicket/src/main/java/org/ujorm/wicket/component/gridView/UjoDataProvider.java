@@ -27,10 +27,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Args;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.extensions.PathProperty;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ColumnWrapper;
@@ -223,8 +223,8 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
         for (IColumn<T, Key<T, ?>> iColumn : columns) {
             if (iColumn instanceof KeyColumn) {
                 Key<T,?> key = ((KeyColumn) iColumn).getKey();
-                if (!key.isDirect()
-                && ((PathProperty)key).getDirectKeyCount() > 1
+                if (key.isComposite()
+                && ((CompositeKey)key).getDirectKeyCount() > 1
                 && handler.findColumnModel(key) != null) {
                     keys.add(key);
                 }
