@@ -205,6 +205,14 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
      * <br/>Note: You can overwrite the method for a different behaviour.
      */
     protected void fetchDatabaseColumns(Query<T> query) {
+        if (columns.isEmpty()) {
+            return ; // Save the default state;
+        }
+
+        if (query.getTableModel().isView()) {
+            return ; // View is not supported;
+        }
+
         final OrmHandler handler = query.getSession().getHandler();
         final List<Key> keys = new ArrayList(query.getColumns().size() + 3);
 
