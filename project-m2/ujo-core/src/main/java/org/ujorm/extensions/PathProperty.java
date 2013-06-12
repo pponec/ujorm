@@ -456,11 +456,16 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
              ;
     }
 
-    /** Returns a sequence of the direct keys */
-    public Key[] getSequenceOfDirectKeys() {
+    /** Returns the full sequence of the direct keys */
+    public Key[] getDirectKeySequence() {
         final Key[] result = new Key[this.keys.length];
         System.arraycopy(this.keys, 0, result, 0, result.length);
         return result;
+    }
+
+    /** Returns a count of items form the direct key sequence */
+    public int getDirectKeyCount() {
+        return this.keys.length;
     }
 
     // ================ STATIC ================
