@@ -21,6 +21,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.KeyRing;
 
 /**
  * Key column for a boolean data type
@@ -32,15 +33,20 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
 
     private static final long serialVersionUID = 1L;
 
+    /** Default CSS class for an OK value */
+    protected static String DEFAULT_LOGICAL_CLASS = "logical";
+    /** Default CSS class for an OK value */
+    protected static String DEFAULT_CSS_OK_CLASS = "ok";
+
     /** Class for OK value */
     protected final String cssOkClass;
 
-    public KeyColumnBoolean(Key<UJO, Boolean> property) {
-        this(property, "logical", "ok");
+    public KeyColumnBoolean(Key<UJO,?> key, Key<UJO,?> keySortable, String cssClass) {
+        this(KeyRing.of(key), KeyRing.of(keySortable), cssClass, DEFAULT_CSS_OK_CLASS);
     }
 
-    public KeyColumnBoolean(Key<UJO, Boolean> property, String cssClass, String cssOkClass) {
-        super(property, cssClass);
+    public KeyColumnBoolean(KeyRing<UJO> key, KeyRing<UJO> keySortable, String cssClass, String cssOkClass) {
+        super(key, keySortable, cssClass);
         this.cssOkClass = cssOkClass;
     }
 
@@ -71,5 +77,34 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
     public String getCssOkClass() {
         return cssOkClass;
     }
+
+    // =============== STATIC FACTORY METHODS ===============
+
+    /** A factory method */
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted) {
+        return of(key, sorted, null);
+    }
+
+    /** A factory method */
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted, String cssClass) {
+        final KeyRing serializableKey = KeyRing.of(key);
+        return new KeyColumnBoolean
+                ( serializableKey
+                , sorted ? serializableKey : null
+                , cssClass
+                , DEFAULT_CSS_OK_CLASS
+                );
+    }
+
+    /** A factory method */
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, Key<U,T> sort, String cssClass) {
+        return new KeyColumnBoolean
+                ( KeyRing.of(key)
+                , KeyRing.of(sort)
+                , cssClass
+                , DEFAULT_CSS_OK_CLASS
+                );
+    }
+
     
 }
