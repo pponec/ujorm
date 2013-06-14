@@ -120,10 +120,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKey());
         fetchDatabaseColumns(query);
-        final Key sortKey = getSortKey();
-        if (sortKey != null) {
-            query.addOrderBy(sortKey);
-        }
+        sortDatabaseQuery(query);
         return query.iterator();
     }
 
@@ -217,6 +214,8 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
      * all required keys/columns from the IColumn object.
      *
      * <br/>Note: You can overwrite the method for a different behaviour.
+     * <br/>Note: If the implementation will be empty, so all related attributes will be lazy loaded,
+     * so it can be a performance problem in some cases.
      */
     protected void fetchDatabaseColumns(Query<T> query) {
         if (columns.isEmpty()) {
@@ -245,6 +244,15 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
             }
         }
         query.setColumns(true, keys.toArray(new Key[keys.size()]));
+    }
+
+
+    /** Add sorting to a database query */
+    protected void sortDatabaseQuery(Query<T> query) {
+        final Key sortKey = getSortKey();
+        if (sortKey != null) {
+            query.addOrderBy(sortKey);
+        }
     }
 
     // ============= STATIC METHOD =============
