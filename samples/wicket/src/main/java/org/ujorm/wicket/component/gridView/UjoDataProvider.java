@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -45,7 +46,7 @@ import org.ujorm.wicket.component.gridView.columns.*;
  * SortableDataProvider extended form the Ujorm
  * @author Pavel Ponec
  */
-public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, String> {
+public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, KeyRing<T>> {
     private static final long serialVersionUID = 1L;
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoDataProvider.class);
@@ -90,15 +91,20 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
      * sort order
      */
     final public void setSort(Key<T, ?> property) {
-        super.setSort(property.getName(), property.isAscending() 
+        super.setSort((KeyRing)KeyRing.of(property), property.isAscending()
                 ? SortOrder.ASCENDING
                 : SortOrder.DESCENDING);
     }
 
     /** Vrací klíč pro řazení */
     public Key<T,?> getSortKey() {
-        final Key<T,?> result = model.find(super.getSort().getProperty());
-        return result.descending(!super.getSort().isAscending());
+        final SortParam<KeyRing<T>> sort = getSort();
+        if (sort != null) {
+            final Key<T,?> result = getSort().getProperty().getFirstKey();
+            return result.descending(!sort.isAscending());
+        } else {
+            return null;
+        }
     }
 
     /** Build a JDBC ResultSet allways.
@@ -114,6 +120,10 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKey());
         fetchDatabaseColumns(query);
+        final Key sortKey = getSortKey();
+        if (sortKey != null) {
+            query.addOrderBy(sortKey);
+        }
         return query.iterator();
     }
 
@@ -176,15 +186,19 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, S
     /** Add table column according to column type */
     public <V> boolean addColumn(Key<T,V> column) {
         if (column.isTypeOf(Boolean.class)) {
-            return addColumn(new KeyColumnBoolean<T>((Key)column));
-        } 
+            return addColumn(KeyColumnBoolean.of(column, isPersistentColumn(column)));
+        }
         if (column.isTypeOf(Number.class)) {
-            return addColumn(KeyColumn.of(column, "number"));
+            return addColumn(KeyColumn.of(column, isPersistentColumn(column), "number"));
         }
         else {
-            final IColumn<T, Key<T,V>> c = KeyColumn.of(column);
-            return addColumn(c);
+            return addColumn(KeyColumn.of(column, isPersistentColumn(column), null));
         }
+    }
+
+    /** Is the column persistent ? */
+    protected boolean isPersistentColumn(final Key<T, ?> column) throws IllegalArgumentException {
+        return getOrmSession().getHandler().findColumnModel(column, false) != null;
     }
 
     /** Transient table columns */

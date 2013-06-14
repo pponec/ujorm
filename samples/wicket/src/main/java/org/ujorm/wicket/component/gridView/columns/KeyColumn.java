@@ -38,17 +38,17 @@ import org.ujorm.wicket.KeyModel;
  * Example:
  * <pre class="pre">
  * <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> DataTablePage2 <span class="keyword-directive">extends</span> WebPage {
- *     
+ *    
  *     <span class="keyword-directive">public</span> DataTablePage2() {
  *         <span class="keyword-directive">final</span> EmployeeProvider userProvider = <span class="keyword-directive">new</span> EmployeeProvider();
- * 
+ *
  *         <span class="keyword-directive">final</span> List&lt;IColumn&gt; columns = <span class="keyword-directive">new</span> ArrayList&lt;IColumn&gt;();
  *         columns.add(<span class="keyword-directive">new</span> KeyColumn(Employee.ID));
  *         columns.add(<span class="keyword-directive">new</span> KeyColumn(Employee.FIRSTNAME));
  *         columns.add(<span class="keyword-directive">new</span> KeyColumn(Employee.LASTNAME));
  *         columns.add(<span class="keyword-directive">new</span> KeyColumn(Employee.EMAIL));
  *         columns.add(<span class="keyword-directive">new</span> KeyColumn(Employee.STUDENT));
- * 
+ *
  *         add(<span class="keyword-directive">new</span> DefaultDataTable(<span class="character">&quot;</span><span class="character">datatable</span><span class="character">&quot;</span>, columns, userProvider, 20));
  *     }
  * }
@@ -64,23 +64,36 @@ import org.ujorm.wicket.KeyModel;
  * @param <UJO extends Ujo>
  *            The Model object type
  */
-public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, Key<UJO,T>> {
+public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<UJO>> {
 
     private static final long serialVersionUID = 1L;
     protected final KeyRing<UJO> keySerializable;
     protected final String cssClass;
 
     /**
-     * Creates a property column that is also sortable - the simplyfied methdod
-     *
-     * @param displayModel display model
-     * @param sortProperty sort property
-     * @param key wicket property expression used by PropertyModel
+     * Creates a sortable property column
+     * @param key Ujorm key to display in the column
+     * @param sortKey Optional persistent ujorm property to sorting
      * @param cssClass optional argument for a CSS class
      */
-    public KeyColumn(final Key<UJO,T> key, String cssClass) {
-        super(new Model(key.getName()));
-        this.keySerializable = KeyRing.of(key);
+    public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey, String cssClass) {
+        this(new Model(key.getFirstKey().getName()), key, sortKey, cssClass);
+    }
+
+    /**
+     * Creates a sortable property column
+     * @param label Column label
+     * @param key Ujorm key to display in the column
+     * @param sortKey Optional persistent ujorm property to sorting
+     * @param cssClass optional argument for a CSS class
+     */
+    public KeyColumn
+            ( final IModel<String> label
+            , final KeyRing<UJO> key
+            , final KeyRing<UJO> sortKey
+            , String cssClass) {
+        super(label, sortKey);
+        this.keySerializable = key;
         this.cssClass = cssClass;
     }
 
@@ -134,16 +147,6 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, Key<UJO,T
         return keySerializable.getFirstKey();
     }
 
-    /** A factory method */
-    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key) {
-        return new KeyColumn(key, null);
-    }
-
-    /** A factory method */
-    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, String cssClass) {
-        return new KeyColumn(key, cssClass);
-    }
-
     /** Append CSS class */
     protected void appendCssClass(final Component value, final UJO ujo) {
         final String cssClass$ = getCssClass();
@@ -156,6 +159,31 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, Key<UJO,T
     @Override
     public String toString() {
         return keySerializable.getFirstKey().toStringFull();
+    }
+
+    // =============== STATIC METHODS ===============
+
+
+    /** A factory method */
+    public static <U extends Ujo, T> KeyColumn<U, T> of(Key<U, T> key, boolean sorted) {
+        return of(key, sorted, null);
+    }
+
+    /** A factory method */
+    public static <U extends Ujo, T> KeyColumn<U, T> of(Key<U, T> key, boolean sorted, String cssClass) {
+        final KeyRing serializableKey = KeyRing.of(key);
+        return new KeyColumn
+                ( serializableKey
+                , sorted ? serializableKey : null
+                , cssClass);
+    }
+
+    /** A factory method */
+    public static <U extends Ujo, T> KeyColumn<U, T> of(Key<U, T> key, Key<U, T> sort, String cssClass) {
+        return new KeyColumn
+                ( KeyRing.of(key)
+                , KeyRing.of(sort)
+                , cssClass);
     }
 
 }
