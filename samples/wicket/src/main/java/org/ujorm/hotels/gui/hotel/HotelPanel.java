@@ -19,6 +19,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.gridView.UjoDataProvider;
+import org.ujorm.wicket.component.gridView.columns.KeyColumn;
+import static org.ujorm.wicket.component.gridView.columns.KeyColumn.*;
 
 /**
  * HotelPanel tab
@@ -30,16 +32,16 @@ public class HotelPanel extends Panel {
         super(id);
 
         UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ID.forAll());
-
+        
         dataProvider.addColumn(Hotel.NAME);
         dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // Relation
         dataProvider.addColumn(Hotel.STREET);
         dataProvider.addColumn(Hotel.PRICE);
-        dataProvider.addColumn(Hotel.CURRENCY);
+        dataProvider.addColumn(KeyColumn.of(Hotel.CURRENCY, NO_SORTING));
         dataProvider.addColumn(Hotel.STARS);
         dataProvider.addColumn(Hotel.PHONE);
         dataProvider.setSort(Hotel.NAME);
-
+        
         add(dataProvider.createDataTable("datatable", 10));
     }
 }

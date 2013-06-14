@@ -80,6 +80,32 @@ table.border tr.navigation td {
     border-right: none;
 }
 
+/* Table Sorting */
+table th {
+    color: #2FA4E7;
+}
+
+table th.wicket_orderDown a {
+    background-image: url("images/orderDown.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 15px;
+}
+
+table th.wicket_orderUp a {
+    background-image: url("images/orderUp.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 15px;
+}
+
+table tr th.wicket_orderNone a {
+    background-image: url("images/orderOff.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 15px;
+}
+
 /* Sell items */
 td.logical {
     text-align: center;
