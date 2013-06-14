@@ -52,7 +52,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     /** Property size */
     private int size;
     /** Transient keys */
-    protected Key<UJO, ?>[] keys;
+    transient protected Key<UJO, ?>[] keys;
     /** Default hash code. */
     transient private int hashCode;
 
@@ -407,7 +407,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Key<? super UJO, ?>... keys) {
-        if (keys == null) {
+        if (keys.length==0
+        ||  keys[0] == null) {
             return null;
         }
         final Key[] ps = new Key[keys.length];
@@ -437,7 +438,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Collection<Key<? super UJO, ?>> keys) {
-        if (keys == null) {
+        if (keys == null
+        ||  keys.isEmpty()) {
             return null;
         }
         final Key[] ps = new Key[keys.size()];
