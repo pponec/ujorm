@@ -59,6 +59,14 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
     protected KeyRing<T> model;
     /** Visible table columns */
     private List<IColumn<T, Key<T,?>>> columns = new ArrayList<IColumn<T, Key<T,?>>>();
+    /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
+     * where the feature is enabled by default
+     */
+    public boolean defaultColumnSorting = true;
+    /** Fetch database columns for better SQL performance
+     * where the feature is enabled by default
+     */
+    public boolean fetchDatabaseColumns = true;
     /** OrmSession */
     transient private Session ormSession;
 
@@ -183,24 +191,22 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
     /** Add table column according to column type */
     public <V> boolean addColumn(Key<T,V> column) {
         if (column.isTypeOf(Boolean.class)) {
-            return addColumn(KeyColumnBoolean.of(column, isPersistentColumn(column)));
+            return addColumn(KeyColumnBoolean.of(column, isSortingEnabled(column)));
         }
         if (column.isTypeOf(Number.class)) {
-            return addColumn(KeyColumn.of(column, isPersistentColumn(column), "number"));
+            return addColumn(KeyColumn.of(column, isSortingEnabled(column), "number"));
         }
         else {
-            return addColumn(KeyColumn.of(column, isPersistentColumn(column), null));
+            return addColumn(KeyColumn.of(column, isSortingEnabled(column), null));
         }
     }
 
-    /** Is the column persistent ? */
-    protected boolean isPersistentColumn(final Key<T, ?> column) throws IllegalArgumentException {
-        return getOrmSession().getHandler().findColumnModel(column, false) != null;
-    }
-
-    /** Transient table columns */
-    public  List<IColumn<T, Key<T,?>>> getColumns() {
-        return columns;
+    /** The sorting is enabled for a persistent Ujorm Key by default
+     * @see #isDefaultColumnSorting()
+     */
+    protected boolean isSortingEnabled(final Key<T, ?> column) throws IllegalArgumentException {
+        return defaultColumnSorting
+            && getOrmSession().getHandler().findColumnModel(column, false) != null;
     }
 
     /** Create AJAX-based DataTable */
@@ -216,14 +222,17 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
      * <br/>Note: You can overwrite the method for a different behaviour.
      * <br/>Note: If the implementation will be empty, so all related attributes will be lazy loaded,
      * so it can be a performance problem in some cases.
+     * @see #isFetchDatabaseColumns()
      */
     protected void fetchDatabaseColumns(Query<T> query) {
-        if (columns.isEmpty()) {
-            return ; // Save the default state;
+        if (!fetchDatabaseColumns) {
+            return; // Fetching is disabled
         }
-
+        if (columns.isEmpty()) {
+            return; // Keep the default state
+        }
         if (query.getTableModel().isView()) {
-            return ; // View is not supported;
+            return; // View is not supported for fetching
         }
 
         final OrmHandler handler = query.getSession().getHandler();
@@ -246,13 +255,56 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
         query.setColumns(true, keys.toArray(new Key[keys.size()]));
     }
 
-
-    /** Add sorting to a database query */
+    /** Add sorting to a database Query,
+     * an empty method causes a natural sorting from database */
     protected void sortDatabaseQuery(Query<T> query) {
         final Key sortKey = getSortKey();
         if (sortKey != null) {
             query.addOrderBy(sortKey);
         }
+    }
+
+    // ============= SETERS / GETTERS =============
+
+    /**
+     * Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
+     * where the feature is enabled by default
+     * @return the defaultColumnSorting
+     */
+    public final boolean isDefaultColumnSorting() {
+        return defaultColumnSorting;
+    }
+
+    /**
+     * Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
+     * where the feature is enabled by default
+     * @param defaultColumnSorting the defaultColumnSorting to set
+     */
+    public void setDefaultColumnSorting(boolean defaultColumnSorting) {
+        this.defaultColumnSorting = defaultColumnSorting;
+    }
+
+    /**
+     * Fetch database columns for better SQL performance
+     * where the feature is enabled by default
+     * @return the fetchDatabaseColumns
+     */
+    public final boolean isFetchDatabaseColumns() {
+        return fetchDatabaseColumns;
+    }
+
+    /**
+     * Fetch database columns for better SQL performance
+     * where the feature is enabled by default
+     * @param fetchDatabaseColumns the fetchDatabaseColumns to set
+     */
+    public void setFetchDatabaseColumns(boolean fetchDatabaseColumns) {
+        this.fetchDatabaseColumns = fetchDatabaseColumns;
+    }
+
+    /** Transient table columns */
+    public  List<IColumn<T, Key<T,?>>> getColumns() {
+        return columns;
     }
 
     // ============= STATIC METHOD =============
@@ -266,5 +318,5 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
     public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
         return new UjoDataProvider<T>(criterion, null);
     }
-
+    
 }
