@@ -37,7 +37,7 @@ public class HotelPanel extends Panel {
         dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // Relation
         dataProvider.addColumn(Hotel.STREET);
         dataProvider.addColumn(Hotel.PRICE);
-        dataProvider.addColumn(KeyColumn.of(Hotel.CURRENCY, NO_SORTING));
+        dataProvider.addColumn(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
         dataProvider.addColumn(Hotel.STARS);
         dataProvider.addColumn(Hotel.PHONE);
         dataProvider.setSort(Hotel.NAME);
