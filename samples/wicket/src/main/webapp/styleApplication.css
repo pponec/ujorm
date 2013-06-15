@@ -27,6 +27,15 @@ div.tabpanel div.tab-row li a.about {
     background-image: url("images/icons/help.png");
 }
 
+/* A fix width of hotel table:
+div.hotel table.border {
+    width: 780px;
+}
+div.hotel table.border tr div.hotel div {
+    white-space: nowrap;    
+}
+*/
+
 /* Prologue */
 div.prologue {
     color: silver;

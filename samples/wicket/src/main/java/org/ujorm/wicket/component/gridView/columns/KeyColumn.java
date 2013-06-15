@@ -67,8 +67,10 @@ import org.ujorm.wicket.KeyModel;
 public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<UJO>> {
     private static final long serialVersionUID = 1L;
 
+    /** Enable a grid column sorting */
+    public static final boolean SORTING_ON = true;
     /** Disable a grid column sorting */
-    public static final boolean NO_SORTING= false;
+    public static final boolean SORTING_OFF = false;
 
     /** Data key */
     protected final KeyRing<UJO> keySerializable;
