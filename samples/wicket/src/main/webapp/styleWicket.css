@@ -89,21 +89,21 @@ table th.wicket_orderDown a {
     background-image: url("images/orderDown.png");
     background-repeat: no-repeat;
     background-position: right;
-    padding-right: 15px;
+    padding-right: 14px;
 }
 
 table th.wicket_orderUp a {
     background-image: url("images/orderUp.png");
     background-repeat: no-repeat;
     background-position: right;
-    padding-right: 15px;
+    padding-right: 14px;
 }
 
 table tr th.wicket_orderNone a {
     background-image: url("images/orderOff.png");
     background-repeat: no-repeat;
     background-position: right;
-    padding-right: 15px;
+    padding-right: 14px;
 }
 
 /* Sell items */
