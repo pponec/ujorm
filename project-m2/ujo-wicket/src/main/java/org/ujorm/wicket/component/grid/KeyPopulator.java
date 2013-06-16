@@ -1,20 +1,19 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ *  Copyright 2013 Pavel Ponec
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
-package org.ujorm.wicket.component.gridView;
+package org.ujorm.wicket.component.grid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,8 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.wicket.KeyModel;
 
@@ -42,7 +41,7 @@ import org.ujorm.wicket.KeyModel;
  *         , Employee.LASTNAME
  *         , Employee.EMAIL
  *         );
- * 
+ *
  * <span class="keyword-directive">final</span> WebMarkupContainer table = <span class="keyword-directive">new</span> WebMarkupContainer(<span class="character">&quot;</span><span class="character">table</span><span class="character">&quot;</span>);
  * <span class="keyword-directive">final</span> DataGridView grid = <span class="keyword-directive">new</span> DataGridView(<span class="character">&quot;</span><span class="character">gridPanel</span><span class="character">&quot;</span>, columns, <span class="keyword-directive">new</span> InnerPeopleProvicer());
  * table.setOutputMarkupId(<span class="keyword-directive">true</span>);
@@ -56,7 +55,7 @@ import org.ujorm.wicket.KeyModel;
  * @author Igor Vaynberg (ivaynberg)
  * @author Pavel Ponec
  */
-public class KeyPopulator<UJO extends Ujo> implements ICellPopulator<UJO>, IColumn<UJO> {
+public class KeyPopulator<UJO extends Ujo,T> implements ICellPopulator<UJO>, IColumn<UJO,Key<UJO,T>> {
 
     private static final long serialVersionUID = 1L;
     private final KeyRing<UJO> property;
@@ -84,7 +83,7 @@ public class KeyPopulator<UJO extends Ujo> implements ICellPopulator<UJO>, IColu
     public void populateItem(final Item<ICellPopulator<UJO>> cellItem, final String componentId, final IModel<UJO> rowModel) {
         cellItem.add(new Label(componentId, KeyModel.of(rowModel.getObject(), (Key<UJO, ?>) property.getFirstKey())));
     }
-    
+
     @Override
     public Component getHeader(String componentId) {
         String id = property.getFirstKey().toString();
@@ -92,8 +91,8 @@ public class KeyPopulator<UJO extends Ujo> implements ICellPopulator<UJO>, IColu
     }
 
     @Override
-    public String getSortProperty() {
-        return property.getFirstKey().toString();
+    public Key<UJO,T> getSortProperty() {
+        return (Key<UJO, T>) property.getFirstKey();
     }
 
     @Override

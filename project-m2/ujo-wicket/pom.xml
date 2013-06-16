@@ -30,7 +30,7 @@
         </license>
     </licenses>
     <properties>
-        <wicket.version>1.5.5</wicket.version>
+        <wicket.version>6.7.0</wicket.version>
     </properties>
 
     <build>
@@ -101,14 +101,15 @@
 
     <dependencies>
 
-        <!-- UJO Core -->
+        <!-- UJO -->
         <dependency>
             <groupId>org.ujorm</groupId>
-            <artifactId>ujo-core</artifactId>
+            <artifactId>ujo-orm</artifactId>
             <version>1.36-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
+        <!-- Wicket -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
