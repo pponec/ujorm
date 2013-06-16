@@ -44,7 +44,7 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  * @author Pavel Ponec
  * @see OrmTable
  */
-public class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
+public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
 
     /** Orm session */
     transient private ThreadLocal<Session> session;
