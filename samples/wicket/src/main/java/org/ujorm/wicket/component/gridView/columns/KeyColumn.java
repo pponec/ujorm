@@ -24,6 +24,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
@@ -58,11 +59,8 @@ import org.ujorm.wicket.KeyModel;
  * &quot;name.first&quot;
  *
  * @see KeyModel
- *
- * @author Igor Vaynberg ( ivaynberg )
  * @author Pavel Ponec
- * @param <UJO extends Ujo>
- *            The Model object type
+ * @param <UJO extends Ujo> The Model object type
  */
 public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<UJO>> {
     private static final long serialVersionUID = 1L;
@@ -71,6 +69,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     public static final boolean SORTING_ON = true;
     /** Disable a grid column sorting */
     public static final boolean SORTING_OFF = false;
+    /** Localization property prefix */
+    public static final String PROPERTY_PREFIX = "column.";
 
     /** Data key */
     protected final KeyRing<UJO> keySerializable;
@@ -84,7 +84,10 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      * @param cssClass optional argument for a CSS class
      */
     public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey, String cssClass) {
-        this(new Model(key.getFirstKey().getName()), key, sortKey, cssClass);
+        this(new ResourceModel(PROPERTY_PREFIX
+                + key.getFirstKey().getName()
+                , key.getFirstKey().getName())
+                , key, sortKey, cssClass);
     }
 
     /**

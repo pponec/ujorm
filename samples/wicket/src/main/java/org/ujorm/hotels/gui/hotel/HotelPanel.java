@@ -34,7 +34,7 @@ public class HotelPanel extends Panel {
         UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ID.forAll());
         
         dataProvider.addColumn(Hotel.NAME);
-        dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // Relation
+        dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
         dataProvider.addColumn(Hotel.STREET);
         dataProvider.addColumn(Hotel.PRICE);
         dataProvider.addColumn(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
