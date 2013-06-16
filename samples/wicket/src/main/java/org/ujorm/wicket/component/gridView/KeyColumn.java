@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.wicket.component.gridView.columns;
+package org.ujorm.wicket.component.gridView;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;

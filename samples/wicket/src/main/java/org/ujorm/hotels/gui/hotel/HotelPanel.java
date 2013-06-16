@@ -19,8 +19,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.gridView.UjoDataProvider;
-import org.ujorm.wicket.component.gridView.columns.KeyColumn;
-import static org.ujorm.wicket.component.gridView.columns.KeyColumn.*;
+import org.ujorm.wicket.component.gridView.KeyColumn;
+import static org.ujorm.wicket.component.gridView.KeyColumn.*;
 
 /**
  * HotelPanel tab

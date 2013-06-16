@@ -45,7 +45,6 @@ import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
-import org.ujorm.wicket.component.gridView.columns.*;
 
 /**
  * SortableDataProvider extended form the Ujorm
