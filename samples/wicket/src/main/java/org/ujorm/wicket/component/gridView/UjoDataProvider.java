@@ -19,11 +19,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxNavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -46,7 +51,7 @@ import org.ujorm.wicket.component.gridView.columns.*;
  * SortableDataProvider extended form the Ujorm
  * @author Pavel Ponec
  */
-public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, KeyRing<T>> {
+public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, Object> {
     private static final long serialVersionUID = 1L;
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoDataProvider.class);
@@ -58,7 +63,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
     /** Domain model */
     protected KeyRing<T> model;
     /** Visible table columns */
-    private List<IColumn<T, Key<T,?>>> columns = new ArrayList<IColumn<T, Key<T,?>>>();
+    private List<IColumn<T, ?>> columns = new ArrayList<IColumn<T, ?>>();
     /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
      * where the feature is enabled by default
      */
@@ -106,10 +111,12 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
 
     /** Vrací klíč pro řazení */
     public Key<T,?> getSortKey() {
-        final SortParam<KeyRing<T>> sort = getSort();
+        final SortParam<Object> sort = getSort();
         if (sort != null) {
-            final Key<T,?> result = getSort().getProperty().getFirstKey();
-            return result.descending(!sort.isAscending());
+            final Object property = getSort().getProperty();
+            return property instanceof KeyRing
+            ? ((KeyRing<T>)property).getFirstKey().descending(!sort.isAscending())
+            : null ;
         } else {
             return null;
         }
@@ -184,8 +191,8 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
     }
 
     /** Add table column */
-    public <V> boolean addColumn(IColumn<T, V> column) {
-        return columns.add((IColumn)column);
+    public boolean addColumn(IColumn<T, ?> column) {
+        return columns.add(column);
     }
 
     /** Add table column according to column type */
@@ -210,8 +217,21 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
     }
 
     /** Create AJAX-based DataTable */
-    public DataTable createDataTable( final String id, final int rowsPerPage) {
-        return new UjoDataTable(id, getColumns(), this, rowsPerPage);
+    public <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage) {
+        final DataTable<T,S> result = new DataTable<T,S>(id, (List)columns, this, rowsPerPage) {
+            @Override protected Item<T> newRowItem
+                    ( final String id
+                    , final int index
+                    , final IModel<T> model) {
+                return new OddEvenItem<T>(id, index, model);
+            }         
+        };
+
+        result.addTopToolbar(new AjaxNavigationToolbar(result));
+        result.addTopToolbar(new HeadersToolbar(result, this));
+        result.addBottomToolbar(new NoRecordsToolbar(result));
+        result.setOutputMarkupId(true);
+        return result;
     }
 
     /**
@@ -242,7 +262,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
             keys.add(c.getKey());
         }
 
-        for (IColumn<T, Key<T, ?>> iColumn : columns) {
+        for (IColumn<T, ?> iColumn : columns) {
             if (iColumn instanceof KeyColumn) {
                 Key<T,?> key = ((KeyColumn) iColumn).getKey();
                 if (key.isComposite()
@@ -303,7 +323,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, K
     }
 
     /** Transient table columns */
-    public  List<IColumn<T, Key<T,?>>> getColumns() {
+    public List<IColumn<T, ?>> getColumns() {
         return columns;
     }
 
