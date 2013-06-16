@@ -408,8 +408,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Key<? super UJO, ?>... keys) {
         if (keys == null
-        ||  keys.length==0
-        ||  keys[0] == null) {
+        ||  keys.length==1
+        &&  keys[0] == null) {
             return null;
         }
         final Key[] ps = new Key[keys.length];
