@@ -60,7 +60,7 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  * @see org.ujorm.implementation.orm.RelationToMany
  * @see org.ujorm.core.UjoIterator
  */
-public class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
+public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
 
     /** Orm session */
     transient private Session session;
