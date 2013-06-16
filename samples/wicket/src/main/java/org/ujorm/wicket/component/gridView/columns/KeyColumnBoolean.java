@@ -80,30 +80,45 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
 
     // =============== STATIC FACTORY METHODS ===============
 
-    /** A factory method */
+    /**
+     * A factory method where a default property {@link #getCssOkClass()} have got value {@link #DEFAULT_CSS_OK_CLASS}
+     * @param key Domain Key
+     * @param sorted A sorting request
+     * @return New instance of the KeyColumn class
+     */
     public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted) {
-        return of(key, sorted, null);
+        return of(key, sorted, DEFAULT_CSS_OK_CLASS);
     }
 
-    /** A factory method */
-    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted, String cssClass) {
+    /**
+     * A factory method
+     * @param key Domain Key
+     * @param sorted Sorted column
+     * @param cssOkClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
+     * @return New instance of the KeyColumn class
+     */
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, boolean sorted, String cssOkClass) {
         final KeyRing serializableKey = KeyRing.of(key);
         return new KeyColumnBoolean
                 ( serializableKey
                 , sorted ? serializableKey : null
-                , cssClass
-                , DEFAULT_CSS_OK_CLASS
-                );
+                , DEFAULT_LOGICAL_CLASS
+                , cssOkClass);
     }
 
-    /** A factory method */
-    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, Key<U,T> sort, String cssClass) {
+    /**
+     * A factory method
+     * @param key Domain Key
+     * @param sort Key of sorting
+     * @param cssOkClass Class for a value {@code Boolean.TRUE} where a default value is {@link #DEFAULT_CSS_OK_CLASS}.
+     * @return
+     */
+    public static <U extends Ujo, T> KeyColumn<U,T> of(Key<U,T> key, Key<U,T> sort, String cssOkClass) {
         return new KeyColumnBoolean
                 ( KeyRing.of(key)
                 , KeyRing.of(sort)
-                , cssClass
-                , DEFAULT_CSS_OK_CLASS
-                );
+                , DEFAULT_LOGICAL_CLASS
+                , cssOkClass);
     }
 
     
