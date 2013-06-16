@@ -115,7 +115,7 @@ public class PropertyTest extends MyTestCase {
     public void testToStringFullTrue_1() {
         Key<PersonExt, Integer> key = PersonExt.ID;
         
-        String expectedResult = "PersonExt.id {index=0, ascending=true, direct=true, default=null, validator=null, type=class java.lang.Integer, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.Property}";
+        String expectedResult = "PersonExt.id {index=0, ascending=true, composite=false, default=null, validator=null, type=class java.lang.Integer, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.Property}";
         String result = key.toStringFull(true);
         assertEquals(expectedResult, result);
     }
@@ -126,7 +126,7 @@ public class PropertyTest extends MyTestCase {
     public void testToStringFullTrue_2() {
         Key<PersonExt, Integer> key = new PathProperty<PersonExt, Integer>(PersonExt.PERS);
         
-        String expectedResult = "PersonExt.person {index=-1, ascending=true, direct=false, default=null, validator=null, type=interface java.util.List, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.PathProperty}";
+        String expectedResult = "PersonExt.person {index=-1, ascending=true, composite=true, default=null, validator=null, type=interface java.util.List, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.PathProperty}";
         String result = key.toStringFull(true);
         assertEquals(expectedResult, result);
     }
