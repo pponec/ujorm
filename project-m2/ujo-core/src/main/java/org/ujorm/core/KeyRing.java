@@ -401,15 +401,25 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     // -------------- STATIC METHOD(S) --------------
 
     /** Create a new instance, the parameters is cloned.
-     * @param domainClass Mandatory doomain class
+     * @param domainClass The domain class where a not null value is recommended for better performance.
+     * @param keys Nullable value
+     * @return If the keys are {@code null}, than the result is the {@code null} too.
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo> KeyRing<UJO> of(Key<? super UJO, ?> key) {
+        return key != null
+             ? new KeyRing<UJO>(n, new Key[] {key})
+             : null;
+    }
+
+    /** Create a new instance, the parameters is cloned.
+     * @param domainClass The domain class where a not null value is recommended for better performance.
      * @param keys Nullable value
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Class<UJO> domainClass, Key<? super UJO, ?>... keys) {
-        if (keys == null
-        ||  keys.length==1
-        &&  keys[0] == null) {
+        if (keys == null) {
             return null;
         }
         final Key[] ps = new Key[keys.length];
@@ -433,7 +443,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /** Create a new instance
-     * @param domainClass Mandatory doomain class
+     * @param domainClass The domain class where a not null value is recommended for better performance.
      * @param keys Nullable value
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
@@ -448,7 +458,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         for (Key<? super UJO, ?> p : keys) {
             ps[i++] = (Key<UJO, ?>) p;
         }
-        return new KeyRing<UJO>(domainClass, (Key[]) ps);
+        return new KeyRing<UJO>(domainClass, ps);
     }
 
     /** Create a new instance, the parameters is cloned. */
@@ -474,7 +484,9 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return result;
     }
 
-    /** Returns a domain type, the result is not null always. */
+    /** Returns a domain type, 
+     * The result is not null always where an undefine value have got result the {@link Ujo}
+     */
     private static Class<?> getDomainType(Key<?,?> key) {
         Class<?> result = key.getDomainType();
         return result!=null ? result : Ujo.class;
