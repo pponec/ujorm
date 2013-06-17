@@ -401,14 +401,14 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     // -------------- STATIC METHOD(S) --------------
 
     /** Create a new instance, the parameters is cloned.
-     * @param domainClass The domain class where a not null value is recommended for better performance.
+     * @param domainClass The domain class where the not null value is recommended for better performance.
      * @param keys Nullable value
      * @return If the keys are {@code null}, than the result is the {@code null} too.
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo> KeyRing<UJO> of(Key<? super UJO, ?> key) {
         return key != null
-             ? new KeyRing<UJO>(n, new Key[] {key})
+             ? new KeyRing<UJO>((Class<UJO>) key.getDomainType(), new Key[] {key})
              : null;
     }
 
