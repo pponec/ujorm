@@ -18,8 +18,8 @@ package org.ujorm.hotels.gui.hotel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.component.gridView.UjoDataProvider;
 import org.ujorm.wicket.component.gridView.KeyColumn;
+import org.ujorm.wicket.component.gridView.UjoDataProvider;
 import static org.ujorm.wicket.component.gridView.KeyColumn.*;
 
 /**
@@ -31,7 +31,7 @@ public class HotelPanel extends Panel {
     public HotelPanel(String id) {
         super(id);
 
-        UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ID.forAll());
+        UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ACTIVE.whereEq(true));
         
         dataProvider.addColumn(Hotel.NAME);
         dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
