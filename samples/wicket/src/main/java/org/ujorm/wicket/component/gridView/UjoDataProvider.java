@@ -61,7 +61,7 @@ import org.ujorm.orm.Session;
  * implement the interface OrmHandlerProvider for an ORM support. See the example:
  * </p>
  * <h4>See the simple sample:</h4>
- * <pre class="pre">{@code
+ * <pre class="pre"> {@code
  *  Criterion<Hotel> allActiveHotels = Hotel.ACTIVE.whereEq(true);
  *  UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(allActiveHotels);
  *

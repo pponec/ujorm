@@ -25,8 +25,8 @@ import org.ujorm.hotels.gui.booking.BookingPanel;
 import org.ujorm.hotels.gui.customer.CustomerPanel;
 import org.ujorm.hotels.gui.hotel.HotelPanel;
 import org.ujorm.orm.OrmHandler;
-import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 import org.ujorm.wicket.component.tabs.UjoTab;
+import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;

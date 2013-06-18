@@ -27,6 +27,16 @@ import org.apache.wicket.model.Model;
 /**
  * A child of Wicket AjaxTabbedPanel class can restore the last selected tab
  * from a session after a page reloading and supports a user tab CSS class.
+ * <h4>See the simple sample:</h4>
+ * <pre code=pre> {@code
+ * List<ITab> tabs = new ArrayList<ITab>();
+ * tabs.add(new UjoTab("Hotels", "hotel", HotelPanel.class));
+ * tabs.add(new UjoTab("Booking", "booking", BookingPanel.class));
+ * tabs.add(new UjoTab("Customer", "customer", CustomerPanel.class));
+ * tabs.add(new UjoTab("About", "about", AboutPanel.class));
+ * panel.add(new UjoTabbedPanel("tabs", tabs));
+ * }
+ * </pre>
  *
  * @author PavelPonec
  */
