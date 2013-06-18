@@ -17,6 +17,8 @@
 package org.ujorm.orm_tutorial.sample;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
@@ -440,6 +442,15 @@ public class SampleORM {
         for (Item item : session.createQuery(Item.ORDER.whereIn(orderA, orderB))) {
             System.out.println("Item: " + item);
         }
+
+        // --- Or dirty hack using identifiers directly ---
+
+        Collection ids = Arrays.asList(1, 2);
+        Criterion<Item> crn = Item.ORDER.whereIn(ids);
+        for (Item item : session.createQuery(crn)) {
+            System.out.println("Item: " + item);
+        }
+
     }
 
     /** Select one items without Order */
