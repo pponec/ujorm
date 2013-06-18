@@ -445,7 +445,7 @@ public class SampleORM {
 
         // --- Or dirty hack using identifiers directly ---
 
-        Collection ids = Arrays.asList(1, 2);
+        Collection ids = Arrays.asList(1L, 2L);
         Criterion<Item> crn = Item.ORDER.whereIn(ids);
         for (Item item : session.createQuery(crn)) {
             System.out.println("Item: " + item);
