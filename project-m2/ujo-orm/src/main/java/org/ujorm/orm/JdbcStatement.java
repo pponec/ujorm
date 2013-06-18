@@ -190,10 +190,12 @@ public class JdbcStatement {
                     final Object[] ujoValues = (Object[]) value;
                     final Object[] rValues = new Object[ujoValues.length];
                     final MetaColumn rColumn = fc.get(0); // only one PK is supported
+                    final boolean isUjo = ujoValues.length > 0
+                                       && ujoValues[0] instanceof OrmUjo;
 
                     for (int j=0; j<ujoValues.length; j++) {
                         final Object ujoValue = ujoValues[j];
-                        if (ujoValue instanceof OrmUjo) {
+                        if (isUjo) {
                             // if instance is OrmUjo, then assing value of key
                             final OrmUjo bo = (OrmUjo) ujoValue;
                             final Object rValue = rColumn.getValue(bo);
