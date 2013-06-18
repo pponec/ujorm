@@ -192,9 +192,16 @@ public class JdbcStatement {
                     final MetaColumn rColumn = fc.get(0); // only one PK is supported
 
                     for (int j=0; j<ujoValues.length; j++) {
-                        final OrmUjo bo = (OrmUjo) ujoValues[j];
-                        final Object rValue = rColumn.getValue(bo);
-                        rValues[j] = rValue;
+                        final Object ujoValue = ujoValues[j];
+                        if (ujoValue instanceof OrmUjo) {
+                            // if instance is OrmUjo, then assing value of key
+                            final OrmUjo bo = (OrmUjo) ujoValue;
+                            final Object rValue = rColumn.getValue(bo);
+                            rValues[j] = rValue;
+                        } else {
+                            // if instance is not OrmUjo, then assing directly value (it's key)
+                            rValues[j] = ujoValue;
+                        }
                     }
                     assignValue(rColumn, rValues, null);
 
