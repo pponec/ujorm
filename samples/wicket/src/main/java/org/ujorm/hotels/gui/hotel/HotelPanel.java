@@ -18,9 +18,9 @@ package org.ujorm.hotels.gui.hotel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.component.gridView.KeyColumn;
-import org.ujorm.wicket.component.gridView.UjoDataProvider;
-import static org.ujorm.wicket.component.gridView.KeyColumn.*;
+import org.ujorm.wicket.component.grid.KeyColumn;
+import org.ujorm.wicket.component.grid.UjoDataProvider;
+import static org.ujorm.wicket.component.grid.KeyColumn.*;
 
 /**
  * HotelPanel tab

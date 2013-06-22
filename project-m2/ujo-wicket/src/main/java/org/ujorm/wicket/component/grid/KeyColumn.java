@@ -39,7 +39,7 @@ import org.ujorm.wicket.KeyModel;
  * Example:
  * <pre class="pre">
  * <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> DataTablePage2 <span class="keyword-directive">extends</span> WebPage {
- *
+ *    
  *     <span class="keyword-directive">public</span> DataTablePage2() {
  *         <span class="keyword-directive">final</span> EmployeeProvider userProvider = <span class="keyword-directive">new</span> EmployeeProvider();
  *
