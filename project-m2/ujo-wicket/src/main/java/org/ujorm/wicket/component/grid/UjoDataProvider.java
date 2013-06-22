@@ -47,7 +47,35 @@ import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 
 /**
- * SortableDataProvider extended form the Ujorm
+ * <p>This class called <strong>UjoDataProvider</strong> is an database
+ * Wicket DataProvider. For a customization you can use a your own {@link IColumn} implementations
+ * or you can owerwrite selected methods of this provider.
+ * </p><p>
+ * The implementation generates two database requests per a one rendering,
+ * the first one get size and the second one get paged data. You can owerwrite the two data methods:
+ * {@link #iterator(long, long) iterator()} and the {@link #size() size()}
+ * for more optimization.
+ * </p><p>
+ * The current class uses a {@link WicketApplication} implementation, which must
+ * implement the interface OrmHandlerProvider for an ORM support. See the example:
+ * </p>
+ * <h4>See the simple sample:</h4>
+ * <pre class="pre"> {@code
+ *  Criterion<Hotel> allActiveHotels = Hotel.ACTIVE.whereEq(true);
+ *  UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(allActiveHotels);
+ *
+ *  dataProvider.addColumn(Hotel.NAME);
+ *  dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
+ *  dataProvider.addColumn(Hotel.STREET);
+ *  dataProvider.addColumn(Hotel.PRICE);
+ *  dataProvider.addColumn(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
+ *  dataProvider.addColumn(Hotel.STARS);
+ *  dataProvider.addColumn(Hotel.PHONE);
+ *  dataProvider.setSort(Hotel.NAME);
+ * 
+ *  panel.add(dataProvider.createDataTable("datatable", 10));
+ * }
+ * </pre>
  * @author Pavel Ponec
  */
 public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, Object> {

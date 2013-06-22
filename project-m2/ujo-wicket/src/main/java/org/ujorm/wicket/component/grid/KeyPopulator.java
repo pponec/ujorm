@@ -41,7 +41,7 @@ import org.ujorm.wicket.KeyModel;
  *         , Employee.LASTNAME
  *         , Employee.EMAIL
  *         );
- *
+ * 
  * <span class="keyword-directive">final</span> WebMarkupContainer table = <span class="keyword-directive">new</span> WebMarkupContainer(<span class="character">&quot;</span><span class="character">table</span><span class="character">&quot;</span>);
  * <span class="keyword-directive">final</span> DataGridView grid = <span class="keyword-directive">new</span> DataGridView(<span class="character">&quot;</span><span class="character">gridPanel</span><span class="character">&quot;</span>, columns, <span class="keyword-directive">new</span> InnerPeopleProvicer());
  * table.setOutputMarkupId(<span class="keyword-directive">true</span>);
@@ -83,7 +83,7 @@ public class KeyPopulator<UJO extends Ujo,T> implements ICellPopulator<UJO>, ICo
     public void populateItem(final Item<ICellPopulator<UJO>> cellItem, final String componentId, final IModel<UJO> rowModel) {
         cellItem.add(new Label(componentId, KeyModel.of(rowModel.getObject(), (Key<UJO, ?>) property.getFirstKey())));
     }
-
+    
     @Override
     public Component getHeader(String componentId) {
         String id = property.getFirstKey().toString();

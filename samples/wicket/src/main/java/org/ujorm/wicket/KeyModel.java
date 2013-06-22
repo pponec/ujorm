@@ -26,7 +26,7 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
     private static final long serialVersionUID = 1L;
     /** Object model */
     private final UJO modelObject;
-    /** Property expression for property access. */
+    /** Serializable key. */
     private final KeyRing<UJO> property;
 
     /**
@@ -51,25 +51,30 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
         return property.toString();
     }
 
+    /** Rerurn Key
+     * @deprecated Use the {@link #getKey()}.
+     */    
+    @Deprecated
+    final public Key<UJO, T> getProperty() {
+        return getKey();
+    }
+    
     /**
      * Rerurn Key
      */
     @SuppressWarnings("unchecked")
-    public Key<UJO, T> getProperty() {
+    final public Key<UJO, T> getKey() {
         return (Key<UJO, T>) property.getFirstKey();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T getObject() {
-        return (T) property.getFirstKey().of((UJO) modelObject);
+        return getKey().of(modelObject);
     }
 
     @Override
     public void setObject(T object) {
-        @SuppressWarnings("unchecked")
-        final Key<UJO,Object> key = (Key<UJO,Object>) this.property.getFirstKey();
-        key.setValue((UJO) modelObject, object);
+        getKey().setValue(modelObject, object);
     }
 
     /** Return a class of the base domainObject */
