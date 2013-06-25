@@ -161,3 +161,9 @@ div.wicket-modal h3 {
     font-size: 18px;
     line-height: 18px;
 }
+div.wicket-modal div.w_caption {
+    background-color: buttonface;
+}
+div.wicket-modal div.w_content_3 {
+    border: 1px buttonface solid;
+}
