@@ -28,6 +28,7 @@ import org.ujorm.Key;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.edit.Field;
+import org.ujorm.wicket.component.edit.FieldFactory;
 import static org.ujorm.wicket.component.edit.UjoAbstractValidator.*;
 
 /**
@@ -39,8 +40,6 @@ public class HotelEditor extends Panel {
 
    private final Form<?> form;
    private final ModalWindow modalWindow;
-   private Field repeatUntilDate;
-   private Field period;
    private RepeatingView repeater;
 
    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
@@ -58,16 +57,18 @@ public class HotelEditor extends Panel {
         // Fields:
         form.addOrReplace(repeater = new RepeatingView("fieldRepeater"));
 
+        FieldFactory factory = new FieldFactory(repeater);
+
         // Edittable fields:
-        repeater.add(new Field(Hotel.NAME, getHotelModel()).setValidator(getMandatoryValidator()));
-        repeater.add(new Field(Hotel.CITY.add(City.NAME), getHotelModel()));
-        repeater.add(new Field(Hotel.STREET, getHotelModel()));
-        repeater.add(new Field(Hotel.PHONE, getHotelModel()));
-        repeater.add(new Field(Hotel.STARS, getHotelModel()));
-        repeater.add(new Field(Hotel.PRICE, getHotelModel()));
-        repeater.add(new Field(Hotel.CURRENCY, getHotelModel()));
-        repeater.add(new Field(Hotel.NOTE, getHotelModel()).setValidator(getMandatoryValidator()));
-        repeater.add(new Field(Hotel.ACTIVE, getHotelModel()));
+        factory.add(Hotel.NAME);
+        factory.add(Hotel.CITY.add(City.NAME));
+        factory.add(Hotel.STREET);
+        factory.add(Hotel.PHONE);
+        factory.add(Hotel.STARS);
+        factory.add(Hotel.PRICE);
+        factory.add(Hotel.CURRENCY);
+        factory.add(Hotel.NOTE);
+        factory.add(Hotel.ACTIVE);
 
         modalWindow.setContent(this);
     }
@@ -121,8 +122,6 @@ public class HotelEditor extends Panel {
 
     /** Kopíruje všechny atributy z parametru */
     public void showDialog(Hotel hotel, AjaxRequestTarget target, String title) {
-        this.repeatUntilDate.setVisible(hotel.ID.of(hotel) == null);
-        //
         Hotel h = getHotel();
         for (Key k : h.readKeys()) {
             k.copy(h, hotel);
