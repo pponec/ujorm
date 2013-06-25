@@ -15,10 +15,49 @@
  */
 package org.ujorm.wicket.component.edit;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import org.apache.wicket.markup.repeater.RepeatingView;
+import org.ujorm.Key;
+import org.ujorm.Ujo;
+
 /**
  * Field Factory
  * @author Pavel Ponec
  */
-public class FieldFactory {
+public class FieldFactory<U extends Ujo> implements Serializable {
+
+    private RepeatingView repeatingView;
+    private HashMap<String, Field> fields = new HashMap<String, Field>(16);
+
+    public FieldFactory(RepeatingView repeatingView) {
+        this.repeatingView = repeatingView;
+    }
+
+    /** Add new field to a repeating view*/
+    public void add(Key key, Field field) {
+        Field oldField = fields.put(key.getName(), field);
+        if (oldField != null) {
+            throw new IllegalStateException("Field is assigned for the key: " + field);
+        }
+        repeatingView.add(field);
+    }
+
+    /** Add new field to a repeating view*/
+    public void add(Key key) {
+        final Field field = new Field(key);
+        add(key, field);
+    }
+
+
+    /** Get Value */
+    public <T> T getValue(Key<U,T> key) {
+        return (T) fields.get(key.getName()).getModelValue();
+    }
+
+    /** Set Value */
+    public <T> void getValue(Key<U,T> key, T value) {
+        fields.get(key.getName()).setModelValue(value);
+    }
 
 }

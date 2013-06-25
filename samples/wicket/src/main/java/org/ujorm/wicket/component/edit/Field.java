@@ -30,8 +30,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
-import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.KeyModel;
+import org.ujorm.core.KeyRing;
 
 /**
  * Input field including a label and a feedback message.
@@ -48,20 +47,17 @@ public class Field extends Panel {
     protected IValidator<?> validator;
     protected WebMarkupContainer div;
     protected String cssClass;
+    protected KeyRing key;
     protected List<AjaxEventBehavior> behaviors = new ArrayList<AjaxEventBehavior>();
 
-    public Field(Key property, IModel<Hotel> hotel) {
-        this(property.getName(), property, hotel, null);
+    public Field(Key property) {
+        this(property.getName(), property, null);
     }
 
-    public Field(String componentId, Key property, IModel<Hotel> hotel, String cssClass) {
-        super(componentId, KeyModel.of(hotel.getObject(), property));
+    public Field(String componentId, Key property, String cssClass) {
+        super(componentId, Model.of());
+        this.key = KeyRing.of(property);
         this.cssClass = cssClass;
-    }
-
-    /** Get KeyModel */
-    public KeyModel getKeyModel() {
-        return (KeyModel) super.getDefaultModel();
     }
 
     /** On initialize */
@@ -77,13 +73,12 @@ public class Field extends Panel {
             div.add(new AttributeAppender("class", new Model(cssClass), " "));
         }
 
-        final KeyModel keyModel = getKeyModel();
         final ResourceModel labelModel = new ResourceModel(PROPERTY_PREFIX
-                + keyModel.getKey().getName()
-                , keyModel.getKey().getName());
+                + key.getFirstKey().getName()
+                , key.getFirstKey().getName());
 
         div.add(new Label("label", labelModel));
-        div.add(input = createInput("input", keyModel));
+        div.add(input = createInput("input", getDefaultModel()));
         div.add(feedback = new FeedbackLabel("message", input, (IModel)null));
 
         for (AjaxEventBehavior behavior : behaviors) {
@@ -93,8 +88,8 @@ public class Field extends Panel {
     }
 
     /** Create Form inputComponent */
-    protected FormComponent createInput(String componentId, KeyModel model) {
-        final FormComponent result = new TextField("input", model, model.getProperty().getType());
+    protected FormComponent createInput(String componentId, IModel model) {
+        final FormComponent result = new TextField("input", model, key.getFirstKey().getType());
         
         if (validator != null) {
             result.add(validator);
