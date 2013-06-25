@@ -26,9 +26,9 @@ import static org.ujorm.wicket.component.grid.KeyColumn.*;
  * HotelPanel tab
  * @author Pavel Ponec
  */
-public class HotelPanel extends Panel {
+public class HotelTable extends Panel {
 
-    public HotelPanel(String id) {
+    public HotelTable(String id) {
         super(id);
 
         UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ACTIVE.whereEq(true));
