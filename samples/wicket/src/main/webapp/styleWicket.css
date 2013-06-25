@@ -35,7 +35,32 @@ table.datatable {
     width: 100%;
 }
 
-/** Wicket TABS */
+/* Form labels */
+form div.w_content {
+    padding-top: 4px;
+}
+
+form div.editField {
+   vertical-align: middle;
+}
+
+form span.feedbacklabel {
+    display: inline-block;
+    color: red;
+}
+form div.buttons {
+    margin: 15px 0 0 88px;
+}
+
+form label {
+    display: inline-block;
+    padding-right: 2px;
+    text-align: right;
+    white-space: nowrap;
+    width: 80px;
+}
+
+/* Wicket TABS */
 div.tabpanel div.tab-row {
     background-color: buttonface;
     margin-top: 20px;
@@ -121,4 +146,18 @@ td.logical .ok {
 td.number {
     text-align: right;
     white-space: nowrap;
+}
+
+/* Input fields margin */
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    margin: 1px;
+}
+input, textarea, .uneditable-input {
+    width: 260px;
+}
+
+/* Dialog title */
+div.wicket-modal h3 {
+    font-size: 18px;
+    line-height: 18px;
 }
