@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.wicket.component.edit;
+package org.ujorm.wicket.component.form;
 
 import java.util.ArrayList;
 import java.util.List;
