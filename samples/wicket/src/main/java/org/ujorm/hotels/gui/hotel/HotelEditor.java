@@ -25,11 +25,10 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.component.edit.Field;
-import org.ujorm.wicket.component.edit.FieldFactory;
-import static org.ujorm.wicket.component.edit.UjoAbstractValidator.*;
+import org.ujorm.wicket.component.form.FieldFactory;
 
 /**
  * Hotel Editor
@@ -41,6 +40,7 @@ public class HotelEditor extends Panel {
    private final Form<?> form;
    private final ModalWindow modalWindow;
    private RepeatingView repeater;
+   private FieldFactory factory;
 
    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
         super(modalWindow.getContentId(), model);
@@ -56,10 +56,9 @@ public class HotelEditor extends Panel {
 
         // Fields:
         form.addOrReplace(repeater = new RepeatingView("fieldRepeater"));
+        factory = new FieldFactory(repeater);
 
-        FieldFactory factory = new FieldFactory(repeater);
-
-        // Edittable fields:
+        // Editable fields:
         factory.add(Hotel.NAME);
         factory.add(Hotel.CITY.add(City.NAME));
         factory.add(Hotel.STREET);
@@ -120,11 +119,16 @@ public class HotelEditor extends Panel {
         return result;
     }
 
-    /** Kopíruje všechny atributy z parametru */
-    public void showDialog(Hotel hotel, AjaxRequestTarget target, String title) {
-        Hotel h = getHotel();
-        for (Key k : h.readKeys()) {
-            k.copy(h, hotel);
+    /**
+     * Show dialog and assign a data from domain object
+     * @param domain Domain object
+     * @param title Window title
+     * @param target target
+     */
+    public void show(Ujo domain, String title, AjaxRequestTarget target) {
+        for (Object keyName : factory.getKeyNames()) {
+            Key k = domain.readKeys().find(keyName.toString());
+            factory.setValue(k, k.of(domain));
         }
 
         getModalWindow().setTitle(title);

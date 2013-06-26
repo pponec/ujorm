@@ -80,15 +80,8 @@ public class HotelTable extends Panel {
     public void onEvent(IEvent<?> event) {
         if (event.getPayload() instanceof UjoEvent) {
             UjoEvent ujoEvent = (UjoEvent) event.getPayload();
-
             if (UjoEvent.UPDATE.equals(ujoEvent.getContext())) {
-                Ujo ujo = (Ujo) dialog.getDefaultModelObject();
-                for (Key key : ujo.readKeys()) {
-                    key.copy(ujoEvent.getUjo(), ujo);
-                }
-                dialog.getModalWindow().show(ujoEvent.getTarget());
-                ujoEvent.getTarget().add(dialog.getModalWindow());
-                return;
+                dialog.show(ujoEvent.getUjo(), "Edit Hotel", ujoEvent.getTarget());
             }
         }
     }
