@@ -13,10 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.wicket.component.edit;
+package org.ujorm.wicket.component.form;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
@@ -56,8 +58,18 @@ public class FieldFactory<U extends Ujo> implements Serializable {
     }
 
     /** Set Value */
-    public <T> void getValue(Key<U,T> key, T value) {
+    public <T> void setValue(Key<U,T> key, T value) {
         fields.get(key.getName()).setModelValue(value);
+    }
+
+    /** Return all fields */
+    public Collection<Field> getFields() {
+        return fields.values();
+    }
+
+    /** Return all keys in a String format */
+    public Set<String> getKeyNames() {
+        return fields.keySet();
     }
 
 }

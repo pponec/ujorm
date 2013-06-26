@@ -13,7 +13,7 @@
  *  limitations under the License.
  *
  */
-package org.ujorm.wicket.component.edit;
+package org.ujorm.wicket.component.form;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
