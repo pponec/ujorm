@@ -21,7 +21,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Key;
@@ -39,7 +38,6 @@ public class HotelEditor extends Panel {
 
    private final Form<?> form;
    private final ModalWindow modalWindow;
-   private RepeatingView repeater;
    private FieldFactory factory;
 
    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
@@ -54,9 +52,8 @@ public class HotelEditor extends Panel {
         form.add(createSaveButton("saveButton", "Save"));
         form.add(createCancelButton("cancelButton", "Cancel"));
 
-        // Fields:
-        form.addOrReplace(repeater = new RepeatingView("fieldRepeater"));
-        factory = new FieldFactory(repeater);
+        // Field Factory:
+        form.addOrReplace((factory = new FieldFactory("fieldRepeater")).getRepeatingView());
 
         // Editable fields:
         factory.add(Hotel.NAME);

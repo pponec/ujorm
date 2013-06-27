@@ -18,6 +18,7 @@ package org.ujorm.wicket.component.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -124,4 +125,10 @@ public class Field extends Panel {
     public void addBehaviour(AjaxEventBehavior behavior) {
         behaviors.add(behavior);
     }
+
+    /** Return an Input component */
+    public Component getInput() {
+        return input;
+    }
+
 }
