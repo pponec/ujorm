@@ -123,11 +123,7 @@ public class HotelEditor extends Panel {
      * @param target target
      */
     public void show(Ujo domain, String title, AjaxRequestTarget target) {
-        for (Object keyName : fieldAdapter.getKeyNames()) {
-            Key k = domain.readKeys().find(keyName.toString());
-            fieldAdapter.setValue(k, k.of(domain));
-        }
-
+        fieldAdapter.setDomain(domain);
         getModalWindow().setTitle(title);
         getModalWindow().show(target);
         target.add(form);

@@ -39,6 +39,7 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
 
     private RepeatingView repeatingView;
     private HashMap<String, Field> fields = new HashMap<String, Field>(16);
+    private Ujo domain;
 
     transient private OrmHandler ormHandler;
 
@@ -82,8 +83,13 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
         return fields.values();
     }
 
+    /** Return field */
+    public Field getField(Key key) {
+        return fields.get(key.getName());
+    }
+
     /** Return all keys in a String format */
-    public Set<String> getKeyNames() {
+    protected Set<String> getKeyNames() {
         return fields.keySet();
     }
 
@@ -127,6 +133,27 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
                 ((FormComponent)input).setRequired(true);
             }
         }
+    }
+
+    /** Save domain value and assign value into components */
+    public void setDomain(Ujo domain) {
+        for (String keyName : getKeyNames()) {
+            Key k = domain.readKeys().find(keyName);
+            setValue(k, k.of(domain));
+        }
+        this.domain = domain;
+    }
+
+    /** Copy new value to the result and return the result */
+    public Ujo getDomain() {
+        for (String keyName : getKeyNames()) {
+            final Key k = domain.readKeys().find(keyName);
+            final Object newValue = getValue(k);
+            if (!k.equals(domain, newValue)) {
+                k.setValue(domain, newValue);
+            }
+        }
+        return domain;
     }
 
 }
