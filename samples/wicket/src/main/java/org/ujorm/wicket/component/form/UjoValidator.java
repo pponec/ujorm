@@ -16,6 +16,8 @@
 package org.ujorm.wicket.component.form;
 
 import java.io.Serializable;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
@@ -30,6 +32,9 @@ import org.ujorm.validator.ValidationError;
  * @author Pavel Ponec
  */
 public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T>, Serializable {
+
+    /** Localization property prefix */
+    public static final String PROPERTY_PREFIX = "validator.";
 
     /** Native Ujorm validator */
     private Validator<T> validator;
@@ -54,7 +59,13 @@ public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T
                 , key != null ? (Key) key.getFirstKey() : null
                 , null);
         if (error != null) {
-            validatable.error(new org.apache.wicket.validation.ValidationError().setMessage(error.getDefaultMessage()));
+            org.apache.wicket.validation.ValidationError wicketErr = new org.apache.wicket.validation.ValidationError();
+            wicketErr.setMessage(error.getDefaultMessage());
+            wicketErr.addKey(error.getLocalizationKey() + "." + key.getFirstKey().getName());
+            wicketErr.addKey(error.getLocalizationKey());
+            wicketErr.setVariables(error.getArguments());
+
+            validatable.error(wicketErr);
         }
     }
 }
