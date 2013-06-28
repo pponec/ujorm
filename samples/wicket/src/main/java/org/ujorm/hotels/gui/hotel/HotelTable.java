@@ -15,7 +15,6 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -24,8 +23,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.ujorm.Key;
-import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
@@ -97,12 +94,6 @@ public class HotelTable extends Panel {
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
         //modalWindow.setCookieName("modal-dialog");
-
-        modalWindow.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
-            @Override public void onClose(AjaxRequestTarget target) {
-                result.clearInput();
-            }
-        });
 
         return result;
     }

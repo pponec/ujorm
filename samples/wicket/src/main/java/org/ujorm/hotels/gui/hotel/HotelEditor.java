@@ -34,8 +34,8 @@ import org.ujorm.wicket.component.form.FieldAdapter;
 public class HotelEditor extends Panel {
    private static final long serialVersionUID = 20130621L;
 
-   private final Form<?> form;
-   private final ModalWindow modalWindow;
+   private Form<?> form;
+   private ModalWindow modalWindow;
    private FieldAdapter fieldAdapter;
 
    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
@@ -65,6 +65,12 @@ public class HotelEditor extends Panel {
         fieldAdapter.add(Hotel.ACTIVE);
 
         modalWindow.setContent(this);
+        modalWindow.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
+            @Override public void onClose(AjaxRequestTarget target) {
+                // ON CLOSE:
+                form.clearInput();
+            }
+        });
     }
 
     /** Returns a current entity */
@@ -93,7 +99,7 @@ public class HotelEditor extends Panel {
 
     /** Vytvoří textfield pro aktuání model */
     private AjaxButton createCancelButton(String id, String name) {
-        final AjaxButton result = new AjaxButton(id, Model.of(name), null) {
+        final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -103,6 +109,7 @@ public class HotelEditor extends Panel {
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {                
+                target.add(form);
                 modalWindow.close(target);
             }
         };
@@ -127,9 +134,5 @@ public class HotelEditor extends Panel {
         return modalWindow;
     }
 
-    /** Clear input */
-    public void clearInput() {
-        form.clearInput();
-    }
 
 }

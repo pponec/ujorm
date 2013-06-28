@@ -118,8 +118,9 @@ public class Field extends Panel {
         return input.getDefaultModelObject();
     }
 
-    /** Set a model for the {@code input} */
+    /** Set new value for the {@code input} and reset feedback messages */
     public void setModelValue(Object value) {
+        input.getFeedbackMessages().clear();
         input.setDefaultModelObject(value);
     }
 
