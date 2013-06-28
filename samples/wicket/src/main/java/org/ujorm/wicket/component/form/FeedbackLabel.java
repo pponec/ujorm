@@ -36,18 +36,18 @@ import org.apache.wicket.model.Model;
 public class FeedbackLabel extends Label {
 
     /** Field component holds a reference to the {@link Component} this FeedbackLabel belongs to */
-    private FormComponent component;
+    private FormComponent form;
     /** Field text holds a model of the text to be shown in the FeedbackLabel */
     private IModel text = null;
 
     /**
      * Call this constructor if you just want to display the FeedbackMessage of the component
      * @param id The non-null id of this component
-     * @param component The {@link FormComponent} to show the FeedbackMessage for.
+     * @param form The {@link FormComponent} to show the FeedbackMessage for.
      */
-    public FeedbackLabel(String id, FormComponent component) {
+    public FeedbackLabel(String id, FormComponent form) {
         super(id);
-        this.component = component;
+        this.form = form;
     }
 
     /**
@@ -66,9 +66,9 @@ public class FeedbackLabel extends Label {
      * @param component The {@link FormComponent} to show the custom model for.
      * @param iModel The custom nullable model to show when the {@link FormComponent} has a FeedbackMessage
      */
-    public FeedbackLabel(String id, FormComponent component, IModel iModel) {
+    public FeedbackLabel(String id, FormComponent form, IModel iModel) {
         super(id);
-        this.component = component;
+        this.form = form;
         this.text = iModel;
     }
 
@@ -89,17 +89,16 @@ public class FeedbackLabel extends Label {
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();
-        this.setDefaultModel(null);
-        if (component.hasFeedbackMessage()) {
+        if (form.hasFeedbackMessage()) {
             if (this.text != null) {
                 this.setDefaultModel(text);
             } else {
-                this.setDefaultModel(new Model(component.getFeedbackMessages().first().getMessage()));
+                this.setDefaultModel(new Model(form.getFeedbackMessages().first().getMessage()));
             }
 
             // Assign an error level as a CSS class:
-            this.add(new AttributeModifier("class"
-                    , new Model("feedbacklabel " + component.getFeedbackMessages().first().getLevelAsString())));
+            this.add( new AttributeModifier("class"
+                    , new Model("feedbacklabel " + form.getFeedbackMessages().first().getLevelAsString())));
         } else {
             this.setDefaultModel(null);
         }
