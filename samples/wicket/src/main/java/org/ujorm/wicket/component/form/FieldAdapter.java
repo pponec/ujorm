@@ -35,18 +35,18 @@ import org.ujorm.validator.ValidatorUtils;
  * Field Factory
  * @author Pavel Ponec
  */
-public class FieldFactory<U extends Ujo> implements Serializable {
+public class FieldAdapter<U extends Ujo> implements Serializable {
 
     private RepeatingView repeatingView;
     private HashMap<String, Field> fields = new HashMap<String, Field>(16);
 
     transient private OrmHandler ormHandler;
 
-    public FieldFactory(String repeatingViewId) {
+    public FieldAdapter(String repeatingViewId) {
         this(new RepeatingView(repeatingViewId));
     }
 
-    public FieldFactory(RepeatingView repeatingView) {
+    public FieldAdapter(RepeatingView repeatingView) {
         this.repeatingView = repeatingView;
     }
 

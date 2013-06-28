@@ -27,7 +27,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.component.form.FieldFactory;
+import org.ujorm.wicket.component.form.FieldAdapter;
 
 /**
  * Hotel Editor
@@ -38,7 +38,7 @@ public class HotelEditor extends Panel {
 
    private final Form<?> form;
    private final ModalWindow modalWindow;
-   private FieldFactory factory;
+   private FieldAdapter fieldAdapter;
 
    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
         super(modalWindow.getContentId(), model);
@@ -53,18 +53,18 @@ public class HotelEditor extends Panel {
         form.add(createCancelButton("cancelButton", "Cancel"));
 
         // Field Factory:
-        form.addOrReplace((factory = new FieldFactory("fieldRepeater")).getRepeatingView());
+        form.addOrReplace((fieldAdapter = new FieldAdapter("fieldRepeater")).getRepeatingView());
 
         // Editable fields:
-        factory.add(Hotel.NAME);
-        factory.add(Hotel.CITY.add(City.NAME));
-        factory.add(Hotel.STREET);
-        factory.add(Hotel.PHONE);
-        factory.add(Hotel.STARS);
-        factory.add(Hotel.PRICE);
-        factory.add(Hotel.CURRENCY);
-        factory.add(Hotel.NOTE);
-        factory.add(Hotel.ACTIVE);
+        fieldAdapter.add(Hotel.NAME);
+        fieldAdapter.add(Hotel.CITY.add(City.NAME));
+        fieldAdapter.add(Hotel.STREET);
+        fieldAdapter.add(Hotel.PHONE);
+        fieldAdapter.add(Hotel.STARS);
+        fieldAdapter.add(Hotel.PRICE);
+        fieldAdapter.add(Hotel.CURRENCY);
+        fieldAdapter.add(Hotel.NOTE);
+        fieldAdapter.add(Hotel.ACTIVE);
 
         modalWindow.setContent(this);
     }
@@ -123,9 +123,9 @@ public class HotelEditor extends Panel {
      * @param target target
      */
     public void show(Ujo domain, String title, AjaxRequestTarget target) {
-        for (Object keyName : factory.getKeyNames()) {
+        for (Object keyName : fieldAdapter.getKeyNames()) {
             Key k = domain.readKeys().find(keyName.toString());
-            factory.setValue(k, k.of(domain));
+            fieldAdapter.setValue(k, k.of(domain));
         }
 
         getModalWindow().setTitle(title);
