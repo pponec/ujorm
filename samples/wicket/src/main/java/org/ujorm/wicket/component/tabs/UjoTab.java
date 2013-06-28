@@ -81,7 +81,7 @@ public class UjoTab extends AbstractTab {
                     ( "Can't create an instance of the class %s with %s constructor argument(s)."
                     , panel.getName()
                     , tabModel != null ? 2 : 1);
-            throw new IllegalStateException();
+            throw new IllegalStateException(msg, e);
         }
     }
 

@@ -65,12 +65,6 @@ public class HotelEditor extends Panel {
         fieldAdapter.add(Hotel.ACTIVE);
 
         modalWindow.setContent(this);
-        modalWindow.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
-            @Override public void onClose(AjaxRequestTarget target) {
-                // ON CLOSE:
-                form.clearInput();
-            }
-        });
     }
 
     /** Returns a current entity */
@@ -103,12 +97,17 @@ public class HotelEditor extends Panel {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                target.add(form);
-                modalWindow.close(target);
+                close(target, form);
             }
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {                
+                close(target, form);
+            }
+
+            /** Close action */
+            private void close(AjaxRequestTarget target, Form<?> form) {
+                form.clearInput();
                 target.add(form);
                 modalWindow.close(target);
             }
