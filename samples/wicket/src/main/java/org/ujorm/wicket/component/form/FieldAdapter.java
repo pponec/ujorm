@@ -17,7 +17,8 @@ package org.ujorm.wicket.component.form;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -38,7 +39,7 @@ import org.ujorm.validator.ValidatorUtils;
 public class FieldAdapter<U extends Ujo> implements Serializable {
 
     private RepeatingView repeatingView;
-    private HashMap<String, Field> fields = new HashMap<String, Field>(16);
+    private Map<String, Field> fields = new LinkedHashMap<String, Field>(16);
     private Ujo domain;
 
     transient private OrmHandler ormHandler;
