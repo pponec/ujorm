@@ -43,11 +43,13 @@ public class Field extends Panel {
     /** Localization property prefix */
     public static final String PROPERTY_PREFIX = "label.";
 
-    protected FormComponent<?> input;
+    /** Input */
+    private FormComponent<?> input;
     protected FeedbackLabel feedback;
     protected IValidator<?> validator;
     protected WebMarkupContainer div;
     protected String cssClass;
+    /** Serializable key */
     protected KeyRing key;
     protected List<AjaxEventBehavior> behaviors = new ArrayList<AjaxEventBehavior>();
 
