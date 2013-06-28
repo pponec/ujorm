@@ -4,7 +4,7 @@
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>demo-hotels.log</file>
         <encoder>
-            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+            <pattern>%date %level [%thread] %logger{50} - %msg%n</pattern>
         </encoder>
     </appender>    
 
@@ -15,13 +15,8 @@
         </encoder>
     </appender>
 
-    <logger name="org.ujorm.orm" level="INFO" >
-         <appender-ref ref="STDOUT" />
-    </logger>
-    <logger name="org.ujorm.hotels" level="INFO">
-         <appender-ref ref="STDOUT" />
-    </logger>
-
+    <logger name="org.ujorm.orm" level="INFO" />
+    <logger name="org.ujorm.hotels" level="INFO" />
     <logger name="wicket" level="WARN" />
 
     <root level="WARN">

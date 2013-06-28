@@ -16,8 +16,6 @@
 package org.ujorm.wicket.component.form;
 
 import java.io.Serializable;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;

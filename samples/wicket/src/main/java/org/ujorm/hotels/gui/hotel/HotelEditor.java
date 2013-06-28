@@ -15,7 +15,6 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -23,7 +22,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
@@ -53,7 +51,7 @@ public class HotelEditor extends Panel {
         form.add(createCancelButton("cancelButton", "Cancel"));
 
         // Field Factory:
-        form.addOrReplace((fieldAdapter = new FieldAdapter("fieldRepeater")).getRepeatingView());
+        form.add((fieldAdapter = new FieldAdapter("fieldRepeater")).getRepeatingView());
 
         // Editable fields:
         fieldAdapter.add(Hotel.NAME);
@@ -74,14 +72,8 @@ public class HotelEditor extends Panel {
         return (Hotel) getDefaultModelObject();
     }
 
-    /** Returns a current entity model */
-    @SuppressWarnings("unchecked")
-    private IModel<Hotel> getHotelModel() {
-        return (IModel<Hotel>) getDefaultModel();
-    }
-
     /** Vytvoří textfield pro aktuání model */
-    private Component createSaveButton(String id, String name) {
+    private AjaxButton createSaveButton(String id, String name) {
         final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
 
             @Override
@@ -95,12 +87,13 @@ public class HotelEditor extends Panel {
                 target.add(form);
             }
         };
+        form.setDefaultButton(result);
         return result;
     }
 
     /** Vytvoří textfield pro aktuání model */
-    private Component createCancelButton(String id, String name) {
-        final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
+    private AjaxButton createCancelButton(String id, String name) {
+        final AjaxButton result = new AjaxButton(id, Model.of(name), null) {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
