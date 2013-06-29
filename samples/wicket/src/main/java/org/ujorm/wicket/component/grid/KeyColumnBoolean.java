@@ -22,6 +22,7 @@ import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
+import static org.ujorm.wicket.CommonConstants.*;
 
 /**
  * Key column for a boolean data type
@@ -69,7 +70,7 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
 
         if (cssOkClass != null
         &&  Boolean.TRUE.equals(keySerializable.getFirstValue(ujo))) {
-            value.add(new AttributeAppender("class", new Model(cssOkClass), " "));
+            value.add(new AttributeAppender(CSS_CLASS, new Model(cssOkClass), " "));
         }
     }
 

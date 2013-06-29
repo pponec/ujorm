@@ -23,6 +23,7 @@ import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import static org.ujorm.wicket.CommonConstants.*;
 
 /**
  * A child of Wicket AjaxTabbedPanel class can restore the last selected tab
@@ -73,7 +74,7 @@ public class UjoTabbedPanel<T extends UjoTab>
     public TabbedPanel<T> setSelectedTab(final int index) {
         TabbedPanel<T> result = super.setSelectedTab(index);
         final Component panel = super.get(TAB_PANEL_ID);
-        panel.add(new AttributeAppender("class", Model.of(getTabs().get(index).getCssClass()), " "));
+        panel.add(new AttributeAppender(CSS_CLASS, Model.of(getTabs().get(index).getCssClass()), " "));
         return result;
     }
 
@@ -94,7 +95,7 @@ public class UjoTabbedPanel<T extends UjoTab>
         final WebMarkupContainer result = super.newLink(linkId, index);
         final String cssClass = getTabs().get(index).getCssClass();
         if (cssClass != null) {
-            result.add(new AttributeAppender("class", cssClass));
+            result.add(new AttributeAppender(CSS_CLASS, cssClass));
         }
         return result;
     }
