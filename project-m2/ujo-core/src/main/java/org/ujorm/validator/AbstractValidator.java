@@ -38,7 +38,7 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
     protected static final MessageService service = new MessageService();
 
     /** Localizatioln Key Prefix */
-    public static final String KEY_PREFIX = Ujo.class.getPackage().getName() + '.';
+    public static final String KEY_PREFIX = "validator.";
 
     /** Check the value without context */
     public final <UJO extends Ujo> void checkValue(VALUE input) throws ValidationException {
