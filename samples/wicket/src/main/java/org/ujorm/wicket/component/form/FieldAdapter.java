@@ -31,6 +31,8 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.validator.ValidatorUtils;
+import org.ujorm.wicket.component.form.fields.BooleanField;
+import org.ujorm.wicket.component.form.fields.Field;
 
 /**
  * Field Factory
@@ -64,7 +66,15 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
 
     /** Add new field to a repeating view*/
     public void add(Key key) {
-        final Field field = new Field(key);
+        Field field;
+
+        if (key.isTypeOf(Boolean.class)) {
+            field = new BooleanField(key);
+        } else if (key.isTypeOf(String.class)) {
+            field = new Field(key);
+        } else {
+            field = new Field(key); // The common field
+        }
         add(key, field);
     }
 
