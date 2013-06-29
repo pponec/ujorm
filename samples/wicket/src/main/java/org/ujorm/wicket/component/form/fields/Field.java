@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.ujorm.wicket.component.form;
+package org.ujorm.wicket.component.form.fields;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +34,11 @@ import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
+import org.ujorm.wicket.component.form.FeedbackLabel;
+import org.ujorm.wicket.component.form.UjoValidator;
 
 /**
- * Input field including a label and a feedback message.
+ * Input textfield with a Label includding a feedback message.
  * @author Pavel Ponec
  */
 public class Field extends Panel {
@@ -95,6 +97,7 @@ public class Field extends Panel {
     /** Create Form inputComponent */
     protected FormComponent createInput(String componentId, IModel model) {
         final FormComponent result = new TextField("input", model, key.getFirstKey().getType());
+        result.add(new AttributeModifier("type", "text"));
         
         if (validator != null) {
             result.add(validator);
