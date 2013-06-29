@@ -93,7 +93,9 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
      * </ul>
      */
     public String getLocalizationKey() {
-        return KEY_PREFIX + "maxStringLength";
+        return KEY_PREFIX + (min==max
+                ? "exactStringLength"
+                : "maxStringLength");
     }
 
     /** String minimal length (inclusive) */
