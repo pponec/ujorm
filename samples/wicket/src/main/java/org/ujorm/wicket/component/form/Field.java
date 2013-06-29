@@ -18,6 +18,7 @@ package org.ujorm.wicket.component.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -32,6 +33,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
+import org.ujorm.validator.ValidatorUtils;
 
 /**
  * Input field including a label and a feedback message.
@@ -96,6 +98,7 @@ public class Field extends Panel {
         
         if (validator != null) {
             result.add(validator);
+            addMaxLength(result);
         }
 
         result.setEnabled(isEnabled());
@@ -132,6 +135,17 @@ public class Field extends Panel {
     /** Return an Input component */
     public Component getInput() {
         return input;
+    }
+
+    /** Add a {@code maxlength} of a text-field for String attributes */
+    protected void addMaxLength(final FormComponent result) {
+        if (validator instanceof UjoValidator
+        && key.getFirstKey().isTypeOf(String.class)) {
+            int length = ValidatorUtils.getMaxLength(((UjoValidator)validator).getValidator());
+            if (length >= 0) {
+               result.add(new AttributeModifier("maxlength", Model.of(length)));
+            }
+        }
     }
 
 }
