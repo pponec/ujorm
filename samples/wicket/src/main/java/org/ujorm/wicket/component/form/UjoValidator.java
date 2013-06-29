@@ -41,7 +41,7 @@ public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T
 
     /**
      * Constructor
-     * @param validator Mandatory validator
+     * @param validator Required validator
      * @param key Optional key
      */
     public UjoValidator(Validator validator, Key<Ujo,T> key) {
@@ -58,12 +58,18 @@ public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T
                 , null);
         if (error != null) {
             org.apache.wicket.validation.ValidationError wicketErr = new org.apache.wicket.validation.ValidationError();
-            wicketErr.setMessage(error.getDefaultMessage());
+            wicketErr.setMessage(error.getDefaultMessage()
+                    + " [" + error.getLocalizationKey() + "]");
             wicketErr.addKey(error.getLocalizationKey() + "." + key.getFirstKey().getName());
             wicketErr.addKey(error.getLocalizationKey());
             wicketErr.setVariables(error.getArguments());
 
             validatable.error(wicketErr);
         }
+    }
+
+    /** Returns an original validator */
+    public Validator getValidator() {
+        return validator;
     }
 }

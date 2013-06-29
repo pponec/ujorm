@@ -29,7 +29,7 @@ public class Hotel extends OrmTable<Hotel> {
     /** Description of the Company */
     @Comment("Name of the Hotel")
     @Column(index=UNIQUE_HOTEL_NAME)
-    public static final Key<Hotel, String> NAME = f.newKey(length(MANDATORY, 3, 80));
+    public static final Key<Hotel, String> NAME = f.newKey(length(MANDATORY, 2, 40));
     /** Description of the hotel */
     @Comment("Description of the hotel")
     public static final Key<Hotel, String> NOTE = f.newKey(length(256));
@@ -53,7 +53,7 @@ public class Hotel extends OrmTable<Hotel> {
     public static final Key<Hotel, BigDecimal> PRICE = f.newKey(min(MANDATORY, BigDecimal.ZERO));
     /** Currency of the price */
     @Comment("Currency of the price")
-    public static final Key<Hotel, String> CURRENCY = f.newKeyDefault("EUR", length(MANDATORY, 3));
+    public static final Key<Hotel, String> CURRENCY = f.newKeyDefault("EUR", length(MANDATORY, 3, 3));
     /** Hotel state, default is ACTIVE (the true or null is required) */
     @Comment("Hotel state (the true or null is required)")
     @Column(index=UNIQUE_HOTEL_NAME)
