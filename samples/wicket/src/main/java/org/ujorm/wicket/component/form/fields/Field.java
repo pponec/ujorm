@@ -21,9 +21,9 @@ import java.util.List;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -34,9 +34,9 @@ import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.form.FeedbackLabel;
 import org.ujorm.wicket.component.form.UjoValidator;
-import static org.ujorm.wicket.CommonConstants.*;
 
 /**
  * Input textfield with a Label includding a feedback message.
@@ -52,7 +52,7 @@ public class Field extends Panel {
     public static final String PROPERTY_PREFIX = "label.";
 
     /** Input */
-    private FormComponent<?> input;
+    private Component input;
     protected FeedbackLabel feedback;
     protected IValidator<?> validator;
     protected WebMarkupContainer div;
@@ -81,13 +81,13 @@ public class Field extends Panel {
 
         add(div = new WebMarkupContainer("editField"));
         if (cssClass!=null) {
-            div.add(new AttributeAppender(CSS_CLASS, new Model(cssClass), " "));
+            div.add(new CssAppender(cssClass));
         }
 
 
         div.add(input = createInput("input", getDefaultModel()));
         div.add(createLabel(input));
-        div.add(feedback = new FeedbackLabel("message", input, (IModel)null));
+        div.add(feedback = new FeedbackLabel("message", (FormComponent) input, (IModel)null));
 
         for (AjaxEventBehavior behavior : behaviors) {
             input.add(behavior);
@@ -96,9 +96,8 @@ public class Field extends Panel {
     }
 
     /** Create Form inputComponent */
-    protected FormComponent createInput(String componentId, IModel model) {
+    protected Component createInput(String componentId, IModel model) {
         final FormComponent result = new TextField("input", model, key.getFirstKey().getType());
-        result.add(new AttributeModifier("type", "text"));
         
         if (validator != null) {
             result.add(validator);
@@ -155,11 +154,11 @@ public class Field extends Panel {
 
     /** Create Label and assign the CSS class {@code required} for the mandatory Field */
     protected Component createLabel(final Component inp) {
-        final SimpleFormComponentLabel result = new SimpleFormComponentLabel("label", input);
+        final SimpleFormComponentLabel result = new SimpleFormComponentLabel("label", (LabeledWebMarkupContainer)input);
         //result.setDefaultModel(createLabelModel()); // see the: FormComponent.setLabel()
 
         if (isMandatory()) {
-            result.add(new AttributeAppender(CSS_CLASS, CSS_REQUIRED));
+            result.add(new CssAppender(CSS_REQUIRED));
         }
         return result;
     }

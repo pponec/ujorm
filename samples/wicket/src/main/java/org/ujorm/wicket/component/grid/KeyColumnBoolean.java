@@ -16,13 +16,12 @@
 package org.ujorm.wicket.component.grid;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
-import static org.ujorm.wicket.CommonConstants.*;
+import org.ujorm.wicket.CssAppender;
 
 /**
  * Key column for a boolean data type
@@ -70,7 +69,7 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
 
         if (cssOkClass != null
         &&  Boolean.TRUE.equals(keySerializable.getFirstValue(ujo))) {
-            value.add(new AttributeAppender(CSS_CLASS, new Model(cssOkClass), " "));
+            value.add(new CssAppender(cssOkClass));
         }
     }
 
