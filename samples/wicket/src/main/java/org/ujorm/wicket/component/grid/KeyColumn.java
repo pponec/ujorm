@@ -29,7 +29,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.wicket.KeyModel;
-
+import static org.ujorm.wicket.CommonConstants.*;
 
 /**
  * A convenience implementation of column that adds a Ujo Property to the cell whose model is determined by
@@ -161,7 +161,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     protected void appendCssClass(final Component value, final UJO ujo) {
         final String cssClass$ = getCssClass();
         if (cssClass$ != null) {
-            value.add(new AttributeAppender("class", new Model(cssClass$), " "));
+            value.add(new AttributeAppender(CSS_CLASS, new Model(cssClass$), " "));
         }
     }
 

@@ -21,6 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import static org.ujorm.wicket.CommonConstants.*;
 
 /**
  * Label displaying feedback messages for FormComponents.
@@ -97,7 +98,7 @@ public class FeedbackLabel extends Label {
             }
 
             // Assign an error level as a CSS class:
-            this.add( new AttributeModifier("class"
+            this.add( new AttributeModifier(CSS_CLASS
                     , new Model("feedbacklabel " + input.getFeedbackMessages().first().getLevelAsString())));
         } else {
             this.setDefaultModel(null);

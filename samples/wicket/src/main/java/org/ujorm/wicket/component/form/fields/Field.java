@@ -23,8 +23,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -36,6 +36,7 @@ import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.component.form.FeedbackLabel;
 import org.ujorm.wicket.component.form.UjoValidator;
+import static org.ujorm.wicket.CommonConstants.*;
 
 /**
  * Input textfield with a Label includding a feedback message.
@@ -43,6 +44,9 @@ import org.ujorm.wicket.component.form.UjoValidator;
  */
 public class Field extends Panel {
     private static final long serialVersionUID = 20130621L;
+
+    /** CSS required style for the Label */
+    public static final String CSS_REQUIRED = "required";
 
     /** Localization property prefix */
     public static final String PROPERTY_PREFIX = "label.";
@@ -77,15 +81,12 @@ public class Field extends Panel {
 
         add(div = new WebMarkupContainer("editField"));
         if (cssClass!=null) {
-            div.add(new AttributeAppender("class", new Model(cssClass), " "));
+            div.add(new AttributeAppender(CSS_CLASS, new Model(cssClass), " "));
         }
 
-        final ResourceModel labelModel = new ResourceModel(PROPERTY_PREFIX
-                + key.getFirstKey().getName()
-                , key.getFirstKey().getName());
 
-        div.add(new Label("label", labelModel));
         div.add(input = createInput("input", getDefaultModel()));
+        div.add(createLabel(input));
         div.add(feedback = new FeedbackLabel("message", input, (IModel)null));
 
         for (AjaxEventBehavior behavior : behaviors) {
@@ -105,6 +106,7 @@ public class Field extends Panel {
         }
 
         result.setEnabled(isEnabled());
+        result.setLabel(createLabelModel());
         return result;
     }
 
@@ -150,5 +152,32 @@ public class Field extends Panel {
             }
         }
     }
+
+    /** Create Label and assign the CSS class {@code required} for the mandatory Field */
+    protected Component createLabel(final Component inp) {
+        final SimpleFormComponentLabel result = new SimpleFormComponentLabel("label", input);
+        //result.setDefaultModel(createLabelModel()); // see the: FormComponent.setLabel()
+
+        if (isMandatory()) {
+            result.add(new AttributeAppender(CSS_CLASS, CSS_REQUIRED));
+        }
+        return result;
+    }
+
+    /** Create label model */
+    protected IModel createLabelModel() {
+        final ResourceModel labelModel = new ResourceModel(PROPERTY_PREFIX
+            + key.getFirstKey().getName()
+            , key.getFirstKey().getName());
+        return labelModel;
+    }
+
+    /** Is the field required ? */
+    protected boolean isMandatory() {
+        boolean result = validator instanceof UjoValidator
+            && ValidatorUtils.isMandatoryValidator(((UjoValidator) validator).getValidator());
+        return result;
+    }
+
 
 }
