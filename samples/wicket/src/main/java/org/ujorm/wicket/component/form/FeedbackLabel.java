@@ -15,13 +15,13 @@
  */
 package org.ujorm.wicket.component.form;
 
-import org.apache.wicket.AttributeModifier;
+import java.util.Locale;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import static org.ujorm.wicket.CommonConstants.*;
+import org.ujorm.wicket.CssAppender;
 
 /**
  * Label displaying feedback messages for FormComponents.
@@ -79,11 +79,10 @@ public class FeedbackLabel extends Label {
      * The HTML class attribute will be filled with the error level of the feedback message. That way, you can easily
      * style different messages differently. Examples:
      *
-     * class = "feedbacklabel INFO"
-     * class = "feedbacklabel ERROR"
-     * class = "feedbacklabel DEBUG"
-     * class = "feedbacklabel FATAL"
-     *
+     * class = "INFO"
+     * class = "ERROR"
+     * class = "DEBUG"
+     * class = "FATAL"
      *
      * @see Component
      */
@@ -98,8 +97,8 @@ public class FeedbackLabel extends Label {
             }
 
             // Assign an error level as a CSS class:
-            this.add( new AttributeModifier(CSS_CLASS
-                    , new Model("feedbacklabel " + input.getFeedbackMessages().first().getLevelAsString())));
+            final String css = input.getFeedbackMessages().first().getLevelAsString();
+            this.add(new CssAppender(css));
         } else {
             this.setDefaultModel(null);
         }

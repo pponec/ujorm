@@ -25,6 +25,7 @@ import org.apache.wicket.model.Model;
 import org.ujorm.Ujo;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.form.FieldAdapter;
 
 /**
@@ -32,13 +33,13 @@ import org.ujorm.wicket.component.form.FieldAdapter;
  * @author Pavel Ponec
  */
 public class HotelEditor extends Panel {
-   private static final long serialVersionUID = 20130621L;
+    private static final long serialVersionUID = 20130621L;
 
-   private Form<?> form;
-   private ModalWindow modalWindow;
-   private FieldAdapter fieldAdapter;
+    private Form<?> form;
+    private ModalWindow modalWindow;
+    private FieldAdapter fieldAdapter;
 
-   public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
+    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
         super(modalWindow.getContentId(), model);
         this.modalWindow = modalWindow;
         this.setOutputMarkupId(true);
@@ -75,7 +76,6 @@ public class HotelEditor extends Panel {
     /** Vytvoří textfield pro aktuání model */
     private AjaxButton createSaveButton(String id, String name) {
         final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
-
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(form);
@@ -87,6 +87,7 @@ public class HotelEditor extends Panel {
                 target.add(form);
             }
         };
+        result.add(new CssAppender("btn btn-primary"));
         form.setDefaultButton(result);
         return result;
     }
@@ -94,14 +95,13 @@ public class HotelEditor extends Panel {
     /** Vytvoří textfield pro aktuání model */
     private AjaxButton createCancelButton(String id, String name) {
         final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
-
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 close(target, form);
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {                
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
                 close(target, form);
             }
 
@@ -112,6 +112,7 @@ public class HotelEditor extends Panel {
                 modalWindow.close(target);
             }
         };
+        result.add(new CssAppender("btn"));
         return result;
     }
 
@@ -132,6 +133,4 @@ public class HotelEditor extends Panel {
     public ModalWindow getModalWindow() {
         return modalWindow;
     }
-
-
 }

@@ -15,13 +15,20 @@
  */
 package org.ujorm.wicket;
 
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.model.Model;
+
 /**
- *
+ * CSS Appender
  * @author Pavel Ponec
  */
-public interface CommonConstants {
+final public class CssAppender extends AttributeAppender {
 
     /** CSS class */
     public static String CSS_CLASS = "class";
+
+    public CssAppender(final String cssClass) {
+        super(CSS_CLASS, new Model(cssClass), " ");
+    }
 
 }
