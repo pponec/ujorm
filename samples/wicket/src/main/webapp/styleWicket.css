@@ -42,7 +42,8 @@ table.datatable {
     margin-left: 100px;
 }
 
-form div.w_content {
+div.wicket-modal div.w_content {
+    background-color: #F5F5F5;
     padding-top: 4px;
 }
 
@@ -155,7 +156,7 @@ div.wicket-modal h3 {
     line-height: 18px;
 }
 div.wicket-modal div.w_caption {
-    background-color: buttonface;
+    background-color: #d0dae1;
 }
 div.wicket-modal div.w_content_3 {
     border: 1px buttonface solid;
