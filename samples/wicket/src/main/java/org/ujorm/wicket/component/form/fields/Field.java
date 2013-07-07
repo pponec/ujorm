@@ -51,8 +51,8 @@ public class Field extends Panel {
     /** Localization property prefix */
     public static final String PROPERTY_PREFIX = "label.";
 
-    /** Input */
-    private Component input;
+    /** A form component */
+    private FormComponent input;
     protected FeedbackLabel feedback;
     protected IValidator<?> validator;
     protected WebMarkupContainer div;
@@ -87,7 +87,7 @@ public class Field extends Panel {
 
         div.add(input = createInput("input", getDefaultModel()));
         div.add(createLabel(input));
-        div.add(feedback = new FeedbackLabel("message", (FormComponent) input, (IModel)null));
+        div.add(feedback = new FeedbackLabel("message", input, (IModel)null));
 
         for (AjaxEventBehavior behavior : behaviors) {
             input.add(behavior);
@@ -96,9 +96,9 @@ public class Field extends Panel {
     }
 
     /** Create Form inputComponent */
-    protected Component createInput(String componentId, IModel model) {
-        final FormComponent result = new TextField("input", model, key.getFirstKey().getType());
-        
+    protected FormComponent createInput(String componentId, IModel model) {
+        final FormComponent result = new TextField(componentId, model, key.getFirstKey().getType());
+
         if (validator != null) {
             result.add(validator);
             addMaxLength(result);
@@ -137,7 +137,7 @@ public class Field extends Panel {
     }
 
     /** Return an Input component */
-    public Component getInput() {
+    public FormComponent getInput() {
         return input;
     }
 

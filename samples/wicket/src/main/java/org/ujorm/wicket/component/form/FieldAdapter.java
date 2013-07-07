@@ -27,11 +27,14 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
+import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.component.form.fields.BooleanField;
+import org.ujorm.wicket.component.form.fields.ComboField;
 import org.ujorm.wicket.component.form.fields.Field;
 
 /**
@@ -78,6 +81,10 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
         add(key, field);
     }
 
+    /** Add a Combo-box for a persistent entity */
+    public <T extends OrmUjo> void add(Key<?,T> key, Criterion<T> crn, Key<T,?> display) {
+        add(key, ComboField.of(key, crn, display));
+    }
 
     /** Get Value */
     public <T> T getValue(Key<U,T> key) {

@@ -56,7 +56,7 @@ public class HotelEditor extends Panel {
 
         // Editable fields:
         fieldAdapter.add(Hotel.NAME);
-        fieldAdapter.add(Hotel.CITY.add(City.NAME));
+        fieldAdapter.add(Hotel.CITY, City.ID.forAll(), City.NAME);
         fieldAdapter.add(Hotel.STREET);
         fieldAdapter.add(Hotel.PHONE);
         fieldAdapter.add(Hotel.STARS);

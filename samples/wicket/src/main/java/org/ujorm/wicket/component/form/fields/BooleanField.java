@@ -15,8 +15,8 @@
  */
 package org.ujorm.wicket.component.form.fields;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
 
@@ -38,7 +38,7 @@ public class BooleanField extends Field {
 
     /** Create Form inputComponent */
     @Override
-    protected Component createInput(String componentId, IModel model) {
+    protected FormComponent createInput(String componentId, IModel model) {
         final CheckBox result = new CheckBox(componentId, model);
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
