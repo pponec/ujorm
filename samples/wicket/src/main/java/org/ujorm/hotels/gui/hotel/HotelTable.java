@@ -28,6 +28,7 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
 import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicket.component.dialog.DialogContent;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
@@ -38,7 +39,8 @@ import static org.ujorm.wicket.component.grid.KeyColumn.*;
  */
 public class HotelTable extends Panel {
 
-    private HotelEditor dialog;
+    private HotelEditor editDialog;
+    private DialogContent removeDialog;
 
     public HotelTable(String id) {
         super(id);
@@ -57,8 +59,8 @@ public class HotelTable extends Panel {
         dataProvider.setSort(Hotel.NAME);
 
         add(dataProvider.createDataTable("datatable", 10));
-        dialog = createDialog("dialog", 700, 390);
-        add(dialog.getModalWindow());
+        add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
+        add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
     }
 
     /** Nabídka akcí: */
@@ -78,13 +80,16 @@ public class HotelTable extends Panel {
         if (event.getPayload() instanceof UjoEvent) {
             UjoEvent ujoEvent = (UjoEvent) event.getPayload();
             if (UjoEvent.UPDATE.equals(ujoEvent.getContext())) {
-                dialog.show(ujoEvent.getUjo(), "Edit Hotel", ujoEvent.getTarget());
+                editDialog.show(ujoEvent.getUjo(), "Edit Hotel", ujoEvent.getTarget());
+            }
+            else if (UjoEvent.DELETE.equals(ujoEvent.getContext())) {
+                removeDialog.show("Remove Hotel", Model.of("Do you want to remove selected Hotel really ?"), ujoEvent.getTarget());
             }
         }
     }
 
     /** Create the editor dialog */
-    private HotelEditor createDialog(String componentId, int width, int height) {
+    private HotelEditor createEditDialog(String componentId, int width, int height) {
         IModel<Hotel> model = Model.of(new Hotel());
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
@@ -93,6 +98,22 @@ public class HotelTable extends Panel {
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
+        
+        //modalWindow.setCookieName("modal-dialog");
+
+        return result;
+    }
+
+    /** Create the editor dialog */
+    private DialogContent createMessageDialog(String componentId, int width, int height) {
+        IModel<String> model = Model.of("");
+        final ModalWindow modalWindow = new ModalWindow(componentId, model);
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final DialogContent result = new DialogContent(modalWindow, model);
+        modalWindow.setInitialWidth(width);
+        modalWindow.setInitialHeight(height);
+        modalWindow.setTitle(new ResourceModel("dialog.delete.title"));
         //modalWindow.setCookieName("modal-dialog");
 
         return result;
