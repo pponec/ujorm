@@ -42,7 +42,7 @@ import org.ujorm.wicket.component.form.fields.TextAreaField;
  * Field Factory
  * @author Pavel Ponec
  */
-public class FieldAdapter<U extends Ujo> implements Serializable {
+public class FieldProvider<U extends Ujo> implements Serializable {
 
     private RepeatingView repeatingView;
     private Map<String, Field> fields = new LinkedHashMap<String, Field>(16);
@@ -50,11 +50,11 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
 
     transient private OrmHandler ormHandler;
 
-    public FieldAdapter(String repeatingViewId) {
+    public FieldProvider(String repeatingViewId) {
         this(new RepeatingView(repeatingViewId));
     }
 
-    public FieldAdapter(RepeatingView repeatingView) {
+    public FieldProvider(RepeatingView repeatingView) {
         this.repeatingView = repeatingView;
     }
 
