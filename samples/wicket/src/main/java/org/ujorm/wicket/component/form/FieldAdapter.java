@@ -36,6 +36,7 @@ import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
 import org.ujorm.wicket.component.form.fields.Field;
+import org.ujorm.wicket.component.form.fields.TextAreaField;
 
 /**
  * Field Factory
@@ -74,7 +75,10 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
         if (key.isTypeOf(Boolean.class)) {
             field = new BooleanField(key);
         } else if (key.isTypeOf(String.class)) {
-            field = new Field(key);
+            final int length = ValidatorUtils.getMaxLength(key.getValidator());
+            field = length >= getTextAreaLimit()
+                    ? new TextAreaField(key)
+                    : new Field(key);
         } else {
             field = new Field(key); // The common field
         }
@@ -172,6 +176,13 @@ public class FieldAdapter<U extends Ujo> implements Serializable {
             }
         }
         return domain;
+    }
+
+    /** Returns a miminal text length to create a TextArea component.
+     * @return The default value is 180 characters
+     */
+    public int getTextAreaLimit() {
+        return 180;
     }
 
 }

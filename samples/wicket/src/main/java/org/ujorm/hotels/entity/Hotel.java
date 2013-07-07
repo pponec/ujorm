@@ -18,7 +18,7 @@ import static org.ujorm.Validator.Build.*;
 public class Hotel extends OrmTable<Hotel> {
 
     private static final String UNIQUE_HOTEL_NAME="idx_hotel_name";
-    
+
     /** Factory */
     private static final KeyFactory<Hotel> f = newFactory(Hotel.class);
 
@@ -38,7 +38,7 @@ public class Hotel extends OrmTable<Hotel> {
     public static final Key<Hotel, City> CITY = f.newKey(mandatory(City.class));
     /** Street of address */
     @Comment("Street of address")
-    public static final Key<Hotel, String> STREET = f.newKey(length(256));
+    public static final Key<Hotel, String> STREET = f.newKey(length(128));
     /** Description of the Company */
     @Comment("Phone")
     public static final Key<Hotel, String> PHONE = f.newKey(length(16));
@@ -58,10 +58,10 @@ public class Hotel extends OrmTable<Hotel> {
     @Comment("Hotel state (the true or null is required)")
     @Column(index=UNIQUE_HOTEL_NAME)
     public static final Key<Hotel, Boolean> ACTIVE = f.newKey(required(true));
-    
+
     static {
         f.lock();
-    }    
+    }
 
     // --- Getters / Setters ---
 
@@ -164,7 +164,7 @@ public class Hotel extends OrmTable<Hotel> {
 //    public void setNote(String note) {
 //        Hotel.NOTE.setValue(this, note);
 //    }
-    
+
     //</editor-fold>
 
 }
