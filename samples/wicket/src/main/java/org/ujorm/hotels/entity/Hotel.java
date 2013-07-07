@@ -44,7 +44,7 @@ public class Hotel extends OrmTable<Hotel> {
     public static final Key<Hotel, String> PHONE = f.newKey(length(16));
     /** Stars */
     @Comment("Stars")
-    public static final Key<Hotel, Integer> STARS = f.newKey(mandatory());
+    public static final Key<Hotel, Integer> STARS = f.newKey(min(MANDATORY, 0));
     /** URL to the HomePage */
     @Comment("URL to the HomePage")
     public static final Key<Hotel, String> HOME_PAGE = f.newKey(length(256));

@@ -165,3 +165,7 @@ div.wicket-modal div.w_caption {
 div.wicket-modal div.w_content_3 {
     border: 1px buttonface solid;
 }
+
+.alert-text {
+    padding: 20px 22px 30px;
+}
