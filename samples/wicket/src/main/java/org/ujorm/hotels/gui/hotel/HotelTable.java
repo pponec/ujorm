@@ -44,7 +44,7 @@ public class HotelTable extends Panel {
         super(id);
 
         UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ACTIVE.whereEq(true));
-        
+
         dataProvider.addColumn(Hotel.NAME);
         dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
         dataProvider.addColumn(Hotel.STREET);
@@ -55,9 +55,9 @@ public class HotelTable extends Panel {
         dataProvider.addColumn(newActionColumn());
 
         dataProvider.setSort(Hotel.NAME);
-        
+
         add(dataProvider.createDataTable("datatable", 10));
-        dialog = createDialog("dialog", 700, 360);
+        dialog = createDialog("dialog", 700, 400);
         add(dialog.getModalWindow());
     }
 
