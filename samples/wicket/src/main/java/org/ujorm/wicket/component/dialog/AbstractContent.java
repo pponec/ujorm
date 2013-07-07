@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.gui.hotel;
+package org.ujorm.wicket.component.dialog;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.ujorm.Ujo;
-import org.ujorm.hotels.entity.City;
-import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.CssAppender;
-import org.ujorm.wicket.component.form.FieldProvider;
 
 /**
- * Hotel Editor
+ * Common Message Dialog
  * @author Pavel Ponec
  */
-public class HotelEditor extends Panel {
+public class AbstractContent extends Panel {
     private static final long serialVersionUID = 20130621L;
+    private static final String SAVE_BUTTON = "saveButton";
+    private static final String CANCEL_BUTTON = "cancelButton";
+    private static final String REPEATER_ID = "repeater";
 
     private Form<?> form;
     private ModalWindow modalWindow;
-    private FieldProvider fields;
+    protected RepeatingView repeater;
 
-    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
+    public AbstractContent(ModalWindow modalWindow, IModel<String> model) {
         super(modalWindow.getContentId(), model);
         this.modalWindow = modalWindow;
         this.setOutputMarkupId(true);
@@ -48,29 +48,13 @@ public class HotelEditor extends Panel {
         // Form:
         this.add(form = new Form("dialogForm"));
         form.setOutputMarkupId(true);
-        form.add(createSaveButton("saveButton", "Save"));
-        form.add(createCancelButton("cancelButton", "Cancel"));
+        form.add(createSaveButton(SAVE_BUTTON, "Save"));
+        form.add(createCancelButton(CANCEL_BUTTON, "Cancel"));
 
-        // Field Factory:
-        form.add((fields = new FieldProvider("repeater")).getRepeatingView());
-
-        // Editable fields:
-        fields.add(Hotel.NAME);
-        fields.add(Hotel.CITY, City.ID.forAll(), City.NAME);
-        fields.add(Hotel.STREET);
-        fields.add(Hotel.PHONE);
-        fields.add(Hotel.STARS);
-        fields.add(Hotel.PRICE);
-        fields.add(Hotel.CURRENCY);
-        fields.add(Hotel.NOTE);
-        fields.add(Hotel.ACTIVE);
+        // Dialog content:
+        form.add(repeater = new RepeatingView(REPEATER_ID));
 
         modalWindow.setContent(this);
-    }
-
-    /** Returns a current entity */
-    final public Hotel getHotel() {
-        return (Hotel) getDefaultModelObject();
     }
 
     /** Vytvoří textfield pro aktuání model */
@@ -122,8 +106,8 @@ public class HotelEditor extends Panel {
      * @param title Window title
      * @param target target
      */
-    public void show(Ujo domain, String title, AjaxRequestTarget target) {
-        fields.setDomain(domain);
+    public void show(String title, IModel<?> body, AjaxRequestTarget target) {
+        repeater.get(0).setDefaultModel(body);
         getModalWindow().setTitle(title);
         getModalWindow().show(target);
         target.add(form);
@@ -133,4 +117,5 @@ public class HotelEditor extends Panel {
     public ModalWindow getModalWindow() {
         return modalWindow;
     }
+
 }
