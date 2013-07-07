@@ -146,6 +146,10 @@ input, textarea, .uneditable-input {
     width: 260px;
 }
 
+form {
+    margin: 0;
+}
+
 .form-horizontal .control-group {
     margin-bottom: 3px;
 }

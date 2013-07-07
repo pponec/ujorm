@@ -57,7 +57,7 @@ public class HotelTable extends Panel {
         dataProvider.setSort(Hotel.NAME);
 
         add(dataProvider.createDataTable("datatable", 10));
-        dialog = createDialog("dialog", 700, 400);
+        dialog = createDialog("dialog", 700, 390);
         add(dialog.getModalWindow());
     }
 
