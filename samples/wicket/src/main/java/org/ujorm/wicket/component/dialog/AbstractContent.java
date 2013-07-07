@@ -22,18 +22,20 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.ujorm.wicket.CssAppender;
 
 /**
- * Common Message Dialog
+ * Abstract Message Dialog Content
  * @author Pavel Ponec
  */
-public class AbstractContent extends Panel {
+public abstract class AbstractContent extends Panel {
     private static final long serialVersionUID = 20130621L;
-    private static final String SAVE_BUTTON = "saveButton";
-    private static final String CANCEL_BUTTON = "cancelButton";
-    private static final String REPEATER_ID = "repeater";
+
+    protected static final String BUTTON_PREFIX = "button.";
+    protected static final String ACTION_BUTTON_ID = "actionButton";
+    protected static final String CANCEL_BUTTON_ID = "cancelButton";
+    protected static final String REPEATER_ID = "repeater";
 
     private Form<?> form;
     private ModalWindow modalWindow;
@@ -48,8 +50,8 @@ public class AbstractContent extends Panel {
         // Form:
         this.add(form = new Form("dialogForm"));
         form.setOutputMarkupId(true);
-        form.add(createSaveButton(SAVE_BUTTON, "Save"));
-        form.add(createCancelButton(CANCEL_BUTTON, "Cancel"));
+        form.add(createSaveButton(ACTION_BUTTON_ID, "save"));
+        form.add(createCancelButton(CANCEL_BUTTON_ID, "cancel"));
 
         // Dialog content:
         form.add(repeater = new RepeatingView(REPEATER_ID));
@@ -58,8 +60,11 @@ public class AbstractContent extends Panel {
     }
 
     /** Vytvoří textfield pro aktuání model */
-    private AjaxButton createSaveButton(String id, String name) {
-        final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
+    private AjaxButton createSaveButton(String id, String propertyName) {
+        final AjaxButton result = new AjaxButton
+                ( id
+                , getButtonModel(propertyName)
+                , form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(form);
@@ -77,8 +82,11 @@ public class AbstractContent extends Panel {
     }
 
     /** Vytvoří textfield pro aktuání model */
-    private AjaxButton createCancelButton(String id, String name) {
-        final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
+    private AjaxButton createCancelButton(String id, String propertyName) {
+        final AjaxButton result = new AjaxButton
+                ( id
+                , getButtonModel(propertyName)
+                , form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 close(target, form);
@@ -107,15 +115,34 @@ public class AbstractContent extends Panel {
      * @param target target
      */
     public void show(String title, IModel<?> body, AjaxRequestTarget target) {
+        show(title, body, null, target);
+    }
+
+    /**
+     * Show dialog and assign a data from domain object
+     * @param title Dialog title
+     * @param body Dialog body
+     * @param actionButtonProperty Action button property
+     * @param target Target
+     */
+    public void show(String title, IModel<?> body, String actionButtonProperty, AjaxRequestTarget target) {
         repeater.get(0).setDefaultModel(body);
         getModalWindow().setTitle(title);
         getModalWindow().show(target);
+        if (actionButtonProperty != null) {
+           form.get(ACTION_BUTTON_ID).setDefaultModel(getButtonModel(actionButtonProperty));
+        }
         target.add(form);
     }
 
     /** Returns modal WIndow */
     public ModalWindow getModalWindow() {
         return modalWindow;
+    }
+
+    /** Get Save button property key */
+    protected IModel<String> getButtonModel(String propertyName) {
+        return new ResourceModel(BUTTON_PREFIX + propertyName, propertyName);
     }
 
 }

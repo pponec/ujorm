@@ -83,7 +83,11 @@ public class HotelTable extends Panel {
                 editDialog.show(ujoEvent.getUjo(), "Edit Hotel", ujoEvent.getTarget());
             }
             else if (UjoEvent.DELETE.equals(ujoEvent.getContext())) {
-                removeDialog.show("Remove Hotel", Model.of("Do you want to remove selected Hotel really ?"), ujoEvent.getTarget());
+                removeDialog.show
+                        ( "Remove Hotel"
+                        , Model.of("Do you want to remove selected Hotel really?")
+                        , "delete"
+                        , ujoEvent.getTarget());
             }
         }
     }
@@ -98,7 +102,6 @@ public class HotelTable extends Panel {
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
-        
         //modalWindow.setCookieName("modal-dialog");
 
         return result;
