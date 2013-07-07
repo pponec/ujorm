@@ -26,7 +26,7 @@ import org.ujorm.Ujo;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.CssAppender;
-import org.ujorm.wicket.component.form.FieldAdapter;
+import org.ujorm.wicket.component.form.FieldProvider;
 
 /**
  * Hotel Editor
@@ -37,7 +37,7 @@ public class HotelEditor extends Panel {
 
     private Form<?> form;
     private ModalWindow modalWindow;
-    private FieldAdapter fieldAdapter;
+    private FieldProvider fields;
 
     public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
         super(modalWindow.getContentId(), model);
@@ -52,18 +52,18 @@ public class HotelEditor extends Panel {
         form.add(createCancelButton("cancelButton", "Cancel"));
 
         // Field Factory:
-        form.add((fieldAdapter = new FieldAdapter("fieldRepeater")).getRepeatingView());
+        form.add((fields = new FieldProvider("fieldRepeater")).getRepeatingView());
 
         // Editable fields:
-        fieldAdapter.add(Hotel.NAME);
-        fieldAdapter.add(Hotel.CITY, City.ID.forAll(), City.NAME);
-        fieldAdapter.add(Hotel.STREET);
-        fieldAdapter.add(Hotel.PHONE);
-        fieldAdapter.add(Hotel.STARS);
-        fieldAdapter.add(Hotel.PRICE);
-        fieldAdapter.add(Hotel.CURRENCY);
-        fieldAdapter.add(Hotel.NOTE);
-        fieldAdapter.add(Hotel.ACTIVE);
+        fields.add(Hotel.NAME);
+        fields.add(Hotel.CITY, City.ID.forAll(), City.NAME);
+        fields.add(Hotel.STREET);
+        fields.add(Hotel.PHONE);
+        fields.add(Hotel.STARS);
+        fields.add(Hotel.PRICE);
+        fields.add(Hotel.CURRENCY);
+        fields.add(Hotel.NOTE);
+        fields.add(Hotel.ACTIVE);
 
         modalWindow.setContent(this);
     }
@@ -123,7 +123,7 @@ public class HotelEditor extends Panel {
      * @param target target
      */
     public void show(Ujo domain, String title, AjaxRequestTarget target) {
-        fieldAdapter.setDomain(domain);
+        fields.setDomain(domain);
         getModalWindow().setTitle(title);
         getModalWindow().show(target);
         target.add(form);
