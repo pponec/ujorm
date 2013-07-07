@@ -32,27 +32,33 @@ import org.ujorm.validator.impl.ReadOnlyValidator;
  * @author Pavel Ponec
  */
 public final class ValidatorUtils {
-    
-    /** Returns true if the validator contains a NotNull validator */
+
+    /** Returns the true value if the validator contains a not-null validator.
+     * @param validator Nullable validator
+     * @return Returns the true value if the validator contains a not-null validator.
+     */
     public static boolean isMandatoryValidator(Validator validator) {
         List<LengthValidator> vals = new ArrayList<LengthValidator>();
-        boolean ok = findValidators(validator, NotNullValidator.class, vals);        
+        boolean ok = findValidators(validator, NotNullValidator.class, vals);
         return ok && !vals.isEmpty();
     }
-    
-    /** Returns the maximal lenght from all LengthValidators. Undefined value is -1. */
+
+    /** Returns the maximal lenght from all LengthValidators.
+     * @param validator Nullable validator
+     * @return The undefined value is -1.
+     */
     public static int getMaxLength(Validator validator) {
         int result = -1;
         List<LengthValidator> vals = new ArrayList<LengthValidator>();
         findValidators(validator, LengthValidator.class, vals);
-        
+
         for (LengthValidator v : vals) {
             result = Math.max(result, v.getMaxLength());
         }
         return result;
     }
-    
-    /** Find a required validators 
+
+    /** Find a required validators
      * @param validator Nullable validator
      * @param requiredType requiredType
      * @param validators Result list of validators
@@ -71,13 +77,13 @@ public final class ValidatorUtils {
         }
         return and;
     }
-    
+
     /** Validate the argument using all keys from the collection
      * where the ReadOnlyValidator validators are excluded.
      * ujos Collection of the beans
      */
     public static List<ValidationError> validate(final Ujo ujo) {
-        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();        
+        final ArrayList<ValidationError> result = new ArrayList<ValidationError>();
         for (Key<Ujo,Object> key : ujo.readKeys()) {
             final Validator<Object> validator = key.getValidator();
             if (validator == null
