@@ -28,7 +28,7 @@ import org.ujorm.wicket.component.form.FieldProvider;
 public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T> {
     private static final long serialVersionUID = 20130621L;
     /** Input fields provider */
-    protected final FieldProvider fields;
+    protected final FieldProvider<T> fields;
 
     public EntityDialogContent(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow, model);
@@ -47,6 +47,12 @@ public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T>
     public void show(IModel<String> title, IModel<T> body, String actionButtonProperty, AjaxRequestTarget target) {
         fields.setDomain(body.getObject());
         super.show(title, body, actionButtonProperty, target);
+    }
+
+    /** Returns a base model object / entity */
+    @Override
+    public T getBaseModelObject() {
+        return fields.getDomain();
     }
 
 }

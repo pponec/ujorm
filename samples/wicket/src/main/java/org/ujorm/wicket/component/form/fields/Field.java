@@ -178,5 +178,9 @@ public class Field extends Panel {
         return result;
     }
 
+    /** Returns assigned key */
+    public Key<?,?> getKey() {
+        return key.getFirstKey();
+    }
 
 }
