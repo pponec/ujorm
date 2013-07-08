@@ -78,14 +78,18 @@ public class HotelTable extends Panel {
     @Override
     public void onEvent(IEvent<?> event) {
         if (event.getPayload() instanceof UjoEvent) {
-            UjoEvent ujoEvent = (UjoEvent) event.getPayload();
+            final UjoEvent<Hotel> ujoEvent = (UjoEvent<Hotel>) event.getPayload();
+
             if (UjoEvent.UPDATE.equals(ujoEvent.getContext())) {
-                editDialog.show(ujoEvent.getUjo(), "Edit Hotel", ujoEvent.getTarget());
+                editDialog.show
+                        ( new ResourceModel("dialog.edit.title")
+                        , ujoEvent.getUjoModel()
+                        , ujoEvent.getTarget());
             }
             else if (UjoEvent.DELETE.equals(ujoEvent.getContext())) {
                 removeDialog.show
-                        ( "Remove Hotel"
-                        , Model.of("Do you want to remove selected Hotel really?")
+                        ( new ResourceModel("dialog.delete.title")
+                        , new Model("Do you want to remove selected Hotel really?")
                         , "delete"
                         , ujoEvent.getTarget());
             }
@@ -116,7 +120,6 @@ public class HotelTable extends Panel {
         final DialogContent result = new DialogContent(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new ResourceModel("dialog.delete.title"));
         //modalWindow.setCookieName("modal-dialog");
 
         return result;

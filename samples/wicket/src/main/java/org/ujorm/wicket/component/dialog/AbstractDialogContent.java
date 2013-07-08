@@ -29,7 +29,7 @@ import org.ujorm.wicket.CssAppender;
  * Abstract Message Dialog Content
  * @author Pavel Ponec
  */
-public abstract class AbstractContent extends Panel {
+public abstract class AbstractDialogContent<T> extends Panel {
     private static final long serialVersionUID = 20130621L;
 
     protected static final String BUTTON_PREFIX = "button.";
@@ -37,11 +37,14 @@ public abstract class AbstractContent extends Panel {
     protected static final String CANCEL_BUTTON_ID = "cancelButton";
     protected static final String REPEATER_ID = "repeater";
 
-    private Form<?> form;
-    private ModalWindow modalWindow;
-    protected RepeatingView repeater;
+    /** Dialog form */
+    protected final Form<?> form;
+    /** Dialog modal window */
+    protected final ModalWindow modalWindow;
+    /** Dialog repeater */
+    protected final RepeatingView repeater;
 
-    public AbstractContent(ModalWindow modalWindow, IModel<String> model) {
+    public AbstractDialogContent(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow.getContentId(), model);
         this.modalWindow = modalWindow;
         this.setOutputMarkupId(true);
@@ -56,7 +59,13 @@ public abstract class AbstractContent extends Panel {
         // Dialog content:
         form.add(repeater = new RepeatingView(REPEATER_ID));
 
+        // Set content to a Modal window:
         modalWindow.setContent(this);
+    }
+
+    /** Returns a base model object / entity */
+    final public T getBaseModelObject() {
+        return (T) getDefaultModelObject();
     }
 
     /** Vytvoří textfield pro aktuání model */
@@ -111,10 +120,19 @@ public abstract class AbstractContent extends Panel {
     /**
      * Show dialog and assign a data from domain object
      * @param domain Domain object
+     * @param target target
+     */
+    public void show(IModel<T> body, AjaxRequestTarget target) {
+        show(null, body, null, target);
+    }
+
+    /**
+     * Show dialog and assign a data from domain object
+     * @param domain Domain object
      * @param title Window title
      * @param target target
      */
-    public void show(String title, IModel<?> body, AjaxRequestTarget target) {
+    public void show(IModel<String> title, IModel<T> body, AjaxRequestTarget target) {
         show(title, body, null, target);
     }
 
@@ -125,13 +143,15 @@ public abstract class AbstractContent extends Panel {
      * @param actionButtonProperty Action button property
      * @param target Target
      */
-    public void show(String title, IModel<?> body, String actionButtonProperty, AjaxRequestTarget target) {
+    public void show(IModel<String> title, IModel<T> body, String actionButtonProperty, AjaxRequestTarget target) {
         repeater.get(0).setDefaultModel(body);
-        getModalWindow().setTitle(title);
-        getModalWindow().show(target);
+        if (title != null) {
+           getModalWindow().setTitle(title);
+        }
         if (actionButtonProperty != null) {
            form.get(ACTION_BUTTON_ID).setDefaultModel(getButtonModel(actionButtonProperty));
         }
+        getModalWindow().show(target);
         target.add(form);
     }
 

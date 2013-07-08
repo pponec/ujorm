@@ -15,7 +15,10 @@
  */
 package org.ujorm.wicket;
 
+import java.io.Serializable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.ujorm.Ujo;
 
 /**
@@ -26,7 +29,7 @@ import org.ujorm.Ujo;
  * @see http://wickeria.com/blog/12-05-23-par-tipu-pro-praci-s-apache-wicket
  * @author Pavel Ponec
  */
-public class UjoEvent {
+public class UjoEvent<T extends Ujo> {
 
     public static final String CREATE = "CREATE";
     public static final String READ = "DISPLAY";
@@ -36,18 +39,24 @@ public class UjoEvent {
     public static final String EXIT = "EXIT";
 
 
-    private Ujo ujo;
+    private T ujo;
     private AjaxRequestTarget target;
     private String context;
 
-    public UjoEvent(String context, Ujo ujo, AjaxRequestTarget target) {
+    public UjoEvent(String context, T ujo, AjaxRequestTarget target) {
         this.context = context;
         this.ujo = ujo;
         this.target = target;
     }
 
-    public Ujo getUjo() {
+    /** Get Ujo domain object */
+    public T getUjo() {
         return ujo;
+    }
+
+    /** Get Ujo domain model */
+    public IModel<T> getUjoModel() {
+        return new Model((Serializable)ujo);
     }
 
     public AjaxRequestTarget getTarget() {

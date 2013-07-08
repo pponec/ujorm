@@ -24,7 +24,7 @@ import org.ujorm.wicket.CssAppender;
  * Common Message Dialog
  * @author Pavel Ponec
  */
-public class DialogContent extends AbstractContent {
+public class DialogContent extends AbstractDialogContent<String> {
     private static final long serialVersionUID = 20130621L;
 
     public DialogContent(ModalWindow modalWindow, IModel<String> model) {
