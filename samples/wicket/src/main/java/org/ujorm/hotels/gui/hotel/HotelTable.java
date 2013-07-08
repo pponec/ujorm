@@ -45,20 +45,19 @@ public class HotelTable extends Panel {
     public HotelTable(String id) {
         super(id);
 
-        UjoDataProvider<Hotel> dataProvider = UjoDataProvider.of(Hotel.ACTIVE.whereEq(true));
+        UjoDataProvider<Hotel> columns = UjoDataProvider.of(Hotel.ACTIVE.whereEq(true));
 
-        dataProvider.addColumn(Hotel.NAME);
-        dataProvider.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
-        dataProvider.addColumn(Hotel.STREET);
-        dataProvider.addColumn(Hotel.PRICE);
-        dataProvider.addColumn(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
-        dataProvider.addColumn(Hotel.STARS);
-        dataProvider.addColumn(Hotel.PHONE);
-        dataProvider.addColumn(newActionColumn());
+        columns.addColumn(Hotel.NAME);
+        columns.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
+        columns.addColumn(Hotel.STREET);
+        columns.addColumn(Hotel.PRICE);
+        columns.addColumn(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
+        columns.addColumn(Hotel.STARS);
+        columns.addColumn(Hotel.PHONE);
+        columns.addColumn(newActionColumn());
+        columns.setSort(Hotel.NAME);
 
-        dataProvider.setSort(Hotel.NAME);
-
-        add(dataProvider.createDataTable("datatable", 10));
+        add(columns.createDataTable("datatable", 10));
         add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
     }
