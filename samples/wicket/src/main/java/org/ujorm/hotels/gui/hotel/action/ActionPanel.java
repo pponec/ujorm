@@ -31,24 +31,24 @@ public class ActionPanel<T extends Ujo> extends Panel {
     public ActionPanel(String id, final T row) {
         super(id);
 
-        add(new AjaxLink(UPDATE) {
+        add(new AjaxLink(SHOW_UPDATE) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(UPDATE, row, target));
+                send(getPage(), Broadcast.BREADTH, new UjoEvent(SHOW_UPDATE, row, target));
             }
         });
 
-        add(new AjaxLink(DELETE) {
+        add(new AjaxLink(SHOW_DELETE) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(DELETE, row, target));
+                send(getPage(), Broadcast.BREADTH, new UjoEvent(SHOW_DELETE, row, target));
             }
         });
     }
 
     /** Enable or disable actions */
     public void setActionEnabled(boolean enabled) {
-        get(UPDATE).setEnabled(enabled);
-        get(DELETE).setEnabled(enabled);
+        get(SHOW_UPDATE).setEnabled(enabled);
+        get(SHOW_DELETE).setEnabled(enabled);
     }
 }

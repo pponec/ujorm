@@ -19,52 +19,74 @@ import java.io.Serializable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.ujorm.Ujo;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * UjoEvent
- * @see http://www.wicket-library.com/wicket-examples/events/wicket/bookmarkable/org.apache.wicket.examples.source.SourcesPage?0&SourcesPage_class=org.apache.wicket.examples.events.IndexPage&source=DecoupledAjaxUpdatePage.java
- * @see http://savicprvoslav.blogspot.cz/2012/06/wicket-15-inter-component-events.html
- * @see http://balamaci.wordpress.com/2011/04/19/wicket-1-5-intercomponent-comunication/
- * @see http://wickeria.com/blog/12-05-23-par-tipu-pro-praci-s-apache-wicket
  * @author Pavel Ponec
  */
-public class UjoEvent<T extends Ujo> {
+public class UjoEvent<T> {
 
-    public static final String CREATE = "CREATE";
-    public static final String READ = "DISPLAY";
-    public static final String UPDATE = "UPDATE";
-    public static final String DELETE = "DELETE";
-    public static final String CLONE = "COPY";
-    public static final String EXIT = "EXIT";
+    public static final String SHOW_CREATE = "SHOW_CREATE";
+    public static final String SHOW_READ = "SHOW_DISPLAY";
+    public static final String SHOW_UPDATE = "SHOW_UPDATE";
+    public static final String SHOW_DELETE = "SHOW_DELETE";
+    public static final String SHOW_CLONE = "SHOW_COPY";
+    public static final String SHOW_EXIT = "SHOW_EXIT";
 
+    public static final String MAKE_CREATE = "MAKE_CREATE";
+    public static final String MAKE_READ = "MAKE_DISPLAY";
+    public static final String MAKE_UPDATE = "MAKE_UPDATE";
+    public static final String MAKE_DELETE = "MAKE_DELETE";
+    public static final String MAKE_CLONE = "MAKE_COPY";
+    public static final String MAKE_EXIT = "MAKE_EXIT";
 
-    private T ujo;
+    private T content;
     private AjaxRequestTarget target;
-    private String context;
+    private String action;
 
-    public UjoEvent(String context, T ujo, AjaxRequestTarget target) {
-        this.context = context;
-        this.ujo = ujo;
+    /**
+     * Constructor
+     * @param action Required action code
+     * @param ujo Optional data context
+     * @param target target
+     */
+    public UjoEvent(String action, T ujo, AjaxRequestTarget target) {
+        this.action = Args.notNull(action, "action");
+        this.content = ujo;
         this.target = target;
     }
 
     /** Get Ujo domain object */
-    public T getUjo() {
-        return ujo;
+    public T getContent() {
+        return content;
     }
 
     /** Get Ujo domain model */
     public IModel<T> getUjoModel() {
-        return new Model((Serializable)ujo);
+        return new Model((Serializable)content);
     }
 
+    /** Get target */
     public AjaxRequestTarget getTarget() {
         return target;
     }
 
-    public String getContext() {
-        return context;
+    /** Get action */
+    public String getAction() {
+        return action;
     }
+
+    /**
+     * Is the required action?
+     * @param action Nullable argument
+     * @return The true value for the match.
+     */
+    public final boolean isAction(String action) {
+        return action != null
+            && this.action.hashCode() == action.hashCode()
+            && this.action.equals(action);
+    }
+
 
 }

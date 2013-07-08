@@ -18,21 +18,29 @@ package org.ujorm.wicket.component.dialog;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.ujorm.Ujo;
 import org.ujorm.wicket.CssAppender;
 
 /**
  * Common Message Dialog
  * @author Pavel Ponec
  */
-public class DialogContent extends AbstractDialogContent<String> {
+public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
     private static final long serialVersionUID = 20130621L;
 
     public DialogContent(ModalWindow modalWindow, IModel<String> model) {
-        super(modalWindow, model);
+        super(modalWindow, new Model());
 
         /** Add message */
         final Label label = new Label(repeater.newChildId(), model);
         label.add(new CssAppender("alert-text"));
         repeater.add(label);
     }
+
+    /** Set a dialog message */
+    public void setMessage(IModel<String> message) {
+        repeater.get(0).setDefaultModel(message);
+    }
+
 }

@@ -17,6 +17,7 @@ package org.ujorm.wicket.component.dialog;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -24,6 +25,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.ujorm.wicket.CssAppender;
+import org.ujorm.wicket.UjoEvent;
 
 /**
  * Abstract Message Dialog Content
@@ -43,6 +45,8 @@ public abstract class AbstractDialogContent<T> extends Panel {
     protected final ModalWindow modalWindow;
     /** Dialog repeater */
     protected final RepeatingView repeater;
+    /** Action code */
+    private String action = "";
 
     public AbstractDialogContent(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow.getContentId(), model);
@@ -63,8 +67,18 @@ public abstract class AbstractDialogContent<T> extends Panel {
         modalWindow.setContent(this);
     }
 
+    /** Action code */
+    public String getAction() {
+        return action;
+    }
+
+    /** Action code */
+    public void setAction(String action) {
+        this.action = action;
+    }
+
     /** Returns a base model object / entity */
-    final public T getBaseModelObject() {
+    public T getBaseModelObject() {
         return (T) getDefaultModelObject();
     }
 
@@ -78,6 +92,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 target.add(form);
                 modalWindow.close(target);
+                send(getPage(), Broadcast.BREADTH, new UjoEvent<T>(getAction(), getBaseModelObject(), target));
             }
 
             @Override
@@ -144,7 +159,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
      * @param target Target
      */
     public void show(IModel<String> title, IModel<T> body, String actionButtonProperty, AjaxRequestTarget target) {
-        repeater.get(0).setDefaultModel(body);
+        setDefaultModel(body);
         if (title != null) {
            getModalWindow().setTitle(title);
         }

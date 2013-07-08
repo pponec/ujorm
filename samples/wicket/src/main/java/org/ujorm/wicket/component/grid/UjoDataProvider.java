@@ -73,7 +73,7 @@ import org.ujorm.orm.Session;
  *  dataProvider.addColumn(Hotel.STARS);
  *  dataProvider.addColumn(Hotel.PHONE);
  *  dataProvider.setSort(Hotel.NAME);
- * 
+ *
  *  panel.add(dataProvider.createDataTable("datatable", 10));
  * }
  * </pre>
@@ -83,6 +83,8 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     private static final long serialVersionUID = 1L;
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoDataProvider.class);
+    /** Default Datatable ID have got value {@code "datatable"}. */
+    public static final String DEFAULT_DATATABLE_ID = "datatable";
     /** Data size */
     protected Long size;
 
@@ -244,6 +246,11 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
             && getOrmSession().getHandler().findColumnModel(column, false) != null;
     }
 
+    /** Create AJAX-based DataTable with a {@link #DEFAULT_DATATABLE_ID} */
+    public <S> DataTable<T,S> createDataTable(final int rowsPerPage) {
+        return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage);
+    }
+
     /** Create AJAX-based DataTable */
     public <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage) {
         final DataTable<T,S> result = new DataTable<T,S>(id, (List)columns, this, rowsPerPage) {
@@ -252,7 +259,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
                     , final int index
                     , final IModel<T> model) {
                 return new OddEvenItem<T>(id, index, model);
-            }         
+            }
         };
 
         result.addTopToolbar(new AjaxNavigationToolbar(result));
@@ -366,5 +373,5 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
         return new UjoDataProvider<T>(criterion, null);
     }
-    
+
 }

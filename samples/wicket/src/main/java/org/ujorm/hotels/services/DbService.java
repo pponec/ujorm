@@ -16,6 +16,7 @@
 package org.ujorm.hotels.services;
 
 import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.entity.Hotel;
 
 /**
  * Common database service
@@ -25,8 +26,14 @@ public interface DbService {
 
     /** Find a customer */
     public Customer getCustomer(String login);
-    
+
     /** Get a hash from the text */
-    public long getHash(String text) throws IllegalStateException;    
+    public long getHash(String text) throws IllegalStateException;
+
+    /** Delete hotel */
+    public void deleteHotel(Hotel hote);
+
+    /** Update hotel */
+    public void updateHotel(Hotel hote);
 
 }

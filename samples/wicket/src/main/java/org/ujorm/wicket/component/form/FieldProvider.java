@@ -46,7 +46,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     private RepeatingView repeatingView;
     private Map<String, Field> fields = new LinkedHashMap<String, Field>(16);
-    private Ujo domain;
+    private U domain;
 
     transient private OrmHandler ormHandler;
 
@@ -158,7 +158,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Save domain value and assign value into components */
-    public void setDomain(Ujo domain) {
+    public void setDomain(U domain) {
         for (String keyName : getKeyNames()) {
             Key k = domain.readKeys().find(keyName);
             setValue(k, k.of(domain));
@@ -167,9 +167,9 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Copy new value to the result and return the result */
-    public Ujo getDomain() {
-        for (String keyName : getKeyNames()) {
-            final Key k = domain.readKeys().find(keyName);
+    public U getDomain() {
+        for (Field field : fields.values()) {
+            final Key k = field.getKey();
             final Object newValue = getValue(k);
             if (!k.equals(domain, newValue)) {
                 k.setValue(domain, newValue);
