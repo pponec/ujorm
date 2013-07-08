@@ -15,44 +15,21 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.ujorm.Ujo;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.CssAppender;
-import org.ujorm.wicket.component.form.FieldProvider;
+import org.ujorm.wicket.component.dialog.EntityDialogContent;
 
 /**
  * Hotel Editor
  * @author Pavel Ponec
  */
-public class HotelEditor extends Panel {
-    private static final long serialVersionUID = 20130621L;
-
-    private Form<?> form;
-    private ModalWindow modalWindow;
-    private FieldProvider fields;
+public class HotelEditor extends EntityDialogContent<Hotel> {
+    private static final long serialVersionUID = 0L;
 
     public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
-        super(modalWindow.getContentId(), model);
-        this.modalWindow = modalWindow;
-        this.setOutputMarkupId(true);
-        this.setOutputMarkupPlaceholderTag(true);
-
-        // Form:
-        this.add(form = new Form("dialogForm"));
-        form.setOutputMarkupId(true);
-        form.add(createSaveButton("saveButton", "Save"));
-        form.add(createCancelButton("cancelButton", "Cancel"));
-
-        // Field Factory:
-        form.add((fields = new FieldProvider("repeater")).getRepeatingView());
+        super(modalWindow, model);
 
         // Editable fields:
         fields.add(Hotel.NAME);
@@ -64,73 +41,6 @@ public class HotelEditor extends Panel {
         fields.add(Hotel.CURRENCY);
         fields.add(Hotel.NOTE);
         fields.add(Hotel.ACTIVE);
-
-        modalWindow.setContent(this);
     }
 
-    /** Returns a current entity */
-    final public Hotel getHotel() {
-        return (Hotel) getDefaultModelObject();
-    }
-
-    /** Vytvoří textfield pro aktuání model */
-    private AjaxButton createSaveButton(String id, String name) {
-        final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                target.add(form);
-                modalWindow.close(target);
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(form);
-            }
-        };
-        result.add(new CssAppender("btn btn-primary"));
-        form.setDefaultButton(result);
-        return result;
-    }
-
-    /** Vytvoří textfield pro aktuání model */
-    private AjaxButton createCancelButton(String id, String name) {
-        final AjaxButton result = new AjaxButton(id, Model.of(name), form) {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                close(target, form);
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
-                close(target, form);
-            }
-
-            /** Close action */
-            private void close(AjaxRequestTarget target, Form<?> form) {
-                form.clearInput();
-                target.add(form);
-                modalWindow.close(target);
-            }
-        };
-        result.add(new CssAppender("btn"));
-        return result;
-    }
-
-    /**
-     * Show dialog and assign a data from domain object
-     * @param domain Domain object
-     * @param title Window title
-     * @param target target
-     */
-    public void show(Ujo domain, String title, AjaxRequestTarget target) {
-        fields.setDomain(domain);
-        getModalWindow().setTitle(title);
-        getModalWindow().show(target);
-        target.add(form);
-    }
-
-    /** Returns modal WIndow */
-    public ModalWindow getModalWindow() {
-        return modalWindow;
-    }
 }
