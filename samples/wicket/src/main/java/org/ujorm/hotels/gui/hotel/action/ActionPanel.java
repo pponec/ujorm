@@ -20,7 +20,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.UjoEvent;
-import static org.ujorm.wicket.UjoEvent.*;
+import static org.ujorm.hotels.gui.hotel.action.Actions.*;
 
 /**
  * The common action panel
