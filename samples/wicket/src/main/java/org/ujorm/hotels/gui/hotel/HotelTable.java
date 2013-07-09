@@ -42,9 +42,10 @@ import static org.ujorm.wicket.component.grid.KeyColumn.*;
  */
 public class HotelTable extends Panel {
 
-    @SpringBean DbService dbService;
+    @SpringBean(name="dbService") DbService dbService;
     private HotelEditor editDialog;
     private DialogContent removeDialog;
+    private DialogContent infoDialog;
 
     public HotelTable(String id) {
         super(id);
@@ -64,6 +65,7 @@ public class HotelTable extends Panel {
         add(columns.createDataTable(10));
         add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
+        add((infoDialog = createMessageDialog("infoDialog", 290, 160)).getModalWindow());
     }
 
     /** Nabídka akcí: */
@@ -100,12 +102,30 @@ public class HotelTable extends Panel {
                         , ujoEvent.getTarget());
             }
             else if (ujoEvent.isAction(MAKE_DELETE)) {
-                dbService.deleteHotel(ujoEvent.getContent());
-                ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                try {
+                    dbService.deleteHotel(ujoEvent.getContent());
+                    ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                } catch (Exception e) {
+                    infoDialog.setMessage(new Model(e.getClass().getSimpleName() + ":  " + e.getMessage()));
+                    infoDialog.show
+                            ( new ResourceModel("dialog.error.title")
+                            , ujoEvent.getUjoModel()
+                            , "ok"
+                            , ujoEvent.getTarget());
+                }
             }
             else if (ujoEvent.isAction(MAKE_UPDATE)) {
-                dbService.updateHotel(ujoEvent.getContent());
-                ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                try {
+                    dbService.updateHotel(ujoEvent.getContent());
+                    ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                } catch (Exception e) {
+                    infoDialog.setMessage(new Model(e.getClass().getSimpleName() + ":  " + e.getMessage()));
+                    infoDialog.show
+                            ( new ResourceModel("dialog.error.title")
+                            , ujoEvent.getUjoModel()
+                            , "ok"
+                            , ujoEvent.getTarget());
+                }
             }
         }
     }

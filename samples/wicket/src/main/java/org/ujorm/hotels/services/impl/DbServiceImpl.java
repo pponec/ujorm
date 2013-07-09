@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.core.UjoService;
@@ -35,10 +36,42 @@ import org.ujorm.hotels.services.*;
 public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
 
+    /** Read only sign */
+    private boolean readOnly;
+
+    /** Read only sign */
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
     /** Load Customer by login using a transaction. */
     @Override
     public Customer getCustomer(String login) {
         return super.createQuery(Customer.LOGIN.whereEq(login)).uniqueResult();
+    }
+
+    /** {@inheritDoc } */
+    @Override
+    public void deleteHotel(Hotel hotel) {
+        LOGGER.info("Delete hotel {}", hotel);
+        checkReadOnly();
+        getSession().delete(hotel);
+    }
+
+    /** {@inheritDoc } */
+    @Override
+    public void updateHotel(Hotel hotel) {
+        LOGGER.info("Update hotel {}", hotel);
+        checkReadOnly();
+        getSession().update(hotel);
+    }
+
+    /** Check a read-only state */
+    private void checkReadOnly() throws UnsupportedOperationException {
+        if (readOnly) {
+            String msg = "It is allowed a read only, download the project for all features.";
+            throw new UnsupportedOperationException(msg);
+        }
     }
 
     /** Get a hash from the text */
@@ -51,20 +84,6 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         } catch (Throwable e) {
             throw new IllegalStateException("Method getHash() failed. ", e);
         }
-    }
-
-    /** {@inheritDoc } */
-    @Override
-    public void deleteHotel(Hotel hotel) {
-        LOGGER.info("Delete hotel {}", hotel);
-        super.getSession().delete(hotel);
-    }
-
-    /** {@inheritDoc } */
-    @Override
-    public void updateHotel(Hotel hotel) {
-        LOGGER.info("Update hotel {}", hotel);
-        super.getSession().update(hotel);
     }
 
 }
