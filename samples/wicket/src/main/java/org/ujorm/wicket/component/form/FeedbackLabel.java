@@ -15,8 +15,8 @@
  */
 package org.ujorm.wicket.component.form;
 
-import java.util.Locale;
 import org.apache.wicket.Component;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
@@ -102,5 +102,10 @@ public class FeedbackLabel extends Label {
         } else {
             this.setDefaultModel(null);
         }
+    }
+
+    /**  Insert feedback message */
+    public void setFeedbackMessage(IModel<String> text) {
+        input.getFeedbackMessages().add(new FeedbackMessage(input, text.getObject(), 0));
     }
 }

@@ -185,7 +185,7 @@ public class Field extends Panel {
 
     /** Assign a feedback message */
     public void setFeedbackMessage(IModel<String> message) {
-        feedback.setDefaultModel(message);
+        feedback.setFeedbackMessage(message);
     }
 
 }

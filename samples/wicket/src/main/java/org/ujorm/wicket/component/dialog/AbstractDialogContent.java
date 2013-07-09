@@ -98,7 +98,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
                     send(getPage(), Broadcast.BREADTH, new UjoEvent<T>(getAction(), getBaseModelObject(), target));
                     modalWindow.close(target);
                 } catch (Throwable e) {
-                    showEmergencyMessage(e);
+                    setEmergencyMessage(e);
                 }
             }
 
@@ -140,11 +140,12 @@ public abstract class AbstractDialogContent<T> extends Panel {
     }
 
     /** Show an emergency message */
-    protected void showEmergencyMessage(Throwable e) {
+    protected void setEmergencyMessage(Throwable e) { e.getCause();
         if (e instanceof ValidationException) {
             final ValidationError error = ((ValidationException) e).getError();
-            String template = getString(error.getLocalizationKey(), getDefaultModel(), error.getDefaultTemplate());
-            String msg = error.getMessage(template, getPage().getLocale());
+            final String defaultMsg = error.getDefaultTemplate() + " [" + error.getLocalizationKey() + "]";
+            final String template = getString( error.getLocalizationKey(), null, defaultMsg);
+            final String msg = error.getMessage(template, getLocale());
             setEmergencyMessage(Model.of(msg));
         } else {
             final String msg = e.getClass().getSimpleName() + ": " + e.getMessage();

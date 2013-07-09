@@ -17,8 +17,7 @@ package org.ujorm.hotels.services.impl;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.Collections;
-import java.util.Map;
+import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -73,12 +72,11 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     private void checkReadOnly() throws ValidationException {
         if (readOnly) {
             String localKey = "exception.readOnly";
-            String msg = "It is allowed a read only actions, download the project for all features.";
             ValidationError error = new ValidationError
-                    ( msg
-                    , localKey
-                    , (Map) Collections.emptyMap());
-            throw new ValidationException(error, new UnsupportedOperationException(msg));
+                    ( localKey
+                    , new HashMap<String,Object>()
+                    , "It is allowed a read only actions, download the project for all features.");
+            throw new ValidationException(error, new UnsupportedOperationException(error.getDefaultMessage()));
         }
     }
 
