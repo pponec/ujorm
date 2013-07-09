@@ -27,20 +27,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public class UjoEvent<T> {
 
-    public static final String SHOW_CREATE = "SHOW_CREATE";
-    public static final String SHOW_READ = "SHOW_DISPLAY";
-    public static final String SHOW_UPDATE = "SHOW_UPDATE";
-    public static final String SHOW_DELETE = "SHOW_DELETE";
-    public static final String SHOW_CLONE = "SHOW_COPY";
-    public static final String SHOW_EXIT = "SHOW_EXIT";
-
-    public static final String MAKE_CREATE = "MAKE_CREATE";
-    public static final String MAKE_READ = "MAKE_DISPLAY";
-    public static final String MAKE_UPDATE = "MAKE_UPDATE";
-    public static final String MAKE_DELETE = "MAKE_DELETE";
-    public static final String MAKE_CLONE = "MAKE_COPY";
-    public static final String MAKE_EXIT = "MAKE_EXIT";
-
     private T content;
     private AjaxRequestTarget target;
     private String action;

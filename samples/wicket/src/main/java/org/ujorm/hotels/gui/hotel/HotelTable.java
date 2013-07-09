@@ -33,6 +33,7 @@ import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.DialogContent;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
+import static org.ujorm.hotels.gui.hotel.action.Actions.*;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
 
 /**
@@ -82,15 +83,15 @@ public class HotelTable extends Panel {
         if (event.getPayload() instanceof UjoEvent) {
             final UjoEvent<Hotel> ujoEvent = (UjoEvent<Hotel>) event.getPayload();
 
-            if (ujoEvent.isAction(UjoEvent.SHOW_UPDATE)) {
-                editDialog.setAction(UjoEvent.MAKE_UPDATE);
+            if (ujoEvent.isAction(SHOW_UPDATE)) {
+                editDialog.setAction(MAKE_UPDATE);
                 editDialog.show
                         ( new ResourceModel("dialog.edit.title")
                         , ujoEvent.getUjoModel()
                         , ujoEvent.getTarget());
             }
-            else if (ujoEvent.isAction(UjoEvent.SHOW_DELETE)) {
-                removeDialog.setAction(UjoEvent.MAKE_DELETE);
+            else if (ujoEvent.isAction(SHOW_DELETE)) {
+                removeDialog.setAction(MAKE_DELETE);
                 removeDialog.setMessage(new Model("Do you want to remove selected Hotel really?"));
                 removeDialog.show
                         ( new ResourceModel("dialog.delete.title")
@@ -98,11 +99,11 @@ public class HotelTable extends Panel {
                         , "delete"
                         , ujoEvent.getTarget());
             }
-            else if (ujoEvent.isAction(UjoEvent.MAKE_DELETE)) {
+            else if (ujoEvent.isAction(MAKE_DELETE)) {
                 dbService.deleteHotel(ujoEvent.getContent());
                 ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
             }
-            else if (ujoEvent.isAction(UjoEvent.MAKE_UPDATE)) {
+            else if (ujoEvent.isAction(MAKE_UPDATE)) {
                 dbService.updateHotel(ujoEvent.getContent());
                 ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
             }
