@@ -23,7 +23,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.ujorm.validator.ValidationError;
+import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 
@@ -57,7 +60,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
         // Form:
         this.add(form = new Form("dialogForm"));
         form.setOutputMarkupId(true);
-        form.add(createSaveButton(ACTION_BUTTON_ID, "save"));
+        form.add(createActionButton(ACTION_BUTTON_ID, "save"));
         form.add(createCancelButton(CANCEL_BUTTON_ID, "cancel"));
 
         // Dialog content:
@@ -83,16 +86,20 @@ public abstract class AbstractDialogContent<T> extends Panel {
     }
 
     /** Vytvoří textfield pro aktuání model */
-    private AjaxButton createSaveButton(String id, String propertyName) {
+    private AjaxButton createActionButton(String id, String propertyName) {
         final AjaxButton result = new AjaxButton
                 ( id
                 , getButtonModel(propertyName)
                 , form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                target.add(form);
-                modalWindow.close(target);
-                send(getPage(), Broadcast.BREADTH, new UjoEvent<T>(getAction(), getBaseModelObject(), target));
+                try {
+                    target.add(form);
+                    send(getPage(), Broadcast.BREADTH, new UjoEvent<T>(getAction(), getBaseModelObject(), target));
+                    modalWindow.close(target);
+                } catch (Throwable e) {
+                    showEmergencyMessage(e);
+                }
             }
 
             @Override
@@ -131,6 +138,22 @@ public abstract class AbstractDialogContent<T> extends Panel {
         result.add(new CssAppender("btn"));
         return result;
     }
+
+    /** Show an emergency message */
+    protected void showEmergencyMessage(Throwable e) {
+        if (e instanceof ValidationException) {
+            final ValidationError error = ((ValidationException) e).getError();
+            String template = getString(error.getLocalizationKey(), getDefaultModel(), error.getDefaultTemplate());
+            String msg = error.getMessage(template, getPage().getLocale());
+            setEmergencyMessage(Model.of(msg));
+        } else {
+            final String msg = e.getClass().getSimpleName() + ": " + e.getMessage();
+            setEmergencyMessage(Model.of(msg));
+        }
+    }
+
+    /** Show an emergency message */
+    protected abstract void setEmergencyMessage(IModel<String> message);
 
     /**
      * Show dialog and assign a data from domain object

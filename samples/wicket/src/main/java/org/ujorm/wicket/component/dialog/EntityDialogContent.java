@@ -20,6 +20,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.component.form.FieldProvider;
+import org.ujorm.wicket.component.form.fields.Field;
 
 /**
  * Entity Dialog Content
@@ -53,6 +54,13 @@ public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T>
     @Override
     public T getBaseModelObject() {
         return fields.getDomain();
+    }
+
+    /** Set an emergency message */
+    @Override
+    protected void setEmergencyMessage(IModel<String> message) {
+        Field field = (Field) fields.getRepeatingView().get(0);
+        field.setFeedbackMessage(message);
     }
 
 }
