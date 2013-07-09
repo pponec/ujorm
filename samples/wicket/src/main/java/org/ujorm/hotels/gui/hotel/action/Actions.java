@@ -27,6 +27,7 @@ public class Actions {
     public static final String SHOW_DELETE = "SHOW_DELETE";
     public static final String SHOW_CLONE = "SHOW_COPY";
     public static final String SHOW_EXIT = "SHOW_EXIT";
+    public static final String SHOW_ERROR = "SHOW_ERROR";
 
     public static final String MAKE_CREATE = "MAKE_CREATE";
     public static final String MAKE_READ = "MAKE_DISPLAY";
@@ -34,6 +35,6 @@ public class Actions {
     public static final String MAKE_DELETE = "MAKE_DELETE";
     public static final String MAKE_CLONE = "MAKE_COPY";
     public static final String MAKE_EXIT = "MAKE_EXIT";
-
+    public static final String MAKE_NONE = "MAKE_NONE";
 
 }
