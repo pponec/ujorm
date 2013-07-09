@@ -183,4 +183,9 @@ public class Field extends Panel {
         return key.getFirstKey();
     }
 
+    /** Assign a feedback message */
+    public void setFeedbackMessage(IModel<String> message) {
+        feedback.setDefaultModel(message);
+    }
+
 }

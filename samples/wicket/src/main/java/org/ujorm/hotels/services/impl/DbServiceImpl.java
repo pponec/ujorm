@@ -17,15 +17,18 @@ package org.ujorm.hotels.services.impl;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Collections;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.*;
+import org.ujorm.validator.ValidationError;
+import org.ujorm.validator.ValidationException;
 
 /**
  * Common database service implementations
@@ -67,10 +70,15 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     }
 
     /** Check a read-only state */
-    private void checkReadOnly() throws UnsupportedOperationException {
+    private void checkReadOnly() throws ValidationException {
         if (readOnly) {
-            String msg = "It is allowed a read only, download the project for all features.";
-            throw new UnsupportedOperationException(msg);
+            String localKey = "exception.readOnly";
+            String msg = "It is allowed a read only actions, download the project for all features.";
+            ValidationError error = new ValidationError
+                    ( msg
+                    , localKey
+                    , (Map) Collections.emptyMap());
+            throw new ValidationException(error, new UnsupportedOperationException(msg));
         }
     }
 
