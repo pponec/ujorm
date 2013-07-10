@@ -50,10 +50,10 @@ public class ValidationError implements Serializable {
 
     /** Common constructor
      * @param localizationKey Mandatory attribute
-     * @param defaultMessage Mandatory attribute
      * @param arguments  Mandatory attribute
+     * @param defaultMessage Mandatory attribute
      */
-    public ValidationError(String localizationKey, String defaultMessage, Map<String, Object> arguments) {
+    public ValidationError(String localizationKey, Map<String, Object> arguments, String defaultMessage) {
         this(null, null, null, AbstractValidator.class, localizationKey, defaultMessage, arguments);
     }
 
