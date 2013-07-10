@@ -25,11 +25,12 @@ import org.apache.wicket.util.lang.Args;
  * UjoEvent
  * @author Pavel Ponec
  */
-public class UjoEvent<T> {
+public class UjoEvent<U> {
 
-    private T content;
-    private AjaxRequestTarget target;
-    private String action;
+    final private String action;
+    final private boolean showDialog;
+    final private U domain;
+    final private AjaxRequestTarget target;
 
     /**
      * Constructor
@@ -37,20 +38,32 @@ public class UjoEvent<T> {
      * @param ujo Optional data context
      * @param target target
      */
-    public UjoEvent(String action, T ujo, AjaxRequestTarget target) {
+    public UjoEvent(String action, U ujo, AjaxRequestTarget target) {
+        this(action, true, ujo, target);
+    }
+
+    /**
+     * Constructor for an Event
+     * @param action Required action code
+     * @param dialogRequest A request to open a dialog
+     * @param ujo Optional data context type of Ujo
+     * @param target Target
+     */
+    public UjoEvent(String action, boolean dialogRequest, U ujo, AjaxRequestTarget target) {
         this.action = Args.notNull(action, "action");
-        this.content = ujo;
+        this.domain = ujo;
+        this.showDialog = dialogRequest;
         this.target = target;
     }
 
-    /** Get Ujo domain object */
-    public T getContent() {
-        return content;
+    /** Get the ujo domain object */
+    public U getDomain() {
+        return domain;
     }
 
     /** Get Ujo domain model */
-    public IModel<T> getUjoModel() {
-        return new Model((Serializable)content);
+    public IModel<U> getUjoModel() {
+        return new Model((Serializable)domain);
     }
 
     /** Get target */
@@ -72,6 +85,21 @@ public class UjoEvent<T> {
         return action != null
             && this.action.hashCode() == action.hashCode()
             && this.action.equals(action);
+    }
+
+    /** A request to open a dialog */
+    public boolean showDialog() {
+        return showDialog;
+    }
+
+    /** To string */
+    @Override
+    public String toString() {
+        return "UjoEvent"
+                + "{ action=" + action
+                + ", showDialog=" + showDialog
+                + ", domain=" + domain
+                + '}';
     }
 
 
