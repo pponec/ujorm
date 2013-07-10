@@ -45,9 +45,9 @@ public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T>
      * @param target Target
      */
     @Override
-    public void show(IModel<String> title, IModel<T> body, String actionButtonProperty, AjaxRequestTarget target) {
+    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body, String actionButtonProperty) {
         fields.setDomain(body.getObject());
-        super.show(title, body, actionButtonProperty, target);
+        super.show(target, title, body, actionButtonProperty);
     }
 
     /** Returns a base model object / entity */

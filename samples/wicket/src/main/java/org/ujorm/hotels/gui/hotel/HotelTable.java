@@ -33,7 +33,7 @@ import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.DialogContent;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
-import static org.ujorm.hotels.gui.hotel.action.Actions.*;
+import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
 
 /**
@@ -79,33 +79,28 @@ public class HotelTable extends Panel {
     }
 
     @Override
-    public void onEvent(IEvent<?> event) {
-        if (event.getPayload() instanceof UjoEvent) {
-            final UjoEvent<Hotel> ujoEvent = (UjoEvent<Hotel>) event.getPayload();
+    public void onEvent(IEvent<?> argEvent) {
+        if (argEvent.getPayload() instanceof UjoEvent) {
+            final UjoEvent<Hotel> event = (UjoEvent<Hotel>) argEvent.getPayload();
 
-            if (ujoEvent.isAction(SHOW_UPDATE)) {
-                editDialog.setAction(MAKE_UPDATE);
-                editDialog.show
-                        ( new ResourceModel("dialog.edit.title")
-                        , ujoEvent.getUjoModel()
-                        , ujoEvent.getTarget());
+            if (event.isAction(UPDATE)) {
+                if (event.showDialog()) {
+                    editDialog.show(event, new ResourceModel("dialog.edit.title"));
+                } else {
+                    dbService.updateHotel(event.getDomain());
+                    event.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                }
             }
-            else if (ujoEvent.isAction(SHOW_DELETE)) {
-                removeDialog.setAction(MAKE_DELETE);
-                removeDialog.setMessage(new Model("Do you want to remove selected Hotel really?"));
-                removeDialog.show
-                        ( new ResourceModel("dialog.delete.title")
-                        , ujoEvent.getUjoModel()
-                        , "delete"
-                        , ujoEvent.getTarget());
-            }
-            else if (ujoEvent.isAction(MAKE_DELETE)) {
-                dbService.deleteHotel(ujoEvent.getContent());
-                ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
-            }
-            else if (ujoEvent.isAction(MAKE_UPDATE)) {
-                dbService.updateHotel(ujoEvent.getContent());
-                ujoEvent.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+            else if (event.isAction(DELETE)) {
+                if (event.showDialog()) {
+                    removeDialog.setMessage(new Model("Do you want to remove selected Hotel really?"));
+                    removeDialog.show(event
+                            , new ResourceModel("dialog.delete.title")
+                            , "delete");
+                } else {
+                    dbService.deleteHotel(event.getDomain());
+                    event.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                }
             }
         }
     }

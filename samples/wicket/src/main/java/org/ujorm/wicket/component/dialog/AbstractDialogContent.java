@@ -95,7 +95,9 @@ public abstract class AbstractDialogContent<T> extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 try {
                     target.add(form);
-                    send(getPage(), Broadcast.BREADTH, new UjoEvent<T>(getAction(), getBaseModelObject(), target));
+                    send(getPage()
+                            , Broadcast.BREADTH
+                            , new UjoEvent<T>(getAction(), false, getBaseModelObject(), target));
                     modalWindow.close(target);
                 } catch (Throwable e) {
                     setEmergencyMessage(e);
@@ -161,8 +163,28 @@ public abstract class AbstractDialogContent<T> extends Panel {
      * @param domain Domain object
      * @param target target
      */
-    public void show(IModel<T> body, AjaxRequestTarget target) {
-        show(null, body, null, target);
+    public void show(AjaxRequestTarget target, IModel<T> body) {
+        show(target, null, body, null);
+    }
+
+    /**
+     * Show dialog and assign a data from domain object
+     * @param domain Domain object
+     * @param target target
+     */
+    public void show(UjoEvent event, IModel<String> title) {
+        setAction(event.getAction());
+        show(event.getTarget(), title, event.getUjoModel());
+    }
+
+    /**
+     * Show dialog and assign a data from domain object
+     * @param domain Domain object
+     * @param target target
+     */
+    public void show(UjoEvent event, IModel<String> title, String actionButtonProperty) {
+        setAction(event.getAction());
+        show(event.getTarget(), title, event.getUjoModel(), actionButtonProperty);
     }
 
     /**
@@ -171,18 +193,18 @@ public abstract class AbstractDialogContent<T> extends Panel {
      * @param title Window title
      * @param target target
      */
-    public void show(IModel<String> title, IModel<T> body, AjaxRequestTarget target) {
-        show(title, body, null, target);
+    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body) {
+        show(target, title, body, null);
     }
 
     /**
      * Show dialog and assign a data from domain object
      * @param title Dialog title
-     * @param body Dialog body
+     * @param body Dialog body as a default mode
      * @param actionButtonProperty Action button property
      * @param target Target
      */
-    public void show(IModel<String> title, IModel<T> body, String actionButtonProperty, AjaxRequestTarget target) {
+    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body, String actionButtonProperty) {
         setDefaultModel(body);
         if (title != null) {
            getModalWindow().setTitle(title);

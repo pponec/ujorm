@@ -20,7 +20,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.UjoEvent;
-import static org.ujorm.hotels.gui.hotel.action.Actions.*;
+import static org.ujorm.wicket.CommonActions.*;
 
 /**
  * The common action panel
@@ -31,24 +31,24 @@ public class ActionPanel<T extends Ujo> extends Panel {
     public ActionPanel(String id, final T row) {
         super(id);
 
-        add(new AjaxLink(SHOW_UPDATE) {
+        add(new AjaxLink(UPDATE) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(SHOW_UPDATE, row, target));
+                send(getPage(), Broadcast.BREADTH, new UjoEvent(UPDATE, row, target));
             }
         });
 
-        add(new AjaxLink(SHOW_DELETE) {
+        add(new AjaxLink(DELETE) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(SHOW_DELETE, row, target));
+                send(getPage(), Broadcast.BREADTH, new UjoEvent(DELETE, row, target));
             }
         });
     }
 
     /** Enable or disable actions */
     public void setActionEnabled(boolean enabled) {
-        get(SHOW_UPDATE).setEnabled(enabled);
-        get(SHOW_DELETE).setEnabled(enabled);
+        get(UPDATE).setEnabled(enabled);
+        get(DELETE).setEnabled(enabled);
     }
 }
