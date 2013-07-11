@@ -195,6 +195,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- JTA (Java Transacton API) -->
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+        </dependency>
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->
         <dependency>
