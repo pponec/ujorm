@@ -16,11 +16,12 @@
 package org.ujorm.wicket.component.dialog;
 
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Ujo;
-import org.ujorm.wicket.CssAppender;
+import static org.ujorm.wicket.CssAppender.*;
 
 /**
  * Common Message Dialog
@@ -29,25 +30,39 @@ import org.ujorm.wicket.CssAppender;
 public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
     private static final long serialVersionUID = 20130621L;
 
+    /** CSS alert */
+    private static final String ALERT_CSS = "alert-text";
+
+    /** Common label */
+    private final Label label;
+    /** Error message */
+    private boolean feedback;
+
     public DialogContent(ModalWindow modalWindow, IModel<String> model) {
         super(modalWindow, new Model());
-
-        /** Add message */
-        final Label label = new Label(repeater.newChildId(), model);
-        label.add(new CssAppender("alert-text"));
-        repeater.add(label);
+        repeater.add(label = new Label(repeater.newChildId(), model) {
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                final String cssClass = feedback
+                        ? ALERT_CSS + " help-inline"
+                        : ALERT_CSS;
+                tag.put(CSS_CLASS, cssClass);
+            }
+        });
     }
-
+    
     /** Set a dialog message */
     public void setMessage(IModel<String> message) {
         repeater.get(0).setDefaultModel(message);
+        feedback = false;
     }
 
-    /** {@inheritDoc}
-     * TODO: add a CSS style */
+    /** {@inheritDoc} */
     @Override
     protected void setCommonFeedback(IModel<String> message) {
         setMessage(message);
+        feedback = true;
     }
 
 }
