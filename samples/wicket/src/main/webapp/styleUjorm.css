@@ -47,7 +47,7 @@ div.wicket-modal div.w_content {
     padding-top: 4px;
 }
 
-form span.help-inline {
+form span.help-inline, form div.help-inline {
     color: #DD5600;
 }
 form div.buttons {
