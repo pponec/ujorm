@@ -100,7 +100,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
                             , new UjoEvent<T>(getAction(), false, getBaseModelObject(), target));
                     modalWindow.close(target);
                 } catch (Throwable e) {
-                    setEmergencyMessage(e);
+                    setCommonFeedback(e);
                 }
             }
 
@@ -142,21 +142,21 @@ public abstract class AbstractDialogContent<T> extends Panel {
     }
 
     /** Show an emergency message */
-    protected void setEmergencyMessage(Throwable e) { e.getCause();
+    protected void setCommonFeedback(Throwable e) { e.getCause();
         if (e instanceof ValidationException) {
             final ValidationError error = ((ValidationException) e).getError();
             final String defaultMsg = error.getDefaultTemplate() + " [" + error.getLocalizationKey() + "]";
             final String template = getString( error.getLocalizationKey(), null, defaultMsg);
             final String msg = error.getMessage(template, getLocale());
-            setEmergencyMessage(Model.of(msg));
+            setCommonFeedback(Model.of(msg));
         } else {
             final String msg = e.getClass().getSimpleName() + ": " + e.getMessage();
-            setEmergencyMessage(Model.of(msg));
+            setCommonFeedback(Model.of(msg));
         }
     }
 
-    /** Show an emergency message */
-    protected abstract void setEmergencyMessage(IModel<String> message);
+    /** Show an common feedback message */
+    protected abstract void setCommonFeedback(IModel<String> message);
 
     /**
      * Show dialog and assign a data from domain object
