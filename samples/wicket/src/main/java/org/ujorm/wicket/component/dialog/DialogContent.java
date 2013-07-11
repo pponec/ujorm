@@ -43,9 +43,10 @@ public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
         repeater.get(0).setDefaultModel(message);
     }
 
-    /** TODO: add a CSS style */
+    /** {@inheritDoc}
+     * TODO: add a CSS style */
     @Override
-    protected void setEmergencyMessage(IModel<String> message) {
+    protected void setCommonFeedback(IModel<String> message) {
         setMessage(message);
     }
 

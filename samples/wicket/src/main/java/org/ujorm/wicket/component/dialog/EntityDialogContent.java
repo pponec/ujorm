@@ -56,9 +56,9 @@ public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T>
         return fields.getDomain();
     }
 
-    /** Set an emergency message */
+    /** {@inheritDoc} */
     @Override
-    protected void setEmergencyMessage(IModel<String> message) {
+    protected void setCommonFeedback(IModel<String> message) {
         Field field = (Field) fields.getRepeatingView().get(0);
         field.setFeedbackMessage(message);
     }
