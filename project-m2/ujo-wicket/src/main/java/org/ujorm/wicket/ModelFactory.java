@@ -15,26 +15,25 @@
  */
 package org.ujorm.wicket;
 
+import java.io.Serializable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 
-public class ModelFactory<U extends Ujo> {
-
-    /** Object model */
-    private final U domain;
+public class ModelFactory<U extends Ujo & Serializable> extends Model<U> {
 
     /**
      * Constructor
      * @param domain A domain bean
      */
     public ModelFactory(U domain) {
-        this.domain = domain;
+        super(domain);
     }
 
     /** Create new model for the key */
-    public <T> IModel<T> getModel(Key<U,T> key) {
-        return new KeyModel(domain, key);
+    public <T> IModel<T> getModel(Key<U, T> key) {
+        return new KeyModel(getObject(), key);
     }
 
 }
