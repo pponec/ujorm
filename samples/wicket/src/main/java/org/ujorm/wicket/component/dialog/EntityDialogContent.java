@@ -58,7 +58,7 @@ public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T>
 
     /** {@inheritDoc} */
     @Override
-    protected void setCommonFeedback(IModel<String> message) {
+    protected void setFeedback(IModel<String> message) {
         Field field = (Field) fields.getRepeatingView().get(0);
         field.setFeedbackMessage(message);
     }

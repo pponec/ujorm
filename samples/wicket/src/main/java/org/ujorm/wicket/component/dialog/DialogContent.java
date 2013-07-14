@@ -51,7 +51,7 @@ public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
             }
         });
     }
-    
+
     /** Set a dialog message */
     public void setMessage(IModel<String> message) {
         repeater.get(0).setDefaultModel(message);
@@ -60,7 +60,7 @@ public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
 
     /** {@inheritDoc} */
     @Override
-    protected void setCommonFeedback(IModel<String> message) {
+    protected void setFeedback(IModel<String> message) {
         setMessage(message);
         feedback = true;
     }
