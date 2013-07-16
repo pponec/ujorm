@@ -20,7 +20,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Ujo;
 import org.ujorm.wicket.component.form.FieldProvider;
-import org.ujorm.wicket.component.form.fields.Field;
+import org.ujorm.wicket.component.form.fields.FeedbackField;
 
 /**
  * Entity Dialog Content
@@ -28,11 +28,15 @@ import org.ujorm.wicket.component.form.fields.Field;
  */
 public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T> {
     private static final long serialVersionUID = 20130621L;
+
     /** Input fields provider */
     protected final FieldProvider<T> fields;
+    private FeedbackField feedbackField;
 
     public EntityDialogContent(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow, model);
+        // Create a feedback:
+        repeater.add(feedbackField = new FeedbackField(repeater.newChildId()));
         // Create a field factory:
         form.add((fields = new FieldProvider(repeater)).getRepeatingView());
     }
@@ -59,8 +63,7 @@ public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T>
     /** {@inheritDoc} */
     @Override
     protected void setFeedback(IModel<String> message) {
-        Field field = (Field) fields.getRepeatingView().get(0);
-        field.setFeedbackMessage(message);
+        feedbackField.setFeedbackMessage(message);
     }
 
 }

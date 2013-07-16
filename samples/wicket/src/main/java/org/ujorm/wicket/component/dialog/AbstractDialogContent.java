@@ -101,6 +101,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
                     modalWindow.close(target);
                 } catch (Throwable e) {
                     setFeedback(e);
+                    target.add(form);
                 }
             }
 
@@ -122,23 +123,23 @@ public abstract class AbstractDialogContent<T> extends Panel {
                 , form) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                close(target, form);
+                closeForm(target, form);
             }
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
-                close(target, form);
-            }
-
-            /** Close action */
-            private void close(AjaxRequestTarget target, Form<?> form) {
-                form.clearInput();
-                target.add(form);
-                modalWindow.close(target);
+                closeForm(target, form);
             }
         };
         result.add(new CssAppender("btn"));
         return result;
+    }
+
+    /** Close action */
+    protected void closeForm(AjaxRequestTarget target, Form<?> form) {
+        form.clearInput();
+        target.add(form);
+        modalWindow.close(target);
     }
 
     /** Show an emergency message */
@@ -155,7 +156,8 @@ public abstract class AbstractDialogContent<T> extends Panel {
         }
     }
 
-    /** Show an common feedback message */
+    /** Show an common feedback message
+     * @param message The {@code null} value clears the message. */
     protected abstract void setFeedback(IModel<String> message);
 
     /**
@@ -206,6 +208,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
      */
     public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body, String actionButtonProperty) {
         setDefaultModel(body);
+        setFeedback((IModel)null);
         if (title != null) {
            getModalWindow().setTitle(title);
         }

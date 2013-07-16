@@ -88,7 +88,6 @@ public class FeedbackLabel extends Label {
      */
     @Override
     protected void onBeforeRender() {
-        super.onBeforeRender();
         if (input.hasFeedbackMessage()) {
             if (this.text != null) {
                 this.setDefaultModel(text);
@@ -102,10 +101,20 @@ public class FeedbackLabel extends Label {
         } else {
             this.setDefaultModel(null);
         }
+        super.onBeforeRender();
     }
 
     /**  Insert feedback message */
-    public void setFeedbackMessage(IModel<String> text) {
-        input.getFeedbackMessages().add(new FeedbackMessage(input, text.getObject(), 0));
+    public void setFeedbackMessage(IModel<String> message) {
+        if (message != null) {
+            input.getFeedbackMessages().add(new FeedbackMessage(input, message.getObject(), 0));
+        } else {
+            input.getFeedbackMessages().clear();
+        }
+    }
+
+    /** Have got the Feedback any message ? */
+    public boolean isFeedbackMessage() {
+        return !input.getFeedbackMessages().isEmpty();
     }
 }

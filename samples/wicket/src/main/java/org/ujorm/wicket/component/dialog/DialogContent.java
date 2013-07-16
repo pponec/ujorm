@@ -33,14 +33,12 @@ public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
     /** CSS alert */
     private static final String ALERT_CSS = "alert-text";
 
-    /** Common label */
-    private final Label label;
     /** Error message */
     private boolean feedback;
 
     public DialogContent(ModalWindow modalWindow, IModel<String> model) {
         super(modalWindow, new Model());
-        repeater.add(label = new Label(repeater.newChildId(), model) {
+        repeater.add(new Label(repeater.newChildId(), model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
@@ -61,8 +59,10 @@ public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
     /** {@inheritDoc} */
     @Override
     protected void setFeedback(IModel<String> message) {
-        setMessage(message);
-        feedback = true;
+        if (message != null) {
+            setMessage(message);
+            feedback = true;
+        }
     }
 
 }
