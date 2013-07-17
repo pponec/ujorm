@@ -95,9 +95,9 @@ public class FeedbackLabel extends Label {
                 this.setDefaultModel(new Model(input.getFeedbackMessages().first().getMessage()));
             }
 
-            // Assign an error level as a CSS class:
-            final String css = input.getFeedbackMessages().first().getLevelAsString();
-            this.add(new CssAppender(css));
+            // Assign an error level as a CSS class: (wrong implementation)
+            // final String css = input.getFeedbackMessages().first().getLevelAsString();
+            // this.add(new CssAppender(css));
         } else {
             this.setDefaultModel(null);
         }

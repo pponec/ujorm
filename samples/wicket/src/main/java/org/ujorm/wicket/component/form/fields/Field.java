@@ -76,6 +76,7 @@ public class Field extends Panel {
     protected void onInitialize() {
         super.onInitialize();
 
+        this.add(new CssAppender(getCssClass()));
         this.setOutputMarkupId(true);
         this.setOutputMarkupPlaceholderTag(true);
 
@@ -186,6 +187,11 @@ public class Field extends Panel {
     /** Assign a feedback message */
     public void setFeedbackMessage(IModel<String> message) {
         feedback.setFeedbackMessage(message);
+    }
+
+    /** Returns a main CSS class */
+    protected String getCssClass() {
+        return "control-group";
     }
 
 }
