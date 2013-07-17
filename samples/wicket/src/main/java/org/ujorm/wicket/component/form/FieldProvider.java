@@ -32,6 +32,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
+import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
@@ -157,13 +158,13 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
 
-    /** Save domain value and assign value into components */
+    /** Clone domain object and initialize all field components */
     public void setDomain(U domain) {
         for (String keyName : getKeyNames()) {
             Key k = domain.readKeys().find(keyName);
             setValue(k, k.of(domain));
         }
-        this.domain = domain;
+        this.domain = OrmTools.clone(domain);
     }
 
     /** Copy new value to the result and return the result */
