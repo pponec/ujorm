@@ -74,7 +74,7 @@ public class FeedbackField extends Field {
     /** Returns a main CSS class */
     @Override
     protected String getCssClass() {
-        return super.getCssClass() + " alert";
+        return super.getCssClass() + " alert absolute-alert";
     }
 
 }
