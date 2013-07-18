@@ -31,7 +31,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Args;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
@@ -42,10 +41,10 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
-import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
+import org.ujorm.wicket.OrmSessionProvider;
 
 /**
  * <p>This class called <strong>UjoDataProvider</strong> is an database
@@ -103,7 +102,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
      */
     public boolean fetchDatabaseColumns = true;
     /** OrmSession */
-    transient private Session ormSession;
+    transient private OrmSessionProvider ormSession;
 
     /** Constructor
      * @param criterion Condition to a database query
@@ -117,6 +116,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
      * @param defaultSort Default sorting can be assigned optionally
      */
     public UjoDataProvider(Criterion<T> criterion, Key<T,?> defaultSort) {
+        this.ormSession = new OrmSessionProvider();
         this.criterion = Args.notNull(criterion, "Criterion is mandatory");
         model = KeyRing.of((Class<T>)criterion.getDomain());
         if (defaultSort == null) {
@@ -183,25 +183,14 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
 
     /** Returns orm Session */
     protected Session getOrmSession() {
-        if (ormSession == null) {
-            WebApplication application = WebApplication.get();
-            if (application instanceof OrmHandlerProvider) {
-                ormSession = ((OrmHandlerProvider) application).getOrmHandler().createSession();
-            } else {
-                throw new IllegalStateException("The WebApplication must to implement " + OrmHandlerProvider.class);
-            }
-        }
-        return ormSession;
+        return ormSession.getSession();
     }
 
     /** Commit and close transaction */
     @Override
     public void detach() {
+        ormSession.closeSession();
         size = null;
-        if (ormSession != null) {
-            ormSession.close();
-            ormSession = null;
-        }
     }
 
     /** Create default Query */
