@@ -34,7 +34,7 @@ import org.ujorm.wicket.UjoEvent;
  * Abstract Message Dialog Content
  * @author Pavel Ponec
  */
-public abstract class AbstractDialogContent<T> extends Panel {
+public abstract class AbstractDialogPanel<T> extends Panel {
     private static final long serialVersionUID = 20130621L;
 
     protected static final String BUTTON_PREFIX = "button.";
@@ -51,7 +51,7 @@ public abstract class AbstractDialogContent<T> extends Panel {
     /** Action code */
     private String action = "";
 
-    public AbstractDialogContent(ModalWindow modalWindow, IModel<T> model) {
+    public AbstractDialogPanel(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow.getContentId(), model);
         this.modalWindow = modalWindow;
         this.setOutputMarkupId(true);

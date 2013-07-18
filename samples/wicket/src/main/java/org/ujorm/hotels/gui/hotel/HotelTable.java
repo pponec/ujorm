@@ -30,7 +30,7 @@ import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.wicket.UjoEvent;
-import org.ujorm.wicket.component.dialog.DialogContent;
+import org.ujorm.wicket.component.dialog.MessageDialogPanel;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 import static org.ujorm.wicket.CommonActions.*;
@@ -44,7 +44,7 @@ public class HotelTable extends Panel {
 
     @SpringBean(name="dbService") DbService dbService;
     private HotelEditor editDialog;
-    private DialogContent removeDialog;
+    private MessageDialogPanel removeDialog;
 
     public HotelTable(String id) {
         super(id);
@@ -121,12 +121,12 @@ public class HotelTable extends Panel {
     }
 
     /** Create the editor dialog */
-    private DialogContent createMessageDialog(String componentId, int width, int height) {
+    private MessageDialogPanel createMessageDialog(String componentId, int width, int height) {
         IModel<String> model = Model.of("");
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final DialogContent result = new DialogContent(modalWindow, model);
+        final MessageDialogPanel result = new MessageDialogPanel(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         //modalWindow.setCookieName("modal-dialog");
