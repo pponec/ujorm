@@ -19,13 +19,13 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.component.dialog.EntityDialogContent;
+import org.ujorm.wicket.component.dialog.EntityDialogPanel;
 
 /**
  * Hotel Editor
  * @author Pavel Ponec
  */
-public class HotelEditor extends EntityDialogContent<Hotel> {
+public class HotelEditor extends EntityDialogPanel<Hotel> {
     private static final long serialVersionUID = 0L;
 
     public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {

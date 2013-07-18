@@ -26,14 +26,14 @@ import org.ujorm.wicket.component.form.fields.FeedbackField;
  * Entity Dialog Content
  * @author Pavel Ponec
  */
-public class EntityDialogContent<T extends Ujo> extends AbstractDialogContent<T> {
+public class EntityDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
     private static final long serialVersionUID = 20130621L;
 
     /** Input fields provider */
     protected final FieldProvider<T> fields;
     private FeedbackField feedbackField;
 
-    public EntityDialogContent(ModalWindow modalWindow, IModel<T> model) {
+    public EntityDialogPanel(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow, model);
         // Create a feedback:
         repeater.add(feedbackField = new FeedbackField(repeater.newChildId()));

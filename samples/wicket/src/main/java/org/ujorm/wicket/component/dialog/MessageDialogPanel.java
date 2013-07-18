@@ -27,7 +27,7 @@ import static org.ujorm.wicket.CssAppender.*;
  * Common Message Dialog
  * @author Pavel Ponec
  */
-public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
+public class MessageDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
     private static final long serialVersionUID = 20130621L;
 
     /** CSS alert */
@@ -36,7 +36,7 @@ public class DialogContent<T extends Ujo> extends AbstractDialogContent<T> {
     /** Error message */
     private boolean feedback;
 
-    public DialogContent(ModalWindow modalWindow, IModel<String> model) {
+    public MessageDialogPanel(ModalWindow modalWindow, IModel<String> model) {
         super(modalWindow, new Model());
         repeater.add(new Label(repeater.newChildId(), model) {
             @Override
