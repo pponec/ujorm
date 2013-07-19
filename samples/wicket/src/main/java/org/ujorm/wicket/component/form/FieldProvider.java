@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -27,6 +28,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
@@ -34,6 +36,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.validator.ValidatorUtils;
+import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
 import org.ujorm.wicket.component.form.fields.Field;
@@ -66,7 +69,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             throw new IllegalStateException("Field is assigned for the key: " + field);
         }
         repeatingView.add(field);
-        assignValidator(key, field);
+        setValidator(key, field);
     }
 
     /** Add new field to a repeating view*/
@@ -145,8 +148,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return ValidatorUtils.isMandatoryValidator(key.getValidator());
     }
 
-    /** Assign the validator */
-    protected void assignValidator(final Key key, final Field field) {
+    /** Set a validator of the Key to the Field from argument */
+    protected void setValidator(final Key key, final Field field) {
         final Validator validator = key.getValidator();
         if (validator != null) {
             field.setValidator(new UjoValidator(validator, key));
@@ -158,13 +161,33 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
 
-    /** Clone domain object and initialize all field components */
+    /** Copy domain attributes to fields and clone the arguments to internal parameters.
+     * <br/>Persistent object will be reloaded from database.
+     */
     public void setDomain(U domain) {
-        for (String keyName : getKeyNames()) {
-            Key k = domain.readKeys().find(keyName);
-            setValue(k, k.of(domain));
+        OrmSessionProvider session = new OrmSessionProvider();
+        try {
+            this.domain = copyToFields(cloneDomain(domain, session));
+        } finally {
+            session.closeSession();
         }
-        this.domain = OrmTools.clone(domain);
+    }
+
+    /** Clone the domain object of reload the persistent object from database. */
+    protected U cloneDomain(U domain, OrmSessionProvider session) throws NoSuchElementException, IllegalStateException {
+        return domain instanceof OrmUjo
+             ? (U) session.getSession().loadBy((OrmUjo) domain)
+             : (U) UjoManager.clone(domain, 2, "clone");
+    }
+
+
+    /** Assign values to required component fields in a transaction for a lazy loading case */
+    protected U copyToFields(U domain) {
+        for (Field field : getFields()) {
+            final Key k = field.getKey();
+            field.setModelValue(k.of(domain));
+        }
+        return domain;
     }
 
     /** Copy new value to the result and return the result */
