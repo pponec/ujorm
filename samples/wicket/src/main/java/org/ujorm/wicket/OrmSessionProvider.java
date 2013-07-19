@@ -35,12 +35,15 @@ public class OrmSessionProvider {
         if (application instanceof OrmHandlerProvider) {
             return ((OrmHandlerProvider) application).getOrmHandler();
         } else {
-            throw new IllegalStateException("The WebApplication must to implement "
-                    + OrmHandlerProvider.class);
+            final String msg = String.format
+                    ( "The class %s must to implement: %s"
+                    , WebApplication.class.getSimpleName()
+                    , OrmHandlerProvider.class.getName());
+            throw new IllegalStateException(msg);
         }
     }
 
-    /** Create and cache the ORM Session, there is necessary to close the created session */
+    /** Create and cache the ORM Session, where created session must be closed later */
     public Session getSession() throws IllegalStateException {
         if (session == null) {
             session = getOrmHandler().createSession();
@@ -48,7 +51,8 @@ public class OrmSessionProvider {
         return session;
     }
 
-    /** Close the session if any */
+    /** Close the session (if any)
+     * and release the session for a garbage collector. */
     public boolean closeSession() {
         final boolean result = session != null;
         if (result) {
