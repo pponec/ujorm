@@ -108,7 +108,7 @@ public class UjoManager implements Comparator<Key> {
         return result;
     }
 
-    /** Read an KeyList instance. The first result is cached. 
+    /** Read an KeyList instance. The first result is cached.
      * @deprecated Use the method {@link #readKeys(java.lang.Class) } instead of.
      */
     @SuppressWarnings("unchecked")
@@ -375,7 +375,6 @@ public class UjoManager implements Comparator<Key> {
      *
      * In other cases the same instance is used. The feature can be useful for a Final object like a String, Integer etc.
      *
-     *
      * @param ujo An Ujo with no parameter constructor.
      * @param depth A depth of the cloning.
      * @param context Context of the action.
@@ -384,7 +383,7 @@ public class UjoManager implements Comparator<Key> {
      * @throws java.lang.IllegalStateException
      */
     @SuppressWarnings("unchecked")
-    public Ujo clone(Ujo ujo, int depth, Object context) throws IllegalStateException {
+    public static Ujo clone(Ujo ujo, int depth, Object context) throws IllegalStateException {
         final UjoAction action = new UjoActionImpl(UjoAction.ACTION_CLONE, context);
         if (--depth < 0
         || ujo==null
