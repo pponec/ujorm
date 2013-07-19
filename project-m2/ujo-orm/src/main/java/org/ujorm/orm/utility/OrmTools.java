@@ -30,9 +30,11 @@ import java.util.Iterator;
 import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
-import org.ujorm.Key;
-import org.ujorm.criterion.Criterion;
 import org.ujorm.CompositeKey;
+import org.ujorm.Key;
+import org.ujorm.KeyList;
+import org.ujorm.Ujo;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
@@ -378,4 +380,19 @@ final public class OrmTools {
         return result;
     }
 
+    /** Clone the argument entity using all direct keys
+     * including the original ORM session, if any.
+     * All lazy relations will be loaded.
+     */
+    public static <U extends Ujo> U clone(U entity) throws IllegalStateException {
+        final KeyList<U> keys = entity.readKeys();
+        final U result = keys.newBaseUjo();
+        for (Key k : keys) {
+            k.copy(entity, result);
+        }
+        if (entity instanceof OrmUjo) {
+           ((OrmUjo)result).writeSession(((OrmUjo)entity).readSession());
+        }
+        return result;
+    }
 }

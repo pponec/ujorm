@@ -452,7 +452,7 @@ public class Session {
                 out.setLength(0);
                 sql = db.getDialect().printInsert(bos, idxFrom, idxTo, out).toString();
                 if (logEnabled) {
-                    LOGGER.log(UjoLogger.INFO, sql);                    
+                    LOGGER.log(UjoLogger.INFO, sql);
                 }
                 statement = getStatement(db, sql, true);
                 statement.assignValues(bos, idxFrom, idxTo);
@@ -922,6 +922,68 @@ public class Session {
     }
 
     /**
+     * Load UJO by a unique id. If a result is not found then a null value is passed.
+     * @param tableType Type of Ujo
+     * @param id Value ID
+     */
+    public <UJO extends OrmUjo> UJO loadBy(UJO ujo) throws NoSuchElementException {
+        checkNotNull(ujo, "load");
+        final MetaTable metaTable = handler.findTableModel(ujo.getClass());
+        final MetaPKey pkeys = MetaTable.PK.of(metaTable);
+        final boolean fk = ujo instanceof ExtendedOrmUjo;
+
+        Criterion<UJO> criterion = null;
+        for (MetaColumn c : MetaPKey.COLUMNS.of(pkeys)) {
+            Criterion<UJO> crn = Criterion.where(c.getKey(), c.getValue(ujo));
+            criterion = criterion != null
+                ? criterion.and(crn)
+                : crn ;
+        }
+
+        final UJO result = createQuery(criterion).uniqueResult();
+        return result;
+    }
+
+    /** Reload values of the persistent object. <br>
+     * Note: If the object has implemented the interface
+     * {@link ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded
+     * else a lazy initialization is loaded - for the first property depth.
+     * @param ujo The persistent object to relading values.
+     * @return The FALSE value means that the object is missing in the database.
+     */
+    @SuppressWarnings("unchecked")
+    public boolean reload(final OrmUjo ujo) {
+        if (ujo==null) {
+            return false;
+        }
+        OrmUjo result = loadBy(ujo);
+        if (result==null) {
+            return false;
+        }
+
+        final MetaTable metaTable = handler.findTableModel(ujo.getClass());
+        final boolean fk = ujo instanceof ExtendedOrmUjo;
+
+        // Copy all key values back to the original object:
+        ujo.writeSession(null);
+        for (MetaColumn c : MetaTable.COLUMNS.of(metaTable)) {
+
+            if (fk && c.isForeignKey()) {
+                // Copy the foreign key only (the workaround for lazy loading):
+                final Key p = c.getKey();
+                ujo.writeValue(p, ((ExtendedOrmUjo)result).readFK(p));
+            } else if (c.isColumn()) {
+                c.getKey().copy(result, ujo);
+            }
+        }
+        ujo.writeSession(this);
+        ujo.readChangedProperties(true); // Clear changed keys
+
+        return true;
+    }
+
+
+    /**
      * Load UJO by a unique id. If the result is not unique, then an exception is throwed.
      * @param relatedProperty Related property
      * @param id Valud ID
@@ -1101,55 +1163,6 @@ public class Session {
         }
     }
 
-    /** Reload values of the persistent object. <br>
-     * Note: If the object has implemented the interface
-     * {@link ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded
-     * else a lazy initialization is loaded - for the first property depth.
-     * @param ujo The persistent object to relading values.
-     * @return The FALSE value means that the object is missing in the database.
-     */
-    @SuppressWarnings("unchecked")
-    public boolean reload(final OrmUjo ujo) {
-        if (ujo==null) {
-            return false;
-        }
-
-        final MetaTable metaTable = handler.findTableModel(ujo.getClass());
-        final MetaPKey pkeys = MetaTable.PK.of(metaTable);
-        boolean fk = ujo instanceof ExtendedOrmUjo;
-
-        Criterion<OrmUjo> criterion = null;
-        for (MetaColumn c : MetaPKey.COLUMNS.of(pkeys)) {
-            Criterion<OrmUjo> crn = Criterion.where(c.getKey(), c.getValue(ujo));
-            criterion = criterion!=null
-                ? criterion.and(crn)
-                : crn
-                ;
-        }
-
-        OrmUjo result = createQuery(criterion).uniqueResult();
-        if (result==null) {
-            return false;
-        }
-
-        // Copy all keys to the original object
-        ujo.writeSession(null);
-        for (MetaColumn c : MetaTable.COLUMNS.of(metaTable)) {
-
-            if (fk && c.isForeignKey()) {
-                // Copy the foreign key only (the workaround of lazy loading):
-                Key p = c.getKey();
-                ujo.writeValue(p, ((ExtendedOrmUjo)result).readFK(p));
-            } else if (c.isColumn()) {
-                c.getKey().copy(result, ujo);
-            }
-        }
-        ujo.writeSession(this);
-        ujo.readChangedProperties(true); // Clear changed keys
-
-        return true;
-    }
-
     /** Check dialecttype */
     public final SqlDialect getDialect(Class<? extends OrmUjo> ormType) {
         return handler.findTableModel(ormType).getDatabase().getDialect();
@@ -1190,7 +1203,7 @@ public class Session {
     public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
         this.lazyLoadingEnabled = lazyLoadingEnabled;
     }
-    
+
     /**
      * Check the Ujo object to not null.
      * @param ujo
@@ -1200,6 +1213,6 @@ public class Session {
     protected void checkNotNull(OrmUjo ujo, String action) throws IllegalArgumentException {
         if (ujo==null) {
             throw new IllegalArgumentException("A null object can't be used for the action: " + action);
-        }        
+        }
     }
 }
