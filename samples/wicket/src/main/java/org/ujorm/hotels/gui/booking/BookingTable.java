@@ -21,10 +21,10 @@ import org.apache.wicket.markup.html.panel.Panel;
  *
  * @author Pavel Ponec
  */
-public class BookingPanel extends Panel {
+public class BookingTable extends Panel {
 
-    public BookingPanel(String id) {
+    public BookingTable(String id) {
         super(id);
     }
-    
+
 }

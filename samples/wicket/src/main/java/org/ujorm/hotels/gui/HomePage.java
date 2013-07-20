@@ -21,8 +21,8 @@ import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.ujorm.hotels.gui.about.AboutPanel;
-import org.ujorm.hotels.gui.booking.BookingPanel;
-import org.ujorm.hotels.gui.customer.CustomerPanel;
+import org.ujorm.hotels.gui.booking.BookingTable;
+import org.ujorm.hotels.gui.customer.CustomerTable;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.wicket.component.tabs.UjoTab;
@@ -37,8 +37,8 @@ public class HomePage extends WebPage {
         // create a list of ITab objects used to feed the tabbed panel
         List<ITab> tabs = new ArrayList<ITab>();
         tabs.add(new UjoTab("Hotels", "hotel", HotelTable.class));
-        tabs.add(new UjoTab("Booking", "booking", BookingPanel.class));
-        tabs.add(new UjoTab("Customer", "customer", CustomerPanel.class));
+        tabs.add(new UjoTab("Booking", "booking", BookingTable.class));
+        tabs.add(new UjoTab("Customer", "customer", CustomerTable.class));
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoTabbedPanel("tabs", tabs));
 
