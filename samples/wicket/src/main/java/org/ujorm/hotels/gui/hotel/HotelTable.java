@@ -28,6 +28,7 @@ import org.ujorm.core.KeyRing;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
+import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.MessageDialogPanel;
@@ -43,14 +44,14 @@ import static org.ujorm.wicket.component.grid.KeyColumn.*;
 public class HotelTable extends Panel {
 
     @SpringBean(name="dbService") DbService dbService;
+    private Toolbar toolbar = new Toolbar("toolbar");
     private HotelEditor editDialog;
     private MessageDialogPanel removeDialog;
 
     public HotelTable(String id) {
         super(id);
 
-        UjoDataProvider<Hotel> columns = UjoDataProvider.of(Hotel.ACTIVE.whereEq(true));
-
+        UjoDataProvider<Hotel> columns = UjoDataProvider.of(toolbar.getCriterion());
         columns.addColumn(Hotel.NAME);
         columns.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
         columns.addColumn(Hotel.STREET);
@@ -61,23 +62,13 @@ public class HotelTable extends Panel {
         columns.addColumn(newActionColumn());
         columns.setSort(Hotel.NAME);
 
-        add(columns.createDataTable(10));
+        add(columns.createDataTable("datatable", 10));
+        add(toolbar);
         add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
     }
 
-    /** Nabídka akcí: */
-    private AbstractColumn<Hotel, KeyRing<Hotel>> newActionColumn() {
-        return new KeyColumn<Hotel, Integer>(KeyRing.of(Hotel.ID), null, null) {
-            @Override
-            public void populateItem(Item item, String componentId, IModel model) {
-                final Hotel hotel = (Hotel) model.getObject();
-                final ActionPanel panel = new ActionPanel(componentId, hotel);
-                item.add(panel);
-            }
-        };
-    }
-
+    /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
         if (argEvent.getPayload() instanceof UjoEvent) {
@@ -103,6 +94,18 @@ public class HotelTable extends Panel {
                 }
             }
         }
+    }
+
+    /** Nabídka akcí: */
+    private AbstractColumn<Hotel, KeyRing<Hotel>> newActionColumn() {
+        return new KeyColumn<Hotel, Integer>(KeyRing.of(Hotel.ID), null, null) {
+            @Override
+            public void populateItem(Item item, String componentId, IModel model) {
+                final Hotel hotel = (Hotel) model.getObject();
+                final ActionPanel panel = new ActionPanel(componentId, hotel);
+                item.add(panel);
+            }
+        };
     }
 
     /** Create the editor dialog */
