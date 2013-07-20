@@ -80,8 +80,6 @@ import org.ujorm.wicket.OrmSessionProvider;
  */
 public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, Object> {
     private static final long serialVersionUID = 1L;
-    /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoDataProvider.class);
     /** Default Datatable ID have got value {@code "datatable"}. */
     public static final String DEFAULT_DATATABLE_ID = "datatable";
     /** Data size */

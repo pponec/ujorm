@@ -35,6 +35,15 @@ public class UjoEvent<U> {
     /**
      * Constructor
      * @param action Required action code
+     * @param target target
+     */
+    public UjoEvent(String action, AjaxRequestTarget target) {
+        this(action, (U) null, target);
+    }
+
+    /**
+     * Constructor
+     * @param action Required action code
      * @param ujo Optional data context
      * @param target target
      */
@@ -101,6 +110,5 @@ public class UjoEvent<U> {
                 + ", domain=" + domain
                 + '}';
     }
-
 
 }
