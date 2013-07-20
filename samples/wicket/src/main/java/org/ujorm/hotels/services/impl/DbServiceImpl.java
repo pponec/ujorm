@@ -68,6 +68,20 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         getSession().update(hotel);
     }
 
+    @Override
+    public void deleteCustomer(Customer customer) {
+        LOGGER.info("Delete customer {}", customer);
+        checkReadOnly();
+        getSession().delete(customer);
+    }
+
+    @Override
+    public void updateCustomer(Customer customer) {
+        LOGGER.info("Update customer {}", customer);
+        checkReadOnly();
+        getSession().update(customer);
+    }
+
     /** Check a read-only state */
     private void checkReadOnly() throws ValidationException {
         if (readOnly) {

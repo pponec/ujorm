@@ -31,9 +31,15 @@ public interface DbService {
     public long getHash(String text) throws IllegalStateException;
 
     /** Delete hotel */
-    public void deleteHotel(Hotel hote);
+    public void deleteHotel(Hotel hotel);
 
     /** Update hotel */
-    public void updateHotel(Hotel hote);
+    public void updateHotel(Hotel hotel);
+
+    /** Delete customer */
+    public void deleteCustomer(Customer customer);
+
+    /** Update customer */
+    public void updateCustomer(Customer customer);
 
 }
