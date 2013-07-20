@@ -15,6 +15,7 @@
  */
 package org.ujorm.wicket;
 
+import java.io.Serializable;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
@@ -24,10 +25,11 @@ import org.ujorm.orm.Session;
  * ORM Session Provider
  * @author Pavel Ponec
  */
-public class OrmSessionProvider {
+public class OrmSessionProvider implements Serializable {
+    private static final long serialVersionUID = 20130720L;
 
     /** Orm Session */
-    private Session session;
+    private transient Session session;
 
     /** Create current ORM Handler */
     public static OrmHandler getOrmHandler() throws IllegalStateException {
