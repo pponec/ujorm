@@ -96,13 +96,13 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
      * where the feature is enabled by default
      */
-    public boolean defaultColumnSorting = true;
+    private boolean defaultColumnSorting = true;
     /** Fetch database columns for better SQL performance
      * where the feature is enabled by default
      */
-    public boolean fetchDatabaseColumns = true;
+    private boolean fetchDatabaseColumns = true;
     /** OrmSession */
-    transient private OrmSessionProvider ormSession;
+    private OrmSessionProvider ormSession;
 
     /** Constructor
      * @param criterion Condition to a database query
