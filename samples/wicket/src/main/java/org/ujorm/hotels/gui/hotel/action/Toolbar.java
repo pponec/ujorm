@@ -41,8 +41,8 @@ import static org.ujorm.core.UjoManager.*;
  */
 public class Toolbar extends Panel {
 
-    /** Delay for searching fields is 700 [ms] by default */
-    protected static final Duration DEFAULT_DELAY = Duration.milliseconds(700);
+    /** Delay for searching fields is 400 [ms] by default */
+    protected static final Duration DEFAULT_DELAY = Duration.milliseconds(400);
     /** Event action */
     public static final String FILTER_ACTION = CommonActions.FILTER;
 
@@ -79,11 +79,11 @@ public class Toolbar extends Panel {
         Criterion<Hotel> result = defaultCriterion;
 
         if (isFilled(searchHotel.getValue())) {
-            result = result.and(Hotel.NAME.where(Operator.STARTS
+            result = result.and(Hotel.NAME.where(Operator.STARTS_CASE_INSENSITIVE
                    , searchHotel.getValue()));
         }
         if (isFilled(searchCity.getValue())) {
-            result = result.and(Hotel.CITY.add(City.NAME).where(Operator.STARTS
+            result = result.and(Hotel.CITY.add(City.NAME).where(Operator.STARTS_CASE_INSENSITIVE
                    , searchCity.getValue()));
         }
 
