@@ -14,9 +14,9 @@
 <body>
 <wicket:panel>
     <div class="controls toolbar">
-    <form>
-        <input type="text" placeholder="Search Hotel ..." class="search-query span2" />&nbsp;
-        <input type="text" placeholder="Search City ..." class="search-query span2" />&nbsp;
+    <form wicket:id="form">
+        <input wicket:id="searchHotel" type="text" class="search-query span2" />&nbsp;
+        <input wicket:id="searchCity" type="text" class="search-query span2" />
     </form>
     </div>
 </wicket:panel>

@@ -36,6 +36,7 @@ import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
+import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
 
 /**
  * Hotel Table
@@ -62,7 +63,7 @@ public class HotelTable extends Panel {
         columns.addColumn(newActionColumn());
         columns.setSort(Hotel.NAME);
 
-        add(columns.createDataTable("datatable", 10));
+        add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
         add(toolbar);
         add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
@@ -79,7 +80,7 @@ public class HotelTable extends Panel {
                     editDialog.show(event, new ResourceModel("dialog.edit.title"));
                 } else {
                     dbService.updateHotel(event.getDomain());
-                    event.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                    reloadTable(event);
                 }
             }
             else if (event.isAction(DELETE)) {
@@ -90,8 +91,11 @@ public class HotelTable extends Panel {
                             , "delete");
                 } else {
                     dbService.deleteHotel(event.getDomain());
-                    event.getTarget().add(get(UjoDataProvider.DEFAULT_DATATABLE_ID));
+                    reloadTable(event);
                 }
+            }
+            else if (event.isAction(Toolbar.FILTER_ACTION)) {
+                reloadTable(event);
             }
         }
     }
@@ -135,6 +139,11 @@ public class HotelTable extends Panel {
         //modalWindow.setCookieName("modal-dialog");
 
         return result;
+    }
+
+    /** Reload the data table */
+    private void reloadTable(UjoEvent event) {
+        event.getTarget().add(get(DEFAULT_DATATABLE_ID));
     }
 
 }

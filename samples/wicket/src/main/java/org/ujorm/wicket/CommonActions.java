@@ -32,6 +32,8 @@ public interface CommonActions {
     /** Default value is the same like the field */
     public static final String CLONE = "CLONE";
     /** Default value is the same like the field */
+    public static final String FILTER = "FILTER";
+    /** Default value is the same like the field */
     public static final String EXIT = "EXIT";
     /** Default value is the same like the field */
     public static final String ERROR = "ERROR";
