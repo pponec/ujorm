@@ -21,15 +21,13 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
-import org.ujorm.orm.Session;
+import org.ujorm.wicket.OrmSessionProvider;
 
 /**
  * CheckBox field with a Label includding a feedback message.
@@ -113,16 +111,21 @@ public class ComboField<T extends Ujo> extends Field {
     }
 
     // ----------- FACTORIES -------------
+    
     /** Create new ComboField using database request */
     public static <T extends OrmUjo> ComboField<T> of(Key<?, T> property, Criterion<T> items, Key<T, ?> display) {
-        final Session session = getOrmSession();
-        final Query<T> query = session.createQuery(items);
-        if (display == null) {
-            display = query.getColumns().get(0).getKey();
+        final OrmSessionProvider session = new OrmSessionProvider();
+        try {
+            final Query<T> query = session.getSession().createQuery(items);
+            if (display == null) {
+                display = query.getColumns().get(0).getKey();
+            }
+            query.setColumns(true, display);
+            query.orderBy(display);
+            return of(property, query, display);
+        } finally {
+            session.closeSession();
         }
-        query.setColumns(true, display);
-        query.orderBy(display);
-        return of(property, query, display);
     }
 
     /** Create new ComboField using database request */
@@ -131,13 +134,4 @@ public class ComboField<T extends Ujo> extends Field {
         return new ComboField<T>(property, query.list(), idKey, display);
     }
 
-    /** Returns orm Session */
-    protected static Session getOrmSession() {
-        final WebApplication application = WebApplication.get();
-        if (application instanceof OrmHandlerProvider) {
-            return ((OrmHandlerProvider) application).getOrmHandler().createSession();
-        } else {
-            throw new IllegalStateException("The WebApplication must to implement " + OrmHandlerProvider.class);
-        }
-    }
 }

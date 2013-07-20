@@ -28,7 +28,7 @@ import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.*;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidationException;
-
+import static org.ujorm.core.UjoManager.*;
 /**
  * Common database service implementations
  * @author ponec
@@ -75,10 +75,18 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         getSession().delete(customer);
     }
 
+    /** Update customer */
     @Override
     public void updateCustomer(Customer customer) {
         LOGGER.info("Update customer {}", customer);
         checkReadOnly();
+
+        String password = customer.get(Customer.PASSWORD);
+        if (isFilled(password)) {
+            customer.writeSession(getSession()); // Activate modifications
+            customer.set(Customer.PASSWORD_HASH, getHash(password));
+        }
+
         getSession().update(customer);
     }
 

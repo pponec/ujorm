@@ -37,8 +37,6 @@ import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.gui.WicketApplication;
-import org.ujorm.logger.UjoLogger;
-import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;

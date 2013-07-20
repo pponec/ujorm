@@ -12,6 +12,7 @@ import org.ujorm.hotels.entity.enums.TitleEnum;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
+import org.ujorm.wicket.component.form.FieldProvider;
 import static org.ujorm.Validator.Build.*;
 
 /** Common User */
@@ -31,20 +32,15 @@ public class Customer extends OrmTable<Customer> {
     @Comment("Unique login")
     @Column(uniqueIndex=UNIQUE_LOGIN)
     public static final Key<Customer, String> LOGIN = f.newKey(length(MANDATORY, 3, 6));
-    /** A form field only */
+    /** A form field only where the {@code null} value means: no password chage */
     @Transient
-    public static final Key<Customer, String> PASSWORD = f.newKey(length(MANDATORY, 3, 1000));
-    /** Customer state (the true or null values are required) */
-    @Comment("Customer is allowed to login (the true or null values are required)")
-    @Column(uniqueIndex=UNIQUE_LOGIN)
-    public static final Key<Customer, Boolean> ACTIVE = f.newKey(forbidden(false));
+    public static final Key<Customer, String> PASSWORD = f.newKey(FieldProvider.PASSWORD_KEY_NAME, length(NULLABLE, 3, 100));
     /** Password hash */
     @Comment("Password hash")
     public static final Key<Customer, Long> PASSWORD_HASH = f.newKey(notNull(Long.class));
     /** Title */
     @Comment("Title")
-    @Column(mandatory = true)
-    public static final Key<Customer, TitleEnum> TITLE = f.newKeyDefault(TitleEnum.UNDEFINED);
+    public static final Key<Customer, TitleEnum> TITLE = f.newKey(notNull(TitleEnum.class));
     /** Firstname */
     @Comment("Firstname")
     public static final Key<Customer, String> FIRSTNAME = f.newKey(length(MANDATORY, 2, 60));
@@ -57,6 +53,10 @@ public class Customer extends OrmTable<Customer> {
     /** Administrator role sign */
     @Comment("Administrator role sign")
     public static final Key<Customer, Boolean> ADMIN = f.newKeyDefault(false);
+    /** Customer state (the true or null values are required) */
+    @Comment("Customer is allowed to login (the true or null values are required)")
+    @Column(uniqueIndex=UNIQUE_LOGIN)
+    public static final Key<Customer, Boolean> ACTIVE = f.newKey(forbidden(false));
 
     static {
         f.lock();
@@ -86,22 +86,22 @@ public class Customer extends OrmTable<Customer> {
 //        Customer.LOGIN.setValue(this, login);
 //    }
 //
-//    /** Customer state (the true or null is required) */
-//    public Boolean getActive() {
-//        return ACTIVE.of(this);
+//    /** A form field only where the {@code null} value means: no password chage */
+//    public String getPassword() {
+//        return PASSWORD.of(this);
 //    }
 //
-//    /** Customer state (the true or null is required) */
-//    public void setActive(Boolean active) {
-//        Customer.ACTIVE.setValue(this, active);
+//    /** A form field only where the {@code null} value means: no password chage */
+//    public void setPassword(String password) {
+//        Customer.PASSWORD.setValue(this, password);
 //    }
 //
-//    /** Password login */
+//    /** Password hash */
 //    public Long getPasswordHash() {
 //        return PASSWORD_HASH.of(this);
 //    }
 //
-//    /** Password login */
+//    /** Password hash */
 //    public void setPasswordHash(Long passwordHash) {
 //        Customer.PASSWORD_HASH.setValue(this, passwordHash);
 //    }
@@ -127,13 +127,13 @@ public class Customer extends OrmTable<Customer> {
 //    }
 //
 //    /** Firstname */
-//    public String getLastname() {
+//    public String getSurename() {
 //        return SURENAME.of(this);
 //    }
 //
 //    /** Firstname */
-//    public void setLastname(String lastname) {
-//        Customer.SURENAME.setValue(this, lastname);
+//    public void setSurename(String surename) {
+//        Customer.SURENAME.setValue(this, surename);
 //    }
 //
 //    /** Email */
@@ -146,16 +146,26 @@ public class Customer extends OrmTable<Customer> {
 //        Customer.EMAIL.setValue(this, email);
 //    }
 //
-//    /** A form field only */
-//    public String getPassword() {
-//        return PASSWORD.of(this);
+//    /** Administrator role sign */
+//    public Boolean getAdmin() {
+//        return ADMIN.of(this);
 //    }
 //
-//    /** A form field only */
-//    public void setPassword(String password) {
-//        Customer.PASSWORD.setValue(this, password);
+//    /** Administrator role sign */
+//    public void setAdmin(Boolean admin) {
+//        Customer.ADMIN.setValue(this, admin);
 //    }
-    //</editor-fold>
+//
+//    /** Customer state (the true or null values are required) */
+//    public Boolean getActive() {
+//        return ACTIVE.of(this);
+//    }
+//
+//    /** Customer state (the true or null values are required) */
+//    public void setActive(Boolean active) {
+//        Customer.ACTIVE.setValue(this, active);
+//    }
 
+    //</editor-fold>
 
 }

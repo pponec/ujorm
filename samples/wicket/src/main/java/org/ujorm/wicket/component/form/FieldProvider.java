@@ -38,7 +38,9 @@ import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
+import org.ujorm.wicket.component.form.fields.EnumField;
 import org.ujorm.wicket.component.form.fields.Field;
+import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
 
 /**
@@ -46,6 +48,9 @@ import org.ujorm.wicket.component.form.fields.TextAreaField;
  * @author Pavel Ponec
  */
 public class FieldProvider<U extends Ujo> implements Serializable {
+
+    /** Password key name to create a component PasswordField */
+    public static final String PASSWORD_KEY_NAME = "password";
 
     private RepeatingView repeatingView;
     private Map<String, Field> fields = new LinkedHashMap<String, Field>(16);
@@ -78,10 +83,16 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         if (key.isTypeOf(Boolean.class)) {
             field = new BooleanField(key);
         } else if (key.isTypeOf(String.class)) {
-            final int length = ValidatorUtils.getMaxLength(key.getValidator());
-            field = length >= getTextAreaLimit()
-                    ? new TextAreaField(key)
-                    : new Field(key);
+            if (PASSWORD_KEY_NAME.equals(key.getName())) {
+                field = new PasswordField(key);
+            } else {
+                final int length = ValidatorUtils.getMaxLength(key.getValidator());
+                field = length >= getTextAreaLimit()
+                        ? new TextAreaField(key)
+                        : new Field(key);
+            }
+        } else if (key.isTypeOf(Enum.class)) {
+            field = new EnumField(key, "combo");
         } else {
             field = new Field(key); // The common field
         }
