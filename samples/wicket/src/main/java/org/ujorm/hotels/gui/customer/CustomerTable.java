@@ -29,9 +29,9 @@ import org.ujorm.wicket.component.grid.UjoDataProvider;
  * Customer Panel
  * @author Pavel Ponec
  */
-public class CustomerPanel extends Panel {
+public class CustomerTable extends Panel {
 
-    public CustomerPanel(String id) {
+    public CustomerTable(String id) {
         super(id);
 
         UjoDataProvider<Customer> columns
@@ -43,8 +43,8 @@ public class CustomerPanel extends Panel {
         columns.addColumn(Customer.EMAIL);
         columns.addColumn(Customer.ADMIN);
         columns.addColumn(Customer.ACTIVE);
-        columns.setSort(Customer.LOGIN);
         columns.addColumn(newActionColumn());
+        columns.setSort(Customer.LOGIN);
         add(columns.createDataTable(10));
     }
 
