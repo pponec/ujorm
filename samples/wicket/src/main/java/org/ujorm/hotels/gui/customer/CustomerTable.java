@@ -15,21 +15,36 @@
  */
 package org.ujorm.hotels.gui.customer;
 
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.customer.action.CustActionPanel;
+import org.ujorm.hotels.gui.hotel.action.Toolbar;
+import org.ujorm.hotels.services.DbService;
+import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicket.component.dialog.MessageDialogPanel;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
+import static org.ujorm.wicket.CommonActions.*;
+import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
 
 /**
  * Customer Panel
  * @author Pavel Ponec
  */
 public class CustomerTable extends Panel {
+
+    @SpringBean(name="dbService") DbService dbService;
+    private CustomerEditor editDialog;
+    private MessageDialogPanel removeDialog;
 
     public CustomerTable(String id) {
         super(id);
@@ -46,7 +61,43 @@ public class CustomerTable extends Panel {
         columns.addColumn(newActionColumn());
         columns.setSort(Customer.LOGIN);
         add(columns.createDataTable(10));
+
+        // Dialogs:
+        add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
+        add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
     }
+
+    /** Manage events */
+    @Override
+    public void onEvent(IEvent<?> argEvent) {
+        if (argEvent.getPayload() instanceof UjoEvent) {
+            final UjoEvent<Customer> event = (UjoEvent<Customer>) argEvent.getPayload();
+
+            if (event.isAction(UPDATE)) {
+                if (event.showDialog()) {
+                    editDialog.show(event, new ResourceModel("dialog.edit.title"));
+                } else {
+                    dbService.updateCustomer(event.getDomain());
+                    reloadTable(event);
+                }
+            }
+            else if (event.isAction(DELETE)) {
+                if (event.showDialog()) {
+                    removeDialog.setMessage(new Model("Do you want to remove selected Customer really?"));
+                    removeDialog.show(event
+                            , new ResourceModel("dialog.delete.title")
+                            , "delete");
+                } else {
+                    dbService.deleteCustomer(event.getDomain());
+                    reloadTable(event);
+                }
+            }
+            else if (event.isAction(Toolbar.FILTER_ACTION)) {
+                reloadTable(event);
+            }
+        }
+    }
+
 
     /** Nabídka akcí: */
     private AbstractColumn<Customer, KeyRing<Customer>> newActionColumn() {
@@ -58,6 +109,40 @@ public class CustomerTable extends Panel {
                 item.add(panel);
             }
         };
+    }
+
+    /** Create the editor dialog */
+    private CustomerEditor createEditDialog(String componentId, int width, int height) {
+        IModel<Customer> model = Model.of(new Customer());
+        final ModalWindow modalWindow = new ModalWindow(componentId, model);
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final CustomerEditor result = new CustomerEditor(modalWindow, model);
+        modalWindow.setInitialWidth(width);
+        modalWindow.setInitialHeight(height);
+        modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
+        //modalWindow.setCookieName("modal-dialog");
+
+        return result;
+    }
+
+    /** Create the editor dialog */
+    private MessageDialogPanel createMessageDialog(String componentId, int width, int height) {
+        IModel<String> model = Model.of("");
+        final ModalWindow modalWindow = new ModalWindow(componentId, model);
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final MessageDialogPanel result = new MessageDialogPanel(modalWindow, model);
+        modalWindow.setInitialWidth(width);
+        modalWindow.setInitialHeight(height);
+        //modalWindow.setCookieName("modal-dialog");
+
+        return result;
+    }
+
+    /** Reload the data table */
+    private void reloadTable(UjoEvent event) {
+        event.getTarget().add(get(DEFAULT_DATATABLE_ID));
     }
 
 }
