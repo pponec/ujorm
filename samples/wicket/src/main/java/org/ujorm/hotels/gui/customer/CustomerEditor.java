@@ -32,6 +32,7 @@ public class CustomerEditor extends EntityDialogPanel<Customer> {
 
         // Editable fields:
         fields.add(Customer.LOGIN);
+        fields.add(Customer.PASSWORD);
         fields.add(Customer.TITLE);
         fields.add(Customer.FIRSTNAME);
         fields.add(Customer.SURENAME);
@@ -41,7 +42,6 @@ public class CustomerEditor extends EntityDialogPanel<Customer> {
 
         // Modify attribute(s):
         fields.getField(Customer.LOGIN).setEnabled(false);
-        fields.getField(Customer.TITLE).setEnabled(false);
     }
 
 }
