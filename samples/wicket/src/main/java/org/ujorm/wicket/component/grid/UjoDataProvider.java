@@ -87,8 +87,8 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     /** Data size */
     protected Long size;
 
-    /** Data criterion */
-    protected Criterion<T> criterion;
+    /** Data criterion model */
+    protected IModel<Criterion<T>> criterion;
     /** Domain model */
     protected KeyRing<T> model;
     /** Visible table columns */
@@ -107,18 +107,19 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public UjoDataProvider(Criterion<T> criterion) {
+    public UjoDataProvider(IModel<Criterion<T>> criterion) {
         this(criterion, null);
     }
 
     /** Constructor
-     * @param criterion Condition to a database query
+     * @param criterion Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public UjoDataProvider(Criterion<T> criterion, Key<T,?> defaultSort) {
+    public UjoDataProvider(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
         this.ormSession = new OrmSessionProvider();
         this.criterion = Args.notNull(criterion, "Criterion is mandatory");
-        model = KeyRing.of((Class<T>)criterion.getDomain());
+
+        model = KeyRing.of((Class<T>)criterion.getObject().getDomain());
         if (defaultSort == null) {
             defaultSort = model.getFirstKey();
         }
@@ -161,7 +162,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
                 , "The argument 'count' have got limit %s but the current value is %s"
                 , Integer.MAX_VALUE
                 , count);
-        Query<T> query = createQuery(criterion)
+        Query<T> query = createQuery(criterion.getObject())
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKey());
         fetchDatabaseColumns(query);
@@ -176,7 +177,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     @Override
     public long size() {
        if (size == null) {
-           size = createQuery(criterion).getCount();
+           size = createQuery(criterion.getObject()).getCount();
        }
        return size;
     }
@@ -354,13 +355,24 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
         return new UjoDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion) {
         return new UjoDataProvider<T>(criterion, null);
     }
+
+    /** Factory for the class */
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
+        return new UjoDataProvider<T>(Model.of(criterion), defaultSort);
+    }
+
+    /** Factory for the class */
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
+        return new UjoDataProvider<T>(Model.of(criterion), null);
+    }
+
 
 }
