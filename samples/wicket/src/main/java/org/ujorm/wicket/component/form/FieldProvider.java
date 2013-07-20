@@ -34,7 +34,6 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
-import org.ujorm.orm.utility.OrmTools;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.fields.BooleanField;
