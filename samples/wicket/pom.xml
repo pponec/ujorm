@@ -10,7 +10,7 @@
     <version>0.9.11-SNAPSHOT</version>
     <packaging>war</packaging>
     <description>A sample application based on the Ujorm, Wicket and Spring frameworks</description>
-    
+
     <organization>
         <name>No company</name>
         <url>http://ujorm.orm/</url>
@@ -97,12 +97,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.0.13</version>
-        </dependency>        
+        </dependency>
        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
-        </dependency>              
+        </dependency>
 
         <!-- SPRING: see http://blog.springsource.com/2009/12/02/obtaining-spring-3-artifacts-with-maven/ -->
 
@@ -273,6 +273,19 @@
             </resource>
             -->
         </resources>
+
+        <testResources>
+            <testResource>
+              <directory>src/test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <inherited>true</inherited>

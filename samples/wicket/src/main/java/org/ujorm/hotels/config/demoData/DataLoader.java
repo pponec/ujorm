@@ -18,6 +18,7 @@ package org.ujorm.hotels.config.demoData;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.core.UjoManagerCSV;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
@@ -46,7 +47,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    private List<City> getCities() throws Exception {
+    @PackagePrivate List<City> getCities() throws Exception {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
@@ -62,7 +63,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    private List<Hotel> getHotels() throws Exception {
+    @PackagePrivate List<Hotel> getHotels() throws Exception {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
@@ -81,7 +82,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    private List<Customer> getCustomers() throws Exception {
+    @PackagePrivate List<Customer> getCustomers() throws Exception {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8.name());
         UjoManagerCSV manager = UjoManagerCSV.getInstance
                 ( Customer.LOGIN
