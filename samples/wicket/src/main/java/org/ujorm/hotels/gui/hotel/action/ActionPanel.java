@@ -18,7 +18,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.Ujo;
+import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.wicket.CommonActions.*;
 
@@ -28,27 +30,42 @@ import static org.ujorm.wicket.CommonActions.*;
  */
 public class ActionPanel<T extends Ujo> extends Panel {
 
+        /** Default value is the same like the field */
+    public static final String BOOKING = "BOOKING";
+
+    @SpringBean
+    private AuthService authService;
+
+    /** Current row */
+    private T row;
+
+
     public ActionPanel(String id, final T row) {
         super(id);
+        this.row = row;
 
-        add(new AjaxLink(UPDATE) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(UPDATE, row, target));
-            }
-        });
-
-        add(new AjaxLink(DELETE) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(DELETE, row, target));
-            }
-        });
+        add(createLink(UPDATE, true));
+        add(createLink(DELETE, true));
+        add(createLink(BOOKING, false));
     }
 
-    /** Enable or disable actions */
-    public void setActionEnabled(boolean enabled) {
-        get(UPDATE).setEnabled(enabled);
-        get(DELETE).setEnabled(enabled);
+    /** Create action */
+    protected final AjaxLink createLink(String action, final boolean admin) {
+        AjaxLink link = new AjaxLink(action) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                send(getPage(), Broadcast.BREADTH, new UjoEvent(getId(), row, target));
+            }
+
+            @Override
+            public boolean isVisible() {
+                 return super.isVisible()
+                     && admin == authService.isAdmin(getSession());
+             }
+        };
+
+        link.setOutputMarkupId(true);
+        link.setOutputMarkupPlaceholderTag(true);
+        return link;
     }
 }

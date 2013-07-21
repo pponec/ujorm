@@ -13,30 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.services;
+package org.ujorm.hotels.gui.customer;
 
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.model.IModel;
 import org.ujorm.hotels.entity.Customer;
-import org.ujorm.hotels.entity.Hotel;
+import org.ujorm.wicket.component.dialog.EntityDialogPanel;
 
 /**
- * Common database service
- * @author ponec
+ * Customer Editor
+ * @author Pavel Ponec
  */
-public interface DbService {
+public class LoginDialog extends EntityDialogPanel<Customer> {
+    private static final long serialVersionUID = 0L;
 
-    /** Find a customer */
-    public Customer getCustomer(String login);
+    public LoginDialog(ModalWindow modalWindow, IModel<Customer> model) {
+        super(modalWindow, model);
 
-    /** Delete hotel */
-    public void deleteHotel(Hotel hotel);
-
-    /** Update hotel */
-    public void updateHotel(Hotel hotel);
-
-    /** Delete customer */
-    public void deleteCustomer(Customer customer);
-
-    /** Update customer */
-    public void updateCustomer(Customer customer);
+        // Editable fields:
+        fields.add(Customer.LOGIN);
+        fields.add(Customer.PASSWORD);
+    }
 
 }

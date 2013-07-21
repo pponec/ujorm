@@ -38,6 +38,10 @@ public interface CommonActions {
     /** Default value is the same like the field */
     public static final String ERROR = "ERROR";
     /** Default value is the same like the field */
+    public static final String LOGIN = "LOGIN";
+    /** Default value is the same like the field */
+    public static final String LOGOUT = "LOGOUT";
+    /** Default value is the same like the field */
     public static final String UNDEFINED = "";
 
 }
