@@ -36,7 +36,7 @@ public class DataLoader implements InitializationBatch {
     public void run(Session session) throws Exception {
         if (!session.exists(City.class)) {
             session.save(getCities());
-        }
+            }
         if (!session.exists(Hotel.class)) {
             session.save(getHotels());
         }
@@ -46,7 +46,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    private List<Hotel> getCities() throws Exception {
+    private List<City> getCities() throws Exception {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
@@ -55,6 +55,8 @@ public class DataLoader implements InitializationBatch {
                 , City.NAME
                 , City.COUNTRY
                 , City.COUNTRY_NAME
+                , City.LATITUDE
+                , City.LONGITUDE
                 );
         return manager.loadCSV(scanner, "CSV import");
     }
