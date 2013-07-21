@@ -35,6 +35,12 @@ public class City extends OrmTable<City> {
     /** Country name will be located in the another entity in a real application */
     @Comment("Country name will be located in the another entity in a real application")
     public static final Key<City, String> COUNTRY_NAME = f.newKey(length(MANDATORY, 50));
+    /** A geographic coordinate for east-west position on the Earth */
+    @Comment("A geographic coordinate for north-south position on the Earth")
+    public static final Key<City, Float> LATITUDE = f.newKey(range(MANDATORY, -90f, 90f));
+    /** A geographic coordinate for north-south position on the Earth */
+    @Comment("A geographic coordinate for east-west position on the Earth")
+    public static final Key<City, Float> LONGITUDE = f.newKey(range(MANDATORY, -180f, 180f));
 
     static {
         f.lock();
