@@ -244,6 +244,9 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         else if (Short.class==type) {
             MetaColumn.DB_TYPE.setValue(column, DbType.SMALLINT);
         }
+        else if (Float.class==type) {
+            MetaColumn.DB_TYPE.setValue(column, DbType.REAL);
+        }
         else if (Long.class==type
         || BigInteger.class.isAssignableFrom(type)
         ){
