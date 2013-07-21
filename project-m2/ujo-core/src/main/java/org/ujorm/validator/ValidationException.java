@@ -15,6 +15,8 @@
  */
 package org.ujorm.validator;
 
+import java.util.HashMap;
+
 /**
  * UJO Validatoin Exception
  * @author Pavel Ponec
@@ -23,6 +25,15 @@ public class ValidationException extends IllegalArgumentException {
 
     private final ValidationError error;
 
+    /** Simple constructor */
+    public ValidationException(String localizationKey, String defaultMessage) {
+        this(new ValidationError(localizationKey
+                , new HashMap<String,Object>()
+                , defaultMessage)
+                , null);
+    }
+
+    /** Full constructor */
     public ValidationException(ValidationError error, Throwable cause) {
         super(error.toString(), cause);
         this.error = error;
