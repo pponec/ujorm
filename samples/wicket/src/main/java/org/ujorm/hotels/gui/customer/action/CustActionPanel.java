@@ -14,6 +14,7 @@ package org.ujorm.hotels.gui.customer.action;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -28,27 +29,26 @@ import static org.ujorm.wicket.CommonActions.*;
  */
 public class CustActionPanel<T extends Ujo> extends Panel {
 
-    public CustActionPanel(String id, final T row) {
+    /** Table row */
+    private T row;
+
+    public CustActionPanel(String id, T rowPar) {
         super(id);
+        this.row = rowPar;
 
-        add(new AjaxLink(UPDATE) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(UPDATE, row, target));
-            }
-        });
+        add(createLink(LOGIN));
+        add(createLink(UPDATE));
+        add(createLink(DELETE));
 
-        add(new AjaxLink(DELETE) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(DELETE, row, target));
-            }
-        });
     }
 
-    /** Enable or disable actions */
-    public void setActionEnabled(boolean enabled) {
-        get(UPDATE).setEnabled(enabled);
-        get(DELETE).setEnabled(enabled);
+    /** Create new Link */
+    protected final AjaxLink createLink(String action) {
+        return new AjaxLink(action) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                send(getPage(), Broadcast.BREADTH, new UjoEvent(getId(), row, target));
+            }
+        };
     }
 }

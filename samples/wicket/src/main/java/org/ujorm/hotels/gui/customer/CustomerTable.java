@@ -28,7 +28,9 @@ import org.ujorm.core.KeyRing;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.customer.action.CustActionPanel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
+import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
+import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.MessageDialogPanel;
 import org.ujorm.wicket.component.grid.KeyColumn;
@@ -42,9 +44,12 @@ import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
  */
 public class CustomerTable extends Panel {
 
-    @SpringBean(name="dbService") DbService dbService;
+    @SpringBean private DbService dbService;
+    @SpringBean private AuthService authService;
+
     private CustomerEditor editDialog;
     private MessageDialogPanel removeDialog;
+    private LoginDialog loginDialog;
 
     public CustomerTable(String id) {
         super(id);
@@ -58,13 +63,14 @@ public class CustomerTable extends Panel {
         columns.addColumn(Customer.EMAIL);
         columns.addColumn(Customer.ADMIN);
         columns.addColumn(Customer.ACTIVE);
-        columns.addColumn(newActionColumn());
+        columns.addColumn(createActionColumn());
         columns.setSort(Customer.LOGIN);
         add(columns.createDataTable(10));
 
         // Dialogs:
         add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
+        add((loginDialog = createLoginDialog("loginDialog", 700, 250)).getModalWindow());
     }
 
     /** Manage events */
@@ -95,12 +101,20 @@ public class CustomerTable extends Panel {
             else if (event.isAction(Toolbar.FILTER_ACTION)) {
                 reloadTable(event);
             }
+            else if (event.isAction(LOGIN)) {
+                if (event.showDialog()) {
+                    loginDialog.show(event, new ResourceModel("dialog.login.title"));
+                } else {
+                    if (!authService.authenticate(event.getDomain(), getSession())) {
+                        throw new ValidationException("login.failed", "Login failed");
+                    }
+                }
+            }
         }
     }
 
-
-    /** Nabídka akcí: */
-    private AbstractColumn<Customer, KeyRing<Customer>> newActionColumn() {
+    /** Create action column */
+    private AbstractColumn<Customer, KeyRing<Customer>> createActionColumn() {
         return new KeyColumn<Customer, Integer>(KeyRing.of(Customer.ID), null, null) {
             @Override
             public void populateItem(Item item, String componentId, IModel model) {
@@ -121,6 +135,21 @@ public class CustomerTable extends Panel {
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
+        //modalWindow.setCookieName("modal-dialog");
+
+        return result;
+    }
+
+    /** Create the editor dialog */
+    private LoginDialog createLoginDialog(String componentId, int width, int height) {
+        IModel<Customer> model = Model.of(new Customer());
+        final ModalWindow modalWindow = new ModalWindow(componentId, model);
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final LoginDialog result = new LoginDialog(modalWindow, model);
+        modalWindow.setInitialWidth(width);
+        modalWindow.setInitialHeight(height);
+        modalWindow.setTitle(new ResourceModel("dialog.login.title"));
         //modalWindow.setCookieName("modal-dialog");
 
         return result;

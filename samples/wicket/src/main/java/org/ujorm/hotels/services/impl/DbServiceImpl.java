@@ -15,28 +15,25 @@
  */
 package org.ujorm.hotels.services.impl;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.*;
-import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidationException;
 import static org.ujorm.core.UjoManager.*;
 /**
  * Common database service implementations
  * @author ponec
  */
-@Service
 @Transactional
 public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
+
+    @Autowired
+    private AuthService authService;
 
     /** Read only sign */
     private boolean readOnly;
@@ -84,7 +81,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         String password = customer.get(Customer.PASSWORD);
         if (isFilled(password)) {
             customer.writeSession(getSession()); // Activate modifications
-            customer.set(Customer.PASSWORD_HASH, getHash(password));
+            customer.set(Customer.PASSWORD_HASH, authService.getHash(password));
         }
 
         getSession().update(customer);
@@ -93,24 +90,8 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     /** Check a read-only state */
     private void checkReadOnly() throws ValidationException {
         if (readOnly) {
-            String localKey = "exception.readOnly";
-            ValidationError error = new ValidationError
-                    ( localKey
-                    , new HashMap<String,Object>()
-                    , "It is allowed a read only actions, download the project for all features.");
-            throw new ValidationException(error, new UnsupportedOperationException(error.getDefaultMessage()));
-        }
-    }
-
-    /** Get a hash from the text */
-    @Override
-    public long getHash(String text) throws IllegalStateException {
-        try {
-            final MessageDigest md = MessageDigest.getInstance("SHA-256");
-            final byte[] digest = md.digest(text.getBytes(UjoService.UTF_8));
-            return new BigInteger(digest).longValue();
-        } catch (Throwable e) {
-            throw new IllegalStateException("Method getHash() failed. ", e);
+            throw new ValidationException("exception.readOnly"
+                , "It is allowed a read only actions, download the project for all features.");
         }
     }
 
