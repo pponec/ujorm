@@ -34,6 +34,7 @@ public enum DbType {
     /* Oracle support for replacing the BIGINT */
     //NUMBER(Types.BIGINT),
     DECIMAL(Types.DECIMAL),
+    FLOAT(Types.FLOAT),
     DOUBLE(Types.DOUBLE),
     REAL(Types.REAL),
     TIME(Types.TIME),
@@ -48,7 +49,7 @@ public enum DbType {
     BLOB(Types.BLOB),
     CLOB(Types.CLOB),
     NULL(Types.NULL),
- 
+
     //UUID(Types.UUID),
     //ARRAY(Types.ARRAY),
     ;

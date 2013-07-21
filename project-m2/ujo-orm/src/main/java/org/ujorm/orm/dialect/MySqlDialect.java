@@ -35,7 +35,7 @@ public class MySqlDialect extends SqlDialect {
 
     /** The Max length of VARCHAR database type */
     public static final int VARCHAR_MAX_LENGTH = 21845;
-    
+
     @Override
     public String getJdbcUrl() {
         return "jdbc:mysql://127.0.0.1:3306/db1";
@@ -45,9 +45,9 @@ public class MySqlDialect extends SqlDialect {
     public String getJdbcDriver() {
         return "com.mysql.jdbc.Driver";
     }
-    
-    /** Does the database support a catalog? 
-     * The feature supports: MySqlDialect and MSSqlDialect. 
+
+    /** Does the database support a catalog?
+     * The feature supports: MySqlDialect and MSSqlDialect.
      * @return The default value is  {@code true}.
      */
     @Override
@@ -63,7 +63,7 @@ public class MySqlDialect extends SqlDialect {
         ) throws IOException
     {
         out.append("DELETE FROM ");
-        
+
         final TableWrapper[] tables = decoder.getTablesSorted();
         if (tables.length==1) {
             tables[0] = new TableWrapperImpl(decoder.getBaseTable(), "");
@@ -81,12 +81,12 @@ public class MySqlDialect extends SqlDialect {
             , CriterionDecoder decoder
             , Appendable out
             ) throws IOException {
-        
+
         final TableWrapper[] tables = decoder.getTablesSorted();
         if (tables.length==1) {
             tables[0] = new TableWrapperImpl(decoder.getBaseTable(), "");
         }
-        
+
         out.append("UPDATE ");
         for (int i = 0; i < tables.length; i++) {
             if (i > 0) { out.append(", "); }
@@ -106,7 +106,7 @@ public class MySqlDialect extends SqlDialect {
         return printWhere(decoder, tables, out);
     }
 
-    /** Print where condition for DELETE / UPDATE 
+    /** Print where condition for DELETE / UPDATE
      * TODO: FIX THE IMPLEMENTATION - probably in the CriterionDecoder class
      */
     protected Appendable printWhere(CriterionDecoder decoder, final TableWrapper[] tables, Appendable out) throws IOException {
@@ -115,11 +115,11 @@ public class MySqlDialect extends SqlDialect {
         if (tables.length==1) {
             String fullTableName = printFullTableName(decoder.getBaseTable(), new StringBuilder(64)).toString();
             String tableAlias = printQuotedName(decoder.getBaseTable().getAlias(), new StringBuilder(64)).toString();
-            where = where.replace(tableAlias + '.', fullTableName + '.');  
+            where = where.replace(tableAlias + '.', fullTableName + '.');
         }
         out.append(where);
         return out;
-    }    
+    }
 
     @Override
     public Appendable printSequenceTable(MetaDatabase db, Appendable out) throws IOException {
@@ -154,12 +154,12 @@ public class MySqlDialect extends SqlDialect {
             case CLOB:
                 //mysql dont have clob but text
                 //http://dev.mysql.com/doc/refman/5.0/en/blob.html
-               //http://www.htmlite.com/mysql003.php
+                //http://www.htmlite.com/mysql003.php
                 return "LONGTEXT";
             case BLOB:
                 return "LONGBLOB";
             case VARCHAR:
-                return column.getMaxLength() > VARCHAR_MAX_LENGTH 
+                return column.getMaxLength() > VARCHAR_MAX_LENGTH
                         ? "TEXT"
                         : super.getColumnType(column);
             default:
@@ -214,5 +214,5 @@ public class MySqlDialect extends SqlDialect {
         sql.append('`'); // quotation end character based on SQL dialect
         return sql;
     }
-    
+
 }
