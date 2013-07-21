@@ -48,12 +48,12 @@ public class Hotel extends OrmTable<Hotel> {
     /** URL to the HomePage */
     @Comment("URL to the HomePage")
     public static final Key<Hotel, String> HOME_PAGE = f.newKey(length(256));
-    /** Price per night in EUR */
-    @Comment("Price per night in EUR")
+    /** Price per night in USD */
+    @Comment("Price per night in USD")
     public static final Key<Hotel, BigDecimal> PRICE = f.newKey(min(MANDATORY, BigDecimal.ZERO));
     /** Currency of the price */
     @Comment("Currency of the price")
-    public static final Key<Hotel, String> CURRENCY = f.newKeyDefault("EUR", length(MANDATORY, 3, 3));
+    public static final Key<Hotel, String> CURRENCY = f.newKeyDefault("USD", length(MANDATORY, 3, 3));
     /** Hotel state, default is ACTIVE (the true or null is required) */
     @Comment("Hotel state (the true or null is required)")
     @Column(index=INDEX_HOTEL_NAME)
