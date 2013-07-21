@@ -17,6 +17,8 @@ package org.ujorm.hotels.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -47,8 +49,10 @@ public class HomePage extends WebPage {
         OrmHandler handler = appl.getOrmHandler();
 
         // Footer:
-        // TODO ...
-    }
-
-
+        add(new AjaxLink("aboutLink") {
+            @Override public void onClick(AjaxRequestTarget target) {
+                ((UjoTabbedPanel)HomePage.this.get("tabs")).selectedTab(AboutPanel.class, target);
+            }
+        });
+   }
 }

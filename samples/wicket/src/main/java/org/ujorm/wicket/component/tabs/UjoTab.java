@@ -85,4 +85,9 @@ public class UjoTab extends AbstractTab {
         }
     }
 
+    /** Get panel class */
+    public Class<? extends WebMarkupContainer> getPanelClass() {
+        return panel;
+    }
+
 }

@@ -65,6 +65,18 @@ public class UjoTabbedPanel<T extends UjoTab>
         setDefaultSelectedTab(getSelectedTab());
     }
 
+    /** Select new tab. */
+    public final void selectedTab(final Class<? extends UjoTab> tab, AjaxRequestTarget target) {
+        final List<T> tabs = getTabs();
+        for (int i=0, max=tabs.size(); i<max; ++i) {
+            if (tab.isAssignableFrom(tabs.get(i).getPanelClass())) {
+                setSelectedTab(i);
+                break;
+            }
+        }
+        target.add(this);
+    }
+
     /** Assign a selected tab and add a user CSS class.
      * <br/>{@inheritDoc}
      */

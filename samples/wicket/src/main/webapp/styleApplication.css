@@ -95,3 +95,17 @@ hr {
 .toolbar {
     margin-bottom: 3px;
 }
+
+div.footer {
+    color: gray;
+    border-top: thick solid buttonface;
+    margin-top: 60px;
+    padding: 10px 20px 15px;
+    font-size: 11px;
+    background-color: #f7f7f7;
+}
+
+div.footer a {
+    text-decoration: none;
+    xxxcolor: gray;
+}
