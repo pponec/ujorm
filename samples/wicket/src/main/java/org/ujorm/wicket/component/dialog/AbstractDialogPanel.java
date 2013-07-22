@@ -54,7 +54,6 @@ public abstract class AbstractDialogPanel<T> extends Panel {
     public AbstractDialogPanel(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow.getContentId(), model);
         this.modalWindow = modalWindow;
-        this.setOutputMarkupId(true);
         this.setOutputMarkupPlaceholderTag(true);
 
         // Form:
