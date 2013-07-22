@@ -77,7 +77,6 @@ public class Field extends Panel {
         super.onInitialize();
 
         this.add(new CssAppender(getCssClass()));
-        this.setOutputMarkupId(true);
         this.setOutputMarkupPlaceholderTag(true);
 
         add(div = new WebMarkupContainer("editField"));

@@ -64,7 +64,6 @@ public class ActionPanel<T extends Ujo> extends Panel {
              }
         };
 
-        link.setOutputMarkupId(true);
         link.setOutputMarkupPlaceholderTag(true);
         return link;
     }

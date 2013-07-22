@@ -35,7 +35,6 @@ public class FeedbackField extends Field {
     public FeedbackField(String id) {
         super(id, null, null);
         setDefaultModel(new Model(""));
-        setOutputMarkupId(true);
         setOutputMarkupPlaceholderTag(true);
     }
 
