@@ -24,6 +24,7 @@ import org.ujorm.core.UjoService;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.services.*;
+import org.ujorm.validator.ValidationException;
 /**
  * Common database service implementations
  * @author ponec
@@ -84,8 +85,6 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
                 : null ;
     }
 
-
-
     /** Is logged admin */
     @Override
     public boolean isAdmin(Session session) {
@@ -97,6 +96,11 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     /** Get a hash from the text */
     @Override
     public long getHash(String text) throws IllegalStateException {
+        if (text==null) {
+            throw new ValidationException
+                    ( "login.emptyPassword"
+                    , "Password must not be empty");
+        }
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
             final byte[] digest = md.digest(text.getBytes(UjoService.UTF_8));
