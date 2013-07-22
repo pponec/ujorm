@@ -101,7 +101,7 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
 
     private Session getSession() {
         if (session == null) {
-            throw new IllegalStateException("session doesnt exist, check pointcut mapping");
+            throw new IllegalStateException("ORM session does not exists, check pointcut mapping");
         } else {
             return session;
         }

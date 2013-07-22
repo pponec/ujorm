@@ -77,7 +77,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
                LOGGER.log(UjoLogger.TRACE
                        , "Transaction is finished on the "
                        + (commit ? "Commit" : "Rollback"));
-            }            
+            }
             if (commit) {
                localSession.commitTransaction();
             } else try {
@@ -115,7 +115,7 @@ public class UjormTransactionManager extends AbstractPlatformTransactionManager 
     public Session getLocalSession() throws IllegalStateException {
         final Session result = session.get();
         if (result == null) {
-            throw new IllegalStateException("Session does not exists, check pointcut mapping");
+            throw new IllegalStateException("ORM session does not exists, check pointcut mapping");
         }
         return result;
     }
