@@ -39,9 +39,6 @@ import org.ujorm.hotels.entity.City;
  */
 public class DataLoaderTest {
 
-    public DataLoaderTest() {
-    }
-
     /** Test method to dowload data from source: http://api.hotelsbase.org/ */
     //@Test
     public void testDownloadData() throws Exception {
@@ -68,7 +65,9 @@ public class DataLoaderTest {
         makeXslTransformation(source, xsl, cityArg, cityArg);
     }
 
-    /** Builda data URL: */
+    /** Load data from URL by an example: <br/>
+     * http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
+     */
     public URL createDataUrl(City city) throws MalformedURLException {
         String result = String.format
                 ( "http://api.hotelsbase.org/search.php?latitude=%s&longitude=%s&distanceMax=%s"
