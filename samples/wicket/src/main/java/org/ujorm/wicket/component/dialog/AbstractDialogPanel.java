@@ -25,6 +25,8 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.CssAppender;
@@ -36,6 +38,8 @@ import org.ujorm.wicket.UjoEvent;
  */
 public abstract class AbstractDialogPanel<T> extends Panel {
     private static final long serialVersionUID = 20130621L;
+    /** Default logger */
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDialogPanel.class);
 
     protected static final String BUTTON_PREFIX = "button.";
     protected static final String ACTION_BUTTON_ID = "actionButton";
@@ -152,6 +156,7 @@ public abstract class AbstractDialogPanel<T> extends Panel {
         } else {
             final String msg = e.getClass().getSimpleName() + ": " + e.getMessage();
             setFeedback(Model.of(msg));
+            LOGGER.error(msg, e); // Unchecked exception
         }
     }
 

@@ -70,7 +70,7 @@ public class CustomerTable extends Panel {
         // Dialogs:
         add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
-        add((loginDialog = createLoginDialog("loginDialog", 700, 250)).getModalWindow());
+        add((loginDialog = createLoginDialog("loginDialog", 600, 150)).getModalWindow());
     }
 
     /** Manage events */
