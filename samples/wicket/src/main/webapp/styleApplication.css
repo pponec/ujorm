@@ -107,5 +107,13 @@ div.footer {
 
 div.footer a {
     text-decoration: none;
-    xxxcolor: gray;
+}
+
+div#logo {
+    width : 700px;
+}
+
+div.login {
+    float: right;
+    margin-top: 20px;
 }

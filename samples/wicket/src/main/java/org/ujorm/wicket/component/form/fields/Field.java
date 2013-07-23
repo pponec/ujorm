@@ -30,8 +30,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
+import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.CssAppender;
@@ -65,6 +67,12 @@ public class Field extends Panel {
         this(property.getName(), property, null);
     }
 
+    /**
+     * The default constructor
+     * @param componentId Required component
+     * @param property Optional Ujorm Key
+     * @param cssClass Optional CSS class
+     */
     public Field(String componentId, Key property, String cssClass) {
         super(componentId, Model.of());
         this.key = KeyRing.of(property);
@@ -157,7 +165,7 @@ public class Field extends Panel {
         final SimpleFormComponentLabel result = new SimpleFormComponentLabel("label", (LabeledWebMarkupContainer)input);
         //result.setDefaultModel(createLabelModel()); // see the: FormComponent.setLabel()
 
-        if (isMandatory()) {
+        if (isRequired()) {
             result.add(new CssAppender(CSS_REQUIRED));
         }
         return result;
@@ -172,7 +180,7 @@ public class Field extends Panel {
     }
 
     /** Is the field required ? */
-    protected boolean isMandatory() {
+    protected boolean isRequired() {
         boolean result = validator instanceof UjoValidator
             && ValidatorUtils.isMandatoryValidator(((UjoValidator) validator).getValidator());
         return result;

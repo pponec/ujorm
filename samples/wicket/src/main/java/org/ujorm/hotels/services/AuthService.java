@@ -24,11 +24,8 @@ import org.ujorm.hotels.entity.Customer;
  */
 public interface AuthService {
 
-    /** Authenticate the user */
+    /** Authenticate the user and save the result to the Wicket session */
     public boolean authenticate(Customer customer, Session session);
-
-    /** Authenticate the user */
-    public boolean authenticate(String login, String password, Session session);
 
     /** Logout */
     public void logout(Session session);

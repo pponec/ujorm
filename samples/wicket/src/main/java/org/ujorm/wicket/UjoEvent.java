@@ -16,6 +16,7 @@
 package org.ujorm.wicket;
 
 import java.io.Serializable;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -80,13 +81,18 @@ public class UjoEvent<U> {
         return target;
     }
 
+    /** Add required component to the target */
+    public void addTarget(Component... components) {
+        target.add(components);
+    }
+
     /** Get action */
     public String getAction() {
         return action;
     }
 
     /**
-     * Is the required action?
+     * Is it the required action?
      * @param action Nullable argument
      * @return The true value for the match.
      */
@@ -94,6 +100,20 @@ public class UjoEvent<U> {
         return action != null
             && this.action.hashCode() == action.hashCode()
             && this.action.equals(action);
+    }
+
+    /**
+     * Check the the required actions from argument to match.
+     * @param action Nullable argument
+     * @return The true value for the match.
+     */
+    public final boolean isAction(String ... actions) {
+        for (String act : actions) {
+            if (isAction(act)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** A request to open a dialog */

@@ -18,45 +18,31 @@ package org.ujorm.hotels.services.impl;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import org.apache.wicket.Session;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.ujorm.core.UjoService;
-import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.services.*;
 import org.ujorm.validator.ValidationException;
 /**
  * Common database service implementations
- * @author ponec
+ * @author Pavel Ponec
  */
-@Service
 public class AuthServiceImpl extends AbstractServiceImpl implements AuthService {
 
     private static final String CUSTOMER_ATTR = "CUSTOMER_ATTR";
 
-    /** Authenticate the user */
+    @Autowired
+    private DbService dbService;
+
+    /** Authenticate the user and save the result to the Wicket session */
     @Override
     public boolean authenticate(Customer customer, Session session) {
-        return authenticate
+        Customer result = customer==null ? customer : dbService.findCustomer
              ( customer.get(Customer.LOGIN)
-             , customer.get(Customer.PASSWORD)
-             , session );
-    }
+             , customer.get(Customer.PASSWORD));
 
-
-    /** Authenticate the user */
-    @Transactional
-    @Override
-    public boolean authenticate(String login, String password, Session session) {
-        final Criterion<Customer> crn1, crn2, crn3, crn4;
-        crn1 = Customer.LOGIN.whereEq(login);
-        crn2 = Customer.PASSWORD_HASH.whereEq(getHash(password));
-        crn3 = Customer.ACTIVE.whereEq(true);
-        crn4 = crn1.and(crn2).and(crn3);
-
-        Customer customer = getSession().createQuery(crn4).uniqueResult();
-        if (customer != null) {
-            customer.writeSession(null);
+        if (result != null) {
+            result.writeSession(null);
             session.setAttribute(CUSTOMER_ATTR, customer);
             return true;
         } else {

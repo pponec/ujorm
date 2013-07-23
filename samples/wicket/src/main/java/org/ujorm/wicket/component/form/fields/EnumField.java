@@ -15,47 +15,49 @@
  */
 package org.ujorm.wicket.component.form.fields;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.wicket.component.tools.UjoChoiceRendererNullable;
 
 /**
  * CheckBox field with a Label includding a feedback message.
  * @author Pavel Ponec
  */
-public class EnumField<T extends Ujo, E extends Enum> extends Field {
-
+public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
     private static final long serialVersionUID = 20130621L;
+    /** This component does not support the {@code null} item now. */
+    private static final boolean NULL_SUPPORT = false;
+    /** Available items */
     private List<E> items;
 
     public EnumField(Key<T, E> property) {
         this(property, null);
     }
+    
     public EnumField(Key<T, E> property, String cssClass) {
         super(property.getName(), property, null);
         this.items = Arrays.asList(property.getType().getEnumConstants());
+        if (NULL_SUPPORT && !isRequired()) {
+            ArrayList list = new ArrayList(items.size() + 1);
+            list.add(null);
+            list.addAll(items);
+            items = Collections.unmodifiableList(list);
+        }
     }
 
     /** Create Form inputComponent */
     @Override
     protected FormComponent createInput(String componentId, IModel model) {
-        DropDownChoice<E> result = new DropDownChoice<E>(componentId, new Model(), getItems(), new IChoiceRenderer<E>() {
-
-            @Override public Object getDisplayValue(E object) {
-                return getComboDisplayValue(object);
-            }
-
-            @Override public String getIdValue(E object, int index) {
-                return getComboIdValue(object, index);
-            }
-
-        });
+        DropDownChoice<E> result = new DropDownChoice<E>(componentId, new Model(), getItems());
+        result.setChoiceRenderer(new UjoChoiceRendererNullable<E>(this));
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;
