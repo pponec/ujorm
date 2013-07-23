@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
@@ -54,7 +56,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     @Override
     public void deleteHotel(Hotel hotel) {
         LOGGER.info("Delete hotel {}", hotel);
-        checkReadOnly();
+        checkReadOnly(hotel);
         getSession().delete(hotel);
     }
 
@@ -62,14 +64,14 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     @Override
     public void updateHotel(Hotel hotel) {
         LOGGER.info("Update hotel {}", hotel);
-        checkReadOnly();
+        checkReadOnly(hotel);
         getSession().update(hotel);
     }
 
     @Override
     public void deleteCustomer(Customer customer) {
         LOGGER.info("Delete customer {}", customer);
-        checkReadOnly();
+        checkReadOnly(customer);
         getSession().delete(customer);
     }
 
@@ -77,7 +79,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     @Override
     public void updateCustomer(Customer customer) {
         LOGGER.info("Update customer {}", customer);
-        checkReadOnly();
+        checkReadOnly(customer);
 
         String password = customer.get(Customer.PASSWORD);
         if (isFilled(password)) {
@@ -101,10 +103,19 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     }
 
     /** Check a read-only state */
-    private void checkReadOnly() throws ValidationException {
+    private void checkReadOnly(Ujo ujo) throws ValidationException {
         if (readOnly) {
+
+            Key<Ujo,Integer> key = (Key<Ujo,Integer>) ujo.readKeys().find("ID");
+            if (key != null
+            &&  key.isTypeOf(Integer.class)
+            &&  key.of(ujo).compareTo(0) > 0) {
+                return; // User data can be modified only.
+            }
+
             throw new ValidationException("exception.readOnly"
-                , "It is allowed a read only actions, download the project for all features.");
+                , "There is not allowed to modify a demo data"
+                + ", download the project for all features.");
         }
     }
 
