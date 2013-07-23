@@ -59,8 +59,7 @@ public class ActionPanel<T extends Ujo> extends Panel {
 
             @Override
             public boolean isVisible() {
-                 return super.isVisible()
-                     && admin == authService.isAdmin(getSession());
+                 return admin == authService.isAdmin(getSession());
              }
         };
 

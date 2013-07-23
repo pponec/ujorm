@@ -19,7 +19,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.Ujo;
+import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.wicket.CommonActions.*;
 
@@ -29,6 +31,9 @@ import static org.ujorm.wicket.CommonActions.*;
  */
 public class CustActionPanel<T extends Ujo> extends Panel {
 
+    @SpringBean
+    private AuthService authService;
+
     /** Table row */
     private T row;
 
@@ -36,19 +41,24 @@ public class CustActionPanel<T extends Ujo> extends Panel {
         super(id);
         this.row = rowPar;
 
-        add(createLink(LOGIN));
-        add(createLink(UPDATE));
-        add(createLink(DELETE));
+        add(createLink(LOGIN, false));
+        add(createLink(UPDATE, true));
+        add(createLink(DELETE, true));
 
     }
 
     /** Create new Link */
-    protected final AjaxLink createLink(String action) {
+    protected final AjaxLink createLink(String action, final boolean admin) {
         return new AjaxLink(action) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 send(getPage(), Broadcast.BREADTH, new UjoEvent(getId(), row, target));
             }
+
+            @Override
+            public boolean isVisible() {
+                 return admin == authService.isAdmin(getSession());
+             }
         };
     }
 }
