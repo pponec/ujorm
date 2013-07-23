@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.*;
@@ -85,6 +86,18 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         }
 
         getSession().update(customer);
+    }
+
+    /** Authenticate the user */
+    @Override
+    public Customer findCustomer(String login, String password) {
+        final Criterion<Customer> crn1, crn2, crn3, crn4;
+        crn1 = Customer.LOGIN.whereEq(login);
+        crn2 = Customer.PASSWORD_HASH.whereEq(authService.getHash(password));
+        crn3 = Customer.ACTIVE.whereEq(true);
+        crn4 = crn1.and(crn2).and(crn3);
+
+        return getSession().createQuery(crn4).uniqueResult();
     }
 
     /** Check a read-only state */

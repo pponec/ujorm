@@ -143,7 +143,7 @@ public class HotelTable extends Panel {
 
     /** Reload the data table */
     private void reloadTable(UjoEvent event) {
-        event.getTarget().add(get(DEFAULT_DATATABLE_ID));
+        event.addTarget(get(DEFAULT_DATATABLE_ID));
     }
 
 }

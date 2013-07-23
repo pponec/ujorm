@@ -27,6 +27,9 @@ public interface DbService {
     /** Find a customer */
     public Customer getCustomer(String login);
 
+    /** Find enabled customer  */
+    public Customer findCustomer(String login, String password);
+
     /** Delete hotel */
     public void deleteHotel(Hotel hotel);
 

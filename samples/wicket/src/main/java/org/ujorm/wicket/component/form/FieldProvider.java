@@ -50,7 +50,7 @@ import org.ujorm.wicket.component.form.fields.TextAreaField;
 public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Password key name to create a component PasswordField */
-    public static final String PASSWORD_KEY_NAME = "password";
+    public static final String PASSWORD_KEY_NAME = "PASSWORD";
 
     private RepeatingView repeatingView;
     private Map<String, Field> fields = new LinkedHashMap<String, Field>(16);

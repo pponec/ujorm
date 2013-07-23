@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.gui.customer;
 
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -104,10 +105,11 @@ public class CustomerTable extends Panel {
             else if (event.isAction(LOGIN)) {
                 if (event.showDialog()) {
                     loginDialog.show(event, new ResourceModel("dialog.login.title"));
-                } else {
+                } else if (event.getDomain() != null) {
                     if (!authService.authenticate(event.getDomain(), getSession())) {
                         throw new ValidationException("login.failed", "Login failed");
                     }
+                    send(getPage(), Broadcast.BREADTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
             }
         }
@@ -171,7 +173,7 @@ public class CustomerTable extends Panel {
 
     /** Reload the data table */
     private void reloadTable(UjoEvent event) {
-        event.getTarget().add(get(DEFAULT_DATATABLE_ID));
+        event.addTarget(get(DEFAULT_DATATABLE_ID));
     }
 
 }

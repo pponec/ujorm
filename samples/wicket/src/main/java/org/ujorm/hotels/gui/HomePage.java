@@ -32,6 +32,8 @@ import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
+    /** Logout */
+    public static final String LOGOUT_ID = "logout";
 
     public HomePage(PageParameters parameters) {
         super(parameters);
@@ -48,11 +50,26 @@ public class HomePage extends WebPage {
         WicketApplication appl = (WicketApplication) getApplication();
         OrmHandler handler = appl.getOrmHandler();
 
+        // Login name and logout action:
+        add(new Login("login"));
+
         // Footer:
         add(new AjaxLink("aboutLink") {
             @Override public void onClick(AjaxRequestTarget target) {
                 ((UjoTabbedPanel)HomePage.this.get("tabs")).selectedTab(AboutPanel.class, target);
             }
         });
-   }
+    }
+
+//    /** Manage events */
+//    @Override
+//    public void onEvent(IEvent<?> argEvent) {
+//        if (argEvent.getPayload() instanceof UjoEvent) {
+//            final UjoEvent event = (UjoEvent) argEvent.getPayload();
+//            if (event.isAction(LOGIN) && !event.showDialog()) {
+//                event.addTarget(HomePage.this.get("tabs"));
+//            }
+//        }
+//    }
+
 }
