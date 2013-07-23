@@ -115,5 +115,12 @@ div#logo {
 
 div.login {
     float: right;
-    margin-top: 20px;
+    margin-top: 10px;
+}
+
+div.login span {
+    background-image: url("images/icons/door_out.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    padding-right: 25px;
 }
