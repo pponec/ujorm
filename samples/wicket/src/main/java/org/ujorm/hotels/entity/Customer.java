@@ -66,105 +66,105 @@ public class Customer extends OrmTable<Customer> {
 
     //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
 
-//    /** The Primary Key */
-//    public Integer getId() {
-//        return ID.of(this);
-//    }
-//
-//    /** The Primary Key */
-//    public void setId(Integer id) {
-//        Customer.ID.setValue(this, id);
-//    }
-//
-//    /** Unique login */
-//    public String getLogin() {
-//        return LOGIN.of(this);
-//    }
-//
-//    /** Unique login */
-//    public void setLogin(String login) {
-//        Customer.LOGIN.setValue(this, login);
-//    }
-//
-//    /** A form field only where the {@code null} value means: no password chage */
-//    public String getPassword() {
-//        return PASSWORD.of(this);
-//    }
-//
-//    /** A form field only where the {@code null} value means: no password chage */
-//    public void setPassword(String password) {
-//        Customer.PASSWORD.setValue(this, password);
-//    }
-//
-//    /** Password hash */
-//    public Long getPasswordHash() {
-//        return PASSWORD_HASH.of(this);
-//    }
-//
-//    /** Password hash */
-//    public void setPasswordHash(Long passwordHash) {
-//        Customer.PASSWORD_HASH.setValue(this, passwordHash);
-//    }
-//
-//    /** Title */
-//    public TitleEnum getTitle() {
-//        return TITLE.of(this);
-//    }
-//
-//    /** Title */
-//    public void setTitle(TitleEnum title) {
-//        Customer.TITLE.setValue(this, title);
-//    }
-//
-//    /** Firstname */
-//    public String getFirstname() {
-//        return FIRSTNAME.of(this);
-//    }
-//
-//    /** Firstname */
-//    public void setFirstname(String firstname) {
-//        Customer.FIRSTNAME.setValue(this, firstname);
-//    }
-//
-//    /** Firstname */
-//    public String getSurename() {
-//        return SURENAME.of(this);
-//    }
-//
-//    /** Firstname */
-//    public void setSurename(String surename) {
-//        Customer.SURENAME.setValue(this, surename);
-//    }
-//
-//    /** Email */
-//    public String getEmail() {
-//        return EMAIL.of(this);
-//    }
-//
-//    /** Email */
-//    public void setEmail(String email) {
-//        Customer.EMAIL.setValue(this, email);
-//    }
-//
-//    /** Administrator role sign */
-//    public Boolean getAdmin() {
-//        return ADMIN.of(this);
-//    }
-//
-//    /** Administrator role sign */
-//    public void setAdmin(Boolean admin) {
-//        Customer.ADMIN.setValue(this, admin);
-//    }
-//
-//    /** Customer state (the true or null values are required) */
-//    public Boolean getActive() {
-//        return ACTIVE.of(this);
-//    }
-//
-//    /** Customer state (the true or null values are required) */
-//    public void setActive(Boolean active) {
-//        Customer.ACTIVE.setValue(this, active);
-//    }
+    /** The Primary Key */
+    public Integer getId() {
+        return ID.of(this);
+    }
+
+    /** The Primary Key */
+    public void setId(Integer id) {
+        Customer.ID.setValue(this, id);
+    }
+
+    /** Unique login */
+    public String getLogin() {
+        return LOGIN.of(this);
+    }
+
+    /** Unique login */
+    public void setLogin(String login) {
+        Customer.LOGIN.setValue(this, login);
+    }
+
+    /** A form field only where the {@code null} value means: no password chage */
+    public String getPassword() {
+        return PASSWORD.of(this);
+    }
+
+    /** A form field only where the {@code null} value means: no password chage */
+    public void setPassword(String password) {
+        Customer.PASSWORD.setValue(this, password);
+    }
+
+    /** Password hash */
+    public Long getPasswordHash() {
+        return PASSWORD_HASH.of(this);
+    }
+
+    /** Password hash */
+    public void setPasswordHash(Long passwordHash) {
+        Customer.PASSWORD_HASH.setValue(this, passwordHash);
+    }
+
+    /** Title */
+    public TitleEnum getTitle() {
+        return TITLE.of(this);
+    }
+
+    /** Title */
+    public void setTitle(TitleEnum title) {
+        Customer.TITLE.setValue(this, title);
+    }
+
+    /** Firstname */
+    public String getFirstname() {
+        return FIRSTNAME.of(this);
+    }
+
+    /** Firstname */
+    public void setFirstname(String firstname) {
+        Customer.FIRSTNAME.setValue(this, firstname);
+    }
+
+    /** Firstname */
+    public String getSurename() {
+        return SURENAME.of(this);
+    }
+
+    /** Firstname */
+    public void setSurename(String surename) {
+        Customer.SURENAME.setValue(this, surename);
+    }
+
+    /** Email */
+    public String getEmail() {
+        return EMAIL.of(this);
+    }
+
+    /** Email */
+    public void setEmail(String email) {
+        Customer.EMAIL.setValue(this, email);
+    }
+
+    /** Administrator role sign */
+    public Boolean getAdmin() {
+        return ADMIN.of(this);
+    }
+
+    /** Administrator role sign */
+    public void setAdmin(Boolean admin) {
+        Customer.ADMIN.setValue(this, admin);
+    }
+
+    /** Customer state (the true or null values are required) */
+    public Boolean getActive() {
+        return ACTIVE.of(this);
+    }
+
+    /** Customer state (the true or null values are required) */
+    public void setActive(Boolean active) {
+        Customer.ACTIVE.setValue(this, active);
+    }
 
     //</editor-fold>
 

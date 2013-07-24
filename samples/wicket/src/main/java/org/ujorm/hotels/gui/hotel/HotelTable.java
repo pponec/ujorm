@@ -15,24 +15,30 @@
  */
 package org.ujorm.hotels.gui.hotel;
 
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
+import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
+import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
+import org.ujorm.hotels.gui.booking.BookingEditor;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
+import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
+import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.MessageDialogPanel;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.wicket.component.tools.UResourceModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
 import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
@@ -43,9 +49,12 @@ import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
  */
 public class HotelTable extends Panel {
 
-    @SpringBean(name="dbService") DbService dbService;
+    @SpringBean DbService dbService;
+    @SpringBean AuthService authService;
+
     private Toolbar toolbar = new Toolbar("toolbar");
     private HotelEditor editDialog;
+    private BookingEditor bookingDialog;
     private MessageDialogPanel removeDialog;
 
     public HotelTable(String id) {
@@ -65,6 +74,7 @@ public class HotelTable extends Panel {
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
         add(toolbar);
         add((editDialog = HotelEditor.create("editDialog", 700, 390)).getModalWindow());
+        add((bookingDialog = BookingEditor.create("bookingDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPanel.create("removeDialog", 290, 160)).getModalWindow());
     }
 
@@ -75,7 +85,7 @@ public class HotelTable extends Panel {
         if (event != null) {
             if (event.isAction(UPDATE)) {
                 if (event.showDialog()) {
-                    editDialog.show(event, new ResourceModel("dialog.edit.title"));
+                    editDialog.show(event, new UResourceModel("dialog.edit.title"));
                 } else {
                     dbService.updateHotel(event.getDomain());
                     reloadTable(event);
@@ -85,11 +95,21 @@ public class HotelTable extends Panel {
                 if (event.showDialog()) {
                     removeDialog.setMessage(new Model("Do you want to remove selected Hotel really?"));
                     removeDialog.show(event
-                            , new ResourceModel("dialog.delete.title")
+                            , new UResourceModel("dialog.delete.title")
                             , "delete");
                 } else {
                     dbService.deleteHotel(event.getDomain());
                     reloadTable(event);
+                }
+            }
+            else if (event.isAction(BookingEditor.BOOKING_ACTION)) {
+                if (event.showDialog()) {
+                    //bookingDialog.setEnabled(Booking.CUSTOMER.add(Customer.LOGIN), true); // TODO
+                    bookingDialog.show(event.getTarget(), createBooking(event));
+                } else {
+                final UjoEvent<Booking> bookingEvent = UjoEvent.get(argEvent);
+                    dbService.createBooking(bookingEvent.getDomain());
+                    send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
             }
             else if (event.isAction(Toolbar.FILTER_ACTION)) {
@@ -113,6 +133,23 @@ public class HotelTable extends Panel {
     /** Reload the data table */
     private void reloadTable(UjoEvent event) {
         event.addTarget(get(DEFAULT_DATATABLE_ID));
+    }
+
+    /** Reload hotel from database and build new Booking model */
+    private IModel<Booking> createBooking(final UjoEvent<Hotel> event) {
+        OrmSessionProvider session = new OrmSessionProvider();
+        try {
+            Booking result = new Booking();
+            result.setHotel(session.getSession().loadBy(event.getDomain()));
+            result.setCurrency(result.getHotel().getCurrency());
+            result.setDateFrom(new java.sql.Date(System.currentTimeMillis()));
+            result.setCustomer(authService.getCurrentCustomer(getSession(), new Customer()));
+            result.getHotel().getCity(); // Fetching City
+
+            return Model.of(result);
+        } finally {
+            session.closeSession();
+        }
     }
 
 }

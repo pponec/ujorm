@@ -22,7 +22,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
 import org.ujorm.hotels.entity.Customer;
@@ -35,6 +34,7 @@ import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.MessageDialogPanel;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.wicket.component.tools.UResourceModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
 
@@ -80,7 +80,7 @@ public class CustomerTable extends Panel {
         if (event != null) {
             if (event.isAction(UPDATE)) {
                 if (event.showDialog()) {
-                    editDialog.show(event, new ResourceModel("dialog.edit.title"));
+                    editDialog.show(event, new UResourceModel("dialog.edit.title"));
                 } else {
                     dbService.updateCustomer(event.getDomain());
                     reloadTable(event);
@@ -90,7 +90,7 @@ public class CustomerTable extends Panel {
                 if (event.showDialog()) {
                     removeDialog.setMessage(new Model("Do you want to remove selected Customer really?"));
                     removeDialog.show(event
-                            , new ResourceModel("dialog.delete.title")
+                            , new UResourceModel("dialog.delete.title")
                             , "delete");
                 } else {
                     dbService.deleteCustomer(event.getDomain());
@@ -102,7 +102,7 @@ public class CustomerTable extends Panel {
             }
             else if (event.isAction(LOGIN)) {
                 if (event.showDialog()) {
-                    loginDialog.show(event, new ResourceModel("dialog.login.title"));
+                    loginDialog.show(event, new UResourceModel("dialog.login.title"));
                 } else if (event.getDomain() != null) {
                     if (!authService.authenticate(event.getDomain(), getSession())) {
                         throw new ValidationException("login.failed", "Login failed");

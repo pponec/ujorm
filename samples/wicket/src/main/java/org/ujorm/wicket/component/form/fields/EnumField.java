@@ -25,7 +25,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
-import org.ujorm.wicket.component.tools.UjoChoiceRendererNullable;
+import org.ujorm.wicket.component.tools.ChoiceRendererNullable;
 
 /**
  * CheckBox field with a Label includding a feedback message.
@@ -41,7 +41,7 @@ public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
     public EnumField(Key<T, E> property) {
         this(property, null);
     }
-    
+
     public EnumField(Key<T, E> property, String cssClass) {
         super(property.getName(), property, null);
         this.items = Arrays.asList(property.getType().getEnumConstants());
@@ -57,7 +57,7 @@ public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
     @Override
     protected FormComponent createInput(String componentId, IModel model) {
         DropDownChoice<E> result = new DropDownChoice<E>(componentId, new Model(), getItems());
-        result.setChoiceRenderer(new UjoChoiceRendererNullable<E>(this));
+        result.setChoiceRenderer(new ChoiceRendererNullable<E>(this));
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;

@@ -30,10 +30,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
-import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.CssAppender;
@@ -65,6 +63,7 @@ public class Field extends Panel {
 
     public Field(Key property) {
         this(property.getName(), property, null);
+        this.setOutputMarkupPlaceholderTag(true);
     }
 
     /**
@@ -83,9 +82,7 @@ public class Field extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
         this.add(new CssAppender(getCssClass()));
-        this.setOutputMarkupPlaceholderTag(true);
 
         add(div = new WebMarkupContainer("editField"));
         if (cssClass!=null) {

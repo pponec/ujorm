@@ -18,6 +18,7 @@ package org.ujorm.hotels.services.impl;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import org.apache.wicket.Session;
+import org.apache.wicket.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
@@ -72,6 +73,13 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
                 : null ;
     }
 
+    /** Get current customer from session of returns the default Value  */
+    @Override
+    public Customer getCurrentCustomer(Session session, Customer defaultValue) {
+        Customer result = getCurrentCustomer(session);
+        return result != null ? result : defaultValue;
+    }
+
     /** Is logged admin */
     @Override
     public boolean isAdmin(Session session) {
@@ -95,6 +103,12 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
         } catch (Throwable e) {
             throw new IllegalStateException("Method getHash() failed. ", e);
         }
+    }
+
+
+    /** Return a Session or {@code null} if no session was found. */
+    private Session getThreadSession() {
+        return ThreadContext.getSession();
     }
 
 }

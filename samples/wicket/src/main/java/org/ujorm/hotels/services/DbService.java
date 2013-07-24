@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.services;
 
+import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 
@@ -41,5 +42,8 @@ public interface DbService {
 
     /** Update customer */
     public void updateCustomer(Customer customer);
+
+    /** Create new booking */
+    public void createBooking(Booking domain);
 
 }

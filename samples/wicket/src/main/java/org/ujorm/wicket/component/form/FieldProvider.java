@@ -25,6 +25,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
@@ -185,14 +186,16 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Clone the domain object of reload the persistent object from database. */
     protected U cloneDomain(U domain, OrmSessionProvider session) throws NoSuchElementException, IllegalStateException {
-        return domain instanceof OrmUjo
+        final U result = domain instanceof OrmUjo
              ? (U) session.getSession().loadBy((OrmUjo) domain)
              : (U) UjoManager.clone(domain, 2, "clone");
+        return result != null ? result : domain;
     }
 
 
     /** Assign values to required component fields in a transaction for a lazy loading case */
     protected U copyToFields(U domain) {
+        Args.notNull(domain, "domain");
         for (Field field : getFields()) {
             final Key k = field.getKey();
             field.setModelValue(k.of(domain));

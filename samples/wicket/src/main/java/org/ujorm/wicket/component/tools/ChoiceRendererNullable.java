@@ -38,7 +38,7 @@ import org.apache.wicket.util.string.Strings;
  *
  * @param <T>
  */
-public class UjoChoiceRendererNullable<T extends Enum<T>> implements IChoiceRenderer<T> {
+public class ChoiceRendererNullable<T extends Enum<T>> implements IChoiceRenderer<T> {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class UjoChoiceRendererNullable<T extends Enum<T>> implements IChoiceRend
      * Constructor that creates the choice renderer that will use global instance of localizer to
      * resolve resource keys.
      */
-    public UjoChoiceRendererNullable() {
+    public ChoiceRendererNullable() {
         this(null);
     }
 
@@ -63,7 +63,7 @@ public class UjoChoiceRendererNullable<T extends Enum<T>> implements IChoiceRend
      * Constructor
      * @param resourceSource
      */
-    public UjoChoiceRendererNullable(Component resourceSource) {
+    public ChoiceRendererNullable(Component resourceSource) {
         this.resourceSource = resourceSource;
     }
 
