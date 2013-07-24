@@ -913,7 +913,7 @@ public class Session {
         final MetaTable table = handler.findTableModel(tableType);
         final MetaColumn column = table.getFirstPK();
 
-        UjoManager.getInstance().assertAssign(MetaColumn.TABLE_KEY.of(column), id);
+        UjoManager.assertAssign(MetaColumn.TABLE_KEY.of(column), id);
         Criterion crn = Criterion.where(column.getKey(), id);
         Query query = createQuery(crn);
 
@@ -922,19 +922,26 @@ public class Session {
     }
 
     /**
-     * Load UJO by a unique id. If a result is not found then a null value is passed.
+     * Load UJO by a unique id. If primary key is {@code null} or no result is found
+     * then the {@code null} value is returned.
      * @param tableType Type of Ujo
      * @param id Value ID
      */
     public <UJO extends OrmUjo> UJO loadBy(UJO ujo) throws NoSuchElementException {
-        checkNotNull(ujo, "load");
+        if (ujo == null) {
+            return ujo;
+        }
         final MetaTable metaTable = handler.findTableModel(ujo.getClass());
         final MetaPKey pkeys = MetaTable.PK.of(metaTable);
         final boolean fk = ujo instanceof ExtendedOrmUjo;
 
         Criterion<UJO> criterion = null;
         for (MetaColumn c : MetaPKey.COLUMNS.of(pkeys)) {
-            Criterion<UJO> crn = Criterion.where(c.getKey(), c.getValue(ujo));
+            final Object pk = c.getValue(ujo);
+            if (pk == null) {
+                return null;
+            }
+            final Criterion<UJO> crn = Criterion.where(c.getKey(), pk);
             criterion = criterion != null
                 ? criterion.and(crn)
                 : crn ;
