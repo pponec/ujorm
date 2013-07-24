@@ -13,49 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.hotels.gui.customer;
+package org.ujorm.hotels.gui.booking;
 
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.ujorm.hotels.entity.Booking;
+import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.EntityDialogPanel;
 import org.ujorm.wicket.component.tools.UResourceModel;
 
 /**
- * Customer Editor
+ * Booking Editor
  * @author Pavel Ponec
  */
-public class CustomerEditor extends EntityDialogPanel<Customer> {
+public class BookingEditor extends EntityDialogPanel<Booking> {
     private static final long serialVersionUID = 0L;
 
-    public CustomerEditor(ModalWindow modalWindow, IModel<Customer> model) {
+    /** Default value is the same like the field */
+    public static final String BOOKING_ACTION = "BOOKING";
+
+    public BookingEditor(ModalWindow modalWindow, IModel<Booking> model) {
         super(modalWindow, model);
 
         // Editable fields:
-        fields.add(Customer.LOGIN);
-        fields.add(Customer.PASSWORD);
-        fields.add(Customer.TITLE);
-        fields.add(Customer.FIRSTNAME);
-        fields.add(Customer.SURENAME);
-        fields.add(Customer.EMAIL);
-        fields.add(Customer.ADMIN);
-        fields.add(Customer.ACTIVE);
+        fields.add(Booking.CUSTOMER.add(Customer.LOGIN));
+        fields.add(Booking.CUSTOMER.add(Customer.PASSWORD));
+        fields.add(Booking.HOTEL.add(Hotel.NAME));
+        fields.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
+        fields.add(Booking.DATE_FROM);
+        fields.add(Booking.NIGHTS);
+        fields.add(Booking.PERSONS);
+        fields.add(Booking.PRICE);
+        fields.add(Booking.CURRENCY);
 
         // Modify attribute(s):
-        fields.getField(Customer.LOGIN).setEnabled(false);
+        fields.getField(Booking.HOTEL.add(Hotel.NAME)).setEnabled(false);
+        fields.getField(Booking.HOTEL.add(Hotel.CITY).add(City.NAME)).setEnabled(false);
+        fields.getField(Booking.PRICE).setEnabled(false);
+        fields.getField(Booking.CURRENCY).setEnabled(false);
     }
 
     /** Create the editor dialog */
-    public static CustomerEditor create(String componentId, int width, int height) {
-        IModel<Customer> model = Model.of(new Customer());
+    public static BookingEditor create(String componentId, int width, int height) {
+        IModel<Booking> model = Model.of(new Booking());
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final CustomerEditor result = new CustomerEditor(modalWindow, model);
+        final BookingEditor result = new BookingEditor(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new UResourceModel("dialog.edit.title"));
+        modalWindow.setTitle(new UResourceModel("dialog.booking.title"));
         //modalWindow.setCookieName("modal-dialog");
 
         return result;

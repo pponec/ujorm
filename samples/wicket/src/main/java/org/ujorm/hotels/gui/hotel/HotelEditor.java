@@ -18,10 +18,10 @@ package org.ujorm.hotels.gui.hotel;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.EntityDialogPanel;
+import org.ujorm.wicket.component.tools.UResourceModel;
 
 /**
  * Hotel Editor
@@ -54,7 +54,7 @@ public class HotelEditor extends EntityDialogPanel<Hotel> {
         final HotelEditor result = new HotelEditor(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
+        modalWindow.setTitle(new UResourceModel("dialog.edit.title"));
         //modalWindow.setCookieName("modal-dialog");
 
         return result;

@@ -39,6 +39,9 @@ public interface AuthService {
     /** Get current customer from session  */
     public Customer getCurrentCustomer(Session session);
 
+    /** Get current customer from session  */
+    public Customer getCurrentCustomer(Session session, Customer defaultValue);
+
     /** Get a hash from the text */
     public long getHash(String text) throws IllegalStateException;
 

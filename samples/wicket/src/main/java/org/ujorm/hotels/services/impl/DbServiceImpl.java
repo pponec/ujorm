@@ -15,6 +15,8 @@
  */
 package org.ujorm.hotels.services.impl;
 
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.*;
@@ -119,4 +122,16 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         }
     }
 
+    /** Create new booking */
+    @Override
+    public void createBooking(Booking booking) {
+        Customer cust = Args.notNull(booking.getCustomer(), Booking.CUSTOMER.toStringFull());
+        if (cust.getId()==null) {
+            authService.authenticate(cust, ThreadContext.getSession());
+        }
+
+        // TODO: validations
+        booking.setReservationDate(new java.sql.Date(System.currentTimeMillis()));
+        getSession().update(booking);
+    }
 }
