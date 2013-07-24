@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.quick.QuickUjo;
@@ -131,7 +132,7 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         ( final Key<UJO, VALUE> property
         , final VALUE value
         ) {
-        readUjoManager().assertAssign(property, value);
+        UjoManager.assertAssign(property, value);
         property.setValue((UJO)this, value);
         return (UJO_IMPL) this;
     }
