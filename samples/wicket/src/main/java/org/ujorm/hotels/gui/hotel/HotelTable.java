@@ -16,7 +16,6 @@
 package org.ujorm.hotels.gui.hotel;
 
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -65,8 +64,8 @@ public class HotelTable extends Panel {
 
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
         add(toolbar);
-        add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
-        add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
+        add((editDialog = HotelEditor.create("editDialog", 700, 390)).getModalWindow());
+        add((removeDialog = MessageDialogPanel.create("removeDialog", 290, 160)).getModalWindow());
     }
 
     /** Manage events */
@@ -109,35 +108,6 @@ public class HotelTable extends Panel {
                 item.add(panel);
             }
         };
-    }
-
-    /** Create the editor dialog */
-    private HotelEditor createEditDialog(String componentId, int width, int height) {
-        IModel<Hotel> model = Model.of(new Hotel());
-        final ModalWindow modalWindow = new ModalWindow(componentId, model);
-        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
-
-        final HotelEditor result = new HotelEditor(modalWindow, model);
-        modalWindow.setInitialWidth(width);
-        modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
-        //modalWindow.setCookieName("modal-dialog");
-
-        return result;
-    }
-
-    /** Create the editor dialog */
-    private MessageDialogPanel createMessageDialog(String componentId, int width, int height) {
-        IModel<String> model = Model.of("");
-        final ModalWindow modalWindow = new ModalWindow(componentId, model);
-        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
-
-        final MessageDialogPanel result = new MessageDialogPanel(modalWindow, model);
-        modalWindow.setInitialWidth(width);
-        modalWindow.setInitialHeight(height);
-        //modalWindow.setCookieName("modal-dialog");
-
-        return result;
     }
 
     /** Reload the data table */

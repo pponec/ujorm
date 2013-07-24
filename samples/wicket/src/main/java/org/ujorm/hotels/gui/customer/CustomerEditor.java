@@ -17,6 +17,8 @@ package org.ujorm.hotels.gui.customer;
 
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.wicket.component.dialog.EntityDialogPanel;
 
@@ -44,4 +46,18 @@ public class CustomerEditor extends EntityDialogPanel<Customer> {
         fields.getField(Customer.LOGIN).setEnabled(false);
     }
 
+    /** Create the editor dialog */
+    public static CustomerEditor create(String componentId, int width, int height) {
+        IModel<Customer> model = Model.of(new Customer());
+        final ModalWindow modalWindow = new ModalWindow(componentId, model);
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final CustomerEditor result = new CustomerEditor(modalWindow, model);
+        modalWindow.setInitialWidth(width);
+        modalWindow.setInitialHeight(height);
+        modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
+        //modalWindow.setCookieName("modal-dialog");
+
+        return result;
+    }
 }
