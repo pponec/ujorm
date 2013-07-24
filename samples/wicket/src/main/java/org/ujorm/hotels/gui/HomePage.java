@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -27,8 +28,10 @@ import org.ujorm.hotels.gui.booking.BookingTable;
 import org.ujorm.hotels.gui.customer.CustomerTable;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.orm.OrmHandler;
+import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.tabs.UjoTab;
 import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
+import static org.ujorm.wicket.CommonActions.*;
 
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
@@ -51,7 +54,7 @@ public class HomePage extends WebPage {
         OrmHandler handler = appl.getOrmHandler();
 
         // Login name and logout action:
-        add(new Login("login"));
+        add(new LoginName("login"));
 
         // Footer:
         add(new AjaxLink("aboutLink") {
@@ -61,15 +64,13 @@ public class HomePage extends WebPage {
         });
     }
 
-//    /** Manage events */
-//    @Override
-//    public void onEvent(IEvent<?> argEvent) {
-//        if (argEvent.getPayload() instanceof UjoEvent) {
-//            final UjoEvent event = (UjoEvent) argEvent.getPayload();
-//            if (event.isAction(LOGIN) && !event.showDialog()) {
-//                event.addTarget(HomePage.this.get("tabs"));
-//            }
-//        }
-//    }
+    /** Manage events */
+    @Override
+    public void onEvent(IEvent<?> argEvent) {
+        UjoEvent<?> event = UjoEvent.get(argEvent);
+        if (event != null && event.isAction(LOGIN_CHANGED)) {
+            event.addTarget(HomePage.this.get("tabs"));
+        }
+    }
 
 }

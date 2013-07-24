@@ -31,12 +31,12 @@ import static org.ujorm.wicket.CommonActions.*;
  * Login component
  * @author Pavel Ponec
  */
-public class Login extends MessageLink {
+public class LoginName extends MessageLink {
 
     @SpringBean
     private AuthService authService;
 
-    public Login(String id) {
+    public LoginName(String id) {
         super(id, null);
         setDefaultModel(new LoginModel());
         setOutputMarkupPlaceholderTag(true);
@@ -46,7 +46,9 @@ public class Login extends MessageLink {
     @Override
     public void onClick(AjaxRequestTarget target) {
         authService.logout(getSession());
-        setResponsePage(HomePage.class);
+        //setResponsePage(HomePage.class);
+        target.add(this);
+        send(getWebPage(), Broadcast.EXACT, new UjoEvent(LOGIN_CHANGED, null, target));
     }
 
     /** Manage events */
@@ -75,7 +77,7 @@ public class Login extends MessageLink {
     /** Login model */
     private class LoginModel extends Model<String> {
         @Override public String getObject() {
-            final Customer cust = Login.this.getCurrentCustomer();
+            final Customer cust = LoginName.this.getCurrentCustomer();
             return cust != null ? cust.get(Customer.LOGIN) : "";
         }
     }

@@ -53,7 +53,8 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     /** Logout */
     @Override
     public void logout(Session session) {
-        session.invalidate();
+        session.setAttribute(CUSTOMER_ATTR, null);
+        // session.invalidate(); // restoring tabs
     }
 
     /** Is logged user ? */

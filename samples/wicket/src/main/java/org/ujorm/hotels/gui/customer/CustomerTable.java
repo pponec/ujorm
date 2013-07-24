@@ -77,9 +77,8 @@ public class CustomerTable extends Panel {
     /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
-        if (argEvent.getPayload() instanceof UjoEvent) {
-            final UjoEvent<Customer> event = (UjoEvent<Customer>) argEvent.getPayload();
-
+        final UjoEvent<Customer> event = UjoEvent.get(argEvent);
+        if (event != null) {
             if (event.isAction(UPDATE)) {
                 if (event.showDialog()) {
                     editDialog.show(event, new ResourceModel("dialog.edit.title"));
@@ -109,8 +108,9 @@ public class CustomerTable extends Panel {
                     if (!authService.authenticate(event.getDomain(), getSession())) {
                         throw new ValidationException("login.failed", "Login failed");
                     }
-                    send(getPage(), Broadcast.BREADTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
+                    send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
+                argEvent.stop();
             }
         }
     }

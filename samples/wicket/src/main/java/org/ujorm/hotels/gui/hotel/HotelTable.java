@@ -72,9 +72,8 @@ public class HotelTable extends Panel {
     /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
-        if (argEvent.getPayload() instanceof UjoEvent) {
-            final UjoEvent<Hotel> event = (UjoEvent<Hotel>) argEvent.getPayload();
-
+        final UjoEvent<Hotel> event = UjoEvent.get(argEvent);
+        if (event != null) {
             if (event.isAction(UPDATE)) {
                 if (event.showDialog()) {
                     editDialog.show(event, new ResourceModel("dialog.edit.title"));
