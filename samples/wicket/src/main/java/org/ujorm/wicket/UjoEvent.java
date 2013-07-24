@@ -18,6 +18,7 @@ package org.ujorm.wicket;
 import java.io.Serializable;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
@@ -102,6 +103,19 @@ public class UjoEvent<U> {
             && this.action.equals(action);
     }
 
+//    /**
+//     * TODO: Check event and stop it on success.
+//     * @param action Nullable argument
+//     * @return The true value for the match.
+//     */
+//    public final boolean isActionStop(String action) {
+//        boolean result = isAction(action);
+//        if (result) {
+//            event.stop();
+//        }
+//        return result
+//    }
+
     /**
      * Check the the required actions from argument to match.
      * @param action Nullable argument
@@ -129,6 +143,16 @@ public class UjoEvent<U> {
                 + ", showDialog=" + showDialog
                 + ", domain=" + domain
                 + '}';
+    }
+
+    // ----------- STATIC ------------
+
+    /** Get Payload type UjoEvent from the argument */
+    public static <T> UjoEvent<T> get(IEvent<?> argEvent) {
+        final Object payLoad = argEvent.getPayload();
+        return payLoad instanceof UjoEvent
+                ? (UjoEvent<T>) payLoad
+                : null ;
     }
 
 }
