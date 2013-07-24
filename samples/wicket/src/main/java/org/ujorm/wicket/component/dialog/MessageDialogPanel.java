@@ -65,4 +65,17 @@ public class MessageDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
         }
     }
 
+    /** Create the default message dialog */
+    public static MessageDialogPanel create(String componentId, int width, int height) {
+        IModel<String> model = Model.of("");
+        final ModalWindow modalWindow = new ModalWindow(componentId, model);
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final MessageDialogPanel result = new MessageDialogPanel(modalWindow, model);
+        modalWindow.setInitialWidth(width);
+        modalWindow.setInitialHeight(height);
+        //modalWindow.setCookieName("modal-dialog");
+
+        return result;
+    }
 }

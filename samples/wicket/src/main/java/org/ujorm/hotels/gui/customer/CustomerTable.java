@@ -17,7 +17,6 @@ package org.ujorm.hotels.gui.customer;
 
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -69,9 +68,9 @@ public class CustomerTable extends Panel {
         add(columns.createDataTable(10));
 
         // Dialogs:
-        add((editDialog = createEditDialog("editDialog", 700, 390)).getModalWindow());
-        add((removeDialog = createMessageDialog("removeDialog", 290, 160)).getModalWindow());
-        add((loginDialog = createLoginDialog("loginDialog", 600, 150)).getModalWindow());
+        add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
+        add((removeDialog = MessageDialogPanel.create("removeDialog", 290, 160)).getModalWindow());
+        add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
     }
 
     /** Manage events */
@@ -125,50 +124,6 @@ public class CustomerTable extends Panel {
                 item.add(panel);
             }
         };
-    }
-
-    /** Create the editor dialog */
-    private CustomerEditor createEditDialog(String componentId, int width, int height) {
-        IModel<Customer> model = Model.of(new Customer());
-        final ModalWindow modalWindow = new ModalWindow(componentId, model);
-        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
-
-        final CustomerEditor result = new CustomerEditor(modalWindow, model);
-        modalWindow.setInitialWidth(width);
-        modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
-        //modalWindow.setCookieName("modal-dialog");
-
-        return result;
-    }
-
-    /** Create the editor dialog */
-    private LoginDialog createLoginDialog(String componentId, int width, int height) {
-        IModel<Customer> model = Model.of(new Customer());
-        final ModalWindow modalWindow = new ModalWindow(componentId, model);
-        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
-
-        final LoginDialog result = new LoginDialog(modalWindow, model);
-        modalWindow.setInitialWidth(width);
-        modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new ResourceModel("dialog.login.title"));
-        //modalWindow.setCookieName("modal-dialog");
-
-        return result;
-    }
-
-    /** Create the editor dialog */
-    private MessageDialogPanel createMessageDialog(String componentId, int width, int height) {
-        IModel<String> model = Model.of("");
-        final ModalWindow modalWindow = new ModalWindow(componentId, model);
-        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
-
-        final MessageDialogPanel result = new MessageDialogPanel(modalWindow, model);
-        modalWindow.setInitialWidth(width);
-        modalWindow.setInitialHeight(height);
-        //modalWindow.setCookieName("modal-dialog");
-
-        return result;
     }
 
     /** Reload the data table */

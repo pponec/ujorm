@@ -17,6 +17,8 @@ package org.ujorm.hotels.gui.hotel;
 
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.EntityDialogPanel;
@@ -42,5 +44,21 @@ public class HotelEditor extends EntityDialogPanel<Hotel> {
         fields.add(Hotel.NOTE);
         fields.add(Hotel.ACTIVE);
     }
+
+    /** Create the editor dialog */
+    public static HotelEditor create(String componentId, int width, int height) {
+        IModel<Hotel> model = Model.of(new Hotel());
+        final ModalWindow modalWindow = new ModalWindow(componentId, model);
+        modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
+
+        final HotelEditor result = new HotelEditor(modalWindow, model);
+        modalWindow.setInitialWidth(width);
+        modalWindow.setInitialHeight(height);
+        modalWindow.setTitle(new ResourceModel("dialog.edit.title"));
+        //modalWindow.setCookieName("modal-dialog");
+
+        return result;
+    }
+
 
 }
