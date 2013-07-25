@@ -23,7 +23,7 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.EntityDialogPanel;
-import org.ujorm.wicket.component.tools.UResourceModel;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
  * Booking Editor
@@ -65,7 +65,7 @@ public class BookingEditor extends EntityDialogPanel<Booking> {
         final BookingEditor result = new BookingEditor(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new UResourceModel("dialog.booking.title"));
+        modalWindow.setTitle(new LocalizedModel("dialog.booking.title"));
         //modalWindow.setCookieName("modal-dialog");
 
         return result;
