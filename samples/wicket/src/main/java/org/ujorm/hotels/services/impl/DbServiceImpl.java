@@ -127,7 +127,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     public void createBooking(Booking booking) {
         Customer cust = Args.notNull(booking.getCustomer(), Booking.CUSTOMER.toStringFull());
         if (cust.getId()==null) {
-            authService.authenticate(cust, ThreadContext.getSession());
+            authService.authenticate(cust);
         }
 
         // TODO: validations

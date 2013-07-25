@@ -104,7 +104,7 @@ public class CustomerTable extends Panel {
                 if (event.showDialog()) {
                     loginDialog.show(event, new LocalizedModel("dialog.login.title"));
                 } else if (event.getDomain() != null) {
-                    if (!authService.authenticate(event.getDomain(), getSession())) {
+                    if (!authService.authenticate(event.getDomain())) {
                         throw new ValidationException("login.failed", "Login failed");
                     }
                     send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));

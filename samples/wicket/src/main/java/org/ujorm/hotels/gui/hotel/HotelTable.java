@@ -143,7 +143,7 @@ public class HotelTable extends Panel {
             result.setHotel(session.getSession().loadBy(event.getDomain()));
             result.setCurrency(result.getHotel().getCurrency());
             result.setDateFrom(new java.sql.Date(System.currentTimeMillis()));
-            result.setCustomer(authService.getCurrentCustomer(getSession(), new Customer()));
+            result.setCustomer(authService.getCurrentCustomer(new Customer()));
             result.getHotel().getCity(); // Fetching City
 
             return Model.of(result);

@@ -37,14 +37,14 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
 
     /** Authenticate the user and save the result to the Wicket session */
     @Override
-    public boolean authenticate(Customer customer, Session session) {
+    public boolean authenticate(Customer customer) {
         Customer result = customer==null ? customer : dbService.findCustomer
              ( customer.get(Customer.LOGIN)
              , customer.get(Customer.PASSWORD));
 
         if (result != null) {
             result.writeSession(null);
-            session.setAttribute(CUSTOMER_ATTR, customer);
+            getThreadSession().setAttribute(CUSTOMER_ATTR, customer);
             return true;
         } else {
             return false;
@@ -53,21 +53,23 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
 
     /** Logout */
     @Override
-    public void logout(Session session) {
-        session.setAttribute(CUSTOMER_ATTR, null);
+    public void logout() {
+        getThreadSession().setAttribute(CUSTOMER_ATTR, null);
         // session.invalidate(); // restoring tabs
     }
 
     /** Is logged user ? */
     @Override
-    public boolean isCustomer(Session session) {
-        return getCurrentCustomer(session) != null;
+    public boolean isCustomer() {
+        return getCurrentCustomer() != null;
     }
 
     /** Get current customer from session  */
     @Override
-    public Customer getCurrentCustomer(Session session) {
-        Object result = session.getAttribute(CUSTOMER_ATTR);
+    public Customer getCurrentCustomer() {
+        Session session = getThreadSession();
+        Object result = session != null
+                ? session.getAttribute(CUSTOMER_ATTR) : null;
         return result instanceof Customer
                 ? (Customer) result
                 : null ;
@@ -75,15 +77,15 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
 
     /** Get current customer from session of returns the default Value  */
     @Override
-    public Customer getCurrentCustomer(Session session, Customer defaultValue) {
-        Customer result = getCurrentCustomer(session);
+    public Customer getCurrentCustomer(Customer defaultValue) {
+        Customer result = getCurrentCustomer();
         return result != null ? result : defaultValue;
     }
 
     /** Is logged admin */
     @Override
-    public boolean isAdmin(Session session) {
-        final Customer customer = (Customer) session.getAttribute(CUSTOMER_ATTR);
+    public boolean isAdmin() {
+        final Customer customer = (Customer) getThreadSession().getAttribute(CUSTOMER_ATTR);
         return customer !=null && customer.get(Customer.ADMIN);
     }
 
