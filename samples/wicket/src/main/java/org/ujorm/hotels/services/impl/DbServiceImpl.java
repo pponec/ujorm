@@ -15,7 +15,8 @@
  */
 package org.ujorm.hotels.services.impl;
 
-import org.apache.wicket.ThreadContext;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.*;
 import org.ujorm.validator.ValidationException;
+import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.core.UjoManager.*;
 /**
  * Common database service implementations
@@ -37,6 +39,8 @@ import static org.ujorm.core.UjoManager.*;
 @Transactional
 public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
+    /** The one day in milisecond */
+    private static final int DAY_AS_MILISEC = 1000 * 60 * 60 * 24;
 
     @Autowired
     private AuthService authService;
@@ -122,16 +126,34 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         }
     }
 
+
+    /** Reload hotel from database and build new Booking model */
+    @Override
+    public IModel<Booking> prepareBooking(final UjoEvent<Hotel> event) {
+        Booking result = new Booking();
+        result.setHotel(getSession().loadBy(event.getDomain()));
+        result.setPrice(result.getHotel().getPrice());
+        result.setCurrency(result.getHotel().getCurrency());
+        result.setDateFrom(new java.sql.Date(System.currentTimeMillis() + DAY_AS_MILISEC));
+        result.setCustomer(authService.getCurrentCustomer(new Customer()));
+        result.getHotel().getCity(); // Fetching City
+
+        return Model.of(result);
+    }
+
     /** Create new booking */
     @Override
     public void createBooking(Booking booking) {
         Customer cust = Args.notNull(booking.getCustomer(), Booking.CUSTOMER.toStringFull());
         if (cust.getId()==null) {
-            authService.authenticate(cust);
+            if (!authService.authenticate(cust)) {
+                throw new ValidationException("wrong.login", "Login failed");
+            }
         }
 
         // TODO: validations
         booking.setReservationDate(new java.sql.Date(System.currentTimeMillis()));
         getSession().update(booking);
     }
+
 }

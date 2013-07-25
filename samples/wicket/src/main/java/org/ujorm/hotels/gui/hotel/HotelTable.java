@@ -105,9 +105,10 @@ public class HotelTable extends Panel {
             else if (event.isAction(BookingEditor.BOOKING_ACTION)) {
                 if (event.showDialog()) {
                     //bookingDialog.setEnabled(Booking.CUSTOMER.add(Customer.LOGIN), true); // TODO
-                    bookingDialog.show(event.getTarget(), createBooking(event));
+                    bookingDialog.setAction(event.getAction());
+                    bookingDialog.show(event.getTarget(), dbService.prepareBooking(event));
                 } else {
-                final UjoEvent<Booking> bookingEvent = UjoEvent.get(argEvent);
+                    final UjoEvent<Booking> bookingEvent = UjoEvent.get(argEvent);
                     dbService.createBooking(bookingEvent.getDomain());
                     send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
@@ -133,23 +134,6 @@ public class HotelTable extends Panel {
     /** Reload the data table */
     private void reloadTable(UjoEvent event) {
         event.addTarget(get(DEFAULT_DATATABLE_ID));
-    }
-
-    /** Reload hotel from database and build new Booking model */
-    private IModel<Booking> createBooking(final UjoEvent<Hotel> event) {
-        OrmSessionProvider session = new OrmSessionProvider();
-        try {
-            Booking result = new Booking();
-            result.setHotel(session.getSession().loadBy(event.getDomain()));
-            result.setCurrency(result.getHotel().getCurrency());
-            result.setDateFrom(new java.sql.Date(System.currentTimeMillis()));
-            result.setCustomer(authService.getCurrentCustomer(new Customer()));
-            result.getHotel().getCity(); // Fetching City
-
-            return Model.of(result);
-        } finally {
-            session.closeSession();
-        }
     }
 
 }
