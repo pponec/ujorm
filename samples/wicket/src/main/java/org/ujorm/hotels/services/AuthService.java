@@ -25,22 +25,22 @@ import org.ujorm.hotels.entity.Customer;
 public interface AuthService {
 
     /** Authenticate the user and save the result to the Wicket session */
-    public boolean authenticate(Customer customer, Session session);
+    public boolean authenticate(Customer customer);
 
     /** Logout */
-    public void logout(Session session);
+    public void logout();
 
     /** Is logged user ? */
-    public boolean isCustomer(Session session);
+    public boolean isCustomer();
 
     /** Is logged admin */
-    public boolean isAdmin(Session session);
+    public boolean isAdmin();
 
     /** Get current customer from session  */
-    public Customer getCurrentCustomer(Session session);
+    public Customer getCurrentCustomer();
 
     /** Get current customer from session  */
-    public Customer getCurrentCustomer(Session session, Customer defaultValue);
+    public Customer getCurrentCustomer(Customer defaultValue);
 
     /** Get a hash from the text */
     public long getHash(String text) throws IllegalStateException;

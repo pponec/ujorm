@@ -45,7 +45,7 @@ public class LoginName extends MessageLink {
 
     @Override
     public void onClick(AjaxRequestTarget target) {
-        authService.logout(getSession());
+        authService.logout();
         //setResponsePage(HomePage.class);
         target.add(this);
         send(getWebPage(), Broadcast.EXACT, new UjoEvent(LOGIN_CHANGED, null, target));
@@ -71,7 +71,7 @@ public class LoginName extends MessageLink {
 
     /** Returns logged user */
     public Customer getCurrentCustomer() {
-        return authService.getCurrentCustomer(getSession());
+        return authService.getCurrentCustomer();
     }
 
     /** Login model */
