@@ -15,9 +15,11 @@
  */
 package org.ujorm.hotels.services;
 
+import org.apache.wicket.model.IModel;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
+import org.ujorm.wicket.UjoEvent;
 
 /**
  * Common database service
@@ -42,6 +44,9 @@ public interface DbService {
 
     /** Update customer */
     public void updateCustomer(Customer customer);
+
+    /** Reload hotel from database and build new Booking model */
+    public IModel<Booking> prepareBooking(UjoEvent<Hotel> event);
 
     /** Create new booking */
     public void createBooking(Booking domain);
