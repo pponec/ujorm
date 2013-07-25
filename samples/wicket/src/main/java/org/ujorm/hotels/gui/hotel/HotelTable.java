@@ -38,7 +38,7 @@ import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.MessageDialogPanel;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
-import org.ujorm.wicket.component.tools.UResourceModel;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
 import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
@@ -85,7 +85,7 @@ public class HotelTable extends Panel {
         if (event != null) {
             if (event.isAction(UPDATE)) {
                 if (event.showDialog()) {
-                    editDialog.show(event, new UResourceModel("dialog.edit.title"));
+                    editDialog.show(event, new LocalizedModel("dialog.edit.title"));
                 } else {
                     dbService.updateHotel(event.getDomain());
                     reloadTable(event);
@@ -95,7 +95,7 @@ public class HotelTable extends Panel {
                 if (event.showDialog()) {
                     removeDialog.setMessage(new Model("Do you want to remove selected Hotel really?"));
                     removeDialog.show(event
-                            , new UResourceModel("dialog.delete.title")
+                            , new LocalizedModel("dialog.delete.title")
                             , "delete");
                 } else {
                     dbService.deleteHotel(event.getDomain());

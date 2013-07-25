@@ -84,7 +84,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         if (key.isTypeOf(Boolean.class)) {
             field = new BooleanField(key);
         } else if (key.isTypeOf(String.class)) {
-            if (PASSWORD_KEY_NAME.equals(key.getName())) {
+            if (isPasswordKey(key)) {
                 field = new PasswordField(key);
             } else {
                 final int length = ValidatorUtils.getMaxLength(key.getValidator());
@@ -222,4 +222,13 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return 180;
     }
 
+
+    /** Is the key type of PasswordField ?
+     * The default condition is: the last key name must be 'PASSWORD'.
+     */
+    protected boolean isPasswordKey(Key key) {
+        return key.getName().endsWith(PASSWORD_KEY_NAME)
+           && ((key.length()==PASSWORD_KEY_NAME.length()
+           || key.charAt(key.length() - PASSWORD_KEY_NAME.length() - 1) == '.'));
+    }
 }

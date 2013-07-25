@@ -19,17 +19,17 @@ package org.ujorm.wicket.component.tools;
 import org.apache.wicket.model.ResourceModel;
 
 /**
- * Extended {@link ResourceModel} where default value is the original key.
+ * Extended {@link ResourceModel} where default value is the original key by default.
  * @author Pavel Ponec
  */
-public class UResourceModel extends ResourceModel {
+public class LocalizedModel extends ResourceModel {
 
     /** Default value is the same as key */
-    public UResourceModel(String resourceKey) {
+    public LocalizedModel(String resourceKey) {
         super(resourceKey, resourceKey);
     }
 
-    public UResourceModel(String resourceKey, String defaultValue) {
+    public LocalizedModel(String resourceKey, String defaultValue) {
         super(resourceKey, defaultValue);
     }
 

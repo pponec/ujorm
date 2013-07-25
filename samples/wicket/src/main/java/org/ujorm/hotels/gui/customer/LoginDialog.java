@@ -20,7 +20,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.wicket.component.dialog.EntityDialogPanel;
-import org.ujorm.wicket.component.tools.UResourceModel;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
  * Customer Editor
@@ -46,7 +46,7 @@ public class LoginDialog extends EntityDialogPanel<Customer> {
         final LoginDialog result = new LoginDialog(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
-        modalWindow.setTitle(new UResourceModel("dialog.login.title"));
+        modalWindow.setTitle(new LocalizedModel("dialog.login.title"));
         //modalWindow.setCookieName("modal-dialog");
 
         return result;
