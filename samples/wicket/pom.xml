@@ -32,7 +32,6 @@
         <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
     </properties>
 
-
     <dependencies>
         <!-- Ujorm -->
         <dependency>
@@ -86,11 +85,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
+        <!-- TODO: use the framework for new dialogs and date pickers -.->
         <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-auth-roles</artifactId>
-            <version>${wicket.version}</version>
+            <groupId>com.googlecode.wicket-jquery-ui</groupId>
+            <artifactId>wicket-jquery-ui</artifactId>
+            <version>6.9.0</version>
         </dependency>
         -->
 

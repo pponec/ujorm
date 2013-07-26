@@ -39,6 +39,7 @@ import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
+import org.ujorm.wicket.component.form.fields.DateField;
 import org.ujorm.wicket.component.form.fields.EnumField;
 import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.form.fields.PasswordField;
@@ -94,6 +95,12 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             }
         } else if (key.isTypeOf(Enum.class)) {
             field = new EnumField(key, "combo");
+        } else if (key.isTypeOf(Enum.class)) {
+            field = new EnumField(key, "combo");
+        } else if (key.isTypeOf(java.sql.Date.class)) {
+            field = new DateField(key);
+        } else if (key.isTypeOf(java.util.Date.class)) {
+            field = new DateField(key); // TODO DateTime field
         } else {
             field = new Field(key); // The common field
         }
@@ -221,7 +228,6 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     public int getTextAreaLimit() {
         return 180;
     }
-
 
     /** Is the key type of PasswordField ?
      * The default condition is: the last key name must be 'PASSWORD'.
