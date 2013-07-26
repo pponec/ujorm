@@ -38,6 +38,7 @@ public class WicketApplication extends WebApplication implements OrmHandlerProvi
 
     @Override
     protected void init() {
+        // getMarkupSettings().setStripWicketTags(true);
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         mountPage("/demo", HomePage.class);
     }

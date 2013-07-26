@@ -37,7 +37,7 @@ import org.ujorm.wicket.CssAppender;
 public class FeedbackLabel extends Label {
 
     /** Field component holds a reference to the {@link Component} this FeedbackLabel belongs to */
-    private FormComponent input;
+    private Component input;
     /** Field text holds a model of the text to be shown in the FeedbackLabel */
     private IModel text = null;
 
@@ -46,7 +46,7 @@ public class FeedbackLabel extends Label {
      * @param id The non-null id of this component
      * @param input The {@link FormComponent} to show the FeedbackMessage for.
      */
-    public FeedbackLabel(String id, FormComponent input) {
+    public FeedbackLabel(String id, Component input) {
         super(id);
         this.input = input;
     }
@@ -57,7 +57,7 @@ public class FeedbackLabel extends Label {
      * @param component The {@link FormComponent} to show the custom text for.
      * @param text The custom nullable text to show when the FormComponent has a FeedbackMessage
      */
-    public FeedbackLabel(String id, FormComponent component, String text) {
+    public FeedbackLabel(String id, Component component, String text) {
         this(id, component, new Model(text));
     }
 
@@ -67,7 +67,7 @@ public class FeedbackLabel extends Label {
      * @param component The {@link FormComponent} to show the custom model for.
      * @param iModel The custom nullable model to show when the {@link FormComponent} has a FeedbackMessage
      */
-    public FeedbackLabel(String id, FormComponent input, IModel iModel) {
+    public FeedbackLabel(String id, Component input, IModel iModel) {
         super(id);
         this.input = input;
         this.text = iModel;
