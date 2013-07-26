@@ -170,10 +170,15 @@ public class Field extends Panel {
 
     /** Create label model */
     protected IModel createLabelModel() {
-        final ResourceModel labelModel = new ResourceModel(PROPERTY_PREFIX
-            + key.getFirstKey().getName()
-            , key.getFirstKey().getName());
+        final Key<?,?> nativeKey = key.getFirstKey();
+        final ResourceModel labelModel = new ResourceModel
+                (getResourceLabelKey(nativeKey), nativeKey.getName());
         return labelModel;
+    }
+
+    /** Resource Label Key */
+    protected String getResourceLabelKey(final Key<?,?> key) {
+        return PROPERTY_PREFIX + key.getName();
     }
 
     /** Is the field required ? */
