@@ -20,14 +20,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.wicket.component.dialog.EntityDialogPanel;
+import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
  * Hotel Editor
  * @author Pavel Ponec
  */
-public class HotelEditor extends EntityDialogPanel<Hotel> {
+public class HotelEditor extends EntityDialogPane<Hotel> {
     private static final long serialVersionUID = 0L;
 
     public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {

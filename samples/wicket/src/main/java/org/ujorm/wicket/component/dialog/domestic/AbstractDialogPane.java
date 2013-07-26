@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.wicket.component.dialog;
+package org.ujorm.wicket.component.dialog.domestic;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -36,10 +36,10 @@ import org.ujorm.wicket.UjoEvent;
  * Abstract Message Dialog Content
  * @author Pavel Ponec
  */
-public abstract class AbstractDialogPanel<T> extends Panel {
+public abstract class AbstractDialogPane<T> extends Panel {
     private static final long serialVersionUID = 20130621L;
     /** Default logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDialogPanel.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDialogPane.class);
 
     protected static final String BUTTON_PREFIX = "button.";
     protected static final String ACTION_BUTTON_ID = "actionButton";
@@ -55,7 +55,7 @@ public abstract class AbstractDialogPanel<T> extends Panel {
     /** Action code */
     private String action = "";
 
-    public AbstractDialogPanel(ModalWindow modalWindow, IModel<T> model) {
+    public AbstractDialogPane(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow.getContentId(), model);
         this.modalWindow = modalWindow;
         this.setOutputMarkupPlaceholderTag(true);

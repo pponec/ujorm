@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.wicket.component.dialog;
+package org.ujorm.wicket.component.dialog.domestic;
 
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.ComponentTag;
@@ -27,7 +27,7 @@ import static org.ujorm.wicket.CssAppender.*;
  * Common Message Dialog
  * @author Pavel Ponec
  */
-public class MessageDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
+public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20130621L;
 
     /** CSS alert */
@@ -36,7 +36,7 @@ public class MessageDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
     /** Error message */
     private boolean feedback;
 
-    public MessageDialogPanel(ModalWindow modalWindow, IModel<String> model) {
+    public MessageDialogPane(ModalWindow modalWindow, IModel<String> model) {
         super(modalWindow, new Model());
         repeater.add(new Label(repeater.newChildId(), model) {
             @Override
@@ -66,12 +66,12 @@ public class MessageDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
     }
 
     /** Create the default message dialog */
-    public static MessageDialogPanel create(String componentId, int width, int height) {
+    public static MessageDialogPane create(String componentId, int width, int height) {
         IModel<String> model = Model.of("");
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final MessageDialogPanel result = new MessageDialogPanel(modalWindow, model);
+        final MessageDialogPane result = new MessageDialogPane(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         //modalWindow.setCookieName("modal-dialog");

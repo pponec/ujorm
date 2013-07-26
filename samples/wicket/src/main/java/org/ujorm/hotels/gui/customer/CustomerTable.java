@@ -31,7 +31,7 @@ import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
-import org.ujorm.wicket.component.dialog.MessageDialogPanel;
+import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
@@ -48,7 +48,7 @@ public class CustomerTable extends Panel {
     @SpringBean private AuthService authService;
 
     private CustomerEditor editDialog;
-    private MessageDialogPanel removeDialog;
+    private MessageDialogPane removeDialog;
     private LoginDialog loginDialog;
 
     public CustomerTable(String id) {
@@ -69,7 +69,7 @@ public class CustomerTable extends Panel {
 
         // Dialogs:
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
-        add((removeDialog = MessageDialogPanel.create("removeDialog", 290, 160)).getModalWindow());
+        add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
     }
 
