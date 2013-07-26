@@ -19,14 +19,14 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.hotels.entity.Customer;
-import org.ujorm.wicket.component.dialog.EntityDialogPanel;
+import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
  * Customer Editor
  * @author Pavel Ponec
  */
-public class CustomerEditor extends EntityDialogPanel<Customer> {
+public class CustomerEditor extends EntityDialogPane<Customer> {
     private static final long serialVersionUID = 0L;
 
     public CustomerEditor(ModalWindow modalWindow, IModel<Customer> model) {

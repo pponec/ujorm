@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.wicket.component.dialog;
+package org.ujorm.wicket.component.dialog.domestic;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -26,14 +26,14 @@ import org.ujorm.wicket.component.form.fields.FeedbackField;
  * Entity Dialog Content
  * @author Pavel Ponec
  */
-public class EntityDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
+public class EntityDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
     private static final long serialVersionUID = 20130621L;
 
     /** Input fields provider */
     protected final FieldProvider<T> fields;
     private FeedbackField feedbackField;
 
-    public EntityDialogPanel(ModalWindow modalWindow, IModel<T> model) {
+    public EntityDialogPane(ModalWindow modalWindow, IModel<T> model) {
         super(modalWindow, model);
         // Create a feedback:
         repeater.add(feedbackField = new FeedbackField(repeater.newChildId()));
