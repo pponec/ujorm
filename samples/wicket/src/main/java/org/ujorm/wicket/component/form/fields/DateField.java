@@ -42,7 +42,7 @@ public class DateField extends Field {
     protected FormComponent createInput(String componentId, IModel model) {
         // TODO final com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker result
         //      = new com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker(componentId, model);
-        final DateTextField result = new DateTextField(componentId, model);
+        final DateTextField result = new DateTextField(componentId, model, getDatePattern());
 
         if (validator != null) {
             IValidator<? super java.util.Date> dateValidator = (IValidator<? super java.util.Date>) validator;
@@ -54,5 +54,10 @@ public class DateField extends Field {
         result.setLabel(createLabelModel());
         return result;
 
+    }
+
+    /** Returns localizadDate pattern */
+    protected String getDatePattern() {
+        return getString("locale.date.pattern", null, "yyyy-MM-dd");
     }
 }
