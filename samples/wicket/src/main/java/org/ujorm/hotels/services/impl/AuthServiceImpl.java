@@ -44,7 +44,7 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
 
         if (result != null) {
             result.writeSession(null);
-            getThreadSession().setAttribute(CUSTOMER_ATTR, customer);
+            getThreadSession().setAttribute(CUSTOMER_ATTR, result);
             return true;
         } else {
             return false;

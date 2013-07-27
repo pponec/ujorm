@@ -56,14 +56,14 @@ public class CustomerTable extends Panel {
 
         UjoDataProvider<Customer> columns
                 = UjoDataProvider.of(Customer.ACTIVE.whereEq(true));
-        columns.addColumn(Customer.LOGIN);
-        columns.addColumn(Customer.TITLE);
-        columns.addColumn(Customer.FIRSTNAME);
-        columns.addColumn(Customer.SURENAME);
-        columns.addColumn(Customer.EMAIL);
-        columns.addColumn(Customer.ADMIN);
-        columns.addColumn(Customer.ACTIVE);
-        columns.addColumn(createActionColumn());
+        columns.add(Customer.LOGIN);
+        columns.add(Customer.TITLE);
+        columns.add(Customer.FIRSTNAME);
+        columns.add(Customer.SURENAME);
+        columns.add(Customer.EMAIL);
+        columns.add(Customer.ADMIN);
+        columns.add(Customer.ACTIVE);
+        columns.add(createActionColumn());
         columns.setSort(Customer.LOGIN);
         add(columns.createDataTable(10));
 

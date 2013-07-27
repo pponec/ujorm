@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.services.impl;
 
+import java.math.BigDecimal;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
@@ -39,8 +40,6 @@ import static org.ujorm.core.UjoManager.*;
 @Transactional
 public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
-    /** The one day in milisecond */
-    private static final int DAY_AS_MILISEC = 1000 * 60 * 60 * 24;
 
     @Autowired
     private AuthService authService;
@@ -64,7 +63,14 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     public void deleteHotel(Hotel hotel) {
         LOGGER.info("Delete hotel {}", hotel);
         checkReadOnly(hotel);
-        getSession().delete(hotel);
+
+        boolean booking = getSession().exists(Booking.HOTEL.whereEq(hotel));
+        if (booking) {
+            hotel.setActive(false);
+            getSession().update(hotel);
+        } else {
+           getSession().update(hotel);
+        }
     }
 
     /** {@inheritDoc } */
@@ -79,7 +85,14 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     public void deleteCustomer(Customer customer) {
         LOGGER.info("Delete customer {}", customer);
         checkReadOnly(customer);
-        getSession().delete(customer);
+
+        boolean booking = getSession().exists(Booking.CUSTOMER.whereEq(customer));
+        if (booking) {
+            customer.setActive(false);
+            getSession().update(customer);
+        } else {
+           getSession().update(customer);
+        }
     }
 
     /** Update customer */
@@ -93,8 +106,6 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
             customer.writeSession(getSession()); // Activate modifications
             customer.set(Customer.PASSWORD_HASH, authService.getHash(password));
         }
-
-        getSession().update(customer);
     }
 
     /** Authenticate the user */
@@ -141,19 +152,53 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         return Model.of(result);
     }
 
-    /** Create new booking */
+    /** Save new booking */
     @Override
-    public void createBooking(Booking booking) {
+    public void saveBooking(Booking booking) {
         Customer cust = Args.notNull(booking.getCustomer(), Booking.CUSTOMER.toStringFull());
         if (cust.getId()==null) {
             if (!authService.authenticate(cust)) {
                 throw new ValidationException("wrong.login", "Login failed");
             }
+            booking.setCustomer(authService.getCurrentCustomer());
         }
+        // TODO: validations ...
 
-        // TODO: validations
+        booking.setPrice(totalPrice(booking));
         booking.setReservationDate(new java.sql.Date(System.currentTimeMillis()));
-        getSession().update(booking);
+        getSession().save(booking);
+    }
+
+    /** Booking in the feature can be removed by its customer, or an administrator */
+    @Override
+    public void deleteBooking(Booking booking) {
+        // TODO: check permissions, ...
+        LOGGER.info("Delete Booking {}", booking);
+        getSession().delete(booking);
+    }
+
+    /** Returns a booking criterion */
+    @Override
+    public Criterion<Booking> getBookingPreview() {
+        Customer cust = authService.getCurrentCustomer();
+        if (cust == null) {
+            return Booking.ID.forNone();
+        }
+        Criterion<Booking> result = Booking.DATE_FROM.whereGe(now());
+        if (!cust.getAdmin()) {
+            result = result.and(Booking.CUSTOMER.whereEq(cust));
+        }
+        return result;
+    }
+
+    /** Get Current SQL time */
+    private java.sql.Date now() {
+        return new java.sql.Date(System.currentTimeMillis());
+    }
+
+    /** Calculate total price */
+    private BigDecimal totalPrice(Booking booking) {
+        return booking.getHotel().getPrice().multiply(new BigDecimal(booking.getNights() * booking.getPersons()));
     }
 
 }

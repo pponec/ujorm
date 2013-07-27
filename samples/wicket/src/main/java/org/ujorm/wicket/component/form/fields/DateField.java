@@ -60,4 +60,13 @@ public class DateField extends Field {
     protected String getDatePattern() {
         return getString("locale.date.pattern", null, "yyyy-MM-dd");
     }
+
+    /** Returns an {@code input} value from model */
+    @Override
+    public Object getModelValue() {
+        Object result = super.getModelValue();
+        return getKey().isTypeOf(java.sql.Date.class)
+             ? new java.sql.Date(((java.util.Date)result).getTime())
+             : result ;
+    }
 }
