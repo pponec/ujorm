@@ -59,14 +59,14 @@ public class HotelTable extends Panel {
         super(id);
 
         UjoDataProvider<Hotel> columns = UjoDataProvider.of(toolbar.getCriterion());
-        columns.addColumn(Hotel.NAME);
-        columns.addColumn(Hotel.CITY.add(City.NAME)); // An example of relations
-        columns.addColumn(Hotel.STREET);
-        columns.addColumn(Hotel.PRICE);
-        columns.addColumn(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
-        columns.addColumn(Hotel.STARS);
-        columns.addColumn(Hotel.PHONE);
-        columns.addColumn(newActionColumn());
+        columns.add(Hotel.NAME);
+        columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
+        columns.add(Hotel.STREET);
+        columns.add(Hotel.PRICE);
+        columns.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
+        columns.add(Hotel.STARS);
+        columns.add(Hotel.PHONE);
+        columns.add(newActionColumn());
         columns.setSort(Hotel.NAME);
 
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
@@ -107,7 +107,7 @@ public class HotelTable extends Panel {
                     bookingDialog.show(event.getTarget(), dbService.prepareBooking(event));
                 } else {
                     final UjoEvent<Booking> bookingEvent = UjoEvent.get(argEvent);
-                    dbService.createBooking(bookingEvent.getDomain());
+                    dbService.saveBooking(bookingEvent.getDomain());
                     send(getPage(), Broadcast.DEPTH, new UjoEvent(LOGIN_CHANGED, null, event.getTarget()));
                 }
             }

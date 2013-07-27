@@ -16,6 +16,7 @@
 package org.ujorm.hotels.services;
 
 import org.apache.wicket.model.IModel;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
@@ -27,19 +28,22 @@ import org.ujorm.wicket.UjoEvent;
  */
 public interface DbService {
 
+    /** The one day in milisecond */
+    public static final int DAY_AS_MILISEC = 1000 * 60 * 60 * 24;
+
     /** Find a customer */
     public Customer getCustomer(String login);
 
     /** Find enabled customer  */
     public Customer findCustomer(String login, String password);
 
-    /** Delete hotel */
+    /** Delete hotel if no related booking was found, or inactive it */
     public void deleteHotel(Hotel hotel);
 
     /** Update hotel */
     public void updateHotel(Hotel hotel);
 
-    /** Delete customer */
+    /** Delete customer if no related booking was found, or inactive it */
     public void deleteCustomer(Customer customer);
 
     /** Update customer */
@@ -49,6 +53,12 @@ public interface DbService {
     public IModel<Booking> prepareBooking(UjoEvent<Hotel> event);
 
     /** Create new booking */
-    public void createBooking(Booking domain);
+    public void saveBooking(Booking domain);
+
+    /** Booking in the feature can be removed by its customer, or an administrator */
+    public void deleteBooking(Booking domain);
+
+    /** Returns a booking criterion */
+    public Criterion<Booking> getBookingPreview();
 
 }

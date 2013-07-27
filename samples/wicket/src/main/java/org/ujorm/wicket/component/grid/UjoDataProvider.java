@@ -207,20 +207,20 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     }
 
     /** Add table column */
-    public boolean addColumn(IColumn<T, ?> column) {
+    public boolean add(IColumn<T, ?> column) {
         return columns.add(column);
     }
 
     /** Add table column according to column type */
-    public <V> boolean addColumn(Key<T,V> column) {
+    public <V> boolean add(Key<T,V> column) {
         if (column.isTypeOf(Boolean.class)) {
-            return addColumn(KeyColumnBoolean.of(column, isSortingEnabled(column)));
+            return add(KeyColumnBoolean.of(column, isSortingEnabled(column)));
         }
         if (column.isTypeOf(Number.class)) {
-            return addColumn(KeyColumn.of(column, isSortingEnabled(column), "number"));
+            return add(KeyColumn.of(column, isSortingEnabled(column), "number"));
         }
         else {
-            return addColumn(KeyColumn.of(column, isSortingEnabled(column), null));
+            return add(KeyColumn.of(column, isSortingEnabled(column), null));
         }
     }
 
