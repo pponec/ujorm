@@ -18,10 +18,12 @@ package org.ujorm.hotels.gui.booking;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
+import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
@@ -34,6 +36,8 @@ public class BookingEditor extends EntityDialogPane<Booking> {
 
     /** Default value is the same like the field */
     public static final String BOOKING_ACTION = "BOOKING";
+
+    @SpringBean AuthService authService;
 
     public BookingEditor(ModalWindow modalWindow, IModel<Booking> model) {
         super(modalWindow, model);
@@ -54,6 +58,15 @@ public class BookingEditor extends EntityDialogPane<Booking> {
         fields.getField(Booking.HOTEL.add(Hotel.CITY).add(City.NAME)).setEnabled(false);
         fields.getField(Booking.PRICE).setEnabled(false);
         fields.getField(Booking.CURRENCY).setEnabled(false);
+    }
+
+    /** Enable/Disable login fields */
+    @Override
+    protected void onBeforeRender() {
+        final boolean enabled = !authService.isCustomer();
+        fields.getField(Booking.CUSTOMER.add(Customer.LOGIN)).setEnabled(enabled);
+        fields.getField(Booking.CUSTOMER.add(Customer.PASSWORD)).setEnabled(enabled);
+        super.onBeforeRender();
     }
 
     /** Create the editor dialog */

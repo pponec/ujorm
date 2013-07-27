@@ -18,7 +18,7 @@ import static org.ujorm.Validator.Build.*;
 /** Hotel */
 public class Booking extends OrmTable<Booking> {
 
-    private static final String UNIQUE_BOOKING_NAME="idx_booking";
+    private static final String INDEX_NAME="idx_booking";
 
     /** Factory */
     private static final KeyFactory<Booking> f = newFactory(Booking.class);
@@ -29,11 +29,11 @@ public class Booking extends OrmTable<Booking> {
     public static final Key<Booking, Long> ID = f.newKey();
     /** Relation to hotel */
     @Comment("Relation to hotel")
-    @Column(uniqueIndex=UNIQUE_BOOKING_NAME)
+    @Column(index=INDEX_NAME)
     public static final Key<Booking, Hotel> HOTEL = f.newKey(notNull());
     /** Relation to customer */
     @Comment("Relation to customer")
-    @Column(uniqueIndex=UNIQUE_BOOKING_NAME)
+    @Column(index=INDEX_NAME)
     public static final Key<Booking, Customer> CUSTOMER = f.newKey(notNull());
     /** Date from */
     @Comment("Date from")
