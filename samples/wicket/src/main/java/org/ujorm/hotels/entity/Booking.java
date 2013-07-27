@@ -42,8 +42,8 @@ public class Booking extends OrmTable<Booking> {
     @Comment("Number of nights")
     public static final Key<Booking, Short> NIGHTS = f.newKeyDefault((short)1, between((short)1, (short)365));
     /** Number of persons (limit from 1 to 20) */
-    @Comment("Number of persons (limit from 1 to 20)")
-    public static final Key<Booking, Short> PERSONS = f.newKeyDefault((short)1, between((short)1, (short)20));
+    @Comment("Number of persons (limit from 1 to 50)")
+    public static final Key<Booking, Short> PERSONS = f.newKeyDefault((short)1, between((short)1, (short)50));
     /** Total price */
     @Comment("Total price")
     public static final Key<Booking, BigDecimal> PRICE = f.newKeyDefault(BigDecimal.ZERO, min(MANDATORY, BigDecimal.ZERO));

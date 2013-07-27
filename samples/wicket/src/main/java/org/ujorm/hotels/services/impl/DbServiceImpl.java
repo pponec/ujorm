@@ -184,7 +184,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         if (cust == null) {
             return Booking.ID.forNone();
         }
-        Criterion<Booking> result = Booking.DATE_FROM.whereGe(now());
+        Criterion<Booking> result = Booking.DATE_FROM.whereGe(now(-DAY_AS_MILISEC));
         if (!cust.getAdmin()) {
             result = result.and(Booking.CUSTOMER.whereEq(cust));
         }
@@ -192,8 +192,8 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     }
 
     /** Get Current SQL time */
-    private java.sql.Date now() {
-        return new java.sql.Date(System.currentTimeMillis());
+    private java.sql.Date now(long shift) {
+        return new java.sql.Date(System.currentTimeMillis() + shift);
     }
 
     /** Calculate total price */

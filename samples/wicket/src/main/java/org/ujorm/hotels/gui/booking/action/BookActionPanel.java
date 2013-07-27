@@ -53,7 +53,7 @@ public class BookActionPanel<T extends Booking> extends Panel {
             /** Removing is allowed in the future more than three days. */
             @Override
             public boolean isEnabled() {
-                return row.getDateFrom().getTime() > System.currentTimeMillis() + DbService.DAY_AS_MILISEC * 3;
+                return row.getDateFrom().getTime() > System.currentTimeMillis();
             }
         };
 
