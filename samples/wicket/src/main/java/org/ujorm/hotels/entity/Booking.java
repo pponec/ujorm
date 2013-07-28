@@ -50,9 +50,9 @@ public class Booking extends OrmTable<Booking> {
     /** Currency of the price */
     @Comment("Currency of the total price")
     public static final Key<Booking, String> CURRENCY = f.newKeyDefault("USD", length(MANDATORY, 3, 3));
-    /** Reservation date */
-    @Comment("Reservation date")
-    public static final Key<Booking, Date> RESERVATION_DATE = f.newKey(mandatory());
+    /** Creation date of booking. */
+    @Comment("Creation date of booking.")
+    public static final Key<Booking, Date> CREATION_DATE = f.newKey(mandatory());
 
     static {
         f.lock();
@@ -144,12 +144,12 @@ public class Booking extends OrmTable<Booking> {
 
     /** Reservation date */
     public Date getReservationDate() {
-        return RESERVATION_DATE.of(this);
+        return CREATION_DATE.of(this);
     }
 
     /** Reservation date */
     public void setReservationDate(Date reservationDate) {
-        Booking.RESERVATION_DATE.setValue(this, reservationDate);
+        Booking.CREATION_DATE.setValue(this, reservationDate);
     }
 
     //</editor-fold>

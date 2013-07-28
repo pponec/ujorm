@@ -64,12 +64,12 @@ public class BookingTable extends Panel {
         columns.add(Booking.PERSONS);
         columns.add(Booking.PRICE);
         columns.add(Booking.CURRENCY);
+        columns.add(Booking.CREATION_DATE);
         columns.add(newActionColumn());
         columns.setSort(Booking.DATE_FROM);
 
         add(columns.createDataTable(10));
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
-
     }
 
     /** Manage events */
