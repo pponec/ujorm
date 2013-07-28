@@ -8,26 +8,1061 @@
 * Creative Commons License
 
 NAME;NOTE;CITY;STREET;PHONE;STARS;HOME_PAGE;PRICE;ACTIVE
-City Bell Hotel in the city center;City Bell Hotel in the city center is a in Prague,Czech Republic.;-81;Belgická 10;420000000000;3;http://www.hotelsbase.org/hotels/122316/PragueCzech-Republic/City-Bell-Hotel-in-the-city-center.html;12;true
-Little Quarter Hostel;Little Quarter Hostel is a Hotel in Prague,Czech Republic.;-81;Nerudova 21;420000000000;3;http://www.hotelsbase.org/hotels/182694/PragueCzech-Republic/Little-Quarter-Hostel.html;12;true
-Hotel Andel;Hotel Andel is a Hotel in Prague,Czech Republic.;-81;Radlická 40;420000000000;3;http://www.hotelsbase.org/hotels/116853/PragueCzech-Republic/Hotel-Andel.html;16;true
-Hotel Ostas;Hotel Ostas is a Hotel in Prague,Czech Republic.;-81;Orebitská 8;420000000000;3;http://www.hotelsbase.org/hotels/140961/PragueCzech-Republic/Hotel-Ostas.html;16;true
-Wellness Hotel Step;Wellness Hotel Step is a Hotel in Prague,Czech Republic.;-81;Malletova 1141;420000000000;4;http://www.hotelsbase.org/hotels/287933/PragueCzech-Republic/Wellness-Hotel-Step.html;23;true
-EuroAgentur Hotel Jasmin;EuroAgentur Hotel Jasmin is a Hotel in Prague,Czech Republic.;-81;Skloněná 515;1978785-48;3;http://www.hotelsbase.org/hotels/78645/PragueCzech-Republic/EuroAgentur-Hotel-Jasmin.html;20;true
-Little Town Budget Hotel;Little Town Budget Hotel is a Hotel in Prague,Czech Republic.;-81;Malostranské náměstí 11/260;420000000000;2;http://www.hotelsbase.org/hotels/182715/PragueCzech-Republic/Little-Town-Budget-Hotel.html;15;true
-BCity Bell Hotel in the city center;City Bell Hotel in the city center is a in Prague,Czech Republic.;-81;Belgická 10;420000000000;3;http://www.hotelsbase.org/hotels/122316/PragueCzech-Republic/City-Bell-Hotel-in-the-city-center.html;12;true
-BLittle Quarter Hostel;Little Quarter Hostel is a Hotel in Prague,Czech Republic.;-81;Nerudova 21;420000000000;3;http://www.hotelsbase.org/hotels/182694/PragueCzech-Republic/Little-Quarter-Hostel.html;12;true
-BHotel Andel;Hotel Andel is a Hotel in Prague,Czech Republic.;-81;Radlická 40;420000000000;3;http://www.hotelsbase.org/hotels/116853/PragueCzech-Republic/Hotel-Andel.html;16;true
-BHotel Ostas;Hotel Ostas is a Hotel in Prague,Czech Republic.;-81;Orebitská 8;420000000000;3;http://www.hotelsbase.org/hotels/140961/PragueCzech-Republic/Hotel-Ostas.html;16;true
-BWellness Hotel Step;Wellness Hotel Step is a Hotel in Prague,Czech Republic.;-81;Malletova 1141;420000000000;4;http://www.hotelsbase.org/hotels/287933/PragueCzech-Republic/Wellness-Hotel-Step.html;23;true
-BEuroAgentur Hotel Jasmin;EuroAgentur Hotel Jasmin is a Hotel in Prague,Czech Republic.;-81;Skloněná 515;1978785-48;3;http://www.hotelsbase.org/hotels/78645/PragueCzech-Republic/EuroAgentur-Hotel-Jasmin.html;20;true
-BLittle Town Budget Hotel;Little Town Budget Hotel is a Hotel in Prague,Czech Republic.;-81;Malostranské náměstí 11/260;420000000000;2;http://www.hotelsbase.org/hotels/182715/PragueCzech-Republic/Little-Town-Budget-Hotel.html;15;true
-CCity Bell Hotel in the city center;City Bell Hotel in the city center is a in Prague,Czech Republic.;-81;Belgická 10;420000000000;3;http://www.hotelsbase.org/hotels/122316/PragueCzech-Republic/City-Bell-Hotel-in-the-city-center.html;12;true
-CLittle Quarter Hostel;Little Quarter Hostel is a Hotel in Prague,Czech Republic.;-81;Nerudova 21;420000000000;3;http://www.hotelsbase.org/hotels/182694/PragueCzech-Republic/Little-Quarter-Hostel.html;12;true
-CHotel Andel;Hotel Andel is a Hotel in Prague,Czech Republic.;-81;Radlická 40;420000000000;3;http://www.hotelsbase.org/hotels/116853/PragueCzech-Republic/Hotel-Andel.html;16;true
-CHotel Ostas;Hotel Ostas is a Hotel in Prague,Czech Republic.;-81;Orebitská 8;420000000000;3;http://www.hotelsbase.org/hotels/140961/PragueCzech-Republic/Hotel-Ostas.html;16;true
-CWellness Hotel Step;Wellness Hotel Step is a Hotel in Prague,Czech Republic.;-81;Malletova 1141;420000000000;4;http://www.hotelsbase.org/hotels/287933/PragueCzech-Republic/Wellness-Hotel-Step.html;23;true
-CEuroAgentur Hotel Jasmin;EuroAgentur Hotel Jasmin is a Hotel in Prague,Czech Republic.;-81;Skloněná 515;1978785-48;3;http://www.hotelsbase.org/hotels/78645/PragueCzech-Republic/EuroAgentur-Hotel-Jasmin.html;20;true
-CLittle Town Budget Hotel;Little Town Budget Hotel is a Hotel in Prague,Czech Republic.;-81;Malostranské náměstí 11/260;420000000000;2;http://www.hotelsbase.org/hotels/182715/PragueCzech-Republic/Little-Town-Budget-Hotel.html;15;true
-DCity Bell Hotel in the city center;City Bell Hotel in the city center is a in Prague,Czech Republic.;-81;Belgická 10;420000000000;3;http://www.hotelsbase.org/hotels/122316/PragueCzech-Republic/City-Bell-Hotel-in-the-city-center.html;12;true
-DLittle Quarter Hostel;Little Quarter Hostel is a Hotel in Prague,Czech Republic.;-81;Nerudova 21;420000000000;3;http://www.hotelsbase.org/hotels/182694/PragueCzech-Republic/Little-Quarter-Hostel.html;12;true
+Czech Inn Hostel;a Hostel in Prague,Czech Republic.;-81;Francouzska 76;;3;http://www.czech-inn.com/;11;true
+City Bell Hotel in the city center;a  in Prague,Czech Republic.;-81;Belgicka 10;+420 222 522 422;3;http://www.hotelcitybell.cz;12;true
+Little Quarter Hostel;a Hotel in Prague,Czech Republic.;-81;Nerudova 21;+420 257 212 029;3;http://www.littlequarter.com/;12;true
+A Plus Hostel;a Hotel in Prague,Czech Republic.;-81;Na Florenci 1413/33;;3;http://www.plushostels.com/hostels;14;true
+Hostel Rosemary Prague;a Hostel in Prague,Czech Republic.;-81;Růžová 5/971;;2;http://tyn.prague-hostels.cz/;12;true
+Hotel Andel;a Hotel in Prague,Czech Republic.;-81;Radlicka 40;+420 251 171 310;3;http://hotelandel.com/;16;true
+Hotel Ostas;a Hotel in Prague,Czech Republic.;-81;Orebitska 8;+420 222 540 960;3;http://www.hotelostas.cz/aboutus.htm;16;true
+Hotel Residence Tabor;a Hotel in Prague,Czech Republic.;-81;Taboritska 4;;3;http://www.residencetaborhotel.com/;16;true
+Plus Hostel Prague;a Hostel in Prague,Czech Republic.;-81;Privozni 1;;2;http://www.plushostels.com/plusprague;12;true
+Hotel Slavia Prague;a Hotel in Prague,Czech Republic.;-81;Vladivostocka 1460/10;;3;http://www.slaviahotel.com/;17;true
+Aida Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Kubisova 23;;4;http://www.pragueshotels.com/;23;true
+Wellness Hotel Step;a Hotel in Prague,Czech Republic.;-81;Malletova 1141;+420 296 786 350;4;http://www.wellness-hotel-step.cz/;23;true
+EuroAgentur Hotel Jasmin;a Hotel in Prague,Czech Republic.;-81;Sklonena 515;1978785-48;3;http://www.euroagentur.com/;20;true
+Fortuna Rhea Hotel Prague;a Hotel in Prague,Czech Republic.;-81;V Uzlabine 19;;3;http://www.hotels-of-prague.com/rhea/fortuna_rhea_prague.htm;20;true
+Little Town Budget Hotel;a Hotel in Prague,Czech Republic.;-81;Malostranské námestí 11/260;+420 242 406 964;2;http://www.littletownhotel.cz/en/;15;true
+Botel Racek Praha;a Hotel in Prague,Czech Republic.;-81;Na Dvorecke Louce;;3;http://www.botelracek-prague.com/;21;true
+Hotel Fortuna Luna;a Hotel in Prague,Czech Republic.;-81;Decinska 1;+49 (0)30 80 947 5;2;http://www.hotelfortunalunaprague.com/;16;true
+Hotel Prokopka;a Hotel in Prague,Czech Republic.;-81;Prokopova 9;+420 222 781 647;2;http://www.prokopka.cz/welcome.html;16;true
+Relax Inn Prague Hotel;a Hotel in Prague,Czech Republic.;-81;Novovysocanska 25;420-2-96895050;4;http://www.holidayinn.com/hotels/us/en/hd/czech-republic/prague-hotels;27;true
+City Inn Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Hybernska 13;+420 226 222 600;3;http://praguehotels.jurysinns.com/;22;true
+Amedia Hotel Theatrino;a Hotel in Prague,Czech Republic.;-81;Borivojova 53;;4;http://amediahotels.com/;28;true
+Pension & Hostel Artharmony;a Hotel in Prague,Czech Republic.;-81;Ječná 509/12;0845 601 2923;2;http://www.pensionsadvisoryservice.org.uk/;17;true
+Hotel Dalimil;a Hotel in Prague,Czech Republic.;-81;Prokopovo Namesti 2-3;;3;http://dalimilhotelprague.com/;23;true
+Hotel Golf Prague;a Hotel in Prague,Czech Republic.;-81;Plzenska 103/215a;;3;http://www.hotelgolfprague.com/;23;true
+Hotel Ostruvek;a Hotel in Prague,Czech Republic.;-81;Na Ostruvku 2;+420 222 539 539;3;http://ostruvek.hotel.cz/;23;true
+Seifert Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Konevova 8;+420 222 780 650;4;http://www.hotelseifert.cz/;29;true
+Adeba Hotel;a Hotel in Prague,Czech Republic.;-81;Pernerova 16;;3;http://www.adebahotel-prague.com/;24;true
+Globus Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Gregorova 2115;+420-296 799 100;3;http://www.hotel-globus.cz/en/;24;true
+Hostel Lewande;a Hostel in Prague,Czech Republic.;-81;Za Poříčskou bránou 375/22;+420       224 932;2;http://www.hostellewande.cz/index.html;18;true
+Hotel At The Black Star Prague;a Hotel in Prague,Czech Republic.;-81;Seminarska 177/6;;4;http://www.theblackstarhotel-prague.com/;31;true
+Bily Lev Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Cimburkova 20;;3;http://www.bilylev-hotel-prague.com/;25;true
+City Partner Hotel Victoria Prague;a Hotel in Prague,Czech Republic.;-81;Seifertova 26;+420 222 220 060;3;http://www.hotelvictoria.cz/;25;true
+Hotel Bohemians;a Hotel in Prague,Czech Republic.;-81;Modranská 51 Prague 04;;3;http://www.hotel-bohemians.cz/;25;true
+Hotel Gloria Prague;a Hotel in Prague,Czech Republic.;-81;Prokopova 20;;3;http://www.praguehotelscenter.com/;25;true
+Lovely Prague Apartments;a Apartment in Prague,Czech Republic.;-81;Truhlářská 23;1-877-744-1222;3;http://www.praguehotels.cz/en/hotel/prague/lovely-prague-apartments-truhlarska-truhlarska-23;25;true
+Pension Aaron;a Hotel in Prague,Czech Republic.;-81;Praha 8 - Karlin Krizikova 42;718-793-9885;3;http://pensionconsultant.com/;25;true
+Vitkov Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Konevova 114;114 130 00;3;http://www.hotel-vitkov.cz/;25;true
+Nabucco Hotel;a Hotel in Prague,Czech Republic.;-81;Ctiradova 16;;4;http://www.hotelnabucco-prague.com/?affid=CR0210;32;true
+Vlkova Palace Apartments Prague;a Apartment in Prague,Czech Republic.;-81;Vlkova street 25;;4;http://www.prague-residence.com/;32;true
+Henrietta Hotel;a Hotel in Prague,Czech Republic.;-81;Ke Stírce 42;;3;http://www.henrietta.cz/en/;26;true
+Eurohotel Praha;a Hotel in Prague,Czech Republic.;-81;Turkova 2318/5a;;3;http://www.prague-eurohotel.com/;27;true
+Hotel Otakar Prague;a Hotel in Prague,Czech Republic.;-81;Otakarova 3;;3;http://1st-prague-hotels.com/;27;true
+Pension Klara;a Hotel in Prague,Czech Republic.;-81;Sternberkova 20;0039 0474 745220;3;http://www.pensionklara.com/;27;true
+Denisa Hotel;a Hotel in Prague,Czech Republic.;-81;Narodni obrany 33;3673939-7;4;http://www.hotel-denisa.cz;34;true
+Amigo City Centre Hotel;a Hotel in Prague,Czech Republic.;-81;Legerova 13;;4;http://www.amigo-hotel.com/en/home;35;true
+Aparthotel Amadeus;a Hotel in Prague,Czech Republic.;-81;Dalimilova 10;+420 222 780 267;3;http://www.amadeushotel.cz/;28;true
+Apart-hotel Nordik;a Hotel in Prague,Czech Republic.;-81;Dalimilova 14;;3;http://www.nordik.cz/main.htm;28;true
+Fortuna City Hotel;a Hotel in Prague,Czech Republic.;-81;Becvarova 14;;3;http://www.hotelfortunacityprague.com/;28;true
+Hotel Hejtman;a Hotel in Prague,Czech Republic.;-81;Rohácova 70;271774450;3;http://www.hotel-hejtman.cz/en/about_us;28;true
+Hotel Taurus;a Hotel in Prague,Czech Republic.;-81;Vinohradska 105;+420 222 727 313;4;http://www.hoteltaurus.cz/;35;true
+Jerabek Hotel;a Hotel in Prague,Czech Republic.;-81;Primatorska 4/7;;3;http://www.jerabekchallenge.us/;28;true
+Residence Select Prague;a Hotel in Prague,Czech Republic.;-81;Sokolska 34;;3;http://www.select-a-room.com/hotels/czech-republic/prague;28;true
+Hotel Popelka;a Hotel in Prague,Czech Republic.;-81;Na Popelce 215/12;;4;http://www.hotelpopelka.cz;36;true
+Hotel U Divadla Prague;a Hotel in Prague,Czech Republic.;-81;U Stare Posty 247/6;;4;http://hotel-u-divadla.com/;36;true
+Akcent Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Stroupeznickeho 1;(+420) 261 261 638;3;http://prague.tv/prague/education/language-schools/akcent-international-house-prague:1890;29;true
+Hotel Florenc;a Hotel in Prague,Czech Republic.;-81;Krizikova 11;(+420) 224 816 247;3;http://www.hotel-florenc.cz/;29;true
+Hotel Olsanka;a Hotel in Prague,Czech Republic.;-81;Praha 3 - Zizkov Táboritská 23;;3;http://www.hotelolsanka.cz/;29;true
+Hotel Victor Prague;a Hotel in Prague,Czech Republic.;-81;Husitska 72;;3;http://www.cheappraguehotels.net/hotels.aspx;29;true
+EA Hotel Sonata;a Hotel in Prague,Czech Republic.;-81;Sokolska 68;;4;http://hotelsonataprague.com/;37;true
+Apollon Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Konevova 158;;3;http://www.hotelapollon.cz/;30;true
+Botel Albatros;a Hotel in Prague,Czech Republic.;-81;Nabr Ludvika Svobody 1;;3;http://www.botelracek-prague.com/;30;true
+Hostel Advantage;a Hostel in Prague,Czech Republic.;-81;Sokolská 11;;1;http://www.advantagehostel.cz/advantage/index.php;15;true
+Hotel Ariston & Ariston Patio;a Hotel in Prague,Czech Republic.;-81;Seifertova 65;00879771004;4;http://www.hotelariston.it/;38;true
+Top Hotel Prague & Congress Center;a Hotel in Prague,Czech Republic.;-81;Blazimska 1781/4;;4;http://www.top-hotel-prague.com/;38;true
+Florentina Boat Hotel;a Hotel in Prague,Czech Republic.;-81;Dvorakovo Nabrezi;+420739002550;3;http://florentinaboat.com/;31;true
+Juno Hotel;a Hotel in Prague,Czech Republic.;-81;Stechovicka 2296;;3;http://www.junohotel.hu/;31;true
+Sparta Pension Prague;a Bed and Breakfast in Prague,Czech Republic.;-81;Ústecká 153 - Praha 8;(+420) 296 111 111;3;http://prague.tv/prague/sports-and-recreation/football-clubs/ac-sparta:4852;31;true
+Albion Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Peroutkova 531/81;+420 226 530 230;4;http://www.albionhotel.cz/en/;39;true
+Elite Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Ostrovni 32;420 211 151 300;4;http://www.hotelelite.cz/en/;39;true
+Aparthotel Na Belidle;a Apartment in Prague,Czech Republic.;-81;Na Belidle 27;;3;http://aparthotelnabelidle-prague.com/;32;true
+Apartments Emma;a Apartment in Prague,Czech Republic.;-81;Oldrichova 9;;3;http://apartments-emma.com/;32;true
+Kavalir Hotel;a Hotel in Prague,Czech Republic.;-81;Plzenska 177;+420 257 216 565;3;http://www.hotelkavalirprague.cz/;32;true
+Rezidence Emmy;a Hotel in Prague,Czech Republic.;-81;K Zelené louce 2a;+420 246 020 000;4;http://www.emmy.cz/;40;true
+Royal Court Boutique Hotel and Spa;a Hotel in Prague,Czech Republic.;-81;Wenzigova 1873/6;;4;http://royalcourthotel.cz/index.php?id=23;40;true
+Sprint Penzion;a Inn in Prague,Czech Republic.;-81;Cukrovarnicka 64;;2;http://penzionsprint.cz/;24;true
+Sunflower Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Oldrichova 31;;3;http://prague.cz/;32;true
+The Bridge B&B;a Bed and Breakfast in Prague,Czech Republic.;-81;Zborovska 14 Smichov;+44 (0)1350 727068;2;http://www.thebridge-dunkeld.co.uk/;24;true
+Belvedere Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Milady Horakove 19;;4;http://www.hotels-in-prague-czech.com/hotel-diplomat.php;41;true
+Euroagentur Art Hotel Embassy;a Hotel in Prague,Czech Republic.;-81;Petrska 31;;4;http://www.arthotelembassy.com/;41;true
+Hotel Union Praha;a Hotel in Prague,Czech Republic.;-81;Ostrčilovo nám 4/468;123456789101112131;4;http://www.hotelunion.cz/;41;true
+Hotel Vysehrad;a Hotel in Prague,Czech Republic.;-81;Marie Cibulkove 29;;4;http://www.hotel-vysehrad.cz/;41;true
+Panorama Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Milevska 7;(+420)-26116-1111;4;http://www.panoramahotelprague.com;41;true
+Raffaello Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Legerova 54;;4;http://raffaello-hotel-prague.h-rez.com/;41;true
+Atos Hotel;a Hotel in Prague,Czech Republic.;-81;Melnicka 13;+420-251 512 890;3;http://www.hotelatos.cz/;33;true
+Easy Journey Pension Prague;a Place in Prague,Czech Republic.;-81;Praha 5 - Plzeňská 22;;3;http://www.in-prague.org/prague-pensions/pension-easy-journey-prague-5/;33;true
+Gallery Hotel SIS;a Hotel in Prague,Czech Republic.;-81;Rostislavova 17;;3;http://galleryhotelsis.com/;33;true
+Krystal CDMS Praha;a Hotel in Prague,Czech Republic.;-81;J. Martího 2/407;;3;http://www.prague-hotel-krystal.cz/;33;true
+Villa Edvin Pension Prague;a Hotel in Prague,Czech Republic.;-81;Rosecska 15/1736 Prague 4;;3;http://www.in-prague.org/prague-pensions/pension-villa-venus-prague-8/;33;true
+Botel Vodnik Prague;a Hotel in Prague,Czech Republic.;-81;Strakonicka 1032/2;;2;http://www.botel-vodnik-prague.com/;25;true
+Golfyacht Botel Prague;a Hotel in Prague,Czech Republic.;-81;Rohanský Ostrov;;4;http://www.pragueshotels.com/;42;true
+Hotel Ehrlich Prague;a Hotel in Prague,Czech Republic.;-81;Konevova 79;;4;http://www.praguehoteldesk.com/;42;true
+Hotel Mucha;a Hotel in Prague,Czech Republic.;-81;Sokolovska 26;+420 222 318 849;4;http://www.hotelmucha.cz/;42;true
+Hotel Abri;a Hotel in Prague,Czech Republic.;-81;Jana Masaryka 36;(415) 392-8800;3;http://hotelabrisf.com/;34;true
+Hotel Branik;a Hotel in Prague,Czech Republic.;-81;Pikovicka 199;+420-244-462-844;3;http://www.hotelbranik.cz/;34;true
+Jeleni Dvur Hotel;a Hotel in Prague,Czech Republic.;-81;Jeleni 199;;3;http://jelenidvurhotelprague.com/;34;true
+Merkur Hotel Prague;a Hotel in Prague,Czech Republic.;-81;Tesnov 1162/9;420-22232-3878;3;http://merkurhotelprague.priorguest.com/it;34;true
+Mad Hostel Madrid;a Hostel in Madrid,Spain.;-28;C/ de la Cabeza 24; +34 914 20 05 83;2.5;http://www.wayhostel.com;16;true
+Splendom Suites Madrid;a Apartment in Madrid,Spain.;-28;Alcalá 57; +34 917 81 65 61;4;http://www.splendomsuites.com;25;true
+Hostal Castro;a Hotel in Madrid,Madrid,Spain.;-28;Leon, 13,Madrid,Madrid,Spain; +34 661 21 03 28;3.5;http://www.budgetplaces.com;29;true
+No Name City Hostel;a Hostel in Madrid,Spain.;-28;Calle Atocha 45; +34 913 69 29 19;2;http://www.nonamecityhostel.com;20;true
+Pension Lemus Madrid;a Place in Madrid,Spain.;-28;Calle Hortaleza 7;;3;http://www.madridman.com/madridhostels.html;28;true
+Hostal Estrella;a Hotel in Madrid,Madrid,Spain.;-28;c/ La Estrella 5 - 2 Derecha,Madrid,Madrid,Spain; +34 915 21 75 85;4.0;http://www.hostalhelena.com;35;true
+Hostal Huespedes Toledo;a Hotel in Madrid,Madrid,Spain.;-28;Calle Conde de Romanones 10, 3 ext/izda,Madrid,Madrid,Spain; +34 914 29 29 70;4.0;http://huespedestoledo.com;35;true
+Hostal Casa Bueno;a Hotel in Madrid,Madrid,Spain.;-28;Calle Fuencarral 10, 4th floor,Madrid,Madrid,Spain; +34 915 22 89 83;4.5;http://www.hostalcasabueno.com;40;true
+Hostal Residencia Arti II Madrid;a Place in Madrid,Spain.;-28;San Leonardo 12;;2;http://hotelsinmadridspain.net/tag/accommodation/;22;true
+Hostal Residencia Arti Madrid;a Hostel in Madrid,Spain.;-28;Gran Vía 76;+34 91 435 07 60;2;http://www.hostaldondiego.com/;23;true
+Hostal Artic;a Hotel in Madrid,Madrid,Spain.;-28;Gatzambide 57,Madrid,Madrid,Spain; +34 915 47 66 00;4.0;http://www.arti.es;39;true
+Hostal Chelo Madrid;a Hostel in Madrid,Spain.;-28;Hortaleza 17 3º Izquierda;;3;http://www.madridman.com/madridhostels.html;32;true
+Hostal Numancia Madrid;a Hostel in Madrid,Spain.;-28;Magdalena 8;+34 91 530 24 18;2;http://www.hostalnumancia-madrid.com/;24;true
+Magda Hostel Madrid;a Hostel in Madrid,Spain.;-28;Calle de la Magdalena 5;;2;http://www.magdahostelmadrid.com/;25;true
+Hostal Equity Point Madrid;a Hostel in Madrid,Spain.;-28;C/ Cruz 5;;2;http://www.equity-point.com/;26;true
+Hostal Jemasaca-Palma61;a Hotel in Madrid,Madrid,Spain.;-28;C/ La Palma, 61,Madrid,Madrid,Spain; +34 915 32 70 11;3.5;http://www.hostaljemasaca-palma61.com;39;true
+Hostal Maria Reloba;a Hotel in Madrid,Madrid,Spain.;-28;Calle Espoz y Mina 8,Madrid,Madrid,Spain; +34 915 32 43 03;3.5;http://www.hostalmariareloba.com;40;true
+Hostal Bahia Madrid;a Hostel in Madrid,Spain.;-28;Calle Carretas 31 2 Izquierda; +34 915 22 98 46;3;http://www.hostalbahiamadrid.es;36;true
+NH La Habana;a Hotel in Madrid,Spain.;-28;Paseo de la Habana 73;+ 34 914 430 720;4;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-la-habana.html?nhagentid=10755&nhsubagentid=107555220035;46;true
+Silken Puerta de Madrid;a Hotel in Madrid,Spain.;-28;Juan Rizi 5;+34 917 445 400;4;http://www.hoteles-silken.com/hotel-puerta-america-madrid/;46;true
+Tijcal II Hostal Madrid;a Hostel in Madrid,Spain.;-28;Calle Cruz 26;;3;http://www.hostaltijcal.com/;37;true
+High Tech Arturo Soria;a Hotel in Madrid,Spain.;-28;C/ Arturo Soria 14;;4;http://high-tech-arturo-soria-alcala.com/;47;true
+Hostal Zamoran;a Hotel in Madrid,Madrid,Spain.;-28;C/ Fuencarral, No 18,Madrid,Madrid,Spain; +34 915 32 20 60;4.0;http://www.hostalzamoran.com;47;true
+Hostal Prim;a Hotel in Madrid,Madrid,Spain.;-28;Calle de Prim, 15, 2a planta,Madrid,Madrid,Spain; +34 915 21 54 95;4.0;http://www.hostalprim.com;47;true
+Hostal Welcome Madrid;a Hostel in Madrid,Spain.;-28;Calle Casas de Miravete 28 B;+34 914 291 188;1;http://www.hostal-astoria.com/;19;true
+Hostal Condestable Madrid;a Hostel in Madrid,Spain.;-28;c/ de la Puebla 15 2º izda;;2;http://www.madridman.com/madridhostels.html;29;true
+Hostal Nuestra Senora de la Paloma;a Hostel in Madrid,Spain.;-28;Esparteros street Nr 12 3rd Floor;;2;http://www.anuestrasenoradelapaloma.com/english/index.html;29;true
+Eurostars Zarzuela Park;a Hotel in Madrid,Spain.;-28;Dario Aparicio S/N;+44(0)8435080328;4;http://www.eurostarshotels.co.uk/eurostars-zarzuela-park.html;49;true
+Osuna Hotel;a Hotel in Madrid,Spain.;-28;Luis De La Mata 18;+34 91 741 81 00;4;http://www.hotelosuna.es/;49;true
+Silken Puerta Castilla Hotel;a Hotel in Madrid,Spain.;-28;Paseo de la Castellana 191;+34 914 531 900;4;http://www.hoteles-silken.com/hotel-puerta-castilla-madrid/en/;49;true
+Hostal Regio;a Hotel in Madrid,Madrid,Spain.;-28;Chincilla 4,Madrid,Madrid,Spain; +34 915 32 03 54;4.0;http://www.hostalregio.es;49;true
+Hostal La Jerezana Madrid;a Hostel in Madrid,Spain.;-28;De La Cruz 26;0034 91 531 93 27;3;http://hostallajerezana.com/IN/index.php;40;true
+Hostal Maria Alcazar II;a Hostel in Madrid,Spain.;-28;Calle Miguel Moya 4;6502906-3;2;http://www.infohostal.com/guia/madrid/madrid/alojamiento/8570/hostal-maria.html;30;true
+NH Mercader;a Hotel in Madrid,Spain.;-28;Carretera Eje 2-7a Políg Aliment.Mercamadrid;+34 913302400;4;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-mercader.html?nhagentid=10755&nhsubagentid=107555220035;50;true
+Hotel Gran Atlanta;a Hotel in Madrid,Spain.;-28;C/ Comandante Zorita 34;+34 91 553 59 00;4;http://www.hotelgranatlanta.com/;51;true
+Hostal Almanzor;a Hotel in Madrid,Madrid,Spain.;-28;Carrera San Jeronimo, 11,Madrid,Madrid,Spain; +34 914 29 38 01;4.0;http://www.hostalalmanzormadrid.com;51;true
+Hostal Regio Madrid;a Hostel in Madrid,Spain.;-28;Chinchilla 4;;3;http://www.gomadrid.com/;41;true
+Hostal Rico;a Hotel in Madrid,Madrid,Spain.;-28;Calle de Fuencarral 22,Madrid,Madrid,Spain; +34 915 31 95 87;2.5;http://www.hostalrico.es;36;true
+Hostal Asuncion;a Hotel in Madrid,Spain.;-28;Plaza de Santa Bárbara 8 2º Piso D;+34 913 082 348;2;http://www.hostalasuncion.es/en/;31;true
+Hostal Dolce Vita Madrid;a Hotel in Madrid,Spain.;-28;Calle de San Bartolomé 4;;2;http://www.gomadrid.com/hostels/Hostal-Dolce-Vita.html;31;true
+Hostal Splendid;a Hotel in Madrid,Spain.;-28;C/ Gran Via 15;;2;http://hostalsplendid.com/;31;true
+Salamanca Hostal Madrid;a Hotel in Madrid,Spain.;-28;Calle C/ Jose Ortega y Gasset 89;;2;http://www.hostalsalamanca.com/en-index.html;31;true
+Hostal Orly;a Hotel in Madrid,Madrid,Spain.;-28;Calle Montera; +34 915 31 30 12;3.5;http://www.hostalorlymadrid.com;47;true
+Confortel Alcala Norte;a Hotel in Madrid,Spain.;-28;Calle San Romualdo 30;1241205-1;4;http://www.confortelhoteles.com/en/;53;true
+Analina Rooms;a Hotel in Madrid,Madrid,Spain.;-28;Cala Espada, 6,Madrid,Madrid,Spain; +34 913 69 19 14;4.0;http://www.analinarooms.com;53;true
+Hostal Besaya;a Hotel in Madrid,Madrid,Spain.;-28;San Bernardo, 13 - 8a,Madrid,Madrid,Spain; +34 917 58 76 30;4.0;http://www.hostalbesaya.com;53;true
+Hostal del Pez Azul;a Hostel in Madrid,Spain.;-28;C/ del Pez 9; +34 915 32 47 45;3;http://www.hostaldelpezazul.com;43;true
+Hostal Luis XV;a Hotel in Madrid,Spain.;-28;Calle de la Montera 47; +34 915 22 10 21;3;http://www.hrluisxv.net;43;true
+Hostal Huespedes Toledo Madrid;a Hostel in Madrid,Spain.;-28;Conde Romanones 10 3º Ext Izq;;2;http://www.madridman.com/madridhostels.html;33;true
+Senator Espana Spa Hotel;a Hotel in Madrid,Spain.;-28;Gran Via 70;;4;http://hotelspasenatorespana.com/;55;true
+Senator Gran Via Hotel;a Hotel in Madrid,Spain.;-28;C/ Gran Via 21;15404287-15;4;http://www.senatorhotelgranvia.com/index.html;55;true
+Hostal Olga;a Hotel in Madrid,Madrid,Spain.;-28;C/ Zorrilla, 13,Madrid,Madrid,Spain; +34 914 29 78 87;4.0;http://www.hostalolgamadrid.com;55;true
+Travelodge Torrelaguna Madrid;a Hotel in Madrid,Spain.;-28;C/ Torrelaguna 69;1-800-525-4055;3;http://www.travelodge.co.uk/search_and_book/hotel_overview.php?hotel_id=271;45;true
+Hostal Villagarcia;a Hotel in Madrid,Madrid,Spain.;-28;Fuencarral 10, 3rd floor,Madrid,Madrid,Spain; +34 915 22 05 85;3.0;http://www.hostalvillagarcia.com;45;true
+Hostal La Fontana;a Hostel in Madrid,Spain.;-28;Calle Valverde 6; +34 915 21 84 49;2;http://www.hostallafontana.com;34;true
+Veguin Hostal;a Hostel in Madrid,Spain.;-28;Calle de Fuencarral 16;915 314 791;2;http://hostal-veguin-en--madrid.buscalis.com/;34;true
+Confortel Atrium;a Hotel in Madrid,Spain.;-28;C/ Emilio Vargas 3-5;+34 913 98 38 70;4;http://www.confortelatrium.com/;57;true
+Hotel Zenit Conde de Orgaz;a Hotel in Madrid,Spain.;-28;Avenida Moscatelar 24;91 218 20 28;4;http://hotelzenitcondedeorgaz.zenithoteles.com/;57;true
+Insignia Arturo Soria Suites;a Hotel in Madrid,Spain.;-28;C/ Juan Perez Zuniga 20;20 - 28027;4;http://arturosoriasuites.com/en/index.html;57;true
+NH Prisma;a Hotel in Madrid,Spain.;-28;Santa Engracia 120;;4;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-suites-prisma.html?nhagentid=10755&nhsubagentid=107555220035;57;true
+Hostal Florida;a Hotel in Madrid,Madrid,Spain.;-28;Calle Doctor Cortezo No. 15,Madrid,Madrid,Spain; +34 914 29 83 32;2.5;http://www.hostalflorida.com;40;true
+Tryp Leganes;a Hotel in Leganes,Spain.;-28;Avenida de la Universidad 7;(34) 91 1844900;3;http://www.tryphotels.com/en/tryp-leganes-hotel-leganes-madrid-spain.html;46;true
+Apartamentos Juan Bravo;a Apartment in Madrid,Spain.;-28;Juan Bravo 58-60;;4;http://www.apartamentos-jb.com/;58;true
+Ayre Gran Hotel Colon;a Hotel in Madrid,Spain.;-28;C/ del Pez Volador 1-11;+34 91 4009900;4;http://www.ayrehoteles.com/en/hotels/ayre-gran-hotel-colon-madrid/the-hotel/home/;58;true
+Hotel El Coloso;a Hotel in Madrid,Spain.;-28;Leganitos 13; +34 915 48 76 40;4;http://www.hotelcoloso.com;58;true
+Suites Husa Mirador de Chamartin;a Hotel in Madrid,Spain.;-28;Del Arte 14;902 100 710;4;http://www.husa.es/en/nuestros-hoteles/hotel/v/u/husa-mirador-de-chamartin;58;true
+Hostal San Martin Madrid;a Hostel in Madrid,Spain.;-28;Calle Concepción Arenal 4 - 4º;+34 91 429 1591;2;http://www.hostalsanisidro.com/;35;true
+Hostal Valencia Madrid;a Hostel in Madrid,Spain.;-28;C/ Gran Vía Nº44 5º;;3;http://www.madridman.com/madridhostels.html;47;true
+Agora Juan de Austria;a Hotel in Madrid,Spain.;-28;C/ Juan De Austria 5;;4;http://madrid-juandeaustria.com/;59;true
+Barcelo Torre Arias;a Hotel in Madrid,Spain.;-28;Julian Camarillo 19-21;(00 800 4 227 23 5;4;http://www.barcelo.com/BarceloHotels/en-GB/Hotels/Spain/Madrid/TorreArias/Home;59;true
+Gran Versalles Hotel;a Hotel in Madrid,Spain.;-28;C/ Covarrubias 4 & 6;914 475 700;4;http://www.hotelgranversalles.es/;59;true
+Hotel Nuevo Madrid;a Hotel in Madrid,Spain.;-28;C/ Bausa 27;+34 91 298 26 00;4;http://www.hotelnuevomadrid.com/;59;true
+Apartamentos H2 Doctor Piga Madrid;a Apartment in Madrid,Spain.;-28;c/ Doctor Piga 15;;3;http://www.softguide-madrid.com/madrid_guide/accommodation/Apartamentos-Doctor-Piga-Madrid.html;48;true
+Etap Hotel Madrid Vallecas;a Hotel in Madrid,Spain.;-28;C/ Casas de Miravete 17;;2.5;http://www.etaphotel.com/gb/home/index.shtml;42;true
+Etap Madrid Valentin Beato;a Hotel in Madrid,Spain.;-28;Rufino Gonzalez 19 (Metro Suanzes);(+34)913040441;2.5;http://www.etaphotel.com/gb/hotel-5100-etap-madrid-valentin-beato-futuro-ibis-budget/location.shtml;42;true
+Foxa 32 Suites;a Hotel in Madrid,Spain.;-28;Agustín Foxa 32;;4;http://www.hotelesfoxa.com/;60;true
+Hostal Alcazar Regis;a Hostel in Madrid,Spain.;-28;Gran Via 61 5º piso; +34 915 47 93 17;2;http://www.hostalalcazarregis.com;36;true
+Hostal Concepcion Arenal Madrid;a Hostel in Madrid,Spain.;-28;Concepcion Arenal 6 Piso 3º;91 522 68 83;2;http://www.hostalconcepcionarenal.es/;36;true
+Hostal la Perla Asturiana;a Hotel in Madrid,Spain.;-28;Plaza de Santa Cruz 3;3 - 28012;2;http://www.perlaasturiana.com/;36;true
+Hostal Nersan II Madrid;a Hostel in Madrid,Spain.;-28;C/ Santa Engracia;;2;http://www.hostalnersan.com/en/presentacion;36;true
+Husa Chamartin;a Hotel in Madrid,Spain.;-28;Agustín de Foxa s/n;902 100 710;4;http://www.husa.es/es/nuestros-hoteles/hotel/v/u/husa-chamartin;60;true
+Novotel Madrid Puente de la Paz;a Hotel in Madrid,Spain.;-28;Albacete 1;;4;http://www.novotel.com/gb/hotel-0843-novotel-madrid-puente-de-la-paz/index.shtml;60;true
+Suites Hotel - Foxa 25;a Hotel in Madrid,Spain.;-28;C/ Agustin de Foxa 25;;4;http://www.hotelesfoxa.com/;60;true
+Hostal Rofer;a Hotel in Madrid,Madrid,Spain.;-28;Calle de Toledo 94,Madrid,Madrid,Spain; +34 913 66 39 69;3.0;http://hostalrofer.es/;48;true
+Barcelo Castellana Norte;a Hotel in Madrid,Spain.;-28;Avenida Manoteras 20;(00 800 4 227 23 5;4;http://www.barcelo.com/BarceloHotels/en-GB/Hotels/Spain/Madrid/CastellanaNorte/Home.htm;61;true
+BEST WESTERN Hotel Arosa;a Hotel in Madrid,Spain.;-28;Salud 21 Edificio Gran Via 29;+34 915 321 600;4;http://www.hotelarosa.es/;61;true
+Confortel Pio XII;a Hotel in Madrid,Spain.;-28;Avda. Pío XII 77;1241205-1;4;http://www.confortelhoteles.com/en/hotel-pio-xii-madrid/;61;true
+Hotel Convencion;a Hotel in Madrid,Spain.;-28;Calle Odonnell 53;(34) 91 221 40 60;4;http://www.hotel-convencion.com/;61;true
+NH Ribera del Manzanares;a Hotel in Madrid,Spain.;-28;C/ Virgen del Puerto 57;+34 913643248;4;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-ribera-del-manzanares.html;61;true
+Tryp Alcala 611;a Hotel in Madrid,Spain.;-28;Calle de Alcala 611;(34) 91 7434130;4;http://www.tryphotels.com/en/tryp-alcala-611-hotel-madrid-spain.html;61;true
+Apartamentos H2 Tirso De Molina Madird;a Apartment in Madrid,Spain.;-28;Abades 3;;3;http://www.softguide-madrid.com/madrid_guide/accommodation/Apartamento-h2-tirso-de-molina-madrid.html;49;true
+H2 La Latina Apartamentos Madrid;a Apartment in Madrid,Spain.;-28;C/ Santa Ana 20;;3;http://www.gomadrid.com/top-10/;49;true
+Hostal Foster Madrid;a Hostel in Madrid,Spain.;-28;Estrella 5;;3;http://www.conozca-madrid.com/ciudades.php?cod=10;49;true
+NH Breton;a Hotel in Madrid,Spain.;-28;Bretón de los Herreros 29;;3;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-breton.html?nhagentid=10755&nhsubagentid=107555220035;49;true
+Silken Torre Garden;a Hotel in Madrid,Spain.;-28;Hermanos Garcia Noblejas 190;+34 913 135 810;3;http://www.hoteles-silken.com/hotel-torre-garden-madrid/en/;49;true
+Babel Guesthouse;a Place in Madrid,Spain.;-28;San Bernardo 30 piso 1; +34 667 87 42 27;2;http://www.babelguesthouse.com;37;true
+Hostal Rayuela;a Hostel in Madrid,Spain.;-28;Fuencarral St 41; +34 915 31 73 57;2;http://www.hostalrayuela.com;37;true
+NH Alcala;a Hotel in Madrid,Spain.;-28;Alcalá 66; +34 914 35 10 60;4;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-alcala.html?nhagentid=10755&nhsubagentid=107555220035;62;true
+NH Parque Avenidas;a Hotel in Madrid,Spain.;-28;Biarritz 2;+34 913610288;4;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-parque-avenidas.html?nhagentid=10755&nhsubagentid=107555220035;62;true
+Novotel Madrid Campo de las Naciones;a Hotel in Madrid,Spain.;-28;Calle Amsterdam 3;;4;http://www.novotel.com/gb/hotel-1636-novotel-madrid-campo-de-las-naciones/index.shtml;62;true
+Seven Hills Village Resort Rome;a Resort in Rome,Latium,Italy.;-23;Via Cassia 1216;10 - 00189;4;http://www.sevenhills.it/;19;true
+Grand Hotel Fleming;a Hotel in Rome,Latium,Italy.;-23;Piazza Monteleone Di Spoleto 20;;4;http://www.grandhotelflemingrome.com/;32;true
+Flaminio Village Bungalow Park;a Hotel in Rome,Latium,Italy.;-23;Via Flaminia Nuova 821;821 - 00189;4;http://www.villageflaminio.com/ENG/default.asp;35;true
+Meeting Hotel Rome;a Hotel in Rome,Latium,Italy.;-23;Via Pier Vittorio Aldini 38/a;1 800 748 3127;3;http://www.romermhotels.worldweb.com/;35;true
+1 Via dei Valeri;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Dei Valeri 1;;5;http://www.hoteldeimellini-rome.com/;54;true
+Flaminius Hotel;a Hotel in Rome,Latium,Italy.;-23;Via del Frassineto 21-23;;3;http://www.hotelflaminiusrome.com/;36;true
+Hotel Marechiaro;a Hotel in Rome,Latium,Italy.;-23;Via Gioberti 30 00185 Rome Italy;0039-(0)6 - 446536;2;http://www.hotelmarechiaro.com/;27;true
+Hotel Victor Rome;a Hotel in Rome,Latium,Italy.;-23;Via Annia Regilla 60;96028380;3;http://www.romexplorer.com/rome-webcam.htm;36;true
+Prime Hotel Roma Cassia;a Hotel in Rome,Latium,Italy.;-23;Via Barbarano Romano 19;;4;http://www.primeromacassia.com/;45;true
+TOP Hotel American Palace EUR;a Hotel in Rome,Latium,Italy.;-23;Via Laurentina 554;554 - 00143;4;http://www.americanpalace.it/default-en.html;45;true
+Aldobrandeschi Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Degli Aldobrandeschi 295;66415964;4;http://www.hotelaldobrandeschi.it/en/index.htm;46;true
+Furio Camillo Bed and Breakfast Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Camilla 40;01194800882;3;http://www.bed-and-breakfast-in-italy.com/bed_and_breakfast_rome.cfm;37;true
+Hotel Giotto Rome;a Hotel in Rome,Latium,Italy.;-23;Via Cardinal Passionei 35;+39-(0)6-61662394;3;http://www.hotelgiotto.eu/en/;37;true
+Hotel Villa del Parco;a Hotel in Rome,Latium,Italy.;-23;Via Nomentana 110;110 - 00161;3;http://www.hotelvilladelparco.it/;37;true
+Aurora Garden Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Emanuele Ciaceri 12;;3;http://hotelauroragarden.net/;38;true
+Hotel Athena Rome;a Hotel in Rome,Latium,Italy.;-23;Via Ercole Pasquali 3;;3;http://universityrome.com/;38;true
+Cristoforo Colombo Hotel Rome;a Hotel in Rome,Latium,Italy.;-23;Via Cristoforo Colombo 710;;4;http://cristoforocolomboroma.com/;48;true
+Rouge Et Noir;a Hotel in Rome,Latium,Italy.;-23;Via Cosimo de Giorgi 8;;4;http://www.hotelrougeetnoir.it/;48;true
+I Mulini a Vento B&B;a Hotel in ,Lazio,Italy.;-23;degli Scipioni 100,Lazio,Italy; +39 329 404 8382;4.5;http://www.imuliniaventobb.com;53;true
+Hotel Mari 2 Rome;a Hotel in Rome,Latium,Italy.;-23;Via Calatafimi 40;01519560583;2;http://www.hotelmari2rome.com/;29;true
+Mi Casa Tu Casa Bed & Breakfast;a Hotel in Rome,Latium,Italy.;-23;Via Principe Eugenio 3;;3;http://www.micasaestucasa.info/index.php?lang=en;39;true
+Excel Roma Montemario;a Hotel in Rome,Latium,Italy.;-23;Via degli Scolopi 31;31 - 00136;4;http://www.excelmontemario.it;49;true
+Grand Hotel Hermitage;a Hotel in Rome,Latium,Italy.;-23;Via East Vajna 12-18;;4;http://www.grandhotelhermitageroma.it/index-eng.php;49;true
+Hotel Artis Rome;a Hotel in Rome,Latium,Italy.;-23;Via R. Fancelli 2;;4;http://hotelartisroma.com/;50;true
+Hotel Santa Costanza;a Hotel in Rome,Latium,Italy.;-23;VIALE XXI APRILE 4;;3;http://www.hotelsantacostanzaroma.com/;40;true
+Quality Hotel Nova Domus;a Hotel in Rome,Latium,Italy.;-23;Via G. Savonarola 38;39749945;4;http://novadomushotel.it/;50;true
+Villa Maria Regina;a Hotel in Rome,Latium,Italy.;-23;Via Della Camilluccia 687;1340366925;4;http://www.villamariaregina.com/;50;true
+Volturno House Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Volturno 31;0039 0690204857;1;http://volturnohouse.com/;20;true
+Roma Park;a Hotel in Rome,Latium,Italy.;-23;Via Della Caffarelletta 114;;4;http://www.romapark.com/;51;true
+Alla Balduina Hotel Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Alfredo Serranti 12;+39 0635346442;5;http://abalduina.altervista.org/;62;true
+Hotel Romulus;a Hotel in Rome,Latium,Italy.;-23;Via Salaria 1069;1069 - 00138;3;http://www.hotelromulus.com/;42;true
+Al Ponte del Papa;a Hotel in ,Lazio,Italy.;-23;Aurelia 62,Lazio,Italy; +39 338 859 2390;4.0;http://www.alpontedelpapa.it;53;true
+A Casa Di Mei Bed & Breakfast Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Piazza Vittorio Emanuele II 55;;2;http://www.bedbreakfasttraveler.com/Italy-bed-and-breakfasts/A-Casa-Di-Mei_Rome.htm;32;true
+Giglio Dell Opera (dellOpera);a Hotel in Rome,Latium,Italy.;-23;Via Principe Amedeo 14;09902951004;3.5;http://www.gigliodellopera.it/xING/index.asp;48;true
+Flower Garden Hotel;a Hotel in Rome,Latium,Italy.;-23;Via del Viminale 7;+39 06 47824096;3;http://www.hotelflowergardenrome.com;43;true
+CineMusic Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Tuscolana 128;70393244;4;http://www.cinemusicrome.com/en/index.htm;54;true
+Esh Executive Style Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Di Torre Rossa 80;80 00165;4;http://www.esh-hotel.com/uk/albergo.php;54;true
+Park Hotel dei Massimi;a Hotel in Rome,Latium,Italy.;-23;Largo Vincenzo Ambrosio 9;+39 0635347200;4;http://www.massimiparkhotel.it/;54;true
+Stellas House;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Montebello 99;1-334-288-1188;3;http://www.stellasvoice.org/;44;true
+Villa Glori Hotel;a Hotel in Rome,Latium,Italy.;-23;Viale del Vignola 28;;4;http://www.gloriahotels.com/;55;true
+Villa Patrizi;a Hotel in Rome,Latium,Italy.;-23;Via di Villa Patrizi 20;+39 055-412058;4;http://villas-in-rome.villeinitalia.com/;55;true
+Al Ponte Del Papa Bed & Breakfast Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Aurelia 62;;3;http://www.alpontedelpapa.it/eng/tariffe.htm;45;true
+Hotel Il Quadrifoglio Rome;a Hotel in Rome,Latium,Italy.;-23;Via Pontina 311 (Via Valleranello 12);;3;http://www.hotelgallesrome.com/;45;true
+Scheppers Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Bogliasco 36;+39 06 66019054;3;http://www.scheppershotel.it/;45;true
+When in Rome Accommodation;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Varese 34;099 00311 003;3;http://wheninromebandb.com/;45;true
+Cardinal Hotel St. Peter;a Hotel in Rome,Latium,Italy.;-23;Via Leone Dehon 71;;4;http://cardinalhotelrome.com/;57;true
+Sunrise Hotel Rome;a Hotel in Rome,Latium,Italy.;-23;Via Cilento 3;;4;http://www.sunrisehotel.it/;57;true
+Andreas Rome B&B;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Sarnano 36;;3;http://www.andreasrome.it/;46;true
+Hotel Antico Acquedotto;a Hotel in Rome,Latium,Italy.;-23;Via Di Villa Serventi 9;;3;http://www.hotelanticoacquedotto.it/;46;true
+Il Romitello Residence Rome;a Hotel in Rome,Latium,Italy.;-23;Via Vincenzo Viara de Ricci 24/26;;3;http://www.casaperferierome.com/;46;true
+Eur Suite Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Giuseppe Prezzolini 5;+39 06 50514028;4;http://www.hoteleursuiterome.com;58;true
+OP Hotel;a Hotel in Rome,Latium,Italy.;-23;Viale Oceano Pacifico 165;09731071008;4;http://www.ophotel.it/en/;58;true
+Palazzetto degli Artisti Suites;a Hotel in Rome,Latium,Italy.;-23;Via della Madonna dei Monti 108;;4;http://www.palazzettodegliartisti.it/;58;true
+Residenza Menni;a Hotel in Rome,Latium,Italy.;-23;Via Morgagni 41;39-06-441738256;2;http://residenzamennihotelrome.priorguest.com/en;35;true
+Hotel Center 1;a Hotel in Rome,Latium,Italy.;-23;Via Giolitti 417;;3;http://www.centerhotelrome.com/;47;true
+Domus Mariae Palazzo Carpegna;a Hotel in Rome,Latium,Italy.;-23;Via Aurelia 481;;4;http://www.palazzocarpegna.com;59;true
+Hotel Turner;a Hotel in Rome,Latium,Italy.;-23;Via Nomentana 29;29 - 00161;4;http://www.hotelturner.com/;59;true
+Zone Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Alfredo Fusco 118;+39 06 35404111;4;http://www.zonehotel.com;59;true
+Aran Mantegna Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Andrea Mantegna 130;(00 800 4 227 23 5;4;http://www.aranhotels.com/;60;true
+Hotel Galeno;a Hotel in Rome,Latium,Italy.;-23;Via dei Villini 10;;2;http://www.hotelgalenorome.com/;36;true
+Hotel Silva Rome;a Hotel in Rome,Latium,Italy.;-23;Via Antonio Bosio 20/A;(+39) 0644241938;3;http://www.hotel-silva.com/?lg=en;48;true
+Repubblica Hotel;a Hotel in Rome,Latium,Italy.;-23;VIA NAZIONALE 251;;3;http://www.hotelrepubblicarome.com/;48;true
+Rovati Guest House;a Hotel in ,Lazio,Italy.;-23;Via Duilio 13,Lazio,Italy; +39 338 632 1257;4.5;http://www.guesthouse-rome.com;66;true
+Romerooms;a Hotel in ,Lazio,Italy.;-23;fabio massimo,57,Lazio,Italy; +39 06 8901 5938;4.5;http://www.bbromerooms.com;66;true
+111 B&B;a Hotel in ,Lazio,Italy.;-23;Via Cola di Rienzo 111,Lazio,Italy; +39 06 6452 0820;4.5;http://www.111bb.it;66;true
+Vatican Museums;a Hotel in ,Lazio,Italy.;-23;Viale Vaticano 51/E,Lazio,Italy; +39 06 3903 0378;4.0;http://www.bebvatican.com;60;true
+Hotel Aniene;a Hotel in Rome,Latium,Italy.;-23;Viale Tirreno 74;06-96708400;4;http://www.hotelanienerome.com/;61;true
+Hotel Savoy Rome;a Hotel in Rome,Latium,Italy.;-23;Via Ludovisi 15;;4;http://www.savoy.it/en;61;true
+Art in Accommodation;a Place in Rome,Latium,Italy.;-23;Via Ferruccio 46;;3;http://www.hoteldeimellini-rome.com/;49;true
+Cesar Palace Guesthouse;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Nomentana 55;;3;http://www.cesarbedandbreakfast.com/;49;true
+Hotel Metro Roma;a Hotel in Rome,Latium,Italy.;-23;Via di Rebibbia 18;(+39) 0640801778;3;http://hotelmetroroma.com/;49;true
+Hotel Piazza Venezia Roma;a Hotel in Rome,Latium,Italy.;-23;Via Cesare Battisti 133;;3;http://www.hotelpiazzavenezia.com/;49;true
+Piccolo Borgo;a Hotel in Rome,Latium,Italy.;-23;Via delle Capannelle 134;;3;http://www.ilpiccoloborgo.it/;49;true
+Villa San Lorenzo Maria Hotel;a Hotel in Rome,Latium,Italy.;-23;Via dei Liguri 7;44202190;3;http://www.villamorgagni.it/;49;true
+Hotel delle Province;a Hotel in Rome,Latium,Italy.;-23;Viale delle Province 103;44292670;4;http://www.hoteldelleprovince.it/eng/home.asp;62;true
+Al Casale De Santis;a Bed and Breakfast in Rome,Latium,Italy.;-23;via labico 112A;;3;http://www.spotitaly.co.uk/?xHOTELid=3694;50;true
+Argentina Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Cavour 47;47 - 00184;3;http://www.hotel-argentina.net/;50;true
+Bed and Breakfast Carpe Diem Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Rattazzi 2-F interno 3;;3;http://www.inromebedandbreakfast.com/;50;true
+Beethoven Hotel Rome;a Hotel in Rome,Latium,Italy.;-23;Via Forte Braschi 2;1 800 748 3127;3;http://www.romermhotels.worldweb.com/;50;true
+Ducale Hotel Rome;a Hotel in Rome,Latium,Italy.;-23;Via Achille Grandi 4;+44 (0) 1904 33888;3;http://www.hotels-rome-italy-hotels.com/venezia/venice/palazzo-ducale/;50;true
+Happy Holiday Bed & Breakfast Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Piazza San Giovanni in Laterano 26;26 - 00184;3;http://happyholidaysrome.com/;50;true
+Hotel Cinecitta;a Hotel in Rome,Latium,Italy.;-23;Via Eudo Giulioli 13;;3;http://hotelcinecitta.com/;50;true
+Hotel Julia Rome;a Hotel in Rome,Latium,Italy.;-23;Via Rasella 29;+39 064881637 - 06;3;http://www.hoteljulia.it/en;50;true
+Hotel Mamiani;a Hotel in Rome,Latium,Italy.;-23;Via Mamiani 28;+39 06 49381646;3;http://hotelmamianirome.com/;50;true
+Hotel Octavia;a Hotel in Rome,Latium,Italy.;-23;Via Gaetano Giovanni Bottari 38;;3;http://www.hoteloceania.it;50;true
+Hotel San Remo Rome;a Hotel in Rome,Latium,Italy.;-23;Via Massimo Dazeglio 36;36 - 00184;3;http://www.hotelsanremorome.com/;50;true
+Lincanto di Roma B&B;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Collina 36;;3;http://www.incantodiroma.com/;50;true
+Serena Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Principe Amedeo 64;64 - 00185;3;http://www.hotelserenaroma.it/;50;true
+Meltin Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Filippo Turati 76 Stazione Termini;00994500288;2.5;http://www.romeinformation.info/Basilicas%20(Basiliche)%20in%20Rome%20Latium.htm;44;true
+Ai Musei Vaticani Bed & Breakfast Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Cipro 56;1046987-6;3;http://www.bbmuseivaticani.com/;51;true
+Al Borgo Bed & Breakfast Rome;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Borgo Pio 64;;3;http://www.alborgotorello.com/home.asp;51;true
+Alterego B&B Vaticano;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Aurelia 383;;3;http://www.playalterego.com/;51;true
+Gladiator Rooms Hotel Rome;a Hotel in Rome,Latium,Italy.;-23;Via Principe Eugenio 106;30 00185;3;http://www.samerooms.com/europehotels/italyhotels/latiumhotels/romehotels/romehotels.htm;51;true
+Hotel Laura Rome;a Hotel in Rome,Latium,Italy.;-23;Viale XXI Aprile 109;;3;http://www.romehotelservice.com/;51;true
+Hotel Principe Di Piemonte;a Hotel in Rome,Latium,Italy.;-23;Via G.Giolitti 449;;3;http://www.directline-hotels.co.uk/hotels_search.cfm;51;true
+Hotel Regina Margherita;a Hotel in Rome,Latium,Italy.;-23;Via Bari 3;301546-311;3;http://www.hotel-rome-regina-margherita.com/;51;true
+Hotel Stromboli;a Hotel in Rome,Latium,Italy.;-23;Via Marsala 34;;3;http://hotelstrombolirome.com/;51;true
+New Morpheus Rooms;a Bed and Breakfast in Rome,Latium,Italy.;-23;Via Palermo 36;36 - 00184;3;http://www.morpheusbb.it;51;true
+Roma Point Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Flaminia 988;988 - 00189;3;http://www.romapointhotel.it/;51;true
+Veio Park Hotel;a Hotel in Rome,Latium,Italy.;-23;Via Cassia 1171 G;;3;http://themeparks.about.com/;51;true
+Zzzurg;a  in London.;-22;12 Regent Street, London;;1;http://1;1;true
+Palmers Lodge;a Hostel in London,England,United Kingdom.;-22;40 College Crescent Swiss Cottage;;3;http://www.palmerslodge.co.uk/;17;true
+Smart Russell Square Hostel;a Hostel in London,England,United Kingdom.;-22;70-72 Guilford St; +44 20 7833 8818;2;http://www.smartbackpackers.com;13;true
+Travel Joy Hostel London;a Hostel in London,England,United Kingdom.;-22;111 Grosvenor Road Pimlico;;4;http://www.traveljoyhostels.com/;23;true
+The Castle Bar;a Bed and Breakfast in London,England,United Kingdom.;-22;392 Camden Road; +44 20 7607 6752;2;http://www.castlebarcamden.co.uk;14;true
+Journeys London Bridge Hostel;a Hostel in London,England,United Kingdom.;-22;204 Manor Place; +44 20 7735 6581;2;http://www.visitjourneys.com;15;true
+Meininger Hotel London Hyde Park;a Hostel in London,England,United Kingdom.;-22;65-67 Queens Gate; +44 20 7590 6910;2;http://www.meininger-hotels.com;15;true
+The W14 Hotel;a Hotel in London,England,United Kingdom.;-22;16-22 Gunterstone Road;+44 207 602 6600;2;http://www.thew14hotel.co.uk/;15;true
+Clink261 Hostel London;a Hostel in London,England,United Kingdom.;-22;261-265 Grays Inn Road;;3;http://www.hostels-london.net/;21;true
+Journeys Kings Cross St. Pancras;a Hostel in London,England,United Kingdom.;-22;54-58 Caledonian Road;;2;http://www.visitjourneys.com/;16;true
+Barkston Youth Hostel London;a Hotel in London,England,United Kingdom.;-22;1 Barkston Gardens;;1;http://hostels-in-london-england.com/hostels/Barkston_Youth_Hostel.php;11;true
+The Norfolk Towers Hotel;a Hotel in London,England,United Kingdom.;-22;34 Norfolk Place;;3;http://www.norfolk-towers-hotel.co.uk/;22;true
+Smart Camden Inn London;a Hostel in London,England,United Kingdom.;-22;55-57 Bayham Street;+44(0)20 7388 8900;2;http://www.smartbackpackers.com/hosteldetails/United-Kingdom/London/Smart-Camden-Inn/HotelDetails.aspx;17;true
+Smart Hyde Park Inn London;a Hostel in London,England,United Kingdom.;-22;48 - 50 Inverness Terrace;+44(0)20 7229 0000;2;http://www.smartbackpackers.com/hosteldetails/United-Kingdom/London/Smart-Hyde-Park-Inn-Hostel/index.htm;17;true
+Journeys London Arsenal Hostel;a Hostel in London,England,United Kingdom.;-22;175 Blackstock Road;;2;http://visitjourneys.com/;18;true
+New Cross Inn Hostel;a Hostel in London,England,United Kingdom.;-22;323A New Cross Road;020 8355 4976;2;http://www.newcrossinn.com/;18;true
+YHA London Thameside;a Hostel in London,England,United Kingdom.;-22;20 Salter Road; +44 845 371 9756;2;http://www.yha.org.uk;20;true
+Generator Hostel London;a Hostel in London,England,United Kingdom.;-22;37 Tavistock Place;517399-1;3;http://www.generatorhostels.com/;28;true
+Garth Hotel;a Hotel in London,England,United Kingdom.;-22;69 Gower Street; +44 20 7636 5761;1;http://www.garthhotel-london.com;16;true
+London Eye Hostel;a Hostel in London,England,United Kingdom.;-22;London South East Kensington; +44 20 7224 4405;1;http://www.londoneyehostel.com;19;true
+Smart Hyde Park View Hostel;a Hostel in London,England,United Kingdom.;-22;16 Leinster Terrace;+44 (0)20 7402 410;2;http://www.smartbackpackers.com/hosteldetails/United-Kingdom/London/Smart-Hyde-Park-View/index.htm;29;true
+Imperial College Beit Hall Hotel London;a Hotel in London,England,United Kingdom.;-22;Prince Consort Road;+44 (0)20 7589 511;3;http://www3.imperial.ac.uk/;42;true
+Hotel Strand Continental London;a Bed and Breakfast in London,England,United Kingdom.;-22;143 Strand;+44 207 379 4737;2;http://www.strandpalacehotel.co.uk/;32;true
+Radnor Bayswater Hotel;a Hotel in London,England,United Kingdom.;-22;23 Inverness Terrace;;3;http://www.bayswaterinn.co.uk/;45;true
+The Belgravia Rooms London;a Hotel in London,England,United Kingdom.;-22;104 Ebury Street;18131904;3;http://www.belgraviarooms.com/main.html;45;true
+The Bridge Hotel London;a Hotel in London,England,United Kingdom.;-22;30 Borough Road;+44 (0)20 7855 220;3;http://www.londonbridgehotel.com/;45;true
+The Oxford Hotel Earls Court London;a Hotel in London,England,United Kingdom.;-22;16-18 & 24 Penywern Road;+ 44 (0) 207 370 5;3;http://www.the-oxford-hotel.com/;47;true
+The Oxford Hotel London;a Hotel in London,England,United Kingdom.;-22;13-14 Craven Terrace Lancaster Gate;;3;http://www.oxfordhotellondon.co.uk/;47;true
+Euro Hotel Clapham;a Hotel in London,England,United Kingdom.;-22;80-81 Clapham Common South Side;020 8890 2358;2;http://www.eurohotelsgroup.co.uk/;36;true
+Euro Hotel London Peckham;a Hotel in London,England,United Kingdom.;-22;110 Peckham Road;020 8890 2358;2;http://www.eurohotelslondon.co.uk/;37;true
+Northumberland Kings Cross Hotel;a Hotel in London,England,United Kingdom.;-22;9-11 Euston Road; +44 20 7837 5675;2;http://nkingscrosshotel.co.uk;37;true
+City View Apartments London Field;a Apartment in London,England,United Kingdom.;-22;251-253 Mare Street;;3;http://lovingapartments.com/London-apartments-home.html;50;true
+Euro Lodge Clapham;a Hotel in London,England,United Kingdom.;-22;90 Clapham Common South Side;020 8890 2358;2;http://www.eurohotelsgroup.co.uk/;38;true
+Charlotte Guest House London;a Bed and Breakfast in London,England,United Kingdom.;-22;195 - 197 Sumatra Road West Hampstead;195 - 197;3;http://www.charlotteguesthouse.co.uk/;53;true
+Queens Hotel Crystal Palace;a Hotel in London,England,United Kingdom.;-22;122 Church Road Crystal Palace;;2;http://www.euroqueenshotel.com/;40;true
+Westbury Kensington;a Hotel in London,England,United Kingdom.;-22;22-24 Collingham Place;;3;http://www.westburybar.com/;54;true
+Cricklewood Lodge Hotel;a Hotel in London,England,United Kingdom.;-22;1 Cricklewood Broadway Cricklewood;;3;http://www.cricklewoodlodgehotel.co.uk/location/;55;true
+The Black Lion Guesthouse Kilburn London;a Hotel in London,England,United Kingdom.;-22;274 Kilburn High Road;020 8450 4422;4;http://www.windmillhotelnorthlondon.co.uk/;71;true
+Grange Lancaster Hotel London;a Hotel in London,England,United Kingdom.;-22;4 -6 Bedford Place;;3;http://www.grangehotels.com/Hotels-London/Grange-Lancaster-Hotel/The-Lancaster-Hotel.aspx;57;true
+Dolphin Inn Paddington London;a Hotel in London,England,United Kingdom.;-22;44 Norfolk Square;+44 20-7402 4949;1;http://www.dolphinhotel.co.uk/index1.asp;29;true
+Tommy Miahs Raj Hotel London;a Hotel in London,England,United Kingdom.;-22;366 Essex Road Highbury Islington;;3;http://www.thetommymiahsrajhotel.co.uk/;58;true
+City Hotel London;a Hotel in London,England,United Kingdom.;-22;12-20 Osborn Street;020 7378 0415;3;http://www.london-city-hotel.co.uk/;59;true
+The Coronation Hotel London;a Hotel in London,England,United Kingdom.;-22;59 Nevern Square;8-444553540000;3;http://www.weatherforecastmap.com/united_kingdom/london/;59;true
+Britannia International Hotel;a Hotel in London,England,United Kingdom.;-22;163 Marsh Wall;1000664866105;4;http://www.britanniahotels.com/hotels/london/;74;true
+Four Stars Hotel;a Hotel in London,England,United Kingdom.;-22;26-28 SUSSEX GARDENS; +44 20 7402 5523;3;http://www.fourstarshoteluk.com;60;true
+Hanover Hotel Victoria;a Hotel in London,England,United Kingdom.;-22;30-32 St Georges Drive;+44 207 834 0367;3;http://www.hanoverhotel.co.uk/;60;true
+Pavilion Hotel London;a Hotel in London,England,United Kingdom.;-22;34-36 Sussex Gardens; +44 20 7262 0905;3;http://www.pavilionhoteluk.com;62;true
+St Georges Hotel Victoria London;a Hotel in London,England,United Kingdom.;-22;107-115 St. Georges Drive;+44 (0) 207 834 02;3;http://www.stgeorgeshotel.net/;62;true
+Chester Hotel London;a Hotel in London,England,United Kingdom.;-22;27-29 Longmoore Street Victoria;0141 270 2171;2;http://www.chesterhotels.uk.com/;47;true
+Comfort Inn Edgware Road;a Hotel in London,England,United Kingdom.;-22;450 Edgware Road; +44 20 7724 3569;3;http://www.comfortinnedgwareroad.co.uk;63;true
+Hotel Sophia London;a Hotel in London,England,United Kingdom.;-22;5A London Street;;3;http://www.cheaphotelinlondon.net/hotels.aspx;63;true
+Montana Excel Hotel London;a Hotel in London,England,United Kingdom.;-22;16-18 Argyle Square St Pancras;7069 5000;3;http://www.excel-london.co.uk/;63;true
+Comfort Inn Kings Cross;a Hotel in London,England,United Kingdom.;-22;2-5 St. Chads Street;+ 44 (0) 20 7837 1;4;http://www.comfortinnkingscross.co.uk/;79;true
+Pembridge Palace Hotel;a Hotel in London,England,United Kingdom.;-22;55 Princes Square; +44 20 7229 6262;3;http://www.pembridgehotel.co.uk;64;true
+New Dawn Hotel;a Hotel in London,England,United Kingdom.;-22;95 Inverness Terrace;;2;http://www.newdawnhotel.com/;49;true
+Lord Jim Hotel;a Hotel in London,England,United Kingdom.;-22;23-25 Penywern Road; +44 20 7373 8919;3;http://www.lordjim-hotel.co.uk;66;true
+Thistle Euston;a Hotel in London,England,United Kingdom.;-22;Cardington Street; +44 871 376 9017;4;http://www.thistle.com;83;true
+Britannia Hampstead Hotel;a Hotel in London,England,United Kingdom.;-22;Primrose Hill Road;;3;http://www.britanniahotels.com/;67;true
+Holland Inn Hotel London;a Hotel in London,England,United Kingdom.;-22;59 Holland Road;;2;http://www.visitlondon.com/;51;true
+Huttons Hotel;a Hotel in London,England,United Kingdom.;-22;53-57 Belgrave Road; +44 20 7834 3726;3;http://www.huttonshotel.com;68;true
+Sacred Heart Lodge;a Place in London,England,United Kingdom.;-22;100 Hassett Road;;2;http://www.sacredheart.hillingdon.sch.uk/;51;true
+Grange Strathmore Hotel;a Hotel in London,England,United Kingdom.;-22;41 Queens Gate Gardens; +44 20 7584 0512;4;http://www.grangehotels.com;86;true
+New Linden Hotel;a Hotel in London,England,United Kingdom.;-22;59 Leinster Square;+44 (0)20 7221 432;4;http://www.newlinden.co.uk/;86;true
+Bayswater Inn;a Hotel in London,England,United Kingdom.;-22;8-16 Princes Square; +44 20 7727 8621;3;http://www.laterooms.com;69;true
+Golden Star Hotel London;a Apartment in London,England,United Kingdom.;-22;75 Warwick Way;;2;http://www.fivestaralliance.com/luxury-hotels/107/europe/united-kingdom;53;true
+Kings Cross Hotel London;a Hotel in London,England,United Kingdom.;-22;60 Argyle street;0141 270 2171;2;http://www.kingscross-hotels.co.uk/?1894249844,588749949;53;true
+Whiteleaf Hotel;a Hotel in London,England,United Kingdom.;-22;66-68 Inverness Terrace London W2 3LB; +44 20 7727 0681;2;http://www.whiteleafhotel.net;53;true
+ABC Hyde Park Hotel;a Hotel in London,England,United Kingdom.;-22;121 Sussex Gardens; +44 20 7706 4660;3;http://www.abchydeparkhotel.co.uk;71;true
+Travelodge London Central Moorgate;a Hotel in London,England,United Kingdom.;-22;7-12 City Road;;3;http://www.travelodge.co.uk/;71;true
+Windmill Hotel London;a Hotel in London,England,United Kingdom.;-22;57 Cricklewood Broadway;;3;http://www.cheaphotelinlondon.net/hotels.aspx;71;true
+Avni Luxury Serviced Apartments;a Apartment in London,England,United Kingdom.;-22;1 Harrington Gardens London Sw7 4Jj United Kingdom;+44 (0) 845 371 00;4;http://www.avniapartments.co.uk/;89;true
+Dylan Paddington;a Apartment in London,England,United Kingdom.;-22;14 Devonshire Terrace;;4;http://www.dylanapartments.co.uk/apartments;89;true
+Kensington Close Hotel;a Hotel in London,England,United Kingdom.;-22;Wrights Lane;0870 751 7770;4;http://www.kensingtonclosehotel.com/;89;true
+Athena Palace Hotel Falkland London;a Hotel in London,England,United Kingdom.;-22;144-146 Falkland Road;5865589-1;2;http://www.londonnethotels.co.uk/Athena_Palace_Hotel.htm;54;true
+Blair Victoria Hotel;a Hotel in London,England,United Kingdom.;-22;78 Warwick Way;020 7828 8603;2;http://www.blairvictoria.com/;54;true
+City Continental London Kensington;a Hotel in London,England,United Kingdom.;-22;11-13 Penywern Road;+ 44 (0) 20 7373 6;3;http://www.citycontinentalkensington.co.uk/;72;true
+Gresham Hotel London;a Hotel in London,England,United Kingdom.;-22;116 Sussex Gardens;;3;http://www.london.com/;72;true
+Palace Court Hotel;a Hotel in London,England,United Kingdom.;-22;64-65 Princes Square; +44 20 7727 6626;2;http://www.palacecourthotel.com;54;true
+Travelodge London Waterloo Hotel;a Hotel in London,England,United Kingdom.;-22;195 -203 Waterloo Road;;3.5;http://www2.travelodge.co.uk/;81;true
+Henry VIII Hotel;a Hotel in London,England,United Kingdom.;-22;19 Leinster Gardens;902 93 24 24;4;http://www.hotelhenryviii.co.uk/;91;true
+Prince William Hotel;a Hotel in London,England,United Kingdom.;-22;42-44 Gloucester Terrace;020 7724 7414;2;http://www.princewilliamhotel.co.uk/;55;true
+Springfield Hotel London;a Hotel in London,England,United Kingdom.;-22;154 Sussex Gardens;;2;http://www.cheaphotelinlondon.net/hotels.aspx;55;true
+Dawson House Hotel London;a Hotel in London,England,United Kingdom.;-22;72 Canfield Gardens;138 - 140;4;http://www.dawsons.com.au/Accommodation/UnitedKingdomIreland/England/London/;92;true
+Georgian & Bower House Hotel London;a Hotel in London,England,United Kingdom.;-22;35-39 Saint Georges Drive;;4;http://www.georgiancarpetsuk.co.uk/;92;true
+Goodwood Hotel;a Hotel in London,England,United Kingdom.;-22;10 Copers Cope Road; +44 20 8663 9199;4;http://www.goodwood-hotel.co.uk;92;true
+Hotel 43 London;a Hotel in London,England,United Kingdom.;-22;43 Queensborough Terrace;;3;http://www.cheaphotelinlondon.net/hotels.aspx;74;true
+London Guards Hotel;a Hotel in London,England,United Kingdom.;-22;36/37 Lancaster Gate; +44 20 7262 2551;3;http://www.londonguardshotel.co.uk;74;true
+MB Hotel London;a Hotel in London,England,United Kingdom.;-22;276 Cricklewood Lane Brent; +49 69/9500554848;3;http://www.mbhotels.co.uk/;74;true
+The Quality Maitrise Hotel;a Hotel in London,England,United Kingdom.;-22;53-59 Kilburn High Road; +44 20 7625 8532;4;http://www.qualitymaitrise.com;93;true
+The Grapevine Hotel;a Hotel in London,England,United Kingdom.;-22;117 Warwick Way;+44 (0)20 7834 013;2;http://www.grapevinehotel.com/;56;true
+Avonmore Hotel;a Hotel in London,England,United Kingdom.;-22;66 Avonmore Road; +44 20 7387 1939;3;http://www.avonmorehotel.net;75;true
+Belmont and Astoria Hotel London;a Hotel in London,England,United Kingdom.;-22;104 Sussex Gardens;44-207-8707777;3;http://waldorfastoria3.hilton.com/en/hotels/united-kingdom/london-syon-park-a-waldorf-astoria-hotel-LHRSPWA/index.html;75;true
+Camden Apartments London;a Apartment in London,England,United Kingdom.;-22;15 Pratt Street Camden;;3;http://property-for-sale-camden.houses-for--sale.co.uk/Apartment_for_sale_Flat_in_Camden_England_London_275602.html;75;true
+Dillons Hotel London;a Hotel in London,England,United Kingdom.;-22;21 Belsize Park Hampstead;;3;http://www.cheaphotelinlondon.net/hotels.aspx;75;true
+Linden House Hotel;a Hotel in London,England,United Kingdom.;-22;6 Sussex Place; +44 1279 813003;3;http://www.lindenhousestansted.co.uk;75;true
+Notting Hill Gate Hotel;a Hotel in London,England,United Kingdom.;-22;7 Clanricarde Gardens;+44 (0) 207 243320;3;http://www.nottinghillgatehotel.co.uk/;75;true
+Umi London;a Hotel in London,England,United Kingdom.;-22;16 Leinster Square; +44 20 7221 4073;3;http://umihotellondon.co.uk;75;true
+Victor Hotel London;a Hotel in London,England,United Kingdom.;-22;51 Belgrave Road;;3;http://www.cheaphotelinlondon.net/hotels.aspx;75;true
+Best Western The Boltons;a Hotel in London,England,United Kingdom.;-22;19-21 Penywern Road Earls Court;;4;http://www.bestwestern.com/reservations/hotels.asp?country=gb;94;true
+Balham Lodge;a Place in London,England,United Kingdom.;-22;204 Bedford Hill Balham;0208 675 4888;3;http://www.balhamlodge.co.uk/;76;true
+Colliers Hotel;a Hotel in London,England,United Kingdom.;-22;97 Warwick Way;;1;http://www.colliershotel.co.uk/;38;true
+Comfort Hotel Finchley;a Hotel in London,England,United Kingdom.;-22;3 Leisure Way High Road; +44 20 8446 6644;3;http://www.choicehotelsuk.co.uk;76;true
+Earls Court Gardens Hotel;a Hotel in London,England,United Kingdom.;-22;36 Earls Court Gardens;9091968376;1;http://www.earlscourtgardenshotel.co.uk/;38;true
+Shaftesbury Premier Hyde Park Paddington;a Hotel in London,England,United Kingdom.;-22;78-82 Westbourne Terrace;020 7745 1212;4;http://www.theshaftesbury.co.uk/hydepark.php;95;true
+BEST WESTERN Victoria Palace;a Hotel in London,England,United Kingdom.;-22;60 Warwick Way;+ 44 (0) 20 7821;3;http://www.bestwesternvictoriapalace.co.uk/;77;true
+Garden Court Hotel London;a Hotel in London,England,United Kingdom.;-22;30-31 Kensington Gardens Square;;3;http://www.royalgardenhotel.co.uk/Home;77;true
+Ibis London Earls Court;a Hotel in London,England,United Kingdom.;-22;47 Lillie Road;;3;http://www.ibishotel.com/gb/hotel-5623-ibis-london-earls-court/index.shtml;77;true
+Premier by Eurotraveller;a Hotel in London,England,United Kingdom.;-22;194-202 Old Kent Road;0871 527 8648;3;http://www.premierinn.com/pti/hotelInformation.do?hotelId=23881;77;true
+Raglan Hotel;a Hotel in London,England,United Kingdom.;-22;8-12 Queens Avenue;;3;http://www.theraglan.com/;77;true
+Travelodge London Southwark;a Hotel in London,England,United Kingdom.;-22;202-206 Union Street;;3;http://www2.travelodge.co.uk/;77;true
+Shaftesbury Premier London Notting Hill;a Hotel in London,England,United Kingdom.;-22;5-7 Princes Square;+44 (0) 20 7792 14;4;http://www.shaftesburyhotels.com/nottinghill.html;97;true
+Hyde Park Executive Apartments Hotel;a Apartment in London,England,United Kingdom.;-22;8-18 Inverness Terrace;+44 (0) 207 229 92;4;http://www.hyde-park-executive-apartments.com/;98;true
+Knightsbridge Green Hotel;a Hotel in London,England,United Kingdom.;-22;159 Knightsbridge; +44 20 7584 6274;4;http://www.knightsbridgegreenhotel.com;98;true
+The Tophams Hotel Belgravia;a Hotel in London,England,United Kingdom.;-22;24-32 Ebury Street;44 (0)20 7730 3313;4;http://www.tophamshotel.com/;98;true
+Central Park Hotel London;a Hotel in London,England,United Kingdom.;-22;49/67 Queensborough Terrace;;3;http://www.centralparklondon.co.uk/;79;true
+Mabledon Court Hotel;a Hotel in London,England,United Kingdom.;-22;10-11 Mabledon Place;(020) 7388 3866;3;http://www.mabledonhotel.com/;79;true
+The William IV Guesthouse London;a Bed and Breakfast in London,England,United Kingdom.;-22;786 Harrow Road;020 8450 4422;3;http://www.windmillhotelnorthlondon.co.uk/;79;true
+Travelodge London Tower Bridge;a Hotel in London,England,United Kingdom.;-22;1 Goodmans Yard;+44 (0) 20 7403 37;3;http://www.towerbridge.org.uk/TBE/EN/;79;true
+Troy Hotel;a Hotel in London,England,United Kingdom.;-22;68-70 Queensborough Terrace; +44 20 7792 1215;3;http://www.troy-hotel.co.uk;79;true
+The Carlton Hotel London;a Hotel in London,England,United Kingdom.;-22;120 Maida Vale;+44 (0) 20 7493 81;4;http://www.theritzlondon.com/;99;true
+Think Apartments Tower Bridge London;a Apartment in London,England,United Kingdom.;-22;37 Tanner Street;35964281;4;http://www.think-apartments.com/;99;true
+Think Earls Court;a Apartment in London,England,United Kingdom.;-22;181 Warwick Road; +44 20 3465 9100;4;http://www.think-apartments.com/locations/earls-court/;99;true
+Airways Hotel London;a Hotel in London,England,United Kingdom.;-22;29-31 St Georges Drive;+44 20 7834 0205;3;http://www.airways-hotel.com/;80;true
+London Carlton Hotel;a Hotel in London,England,United Kingdom.;-22;90 Belgrave Road;320804-13;2;http://www.thelondoncarlton.com/;60;true
+Manor Hotel London;a Hotel in London,England,United Kingdom.;-22;23 Nevern Place;;2;http://www.cheaphotelinlondon.net/hotels.aspx;60;true
+Grand Royale London Hyde Park;a Hotel in London,England,United Kingdom.;-22;1 Inverness Terrace Hyde Park; +44 20 7745 1212;4;http://www.grandroyalelondon.co.uk;101;true
+Dylan Kensington;a Apartment in London,England,United Kingdom.;-22;60/109 Warwick Road Earls Court;;3;http://www.dylanapartments.co.uk/;81;true
+Pasha Hotel;a Hotel in London,England,United Kingdom.;-22;158 Camberwell Road; +44 20 7277 2228;3;http://www.pasharestaurants.co.uk;81;true
+Elmwood Hotel;a Hotel in London,England,United Kingdom.;-22;19 Argyle Square; +44 20 7833 4818;2;http://www.elmwoodhotel.co.uk;61;true
+Enrico Hotel;a Hotel in London,England,United Kingdom.;-22;77-79 Warwick Way; +44 20 7233 9995;2;http://www.tudorinnhotelvictoria.co.uk;61;true
+Griffin House Hotel London;a Hotel in London,England,United Kingdom.;-22;10 Connaught Street;;2;http://www.visitlondon.com/;61;true
+Hour Glass Hotel Walworth London;a Hotel in London,England,United Kingdom.;-22;77 Thurlow Street;020 7437 4370;2;http://www.londontown.com/LondonStreets/walworth_road_155.html/;61;true
+London Shelton Hotel;a Hotel in London,England,United Kingdom.;-22;60 Wightman Rd;;2;http://www.londonshelton.com/;61;true
+Chamberlain Hotel;a Hotel in London,England,United Kingdom.;-22;130-135 Minories;1-800-201-9652;4;http://www.chamberlainwesthollywood.com/;102;true
+Mayflower Hotel & Apartments;a Hotel in London,England,United Kingdom.;-22;26-28 Trebovir Rd;+44 (0)20 7370 099;4;http://www.themayflowerhotel.co.uk/;102;true
+The Gainsborough Hotel;a Hotel in London,England,United Kingdom.;-22;7-11 Queensberry Place;;4;http://www.hotelgainsborough.co.uk/;102;true
+Church Street Hotel;a Hotel in London,England,United Kingdom.;-22;29-33 Camberwell Church Street; +44 20 7703 5984;4;http://www.churchstreethotel.com;103;true
+Grange Langham Court;a Hotel in London,England,United Kingdom.;-22;31-35 Langham Street;;4;http://www.grangehotels.com/Hotels-London/Grange-Langham-Court-Hotel/Grange-Langham-Court-Hotel.aspx;103;true
+Hyde Park Economy Apartments;a Apartment in London,England,United Kingdom.;-22;11 Inverness Terrace; +44 20 7985 0382;4;http://www.hydeparksuites.com;103;true
+The Beauchamp;a Hotel in London,England,United Kingdom.;-22;24-27 Bedford Place;373-6812;4;http://www.thebeauchamp.com/;103;true
+Fitzroy Hotel;a Hotel in London,England,United Kingdom.;-22;41 Fitzroy Street;;2;http://www.fitzroy-hotel.net/;62;true
+Holiday Villa London;a Hotel in London,England,United Kingdom.;-22;37 Leinster Gardens;;3;http://www.londonselecthotels.com/;83;true
+St. Mark Hotel;a Hotel in London,England,United Kingdom.;-22;4 Barkston Gardens; +44 20 7373 0060;3;http://www.st-markhotel.co.uk;83;true
+Club Quarters St. Pauls;a Hotel in London,England,United Kingdom.;-22;24 Ludgate Hill; +44 20 7651 2200;4;http://www.clubquarters.com;105;true
+Crescent Hotel London;a Hotel in London,England,United Kingdom.;-22;49-50 Cartwright Gardens Bloomsbury;;3;http://www.cheaphotelinlondon.net/hotels.aspx;84;true
+Cromwell Crown Hotel;a Hotel in London,England,United Kingdom.;-22;139-141 Cromwell Road; +44 20 7370 1222;2;http://www.cromwellcrownhotel.com;63;true
+Grand Parade Apartments;a Apartment in London,England,United Kingdom.;-22;45 Grand Parade Green Lanes;;2;http://www.grandparadehotel.co.uk/;63;true
+Kensington Town House London;a Apartment in London,England,United Kingdom.;-22;32-36 Hogarth Road Earls Court; +44 20 7745 1212;3;http://www.kensingtonhogarthhotel.co.uk/;84;true
+Lord Kensington Hotel;a Hotel in London,England,United Kingdom.;-22;38 Trebovir Road; +44 20 7373 7331;3;http://www.lordkensington.co.uk;84;true
+Paddington Court Rooms London;a Hotel in London,England,United Kingdom.;-22;3 Devonshire Terrace;011-800-868-36266;3;http://www.paddingtoncourt.com/;84;true
+Vintage Hostel;a Hostel in Paris,Île-de-France,France.;-21;73 rue de Dunkerque 09. Opéra; +33 1 42 64 22 02;2;http://www.villagehostel.fr;26;true
+Hotel Pulitzer Paris;a Hotel in Paris,Île-de-France,France.;-21;23 Rue Du Faubourg Montmartre; +33 1 53 34 98 10;3;http://www.hotelpulitzer.com;35;true
+Hotel Etoile Pereire;a Hotel in Paris,Île-de-France,France.;-21;146 Boulevard Pereire; +33 1 42 67 60 00;3;http://www.paris-hotel-etoile.com;39;true
+Peace and Love Hostel Paris;a Hostel in Paris,Île-de-France,France.;-21;245 Rue La Fayette;+33 1 46 07 65 11;2;http://www.paris-hostels.com/;31;true
+Hotel Lafayette;a Hotel in Paris,Île-de-France,France.;-21;198, rue Lafayette,; +33 1 40 35 76 07;3.5;http://www.galerieslafayette.com;52;true
+Adagio Access Vanves Porte de Chatillon;a Hotel in Hauts-de-Seine,Île-de-France,France.;-21;5 rue Aristide Briand,; +33 1 40 95 56 00;3.5;http://www.accorhotels.com;53;true
+Victory Hotel Galou;a Hotel in Paris,Île-de-France,France.;-21;15 Passage De L Industrie;01 47 70 10 84;3;http://www.victory-hotel-galou.com/en/accueil.html;49;true
+Hotel Elysees 8;a Hotel in Paris,Île-de-France,France.;-21;16 Rue Cambaceres; +33 1 43 59 23 46;3;http://www.elyseeshotel.com;50;true
+Hotel Prince Albert Monceau;a Hotel in Paris,Île-de-France,France.;-21;9 Rue Tarbe;+33 (0)1 47 54 06;2;http://www.hotelprincealbertwagram.com/;38;true
+Etap Paris Porte DOrleans;a Hotel in Paris,Île-de-France,France.;-21;15-21 Boulevard Romain Rolland,; +33 1 45 45 49 49;4.0;http://www.accorhotels.com;65;true
+Hotel de Nesle;a Hotel in Paris,Île-de-France,France.;-21;7 rue de Nesle,; +33 1 44 59 28 79;4.0;http://www.hoteldeneuveparis.com;67;true
+Le Grand Hotel;a Hotel in Hauts-de-Seine,Île-de-France,France.;-21;36 boulevard Jean Jaures,; +33 1 40 07 32 32;2.5;http://www.intercontinental.com;48;true
+Nation Hotel;a Hotel in Paris,Île-de-France,France.;-21;4 Rue Boissieu;33(0) 1 46 06 39 7;3;http://hotelnationmontmartre.com/;55;true
+Lux Hotel Picpus;a Hotel in Paris,Île-de-France,France.;-21;74, boulevard de Picpus,; +33 1 43 44 55 56;4.5;http://www.parisluxhotel.com/;77;true
+Hotel Le Canal;a Hotel in Paris,Île-de-France,France.;-21;48 Rue De Flandre; +33 1 40 05 00 57;3;http://www.hotellecanal.com;57;true
+Pavillon Bercy Gare de Lyon;a Hotel in Paris,Île-de-France,France.;-21;209/211 Rue De Charenton; +33 1 43 40 80 30;3;http://www.pavillon-bercy-gare-de-lyon.com;57;true
+Pavillon Villiers Etoile;a Hotel in Paris,Île-de-France,France.;-21;6 Rue Lebouteux; +33 1 40 53 05 05;3;http://www.pavillon-villiers.com;58;true
+Hotel Bonsejour Montmartre;a Hotel in Paris,Île-de-France,France.;-21;11 Rue Burq;33 (1) 42 54 22 53;3;http://www.hotel-bonsejour-montmartre.fr/pages/en48alhomepag.html;59;true
+Hotel Montpellier;a Hotel in Paris,Île-de-France,France.;-21;64 Boulevard Rochechouart; +33 1 42 96 28 50;3;http://www.montpensierparis.com;59;true
+Pavillon Republique les Halles;a Hotel in Paris,Île-de-France,France.;-21;7-9 Rue Pierre Chausson; +33 1 40 18 11 00;3;http://www.pavillon-republique-les-halles.com;59;true
+Hotel Victoria;a Hotel in Paris,Île-de-France,France.;-21;1, boulevard Ornano,; +33 1 60 74 90 10;3.5;http://www.hotelvictoria.com;67;true
+Le Petit Chatelet;a Hotel in Paris,Île-de-France,France.;-21;8 rue St-Denis,; +33 1 42 33 32 31;4.5;http://www.lepetitchatelet.com;82;true
+Balladins Superior Hotel Bobigny;a Hotel in Bobigny,Île-de-France,France.;-21;302 Avenue Paul Vaillant Couturier;;3;http://www.balladins.com/;60;true
+Hotel Rhetia;a Hotel in Paris,Île-de-France,France.;-21;3, Rue du General Blaise,; +33 1 47 00 47 18;3.0;http://hotel.rhetia.free.fr;60;true
+Normandy Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;7 Rue De L Echelle;;4;http://www.leshotelsdeparis.com/les-hotels-de-paris.html?l=EN;78;true
+Hotel DAlsace Paris;a Hotel in Paris,Île-de-France,France.;-21;85 Boulevard de Strasbourg;;3;http://paris.indymedia.org/;63;true
+Pavillon Pereire Arc de Triomphe;a Hotel in Paris,Île-de-France,France.;-21;51 Boulevard Pereire; +33 1 44 01 04 90;3;http://www.pavillon-pereire-arc-de-triomphe.com;63;true
+Villa Eugenie;a Hotel in Paris,Île-de-France,France.;-21;167 Rue De Rome; +33 1 44 29 06 06;4;http://www.villa-eugenie.com;79;true
+Hipotel Paris Belleville;a Hotel in Paris,Île-de-France,France.;-21;21 Rue Vic D Azir; +33 1 42 08 47 37;2;http://www.hipotel.fr;48;true
+Hotel Atlanta Frochot;a Hotel in Paris,Île-de-France,France.;-21;9 Rue Frochot; +33 1 48 78 37 14;3;http://www.atlantafrochot-paris-hotel.com;64;true
+Kyriad Paris IX Montmartre;a Hotel in Paris,Île-de-France,France.;-21;55 Rue Jean Baptiste Pigalle; +33 1 48 74 02 33;3;http://www.hotelparismontmartre.com;64;true
+Hipotel Paris Voltaire;a Hotel in Paris,Île-de-France,France.;-21;132 Boulevard Voltaire,; +33 1 43 79 31 18;3.0;http://www.hipotel.fr;64;true
+Hotel Cervantes Paris;a Hotel in Paris,Île-de-France,France.;-21;19 Rue De Berne;;3;http://paris.indymedia.org/;65;true
+Hotel Magenta Paris;a Hotel in Paris,Île-de-France,France.;-21;38 Boulevard De Magenta; +33 1 42 06 13 88;3;http://www.hotelmagentaparis.com/EN.hotel-magenta-paris.home.html;65;true
+Pavillon Porte de Versailles;a Hotel in Paris,Île-de-France,France.;-21;37 Rue Du Hameau; +33 1 48 28 16 79;3;http://www.viparis.com;66;true
+Le Fontainebleau;a Hotel in Chevilly-Larue,Île-de-France,France.;-21;94/196 Avenue de Stalingrad;627945-5;2;http://www.letsbookhotel.com/fr/france/chevilly-larue/hotel/le-fontainebleau.aspx;50;true
+Hotel Losserand Montparnasse;a Hotel in Paris,Île-de-France,France.;-21;76 Rue Raymond Losserand;3741837-20;3;http://www.pavillon-losserand-montparnasse.com/EN/;67;true
+Ibis Paris Avenue dItalie;a Hotel in Paris,Île-de-France,France.;-21;15 Bis Avenue dItalie;	1-800-515-5679;3;http://www.ibishotel.com/gb/hotel-0634-ibis-paris-porte-d-italie/index.shtml;67;true
+Ibis Paris Italie Tolbiac 13eme;a Hotel in Paris,Île-de-France,France.;-21;177 Rue De Tolbiac;	1-800-515-5679;3;http://www.ibishotel.com/fr/hotel-0923-ibis-paris-italie-tolbiac-13eme/index.shtml;67;true
+Studio Hotel;a Hotel in Paris,Île-de-France,France.;-21;25 rue Alain Chartier,; +33 1 48 28 66 48;3.0;http://www.paris-hotels-montmartre.com;67;true
+Villa Royale Montsouris;a Hotel in Paris,Île-de-France,France.;-21;144 Rue De La Tombe Issoire; +33 6 30 58 15 34;4;http://www.leshotelsdeparis.com;84;true
+61 Paris Nation Hotel;a Hotel in Paris,Île-de-France,France.;-21;61 Rue De La Voute;+33 (0)1 43 45 41;3;http://www.61-paris-nation-hotel.com/en/;68;true
+Hotel Batignolles Villiers;a Hotel in Paris,Île-de-France,France.;-21;11 Rue Des Batignolles;33(0)1 45 22 50 58;3;http://www.hotel-batignolles-villiers.com/;68;true
+Ideal Hotel design;a Hotel in Paris,Île-de-France,France.;-21;108 Boulevard Jourdan; +33 1 45 40 45 16;3;http://www.idealhotel.fr;68;true
+Le Carrosse;a Hotel in Paris,Île-de-France,France.;-21;88 rue Desnouettes,; +33 1 42 50 02 02;3.0;http://www.le-carrosse.fr;68;true
+La Villa Alessandra;a Hotel in Paris,Île-de-France,France.;-21;9 Place Boulnois;3741837-7;4;http://www.villa-alessandra.com/;86;true
+Villa Lutece Port Royal;a Hotel in Paris,Île-de-France,France.;-21;52-52 Bis Rue Jenner; +33 1 53 61 90 90;4;http://www.villa-lutece-port-royal.com;86;true
+Villa Montparnasse;a Hotel in Paris,Île-de-France,France.;-21;2 Rue Boulard; +33 1 56 80 34 34;4;http://www.villa-montparnasse.com;86;true
+Pavillon Courcelles Parc Monceau;a Apartment in Paris,Île-de-France,France.;-21;25 Rue De Saussure; +33 1 56 33 23 23;3;http://www.pavillon-monceau-etoile.com;69;true
+Adagio Access Paris La Villette;a Hotel in Paris,Île-de-France,France.;-21;28 bis avenue Corentin Cariou;44724200;3;http://www.adagio-city.com/gb/hotel-8368-adagio-access-paris-la-villette-ex-citea/nearby.shtml;70;true
+BEST WESTERN Le Saint-Maurice;a Hotel in Saint-Maurice,Île-de-France,France.;-21;12 Rue Du Marechal Leclerc;;3;http://www.bestwestern.com/reservations/hotels.asp?country=fr;70;true
+Hotel Eurotel Paris;a Hotel in Paris,Île-de-France,France.;-21;67 Boulevard De Clichy;;3;http://www.reservation-parishotels.com/districts.php?dis=2;70;true
+Est Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;49 Boulevard Magenta;(312) 212-3543;3;http://www.paris-reservations.com/search_hotels.php;71;true
+Mon Reve Amadeus;a Hotel in Paris,Île-de-France,France.;-21;76 Avenue Felix Faure;(33) 1 45 54 35 63;3;http://www.amadeus-hotel-paris.com/;71;true
+Hotel Kyriad Paris 19 La Villette;a Hotel in Paris,Île-de-France,France.;-21;147/151 Avenue De Flandre;1313223-1;3;http://www.parkingsdeparis.com/hotels.php;72;true
+Hotel Little;a Hotel in Paris,Île-de-France,France.;-21;3 Rue Pierre Chausson;230 3500;2;http://www.littlehotelsoffrance.co.uk/paris.php;54;true
+Hotel Tronchet;a Hotel in Paris,Île-de-France,France.;-21;22 Rue Tronchet; +33 1 47 42 26 14;3;http://www.hotel-tronchet.com;72;true
+Parc Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;60 Rue Beaunier; +33 1 45 40 77 02;2;http://www.parc-hotel-paris.com;54;true
+Villa Luxembourg;a Apartment in Paris,Île-de-France,France.;-21;121 Boulevard Du Montparnasse; +33 1 43 35 46 35;4;http://www.villa-luxembourg.com;91;true
+Hotel Murat Paris;a Hotel in Paris,Île-de-France,France.;-21;119 Bis Boulevard Murat;+33 (0) 1 46 51 12;3;http://www.paris-hotel-murat.com/hotel-murat-english/the-hotel-01.html;73;true
+Hotel Choisy;a Hotel in Paris,Île-de-France,France.;-21;135, avenue de Choisy,; +33 1 45 74 21 86;3.0;http://www.doisy.com;73;true
+Hotel du Roi Rene;a Hotel in Paris,Île-de-France,France.;-21;72 Place Du Dr Félix Lobligeois; +33 1 42 26 72 73;2;http://www.roi-rene.com;55;true
+Hotel Mistral;a Hotel in Paris,Île-de-France,France.;-21;24, rue Cels,; +33 1 43 20 25 43;4.0;http://www.hotel-mistral-paris.com;92;true
+Appi Hotel;a Hotel in Paris,Île-de-France,France.;-21;158 Rue Saint-Denis;;1;http://www.appihotel.com/;37;true
+Comfort Hotel Paris Montmartre;a Hotel in Paris,Île-de-France,France.;-21;13 Rue Lecluse;;3;http://www.hotels-paris.fr/en/hotel/Montmartre-Pigalle.htm;74;true
+Hotel de Chateaudun;a Hotel in Paris,Île-de-France,France.;-21;30 Rue De Chateaudun;+33 (0) 1 43 80 31;3;http://www.arc-avenues-hotels.com;74;true
+Lafayette Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;198 Rue Lafayette;+33 1 40 68 50 68;1;http://www.concorde-lafayette.com/en/;37;true
+Pavillon Saint Augustin;a Hotel in Paris,Île-de-France,France.;-21;16 Rue De La Pepiniere; +33 1 53 04 96 96;3;http://www.pavillon-saint-augustin.com;74;true
+Comfort Hotel Davout Nation;a Hotel in Paris,Île-de-France,France.;-21;110 Rue Des Orteaux;(33) 1 40 09 28 28;2;http://www.comfortinn.com/hotel-paris-france-FR321;56;true
+Hotel les Jardins dAlesia;a Hotel in Paris,Île-de-France,France.;-21;34 Rue dalesia;+33 (0) 1 43 27 60;2;http://www.alesia-paris-hotel.com/english/;56;true
+Hotel De La Comete;a Hotel in Paris,Île-de-France,France.;-21;196 boulevard de la Villette,; +33 1 42 08 55 88;3.5;http://www.budgetplaces.com;84;true
+Ambassadeur Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;153 Rue Legendre;;3;http://www.ambassadeur-hotel-paris.com/index.htm;75;true
+Hotel Metropol Paris;a Hotel in Paris,Île-de-France,France.;-21;98 rue de Maubeuge;301546-311;3;http://paris-hotel-metropol.com/;75;true
+Pavillon Italie;a Hotel in Le Kremlin-Bicetre,Île-de-France,France.;-21;1-3 Rue Elisee Reclus; +33 1 47 26 16 66;3;http://www.hiexpress.com;75;true
+Arcadie Montparnasse;a Hotel in Paris,Île-de-France,France.;-21;71 Avenue Du Maine;01 43 20 91 11;3;http://en.hotel-paris-arcadie.com/;76;true
+Auriane Porte de Versailles;a Hotel in Paris,Île-de-France,France.;-21;60 Rue Olivier De Serres;01 45 32 44 33;3;http://aurianeparishotel.com/;76;true
+BEST WESTERN Parc des Expos;a Hotel in Malakoff,Île-de-France,France.;-21;122 Avenue Pierre Brossolette;;3;http://www.bestwestern.com/reservations/hotels.asp?country=fr;76;true
+Grand Hotel De Paris;a Hotel in Paris,Île-de-France,France.;-21;72 Boulevard De Strasbourg; +33 1 46 07 40 56;3;http://www.grand-hotel-dore.com;76;true
+Hotel des Olympiades;a Hotel in Paris,Île-de-France,France.;-21;22 Square Clignancourt; +33 1 46 06 65 91;1;http://www.hoteldesolympiades.com;38;true
+Hotel du Plat dEtain;a Hotel in Paris,Île-de-France,France.;-21;69 Rue Meslay; +33 1 42 78 04 04;3;http://www.hotelplatdetain.com;76;true
+Richard Hostel Paris;a Hostel in Paris,Île-de-France,France.;-21;35 rue Richard Lenoir;+33 (0)1 43 79 39 98;1;http://www.fasthostels.fr;38;true
+Mercure Paris Porte de Pantin;a Hotel in Pantin,Île-de-France,France.;-21;22 Avenue Jean Lolive;48916600;4;http://www.mercure.com/gb/hotel-2799-mercure-paris-porte-de-pantin/index.shtml;96;true
+Abrial Hotel;a Hotel in Paris,Île-de-France,France.;-21;176 Rue Cardinet;+33 (0)1 42 63 50;3;http://www.abrial.fr/fr/index.php;77;true
+Arcantis Hotel Frochot;a Hotel in Paris,Île-de-France,France.;-21;3 Rue Frochot;33-1-42853166;3;http://arcantisfrochothotelparis.priorguest.com/it;77;true
+Caravelle Opera Hotel;a Hotel in Paris,Île-de-France,France.;-21;68 Rue des Martyrs;33(0)1 48 78 43 31;3;http://www.caravelle-paris-hotel.com/;77;true
+Du Casino;a Hotel in Paris,Île-de-France,France.;-21;41 Rue De Clichy;08 926 98 926;3;http://www.casinodeparis.fr/;77;true
+Hotel Median Paris Congres;a Hotel in Paris,Île-de-France,France.;-21;6-8 Boulevard De Douaumont;+33 (0)1 47 56 04;3;http://www.medianhotels.com/hotel-median-paris-congres;77;true
+Hotel Porte de Versailles;a Hotel in Paris,Île-de-France,France.;-21;11 Boulevard Victor;;3;http://parisportedeversailles.medianhotels.com/;77;true
+Hotel Saint-Louis Bastille;a Hotel in Paris,Île-de-France,France.;-21;114 Boulevard Richard Lenoir; +33 1 43 38 29 29;3;http://www.saintlouisbastille.com;77;true
+Timhotel Berthier Paris XVII;a Hotel in Paris,Île-de-France,France.;-21;4 Boulevard Berthier;01 46 27 10 00;3;http://www.timhotel-berthier.com/gb/index_gb.html;77;true
+Abricotel Hotel;a Hotel in Paris,Île-de-France,France.;-21;15 Rue Lally Tollendal;02459002;2;http://www.abricotel.fr/;58;true
+Hotel Villa du Maine;a Hotel in Paris,Île-de-France,France.;-21;20 Rue Ledion; +33 1 45 42 33 29;2;http://hotel-villa-du-maine-paris.com;58;true
+Tamaris Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;14 Rue Des Maraichers;01855812;2;http://www.hotel-tamaris.fr/;58;true
+Hotel Pacific;a Hotel in Paris,Île-de-France,France.;-21;70 rue du chateau deau,; +33 1 47 70 07 91;3.5;http://hotelpacific.fr;87;true
+Washington Paris Hotel;a Hotel in Paris,Île-de-France,France.;-21;43 Rue Washington;33 (0)1 49 53 94 4;4;http://www.hotelwashingtonparis.com/;97;true
+Grand Hotel Voltaire;a Hotel in Paris,Île-de-France,France.;-21;150 Boulevard Voltaire,; +33 1 43 79 07 12;4.0;http://www.grandhotelvoltaire.com;97;true
+Hotel Manet;a Hotel in Paris,Île-de-France,France.;-21;15 Rue Edouard Manet,; +33 1 47 83 21 35;4.5;http://www.mayet.com;107;true
+Etap Hotel Paris Porte De Montmartre;a Hotel in Paris,Île-de-France,France.;-21;45 Rue Du Docteur Babinski;;3;http://www.etaphotel.com/gb/home/index.shtml;78;true
+TIMHOTEL Paris Gare De Lyon;a Hotel in Paris,Île-de-France,France.;-21;1 Bis Rue D Austerlitz;123456789101112131;3;http://www.timhotel.com/fr/nos-hotels-details/12-timhotel-nation.htm;78;true
+Hotel de Belfort;a Hotel in Paris,Île-de-France,France.;-21;22 rue de Belfort,; +33 1 47 00 67 33;3.5;http://www.hotelbelfortparis.com;88;true
+Villa Pantheon Paris;a Hotel in Paris,Île-de-France,France.;-21;41 Rue Des Ecoles;3741837-1;4;http://www.villa-pantheon.com/EN/;98;true
+Ajiel Hotel;a Hotel in Paris,Île-de-France,France.;-21;237 Rue De La Convention;33 1 55 76 31 31;2;http://www.ajiel-hotel-paris.com/;59;true
+Belambra Clubs - Magendie;a Hotel in Paris,Île-de-France,France.;-21;2/4 rue Magendie (corner 6 rue Corvisart);;2;http://www.belambra.fr/;59;true
+Aberotel Montparnasse;a Hotel in Paris,Île-de-France,France.;-21;24 Rue Blomet;+33 (0) 1 40 61 70;3;http://www.aberotelparishotel.com/;79;true
+Hotel Ariane Montparnasse;a Hotel in Paris,Île-de-France,France.;-21;35 Rue De La Sabliere;01 45 45 67 13;3;http://www.ariane-montparnasse-paris.com/;79;true
+Hotel Baldi Paris;a Hotel in Paris,Île-de-France,France.;-21;42 Boulevard Garibaldi;+ 33 01 47 83 20 1;3;http://baldi-paris-hotel.com/;79;true
+Kyriad Arcueil Cachan;a Hotel in Cachan,Île-de-France,France.;-21;23 Avenue Carnot;+33 1 46 63 82 82;3;http://www.kyriad-arcueil-cachan.fr/;79;true
+Moulin Plaza Hotel;a Hotel in Paris,Île-de-France,France.;-21;39 Rue Pierre Fontaine;13941376135901;3;http://moulinplaza.com/;79;true
+Paris Hotel;a Hotel in Paris,Île-de-France,France.;-21;23 Rue Henry Monnier;301546-311;3;http://paris-france-hotel.com/;79;true
+Timhotel;a Hotel in Hauts-de-Seine,Île-de-France,France.;-21;14, rue Dagobert,; +33 1 44 23 22 02;3.5;http://www.amhotelitalie.com;89;true
+Villa Madame;a Hotel in Paris,Île-de-France,France.;-21;44 Rue Madame;+33 (0)1 45 48 02;4;http://hotelvillamadameparis.com/;99;true
+Au Royal Mad;a Hotel in Paris,Île-de-France,France.;-21;68 rue Sedaine 11. Bastille - République;+612 9240 3000;1.5;http://merivale.com.au/;50;true
+Baldaquin Hotel;a Hotel in Paris,Île-de-France,France.;-21;16 Rue Caroline;;3;http://hotel-baldaquin-excelsior-paris.com/index.htm;80;true
+BEST WESTERN Bretagne Montparnasse;a Hotel in Paris,Île-de-France,France.;-21;33 Rue Raymond Losserand;835503898884;4;http://www.bretagne-paris-hotel.com;100;true
+BEST WESTERN Opera Batignolles;a Hotel in Paris,Île-de-France,France.;-21;165 Rue De Rome;(123) 456-7890;4;http://www.hotel-opera-batignolles.com;100;true
+Hotel Balladins Paris La Villette;a Hotel in Paris,Île-de-France,France.;-21;219 Rue Crimee;;2;http://www.balladins.com/;60;true
+Hotel Glasgow Monceau;a Hotel in Paris,Île-de-France,France.;-21;3 Rue De La Felicite;+33 1 42 27 93 95;3;http://hotel-glasgow.com/;80;true
+Kyriad Villeneuve la Garenne;a Hotel in Villeneuve-la-Garenne,Île-de-France,France.;-21;80 Boulevard Charles De Gaulle;+33 1 47 99 56 00;3;http://www.kyriad-villeneuve-la-garenne.fr/fr/index.aspx;80;true
+Mirific Opera Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;119 Avenue de Clichy;;3;http://www.hotel-mirific-paris.com/Mirific_Opera_Hotel_Facilities_en.html;80;true
+Nouvel Hotel Paris 18;a Hotel in Paris,Île-de-France,France.;-21;86 Rue Myrha; +33 1 42 64 27 93;2;http://www.parishotels.com/;60;true
+Timhotel Place dItalie-Butte aux Cailles;a Hotel in Paris,Île-de-France,France.;-21;22 Rue Barrault;123456789101112131;2;http://www.timhotel.com/en/our-hotels-details/11-timhotel-place-d-italie-butte-aux-cailles.htm;60;true
+Villa Royale;a Hotel in Paris,Île-de-France,France.;-21;2 Rue Duperre; +33 1 55 31 78 78;4;http://www.villa-royale.com;100;true
+Hotel Astruc Elysees;a Hotel in Paris,Île-de-France,France.;-21;18 Rue Leon Jost; +33 1 46 22 60 70;3;http://www.astrucelyseesparishotel.com;81;true
+Hotel De Geneve Paris;a Hotel in Paris,Île-de-France,France.;-21;36 Rue De Londres;+33 (0)1 48 74 33;3;http://www.geneve-paris-hotel.com/;81;true
+Hotel de lOrchidee;a Hotel in Paris,Île-de-France,France.;-21;65 Rue De L Ouest; +33 1 43 22 70 50;3;http://www.hotelorchidee.com;81;true
+Hotel Sophie Germain;a Hotel in Paris,Île-de-France,France.;-21;12 Rue Sophie Germain; +33 1 43 20 82 89;3;http://www.hotelsophiegermain.com;81;true
+Noveau Paris Park Hotel;a Hotel in Paris,Île-de-France,France.;-21;4 Rue Hassard 19 Buttes-Chaumont; +33 1 42 06 67 67;3;http://nouveauparisparkhotel.com;81;true
+Timhotel Paris Clichy;a Hotel in Clichy,Île-de-France,France.;-21;14 Rue Dagobert;8825397126471;3;http://www.timhotel.com/en/home.htm;81;true
+Belgrand Hotel;a Hotel in Paris,Île-de-France,France.;-21;60 Rue Belgrand;;2;http://hipotel-paris-belgrand.h-rsv.com/;61;true
+Comfort Hotel Gare De Lest Paris;a Hotel in Paris,Île-de-France,France.;-21;31 Boulevard De Strasbourg;(33) 1 47 70 2500;2;http://www.comfortinn.com/hotel-paris-france-FR295;61;true
+Hotel Des Arts Paris;a Hotel in Paris,Île-de-France,France.;-21;8 Rue Coypel;;2;http://bonjourparis.com/;61;true
+Hotel Little Regina;a Hotel in Paris,Île-de-France,France.;-21;89 Boulevard De Strasbourg; +33 1 40 37 72 30;2;http://www.paris-hotel-little-regina.com;61;true
+Iliade Paris 18;a Hotel in Paris,Île-de-France,France.;-21;51 Rue Letort;;2;http://www.hotel-iliade-paris.com/;61;true
+Novotel Paris La Defense;a Hotel in Paris,Île-de-France,France.;-21;2 Boulevard De Neuilly; +33 1 41 45 23 23;4;http://www.grandearche.com;102;true
+Hotel Saint Pierre;a Hotel in Paris,Île-de-France,France.;-21;4 rue Ecole de Medecine,; +33 1 46 34 78 80;3.5;http://www.saintpierre-hotel.com;92;true
+Hotel Helvetia;a Hotel in Paris,Île-de-France,France.;-21;28 bis boulevard Diderot,; +33 1 43 43 25 19;3.5;http://www.helvetia-paris-hotel.com;92;true
+Hotel de la Herse dOr;a Hotel in Paris,Île-de-France,France.;-21;20 Rue Saint-Antoine,; +33 1 48 87 84 09;3.5;http://www.hotel-herse-dor.com;92;true
+Abotel Garden Opera;a Hotel in Paris,Île-de-France,France.;-21;65 Rue Du Chateau D Eau; +33 1 47 70 07 41;3;http://www.gardenopera.com;82;true
+All Seasons Paris Lafayette Opera;a Hotel in Paris,Île-de-France,France.;-21;3/5 Rue De Trevise;01-10096;3;http://www.all-seasons-hotels.com/gb/home/index.shtml;82;true
+Apogia Paris;a Hotel in Ivry-sur-Seine,Île-de-France,France.;-21;14 Boulevard Paul Vaillant Couturier;02045710270;3;http://www.apogia-hotel-paris.com/;82;true
+Grand Hotel de Turin;a Hotel in Paris,Île-de-France,France.;-21;6 Rue Victor Masse; +33 1 42 80 61 50;3;http://www.hoteldeturin.com;82;true
+Hi Matic Hotel Paris;a Hotel in Paris,Île-de-France,France.;-21;71 Rue De Charonne;;3;http://www.hi-hotel.net/fr;82;true
+Hotel Eiffel Segur;a Hotel in Paris,Île-de-France,France.;-21;34 Boulevard Garibaldi; +33 1 47 34 30 82;3;http://paris-hotel-eiffel-segur.com;82;true
+Hotel Kleber;a Hotel in Paris,Île-de-France,France.;-21;7 Rue De Belloy;+33 (1) 47 23 80 2;3;http://www.kleberhotel.com/htgb/0004.htm;82;true
+Residence International;a Apartment in Paris,Île-de-France,France.;-21;44 Rue Louis Lumière 20 Ménilmontant;;3;http://www.international-recollets-paris.org/inscription/accueil.php?lng=en;82;true
+Hotel Campanile;a Hotel in Paris,Île-de-France,France.;-21;32, rue Luis Blanc,; +33 1 64 05 76 53;3.0;http://www.campanile-brie-comte-robert.fr;82;true
+Campanile Paris XV - Tour Eiffel;a Hotel in Paris,Île-de-France,France.;-21;30 Rue Saint Charles;;2;http://www.campanile.com/en/default.aspx;62;true
+Hotel Amadeus Paris;a Hotel in Paris,Île-de-France,France.;-21;39 Rue Claude Tillier;(33) 1 45 54 35 63;2;http://www.amadeus-hotel-paris.com/;62;true
+Hotel Bonne Nouvelle;a Hotel in Paris,Île-de-France,France.;-21;17 Rue Beauregard; +33 1 45 08 42 42;2;http://www.hotel-bonne-nouvelle.com;62;true
+Hotel F1 Paris Porte de Montmartre;a Hotel in Paris,Île-de-France,France.;-21;29 Rue du Docteur Babinski;0892-685-685;2;http://www.hotelf1.com/gb/hotel-2539-formule-1-hotelf1-paris-porte-de-montmartre/index.shtml;62;true
+Hotel Ibis Kemayoran Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl Bungur Besar Raya 79-81;	1-800-515-5679;3;http://www.ibishotel.com/gb/hotel-1671-ibis-jakarta-kemayoran/index.shtml;30;true
+Hotel Mustika;a Hotel in Jakarta,Indonesia.;-4;193e Gajah mada street;;1;http://brajamustika.com/;17;true
+Ibis Jakarta Mangga Dua Hotel;a Hotel in Jakarta,Indonesia.;-4;Jalan Pangeran Jayakarta 73;	1-800-515-5679;3;http://www.ibishotel.com/gb/hotel-1736-ibis-jakarta-slipi/index.shtml;34;true
+The Plaza Hotel Glodok;a Hotel in Jakarta,Indonesia.;-4;Glodok Plaza Lot 3 Jl. Pinangsia Raya No. 1;;2;http://plazahotelglodok.com/;26;true
+Putri Duyung Ancol;a Hotel in Jakarta,Indonesia.;-4;Taman Impian Jaya Ancol Jl. Lodan Timur No. 7;44548790;3;http://putriduyung-ancol.com/;37;true
+Mega Matra Hotel;a Hotel in Jakarta,Indonesia.;-4;Jl. Matraman Raya No. 115;021 9777 4848;2;http://megamatra.hargahotel.com/;28;true
+Bangka Bed and Breakfast;a Bed and Breakfast in Jakarta,Indonesia.;-4;Jl. Bangka XI A no. 26 Kemang;;3;http://bangka-bnb.com/;38;true
+The Kchrysant Hotel;a Hotel in Jakarta,Indonesia.;-4;Jl. Daan Mogot No.63;+62 21 5660229;2;http://www.kchrysant.com/;30;true
+Ibis Slipi;a Hotel in Jakarta,Indonesia.;-4;Jalan Letjen S Parman Kav 59;	1-800-515-5679;3;http://www.ibishotel.com/gb/hotel-1736-ibis-jakarta-slipi/index.shtml;41;true
+Ibis Tamarin;a Hotel in Jakarta,Indonesia.;-4;Jl. KH Wahid Hasyim 77 Jakarta Pusat;	1-800-515-5679;3;http://www.ibishotel.com/gb/hotel-1867-ibis-jakarta-tamarin/index.shtml;41;true
+Hotel Mega Anggrek;a Hotel in Jakarta,Indonesia.;-4;Jalan Arjuna Selatan No 4 Kemanggisan;;3;http://www.megaanggrekhotel.com/;42;true
+Oasis Amir Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Senen Raya;;4;http://oasisamirhotel.com/;53;true
+MyHotel;a Hotel in Jakarta,Indonesia.;-4;Jalan Hayam Wuruk No. 127 A;14480705335;3;http://www.myhotels.com/;43;true
+FLAT06. Minimalist Residence;a Apartment in Jakarta,Indonesia.;-4;Jalan Haji Abdul Majid No 6 Cipete Utara Kebayoran Baru Fatmawati Selatan;;2;http://www.theflat06.com;33;true
+Rasuna Icon;a Hotel in Jakarta,Indonesia.;-4;Jalan Karet Pedurenan No. 3;(021) 520 1642;3;http://www.rasunaiconresidence.com/index.php/sites/room/2;44;true
+Orchardz Hotel;a Hotel in Jakarta,Indonesia.;-4;Jl. Industri Raya No. 8 Gunung Sahari;;3;http://pontianak.orchardzhotel.com/;46;true
+Takes Mansion;a Hotel in Jakarta,Indonesia.;-4;Jl.Taman Kebon Sirih 1 No 3;021 - 718 19 66;3;http://takesmansion.com/;46;true
+Hotel Jatra;a Hotel in Jakarta,Indonesia.;-4;Jalan Bandengan Selatan No. 20;+62 761 850888;2;http://www.jatrahotelpekanbaru.com/;35;true
+Hotel Sentral Jakarta;a Hotel in Jakarta,Indonesia.;-4;Pramuka Raya kav 63 - 64 Jakarta pusat;;3;http://www.jakartahotels.com/;47;true
+Triniti Hotel;a Hotel in Jakarta,Indonesia.;-4;Jalan Pembangunan 3 No.4 Pusat;;3;http://www.triniti.co.tz/;47;true
+Novotel Jakarta Mangga Dua Square;a Hotel in Jakarta,Indonesia.;-4;Jalan Gunung Sahari Raya No 1;(+62)2162312800;4;http://www.novotel.com/gb/hotel-5704-novotel-jakarta-mangga-dua-square/room.shtml;60;true
+Mercure Convention Center Ancol Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Pantai Indah;1 800 221 4542;4;http://www.mercure.com/gb/hotel-5473-mercure-convention-centre-ancol/index.shtml;61;true
+Amos Cozy Hotel;a Hotel in Jakarta,Indonesia.;-4;Jl. Melawai Raya No. 83-85;;4;http://amoscozy.com/;63;true
+Pullman Jakarta Central Park;a Hotel in Jakarta,Indonesia.;-4;Central Park Podomoro City;;5;http://www.pullmanjakartacentralpark.com/;77;true
+Redtop Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Pecenongan 72;;5;http://www.redtophotel.com/;77;true
+Royal Regal Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Mangga Besar VIII No 25-27;;2;http://royalregalhotel.com/jkt/;39;true
+Prasada Mansion;a Hotel in Jakarta,Indonesia.;-4;JL. Komando Raya No.6 Setiabudi;+62 21 529 20 299;3;http://prasadamansion.com/;53;true
+Hotel Menara Peninsula;a Hotel in Jakarta,Indonesia.;-4;Jl. Let. Jend. S. Parman 78 Slipi;+62 21 522 5090;4;http://sintesapeninsulahotel.com/;68;true
+Travellers Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl. Pangeran Jayakarta No. 70;;3;http://www.jakartahotels.com/;55;true
+Hotel Sofyan Tebet;a Hotel in Jakarta,Indonesia.;-4;Jl. Dr. Seopomo S.H;;2;http://www.sofyanhotel.com/;42;true
+Sheraton Media Hotel And Towers;a Hotel in Jakarta,Indonesia.;-4;Jl. Gunung Sahari 3;877-242-2558;5;http://www.sheratonchicago.com/;84;true
+Sunlake Hotel;a Hotel in Jakarta,Indonesia.;-4;Jl. Danau Permai Raya C1 Sunter;;4;http://www.sunlakehotel.com.cn/;73;true
+The Jayakarta Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl. Hayam Wuruk 126;()+86400000;4;http://jakarta.jayakartahotelsresorts.com/;73;true
+Amaris Hotel Mangga Besar;a Hotel in Jakarta,Indonesia.;-4;Jl. Mangga Besar Raya No.7-11;;2;http://www.amarishotel.com/amaris-manggabesar/;44;true
+Amaris Hotel Mangga Dua Square;a Hotel in Jakarta,Indonesia.;-4;JJl. Gunung Sahari No.1;;2;http://www.amarishotel.com/amaris-manggadua/;44;true
+Amaris Hotel Thamrin City;a Hotel in Jakarta,Indonesia.;-4;Gedung Thamrin City Lt. 6 Blok HT No. 1 Jalan Thamrin Boulevard;;2;http://www.amarishotel.com/amaris-thamrincity/;44;true
+Aryaduta Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl. Prapatan No. 44 - 48;+62 21 2352 1234;5;http://aryaduta.com/hotels_home_jakarta.php;92;true
+The Park Lane Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Casablanca Kav 18;(62-21) 828 2000;5;http://www.parklanejakarta.com/;93;true
+Kartika Chandra Hotel;a Hotel in Jakarta,Indonesia.;-4;Jalan Gatot Subroto Kav 18-20;123401234;4;http://www.kartikachandra.com/;79;true
+Sparks Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Mangga Besar Raya 42;153-1-43-24;3;http://sparks-hotel.com/;65;true
+Le Grandeur Mangga Dua;a Hotel in Jakarta,Indonesia.;-4;Jalan Mangga Dua Raya;(62-21) 612 8811;5;http://www.legrandeurhotels.com/;99;true
+Hotel Santika Premiere Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Aipda KS Tubun No. 7;;4;http://www.santika.com/;85;true
+Alila Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl Pecenongan Kav 7-17;+62 21 231 6008;4;http://www.alilahotels.com/;86;true
+Hotel Atlet Century Park;a Hotel in Jakarta,Indonesia.;-4;Jl Pintu Satu Senayan;+62 (21) 571-2041;4;http://atletcentury.com/contents/;87;true
+Swiss-Belhotel Mangga Besar;a Hotel in Jakarta,Indonesia.;-4;Jl. Kartini Raya 57;+(62-21) 6393 888;4;http://www.swiss-belhotel.com/Indonesia/Jakarta/jakarta;88;true
+Hotel Aryaduta Semanggi;a Hotel in Jakarta,Indonesia.;-4;Jalan Garnisun Dalam 8 Karet Semanggi;+62 21 251 5151;5;http://aryaduta.com/;108;true
+Studio One Residence;a Hotel in Jakarta,Indonesia.;-4;Jalan Talang Betutu No 15;;1;http://www.studio-one.co.id/;36;true
+Somerset Grand Citra;a Apartment in Jakarta,Indonesia.;-4;Jl Prof. Dr. Satrio Kav. 1 Kuningan;(62-21) 2995 6888;4;http://www.somerset.com/indonesia/jakarta/somerset_grand_citra.html;91;true
+Aston Rasuna;a Hotel in Jakarta,Indonesia.;-4;Taman Rasuna Apartment Complex jalan H R Rasuna Said;0-800-183-1000 (;4;http://www.aston-international.com/ourhotels_overview.php?id=MTQ=;94;true
+Arion Swiss-Belhotel Kemang Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Kemang Raya 7;;4;http://www.swiss-belhotel.com/en/;95;true
+Millennium Hotel Sirih Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl H Fachrudin 3;;4;http://www.millenniumhotels.com/id/millenniumjakarta/index.html;95;true
+Aston at Kuningan Suites;a Hotel in Jakarta,Indonesia.;-4;Jalan Setiabudi Utara;2077749-1;4;http://www.aston-international.com/ourhotels_overview.php?id=NDA=;99;true
+Hotel Ciputra Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Letnan Jenderal S. Parman;(16308900;4;http://www.ciputra.com/hotel.html;99;true
+Hotel Gran Mahakam Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl. Mahakam No. 6 Blok M;;5;http://www.granmahakam.com/;119;true
+Le Meridien Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Jenderal Sudirman Kav 18 - 20;5722151 - 5722152;5;http://www.jakarta100bars.com/2009/01/fortune-jl-mas-mansyur-near-menara.html;119;true
+Ascott Jakarta;a Apartment in Jakarta,Indonesia.;-4;Jalan Kebon Kacang Raya No 2;(62-21) 2995 6888;5;http://www.the-ascott.com/en/indonesia/jakarta/ascott_jakarta.html;128;true
+Gran Melia Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jl. H.R. Rasuna Said Kav. X-0;;5;http://www.solmelia.com/nHoteles/jsp/C_Hotel_Description.jsp?codigoHotel=5711&idLang=en&idPrm=TRIPADV_RO&utm_source=TRIPADV&utm_medium=BL&utm_content=5711GranMeliaJakarta&utm_campaign=TRIPADV_RO;128;true
+Ambhara Hotel;a Hotel in Jakarta,Indonesia.;-4;Jalan Iskandarsyah Raya No 1 Kebayoran Baru;021 9777 4848;4;http://ambhara.hargahotel.com/;110;true
+Hotel Horison Bekasi;a Hotel in Bekasi,Indonesia.;-4;Jl. K.H Noer Alie Po Box 223;+622130028500;4;http://horisonbekasi.com/;112;true
+Sari Pan Pacific Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan M.H. Thamrin 6;+62 21 2993 2888;4;http://www2.panpacific.com/en/Jakarta/Overview.html;120;true
+Somerset Berlian Jakarta;a Apartment in Jakarta,Indonesia.;-4;Jalan Permata Berlian V Permata Hijau;;4;http://www.somerset.com/;125;true
+Losari Blok M Hotel;a Hotel in Jakarta,Indonesia.;-4;Jl Panglima Polim Raya No 3;;1;http://www.losarihotels.co.id/;51;true
+Four Seasons Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan H.R. Rasuna Said;1 (800) 819-5053;5;http://www.fourseasons.com/jakarta?source=tajakartablhotel;169;true
+Hotel Mulia Senayan;a Hotel in Jakarta,Indonesia.;-4;Jl Asia Afrika Senayan;;5;http://www.hotelmulia.com;181;true
+Mandarin Oriental Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan M.H. Thamrin Po Box 3392;;5;http://www.mandarinoriental.com/jakarta/;195;true
+JW Marriott Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Lingkar Mega Kuningan Kav E1.2 No 1&2;1 402 548-3575;5;http://www.marriott.com/hotels/travel/jktjw-jw-marriott-hotel-jakarta/;196;true
+Oakwood Premier Cozmo Jakarta;a Apartment in Jakarta,Indonesia.;-4;Jalan Lingkar Mega Kuningan Blok E.4.2 No. 1;313233343536373839;5;http://www.oakwoodasia.com;201;true
+Kemang Icon By Alila;a Hotel in Jakarta,Indonesia.;-4;Jalan Kemang Raya 1;+62 21 719 7989;5;http://www.alilahotels.com/kemangicon;204;true
+Shangri La Hotel Jakarta;a Hotel in Jakarta,Indonesia.;-4;Jalan Jenderal Sudirman Kav. 1;(62 21) 2922 9999;5;http://www.shangri-la.com/;210;true
+The Dharmawangsa;a Hotel in Jakarta,Indonesia.;-4;Jalan Brawijaya Raya 26 Kebayoran Baru;62-21-7258181;5;http://www.the-dharmawangsa.com;264;true
+Ritz-Carlton Pacific Place;a Hotel in Jakarta,Indonesia.;-4;Sudirman Commercial Business District JI. Jend.;1-1679-4843-80;5;http://www.pacificplace.co.id/;351;true
+Kalorama Guest House;a Hotel in Columbia,Washington,United States of America.;-3;1854 Mintwood Place NW,Columbia,Washington,United States of America;(202) 588-8188;4.0;http://www.kaloramaguesthouse.com/reservations.php;65;true
+The Churchill Hotel Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1914 Connecticut Avenue NW;202-797-2000;4;http://www.thechurchillhotel.com/;86;true
+Hyatt Arlington;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1325 Wilson Boulevard; (703) 525-1234;4;http://www.arlington.hyatt.com;92;true
+The Westin Arlington Gateway;a Hotel in Arlington (Virginia),Virginia,United States.;-3;801 North Glebe Road; (703) 717-6200;4;http://www.starwoodhotels.com;92;true
+Hyatt Regency Bethesda;a Hotel in Bethesda,Maryland,United States.;-3;One Bethesda Metro Center (7400 Wisconsin Ave); (301) 657-1234;4;http://bethesda.hyatt.com;95;true
+Sheraton National Hotel;a Hotel in Arlington (Virginia),Virginia,United States.;-3;900 South Orme Street; (703) 521-1900;3;http://www.sheratonnational.com;78;true
+Omni Shoreham Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2500 Calvert Street NW (at Connecticut Ave.); (202) 234-0700;4;http://www.omnihotels.com;101;true
+The River Inn;a Hotel in Washington D.C.,District of Columbia,United States.;-3;924 25th Street Northwest; (202) 337-7600;4;http://www.theriverinn.com;101;true
+Hampton Inn Alexandria;a Hotel in Alexandria (Virginia),Virginia,United States.;-3;4800 Leesburg Pike;(703) 329-1400;3;http://hamptoninn1.hilton.com/en_US/hp/index.do;82;true
+Hilton Alexandria Mark Center;a Hotel in Alexandria (Virginia),Virginia,United States.;-3;5000 Seminary Road; (703) 845-7684;3;http://www.hilton.com;84;true
+The Madison;a Hotel in Columbia,Washington,United States of America.;-3;1177 Fifteenth Street NW,Columbia,Washington,United States of America; (202) 862-1600;4.0;http://www.madisonhoteldc.com;105;true
+Sheraton Crystal City Hotel;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1800 Jefferson Davis Highway; (703) 769-3970;3;http://www.sheratoncrystalcity.com;85;true
+Washington Marriott Wardman Park;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2660 Woodley Road NW; (202) 328-2000;4;http://www.marriott.com;110;true
+Days Inn Arlington Pentagon;a Hotel in Arlington (Virginia),Virginia,United States.;-3;3030 Columbia Pike; (703) 521-5570;2;http://www.daysinn.com;67;true
+One Washington Circle Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;One Washington Circle NW; (202) 872-1680;4;http://thecirclehotel.com;112;true
+Washington Marriott;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1221 22nd Street Nw; (202) 872-1500;4;http://www.marriott.com;112;true
+Hyatt Regency Crystal City;a Hotel in Arlington (Virginia),Virginia,United States.;-3;2799 Jefferson Davis Highway; (703) 418-1234;3;http://crystalcity.hyatt.com;91;true
+Hyatt Regency Washington on Capitol Hill;a Hotel in Washington D.C.,District of Columbia,United States.;-3;400 New Jersey Ave NW; (202) 737-1234;3;http://washingtonregency.hyatt.com;91;true
+Washington Hilton;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1919 Connecticut Avenue NW; (202) 483-3000;4;http://www1.hilton.com;115;true
+Hawthorn Suites by Wyndham Alexandria;a Hotel in Alexandria (Virginia),Virginia,United States.;-3;420 North Van Dorn Street; (703) 370-1000;3;http://www.hawthorn.com;94;true
+Hilton Hotel Embassy Row Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2015 Massachusetts Avenue Nw;1-202-857-3388;3;http://embassysuites1.hilton.com/en_US/es/hotel/WASDNES-Embassy-Suites-Washington-D-C--District-of-Columbia/index.do;94;true
+Inn Of Rosslyn;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1601 Arlington Blvd.;0871 423 4896;3;http://www.holidayinn.com/hotels/us/en/arlington/waswp/hoteldetail/directions;94;true
+Channel Inn Hotel;a Hotel in Columbia,Washington,United States of America.;-3;650 Water St SW,Columbia,Washington,United States of America; (202) 554-2400;3.0;http://www.channelinn.com;95;true
+Key Bridge Marriott;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1401 Lee Highway; (703) 524-6400;3;http://www.marriott.com;97;true
+Motel 6 Washington D.C.;a Motel in Washington D.C.,District of Columbia,United States.;-3;6711 Georgia Ave Nw;(202) 722-1600;2;http://www.motel6.com/reservations/motel_detail.aspx?num=4063;73;true
+Courtyard Alexandria Pentagon South;a Hotel in Alexandria (Virginia),Virginia,United States.;-3;4641 Kenmore Avenue; (703) 751-4510;3;http://www.marriott.com;98;true
+Doubletree Hotel Bethesda;a Hotel in Bethesda,Maryland,United States.;-3;8120 Wisconsin Avenue; (301) 664-7317;3;http://www.doubletreebethesda.com;98;true
+Capitol Skyline Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;10 I Street SW; (202) 488-7500;3;http://www.capitolskyline.com;99;true
+Carlyle Suites Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1731 New Hampshire Avenue NW; (202) 234-3200;3;http://www.carlylesuites.com;100;true
+Comfort Inn Georgia Ave/DC Gateway;a Hotel in Silver Spring,Maryland,United States.;-3;7990 Georgia Avenue;;3;http://www.comfortinn.com;101;true
+Hilton Hotel Arlington (Virginia);a Hotel in Arlington (Virginia),Virginia,United States.;-3;950 North Stafford Street;1-703-820-0440;3;http://hiltongardeninn3.hilton.com/en/hotels/virginia/hilton-garden-inn-arlington-shirlington-DCAASGI/index.html;102;true
+Le Meridian Arlington;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1121 N 19Th Street;;4;http://www.hotelpalomar-arlington.com/;131;true
+The Latham Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;3000 M Street Nw;1-800-583-7591;3;http://www.thayerinteractive.com/clickthru/clickthrough.rry/114153;105;true
+Travelodge Alexandria;a Hotel in Alexandria (Virginia),Virginia,United States.;-3;700 North Washington St; (703) 836-5100;2;http://www.travelodge.com;79;true
+Donovan House;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1155 14th Street NW; (202) 737-1200;4;http://www.thompsonhotels.com;134;true
+Palomar Washington DC a Kimpton Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2121 P Street Nw;(202) 448-1800;4;http://www.hotelpalomar-dc.com/;134;true
+Courtyard by Marriott Arlington Rosslyn;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1533 Clarendon Blvd;1 402 548-3575;3;http://www.marriott.com/hotels/travel/wasar-courtyard-arlington-rosslyn/;108;true
+Hilton Garden Inn Arlington/Shirlington;a Hotel in Arlington (Virginia),Virginia,United States.;-3;4271 Campell Avenue; (703) 820-0440;3;http://hiltongardeninn.hilton.com;108;true
+Marriott Crystal Gateway;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1700 Jefferson Davis Highway;1 402 548-3575;3;http://www.marriott.com/hotels/travel/wasgw-crystal-gateway-marriott/;108;true
+The Normandy Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2118 Wyoming Avenue Nw; (202) 483-1350;3;http://www.doylecollection.com;108;true
+The Quincy;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1823 L Street Nw; (202) 223-4320;3;http://www.thequincy.com;108;true
+Washington Marriott at Metro Center;a Hotel in Washington D.C.,District of Columbia,United States.;-3;775 12th Street NW; (202) 737-2200;4;http://www.marriott.com;135;true
+Washington Plaza;a Hotel in Washington D.C.,District of Columbia,United States.;-3;10 Thomas Circle NW; (202) 842-1300;3;http://www.washingtonplazahotel.com;108;true
+State Plaza Hotel;a Hotel in Columbia,Washington,United States of America.;-3;2117 E St. NW,Columbia,Washington,United States of America; (202) 861-8200;4.0;http://www.stateplaza.com;135;true
+Georgetown Suites Harbour;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1000 29Th St Nw; (202) 316-0656;3;http://www.georgetownsuites.com;109;true
+LEnfant Plaza Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;480 LEnfant Plaza; (800) 635-5065;3;http://www.lenfantplazahotel.com;109;true
+Hilton Arlington;a Hotel in Arlington,Virginia,United States of America.;-3;950 North Stafford Street,Arlington,Virginia,United States of America; (703) 528-6000;3.5;http://www.hilton.com;123;true
+George Washington University Inn;a Hotel in Washington D.C.,District of Columbia,United States.;-3;824 New Hampshire Ave Nw; (202) 337-6620;3;http://gwuinn.com;111;true
+Westin Hotel City Center Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1400 M Street NW;202-429-1700;4;http://www.westinwashingtondccitycenter.com/;139;true
+Homewood Suites Silver Spring;a Hotel in Silver Spring,Maryland,United States.;-3;8728 Colesville Road;1-301-565-0005;3;http://homewoodsuites1.hilton.com/en_US/hw/hotel/WASSVHW-Homewood-Suites-by-Hilton-Silver-Spring-Maryland/index.do;112;true
+Travelodge Silver Spring;a Hotel in Silver Spring,Maryland,United States.;-3;8040 13Th Street; (301) 495-0808;2;http://www.travelodge.com;84;true
+Motel 6 Washington DC/Convention Center;a Motel in Washington D.C.,District of Columbia,United States.;-3;1345 4th Street NE I-95 Exit #22-B; (202) 544-2000;2;http://www.motel6.com;85;true
+Homewood Suites Alexandria;a Hotel in Alexandria (Virginia),Virginia,United States.;-3;4850 Leesburg Pike;1-800-445-8667;3;http://www.alexandria.com/hotels/homewood-suites-by-hilton_100009;114;true
+Savoy Suites Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2505 Wisconsin Avenue NW; (202) 337-9700;3;http://www.savoysuites.com;114;true
+Asante Sana Guest Quarters;a Place in Washington D.C.,District of Columbia,United States.;-3;1207 Kenyon Street Northwest; (202) 570-3440;3;http://www.asantesana.us;115;true
+Melrose Hotel Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2430 Pennsylvania Avenue Nw;202-955-6400;3;http://www.melrosehoteldc.com/;115;true
+Days Inn Arlington/Washington DC;a Hotel in Arlington (Virginia),Virginia,United States.;-3;2201 Arlington Blvd;1-800-225-3297 (1;2;http://www.daysinn.com/hotels/virginia/arlington/days-inn-arlington-washington-dc/hotel-overview;87;true
+Inns Of Virginia Arlington;a Hotel in Arlington (Virginia),Virginia,United States.;-3;3335 Lee Hwy;;2;http://www.innsofvirginia.com/;87;true
+Phoenix Park Hotel Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;520 North Capitol Street NW;;3;http://www.indeed.com/cmp/Phoenix-Park-Hotel;117;true
+BEST WESTERN Rosslyn/Iwo Jima;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1501 Arlington Blvd;;2;http://book.bestwestern.com/bestwestern/US/VA/Arlington-hotels/BEST-WESTERN-Rosslyn-Iwo-Jima/Printed-Hotel-Fact-Sheet.do?propertyCode=47133;88;true
+District Hotel Washington;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1440 Rhode Island Ave NW;1-855-232-7800;2;http://www.districthotel.com/;88;true
+Comfort Inn & Suites Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1600 New York Avenue NE;;2;http://www.comfortinn.com/;88;true
+Econo Lodge Takoma Park;a Hotel in Takoma Park,Maryland,United States.;-3;7411 New Hampshire Avenue Bldg. 2;(301) 439-3003;2;http://www.econolodge.com/hotel-takoma_park-maryland-MD166;88;true
+American Inn of Bethesda;a Hotel in Bethesda,Maryland,United States.;-3;8130 Wisconsin Avenue; (800) 323-7081;2;http://www.american-inn.com;89;true
+Days Inn Gateway;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2700 New York Avenue NE;1-800-225-3297 (1;2;http://www.daysinn.com/;89;true
+Sheraton Suites Old Town Alexandria;a Hotel in Alexandria (Virginia),Virginia,United States.;-3;801 North Saint Asaph Street; (703) 836-4700;3;http://www.sheratonsuitesalexandria.com;119;true
+Comfort Inn Pentagon City;a Hotel in Arlington (Virginia),Virginia,United States.;-3;2480 South Glebe Rd. Bldg. 2;;3;http://www.holidaycityusa.com/ci-pentagon-arlington/index.htm;120;true
+Hotel Lombardy;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2019 Pennsylvania Avenue Nw; (202) 828-2600;3;http://www.hotellombardy.com;120;true
+Courtyard Washington, DC / U.S. Capitol;a Hotel in Columbia,Washington,United States of America.;-3;1325 2nd Street NE,Columbia,Washington,United States of America; (202) 898-4000;3.5;http://restaurantsinwashingtondc.com/;136;true
+Club Quarters Hotel Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;839 17th Street N.W.;;3;http://www.travelpod.com/hotels/p2-Washington_DC.html;121;true
+Hilton Washington DC/Silver Spring;a Hotel in Silver Spring,Maryland,United States.;-3;8727 Colesville Road; (301) 589-5200;3;http://www.hilton.com;121;true
+Georgetown University Conference Hotel;a Hotel in Washington D.C.,District of Columbia,United States.;-3;3800 Reservoir Rd NW;;3;http://www.conferencealerts.com/show-event?id=ca1h0hx3m;122;true
+Washington Suites Georgetown;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2500 Pennsylvania Avenue NW; (202) 333-8062;3;http://www.washingtonsuitesgeorgetown.com;122;true
+The Westin Georgetown Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2350 M Street N.W.; (202) 429-0100;4;http://clk.atdmt.com/NYC/go/357863732/direct/01/;153;true
+Morrison Clark Inn Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1015 L Street Nw;;3;http://www.travelpod.com/hotels/p3-Washington_DC.html;123;true
+Channel Inn Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;650 Water Street Sw;;2;http://channelinn.com/;94;true
+Days Inn Silver Spring;a Hotel in Silver Spring,Maryland,United States.;-3;8040 13th Street/I-495; (800) 440-2021;2;http://www.daysinn.com;94;true
+Washington Court Hotel on Capitol Hill;a Hotel in Washington D.C.,District of Columbia,United States.;-3;525 New Jersey Ave Nw;;3;http://www.reservations.ru/united-states/dc/washington/the-capitol-hill-suites-1084870.html;127;true
+The Fairfax at Embassy Row;a Hotel in Washington D.C.,District of Columbia,United States.;-3;2100 Massachusetts Ave. N.W.;202-293-2100;4;http://www.fairfaxhoteldc.com/;160;true
+Doubletree Hotel Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1515 Rhode Island Avenue Nw;1-202-232-7000;3;http://doubletree1.hilton.com/en_US/dt/hotel/WASDTDT-Doubletree-Hotel-Washington-DC-District-of-Columbia/index.do;129;true
+William Lewis House;a Bed and Breakfast in Washington D.C.,District of Columbia,United States.;-3;1309 R Street NW;800-465-7574;2.5;http://www.wlewishous.com;113;true
+Quality Inn Takoma Park;a Hotel in Takoma Park,Maryland,United States.;-3;7411 New Hampshire Avenue Bldg. 1;(301) 439-3000;2;http://www.qualityinn.com/hotel-takoma_park-maryland-MD628;98;true
+Courtyard Washington Embassy Row;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1600 Rhode Island Avenue Northwest; (202) 293-0085;3;http://www.marriott.com;134;true
+Hampton Inn Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;901 6th Street Nw; (202) 842-2500;3;http://hamptoninn.hilton.com;134;true
+Capitol Hill Suites;a Hotel in Washington D.C.,District of Columbia,United States.;-3;200 C STREET SE; (800) 814-5983;3;http://www.capitolhillsuites.com;136;true
+Virginian Suites Arlington;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1500 ARLINGTON BLVD; (703) 522-9600;2;http://www.ascendcollection.com;103;true
+Rouge Hotel Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1315 16th Street NW;(202) 232-8000;3;http://www.rougehotel.com/;140;true
+Comfort Inn Ballston;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1211 N. Glebe Rd.; (703) 247-3399;2;http://www.comfortinnarlington.com;107;true
+Hampton Inn Silver Spring;a Hotel in Silver Spring,Maryland,United States.;-3;8728-A Colesville Road; (301) 588-5887;2;http://www.hilton.com;108;true
+Towne Motel Alexandria;a Motel in Alexandria (Virginia),Virginia,United States.;-3;808 N. Washington St.; (703) 548-3502;2;http://townemotelalexandria.magnusonhotels.com;108;true
+Courtyard Chevy Chase;a Hotel in Chevy Chase,Maryland,United States.;-3;5520 Wisconsin Avenue; (301) 656-1500;3;http://www.marriott.com;145;true
+Quality Inn Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;501 New York Avenue NE;;2;http://www.qualityinn.com/;110;true
+New Royal Hotel;a Hotel in New Delhi,Delhi,India.;-2;1643, S.P.Mukherjee Marg,New Delhi,Delhi,India; +91 11 2396 3233;4.0;http://newroyalhotel.co.in;16;true
+Hotel Delhi Continental;a Hotel in New Delhi,India.;-2;8218-19 Arakashan Road Street No. 6 Pahar Ganj;91-11-25712759;2;http://metrocontinental.com/;11;true
+Hotel Hi-Life;a Hotel in New Delhi,India.;-2;8280 Arakashan Road Street No. 6 Pahar Ganj;+44 (0)1253 608910;2;http://www.hi-life.co.uk/travel.aspx;11;true
+Hotel Shiv Palace;a Hotel in New Delhi,India.;-2;8186 Arakashan Road Street No. 6 Pahar Ganj Near New Delhi Railway Station;+91-11-23582825;2;http://hotelstarpalacedelhi.com/;11;true
+Woodland Deluxe;a Hotel in New Delhi,India.;-2;8235/6 Multani Dhanda Arakashan Road;9810290525;2;http://hotelwoodland.com/;11;true
+New Royal Hotel New Delhi;a Hotel in New Delhi,India.;-2;1643 S.P. Mukherjee Marg;110005 (;3;http://www.hotelroyalholidays.com/;15;true
+Hotel City Palace;a Hotel in New Delhi,Delhi,India.;-2;Ak-12, Arakashan Road,Near Sanjeevan Hospital,New Delhi,Delhi,India; +91 11 4154 1775;3.5;http://www.avenuegroupofhotels.com;17;true
+Hotel The Spot;a Hotel in New Delhi,Delhi,India.;-2;867-868 Gali Chandiwali,New Delhi,Delhi,India; +91 11 2358 0168;4.0;http://www.hotelthespot.in;19;true
+Aman New Delhi;a Hotel in New Delhi,India.;-2;Lodhi Road;;5;http://www.amanresorts.com/amannewdelhi/home.aspx;24;true
+Hare Krishna Guest House;a Place in New Delhi,India.;-2;1572-73 Main Bazar Paharganj Central Delhi; +91 11 4154 1340;2;http://harekrishnaguesthouse.com;12;true
+Hotel Sahara International Deluxe;a Hotel in New Delhi,India.;-2;3162/63 Sangtrashan Paharganj;9810025353;2;http://www.hotelsaiinternational.in/;12;true
+Hotel Star Paradise;a Hotel in New Delhi,India.;-2;4582 Main Bazar Paharganj Opp Reebok Showroom;(91-11) 23585357;2;http://www.stargroupofhotels.com/html/star_paradise.html;12;true
+Star Palace Hotel New Delhi;a Hotel in New Delhi,India.;-2;4590 Main Bazar Pahar Ganj;+91-11-23582825;2;http://hotelstarpalacedelhi.com/;12;true
+Hotel Surya Plaza New Delhi;a Hotel in New Delhi,India.;-2;2471 Nalwa Street Chuna Mandi Pahar Ganj;;5;http://www.new-delhi-hotels.com/hotel-crowne-plaza-surya.html;25;true
+Anoop Hotel;a Hotel in New Delhi,India.;-2;1566 Main Bazar Paharganj; +91 11 2358 9366;2;http://www.anoophotel.com;13;true
+Hotel Amax Inn;a Hotel in New Delhi,India.;-2;8145/6 Arakashan Road;;2;http://www.hotelamax.com/;13;true
+Hotel Kwality;a Hotel in New Delhi,India.;-2;53 Arakashan Road Pahar Ganj;+919971177887;2.5;http://hotelkwality.com/;16;true
+Hotel Sun Flower;a Hotel in New Delhi,India.;-2;962 Kumharan Street Main Bazar Paharganj;;2.5;http://www.hotelsunstargrand.com/profile.htm;16;true
+Hotel Express 66;a Hotel in New Delhi,India.;-2;Thapar Chember 3rd 2 Deshbandhu Gupta Road Pahar Ganj; +91 11 2358 5651;3;http://www.express66.com;19;true
+Hotel Shiva Intercontinental New Delhi;a Hotel in New Delhi,India.;-2;8478/13 Arakashan Road Ram Nagar Pahar Ganj;+91-9811225849;3;http://www.hotelshivaintercontinental.co.in/;19;true
+Madonna Hotel New Delhi;a Hotel in New Delhi,India.;-2;53/7 Old Rajinder Nager;42432803;3;http://www.madonnahotel.net/;19;true
+Sun Shine House;a Place in New Delhi,India.;-2;8A/91 W.E.A. Top Floor Channa Market Karol Bagh;;3;http://www.hotelsunshinedelhi.com/;19;true
+Anmol Hotel Pvt Ltd;a Hotel in New Delhi,India.;-2;8180/6 Arakashan Road Paharganj;;2;http://anmolhotel.net/;15;true
+Hotel Avtar;a Hotel in New Delhi,India.;-2;3425 Desh Bandhu Gupta Road Paharganj;;2;http://hotelavtarludhiana.com/;15;true
+Hotel Harjas Palace;a Hotel in New Delhi,India.;-2;5/43 W.E.A. Ajmal Khan Road Karol Bagh;+91 1125748000;3;http://new-delhi.hotel-harjas-palace.tobook.com/India/Hotels/Hotel-Harjas-Palace;20;true
+Hotel Maharani Lodge;a Hotel in New Delhi,India.;-2;32 Arakashan Road;;1;http://www.manumaharani.com/nainitalpackage.htm;10;true
+Hotel Pitrashish Grand;a Hotel in New Delhi,India.;-2;59/37 New Rohatak Road Karol Bagh;;4;http://thegrandnewdelhi.com/;25;true
+Hotel Horizon Palace;a Hotel in New Delhi,Delhi,India.;-2;6A/7,W.E.A.,New Delhi,Delhi,India; +91 11 4154 1775;3.0;http://www.avenuegroupofhotels.com;20;true
+T Home;a Hotel in New Delhi,Delhi,India.;-2;7, Link Rd, Jangpura Extension,New Delhi,Delhi,India; +91 11 2432 8135;3.0;http://www.thoteles.net;20;true
+Hotel Ambrosia New Delhi;a Hotel in New Delhi,India.;-2;A 217 Road No. -6 Mahipalpur Extn;;3;http://www.hotels-new-delhi.com/;21;true
+Hotel Arihant;a Hotel in New Delhi,India.;-2;7A/69 W.E.A Chana Market Pusa Road;;3;http://hotelarihant.com/;21;true
+Snow White Hotel New Delhi;a Hotel in New Delhi,India.;-2;2433 Raj Guru Road Chuna Mandi Main Bazar Pahar Ganj;0091-11-41452172;3;http://hotel-whitehouse.com/;21;true
+Hotel Star Villa New Delhi;a Hotel in New Delhi,India.;-2;98-99 Krishna Gali Near Main Bazar Pahar Ganj New Delhi;(91 11) 4587 1123;2;http://vansonvilla.com/;16;true
+Hotel Vardhmaan;a Hotel in New Delhi,India.;-2;1521/27 Naiwala Karol bagh; +91 99 90 000045;3;http://www.delhistarhotels.com;22;true
+Incredible Home Stay;a Hotel in New Delhi,India.;-2;8A/98 Channa Market Karol Bagh;;3;http://www.incrediblehomes.in/;22;true
+Raja Hotel New Delhi;a Hotel in New Delhi,India.;-2;5 Ara Kashan Road;+91 11 2354 0456;3;http://hotelraja.com/;22;true
+Baba Continental Hotel New Delhi;a Hotel in New Delhi,India.;-2;5/30 W.E.A. Saraswati Marg Karol Bagh;;2;http://hotelbabacontinental.net/;17;true
+Hotel Astoria New Delhi;a Hotel in New Delhi,India.;-2;11A/28 W.E.A. Channa Market Karol Bagh;;2;http://www.hotels-new-delhi.com/;17;true
+Hotel Golden Deluxe;a Hotel in New Delhi,India.;-2;12A/7 W.E.A Saraswati Marg Karol Bagh;+91-94140-89911;2;http://www.hotelgoldendelux.com/;17;true
+Hotel Singh Empire Dx;a Hotel in New Delhi,India.;-2;8707 Desh Bandhu Gupta Road Paharganj; +91 11 4799 9999;2;http://www.hotelsinghempire.com;17;true
+Hotel Sita International;a Hotel in New Delhi,India.;-2;3/10 D.B. Gupta Road Pahar Ganj;+91-11-28753034;2;http://hotelmeminternational.com/;17;true
+Western Queen Hotel;a Hotel in New Delhi,India.;-2;14a/25 Wea Channa Market;;2;http://www.hotelwesternqueen.in/;17;true
+Hotel Le Alfanso;a Hotel in New Delhi,India.;-2;4/4 D.B Gupta Road Pahargunj;;2.5;http://delhihotelsleroi.com/amenities.php;20;true
+Hotel Chopra International;a Hotel in New Delhi,India.;-2;4078 Behin Hotel Grand Plaza Hari Mandi;+91-11-28753034;3;http://hotelmeminternational.com/;23;true
+Raunak Plaza;a Hotel in New Delhi,India.;-2;12A/29 WEA Krishna Market Saraswati Marg Karol Bagh;+(91)-(11)-4509694;3;http://www.hotelraunak.com/index.html;23;true
+TLC Inn;a Hotel in New Delhi,India.;-2;Block A 334/2 Mahipalpur Extension Exit 2 NH 8;0091- 11-24113234;4;http://www.innatdelhi.com/;29;true
+Ginger East Delhi;a Hotel in New Delhi,India.;-2;DDA Community center Opposite East End Club VivekVihar; +91 11 6666 3333;3;http://www.gingerhotels.com;24;true
+Hotel Aman Plaza New Delhi;a Hotel in New Delhi,India.;-2;11A/29 W.E.A. Channa Market;;3;http://www.amanresorts.com/amannewdelhi/home.aspx;24;true
+Hotel Chand Palace;a Hotel in New Delhi,India.;-2;54 Arakashan Road Paharganj; +91 11 2362 0650;2;http://www.budgethotelsindelhi.com;18;true
+Hotel Golden Wings;a Hotel in New Delhi,India.;-2;135-136 Krishna Street Tel Mandi Pahar Ganj; +91 11 2356 1458;2;http://www.hotelgoldenwings.com;18;true
+Hotel Legend International;a Hotel in New Delhi,India.;-2;8525 Hotel Lane Arakashan Road Paharganj; +91 11 2351 2010;3;http://www.hotellegendinternational.com;24;true
+Hotel Pauls Court;a Hotel in New Delhi,India.;-2;5/62 WEA Ajmal Khan Road Karol Bagh;+44 (0)207 828 327;2;http://www.earlscourtlondonhotel.com/;18;true
+Hotel Prince International;a Hotel in New Delhi,India.;-2;14A/24 W.E.A. Channa Market Karol Bagh; +91 11 4506 4008;2;http://hotelprincepolonia.com/about.html;18;true
+Hotel Prince Palace Deluxe;a Hotel in New Delhi,India.;-2;5115 Gali Thanedar wali Main Bazar Pahar Ganj;1234567890;2.5;http://www.princepalace.co.th/;21;true
+Hotel Sunshine New Delhi;a Hotel in New Delhi,India.;-2;17B/21 Dev Nagar Deshbandhu Gupta Road Karol Bagh;;2;http://www.hotelsunshinedelhi.com/;18;true
+Le Heritage Hotel New Delhi;a Hotel in New Delhi,India.;-2;8A/3 WEA Pusa Road / Near Telephone Exchange Karol Bagh;;3;http://www.leheritagehotel.in/;24;true
+The RTS Hotel New Delhi;a Hotel in New Delhi,India.;-2;A-2/67 Road No. 2 NH-8 Mahipalpur Extn.;;4;http://www.theimperialindia.com/;31;true
+Airport Hotel New Delhi;a Hotel in New Delhi,India.;-2;Mehram Nagar Delhi Cantt. Opp. IGI Airport (T-1);011 - 25675262;3.5;http://www.airporthoteldelhi.com/;28;true
+Hotel De Gold;a Hotel in New Delhi,India.;-2;Bank St Karol Bagh;+91-11 4981 4981;3;http://www.luxury-delhi-hotels.com/;25;true
+Metro City Hotel;a Hotel in New Delhi,India.;-2;12A/6 WEA Saraswati Marg Karol Bagh;(212) 947-2500;3;http://hotelmetronyc.com/;25;true
+EuroStar International;a Hotel in New Delhi,India.;-2;A 27/1 Street No.1 Near MTNL Office Mahipalpur Extension NH-8;;2;http://hoteleurostar.in/;19;true
+Horizon Palace Hotel New Delhi;a Hotel in New Delhi,India.;-2;6A/7 Wea Channa Market Karol Bagh;+91 11 49814981;2;http://www.luxury-delhi-hotels.com/hotel-taj-palace-delhi.php;19;true
+Hotel Anmol Deluxe New Delhi;a Hotel in New Delhi,India.;-2;17A/36 WEA Gurudwara Road;;2;http://www.budgethotelsofdelhi.com/hotel-anmol-deluxe-karol-bagh-delhi.html;19;true
+Megha Palace;a Hotel in New Delhi,India.;-2;39/3 Old Rajinder Nagar;42432807;2;http://hotelmeghapalace.in/;19;true
+Megha Sheraton;a Hotel in New Delhi,India.;-2;53/1 Old Rajinder Nagar (Near Market);91-11-42432807;2;http://hotelmeghasheraton.com/;19;true
+Mohan International Hotel New Delhi;a Hotel in New Delhi,India.;-2;2 Arakashan Road;;2;http://www.budgethotelsindelhi.com/;19;true
+Hotel City Lite New Delhi;a Hotel in New Delhi,India.;-2;Street No 6;;3;http://www.holidaycity.com/newdelhihotels/;26;true
+Hotel OM Palace New Delhi;a Hotel in New Delhi,India.;-2;A - 1031/1 Road No - 06-07;+ 91 - 9899 890 00;3;http://www.hotelompalaceindia.com/;26;true
+Hotel Royal Holidays;a Hotel in New Delhi,India.;-2;17A/35 WEA Karol Bagh;4533031937;3;http://www.hotelroyalholidays.com/;26;true
+Hotel Aira Xing;a Hotel in New Delhi,India.;-2;1/5 Desh Bandhu Gupta Road Opposite Police Station Pahar Ganj;;2.5;http://hotelairaxing.com/;23;true
+Hotel Le Heritage;a Hotel in New Delhi,Delhi,India.;-2;8A/3 W E A Karol Bagh,New Delhi,Delhi,India; +91 99 90 699010;2.5;http://www.hotelleheritage.in;23;true
+Hotel Durga Deluxe;a Hotel in New Delhi,India.;-2;5/40 W.E.A. Saraswati Marg Karol Bag;;2;http://www.hoteldurgadeluxe.com/weather_updates.htm;20;true
+Hotel Kafila;a Hotel in New Delhi,India.;-2;10185 C Arya Samaj Road Karol Bagh;;2;http://kafilatravel.in/;20;true
+Ivory Palace Hotel New Delhi;a Hotel in New Delhi,India.;-2;14a/27 WEA Channa Market Karol Bagh;9313113014;2;http://www.hotelivorypalace.co.in/;20;true
+Sun Village Hotel New Delhi;a Hotel in New Delhi,India.;-2;2508-12 Nalwa Street Behind Emperial cinema Chuna mandi Pahar Ganj;;2;http://hotelsunvillage.com/;20;true
+Hotel Sunrise;a Hotel in New Delhi,Delhi,India.;-2;4/52, Saraswati Marg,New Delhi,Delhi,India; +91 11 4707 1477;3.5;http://www.hotelsunrise.net;30;true
+Hotel Parkway Deluxe;a Hotel in New Delhi,Delhi,India.;-2;8591,Main Qutab Road,New Delhi,Delhi,India; +91 11 2353 1125;3.5;http://www.hotelparkway.in;30;true
+Apra Inn New Delhi;a Inn in New Delhi,India.;-2;15A/61 W.E.A. Channa Market Karol Bagh;;3;http://hotelaprainn.com/;27;true
+Hotel Snow White Dx;a Hotel in New Delhi,Delhi,India.;-2;2434 Raj Guru Road,New Delhi,Delhi,India; +91 98 11 205056;2.5;http://www.hotelsnowwhite.com;24;true
+Bless Inn Hotel New Delhi;a Hotel in New Delhi,India.;-2;Raj Guru Road Chuna Mandi Pahar Ganj;+91-11-45081841;2;http://hotelgrandparkinn.com/;21;true
+Hotel Delhi City Centre;a Hotel in New Delhi,India.;-2;8633-45 Arakashan Road Ram Nagar Paharganj; +91 11 4176 4563;2;http://www.hoteldelhicitycentre.com/;21;true
+Hotel Delhi Heights;a Hotel in New Delhi,India.;-2;4/39 w.e.a Saraswati Marg Karol Bagh;;3;http://www.hotels-new-delhi.com/;28;true
+Hotel Eliza Continental;a Hotel in New Delhi,India.;-2;6/15 W.E.A Karol Bagh Ajmal Khan Road;;2;http://www.elizacontinental.com/;21;true
+Hotel Kelson New Delhi;a Hotel in New Delhi,India.;-2;2264-69 Raj Guru Road Chuna Mandi Pahar Ganj;;2;http://www.hotels-new-delhi.com/;21;true
+Hotel Star View;a Hotel in New Delhi,India.;-2;5136/1 Main Bazar Paharganj;;3;http://www.starwoodhotels.com/lemeridien/property/overview/index.html?propertyID=1831;28;true
+Hotel Welcome Palace New Delhi;a Hotel in New Delhi,India.;-2;5/5 Desh Bandhu Gupta Road Pahar Ganj (Near N.D. Rly. Station);011- 2362 6497;2;http://www.hotelwelcomepalace.net/;21;true
+Jaypee Vasant Continental;a Hotel in New Delhi,India.;-2;Basant Lok Vasant Vihar;;5;http://www.jaypeehotels.com/vasant_continental/index.aspx;42;true
+Karat 87 Inn;a Hotel in New Delhi,India.;-2;18/19 w.e.a Padam Singh Road;;3;http://karat87hotel.com/;28;true
+Pawan Plaza Hotel New Delhi;a Hotel in New Delhi,India.;-2;7A/9 Channa Market W.E.A. Karol Bagh;;2;http://hotelpearlplaza.com/;21;true
+Roxy Dx Hotel New Delhi;a Hotel in New Delhi,India.;-2;2267 Raj Guru Road Chuna Mandi Main Bazar Pahar Ganj;;2;http://hotelnewking.com/;21;true
+Yuvraj Deluxe Hotel;a Hotel in New Delhi,India.;-2;38 Arakashan Road Ram Nagar;;2;http://www.yuvrajhotel.net/;21;true
+Hotel Western Queen;a Hotel in New Delhi,Delhi,India.;-2;W.E.A, Channa Market,New Delhi,Delhi,India; +91 11 2582 2333;2.0;http://www.hotelwesternqueen.in;21;true
+Hotel Topaz - New Delhi;a Hotel in New Delhi,India.;-2;9140 Multani Dhanda Pharganj;;2.5;http://www.hotelsofnewdelhi.com/;25;true
+Hotel Cartel Palace New Delhi;a Hotel in New Delhi,India.;-2;8A/49 WEA Channa Market Karol Bagh;+91 11 49814981;4;http://www.luxury-delhi-hotels.com/hotel-taj-palace-delhi.php;36;true
+Samrat Hotel;a Hotel in New Delhi,India.;-2;Kautilya Marg Chanakyapuri;+251-251130600;4;http://www.hotelsamrat.co.in/;36;true
+Hotel Nice Palace;a Hotel in New Delhi,India.;-2;17A/13 WEA Opp Jassa Ram Hospital Karol Bagh; +91 11 4546 0000;3;http://www.oktatabyebye.com;29;true
+Hotel City Centre;a Hotel in New Delhi,India.;-2;L-118 Street No. 15 Near Airport;(+420)  224 814 65;2;http://www.citycenter.com/;22;true
+Hotel Garden View New Delhi;a Hotel in New Delhi,India.;-2;5/12 Saraswati Marg WEA Karol Bagh;9810212002;2;http://www.hotelgardenview.in/;22;true
+Hotel Pal Palace New Delhi;a Hotel in New Delhi,India.;-2;16/67-68 Faiz Road Karol Bagh (Above S.B.B.J. Bank);;2;http://hotelbbpalace.com/;22;true
+Hotel Sai International;a Hotel in New Delhi,India.;-2;7864 Arakashan Road; +91 11 2352 6565;2;http://www.budgethotelinnewdelhi.com;22;true
+Hotel Star International;a Hotel in New Delhi,India.;-2;8172 Arakashan Road Paharganj;;2;http://hoteleurostar.in/;22;true
+Hotel Sun International;a Hotel in New Delhi,India.;-2;7875/79 Arakashan Road;091 - 9810025353;2;http://hotelsuninternational.com/contactus.htm;22;true
+Hotel Vishesh Continental;a Hotel in New Delhi,India.;-2;7-A/12 Channa Market Karol Bagh;91-11-25712759;2;http://metrocontinental.com/;22;true
+Metro Continental Hotel;a Hotel in New Delhi,India.;-2;15A/5 W.E.A Opp.Ajaml khan road;91-11-25712759;2;http://metrocontinental.com/;22;true
+Mystique Moments;a Bed and Breakfast in New Delhi,India.;-2;4203C Rani Bagh Near M2K Cinema Pitampura;;2;http://www.mystique21.com/;22;true
+The Sunder;a Bed and Breakfast in New Delhi,India.;-2;9776/8 Multani Dhanda Sadar Thana Road Paharganj;+91-9811350492;2;http://www.thebackpacker.net/hotels/india/delhi/new-delhi/20334/;22;true
+Uday Palace Hotel New Delhi;a Hotel in New Delhi,India.;-2;1344/2 Street Sangtarshan Pahar Gunj;;2;http://hotelbbpalace.com/;22;true
+Hotel Classic New Delhi;a Hotel in New Delhi,India.;-2;17A 59 W.E.A. Ajmal Khan Road;;3;http://www.hotelclassic.in/;30;true
+Hotel Unistar;a Hotel in New Delhi,India.;-2;3380 Christion Colony D. B Gupta Road Near Karol Bagh Police Station;110005 (;3;http://hotelunistar.com/;30;true
+Smyle Inn;a Inn in New Delhi,India.;-2;916, Gali Chandi Wali, Main Bazaar, Paharganj, New Delhi - 110055 DELHI (INDIA);+91-11-23584076;1;http://www.smyleinn.com/;15;true
+Paras International Hotel New Delhi;a Hotel in New Delhi,India.;-2;5 25 WEA Ajmal Khan Road Karol Bagh;;3;http://www.delhihotels.org.uk/;30;true
+The Corporate Hotel New Delhi;a Hotel in New Delhi,India.;-2;Plot No.112 Road No.3 Mahipalpur Extn. NH - 8;110037 (;1;http://www.thecorporatehotel.com/;15;true
+Hotel Elegant International;a Hotel in New Delhi,India.;-2;6/28 WEA Ajmal Khan Road Karol Bagh;91-11-2875-9130;1.5;http://www.hotelelegantdelhi.in/;19;true
+Hotel Airport Inn New Delhi;a Hotel in New Delhi,India.;-2;A-7 Mahipalpur Extn. National Highway-8 Near Indira Gandhi International Airport;;2;http://www.newdelhihotels.com/;23;true
+Hotel Mayank Residency;a Hotel in New Delhi,India.;-2;New Delhi;;2;http://www.omegaresidency.com/;23;true
+Maurya Heritage Hotel New Delhi;a Hotel in New Delhi,India.;-2;7A/58 W.E.A. Channa Market Karol Bagh;;2;http://www.hotelmauryaheritage.co.in/;23;true
+Sahib Hotel New Delhi;a Hotel in New Delhi,India.;-2;7779 Ram Nagar Arakarshan Road;+ 91 11 42500200;2;http://hotelmetdelhi.com/;23;true
+Crest Inn Hotel New Delhi;a Hotel in New Delhi,India.;-2;4/27 WEA Saraswati Marg Karol Bagh;;3;http://crestinn.com/;31;true
+Hotel Hari Piorko;a Hotel in New Delhi,India.;-2;4775 main Bazaar Near 6 Tooti Chowk; +91 11 2358 7888;3;http://www.hotelharipiorkodelhi.com;31;true
+Hotel Vishal Heritage;a Hotel in New Delhi,India.;-2;5/11 W.E.A Karol Bagh;;3;http://www.hotelvishalheritagenewdelhi.com/ppc/;31;true
+Pablas International Hotel New Delhi;a Hotel in New Delhi,India.;-2;12A/22 W.E.A. Saraswati Marg Karol Bagh;;3;http://hotelpablas.com/;31;true
+The Grace Hotel New Delhi;a Hotel in New Delhi,India.;-2;59B a Block Near IGI Airport;;3;http://www.thegracehotel.in/index.html;31;true
+The Raj Hotel;a Hotel in New Delhi,India.;-2;8495 Arakashan Road Arya Nagar Pahar Ganj;;3;http://www.therajnewdelhi.com/;31;true
+Sarans Heritage;a Hotel in New Delhi,Delhi,India.;-2;18, Netaji Subhash Marg,New Delhi,Delhi,India; +91 11 2325 9392;4.0;http://www.saransheritage.com;39;true
+Hotel Singh Palace;a Hotel in New Delhi,India.;-2;8A/30 W.E.A. Channa Market Metro Pillar No. 123;;5;http://www.singhpalace.com/;47;true
+Centra Inn New Delhi;a Hotel in New Delhi,India.;-2;2503 Nalwa Street Chuna Mandi Behind Emperial Cinema Pahar Ganj;0091- 11-24113234;2;http://www.innatdelhi.com/;24;true
+Hotel Ambica Deluxe New Delhi;a Hotel in New Delhi,India.;-2;7A/68 WEA Channa Market Karol Bagh;;2;http://www.new-delhi-hotels.com/marriot-welcomhotel.html;24;true
+Hotel Chanchal Continental;a Hotel in New Delhi,India.;-2;8524 Arakashan Road Behind Shiela Cinema Pahar Ganj; +91 11 2368 1051;2;http://www.chanchal-hotels.com;24;true
+Hotel Delhi Pride;a Hotel in New Delhi,India.;-2;12A/28 W.E.A Saraswati marg Karol Bagh;+91-11-45709999;3;http://hoteldelhipride.com/;32;true
+Hotel Krishna Cottage;a Hotel in New Delhi,India.;-2;1750-51 Laxmi Narayan Chuna Mandi Pahar Ganj;;2;http://hotelkrishna.com/;24;true
+Hotel Midtown;a Hotel in New Delhi,India.;-2;17 A-7 W.E.A;8-444553540000;3;http://www.hotelmidtownatlanta.com/;32;true
+Hotel Pearl Plaza;a Hotel in New Delhi,India.;-2;2348 / 2350 Raj Guru Road; +91 11 2358 5544;2.5;http://hotelpearlplaza.com/;28;true
+Hotel ShivDev International;a Hotel in New Delhi,India.;-2;8518/22 Arakashan Road; +91 11 2353 9394;2;http://hotelmeminternational.com/;24;true
+Hotel Star Plaza;a Hotel in New Delhi,India.;-2;5158 Main Bazar Pahar Ganj Backside of Hotel Star View; +91 11 2358 1731;2;http://www.hotelstarplaza.co.in;24;true
+Hotel Aman Inn;a Inn in New Delhi,India.;-2;7/3 Desh Bandhu Gupta Road Pahar Ganj;;3;http://www.amanresorts.com/amannewdelhi/home.aspx;33;true
+Hotel Apra International;a Hotel in New Delhi,India.;-2;15A/57 Saraswati marg Karol Bagh;+91-11-9310078962;3;http://hotelmeminternational.com/;33;true
+Hotel Kashvi International;a Hotel in New Delhi,India.;-2;Street No.6 8171 Arakashan Road;9810025353;3;http://www.hotelsaiinternational.in/;33;true
+Hotel S & B East Inn;a Hotel in New Delhi,India.;-2;30/26 East Patel Nagar Near Hotel JP Sidhartha;;3;http://www.premierinn.com/;33;true
+Centra Inn;a Hotel in New Delhi,Delhi,India.;-2;2503, Nalwa Street, Pahar Ganj (behind Imperial Cinema),New Delhi,Delhi,India; +91 11 4501 3582;3.0;http://www.innatdelhi.com/;33;true
+Hotel Blessings;a Hotel in New Delhi,India.;-2;Basant Road Paharganj Near New Delhi Rly-Station;20011-12;2;http://www.blessingshotel.com/;25;true
+Hotel Blue Sapphire New Delhi;a Hotel in New Delhi,India.;-2;3351-54 Christian Colony Bank Street Karol Bagh;0 98 71 90 88 50 (;2;http://www.hotelbluesapphire.com/;25;true
+Legacy Home Stay Hotel New Delhi;a Hotel in New Delhi,India.;-2;8A/99 W.E.A Channa Market Karol Bagh;;2;http://www.incrediblehomes.in/;25;true
+Grand Godwin Hotel;a Hotel in New Delhi,India.;-2;8502/42 Arakashan Road Ram Nagar Paharganj; +91 11 2354 6891;3;http://www.godwinhotels.com/;34;true
+Livasa Inn New Delhi;a Hotel in New Delhi,India.;-2;7 A/38 W.E.A Channa Market Karol Bagh;;3;http://www.thestay-inn.com/;34;true
+Hotel Ashiana;a Hotel in New Delhi,India.;-2;50 Ara Kashan Road Ram Nagar; +91 11 2362 7617;2;http://www.kukrejagrouphotels.com;26;true
+Hotel Chanchal Deluxe;a Hotel in New Delhi,India.;-2;8575 Arakashan Road Behind Shiela Cinema Pahar Ganj;+91-9910609111;2;http://www.chanchal-hotels.com/delhi-accommodation.html;26;true
+Hotel Noratan Palace;a Hotel in New Delhi,India.;-2;A-27 N.H.8 Road No -1 Mahipalpur Near Airport;+91-11-23582825;2;http://hotelstarpalacedelhi.com/;26;true
+Delhi Heart Dx Hotel;a Hotel in New Delhi,India.;-2;3738 Opposite Shiela Cinema New Delhi Station;;3;http://www.delhihotels.org.uk/;35;true
+Hotel Apra Deluxe;a Hotel in New Delhi,India.;-2;12A/35 W.E.A Saraswati Marg;;3;http://hotelaprainn.com/;35;true
+Beijing Jade International Youth Hostel;a Hotel in Beijing,China.;-1;5 Zhidebeixiang Beiheyan Street Beijing;;3;http://www.jadeinternationalyouthhostel.com/;10;true
+Peony Hotel Beijing;a Hotel in Beijing,China.;-1;No.31 Huayuan Road(E) Haidian District;;3;http://www.cheapbeijinghotels.net/hotels.aspx;12;true
+Henghui Hotel;a Hotel in Beijing,China.;-1;No.2 Guanganmen Outer South Street Xicheng District;;2;http://en.henghuidg.cn/;12;true
+Jun An Hotel;a Hotel in Beijing,China.;-1;No. 134 Fahuasi Street Chongwen District;+353 (0)74 93 6890;4;http://hotels.lonelyplanet.com/china/beijing-r1973684/;21;true
+Xinghaiqi Holiday Hotel;a Hotel in Beijing,China.;-1;No.89-3 Dianmen East Street Dongcheng District;;4;http://www.holidayhotelbeijing.com/;21;true
+Atravis Express Hotel (Beijing Dongsi);a Hotel in Beijing,China.;-1;No.25 Yueya Alley Liutiao Dongsi Dongcheng District;;3;http://www.cheapbeijinghotels.net/hotels.aspx;19;true
+Golden Inn Xizhimen Beijing;a Hotel in Beijing,China.;-1;58 Wenhuiyuan Road Haidian District;;3;http://www.cheapbeijinghotels.net/hotels.aspx;19;true
+Homekey Hotel;a Hotel in Beijing,China.;-1;No.15 Yuer Hutong Dongcheng District;;3;http://www.homekeyhotel.com/;19;true
+Piao Home Inn Beijing Qianmen;a Hotel in Beijing,China.;-1;No.17 Hanjia Hutong;010-65265757;2;http://piaohome.com/;15;true
+Yi Fa Hotel;a Hotel in Beijing,China.;-1;56 Waixie Road;;3;http://www.fab-hotels.com/allHostels.html;20;true
+Purple Courtyard;a Hotel in Beijing,China.;-1;No.24 ShajingHutong NanLuoGuXiang Dongcheng district;;4.5;http://www.purplehippoartstudio.com/;28;true
+Babylon Fashion Hotel;a Hotel in Beijing,China.;-1;No.3 Tonghui Temple Haidian Middle Street South Exit Haidian District;;4;http://www.dreaming-of-hotelbabylon.jp/;26;true
+Beijing Hutong Culture Inn;a Hostel in Beijing,China.;-1;17 Beixiawazi Hutong Bei Luoguxiang Dongcheng District;800-2682918 (;3;http://www.mybeijingchina.com/beijing-attractions/beijing-hutong/hutong-culture.htm;21;true
+Heping Street Hotel Beijing;a Hotel in Beijing,China.;-1;Building 4 Hepingli 13 Chaoyang District;;3;http://www.goldenpalacesilverstreethotel.cn/;21;true
+Qinglian Furun Hotel Beijing Qianmen;a Hotel in Beijing,China.;-1;No.104 Yangmeizhu Xiejie Xuanwu District;;3;http://www.beijing-hotel.cn/Dongcheng-hotels/Beijing-Qinglian-Furun-hotel-Dongsi-Branch.html;21;true
+Botai Hotel;a Hotel in Beijing,China.;-1;No 140 Jiaodaokou South Street Dongcheng District;(010)64079911;3;http://www.botaihotelbeijing.cn/;22;true
+Golden Inn (Beijing Jingsong);a Hotel in Beijing,China.;-1;No.9 Ertiao Guanghe Nanli Chaoyang District;;2;http://www.cheapbeijinghotels.net/hotels.aspx;17;true
+Saga International Youth Hostel Beijing;a Hostel in Beijing,China.;-1;No.9 Shijia Hutong Chaoyang Men Nei Nan Xiao Jie Dongcheng District;(+86) 133-8140-073;2;http://www.bikebeijing.com/hostel/Saga_International.htm;17;true
+Beijing Tang House Fuxue Hutong;a Hotel in Beijing,China.;-1;A1 of Fuxue Hutong North of Dongsibei Street Back Lakes (Hou Hai);;3;http://meetingbeijing.com/;23;true
+Super 8 (Beijing Chang Ping Xi Guan);a Hotel in Beijing,China.;-1;26 XiHuan Road;1-800-454-3213 (1;3;http://www.super8.com/hotels/china/beijing/super-8-hotel-beijing-chang-ping-xi-guan/hotel-overview;23;true
+Super 8 Hotel Beijing You An Men;a Hotel in Beijing,China.;-1;6 You An Men Wai Street;1-800-454-3213 (1;3;http://www.super8.com/hotels/china/beijing/super-8-hotel-beijing-you-an-men/hotel-overview;23;true
+Tang Yue Hotel;a Hotel in Beijing,China.;-1;No 54 Donghuamen Street Dongcheng District;(010)65252502;3;http://www.tangyuehotelbeijing.cn/;23;true
+Yun Gang Business Hotel Beijing;a Hotel in Beijing,China.;-1;68 Hua Yan Bei Li Yayun Cun;+44 208 144 02 15;4;http://www.beijinghotelchina.net/near-Beijing-Convention-Center-147968/;29;true
+Hutong Inn Beijing;a Inn in Beijing,China.;-1;No 17 Zhangwang Hutong Jiu Gulou Street Dongcheng District;+86 13260108267;3;http://beijinghutonginnhotel.com/;24;true
+Ju Le Yuan Hotel Beijing;a Hotel in Beijing,China.;-1;2 Xiaoshiqiao Hutong Jiugulou Street Xicheng District;0086-10-69181904;3;http://www.beijinghotelchina.com/haoyuan/hotel.html;24;true
+Piao Home Inn (Beijing Wangfujing);a Motel in Beijing,China.;-1;No 43 DonganMen Street;86-10-57305888;2.5;http://piaohomeinnhotel.com/;21;true
+Super 8 Hotel Jin Bao Jie Beijing;a Hotel in Beijing,China.;-1;No.26 Shijia Hutong Dong Dan Bei Dajie;1-800-454-3213 (1;2;http://www.super8.com/hotels/china/beijing/super-8-hotel-beijing-jin-bao-jie/hotel-overview;18;true
+Tang Fu Hotel;a Hotel in Beijing,China.;-1;1A Fuxue Hutong Dongsi North Avenue;;3;http://foodsifu.com/puchong-yong-tau-fu/;24;true
+Changfeng Hotel (South Sanhuan);a Hotel in Beijing,China.;-1;6 Songzhuang Road;;4;http://www.southtravels.com/asia/china/hiltonbeijing/index.html;31;true
+Jialong Sunny Hotel Beijing;a Hotel in Beijing,China.;-1;No.75 Chaonei Avenue Dongcheng District;;4;http://www.jialongsunny.com/;31;true
+Saint Angel Hotel;a Hotel in Beijing,China.;-1;#10 4 Lane Xiangjun Beili Hujialou Chaoyang District;;4;http://www.angelfire.lycos.com/;31;true
+Beijing Tianhai Huijin Hotel;a Hotel in Beijing,China.;-1;2 Linhong Road Muxiyuan Fengtai District;;3;http://www.btmbeijing.com/contents/en/btm/2010-04/knowyourbeijing/dashilaxijie;25;true
+Hong Sheng Hotel Beijing;a Hotel in Beijing,China.;-1;36 Jiaoda East Road Haidian District;100027      20;3;http://beijing-hotel.cn/;25;true
+Jinjiang Inn Beijing Fangzhuang;a Motel in Beijing,China.;-1;No.210 Guanjiakeng Road Chengshou Temple Fengtai District;801-1200;3;http://www.jinjianghotels.com/portal/en/index.asp;25;true
+Furun Hotel (Beijing Dongsi);a Hotel in Beijing,China.;-1;No. 113 Jia Beixiaojie Chaoyang Men Nei;;3;http://www.beijing-hotel.cn/Dongcheng-hotels/Beijing-Qinglian-Furun-hotel-Dongsi-Branch.html;26;true
+Hong Fu Gong Hotel;a Hotel in Beijing,China.;-1;Lvjiaying Food Street South Bridge Shibalidian Chaoyang District;;3;http://hongkongreal.com/;26;true
+Shiji Huangshan Hotel Beijing;a Hotel in Beijing,China.;-1;No.5 Renshou Road Xuanwu District;(86) 10 67160201;3;http://www.tour-beijing.com/huangshan_dining/;26;true
+Beijing Boxin Hotel;a Hotel in Beijing,China.;-1;39 Xihua Street;;2.5;http://en.beijing2008.cn/;23;true
+Beijing South Garden Youth Hotel;a Hostel in Beijing,China.;-1;No 35 D Nancaiyuan Street Xuanwu District;;2;http://www.cheapbeijinghotels.net/hotels.aspx;20;true
+Fuyuan Hotel Beijing;a Hotel in Beijing,China.;-1;95 Longfusi Street Dongcheng District;;2;http://www.beijinghotelchina.com/dongsi-fuyuan/index.htm;20;true
+Piao Home Inn Beijing Xi Ke Zhan;a Hotel in Beijing,China.;-1;Building 48 No. 1 Hong Ju South Street;;2;http://online.takemetoasia.com/Beijing-hotels/Oriental-Bay-International.html;20;true
+Shindom Inn (Beijing Dazhalan);a Hotel in Beijing,China.;-1;No.57 Cherry Street Xicheng District;;2;http://www.cheapbeijinghotels.net/hotels.aspx;20;true
+Beijing Perfect Inn;a Hotel in Beijing,China.;-1;No.281 Gulou Dong Dajie Dongcheng District;4480830-1;3;http://beijingperfectinn.com/;27;true
+Nobletimes Hotel Beijing;a Hotel in Beijing,China.;-1;40 Liulijing Road Chongwen District;(86) 10 67160201;3;http://www.tour-beijing.com/hotel/list.php;27;true
+Super 8 Beijing Qianmen Yongan Road;a Hotel in Beijing,China.;-1;No.106 Yongan Road Xicheng District;0086-10-69181904;3;http://www.beijinghotelchina.com/qianmen/index.htm;27;true
+Beijing Friendship Hotel;a Hotel in Beijing,China.;-1;1 Zhongguancun South Street;;4;http://www.beijinghotelchina.com/friendship/hotel.html;34;true
+Beijing Chun Hao Hotel;a Hotel in Beijing,China.;-1;No.17 Daboge Hutong Wangfujing Street Dongcheng District;;2;http://www.cheapbeijinghotels.net/hotels.aspx;21;true
+Eastern Airline Star Hotel Beijing;a Hotel in Beijing,China.;-1;152-1A Gulou East Street Dongcheng District;600 - 1000;3;http://www.hoteltravelbeijing.com/beijinghotelinfo4389.php;28;true
+Jiaxing Express Hotel Beijing;a Hotel in Beijing,China.;-1;Kuche Town Yaowahuqiao East East Fourth Ring Chaoyang District;86-10-83157777;3;http://www.hiexpress.com/hotels/us/en/hd/china/beijing-hotels;28;true
+JinJiang Inn Changchun Street Beijing;a Hotel in Beijing,China.;-1;No. 7 Changchun St. Xili Xuanwu District;;3;http://www.jinjianghotels.com/portal/en/ji_ji_ho_ca_4.asp;28;true
+Joyful City Hotel;a Hotel in Beijing,China.;-1;Building F1 Beijing South Railway Station Fengtai District;;3;http://www.nagacityhotels.com/;28;true
+Linge Business Hotel;a Hotel in Beijing,China.;-1;308 Zhoujiazhuang Shibalidianxiang Chaoyang District;11398210;2;http://www.thehindubusinessline.com/;21;true
+My House Hotel;a Hotel in Beijing,China.;-1;No. 7 Zizhuyuan South Road Haidian District;800-2682918 (;3;http://www.mybeijingchina.com/;28;true
+Super 8 Beijing Dong Si;a Hotel in Beijing,China.;-1;137 Dongsi Wutiao Dongcheng District;1-800-454-3213 (1;3;http://www.super8.com/hotels/china/beijing/super-8-beijing-dong-si/hotel-overview;28;true
+GreenTree Inn Yonghe Palace Beijing;a Hotel in Beijing,China.;-1;No 46 Fangjia Alley Dongcheng District;100027      20;3;http://beijing-hotel.cn/;29;true
+Junan Business Downtown Hotel Beijing;a Hotel in Beijing,China.;-1;143 Fahuasi Street Chongwen District;;3;http://www.beijingservice.com/hotels/downtwonhotel.htm;29;true
+Wangfujing Dawan Hotel;a Hotel in Beijing,China.;-1;2 Ganyu Hutong Dongdan North Street;1-800-445-8667;3;http://hiltonbeijingwangfujing.com/;29;true
+Youyou Star Express Hotel;a Hotel in Beijing,China.;-1;Jia No.2 Panjiayuan Chaoyang District;0800 911 617;3;http://www.hiexpress.com/hotels/gb/en/reservation;29;true
+Zhong An Hotel Beijing;a Hotel in Beijing,China.;-1;6 Kuijiachang Hutong East Beijing Train Station Avenue Dongcheng District;;3;http://www.chiangdao.com/hotels4/asiahotels/chinahotels/beijinghotels/zhongyipengaohotel.htm;29;true
+Hotel Orion Long Zhao Shu Beijing;a Hotel in Beijing,China.;-1;312 Longzhaoshu xiaohongmen Road;;4;http://www.orion-international.net/orion-Apartmentsen-128/145.html;37;true
+Master Inn Olympic Hotel Beijing;a Hotel in Beijing,China.;-1;38 Xueyuan Road;(86) 10 85235522;4;http://www.comfortinn.com/hotel-beijing-china-CP004;37;true
+Fu Run Hotel Beijing;a Hotel in Beijing,China.;-1;No 116 1 Guanganmen Nei Street Xuanwu District;86-10-51209588;2.5;http://www.beijinghotelchina.com/wancheng-huafu/beijing-hotel.html;26;true
+Piao Home Inn (Beijing Dongsi);a Hotel in Beijing,China.;-1;No.114-1 Dongsiqi Tiao;;2.5;http://www.cheapbeijinghotels.net/hotels.aspx;26;true
+Citytel Inn;a Hotel in Beijing,China.;-1;C D Block Nanheyan Street Dongcheng District;(010)85116665;3;http://www.citytelinnhotelbeijing.cn/;30;true
+Jiaolou Business Hotel Beijing;a Hotel in Beijing,China.;-1;33 Wusidajie Dongcheng District;90599823;3;http://www.beijinghotelschina.net/Forbidden_City/forbiddencityhot.html;30;true
+Zhaolong Hotel Beijing;a Hotel in Beijing,China.;-1;2 Workers Stadium North Road Chaoyang District;;3;http://www.zhaolonghotel.com.cn/indexen.asp;30;true
+King Parkview Hotel;a Hotel in Beijing,China.;-1;No. 55 Shatan Hou Jie Dongcheng District;86-10-58757888;4;http://www.kingparkview.com/;38;true
+Escargotel Beijing;a Hotel in Beijing,China.;-1;No.10 Zhangzizhong Road.Dongcheng District;;2;http://www.beijinghoteldesk.com/hotel/428021-chinese-culture-holiday-hotel-beijing.en.html;23;true
+Zhouyang Hotel Weigongcun Beijing;a Hotel in Beijing,China.;-1;18-5 South Avenue Zhongguancun Haidian District;(86) 10 67160201;2;http://www.tour-beijing.com/free_maps/;23;true
+Motel 168 Beijing An Zhen Qiao Inn;a Motel in Beijing,China.;-1;No.22 An Ding Road Dong Cheng District;;2.5;http://beijing.china.mymotels.com/;27;true
+Motel 168 Beijing Zhong Guang Chun Inn;a Motel in Beijing,China.;-1;No.106 East Zhong Guan Cun Road;;2.5;http://beijing.china.mymotels.com/;27;true
+Beijing Shengyuan Xiangjiang Hotel;a Hotel in Beijing,China.;-1;5 Qingnianhu Beili Andingmenwai Street;;3;http://www.beijingchinahotels.net/;31;true
+Beijing Wangfujing Donghua Hotel;a Hotel in Beijing,China.;-1;Dengshikou West Street 32 Wangfujing Dongcheng;;3;http://www.beijingservice.com/hotels/hotelinwangfujingstreet.htm;31;true
+Green Tree Inn Lama Temple;a Hotel in Beijing,China.;-1;46 Fangjia Hutong;86-10-64044499;3;http://beijinglamatemple.com/lama-temple/;31;true
+Hanting Hotel (Beijing Dongzhimen);a Hotel in Beijing,China.;-1;Dongzhimen Waixie Street Dongcheng District;100027      20;3;http://beijing-hotel.cn/;31;true
+Jinjiang Inn (Beijing Guangqumen);a Hotel in Beijing,China.;-1;No. 1 East Section Donghuashi Beili Chongwen District;010-6655-0000;3;http://www.jinjianghotels.com/portal/en/index.asp;31;true
+Jinshi Business Hotel;a Hotel in Beijing,China.;-1;32 Mengjiaqiao Sanluju Fengtai District;0086-29-83133666;3;http://jinshiinternationalhotel.com/;31;true
+Red Cross Business Hotel;a Hotel in Beijing,China.;-1;53 Ganmian Hutong North Dongdan Road;0844 871 11 11;3;http://www.redcross.org.uk/About-us/Jobs;31;true
+Super 8 Hotel Beijing Nanzhan;a Hotel in Beijing,China.;-1;8 Building 28 Majiapu West Road Fengtai District;1-800-454-3213 (1;3;http://www.super8.com/hotels/china/beijing/search-results;31;true
+Taihang Star Business Hotel;a Hotel in Beijing,China.;-1;Lizeyayuan Fengtai District;;3;http://www.fivestaralliance.com/luxury-hotels/656/asia/china/beijing;31;true
+Tiananmen View Hotel;a Hotel in Beijing,China.;-1;No. 33 Qianmen Dazhalan Xijie Xuanwu District;86-10-63095718;3;http://tiananmensquarebeijing.com/?p=83;31;true
+Xin Tian Di Hotel;a Hotel in Beijing,China.;-1;Wangfujing Street 218-3 Dongcheng District;021-5878-0101;3;http://meiguoxing.com/blog/tag/xin-tian-di/;31;true
+Ao Xiang Ge Hotel;a Hotel in Beijing,China.;-1;No. yi 26 Zhanlanguan Road Xicheng Area;(010)68313399;2;http://www.aoxianggehotel.com/;24;true
+Jade Hotel Beijing;a Hotel in Beijing,China.;-1;2 Zhide North alleyway Bei Heyan Avenue;0086-10-69181904;2;http://www.beijinghotelchina.com/jadepalace/hotel.html;24;true
+Jin Chang Jia Yuan Hotel;a Hotel in Beijing,China.;-1;25 Xili Shuangyushu Haidian District;;3;http://www.jinjianghotels.com/portal/en/ji_ji_ho_ca_5.asp;32;true
+Muyang Fashion Hotel(Beijing Jianguomen);a Hotel in Beijing,China.;-1;No.11 Jianhua South Road Jianwai Street Chaoyang District;1 402 548-3575;2;http://www.beijinghotelweb.com/en-location-3-ladies%27_street.html;24;true
+Poly Plaza Hotel;a Hotel in Beijing,China.;-1;No.14 Dongzhimen street Dongcheng Area;(0086-10)65001188;4;http://www.polyplazahotel.com/;40;true
+Yunlai Hotel Beijing;a Hotel in Beijing,China.;-1;Second Floor 36 Jiaoda East Road Haidian District;;1.5;http://www.cheapbeijinghotels.net/hotels.aspx;20;true
+Shang Da International Hotel Beijing;a Hotel in Beijing,China.;-1;169 Guang An Men Nei Street Xuanwu District;(86 10) 6841 2211;4;http://www.shangri-la.com/en/beijing/shangrila/dining;41;true
+Eastern Inn (Beijing Sanlitun);a Hotel in Beijing,China.;-1;No. 6 Baijiazhuang Road Chaoyang District;86-10-65086611;3;http://www.beijingservice.com/hotels/3-hotel/beasterninnhotel.htm;33;true
+Hanting Inns Zhongguancunnan Beijing;a Hotel in Beijing,China.;-1;Daliushu 17A Haidian District;(86) 10 67160201;3;http://www.tour-beijing.com/shanghai_tours/;33;true
+Lu Song Yuan Hotel Beijing;a Hotel in Beijing,China.;-1;22 Banchang Lane Kuanjie Dongcheng District;0086-10-6918 1904;3;http://www.beijinghotelchina.com/lusongyuan/hotel.html;33;true
+Far East International Hotel Beijing;a Hotel in Beijing,China.;-1;No 90 Tieshuxie Street;(010) 51958811;2;http://www.fareastyh.com/enindex.asp;25;true
+Happy Dragon Hostel;a Hostel in Beijing,China.;-1;29 Ren Min Shi Chang Xi Xiang Dong Cheng District;9156498-1;2;http://www.happydragonhostel.com/;25;true
+King Wing Hot Spring International Hotel;a Hotel in Beijing,China.;-1;17 South Third Ring Road Dongsanhuan Nan Lu Chaoyang District;01 57 32 36 09;5;http://www.hotels.com/ho188256/king-wing-hot-spring-international-hotel-beijing-china/;50;true
+Motel 168 Beijing South Railway Station;a Motel in Beijing,China.;-1;Building 2 Yard 97 Youanmen Wai Street Fengtai District;;2;http://www.cheapbeijinghotels.net/hotels.aspx;25;true
+Boxin Hotel Beijing Huguosi Street;a Hotel in Beijing,China.;-1;137 Huguosi Street Xicheng District;93504608;1.5;http://beijing-hotel.cn/Xicheng-hotels/Huguosi-Hotel-Beijing.html;21;true
+Shenzhen Hotel;a Hotel in Beijing,China.;-1;1 Guang An Men Wai Street;(0755)82233888;4;http://www.sunshinehotelshenzhen.cn/;42;true
+The Royal Palace Hotel;a Hotel in Beijing,China.;-1;No 6 Xiaoyunli Xiaoyun Road Chaoyang District;+66 3842 6262-6;4;http://royalpalacepattaya.com/;42;true
+Beijing Sentury Apartment Hotel;a Hotel in Beijing,China.;-1;6 Nan Xin Yuan West Road;86-10-87328858;3;http://www.senturysuitehotel.com/;34;true
+Gu Yun Fang Courtyard Hotel Beijing;a Hotel in Beijing,China.;-1;No.33 JuEr Hutong JiaoDaoKou Dongcheng District;100027      20;3;http://beijing-hotel.cn/;34;true
+Jinjiang Inn Beijing Madianqiao;a Motel in Beijing,China.;-1;Building 7 No 23 Huangsi St. Xicheng District;801-1200;3;http://www.jinjianghotels.com/portal/en/index.asp;34;true
+Home Inns Olympic Park Beijing;a Hotel in Beijing,China.;-1;2 BeiShaTan Road;;3;http://en.beijing2008.cn/;34;true
+Shen Zhen Hotel Beijing;a Hotel in Beijing,China.;-1;1 Guang An Men Wai Street Xuan Wu District;86-10-63271188;4;http://www.beijingservice.com/hotels/4-hotel/shengzhenhotel.htm;43;true
+Soluxe Courtyard Hotel Beijing;a Hotel in Beijing,China.;-1;2 Xitao Hutong Jiugulou Street (Jiugulou Dajie);0086-10-69181904;4;http://www.beijinghotelchina.com/beijing-soluxe-courtyard-hotel/index.html;43;true
+Traveler Inn Huaqiao Beijing;a Hotel in Beijing,China.;-1;No. 5 Santiao Beixinqiao Dongcheng District;+86-18211044601;4;http://www.beijingholiday.com/hotel/traveler-inn-huaqiao.html;43;true
+Cinderella Hotel Beijing;a Hotel in Beijing,China.;-1;No 30 Xiaguangli Xiaoyun Road Chaoyang District;+44 208 144 02 15;2;http://www.beijinghotelchina.net/;26;true
+Home Inn Beijing Tiantan Nanmen;a Hotel in Beijing,China.;-1;Block 18 Andongli Anding Road Fengtai Distric;400-820-3333;2;http://www.homeinns.com/;26;true
+Home Inn Tiantan Nanmen Beijing;a Hotel in Beijing,China.;-1;No.18 Building Dingan Dongli Dingan Road Fengtai District;(86) 10 67160201;2;http://www.tour-beijing.com/beijing_tours/;26;true
+Rest Motel (Beijing Hepingli);a Motel in Beijing,China.;-1;8 Xinghua Road;0086-577-88555070;2;http://www.china-hotels-beijing.com/hotels/p_2.html;26;true
+Super 8 Hotel Beijing West Rai;a Hotel in Beijing,China.;-1;B 8 Taipingqiao Village Fengtai District;1-800-454-3213 (1;2;http://www.super8.com/hotels/china/beijing/search-results;26;true
+Tian An Men Sunrise Hostel;a Hostel in Beijing,China.;-1;2 Ciqiku Hutong Nanheyan Street Dongcheng District;27203769-1;2;http://www.sunrisehostel.com/;26;true
+Green Tree Inn Beijing Temple of Earth;a Hotel in Beijing,China.;-1;No.8-10 A District of Xiaohuangzhuang Waidajie Andingmen China National Convention Center & Olympic Village;;3;http://www.beijing-hotel.cn/Dongcheng-hotels/GreenTree-Inn-Lama-Temple-Beijing.html;35;true
+Hua Fu International Hotel Beijing;a Hotel in Beijing,China.;-1;No. 53 Dong an Men Street Wung Fu Jing Beijing;(010)51209588;3;http://www.wanchenghuafuhotel.cn/;35;true
+Golden Oasis Hotel Beijing;a Hotel in Beijing,China.;-1;No.58A Yongwai Penzhuang Chongwen District;86-10-6456-5588;3;http://www.citichotelbeijing.com/;36;true
+Hanting Express (Beijing Deshengmen);a Hotel in Beijing,China.;-1;No 9 Liupukang Third District North Building Xicheng District;(86)10 67160201;3;http://www.tour-beijing.com/student_travel/;36;true
+Hanting Express (Beijing Jianwai);a Hotel in Beijing,China.;-1;11 South Jianhua Road;(1368-1911;3;http://blog.beijingholiday.com/;36;true
+Jin Tie Hotel;a Hotel in Beijing,China.;-1;Guanglian Road 13 Fengtai District;010-51300868;3;http://parkhyattbeijing.net/;36;true
+Jinjiang Inn Beijing Jiuxianqiao;a Hotel in Beijing,China.;-1;No.10 Jiuxianqiao Road Chaoyang District;801-1200;3;http://www.jinjianghotels.com/portal/en/index.asp;36;true
+Shindom Inn Hong Bridge Beijing;a Hotel in Beijing,China.;-1;25 Tiyuguan West Road;;2;http://www.cheapbeijinghotels.net/hotels.aspx;27;true
+Super 8 Hotel Yizhuang Tianbao Beijing;a Hotel in Beijing,China.;-1;1 Tian Bao Street Yizhuang;1-800-454-3213 (1;2;http://www.super8.com/hotels/china/beijing/search-results;27;true
+The Beijing Butterfly Spring Hotel;a Hotel in Beijing,China.;-1;55 Xixie Street North Xidan Avenue;010-66155515;3;http://www.beijingfeeling.com/beijing-guide/restaurant/beijing-yunnan-restaurant/;36;true
+Home Inn (Beijing Jiaodaokou);a Hotel in Beijing,China.;-1;Jiaodaokou Street 113 Dongcheng District;;2.5;http://www.beijingpage.com/;32;true
+Jinjiang Inn Beijing Tianqiao;a Hotel in Beijing,China.;-1;30 Beiwei Road Xuanwu District;801-1200;2.5;http://www.jinjianghotels.com/portal/en/index.asp;32;true
+Royal King Hotel Beijing;a Hotel in Beijing,China.;-1;No.2 West Road of the North 4th Ring Road Haidian;86-10-62589999;5;http://www.royalkinghotelbeijing.com/;55;true
+Inlodge Hotel Beijing;a Hotel in Beijing,China.;-1;8 East Qingnian Gou Road (Qingnian Gou Dong Lu);;4;http://www.inlodgehotelbeijing.cn/;46;true
+Ming Ri Wuzhou Hotel Beijing;a Hotel in Beijing,China.;-1;16 Maliandao Nan Kou;0086-10-69181904;4;http://www.beijinghotelchina.com/parkview-wuzhou/crowne_plaza_beijing.html;46;true
+Beijing Friends Hotel;a Hotel in Beijing,China.;-1;No.39 Sanlihe Road Haidian District;86-10-6456-5588;3;http://www.citichotelbeijing.com/restaurants-beijing-china.aspx;37;true
+Jing Guang Run Hotel;a Hotel in Beijing,China.;-1;Guanganmennei St Shizidianhutongkou Xuanwu District;86-020-28315156 85;3;http://www.hotels-guangzhou.net/;37;true
+Joyinn Suites Hongmiao Branch Beijing;a Hotel in Beijing,China.;-1;No. 5 Caijiawan Chaoyang District;0086-577-88555070;3;http://www.china-hotels-beijing.com/Chaoyang.html;37;true
+Xing He Lou Hotel Beijing;a Hotel in Beijing,China.;-1;No.15 Zuojiazhuang;010-8400-2429;3;http://www.meiguoxing.com/Hotels/Hostels_and_Budget_Hotels_in_Beijing.html;37;true
+Beijing Houhai Courtyard Inn;a Inn in Beijing,China.;-1;No.89 Mianhua Hutong Huguosi Street Xicheng District;;2;http://www.cheapbeijinghotels.net/hotels.aspx;28;true
+Jingzhou Hotel Beijing;a Hotel in Beijing,China.;-1;27 Middle Yanjingli Street Chaoyang;91899719;2;http://beijing-hotel.cn/Chaoyang-hotels/161-Chain-Hotel-Beijing-JingZhou-Department.html;28;true
+Piao Home Inn (Beijing Daguanyuan);a Hotel in Beijing,China.;-1;54 Guanganmen South Street Xuanwu District;010-65265757;2;http://piaohome.com/;28;true
+Days Inn Business Place Yinfeng;a Hotel in Beijing,China.;-1;6 Caihong Road;86-010 64388866;4;http://www.daysinn.cn/english/hotel/yinfeng_a.htm;47;true
+Rich International Hotel Beijing;a Hotel in Beijing,China.;-1;1 Jia Nan Xinhua Street Xuanwu District;;4;http://www.beijinghotelchina.com/international/hotel.html;47;true
+Tianfang Hotel;a Hotel in Beijing,China.;-1;Haidian District Beijing xi zhi men North Avenue on the 28th;010-62235555;4;http://www.tianfanghotel.com/;47;true
+Beijing Railway Hotel;a Hotel in Beijing,China.;-1;No.116-2 Lianhuachi Road Fengtai District;0086-10-6918 1904;3;http://www.beijinghotelchina.com/hotel_beijing/hotel.html;38;true
+Chinese Culture Holiday Hotel Beijing;a Hotel in Beijing,China.;-1;No. 1 Dafosi Dongjie Dongcheng District;;3;http://www.beijinghoteldesk.com/hotel/428021-chinese-culture-holiday-hotel-beijing.en.html;38;true
+Furama Xpress Yansha Hotel Beijing;a Hotel in Beijing,China.;-1;39 Maizidian West Street Chaoyang District;;3;http://furama.com/;38;true
+Jintai Home Xizhimen Hotel Beijing;a Hotel in Beijing,China.;-1;2 Suojiafeng Haidian District;;1;http://www.cheapbeijinghotels.net/hotels.aspx;19;true
+Zao Yuan Ju Hotel Beijing;a Hotel in Beijing,China.;-1;17 Zhang Wang Hutong Jiu Gulou Avenue;0086-10-6918 1904;3;http://www.beijinghotelchina.com/qomolangma/hotel.html;38;true
+Longtou Hotel;a Hotel in Beijing,China.;-1;8 Nanxinyuan West Road;8735-9999;4;http://hotel.longtou.net/;48;true
+Xizhao Temple Hotel Beijing;a Hotel in Beijing,China.;-1;No.15 Xizhaosi Middle Street Chongwen District;86-10-67119999;4;http://xizhaotemplehotel.net/beijing-stadium/;48;true
+Beijing Fuxing Holiday Hotel;a Hotel in Beijing,China.;-1;271 Chaonei Main Street;;2;http://www.holidaycity.com/beijinghotels/;29;true
+Howard Johnson Regel Court Hotel Beijing;a Hotel in Beijing,China.;-1;No. 23 Xi Da Wang Road Chaoyang District;86-10-58796666;5;http://beijing-travels.com/beijing_hotels/howard_johnson_regal_court_hotel_beijing.html;58;true
+Orange Hotel Yayuncun;a Hotel in Beijing,China.;-1;Buiding 6 No.10Yard AnyuandongliSanQu No.200 Beiyuan Road Chaoyang District;400-819-0099;2;http://www.orangehotel.com.cn/;29;true
+Star of City Hotel;a Hotel in Beijing,China.;-1;Dongzhimen Nei Da Jie 216 Dongcheng District;1-888-625-5144;2;http://www.cityhotelbeijing.cn/;29;true
+Super 8 Hotel Beijing Jiu Long;a Hotel in Beijing,China.;-1;39 Part A Jiuxianqiao Road 4th fl Jiu Long Shopping Mall;1-800-454-3213 (1;2;http://www.super8.com/hotels/china/beijing/super-8-hotel-beijing-jiu-long/hotel-overview;29;true
+Xiyuan Hotel Beijing;a Hotel in Beijing,China.;-1;No. 1 Sanlihe Road;(010)68313388;5;http://www.xiyuanhotelbeijing.cn/;58;true
