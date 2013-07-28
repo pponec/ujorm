@@ -105,21 +105,21 @@ table th {
 }
 
 table th.wicket_orderDown a {
-    background-image: url("images/orderDown.png");
+    background-image: url("../images/orderDown.png");
     background-repeat: no-repeat;
     background-position: right;
     padding-right: 14px;
 }
 
 table th.wicket_orderUp a {
-    background-image: url("images/orderUp.png");
+    background-image: url("../images/orderUp.png");
     background-repeat: no-repeat;
     background-position: right;
     padding-right: 14px;
 }
 
 table tr th.wicket_orderNone a {
-    background-image: url("images/orderOff.png");
+    background-image: url("../images/orderOff.png");
     background-repeat: no-repeat;
     background-position: right;
     padding-right: 14px;
@@ -132,7 +132,7 @@ td.logical {
 
 td.logical .ok {
     color: rgba(0, 0, 0, 0);
-    background-image: url("images/icons/tick.png");
+    background-image: url("../images/icons/tick.png");
     background-repeat: no-repeat;
     background-position: center;
 }
