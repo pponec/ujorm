@@ -20,14 +20,16 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
+import org.ujorm.wicket.CssAppender;
 
 /**
  * CheckBox field with a Label includding a feedback message.
  * @author Pavel Ponec
  */
 public class DateField extends Field {
-
     private static final long serialVersionUID = 20130621L;
+    /** Default CSS class have got value {@code datepicker} */
+    public static final String CSS_DATEPICKER = "datePickerComponent";
 
     public DateField(Key property) {
         super(property.getName(), property, null);
@@ -40,9 +42,8 @@ public class DateField extends Field {
     /** Create Form inputComponent */
     @Override
     protected FormComponent createInput(String componentId, IModel model) {
-        // TODO final com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker result
-        //      = new com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker(componentId, model);
         final DateTextField result = new DateTextField(componentId, model, getDatePattern());
+        result.add(new CssAppender(getInputCssClass()));
 
         if (validator != null) {
             IValidator<? super java.util.Date> dateValidator = (IValidator<? super java.util.Date>) validator;
@@ -53,7 +54,6 @@ public class DateField extends Field {
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;
-
     }
 
     /** Returns localizadDate pattern */
@@ -68,5 +68,10 @@ public class DateField extends Field {
         return getKey().isTypeOf(java.sql.Date.class)
              ? new java.sql.Date(((java.util.Date)result).getTime())
              : result ;
+    }
+
+    /** Default CSS class have got value {@code datepicker} */
+    protected String getInputCssClass() {
+        return CSS_DATEPICKER;
     }
 }

@@ -37,7 +37,7 @@ public class DataLoader implements InitializationBatch {
     public void run(Session session) throws Exception {
         if (!session.exists(City.class)) {
             session.save(getCities());
-            }
+        }
         if (!session.exists(Hotel.class)) {
             session.save(getHotels());
         }
