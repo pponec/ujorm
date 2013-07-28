@@ -31,6 +31,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ujorm.hotels.entity.City;
 
 /**
@@ -39,6 +41,8 @@ import org.ujorm.hotels.entity.City;
  */
 public class DataLoaderTest {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(DataLoaderTest.class);
+
     /** Test method to dowload data from source: http://api.hotelsbase.org/ */
     //@Test
     public void testDownloadData() throws Exception {
@@ -46,9 +50,11 @@ public class DataLoaderTest {
 
         for (City city : getCities()) {
             URL dataUrl = createDataUrl(city);
+            LOGGER.info("{}({}): {}",city.getName(), city.getId(), dataUrl.toString());
             StreamSource source = new StreamSource(dataUrl.openStream());
             StreamSource xsl = new StreamSource(getClass().getResourceAsStream("hotels-trans.xsl"));
             makeXslTransformation(source, xsl, new String[]{"CITY_ID", city.get(City.ID).toString()});
+            Thread.sleep(1000);
         }
     }
 
@@ -69,11 +75,12 @@ public class DataLoaderTest {
      * http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
      */
     public URL createDataUrl(City city) throws MalformedURLException {
+        Integer distance = 10; // [km]
         String result = String.format
                 ( "http://api.hotelsbase.org/search.php?latitude=%s&longitude=%s&distanceMax=%s"
                 , city.get(City.LATITUDE)
                 , city.get(City.LONGITUDE)
-                , 10 // [km]
+                , distance // [km]
                 );
        return new URL(result);
     }
