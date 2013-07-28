@@ -41,10 +41,10 @@ public class Hotel extends OrmTable<Hotel> {
     public static final Key<Hotel, String> STREET = f.newKey(length(MANDATORY, 128));
     /** Description of the Company */
     @Comment("Phone")
-    public static final Key<Hotel, String> PHONE = f.newKey(length(16));
+    public static final Key<Hotel, String> PHONE = f.newKey(length(20));
     /** Stars */
     @Comment("Stars")
-    public static final Key<Hotel, Integer> STARS = f.newKey(min(MANDATORY, 0));
+    public static final Key<Hotel, Float> STARS = f.newKey(min(MANDATORY, 0f));
     /** URL to the HomePage */
     @Comment("URL to the HomePage")
     public static final Key<Hotel, String> HOME_PAGE = f.newKey(length(256));
@@ -128,12 +128,12 @@ public class Hotel extends OrmTable<Hotel> {
     }
 
     /** Stars */
-    public Integer getStars() {
+    public Float getStars() {
         return STARS.of(this);
     }
 
     /** Stars */
-    public void setStars(Integer stars) {
+    public void setStars(Float stars) {
         Hotel.STARS.setValue(this, stars);
     }
 
@@ -176,7 +176,7 @@ public class Hotel extends OrmTable<Hotel> {
     public void setActive(Boolean active) {
         Hotel.ACTIVE.setValue(this, active);
     }
-    
+
     //</editor-fold>
 
 }

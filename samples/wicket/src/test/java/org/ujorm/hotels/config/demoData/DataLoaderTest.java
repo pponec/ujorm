@@ -15,9 +15,13 @@
  */
 package org.ujorm.hotels.config.demoData;
 
+import java.io.CharArrayReader;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
@@ -51,9 +55,8 @@ public class DataLoaderTest {
         for (City city : getCities()) {
             URL dataUrl = createDataUrl(city);
             LOGGER.info("{}({}): {}",city.getName(), city.getId(), dataUrl.toString());
-            StreamSource source = new StreamSource(dataUrl.openStream());
             StreamSource xsl = new StreamSource(getClass().getResourceAsStream("hotels-trans.xsl"));
-            makeXslTransformation(source, xsl, new String[]{"CITY_ID", city.get(City.ID).toString()});
+            makeXslTransformation(openStreamExt(dataUrl), xsl, new String[]{"CITY_ID", city.get(City.ID).toString()});
             Thread.sleep(1000);
         }
     }
@@ -83,6 +86,29 @@ public class DataLoaderTest {
                 , distance // [km]
                 );
        return new URL(result);
+    }
+
+    /** Basic method to open resource */
+    protected StreamSource openStreamBase(URL dataUrl) throws IOException {
+        return new StreamSource(dataUrl.openStream());
+    }
+
+    /** Extended method to open resource to fix some errors of data source */
+    protected StreamSource openStreamExt(URL dataUrl) throws IOException {
+        Reader reader = new InputStreamReader(dataUrl.openStream(), "utf-8");
+        CharArrayWriter writer = new CharArrayWriter(10000);
+        int c;
+        while((c=reader.read())!=-1) {
+            writer.write(c);
+        }
+        reader.close();
+
+        String body = writer.toString();
+        writer = null;
+        body = body.replaceFirst("iso-8859-1", "utf-8");
+        body = body.replaceAll("& ", "&amp; ");
+        reader = new CharArrayReader(body.toCharArray());
+        return new StreamSource(reader);
     }
 
     /** Get all cities from a local CSV file */
