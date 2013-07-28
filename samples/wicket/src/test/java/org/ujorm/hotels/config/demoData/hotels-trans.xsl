@@ -16,11 +16,16 @@
 
 <!-- CSV: -->
 <xsl:for-each select="HotelList/Hotel">
-<xsl:if test="stars != ''">
-<xsl:if test="url != ''">
-<xsl:if test="price != ''">
-<xsl:if test="string-length(name) &lt;= 40 ">
-<xsl:if test="string-length(substring-after(description, ' is ')) &lt;= 256 ">
+<xsl:if test="name != ''
+    and string-length(name) &lt;= 40
+    and string-length(substring-after(description, ' is ')) &lt;= 256
+    and string-length(substring-before(fulladdress, ' ,')) &lt;= 128
+    and string-length(phone) &lt;= 20
+    and number(stars) = stars
+    and number(price) = price
+    and url != ''
+    and string-length(substring-before(url, ' ,')) &lt;= 20
+">
 
 <xsl:value-of select="name"/>
 <xsl:value-of select="$SEPARATOR"/>
@@ -41,13 +46,8 @@
 <xsl:value-of select="$TRUE"/>
 <xsl:text>&#xa;</xsl:text>
 </xsl:if>
-</xsl:if>
-</xsl:if>
-</xsl:if>
-</xsl:if>
 
 </xsl:for-each>
-
 
 </xsl:template>
 </xsl:stylesheet>

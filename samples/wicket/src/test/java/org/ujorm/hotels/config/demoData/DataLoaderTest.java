@@ -40,7 +40,12 @@ import org.slf4j.LoggerFactory;
 import org.ujorm.hotels.entity.City;
 
 /**
- * Class to load hotes.
+ * Class to load hotes.<br/>
+ * Join all CSV files using a linux statement:
+ * <pre class=pre>
+ * {@code head -q -n 20 *.csv}
+ * </pre>
+ *
  * @author Pavel Ponec
  */
 public class DataLoaderTest {
