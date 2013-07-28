@@ -12,19 +12,19 @@ div.tabpanel div.tab-row li a {
 }
 
 div.tabpanel div.tab-row li a.hotel {
-    background-image: url("images/icons/house.png");
+    background-image: url("../images/icons/house.png");
 }
 
 div.tabpanel div.tab-row li a.booking {
-    background-image: url("images/icons/book_open.png");
+    background-image: url("../images/icons/book_open.png");
 }
 
 div.tabpanel div.tab-row li a.customer {
-    background-image: url("images/icons/user.png");
+    background-image: url("../images/icons/user.png");
 }
 
 div.tabpanel div.tab-row li a.about {
-    background-image: url("images/icons/help.png");
+    background-image: url("../images/icons/help.png");
 }
 
 /* A fix width of hotel table:
@@ -119,7 +119,7 @@ div.login {
 }
 
 div.login span {
-    background-image: url("images/icons/door_out.png");
+    background-image: url("../images/icons/door_out.png");
     background-position: right;
     background-repeat: no-repeat;
     padding-right: 25px;
