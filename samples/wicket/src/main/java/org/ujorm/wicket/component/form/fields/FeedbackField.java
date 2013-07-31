@@ -16,13 +16,11 @@
 package org.ujorm.wicket.component.form.fields;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import static org.ujorm.wicket.CssAppender.*;
 
 /**
  * Common Feedback Field
@@ -39,11 +37,9 @@ public class FeedbackField extends Field {
     }
 
     @Override
-    protected void onComponentTag(ComponentTag tag) {
-        super.onComponentTag(tag);
-        if (!feedback.isFeedbackMessage()) {
-            tag.put(CSS_CLASS, "hidden");
-        }
+    public void onConfigure() {
+        super.onConfigure();
+        setVisible(feedback.isFeedbackMessage());
     }
 
     /** Create Label and assign the CSS class {@code required} for the mandatory Field */
