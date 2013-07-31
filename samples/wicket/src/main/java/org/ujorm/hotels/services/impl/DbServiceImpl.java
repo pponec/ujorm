@@ -16,6 +16,7 @@
 package org.ujorm.hotels.services.impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
@@ -121,16 +122,17 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     }
 
     /** Check a read-only state */
-    private void checkReadOnly(Ujo ujo) throws ValidationException {
-        if (readOnly) {
+    private void checkReadOnly(Hotel ujo) throws ValidationException {
+        if (readOnly && ujo.getId().compareTo(0L) < 0) {
+            throw new ValidationException("exception.readOnly"
+                , "There is not allowed to modify a demo data"
+                + ", download the project for all features.");
+        }
+    }
 
-            Key<Ujo,Integer> key = (Key<Ujo,Integer>) ujo.readKeys().find("ID");
-            if (key != null
-            &&  key.isTypeOf(Integer.class)
-            &&  key.of(ujo).compareTo(0) > 0) {
-                return; // User data can be modified only.
-            }
-
+    /** Check a read-only state */
+    private void checkReadOnly(Customer ujo) throws ValidationException {
+        if (readOnly && Arrays.asList("demo","test","admin").contains(ujo.getLogin())) {
             throw new ValidationException("exception.readOnly"
                 , "There is not allowed to modify a demo data"
                 + ", download the project for all features.");

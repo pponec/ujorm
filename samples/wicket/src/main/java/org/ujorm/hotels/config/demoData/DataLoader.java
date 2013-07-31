@@ -78,7 +78,13 @@ public class DataLoader implements InitializationBatch {
                 , Hotel.PRICE
                 , Hotel.ACTIVE
                 );
-        return manager.loadCSV(scanner, "CSV import");
+        List<Hotel> result = manager.loadCSV(scanner, "CSV import");
+
+        // Optionaly assign negative IDs to sign a demo-data:
+        for (int i = 0, max = result.size(); i < max; i++) {
+            result.get(i).setId(-1L - i);
+        }
+        return result;
     }
 
     /** Get hotels from CSV file */
