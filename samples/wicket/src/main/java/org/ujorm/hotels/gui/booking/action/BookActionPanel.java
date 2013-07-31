@@ -17,9 +17,9 @@ package org.ujorm.hotels.gui.booking.action;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.ujorm.hotels.entity.Booking;
-import org.ujorm.hotels.services.DbService;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.wicket.CommonActions.*;
 
@@ -40,6 +40,7 @@ public class BookActionPanel<T extends Booking> extends Panel {
         super(id);
         this.row = row;
         add(createLink(DELETE, true));
+        add(new ExternalLink("externalLink", row.getHotel().getHomePage()));
     }
 
     /** Create action */
