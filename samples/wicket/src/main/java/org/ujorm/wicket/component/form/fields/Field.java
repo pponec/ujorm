@@ -21,6 +21,12 @@ import java.util.List;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.ThrottlingSettings;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
@@ -30,12 +36,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.form.FeedbackLabel;
+import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.form.UjoValidator;
 
 /**
@@ -44,6 +52,9 @@ import org.ujorm.wicket.component.form.UjoValidator;
  */
 public class Field extends Panel {
     private static final long serialVersionUID = 20130621L;
+
+    /** Delay for searching fields is 400 [ms] by default */
+    protected static final Duration DEFAULT_DELAY = Duration.milliseconds(400);
 
     /** CSS required style for the Label */
     public static final String CSS_REQUIRED = "required";
@@ -59,7 +70,7 @@ public class Field extends Panel {
     protected String cssClass;
     /** Serializable key */
     protected KeyRing key;
-    protected List<AjaxEventBehavior> behaviors = new ArrayList<AjaxEventBehavior>();
+    protected List<Behavior> behaviors;
 
     public Field(Key property) {
         this(property.getName(), property, null);
@@ -89,13 +100,15 @@ public class Field extends Panel {
             div.add(new CssAppender(cssClass));
         }
 
-
         div.add(input = createInput("input", getDefaultModel()));
         div.add(createLabel(input));
         div.add(feedback = new FeedbackLabel("message", input, (IModel)null));
 
-        for (AjaxEventBehavior behavior : behaviors) {
-            input.add(behavior);
+        if (behaviors!=null) {
+            for (Behavior behavior : behaviors) {
+                input.add(behavior);
+            }
+            behaviors = null;
         }
         feedback.setOutputMarkupId(true);
     }
@@ -138,6 +151,9 @@ public class Field extends Panel {
 
     /** add Behaviour */
     public void addBehaviour(AjaxEventBehavior behavior) {
+        if (behaviors==null) {
+            behaviors = new ArrayList<Behavior>();
+        }
         behaviors.add(behavior);
     }
 
@@ -203,4 +219,20 @@ public class Field extends Panel {
         return "control-group";
     }
 
+    /** Create an Updating Behavior with "keyup" event
+     * @param field Field is not used by default, however it can be a switch for different results for example.
+     * @return
+     */
+    public void onChange(final String action) {
+        addBehaviour(new AjaxFormComponentUpdatingBehavior("keyup") {
+            @Override protected void onUpdate(AjaxRequestTarget target) {
+                send(Field.this, Broadcast.BUBBLE, new FieldEvent(action, key, target));
+            }
+
+            @Override protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+                super.updateAjaxAttributes(attributes);
+                attributes.setThrottlingSettings(new ThrottlingSettings("thr2Id", DEFAULT_DELAY, true));
+            }
+        });
+    }
 }

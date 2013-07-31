@@ -15,6 +15,8 @@
  */
 package org.ujorm.hotels.gui.booking;
 
+import java.math.BigDecimal;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -25,6 +27,7 @@ import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
+import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
@@ -58,6 +61,10 @@ public class BookingEditor extends EntityDialogPane<Booking> {
         fields.getField(Booking.HOTEL.add(Hotel.CITY).add(City.NAME)).setEnabled(false);
         fields.getField(Booking.PRICE).setEnabled(false);
         fields.getField(Booking.CURRENCY).setEnabled(false);
+
+        // Ajax Events.
+        fields.onChange(Booking.NIGHTS);
+        fields.onChange(Booking.PERSONS);
     }
 
     /** Enable/Disable login fields */
@@ -67,6 +74,24 @@ public class BookingEditor extends EntityDialogPane<Booking> {
         fields.getField(Booking.CUSTOMER.add(Customer.LOGIN)).setEnabled(enabled);
         fields.getField(Booking.CUSTOMER.add(Customer.PASSWORD)).setEnabled(enabled);
         super.onBeforeRender();
+    }
+
+    /** Calculate price */
+    @Override
+    public void onEvent(IEvent<?> iEvent) {
+        final FieldEvent event = FieldEvent.get(iEvent);
+        if (event != null) {
+            try {
+                short nights = fields.getValue(Booking.NIGHTS);
+                short persons = fields.getValue(Booking.PERSONS);
+                BigDecimal price = fields.getInputDomain().getHotel().getPrice()
+                        .multiply(new BigDecimal((int) nights * persons));
+                fields.setValue(Booking.PRICE, price, event.getRequestTarget());
+                iEvent.stop();
+            } catch (Exception e) {
+                fields.setValue(Booking.PRICE, BigDecimal.ZERO, event.getRequestTarget());
+            }
+        }
     }
 
     /** Create the editor dialog */

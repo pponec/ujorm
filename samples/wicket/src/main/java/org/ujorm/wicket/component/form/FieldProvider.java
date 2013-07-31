@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.util.lang.Args;
@@ -122,6 +123,12 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         fields.get(key.getName()).setModelValue(value);
     }
 
+    /** Set Value and repaing component */
+    public <T> void setValue(Key<U,T> key, T value, AjaxRequestTarget target) {
+        setValue(key, value);
+        target.add(fields.get(key.getName()));
+    }
+
     /** Return all fields */
     public Collection<Field> getFields() {
         return fields.values();
@@ -199,7 +206,6 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return result != null ? result : domain;
     }
 
-
     /** Assign values to required component fields in a transaction for a lazy loading case */
     protected U copyToFields(U domain) {
         Args.notNull(domain, "domain");
@@ -222,6 +228,11 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return domain;
     }
 
+    /** Get original domain */
+    public U getInputDomain() {
+        return domain;
+    }
+
     /** Returns a miminal text length to create a TextArea component.
      * @return The default value is 180 characters
      */
@@ -236,5 +247,15 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return key.getName().endsWith(PASSWORD_KEY_NAME)
            && ((key.length()==PASSWORD_KEY_NAME.length()
            || key.charAt(key.length() - PASSWORD_KEY_NAME.length() - 1) == '.'));
+    }
+
+    /** Refresh component */
+    public void onChange(Key<U, ?> source) {
+        onChange(source, "");
+    }
+
+    /** Refresh component */
+    public void onChange(Key<U, ?> source, String action) {
+        getField(source).onChange(action);
     }
 }
