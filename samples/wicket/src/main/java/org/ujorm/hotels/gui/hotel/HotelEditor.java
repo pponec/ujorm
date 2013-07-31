@@ -21,6 +21,7 @@ import org.apache.wicket.model.Model;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
+import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
@@ -41,6 +42,7 @@ public class HotelEditor extends EntityDialogPane<Hotel> {
         fields.add(Hotel.STARS);
         fields.add(Hotel.PRICE);
         fields.add(Hotel.CURRENCY);
+        fields.add(new Field(Hotel.HOME_PAGE));
         fields.add(Hotel.NOTE);
         fields.add(Hotel.ACTIVE);
     }

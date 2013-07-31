@@ -124,3 +124,9 @@ div.login span {
     background-repeat: no-repeat;
     padding-right: 25px;
 }
+
+img.world {
+    width: 16px;
+    height: 16px;
+    margin-left: 2px;
+}

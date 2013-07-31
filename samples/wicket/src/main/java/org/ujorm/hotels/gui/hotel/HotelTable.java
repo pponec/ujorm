@@ -71,7 +71,7 @@ public class HotelTable extends Panel {
 
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
         add(toolbar);
-        add((editDialog = HotelEditor.create("editDialog", 700, 390)).getModalWindow());
+        add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());
         add((bookingDialog = BookingEditor.create("bookingDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
     }

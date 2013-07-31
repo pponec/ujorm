@@ -69,8 +69,9 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         this.repeatingView = repeatingView;
     }
 
-    /** Add new field to a repeating view*/
-    public void add(final Key key, final Field field) {
+    /** Add any field to a repeating view */
+    public void add(final Field field) {
+        final Key key = field.getKey();
         Field oldField = fields.put(key.getName(), field);
         if (oldField != null) {
             throw new IllegalStateException("Field is assigned for the key: " + field);
@@ -105,12 +106,12 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         } else {
             field = new Field(key); // The common field
         }
-        add(key, field);
+        add(field);
     }
 
     /** Add a Combo-box for a persistent entity */
     public <T extends OrmUjo> void add(Key<?,T> key, Criterion<T> crn, Key<T,?> display) {
-        add(key, ComboField.of(key, crn, display));
+        add(ComboField.of(key, crn, display));
     }
 
     /** Get Value */
