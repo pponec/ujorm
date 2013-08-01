@@ -3,7 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
@@ -11,9 +12,9 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <!-- Annotation-based configuration-->
-    <context:annotation-config />
     <context:component-scan base-package="org.ujorm.hotels.services.impl;org.ujorm.hotels.gui" />
-    <tx:annotation-driven transaction-manager="ujormTransactionManager"/>
+    <context:annotation-config />
+    <tx:annotation-driven transaction-manager="ujormTransactionManager" />
 
     <!-- ORM Ujorm config -->
     <bean name="ormConfigProvider" class="org.ujorm.hotels.config.DatabaseConfig"
