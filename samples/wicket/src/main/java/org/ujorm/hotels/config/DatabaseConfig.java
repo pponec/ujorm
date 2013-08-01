@@ -46,6 +46,7 @@ public final class DatabaseConfig implements OrmHandlerProvider {
             params.set(MetaParams.CHECK_KEYWORDS, CheckReport.QUOTE_SQL_NAMES);
             params.set(MetaParams.INITIALIZATION_BATCH, DataLoader.class);
             params.set(MetaParams.APPL_CONTEXT, applicationContext);
+            params.setQuotedSqlNames(false); // It is a default value
             handler.config(params);
         }
         // External Configuration:
