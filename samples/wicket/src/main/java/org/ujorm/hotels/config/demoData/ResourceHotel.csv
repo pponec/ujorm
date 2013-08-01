@@ -59,7 +59,6 @@ Hostel Suites DF;a Hostel in Mexico City,Mexico.;-11;Jesus Teran 38 Colonia Taba
 Hotel El Salvador;a Hotel in Mexico City,Mexico.;-11;República del Salvador No. 16;627945-5;3;http://www.letsbookhotel.com/en/mexico/mexico-city/hotel/hotel-el-salvador.aspx;30;true
 Hotel Premier Mexico City;a Hotel in Mexico City,Mexico.;-11;Atenas No 72;5566-2700;3;http://www.hotel-premier.com/index2.htm;30;true
 Posada Viena Hotel;a Hotel in Mexico City,Mexico.;-11;Marsella 28 Esq. Dinamarca Zona Rosa;01 (55) 55-92-73-1;4;http://www.posadavienahotel.com/thehotel.html;39;true
-Howard Johnson Hotel Alameda Mexico City;a Hotel in Mexico City,Mexico.;-11;Revillagigedo No. 23;1 800 485 4959;3;http://www.visitehotelesdemexico.com/mexico/distrito_federal/mexico_city/hoteles/Howard-Johnson-Alameda.aspx;32;true
 Lark Hotel Mexico City;a Hotel in Mexico City,Mexico.;-11;Mariano Azuela 12;55-5566-7244;4;http://www.larkhotel.com.mx/;41;true
 Hotel El Ejecutivo;a Hotel in Mexico City,Mexico.;-11;Viena 8 Col Juarez;1-800-403-4176;3;http://www.hotel-rates.com/mexico/mexico-city/hotel-el-ejecutivo.html;34;true
 Avilla Apartamentos Hotel Mexico City;a Hotel in Mexico City,Mexico.;-11;Sombrereros 9 - Colonia Tabacalera Delegación Cuauhtemoc;;3;http://www.hotelmexicocityapartmentsavilla.com.mx/Ingles/index.html;36;true
@@ -68,6 +67,7 @@ Hotel Ritz Ciudad de Mexico;a Hotel in Mexico City,Mexico.;-11;Madero 30 Col Cen
 Galeria Plaza;a Hotel in Mexico City,Mexico.;-11;Hamburgo 195;;5;http://mexicocity-galeriaplaza.com/default.asp?HotelID=97277;57;true
 Hotel Del Principado;a Hotel in Mexico City,Mexico.;-11;Londres 42 Col Juarez Delegacion Cuauhtemoc;1177857396;3;http://www.hoteldelprincipado.com.mx/;38;true
 Quality Zona Rosa Suites Mexico;a Hotel in Mexico City,Mexico.;-11;Liverpool No. 197;;5;http://zona-rosa-suites-mexico.h-rez.com/;59;true
+BEST WESTERN Majestic;a Hotel in Mexico City,Mexico.;-11;Avenue Madero 73. Col. Centro;+52 (998) 2873674;4;http://www.bestday.com/Mexico/Hotels/Hotel_Majestic/;50;true
 Creekside Amorsolo Hotel;a Hotel in Makati City,Philippines.;-12;Creekside Mall Amorsolo St. Cor. V.A. Rufino St. Lezapi Village; +63 2 817 8726;3;http://www.creeksideamorsolohotel.com;23;true
 Leesons Residences;a Hotel in Manila,Philippines.;-12;944 Remedios Street corner San Pascual Malate; +63 2 474 8097;2.5;http://www.leesonsresidences.com;22;true
 Amax in Makati;a Hotel in Makati City,Philippines.;-12;7554 Santillan Street Barangay Pio Del Pillar;(632) 812-9035;1;http://www.philippines-travel-guide.com/amax-in-makati.html;13;true
@@ -206,14 +206,14 @@ Clink261 Hostel London;a Hostel in London,England,United Kingdom.;-22;261-265 Gr
 Journeys Kings Cross St. Pancras;a Hostel in London,England,United Kingdom.;-22;54-58 Caledonian Road;;2;http://www.visitjourneys.com/;16;true
 Barkston Youth Hostel London;a Hotel in London,England,United Kingdom.;-22;1 Barkston Gardens;;1;http://hostels-in-london-england.com/hostels/Barkston_Youth_Hostel.php;11;true
 The Norfolk Towers Hotel;a Hotel in London,England,United Kingdom.;-22;34 Norfolk Place;;3;http://www.norfolk-towers-hotel.co.uk/;22;true
-Smart Camden Inn London;a Hostel in London,England,United Kingdom.;-22;55-57 Bayham Street;+44(0)20 7388 8900;2;http://www.smartbackpackers.com/hosteldetails/United-Kingdom/London/Smart-Camden-Inn/HotelDetails.aspx;17;true
-Smart Hyde Park Inn London;a Hostel in London,England,United Kingdom.;-22;48 - 50 Inverness Terrace;+44(0)20 7229 0000;2;http://www.smartbackpackers.com/hosteldetails/United-Kingdom/London/Smart-Hyde-Park-Inn-Hostel/index.htm;17;true
 Journeys London Arsenal Hostel;a Hostel in London,England,United Kingdom.;-22;175 Blackstock Road;;2;http://visitjourneys.com/;18;true
 New Cross Inn Hostel;a Hostel in London,England,United Kingdom.;-22;323A New Cross Road;020 8355 4976;2;http://www.newcrossinn.com/;18;true
 YHA London Thameside;a Hostel in London,England,United Kingdom.;-22;20 Salter Road; +44 845 371 9756;2;http://www.yha.org.uk;20;true
 Generator Hostel London;a Hostel in London,England,United Kingdom.;-22;37 Tavistock Place;517399-1;3;http://www.generatorhostels.com/;28;true
 Garth Hotel;a Hotel in London,England,United Kingdom.;-22;69 Gower Street; +44 20 7636 5761;1;http://www.garthhotel-london.com;16;true
 London Eye Hostel;a Hostel in London,England,United Kingdom.;-22;London South East Kensington; +44 20 7224 4405;1;http://www.londoneyehostel.com;19;true
+Smart Hyde Park View Hostel;a Hostel in London,England,United Kingdom.;-22;16 Leinster Terrace;+44 (0)20 7402 410;2;http://www.smartbackpackers.com/hosteldetails/United-Kingdom/London/Smart-Hyde-Park-View/index.htm;29;true
+Imperial College Beit Hall Hotel London;a Hotel in London,England,United Kingdom.;-22;Prince Consort Road;+44 (0)20 7589 511;3;http://www3.imperial.ac.uk/;42;true
 Seven Hills Village Resort Rome;a Resort in Rome,Latium,Italy.;-23;Via Cassia 1216;10 - 00189;4;http://www.sevenhills.it/;19;true
 Grand Hotel Fleming;a Hotel in Rome,Latium,Italy.;-23;Piazza Monteleone Di Spoleto 20;;4;http://www.grandhotelflemingrome.com/;32;true
 Flaminio Village Bungalow Park;a Hotel in Rome,Latium,Italy.;-23;Via Flaminia Nuova 821;821 - 00189;4;http://www.villageflaminio.com/ENG/default.asp;35;true
@@ -252,8 +252,8 @@ Hostal Equity Point Madrid;a Hostel in Madrid,Spain.;-28;C/ Cruz 5;;2;http://www
 Hostal Jemasaca-Palma61;a Hotel in Madrid,Madrid,Spain.;-28;C/ La Palma, 61,Madrid,Madrid,Spain; +34 915 32 70 11;3.5;http://www.hostaljemasaca-palma61.com;39;true
 Hostal Maria Reloba;a Hotel in Madrid,Madrid,Spain.;-28;Calle Espoz y Mina 8,Madrid,Madrid,Spain; +34 915 32 43 03;3.5;http://www.hostalmariareloba.com;40;true
 Hostal Bahia Madrid;a Hostel in Madrid,Spain.;-28;Calle Carretas 31 2 Izquierda; +34 915 22 98 46;3;http://www.hostalbahiamadrid.es;36;true
-NH La Habana;a Hotel in Madrid,Spain.;-28;Paseo de la Habana 73;+ 34 914 430 720;4;http://www.nh-hotels.com/nh/en/hotels/spain/madrid/nh-la-habana.html?nhagentid=10755&nhsubagentid=107555220035;46;true
 Silken Puerta de Madrid;a Hotel in Madrid,Spain.;-28;Juan Rizi 5;+34 917 445 400;4;http://www.hoteles-silken.com/hotel-puerta-america-madrid/;46;true
+Tijcal II Hostal Madrid;a Hostel in Madrid,Spain.;-28;Calle Cruz 26;;3;http://www.hostaltijcal.com/;37;true
 Kalorama Guest House;a Hotel in Columbia,Washington,United States of America.;-3;1854 Mintwood Place NW,Columbia,Washington,United States of America;(202) 588-8188;4.0;http://www.kaloramaguesthouse.com/reservations.php;65;true
 The Churchill Hotel Washington D.C.;a Hotel in Washington D.C.,District of Columbia,United States.;-3;1914 Connecticut Avenue NW;202-797-2000;4;http://www.thechurchillhotel.com/;86;true
 Hyatt Arlington;a Hotel in Arlington (Virginia),Virginia,United States.;-3;1325 Wilson Boulevard; (703) 525-1234;4;http://www.arlington.hyatt.com;92;true
@@ -337,10 +337,10 @@ OHostel Moscow;a Hostel in Moscow,Russia.;-9;Malaya Ordinka 19 3 Floor;;1;http:/
 All the World Hostel;a Hostel in Moscow,Russia.;-9;Bolshaya Tulskaya Str.54;;1;http://www.allthehostel.ru/;19;true
 Buddy Bear Hostel Moscow;a Hostel in Moscow,Russia.;-9;Smolenskii Boulevard 15 Ap. 13;1345485504;1;http://www.bear-hostels.com/;19;true
 Green Mango Hostel;a Hostel in Moscow,Russia.;-9;Novaya Basmannaya Street 25 Bld.2;+7 (499) 261-10-76;1;http://www.greenmangohostel.com/;21;true
-Za Za Zoo Hostel;a Hostel in Moscow,Russia.;-9;Maroseyka Street 9 Basmanny;;1;http://www.zoolodge.co.za/Africas%20Zoo%20Lodge%20Backpackers%20Hostel%20for%20backpacking%20South%20Africa,%20Johannesburg,%20Gauteng%20-%20tours,%20car%20hire,%20Baz%20Bus_files/links.html;21;true
 iVAN Hostel;a Hostel in Moscow,Russia.;-9;Petrovsky Pereulok 1/30 App 6;+7(916)407-11-78;1;http://www.ivanhostel.com/;23;true
 108 Minutes Hostel;a Hostel in Moscow,Russia.;-9;Malaya Ordynka Street 5/6 Bld.4 App.3;+7 (495) 795-4259;1;http://www.108min.com/;24;true
 Capital Hostel Moscow;a Hostel in Moscow,Russia.;-9;Malaya Ordynka Str.5/6;(1336999953;1;http://capitalhostel.com/;24;true
 Hostel Dom Moscow;a Hotel in Moscow,Russia.;-9;Podsosenskiy Pereulok 21 Bld.5;;1;http://www.moscow-hotels.com/hotels/gostiny_dom.htm;24;true
 Hostel Moscow 444;a Hostel in Moscow,Russia.;-9;Maliy Afanasyevskiy Pereulok 1 Bld.33 App.10;;1;http://hostelmoscow444.com/;24;true
 1st Arbat Hostel at Novinsky;a Hostel in Moscow,Russia.;-9;Novinsky Bulvar 1/2 App 64;+7 (967) 0130047;1;http://1arbat-hostel.ru/english/novinsky.html;26;true
+Hostel People;a Hostel in Moscow,Russia.;-9;Novinsky Boulevard 11;1911-1913;1;http://www.hostel-people.com/;26;true

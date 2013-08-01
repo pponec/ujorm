@@ -42,7 +42,7 @@ public class HotelEditor extends EntityDialogPane<Hotel> {
         fields.add(Hotel.STARS);
         fields.add(Hotel.PRICE);
         fields.add(Hotel.CURRENCY);
-        fields.add(new Field(Hotel.HOME_PAGE));
+        fields.add(Hotel.HOME_PAGE);
         fields.add(Hotel.NOTE);
         fields.add(Hotel.ACTIVE);
     }

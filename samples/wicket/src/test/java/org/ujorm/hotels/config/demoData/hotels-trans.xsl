@@ -24,7 +24,7 @@
     and number(stars) = stars
     and number(price) = price
     and url != ''
-    and string-length(substring-before(url, ' ,')) &lt;= 20
+    and string-length(url) &lt;= 100
 ">
 
 <xsl:value-of select="name"/>
