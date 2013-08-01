@@ -47,7 +47,7 @@ public class Hotel extends OrmTable<Hotel> {
     public static final Key<Hotel, Float> STARS = f.newKey(min(MANDATORY, 0f));
     /** URL to the HomePage */
     @Comment("URL to the HomePage")
-    public static final Key<Hotel, String> HOME_PAGE = f.newKey(length(256));
+    public static final Key<Hotel, String> HOME_PAGE = f.newKey(length(100));
     /** Price per night in USD */
     @Comment("Price per night in USD")
     public static final Key<Hotel, BigDecimal> PRICE = f.newKey(min(MANDATORY, BigDecimal.ZERO));
