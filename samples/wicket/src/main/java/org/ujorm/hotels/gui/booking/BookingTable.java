@@ -60,8 +60,8 @@ public class BookingTable extends Panel {
         columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
         columns.add(Booking.HOTEL.add(Hotel.NAME));
         columns.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
-        columns.add(Booking.NIGHTS);
         columns.add(Booking.PERSONS);
+        columns.add(Booking.NIGHTS);
         columns.add(Booking.PRICE);
         columns.add(Booking.CURRENCY);
         columns.add(Booking.CREATION_DATE);
