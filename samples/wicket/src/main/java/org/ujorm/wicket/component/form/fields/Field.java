@@ -54,7 +54,7 @@ public class Field extends Panel {
     private static final long serialVersionUID = 20130621L;
 
     /** Delay for searching fields is 400 [ms] by default */
-    protected static final Duration DEFAULT_DELAY = Duration.milliseconds(400);
+    protected static final Duration DEFAULT_DELAY = Duration.milliseconds(300);
 
     /** CSS required style for the Label */
     public static final String CSS_REQUIRED = "required";
@@ -224,7 +224,13 @@ public class Field extends Panel {
      * @return
      */
     public void onChange(final String action) {
-        addBehaviour(new AjaxFormComponentUpdatingBehavior("keyup") {
+        addBehaviour(createChangeBehaviour(action, "keyup"));
+        addBehaviour(createChangeBehaviour(action, "onchange"));
+    }
+
+    /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */
+    protected AjaxEventBehavior createChangeBehaviour(final String action, final String jsEvent) {
+        return new AjaxFormComponentUpdatingBehavior(jsEvent) {
             @Override protected void onUpdate(AjaxRequestTarget target) {
                 send(Field.this, Broadcast.BUBBLE, new FieldEvent(action, key, target));
             }
@@ -233,6 +239,6 @@ public class Field extends Panel {
                 super.updateAjaxAttributes(attributes);
                 attributes.setThrottlingSettings(new ThrottlingSettings("thr2Id", DEFAULT_DELAY, true));
             }
-        });
+        };
     }
 }
