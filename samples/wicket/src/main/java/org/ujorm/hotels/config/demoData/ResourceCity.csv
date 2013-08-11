@@ -1,4 +1,4 @@
-# Resource: http://en.wikipedia.org/wiki/List_of_countries_by_population (2013-06-10)
+    # Resource: http://en.wikipedia.org/wiki/List_of_countries_by_population (2013-06-10)
 
 ID;CITY;COUNTRY;COUNTRY_NAME,LATITUDE,LONGITUDE
 -1;Beijing;CN;China;39.904030;116.407526
@@ -21,4 +21,5 @@ ID;CITY;COUNTRY;COUNTRY_NAME,LATITUDE,LONGITUDE
 -22;London;GB;United Kingdom;51.511214;-0.119824
 -23;Rome;IT;Italy;41.892916;12.482520
 -28;Madrid;ES;Spain;40.416775;-3.703790
+-63;Amsterdam;NL;Netherlands;52.370216;4.895168
 -81;Prague;CZ;Czech Republic;50.075538;14.437800
