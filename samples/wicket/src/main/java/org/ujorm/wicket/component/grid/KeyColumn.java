@@ -83,8 +83,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      */
     public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey, String cssClass) {
         this(new ResourceModel(PROPERTY_PREFIX
-                + key.getFirstKey().getName()
-                , key.getFirstKey().getName())
+                + key.getFirstKey().toStringFull()
+                , key.getFirstKey().toString())
                 , key, sortKey, cssClass);
     }
 

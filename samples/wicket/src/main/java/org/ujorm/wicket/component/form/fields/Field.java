@@ -194,7 +194,7 @@ public class Field extends Panel {
 
     /** Resource Label Key */
     protected String getResourceLabelKey(final Key<?,?> key) {
-        return PROPERTY_PREFIX + key.getName();
+        return PROPERTY_PREFIX + key.toStringFull();
     }
 
     /** Is the field required ? */
