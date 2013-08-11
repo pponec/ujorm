@@ -15,9 +15,12 @@
  */
 package org.ujorm.wicket.component.form.fields;
 
+import com.googlecode.wicket.jquery.core.Options;
+import java.util.Date;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
 import org.ujorm.wicket.CssAppender;
@@ -42,7 +45,8 @@ public class DateField extends Field {
     /** Create Form inputComponent */
     @Override
     protected FormComponent createInput(String componentId, IModel model) {
-        final DateTextField result = new DateTextField(componentId, model, getDatePattern());
+        final DateTextField result = new com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker
+                (componentId, new Model<Date>(), getDatePattern(), createJQueryOptions());
         result.add(new CssAppender(getInputCssClass()));
 
         if (validator != null) {
@@ -58,7 +62,7 @@ public class DateField extends Field {
 
     /** Returns localizadDate pattern */
     protected String getDatePattern() {
-        return getString("locale.date.pattern", null, "yyyy-MM-dd");
+        return getString("locale.date.pattern", null, "yyyy-MM-dd"); // ISO 8601
     }
 
     /** Returns an {@code input} value from model */
@@ -73,5 +77,13 @@ public class DateField extends Field {
     /** Default CSS class have got value {@code datepicker} */
     protected String getInputCssClass() {
         return CSS_DATEPICKER;
+    }
+
+    /** Create jQuery options: */
+    protected Options createJQueryOptions() {
+        final Options options = new Options();
+      options.set("dateFormat", "'yy-mm-dd'"); // ISO 8601
+      //options.set("showButtonPanel", "true");
+      return options;
     }
 }

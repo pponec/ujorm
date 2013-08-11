@@ -74,11 +74,4 @@ public class HomePage extends WebPage {
             event.addTarget(HomePage.this.get("tabs"));
         }
     }
-
-    /** Load jQuery on the page */
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        response.render(JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getJQueryReference()));
-    }
 }

@@ -130,3 +130,7 @@ img.world {
     height: 16px;
     margin-left: 2px;
 }
+
+.ui-widget {
+    font-family: inherit;
+}
