@@ -29,7 +29,7 @@ import org.ujorm.validator.ValidationError;
  * Ujorm validator for the Wicket
  * @author Pavel Ponec
  */
-public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T>, Serializable {
+public class UiValidator<T> implements IValidator<T>, INullAcceptingValidator<T>, Serializable {
 
     /** Localization property prefix */
     public static final String PROPERTY_PREFIX = "validator.";
@@ -40,13 +40,23 @@ public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T
     private KeyRing<Ujo> key;
 
     /**
-     * Constructor
+     * Constructor for a special Wicket validator
      * @param validator Required validator
      * @param key Optional key
      */
-    public UjoValidator(Validator validator, Key<Ujo,T> key) {
+    public UiValidator(Validator validator, Key<Ujo,T> key) {
         this.validator = validator;
         this.key = KeyRing.of(key);
+    }
+
+    /**
+     * Constructor for a special Wicket validator
+     * @param validator Required validator
+     * @param key Optional key
+     */
+    public UiValidator(Validator validator, KeyRing key) {
+        this.validator = validator;
+        this.key = key;
     }
 
     /** TODO: Localization */

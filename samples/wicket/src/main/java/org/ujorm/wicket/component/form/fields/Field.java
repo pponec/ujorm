@@ -39,12 +39,13 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
+import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.form.FeedbackLabel;
 import org.ujorm.wicket.component.form.FieldEvent;
-import org.ujorm.wicket.component.form.UjoValidator;
+import org.ujorm.wicket.component.form.UiValidator;
 
 /**
  * Input textfield with a Label includding a feedback message.
@@ -138,6 +139,12 @@ public class Field extends Panel {
         return this;
     }
 
+    /** Validator setter */
+    public Field setValidator(Validator<?> validator) {
+        this.validator = new UiValidator(validator, key);
+        return this;
+    }
+
     /** Returns an {@code input} value from model */
     public Object getModelValue() {
         return input.getDefaultModelObject();
@@ -164,9 +171,9 @@ public class Field extends Panel {
 
     /** Add a {@code maxlength} of a text-field for String attributes */
     protected void addMaxLength(final FormComponent result) {
-        if (validator instanceof UjoValidator
+        if (validator instanceof UiValidator
         && key.getFirstKey().isTypeOf(String.class)) {
-            int length = ValidatorUtils.getMaxLength(((UjoValidator)validator).getValidator());
+            int length = ValidatorUtils.getMaxLength(((UiValidator)validator).getValidator());
             if (length >= 0) {
                result.add(new AttributeModifier("maxlength", Model.of(length)));
             }
@@ -199,8 +206,8 @@ public class Field extends Panel {
 
     /** Is the field required ? */
     protected boolean isRequired() {
-        boolean result = validator instanceof UjoValidator
-            && ValidatorUtils.isMandatoryValidator(((UjoValidator) validator).getValidator());
+        boolean result = validator instanceof UiValidator
+            && ValidatorUtils.isMandatoryValidator(((UiValidator) validator).getValidator());
         return result;
     }
 

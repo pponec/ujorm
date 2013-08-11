@@ -29,7 +29,7 @@ import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.tools.LocalizedModel;
-
+import static org.ujorm.Validator.Build.*;
 /**
  * Booking Editor
  * @author Pavel Ponec
@@ -61,6 +61,7 @@ public class BookingEditor extends EntityDialogPane<Booking> {
         fields.getField(Booking.HOTEL.add(Hotel.CITY).add(City.NAME)).setEnabled(false);
         fields.getField(Booking.PRICE).setEnabled(false);
         fields.getField(Booking.CURRENCY).setEnabled(false);
+        fields.getField(Booking.DATE_FROM).setValidator(future());
 
         // Ajax Events.
         fields.onChange(Booking.NIGHTS);
