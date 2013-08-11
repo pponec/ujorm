@@ -82,7 +82,7 @@ public class DateField extends Field {
     /** Create jQuery options: */
     protected Options createJQueryOptions() {
         final Options options = new Options();
-      options.set("dateFormat", "'yy-mm-dd'"); // ISO 8601
+      options.set("dateFormat", "'" + new DateConverter().toJQueryUIDateFormat(getDatePattern()) + "'");
       //options.set("showButtonPanel", "true");
       return options;
     }
