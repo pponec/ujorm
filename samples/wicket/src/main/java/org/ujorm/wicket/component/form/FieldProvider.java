@@ -178,7 +178,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     protected void setValidator(final Key key, final Field field) {
         final Validator validator = key.getValidator();
         if (validator != null) {
-            field.setValidator(new UjoValidator(validator, key));
+            field.setValidator(new UiValidator(validator, key));
         } else if (isMandatory(key)) {
             Component input = field.getInput();
             if (input instanceof FormComponent) {
