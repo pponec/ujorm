@@ -16,7 +16,10 @@
 package org.ujorm.wicket.component.form.fields;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
@@ -34,6 +37,12 @@ public class FeedbackField extends Field {
         super(id, null, null);
         setDefaultModel(new Model(""));
         setOutputMarkupPlaceholderTag(true);
+        add(new AjaxButton("closeButton") {
+            @Override protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                feedback.setFeedbackMessage(null);
+                target.add(FeedbackField.this);
+            }
+        });
     }
 
     @Override

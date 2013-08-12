@@ -67,7 +67,6 @@ public class Field extends Panel {
     private FormComponent input;
     protected FeedbackLabel feedback;
     protected IValidator<?> validator;
-    protected WebMarkupContainer div;
     protected String cssClass;
     /** Serializable key */
     protected KeyRing key;
@@ -96,14 +95,13 @@ public class Field extends Panel {
         super.onInitialize();
         this.add(new CssAppender(getCssClass()));
 
-        add(div = new WebMarkupContainer("editField"));
         if (cssClass!=null) {
-            div.add(new CssAppender(cssClass));
+            add(new CssAppender(cssClass));
         }
 
-        div.add(input = createInput("input", getDefaultModel()));
-        div.add(createLabel(input));
-        div.add(feedback = new FeedbackLabel("message", input, (IModel)null));
+        add(input = createInput("input", getDefaultModel()));
+        add(createLabel(input));
+        add(feedback = new FeedbackLabel("message", input, (IModel)null));
 
         if (behaviors!=null) {
             for (Behavior behavior : behaviors) {
