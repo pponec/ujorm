@@ -17,11 +17,10 @@ package org.ujorm.wicket.component.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.ujorm.wicket.CssAppender;
 
 /**
  * Label displaying feedback messages for FormComponents.
@@ -34,7 +33,7 @@ import org.ujorm.wicket.CssAppender;
  * Tested with Wicket 1.3.4
  * @author Daan, StuQ.nl, modified by Pavel Ponec
  */
-public class FeedbackLabel extends Label {
+public class FeedbackLabel extends MultiLineLabel {
 
     /** Field component holds a reference to the {@link Component} this FeedbackLabel belongs to */
     private Component input;

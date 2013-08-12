@@ -17,7 +17,7 @@ package org.ujorm.wicket.component.dialog.domestic;
 
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Ujo;
@@ -38,7 +38,7 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
 
     public MessageDialogPane(ModalWindow modalWindow, IModel<String> model) {
         super(modalWindow, new Model());
-        repeater.add(new Label(repeater.newChildId(), model) {
+        repeater.add(new MultiLineLabel(repeater.newChildId(), model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);

@@ -93,10 +93,8 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     /** Get a hash from the text */
     @Override
     public long getHash(String text) throws IllegalStateException {
-        if (text==null) {
-            throw new ValidationException
-                    ( "login.emptyPassword"
-                    , "Password must not be empty");
+        if (text == null) {
+            text = "";
         }
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256");
