@@ -68,8 +68,8 @@ public class HotelTable extends Panel {
         columns.add(Hotel.PHONE);
         columns.add(newActionColumn());
         columns.setSort(Hotel.NAME);
-
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
+
         add(toolbar);
         add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());
         add((bookingDialog = BookingEditor.create("bookingDialog", 700, 390)).getModalWindow());

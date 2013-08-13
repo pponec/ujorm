@@ -50,12 +50,7 @@ public class BookingTable extends Panel {
     public BookingTable(String id) {
         super(id);
 
-        // Criterion from dbService:
-        UjoDataProvider<Booking> columns = UjoDataProvider.of(new Model<Criterion<Booking>>(){
-            @Override public Criterion<Booking> getObject() {
-                return dbService.getBookingPreview();
-            }
-        });
+        UjoDataProvider<Booking> columns = UjoDataProvider.of(getCriterionModel());
         columns.add(Booking.DATE_FROM);
         columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
         columns.add(Booking.HOTEL.add(Hotel.NAME));
@@ -67,9 +62,18 @@ public class BookingTable extends Panel {
         columns.add(Booking.CREATION_DATE);
         columns.add(newActionColumn());
         columns.setSort(Booking.DATE_FROM);
-
         add(columns.createDataTable(10));
+
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
+    }
+
+    /** Create a new criterion model from the {@code dbService} */
+    private Model<Criterion<Booking>> getCriterionModel() {
+        return new Model<Criterion<Booking>>(){
+            @Override public Criterion<Booking> getObject() {
+                return dbService.getBookingPreview();
+            }
+        };
     }
 
     /** Manage events */
