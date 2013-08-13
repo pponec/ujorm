@@ -122,6 +122,12 @@
             <version>${wicket.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.wicket-jquery-ui</groupId>
+            <artifactId>wicket-jquery-ui</artifactId>
+            <version>6.8.1</version> <!-- or 1.5.10 -->
+            <scope>provided</scope>
+        </dependency>
         <!--
         <dependency>
             <groupId>org.apache.wicket</groupId>
@@ -173,8 +179,10 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
+                            <!--
                             <debug>false</debug>
                             <optimize>true</optimize>
+                            -->
                         </configuration>
                     </plugin>
                 </plugins>
