@@ -43,7 +43,7 @@ public class CustomerEditor extends EntityDialogPane<Customer> {
         fields.add(Customer.ACTIVE);
 
         // Modify attribute(s):
-        fields.getField(Customer.LOGIN).setEnabled(false);
+        fields.setEnabled(Customer.LOGIN, false);
     }
 
     /** Create the editor dialog */
