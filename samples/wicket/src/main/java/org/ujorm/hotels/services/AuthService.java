@@ -36,6 +36,9 @@ public interface AuthService {
     /** Is logged admin */
     public boolean isAdmin();
 
+    /** Is logged selected user */
+    public boolean isLogged(Customer customer);
+
     /** Get current customer from session  */
     public Customer getCurrentCustomer();
 

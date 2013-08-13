@@ -20,7 +20,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.Ujo;
+import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.wicket.CommonActions.*;
@@ -29,7 +29,7 @@ import static org.ujorm.wicket.CommonActions.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public class CustActionPanel<T extends Ujo> extends Panel {
+public class CustActionPanel<T extends Customer> extends Panel {
 
     @SpringBean
     private AuthService authService;
@@ -42,9 +42,8 @@ public class CustActionPanel<T extends Ujo> extends Panel {
         this.row = rowPar;
 
         add(createLink(LOGIN, false));
-        add(createLink(UPDATE, true));
+        add(createLink(UPDATE, false));
         add(createLink(DELETE, true));
-
     }
 
     /** Create new Link */
@@ -56,9 +55,18 @@ public class CustActionPanel<T extends Ujo> extends Panel {
             }
 
             @Override
-            public boolean isVisible() {
-                 return admin == authService.isAdmin();
-             }
+            protected void onConfigure() {
+                super.onConfigure();
+                if (DELETE.equals(getId())) {
+                    setVisible(!authService.isLogged(row)
+                            && admin == authService.isAdmin());
+                } else {
+                    boolean canUpdate = authService.isAdmin()
+                            || authService.isLogged(row);
+                    boolean isUpdate = UPDATE.equals(getId());
+                    setVisible(isUpdate == canUpdate);
+                }
+            }
         };
     }
 }
