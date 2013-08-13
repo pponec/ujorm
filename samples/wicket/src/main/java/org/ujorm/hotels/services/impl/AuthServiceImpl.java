@@ -89,6 +89,12 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
         return customer !=null && customer.get(Customer.ADMIN);
     }
 
+    /** Is logged selected user */
+    @Override
+    public boolean isLogged(Customer customer) {
+        final Customer lc = (Customer) getThreadSession().getAttribute(CUSTOMER_ATTR);
+        return lc != null && lc.getLogin().equals(customer.getLogin());
+    }
 
     /** Get a hash from the text */
     @Override
