@@ -16,20 +16,18 @@
 package org.ujorm.wicket.component.grid;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.KeyModel;
-
 
 /**
  * A convenience implementation of column that adds a Ujo Property to the cell whose model is determined by
@@ -85,8 +83,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      */
     public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey, String cssClass) {
         this(new ResourceModel(PROPERTY_PREFIX
-                + key.getFirstKey().getName()
-                , key.getFirstKey().getName())
+                + key.getFirstKey().toStringFull()
+                , key.getFirstKey().toString())
                 , key, sortKey, cssClass);
     }
 
@@ -161,7 +159,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     protected void appendCssClass(final Component value, final UJO ujo) {
         final String cssClass$ = getCssClass();
         if (cssClass$ != null) {
-            value.add(new AttributeAppender("class", new Model(cssClass$), " "));
+            value.add(new CssAppender(cssClass$));
         }
     }
 

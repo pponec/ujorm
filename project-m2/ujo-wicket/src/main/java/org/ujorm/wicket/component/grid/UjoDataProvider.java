@@ -31,20 +31,17 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Args;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.logger.UjoLogger;
-import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ColumnWrapper;
 import org.ujorm.orm.OrmHandler;
-import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
+import org.ujorm.wicket.OrmSessionProvider;
 
 /**
  * <p>This class called <strong>UjoDataProvider</strong> is an database
@@ -72,7 +69,7 @@ import org.ujorm.orm.Session;
  *  dataProvider.addColumn(Hotel.STARS);
  *  dataProvider.addColumn(Hotel.PHONE);
  *  dataProvider.setSort(Hotel.NAME);
- * 
+ *
  *  panel.add(dataProvider.createDataTable("datatable", 10));
  * }
  * </pre>
@@ -80,13 +77,13 @@ import org.ujorm.orm.Session;
  */
 public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, Object> {
     private static final long serialVersionUID = 1L;
-    /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoDataProvider.class);
+    /** Default Datatable ID have got value {@code "datatable"}. */
+    public static final String DEFAULT_DATATABLE_ID = "datatable";
     /** Data size */
     protected Long size;
 
-    /** Data criterion */
-    protected Criterion<T> criterion;
+    /** Data criterion model */
+    protected IModel<Criterion<T>> criterion;
     /** Domain model */
     protected KeyRing<T> model;
     /** Visible table columns */
@@ -94,28 +91,30 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
      * where the feature is enabled by default
      */
-    public boolean defaultColumnSorting = true;
+    private boolean defaultColumnSorting = true;
     /** Fetch database columns for better SQL performance
      * where the feature is enabled by default
      */
-    public boolean fetchDatabaseColumns = true;
+    private boolean fetchDatabaseColumns = true;
     /** OrmSession */
-    transient private Session ormSession;
+    private OrmSessionProvider ormSession;
 
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public UjoDataProvider(Criterion<T> criterion) {
+    public UjoDataProvider(IModel<Criterion<T>> criterion) {
         this(criterion, null);
     }
 
     /** Constructor
-     * @param criterion Condition to a database query
+     * @param criterion Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public UjoDataProvider(Criterion<T> criterion, Key<T,?> defaultSort) {
+    public UjoDataProvider(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
+        this.ormSession = new OrmSessionProvider();
         this.criterion = Args.notNull(criterion, "Criterion is mandatory");
-        model = KeyRing.of((Class<T>)criterion.getDomain());
+        this.model = KeyRing.of((Class<T>)criterion.getObject().getDomain());
+
         if (defaultSort == null) {
             defaultSort = model.getFirstKey();
         }
@@ -158,7 +157,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
                 , "The argument 'count' have got limit %s but the current value is %s"
                 , Integer.MAX_VALUE
                 , count);
-        Query<T> query = createQuery(criterion)
+        Query<T> query = createQuery(criterion.getObject())
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKey());
         fetchDatabaseColumns(query);
@@ -173,32 +172,21 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     @Override
     public long size() {
        if (size == null) {
-           size = createQuery(criterion).getCount();
+           size = createQuery(criterion.getObject()).getCount();
        }
        return size;
     }
 
     /** Returns orm Session */
     protected Session getOrmSession() {
-        if (ormSession == null) {
-            WebApplication application = WebApplication.get();
-            if (application instanceof OrmHandlerProvider) {
-                ormSession = ((OrmHandlerProvider) application).getOrmHandler().createSession();
-            } else {
-                throw new IllegalStateException("The WebApplication must to implement " + OrmHandlerProvider.class);
-            }
-        }
-        return ormSession;
+        return ormSession.getSession();
     }
 
     /** Commit and close transaction */
     @Override
     public void detach() {
+        ormSession.closeSession();
         size = null;
-        if (ormSession != null) {
-            ormSession.close();
-            ormSession = null;
-        }
     }
 
     /** Create default Query */
@@ -218,20 +206,20 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     }
 
     /** Add table column */
-    public boolean addColumn(IColumn<T, ?> column) {
+    public boolean add(IColumn<T, ?> column) {
         return columns.add(column);
     }
 
     /** Add table column according to column type */
-    public <V> boolean addColumn(Key<T,V> column) {
+    public <V> boolean add(Key<T,V> column) {
         if (column.isTypeOf(Boolean.class)) {
-            return addColumn(KeyColumnBoolean.of(column, isSortingEnabled(column)));
+            return add(KeyColumnBoolean.of(column, isSortingEnabled(column)));
         }
         if (column.isTypeOf(Number.class)) {
-            return addColumn(KeyColumn.of(column, isSortingEnabled(column), "number"));
+            return add(KeyColumn.of(column, isSortingEnabled(column), "number"));
         }
         else {
-            return addColumn(KeyColumn.of(column, isSortingEnabled(column), null));
+            return add(KeyColumn.of(column, isSortingEnabled(column), null));
         }
     }
 
@@ -243,6 +231,11 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
             && getOrmSession().getHandler().findColumnModel(column, false) != null;
     }
 
+    /** Create AJAX-based DataTable with a {@link #DEFAULT_DATATABLE_ID} */
+    public <S> DataTable<T,S> createDataTable(final int rowsPerPage) {
+        return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage);
+    }
+
     /** Create AJAX-based DataTable */
     public <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage) {
         final DataTable<T,S> result = new DataTable<T,S>(id, (List)columns, this, rowsPerPage) {
@@ -251,7 +244,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
                     , final int index
                     , final IModel<T> model) {
                 return new OddEvenItem<T>(id, index, model);
-            }         
+            }
         };
 
         result.addTopToolbar(new AjaxNavigationToolbar(result));
@@ -357,13 +350,24 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
         return new UjoDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion) {
         return new UjoDataProvider<T>(criterion, null);
     }
-    
+
+    /** Factory for the class */
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
+        return new UjoDataProvider<T>(Model.of(criterion), defaultSort);
+    }
+
+    /** Factory for the class */
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
+        return new UjoDataProvider<T>(Model.of(criterion), null);
+    }
+
+
 }

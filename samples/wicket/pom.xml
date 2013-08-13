@@ -49,6 +49,11 @@
             <artifactId>ujo-spring</artifactId>
             <version>${ujorm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-wicket</artifactId>
+            <version>${ujorm.version}</version>
+        </dependency>
 
         <!-- WICKET DEPENDENCIES -->
 

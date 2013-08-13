@@ -18,11 +18,10 @@ package org.ujorm.wicket.component.tabs;
 import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.ujorm.wicket.CssAppender;
 
 /**
  * A child of Wicket AjaxTabbedPanel class can restore the last selected tab
@@ -66,14 +65,26 @@ public class UjoTabbedPanel<T extends UjoTab>
         setDefaultSelectedTab(getSelectedTab());
     }
 
+    /** Select new tab. */
+    public final void selectedTab(final Class<? extends UjoTab> tab, AjaxRequestTarget target) {
+        final List<T> tabs = getTabs();
+        for (int i=0, max=tabs.size(); i<max; ++i) {
+            if (tab.isAssignableFrom(tabs.get(i).getPanelClass())) {
+                setSelectedTab(i);
+                break;
+            }
+        }
+        target.add(this);
+    }
+
     /** Assign a selected tab and add a user CSS class.
      * <br/>{@inheritDoc}
      */
     @Override
-    public TabbedPanel<T> setSelectedTab(final int index) {
+    public final TabbedPanel<T> setSelectedTab(final int index) {
         TabbedPanel<T> result = super.setSelectedTab(index);
         final Component panel = super.get(TAB_PANEL_ID);
-        panel.add(new AttributeAppender("class", Model.of(getTabs().get(index).getCssClass()), " "));
+        panel.add(new CssAppender(getTabs().get(index).getCssClass()));
         return result;
     }
 
@@ -94,7 +105,7 @@ public class UjoTabbedPanel<T extends UjoTab>
         final WebMarkupContainer result = super.newLink(linkId, index);
         final String cssClass = getTabs().get(index).getCssClass();
         if (cssClass != null) {
-            result.add(new AttributeAppender("class", cssClass));
+            result.add(new CssAppender(cssClass));
         }
         return result;
     }
