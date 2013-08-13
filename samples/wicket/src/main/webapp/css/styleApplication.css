@@ -125,10 +125,10 @@ div.login span {
     padding-right: 25px;
 }
 
-img.world {
+img.world-icon {
     width: 16px;
     height: 16px;
-    margin-left: 2px;
+    margin-left: 4px;
 }
 
 .ui-widget {
