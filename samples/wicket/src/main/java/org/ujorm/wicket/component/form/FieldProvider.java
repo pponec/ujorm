@@ -110,22 +110,22 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add a Combo-box for a persistent entity */
-    public <T extends OrmUjo> void add(Key<?,T> key, Criterion<T> crn, Key<T,?> display) {
+    public <T extends OrmUjo> void add(Key<U, T> key, Criterion<T> crn, Key<T,?> display) {
         add(ComboField.of(key, crn, display));
     }
 
     /** Get Value */
-    public <T> T getValue(Key<U,T> key) {
+    public <T> T getValue(Key<U, T> key) {
         return (T) fields.get(key.getName()).getModelValue();
     }
 
     /** Set Value */
-    public <T> void setValue(Key<U,T> key, T value) {
+    public <T> void setValue(Key<U, T> key, T value) {
         fields.get(key.getName()).setModelValue(value);
     }
 
     /** Set Value and repaing component */
-    public <T> void setValue(Key<U,T> key, T value, AjaxRequestTarget target) {
+    public <T> void setValue(Key<U, T> key, T value, AjaxRequestTarget target) {
         setValue(key, value);
         target.add(fields.get(key.getName()));
     }
@@ -163,7 +163,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Is the key mandatory ? */
-    protected boolean isMandatory(Key key) {
+    protected boolean isMandatory(Key<U, ?> key) {
         final OrmHandler handler = getOrmHandler();
         if (handler != null) {
             MetaColumn column = handler.findColumnModel(key, false);
@@ -175,7 +175,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Set a validator of the Key to the Field from argument */
-    protected void setValidator(final Key key, final Field field) {
+    protected void setValidator(final Key<U, ?> key, final Field field) {
         final Validator validator = key.getValidator();
         if (validator != null) {
             field.setValidator(new UiValidator(validator, key));
@@ -244,7 +244,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Is the key type of PasswordField ?
      * The default condition is: the last key name must be 'PASSWORD'.
      */
-    protected boolean isPasswordKey(Key key) {
+    protected boolean isPasswordKey(Key<U, ?> key) {
         return key.getName().endsWith(PASSWORD_KEY_NAME)
            && ((key.length()==PASSWORD_KEY_NAME.length()
            || key.charAt(key.length() - PASSWORD_KEY_NAME.length() - 1) == '.'));
