@@ -55,7 +55,7 @@ public class CustomerTable extends Panel {
         super(id);
 
         UjoDataProvider<Customer> columns
-                = UjoDataProvider.of(Customer.ACTIVE.whereEq(true));
+               = UjoDataProvider.of(Customer.ACTIVE.whereEq(true));
         columns.add(Customer.LOGIN);
         columns.add(Customer.TITLE);
         columns.add(Customer.FIRSTNAME);
