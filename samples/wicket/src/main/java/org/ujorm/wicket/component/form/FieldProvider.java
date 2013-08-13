@@ -27,6 +27,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
@@ -259,4 +260,52 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     public void onChange(Key<U, ?> source, String action) {
         getField(source).onChange(action);
     }
+
+    /** Set an enabled attribute for a required filed.
+     * If the field is not found, the statement is ignored */
+    public void setEnabled(final Key<U, ?> key, boolean enabled) {
+        final Field field =  getField(key);
+        if (field != null) {
+            field.setEnabled(enabled);
+        }
+    }
+
+    /** Set a visible attribute for a required filed.
+     * If the field is not found, the statement is ignored */
+    public void setVisible(final Key<U, ?> key, boolean visible) {
+        final Field field =  getField(key);
+        if (field != null) {
+            field.setVisible(visible);
+        }
+    }
+
+    /** Set a visible attribute for a required filed.
+     * If the field is not found, the statement is ignored */
+    public <T> void setValidator(final Key<U, T> key, Validator<T> validator) {
+        final Field field =  getField(key);
+        if (field != null) {
+            field.setValidator(validator);
+        }
+    }
+
+    /** Set a visible attribute for a required filed, where validator have not generic type.
+     * If the field is not found, the statement is ignored 
+     * @see #setValidator(org.ujorm.Key, org.ujorm.Validator) 
+     */
+    public <T> void setValidatorOld(final Key<U, T> key, Validator validator) {
+        final Field field =  getField(key);
+        if (field != null) {
+            field.setValidator(validator);
+        }
+    }
+
+    /** Set a visible attribute for a required filed.
+     * If the field is not found, the statement is ignored */
+    public <T> void setValidator(final Key<U, T> key, IValidator<T> validator) {
+        final Field field =  getField(key);
+        if (field != null) {
+            field.setValidator(validator);
+        }
+    }
+
 }

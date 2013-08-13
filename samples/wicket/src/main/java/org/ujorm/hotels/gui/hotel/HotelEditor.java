@@ -21,7 +21,6 @@ import org.apache.wicket.model.Model;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
-import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
@@ -61,6 +60,5 @@ public class HotelEditor extends EntityDialogPane<Hotel> {
 
         return result;
     }
-
 
 }

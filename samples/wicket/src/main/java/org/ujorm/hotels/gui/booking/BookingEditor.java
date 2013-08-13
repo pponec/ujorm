@@ -57,9 +57,11 @@ public class BookingEditor extends EntityDialogPane<Booking> {
         fields.add(Booking.CURRENCY);
 
         // Modify attribute(s):
-        fields.getField(Booking.PRICE).setEnabled(false);
-        fields.getField(Booking.CURRENCY).setEnabled(false);
-        fields.getField(Booking.DATE_FROM).setValidator(future());
+        fields.setEnabled(Booking.HOTEL.add(Hotel.NAME), false);
+        fields.setEnabled(Booking.HOTEL.add(Hotel.CITY).add(City.NAME), false);
+        fields.setEnabled(Booking.PRICE, false);
+        fields.setEnabled(Booking.CURRENCY, false);
+        fields.setValidatorOld(Booking.DATE_FROM, future());
 
         // Ajax Events.
         fields.onChange(Booking.NIGHTS);
@@ -70,8 +72,8 @@ public class BookingEditor extends EntityDialogPane<Booking> {
     @Override
     protected void onBeforeRender() {
         final boolean enabled = !authService.isCustomer();
-        fields.getField(Booking.CUSTOMER.add(Customer.LOGIN)).setEnabled(enabled);
-        fields.getField(Booking.CUSTOMER.add(Customer.PASSWORD)).setVisible(enabled);
+        fields.setEnabled(Booking.CUSTOMER.add(Customer.LOGIN), enabled);
+        fields.setVisible(Booking.CUSTOMER.add(Customer.PASSWORD), enabled);
         super.onBeforeRender();
     }
 
