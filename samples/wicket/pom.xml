@@ -7,7 +7,7 @@
     <groupId>org.ujorm.wicket.sample</groupId>
     <artifactId>demo-hotels</artifactId>
     <name>sample-wicket-hotels</name>
-    <version>0.9.11-SNAPSHOT</version>
+    <version>1.36-SNAPSHOT</version>
     <packaging>war</packaging>
     <description>A sample application based on the Ujorm, Wicket and Spring frameworks</description>
 
