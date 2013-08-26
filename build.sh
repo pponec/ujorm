@@ -21,7 +21,7 @@ do
     (
 	echo ARTEFACT=$ARTEFACT
 	cd $ARTEFACT/target
-	cp ../pom.xml $ARTEFACT-$RELEASE.pom
+	cp ../pom.xml ./$ARTEFACT-$RELEASE.pom
 
 	mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE.jar
 	mvn gpg:sign-and-deploy-file -Durl=${URL} -DrepositoryId=sonatype-nexus-staging -DpomFile=$ARTEFACT-$RELEASE.pom -Dfile=$ARTEFACT-$RELEASE-sources.jar -Dclassifier=sources

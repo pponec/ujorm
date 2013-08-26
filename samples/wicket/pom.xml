@@ -7,7 +7,7 @@
     <groupId>org.ujorm.wicket.sample</groupId>
     <artifactId>demo-hotels</artifactId>
     <name>sample-wicket-hotels</name>
-    <version>1.36-SNAPSHOT</version>
+    <version>1.40-SNAPSHOT</version>
     <packaging>war</packaging>
     <description>A sample application based on the Ujorm, Wicket and Spring frameworks</description>
 
@@ -24,7 +24,7 @@
     </licenses>
 
     <properties>
-        <ujorm.version>1.36-SNAPSHOT</ujorm.version>
+        <ujorm.version>1.40-SNAPSHOT</ujorm.version>
         <wicket.version>6.9.1</wicket.version>
         <jetty.version>6.1.26</jetty.version>
         <spring.version>3.2.2.RELEASE</spring.version>
