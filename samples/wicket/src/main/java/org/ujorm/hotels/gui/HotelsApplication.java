@@ -30,7 +30,7 @@ import org.ujorm.orm.OrmHandlerProvider;
  * @see com.mycompany.Start#main(String[])
  */
 @Component("wicketApplicationSpringBean")
-public class WicketApplication extends WebApplication implements OrmHandlerProvider {
+public class HotelsApplication extends WebApplication implements OrmHandlerProvider {
 
     /** OrmHandler Provider */
     @Autowired
@@ -43,7 +43,7 @@ public class WicketApplication extends WebApplication implements OrmHandlerProvi
         getComponentInstantiationListeners().add(new SpringComponentInjector(this));
         mountPage("/demo", HomePage.class);
     }
-        
+
     /** {@inheritDoc { */
     @Override
     public Class<? extends WebPage> getHomePage() {
