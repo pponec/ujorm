@@ -49,10 +49,6 @@ public class HomePage extends WebPage {
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoTabbedPanel("tabs", tabs));
 
-        // Add your page's components here:
-        WicketApplication appl = (WicketApplication) getApplication();
-        OrmHandler handler = appl.getOrmHandler();
-
         // Login name and logout action:
         add(new LoginName("login"));
 
