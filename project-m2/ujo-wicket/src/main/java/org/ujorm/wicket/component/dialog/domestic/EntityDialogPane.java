@@ -41,6 +41,13 @@ public class EntityDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
         form.add((fields = new FieldProvider(repeater)).getRepeatingView());
     }
 
+    /** Input fields provider 
+     * @see #fields
+     */
+    public FieldProvider<T> getFields() {
+        return fields;
+    }
+
     /**
      * Show dialog and assign a data from domain object
      * @param title Dialog title

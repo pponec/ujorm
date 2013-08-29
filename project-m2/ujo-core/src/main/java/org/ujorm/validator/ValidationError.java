@@ -57,7 +57,6 @@ public class ValidationError implements Serializable {
         this(null, null, null, AbstractValidator.class, localizationKey, defaultMessage, arguments);
     }
 
-
     /** Constructor
      * @param value Optional attribute
      * @param key Optional attribute
