@@ -38,6 +38,7 @@ import org.ujorm.orm.OrmHandlerProvider;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.validator.ValidatorUtils;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.fields.BooleanField;
 import org.ujorm.wicket.component.form.fields.ComboField;
@@ -264,7 +265,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Set an enabled attribute for a required filed.
      * If the field is not found, the statement is ignored */
     public void setEnabled(final Key<U, ?> key, boolean enabled) {
-        final Field field =  getField(key);
+        final Field field = getField(key);
         if (field != null) {
             field.setEnabled(enabled);
         }
@@ -273,7 +274,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Set a visible attribute for a required filed.
      * If the field is not found, the statement is ignored */
     public void setVisible(final Key<U, ?> key, boolean visible) {
-        final Field field =  getField(key);
+        final Field field = getField(key);
         if (field != null) {
             field.setVisible(visible);
         }
@@ -282,7 +283,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Set a visible attribute for a required filed.
      * If the field is not found, the statement is ignored */
     public <T> void setValidator(final Key<U, T> key, Validator<T> validator) {
-        final Field field =  getField(key);
+        final Field field = getField(key);
         if (field != null) {
             field.setValidator(validator);
         }
@@ -293,7 +294,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * @see #setValidator(org.ujorm.Key, org.ujorm.Validator) 
      */
     public <T> void setValidatorOld(final Key<U, T> key, Validator validator) {
-        final Field field =  getField(key);
+        final Field field = getField(key);
         if (field != null) {
             field.setValidator(validator);
         }
@@ -302,9 +303,18 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Set a visible attribute for a required filed.
      * If the field is not found, the statement is ignored */
     public <T> void setValidator(final Key<U, T> key, IValidator<T> validator) {
-        final Field field =  getField(key);
+        final Field field = getField(key);
         if (field != null) {
             field.setValidator(validator);
+        }
+    }
+
+    /** Add a CSS style to the field of required key.
+     * If the field is not found, the statement is ignored */
+    public <T> void setNewCssStyle(final Key<U, T> key, String cssStyle) {
+        final Field field = getField(key);
+        if (field != null) {
+            field.add(new CssAppender(cssStyle));
         }
     }
 
