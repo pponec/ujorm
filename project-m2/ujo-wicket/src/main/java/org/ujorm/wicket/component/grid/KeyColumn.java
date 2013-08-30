@@ -178,9 +178,11 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     /** A factory method */
     public static <U extends Ujo, T> KeyColumn<U, T> of(Key<U, T> key, boolean sorted, String cssClass) {
         final KeyRing serializableKey = KeyRing.of(key);
-        return new KeyColumn
+        final KeyColumn<U, T> result = new KeyColumn
                 ( serializableKey
                 , sorted ? serializableKey : null);
+        result.setCssClass(cssClass);
+        return result;
     }
 
     /** A factory method */

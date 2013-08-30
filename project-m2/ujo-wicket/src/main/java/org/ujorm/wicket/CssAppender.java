@@ -31,4 +31,13 @@ final public class CssAppender extends AttributeAppender {
         super(CSS_CLASS, new Model(cssClass), " ");
     }
 
+    /** Returns a CSS class */
+    public String getCssClass() {
+        return (String) getReplaceModel().getObject();
+    }
+
+    /** The CssAppender factory */
+    public static CssAppender of(final String cssName) {
+        return new CssAppender(cssName);
+    }
 }

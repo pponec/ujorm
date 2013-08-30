@@ -41,6 +41,7 @@ import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.OrmSessionProvider;
 
 /**
@@ -208,6 +209,13 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     /** Add table column */
     public boolean add(IColumn<T, ?> column) {
         return columns.add(column);
+    }
+
+    /** Add table column according to column type including CSS class */
+    public <V> boolean add(Key<T,V> column, CssAppender cssClass) {
+        final boolean result = add(column);
+        ((KeyColumn)columns.get(columns.size()-1)).setCssClass(cssClass.getCssClass());
+        return result;
     }
 
     /** Add table column according to column type */
