@@ -369,5 +369,14 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
         return new UjoDataProvider<T>(Model.of(criterion), null);
     }
 
-
+    /** Assign a CSS class to a KeyColumn, if exists */
+    public void setCssClass(final Key<T, ?> key, final String cssClass) {
+        for (IColumn<T, ?> iColumn : columns) {
+            if (iColumn instanceof KeyColumn
+            && ((KeyColumn) iColumn).getKey().equals(key)) {
+               ((KeyColumn) iColumn).setCssClass(cssClass);
+               break;
+            }
+        }
+    }
 }

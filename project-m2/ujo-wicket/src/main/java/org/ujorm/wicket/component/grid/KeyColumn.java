@@ -37,7 +37,7 @@ import org.ujorm.wicket.KeyModel;
  * Example:
  * <pre class="pre">
  * <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> DataTablePage2 <span class="keyword-directive">extends</span> WebPage {
- *    
+ *
  *     <span class="keyword-directive">public</span> DataTablePage2() {
  *         <span class="keyword-directive">final</span> EmployeeProvider userProvider = <span class="keyword-directive">new</span> EmployeeProvider();
  *
@@ -72,8 +72,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
 
     /** Data key */
     protected final KeyRing<UJO> keySerializable;
-    /** CSS class */
-    protected final String cssClass;
+    /** The CSS class of the column */
+    protected String cssClass;
 
     /**
      * Creates a sortable property column
@@ -81,11 +81,11 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      * @param sortKey Optional persistent ujorm property to sorting
      * @param cssClass optional argument for a CSS class
      */
-    public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey, String cssClass) {
+    public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey) {
         this(new ResourceModel(PROPERTY_PREFIX
                 + key.getFirstKey().toStringFull()
                 , key.getFirstKey().toString())
-                , key, sortKey, cssClass);
+                , key, sortKey);
     }
 
     /**
@@ -98,11 +98,9 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     public KeyColumn
             ( final IModel<String> label
             , final KeyRing<UJO> key
-            , final KeyRing<UJO> sortKey
-            , String cssClass) {
+            , final KeyRing<UJO> sortKey) {
         super(label, sortKey);
         this.keySerializable = key;
-        this.cssClass = cssClass;
     }
 
     /**
@@ -124,6 +122,11 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     @Override
     public String getCssClass() {
         return cssClass;
+    }
+
+    /** Assign a CSS class */
+    public void setCssClass(final String cssClass) {
+        this.cssClass = cssClass;
     }
 
     /** Create the Label for a Value component */
@@ -155,12 +158,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
         return keySerializable.getFirstKey();
     }
 
-    /** Append CSS class */
+    /** Append a CSS class - to overwriting only */
     protected void appendCssClass(final Component value, final UJO ujo) {
-        final String cssClass$ = getCssClass();
-        if (cssClass$ != null) {
-            value.add(new CssAppender(cssClass$));
-        }
     }
 
     /** Domain class + key */
@@ -170,7 +169,6 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     // =============== STATIC METHODS ===============
-
 
     /** A factory method */
     public static <U extends Ujo, T> KeyColumn<U, T> of(Key<U, T> key, boolean sorted) {
@@ -182,16 +180,16 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
         final KeyRing serializableKey = KeyRing.of(key);
         return new KeyColumn
                 ( serializableKey
-                , sorted ? serializableKey : null
-                , cssClass);
+                , sorted ? serializableKey : null);
     }
 
     /** A factory method */
     public static <U extends Ujo, T> KeyColumn<U, T> of(Key<U, T> key, Key<U, T> sort, String cssClass) {
-        return new KeyColumn
-                ( KeyRing.of(key)
-                , KeyRing.of(sort)
-                , cssClass);
+        final KeyColumn<U, T> result = new KeyColumn
+            ( KeyRing.of(key)
+            , KeyRing.of(sort));
+        result.setCssClass(cssClass);
+        return result;
     }
 
 }

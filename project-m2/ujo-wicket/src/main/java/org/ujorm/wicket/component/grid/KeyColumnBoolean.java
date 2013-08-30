@@ -46,7 +46,8 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
     }
 
     public KeyColumnBoolean(KeyRing<UJO> key, KeyRing<UJO> keySortable, String cssClass, String cssOkClass) {
-        super(key, keySortable, cssClass);
+        super(key, keySortable);
+        setCssClass(cssClass);
         this.cssOkClass = cssOkClass;
     }
 
@@ -121,5 +122,5 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
                 , cssOkClass);
     }
 
-    
+
 }
