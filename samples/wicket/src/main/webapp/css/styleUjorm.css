@@ -88,11 +88,10 @@ div.tabpanel div.tab-row a {
 
 /* Table Navigator */
 div.navigator {
-    text-align: left;
+    text-align: right;
 }
-
 div.navigatorLabel {
-    float: right;
+    float: left;
 }
 
 table.border tr.navigation td {
