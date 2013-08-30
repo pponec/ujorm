@@ -1,4 +1,3 @@
-package org.ujorm.hotels.gui.hotel.action;
 /*
  * Copyright 2013, Pavel Ponec
  *
@@ -14,6 +13,8 @@ package org.ujorm.hotels.gui.hotel.action;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.ujorm.hotels.gui.hotel.action;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;

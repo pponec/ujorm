@@ -41,7 +41,7 @@ public interface DbService {
     public void deleteHotel(Hotel hotel);
 
     /** Update hotel */
-    public void updateHotel(Hotel hotel);
+    public void saveOrUpdateHotel(Hotel hotel);
 
     /** Delete customer if no related booking was found, or inactive it */
     public void deleteCustomer(Customer customer);
