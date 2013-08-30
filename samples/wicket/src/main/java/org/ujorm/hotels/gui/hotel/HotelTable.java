@@ -68,6 +68,8 @@ public class HotelTable extends Panel {
         columns.add(Hotel.PHONE);
         columns.add(newActionColumn());
         columns.setSort(Hotel.NAME);
+        columns.setCssClass(Hotel.NAME, "hotelName");
+        columns.setCssClass(Hotel.STREET, "streetName");
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
 
         add(toolbar);
@@ -119,7 +121,7 @@ public class HotelTable extends Panel {
 
     /** Nabídka akcí: */
     private AbstractColumn<Hotel, KeyRing<Hotel>> newActionColumn() {
-        return new KeyColumn<Hotel, Integer>(KeyRing.of(Hotel.ID), null, null) {
+        return new KeyColumn<Hotel, Integer>(KeyRing.of(Hotel.ID), null) {
             @Override
             public void populateItem(Item item, String componentId, IModel model) {
                 final Hotel hotel = (Hotel) model.getObject();

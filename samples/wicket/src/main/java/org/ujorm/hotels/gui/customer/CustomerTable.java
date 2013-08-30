@@ -116,7 +116,7 @@ public class CustomerTable extends Panel {
 
     /** Create action column */
     private AbstractColumn<Customer, KeyRing<Customer>> createActionColumn() {
-        return new KeyColumn<Customer, Integer>(KeyRing.of(Customer.ID), null, null) {
+        return new KeyColumn<Customer, Integer>(KeyRing.of(Customer.ID), null) {
             @Override
             public void populateItem(Item item, String componentId, IModel model) {
                 final Customer customer = (Customer) model.getObject();

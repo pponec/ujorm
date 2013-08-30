@@ -97,7 +97,7 @@ public class BookingTable extends Panel {
 
     /** Offer action: */
     private AbstractColumn<Booking, KeyRing<Booking>> newActionColumn() {
-        return new KeyColumn<Booking, Integer>(KeyRing.of(Booking.ID), null, null) {
+        return new KeyColumn<Booking, Integer>(KeyRing.of(Booking.ID), null) {
             @Override
             public void populateItem(Item item, String componentId, IModel model) {
                 final Booking hotel = (Booking) model.getObject();

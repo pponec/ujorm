@@ -27,14 +27,23 @@ div.tabpanel div.tab-row li a.about {
     background-image: url("../images/icons/help.png");
 }
 
-/* A fix width of hotel table:
+/* A fix width of hotel table */
 div.hotel table.border {
-    width: 780px;
+    width: 800px;
 }
-div.hotel table.border tr div.hotel div {
+table.border td.hotelName {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 150px;
+}
+table.border td.streetName {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100px;
+}
+table.border td div.actions {
     white-space: nowrap;
 }
-*/
 
 /* Prologue */
 div.prologue {
@@ -50,7 +59,7 @@ div.prologue a {
 
 div.chapter-about {
     margin: 2px 0 10px 0px;
-    width: 600px;
+    width: 790px;
 }
 
 h1, h2, h3, h4 {
@@ -110,7 +119,7 @@ div.footer a {
 }
 
 div#logo {
-    width : 700px;
+    width: 790px;
 }
 
 div.login {
