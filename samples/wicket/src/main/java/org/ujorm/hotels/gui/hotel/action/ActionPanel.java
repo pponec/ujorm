@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.AuthService;
+import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
 import static org.ujorm.wicket.CommonActions.*;
 
@@ -49,6 +50,7 @@ public class ActionPanel<T extends Hotel> extends Panel {
         add(createLink(DELETE, true));
         add(createLink(BOOKING, false));
         add(new ExternalLink("externalLink", row.getHomePage()));
+        add(new CssAppender("actions"));
     }
 
     /** Create action */
