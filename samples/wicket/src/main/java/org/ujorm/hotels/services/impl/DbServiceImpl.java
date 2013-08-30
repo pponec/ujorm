@@ -76,10 +76,10 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
 
     /** {@inheritDoc } */
     @Override
-    public void updateHotel(Hotel hotel) {
-        LOGGER.info("Update hotel {}", hotel);
+    public void saveOrUpdateHotel(Hotel hotel) {
+        LOGGER.info("Save or update hotel {}", hotel);
         checkReadOnly(hotel);
-        getSession().update(hotel);
+        getSession().saveOrUpdate(hotel);
     }
 
     @Override
@@ -123,7 +123,8 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
 
     /** Check a read-only state */
     private void checkReadOnly(Hotel ujo) throws ValidationException {
-        if (readOnly && ujo.getId().compareTo(0L) < 0) {
+        final Long id = ujo.getId();
+        if (readOnly && (id==null || id.compareTo(0L) < 0)) {
             throw new ValidationException("exception.readOnly"
                 , "There is not allowed to modify a demo data"
                 + ", download the project for all features.");

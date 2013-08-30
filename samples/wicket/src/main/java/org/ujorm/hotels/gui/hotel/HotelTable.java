@@ -18,6 +18,7 @@ package org.ujorm.hotels.gui.hotel;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -29,6 +30,7 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.booking.BookingEditor;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
+import org.ujorm.hotels.gui.hotel.action.InsertHotel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
@@ -76,6 +78,9 @@ public class HotelTable extends Panel {
         add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());
         add((bookingDialog = BookingEditor.create("bookingDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
+
+        DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
+        table.addBottomToolbar(new InsertHotel(table));
     }
 
     /** Manage events */
@@ -85,9 +90,12 @@ public class HotelTable extends Panel {
         if (event != null) {
             if (event.isAction(UPDATE)) {
                 if (event.showDialog()) {
-                    editDialog.show(event, new LocalizedModel("dialog.edit.title"));
+                    String key = event.getDomain().getId() == null
+                            ? "dialog.create.title"
+                            : "dialog.edit.title";
+                    editDialog.show(event, new LocalizedModel(key));
                 } else {
-                    dbService.updateHotel(event.getDomain());
+                    dbService.saveOrUpdateHotel(event.getDomain());
                     reloadTable(event);
                 }
             }

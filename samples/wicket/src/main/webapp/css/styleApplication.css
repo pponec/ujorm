@@ -143,3 +143,11 @@ img.world-icon {
 .ui-widget {
     font-family: inherit;
 }
+
+td.insertHotel {
+    text-align: right;
+}
+
+td.insertHotel img.world-icon {
+    margin-right: 9px;
+}
