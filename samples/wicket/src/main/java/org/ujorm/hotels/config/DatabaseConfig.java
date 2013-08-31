@@ -49,10 +49,10 @@ public final class DatabaseConfig implements OrmHandlerProvider {
             params.setQuotedSqlNames(false); // It is a default value
             handler.config(params);
         }
-        // External Configuration:
+        // External DB connection or configuration arguments:
         final boolean yesIWantToLoadExternalConfig = false;
         if (yesIWantToLoadExternalConfig) {
-            java.net.URL config = getClass().getResource("DatabaseMappingFull.xml");
+            java.net.URL config = getClass().getResource("DatabaseMapping4PostgreSql.xml");
             handler.config(config, true);
         }
 

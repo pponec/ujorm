@@ -10,6 +10,8 @@
         <user>sa</user>
         <sequencer>org.ujorm.orm.UjoSequencer</sequencer>
         <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+        <!-- <jndi>java:comp/env/jdbc/demoHotels</jndi> -->
+
         <table id="HOTEL">
             <name>demo_hotel</name>
             <alias>demo_hotel</alias>
