@@ -1,6 +1,6 @@
 * DEMO HOTELS
-* Data was loaded from the application "Sample Hotel Search" on the day 2013-05-25 from a
-* resource: http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
+* The original data was loaded from the application "Sample Hotel Search" on the day 2013-08-11
+* using a resource type of: http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
 *
 * License (http://api.hotelsbase.org/documentation.php):
 * Each page that uses hotelsbase data must link to hotelsbase.org, in any many you choose.
