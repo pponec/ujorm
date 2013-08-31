@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release 1.40-SNAPSHOT was created 2013/08/31 10:12 -->
+<body>
+    <database id="DatabaseMapping">
+        <schema>demoHotels</schema>
+        <user>demoHotels</user>
+        <password>demoHotels</password>
+        <dialect>org.ujorm.orm.dialect.MySqlDialect</dialect>
+        <jdbcUrl>jdbc:mysql://127.0.0.1:3306/</jdbcUrl>
+        <jdbcDriver>com.mysql.jdbc.Driver</jdbcDriver>
+        <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+        <!-- <jndi>java:comp/env/jdbc/demoHotels</jndi> -->
+    </database>
+    <parameters>
+        <initializationBatch>org.ujorm.hotels.config.demoData.DataLoader</initializationBatch>
+        <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
+    </parameters>
+</body>
