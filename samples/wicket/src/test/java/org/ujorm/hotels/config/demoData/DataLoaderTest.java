@@ -52,6 +52,9 @@ public class DataLoaderTest {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(DataLoaderTest.class);
 
+    /** Distance of locations from city ceter [km] */
+    protected static final Integer DISTANCE_FROM_CENTER = 10;
+
     /** Test method to dowload data from source: http://api.hotelsbase.org/ */
     //@Test
     public void testDownloadData() throws Exception {
@@ -83,12 +86,11 @@ public class DataLoaderTest {
      * http://api.hotelsbase.org/search.php?longitude=14.421138&latitude=50.087533
      */
     public URL createDataUrl(City city) throws MalformedURLException {
-        Integer distance = 10; // [km]
         String result = String.format
                 ( "http://api.hotelsbase.org/search.php?latitude=%s&longitude=%s&distanceMax=%s"
                 , city.get(City.LATITUDE)
                 , city.get(City.LONGITUDE)
-                , distance // [km]
+                , DISTANCE_FROM_CENTER // [km]
                 );
        return new URL(result);
     }
