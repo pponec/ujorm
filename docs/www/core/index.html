@@ -39,7 +39,7 @@ Released   : 20080129
       <hr />
       <div id="page">
         <div id="content">
-          
+
           <div class="post">
             <div class="entry">
               The <strong>Ujorm core</strong> (original name was <span>UJO Framework</span>) is
@@ -49,20 +49,20 @@ Released   : 20080129
               however over time it appears, that the architecture has many interesting features.
             </div><p class="meta">&nbsp;</p>
           </div><!-- post -->
-                        
-                        
+
+
           <div class="post">
             <img src="../images/milky-44.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title"><a href="#">Core Features</a></h2>
-            <div class="entry">                           
+            <div class="entry">
               <div style="margin-top: 28px;">
                 <a href="../images/UjoUmlFull.png"><img src="../images/UjoUmlFull2-green.png" title="Class diagram release 0.80" width="200" height="190" alt="UjoUml.png" style="float:right; margin: 15px 0 0 0px; vertical-align:text-top; border:0" /></a>
                 <ul>
                   <li>object architecture based on two interfaces</li>
-                  <li>very simple <a href="javadoc/org/ujorm/Ujo.html#readProperties()">introspection</a></li>  
-                  <li>serialization to / from formats 
+                  <li>very simple <a href="javadoc/org/ujorm/Ujo.html#readProperties()">introspection</a></li>
+                  <li>serialization to / from formats
                      <a href="http://en.wikipedia.org/wiki/XML">XML</a>,
-                     <a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> and 
+                     <a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> and
                      <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/PropertyResourceBundle.html">Resource bundle</a></li>
                   <li>unique <a href="http://ujorm.com/">object-relation mapping</a> (ORM) solution is available for mapping to <a href="http://en.wikipedia.org/wiki/Relational_database_management_system">RDMBS</a></li>
                   <li>special validators can be located into ujo-keys to check a consistency of the ujo-bean data</li>
@@ -73,116 +73,116 @@ Released   : 20080129
                   <li>way for an implementation a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/beans/PropertyChangeListener.html">listener</a>
                     to only one <a href="javadoc/org/ujorm/Ujo.html#writeValue(org.ujorm.Key,%20java.lang.Object)">place</a>
                     for each keys including children</li>
-                  <li>unlike some <a href="#similar">competing projects</a> the Key instance is immutable 
+                  <li>unlike some <a href="#similar">competing projects</a> the Key instance is immutable
                       (hence never contains value)
                       and the encapsulation is supported</li>
                   <li>most features are checked by unit tests</li>
                   <li>tiny framework without further dependencies</li>
-                </ul>        					
+                </ul>
               </div>
-              
+
             </div>
             <p class="meta">&nbsp;</p>
           </div><!-- post -->
-                        
-                        
+
+
           <div class="post" id="architecture">
             <img src="../images/milky-31.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title"><a href="#">Architecture</a></h2>
             <div class="entry">
-                
+
               <strong>UJO</strong> is an abbreviation for <strong>Unified Java Object</strong>
               and it is a such <a href="http://en.wikipedia.org/wiki/Object_%28computer_science%29">object</a>
               which implements an interface <a href="javadoc/org/ujorm/Ujo.html">Ujo</a>.
-              
+
               You can imagine the object UJO like a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Map.html">map</a> (an object that maps keys to values)
-              with data access by <strong>methods of the key</strong> for example. 
-              This key is made up of the implementation of the <a href="javadoc/org/ujorm/Key.html">Key</a> 
+              with data access by <strong>methods of the key</strong> for example.
+              This key is made up of the implementation of the <a href="javadoc/org/ujorm/Key.html">Key</a>
               including (among others) two type-safe methods:
-              
+
               <ul>
-                <li><a href="javadoc/org/ujorm/Key.html#setValue(UJO,%20VALUE)">Key.setValue(Ujo, VALUE)</a> - to write the value into the object and</li> 
+                <li><a href="javadoc/org/ujorm/Key.html#setValue(UJO,%20VALUE)">Key.setValue(Ujo, VALUE)</a> - to write the value into the object and</li>
                 <li><a href="javadoc/org/ujorm/Key.html#getValue(UJO)">Key.getValue(Ujo)</a> - to read the value.</li>
               </ul>
-              
+
               There is possible to send a key method to an another object simply by the <strong>key</strong> contrary of the methods of JavaBean object.
-              
+
               An example of the use can be a list of table columns sent to the data model (type of TableModel)
-              or references to the methods of the bean in a JSP page. 
-              
-              The core of the project are two interfaces 
-              <a href="javadoc/org/ujorm/Ujo.html" style="font-style: italic;">Ujo</a> a 
+              or references to the methods of the bean in a JSP page.
+
+              The core of the project are two interfaces
+              <a href="javadoc/org/ujorm/Ujo.html" style="font-style: italic;">Ujo</a> a
               <a href="javadoc/org/ujorm/Key.html" style="font-style: italic;">Key</a>,
               which have got three abstract implementations:
-              
+
               <ul>
                 <li><a href="javadoc/org/ujorm/core/AbstractUjo.html">AbstractUjo</a> - the great performance implemented by the <strong>object array</strong></li>
                 <li><a href="javadoc/org/ujorm/implementation/map/MapUjo.html">MapUjo</a> - a memory safe solution for the case of the sparse attribute values, the solution is based on the object <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashMap.html">HashMap</a></li>
                 <li><a href="javadoc/org/ujorm/implementation/bean/BeanUjo.html">BeanUjo</a> - implementation calls related methods of <a href="http://en.wikipedia.org/wiki/JavaBeans">JavaBean</a> using a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Method.html">Java reflection</a></li>
               </ul>
-              
-              
+
+
               I took inspiration for my work from project <a href="http://cayenne.apache.org/">Cayenne</a> (a solution for an <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">ORM</a>).
               I&nbsp;thank the authors for this product.
               <br />&nbsp;<br />
-              
+
             </div>
             <p class="meta"> <a href="javadoc/org/ujorm/package-summary.html#UJO" class="permalink">Read more</a> </p>
           </div><!-- post -->
-                        
-                                                
-                        
+
+
+
           <div class="post">
             <img src="../images/milky-10.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title" id="sample"><a href="#">Sample of usage:</a></h2>
             <div class="entry">
               How do you <strong>write your first</strong> UJO object?	The easiest way is to use some abstract implementation of the Ujo interface.
               For example see an implementation of the class <i>Person</i> which includes three attributes and a one method to add a&nbsp;cash.
-              
+
               <pre class="pre"><span class="java-keywords">import</span> org.ujorm.core.*;
 
 <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> AbstractUjo {
   <span class="java-keywords">private static final</span> KeyFactory f = <span class="java-layer-method">newFactory</span>(Person.<span class="java-keywords">class</span>);
-    
+
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Boolean&gt; MALE = f.<span class="java-layer-method">newKey</span>();
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person,Double &gt; CASH = f.<span class="java-layer-method">newKey</span>();
-    
+
   <span class="java-annotation">@</span>Override
   <span class="java-keywords">public</span> <span class="java-keywords">KeyList</span>&lt;?&gt; <span class="java-layer-method">readKeys</span>() {
     <span class="java-keywords">return</span> f.<span class="java-layer-method">getKeys</span>();
   }
 }</pre>
-<!-- -->          
-              <p>Note that a result of the method get(CASH) <strong>needs no casting</strong> to Double type and 
+<!-- -->
+              <p>Note that a result of the method get(CASH) <strong>needs no casting</strong> to Double type and
               the Java <strong>compiler disallows improper parameter types</strong> in the statement set(CASH, newCash).
-              The CASH key have got a default zero value to all Person instances similar like a primitive type do it.              
+              The CASH key have got a default zero value to all Person instances similar like a primitive type do it.
               </p>
-              
-              <p>The sample uses an <a href="javadoc/org/ujorm/extensions/UjoExt.html">extended API</a>                
+
+              <p>The sample uses an <a href="javadoc/org/ujorm/extensions/UjoExt.html">extended API</a>
               for more conventional key access in a source code
               that's available since the <strong>UJO release 0.80</strong>.
               The new solution allows to you to chain more keys according to a model of a some new popular languages.
               <!-- <a href="http://en.wikipedia.org/wiki/Groovy_(programming_language)">Groovy</a> -->
-              The extended API is a child of the <a href="javadoc/org/ujorm/Ujo.html">original API</a> so 
+              The extended API is a child of the <a href="javadoc/org/ujorm/Ujo.html">original API</a> so
               you can mix both types because all internal tools are handling the original API still  .
               </p>
-              
+
               <p id="ujoimpl">Sometimes it is not possible to extend an abstract class so you can implements the Ujo interface by four methods only.
               Note the implementation is valid also for <strong>all subclasses</strong> of the Person class.
               The simple example:</p>
-              
+
 <pre class="pre"><span class="keyword-directive">import</span> org.ujorm.*;
 <span class="keyword-directive">import</span> org.ujorm.core.*;
 
 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">implements</span> Ujo {
   <span class="java-keywords">private static final</span> KeyFactory&lt;Person&gt; f
       = KeyFactory.CamelBuilder.<span class="java-layer-method">get</span>(Person.<span class="java-keywords">class</span>);
-    
+
   <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME = f.<span class="java-layer-method">newKey</span>();
   <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE = f.<span class="java-layer-method">newKey</span>();
   <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Double &gt; CASH = f.<span class="java-layer-method">newKeyDefault</span>(0.0);
-  
+
   <span style="background-color: #fbf1f1"><span class="comment">// --- The start of the Ujo implementation ---</span></span>
   <span class="keyword-directive">private</span> Object[] data = <span class="keyword-directive">new</span> Object[f.<span class="java-layer-method">lockAndSize</span>()];
 
@@ -217,14 +217,14 @@ Released   : 20080129
 If we exclude all imports from the code then the <strong>Ujo implementation</strong> have got slightly less code lines in compare to JavaBeans.
 However the more keys gives significantly the better effect in favour of the Ujo implementation.
 </p>
-<!-- -->           
+<!-- -->
 
             </div>
             <p class="meta"> <a href="javadoc/org/ujorm/package-summary.html#UJO" class="permalink">To continue</a> </p>
           </div><!-- post -->
-             
-                        
-                        
+
+
+
           <div class="post">
             <h2 class="title" id="reference"><a href="#">Reference projects</a></h2>
             <div class="entry">
@@ -248,7 +248,7 @@ However the more keys gives significantly the better effect in favour of the Ujo
               <a href="http://pekiline.ponec.net/"><img src="../images/logoPekiLine48.png" width="48" height="48" alt="jws48.png" style="float:right; margin: 0 0 5px 5px; vertical-align:text-top; border:0" /></a>
               <a href="http://pekiline.ponec.net/" style="font-weight: bold;">PekiLine</a>
               - the desktop application manages your personal (English) vocabulary to learn.
-              
+
               <ul>
                     <li>the application can get an translation word from a <a href="http://www.google.com/dictionary">Google dictionary</a> including a pronunciation in case you are on-line</li>
                     <li>you can modify all items of vocabulary, sort columns or mark word to a print</li>
@@ -258,16 +258,16 @@ However the more keys gives significantly the better effect in favour of the Ujo
             </div>
             <p class="meta"> <a href="http://jworksheet.ponec.net/" class="permalink">Read more</a> </p>
           </div><!-- post -->
-             
-                        
-                        
+
+
+
           <div class="post">
             <img src="../images/milky-46.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title"  id="license"><a href="#">Licence:</a></h2>
             <div class="entry">
               Source code was released under license <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License, Version 2.0</a>. <br />
               <br />
-              
+
               <div class="pre apache"><code>
  Copyright 2007-2013 Pavel Ponec
 
@@ -285,17 +285,17 @@ However the more keys gives significantly the better effect in favour of the Ujo
               </div>
             </div>
             <p class="meta">&nbsp;</p>
-            
+
           </div><!-- post -->
-             
-                        
-                        
+
+
+
           <div class="post">
             <img src="../images/milky-07.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title" id="download"><a href="#">Download:</a></h2>
             <div class="entry">
               You can download a source or binary package from the SourceForge:
-              <ul> 
+              <ul>
                 <li>Binary <a href="http://sourceforge.net/projects/ujoframework/">package</a> (compatible with <span title="Java Standard Edition">J2SE</span> 5.0+)</li>
                 <li>Source <a href="http://sourceforge.net/projects/ujoframework/">package</a> (compatible with <span title="Java Standard Edition">J2SE</span> 6.0+)</li>
               </ul>
@@ -304,7 +304,7 @@ However the more keys gives significantly the better effect in favour of the Ujo
 <span class="xml-tag">&lt;dependency&gt;</span>
     <span class="xml-tag">&lt;groupId&gt;</span>org.ujorm<span class="xml-tag">&lt;/groupId&gt;</span>
     <span class="xml-tag">&lt;artifactId&gt;</span>ujo-core<span class="xml-tag">&lt;/artifactId&gt;</span>
-    <span class="xml-tag">&lt;version&gt;</span>1.34<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.40<span class="xml-tag">&lt;/version&gt;</span>
 <span class="xml-tag">&lt;/dependency&gt;</span>
 </pre>
               and the next extended dependency for the <a href="orm/index.html">ORM</a>:
@@ -312,17 +312,17 @@ However the more keys gives significantly the better effect in favour of the Ujo
 <span class="xml-tag">&lt;dependency&gt;</span>
     <span class="xml-tag">&lt;groupId&gt;</span>org.ujorm<span class="xml-tag">&lt;/groupId&gt;</span>
     <span class="xml-tag">&lt;artifactId&gt;</span>ujo-orm<span class="xml-tag">&lt;/artifactId&gt;</span>
-    <span class="xml-tag">&lt;version&gt;</span>1.34<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.40<span class="xml-tag">&lt;/version&gt;</span>
 <span class="xml-tag">&lt;/dependency&gt;</span>
 </pre>
               The latest version of the source code is available in the <a href="https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2">SVN repository</a>.
             </div>
             <p class="meta">&nbsp;</p>
-            
+
           </div><!-- post -->
-             
-             
-                        
+
+
+
           <div class="post">
             <img src="../images/milky-27.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title" id="similar"><a href="#">Similar projects:</a></h2>
@@ -346,14 +346,14 @@ However the more keys gives significantly the better effect in favour of the Ujo
 
 
             <p class="meta">&nbsp;</p>
-            
+
           </div><!-- post -->
 
           <div class="post">
             <img src="../images/milky-06.png" width="48" height="48" alt="architecture" style="float:left; margin: 0 15px 0 0; vertical-align:text-top; border:0" />
             <h2 class="title"  id="support"><a href="#">Support:</a></h2>
             <div class="entry">
-              <ul>  
+              <ul>
                 <li>Forum: <a href="http://sourceforge.net/forum/forum.php?forum_id=744237">discussion forums</a></li>
                 <li>Contact: ponec@ujorm.com</li>
                 <li>Blog: <a href="http://ujorm.blogspot.com/">http://ujorm.blogspot.com/</a></li>
@@ -361,10 +361,10 @@ However the more keys gives significantly the better effect in favour of the Ujo
             </div>
             <p>&nbsp;</p>
           </div><!-- post -->
-             
-             
-                        
-          <!--              
+
+
+
+          <!--
           <div class="post">
             <h2 class="title"><a href="#">Xxx</a></h2>
             <div class="entry">
@@ -372,11 +372,11 @@ However the more keys gives significantly the better effect in favour of the Ujo
             </div>
             <p class="meta"> <a href="javadoc/org/ujorm/package-summary.html#UJO" class="permalink">Read more</a> </p>
           </div><!-.- post -.->
-          -->   
-                        
-                        
+          -->
+
+
         </div><!-- end #content -->
-        
+
         <div id="sidebar">
           <ul>
             <li id="search">
@@ -420,7 +420,7 @@ However the more keys gives significantly the better effect in favour of the Ujo
                  <li><a href="#similar">Similar projects</a></li>
               </ul>
             </li>
-            
+
             <li><h2>advertising </h2>
               <ul><li>
 <script type="text/javascript"><!--
@@ -433,7 +433,7 @@ google_ad_height = 200;
 </script>
 <script type="text/javascript"
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>                
+</script>
               </li>
               <li>
 <script type="text/javascript"><!--
@@ -446,22 +446,22 @@ google_ad_height = 200;
 </script>
 <script type="text/javascript"
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>                
-              </li>              
+</script>
+              </li>
               </ul>
-            </li>  
-            
+            </li>
+
             <li><h2 id="emblems">Emblems</h2>
               <ul>
 
               <li>
 <script type="text/javascript" src="http://www.ohloh.net/p/93634/widgets/project_thin_badge.js"></script>
               </li>
-                  
+
               <li><a href="http://www.java.net">
 <img height="25" width="90" style="border:0;" alt="java.net Member Button: 90px wide" src="../images/javanet_button_90.gif"/>
 </a>
-              </li>    
+              </li>
               <li>
 <a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
 
@@ -471,9 +471,9 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <a href="http://navrcholu.cz/Statistika/111542/" style="text-decoration: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
               </li>
-              
-              </ul>  
-            </li>  
+
+              </ul>
+            </li>
           </ul>
         </div>
         <!-- end #sidebar -->
