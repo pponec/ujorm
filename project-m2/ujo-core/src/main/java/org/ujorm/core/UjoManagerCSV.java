@@ -58,6 +58,8 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     private String newLine = System.getProperty("line.separator");
     /** Enable to print a CSV header */
     private boolean printHeader = true;
+    /** Skip empty lines on reading, the default value is {@code true}. */
+    private boolean skipEmptyLines = true;
     /** Print or validate the CSV Header content */
     private CharSequence[] headerContent = new CharSequence[0];
 
@@ -125,7 +127,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
             if (isHeaderFilled()) {
                 printHeaders(out);
             } else {
-                UJO ujo = ujoList.size()>0 
+                UJO ujo = ujoList.size()>0
                         ? ujoList.get(0)
                         : getUjoClass().newInstance();
                 boolean printSepar = false;
@@ -213,6 +215,10 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         while (inp.hasNextLine()) {
             String line = inp.nextLine();
             ++lineCounter;
+
+            if (skipEmptyLines && line.length()==0) {
+                continue;
+            }
 
             if (readHeader) {
                 if (isHeaderFilled()
@@ -327,6 +333,22 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         return this;
     }
 
+    /**
+     * Skip empty lines on reading, the default value is {@code true}.
+     * @return the skipEmptyLines
+     */
+    public boolean isSkipEmptyLines() {
+        return skipEmptyLines;
+    }
+
+    /**
+     * Skip empty lines on reading, the default value is {@code true}.
+     * @param skipEmptyLines the skipEmptyLines to set
+     */
+    public void setSkipEmptyLines(boolean skip) {
+        this.skipEmptyLines = skip;
+    }
+
     /** PrintHeaders text with separators */
     protected void printHeaders(Writer out) throws IOException {
         for (int i = 0; i < headerContent.length; i++) {
@@ -366,7 +388,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     public void setHeaderContent(CharSequence... headerContent) {
         this.headerContent = headerContent;
     }
-    
+
     /** Assign the entire content of the CSV where no characte is escaped.
      * The empty text or {@code null} value means the undefined header.
      * @param headerContent a String or Key arguments
