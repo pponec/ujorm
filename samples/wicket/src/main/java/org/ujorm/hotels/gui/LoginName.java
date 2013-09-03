@@ -22,9 +22,11 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.gui.customer.LoginDialog;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.link.MessageLink;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 
 /**
@@ -35,20 +37,26 @@ public class LoginName extends MessageLink {
 
     @SpringBean
     private AuthService authService;
+    /** Login dialog */
+    private LoginDialog dialog;
 
-    public LoginName(String id) {
+    public LoginName(String id, LoginDialog dialog) {
         super(id, null);
+        this.dialog = dialog;
         setDefaultModel(new LoginModel());
         setOutputMarkupPlaceholderTag(true);
-        add(new AttributeModifier("title", "Logout"));
+        add(new AttributeModifier("title", "Change login"));
     }
 
     @Override
     public void onClick(AjaxRequestTarget target) {
-        authService.logout();
-        //setResponsePage(HomePage.class);
-        target.add(this);
-        send(getWebPage(), Broadcast.EXACT, new UjoEvent(LOGIN_CHANGED, null, target));
+        if (authService.isCustomer()) {
+            authService.logout();
+            target.add(this);
+            send(getWebPage(), Broadcast.EXACT, new UjoEvent(LOGIN_CHANGED, null, target));
+        } else {
+            dialog.show(new UjoEvent(LOGIN_CHANGED, new Customer(), target), new LocalizedModel("dialog.login.title"));
+        }
     }
 
     /** Manage events */
@@ -62,24 +70,17 @@ public class LoginName extends MessageLink {
         }
     }
 
-    /** Component is visible if the Current customer is not null */
-    @Override
-    public boolean isVisible() {
-        return super.isVisible()
-            && getCurrentCustomer() != null;
-    }
-
-    /** Returns logged user */
-    public Customer getCurrentCustomer() {
-        return authService.getCurrentCustomer();
-    }
-
     /** Login model */
     private class LoginModel extends Model<String> {
         @Override public String getObject() {
-            final Customer cust = LoginName.this.getCurrentCustomer();
-            return cust != null ? cust.get(Customer.LOGIN) : "";
+            final Customer cust = getCurrentCustomer();
+            return cust != null ? cust.getLogin() : "Log-in";
         }
+    }
+
+    /** Returns logged user */
+    private Customer getCurrentCustomer() {
+        return authService.getCurrentCustomer();
     }
 
 }

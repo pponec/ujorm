@@ -23,10 +23,15 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.about.AboutPanel;
 import org.ujorm.hotels.gui.booking.BookingTable;
 import org.ujorm.hotels.gui.customer.CustomerTable;
+import org.ujorm.hotels.gui.customer.LoginDialog;
 import org.ujorm.hotels.gui.hotel.HotelTable;
+import org.ujorm.hotels.services.AuthService;
+import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.tabs.UjoTab;
 import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
@@ -36,6 +41,10 @@ public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
     /** Logout */
     public static final String LOGOUT_ID = "logout";
+    @SpringBean
+    private AuthService authService;
+    /** Login Dialog */
+    private LoginDialog loginDialog;
 
     public HomePage(PageParameters parameters) {
         super(parameters);
@@ -49,7 +58,8 @@ public class HomePage extends WebPage {
         add(new UjoTabbedPanel("tabs", tabs));
 
         // Login name and logout action:
-        add(new LoginName("login"));
+        add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
+        add(new LoginName("login", loginDialog));
 
         // Footer:
         add(new AjaxLink("aboutLink") {
@@ -62,9 +72,15 @@ public class HomePage extends WebPage {
     /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
-        UjoEvent<?> event = UjoEvent.get(argEvent);
+        UjoEvent<Customer> event = UjoEvent.get(argEvent);
         if (event != null && event.isAction(LOGIN_CHANGED)) {
+            if (event.getDomain()!=null) {
+                if (!authService.authenticate(event.getDomain())) {
+                    throw new ValidationException("login.failed", "Login failed");
+                }
+            }
             event.addTarget(HomePage.this.get("tabs"));
+            event.addTarget(HomePage.this.get("login"));
         }
     }
 }
