@@ -161,7 +161,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         Customer cust = Args.notNull(booking.getCustomer(), Booking.CUSTOMER.toStringFull());
         if (cust.getId()==null) {
             if (!authService.authenticate(cust)) {
-                throw new ValidationException("wrong.login", "Login failed");
+                throw new ValidationException("login.failed", "Login failed");
             }
             booking.setCustomer(authService.getCurrentCustomer());
         }
