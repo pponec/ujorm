@@ -9,7 +9,7 @@
     <!-- The SpringWebApplicationFactory will need access to a Spring Application context, configured like this... -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:org/ujorm/hotels/config/ApplicationContext.xml</param-value>
+        <param-value>classpath:org/ujorm/hotels/config/applicationContext.xml</param-value>
     </context-param>
 
     <!-- Spring's context loader listener -->
