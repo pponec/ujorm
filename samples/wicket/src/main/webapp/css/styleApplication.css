@@ -144,7 +144,7 @@ img.world-icon {
     font-family: inherit;
 }
 
-td.insertHotel {
+td.actions .insertHotel {
     text-align: right;
 }
 
