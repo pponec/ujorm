@@ -52,7 +52,7 @@ public final class DatabaseConfig implements OrmHandlerProvider {
         // External DB connection or configuration arguments:
         final boolean yesIWantToLoadExternalConfig = false;
         if (yesIWantToLoadExternalConfig) {
-            java.net.URL config = getClass().getResource("DatabaseMapping4PostgreSql.xml");
+            java.net.URL config = getClass().getResource("databaseMapping4PostgreSql.xml");
             handler.config(config, true);
         }
 
