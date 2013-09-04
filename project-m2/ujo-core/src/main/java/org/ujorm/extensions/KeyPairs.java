@@ -25,7 +25,7 @@ import org.ujorm.Ujo;
  * The help class to simple copy between Ujo objects.
  * @author Pavel Ponec
  */
-public class KeyPairList<SRC extends Ujo, TRG extends Ujo> {
+public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
 
     private List<PairItem> pairs = new ArrayList<PairItem>();
     /** Locked sign */
@@ -42,7 +42,7 @@ public class KeyPairList<SRC extends Ujo, TRG extends Ujo> {
         }
     }
 
-    public KeyPairList<SRC, TRG> lock() {
+    public KeyPairs<SRC, TRG> lock() {
         locked = true;
         return this;
     }
@@ -98,8 +98,8 @@ public class KeyPairList<SRC extends Ujo, TRG extends Ujo> {
 
     // ----------- FACTORY -----------
 
-    public static <SRC extends Ujo, TRG extends Ujo, V> KeyPairList<SRC,TRG> get() {
-        return new KeyPairList<SRC, TRG>();
+    public static <SRC extends Ujo, TRG extends Ujo, V> KeyPairs<SRC,TRG> get() {
+        return new KeyPairs<SRC, TRG>();
     }
 
 
