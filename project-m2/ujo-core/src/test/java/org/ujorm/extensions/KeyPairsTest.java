@@ -19,12 +19,12 @@ import junit.framework.TestCase;
 import org.ujorm.implementation.universe.UniUjoBase;
 
 /**
- * KeyPairListTest
+ * KeyPairsTest
  * @author Pavel Ponec
  */
-public class KeyPairListTest extends TestCase {
+public class KeyPairsTest extends TestCase {
 
-    public KeyPairListTest(String testName) {
+    public KeyPairsTest(String testName) {
         super(testName);
     }
 
@@ -47,7 +47,7 @@ public class KeyPairListTest extends TestCase {
         UniUjoBase p1 = new UniUjoBase();
         UniUjoBase p2 = new UniUjoBase();
 
-        KeyPairList<UniUjoBase,UniUjoBase> pairs = KeyPairList.get();
+        KeyPairs<UniUjoBase,UniUjoBase> pairs = KeyPairs.get();
 
         pairs.add(UniUjoBase.PRO_P0, UniUjoBase.PRO_P0);
         pairs.add(UniUjoBase.PRO_P1, UniUjoBase.PRO_P1);
