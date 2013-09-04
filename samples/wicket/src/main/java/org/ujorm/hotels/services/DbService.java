@@ -46,8 +46,8 @@ public interface DbService {
     /** Delete customer if no related booking was found, or inactive it */
     public void deleteCustomer(Customer customer);
 
-    /** Update customer */
-    public void updateCustomer(Customer customer);
+    /** Insert or Update customer */
+    public void saveOrUpdateCustomer(Customer customer);
 
     /** Reload hotel from database and build new Booking model */
     public IModel<Booking> prepareBooking(UjoEvent<Hotel> event);

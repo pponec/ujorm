@@ -18,6 +18,7 @@ package org.ujorm.hotels.gui.customer;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -26,6 +27,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.customer.action.CustActionPanel;
+import org.ujorm.hotels.gui.customer.action.InsertCustomer;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
@@ -71,6 +73,9 @@ public class CustomerTable extends Panel {
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
+
+        DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
+        table.addBottomToolbar(new InsertCustomer(table));
     }
 
     /** Manage events */
@@ -82,7 +87,7 @@ public class CustomerTable extends Panel {
                 if (event.showDialog()) {
                     editDialog.show(event, new LocalizedModel("dialog.edit.title"));
                 } else {
-                    dbService.updateCustomer(event.getDomain());
+                    dbService.saveOrUpdateCustomer(event.getDomain());
                     reloadTable(event);
                 }
             }
