@@ -96,9 +96,9 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         }
     }
 
-    /** Update customer */
+    /** Insert or update customer */
     @Override
-    public void updateCustomer(Customer customer) {
+    public void saveOrUpdateCustomer(Customer customer) {
         LOGGER.info("Update customer {}", customer);
         checkReadOnly(customer);
 
@@ -107,6 +107,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
             customer.writeSession(getSession()); // Activate modifications
             customer.set(Customer.PASSWORD_HASH, authService.getHash(password));
         }
+        getSession().saveOrUpdate(customer);
     }
 
     /** Authenticate the user */
@@ -133,7 +134,9 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
 
     /** Check a read-only state */
     private void checkReadOnly(Customer ujo) throws ValidationException {
-        if (readOnly && Arrays.asList("demo","test","admin").contains(ujo.getLogin())) {
+        if (readOnly 
+        && Arrays.asList("demo","test","admin").contains(ujo.getLogin())
+        && ujo.getId() != null) {
             throw new ValidationException("exception.readOnly"
                 , "There is not allowed to modify a demo data"
                 + ", download the project for all features.");
