@@ -43,8 +43,6 @@ public class HomePage extends WebPage {
     public static final String LOGOUT_ID = "logout";
     @SpringBean
     private AuthService authService;
-    /** Login Dialog */
-    private LoginDialog loginDialog;
 
     public HomePage(PageParameters parameters) {
         super(parameters);
@@ -57,9 +55,8 @@ public class HomePage extends WebPage {
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoTabbedPanel("tabs", tabs));
 
-        // Login name and logout action:
-        add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
-        add(new LoginName("login", loginDialog));
+        // Login name and logout action:        
+        add(new LoginName("login"));
 
         // Footer:
         add(new AjaxLink("aboutLink") {

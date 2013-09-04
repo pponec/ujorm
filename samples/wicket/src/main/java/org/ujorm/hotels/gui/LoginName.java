@@ -40,12 +40,12 @@ public class LoginName extends MessageLink {
     /** Login dialog */
     private LoginDialog dialog;
 
-    public LoginName(String id, LoginDialog dialog) {
+    public LoginName(String id) {
         super(id, null);
-        this.dialog = dialog;
         setDefaultModel(new LoginModel());
         setOutputMarkupPlaceholderTag(true);
         add(new AttributeModifier("title", "Change login"));
+        add((dialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
     }
 
     @Override
