@@ -26,9 +26,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.about.AboutPanel;
+import org.ujorm.hotels.gui.about.MeasuringCode;
 import org.ujorm.hotels.gui.booking.BookingTable;
 import org.ujorm.hotels.gui.customer.CustomerTable;
-import org.ujorm.hotels.gui.customer.LoginDialog;
 import org.ujorm.hotels.gui.hotel.HotelTable;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.validator.ValidationException;
@@ -64,6 +64,7 @@ public class HomePage extends WebPage {
                 ((UjoTabbedPanel)HomePage.this.get("tabs")).selectedTab(AboutPanel.class, target);
             }
         });
+        add(new MeasuringCode("measuringCode"));
     }
 
     /** Manage events */
