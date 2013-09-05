@@ -351,7 +351,10 @@ public class Session {
         }
     }
 
-    /** INSERT or UPDATE object into table. */
+    /** Make a statement INSERT or UPDATE into a database table
+     * according to attribute {@link Session}. Related objects
+     * must be saved using an another call of the method.
+     */
     public void saveOrUpdate(final OrmUjo bo) throws IllegalStateException {
         checkNotNull(bo, "saveOrUpdate");
         if (bo.readSession() == null) {
