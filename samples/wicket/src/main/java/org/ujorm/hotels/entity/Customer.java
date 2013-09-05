@@ -40,7 +40,7 @@ public class Customer extends OrmTable<Customer> {
     public static final Key<Customer, Long> PASSWORD_HASH = f.newKey(notNull(Long.class));
     /** Title */
     @Comment("Title")
-    public static final Key<Customer, TitleEnum> TITLE = f.newKey(notNull(TitleEnum.class));
+    public static final Key<Customer, TitleEnum> TITLE = f.newKey();
     /** Firstname */
     @Comment("Firstname")
     public static final Key<Customer, String> FIRSTNAME = f.newKey(length(MANDATORY, 2, 60));
@@ -56,7 +56,7 @@ public class Customer extends OrmTable<Customer> {
     /** Customer state (the true or null values are required) */
     @Comment("Customer is allowed to login (the true or null values are required)")
     @Column(uniqueIndex=UNIQUE_LOGIN)
-    public static final Key<Customer, Boolean> ACTIVE = f.newKey(forbidden(false));
+    public static final Key<Customer, Boolean> ACTIVE = f.newKeyDefault(true);
 
     static {
         f.lock();
