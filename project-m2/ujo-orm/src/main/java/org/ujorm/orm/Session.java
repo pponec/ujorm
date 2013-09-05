@@ -304,7 +304,7 @@ public class Session {
 
     /** Returns {@code true} if exists any database row for the required criterion. */
     final protected <UJO extends OrmUjo> boolean exists( MetaTable table, Criterion<UJO> criterion, Key pk) {
-        final UJO result = new Query<UJO>(table, pk.forAll(), this)
+        final UJO result = new Query<UJO>(table, criterion, this)
                 .setColumn(pk)
                 .setLimit(1)
                 .uniqueResult();
