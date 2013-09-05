@@ -24,8 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.ujorm.Key;
-import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
@@ -101,11 +99,17 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     public void saveOrUpdateCustomer(Customer customer) {
         LOGGER.info("Update customer {}", customer);
         checkReadOnly(customer);
+        final boolean newMode = customer.getId() == null;
 
-        String password = customer.get(Customer.PASSWORD);
+        // Check a unique login:
+        if (newMode && getSession().exists(Customer.LOGIN.whereEq(customer.getLogin()))) {
+            throw new ValidationException("login.occupied", "Login is occupied");
+        }
+
+        final String password = customer.getPassword();
         if (isFilled(password)) {
-            customer.writeSession(getSession()); // Activate modifications
-            customer.set(Customer.PASSWORD_HASH, authService.getHash(password));
+            customer.writeSession(newMode ? null : getSession() ); // Activate modifications for EditMode
+            customer.setPasswordHash(authService.getHash(password));
         }
         getSession().saveOrUpdate(customer);
     }
@@ -134,7 +138,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
 
     /** Check a read-only state */
     private void checkReadOnly(Customer ujo) throws ValidationException {
-        if (readOnly 
+        if (readOnly
         && Arrays.asList("demo","test","admin").contains(ujo.getLogin())
         && ujo.getId() != null) {
             throw new ValidationException("exception.readOnly"

@@ -25,6 +25,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.customer.action.CustActionPanel;
 import org.ujorm.hotels.gui.customer.action.InsertCustomer;
@@ -56,8 +57,7 @@ public class CustomerTable extends Panel {
     public CustomerTable(String id) {
         super(id);
 
-        UjoDataProvider<Customer> columns
-               = UjoDataProvider.of(Customer.ACTIVE.whereEq(true));
+        UjoDataProvider<Customer> columns = UjoDataProvider.of(getCriterion());
         columns.add(Customer.LOGIN);
         columns.add(Customer.TITLE);
         columns.add(Customer.FIRSTNAME);
@@ -78,6 +78,13 @@ public class CustomerTable extends Panel {
         table.addBottomToolbar(new InsertCustomer(table));
     }
 
+    /** Create a criterion for the table */
+    private IModel<Criterion<Customer>> getCriterion() {
+        return Model.of(authService.isAdmin()
+             ? Customer.ACTIVE.forAll()
+             : Customer.ACTIVE.whereEq(true));
+    }
+
     /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
@@ -85,6 +92,9 @@ public class CustomerTable extends Panel {
         if (event != null) {
             if (event.isAction(UPDATE)) {
                 if (event.showDialog()) {
+                    String key = event.getDomain().getId() == null
+                            ? "dialog.create.title"
+                            : "dialog.edit.title";
                     editDialog.show(event, new LocalizedModel("dialog.edit.title"));
                 } else {
                     dbService.saveOrUpdateCustomer(event.getDomain());

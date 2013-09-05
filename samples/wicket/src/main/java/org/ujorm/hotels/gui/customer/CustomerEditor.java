@@ -18,7 +18,9 @@ package org.ujorm.hotels.gui.customer;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
+import org.ujorm.hotels.services.AuthService;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
@@ -28,6 +30,8 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
  */
 public class CustomerEditor extends EntityDialogPane<Customer> {
     private static final long serialVersionUID = 0L;
+
+    @SpringBean private AuthService authService;
 
     public CustomerEditor(ModalWindow modalWindow, IModel<Customer> model) {
         super(modalWindow, model);
@@ -41,9 +45,21 @@ public class CustomerEditor extends EntityDialogPane<Customer> {
         fields.add(Customer.EMAIL);
         fields.add(Customer.ADMIN);
         fields.add(Customer.ACTIVE);
+    }
 
-        // Modify attribute(s):
-        fields.setEnabled(Customer.LOGIN, false);
+    /** Modify attribute(s): */
+    @Override
+    protected void onBeforeRender() {
+        final boolean newMode = isNew();
+        fields.setEnabled(Customer.LOGIN, newMode);
+        fields.setVisible(Customer.ACTIVE, !newMode);
+        fields.setVisible(Customer.ADMIN, authService.isAdmin());
+        super.onBeforeRender();
+    }
+
+    /** Dialog for a new Customer */
+    private boolean isNew() {
+        return getBaseModelObject().getId() == null;
     }
 
     /** Create the editor dialog */
