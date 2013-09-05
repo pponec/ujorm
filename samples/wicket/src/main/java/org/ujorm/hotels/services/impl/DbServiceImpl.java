@@ -129,24 +129,28 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     /** Check a read-only state */
     private void checkReadOnly(Hotel ujo) throws ValidationException {
         final Long id = ujo.getId();
-        if (readOnly && (id==null || id.compareTo(0L) < 0)) {
-            throw new ValidationException("exception.readOnly"
-                , "There is not allowed to modify a demo data"
-                + ", download the project for all features.");
+        if (readOnly 
+        && id !=null
+        && id.compareTo(0L) < 0) {
+            throwReadOnlyException();
         }
     }
 
     /** Check a read-only state */
     private void checkReadOnly(Customer ujo) throws ValidationException {
         if (readOnly
-        && Arrays.asList("demo","test","admin").contains(ujo.getLogin())
-        && ujo.getId() != null) {
-            throw new ValidationException("exception.readOnly"
-                , "There is not allowed to modify a demo data"
-                + ", download the project for all features.");
+        && ujo.getId() != null
+        && Arrays.asList("demo","test","admin").contains(ujo.getLogin())) {
+            throwReadOnlyException();
         }
     }
 
+    /** Throws a read-only exception */
+    private void throwReadOnlyException() throws ValidationException {
+        throw new ValidationException("exception.readOnly"
+            , "There is not allowed to modify a demo data"
+            + ", download the project for all features.");
+    }
 
     /** Reload hotel from database and build new Booking model */
     @Override
