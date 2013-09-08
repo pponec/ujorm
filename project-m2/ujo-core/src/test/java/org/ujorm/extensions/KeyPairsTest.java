@@ -55,7 +55,7 @@ public class KeyPairsTest extends TestCase {
 
         UniUjoBase.PRO_P0.setValue(p1, 300L);
         UniUjoBase.PRO_P1.setValue(p1, 9);
-        pairs.copyToSource(p1, p2);
+        pairs.copyToTarget(p1, p2);
         assertEquals(UniUjoBase.PRO_P0.of(p1), UniUjoBase.PRO_P0.of(p2));
         assertEquals(UniUjoBase.PRO_P1.of(p1), UniUjoBase.PRO_P1.of(p2));
     }
