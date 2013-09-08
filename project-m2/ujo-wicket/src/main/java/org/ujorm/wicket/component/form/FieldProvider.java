@@ -226,6 +226,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             final Object newValue = getValue(k);
             if (!k.equals(domain, newValue)) {
                 k.setValue(domain, newValue);
+            } else if (k.getValidator()!=null) {
+                k.getValidator().checkValue(newValue, k, domain);
             }
         }
         return domain;
@@ -290,8 +292,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Set a visible attribute for a required filed, where validator have not generic type.
-     * If the field is not found, the statement is ignored 
-     * @see #setValidator(org.ujorm.Key, org.ujorm.Validator) 
+     * If the field is not found, the statement is ignored
+     * @see #setValidator(org.ujorm.Key, org.ujorm.Validator)
      */
     public <T> void setValidatorOld(final Key<U, T> key, Validator validator) {
         final Field field = getField(key);

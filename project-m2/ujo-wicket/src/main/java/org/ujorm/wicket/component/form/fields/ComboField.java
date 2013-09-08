@@ -67,6 +67,8 @@ public class ComboField<T extends Ujo> extends Field {
         });
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
+        result.setRequired(isRequired());
+        result.setNullValid(!isRequired());
         return result;
     }
 
@@ -111,7 +113,7 @@ public class ComboField<T extends Ujo> extends Field {
     }
 
     // ----------- FACTORIES -------------
-    
+
     /** Create new ComboField using database request */
     public static <T extends OrmUjo> ComboField<T> of(Key<?, T> property, Criterion<T> items, Key<T, ?> display) {
         final OrmSessionProvider session = new OrmSessionProvider();
