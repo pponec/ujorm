@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cs">
+<head>
+  <title>Demo WEB aplikace s Ujorm a Wicket</title>
+  <meta name="keywords" content="Ujorm, CRUD, WEB, applicaton demo-hotels, wicket, spring framework" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:300,300italic,600&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css' />
+  <style type="text/css">
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    width: 710px;
+    padding: 15px;
+  }
+  h1, h2, h3 {
+    color: darkblue;
+    margin-bottom: 20px;
+  }
+  h2 {
+    font-size: 24px;
+    margin: 30px 0 10px
+  }
+  img {
+    border: 0;
+  }
+  div.img.code {
+    border: silver solid 1px;
+    border-radius: 10px;
+  }
+  </style>
+</head>
+
+<body>
+<h1>Demo WEB aplikace s Ujorm a Wicket</h1>
+
+<p>Knihovna <strong>Ujorm</strong> byla představena poprvé na portálu <a
+href="http://java.cz/article/7977">java.cz</a> v roce 2007, tehdy ještě pod
+starým názvem UJO Framework. Od té doby uběhlo 6 let a zdrojový kód
+prošel mnoha úpravami, základní myšlenka však zůstala stejná: přístup
+k vlastnostem objektu se provádí pomocí konstant zvaných
+<strong>klíče</strong>. Je pravda, že podobný přístup používá také
+objekt HashMap, narozdíl od něj se však klíče v Ujorm liší v několika
+vlastnostech:</p>
+<ul>
+  <li>objekty podporující práci s Ujorm klíči (dále jen Ujo objekty)
+    mají svůj pevný výčet klíčů </li>
+  <li>každý klíč poskytuje typ svého atributu včetně dvou metod pro
+    typově bezpečné čtení a zápis hodnoty (do Ujo objektu)</li>
+  <li>každý klíč obsahuje referenci na svoji doménovou třídu</li>
+  <li>klíče lze logicky spojovat (podobně jako v EL výrazech) </li>
+  <li>klíče mohou poskytovat různé další služby (například řeší
+    lazy-loading v ORM implementaci) </li>
+  <li>klíč může obsahovat validátor pro kontrolu platnosti vstupních dat,
+    validátory je možné spojovat pomocí operátorů AND a OR,</li>
+  <li>v neposlední řadě klíče mají Ujo objektu vyšší rychlost při
+    čtení a zápisu hodnot ve srovnání s HashMap díky přímému
+    přístupu do pole objektů pomocí atributu <strong>index</strong> </li>
+</ul>
+
+<p>Vlastnosti naopak společné se třídou HashMap:</p>
+<ul>
+  <li>klíč se využívá pro čtení a zápis hodnoty objektu</li>
+  <li>klíče jsou neměnné objekty (immutable objects), které neobsahují
+    žádná bussiness data</li>
+</ul>
+
+<p>Je nesporné, že přístup k datům pomocí Ujo klíčů je méně
+komfortní než přístupy přes gettery a settery, nabízí se tedy otázka,
+jaké je jejich praktické využití. Jednoduchá odpověď zní, že Ujo
+objekty jsou užitečné všude tam, kde potřebujeme <strong>referenci na
+atribut</strong> doménového objektu (nikoli jeho hodnotu). Protože takové
+tvrzení je jen málo ilustrativní, rozhodl jsem se prezentovat využití
+knihovny Ujorm na malém webovém projektu pro rezervaci hotelů. Grafické
+rozhraní vykresluje populární framework <strong>Apache Wicket</strong>,
+jádrem aplikace jsou pak přehledové tabulky a editační dialogy, pro
+přístup k databázi se využívá ORM modul projektu Ujorm. Během tvorby
+projektu vzniklo několik tříd vhodných pro obecné použití, které jsem
+přesunul do samostatného modulu zvaného <strong>ujo-wicket</strong>.
+Všechny použité Java knihovny mají otevřenou licenci a jsou dostupné z
+centrálního Maven repositáře.</p>
+
+<h2>Přehled hotelů</h2>
+
+<p>Tabulku s přehledem hotelů v aplikaci představuje následující obrázek:</p>
+
+<div style="width: 700px; height: 337px; overflow-x: scroll;" class="img"><img
+     style="width: 1180px; height: 312px"
+     src="image-hotels/hotelTableGui.png" alt="hotelTableGui"
+/></div>
+
+<p>Tabulka asi ničím nepřekvapí běžného uživatele internetových
+aplikací, zvládá stránkování, řazení sloupců a rezervaci vybraného
+hotelu. Data se načítají z relační databáze pomocí SQL příkazů.
+Zajímavější je zdrojový kód, kde jednotlivé sloupce tabulky (komponenty)
+poskytuje tovární metoda - podle předaných Ujo klíčů, wow :). Podle
+vlastností klíče se generují výchozí CSS styly, zdrojový kód pro
+vykreslení tabulky následuje:</p>
+
+<div class="img code" style="width: 700px; height: 310px; overflow-x: scroll;"><img
+     style="width: 809px; height: 285px"
+     src="image-hotels/hotelTableCode.png" alt="hotelTableCode"
+/></div>
+
+<p>To je vše. Výběr databázových řádků se řídí objektem
+<strong>Criterion</strong>, který se vkládá do konstruktoru třídy
+<strong>UjoDataProvider</strong>, který poskytuje netradičně také instanci
+komponenty <strong>DataTable</strong>. Mapování databázového připojení
+získává komponenta pomocí třídy <strong>HotelsApplication</strong>.
+Řazení tabulky nemusíme teď řešit, protože každý sloupec je mapovaný
+na jeden databázový sloupec a tak událost na kliknutí generuje potřebný
+SQL dotaz automaticky.</p>
+
+<h2>Ukázka editačního dialogu:</h2>
+
+<div class="img"><img
+     style="width: 510px; height: 336px; margin-left: 30px;"
+     src="image-hotels/hotelFormGui.png"
+     alt="hotelFormGui"
+/></div>
+
+<p>Podobně jako sloupce tabulky také jednotlivé řádky editačního dialogu
+tvoří tovární metoda podle Ujo klíčů, přitom klíče poskytují
+formuláři vedle svého typu také validátory. Všechny texty jsou
+lokalizované pomocí nástrojů Wicketu. Ukázka zdrojového kódu
+následuje:</p>
+
+<div class="img code" style="width: 700px;"><img
+     style="width: 671px; height: 299px"
+     src="image-hotels/hotelFormCode.png" alt="hotelFormCode"
+/></div>
+
+<p>Zbývá jen doplnit kód pro ukládání hotelu tlačítkem Save. V našem
+projektu využijeme metody dostupné pomocí služeb Springu. Pro úplnost
+přikládám také zdrojový kód perzistentní entity
+<strong>hotel</strong>:</p>
+
+<div style="width: 700px; height: 748px; overflow-x: scroll;" class="img code"><img
+     style="width: 897; height: 723px"
+     src="image-hotels/hotelDomainObject.png" alt="hotelDomainObject"
+/></div>
+
+
+<p>Gettery a settery v Ujo třídy nejsou povinné, ale jejich doplnění
+zpřehlední náš zdrojový kód v implementaci servisní vrstvy. Vývojové
+prostředí NetBeans má k dispozici <a
+href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">plugin</a>
+pro generování potřebných metod podle klíčů, podobný plugin pro Eclipse
+zatím bohužel chybí, snad to bude výzva pro nějakého nového příznivce
+:).</p>
+
+<h2>Objektový model</h2>
+
+<p>Následující obrázek popisuje použitý class model perzistentních tříd:</p>
+
+<div class="img"><img style="width:529px; height:153px; margin-left: 30px;"
+     src="image-hotels/classModel.png" alt="classModel"
+/></div>
+
+<p>Entita <strong>rezervace</strong> (Booking) je relací typu M:N mezi
+<strong>hotelem</strong> a <strong>zákazníkem</strong>, jeden zákazník
+tedy může rezervovat ubytování ve více hotelech a jeden hotel pojme
+rezervace více zákazníků, kapacitu hotelu pro zjednodušení neřešíme.
+Aby byl datový model zajímavější, doplníme ještě entitu zvanou
+<strong>město</strong> (City), která bude atributem hotelu, entita
+město však v projektu nemá vlastní administraci.</p>
+
+<h2>Volba databázového připojení</h2>
+
+<p>Aplikace Demo-Hotels používá ve výchozím nastavení databázi H2
+běžící v režimu IN-MEMORY, databázovou strukturu si zakládá ORM podle
+objektového modelu a použité konfigurace. Pro změnu databázového
+připojení je možné upravit:</p>
+<ol>
+  <li>ve třídě DatabaseMapping parametry anotace: user, password, jdbcUrl,
+    dialect</li>
+  <li>ve třídě DatabaseMapping parametry anotace: jndi + dialect</li>
+  <li>ve třídě DatabaseConfig lze nastavit  externí XML konfiguraci s
+    tagy: user, password, jdbcUrl, dialect</li>
+  <li>ve třídě DatabaseConfig lze nastavit  externí XML konfiguraci s
+    tagy: jndi + dialect</li>
+  <li>v použitém dialektu lze také překrýt metodu:
+    SqlDialect.<strong>createConnection</strong>(..)</li>
+  <li>data pro tabulku lze změnit také překrytím metody
+    UjoDataProvider.<strong>iterator</strong>(first,count)  pomocí vlastní
+    implementace</li>
+</ol>
+
+<p>Přitom každé řešení s vyšším číslem překrývá řešení
+předchozí.</p>
+
+<p>Pro připojení k databázím typu PostgreSQL a MySQL jsem přiložil do
+projektu dva soubory:</p>
+<ul>
+  <li>databaseMapping4PostgreSql.xml a </li>
+  <li>databaseMapping4MySql.xml,</li>
+</ul>
+
+<p>které mohou sloužit jako předloha pro připojení k nějaké vlastní
+databázi. Připomínám, že XML konfigurace lze aktiovvat ve třídě
+DatabaseConfig.</p>
+
+<h2>Závěr</h2>
+
+<p>Aplikace <strong>Demo-Hotels</strong> vznikla v naději, že některé
+části zdrojového kódu objasní čtenáři využití Ujo objektů, samotná
+aplikace však není určena pro komerční použití. Pokud budete mít dojem,
+že některé části kódu lze řešit lépe nebo že na projektu lze ještě
+dále pracovat,budete mít možná pravdu. Všechny grafické komponenty jsou
+potomkem komponenty z Wicket frameworku a tak není velký problém
+rozšířit vlastní potomky pro specifické potřeby. Některé nápady byly
+inspirované projektem <a
+href="http://sourceforge.net/projects/webfort/">WebFort</a> z konce roku 2008,
+nemohu však vyloučit, že podobný kód se neobjevil už někdy dříve. Za
+konstruktivní ohlasy děkuji.</p>
+
+<h2>Internetové odkazy:</h2>
+<ul>
+  <li>zdrojový <a href="http://sourceforge.net/projects/ujoframework/files/ujorm/1.40/DemoHotels.zip">kód projektu</a> ke
+    stažení pod licencí Apache License 2.0 </li>
+  <li>další <a
+    href="https://docs.google.com/document/d/1QaTekUxugJJ4H_jfl3EeJNwqOLJa1wgAc-4WLKTM1AI/edit?usp=sharing">snímky
+    obrazovek</a> (screenshots) </li>
+  <li>odkaz na <a href="http://hotels.ujorm.org/">živou aplikaci</a> s
+    uživatelem a heslem: test/test, případně admin/test. Aplikace běží
+    na pomalém serveru a modifikace původních dat bude pravděpodobně
+    zakázána (v souboru applicationContext.xml) </li>
+  <li>domovská stránka <a href="http://ujorm.org/">Ujorm</a> </li>
+  <li>nějaké užitečné informace lze najít také v <a
+    href="http://ujorm.org/javadoc/">JavaDoc</a> projektu</li>
+</ul>
+
+<!-- google analytics beg -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9284194-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- google analytics end -->
+
+
+<div style="display: none;">
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+</div>
+
+</body>
+</html>
