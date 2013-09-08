@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2013 Pavel Ponec
+ *  Copyright 2013-2013 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,8 @@ public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
     /** Locked sign */
     private boolean locked;
 
-    public <V> void add(Key<SRC, V> source, Key<TRG, V> target) throws UnsupportedOperationException {
+    @SuppressWarnings("unchecked")
+    public <V> void add(Key<? super SRC, V> source, Key<? super TRG, V> target) throws UnsupportedOperationException {
         checkLock();
         pairs.add(new PairItem(source, target));
     }
@@ -47,15 +48,18 @@ public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
         return this;
     }
 
-    public void copyToTarget(SRC src, TRG target) {
+
+    /** Copy target to a source */
+    public void copyToTarget(SRC source, TRG target) {
         for (PairItem pairItem : pairs) {
-            pairItem.copyToTarget(src, target);
+            pairItem.copyToTarget(source, target);
         }
     }
 
-    public void copyToSource(TRG target, SRC src) {
+    /** Copy source to a target. */
+    public void copyToSource(SRC source, TRG target) {
         for (PairItem pairItem : pairs) {
-            pairItem.copyToSource(target, src);
+            pairItem.copyToSource(target, source);
         }
     }
 
@@ -63,12 +67,12 @@ public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
 
     private static final class PairItem<SRC extends Ujo, TRG extends Ujo, V> {
 
-        private final Key<SRC, V> srcKey;
-        private final Key<TRG, V> trgKey;
+        private final Key<? super SRC, V> srcKey;
+        private final Key<? super TRG, V> trgKey;
         private final boolean compositeSrc;
         private final boolean compositeTrg;
 
-        public PairItem(Key<SRC, V> srcKey, Key<TRG, V> tgtKey) {
+        public PairItem(Key<? super SRC, V> srcKey, Key<? super TRG, V> tgtKey) {
             this.srcKey = srcKey;
             this.trgKey = tgtKey;
             this.compositeSrc = srcKey.isComposite();
@@ -76,6 +80,7 @@ public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
         }
 
         /** Copy value to target */
+        @SuppressWarnings("unchecked")
         private void copyToTarget(SRC source, TRG target) {
             final Object value = srcKey.of(source);
             if (compositeTrg) {
@@ -86,6 +91,7 @@ public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
         }
 
         /** Copy value to source */
+        @SuppressWarnings("unchecked")
         private void copyToSource(TRG target, SRC source) {
             final Object value = trgKey.of(target);
             if (compositeSrc) {
