@@ -45,10 +45,23 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
 
     /** Read only sign */
     private boolean readOnly;
+    /** Is the measuring code enabled? */
+    private boolean measuringCode;
 
     /** Read only sign */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+    }
+
+    /** Is the measuring code enabled? */
+    @Override
+    public boolean isMeasuringCode() {
+        return measuringCode;
+    }
+
+    /** Is the measuring code enabled? */
+    public void setMeasuringCode(boolean measuringCode) {
+        this.measuringCode = measuringCode;
     }
 
     /** Load Customer by login using a transaction. */
@@ -129,7 +142,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     /** Check a read-only state */
     private void checkReadOnly(Hotel ujo) throws ValidationException {
         final Long id = ujo.getId();
-        if (readOnly 
+        if (readOnly
         && id !=null
         && id.compareTo(0L) < 0) {
             throwReadOnlyException();
