@@ -16,15 +16,16 @@
 package org.ujorm.hotels.gui.about;
 
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.ujorm.hotels.services.DbService;
 
 /**
  * MeasuringCode
  * @author Pavel Ponec
  */
 public class MeasuringCode extends Panel {
-    
-    /** The Measuring code is disabled by default */
-    private static final boolean VISIBLE = false;
+
+    @SpringBean private DbService service;
 
     public MeasuringCode(String id) {
         super(id);
@@ -32,7 +33,7 @@ public class MeasuringCode extends Panel {
 
     @Override
     public boolean isVisible() {
-        return VISIBLE;
+        return service.isMeasuringCode();
     }
 
 

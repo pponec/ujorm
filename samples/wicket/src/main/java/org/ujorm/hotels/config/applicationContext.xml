@@ -28,6 +28,7 @@
     <bean id="authService" class="org.ujorm.hotels.services.impl.AuthServiceImpl" />
     <bean id="dbService" class="org.ujorm.hotels.services.impl.DbServiceImpl">
         <property name="readOnly" value="false"/>
+        <property name="measuringCode" value="false"/>
     </bean>
 
 </beans>

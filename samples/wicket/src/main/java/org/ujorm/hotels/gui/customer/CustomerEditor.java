@@ -59,7 +59,7 @@ public class CustomerEditor extends EntityDialogPane<Customer> {
 
     /** Dialog for a new Customer */
     private boolean isNew() {
-        return getBaseModelObject().getId() == null;
+        return ((Customer)getDefaultModelObject()).getId() == null;
     }
 
     /** Create the editor dialog */

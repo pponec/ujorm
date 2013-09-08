@@ -61,4 +61,7 @@ public interface DbService {
     /** Returns a booking criterion */
     public Criterion<Booking> getBookingPreview();
 
+    /** Is the measuring code enabled? */
+    public boolean isMeasuringCode();
+
 }
