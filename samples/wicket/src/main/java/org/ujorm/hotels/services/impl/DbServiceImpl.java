@@ -119,6 +119,11 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
             throw new ValidationException("login.occupied", "Login is occupied");
         }
 
+        // Check the not-null password:
+        if (newMode && customer.getPassword()==null) {
+            throw new ValidationException("password.empty", "The password must not be empty");
+        }
+
         final String password = customer.getPassword();
         if (isFilled(password)) {
             customer.writeSession(newMode ? null : getSession() ); // Activate modifications for EditMode
