@@ -1,6 +1,11 @@
 The Ujorm release notes
 *******************************
 
+release 1.40 (2013-09-09)
++ small bug-fixing is done
++ CSV parsing is extended
++ a new sample web application called Demo-Hotels is available now
+
 release 1.35 (2013-05-20
 + an API of the ValidatorFactory class is extended
 + the data type StringWrapper is supported in the XML serialization including Enum types
@@ -86,7 +91,7 @@ release 1.21 (2011-11-06)
 + new BytesWrapper interface to store binary content to a BLOB is implemented in ORM.
 + Ujorm have got a native support for the "org.slf4j.Logger" framework
 + an expression ${SCHEMA} is replaced for a real schema name in the NATIVE SQL view.
-+ The LIMIT and OFFSET parameters are implemented for the Native View query 
++ The LIMIT and OFFSET parameters are implemented for the Native View query
 + DDL management is fixed for the multi schema structure in databases
 + the SQL parser for a Native View is improved
 + the OrmTableSynchronized class implementation is ready to use for the multi-thread environment.
@@ -103,12 +108,12 @@ release 1.21 (2011-11-06)
 
 release 1.20 (2011-05-29)
 + the project leaves the old domain org.ujoframework so all new Java packages are renamed to: org.ujorm
-+ the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL. 
++ the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL.
   See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
   Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;
 + the 'Sequence Table Model' is implemented to an optional customize of the 'ujorm_pk_support' table.
 + persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement including its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
-+ the batch INSERT for list of items usding a multi row SQL INSERT is implemented 
++ the batch INSERT for list of items usding a multi row SQL INSERT is implemented
 + the batch UPDATE is supoorted now, see documentation for more information
 + new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
 + select DISTINCT is supported now
@@ -297,21 +302,21 @@ release 0.74 (2008-05-11)
 
 release 0.73 (2008-04-14)
 + attributes in a XML export file is supported now
-+ performance tuning 
-+ XML persistence performance tests are completed and described in documentation  
++ performance tuning
++ XML persistence performance tests are completed and described in documentation
 + action constants are reevaluated (there is recommended to recompile your project)
 
 release 0.72 (2008-03-16)
 + UJO implementations have got extended API for easier PROPERTY building with a better type saving.
-+ class UjoComparator have got new method: equals(UJO ujo1, UJO ujo2)  
++ class UjoComparator have got new method: equals(UJO ujo1, UJO ujo2)
 + documentation was supplemented
 
 release 0.71 (2007-11-26)
 + code cleaning: a compilation with parameter "-Xlint:unchecked parameter" doesn't write any warning.
-+ API cleaning: an obscure class names with a suffix "Easy" was replaced by a word "Rife"  
++ API cleaning: an obscure class names with a suffix "Easy" was replaced by a word "Rife"
 + documentation was improved
 
-release 0.70 (2007-11-16) 
+release 0.70 (2007-11-16)
 + project documentation is translated into English
 + unnecessary class MapUjoTextable was removed
 + class SingleUjoTabModel is fixed
@@ -328,5 +333,5 @@ release 0.70.beta (2007-10-12)
 + a Zero provider is supported
 + project documentation version is available in a Czech language only
 
--- 
+--
 EOF
