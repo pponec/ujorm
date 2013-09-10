@@ -45,7 +45,7 @@ Ujormprovides a non-traditional object architecture  different from JavaBeans, w
                     <source>1.6</source>
                     <target>1.5</target>
                     <encoding>UTF-8</encoding>
-                    <debug>false</debug>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
 

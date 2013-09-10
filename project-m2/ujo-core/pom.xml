@@ -4,7 +4,7 @@
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.40-SNAPSHOT</version>
+    <version>1.40</version>
     <url>http://ujorm.org</url>
     <name>ujo-core</name>
     <description>Ujorm-core is an open source Java small library which providing non-traditional objects
@@ -63,7 +63,7 @@
                     <windowtitle>Ujorm ${project.version} - ${project.name}</windowtitle>
                     <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="http://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
 
-                    <!-- Doclet (yWorks UML Doclet) 
+                    <!-- Doclet (yWorks UML Doclet)
                     <doclet>ydoc.doclets.YStandard</doclet>
                     <docletPath>${yworks.uml.path}/lib/ydoc.jar:${yworks.uml.path}/lib/class2svg.jar:${yworks.uml.path}/resources</docletPath>
                     <additionalparam>-link http://docs.oracle.com/javase/6/docs/api/ -umlautogen</additionalparam>
@@ -166,7 +166,7 @@
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-    
+
     <!-- PROFILE(S) -->
 
     <profiles>
@@ -179,7 +179,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
-                            <debug>false</debug>
+                            <debug>true</debug>
                             <optimize>true</optimize>
                         </configuration>
                     </plugin>
