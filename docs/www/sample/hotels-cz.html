@@ -29,6 +29,13 @@
     border: silver solid 1px;
     border-radius: 10px;
   }
+  .intro {
+    color: gray;
+    font-style: italic;
+  }
+  .intro a {
+      text-decoration: none;
+  }
   </style>
 </head>
 
@@ -36,6 +43,10 @@
 <h1><img src="image-hotels/screen-hotels-app1.jpg"
          style="float: right; margin: 10px 0 20px 20px;" alt="screen" />
 Demo aplikace pro Ujorm a&nbsp;Wicket</h1>
+<p class="intro">Ukázková CRUD aplikace s rezervací hotelů
+   <br/>Autor: Pavel Ponec, 2013
+   <br/>Licence dokumentu: <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons BY-ND</a>
+</p>
 
 <p>Knihovna <strong>Ujorm</strong> byla představena poprvé na portálu <a
 href="http://java.cz/article/7977">java.cz</a> v roce 2007, tehdy ještě pod
@@ -100,10 +111,10 @@ poskytuje tovární metoda - podle předaných Ujo klíčů, wow :). Podle
 vlastností klíče se generují výchozí CSS styly, zdrojový kód pro
 vykreslení tabulky následuje:</p>
 
-<div class="img code" style="width: 700px; height: 310px; overflow-x: scroll;"><img
+<div class="img code" style="width: 700px; height: 310px; overflow-x: scroll;"><a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l50"><img
      style="width: 809px; height: 285px"
      src="image-hotels/hotelTableCode.png" alt="hotelTableCode"
-/></div>
+/></a></div>
 
 <p>To je vše. Výběr databázových řádků se řídí objektem
 <strong>Criterion</strong>, který se vkládá do konstruktoru třídy
@@ -128,21 +139,20 @@ formuláři vedle svého typu také validátory. Všechny texty jsou
 lokalizované pomocí nástrojů Wicketu. Ukázka zdrojového kódu
 následuje:</p>
 
-<div class="img code" style="width: 700px;"><img
+<div class="img code" style="width: 700px;"><a href="https://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelEditor.java#l30"><img
      style="width: 671px; height: 299px"
      src="image-hotels/hotelFormCode.png" alt="hotelFormCode"
-/></div>
+/></a></div>
 
 <p>Zbývá jen doplnit kód pro ukládání hotelu tlačítkem Save. V našem
 projektu využijeme metody dostupné pomocí služeb Springu. Pro úplnost
 přikládám také zdrojový kód perzistentní entity
 <strong>hotel</strong>:</p>
 
-<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code"><img
+<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code"><a href="https://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/entity/Hotel.java#l18"><img
      style="width: 1031; height: 728px"
      src="image-hotels/hotelDomainObject.png" alt="hotelDomainObject"
-/></div>
-
+/></a></div>
 
 <p>Gettery a settery v Ujo třídy nejsou povinné, ale jejich doplnění
 zpřehlední náš zdrojový kód v implementaci servisní vrstvy. Vývojové
@@ -229,6 +239,7 @@ konstruktivní ohlasy děkuji.</p>
     na pomalém serveru a modifikace původních dat bude pravděpodobně
     zakázána (v souboru applicationContext.xml) </li>
   <li>domovská stránka <a href="http://ujorm.org/">Ujorm</a> </li>
+  <li>popis ORM je k dispozici v dokumentu <a href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a></li>
   <li>užitečné informace lze najít také v <a
     href="http://ujorm.org/javadoc/">JavaDoc</a> projektu</li>
   <li>odkaz <a href="http://ujorm-cs.blogspot.cz/2013/09/demo-aplikace-pro-ujorm-wicket.html">na blog</a>
