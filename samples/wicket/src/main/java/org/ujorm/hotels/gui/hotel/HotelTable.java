@@ -127,7 +127,7 @@ public class HotelTable extends Panel {
         }
     }
 
-    /** Nabídka akcí: */
+    /** Action offer: */
     private AbstractColumn<Hotel, KeyRing<Hotel>> newActionColumn() {
         return new KeyColumn<Hotel, Integer>(KeyRing.of(Hotel.ID), null) {
             @Override
