@@ -70,8 +70,6 @@ public class HotelTable extends Panel {
         columns.add(Hotel.PHONE);
         columns.add(newActionColumn());
         columns.setSort(Hotel.NAME);
-        columns.setCssClass(Hotel.NAME, "hotelName");
-        columns.setCssClass(Hotel.STREET, "streetName");
         add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
 
         add(toolbar);
@@ -81,6 +79,8 @@ public class HotelTable extends Panel {
 
         DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
         table.addBottomToolbar(new InsertHotel(table));
+        columns.setCssClass(Hotel.NAME, "hotelName");
+        columns.setCssClass(Hotel.STREET, "streetName");
     }
 
     /** Manage events */
