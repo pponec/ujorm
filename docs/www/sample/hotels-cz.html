@@ -1,10 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="cs">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Demo WEB aplikace s Ujorm a Wicket</title>
-  <meta name="keywords" content="Ujorm, CRUD, WEB, applicaton demo-hotels, wicket, spring framework" />
+  <meta name="keywords"
+  content="Ujorm, CRUD, WEB, application, demo-hotels, wicket, spring, framework"
+  />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:300,300italic,600&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css' />
+  <link
+  href="http://fonts.googleapis.com/css?family=Titillium+Web:300,300italic,600&amp;subset=latin,latin-ext"
+  rel="stylesheet" type="text/css" />
   <style type="text/css">
   body {
     margin: 0;
@@ -33,7 +39,7 @@
     color: gray;
     font-style: italic;
   }
-  .intro a {
+  .intro a, .toc a {
       text-decoration: none;
   }
   </style>
@@ -41,12 +47,30 @@
 
 <body>
 <h1><img src="image-hotels/screen-hotels-app1.jpg"
-         style="float: right; margin: 10px 0 20px 20px;" alt="screen" />
-Demo aplikace pro Ujorm a&nbsp;Wicket</h1>
-<p class="intro">Ukázková CRUD aplikace s rezervací hotelů
-   <br/>Autor: Pavel Ponec, 2013
-   <br/>Licence dokumentu: <a href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons BY-ND</a>
-</p>
+style="float: right; margin: 10px 0 20px 20px;" alt="screen" /> Demo aplikace
+pro Ujorm a Wicket</h1>
+
+<p class="intro">Ukázková CRUD aplikace s rezervací hotelů <br />
+Autor: Pavel Ponec, 2013 <br />
+Licence dokumentu: <a
+href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons
+BY-ND</a></p>
+
+<h2 id="menu">Obsah</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#introduction">Úvod</a></li>
+  <li><a href="#hotelTableGui">Přehled hotelů</a></li>
+  <li><a href="#hotelFormGui">Ukázka editačního dialogu:</a></li>
+  <li><a href="#objectModel">Objektový model</a></li>
+  <li><a href="#dbConnection">Volba databázového připojení</a></li>
+  <li><a href="#conclusion">Závěr</a></li>
+  <li><a href="#links">Internetové odkazy</a></li>
+</ul>
+</div>
+
+<h2 id="introduction">Úvod</h2>
 
 <p>Knihovna <strong>Ujorm</strong> byla představena poprvé na portálu <a
 href="http://java.cz/article/7977">java.cz</a> v roce 2007, tehdy ještě pod
@@ -67,7 +91,7 @@ vlastnostech:</p>
     lazy-loading v ORM implementaci) </li>
   <li>klíč může obsahovat validátor pro kontrolu platnosti vstupních dat,
     validátory je možné spojovat pomocí operátorů AND a OR,</li>
-  <li>v neposlední řadě klíče mají Ujo objektu vyšší rychlost při
+  <li>v neposlední řadě klíče Ujo objektu mají vyšší rychlost při
     čtení a zápisu hodnot ve srovnání s HashMap díky přímému
     přístupu do pole objektů pomocí atributu <strong>index</strong> </li>
 </ul>
@@ -94,14 +118,14 @@ přesunul do samostatného modulu zvaného <strong>ujo-wicket</strong>.
 Všechny použité Java knihovny mají otevřenou licenci a jsou dostupné z
 centrálního Maven repositáře.</p>
 
-<h2>Přehled hotelů</h2>
+<h2 id="hotelTableGui">Přehled hotelů</h2>
 
-<p>Tabulku s přehledem hotelů v aplikaci představuje následující obrázek:</p>
+<p>Tabulku s přehledem hotelů v aplikaci představuje následující
+obrázek:</p>
 
-<div style="width: 700px; height: 337px; overflow-x: scroll;" class="img"><img
-     style="width: 1180px; height: 312px"
-     src="image-hotels/hotelTableGui.png" alt="hotelTableGui"
-/></div>
+<div style="width: 700px; height: 337px; overflow-x: scroll;" class="img">
+<img style="width: 1180px; height: 312px" src="image-hotels/hotelTableGui.png"
+alt="hotelTableGui" /></div>
 
 <p>Tabulka asi ničím nepřekvapí běžného uživatele internetových
 aplikací, zvládá stránkování, řazení sloupců a rezervaci vybraného
@@ -111,10 +135,11 @@ poskytuje tovární metoda - podle předaných Ujo klíčů, wow :). Podle
 vlastností klíče se generují výchozí CSS styly, zdrojový kód pro
 vykreslení tabulky následuje:</p>
 
-<div class="img code" style="width: 700px; height: 310px; overflow-x: scroll;"><a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l50"><img
-     style="width: 809px; height: 285px"
-     src="image-hotels/hotelTableCode.png" alt="hotelTableCode"
-/></a></div>
+<div class="img code" style="width: 700px; height: 310px; overflow-x: scroll;">
+<a
+href="http://sourceforge.net/p/ujoframework/svn/2026/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l60"><img
+style="width: 809px; height: 285px" src="image-hotels/hotelTableCode.png"
+alt="hotelTableCode" /></a></div>
 
 <p>To je vše. Výběr databázových řádků se řídí objektem
 <strong>Criterion</strong>, který se vkládá do konstruktoru třídy
@@ -125,13 +150,11 @@ získává komponenta pomocí třídy <strong>HotelsApplication</strong>.
 na jeden databázový sloupec a tak událost na kliknutí generuje potřebný
 SQL dotaz automaticky.</p>
 
-<h2>Ukázka editačního dialogu:</h2>
+<h2 id="hotelFormGui">Ukázka editačního dialogu:</h2>
 
-<div class="img"><img
-     style="width: 510px; height: 336px; margin-left: 30px;"
-     src="image-hotels/hotelFormGui.png"
-     alt="hotelFormGui"
-/></div>
+<div class="img">
+<img style="width: 510px; height: 336px; margin-left: 30px;"
+src="image-hotels/hotelFormGui.png" alt="hotelFormGui" /></div>
 
 <p>Podobně jako sloupce tabulky také jednotlivé řádky editačního dialogu
 tvoří tovární metoda podle Ujo klíčů, přitom klíče poskytují
@@ -139,20 +162,20 @@ formuláři vedle svého typu také validátory. Všechny texty jsou
 lokalizované pomocí nástrojů Wicketu. Ukázka zdrojového kódu
 následuje:</p>
 
-<div class="img code" style="width: 700px;"><a href="https://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelEditor.java#l30"><img
-     style="width: 671px; height: 299px"
-     src="image-hotels/hotelFormCode.png" alt="hotelFormCode"
-/></a></div>
+<div class="img code" style="width: 700px;"><a
+href="https://sourceforge.net/p/ujoframework/svn/2026/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelEditor.java#l34"><img
+style="width: 671px; height: 299px" src="image-hotels/hotelFormCode.png"
+alt="hotelFormCode" /></a></div>
 
 <p>Zbývá jen doplnit kód pro ukládání hotelu tlačítkem Save. V našem
 projektu využijeme metody dostupné pomocí služeb Springu. Pro úplnost
 přikládám také zdrojový kód perzistentní entity
 <strong>hotel</strong>:</p>
 
-<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code"><a href="https://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/entity/Hotel.java#l18"><img
-     style="width: 1031; height: 728px"
-     src="image-hotels/hotelDomainObject.png" alt="hotelDomainObject"
-/></a></div>
+<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code"><a
+href="https://sourceforge.net/p/ujoframework/svn/2026/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/entity/Hotel.java#l18"><img
+style="width: 1031; height: 728px" src="image-hotels/hotelDomainObject.png"
+alt="hotelDomainObject" /></a></div>
 
 <p>Gettery a settery v Ujo třídy nejsou povinné, ale jejich doplnění
 zpřehlední náš zdrojový kód v implementaci servisní vrstvy. Vývojové
@@ -162,13 +185,14 @@ pro generování potřebných metod podle klíčů, podobný plugin pro Eclipse
 zatím bohužel chybí, snad to bude výzva pro nějakého nového příznivce
 :).</p>
 
-<h2>Objektový model</h2>
+<h2 id="objectModel">Objektový model</h2>
 
-<p>Následující obrázek popisuje použitý class model perzistentních tříd:</p>
+<p>Následující obrázek popisuje použitý class model perzistentních
+tříd:</p>
 
-<div class="img"><img style="width:529px; height:153px; margin-left: 30px;"
-     src="image-hotels/classModel.png" alt="classModel"
-/></div>
+<div class="img">
+<img style="width:529px; height:153px; margin-left: 30px;"
+src="image-hotels/classModel.png" alt="classModel" /></div>
 
 <p>Entita <strong>rezervace</strong> (Booking) je relací typu M:N mezi
 <strong>hotelem</strong> a <strong>zákazníkem</strong>, jeden zákazník
@@ -178,7 +202,7 @@ Aby byl datový model zajímavější, doplníme ještě entitu zvanou
 <strong>město</strong> (City), která bude atributem hotelu, entita
 město však v projektu nemá vlastní administraci.</p>
 
-<h2>Volba databázového připojení</h2>
+<h2 id="dbConnection">Volba databázového připojení</h2>
 
 <p>Aplikace Demo-Hotels používá ve výchozím nastavení databázi H2
 běžící v režimu IN-MEMORY, databázovou strukturu si zakládá ORM podle
@@ -213,7 +237,7 @@ projektu dva soubory:</p>
 databázi. Připomínám, že XML konfigurace lze aktiovvat ve třídě
 DatabaseConfig.</p>
 
-<h2>Závěr</h2>
+<h2 id="conclusion">Závěr</h2>
 
 <p>Aplikace <strong>Demo-Hotels</strong> vznikla v naději, že některé
 části zdrojového kódu objasní čtenáři využití Ujo objektů, samotná
@@ -227,10 +251,11 @@ href="http://sourceforge.net/projects/webfort/">WebFort</a> z konce roku 2008,
 nemohu však vyloučit, že podobný kód se neobjevil už někdy dříve. Za
 konstruktivní ohlasy děkuji.</p>
 
-<h2>Internetové odkazy:</h2>
+<h2 id="links">Internetové odkazy</h2>
 <ul>
-  <li>zdrojový <a href="http://sourceforge.net/projects/ujoframework/files/ujorm/1.40/DemoHotels.zip">kód projektu</a> ke
-    stažení pod licencí Apache License 2.0 </li>
+  <li>zdrojový <a
+    href="http://sourceforge.net/projects/ujoframework/files/ujorm/1.40/DemoHotels.zip">kód
+    projektu</a> ke stažení pod licencí Apache License 2.0 </li>
   <li>další <a
     href="https://docs.google.com/document/d/1QaTekUxugJJ4H_jfl3EeJNwqOLJa1wgAc-4WLKTM1AI/edit?usp=sharing">snímky
     obrazovek</a> (screenshots) </li>
@@ -239,13 +264,14 @@ konstruktivní ohlasy děkuji.</p>
     na pomalém serveru a modifikace původních dat bude pravděpodobně
     zakázána (v souboru applicationContext.xml) </li>
   <li>domovská stránka <a href="http://ujorm.org/">Ujorm</a> </li>
-  <li>popis ORM je k dispozici v dokumentu <a href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a></li>
+  <li>popis ORM je k dispozici v dokumentu <a
+    href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a></li>
   <li>užitečné informace lze najít také v <a
     href="http://ujorm.org/javadoc/">JavaDoc</a> projektu</li>
-  <li>odkaz <a href="http://ujorm-cs.blogspot.cz/2013/09/demo-aplikace-pro-ujorm-wicket.html">na blog</a>
-     a případné komentáře</li>
+  <li>odkaz <a
+    href="http://ujorm-cs.blogspot.cz/2013/09/demo-aplikace-pro-ujorm-wicket.html">na
+    blog</a> a případné komentáře</li>
 </ul>
-
 <!-- google analytics beg -->
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -257,7 +283,6 @@ var pageTracker = _gat._getTracker("UA-9284194-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
 <!-- google analytics end -->
-
 
 <div style="display: none;">
 <script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
