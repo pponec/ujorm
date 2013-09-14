@@ -21,6 +21,7 @@ import org.apache.wicket.model.Model;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.wicket.component.dialog.domestic.EntityDialogPane;
+import org.ujorm.wicket.component.form.FieldProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 
 /**
@@ -33,7 +34,8 @@ public class HotelEditor extends EntityDialogPane<Hotel> {
     public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
         super(modalWindow, model);
 
-        // Editable fields:
+        // Create form fields:
+        FieldProvider fields = getFields(); // optional statement
         fields.add(Hotel.NAME);
         fields.add(Hotel.CITY, City.ID.forAll(), City.NAME);
         fields.add(Hotel.STREET);
