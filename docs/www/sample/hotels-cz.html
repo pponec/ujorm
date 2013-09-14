@@ -38,6 +38,7 @@
   .intro {
     color: gray;
     font-style: italic;
+    margin-left: 25px;
   }
   .intro a, .toc a {
       text-decoration: none;
@@ -50,11 +51,11 @@
 style="float: right; margin: 10px 0 20px 20px;" alt="screen" /> Demo aplikace
 pro Ujorm a Wicket</h1>
 
-<p class="intro">Ukázková CRUD aplikace s rezervací hotelů <br />
+<div class="intro">Ukázková CRUD aplikace s rezervací hotelů <br />
 Autor: Pavel Ponec, 2013 <br />
 Licence dokumentu: <a
 href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons
-BY-ND</a></p>
+BY-ND</a></div>
 
 <h2 id="menu">Obsah</h2>
 
@@ -63,6 +64,7 @@ BY-ND</a></p>
   <li><a href="#introduction">Úvod</a></li>
   <li><a href="#hotelTableGui">Přehled hotelů</a></li>
   <li><a href="#hotelFormGui">Ukázka editačního dialogu:</a></li>
+  <li><a href="#onEvent">Události</a></li>
   <li><a href="#objectModel">Objektový model</a></li>
   <li><a href="#dbConnection">Volba databázového připojení</a></li>
   <li><a href="#conclusion">Závěr</a></li>
@@ -185,7 +187,26 @@ pro generování potřebných metod podle klíčů, podobný plugin pro Eclipse
 zatím bohužel chybí, snad to bude výzva pro nějakého nového příznivce
 :).</p>
 
-<h2 id="objectModel">Objektový model</h2>
+<h2 id="onEvent">Události</h2>
+
+<p>Události se rozesílají pomocí metody
+Component.<strong>send</strong>(..), kde parametrem payload je objekt typu
+<strong>UjoEvent</strong>. Příjemce se pokusí rozpoznat typ takové
+události v metodě Component.<strong>onEvent</strong>(...). Požadavek na
+zobrazení dialogu se liší od výkonného kódu hodnotou atributem
+UjoEvent..<strong>showDialog</strong>, přitom společný rodič všech
+dialogů zajistí při odeslání událost vypnutí tohoto příznaku. Podobné
+se chová také událost na změnu formulářového objektu Field, žádost o
+notifikaci se provádí voláním metody:
+FieldProvider.<strong>onChange</strong>(Booking.KEY). Ukázka
+ošetření některých událostí potřebných pro administraci hotelu následuje:</p>
+
+<div style="width: 700px; height: 505px; overflow-x: scroll;" class="img code"><a
+href="http://sourceforge.net/p/ujoframework/svn/2026/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l88"><img
+style="width: 993px; height: 479px;" src="image-hotels/onEvent.png"
+alt="onEvent" /></a></div>
+
+<h2>Objektový model</h2>
 
 <p>Následující obrázek popisuje použitý class model perzistentních
 tříd:</p>
