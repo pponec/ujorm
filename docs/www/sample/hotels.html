@@ -76,11 +76,11 @@ different:</p>
   <li>a key can include a validator for input data and two validators can be
     associated using operators AND / OR,</li>
   <li>last but not least, the keys have got better performance in data
-    manipulation compared to the HashMap thanks to a direct access to arrays us
+    manipulation compared to the HashMap thanks to a direct access to arrays
   </li>
 </ul>
 
-<p>Features common to Ujorm and the HashMap class:</p>
+<p>Features common to Ujo and the HashMap class:</p>
 <ul>
   <li>the key is used for reading and writing object values</li>
   <li>keys are immutable objects that don’t contain any bussiness data</li>
@@ -90,7 +90,7 @@ different:</p>
 accessing through the getters and setters. The question is, what is the
 practical use then? The simple answer is that the Ujo objects are useful
 wherever we need a <strong>reference to attributes</strong> of a domain object
-(not its value). Because such claims are little illustrative, I decided to
+(not its value). Because such claims are insufficiently illustrative, I decided to
 present a small web project for hotel booking. Graphical interface is rendered
 by the popular <strong>Apache Wicket</strong> framework. The core of the
 application consist of the dialogs and preview tables, all data are provided
@@ -112,7 +112,7 @@ alt="hotelTableGui" /></div>
 it handles paging, sorting columns and booking the selected hotel. Data are
 retrieved from a relational database using the SQL statements. The source code
 is more interesting, the individual table columns (components) provides a
-factory method - according to the Ujo keys, wow :). Some CSS styles were also
+factory method - according to the Ujo keys, wow :-). Some CSS styles were also
 assigned by the key’s attribute type. The table component is built using the
 source code below:</p>
 
@@ -183,15 +183,12 @@ Component.<strong>onEvent</strong> (...). Request to view a modal dialogue can
 be distinguished by setting a flag UjoEvent.showDialog with a value true.
 Sample of event hotel management are as follows:</p>
 
-<div style="width: 700px; height: 520px; overflow-x: scroll;" class="img">
-<img alt="Hotel Events" src="image-hotels/hotelEvents.png" width="993"
-height="479" /></div>
+<div class="img code" style="width: 700px; height: 520px; overflow-x: scroll;">
+<a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l88"
+><img alt="Hotel Events" src="image-hotels/hotelEvents.png" width="993"
+height="479" /></a></div>
 
 <p></p>
-
-<p></p>
-
-<p><img /></p>
 
 <h2>Object Model</h2>
 
