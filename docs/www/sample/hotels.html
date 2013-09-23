@@ -90,14 +90,14 @@ different:</p>
 accessing through the getters and setters. The question is, what is the
 practical use then? The simple answer is that the Ujo objects are useful
 wherever we need a <strong>reference to attributes</strong> of a domain object
-(not its value). Because such claims are insufficiently illustrative, I decided to
-present a small web project for hotel booking. Graphical interface is rendered
-by the popular <strong>Apache Wicket</strong> framework. The core of the
-application consist of the dialogs and preview tables, all data are provided
-from a relational database using an ORM module from the Ujorm library. During
-the development, several classes have been optimized for general use so I moved
-them into a separate module called <strong>ujo-wicket</strong>. All the Java
-libraries have an open license and they are available at the central Maven
+(not its value). Because such claims are insufficiently illustrative, I decided
+to present a small web project for hotel booking. Graphical interface is
+rendered by the popular <strong>Apache Wicket</strong> framework. The core of
+the application consist of the dialogs and preview tables, all data are
+provided from a relational database using an ORM module from the Ujorm library.
+During the development, several classes have been optimized for general use so
+I moved them into a separate module called <strong>ujo-wicket</strong>. All the
+Java libraries have an open license and they are available at the central Maven
 repository.</p>
 
 <h2>Hotel table list</h2>
@@ -174,6 +174,18 @@ href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">plugi
 for generating the required methods by keys, similar plugin for Eclipse is
 missing yet, perhaps it will be a challenge for new fans :-).</p>
 
+<h2>Database queries</h2>
+
+<p>Database queries are modelled using the <strong>Criterion</strong> objects
+    where two Criterions can be joined to a binary tree. See a simple code to get a logged user:</p>
+
+<div class="img code">
+<a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/services/impl/DbServiceImpl.java#l135">
+<img alt="Find Customer" src="image-hotels/findCustomer.png" width="600" height="194" />
+</a></div>
+
+<p>For more information see the document <a
+href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a>.</p>
 <h2>Application events</h2>
 
 <p>On some user action, a related component sends an event to another component
@@ -184,9 +196,9 @@ be distinguished by setting a flag UjoEvent.showDialog with a value true.
 Sample of event hotel management are as follows:</p>
 
 <div class="img code" style="width: 700px; height: 520px; overflow-x: scroll;">
-<a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l88"
-><img alt="Hotel Events" src="image-hotels/hotelEvents.png" width="993"
-height="479" /></a></div>
+<a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l88"><img
+alt="Hotel Events" src="image-hotels/hotelEvents.png" width="993" height="479"
+/></a></div>
 
 <p></p>
 
@@ -267,8 +279,7 @@ appear ever before. Thank you for your constructive feedback.</p>
     server and modification of the original data may be disabled (using file
     applicationContext.xml)</li>
   <li>homepage of the <a href="http://ujorm.org/">Ujorm</a></li>
-  <li>the document <a href="http://ujorm.org/orm/tutorial/">Ujorm User
-  Guide</a></li>
+  <li>the document <a href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a></li>
   <li>useful information can also be found in <a
     href="http://ujorm.org/javadoc/">JavaDoc</a> project</li>
   <li>reference the <a
@@ -286,7 +297,7 @@ try {
 var pageTracker = _gat._getTracker("UA-9284194-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-<!-- google analytics end -->
+<!-- google analytics end --> 
 
 <div style="display: none;">
 <script type="text/javascript"
