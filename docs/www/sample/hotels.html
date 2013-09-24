@@ -31,6 +31,9 @@
   img {
     border: 0;
   }
+  div.img {
+    margin: 20px 0;
+  }
   div.img.code {
     border: silver solid 1px;
     border-radius: 10px;
@@ -100,7 +103,7 @@ I moved them into a separate module called <strong>ujo-wicket</strong>. All the
 Java libraries have an open license and they are available at the central Maven
 repository.</p>
 
-<h2>Hotel table list</h2>
+<h2 id="hotelTableList">Hotel table list</h2>
 
 <p>Table with a list of hotels in a picture below:</p>
 
@@ -133,7 +136,7 @@ not have to care about sorting column tables now, because each column is mapped
 to a database column and then a click event generates the necessary SQL query
 automatically.</p>
 
-<h2>Editing form:</h2>
+<h2 id="editingForm">Editing form</h2>
 
 <div class="img">
 <img style="width: 510px; height: 336px; margin-left: 30px;"
@@ -154,18 +157,7 @@ alt="hotelFormCode" /></a></div>
 
 <p>It remains only to add some Java code to save the modified hotel on the Save
 button. In our project we are going to use some methods/services managed by the
-Spring framework. To be clear, I’m enclosing a source code of persistent
-<strong>hotel</strong> entity:</p>
-
-<p></p>
-
-<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code">
-<a
-href="https://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/entity/Hotel.java#l18"><img
-style="width: 1031; height: 728px" src="image-hotels/hotelDomainObject.png"
-alt="hotelDomainObject" /></a></div>
-
-<p></p>
+Spring framework.</p>
 
 <p>Getters and setters are not required in any Ujo class, but putting them in
 will make more transparent source code in service layer implementations. The
@@ -174,19 +166,22 @@ href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">plugi
 for generating the required methods by keys, similar plugin for Eclipse is
 missing yet, perhaps it will be a challenge for new fans :-).</p>
 
-<h2>Database queries</h2>
+<h2 id="databaseQueries">Database queries</h2>
 
-<p>Database queries are modelled using the <strong>Criterion</strong> objects
-    where two Criterions can be joined to a binary tree. See a simple code to get a logged user:</p>
 
-<div class="img code">
-<a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/services/impl/DbServiceImpl.java#l135">
-<img alt="Find Customer" src="image-hotels/findCustomer.png" width="600" height="194" />
+<p>Database requirements are modeled using the Key object
+  that provides special methods to creating new object called <strong>Criterion</strong>
+  for describing logical conditions. Two Criterions can be joined to a binary tree.
+  See a simple code to get a logged user:</p>
+
+<div class="img code" style="width: 700px; height: 240px; overflow-x: scroll;"><a
+href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/services/impl/DbServiceImpl.java#l135">
+<img alt="Find Customer" src="image-hotels/findCustomer.png" width="739" height="214" />
 </a></div>
 
 <p>For more information see the document <a
 href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a>.</p>
-<h2>Application events</h2>
+<h2 id="applEvents">Application events</h2>
 
 <p>On some user action, a related component sends an event to another component
 using the method Component.send(..) with a payload argument type of UjoEvent.
@@ -195,14 +190,23 @@ Component.<strong>onEvent</strong> (...). Request to view a modal dialogue can
 be distinguished by setting a flag UjoEvent.showDialog with a value true.
 Sample of event hotel management are as follows:</p>
 
-<div class="img code" style="width: 700px; height: 520px; overflow-x: scroll;">
+<div class="img code" style="width: 700px;" >
 <a href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/gui/hotel/HotelTable.java#l88"><img
-alt="Hotel Events" src="image-hotels/hotelEvents.png" width="993" height="479"
+alt="Hotel Events" src="image-hotels/hotelEvents.png" width="673" height="268"
 /></a></div>
 
-<p></p>
+<h2 id="domainObject">Domain object</h2>
 
-<h2>Object Model</h2>
+<p>To be clear, I’m enclosing a source code of persistent
+<strong>hotel</strong> entity:</p>
+
+<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code"><a
+href="https://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/entity/Hotel.java#l18"><img
+style="width: 1031; height: 728px" src="image-hotels/hotelDomainObject.png"
+alt="hotelDomainObject" /></a></div>
+
+
+<h2 id="classModel">Class Model</h2>
 
 <p>The following figure describes the use of class model of the persistent
 classes:</p>
@@ -219,7 +223,7 @@ make the data model more interesting, we should add next entity called City,
 which is an attribute of the Hotel, however the project have no administration
 for the <strong>City</strong> entity.</p>
 
-<h2>Database connection</h2>
+<h2 id="dbConnection">Database connection</h2>
 
 <p>Application Demo-Hotels uses the H2 database running under in-memory in the
 default configuration. A database structure create ORM based on the object
@@ -252,7 +256,7 @@ databases type:</p>
 that the XML configuration can be activated in the
 <strong>DatabaseConfig</strong> class.</p>
 
-<h2>Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 
 <p>Application <strong>Demo-Hotels</strong> was created in a hope that some
 parts of the source code would clarify the using of Ujo objects to our readers,
@@ -287,31 +291,21 @@ appear ever before. Thank you for your constructive feedback.</p>
     comments and</li>
 </ul>
 
-<p></p>
 <!-- google analytics beg -->
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script>
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
 <script type="text/javascript">
 try {
 var pageTracker = _gat._getTracker("UA-9284194-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-<!-- google analytics end --> 
+<!-- google analytics end -->
 
 <div style="display: none;">
-<script type="text/javascript"
-src="http://c1.navrcholu.cz/code?site=111542;t=lb14">
-</script>
-
-<noscript>
-
-<div>
-<a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz"
-style="border:none"
-src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"
-/></a></div>
-</noscript>
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
 </div>
+
 </body>
 </html>
