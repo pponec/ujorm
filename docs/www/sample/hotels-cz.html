@@ -63,7 +63,8 @@ BY-ND</a></div>
 <ul>
   <li><a href="#introduction">Úvod</a></li>
   <li><a href="#hotelTableGui">Přehled hotelů</a></li>
-  <li><a href="#hotelFormGui">Ukázka editačního dialogu:</a></li>
+  <li><a href="#hotelFormGui">Ukázka editačního dialogu</a></li>
+  <li><a href="#databaseQueries">Tvorba databázových dotazů</a></li>
   <li><a href="#onEvent">Události</a></li>
   <li><a href="#objectModel">Objektový model</a></li>
   <li><a href="#dbConnection">Volba databázového připojení</a></li>
@@ -186,6 +187,20 @@ href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">plugi
 pro generování potřebných metod podle klíčů, podobný plugin pro Eclipse
 zatím bohužel chybí, snad to bude výzva pro nějakého nového příznivce
 :).</p>
+
+<h2 id="databaseQueries">Tvorba databázových dotazů</h2>
+<p>Dotazy na relační databázi modelujeme pomocí klíčů (Keys), konstant a jejich operátorů,
+   které jsou obsaženy v objektech pro popis logických podmínek typu <strong>Criterion</strong>.
+   Dva objekty typu Criterion lze dále spojovat pomcí operátorů AND / OR do binárního stromu.
+   Následuje ukázka jednoduchého kódu pro získání registrovaného uživatele:</p>
+
+<div class="img code" style="width: 700px; height: 240px; overflow-x: scroll;"><a
+href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/services/impl/DbServiceImpl.java#l135">
+<img alt="Find Customer" src="image-hotels/findCustomer.png" width="739" height="214" />
+</a></div>
+
+<p>Více informací k ORM lze najít v dokumentaci <a href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a>.</p>
+
 
 <h2 id="onEvent">Události</h2>
 
