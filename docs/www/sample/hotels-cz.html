@@ -66,7 +66,8 @@ BY-ND</a></div>
   <li><a href="#hotelFormGui">Ukázka editačního dialogu</a></li>
   <li><a href="#databaseQueries">Tvorba databázových dotazů</a></li>
   <li><a href="#onEvent">Události</a></li>
-  <li><a href="#objectModel">Objektový model</a></li>
+  <li><a href="#ujoImpl">Implementace UJO objektu</a></li>
+  <li><a href="#classModel">Objektový model</a></li>
   <li><a href="#dbConnection">Volba databázového připojení</a></li>
   <li><a href="#conclusion">Závěr</a></li>
   <li><a href="#links">Internetové odkazy</a></li>
@@ -170,24 +171,6 @@ href="https://sourceforge.net/p/ujoframework/svn/2026/tree/trunk/samples/wicket/
 style="width: 671px; height: 299px" src="image-hotels/hotelFormCode.png"
 alt="hotelFormCode" /></a></div>
 
-<p>Zbývá jen doplnit kód pro ukládání hotelu tlačítkem Save. V našem
-projektu využijeme metody dostupné pomocí služeb Springu. Pro úplnost
-přikládám také zdrojový kód perzistentní entity
-<strong>hotel</strong>:</p>
-
-<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code"><a
-href="https://sourceforge.net/p/ujoframework/svn/2026/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/entity/Hotel.java#l18"><img
-style="width: 1031; height: 728px" src="image-hotels/hotelDomainObject.png"
-alt="hotelDomainObject" /></a></div>
-
-<p>Gettery a settery v Ujo třídy nejsou povinné, ale jejich doplnění
-zpřehlední náš zdrojový kód v implementaci servisní vrstvy. Vývojové
-prostředí NetBeans má k dispozici <a
-href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">plugin</a>
-pro generování potřebných metod podle klíčů, podobný plugin pro Eclipse
-zatím bohužel chybí, snad to bude výzva pro nějakého nového příznivce
-:).</p>
-
 <h2 id="databaseQueries">Tvorba databázových dotazů</h2>
 <p>Dotazy na relační databázi modelujeme pomocí klíčů (Keys), konstant a jejich operátorů,
    které jsou obsaženy v objektech pro popis logických podmínek typu <strong>Criterion</strong>.
@@ -201,9 +184,7 @@ href="http://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/s
 
 <p>Více informací k ORM lze najít v dokumentaci <a href="http://ujorm.org/orm/tutorial/">Ujorm User Guide</a>.</p>
 
-
 <h2 id="onEvent">Události</h2>
-
 <p>Události se rozesílají pomocí metody
 Component.<strong>send</strong>(..), kde parametrem payload je objekt typu
 <strong>UjoEvent</strong>. Příjemce se pokusí rozpoznat typ takové
@@ -221,8 +202,27 @@ ošetření některých událostí potřebných pro administraci hotelu následu
 alt="Hotel Events" src="image-hotels/hotelEvents.png" width="673" height="268"
 /></a></div>
 
-<h2>Objektový model</h2>
+<p>Zbývá jen doplnit kód pro ukládání hotelu tlačítkem Save. V našem
+projektu využijeme metody dostupné pomocí služeb Springu.</p>
 
+<h2 id="ujoImpl">Implementace UJO objektu</h2>
+<p>Pro úplnost přikládám také zdrojový kód perzistentní entity <strong>hotel</strong>:</p>
+
+<div style="width: 700px; height: 753px; overflow-x: scroll;" class="img code"><a
+href="https://sourceforge.net/p/ujoframework/svn/2026/tree/trunk/samples/wicket/src/main/java/org/ujorm/hotels/entity/Hotel.java#l18"><img
+style="width: 1031; height: 728px" src="image-hotels/hotelDomainObject.png"
+alt="hotelDomainObject" /></a></div>
+
+<p>Gettery a settery v Ujo třídy nejsou povinné, ale jejich doplnění
+zpřehlední náš zdrojový kód v implementaci servisní vrstvy. Vývojové
+prostředí NetBeans má k dispozici <a
+href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">plugin</a>
+pro generování potřebných metod podle klíčů, podobný plugin pro Eclipse
+zatím bohužel chybí, snad to bude výzva pro nějakého nového příznivce
+:).</p>
+
+
+<h2 id="classModel">Objektový model</h2>
 <p>Následující obrázek popisuje použitý class model perzistentních
 tříd:</p>
 
