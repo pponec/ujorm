@@ -438,6 +438,7 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      * </ul>
      * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted
+     * A substring {@code {0}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
     public static <UJO extends Ujo> Criterion<UJO> forSql(Key<UJO,?> property, String sqlCondition) {
