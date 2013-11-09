@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 package org.ujorm;
 
 import org.ujorm.criterion.*;
@@ -182,7 +182,8 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      *       of target application to ensure database compatibility</li>
      * </ul>
      * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
-     * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted
+     * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted.
+     * A substring {@code {0}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
     public Criterion<UJO> forSql(String sqlCondition);

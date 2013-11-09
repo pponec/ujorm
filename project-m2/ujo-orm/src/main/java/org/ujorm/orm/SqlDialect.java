@@ -98,14 +98,14 @@ abstract public class SqlDialect {
     public InitialContext createJndiInitialContext(final MetaDatabase db) throws NamingException {
           return new InitialContext();
     }
-    
-    /** Does the database support a catalog? 
-     * The feature supports: MySqlDialect and MSSqlDialect. 
+
+    /** Does the database support a catalog?
+     * The feature supports: MySqlDialect and MSSqlDialect.
      * @return The default value is  {@code false}.
      */
     public boolean isCatalog() {
         return false;
-    }    
+    }
 
     /** Print SQL 'CREATE SCHEMA' */
     public Appendable printCreateSchema(String schema, Appendable out) throws IOException {
@@ -209,7 +209,7 @@ abstract public class SqlDialect {
         }
         return out;
     }
-    
+
     /** Print a SQL phrase for the DEFAULT VALUE, for example: DEFAULT 777 */
     public Appendable printDefaultValue(final MetaColumn column, final Appendable out) throws IOException {
         Object value = column.getJdbcFriendlyDefaultValue();
@@ -659,37 +659,47 @@ abstract public class SqlDialect {
             throw new UnsupportedOperationException("Unsupported SQL operator: " + operator);
         }
 
-        if (crit.isConstant()) {
-            out.append( template );
-        } else if (right instanceof Key) {
-            final Key rightProperty = (Key) right;
-            final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty, true);
+        switch (crit.getOperator()) {
+            case XFIXED:
+                out.append( template );
+                break;
+            case XSQL:
+                if (template.contains("{0}")) {
+                    out.append(MessageFormat.format(template, getAliasColumnName(column)));
+                } else {
+                    out.append(template);
+                }
+                break;
+            default: if (right instanceof Key) {
+                final Key rightProperty = (Key) right;
+                final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty, true);
 
-            if (col2.isForeignKey()) {
-                throw new UnsupportedOperationException("Foreign key is not supported yet");
-            }
-            if (true) {
-                // Better performance:
-                String f = MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2));
-                //String f=String.format(template, column.getAliasName(), col2.getAliasName());
+                if (col2.isForeignKey()) {
+                    throw new UnsupportedOperationException("Foreign key is not supported yet");
+                }
+                if (true) {
+                    // Better performance:
+                    String f = MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2));
+                    //String f=String.format(template, column.getAliasName(), col2.getAliasName());
+                    out.append(f);
+                }
+            } else if (right instanceof Object[]) {
+                final Object[] os = (Object[]) right;
+                final StringBuilder sb = new StringBuilder(2*os.length);
+                for (Object o : os) {
+                    sb.append(sb.length()>0 ? ",?" : "?");
+                }
+                String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
                 out.append(f);
+                return crit;
+            } else if (column.isForeignKey()) {
+                printForeignKey(crit, column, template, out);
+                return crit;
+            } else {
+                String f = MessageFormat.format(template, getAliasColumnName(column), "?");
+                out.append(f);
+                return crit;
             }
-        } else if (right instanceof Object[]) {
-            final Object[] os = (Object[]) right;
-            final StringBuilder sb = new StringBuilder(2*os.length);
-            for (Object o : os) {
-                sb.append(sb.length()>0 ? ",?" : "?");
-            }
-            String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
-            out.append(f);
-            return crit;
-        } else if (column.isForeignKey()) {
-            printForeignKey(crit, column, template, out);
-            return crit;
-        } else {
-            String f = MessageFormat.format(template, getAliasColumnName(column), "?");
-            out.append(f);
-            return crit;
         }
         return null;
     }
@@ -977,7 +987,7 @@ abstract public class SqlDialect {
         out.append(",");
         printQuotedNameAlways(getSeqTableModel().getMaxValue(), out);
         out.append(") VALUES (?," + seq).append("," + cache).append(",0)");
-        
+
         return out;
     }
 
@@ -1033,10 +1043,10 @@ abstract public class SqlDialect {
         out.append(" WHERE ");
         printQuotedNameAlways(tm.getId(), out);
         out.append("=?");
-        
+
         return out;
     }
-    
+
     /** Print SQL DELETE SEQUENCE BY ID. */
     public Appendable printSequenceDeleteById(final UjoSequencer sequence, String id, final Appendable out) throws IOException {
         final SeqTableModel tm = getSeqTableModel();
@@ -1046,7 +1056,7 @@ abstract public class SqlDialect {
         out.append(" WHERE ");
         printQuotedNameAlways(tm.getId(), out);
         out.append("=?");
-        
+
         return out;
     }
 
