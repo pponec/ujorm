@@ -24,11 +24,11 @@ import org.ujorm.hotels.services.AuthService;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Some tests for the DbServiceImpl class
  * @author Pavel Ponec
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/ApplicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/applicationContext.xml"})
 public class DbServiceImplTest {
 
     /** Has service */

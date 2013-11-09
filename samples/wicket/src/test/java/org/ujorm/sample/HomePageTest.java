@@ -13,7 +13,7 @@ import org.ujorm.hotels.gui.HotelsApplication;
  * Simple test using the WicketTester
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:org/ujorm/hotels/config/ApplicationContext.xml"})
+@ContextConfiguration(locations={"classpath:org/ujorm/hotels/config/applicationContext.xml"})
 public class HomePageTest extends TestCase {
 
     private WicketTester tester;
