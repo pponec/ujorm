@@ -16,8 +16,8 @@
 
 package org.ujorm;
 
-import org.ujorm.criterion.*;
 import java.util.Collection;
+import org.ujorm.criterion.*;
 
 public interface CriterionProvider<UJO extends Ujo, VALUE> {
 
@@ -187,6 +187,23 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @see Operator#XSQL
      */
     public Criterion<UJO> forSql(String sqlCondition);
+    /** Create a new Criterion for a Native Criterion in SQL statement format.
+     * Special features:
+     * <ul>
+     *   <li>parameters of the SQL_condition are not supported by the Ujorm</li>
+     *   <li>your own implementation of SQL the parameters can increase
+     *       a risk of the <a href="http://en.wikipedia.org/wiki/SQL_injection">SQL injection</a> attacks</li>
+     *   <li>method {@link #evaluate(org.ujorm.Ujo)} is not supported and throws UnsupportedOperationException in the run-time</li>
+     *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
+     *       of target application to ensure database compatibility</li>
+     * </ul>
+     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted.
+     * A substring {@code {0}} will be replaced for the current column name
+     * and the substring {@code {1}} will be replaced for the required value.
+     * @see Operator#XSQL
+     */
+    public Criterion<UJO> forSql(String sqlTemplate, VALUE value);
 
     /** Create a new Criterion for this property where all results will be true (the result is independed on the value).
      *  The method evaluate(ujo) returns TRUE always.

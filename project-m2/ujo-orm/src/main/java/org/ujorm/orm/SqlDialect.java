@@ -32,7 +32,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.criterion.TemplateValue;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -578,7 +580,10 @@ abstract public class SqlDialect {
                     : "1=0" // "false"
                     ;
             case XSQL:
-                return "(" + crit.getRightNode() + ')' ;
+                Object tmp = crit.getRightNode() instanceof TemplateValue
+                        ? ((TemplateValue) crit.getRightNode()).getTemplate()
+                        : crit.getRightNode();
+                return "(" + tmp + ')' ;
             case REGEXP:
             case NOT_REGEXP:
             default:
@@ -664,42 +669,61 @@ abstract public class SqlDialect {
                 out.append( template );
                 break;
             case XSQL:
+                if (right instanceof TemplateValue) {
+                    right = ((TemplateValue) right).getRightVale();
+                    ValueCriterion crit2 = (ValueCriterion) Criterion.where
+                            ( crit.getLeftNode()
+                            , Operator.EQ // The hack
+                            , right);
+                    return printCriterionValue(template, column, crit2, out);
+                }
                 if (template.contains("{0}")) {
                     out.append(MessageFormat.format(template, getAliasColumnName(column)));
                 } else {
                     out.append(template);
                 }
                 break;
-            default: if (right instanceof Key) {
-                final Key rightProperty = (Key) right;
-                final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty, true);
+            default:
+                return printCriterionValue(template, column, crit, out);
+        }
+        return null;
+    }
 
-                if (col2.isForeignKey()) {
-                    throw new UnsupportedOperationException("Foreign key is not supported yet");
-                }
-                if (true) {
-                    // Better performance:
-                    String f = MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2));
-                    //String f=String.format(template, column.getAliasName(), col2.getAliasName());
-                    out.append(f);
-                }
-            } else if (right instanceof Object[]) {
-                final Object[] os = (Object[]) right;
-                final StringBuilder sb = new StringBuilder(2*os.length);
-                for (Object o : os) {
-                    sb.append(sb.length()>0 ? ",?" : "?");
-                }
-                String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
-                out.append(f);
-                return crit;
-            } else if (column.isForeignKey()) {
-                printForeignKey(crit, column, template, out);
-                return crit;
-            } else {
-                String f = MessageFormat.format(template, getAliasColumnName(column), "?");
-                out.append(f);
-                return crit;
+    /**
+     * Write a right value form criterion
+     * @return return {@code false} if no righ value was written.
+     */
+    protected ValueCriterion printCriterionValue(String template, MetaColumn column, ValueCriterion crit, Appendable out) throws IOException {
+        final Object right = crit.getRightNode();
+        if (right instanceof Key) {
+            final Key rightProperty = (Key) right;
+            final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty, true);
+
+            if (col2.isForeignKey()) {
+                throw new UnsupportedOperationException("Foreign key is not supported yet");
             }
+            if (true) {
+                // Better performance:
+                String f = MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2));
+                //String f=String.format(template, column.getAliasName(), col2.getAliasName());
+                out.append(f);
+            }
+        } else if (right instanceof Object[]) {
+            final Object[] os = (Object[]) right;
+            final StringBuilder sb = new StringBuilder(2*os.length);
+            for (Object o : os) {
+                sb.append(sb.length()>0 ? ",?" : "?");
+            }
+            String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
+            out.append(f);
+            return crit;
+        } else if (column.isForeignKey()) {
+            printForeignKey(crit, column, template, out);
+            return crit;
+        } else {
+            String f = MessageFormat.format(template, getAliasColumnName(column), "?");
+            out.append(f);
+            return crit;
         }
         return null;
     }
