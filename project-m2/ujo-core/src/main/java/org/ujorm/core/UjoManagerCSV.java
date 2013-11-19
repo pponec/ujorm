@@ -271,6 +271,9 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     , final UjoAction action
     ) throws IllegalArgumentException {
         if (keyPointer >= getKeys().size()) {
+            if (value.length() == 0) {
+                return;
+            }
             throw new IllegalArgumentException("Too many columns on the row: "
                     + lineCounter
                     + " value: "
