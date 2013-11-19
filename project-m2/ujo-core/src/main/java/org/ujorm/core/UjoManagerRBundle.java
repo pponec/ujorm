@@ -123,9 +123,9 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         PropertyResourceBundle bundle = new PropertyResourceBundle(inp);
         UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_IMPORT, context);
 
-        Enumeration keys = bundle.getKeys();
+        Enumeration<String> keys = bundle.getKeys();
         while (keys.hasMoreElements()) {
-            final String key = (String) keys.nextElement();
+            final String key = keys.nextElement();
             final String value = bundle.getString(key);
             final Key prop = ujo.readKeys().findDirectKey(key, false);
             if (prop!=null) {
