@@ -106,10 +106,11 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         this.converter = converter;
     }
 
+    @SuppressWarnings({"LeakingThisInConstructor", "unchecked"})
     public MetaColumn(MetaTable table, Key tableProperty, MetaColumn param) {
         super(table, tableProperty, param);
         this.foreignKey = isTypeOf(OrmUjo.class);
-
+        
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
@@ -143,9 +144,11 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         }
 
         // Assign Comments:
-        if (field!=null) {
-            Comment comment = field.getAnnotation(Comment.class);
-            if (comment!=null) changeDefault(this, COMMENT  , comment.value());
+        if (field != null) {
+            final Comment comment = field.getAnnotation(Comment.class);
+            if (comment != null) {
+                changeDefault(this, COMMENT  , comment.value());
+            }
         }
 
         // Assign the Converter:
