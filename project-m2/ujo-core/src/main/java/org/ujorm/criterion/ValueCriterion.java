@@ -38,7 +38,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     /** False constant criterion */
     public static final Criterion<Ujo> FALSE = new ValueCriterion<Ujo>(false);
 
-    private Key key;
+    private Key<UJO, Object> key;
     private Operator operator;
     protected Object value;
 
@@ -79,22 +79,23 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
                  makeArrayTest(value);
                  break;
             case XSQL:
-                 String val;
-                 if (value==null || (val=value.toString().trim()).length()==0) {
-                    throw new IllegalArgumentException("Value must not be empty");
+                 String template = value instanceof TemplateValue
+                      ? ((TemplateValue)value).getTemplate()
+                      : String.valueOf(value);
+                 if (value==null || template.trim().isEmpty()) {
+                     throw new IllegalArgumentException("Value must not be empty");
                  }
-                 value = val;
                  break;
         }
 
-        this.key = key;
+        this.key = (Key<UJO, Object>) key;
         this.value = value;
         this.operator = operator;
     }
 
     /** Returns the left node of the parrent */
     @Override
-    public final Key getLeftNode() {
+    public final Key<?,?> getLeftNode() {
         return key;
     }
 
@@ -351,13 +352,13 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         final Class domain = (Class) in.readObject();
         final String name = (String) in.readObject();
-        key = UjoManager.getInstance().readProperties(domain).find(name);
+        key = (Key<UJO, Object>) UjoManager.getInstance().readKeys(domain).find(name);
         operator = (Operator) in.readObject();
         boolean valueIsKey = in.readBoolean();
         value = in.readObject();
         if (valueIsKey) {
             final String nameVal = (String) in.readObject();
-            value = UjoManager.getInstance().readProperties((Class)value).find(nameVal);
+            value = UjoManager.getInstance().readKeys((Class)value).find(nameVal);
         }
     }
 

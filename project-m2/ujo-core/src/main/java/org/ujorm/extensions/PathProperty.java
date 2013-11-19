@@ -31,6 +31,7 @@ import org.ujorm.Validator;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
+import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.validator.ValidationException;
 
 /**
@@ -325,9 +326,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     public String toStringFull() {
         return getDomainType().getSimpleName() + '.' +  getName();
     }
-    
+
     /**
-     * Returns the full name of the Key including all atributes. 
+     * Returns the full name of the Key including all atributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
      * @param extended argumenta false calls the method {@link #toStringFull()} only.
      * @return the full name of the Key including all atributes.
@@ -680,6 +681,28 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
     @Override
     public Criterion<UJO> forSql(String sqlCondition) {
         return Criterion.forSql(this, sqlCondition);
+    }
+
+    /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
+     * Special features:
+     * <ul>
+     *   <li>parameters of the SQL_condition are not supported by the Ujorm</li>
+     *   <li>your own implementation of SQL the parameters can increase
+     *       a risk of the <a href="http://en.wikipedia.org/wiki/SQL_injection">SQL injection</a> attacks</li>
+     *   <li>method {@link #evaluate(org.ujorm.Ujo)} is not supported and throws UnsupportedOperationException in the run-time</li>
+     *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
+     *       of target application to ensure database compatibility</li>
+     * </ul>
+     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
+     * A substring {@code {0}} will be replaced for the current column name;
+     * @param value a codition value
+     * A substring {@code {1}} will be replaced for the current column name;
+     * @see Operator#XSQL
+     */
+
+    public Criterion<UJO> forSql(String sqlTemplate, VALUE value) {
+        return new ValueCriterion<UJO>(this, Operator.XSQL, new Object[]{sqlTemplate, value});
     }
 
     /** {@inheritDoc} */

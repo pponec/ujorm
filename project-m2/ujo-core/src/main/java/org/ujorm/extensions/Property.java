@@ -448,7 +448,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
         return name;
     }
 
-    /** Returns the full name of the Key including a simple domain class. 
+    /** Returns the full name of the Key including a simple domain class.
      * <br />Example: Person.id */
     @Override
     public final String toStringFull() {
@@ -458,7 +458,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     }
 
     /**
-     * Returns the full name of the Key including all atributes. 
+     * Returns the full name of the Key including all atributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
      * @param extended argumenta false calls the method {@link #toStringFull()} only.
      * @return the full name of the Key including all atributes.
@@ -469,7 +469,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
                 ? toStringFull() + Property.printAttributes(this)
                 : toStringFull() ;
     }
-    
+
     /** Print  */
     @PackagePrivate static String printAttributes(Key key) {
         return " {index=" + key.getIndex()
@@ -482,7 +482,7 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
             + ", class=" + key.getClass().getName()
             + "}" ;
     }
-    
+
     // --------- STATIC METHODS -------------------
 
     /** Returns a new instance of property where the default value is null.
@@ -693,6 +693,12 @@ public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
     @Override
     public Criterion<UJO> forSql(String sqlCondition) {
         return Criterion.forSql(this, sqlCondition);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion<UJO> forSql(String sqlCondition, VALUE value) {
+        return Criterion.forSql(this, sqlCondition, value);
     }
 
     /** {@inheritDoc} */

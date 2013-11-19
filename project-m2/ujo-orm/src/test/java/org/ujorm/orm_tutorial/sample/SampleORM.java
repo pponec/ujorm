@@ -109,7 +109,7 @@ public class SampleORM {
 
     /** The session contains a cache and database connections. */
     private Session session;
-    
+
     /** Temporary field */
     private Long anyOrderId;
 
@@ -130,7 +130,7 @@ public class SampleORM {
             MetaParams params = new MetaParams();
             params.set(MetaParams.SEQUENCE_SCHEMA_SYMBOL, true);
             params.set(MetaParams.TABLE_ALIAS_SUFFIX, "_alias");
-            params.setQuotedSqlNames(false);            
+            params.setQuotedSqlNames(false);
             params.set(MetaParams.INITIALIZATION_BATCH, new InitializationBatch() {
                 @Override public void run(Session session) throws Exception {
                     if (!session.exists(Customer.class)) {
@@ -526,6 +526,16 @@ public class SampleORM {
         for (Order order : orders) {
             System.out.println("ORDER: " + order);
         }
+
+        // Cleaner using:
+        crn = Order.ID.forSql("{0}>{1}", 0L)
+             .and(Order.CREATED.where(LE, new Date())); Order.ID.forSql("{0}>{1}", 1L).getRightNode();
+        orders = session.createQuery(crn);
+
+        for (Order order : orders) {
+            System.out.println("ORDER: " + order);
+        }
+
     }
 
     /** How to reload the object property values from the database ? */
