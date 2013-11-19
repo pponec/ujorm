@@ -359,7 +359,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         }
         return result;
     }
-
+    
     /** UJO sequencer */
     public UjoSequencer getSequencer() {
         return sequencer;
