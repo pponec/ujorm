@@ -15,15 +15,20 @@
  */
 package org.ujorm.implementation.orm;
 
-import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.extensions.Property;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
+import static org.ujorm.orm.ao.LazyLoading.*;
 
 /** The special property pro LazyLoadiing */
 public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
+
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmProperty.class);
 
     // /** Is the property type of Relation  */
     // private boolean relation;
@@ -51,7 +56,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
     @SuppressWarnings("unchecked")
     @Override
     public VALUE of(final U ujo) {
-        final Session mySession = ujo.readSession();  // maybe readSession() is better?
+        Session mySession = ujo.readSession();  // maybe readSession() is better?
         Object result = ujo.readValue(this);
 
         if (isTypeOf(OrmUjo.class)) {
@@ -59,10 +64,29 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                 if (mySession == null) {
                     return null;
                 }
-                if (!mySession.isLazyLoadingEnabled()) {
+                if (DISABLED.equalsTo(mySession.getLazyLoading())) {
                     throw new IllegalStateException("The lazy loading is disabled in the current Session.");
                 }
-                result = mySession.loadInternal(this, ((ForeignKey) result).getValue(), true);
+                if (mySession.isClosed()) {
+                    switch (mySession.getLazyLoading()) {
+                        default:
+                            throw new IllegalStateException("The lazy loading is disabled in the closed Session.");
+                        case ALLOWED_ANYWHERE_WITH_WARNING:
+                            if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                                LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + toStringFull() + " = " + result);
+                            }
+                        case ALLOWED_ANYWHERE:
+                            // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.) */
+                            final Session tempSession = mySession.getHandler().createSession();
+                            try {
+                                result = tempSession.loadInternal(this, ((ForeignKey) result).getValue(), true);
+                            } finally {
+                                tempSession.close();
+                            }
+                    }
+                } else {
+                    result = mySession.loadInternal(this, ((ForeignKey) result).getValue(), true);
+                }
                 ujo.writeSession(null); // Replacing of the foreign key is not a property change
                 ujo.writeValue(this, result);
                 ujo.writeSession(mySession); // Restore the Session

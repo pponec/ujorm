@@ -116,7 +116,6 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return result;
     }
 
-
     /** Getter based on Key implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
     public final <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
