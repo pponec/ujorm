@@ -41,6 +41,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ao.CacheKey;
 import org.ujorm.orm.ao.CachePolicy;
+import org.ujorm.orm.ao.LazyLoading;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaDatabase;
 import org.ujorm.orm.metaModel.MetaPKey;
@@ -67,7 +68,7 @@ public class Session {
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(Session.class);
     /** Handler. */
     final private OrmHandler handler;
-    /** Orm parameters. */
+    /** ORM parameters. */
     final private MetaParams params;
     /** Two database connections set (common and sequence)  */
     final private HashMap<MetaDatabase, Connection>[] connections = new HashMap[]
@@ -81,7 +82,7 @@ public class Session {
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      */
-    private boolean lazyLoadingEnabled;
+    private LazyLoading lazyLoading;
     /** Closed session */
     private boolean closed = false;
     /** Transaction */
@@ -91,7 +92,7 @@ public class Session {
     Session(OrmHandler handler) {
         this.handler = handler;
         this.params = handler.getParameters();
-        this.lazyLoadingEnabled = MetaParams.LAZY_LOADING_ENABLED.of(params);
+        this.lazyLoading = MetaParams.LAZY_LOADING.of(params);
         clearCache(MetaParams.CACHE_POLICY.of(params));
     }
 
@@ -1203,15 +1204,15 @@ public class Session {
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      * @return the lazyLoadingEnabled */
-    public boolean isLazyLoadingEnabled() {
-        return lazyLoadingEnabled;
+    public LazyLoading getLazyLoading() {
+        return lazyLoading;
     }
 
     /** Enable a lazy-loading of related Ujo object.
      * The default value is assigned from the parameter {@link MetaParams#LAZY_LOADING_ENABLED}.
      * @param lazyLoadingEnabled the lazyLoadingEnabled to set */
-    public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
-        this.lazyLoadingEnabled = lazyLoadingEnabled;
+    public void setLazyLoading(LazyLoading lazyLoadingEnabled) {
+        this.lazyLoading = lazyLoadingEnabled;
     }
 
     /**

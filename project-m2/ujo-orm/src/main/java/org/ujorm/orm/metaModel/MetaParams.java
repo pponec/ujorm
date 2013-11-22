@@ -33,6 +33,7 @@ import org.ujorm.orm.TypeService;
 import org.ujorm.orm.ao.CachePolicy;
 import org.ujorm.orm.ao.CheckReport;
 import org.ujorm.orm.ao.CommentPolicy;
+import org.ujorm.orm.ao.LazyLoading;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 import org.ujorm.orm.utility.OrmTools;
 
@@ -63,11 +64,11 @@ final public class MetaParams extends AbstractMetaModel {
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 100, the smallest possible value is 1. */
     public static final Key<MetaParams,Integer> SEQUENCE_CACHE = f.newKey("sequenceCache", 100);
-    /** The parameter 'lazyLoadingEnabled' affects
-     * a default value of the method {@link org.ujorm.orm.Session#isLazyLoadingEnabled()}
-     * The default value is {@code true}.
-     * @see org.ujorm.orm.Session#isLazyLoadingEnabled() */
-    public static final Key<MetaParams,Boolean> LAZY_LOADING_ENABLED = f.newKey("lazyLoadingEnabled", true);
+    /** The parameter 'lazyLoading' specify a Lazy loading policy, see the enum:
+     * {@link org.ujorm.orm.ao.LazyLoading} for more inormation.
+     * The default value is {@link org.ujorm.orm.ao.LazyLoading#ALLOWED_USING_OPEN_SESSION}
+     * @see org.ujorm.orm.ao.LazyLoading */
+    public static final Key<MetaParams,LazyLoading> LAZY_LOADING = f.newKey("lazyLoading", LazyLoading.ALLOWED_USING_OPEN_SESSION);
     /** A policy to defining the database structure by a DDL.
      * The default value is option: CREATE_OR_UPDATE_DDL.
      * @see Orm2ddlPolicy Parameter values
@@ -148,7 +149,7 @@ final public class MetaParams extends AbstractMetaModel {
      * If JDBC driver does not support the multi-value statement, the parameter is ignored.
      */
     public static final Key<MetaParams,Boolean> LOG_SQL_MULTI_INSERT = f.newKey("logSqlMultiInsert", false);
-    
+
     /** Pamameter tries to install a brighe to the <a href="http://logback.qos.ch/">Logback</a> logging framework
      * using a statement <code>SLF4JBridgeHandler.install()</code>;
      */
@@ -167,7 +168,7 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** The type service cache */
     private final Map<Class, ITypeService> typeServices = new HashMap<Class, ITypeService>(2);
-    
+
     /** Assign an initialization batch */
     private InitializationBatch batch;
 
@@ -252,7 +253,7 @@ final public class MetaParams extends AbstractMetaModel {
                 : null // The default value
                 );
     }
-        
+
     /** Assign an initialization batch */
     public void set(Key<MetaParams,Class<? extends InitializationBatch>> key, InitializationBatch batch) {
         checkReadOnly(true);
@@ -264,7 +265,7 @@ final public class MetaParams extends AbstractMetaModel {
         if (INITIALIZATION_BATCH.isDefault(this)) {
             return this.batch;
         } else try {
-            return INITIALIZATION_BATCH.of(this).newInstance(); 
+            return INITIALIZATION_BATCH.of(this).newInstance();
         } catch (Exception e) {
             throw new IllegalStateException("Instance of the class failed: " + INITIALIZATION_BATCH.of(this));
         }

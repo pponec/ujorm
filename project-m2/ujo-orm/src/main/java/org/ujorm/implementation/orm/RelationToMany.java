@@ -15,11 +15,15 @@
  */
 package org.ujorm.implementation.orm;
 
+import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.extensions.AbstractCollectionProperty;
+import org.ujorm.logger.UjoLogger;
+import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.Session;
+import static org.ujorm.orm.ao.LazyLoading.*;
 
 /**
  * The relation 1:N to another UJO type items
@@ -28,6 +32,8 @@ import org.ujorm.orm.Session;
  */
 public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo>
         extends AbstractCollectionProperty<UJO, UjoIterator<ITEM>, ITEM> {
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(RelationToMany.class);
 
     /** Constructor
      * @param name optional
@@ -69,7 +75,32 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
 
         if (mySession != null
         &&  mySession.getHandler().isPersistent(this)) {
-            return mySession.iterateInternal((RelationToMany) this, ujo);
+
+            if (DISABLED.equalsTo(mySession.getLazyLoading())) {
+                throw new IllegalStateException("The lazy loading is disabled in the current Session.");
+            }
+
+            if (mySession.isClosed()) {
+                switch (mySession.getLazyLoading()) {
+                    default:
+                        throw new IllegalStateException("The lazy loading is disabled in the closed Session.");
+                    case ALLOWED_ANYWHERE_WITH_WARNING:
+                        if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                            LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + toStringFull());
+                        }
+                    case ALLOWED_ANYWHERE:
+                        // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.)
+                        final Session tempSession = mySession.getHandler().createSession();
+                        try {
+                            List<ITEM> list = (List) tempSession.iterateInternal((RelationToMany) this, ujo).toList();
+                            return UjoIterator.getInstance(list);
+                        } finally {
+                            tempSession.close();
+                        }
+                }
+            } else {
+                return mySession.iterateInternal((RelationToMany) this, ujo);
+            }
             // Don't save the result!
         } else {
             return (UjoIterator<ITEM>) ujo.readValue(this);
