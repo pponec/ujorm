@@ -513,29 +513,29 @@ public class SampleORM {
         }
     }
 
-    /** Select all items with a description with the 'table' insensitive text. */
+    /** Select orderes using a native criterion */
     public void useNativeCriterion() {
-        if (session.getParameters().isQuotedSqlNames()) {
-            return;  // Columns must be quoted
-        }
-
-        Criterion<Order> crn = Order.STATE.forSql("ord_order_alias.id>0")
-             .and(Order.CREATED.where(LE, new Date()));
+        // The base using: the first arguments is replaced by column, the second is replaced using argument.
+        Criterion<Order> crn = Order.ID.forSql("{0} > {1}", 0L)
+             .and(Order.CREATED.where(LE, new Date())); Order.ID.forSql("{0}>{1}", 1L).getRightNode();
         Query<Order> orders = session.createQuery(crn);
 
         for (Order order : orders) {
             System.out.println("ORDER: " + order);
         }
 
-        // Cleaner using:
-        crn = Order.ID.forSql("{0}>{1}", 0L)
-             .and(Order.CREATED.where(LE, new Date())); Order.ID.forSql("{0}>{1}", 1L).getRightNode();
+        // Special using without arguments:
+        if (session.getParameters().isQuotedSqlNames()) {
+            return;  // Columns must be quoted
+        }
+
+        crn = Order.STATE.forSql("ord_order_alias.id > 0")
+             .and(Order.CREATED.where(LE, new Date()));
         orders = session.createQuery(crn);
 
         for (Order order : orders) {
             System.out.println("ORDER: " + order);
         }
-
     }
 
     /** How to reload the object property values from the database ? */
