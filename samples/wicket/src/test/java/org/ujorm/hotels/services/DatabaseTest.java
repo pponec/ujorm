@@ -18,6 +18,7 @@ package org.ujorm.hotels.services;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,6 +28,7 @@ import org.ujorm.Key;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
+import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.impl.AbstractServiceImpl;
 import org.ujorm.orm.Query;
@@ -39,8 +41,31 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:org/ujorm/hotels/config/applicationContext.xml"})
 public class DatabaseTest extends AbstractServiceImpl {
+    /** The one day in MILIS */
+    private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
-    /** Database query using the Ujorm Keys */
+    /** Create a one reservation in the Prague */
+    @Before
+    @Transactional
+    public void setUp() {
+        final String login = "test";
+        final String city = "Prague";
+        if (!createQuery(Booking.ID.forAll()).exists()) {
+            Customer customer = createQuery(Customer.LOGIN.whereEq(login)).uniqueResult();
+            Hotel hotel = createQuery(Hotel.CITY.add(City.NAME).whereEq(city)).setLimit(1).uniqueResult();
+            //
+            Booking booking = new Booking();
+            booking.setCustomer(customer);
+            booking.setHotel(hotel);
+            booking.setDateFrom(new Date(System.currentTimeMillis() + ONE_DAY));
+            booking.setPrice(hotel.getPrice());
+            booking.setReservationDate(now());
+
+            getSession().save(booking);
+        }
+    }
+
+    /** Database query using the Ujorm <strong>Keys</strong> */
     @Test
     @Transactional
     public void testDbQueries() {
@@ -62,19 +87,35 @@ public class DatabaseTest extends AbstractServiceImpl {
         // Building criterions:
         Criterion<Booking> crn2 = bookingCityName.whereEq("Prague");
         Criterion<Booking> crn3 = crn1.and(crn2);
-        Criterion<Booking> crn4 = crn1.and(crn2.or(getNextCriterion()));
+        Criterion<Booking> crn4 = crn1.and(crn2.or(anotherCriterion()));
         assertEquals(1, crn4.evaluate(getBookings()).size());
 
         // Build query:
         Query<Booking> bookings = createQuery(crn3);
         List<Booking> result = bookings.list();
-        assertTrue(result.isEmpty());
+        assertFalse(result.isEmpty());
 
         // Fetch columns:
         bookings.addColumn(bookingHotel.add(hotelCity).add(City.ID));
         // Ordering:
         bookings.orderBy(Booking.DATE_FROM);
         bookings.orderBy(Booking.PRICE.descending());
+    }
+
+    /** Database query using the Ujorm <strong>Keys</strong> */
+    @Test
+    @Transactional
+    public void testNativeCriterion() {
+        Key<Booking, String> bookingCityName = Booking.HOTEL
+                .add(Hotel.CITY)
+                .add(City.NAME);
+
+        String[] cities  = {"Prague", "Amsterdam"};
+        Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
+
+        Query<Booking> bookings = createQuery(crn);
+        List<Booking> result = bookings.list();
+        assertFalse(result.isEmpty());
     }
 
     // ---------- HELPFUL METHODS ----------
@@ -87,21 +128,20 @@ public class DatabaseTest extends AbstractServiceImpl {
     /** Returns two Booking objects with different DateFrom attribute value */
     private List<Booking> getBookings() {
         List<Booking> result = new ArrayList<Booking>();
-        int oneDay = 24 * 60 * 60 * 1000; // The one day in MILOS */
 
         Booking item1 = new Booking();
         result.add(item1);
-        item1.setDateFrom(new Date(System.currentTimeMillis() - oneDay));
+        item1.setDateFrom(new Date(System.currentTimeMillis() - ONE_DAY));
 
         Booking item2 = new Booking();
         result.add(item2);
-        item2.setDateFrom(new Date(System.currentTimeMillis() + oneDay));
+        item2.setDateFrom(new Date(System.currentTimeMillis() + ONE_DAY));
 
         return result;
     }
 
     /** Returns some next Criterion */
-    private Criterion<Booking> getNextCriterion() {
+    private Criterion<Booking> anotherCriterion() {
         return Booking.CURRENCY.whereEq("USD");
     }
 }

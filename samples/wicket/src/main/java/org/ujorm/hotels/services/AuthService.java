@@ -15,7 +15,6 @@
  */
 package org.ujorm.hotels.services;
 
-import org.apache.wicket.Session;
 import org.ujorm.hotels.entity.Customer;
 
 /**
