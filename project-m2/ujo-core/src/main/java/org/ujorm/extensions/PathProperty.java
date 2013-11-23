@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.ujorm.CompositeKey;
-import org.ujorm.CompositeProperty;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -45,7 +44,7 @@ import org.ujorm.validator.ValidationException;
  */
 @Immutable
 @SuppressWarnings("deprecation")
-public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<UJO, VALUE> {
+public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, VALUE> {
 
     /** Array of <strong>direct</strong> keys */
     private final Key[] keys;
@@ -668,7 +667,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      */
 
     public Criterion<UJO> forSql(String sqlTemplate, VALUE value) {
-        return new ValueCriterion<UJO>(this, Operator.XSQL, new Object[]{sqlTemplate, value});
+        return Criterion.forSql(this, sqlTemplate, value);
+    }
+
+    public Criterion<UJO> forSqlUnchecked(String sqlTemplate, Object value) {
+        return Criterion.forSqlUnchecked(this, sqlTemplate, value);
     }
 
     /** {@inheritDoc} */
