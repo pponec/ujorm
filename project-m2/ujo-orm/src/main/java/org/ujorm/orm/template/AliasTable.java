@@ -26,23 +26,23 @@ import org.ujorm.orm.metaModel.MetaColumn;
 /**
  * The class for building any SQL statement using Ujorm Keys.
  * <br>Example:
- * <pre class="pre">{@code 
+ * <pre class="pre">{@code
  * import static org.ujorm.orm.template.AliasTable.Build.*;
  * public void example() {
  *     OrmHandler handler = createHandler();
  *     AliasTable<Order> order = AliasTable.of(Order.class, "order", handler);
  *     AliasTable<Item> item = AliasTable.of(Item.class, "item", handler);
- *      
- *     String sql 
+ *
+ *     String sql
  *             = SELECT(order.column(Order.CREATED), item.column(Item.NOTE))
  *             + FROM (order, item)
  *             + WHERE(order.column(Order.ID), " = ", item.column(Item.ORDER));
- * 
+ *
  *     String sqlExpected = "SELECT order.CREATED, item.NOTE "
  *             + "FROM db1.ord_order order, db1.ord_item item "
  *             + "WHERE order.ID = item.fk_order";
- * 
- *     assertEquals(sqlExpected, sql);        
+ *
+ *     assertEquals(sqlExpected, sql);
  * }}<pre>
  *
  * @author Pavel Ponec
@@ -84,7 +84,7 @@ public class AliasTable<UJO extends OrmUjo> {
             throw new IllegalStateException(e.getClass().getSimpleName(), e);
         }
     }
-    
+
     /** Print one column including alias */
     public <T> String column(Key<UJO, T> key) throws IllegalStateException {
         return printColumn
@@ -98,12 +98,12 @@ public class AliasTable<UJO extends OrmUjo> {
     public <T> String columnAs(Key<UJO, T> key) throws IllegalStateException {
         return columnAs(key, null);
     }
-    
+
     /** Returns one column including the <strong>required</strong> alias name after the 'AS' phrase.
      * @param key Related key
      * @param columnAlias an alias String or a Key instance for the key Name, the {@code null} value use an Key name.
      * @return  Returns one column including the <strong>required</strong> alias name after the 'AS' phrase.
-     * @throws IllegalStateException 
+     * @throws IllegalStateException
      */
     public <T> String columnAs(Key<UJO, T> key, CharSequence columnAlias) throws IllegalStateException {
         return printColumn
@@ -116,7 +116,7 @@ public class AliasTable<UJO extends OrmUjo> {
     public String allColumns() throws IllegalStateException {
         return allColumns(false);
     }
-    
+
     /** Call the column() method for all Keys of Ujorm */
     public String allColumns(boolean includeKeyAlias) throws IllegalStateException {
         final StringBuilder result = new StringBuilder(128);
@@ -131,7 +131,7 @@ public class AliasTable<UJO extends OrmUjo> {
         }
         return result.toString();
     }
-    
+
     /** Return the same result as {@link #table} */
     @Override
     public String toString() {
@@ -139,12 +139,12 @@ public class AliasTable<UJO extends OrmUjo> {
     }
 
     // ------------ HELPER METHODS ------------
-    
+
     /** Returns one column including an default special alias after the 'AS' phrase.
      * @param key Related key
      * @param columnAlias an alias name or a Key instance, the {@code null} value use an Key name.
      * @return Returns one column including an default special alias.
-     * @throws IllegalStateException 
+     * @throws IllegalStateException
      */
     protected StringBuilder printColumn(MetaColumn column, final CharSequence columnAlias, StringBuilder out) throws IllegalStateException {
         try {
@@ -156,15 +156,15 @@ public class AliasTable<UJO extends OrmUjo> {
         } catch (IOException e) {
             throw new IllegalStateException(e.getClass().getSimpleName(), e);
         }
-    }    
+    }
 
     /** Find Column Model or throw an IllegalArgumentException. */
     protected MetaColumn findColumnModel(Key<UJO, ?> key) throws IllegalArgumentException {
         return (MetaColumn) handler.findColumnModel((Key) key, true);
     }
-    
+
     // ------------ STATIC METHODS ------------
-    
+
     /** Create new Alias with required name */
     public static <UJO extends OrmUjo> AliasTable<UJO> of(Class<UJO> table, String alias, OrmHandler handler) {
         return new AliasTable<UJO>(table, alias, handler);
@@ -174,9 +174,9 @@ public class AliasTable<UJO extends OrmUjo> {
     public static <UJO extends OrmUjo> AliasTable<UJO> of(Class<UJO> table, OrmHandler handler) {
         return new AliasTable<UJO>(handler.findTableModel(table), handler);
     }
-    
+
     // ------------ STATIC TOOLS ------------
-    
+
     /** Static building methods. */
     public static final class Build {
 
@@ -191,6 +191,12 @@ public class AliasTable<UJO extends OrmUjo> {
         /** Build SQL FROM phrase */
         public static String FROM(Object... params) {
             return " FROM " + toText(", ", params);
+        }
+
+        /** Build SQL FROM phrase */
+        public static String INNER_JOIN(Object table, Object... conditions) {
+            return " INNER JOIN " + table
+                 + " ON " + toText(" ", conditions) + " ";
         }
 
         /** Build SQL WHERE phrase */
@@ -209,6 +215,6 @@ public class AliasTable<UJO extends OrmUjo> {
             }
             return sb.toString();
         }
-    }    
-    
+    }
+
 }
