@@ -55,7 +55,6 @@ import static org.ujorm.criterion.Operator.*;
  * @see Item
  */
 public class SampleORM {
-    private static final Logger LOGGER = Logger.getLogger(SampleORM.class.getName());
 
     // ------- TUTORIAL MENU: -------
 
@@ -275,7 +274,7 @@ public class SampleORM {
         orders.orderBy( Order.NOTE
                       , Order.CREATED.descending() );
 
-        LOGGER.info("VIEW-ORDER COUNT: " + orders.getCount());
+        logInfo("View-order count: %s", orders.getCount());
     }
 
     /** Sort items by a <strong>composite</strong> propertry. <br>
@@ -289,11 +288,11 @@ public class SampleORM {
 
         for (Item item : items) {
             OrmTools.loadLazyValues(item, 2);
-            LOGGER.info(item.get(Item.ORDER.add(Order.CREATED)) + " " + item);
+            logInfo("Created: %s of %s", item.get(Item.ORDER.add(Order.CREATED)), item);
         }
         // Another way to avoid the lazy loading by a bulk property loading:
         List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
-        LOGGER.info("itemList: " + itemList);
+        logInfo("ItemList: %s", itemList);
     }
 
     /** Use a 'native query' where the query is CREATED
@@ -316,7 +315,7 @@ public class SampleORM {
                 .setSqlParameters(minimalOrderId)
                 .getCount()
                 ;
-        LOGGER.info("Order Count: " + orderCount);
+        logInfo("Order count: %s", orderCount);
 
         Query<ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
@@ -324,7 +323,7 @@ public class SampleORM {
                 .setSqlParameters(0)
                 ;
         for (ViewOrder order : orders) {
-            LOGGER.info("ORDER ROW: " + order);
+            logInfo("Order row: %s", order);
         }
     }
 
@@ -359,7 +358,7 @@ public class SampleORM {
                 .setSqlParameters(sql)
                 .getCount()
                 ;
-        LOGGER.info("Order Count: " + orderCount);
+        logInfo("Order Count: %s", orderCount);
 
         Query<ViewOrder> orders = session.createQuery(crit)
                 .setLimit(5)
@@ -367,7 +366,7 @@ public class SampleORM {
                 .setSqlParameters(sql)
                 ;
         for (ViewOrder order : orders) {
-            LOGGER.info("ORDER ROW: " + order);
+            logInfo("Order row: %s", order);
         }
     }
 
@@ -379,7 +378,7 @@ public class SampleORM {
 
         for (Item item : items) {
             Order order = item.getOrder();
-            LOGGER.info("ITEM ROW: " + item + " ORDER: " + order);
+            logInfo("Item row: %s of the Order: %s", item, order);
         }
     }
 
@@ -391,7 +390,7 @@ public class SampleORM {
 
         for (Item item : items) {
             Order order2 = item.getOrder();
-            LOGGER.info("ITEM ROW: " + item + " ORDER: " + order2);
+            logInfo("item row: %s of the Order: %s", item, order2);
         }
     }
 
@@ -403,7 +402,7 @@ public class SampleORM {
 
         for (Item item : order.getItems()) {
             Order order2 = item.getOrder();
-            LOGGER.info("ITEM ROW: " + item + " ORDER: " + order2);
+            logInfo("Item row: %s of the Order: %s", item, order2);
         }
     }
 
@@ -416,7 +415,7 @@ public class SampleORM {
         Query<Item> items = session.createQuery(ORDER_DATE.whereLe(new Date()));
 
         for (Item item : items) {
-            LOGGER.info("Item: " + item);
+            logInfo("Item: %s", item);
         }
     }
 
@@ -429,7 +428,7 @@ public class SampleORM {
         Query<Item> items = session.createQuery(Item.ID.whereIn(1L, 2L, 3L, 4L, 5L));
 
         for (Item item : items) {
-            LOGGER.info("Item: " + item);
+            logInfo("Item: %s", item);
         }
     }
 
@@ -439,7 +438,7 @@ public class SampleORM {
         Order orderB = new Order(2L);
 
         for (Item item : session.createQuery(Item.ORDER.whereIn(orderA, orderB))) {
-            LOGGER.info("Item: " + item);
+            logInfo("Item: %s", item);
         }
 
         // --- Or dirty hack using identifiers directly ---
@@ -447,7 +446,7 @@ public class SampleORM {
         Collection ids = Arrays.asList(1L, 2L);
         Criterion<Item> crn = Item.ORDER.whereIn(ids);
         for (Item item : session.createQuery(crn)) {
-            LOGGER.info("Item: " + item);
+            logInfo("Item: %s", item);
         }
 
     }
@@ -456,7 +455,7 @@ public class SampleORM {
     public void useSelectItems_6() {
         Query<Item> items = session.createQuery(Item.ORDER.add(Order.CUSTOMER).whereNull());
         for (Item item : items) {
-            LOGGER.info("ITEM WITHOUT ORDER: " + item);
+            logInfo("Item without order: %s", item);
         }
     }
 
@@ -476,7 +475,7 @@ public class SampleORM {
                 .setDistinct()        // Remove duplicate rows
                 ;
         for (Item item : items) {
-            LOGGER.info("Note: " + item.getNote());
+            logInfo("Note: %s", item.getNote());
 
             // Other columns have got the default value always:
             assert item.getId() == Item.ID.getDefault();
@@ -521,7 +520,7 @@ public class SampleORM {
         Query<Order> orders = session.createQuery(crn);
 
         for (Order order : orders) {
-            LOGGER.info("ORDER: " + order);
+            logInfo("Order: %s", order);
         }
 
         // Special using without arguments:
@@ -534,16 +533,15 @@ public class SampleORM {
         orders = session.createQuery(crn);
 
         for (Order order : orders) {
-            LOGGER.info("ORDER: " + order);
+            logInfo("Order: %s", order);
         }
     }
 
     /** How to reload the object property values from the database ? */
     public void useReloading() {
         Order order = new Order(anyOrderId);
-
         boolean result = session.reload(order);
-        LOGGER.info("Reloading result: " + result + " for Order: " + order);
+        logInfo("Reloading result: %s for Order: %s", result, order);
     }
 
     /** How to reload the object property values from the database ? */
@@ -558,12 +556,13 @@ public class SampleORM {
             Order order2 = item.getOrder();
             assert false : "Lazy-loading for a closed session is disabled by default, the Item is: " + order2.getId();
         } catch (IllegalStateException e) {
-            LOGGER.info("OK");
+            logInfo("OK");
         }
 
         item.readSession().setLazyLoading(LazyLoading.ALLOWED_ANYWHERE_WITH_WARNING); // Enable
         Order order3 = item.getOrder();
-        LOGGER.info("Lazy Order: " + order3);
+        Item item4 = order3.getItems().next(); // Lazy loading type of one to many
+        logInfo("Lazy Order: %s and Item: %s", order3, item4);
     }
 
     /** How to get the latest order by the LIMIT attribute? */
@@ -574,14 +573,14 @@ public class SampleORM {
                 .orderBy(Order.CREATED.descending())
                 .uniqueResult()
                 ;
-        LOGGER.info("The latest Order: " + order);
+        logInfo("The latest Order: %s", order);
     }
 
     /** How to count items ? */
     public void useSelectCount() {
         Query<Item> query = session.createQuery(Item.NOTE.where(CONTAINS_CASE_INSENSITIVE, "table"));
         long count = query.getCount();
-        LOGGER.info("Count of the order items: " + count);
+        logInfo("Count of the order items: %s", count);
     }
 
     /** How to get a Foreign Key without lazy loading */
@@ -591,7 +590,7 @@ public class SampleORM {
             ForeignKey fk1 = item.readFK(Item.ORDER);   // before lazy loading
             item.get(Item.ORDER);                       // the lazy loading
             ForeignKey fk2 = item.readFK(Item.ORDER);   // after lazy loading
-            LOGGER.info("FK: " + fk1 + " " + fk1.equals(fk2));
+            logInfo("FK1: %s where FK1 eq FK2: %s", fk1, fk1.equals(fk2));
         }
     }
 
@@ -602,12 +601,12 @@ public class SampleORM {
         boolean skip = items.skip(1);
         if (items.hasNext()) {
             Item item = items.next();
-            LOGGER.info("Item : " + item);
+            logInfo("Item: %s", item);
         }
 
         skip = items.skip(1);
         boolean isNext = items.hasNext();
-        LOGGER.info("Next: " + isNext);
+        logInfo("Next: %s", isNext);
     }
 
     /** Sample for 'one to many' relation.
@@ -619,12 +618,12 @@ public class SampleORM {
         UjoIterator<Order> orders = db.get(Database.ORDERS);
         for (Order order : orders) {
             String note = order.getNote();
-            LOGGER.info("Order: " + order + " // note: " + note);
+            logInfo("Order: %s with Note: %s", order, note);
 
             for (Item item : order.getItems()) {
                 Long itemId = item.getId();
                 String itemDescr = item.getNote();
-                LOGGER.info(" Item id: " + itemId + " note: " + itemDescr);
+                logInfo(" Item id: %s with Note: %s", itemId, itemDescr);
             }
         }
     }
@@ -650,14 +649,14 @@ public class SampleORM {
         procedure.set(MyProcedure.PARAM_CODE, 5);
         procedure.set(MyProcedure.PARAM_ENABLED, true);
         Integer result = procedure.call(session); // Take the RESULT from the first parameter
-        LOGGER.info("The stored procedure result #1: " + result);
+        logInfo("The stored procedure result #1: %s", result);
 
         // Another way how to get the output parameter:
         procedure.set(MyProcedure.PARAM_CODE, 24);
         procedure.set(MyProcedure.RESULT, null); // The output parameter(s) can't be initialized.
         procedure.call(session);
         result = procedure.get(MyProcedure.RESULT); // Take the RESULT from any output parameter
-        LOGGER.info("The stored procedure result #2: " + result);
+        logInfo("The stored procedure result #2: %s", result);
     }
 
     /** Call a database stored procedure:
@@ -683,12 +682,12 @@ public class SampleORM {
         procedure.set(MyProcedure.PARAM_ENABLED, true);
 
         Integer result = procedure.call(session);
-        LOGGER.info("The stored procedure result #1: " + result);
+        logInfo("The stored procedure result #1: %s", result);
 
         // See how to reuse input parameters of the object 'procedure':
         procedure.set(MyProcedure.PARAM_CODE, 24);
         result = procedure.call(session, MyProcedure.RESULT); // Take the RESULT of any (output) parameter
-        LOGGER.info("The stored procedure result #2: " + result);
+        logInfo("The stored procedure result #2: %s", result);
     }
 
     /** Using the database UPDATE */
@@ -747,7 +746,7 @@ public class SampleORM {
 
         session.delete(item);
         session.commit();
-        LOGGER.info("There is DELETED object: " + item);
+        logInfo("There is DELETED object:  %s", item);
     }
 
     /** How to use a batch DELETE? <br/>
@@ -756,7 +755,7 @@ public class SampleORM {
     public void useBatchDelete() {
         int count = session.delete(Item.ID.whereEq(anyOrderId));
         session.commit();
-        LOGGER.info("There are DELETED rows: " + count);
+        logInfo("There are DELETED rows:  %s", count);
     }
 
     /** How to use a batch DELETE for an extended conditon? <br/>
@@ -767,7 +766,7 @@ public class SampleORM {
                 .and(Item.ORDER.add(Order.NOTE).whereNull());
         int count = session.delete(crn);
         session.commit();
-        LOGGER.info("There are DELETED rows: " + count);
+        logInfo("There are DELETED rows:  %s", count);
     }
 
     /** Print some meta-data of the property Order.NOTE. */
@@ -782,11 +781,11 @@ public class SampleORM {
             + "Primary: " + col.isPrimaryKey() + '\n'
             + "Dialect: " + col.getDialectName()
             ;
-        LOGGER.info(msg);
+        logInfo(msg);
 
         // See, how to get an annotation of a persistent Key in run-time:
         Comment annotation = handler.findAnnotation(Order.ID, Comment.class);
-        LOGGER.info(annotation.value());
+        logInfo(annotation.value());
     }
 
     /** Close Ujorm session to clear a session cache
@@ -796,5 +795,15 @@ public class SampleORM {
         if (session != null) {
             session.close();
         }
+    }
+
+    /** Log the information with the {code Level.INFO} */
+    private void logInfo(String message, Object... args) {
+        final Logger logger = Logger.getLogger(SampleORM.class.getName());
+        if (logger.isLoggable(Level.INFO)
+        &&  args.length > 0) {
+            message = String.format(message, args);
+        }
+        logger.info(message);
     }
 }
