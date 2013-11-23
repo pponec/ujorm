@@ -702,6 +702,12 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     /** {@inheritDoc} */
     @Override
+    public Criterion<UJO> forSqlUnchecked(String sqlCondition, Object value) {
+        return Criterion.forSqlUnchecked(this, sqlCondition, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Criterion<UJO> forAll() {
         return Criterion.forAll(this);
     }
