@@ -80,6 +80,10 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                             final Session tempSession = mySession.getHandler().createSession();
                             try {
                                 result = tempSession.loadInternal(this, ((ForeignKey) result).getValue(), true);
+                                if (result != null) {
+                                    // Assign the same session due original session arguments (lazyLoading e.g.):
+                                    ((OrmUjo)result).writeSession(mySession);
+                                }
                             } finally {
                                 tempSession.close();
                             }
