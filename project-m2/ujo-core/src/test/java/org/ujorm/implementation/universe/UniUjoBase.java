@@ -12,11 +12,10 @@ package org.ujorm.implementation.universe;
 import java.util.Date;
 import org.ujorm.*;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.core.UjoPropertyListImpl;
 import static org.ujorm.Validator.Build.*;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class UniUjoBase implements Ujo {

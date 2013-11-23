@@ -37,7 +37,7 @@ public class FieldUjoTest extends MyTestCase {
         
         Long    o0 = new Long(Long.MAX_VALUE);
         Integer o1 = new Integer(1);
-        String  o2 ="TEST";
+        String  o2 = "TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
         Object result;
@@ -81,7 +81,7 @@ public class FieldUjoTest extends MyTestCase {
         
         Long    o0 = new Long(Long.MAX_VALUE);
         Integer o1 = new Integer(1);
-        String  o2 ="TEST";
+        String  o2 = "TEST";
         Date    o3 = new Date();
         Float   o4 = new Float(123456.456);
         Object result;

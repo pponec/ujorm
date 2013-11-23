@@ -14,7 +14,7 @@ import org.ujorm.ListKey;
 import org.ujorm.implementation.map.MapUjoImplChild;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class MapTree extends MapUjoImplChild {

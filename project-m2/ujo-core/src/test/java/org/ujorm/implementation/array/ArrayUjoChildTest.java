@@ -119,8 +119,8 @@ public class ArrayUjoChildTest extends MyTestCase {
         ArrayUjoImpl ujb1 = new ArrayUjoImpl();
         ArrayUjoImplChild  ujb2 = new ArrayUjoImplChild();
         
-        assertEquals( 5, ujb1.readPropertyCount());
-        assertEquals(10, ujb2.readPropertyCount());
+        assertEquals( 5, ujb1.readKeys().size());
+        assertEquals(10, ujb2.readKeys().size());
     }
     
     /** */

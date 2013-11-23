@@ -102,34 +102,5 @@ abstract public class BeanUjoExt<UJO extends BeanUjoExt> extends AbstractUjoExt<
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newKeyList(String name, Class<ITEM> type) {
         return new BeanPropertyList<UJO,ITEM> (name, type, Property.UNDEFINED_INDEX);
     }
-
-    // --------- DEPRECATED -------------------
-
-    /** A Property Factory
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newProperty(String name, Class<VALUE> type) {
-        return new BeanProperty<UJO,VALUE> (name, type, Property.UNDEFINED_INDEX);
-    }
-
-    /** A Property Factory, a property type is related from the default value.
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newProperty(String name, VALUE value) {
-        return new BeanProperty<UJO, VALUE>(name, value, Property.UNDEFINED_INDEX);
-    }
-
-    /** A ListProperty Factory for a <strong>BeanUjo</strong> object
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return new BeanPropertyList<UJO,ITEM> (name, type, Property.UNDEFINED_INDEX);
-    }
         
 }

@@ -32,7 +32,7 @@ import org.ujorm.validator.ValidationException;
  * @since 0.81
  */
 @SuppressWarnings("deprecation")
-public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, VALUE> {
+public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
 
     /** Get the first property of the current object. The result is direct property always. */
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey();
@@ -56,14 +56,6 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
      */
     public void setValue(final UJO ujo, final VALUE value, boolean createRelations) throws ValidationException;
 
-    /** Get a penultimate value of a composite key.
-     * If any value is {@code null}, then the result is {@code null}.
-     * If the Composite key is a direct key than the ujo argument is send to the method result.
-     * @param ujo base Ujo object
-     * @deprecated Use the method {@link #getSemiValue(org.ujorm.Ujo, boolean)} rather
-     */
-    public Ujo getSemifinalValue(UJO ujo);
-
     /** Get a penultimate value of this composite key.
      * If any value is {@code null}, then the result is {@code null}.
      * If the Composite key is a direct key than the ujo argument is send to the method result.
@@ -72,24 +64,6 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends UjoProperty<UJO, V
      * During the assigning the new relations are <strong>disabled</strong> all validators.
      */
     public Ujo getSemiValue(UJO ujo, boolean create);
-
-    /** Get the first property of the current object. The result is direct property always.
-     * @deprecated Uset the {@link #getLastKey()}.
-     */
-    @Deprecated
-    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty();
-
-    /** Get the first property of the current object. The result is direct property always.
-     * @deprecated Uset the {@link #getFirstKey() }.
-     */
-    @Deprecated
-    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty();
-
-    /** Export all <string>direct</strong> keys to the list from parameter.
-     * @deprecated Uset the {@link #exportKeys(java.util.List) }.
-     */
-    @Deprecated
-    public void exportProperties(List<Key> result);
 
     /** Returns a count of inner key items of this composite key
      * @see #exportKeys(java.util.List)

@@ -23,7 +23,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.UjoPropertyListImpl;
+import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.quick.QuickUjo;
 import org.ujorm.orm.ExtendedOrmUjo;
@@ -63,7 +63,10 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  */
 public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
 
-    /** Orm session */
+    /** An empty array of the UJO keys */
+    @PackagePrivate
+    static final Key[] EMPTY = new Key[0];
+    /** ORM session */
     transient private Session session;
     /** Set of changes */
     transient private Set<Key> changes = null;
@@ -107,7 +110,7 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
     public Key[] readChangedProperties(boolean clear) {
         final Key[] result
             = changes==null || changes.isEmpty()
-            ? UjoPropertyListImpl.EMPTY
+            ? EMPTY
             : changes.toArray(new Key[changes.size()])
             ;
         if (clear) {

@@ -11,16 +11,19 @@ package org.ujorm.implementation.xmlSpeed;
 
 import java.util.Date;
 import java.util.List;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.bean.*;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class BeanTree extends BeanUjoImplChild {
-    
-    public static final BeanPropertyList<BeanTree, BeanTree> PRO_CHILDS = newListProperty("Child", BeanTree.class);
-    
+
+    public static final BeanPropertyList<BeanTree, BeanTree> PRO_CHILDS = newListKey("Child");
+
+    /** Verify unique constants */
+    static{init(BeanTree.class,true);}
     
     private List<PojoTree> childs;
     

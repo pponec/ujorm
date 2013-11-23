@@ -14,7 +14,7 @@ import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class MapUjoImpl extends MapUjo {

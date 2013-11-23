@@ -10,9 +10,9 @@ package org.ujorm.criterion;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.*;
+import org.ujorm.Key;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.UjoComparator;
-import org.ujorm.extensions.PathProperty;
 import static org.ujorm.criterion.Person.*;
 
 /**
@@ -21,9 +21,9 @@ import static org.ujorm.criterion.Person.*;
  */
 public class ComparatorTest extends MyTestCase {
     
-    PathProperty<Person,Double> MOTHERS_CASH  = PathProperty.newInstance(MOTHER, CASH);
-    PathProperty<Person,String> MOTHERS_NAME  = PathProperty.newInstance(MOTHER, NAME);
-    PathProperty<Person,Double> GMOTHERS_CASH = PathProperty.newInstance(MOTHER, MOTHER, CASH);
+    Key<Person,Double> MOTHERS_CASH  = MOTHER.add(CASH);
+    Key<Person,String> MOTHERS_NAME  = MOTHER.add(NAME);
+    Key<Person,Double> GMOTHERS_CASH = MOTHER.add(MOTHER).add(CASH);
     
     private List<Person> persons;
     

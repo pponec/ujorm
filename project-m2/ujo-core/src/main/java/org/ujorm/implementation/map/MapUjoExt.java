@@ -115,52 +115,10 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * Method assigns a next property index.
      * @hidden
      */
+    @SuppressWarnings("unchecked")
     protected static <UJO extends MapUjoExt, ITEM> ListProperty<UJO,ITEM> newListKey(String name) {
         return ListProperty.newListProperty(name, (Class)null);
     }
-
-    // --------- DEPRECATED -------------------
-
-    /** Returns a new instance of property where the default value is null.
-     * Method assigns a next property index.
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    public static <UJO extends MapUjoExt,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return Property.newInstance(name, type);
-    }
-
-    /** A Property Factory
-     * Method assigns a next property index.
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends MapUjoExt, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
-        return Property.newInstance(name, value);
-    }
-
-    /** A ListProperty Factory
-     * Method assigns a next property index.
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends MapUjoExt, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {
-        return ListProperty.newListProperty(name, type);
-    }
-
-    /** A ListProperty Factory
-     * Method assigns a next property index.
-     * @deprecated Use newListProperty(...) instead of.
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newPropertyList(String name, Class<ITEM> type) {
-        return ListProperty.newListProperty(name, type);
-    }
-
 
 
 }

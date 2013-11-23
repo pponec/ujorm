@@ -25,7 +25,7 @@ abstract public class MyTestCase extends TestCase {
     /** A TimeTest loop size. */
     public int getTimeLoopCount() {
         //return 5*1000*1000;
-        return   5*1000;
+        return 5;
     }
 
     /** Print the time in seconds. */
@@ -36,7 +36,7 @@ abstract public class MyTestCase extends TestCase {
     
     /** Modify a Test directory */
     public String getTestDir() {
-        return "c:/temp/";
+        return System.getProperty("java.io.tmpdir");
     }
     
     /**

@@ -10,10 +10,9 @@
 package org.ujorm.implementation.universe;
 
 import org.ujorm.*;
-import org.ujorm.core.UjoPropertyListImpl;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class UniUjoChildImpl implements UniUjoInterfaceChild {
@@ -30,10 +29,6 @@ public class UniUjoChildImpl implements UniUjoInterfaceChild {
 
     public KeyList readKeys() {
         return $factory2.getKeys();
-    }
-
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
     }
 
     public boolean readAuthorization(UjoAction action, Key property, Object value) {

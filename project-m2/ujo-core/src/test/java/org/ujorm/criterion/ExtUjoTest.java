@@ -45,12 +45,12 @@ public class ExtUjoTest extends MyTestCase {
         
         person.set(NAME, nameExp1);
         person.set(MOTHER, new Person());
-        person.set(MOTHER, NAME, nameExp2);
-        person.set(MOTHER, CASH, cashExp);
+        person.set(MOTHER.add(NAME), nameExp2);
+        person.set(MOTHER.add(CASH), cashExp);
         
         String name1 = person.get(NAME);
-        String name2 = person.get(MOTHER, NAME);
-        double cash = person.get(MOTHER, CASH);        
+        String name2 = person.get(MOTHER.add(NAME));
+        double cash = person.get(MOTHER.add(CASH));
         
         assertEquals(nameExp1, name1);
         assertEquals(nameExp2, name2);
@@ -62,34 +62,35 @@ public class ExtUjoTest extends MyTestCase {
         Person person = new Person();
         person.init();
         
-        String name = person.get(MOTHER, NAME);
+        String name = person.get(MOTHER.add(NAME));
         assertEquals("Jane", name);
     }
 
     public void testInit3() throws Throwable {
 
         Person person = new Person();
-        person.set(NAME, "Jack").set(CASH, 50d);
+        person.set(NAME, "Jack");
+        person.set(CASH, 50d);
         person.set(MOTHER, new Person());
-        person.set(MOTHER, MOTHER, new Person());
-        person.set(MOTHER, MOTHER, MOTHER, new Person());
+        person.set(MOTHER.add(MOTHER), new Person());
+        person.set(MOTHER.add(MOTHER).add(MOTHER), new Person());
         
-        Object o = person.get(MOTHER, MOTHER, MOTHER);
+        Object o = person.get(MOTHER.add(MOTHER).add(MOTHER));
         
-        person.get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 10D);
+        person.get(MOTHER.add(MOTHER).add(MOTHER)).set(NAME, "Jack");
+        person.get(MOTHER.add(MOTHER).add(MOTHER)).set(CASH, 10D);
 
         String name1 = person.get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, NAME));
         Double cash1 = person.get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, CASH));
 
-        String name2 = person.get(MOTHER, MOTHER, NAME);
-        Double cash2 = person.get(MOTHER, MOTHER, CASH);
+        String name2 = person.get(MOTHER.add(MOTHER).add(NAME));
+        Double cash2 = person.get(MOTHER.add(MOTHER).add(CASH));
         
         //
         assertEquals("Jack", name1);
         assertEquals(10D , cash1);
         assertEquals(null, name2);
-        assertEquals(0D  , cash2);        
-    
+        assertEquals(0D  , cash2);            
     }
         
     

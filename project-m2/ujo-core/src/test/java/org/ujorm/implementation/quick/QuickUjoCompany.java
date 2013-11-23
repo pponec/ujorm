@@ -12,7 +12,7 @@ package org.ujorm.implementation.quick;
 import org.ujorm.Key;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class QuickUjoCompany extends QuickUjoImpl {

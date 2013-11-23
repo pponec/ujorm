@@ -14,7 +14,7 @@ import org.ujorm.core.annot.XmlElementBody;
 import org.ujorm.implementation.quick.QuickUjo;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class AtrPerson3 extends QuickUjo {

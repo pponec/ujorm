@@ -42,7 +42,7 @@ final public class UjoPropertyGetter implements Getter {
      * @param theClass Class type of Ujo.
      */
     public UjoPropertyGetter(String propertyName, Class theClass) {
-        ujoProperty = UjoManager.getInstance().readProperties(theClass).findDirectKey(propertyName, true);
+        ujoProperty = UjoManager.getInstance().readKeys(theClass).findDirectKey(propertyName, true);
     }
 
     /**

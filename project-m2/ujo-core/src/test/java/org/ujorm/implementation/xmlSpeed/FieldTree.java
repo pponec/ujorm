@@ -17,16 +17,15 @@ import org.ujorm.implementation.field.FieldPropertyList;
 import org.ujorm.implementation.field.FieldUjoImplChild;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class FieldTree extends FieldUjoImplChild {
     
     private List<FieldTree> childs;
-
     
     /** (List) */
-    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDS = newListProperty("CHILDS", FieldTree.class, new ValueAgent<FieldTree,List<FieldTree>>() {
+    public static final FieldPropertyList<FieldTree,FieldTree> PRO_CHILDS = newListKey("CHILDS", new ValueAgent<FieldTree,List<FieldTree>>() {
         public void writeValue(FieldTree ujo, List<FieldTree> value) {
             ujo.childs = value; 
         }
@@ -34,9 +33,6 @@ public class FieldTree extends FieldUjoImplChild {
             return ujo.childs; 
         }
     });
-    
-    
-    
     
     public void setChilds(List<FieldTree> childs) {
         this.childs = childs;

@@ -17,7 +17,7 @@ import org.ujorm.implementation.map.MapUjo;
 import static org.ujorm.implementation.xml.t002_tech.ZeroProvider.*;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class UTechnicalBean extends MapUjo  {

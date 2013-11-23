@@ -11,23 +11,22 @@ package org.ujorm.implementation.xmlSpeed;
 
 import java.util.Date;
 import org.ujorm.ListKey;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.array.ArrayUjoImplChild;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class ArrayTree extends ArrayUjoImplChild {
+
+    /** Factory */
+    private static final KeyFactory<ArrayTree> f = newFactory(ArrayTree.class);
     
-    /** Incrementator */
-    protected static int propertyCount = ArrayUjoImplChild.propertyCount;
-    
-    public static final ListKey<ArrayTree, ArrayTree> PRO_CHILDS = newListProperty("CHILDS", ArrayTree.class, propertyCount++);
-    
-    /** Returns a count of keys. */
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
+    public static final ListKey<ArrayTree, ArrayTree> PRO_CHILDS = f.newListKey("CHILDS");
+
+    static {
+        f.lock();
     }
     
     public int size() {
@@ -37,7 +36,7 @@ public class ArrayTree extends ArrayUjoImplChild {
         }
         return result;
     }
-    
+
     // * * * * * * * * * * * 
     
     public void init(ZCounter counter, int deep) {

@@ -54,21 +54,10 @@ public abstract class FactoryUjo extends SuperAbstractUjo {
     /** Returns a new instance of property where the default value is null.
      * @hidden     
      */
+    @SuppressWarnings("unchecked")
     protected static <UJO extends Ujo,VALUE> FactoryProperty<UJO, VALUE> newKey
         ( String name) {
         return new FactoryProperty<UJO,VALUE> (name, (Class) null, Property.UNDEFINED_INDEX);
-    }
-
-    /** Returns a new instance of property where the default value is null.
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends Ujo,VALUE> FactoryProperty<UJO, VALUE> newProperty
-        ( String name
-        , Class<VALUE> type
-        ) {
-        return new FactoryProperty<UJO,VALUE> (name, type, Property.UNDEFINED_INDEX);
     }
     
 }

@@ -124,46 +124,4 @@ public abstract class FieldUjo extends SuperAbstractUjo {
         ) {
         return new FieldPropertyList<UJO,ITEM> (name, (Class) null, -1, agent);
     }
-
-    // --------- DEPRECATED -------------------
-
-    /** Returns a new instance of property where the default value is null.
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newProperty
-        ( String name
-        , Class<VALUE> type
-        , ValueAgent<UJO, VALUE> agent
-        ) {
-        return new FieldProperty<UJO,VALUE> (name, type, -1, agent);
-    }
-
-    /** A Property Factory creates a new property and assigns a next property index.
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends Ujo, VALUE> FieldProperty<UJO, VALUE> newProperty
-        ( String name
-        , VALUE value
-        , ValueAgent<UJO, VALUE> agent
-        ) {
-        return new FieldProperty<UJO, VALUE>(name, value, -1, agent);
-    }
-
-    /** A ListProperty Factory for a <strong>FieldUjo</strong> object
-     * @deprecated Use method newKey(..) rather
-     * @hidden
-     */
-    @Deprecated
-    protected static <UJO extends Ujo, ITEM> FieldPropertyList<UJO, ITEM> newListProperty
-        ( String name
-        , Class<ITEM> type
-        , ValueAgent<UJO, List<ITEM>> agent
-        ) {
-        return new FieldPropertyList<UJO,ITEM> (name, type, -1, agent);
-    }
-
 }

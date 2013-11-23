@@ -11,34 +11,29 @@ package org.ujorm.implementation.array;
 
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class ArrayUjoImplChild extends ArrayUjoImpl {
     
-    /** Incrementator */
-    protected static int propertyCount = ArrayUjoImpl.propertyCount;
+    /** Factory */
+    private static final KeyFactory<ArrayUjoImplChild> f = newFactory(ArrayUjoImplChild.class);
 
-    public static final Key <ArrayUjoImplChild, Long>    PRO_P5 = newProperty("P5", Long.class, propertyCount++);
-    public static final Key <ArrayUjoImplChild, Integer> PRO_P6 = newProperty("P6", Integer.class, propertyCount++);
-    public static final Key <ArrayUjoImplChild, String>  PRO_P7 = newProperty("P7", String.class, propertyCount++);
-    public static final Key <ArrayUjoImplChild, Date>    PRO_P8 = newProperty("P8", Date.class, propertyCount++);
-    public static final Key <ArrayUjoImplChild, Float>   PRO_P9 = newProperty("P9", Float.class, propertyCount++);
-    /** Verify unique constants */
-    static{init(ArrayUjoImplChild.class,true);}
+    public static final Key <ArrayUjoImplChild, Long>    PRO_P5 = f.newKey("P5");
+    public static final Key <ArrayUjoImplChild, Integer> PRO_P6 = f.newKey("P6");
+    public static final Key <ArrayUjoImplChild, String>  PRO_P7 = f.newKey("P7");
+    public static final Key <ArrayUjoImplChild, Date>    PRO_P8 = f.newKey("P8");
+    public static final Key <ArrayUjoImplChild, Float>   PRO_P9 = f.newKey("P9");
+    
+    static {
+        f.lock();
+    }
     
     /** Creates a new instance of UnifiedDataObjectImlp */
     public ArrayUjoImplChild() {
-    }
-    
-     /** Returns a count of keys. */
-    @Override
-     public int readPropertyCount() {
-         return propertyCount;
-     }
-    
-    
+    }    
     
 }

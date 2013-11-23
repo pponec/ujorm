@@ -556,10 +556,10 @@ public class SampleORM {
             Order order2 = item.getOrder();
             assert false : "Lazy-loading for a closed session is disabled by default, the Item is: " + order2.getId();
         } catch (IllegalStateException e) {
-            logInfo("OK");
+            logInfo("OK: %s", e.getClass().getSimpleName());
         }
 
-        item.readSession().setLazyLoading(LazyLoading.ALLOWED_ANYWHERE_WITH_WARNING); // Enable
+        item.readSession().setLazyLoading(LazyLoading.ALLOWED_ANYWHERE_WITH_WARNING); // Enable lazy-loading
         Order order3 = item.getOrder();
         Item item4 = order3.getItems().next(); // Lazy loading type of one to many
         logInfo("Lazy Order: %s and Item: %s", order3, item4);

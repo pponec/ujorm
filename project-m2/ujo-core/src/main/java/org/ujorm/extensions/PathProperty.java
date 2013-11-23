@@ -26,7 +26,6 @@ import org.ujorm.CompositeProperty;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
 import org.ujorm.Validator;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
@@ -97,15 +96,6 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
         return keys[keys.length - 1];
     }
 
-    /** Get the first property of the current object. The result is direct property always.
-     * <br>Use the getLastKey() method.
-     */
-    @Override
-    @Deprecated
-    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastProperty() {
-        return getLastKey();
-    }
-
     /** Get the first property of the current object. The result is direct property always. */
     @SuppressWarnings("unchecked")
     @Override
@@ -115,14 +105,6 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
             ? ((CompositeKey)result).getLastKey()
             : result
             ;
-    }
-
-    /** Get the first property of the current object. The result is direct property always. */
-    @SuppressWarnings("unchecked")
-    @Override
-    @Deprecated
-    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstProperty() {
-        return getFirstKey();
     }
 
     /** Get the first property of the current object. The result is direct property always. */
@@ -159,17 +141,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
 
     /** Property domain type */
     @Override
+    @SuppressWarnings("unchecked")
     public Class<UJO> getDomainType() {
         return keys[0].getDomainType();
-    }
-
-    /** Get a penultimate value of a composite key.
-     * If any value (not getLastPartialProperty) is null, then the result is null.
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    final public Ujo getSemifinalValue(final UJO ujo) {
-        return getSemiValue(ujo, false);
     }
 
     /** Get a penultimate value of a composite key.
@@ -393,7 +367,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      */
     @Override
     @SuppressWarnings({"unchecked","deprecation"})
-    public UjoProperty<UJO,VALUE> descending() {
+    public Key<UJO,VALUE> descending() {
         return descending(true);
     }
 
@@ -402,19 +376,11 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      */
     @Override
     @SuppressWarnings({"unchecked","deprecation"})
-    public UjoProperty<UJO,VALUE> descending(boolean descending) {
+    public Key<UJO,VALUE> descending(boolean descending) {
         return isAscending()==descending
                 ? new PathProperty(keys, !descending)
                 : this
                 ;
-    }
-
-    /** Export all <string>direct</strong> keys to the list from parameter. */
-    @SuppressWarnings("unchecked")
-    @Override
-    @Deprecated
-    public void exportProperties(List<Key> result) {
-        exportKeys(result);
     }
 
     /** Export all <string>direct</strong> keys to the list from parameter. */
@@ -489,9 +455,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeProperty<U
      * @hidden
      */
     @SuppressWarnings("deprecation")
-    public static <UJO extends Ujo, VALUE> UjoProperty<UJO, VALUE> sort(final Key<UJO, VALUE> property, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<UJO, VALUE> property, final boolean ascending) {
         if (property.isAscending()==ascending) {
-            return (UjoProperty<UJO, VALUE>) property;
+            return (Key<UJO, VALUE>) property;
         }
         return property.isComposite()
             ? new PathProperty<UJO, VALUE>(ascending, property)

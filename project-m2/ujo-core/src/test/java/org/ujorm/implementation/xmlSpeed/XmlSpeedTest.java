@@ -330,7 +330,8 @@ public class XmlSpeedTest extends MyTestCase {
     }
         
     // ------------------------------------------------------
-    
+
+    /** Create new ByteArrayOutputStream. */
     public ByteArrayOutputStream createOS(String file) {
         ByteArrayOutputStream result = new ByteArrayOutputStream(8000*1000);
         return result;

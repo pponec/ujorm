@@ -16,11 +16,11 @@
 
 package org.ujorm.swing;
 
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
+import org.ujorm.UjoAction;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
-import org.ujorm.UjoAction;
 import org.ujorm.extensions.UjoTextable;
 import org.ujorm.implementation.quick.QuickUjoMid;
 
