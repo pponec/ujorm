@@ -24,7 +24,7 @@ import org.ujorm.core.annot.Immutable;
  * @author Pavel Ponec
  */
 @Immutable
-public interface ListKey<UJO extends Ujo, ITEM> extends UjoProperty<UJO,List<ITEM>> {
+public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
 
     /** Returns a class of the property. */
     public Class<ITEM> getItemType();

@@ -18,7 +18,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 abstract public class AbstractyUjoBase implements Ujo {

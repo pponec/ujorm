@@ -15,7 +15,7 @@ import org.ujorm.Key;
 import org.ujorm.extensions.ListProperty;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class QuickUjoImplChild extends QuickUjoImpl {

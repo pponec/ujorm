@@ -8,19 +8,24 @@
  */
 package samples.array;
 
-import java.util.Date;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
-import org.ujorm.implementation.array.ArrayUjo;
+import org.ujorm.implementation.quick.QuickUjo;
 
-public class Person extends ArrayUjo {
+public class Person extends QuickUjo {
 
     /** An Incrementator. Use a new counter for each subclass by sample. */
-    protected static int propertyCount = ArrayUjo.propertyCount;
-    public static final Key NAME = newKey("name", String.class, propertyCount++);
-    public static final Key MALE = newKey("male", Boolean.class, propertyCount++);
-    public static final Key BIRTH = newKey("birth", Date.class, propertyCount++);
+    private static final KeyFactory<Person> f = newFactory(Person.class);
+
+    public static final Key NAME = f.newKey("name");
+    public static final Key MALE = f.newKey("male");
+    public static final Key BIRTH = f.newKey("birth");
+
+    static {
+        f.lock();
+    }
 
     /** Equals */
     public boolean equals(Object obj) {
@@ -33,7 +38,4 @@ public class Person extends ArrayUjo {
         return UjoManager.getInstance().clone(this, depth, context);
     }
 
-    public int readPropertyCount() {
-        return propertyCount;
-    }
 }

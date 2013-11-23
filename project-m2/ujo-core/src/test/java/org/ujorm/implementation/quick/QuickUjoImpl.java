@@ -15,7 +15,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class QuickUjoImpl extends QuickUjoMid<QuickUjoImpl> {

@@ -24,7 +24,6 @@ import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
-import org.ujorm.UjoProperty;
 import org.ujorm.Validator;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
@@ -39,7 +38,7 @@ import org.ujorm.validator.ValidationException;
  * @author Pavel Ponec
  */
 @Immutable
-public class Property<UJO extends Ujo,VALUE> implements UjoProperty<UJO,VALUE> {
+public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';

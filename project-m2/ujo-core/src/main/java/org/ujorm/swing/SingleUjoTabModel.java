@@ -38,7 +38,7 @@ public class SingleUjoTabModel extends UjoTableModel<UjoPropertyRow> implements 
      * Creates a new instance of SingleUjoTabModel
      */
     public SingleUjoTabModel(Ujo content) {
-        this(content, UjoManager.getInstance().readProperties(UjoPropertyRow.class).toArray() );
+        this(content, UjoManager.getInstance().readKeys(UjoPropertyRow.class).toArray() );
     }
     
     /**

@@ -14,7 +14,7 @@ import org.ujorm.Key;
 import org.ujorm.implementation.map.MapUjo;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class XmlUjoItem extends MapUjo  {

@@ -9,14 +9,16 @@
 
 package org.ujorm.implementation.bean;
 import java.util.Date;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
+import org.ujorm.implementation.xmlSpeed.BeanTree;
 
 /**
  * A BEAN Object
  * @author Pavel Ponec
  */
 public class BeanUjoImplChild extends BeanUjoImpl {
-    
+
     /** (Long) */
     public static final BeanProperty<BeanUjoImplChild,Long>    PRO_P5 = newKey("P5");
     /** (Integer) */
@@ -27,8 +29,11 @@ public class BeanUjoImplChild extends BeanUjoImpl {
     public static final BeanProperty<BeanUjoImplChild,Date>    PRO_P8 = newKey("P8");
     /** (Float) */
     public static final BeanProperty<BeanUjoImplChild,Float>   PRO_P9 = newKey("P9");
+
     /** Verify unique constants */
-    static{init(BeanUjoImplChild.class,true);}
+    static{
+        init(BeanUjoImplChild.class,true);
+    }
     
     // ------- STANDARD BEAN --------------------
     

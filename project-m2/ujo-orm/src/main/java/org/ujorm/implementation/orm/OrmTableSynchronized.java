@@ -23,7 +23,6 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
-import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.extensions.Property;
 import org.ujorm.implementation.quick.QuickUjo;
 import org.ujorm.orm.ExtendedOrmUjo;
@@ -103,7 +102,7 @@ public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUj
     synchronized public Key[] readChangedProperties(boolean clear) {
         final Key[] result
             = changes==null || changes.isEmpty()
-            ? UjoPropertyListImpl.EMPTY
+            ? OrmTable.EMPTY
             : changes.toArray(new Key[changes.size()])
             ;
         if (clear) {

@@ -11,28 +11,27 @@ package org.ujorm.implementation.xml.t005_attrib2;
 
 import org.ujorm.Key;
 import org.ujorm.ListKey;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.array.ArrayUjo;
+import org.ujorm.implementation.quick.QuickUjo;
 
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
-public class AtrPersonArray extends ArrayUjo  {
+public class AtrPersonArray extends QuickUjo  {
 
+    /** Factory */
+    private static final KeyFactory<AtrPersonArray> f = newFactory(AtrPersonArray.class);
 
-    protected static int propertyCount = ArrayUjo.propertyCount;
-
-    public static final Key<AtrPersonArray, String> NAME_ELEM = newProperty("name", String.class, propertyCount++);
+    public static final Key<AtrPersonArray, String> NAME_ELEM = f.newKey("name");
     @XmlAttribute
-    public static final Key<AtrPersonArray, String> NAME_ATTR = newProperty("name", String.class, propertyCount++);
-    public static final ListKey<AtrPersonArray, AtrPersonArray> CHILDS = newListProperty("child", AtrPersonArray.class, propertyCount++);
-    
-    @Override
-    public int readPropertyCount() {
-        return propertyCount;
-    }    
-    
+    public static final Key<AtrPersonArray, String> NAME_ATTR = f.newKey("name");
+    public static final ListKey<AtrPersonArray, AtrPersonArray> CHILDS = f.newListKey("child");
+
+    static {
+        f.lock();
+    }
     
 }

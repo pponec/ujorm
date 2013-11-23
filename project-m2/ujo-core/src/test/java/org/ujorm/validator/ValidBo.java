@@ -15,7 +15,7 @@ import org.ujorm.extensions.AbstractUjo;
 import static org.ujorm.validator.impl.ValidatorFactory.*;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")

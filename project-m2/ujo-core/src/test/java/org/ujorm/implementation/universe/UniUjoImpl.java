@@ -12,7 +12,7 @@ package org.ujorm.implementation.universe;
 import org.ujorm.*;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class UniUjoImpl implements UniUjoInterface {    

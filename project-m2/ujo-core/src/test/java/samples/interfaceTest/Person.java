@@ -13,8 +13,8 @@ import org.ujorm.core.*;
 
 @SuppressWarnings("unchecked")
 public class Person implements Ujo {
-
     private static final KeyFactory<Person> f = KeyFactory.CamelBuilder.get(Person.class);
+
     public static final Key<Person, String> NAME = f.newKey();
     public static final Key<Person, Boolean> MALE = f.newKey();
     public static final Key<Person, Double> CASH = f.newKeyDefault(0.0);
@@ -43,7 +43,4 @@ public class Person implements Ujo {
         CASH.setValue(this, newPrice);
     }
 
-    public UjoPropertyList readProperties() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

@@ -17,7 +17,7 @@ import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.ListKey;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class MismuchUjoBase extends AbstractUjo {

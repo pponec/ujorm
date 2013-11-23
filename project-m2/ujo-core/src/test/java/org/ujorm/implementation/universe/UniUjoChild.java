@@ -16,7 +16,7 @@ import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class UniUjoChild extends UniUjoBase {

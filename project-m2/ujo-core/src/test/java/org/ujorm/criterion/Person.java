@@ -18,13 +18,13 @@ package org.ujorm.criterion;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.PathProperty;
-import org.ujorm.implementation.array.ArrayUjoExt;
+import org.ujorm.implementation.quick.QuickUjoMid;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class Person extends ArrayUjoExt<Person> {
+public class Person extends QuickUjoMid<Person> {
 
     protected static final KeyFactory<Person> f = KeyFactory.Builder.get(Person.class);
 
@@ -40,46 +40,46 @@ public class Person extends ArrayUjoExt<Person> {
     public void init() {
         set(NAME, "Jack");
         set(MOTHER, new Person());
-        set(MOTHER, NAME, "Jane");
-        set(MOTHER, CASH, 200d);
+        set(MOTHER.add(NAME), "Jane");
+        set(MOTHER.add(CASH), 200d);
 
-        String name = get(MOTHER, NAME);
-        double cash = get(MOTHER, CASH);
+        String name = get(MOTHER.add(NAME));
+        double cash = get(MOTHER.add(CASH));
 
         System.out.println(name + " " + cash);
     }
 
     public void init2() {
-        set(NAME, "Jack").set(CASH, 50d);
+        set(NAME, "Jack");
+        set(CASH, 50d);
         set(MOTHER, new Person());
-        get(MOTHER).set(NAME, "Jackie").set(CASH, 10D);
+        get(MOTHER).set(NAME, "Jackie");
+        set(CASH, 10D);
 
-        String name = get(MOTHER, NAME);
-        double cash = get(MOTHER, CASH);
+        String name = get(MOTHER.add(NAME));
+        double cash = get(MOTHER.add(CASH));
 
         System.out.println(name + " " + cash);
     }
 
     public void init3() {
-        set(NAME, "Jack").set(CASH, 50D);
+        set(NAME, "Jack");
+        set(CASH, 50D);
         set(MOTHER, new Person());
-        set(MOTHER, MOTHER, new Person());
-        set(MOTHER, MOTHER, CASH, 20D);
-        set(MOTHER, MOTHER, MOTHER, new Person());
-        get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 10D);
-        get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 1.1);
+        set(MOTHER.add(MOTHER), new Person());
+        set(MOTHER.add(MOTHER).add(CASH), 20D);
+        set(MOTHER.add(MOTHER).add(MOTHER), new Person());
+        set(MOTHER.add(MOTHER).add(MOTHER).add(NAME), "Jack");
+        set(MOTHER.add(MOTHER).add(MOTHER).add(CASH), 1.1);
 
         String name = get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, NAME));
         Double cash = get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, CASH));
 
-        String name2 = get(MOTHER, MOTHER, NAME);
-        Double cash2 = get(MOTHER, MOTHER, CASH);
+        String name2 = get(MOTHER.add(MOTHER).add(NAME));
+        Double cash2 = get(MOTHER.add(MOTHER).add(CASH));
 
         System.out.println(name + " " + cash);
+        System.out.println(name2 + " " + cash2);
     }
 
-    @Override
-    public int readPropertyCount() {
-        return f.lockAndSize();
-    }
 }

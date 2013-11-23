@@ -32,13 +32,11 @@ import org.ujorm.KeyList;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoPropertyList;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.core.annot.XmlElementBody;
 import org.ujorm.extensions.*;
-import org.ujorm.implementation.array.ArrayUjo;
 import org.ujorm.swing.UjoPropertyRow;
 import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidatorUtils;
@@ -106,14 +104,6 @@ public class UjoManager implements Comparator<Key> {
     protected boolean isAbstract(Class type) {
         final boolean result = Modifier.isAbstract(type.getModifiers() );
         return result;
-    }
-
-    /** Read an KeyList instance. The first result is cached.
-     * @deprecated Use the method {@link #readKeys(java.lang.Class) } instead of.
-     */
-    @SuppressWarnings("unchecked")
-    public UjoPropertyList readProperties(Class type) {
-        return new UjoPropertyListImpl(readKeys(type));
     }
 
     /** Read an KeyList instance. The first result is cached. */
@@ -256,7 +246,7 @@ public class UjoManager implements Comparator<Key> {
     /** Sort keys. */
     protected void sortProperties(final Class type, final Key[] keys) {
         if (keys.length>0) {
-            if (ArrayUjo.class.isAssignableFrom(type)) {
+            if (AbstractUjo.class.isAssignableFrom(type)) {
                 Arrays.sort(keys, this);
             } else if(isPropertiesReversed()) {
                 revertArray(keys);
@@ -428,24 +418,6 @@ public class UjoManager implements Comparator<Key> {
      * Find a key by key name from parameter. Use rather the KeyList.findPropety(...).
      * @param ujo An Ujo object
      * @param name A key name.
-     * @param throwException If result not found an Exception is throwed, or a null can be returned.
-     * @deprecated Use KeyList.findPropety(...)
-     * @see KeyList#findDirectKey(org.ujorm.Ujo, java.lang.String, boolean)
-     *
-     */
-    public Key findProperty
-    ( final Ujo ujo
-    , final String name
-    , final boolean throwException
-    ) throws IllegalArgumentException
-    {
-        return ujo.readKeys().findDirectKey(ujo, name, UjoAction.DUMMY, true, throwException);
-    }
-
-    /**
-     * Find a key by key name from parameter. Use rather the KeyList.findPropety(...).
-     * @param ujo An Ujo object
-     * @param name A key name.
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
@@ -472,7 +444,7 @@ public class UjoManager implements Comparator<Key> {
     /** Find <strong>indirect</strong> key by the name. Empty result can trhow NULL value if parameter throwException==false. */
     @SuppressWarnings("unchecked")
     public Key findIndirectProperty(Class ujoType, String names, boolean throwException) {
-        return readProperties(ujoType).find(names, throwException);
+        return readKeys(ujoType).find(names, throwException);
     }
 
     /** Print a String representation */
@@ -580,7 +552,7 @@ public class UjoManager implements Comparator<Key> {
     public final Key getXmlElementBody(final Class type) {
 
         if (propertiesCache.get(type)==null) {
-            readProperties(type); // Load cache;
+            readKeys(type); // Load cache;
         }
 
         final Key result
@@ -775,16 +747,6 @@ public class UjoManager implements Comparator<Key> {
         }
         setValue(ujo, lastProp, value);
         return ujo;
-    }
-
-
-    /** Get a value from an Ujo object by a selected key.
-     * If a not getLastPartialProperty value is null, then is throwded a NullPointe exception.
-     * @deprecated Use a expression <code>prop.of(ujo)</code> rather.
-     */
-    @Deprecated  @SuppressWarnings("unchecked")
-    public static Object getValue(final Ujo ujo, final Key prop) {
-        return prop.of(ujo);
     }
 
     /** Get a value from an Ujo object by a chain of keys.
@@ -1019,7 +981,7 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /** Regurns information about current library.
-     * @deprecated Uset the method {@link #version()}.
+     * @deprecated Use the method {@link #version()} rather.
      */
     public static String projectVersion() {
         return version();

@@ -14,7 +14,7 @@ import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.AbstractUjo;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class Relation extends AbstractUjo {

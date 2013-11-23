@@ -27,7 +27,6 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoProperty;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.extensions.PathProperty;
@@ -167,7 +166,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         names += ".";
         while ((j = names.indexOf('.', i + 1)) >= 0) {
             final String name = names.substring(i, j);
-            final Key p = UjoManager.getInstance().readProperties(ujoType).findDirectKey(name, true);
+            final Key p = UjoManager.getInstance().readKeys(ujoType).findDirectKey(name, true);
             props.add(p);
             ujoType = p.getType();
             i = j + 1;
@@ -240,16 +239,16 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create Property Interator */
     @Override
-    public Iterator<UjoProperty<UJO, Object>> iterator() {
-        return new Iterator<UjoProperty<UJO, Object>>() {
+    public Iterator<Key<UJO, Object>> iterator() {
+        return new Iterator<Key<UJO, Object>>() {
             int i = -1;
 
             public boolean hasNext() {
                 return (i + 1) < size;
             }
 
-            public UjoProperty<UJO,Object> next() {
-                return (UjoProperty<UJO,Object>) get(++i);
+            public Key<UJO,Object> next() {
+                return (Key<UJO,Object>) get(++i);
             }
 
             /**
@@ -385,7 +384,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Create Keys */
     private Key<UJO, ?>[] restoreProperties(Class type, String[] nameProperties) {
-        final KeyList propertyList = getUjoManager().readProperties(type);
+        final KeyList propertyList = getUjoManager().readKeys(type);
         final Key<UJO, ?>[] ps = new Key[nameProperties.length];
         for (int i = 0; i < nameProperties.length; i++) {
             final String pNameRaw = nameProperties[i];

@@ -11,39 +11,31 @@ package org.ujorm.implementation.array;
 
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
+import org.ujorm.implementation.quick.QuickUjo;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
-public class ArrayUjoImpl extends ArrayUjo {
+public class ArrayUjoImpl extends QuickUjo {
+
+    /** Factory */
+    private static final KeyFactory<ArrayUjoImpl> f = newFactory(ArrayUjoImpl.class);
     
-    /** An Incrementator. Use a new counter for each subclass by sample:
-     *<pre class="pre">
-     * <span class="java-block-comment">&#47&#42&#42 An Incrementator. Use a new counter for each subclass. &#42&#47</span>
-     * <span class="java-keywords">protected</span> <span class="java-keywords">static</span> <span class="java-keywords">int</span> propertyCount = [SuperClass].propertyCount;
-     *</pre>
-     */
-    protected static int propertyCount = ArrayUjo.propertyCount;
-    
-    public static final Key<ArrayUjoImpl,Long>    PRO_P0 = newProperty("P0", Long.class, propertyCount++);
-    public static final Key<ArrayUjoImpl,Integer> PRO_P1 = newProperty("P1", Integer.class, propertyCount++);
-    public static final Key<ArrayUjoImpl,String>  PRO_P2 = newProperty("P2", String.class, propertyCount++);
-    public static final Key<ArrayUjoImpl,Date>    PRO_P3 = newProperty("P3", Date.class, propertyCount++);
-    public static final Key<ArrayUjoImpl,Float>   PRO_P4 = newProperty("P4", Float.class, propertyCount++);
+    public static final Key<ArrayUjoImpl,Long>    PRO_P0 = f.newKey("P0");
+    public static final Key<ArrayUjoImpl,Integer> PRO_P1 = f.newKey("P1");
+    public static final Key<ArrayUjoImpl,String>  PRO_P2 = f.newKey("P2");
+    public static final Key<ArrayUjoImpl,Date>    PRO_P3 = f.newKey("P3");
+    public static final Key<ArrayUjoImpl,Float>   PRO_P4 = f.newKey("P4");
 
     /** Verify unique constants */
     static{
-        init(ArrayUjoImpl.class,true);
+        f.lock();
     }
 
     /** Creates a new instance of UnifiedDataObjectImlp */
     public ArrayUjoImpl() {
     }
-    
-     /** Returns a count of keys. */
-    @Override
-     public int readPropertyCount() {
-         return propertyCount;
-     }
+
 }

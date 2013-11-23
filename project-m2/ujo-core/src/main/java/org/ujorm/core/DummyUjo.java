@@ -16,12 +16,11 @@
 
 package org.ujorm.core;
 
+import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
-import org.ujorm.Key;
-import org.ujorm.UjoPropertyList;
-import org.ujorm.extensions.Property;
 import org.ujorm.UjoAction;
+import org.ujorm.extensions.Property;
 
 /**
  * Data object abstract implementation.

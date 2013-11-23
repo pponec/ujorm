@@ -15,8 +15,8 @@
  */
 package org.ujorm.implementation.quick;
 
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.UjoMiddle;
 
@@ -67,7 +67,6 @@ abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid>
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
         property.setValue((UJO)this, value);
         return this;
     }

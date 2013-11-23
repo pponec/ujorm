@@ -997,7 +997,7 @@ public class Session {
     /**
      * Load UJO by a unique id. If the result is not unique, then an exception is throwed.
      * @param relatedProperty Related property
-     * @param id Valud ID
+     * @param id Valid ID
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */
     @SuppressWarnings("unchecked")

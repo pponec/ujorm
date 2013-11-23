@@ -13,7 +13,7 @@ import org.ujorm.Key;
 import org.ujorm.implementation.quick.QuickUjo;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class URootMasterBean extends QuickUjo  {

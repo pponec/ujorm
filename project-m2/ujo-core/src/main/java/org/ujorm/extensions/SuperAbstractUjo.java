@@ -20,7 +20,6 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
-import org.ujorm.UjoPropertyList;
 import org.ujorm.core.*;
 
 /**
@@ -39,7 +38,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @param ujoClass Ujo class
      */
     @SuppressWarnings("unchecked")
-    protected static UjoPropertyList init(Class ujoClass) throws IllegalStateException {
+    protected static KeyList init(Class ujoClass) throws IllegalStateException {
         return init(ujoClass, false);
     }
 
@@ -51,8 +50,8 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * @param checkUniqueProperties Check unique keys
      */
     @SuppressWarnings("unchecked")
-    protected static UjoPropertyList init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
-        UjoPropertyList result = UjoManager.getInstance().readProperties(ujoClass);
+    protected static KeyList init(Class ujoClass, boolean checkUniqueProperties) throws IllegalStateException {
+        KeyList result = UjoManager.getInstance().readKeys(ujoClass);
         if (checkUniqueProperties) {
             UjoManager.getInstance().checkUniqueProperties(ujoClass);
         }
@@ -72,21 +71,8 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      */
     @SuppressWarnings("unchecked")
     public <T extends Ujo> KeyList<T> readKeys() {
-        return readUjoManager().readProperties(getClass());
+        return (KeyList<T>) readUjoManager().readKeys(getClass());
     }
-
-    /** Returns all direct keys.
-     * <br>Note 1: An order of keys is sorted by a value of the index attribute.
-     * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
-     *            Overwrite the method to return a copy array in case you need an assurance of immutable!
-     * @see Key#isDirect()
-     * @deprecated Use the method {@link #readKeys()} instead of. The defauult implementation is: {@code new UjoPropertyList(readKeys())}
-     */
-    @Deprecated
-    final public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
-    }
-
 
     /**
      * Get an authorization of the property for different actions.

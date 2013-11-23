@@ -5,15 +5,20 @@ package samples.map.personUjo;
 
 import java.util.HashMap;
 import org.ujorm.*;
-import org.ujorm.core.UjoManager;
-import org.ujorm.core.UjoPropertyListImpl;
-import org.ujorm.extensions.Property;
+import org.ujorm.core.KeyFactory;
 
 public class Person implements Ujo {
+    /** Factory */
+    private static final KeyFactory<Person> f = KeyFactory.Builder.get(Person.class);
 
-    public static final Key<Person, String> NAME = Property.newInstance("Name", String.class);
-    public static final Key<Person, Boolean> MALE = Property.newInstance("Male", Boolean.class);
-    public static final Key<Person, Double> CASH = Property.newInstance("Cash", 0d);
+    public static final Key<Person, String> NAME = f.newKey("Name");
+    public static final Key<Person, Boolean> MALE = f.newKey("Male");
+    public static final Key<Person, Double> CASH = f.newKey("Cash", 0d);
+
+    static {
+        f.lock();
+    }
+
     // --- The begin of the Ujo implementation ---
     private HashMap map = new HashMap();
 
@@ -26,12 +31,9 @@ public class Person implements Ujo {
         map.put(property, value);
     }
 
-    public KeyList readKeys() {
-        return UjoManager.getInstance().readProperties(getClass());
-    }
-
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
+    @SuppressWarnings("unchecked")
+    public <T extends Ujo> KeyList<T> readKeys() {
+        return (KeyList<T>) f.getKeys();
     }
 
     public boolean readAuthorization(UjoAction action, Key property, Object value) {

@@ -14,13 +14,11 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
-import org.ujorm.UjoPropertyList;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.core.UjoPropertyListImpl;
 import org.ujorm.extensions.Property;
 
 /**
- * An UnifiedDataObject Imlpementation
+ * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
 public class UniUjoBasePlain implements Ujo {
@@ -34,6 +32,10 @@ public class UniUjoBasePlain implements Ujo {
     public static final Key<UniUjoBasePlain,String>  PRO_P2 = pf.newKey();
     public static final Key<UniUjoBasePlain,Date>    PRO_P3 = pf.newKey();
     public static final Key<UniUjoBasePlain,Float>   PRO_P4 = pf.newKey();
+
+    static {
+        pf.lock();
+    }
 
     /** Data */
     protected Object[] data;
@@ -57,11 +59,5 @@ public class UniUjoBasePlain implements Ujo {
     public boolean readAuthorization(UjoAction action, Key property, Object value) {
         return true;
     }
-
-    public UjoPropertyList readProperties() {
-        return new UjoPropertyListImpl(readKeys());
-    }
-
-
 
 }
