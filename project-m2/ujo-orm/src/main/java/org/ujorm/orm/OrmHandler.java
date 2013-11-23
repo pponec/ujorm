@@ -41,6 +41,7 @@ import org.ujorm.orm.metaModel.MetaProcedure;
 import org.ujorm.orm.metaModel.MetaRelation2Many;
 import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.orm.metaModel.MetaTable;
+import org.ujorm.orm.template.AliasTable;
 
 /**
  * The basic class for an ORM support.
@@ -436,6 +437,11 @@ public class OrmHandler implements OrmHandlerProvider {
     /** Returns the same instance */
     public OrmHandler getOrmHandler() {
         return this;
+    }
+
+    /** Create new Alias table */
+    public <UJO extends OrmUjo> AliasTable<UJO> alias(Class<UJO> entity, String alias) {
+        return AliasTable.of(entity, alias, this);
     }
 
 }

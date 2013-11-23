@@ -31,8 +31,11 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.services.impl.AbstractServiceImpl;
+import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Query;
+import org.ujorm.orm.template.AliasTable;
 import static org.junit.Assert.*;
+import static org.ujorm.orm.template.AliasTable.Build.*;
 
 /**
  * Sample code for new article
@@ -107,8 +110,7 @@ public class DatabaseTest extends AbstractServiceImpl {
     @Transactional
     public void testNativeCriterion() {
         Key<Booking, String> bookingCityName = Booking.HOTEL
-                .add(Hotel.CITY)
-                .add(City.NAME);
+                .add(Hotel.CITY).add(City.NAME);
 
         String[] cities  = {"Prague", "Amsterdam"};
         Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
@@ -116,6 +118,26 @@ public class DatabaseTest extends AbstractServiceImpl {
         Query<Booking> bookings = createQuery(crn);
         List<Booking> result = bookings.list();
         assertFalse(result.isEmpty());
+    }
+
+    /** Database query using the Ujorm <strong>Keys</strong> */
+    //@Test
+    @Transactional
+    public void testNativeQuery_1() {
+        OrmHandler handler = getSession().getHandler();
+        AliasTable<Booking> booking = handler.alias(Booking.class, "a");
+        AliasTable<Hotel> hotel = handler.alias(Hotel.class, "b");
+        AliasTable<City> city = handler.alias(City.class, "c");
+
+        String sql
+                = SELECT( booking.column(Booking.ID)
+                        , booking.column(Booking.DATE_FROM))
+                + FROM (booking)
+                + INNER_JOIN(hotel, hotel.column(Hotel.ID), "=", booking.column(Booking.HOTEL))
+                + INNER_JOIN(city, city.column(City.ID), "=", hotel.column(Hotel.CITY))
+                + WHERE(city.column(City.NAME), "=", "Prague");
+
+        System.out.println("sql: " + sql);
     }
 
     // ---------- HELPFUL METHODS ----------
