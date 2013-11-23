@@ -64,9 +64,12 @@ final public class MetaParams extends AbstractMetaModel {
      * can be changed any time later in the column 'cache' of table 'ormujo_pk_support' .
      * Default values is 100, the smallest possible value is 1. */
     public static final Key<MetaParams,Integer> SEQUENCE_CACHE = f.newKey("sequenceCache", 100);
-    /** The parameter 'lazyLoading' specify a Lazy loading policy, see the enum:
-     * {@link org.ujorm.orm.ao.LazyLoading} for more inormation.
-     * The default value is {@link org.ujorm.orm.ao.LazyLoading#ALLOWED_USING_OPEN_SESSION}
+    /** The parameter 'lazyLoading' specify a lazy-loading policy in case
+     * that UJO objects have got any sesson. Argument options are described
+     * in the enum {@link org.ujorm.orm.ao.LazyLoading}.
+     * In case the object have assigned no session, the key returns the {@code null} value
+     * as well as common javabeans. A default key value is the
+     * {@link org.ujorm.orm.ao.LazyLoading#ALLOWED_USING_OPEN_SESSION}.
      * @see org.ujorm.orm.ao.LazyLoading */
     public static final Key<MetaParams,LazyLoading> LAZY_LOADING = f.newKey("lazyLoading", LazyLoading.ALLOWED_USING_OPEN_SESSION);
     /** A policy to defining the database structure by a DDL.
