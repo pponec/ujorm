@@ -4925,3 +4925,404 @@ java.lang.IllegalStateException: org.apache.wicket.Component has not been proper
 	FROM "demoHotels"."demo_customer" "demo_customer" WHERE 1=1 -- SQL VALUES: NONE
 2013-07-29 00:43:50,695 INFO [Timer-1] org.ujorm.orm.UjoSequencer - UPDATE "demoHotels"."ujorm_pk_support" SET "seq"="seq"+"cache" WHERE "id"=?; [~."demo_customer"]
 2013-07-29 00:43:50,696 INFO [Timer-1] org.ujorm.orm.UjoSequencer - INSERT INTO "demoHotels"."ujorm_pk_support" ("id","seq","cache","max_value") VALUES (?,100,100,0); [~."demo_customer"]
+2013-09-14 09:19:05,015 INFO [main] org.ujorm.orm.OrmHandler - DATABASE META-MODEL:
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release 1.40 was created 2013/09/14 09:19 -->
+<body>
+<database id="DatabaseMapping">
+<schema>demoHotels</schema>
+<readOnly>false</readOnly>
+<dialect>org.ujorm.orm.dialect.H2Dialect</dialect>
+<jdbcUrl>jdbc:h2:mem:db1</jdbcUrl>
+<jdbcDriver>org.h2.Driver</jdbcDriver>
+<user>sa</user>
+<sequencer>org.ujorm.orm.UjoSequencer</sequencer>
+<orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+<table id="HOTEL">
+<name>demo_hotel</name>
+<alias>demo_hotel</alias>
+<schema>demoHotels</schema>
+<orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+<column id="ID">
+<name>ID</name>
+<primaryKey>true</primaryKey>
+<dbType>BIGINT</dbType>
+<comment>The Primary Key</comment></column>
+<column id="NAME">
+<name>NAME</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>40</maxLength>
+<index>idx_hotel_name</index>
+<comment>Name of the Hotel</comment></column>
+<column id="NOTE">
+<name>NOTE</name>
+<dbType>VARCHAR</dbType>
+<maxLength>256</maxLength>
+<comment>Description of the hotel</comment></column>
+<column id="CITY">
+<name>CITY</name>
+<dbType>INT</dbType>
+<mandatory>true</mandatory>
+<comment>Relation to the City address</comment></column>
+<column id="STREET">
+<name>STREET</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>128</maxLength>
+<comment>Street of address</comment></column>
+<column id="PHONE">
+<name>PHONE</name>
+<dbType>VARCHAR</dbType>
+<maxLength>20</maxLength>
+<comment>Phone</comment></column>
+<column id="STARS">
+<name>STARS</name>
+<dbType>REAL</dbType>
+<mandatory>true</mandatory>
+<comment>Stars</comment></column>
+<column id="HOME_PAGE">
+<name>HOME_PAGE</name>
+<dbType>VARCHAR</dbType>
+<maxLength>100</maxLength>
+<comment>URL to the HomePage</comment></column>
+<column id="PRICE">
+<name>PRICE</name>
+<dbType>DECIMAL</dbType>
+<mandatory>true</mandatory>
+<maxLength>8</maxLength>
+<precision>2</precision>
+<comment>Price per night in USD</comment></column>
+<column id="CURRENCY">
+<name>CURRENCY</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>3</maxLength>
+<comment>Currency of the price</comment></column>
+<column id="ACTIVE">
+<name>ACTIVE</name>
+<dbType>BOOLEAN</dbType>
+<mandatory>true</mandatory>
+<index>idx_hotel_name</index>
+<comment>Hotel state (the true or null is required)</comment></column></table>
+<table id="CUSTOMER">
+<name>demo_customer</name>
+<alias>demo_customer</alias>
+<schema>demoHotels</schema>
+<orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+<column id="ID">
+<name>ID</name>
+<primaryKey>true</primaryKey>
+<dbType>INT</dbType>
+<comment>The Primary Key</comment></column>
+<column id="LOGIN">
+<name>LOGIN</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>6</maxLength>
+<uniqueIndex>idx_unique_login</uniqueIndex>
+<comment>Unique login</comment></column>
+<column id="PASSWORD_HASH">
+<name>PASSWORD_HASH</name>
+<dbType>BIGINT</dbType>
+<mandatory>true</mandatory>
+<comment>Password hash</comment></column>
+<column id="TITLE">
+<name>TITLE</name>
+<dbType>VARCHAR</dbType>
+<maxLength>2</maxLength>
+<comment>Title</comment></column>
+<column id="FIRSTNAME">
+<name>FIRSTNAME</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>60</maxLength>
+<comment>Firstname</comment></column>
+<column id="SURENAME">
+<name>SURENAME</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>60</maxLength>
+<comment>Lastname</comment></column>
+<column id="EMAIL">
+<name>EMAIL</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>128</maxLength>
+<comment>Email</comment></column>
+<column id="ADMIN">
+<name>ADMIN</name>
+<dbType>BOOLEAN</dbType>
+<comment>Administrator role sign</comment></column>
+<column id="ACTIVE">
+<name>ACTIVE</name>
+<dbType>BOOLEAN</dbType>
+<uniqueIndex>idx_unique_login</uniqueIndex>
+<comment>Customer is allowed to login (the true or null values are required)</comment></column></table>
+<table id="BOOKING">
+<name>demo_booking</name>
+<alias>demo_booking</alias>
+<schema>demoHotels</schema>
+<orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+<column id="ID">
+<name>ID</name>
+<primaryKey>true</primaryKey>
+<dbType>BIGINT</dbType>
+<comment>The Primary Key</comment></column>
+<column id="HOTEL">
+<name>HOTEL</name>
+<dbType>BIGINT</dbType>
+<mandatory>true</mandatory>
+<index>idx_booking</index>
+<comment>Relation to hotel</comment></column>
+<column id="CUSTOMER">
+<name>CUSTOMER</name>
+<dbType>INT</dbType>
+<mandatory>true</mandatory>
+<index>idx_booking</index>
+<comment>Relation to customer</comment></column>
+<column id="DATE_FROM">
+<name>DATE_FROM</name>
+<dbType>DATE</dbType>
+<mandatory>true</mandatory>
+<comment>Date from</comment></column>
+<column id="NIGHTS">
+<name>NIGHTS</name>
+<dbType>SMALLINT</dbType>
+<comment>Number of nights</comment></column>
+<column id="PERSONS">
+<name>PERSONS</name>
+<dbType>SMALLINT</dbType>
+<comment>Number of persons (limit from 1 to 50)</comment></column>
+<column id="PRICE">
+<name>PRICE</name>
+<dbType>DECIMAL</dbType>
+<mandatory>true</mandatory>
+<maxLength>8</maxLength>
+<precision>2</precision>
+<comment>Total price</comment></column>
+<column id="CURRENCY">
+<name>CURRENCY</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>3</maxLength>
+<comment>Currency of the total price</comment></column>
+<column id="CREATION_DATE">
+<name>CREATION_DATE</name>
+<dbType>DATE</dbType>
+<mandatory>true</mandatory>
+<comment>Creation date of booking.</comment></column></table>
+<table id="CITY">
+<name>demo_city</name>
+<alias>demo_city</alias>
+<schema>demoHotels</schema>
+<orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+<column id="ID">
+<name>ID</name>
+<primaryKey>true</primaryKey>
+<dbType>INT</dbType>
+<comment>The Primary Key</comment></column>
+<column id="NAME">
+<name>NAME</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>40</maxLength>
+<uniqueIndex>idx_unique_city</uniqueIndex>
+<comment>City name</comment></column>
+<column id="COUNTRY">
+<name>COUNTRY</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>3</maxLength>
+<comment>Two characters country code along the ISO 3166</comment></column>
+<column id="COUNTRY_NAME">
+<name>COUNTRY_NAME</name>
+<dbType>VARCHAR</dbType>
+<mandatory>true</mandatory>
+<maxLength>40</maxLength>
+<comment>Country name will be located in the another entity in a real application</comment></column>
+<column id="LATITUDE">
+<name>LATITUDE</name>
+<dbType>REAL</dbType>
+<mandatory>true</mandatory>
+<comment>A geographic coordinate for north-south position on the Earth</comment></column>
+<column id="LONGITUDE">
+<name>LONGITUDE</name>
+<dbType>REAL</dbType>
+<mandatory>true</mandatory>
+<comment>A geographic coordinate for east-west position on the Earth</comment></column></table>
+<table id="demoHotels">
+<name>demoHotels</name>
+<alias>demoHotels</alias>
+<schema>demoHotels</schema>
+<orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+<relation2m id="HOTEL">
+<name>HOTEL</name></relation2m>
+<relation2m id="CUSTOMER">
+<name>CUSTOMER</name></relation2m>
+<relation2m id="BOOKING">
+<name>BOOKING</name></relation2m>
+<relation2m id="CITY">
+<name>CITY</name></relation2m></table></database>
+<parameters>
+<initializationBatch>org.ujorm.hotels.config.demoData.DataLoader</initializationBatch>
+<sequenceSchemaSymbol>true</sequenceSchemaSymbol>
+<moreParams></moreParams></parameters></body>
+---
+
+2013-09-14 09:19:05,700 INFO [main] org.ujorm.orm.metaModel.MetaDbService - Table 'ujorm_pk_support' is not available on the database 'DatabaseMapping'.
+2013-09-14 09:19:05,724 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB table: demo_hotel
+2013-09-14 09:19:05,731 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB index: idx_hotel_name [2] of the table: demo_hotel
+2013-09-14 09:19:05,735 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB table: demo_customer
+2013-09-14 09:19:05,736 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB index: idx_unique_login [2] of the table: demo_customer
+2013-09-14 09:19:05,739 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB table: demo_booking
+2013-09-14 09:19:05,740 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB index: idx_booking [2] of the table: demo_booking
+2013-09-14 09:19:05,744 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB table: demo_city
+2013-09-14 09:19:05,745 INFO [main] org.ujorm.orm.metaModel.MetaDbService - New DB index: idx_unique_city [1] of the table: demo_city
+2013-09-14 09:19:05,756 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE TABLE demoHotels.demo_hotel
+	( ID BIGINT PRIMARY KEY
+	, NAME VARCHAR(40) NOT NULL
+	, NOTE VARCHAR(256)
+	, CITY INT NOT NULL
+	, STREET VARCHAR(128) NOT NULL
+	, PHONE VARCHAR(20)
+	, STARS REAL NOT NULL
+	, HOME_PAGE VARCHAR(100)
+	, PRICE DECIMAL(8,2) NOT NULL
+	, CURRENCY VARCHAR(3) NOT NULL
+	, ACTIVE BOOLEAN NOT NULL
+	)
+2013-09-14 09:19:05,761 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE TABLE demoHotels.demo_customer
+	( ID INT PRIMARY KEY
+	, LOGIN VARCHAR(6) NOT NULL
+	, PASSWORD_HASH BIGINT NOT NULL
+	, TITLE VARCHAR(2)
+	, FIRSTNAME VARCHAR(60) NOT NULL
+	, SURENAME VARCHAR(60) NOT NULL
+	, EMAIL VARCHAR(128) NOT NULL
+	, ADMIN BOOLEAN
+	, ACTIVE BOOLEAN
+	)
+2013-09-14 09:19:05,764 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE TABLE demoHotels.demo_booking
+	( ID BIGINT PRIMARY KEY
+	, HOTEL BIGINT NOT NULL
+	, CUSTOMER INT NOT NULL
+	, DATE_FROM DATE NOT NULL
+	, NIGHTS SMALLINT
+	, PERSONS SMALLINT
+	, PRICE DECIMAL(8,2) NOT NULL
+	, CURRENCY VARCHAR(3) NOT NULL
+	, CREATION_DATE DATE NOT NULL
+	)
+2013-09-14 09:19:05,766 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE TABLE demoHotels.demo_city
+	( ID INT PRIMARY KEY
+	, NAME VARCHAR(40) NOT NULL
+	, COUNTRY VARCHAR(3) NOT NULL
+	, COUNTRY_NAME VARCHAR(40) NOT NULL
+	, LATITUDE REAL NOT NULL
+	, LONGITUDE REAL NOT NULL
+	)
+2013-09-14 09:19:05,768 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE INDEX idx_hotel_name ON demoHotels.demo_hotel (NAME, ACTIVE)
+2013-09-14 09:19:05,769 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE UNIQUE INDEX idx_unique_login ON demoHotels.demo_customer (LOGIN, ACTIVE)
+2013-09-14 09:19:05,770 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE INDEX idx_booking ON demoHotels.demo_booking (HOTEL, CUSTOMER)
+2013-09-14 09:19:05,771 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE UNIQUE INDEX idx_unique_city ON demoHotels.demo_city (NAME)
+2013-09-14 09:19:05,788 INFO [main] org.ujorm.orm.metaModel.MetaDbService - ALTER TABLE demoHotels.demo_hotel
+	ADD CONSTRAINT fk_demo_hotel__CITY FOREIGN KEY (CITY)
+	REFERENCES demoHotels.demo_city(ID)
+2013-09-14 09:19:05,793 INFO [main] org.ujorm.orm.metaModel.MetaDbService - ALTER TABLE demoHotels.demo_booking
+	ADD CONSTRAINT fk_demo_booking__HOTEL FOREIGN KEY (HOTEL)
+	REFERENCES demoHotels.demo_hotel(ID)
+2013-09-14 09:19:05,798 INFO [main] org.ujorm.orm.metaModel.MetaDbService - ALTER TABLE demoHotels.demo_booking
+	ADD CONSTRAINT fk_demo_booking__CUSTOMER FOREIGN KEY (CUSTOMER)
+	REFERENCES demoHotels.demo_customer(ID)
+2013-09-14 09:19:05,800 INFO [main] org.ujorm.orm.metaModel.MetaDbService - CREATE TABLE demoHotels.ujorm_pk_support
+	( "id" VARCHAR(96) NOT NULL PRIMARY KEY
+	, "seq" BIGINT DEFAULT 100 NOT NULL
+	, "cache" INT DEFAULT 100 NOT NULL
+	, "max_value" BIGINT DEFAULT 0 NOT NULL
+	)
+2013-09-14 09:19:05,806 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.ID IS 'The Primary Key'
+2013-09-14 09:19:05,808 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.NAME IS 'Name of the Hotel'
+2013-09-14 09:19:05,808 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.NOTE IS 'Description of the hotel'
+2013-09-14 09:19:05,809 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.CITY IS 'Relation to the City address'
+2013-09-14 09:19:05,810 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.STREET IS 'Street of address'
+2013-09-14 09:19:05,811 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.PHONE IS 'Phone'
+2013-09-14 09:19:05,811 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.STARS IS 'Stars'
+2013-09-14 09:19:05,812 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.HOME_PAGE IS 'URL to the HomePage'
+2013-09-14 09:19:05,813 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.PRICE IS 'Price per night in USD'
+2013-09-14 09:19:05,814 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.CURRENCY IS 'Currency of the price'
+2013-09-14 09:19:05,815 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_hotel.ACTIVE IS 'Hotel state (the true or null is required)'
+2013-09-14 09:19:05,816 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.ID IS 'The Primary Key'
+2013-09-14 09:19:05,817 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.LOGIN IS 'Unique login'
+2013-09-14 09:19:05,818 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.PASSWORD_HASH IS 'Password hash'
+2013-09-14 09:19:05,819 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.TITLE IS 'Title'
+2013-09-14 09:19:05,819 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.FIRSTNAME IS 'Firstname'
+2013-09-14 09:19:05,820 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.SURENAME IS 'Lastname'
+2013-09-14 09:19:05,821 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.EMAIL IS 'Email'
+2013-09-14 09:19:05,822 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.ADMIN IS 'Administrator role sign'
+2013-09-14 09:19:05,823 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_customer.ACTIVE IS 'Customer is allowed to login (the true or null values are required)'
+2013-09-14 09:19:05,824 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.ID IS 'The Primary Key'
+2013-09-14 09:19:05,824 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.HOTEL IS 'Relation to hotel'
+2013-09-14 09:19:05,825 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.CUSTOMER IS 'Relation to customer'
+2013-09-14 09:19:05,826 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.DATE_FROM IS 'Date from'
+2013-09-14 09:19:05,826 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.NIGHTS IS 'Number of nights'
+2013-09-14 09:19:05,827 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.PERSONS IS 'Number of persons (limit from 1 to 50)'
+2013-09-14 09:19:05,828 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.PRICE IS 'Total price'
+2013-09-14 09:19:05,829 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.CURRENCY IS 'Currency of the total price'
+2013-09-14 09:19:05,830 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_booking.CREATION_DATE IS 'Creation date of booking.'
+2013-09-14 09:19:05,830 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_city.ID IS 'The Primary Key'
+2013-09-14 09:19:05,831 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_city.NAME IS 'City name'
+2013-09-14 09:19:05,832 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_city.COUNTRY IS 'Two characters country code along the ISO 3166'
+2013-09-14 09:19:05,832 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_city.COUNTRY_NAME IS 'Country name will be located in the another entity in a real application'
+2013-09-14 09:19:05,837 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_city.LATITUDE IS 'A geographic coordinate for north-south position on the Earth'
+2013-09-14 09:19:05,839 INFO [main] org.ujorm.orm.metaModel.MetaDbService - COMMENT ON COLUMN demoHotels.demo_city.LONGITUDE IS 'A geographic coordinate for east-west position on the Earth'
+2013-09-14 09:19:05,840 INFO [main] org.ujorm.orm.OrmHandler - The initializaton batch is running: org.ujorm.hotels.config.demoData.DataLoader
+2013-09-14 09:19:05,861 INFO [main] org.ujorm.orm.Session - SELECT demo_city.ID
+	FROM demoHotels.demo_city demo_city WHERE 1=1 -- SQL VALUES: NONE
+2013-09-14 09:19:05,882 INFO [main] org.ujorm.orm.Session - SELECT demo_hotel.ID
+	FROM demoHotels.demo_hotel demo_hotel WHERE 1=1 -- SQL VALUES: NONE
+2013-09-14 09:19:06,210 INFO [main] org.ujorm.orm.Session - SELECT demo_customer.ID
+	FROM demoHotels.demo_customer demo_customer WHERE 1=1 -- SQL VALUES: NONE
+2013-09-14 09:19:06,214 INFO [main] org.ujorm.orm.UjoSequencer - UPDATE demoHotels.ujorm_pk_support SET "seq"="seq"+"cache" WHERE "id"=?; [~.demo_customer]
+2013-09-14 09:19:06,222 INFO [main] org.ujorm.orm.UjoSequencer - INSERT INTO demoHotels.ujorm_pk_support ("id","seq","cache","max_value") VALUES (?,100,100,0); [~.demo_customer]
+2013-09-14 09:19:43,336 INFO [25164373@qtp-11830583-0] org.ujorm.orm.Session - SELECT demo_city.NAME, demo_city.ID
+	FROM demoHotels.demo_city demo_city WHERE 1=1 ORDER BY demo_city.NAME -- SQL VALUES: NONE
+2013-09-14 09:19:47,417 INFO [25164373@qtp-11830583-0] org.ujorm.orm.Session - SELECT COUNT(*)
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ACTIVE=?
+2013-09-14 09:19:47,422 INFO [25164373@qtp-11830583-0] org.ujorm.orm.Session - -- SQL VALUES: [true]
+2013-09-14 09:19:47,445 INFO [25164373@qtp-11830583-0] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE, demo_city.NAME
+	FROM demoHotels.demo_hotel demo_hotel, demoHotels.demo_city demo_city WHERE demo_hotel.ACTIVE=? AND (demo_hotel.CITY = demo_city.ID) ORDER BY demo_hotel.NAME, demo_hotel.NAME -- SQL VALUES: [true]
+2013-09-14 09:20:23,897 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT COUNT(*)
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ACTIVE=?
+2013-09-14 09:20:23,898 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - -- SQL VALUES: [true]
+2013-09-14 09:20:23,965 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE, demo_city.NAME
+	FROM demoHotels.demo_hotel demo_hotel, demoHotels.demo_city demo_city WHERE demo_hotel.ACTIVE=? AND (demo_hotel.CITY = demo_city.ID) ORDER BY demo_hotel.NAME, demo_hotel.NAME LIMIT 10 OFFSET 10 -- SQL VALUES: [true]
+2013-09-14 09:20:24,929 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT COUNT(*)
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ACTIVE=?
+2013-09-14 09:20:24,932 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - -- SQL VALUES: [true]
+2013-09-14 09:20:24,941 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE, demo_city.NAME
+	FROM demoHotels.demo_hotel demo_hotel, demoHotels.demo_city demo_city WHERE demo_hotel.ACTIVE=? AND (demo_hotel.CITY = demo_city.ID) ORDER BY demo_hotel.NAME, demo_hotel.NAME LIMIT 10 OFFSET 20 -- SQL VALUES: [true]
+2013-09-14 09:20:25,603 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT COUNT(*)
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ACTIVE=?
+2013-09-14 09:20:25,604 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - -- SQL VALUES: [true]
+2013-09-14 09:20:25,616 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE, demo_city.NAME
+	FROM demoHotels.demo_hotel demo_hotel, demoHotels.demo_city demo_city WHERE demo_hotel.ACTIVE=? AND (demo_hotel.CITY = demo_city.ID) ORDER BY demo_hotel.NAME, demo_hotel.NAME LIMIT 10 OFFSET 30 -- SQL VALUES: [true]
+2013-09-14 09:20:26,252 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT COUNT(*)
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ACTIVE=?
+2013-09-14 09:20:26,256 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - -- SQL VALUES: [true]
+2013-09-14 09:20:26,272 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE, demo_city.NAME
+	FROM demoHotels.demo_hotel demo_hotel, demoHotels.demo_city demo_city WHERE demo_hotel.ACTIVE=? AND (demo_hotel.CITY = demo_city.ID) ORDER BY demo_hotel.NAME, demo_hotel.NAME LIMIT 10 OFFSET 40 -- SQL VALUES: [true]
+2013-09-14 09:20:26,984 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT COUNT(*)
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ACTIVE=?
+2013-09-14 09:20:26,985 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - -- SQL VALUES: [true]
+2013-09-14 09:20:26,991 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE, demo_city.NAME
+	FROM demoHotels.demo_hotel demo_hotel, demoHotels.demo_city demo_city WHERE demo_hotel.ACTIVE=? AND (demo_hotel.CITY = demo_city.ID) ORDER BY demo_hotel.NAME, demo_hotel.NAME LIMIT 10 OFFSET 50 -- SQL VALUES: [true]
+2013-09-14 09:20:27,715 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT COUNT(*)
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ACTIVE=?
+2013-09-14 09:20:27,716 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - -- SQL VALUES: [true]
+2013-09-14 09:20:27,724 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE, demo_city.NAME
+	FROM demoHotels.demo_hotel demo_hotel, demoHotels.demo_city demo_city WHERE demo_hotel.ACTIVE=? AND (demo_hotel.CITY = demo_city.ID) ORDER BY demo_hotel.NAME, demo_hotel.NAME LIMIT 10 OFFSET 60 -- SQL VALUES: [true]
+2013-09-14 09:23:51,101 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_hotel.ID, demo_hotel.NAME, demo_hotel.NOTE, demo_hotel.CITY, demo_hotel.STREET, demo_hotel.PHONE, demo_hotel.STARS, demo_hotel.HOME_PAGE, demo_hotel.PRICE, demo_hotel.CURRENCY, demo_hotel.ACTIVE
+	FROM demoHotels.demo_hotel demo_hotel WHERE demo_hotel.ID=? -- SQL VALUES: [-317]
+2013-09-14 09:23:51,108 INFO [1213653@qtp-11830583-3] org.ujorm.orm.Session - SELECT demo_city.ID, demo_city.NAME, demo_city.COUNTRY, demo_city.COUNTRY_NAME, demo_city.LATITUDE, demo_city.LONGITUDE
+	FROM demoHotels.demo_city demo_city WHERE demo_city.ID=? -- SQL VALUES: [-81]
