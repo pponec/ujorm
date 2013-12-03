@@ -156,13 +156,23 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
                     , name);
             throw new IllegalArgumentException(msg);
         }
-        if (name.indexOf(PROPERTY_SEPARATOR)>0) {
+        if (isPropertySeparatorDisabled()
+        && name.indexOf(PROPERTY_SEPARATOR)>0) {
             final String msg = String.format("Property name '%s' must not contain a dot character '%c'."
                     , name
                     , PROPERTY_SEPARATOR);
             throw new IllegalArgumentException(msg);
         }
         this.name = name;
+    }
+
+    /** Method returns the {@code true} in case the {@link #PROPERTY_SEPARATOR}
+     * character is disabled in a prperty name.
+     * The method can be overriden.
+     * The {@code true} is a default value.
+     */
+    protected boolean isPropertySeparatorDisabled() {
+        return true;
     }
 
     /** Is the property Locked? */
