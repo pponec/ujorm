@@ -1,10 +1,17 @@
 The Ujorm release notes
 *******************************
 
+release 1.40 (2013-12-03)
++ deprecated interface UjoProperty is removed and
++ many obsolete methods was removed too
++ the lazy-loading can be allowed using the parameter MetaParams.LAZY_LOADING on the closed session optionally
++ there is supported building new Criterion using a template: Order.ID.forSql("{0} > {1}", 0L)
++ the property separator character '.' can be enabled in the key/property name by the overriding the method: Property.isPropertySeparatorDisabled()
+
 release 1.40 (2013-09-09)
 + small bug-fixing is done
 + CSV parsing is extended
-+ a new sample web application called Demo-Hotels is available now
++ new sample web application is available on the link: http://hotels.ujorm.org/
 
 release 1.35 (2013-05-20
 + an API of the ValidatorFactory class is extended
