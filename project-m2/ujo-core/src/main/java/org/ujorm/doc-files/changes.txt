@@ -1,7 +1,7 @@
 The Ujorm release notes
 *******************************
 
-release 1.40 (2013-12-03)
+release 1.41 (2013-12-03)
 + deprecated interface UjoProperty is removed and
 + many obsolete methods was removed too
 + the lazy-loading can be allowed using the parameter MetaParams.LAZY_LOADING on the closed session optionally
