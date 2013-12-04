@@ -511,10 +511,10 @@ font.FrameTitleFont a.UjoLogo {
 
 a.UjoLogo {
 	display: block;
-	padding-left: 170px;
+	padding-left: 50px;
 	background-image: url("org/ujorm/doc-files/ujo32.png");
 	background-repeat: no-repeat;
-	background-position: 132px 2px;
+	background-position: 6px 0px;
 	text-align: left;
 	text-decoration: none;
 	color: black;
