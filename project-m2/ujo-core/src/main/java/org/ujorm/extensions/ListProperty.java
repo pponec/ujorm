@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The main implementation of the interface ListKey.
@@ -41,7 +42,8 @@ public class ListProperty<UJO extends Ujo, ITEM>
     protected ListProperty(String name, Class<ITEM> itemType, int index) {
         super((Class<List<ITEM>>)(Object)List.class);
         initItemType(itemType);
-        init(name, null, null, null, index, false);
+        init(NAME, name);
+        init(INDEX, index);
     }
 
     /** Returns a count of Items. If a property value is null, method returns 0. */
@@ -155,7 +157,9 @@ public class ListProperty<UJO extends Ujo, ITEM>
     , final boolean lock
     ) {
         final ListProperty<UJO,ITEM> result = new ListProperty<UJO,ITEM>(itemType);
-        result.init(name, null, null, null, index, lock);
+        result.init(NAME, name);
+        result.init(INDEX, index);
+        result.init(LOCK, lock);        
         return result;
     }
 

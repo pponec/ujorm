@@ -18,7 +18,7 @@ package org.ujorm.implementation.orm;
 
 import org.ujorm.Key;
 import org.ujorm.orm.ExtendedOrmUjo;
-
+import static org.ujorm.extensions.PropertyModifier.*;
 
 
 /**
@@ -32,7 +32,8 @@ public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends OrmPropert
     @SuppressWarnings("unchecked")
     protected RelationToOne(String name, Class type, Key relatedKey) {
         super(UNDEFINED_INDEX);
-        init(name, type, null, null, UNDEFINED_INDEX, false);
+        init(NAME, name);
+        init(TYPE, type);
         this.relatedKey = relatedKey;
     }
 

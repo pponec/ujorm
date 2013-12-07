@@ -22,6 +22,7 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ForeignKey;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Session;
+import static org.ujorm.extensions.PropertyModifier.*;
 import static org.ujorm.orm.ao.LazyLoading.*;
 
 /** The special property pro LazyLoadiing */
@@ -38,8 +39,10 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
     }
 
     public OrmProperty(int index, String name, VALUE defaultValue, Validator<VALUE> validator) {
-        super(index, validator);
-        init(name, null, null, defaultValue, index, false);
+        super(index);
+        init(NAME, name);
+        init(DEFAULT_VALUE, defaultValue);
+        init(VALIDATOR, validator);
     }
 
     /** Lock the Property */
