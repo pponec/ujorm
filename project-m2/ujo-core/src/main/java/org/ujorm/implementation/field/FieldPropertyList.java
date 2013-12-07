@@ -17,11 +17,12 @@
 package org.ujorm.implementation.field;
 
 import java.util.List;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.extensions.ListProperty;
-import org.ujorm.ListKey;
 import org.ujorm.extensions.ValueAgent;
 import org.ujorm.implementation.bean.BeanProperty;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * Property List implementation. There is used an List collection.
@@ -41,7 +42,9 @@ public class FieldPropertyList<UJO extends Ujo, ITEM>
     @SuppressWarnings("unchecked")
     public FieldPropertyList(String name, Class<ITEM> itemType, int index, ValueAgent<UJO, List<ITEM>> agent) {
         super(itemType);
-        init(name, (Class) List.class, null, null, index, false);
+        init(INDEX, index);
+        init(NAME, name);
+        init(TYPE, List.class);
         this.agent = agent;
     }
     

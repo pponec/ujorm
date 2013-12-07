@@ -23,6 +23,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.ExtendedOrmUjo;
 import org.ujorm.orm.Session;
+import static org.ujorm.extensions.PropertyModifier.*;
 import static org.ujorm.orm.ao.LazyLoading.*;
 
 /**
@@ -60,7 +61,9 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
     public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {
         super((Class<UjoIterator<ITEM>>) (Class) UjoIterator.class);
         initItemType(itemType);
-        init(name, null, null, null, index, lock);
+        init(INDEX, index);
+        init(NAME, name);
+        init(LOCK, lock);
     }
 
     /**

@@ -18,6 +18,7 @@ package org.ujorm.extensions;
 
 import org.ujorm.Ujo;
 import org.ujorm.core.annot.Immutable;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The abstract implementation for property of the collection type.
@@ -32,12 +33,14 @@ abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> ext
 
     public AbstractCollectionProperty(Class<VALUE> collectionType) {
         super(UNDEFINED_INDEX);
-        init(null, collectionType, null, null, UNDEFINED_INDEX, false);
+        init(TYPE, collectionType);
     }
 
     public AbstractCollectionProperty(String name, Class<VALUE> collectionType, int index) {
         super(index);
-        init(name, collectionType, null, null, index, false);
+        init(NAME, name);
+        init(TYPE, collectionType);
+        init(INDEX, index);
     }
     
     /** Return a Class of the Item. */

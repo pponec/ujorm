@@ -16,18 +16,36 @@
 
 package org.ujorm.extensions;
 
+import static org.ujorm.extensions.PropertyModifier.*;
+
 /**
  * Property Setter
  * @author Ponec
  */
 public class PropertyModifier {
 
+    /** Property name */
+    public static final int NAME = 901;
+    /** Property index */
+    public static final int INDEX = 902;
+    /** Property type (class) */
+    public static final int TYPE = 903;
+    /** Doman type type (class) */
+    public static final int DOMAIN_TYPE = 904;
+    /** Property default value */
+    public static final int DEFAULT_VALUE = 905;
+    /** Input Validator */
+    public static final int VALIDATOR = 907;
+    /** Lock all properties after initialization */
+    public static final int LOCK = 999;
+
+
     /** Write property type into property if it is not locked yet. */
     @SuppressWarnings("unchecked")
     public static void setType(Class type, Property property) {
         if (!property.isLock()) {
-            final int index = property.getIndex();
-            property.init(null, type, null, null, index, false);
+            property.init(TYPE, type);
+            property.init(INDEX, property.getIndex());
         }
     }
 
@@ -35,8 +53,8 @@ public class PropertyModifier {
     @SuppressWarnings("unchecked")
     public static void setDomainType(Class domainType, Property property) {
         if (!property.isLock()) {
-            final int index = property.getIndex();
-            property.init(null, null, domainType, null, index, false);
+            property.init(DOMAIN_TYPE, domainType);
+            property.init(INDEX, property.getIndex());
         }
     }
 
@@ -55,7 +73,7 @@ public class PropertyModifier {
     @SuppressWarnings("unchecked")
     public static void setName(String name, Property property) {
         if (!property.isLock()) {
-            property.init(name, null, null, null, Property.UNDEFINED_INDEX, false);
+            property.init(NAME, name);
         }
     }
     
@@ -67,9 +85,10 @@ public class PropertyModifier {
 
     /** Set the new index */
     @SuppressWarnings("unchecked")
-    public static void setIndex(int anIndex, Property property, boolean lock) {
-        if (!property.isLock() && property.getIndex()!=anIndex) {
-            property.init(null, null, null, null, anIndex, lock);
+    public static void setIndex(int index, Property property, boolean lock) {
+        if (!property.isLock() && property.getIndex()!=index) {
+            property.init(INDEX, index);
+            property.init(LOCK, lock);
         }
     }
 
@@ -77,7 +96,7 @@ public class PropertyModifier {
     @SuppressWarnings("unchecked")
     public static void lock(Property property) {
         if (!property.isLock()) {
-            property.init(null, null, null, null, Property.UNDEFINED_INDEX, true);
+            property.init(LOCK, true);
         }
     }
 

@@ -19,6 +19,7 @@ package org.ujorm.implementation.field;
 import org.ujorm.Ujo;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ValueAgent;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * A Field property implementation.
@@ -40,7 +41,8 @@ public class FieldProperty<UJO extends Ujo,VALUE>
      */
     public FieldProperty(String name, Class<VALUE> type, int index, ValueAgent<UJO,VALUE> agent) {
         super(index);
-        init(name, type, null, null, index, false);
+        init(NAME, name);
+        init(TYPE, type);
         this.agent = agent;
     }
     
@@ -51,7 +53,8 @@ public class FieldProperty<UJO extends Ujo,VALUE>
     @SuppressWarnings("unchecked")
     public FieldProperty(String name, VALUE defaultValue, int index, ValueAgent<UJO,VALUE> agent) {
         super(index);
-        init(name, null, null, defaultValue, index, false);
+        init(NAME, name);
+        init(DEFAULT_VALUE, defaultValue);
         this.agent = agent;
     }
     

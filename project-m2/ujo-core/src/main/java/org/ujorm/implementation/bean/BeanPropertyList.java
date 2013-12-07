@@ -16,11 +16,12 @@
 
 package org.ujorm.implementation.bean;
 
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.BeanManager;
-import org.ujorm.ListKey;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.ValueAgent;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * Property List implementation. There is used an List collection.
@@ -39,7 +40,8 @@ implements ValueAgent<Object,Object>, ListKey<UJO, ITEM>
     @SuppressWarnings("unchecked")
     public BeanPropertyList(String name, Class<ITEM> itemType, int index) {
         super(itemType);
-        init(name, null, null, null, index, false);
+        init(INDEX, index);
+        init(NAME, name);
         beanManager = BeanManager.getInstance(this);
     }
     

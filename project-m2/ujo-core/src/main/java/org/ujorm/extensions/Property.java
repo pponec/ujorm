@@ -31,6 +31,7 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.validator.ValidationException;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The main implementation of the interface Key.
@@ -47,7 +48,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     /** Property name */
     private String name;
-    /** Property index, there are exist three indext ranges
+    /** Property index, there are exist three index ranges:
      * <ul>
      *     <li>index == UNDEFINED_INDEX
      *     : an undefine index or a signal for auto-index action</li>
@@ -64,10 +65,10 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     private Class<UJO> domainType;
     /** Property default value */
     private VALUE defaultValue;
-    /** Lock the property after initialization */
-    private boolean lock;
     /** Input Validator */
     private Validator<VALUE> validator;
+    /** Lock all properties after initialization */
+    private boolean lock;
 
 
     /** A property seqeuncer for an index attribute
@@ -85,13 +86,9 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     /** Protected constructor */
     protected Property(int index) {
-        this(index, null);
-    }
-
-    /** Protected constructor */
-    protected Property(int index, Validator<VALUE> validator) {
-        this.index = index==UNDEFINED_INDEX ? _nextRawSequence() : index ;
-        this.validator = validator;
+        this.index = index != UNDEFINED_INDEX
+                ? index
+                : _nextRawSequence();
     }
 
     /**
@@ -103,34 +100,49 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
      * @param lock Lock the property.
      */
     @SuppressWarnings("unchecked")
-    protected final Property<UJO,VALUE> init
-    ( final String name
-    , Class<VALUE> type
-    , Class<UJO> domainType
-    , final VALUE defaultValue
-    , final int index
-    , final boolean lock
-    ) {
+    protected final Property<UJO,VALUE> init(final int field, final Object value) {
         checkLock();
-
-        if (this.index < 0 && index >= 0) {
-            this.index = index ;
-        }
-        if (this.name==null) {
-            setName(name);
-        }
-        if (this.defaultValue == null) {
-            this.defaultValue = defaultValue;
-        }
-        if (this.type == null) {
-            this.type = type;
-        }
-        if (this.domainType == null) {
-            this.domainType = domainType;
-        }
-        if (lock) {
-            lock();
-            checkValidity();
+        switch (field) {
+            case NAME:
+                if (this.name == null) {
+                    setName((String)value);
+                }
+                break;
+            case INDEX:
+                final int idxParam = ((Integer)value).intValue();
+                if (this.index < 0 && idxParam >= 0) {
+                    this.index = idxParam;
+                }
+                break;
+            case TYPE:
+                if (this.type == null) {
+                    this.type = (Class<VALUE>) value;
+                }
+                break;
+            case DOMAIN_TYPE:
+                if (this.domainType == null) {
+                    this.domainType = (Class<UJO>) value;
+                }
+                break;
+            case DEFAULT_VALUE:
+                if (this.defaultValue == null) {
+                    this.defaultValue = (VALUE) value;
+                }
+                break;
+            case VALIDATOR:
+                if (this.validator == null) {
+                    this.validator = (Validator<VALUE>) value;
+                }
+                break;
+            case LOCK:
+                if (Boolean.TRUE.equals(value)) {
+                    lock();
+                    checkValidity();
+                }
+                break;
+            default:
+                final String msg = String.format("Undefined field %s with value '%s'", field, value);
+                throw new IllegalArgumentException(msg);
         }
         return this;
     }
@@ -499,7 +511,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
-        return new Property<UJO,VALUE>(index).init(name, type, null, value, index, lock);
+        return newInstance(name, type, value, index, (Validator) null, lock);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -507,7 +519,12 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
-        return new Property<UJO,VALUE>(index, validator).init(name, type, null, value, index, lock);
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DEFAULT_VALUE, value)
+                .init(VALIDATOR, validator)
+                .init(LOCK, lock);
     }
 
 
@@ -518,7 +535,11 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, Class<UJO> domainType, int index) {
         final boolean lock = type!=null
                     && domainType!=null;
-        return new Property<UJO,VALUE>(index).init(name, type, domainType, null, index, lock);
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DOMAIN_TYPE, domainType)
+                .init(LOCK, lock);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -545,7 +566,10 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value, int index) {
         @SuppressWarnings("unchecked")
         Class<VALUE> type = (Class) value.getClass();
-        return new Property<UJO, VALUE>(index).init(name, type, null, value, index, false);
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DEFAULT_VALUE, value);
     }
 
     /** A Property Factory where a property type is related from from default value.

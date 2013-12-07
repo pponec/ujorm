@@ -16,14 +16,15 @@
 package org.ujorm.extensions;
 
 import java.lang.reflect.Method;
-import org.ujorm.WeakKey;
 import java.util.List;
 import java.util.Map;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.WeakKey;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.WeakKeyFactory;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The WeakKeyImpl is a default WeakKeyKey implementation without the generic parameter for the domain type.
@@ -56,7 +57,8 @@ public class WeakKeyImpl<VALUE>
      */
     public WeakKeyImpl(String name, VALUE defaultValue, int index) {
         super(index);
-        init(name, null, null, defaultValue, UNDEFINED_INDEX, false);
+        init(NAME, name);
+        init(DEFAULT_VALUE, defaultValue);
     }
 
     /**

@@ -20,6 +20,7 @@ import org.ujorm.Ujo;
 import org.ujorm.core.BeanManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ValueAgent;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * A Map property implementation.
@@ -41,7 +42,8 @@ public class BeanProperty<UJO extends Ujo,VALUE>
      */
     public BeanProperty(String name, Class<VALUE> type, final int index) {
         super(index);
-        init(name, type, null, null, index, false);
+        init(NAME, name);
+        init(TYPE, type);
         beanManager = BeanManager.getInstance(this);
     }
     
@@ -53,7 +55,8 @@ public class BeanProperty<UJO extends Ujo,VALUE>
     @SuppressWarnings("unchecked")
     public BeanProperty(String name, VALUE defaultValue, final int index) {
         super(index);
-        init(name, null, null, defaultValue, index, false);
+        init(NAME, name);
+        init(DEFAULT_VALUE, defaultValue);
         beanManager = BeanManager.getInstance(this);
     }
     

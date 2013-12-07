@@ -17,10 +17,11 @@
 package org.ujorm.implementation.factory;
 
 import java.lang.reflect.Constructor;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ValueAgent;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * A Factory property implementation.
@@ -52,7 +53,8 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
      */
     public FactoryProperty(String name, Class<VALUE> type, int index) {
         super(index);
-        init(name, type, null, null, index, false);
+        init(NAME, name);
+        init(TYPE, type);
         Constructor<VALUE> c = null;
         try {
             c = type.getConstructor(Ujo.class, Key.class);

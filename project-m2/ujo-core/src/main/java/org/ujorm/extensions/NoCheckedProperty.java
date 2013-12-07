@@ -19,6 +19,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
+import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
  * The implementation of the interface Key where the validator is off (it is never called).
@@ -30,8 +31,10 @@ public class NoCheckedProperty<UJO extends Ujo, VALUE> extends Property<UJO, VAL
 
     /** Protected constructor */
     public NoCheckedProperty(String name, VALUE defaultValue, Validator<VALUE> validator) {
-        super(UNDEFINED_INDEX, validator);
-        init(name, (Class)null, (Class)null, defaultValue, UNDEFINED_INDEX, false);
+        super(UNDEFINED_INDEX);
+        init(NAME, name);
+        init(DEFAULT_VALUE, defaultValue);
+        init(VALIDATOR, validator);
     }
 
     /**
