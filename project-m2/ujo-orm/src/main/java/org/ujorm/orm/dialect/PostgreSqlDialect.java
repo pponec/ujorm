@@ -23,7 +23,6 @@ import org.ujorm.orm.SqlDialect;
 import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
-import org.ujorm.orm.metaModel.MetaTable;
 
 /** PostgreSQL (http://www.postgresql.org/) */
 public class PostgreSqlDialect extends SqlDialect {
