@@ -22,6 +22,7 @@ import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.orm.metaModel.MetaColumn;
 import org.ujorm.orm.metaModel.MetaIndex;
+import org.ujorm.orm.metaModel.MetaTable;
 
 /** Oracle (www.oracle.com/) release 9.0 */
 public class OracleDialect extends PostgreSqlDialect {
@@ -150,6 +151,15 @@ public class OracleDialect extends PostgreSqlDialect {
     @Override
     public Appendable printInsert(List<? extends OrmUjo> bo, int idxFrom, int idxTo, Appendable out) throws IOException {
         return printInsertBySelect(bo, idxFrom, idxTo, "FROM DUAL", out);
+    }
+
+    /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer */
+    @Override
+    public Appendable printNextSequence(String sequenceName, MetaTable table, Appendable out) throws IOException {
+        out.append("SELECT ");
+        out.append(sequenceName);
+        out.append(".NEXTVAL FROM DUAL");
+        return out;
     }
 
 }

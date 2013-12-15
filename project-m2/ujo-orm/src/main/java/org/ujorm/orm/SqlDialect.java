@@ -1251,4 +1251,12 @@ abstract public class SqlDialect {
         }
         return extentedDialect;
     }
+
+    /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer */
+    public Appendable printNextSequence(String sequenceName, MetaTable table, Appendable out) throws IOException {
+        out.append("SELECT NEXTVAL('");
+        out.append(sequenceName);
+        out.append("')");
+        return out;
+    }
 }

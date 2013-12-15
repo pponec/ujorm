@@ -67,4 +67,11 @@ public class HsqldbDialect extends H2Dialect {
         return out;
     }
 
+    /** Create a SQL script for the NEXT SEQUENCE from a native database sequencer */
+    @Override
+    public Appendable printNextSequence(String sequenceName, MetaTable table, Appendable out) throws IOException {
+        out.append("CALL NEXT VALUE FOR ");
+        out.append(sequenceName);
+        return out;
+    }
 }
