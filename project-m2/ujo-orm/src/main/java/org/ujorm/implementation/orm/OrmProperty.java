@@ -71,12 +71,17 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                     throw new IllegalStateException("The lazy loading is disabled in the current Session.");
                 }
                 if (mySession.isClosed()) {
+                   IllegalStateException e = null;
                     switch (mySession.getLazyLoading()) {
                         default:
                             throw new IllegalStateException("The lazy loading is disabled in the closed Session.");
+                        case ALLOWED_ANYWHERE_WITH_STACKTRACE:
+                            if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                                e = new IllegalStateException(mySession.getLazyLoading().name());
+                            }
                         case ALLOWED_ANYWHERE_WITH_WARNING:
                             if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                                LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + toStringFull() + " = " + result);
+                                LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + toStringFull() + " = " + result, e);
                             }
                         case ALLOWED_ANYWHERE:
                             // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.) */
@@ -85,7 +90,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                                 result = tempSession.loadInternal(this, ((ForeignKey) result).getValue(), true);
                                 if (result != null) {
                                     // Assign the same session due original session arguments (lazyLoading e.g.):
-                                    ((OrmUjo)result).writeSession(mySession);
+                                    ((OrmUjo) result).writeSession(mySession);
                                 }
                             } finally {
                                 tempSession.close();

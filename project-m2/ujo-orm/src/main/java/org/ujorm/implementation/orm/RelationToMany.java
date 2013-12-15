@@ -84,12 +84,17 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
             }
 
             if (mySession.isClosed()) {
+                IllegalStateException e = null;
                 switch (mySession.getLazyLoading()) {
                     default:
                         throw new IllegalStateException("The lazy loading is disabled in the closed Session.");
+                    case ALLOWED_ANYWHERE_WITH_STACKTRACE:
+                        if (LOGGER.isLoggable(UjoLogger.INFO)) {
+                            e = new IllegalStateException(mySession.getLazyLoading().name());
+                        }
                     case ALLOWED_ANYWHERE_WITH_WARNING:
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
-                            LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + toStringFull());
+                            LOGGER.log(UjoLogger.WARN, "The lazy loading on closed session on the key " + toStringFull(), e);
                         }
                     case ALLOWED_ANYWHERE:
                         // open temporary session if it's closed ;) - because of lazy-loading of detached objects (caches, etc.)
