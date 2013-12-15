@@ -31,8 +31,11 @@ public enum LazyLoading {
     /** Lazy loading is allowed using an open open sesson. It is the <strong>default</strong> value */
     ALLOWED_USING_OPEN_SESSION,
     /** Lazy loading is allowed on an open or closed sessions, for the second case Ujorm creates new temporary session.
-     * The action is logged with the WARNING level. */
+     * The action is logged with the WARNING but no stacktrace. */
     ALLOWED_ANYWHERE_WITH_WARNING,
+    /** Lazy loading is allowed on an open or closed sessions, for the second case Ujorm creates new temporary session.
+     * The action is logged with the WARNING level including a stacktrace. */
+    ALLOWED_ANYWHERE_WITH_STACKTRACE,
     /** Lazy loading is allowed on an open or closed sessions, for the second case Ujorm creates new temporary session.
      * The action is newer logged. */
     ALLOWED_ANYWHERE;
