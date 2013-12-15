@@ -126,6 +126,13 @@ public class CriterionDecoder {
                 unpack(eb.getRightNode());
                 if (or) sql.append(") ");
                 break;
+            case NOT:
+                sql.append(" ");
+                sql.append(eb.getOperator().name());
+                sql.append(" (");
+                unpack(eb.getRightNode()); // same criterion in both nodes
+                sql.append(") ");
+                break;
             default:
                 String message = "Operator is not supported in the SQL statement: " + eb.getOperator();
                 throw new UnsupportedOperationException(message);
