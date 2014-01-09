@@ -94,6 +94,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * @return .
      */
     @Override
+    @SuppressWarnings("unchecked")
     public Key<UJO, ?> findDirectKey(final String name, final boolean throwException) throws IllegalArgumentException {
         int nameHash = name.hashCode();
 
@@ -105,10 +106,9 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         }
 
         if (throwException) {
-            throw new IllegalArgumentException("A property called \"" + name + "\" was not found in the " + type);
-        } else {
-            return null;
-        }
+            throwException(name, type, null);
+        } 
+        return null;
     }
 
     @Override
@@ -134,17 +134,16 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
         for (final Key prop : keys) {
             if (prop.getName().hashCode() == nameHash // speed up
-                    && prop.getName().equals(name)
-                    && (getUjoManager().isXmlAttribute(prop)) != result) {
+            &&  prop.getName().equals(name)
+            && (getUjoManager().isXmlAttribute(prop)) != result) {
                 return prop;
             }
         }
 
         if (throwException) {
-            throw new IllegalArgumentException("A property name \"" + name + "\" was not found in the " + ujo.getClass());
-        } else {
-            return null;
-        }
+            throwException(name, ujo.getClass(), null);
+        } 
+        return null;
     }
 
     /**
@@ -164,17 +163,25 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         int j, i = 0;
         List<Key> props = new ArrayList<Key>(8);
         names += ".";
-        while ((j = names.indexOf('.', i + 1)) >= 0) {
-            final String name = names.substring(i, j);
-            final Key p = UjoManager.getInstance().readKeys(ujoType).findDirectKey(name, true);
-            props.add(p);
-            ujoType = p.getType();
-            i = j + 1;
+        try {
+            while ((j = names.indexOf('.', i + 1)) >= 0) {
+                final String name = names.substring(i, j);
+                final Key p = UjoManager.getInstance().readKeys(ujoType).findDirectKey(name, throwException);
+                if (p == null) {
+                    return null;
+                }
+                props.add(p);
+                ujoType = p.getType();
+                i = j + 1;
+            }
+        } catch (Exception e) {
+            throwException(names, type, e);
         }
+
         switch (props.size()) {
             case 0:
                 if (throwException) {
-                    throw new IllegalStateException("Invalid property name: " + names);
+                    throwException(names, type, null);
                 } else {
                     return null;
                 }
@@ -491,5 +498,12 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return result!=null ? result : Ujo.class;
     }
 
-
+    /** Throws an {@link IllegalArgumentException} exception with the text:<br/>
+     * "The key '%s' of the class %s was not found"
+     */
+    private void throwException(final String keyName, final Class type, Throwable e) throws IllegalArgumentException {
+        final String msg = String.format("The key '%s' of the class %s was not found", keyName, type);
+        throw new IllegalArgumentException(msg, e);
+    }
+    
 }
