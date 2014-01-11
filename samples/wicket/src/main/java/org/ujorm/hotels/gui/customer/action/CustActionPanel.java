@@ -58,13 +58,13 @@ public class CustActionPanel<T extends Customer> extends Panel {
             protected void onConfigure() {
                 super.onConfigure();
                 if (DELETE.equals(getId())) {
-                    setVisible(!authService.isLogged(row)
+                    setVisibilityAllowed(!authService.isLogged(row)
                             && admin == authService.isAdmin());
                 } else {
                     boolean canUpdate = authService.isAdmin()
                             || authService.isLogged(row);
                     boolean isUpdate = UPDATE.equals(getId());
-                    setVisible(isUpdate == canUpdate);
+                    setVisibilityAllowed(isUpdate == canUpdate);
                 }
             }
         };

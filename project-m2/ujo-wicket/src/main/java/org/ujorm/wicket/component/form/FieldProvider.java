@@ -278,7 +278,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     public void setVisible(final Key<U, ?> key, boolean visible) {
         final Field field = getField(key);
         if (field != null) {
-            field.setVisible(visible);
+            field.setVisibilityAllowed(visible);
         }
     }
 

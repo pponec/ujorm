@@ -48,14 +48,14 @@ public class FeedbackField extends Field {
     @Override
     public void onConfigure() {
         super.onConfigure();
-        setVisible(feedback.isFeedbackMessage());
+        setVisibilityAllowed(feedback.isFeedbackMessage());
     }
 
     /** Create Label and assign the CSS class {@code required} for the mandatory Field */
     @Override
     protected Component createLabel(final Component inp) {
         final Label result = new Label("label");
-        result.setVisible(false);
+        result.setVisibilityAllowed(false);
         return result;
     }
 
@@ -69,7 +69,7 @@ public class FeedbackField extends Field {
 
     @Override
     public void setFeedbackMessage(IModel<String> message) {
-        // setVisible(message != null); // It does not work
+        // setVisibleAllowed(message != null); // It does not work
         if (feedback != null) {
             feedback.setFeedbackMessage(message);
         }
