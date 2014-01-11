@@ -36,7 +36,4 @@ public class MeasuringCode extends Panel {
         return service.isMeasuringCode();
     }
 
-
-
-
 }
