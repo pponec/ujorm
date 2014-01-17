@@ -1,5 +1,10 @@
 The Ujorm release notes
 *******************************
+release 1.42 (2014-01-17)
++ method KeyRing.find(..) is improved for a parsing of composite Keys
++ native database sequences are supported by the new class 'NativeDbSequencer'
++ the operator 'BinaryOperator.NOT' is supported in the ORM module now
++ the PropertyModifier class is redesigned for a cleaner code and better performance
 
 release 1.41 (2013-12-03)
 + deprecated interface UjoProperty is removed and
