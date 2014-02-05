@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoCoder;
 import org.ujorm.core.UjoManager;
 
@@ -32,6 +33,7 @@ import org.ujorm.core.UjoManager;
  * @author Pavel Ponec
  */
 public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements Serializable {
+    static final long serialVersionUID = 20140128L;
 
     /** True constant criterion */
     public static final Criterion<Ujo> TRUE  = new ValueCriterion<Ujo>(true);
@@ -42,7 +44,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     private Operator operator;
     protected Object value;
 
-    /** Creante an Criterion constant */
+    /** Create an Criterion constant */
     public ValueCriterion(boolean value) {
         this(null, Operator.XFIXED, value);
     }
@@ -329,37 +331,30 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     // -------------- SERIALIZATION METHOD(S) --------------
 
     /** Serialization method */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "unchecked"})
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        boolean valueIsKey = value instanceof Key;
-
-        out.writeObject(key.getDomainType());
-        out.writeObject(key.getName());
         out.writeObject(operator);
+        boolean valueIsKey = value instanceof Key;
         out.writeBoolean(valueIsKey);
 
         if (valueIsKey) {
-            Key kVal = (Key) value;
-            out.writeObject(kVal.getDomainType());
-            out.writeObject(kVal.getName());
+            out.writeObject(KeyRing.of(key.getDomainType(), key, (Key) value));
         } else {
+            out.writeObject(KeyRing.of(key.getDomainType(), key));
             out.writeObject(value);
         }
     }
 
-    /** Deserialization method */
-    @SuppressWarnings("unused")
+    /** De-serialization method */
+    @SuppressWarnings({"unused", "unchecked"})
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        final Class domain = (Class) in.readObject();
-        final String name = (String) in.readObject();
-        key = (Key<UJO, Object>) UjoManager.getInstance().readKeys(domain).find(name);
-        operator = (Operator) in.readObject();
-        boolean valueIsKey = in.readBoolean();
-        value = in.readObject();
-        if (valueIsKey) {
-            final String nameVal = (String) in.readObject();
-            value = UjoManager.getInstance().readKeys((Class)value).find(nameVal);
-        }
+        this.operator = (Operator) in.readObject();
+        final boolean valueIsKey = in.readBoolean();
+        final KeyRing keyRing = (KeyRing) in.readObject();
+        this.key = keyRing.get(0);
+        this.value = valueIsKey
+                ? keyRing.get(1)
+                : in.readObject();
     }
 
 }

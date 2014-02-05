@@ -18,16 +18,16 @@ import static org.ujorm.extensions.PersonExt.*;
  *
  * @author Pavel Ponec
  */
-public class PropertyTest extends MyTestCase {
-    
-    public PropertyTest(String testName) {
+public class KeyTest extends MyTestCase {
+
+    public KeyTest(String testName) {
         super(testName);
     }
-    
+
     private static Class suite() {
-        return PropertyTest.class;
+        return KeyTest.class;
     }
-    
+
     /**
      * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
      */
@@ -84,7 +84,7 @@ public class PropertyTest extends MyTestCase {
     public void testDescending_2() {
 
         boolean descending = false;
-        Key<PersonExt, Integer> id = new PathProperty<PersonExt, Integer>(PersonExt.ID);
+        Key<PersonExt, Integer> id = new PathProperty<PersonExt, Integer>(null, PersonExt.ID);
         assertEquals(descending, !id.isAscending());
 
         descending = true;
@@ -114,7 +114,7 @@ public class PropertyTest extends MyTestCase {
      */
     public void testToStringFullTrue_1() {
         Key<PersonExt, Integer> key = PersonExt.ID;
-        
+
         String expectedResult = "PersonExt.id {index=0, ascending=true, composite=false, default=null, validator=null, type=class java.lang.Integer, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.Property}";
         String result = key.toStringFull(true);
         assertEquals(expectedResult, result);
@@ -124,8 +124,8 @@ public class PropertyTest extends MyTestCase {
      * Test the toString name
      */
     public void testToStringFullTrue_2() {
-        Key<PersonExt, Integer> key = new PathProperty<PersonExt, Integer>(PersonExt.PERS);
-        
+        Key<PersonExt, Integer> key = new PathProperty<PersonExt, Integer>(null, PersonExt.PERS);
+
         String expectedResult = "PersonExt.person {index=-1, ascending=true, composite=true, default=null, validator=null, type=interface java.util.List, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.PathProperty}";
         String result = key.toStringFull(true);
         assertEquals(expectedResult, result);
@@ -134,6 +134,5 @@ public class PropertyTest extends MyTestCase {
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-    
-    
+
 }

@@ -29,7 +29,6 @@ import org.ujorm.Validator;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
-import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.validator.ValidationException;
 
 /**
@@ -45,15 +44,19 @@ import org.ujorm.validator.ValidationException;
 @Immutable
 @SuppressWarnings("deprecation")
 public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, VALUE> {
+    /** No spaces */
+    protected static final String[] NO_SPACES = null;
 
     /** Array of <strong>direct</strong> keys */
     private final Key[] keys;
+    /** Array of <strong>aliases</strong> keys */
+    private final String[] aliases;
     /** Is property ascending / descending */
     private final boolean ascending;
     private String name;
 
-    public PathProperty(List<Key> keys) {
-        this(keys.toArray(new Key[keys.size()]));
+    public PathProperty(String lastSpaceName, List<Key> keys) {
+        this(lastSpaceName, keys.toArray(new Key[keys.size()]));
     }
 
     /** The main constructor. It is recommended to use the factory method
@@ -61,19 +64,22 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * for better performance in some cases.
      * @see #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)
      */
-    public PathProperty(Key... keys) {
-        this(null, keys);
+    public PathProperty(String lastSpaceName, Key... keys) {
+        this(null, lastSpaceName, keys);
     }
 
     /** Main constructor */
     @SuppressWarnings("unchecked")
-    public PathProperty(Boolean ascending, Key... keys) {
+    public PathProperty(Boolean ascending, String lastSpaceName, Key... keys) {
         final ArrayList<Key> list = new ArrayList<Key>(keys.length + 3);
-        for (Key property : keys) {
-            if (property.isComposite()) {
-                ((CompositeKey)property).exportKeys(list);
+        boolean alias = lastSpaceName != null;
+        for (Key key : keys) {
+            if (key.isComposite()) {
+                final CompositeKey cKey = ((CompositeKey)key);
+                cKey.exportKeys(list);
+                alias = alias || cKey.isSpaceName();
             } else {
-                list.add(property);
+                list.add(key);
             }
         }
         if (list.isEmpty()) {
@@ -81,12 +87,71 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         }
         this.ascending = ascending!=null ? ascending : keys[keys.length-1].isAscending();
         this.keys = list.toArray(new Key[list.size()]);
+        this.aliases = alias
+                ? new String[list.size()]
+                : NO_SPACES;
+
+        if (alias) {
+            int i = 0;
+            for (Key key : keys) {
+                if (key.isComposite()) {
+                    final CompositeKey cKey = ((CompositeKey)key);
+                    list.clear();
+                    cKey.exportKeys(list);
+                    for (int j = 0, max = list.size(); j < max; j++) {
+                        this.aliases[i++] = cKey.getAlias(j);
+                    }
+                } else {
+                    i++;
+                }
+            }
+            if (lastSpaceName != null) {
+               this.aliases[this.aliases.length - 1] = lastSpaceName;
+            }
+        }
     }
 
-    /** Private constructor for a better performance. For internal use only. */
-    private PathProperty(final Key[] keys, final boolean ascending) {
+    /** A constructor for a better performance. For an internal use only. */
+    private PathProperty(final Key[] keys, final String[] spaces, final boolean ascending) {
+        this.aliases = spaces;
         this.keys = keys;
         this.ascending = ascending;
+
+        checkAttributes();
+    }
+
+    /** A constructor for a better performance */
+    public PathProperty(final Key<?,?> keys, final String[] spaces, final boolean ascending) {
+        this.aliases = spaces;
+        this.keys = createKeyArray(keys);
+        this.ascending = ascending;
+
+        checkAttributes();
+    }
+
+    /** Create a key array from the argument */
+    private static Key[] createKeyArray(final Key keys) {
+        if (keys instanceof PathProperty) {
+            return ((PathProperty)keys).keys;
+        } else if (keys instanceof CompositeKey) {
+            final CompositeKey cKey = (CompositeKey) keys;
+            final Key[] result = new Key[cKey.getCompositeCount()];
+            for (int i = cKey.length() - 1; i >= 0 ; i--) {
+                result[i] = cKey.getDirectKey(i);
+            }
+            return result;
+        } else {
+            return new Key[] {keys};
+        }
+    }
+
+    /** Check arguments */
+    private void checkAttributes() throws IllegalStateException {
+        if (aliases != null && aliases.length != keys.length) {
+            throw new IllegalStateException
+                    ( "The spaces have hot a bad count: "
+                    + (aliases != null ? aliases.length : -1));
+        }
     }
 
     /** Get the last property of the current object. The result may not be the direct property. */
@@ -377,7 +442,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     @SuppressWarnings({"unchecked","deprecation"})
     public Key<UJO,VALUE> descending(boolean descending) {
         return isAscending()==descending
-                ? new PathProperty(keys, !descending)
+                ? new PathProperty(this, aliases, !descending)
                 : this
                 ;
     }
@@ -385,15 +450,18 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Export all <string>direct</strong> keys to the list from parameter. */
     @SuppressWarnings("unchecked")
     @Override
-    public List<Key> exportKeys(final List<Key> result) {
+    public void exportKeys(final Collection<Key<?,?>> result) {
         for (Key p : keys) {
-            if (p.isComposite()) {
-                ((CompositeKey)p).exportKeys(result);
-            } else {
-                result.add(p);
-            }
+            result.add(p);
         }
-        return result;
+    }
+
+    /** Returns a {@code directKey} for the required level.
+     * @param level Level of the composite key.
+     * @see #getCompositeCount()
+     */
+    public Key<?,?> getDirectKey(int level) {
+        return keys[level];
     }
 
     /** Get the last key validator or return the {@code null} value if no validator was assigned */
@@ -407,22 +475,48 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     @SuppressWarnings("unchecked")
     @Override
     public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> property) {
-
-        Key[] props = new Key[keys.length+1];
-        System.arraycopy(keys, 0, props, 0, keys.length);
-        props[keys.length] = property;
-
-        return new PathProperty(props);
+        return new PathProperty(DEFAULT_SPACE, this, property);
     }
 
-    /** ListKey */
+    /** Create new composite (indirect) instance.
+     * @since 1.43
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> property, String alias) {
+        return new PathProperty(alias, this, property);
+    }
+
+    /** ListKey, method does not support the name spaces */
     @SuppressWarnings("unchecked")
     public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> property) {
         Key[] props = new Key[keys.length+1];
         System.arraycopy(keys, 0, props, 0, keys.length);
         props[keys.length] = property;
 
-        return new PathListProperty(props);
+        return new PathListProperty(DEFAULT_SPACE, props);
+    }
+    
+    /** Create new composite (indirect) instance with a required space
+     * @since 1.43
+     */
+    @Override
+    public CompositeKey<UJO, VALUE> alias(String alias) {
+        return new PathProperty<UJO, VALUE>(alias, this);
+    }    
+
+    /** Returns a {@code spaceName} for the required level.
+     * Level no. 0 returns the {@link null} value always.
+     */
+    public String getAlias(int level) {
+        return this.aliases == NO_SPACES
+            ? DEFAULT_SPACE
+            : this.aliases[level];
+    }
+
+    /** Returns the {@code true} if the composite key contains any name space */
+    public boolean isSpaceName() {
+        return this.aliases != NO_SPACES;
     }
 
 
@@ -459,8 +553,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
             return (Key<UJO, VALUE>) property;
         }
         return property.isComposite()
-            ? new PathProperty<UJO, VALUE>(ascending, property)
-            : new PathProperty<UJO, VALUE>(new Key[]{property}, ascending)
+            ? new PathProperty<UJO, VALUE>(ascending, DEFAULT_SPACE, property)
+            : new PathProperty<UJO, VALUE>(new Key[]{property}, NO_SPACES, ascending)
             ;
     }
 
@@ -478,12 +572,12 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final Key<UJO, VALUE> property) {
         return property.isComposite()
-            ? new PathProperty<UJO, VALUE>(property.isAscending(), property)
-            : new PathProperty<UJO, VALUE>(new Key[]{property}, property.isAscending())
+            ? new PathProperty<UJO, VALUE>(property.isAscending(), CompositeKey.DEFAULT_SPACE, property)
+            : new PathProperty<UJO, VALUE>(new Key[]{property}, NO_SPACES, property.isAscending())
             ;
     }
 
-    /** Quick instance for the direct properrites
+    /** Quick instance for the direct properites
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
@@ -491,8 +585,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         , final Key<UJO2, VALUE> property2
         ) {
         return property1.isComposite() || property2.isComposite()
-            ? new PathProperty<UJO1, VALUE>(property2.isAscending(), property1, property2)
-            : new PathProperty<UJO1, VALUE>(new Key[]{property1,property2}, property2.isAscending())
+            ? new PathProperty<UJO1, VALUE>(property2.isAscending(), DEFAULT_SPACE, property1, property2)
+            : new PathProperty<UJO1, VALUE>(new Key[]{property1,property2}, NO_SPACES, property2.isAscending())
             ;
     }
 
@@ -504,7 +598,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         , final Key<UJO2, UJO3> property2
         , final Key<UJO3, VALUE> property3
         ) {
-        return new PathProperty<UJO1, VALUE>(property1, property2, property3);
+        return new PathProperty<UJO1, VALUE>(DEFAULT_SPACE, property1, property2, property3);
     }
 
     /** Create new instance
@@ -516,7 +610,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         , final Key<UJO3, UJO4> property3
         , final Key<UJO4, VALUE> property4
         ) {
-        return new PathProperty<UJO1, VALUE>(property1, property2, property3, property4);
+        return new PathProperty<UJO1, VALUE>(DEFAULT_SPACE, property1, property2, property3, property4);
     }
 
     /** Create new instance
@@ -524,7 +618,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... keys) {
-        return new PathProperty(keys);
+        return new PathProperty(DEFAULT_SPACE, keys);
     }
 
     /** {@inheritDoc} */
@@ -685,5 +779,4 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     public Criterion<UJO> forNone() {
         return Criterion.forNone(this);
     }
-
 }

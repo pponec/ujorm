@@ -9,9 +9,6 @@ package org.ujorm.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 import org.ujorm.MyTestCase;
 import org.ujorm.core.ujos.UjoCSV;
 
@@ -20,28 +17,28 @@ import org.ujorm.core.ujos.UjoCSV;
  * @author Pavel Ponec
  */
 public class UjoManagerRBundleTest extends MyTestCase {
-    
+
     protected UjoManagerRBundle<UjoCSV> manager;
     protected Object context;
     protected UjoCSV ujo;
     protected String header;
-    
-    
+
+
     public UjoManagerRBundleTest(String testName) {
         super(testName);
     }
-    
+
     private static Class suite() {
         return UjoManagerCSVTest.class;
     }
-    
+
     protected void setUp() throws Exception {
         manager = UjoManagerRBundle.getInstance(UjoCSV.class);
         context = "Bundle-Context";
         header  = "UJO Header";
         ujo = new UjoCSV();
     }
-    
+
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
@@ -55,16 +52,16 @@ public class UjoManagerRBundleTest extends MyTestCase {
         ByteArrayOutputStream out = createOS("F1");
         manager.saveResourceBundle(out, ujo, header, context);
         out.close();
-        
+
         ByteArrayInputStream is = createIS(out);
         UjoCSV ujo2 = manager.loadResourceBundle(is, true, context);
-        
+
         assertEquals(ujo, ujo2);
-        
+
         // PrintIt
         // System.out.print("-----\n" + out.toString("windows-1250") + "\n-----\n");
     }
-    
+
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
@@ -78,16 +75,16 @@ public class UjoManagerRBundleTest extends MyTestCase {
         ByteArrayOutputStream out = createOS("F1");
         manager.saveResourceBundle(out, ujo, header, context);
         out.close();
-        
+
         ByteArrayInputStream is = createIS(out);
         UjoCSV ujo2 = manager.loadResourceBundle(is, true, context);
-        
+
         assertEquals(ujo, ujo2);
-        
+
         // PrintIt
         System.out.print("-----\n" + out.toString("windows-1250") + "\n-----\n");
     }
-        
+
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
@@ -101,16 +98,16 @@ public class UjoManagerRBundleTest extends MyTestCase {
         ByteArrayOutputStream out = createOS("F1");
         manager.saveResourceBundle(out, ujo, header, context);
         out.close();
-        
+
         ByteArrayInputStream is = createIS(out);
         UjoCSV ujo2 = manager.loadResourceBundle(is, true, context);
-        
+
         assertEquals(ujo, ujo2);
-        
+
         // PrintIt
         // System.out.print("-----\n" + out.toString("windows-1250") + "\n-----\n");
     }
-    
+
     /**
      * Test of saveBundle method, of class org.ujorm.core.UjoManagerCSV.
      */
@@ -125,33 +122,33 @@ public class UjoManagerRBundleTest extends MyTestCase {
         ByteArrayOutputStream out = createOS("F1");
         manager.saveResourceBundle(out, ujo, header, context);
         out.close();
-        
+
         ByteArrayInputStream is = createIS(out);
         UjoCSV ujo2 = manager.loadResourceBundle(is, true, context);
         ujo2.setOnZeroManager(false);
-        
+
         assertEquals(ujo, ujo2);
-        
+
         // PrintIt
         System.out.print("-----\n" + out.toString("windows-1250") + "\n-----\n");
-    }    
-    
+    }
+
 
     // ----------------------------
-    
-    
+
+
     public ByteArrayOutputStream createOS(String file) {
         ByteArrayOutputStream result = new ByteArrayOutputStream(8000*1000);
         return result;
     }
-    
+
     public ByteArrayInputStream createIS(ByteArrayOutputStream data) {
         ByteArrayInputStream result = new ByteArrayInputStream(data.toByteArray());
         return result;
     }
-    
+
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-    
+
 }

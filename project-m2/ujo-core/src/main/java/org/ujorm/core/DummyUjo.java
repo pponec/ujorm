@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.core;
 
@@ -28,10 +28,10 @@ import org.ujorm.extensions.Property;
  * @author Pavel Ponec
  */
 final class DummyUjo implements Ujo {
-    
+
     public static final Key<DummyUjo,Object> P0 = Property.newInstance("A", Object.class, DummyUjo.class, Property.UNDEFINED_INDEX);
     public static final Key<DummyUjo,Object> P1 = Property.newInstance("B", Object.class, DummyUjo.class, Property.UNDEFINED_INDEX);
-    
+
     /** A dummy implementation. */
     @Override
     public void writeValue(Key property, Object value) {}
@@ -62,5 +62,5 @@ final class DummyUjo implements Ujo {
         return true;
     }
 
-    
+
 }
