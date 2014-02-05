@@ -57,12 +57,15 @@ public class MetaRelation2Many extends AbstractMetaModel {
     /** The property initialization */
     static{fa.lock();}
 
-
+    /** Table alias for a better performance, the resource is: {@code TABLE.of(this).getAlias()} */
+    private final String tableAlias;
+    
     public MetaRelation2Many() {
+        this.tableAlias = MetaTable.ALIAS.getDefault();
     }
 
     public MetaRelation2Many(MetaTable table, Key tableProperty, MetaRelation2Many param) {
-
+        this.tableAlias = table.getAlias();
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
@@ -96,26 +99,32 @@ public class MetaRelation2Many extends AbstractMetaModel {
     }
 
     /** Returns a column property */
-    final public Key getKey() {
+    public final Key getKey() {
         return TABLE_KEY.of(this);
     }
 
     /** Is it newer the composite Key */
-    final public boolean isCompositeKey() {
+    public final boolean isCompositeKey() {
         return false;
     }
 
     /** Returns true if the property type is a type or subtype of the parameter class. */
-    final public boolean isTypeOf(Class type) {
+    public final boolean isTypeOf(Class type) {
         return getKey().isTypeOf(type);
     }
 
-    final public MetaTable getTable() {
+    /** Returns a table model */
+    public final MetaTable getTable() {
         return TABLE.of(this);
     }
 
+    /** Returns an alias of the table model */
+    public final String getTableAlias() {
+        return tableAlias;
+    }
+
     /** Returns a class of column table. */
-    final public Class<OrmUjo> getTableClass() {
+    public final Class<OrmUjo> getTableClass() {
         final Class<OrmUjo> result = TABLE.of(this).getType();
         return result;
     }

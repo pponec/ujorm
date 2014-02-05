@@ -19,8 +19,8 @@ import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
@@ -33,24 +33,26 @@ public final class Customer extends OrmTable<Customer> {
     /** Unique key */
     @Column(pk = true)
     public static final Key<Customer, Long> ID = f.newKey();
-    /** Personal Numbr */
+    /** Personal Number */
     public static final Key<Customer, Integer> PIN = f.newKey();
     /** Firstname */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final Key<Customer, String> SURENAME = f.newKey();
-    /** Lastname */
+    public static final Key<Customer, String> FIRSTNAME = f.newKey();
+    /** Surename */
     @Column(length=50, uniqueIndex="idx_customer_full_name")
-    public static final Key<Customer, String> LASTNAME = f.newKey();
+    public static final Key<Customer, String> SURENAME = f.newKey();
     /** Date of creation */
     public static final Key<Customer, Date> CREATED = f.newKey();
+    /** A parent (father or mother ) */
+    public static final Key<Customer, Customer> PARENT = f.newKey();
 
     // Lock the Key factory
     static { f.lock(); }
 
     /** An optional method for a better performance.
-     * @return Return all direct Keys (An implementation from hhe Ujo API)
+     * @return Return all direct Keys (An implementation from the Ujo API)
      */
-    @Override 
+    @Override
     public KeyList<Customer> readKeys() {
         return f.getKeys();
     }

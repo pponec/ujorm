@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2013 Pavel Ponec
+ *  Copyright 2009-2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.ujorm.orm.bo;
 
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
@@ -27,20 +28,27 @@ import org.ujorm.orm.annot.Column;
  * @hidden
  */
 public class XCustomer extends OrmTable<XCustomer> {
+    private static KeyFactory<XCustomer> f = newFactory(XCustomer.class);
 
     /** Unique key */
     @Column(pk = true, converter=TypeService.class)
-    public static final Key<XCustomer, Long> ID = newKey();
-    /** Personal Numbr */
-    public static final Key<XCustomer, Integer> PIN = newKey();
-    /** Firstname */
+    public static final Key<XCustomer, Long> ID = f.newKey();
+    /** Personal Number */
+    public static final Key<XCustomer, Integer> PIN = f.newKey();
+    /** Surename */
     @Column(uniqueIndex="idx_xcustomer_full_name")
-    public static final Key<XCustomer, String> FIRSTNAME = newKey();
-    /** Lastanme */
+    public static final Key<XCustomer, String> FIRSTNAME = f.newKey();
+    /** Lastname */
     @Column(uniqueIndex="idx_xcustomer_full_name")
-    public static final Key<XCustomer, String> LASTNAME = newKey();
+    public static final Key<XCustomer, String> LASTNAME = f.newKey();
     /** Date of creation */
-    public static final Key<XCustomer, Date> CREATED = newKey();
+    public static final Key<XCustomer, Date> CREATED = f.newKey();
+    /** Date of creation */
+    public static final Key<XCustomer, XCustomer> SUPERIOR = f.newKey("superior");
+
+    static {
+        f.lock();
+    }
 
     // --- An optional implementation of commonly used setters and getters ---
     public Long getId() {

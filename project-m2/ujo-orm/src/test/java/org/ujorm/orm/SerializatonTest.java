@@ -1,12 +1,12 @@
 /*
  *  Copyright 2009-2010 pavel.
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ import org.ujorm.orm.bo.XOrder;
  * @author Pavel Ponec
  */
 public class SerializatonTest extends TestCase {
-    
+
     public SerializatonTest(String testName) {
         super(testName);
     }
@@ -65,29 +65,19 @@ public class SerializatonTest extends TestCase {
         assertSame(expResult.getNote(), result.getNote());
     }
 
-
     /** Object serialization */
     @SuppressWarnings("unchecked")
     private <T> T serialize(Serializable object) throws Exception {
-
-        ByteArrayOutputStream dataFile = new ByteArrayOutputStream(8000);
-
-        ObjectOutputStream encoder = null;
-        ObjectInputStream decoder = null;
-
-        encoder = new ObjectOutputStream(dataFile);
+        ByteArrayOutputStream os = new ByteArrayOutputStream(8000);
+        ObjectOutputStream encoder = new ObjectOutputStream(os);
         encoder.writeObject(object);
-        encoder.flush();
         encoder.close();
         //
-        InputStream is = new ByteArrayInputStream(dataFile.toByteArray());
-        decoder = new ObjectInputStream(is);
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
+        ObjectInputStream decoder = new ObjectInputStream(is);
         Object result = (Serializable) decoder.readObject();
         decoder.close();
 
         return (T) result;
     }
-
-
-
 }

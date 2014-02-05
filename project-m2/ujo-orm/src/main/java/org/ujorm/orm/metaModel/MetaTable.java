@@ -41,6 +41,7 @@ import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
 import org.ujorm.orm.annot.View;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
+import org.ujorm.orm.impl.TableWrapperImpl;
 import org.ujorm.orm.utility.OrmTools;
 
 
@@ -520,5 +521,12 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
      */
     public void clearReadOnly() {
         super.clearReadOnly(this.getDatabase().getOrmHandler());
+    }
+    
+    /** Add alias name to the new object */
+    public TableWrapper addAlias(final String alias) {
+        return alias != null
+             ? new TableWrapperImpl(this, alias)
+             : this ;
     }
 }

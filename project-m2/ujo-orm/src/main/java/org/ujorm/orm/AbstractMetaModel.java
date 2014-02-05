@@ -61,7 +61,6 @@ abstract public class AbstractMetaModel extends AbstractUjo {
         if (readOnly) return;
 
         for (Key p : readKeys()) {
-
             if (p instanceof ListKey) {
                final List list = (List) p.of(this);
                p.setValue(this, list!=null

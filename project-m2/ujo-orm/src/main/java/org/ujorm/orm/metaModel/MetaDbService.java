@@ -174,7 +174,7 @@ public class MetaDbService {
                     // create columns:
                     for (MetaColumn mc : MetaTable.COLUMNS.of(table)) {
 
-                        boolean exists = items.contains(MetaColumn.NAME.of(mc).toUpperCase());
+                        boolean exists = items.contains(mc.getName().toUpperCase());
                         if (!exists) {
                             LOGGER.log(INFO, "New DB column: " + mc.getFullName());
                             newColumns.add(mc);
@@ -296,7 +296,7 @@ public class MetaDbService {
                     if (table.isTable()) {
                         checkKeyWord(MetaTable.NAME.of(table), table, keywords);
                         for (MetaColumn column : MetaTable.COLUMNS.of(table)) {
-                            checkKeyWord(MetaColumn.NAME.of(column), table, keywords);
+                            checkKeyWord(column.getName(), table, keywords);
                         }
                     }
                 }
@@ -370,8 +370,7 @@ public class MetaDbService {
         for (MetaColumn column : foreignColumns) {
             if (column.isForeignKey()) {
                 sql.setLength(0);
-                MetaTable table = MetaColumn.TABLE.of(column);
-                db.getDialect().printForeignKey(column, table, sql);
+                db.getDialect().printForeignKey(column, sql);
                 executeUpdate(sql, column.getTable());
                 anyChange = true;
             }

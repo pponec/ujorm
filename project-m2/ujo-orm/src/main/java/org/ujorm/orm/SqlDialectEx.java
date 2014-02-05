@@ -76,7 +76,7 @@ public class SqlDialectEx {
         String overColumn = "";
         String separator = "";
         for (MetaColumn col : columns) {
-            String name = MetaColumn.NAME.of(col);
+            String name = col.getName();
             overColumn += separator;
             overColumn += name;
             separator = ",";
@@ -102,7 +102,7 @@ public class SqlDialectEx {
         String separator = "";
         for (MetaColumn column : columns) {
             out.append(separator);
-            dialect.printQuotedName(MetaColumn.NAME.of(column), out);
+            dialect.printQuotedName(column.getName(), out);
             separator = ",";
         }
         out.append(")");
