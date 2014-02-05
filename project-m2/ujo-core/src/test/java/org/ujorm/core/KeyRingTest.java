@@ -163,7 +163,7 @@ public class KeyRingTest extends TestCase {
     /**
      * Test of getType method, of class KeyRing.
      */
-    public void testKeySpaceName() throws Exception {
+    public void testKeyAliasName() throws Exception {
         CompositeKey<UjoName,?> cKey;
         KeyRing<UjoName> key1, key2;
 
@@ -209,7 +209,7 @@ public class KeyRingTest extends TestCase {
     /**
      * Test of getType method, of class KeyRing.
      */
-    public void testKeySpaceName2() throws Exception {
+    public void testKeyAliasName2() throws Exception {
         CompositeKey<UjoName,?> cKey;
         KeyRing<UjoName> key1, key2;
 

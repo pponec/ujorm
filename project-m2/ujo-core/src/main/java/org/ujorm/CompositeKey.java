@@ -34,7 +34,7 @@ import org.ujorm.validator.ValidationException;
 @SuppressWarnings("deprecation")
 public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
     /** Default name space have got the {@code null} value */
-    public static final String DEFAULT_SPACE = null;
+    public static final String DEFAULT_ALIAS = null;
 
     /** Get the first property of the current object. The result is direct property always. */
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey();
@@ -87,7 +87,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
      */
     public String getAlias(int level);
 
-    /** Returns the {@code true} if the composite key contains any name space */
-    public boolean isSpaceName();
+    /** Returns the {@code true} if the composite key contains any alias name */
+    public boolean hasAlias();
 
 }

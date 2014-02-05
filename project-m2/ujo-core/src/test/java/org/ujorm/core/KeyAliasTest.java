@@ -36,7 +36,7 @@ public class KeyAliasTest extends MyTestCase {
         keys1 = PersonExt.SUPERIOR.add(SUPERIOR);
         assertEquals(aliasN, keys1.getAlias(0));
         assertEquals(aliasN, keys1.getAlias(1));
-        assertFalse(keys1.isSpaceName());
+        assertFalse(keys1.hasAlias());
 
         //--
         String alias1 = "Alias1";
@@ -44,7 +44,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(2, keys2.getCompositeCount());
         assertEquals(aliasN, keys2.getAlias(0));
         assertEquals(alias1, keys2.getAlias(1));
-        assertTrue(keys2.isSpaceName());
+        assertTrue(keys2.hasAlias());
 
         //--
         String alias2 = "Alias2";
@@ -54,7 +54,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(aliasN, keys3.getAlias(0));
         assertEquals(alias2, keys3.getAlias(1));
         assertEquals(alias3, keys3.getAlias(2));
-        assertTrue(keys3.isSpaceName());
+        assertTrue(keys3.hasAlias());
 
         //--
         keys4 = (CompositeKey<PersonExt,PersonExt>) keys3.descending();
@@ -63,7 +63,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(alias2, keys4.getAlias(1));
         assertEquals(alias3, keys4.getAlias(2));
         assertFalse(keys4.isAscending());
-        assertTrue(keys4.isSpaceName());
+        assertTrue(keys4.hasAlias());
 
         //--
         keys5 = keys2.add(keys4);
@@ -74,7 +74,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(alias2, keys5.getAlias(3));
         assertEquals(alias3, keys5.getAlias(4));
         assertFalse(keys5.isAscending());
-        assertTrue(keys5.isSpaceName());
+        assertTrue(keys5.hasAlias());
     }
 
     /**
@@ -87,7 +87,7 @@ public class KeyAliasTest extends MyTestCase {
         keys1 = PersonExt.SUPERIOR.add(SUPERIOR);
         assertEquals(aliasN, keys1.getAlias(0));
         assertEquals(aliasN, keys1.getAlias(1));
-        assertFalse(keys1.isSpaceName());
+        assertFalse(keys1.hasAlias());
 
         //--
         String alias0 = "Alias0";
@@ -96,7 +96,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(2, keys2.getCompositeCount());
         assertEquals(alias0, keys2.getAlias(0));
         assertEquals(alias1, keys2.getAlias(1));
-        assertTrue(keys2.isSpaceName());
+        assertTrue(keys2.hasAlias());
 
         //--
         String alias2 = "Alias2";
@@ -106,7 +106,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(alias0, keys3.getAlias(0));
         assertEquals(alias2, keys3.getAlias(1));
         assertEquals(alias3, keys3.getAlias(2));
-        assertTrue(keys3.isSpaceName());
+        assertTrue(keys3.hasAlias());
 
         //--
         keys4 = (CompositeKey<PersonExt,PersonExt>) keys3.descending();
@@ -115,7 +115,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(alias2, keys4.getAlias(1));
         assertEquals(alias3, keys4.getAlias(2));
         assertFalse(keys4.isAscending());
-        assertTrue(keys4.isSpaceName());
+        assertTrue(keys4.hasAlias());
 
         //--
         keys5 = keys2.add(keys4);
@@ -126,7 +126,7 @@ public class KeyAliasTest extends MyTestCase {
         assertEquals(alias2, keys5.getAlias(3));
         assertEquals(alias3, keys5.getAlias(4));
         assertFalse(keys5.isAscending());
-        assertTrue(keys5.isSpaceName());
+        assertTrue(keys5.hasAlias());
     }
 
     public static void main(java.lang.String[] argList) {
