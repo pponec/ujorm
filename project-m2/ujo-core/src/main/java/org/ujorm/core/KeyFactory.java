@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -364,6 +365,30 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     /** Create new Key for a value type class */
     public <T> Key<UJO, T> newClassKey(String name, Class<?> defaultClassValue) {
         return createKey(name, (T) defaultClassValue, null);
+    }
+
+    /** Create a new CompositeKey with an alias name */
+    public <T> CompositeKey<UJO, T> newKeyAlias(String alias) {
+        final Key<UJO, T> result = newKey();
+        return result.alias(alias);
+    }
+
+    /** Create a new CompositeKey with an alias name */
+    public <T> CompositeKey<UJO, T> newKeyAlias(String name, String alias) {
+        final Key<UJO, T> result = newKey(name);
+        return result.alias(alias);
+    }
+
+    /** Create a new CompositeKey with an alias name */
+    public <T> CompositeKey<UJO, T> newKeyAlias(String name, String alias, Validator<T> validator) {
+        final Key<UJO, T> result = newKey(name, validator);
+        return result.alias(alias);
+    }
+
+    /** Create a new CompositeKey with an alias name */
+    public <T> CompositeKey<UJO, T> newKeyAlias(String alias, Validator<T> validator) {
+        final Key<UJO, T> result = newKey(validator);
+        return result.alias(alias);
     }
 
     /** Add new Key for a value type class, index must be undefied */

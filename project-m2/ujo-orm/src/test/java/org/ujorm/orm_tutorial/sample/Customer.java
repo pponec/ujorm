@@ -43,8 +43,8 @@ public final class Customer extends OrmTable<Customer> {
     public static final Key<Customer, String> SURENAME = f.newKey();
     /** Date of creation */
     public static final Key<Customer, Date> CREATED = f.newKey();
-    /** A parent (father or mother ) */
-    public static final Key<Customer, Customer> PARENT = f.newKey();
+    /** A parent (father or mother) with an alias name */
+    public static final Key<Customer, Customer> PARENT = f.newKeyAlias("parent");
 
     // Lock the Key factory
     static { f.lock(); }
