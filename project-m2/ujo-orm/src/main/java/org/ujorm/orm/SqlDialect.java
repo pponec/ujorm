@@ -159,18 +159,15 @@ abstract public class SqlDialect {
         }
     }
 
-    /** Print a full SQL column alias name by sample: TABLE_ALIAS.COLUMN */
+    /** Print a full SQL column alias name by sample: "TABLE_ALIAS"."ORIG_COLUMN" */
     public Appendable printColumnAlias(final ColumnWrapper column, final Appendable out) throws IOException {
-        final TableWrapper table = column.getTable();
-
-        printQuotedName(table.getAlias(), out);
+        printQuotedName(column.getTableAlias(), out);
         out.append('.');
-        printQuotedName(MetaColumn.NAME.of(column.getModel()), out);
-
+        printQuotedName(column.getName(), out);
         return out;
     }
 
-    /** Print a SQL sript to create table */
+    /** Print a SQL script to create table */
     public Appendable printTable(MetaTable table, Appendable out) throws IOException {
         out.append("CREATE TABLE ");
         printFullTableName(table, out);
@@ -189,12 +186,12 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print a SQL sript to add a new column to the table */
+    /** Print a SQL script to add a new column to the table */
     public Appendable printAlterTableAddColumn(MetaColumn column, Appendable out) throws IOException {
         return printAlterTableColumn(column, true, out);
     }
 
-    /** Print a SQL sript to add a new column to the table */
+    /** Print a SQL script to add a new column to the table */
     public Appendable printAlterTableColumn(MetaColumn column, boolean add, Appendable out) throws IOException {
         out.append("ALTER TABLE ");
         printFullTableName(column.getTable(), out);
@@ -240,7 +237,7 @@ abstract public class SqlDialect {
             out.append("ALTER TABLE ");
             printFullTableName(table, out);
             out.append(" ALTER COLUMN ");
-            printQuotedName(MetaColumn.NAME.of(column), out);
+            printQuotedName(column.getName(), out);
             out.append(" SET ");
             printDefaultValue(column, out);
         }
@@ -249,10 +246,11 @@ abstract public class SqlDialect {
 
     /**
      * Print foreign key for the parameter column
-     * @return More statements separated by the ';' charactes are enabled
+     * @return More statements separated by the ';' characters are enabled
      */
-    public Appendable printForeignKey(MetaColumn column, MetaTable table, Appendable out) throws IOException {
+    public Appendable printForeignKey(MetaColumn column, Appendable out) throws IOException {
 
+        MetaTable table = column.getTable();
         List<MetaColumn> fColumns = column.getForeignColumns();
         MetaTable foreignTable = fColumns.get(0).getTable();
         int columnsSize = fColumns.size();
@@ -276,7 +274,7 @@ abstract public class SqlDialect {
         for (MetaColumn fColumn : fColumns) {
             out.append(separator);
             separator = ", ";
-            printQuotedName(MetaColumn.NAME.of(fColumn), out);
+            printQuotedName(fColumn.getName(), out);
         }
 
         out.append(")");
@@ -286,7 +284,7 @@ abstract public class SqlDialect {
 
     /**
      * Print an INDEX for the parameter column.
-     * @return More statements separated by the ';' charactes are enabled
+     * @return More statements separated by the ';' characters are enabled
      */
     public Appendable printIndex(final MetaIndex index, final Appendable out) throws IOException {
 
@@ -302,7 +300,7 @@ abstract public class SqlDialect {
 
         for (MetaColumn column : MetaIndex.COLUMNS.of(index)) {
             out.append(separator);
-            printQuotedName(MetaColumn.NAME.of(column), out);
+            printQuotedName(column.getName(), out);
             separator = ", ";
         }
         out.append(')');
@@ -336,7 +334,7 @@ abstract public class SqlDialect {
      */
     public Appendable printColumnDeclaration(MetaColumn column, String aName, Appendable out) throws IOException {
 
-        String name = aName!=null ? aName : MetaColumn.NAME.of(column);
+        String name = aName!=null ? aName : column.getName();
         printQuotedName(name, out);
         out.append(' ');
         out.append(getColumnType(column));
@@ -427,11 +425,11 @@ abstract public class SqlDialect {
         return out;
     }
 
-    /** Print an batch SQL INSERT statement unsing SELECT UNION statejemnt.
+    /** Print an batch SQL INSERT statement using SELECT UNION statement.
      * @param bos Business object list
      * @param idxFrom Start index from list
      * @param idxTo Finished index from list (excluded)
-     * @param fromPhrase For example the Oracla syntax: SELECT 1,2,3 FROM DUAL;
+     * @param fromPhrase For example the Oracle syntax: SELECT 1,2,3 FROM DUAL;
      * @see #isMultiRowInsertSupported()
      */
     public Appendable printInsertBySelect(final List<? extends OrmUjo> bos, final int idxFrom, final int idxTo, final String fromPhrase, final Appendable out) throws IOException {
@@ -483,13 +481,13 @@ abstract public class SqlDialect {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i==0 ? "" :  ", ");
-            printQuotedName(MetaColumn.NAME.of(ormColumn), out);
+            printQuotedName(ormColumn.getName(), out);
             out.append("=?");
         }
         out.append("\n\tWHERE ");
 
         if (decoder.getTableCount() > 1) {
-            printQuotedName(MetaColumn.NAME.of(table.getFirstPK()), out);
+            printQuotedName(table.getFirstPK().getName(), out);
             out.append(" IN (");
             printSelectTableBase(createSubQuery(decoder), false, out);
             out.append(")");
@@ -511,7 +509,7 @@ abstract public class SqlDialect {
         out.append(" WHERE ");
 
         if (decoder.getTableCount() > 1) {
-            printQuotedName(MetaColumn.NAME.of(table.getFirstPK()), out);
+            printQuotedName(table.getFirstPK().getName(), out);
             out.append(" IN (");
             printSelectTableBase(createSubQuery(decoder), false, out);
             out.append(")");
@@ -607,7 +605,7 @@ abstract public class SqlDialect {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
                     if (select) {
-                        printQuotedName(wColumn.getTable().getAlias(), out);
+                        printQuotedName(wColumn.getTableAlias(), out);
                         out.append('.');
                     }
                     printQuotedName(column.getForeignColumnName(i), out);
@@ -622,7 +620,7 @@ abstract public class SqlDialect {
                 if (select) {
                     printColumnAlias(column, out);
                 } else {
-                    printQuotedName(MetaColumn.NAME.of(column), out);
+                    printQuotedName(column.getName(), out);
                 }
                 if (values != null) {
                     values.append(separator);
@@ -634,14 +632,15 @@ abstract public class SqlDialect {
     }
 
 
-    /** Print a <strong>conditon phrase</strong> from the criterion.
+    /** Print a <strong>condition phrase</strong> from the criterion.
      * @return A value criterion to assign into the SQL query.
      */
     public ValueCriterion printCriterion(ValueCriterion crit, Appendable out) throws IOException {
-        Operator operator = crit.getOperator();
-        Key property = crit.getLeftNode();
+        final Operator operator = crit.getOperator();
+        final Key property = crit.getLeftNode();
+        final ColumnWrapper column = property != null
+                ? AliasKey.getLastKey(property).getColumn(ormHandler) : null;
         Object right = crit.getRightNode();
-        MetaColumn column = ormHandler.findColumnModel(property);
 
         if (right==null ) {
             switch (operator) {
@@ -691,9 +690,9 @@ abstract public class SqlDialect {
 
     /**
      * Write a right value form criterion
-     * @return return {@code false} if no righ value was written.
+     * @return return {@code false} if no right value was written.
      */
-    protected ValueCriterion printCriterionValue(String template, MetaColumn column, ValueCriterion crit, Appendable out) throws IOException {
+    protected ValueCriterion printCriterionValue(String template, ColumnWrapper column, ValueCriterion crit, Appendable out) throws IOException {
         final Object right = crit.getRightNode();
         if (right instanceof Key) {
             final Key rightProperty = (Key) right;
@@ -705,7 +704,7 @@ abstract public class SqlDialect {
             if (true) {
                 // Better performance:
                 String f = MessageFormat.format(template, getAliasColumnName(column), getAliasColumnName(col2));
-                //String f=String.format(template, column.getAliasName(), col2.getAliasName());
+                //String f=String.format(template, column.getColumnAlias(), col2.getColumnAlias());
                 out.append(f);
             }
         } else if (right instanceof Object[]) {
@@ -717,7 +716,7 @@ abstract public class SqlDialect {
             String f = MessageFormat.format(template, getAliasColumnName(column), sb.toString());
             out.append(f);
             return crit;
-        } else if (column.isForeignKey()) {
+        } else if (column.getModel().isForeignKey()) {
             printForeignKey(crit, column, template, out);
             return crit;
         } else {
@@ -729,10 +728,11 @@ abstract public class SqlDialect {
     }
 
     /** Returns quoted column name including the alias table */
-    protected String getAliasColumnName(MetaColumn column) throws IOException {
-        final String aliasName = column.getAliasName();
-        final Appendable out = new StringBuilder(aliasName.length() + 2);
-        out.append(aliasName);
+    protected String getAliasColumnName(ColumnWrapper column) throws IOException {
+        final Appendable out = new StringBuilder(32);
+        printQuotedName(column.getTableAlias(), out);
+        out.append('.');
+        printQuotedName(column.getName(), out);
         return out.toString();
     }
 
@@ -753,7 +753,7 @@ abstract public class SqlDialect {
             }
 
             StringBuilder columnName = new StringBuilder(256);
-            String alias = column.getTable().getAlias();
+            String alias = column.getTableAlias();
             if (isFilled(alias)) {
                 printQuotedName(alias, columnName);
                 columnName.append('.');
@@ -1115,7 +1115,7 @@ abstract public class SqlDialect {
         out.append("COMMENT ON COLUMN ");
         printFullTableName(MetaColumn.TABLE.of(column), out);
         out.append('.');
-        out.append(MetaColumn.NAME.of(column));
+        out.append(column.getName());
         out.append(" IS '");
         escape(MetaColumn.COMMENT.of(column), out);
         out.append("'");

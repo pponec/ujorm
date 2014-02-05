@@ -53,5 +53,32 @@ public class TableWrapperImpl implements TableWrapper {
     public List<? extends ColumnWrapper> getColumns() {
         return columns;
     }
+    
+    /** Table model and alias must be the same */
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash +  this.table.hashCode();
+        hash = 71 * hash + (this.alias != null ? this.alias.hashCode() : 0);
+        return hash;
+    }
 
+    /** Table model and alias must be the same */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TableWrapperImpl)) {
+            return false;
+        }
+        final TableWrapperImpl other = (TableWrapperImpl) obj;
+        if (this.table != other.table) {
+            return false;
+        }
+        if (this.alias != other.alias
+        && (this.alias == null || !this.alias.equals(other.alias))
+        ){
+            return false;
+        }
+        return true;
+    }  
+    
 }

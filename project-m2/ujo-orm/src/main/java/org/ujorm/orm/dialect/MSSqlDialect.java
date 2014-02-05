@@ -83,7 +83,7 @@ public class MSSqlDialect extends SqlDialect {
                 throw new IllegalStateException("Primary key can not be changed: " + ormColumn);
             }
             out.append(i == 0 ? "" : ", ");
-            printQuotedName(MetaColumn.NAME.of(ormColumn), out);
+            printQuotedName(ormColumn.getName(), out);
             out.append("=?");
         }
         out.append("\n\tFROM ");
@@ -113,17 +113,15 @@ public class MSSqlDialect extends SqlDialect {
 
         out.append(table.getAlias());
         out.append('_');
-        out.append(MetaColumn.NAME.of(column));
+        out.append(column.getName());
 
         return out;
     }
 
     /** Print a full SQL column alias name by sample: o_<TABLE>_<ALIAS_COLUMN> - used for as order alias */
     public Appendable printColumnOrderAlias(final MetaColumn column, final Appendable out) throws IOException {
-        final MetaTable table = MetaColumn.TABLE.of(column);
-
         out.append("o_");
-        out.append(table.getAlias());
+        out.append(column.getTableAlias());
         out.append('_');
         out.append(MetaColumn.NAME.of(column));
 
@@ -139,7 +137,7 @@ public class MSSqlDialect extends SqlDialect {
                 for (int i = 0; i < column.getForeignColumns().size(); ++i) {
                     out.append(separator);
 
-                    printQuotedName(MetaColumn.TABLE.of(column).getAlias(), out);
+                    printQuotedName(column.getTableAlias(), out);
                     out.append('.');
                     printQuotedName(column.getForeignColumnName(i), out);
 
@@ -250,7 +248,7 @@ public class MSSqlDialect extends SqlDialect {
         List<Key> props = query.getOrderBy();
         for (int i = 0; i < props.size(); i++) {
             MetaColumn column = query.readOrderColumn(i);
-            String alias = column.getTable().getAlias();
+            String alias = column.getTableAlias();
             tables.put(alias, column.getTable());
         }
         if (query.getCriterion() != null) {

@@ -35,6 +35,7 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.Checks.*;
 import static org.ujorm.criterion.Operator.*;
+import static org.ujorm.orm_tutorial.sample.Customer.PARENT;
 
 /**
  * The tutorial in the class for the Ujorm <br/>
@@ -78,6 +79,7 @@ public class SampleORM {
             sample.useSelectItems_5b();
             sample.useSelectItems_6();
             sample.useSelectItems_7();
+            sample.useHierarchicalQuery();
             sample.useOptimizedSelect();
             sample.useOneRequestLoading();
             sample.useNativeCriterion();
@@ -466,6 +468,23 @@ public class SampleORM {
         assert items.size() > 0 : "The result have got two Items";
     }
 
+    /** Sample of a DB query with relations to yourself. */
+    public void useHierarchicalQuery() {
+        Criterion<Customer> crn1, crn2, crn3;
+        crn1 = Customer.PARENT.alias("parent1")
+          .add(Customer.PARENT).alias("parent2")
+          .add(Customer.SURENAME)
+          .whereEq("Smith");
+        crn2 = Customer.SURENAME.whereEq("Brown");
+        crn3 = crn1.and(crn2);
+
+        createHierarchicalCustomers("Smith", "Brown");
+        Customer customer = session.createQuery(crn3).uniqueResult();
+
+        assert customer != null : "The result have got the one customers";
+        assert Customer.SURENAME.equals(customer, "Brown") : "Wrong customer";
+    }
+
     /** Create a SELECT for the one column only
      * with no duplicate rows for a better performance.
      */
@@ -805,5 +824,29 @@ public class SampleORM {
             message = String.format(message, args);
         }
         logger.info(message);
+    }
+
+    /** Create the hierarchical data */
+    private void createHierarchicalCustomers(String superName, String currentName) {
+        if (!session.exists(Customer.SURENAME.whereEq(superName))) {
+            Customer c2 = new Customer();
+            Customer.SURENAME.setValue(c2, superName);
+            Customer.FIRSTNAME.setValue(c2, "John");
+            Customer.PARENT.setValue(c2, null);
+            //
+            Customer c1 = new Customer();
+            Customer.SURENAME.setValue(c1, superName + "-" + currentName);
+            Customer.FIRSTNAME.setValue(c1, "Jack");
+            Customer.PARENT.setValue(c1, c2);
+            //
+            Customer c0 = new Customer();
+            Customer.SURENAME.setValue(c0, currentName);
+            Customer.FIRSTNAME.setValue(c0, "Lucy");
+            Customer.PARENT.setValue(c0, c1);
+            //
+            session.save(c2);
+            session.save(c1);
+            session.save(c0);
+        }
     }
 }

@@ -25,11 +25,14 @@ import org.ujorm.orm.metaModel.MetaColumn;
  */
 public interface ColumnWrapper {
 
-    /** Returns a meta-tablemodel */
+    /** Returns an original meta-table model */
     public MetaColumn getModel();
 
-    /** Returns a unique table name in the one SQL statement. */
-    public TableWrapper getTable();
+    /** Returns an original column name */
+    public String getName();
+
+    /** Returns always the NonNull alias of the related database table */
+    public String getTableAlias();
 
     /** Returns an original key */
     public Key getKey();
@@ -37,7 +40,7 @@ public interface ColumnWrapper {
     /** Returns if key is type of {@link org.ujorm.CompositeKey} */
     public boolean isCompositeKey();
 
-    /** Method retuns the {@code true} value if two attribut Keys are the same */
+    /** Method returns the {@code true} value if two attributes Keys are the same */
     @Override
     public boolean equals(Object column);
 

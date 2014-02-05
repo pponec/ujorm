@@ -18,7 +18,6 @@ package org.ujorm.orm.impl;
 
 import org.ujorm.Key;
 import org.ujorm.orm.ColumnWrapper;
-import org.ujorm.orm.TableWrapper;
 import org.ujorm.orm.metaModel.MetaColumn;
 
 /**
@@ -28,11 +27,11 @@ import org.ujorm.orm.metaModel.MetaColumn;
 public class ColumnWrapperImpl implements ColumnWrapper {
 
     private MetaColumn column;
-    private TableWrapper table;
+    private String tableAlias;
     private Key key;
 
-    public ColumnWrapperImpl(MetaColumn column, TableWrapper table) {
-        this(column, table, column.getKey());
+    public ColumnWrapperImpl(MetaColumn column, String tableAlias) {
+        this(column, tableAlias, column.getKey());
     }
 
     public ColumnWrapperImpl(MetaColumn column, Key key) {
@@ -41,23 +40,30 @@ public class ColumnWrapperImpl implements ColumnWrapper {
 
     /**
      * Basic constructor
-     * @param column Mansatory column
+     * @param column Mandatory column
      * @param table Optional table
      * @param key Optional Key
      */
-    public ColumnWrapperImpl(MetaColumn column, TableWrapper table, Key key) {
+    public ColumnWrapperImpl(MetaColumn column, String tableAlias, Key key) {
         assert column!=null : "The MetaColumn must not be null";
         this.column = column;
-        this.table = table != null ? table : column.getTable();
+        this.tableAlias = tableAlias != null ? tableAlias : column.getTableAlias();
         this.key = key != null ? key : column.getKey();
     }
 
+    /** Returns an original column model */
     public MetaColumn getModel() {
         return column;
     }
 
-    public TableWrapper getTable() {
-        return table;
+    /** Returns an original colum name */
+    public String getName() {
+        return column.getName();
+    }
+
+    /** Returns always the NonNull alias of the related database table */
+    public String getTableAlias() {
+        return tableAlias;
     }
 
     /** Returns an original Key */
@@ -93,8 +99,5 @@ public class ColumnWrapperImpl implements ColumnWrapper {
     public String toString() {
         return key.toStringFull();
     }
-
-
-
 
 }

@@ -39,17 +39,18 @@ import org.ujorm.orm.TypeService;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.ao.UjoStatement;
+import org.ujorm.orm.impl.ColumnWrapperImpl;
 import org.ujorm.validator.ValidatorUtils;
 
 /**
- * Database column metadata
+ * Database column meta-data
  * @author Pavel Ponec
  * @composed 1 - * DbType
  */
 @Immutable
 public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper {
     private static final Class<MetaColumn> CLASS = MetaColumn.class;
-    
+
     /** A constant for an auto index name */
     public static final String AUTO_INDEX_NAME = "AUTO";
 
@@ -94,8 +95,8 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
      */
     private char typeCode;
     private boolean foreignKey;
-    /** Type converter. Value is Notnull allvays. */
-    final private ITypeService converter;
+    /** Type converter. Value is Notnull always. */
+    private final ITypeService converter;
 
 
     public MetaColumn() {
@@ -110,7 +111,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     public MetaColumn(MetaTable table, Key tableProperty, MetaColumn param) {
         super(table, tableProperty, param);
         this.foreignKey = isTypeOf(OrmUjo.class);
-        
+
         Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
@@ -136,7 +137,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
             changeDefault(this, CONSTRAINT_NAME, column.constraintName());
             changeDefault(this, CONVERTER  , column.converter());
         }
-        
+
         final Validator validator = tableProperty.getValidator();
         if (validator != null) {
             changeDefault(this, MANDATORY , ValidatorUtils.isMandatoryValidator(validator));
@@ -164,7 +165,6 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         if (MAX_LENGTH.isDefault(this)) {
             MetaTable.DATABASE.of(table).changeDbLength(this);
         }
-
     }
 
     /** It is a DB column (either a value of a foreign key),
@@ -261,14 +261,15 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns names of foreign columns.
-     * <br>TODO: Is a time to an optimalization ?
+     * <br>TODO: Is a time to an optimization ?
      */
     @SuppressWarnings("unchecked")
     private String[] getForeignColumnNames() {
         if (foreignNames==null) {
             if (isForeignKey()) {
                 List<MetaColumn> dbColumns = getForeignColumns();
-                final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1 ? NAME.of(this) : "", ", ");
+                final StringTokenizer tokenizer = new StringTokenizer(dbColumns.size()==1
+                        ? getName() : "", ", ");
 
                 ArrayList<String> fNames = new ArrayList<String>(dbColumns.size());
                 for (MetaColumn dbColumn : dbColumns) {
@@ -329,6 +330,11 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return TABLE_KEY.of(this).getType();
     }
 
+    /** Returns a column name */
+    public final String getName() {
+        return NAME.of(this);
+    }
+
     /** Returns a DB, TABLE and COLUMN name */
     public String getFullName() {
         try {
@@ -338,22 +344,21 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
                 .getDialect()
                 .printFullTableName(table, out);
             out.append('.');
-            out.append(MetaColumn.NAME.of(this));
+            out.append(getName());
             return out.toString();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    /** Returns an ALIAS of table and COLUMN name. */
-    public String getAliasName() {
+    /** Returns a full SQL column alias name by sample: "TABLE_ALIAS"."ORIG_COLUMN" */
+    public String getColumnAlias() {
         try {
             final String result = TABLE.of(this)
                 .getDatabase()
                 .getDialect()
                 .printColumnAlias(this, new StringBuilder(32))
-                .toString()
-                ;
+                .toString();
             return result;
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -362,11 +367,10 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
 
     /** Print a full 'alias' name of foreign column by index */
     public void printForeignColumnFullName(int index, Appendable out) throws IOException {
-        MetaTable table = TABLE.of(this);
         SqlDialect dialect = TABLE.of(this)
                 .getDatabase()
                 .getDialect();
-        dialect.printQuotedName(table.getAlias(), out);
+        dialect.printQuotedName(getTableAlias(), out);
         out.append('.');
         dialect.printQuotedName(getForeignColumnNames()[index], out);
     }
@@ -455,10 +459,20 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return converter.getDbTypeClass(this);
     }
 
-    /** Get ling to a column neta-model */
+    /** Get link to a column meta-model */
     @Override
     public MetaColumn getModel() {
         return this;
+    }
+
+    /** Create new object column for the new alias
+     * @param alias Nullable alias value
+     * @return New instance of ColumnWrapper for a different alias.
+     */
+    public final ColumnWrapper addTableAlias(final String alias) {
+        return alias != null
+             ? new ColumnWrapperImpl(this, alias)
+             : this ;
     }
 
 }

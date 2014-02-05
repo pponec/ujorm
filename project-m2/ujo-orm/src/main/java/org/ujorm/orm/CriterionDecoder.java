@@ -18,6 +18,7 @@ package org.ujorm.orm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class CriterionDecoder {
     final protected StringBuilder sql;
     final protected List<ValueCriterion> values;
     final protected List<ValueCriterion> nullValues;
-    final protected Set<MetaTable> tables;
+    final protected Set<TableWrapper> tables;
     final protected MetaTable baseTable;
     /** EFFECTIVA REQUEST: to enforce printing all Ujorm joined tables */
     final protected boolean printAllJoinedTables;
@@ -78,7 +79,7 @@ public class CriterionDecoder {
         this.sql = new StringBuilder(64);
         this.values = new ArrayList<ValueCriterion>();
         this.nullValues = new ArrayList<ValueCriterion>();
-        this.tables = new HashSet<MetaTable>();
+        this.tables = new HashSet<TableWrapper>();
         this.tables.add(baseTable);
         this.printAllJoinedTables = MetaParams.MORE_PARAMS.add(MoreParams.PRINT_All_JOINED_TABLES).of(handler.getParameters());
 
@@ -222,33 +223,34 @@ public class CriterionDecoder {
     /** Writer a relation conditions: */
     @SuppressWarnings("unchecked")
     protected void writeRelations() {
-        Key[] relations = getPropertyRelations();
+        Collection<AliasKey> relations = getPropertyRelations();
 
-        boolean parenthesis = sql.length()>0 && relations.length>0;
+        boolean parenthesis = sql.length() > 0
+                && !relations.isEmpty();
         if (parenthesis) {
             sql.append(" AND (");
         }
 
         boolean andOperator = false;
-        for (Key property : relations) try {
-            final MetaColumn fk1 = (MetaColumn) handler.findColumnModel(property, true);
-            final List<MetaColumn> pk2 = fk1.getForeignColumns();
-            final MetaTable tab2 = pk2.get(0).getTable();
+        for (AliasKey property : relations) try {
+            final ColumnWrapper fk1 = property.getColumn(handler);
+            final MetaTable tab1 = fk1.getModel().getTable();
+            final ColumnWrapper pk2 = fk1.getModel().getForeignColumns().get(0).addTableAlias(property.aliasTo);
+            final MetaTable tab2 = pk2.getModel().getTable();
             //
-            tables.add(MetaColumn.TABLE.of(fk1));
-            tables.add(tab2);
-
-            for (int i=fk1.getForeignColumns().size()-1; i>=0; i--) {
-
+            tables.add(tab1.addAlias(property.getAliasFrom()));
+            tables.add(tab2.addAlias(property.getAliasTo()));
+            
+            {// TODO: for all foreign columns:
                 if (andOperator) {
                     sql.append(" AND ");
                 } else {
-                    andOperator=true;
+                    andOperator = true;
                 }
 
-                fk1.printForeignColumnFullName(i, sql);
+                dialect.printColumnAlias(fk1, sql);
                 sql.append(" = ");
-                dialect.printColumnAlias(pk2.get(i), sql);
+                dialect.printColumnAlias(pk2, sql);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -261,41 +263,33 @@ public class CriterionDecoder {
 
     /** Returns the unique direct property relations. */
     @SuppressWarnings("unchecked")
-    protected Key[] getPropertyRelations() {
-        Set<Key> result = new HashSet<Key>();
-        ArrayList<Key> dirs = new ArrayList<Key>();
-        ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>(values.size() + nullValues.size());
+    protected Collection<AliasKey> getPropertyRelations() {
+        final Set<AliasKey> result = new HashSet<AliasKey>();
+        final ArrayList<ValueCriterion> allValues = new ArrayList<ValueCriterion>
+                ( values.size() 
+                + nullValues.size());
         allValues.addAll(values);
         allValues.addAll(nullValues);
 
         for (ValueCriterion value : allValues) {
             Key p1 = value.getLeftNode();
-            Object p2 = value.getRightNode();
-
             if (p1 != null) {
-                if (p1.isComposite()) {
-                    ((CompositeKey) p1).exportKeys(dirs);
-                    dirs.remove(dirs.size()-1); // remove the last direct property
-                }
+                AliasKey.addRelations(p1, result);
+                final Object p2 = value.getRightNode();
                 if (p2 instanceof CompositeKey) {
-                    ((CompositeKey) p2).exportKeys(dirs);
-                    dirs.remove(dirs.size()-1); // remove the last direct property
+                    AliasKey.addRelations((CompositeKey)p2, result);
                 }
             }
         }
 
         // Get relations from the 'order by':
-        if (orderBy!=null) {
+        if (orderBy != null) {
             for (Key p1 : orderBy) {
-                if (p1.isComposite()) {
-                    ((CompositeKey) p1).exportKeys(dirs);
-                    dirs.remove(dirs.size()-1); // remove the last direct property
-                }
+                AliasKey.addRelations((CompositeKey) p1, result);
             }
         }
 
-        result.addAll(dirs);
-        return result.toArray(new Key[result.size()]);
+        return result;
     }
 
     /** Get Base Table */
@@ -311,7 +305,7 @@ public class CriterionDecoder {
     /** Returns all participated tables include the parameter table. */
     public TableWrapper[] getTables() {
         if (printAllJoinedTables) {
-            Set<MetaTable> result = new HashSet<MetaTable>();
+            final Set<TableWrapper> result = new HashSet<TableWrapper>();
             result.addAll(tables);
 
             //EFFECTIVA REQUEST: TR-1771: to enforce printing Ujorm joined tables
@@ -322,11 +316,11 @@ public class CriterionDecoder {
                 Object o1 = value.getLeftNode();
                 Object o2 = value.getRightNode();
                 if (o1 instanceof Key) {
-                    MetaTable table = handler.findColumnModel((Key) o1).getTable();
+                    final MetaTable table = handler.findColumnModel((Key) o1).getTable();
                     result.add(table);
                 }
                 if (o2 instanceof Key) {
-                    MetaTable table = handler.findColumnModel((Key) o2).getTable();
+                    final MetaTable table = handler.findColumnModel((Key) o2).getTable();
                     result.add(table);
                 }
             }

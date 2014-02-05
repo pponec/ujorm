@@ -53,7 +53,8 @@ public class Database extends OrmTable<Database> {
     public static final RelationToMany<Database,ViewOrder> VIEW_ORDERS = newRelation();
 
     /** Customer */
-    @Table("ord_customer") public static final RelationToMany<Database,Customer> CUSTOMER = newRelation();
+    @Table("ord_customer")
+    public static final RelationToMany<Database,Customer> CUSTOMER = newRelation();
 
     // ----- STORED PROCEDURES --------
 

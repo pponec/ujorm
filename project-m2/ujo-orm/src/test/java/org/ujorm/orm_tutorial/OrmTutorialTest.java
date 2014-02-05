@@ -83,7 +83,6 @@ public class OrmTutorialTest extends TestCase {
 //        }
 //    }
 
-
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }

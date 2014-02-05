@@ -43,7 +43,7 @@ public class SqlNameProvider {
         String constName = "uq__" + MetaTable.NAME.of(table);
         for (MetaColumn column : columns) {
             constName += "__";
-            constName += MetaColumn.NAME.of(column);
+            constName += column.getName();
         }
         return constName;
     }
@@ -57,7 +57,7 @@ public class SqlNameProvider {
         String constName = "ix__" + MetaTable.NAME.of(table);
         for (MetaColumn column : columns) {
             constName += "__";
-            constName += MetaColumn.NAME.of(column);
+            constName += column.getName();
         }
         return constName;
     }

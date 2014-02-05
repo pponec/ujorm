@@ -536,11 +536,10 @@ public class MetaDbServiceEx extends MetaDbService {
                 messages.add(msg);
                 if (repairDB) {
                     StringBuilder sql = new StringBuilder();
-                    MetaTable table = mappedColumn.getTable();
-                    getDialect().printForeignKey(mappedColumn, table, sql);
+                    getDialect().printForeignKey(mappedColumn, sql);
                     msg = "  REPAIR: Adding foreign key '" + fkeyName + "' on column '" + columnName + "' in table '" + mappedTable.getAlias() + "' with SQL:\n" + sql;
                     LOGGER.log(INFO, msg);
-                    executeUpdate(sql, table);
+                    executeUpdate(sql, mappedColumn.getTable());
                 }
             }
         }
