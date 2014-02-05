@@ -35,7 +35,6 @@ import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.utility.OrmTools;
 import static org.ujorm.Checks.*;
 import static org.ujorm.criterion.Operator.*;
-import static org.ujorm.orm_tutorial.sample.Customer.PARENT;
 
 /**
  * The tutorial in the class for the Ujorm <br/>
@@ -80,6 +79,7 @@ public class SampleORM {
             sample.useSelectItems_6();
             sample.useSelectItems_7();
             sample.useHierarchicalQuery();
+            sample.useHierarchicalQuerySimple();
             sample.useOptimizedSelect();
             sample.useOneRequestLoading();
             sample.useNativeCriterion();
@@ -468,7 +468,10 @@ public class SampleORM {
         assert items.size() > 0 : "The result have got two Items";
     }
 
-    /** Sample of a DB query with relations to yourself. */
+    /** Sample for a DB query with relations to yourself.<br>
+     * All relations of the same entity must be marked by an unique alias name.
+     * @see Key#alias(java.lang.String) 
+     */
     public void useHierarchicalQuery() {
         Criterion<Customer> crn1, crn2, crn3;
         crn1 = Customer.PARENT.alias("parent1")
@@ -483,6 +486,19 @@ public class SampleORM {
 
         assert customer != null : "The result have got the one customers";
         assert Customer.SURENAME.equals(customer, "Brown") : "Wrong customer";
+    }
+
+    /**
+     * Simple hierarchical Query (to yourself) for the special case<br>
+     * where the relation {@link Customer#PARENT PARENT} is created by method {@link KeyFactory#newKeyAlias(java.lang.String)}
+     * and the request have got the <strong>first level</strong> of hierarchical relations only.
+     * @see org.ujorm.core.KeyFactory#newKeyAlias(java.lang.String)
+     */
+    public void useHierarchicalQuerySimple() {
+        Key<Customer, String> parentName = Customer.PARENT.add(Customer.SURENAME);
+        Customer customer = session.createQuery(parentName.whereEq("Smith")).uniqueResult();
+
+        assert customer != null : "The result have got the one customers";
     }
 
     /** Create a SELECT for the one column only

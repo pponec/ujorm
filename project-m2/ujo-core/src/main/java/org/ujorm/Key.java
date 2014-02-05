@@ -16,6 +16,7 @@
 
 package org.ujorm;
 
+import org.ujorm.core.KeyFactory;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.validator.ValidationException;
@@ -212,14 +213,15 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      */
     public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key);
     
-    /** Create new composite (indirect) instance with a required spaceName
+    /** Create new composite (indirect) instance with a required alias name
      * @param alias This attribute is used to distinguish the same entities
      * in different spaces. Examples of use are different alias for a table in SQL queries.
      * <br/>The attribute is not serializable in the current release.
      *
-     * @return
+     * @return An instance of the CompositeKey interface
      * @since 1.43
      * @see CompositeKey#getSpaceName(int)
+     * @see KeyFactory#newKeyAlias(java.lang.String) 
      */
     public CompositeKey<UJO, VALUE> alias(String alias);
 
