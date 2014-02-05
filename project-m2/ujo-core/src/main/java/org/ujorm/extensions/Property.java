@@ -393,16 +393,16 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key, String spaceName) {
-        return new PathListProperty(spaceName, (Key)this, key);
+    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key, String alias) {
+        return new PathProperty(alias, (Key)this, key);
     }
 
-    /** Create new composite (indirect) instance with a required space
+    /** Create new composite (indirect) instance with a required alias name
      * @since 1.43
      */
     @Override
-    public CompositeKey<UJO, VALUE> alias(String spaceName) {
-        return new PathProperty<UJO, VALUE>(spaceName, this);
+    public CompositeKey<UJO, VALUE> alias(String alias) {
+        return new PathProperty<UJO, VALUE>(alias, this);
     }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
