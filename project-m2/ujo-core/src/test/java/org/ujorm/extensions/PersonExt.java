@@ -28,6 +28,7 @@ import org.ujorm.implementation.map.MapUjoExt;
 public class PersonExt extends MapUjoExt<PersonExt> {
     
     public static final Key<PersonExt, Integer> ID = newKey("id");
+    public static final Key<PersonExt, PersonExt> SUPERIOR = newKey("superior");
     public static final ListKey<PersonExt, PersonExt> PERS = newListKey("person");
     
     static {

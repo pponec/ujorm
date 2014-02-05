@@ -43,7 +43,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     /** Property Separator character */
     public static final char PROPERTY_SEPARATOR = '.';
-    /** Unefined index value */
+    /** Undefined index value */
     public static final int UNDEFINED_INDEX = -1;
 
     /** Property name */
@@ -61,7 +61,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     private int index;
     /** Property type (class) */
     private Class<VALUE> type;
-    /** Doman type type (class) */
+    /** Domain type type (class) */
     private Class<UJO> domainType;
     /** Property default value */
     private VALUE defaultValue;
@@ -71,7 +71,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     private boolean lock;
 
 
-    /** A property seqeuncer for an index attribute
+    /** A property sequencer for an index attribute
      * @see #_nextSequence()
      */
     private static int _sequencer = Integer.MIN_VALUE;
@@ -179,7 +179,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     /** Method returns the {@code true} in case the {@link #PROPERTY_SEPARATOR}
-     * character is disabled in a prperty name.
+     * character is disabled in a property name.
      * The method can be overriden.
      * The {@code true} is a default value.
      */
@@ -381,18 +381,29 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> property) {
-        return PathProperty.newInstance((Key)this, property);
+    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> key) {
+        return PathProperty.newInstance((Key) this, key);
     }
 
     /** Create new composite (indirect) instance for an object type of ListKey.
      * @since 0.92
      */
-    @SuppressWarnings("unchecked")
-    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> property) {
-        return new PathListProperty((Key)this, property);
+    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key) {
+        return new PathListProperty<UJO, T>(PathProperty.DEFAULT_SPACE, (Key)this, key);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key, String spaceName) {
+        return new PathListProperty(spaceName, (Key)this, key);
+    }
+
+    /** Create new composite (indirect) instance with a required space
+     * @since 1.43
+     */
+    @Override
+    public CompositeKey<UJO, VALUE> alias(String spaceName) {
+        return new PathProperty<UJO, VALUE>(spaceName, this);
+    }
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     @Override
@@ -752,4 +763,4 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return Criterion.forNone(this);
     }
 
-    }
+}

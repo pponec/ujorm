@@ -39,8 +39,8 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
       extends PathProperty<UJO, List<VALUE>>
       implements ListKey<UJO, VALUE> {
 
-    public PathListProperty(List<Key> keys) {
-        super(keys);
+    public PathListProperty(String lastSpaceName, List<Key> keys) {
+        super(lastSpaceName, keys);
     }
 
     /** The main constructor. It is recommended to use the factory method
@@ -48,8 +48,8 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
      * for better performance in some cases.
      * @see #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)
      */
-    public PathListProperty(Key... keys) {
-        super(keys);
+    public PathListProperty(String lastSpaceName, Key... keys) {
+        super(lastSpaceName, keys);
     }
 
     /** Get the last property of the current object. The result may not be the direct property. */
@@ -116,6 +116,5 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
     private <T> T throwException() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Concatenation of the ListKey is not supported");
     }
-
 
 }

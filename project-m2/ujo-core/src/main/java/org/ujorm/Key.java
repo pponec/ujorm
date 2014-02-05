@@ -196,9 +196,32 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key);
 
     /** Create new composite (indirect) instance of the {@link  Key}.
+     * @param key The relation key
+     * @param alias This attribute is used to distinguish the same entities
+     * in different spaces. Examples of use are different alias for a table in SQL queries.
+     * <br/>The attribute is not serializable in the current release.
+     *
+     * @return
+     * @since 1.43
+     * @see CompositeKey#getSpaceName(int)
+     */
+    public <T> CompositeKey<UJO, T> add(Key<? super VALUE, T> key, String alias);
+
+    /** Create new composite (indirect) instance of the {@link  Key}.
      * @since 1.36
      */
     public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key);
+    
+    /** Create new composite (indirect) instance with a required spaceName
+     * @param alias This attribute is used to distinguish the same entities
+     * in different spaces. Examples of use are different alias for a table in SQL queries.
+     * <br/>The attribute is not serializable in the current release.
+     *
+     * @return
+     * @since 1.43
+     * @see CompositeKey#getSpaceName(int)
+     */
+    public CompositeKey<UJO, VALUE> alias(String alias);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(UJO from, UJO to);
@@ -219,7 +242,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     public String toStringFull();
 
     /**
-     * Returns the full name of the Key including all atributes. 
+     * Returns the full name of the Key including all atributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
      * @param extended argumenta false calls the method {@link #toStringFull()} only.
      * @return the full name of the Key including all atributes.

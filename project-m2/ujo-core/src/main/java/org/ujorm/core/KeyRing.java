@@ -1,12 +1,12 @@
 /*
  *  Copyright 2011-2013 Pavel Ponec
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.Ujo;
@@ -40,13 +41,17 @@ import org.ujorm.extensions.PathProperty;
 @Immutable
 @SuppressWarnings("deprecation")
 public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
+    static final long serialVersionUID = 20140128L;
 
-    static final long serialVersionUID = 1L;
     /** Property Separator */
     protected static final char PROPERTY_SEPARATOR = '.';
-    /** A text to mark a descending sort of a property in a deserializaton proccess. */
-    protected static final String DESCENDING_SYMBOL = "" + PROPERTY_SEPARATOR + PROPERTY_SEPARATOR;
-    /** The the domain class of reelated Keys. The value can be {@code null} if the Key array is empty. */
+    /** A text to mark a descending sort of a property in a de-serialization process. */
+    protected static final String DESCENDING_SYMBOL = ""
+            + PROPERTY_SEPARATOR
+            + PROPERTY_SEPARATOR
+            + PROPERTY_SEPARATOR
+            ;
+    /** The the domain class of related Keys. The value can be {@code null} if the Key array is empty. */
     private Class<UJO> type;
     /** Property size */
     private int size;
@@ -77,7 +82,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         this.size = keys.length;
     }
 
-    /** The the domain class of reelated Keys.
+    /** The the domain class of related Keys.
      * The value can be {@code null} if the Key array is empty. */
     public Class<UJO> getType() {
         if (type==null) {
@@ -107,7 +112,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
         if (throwException) {
             throwException(name, type, null);
-        } 
+        }
         return null;
     }
 
@@ -142,7 +147,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
         if (throwException) {
             throwException(name, ujo.getClass(), null);
-        } 
+        }
         return null;
     }
 
@@ -159,7 +164,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             return findDirectKey(names, throwException);
         }
 
-        Class ujoType = type;
+        Class ujoType = getType();
         int j, i = 0;
         List<Key> props = new ArrayList<Key>(8);
         names += ".";
@@ -188,7 +193,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             case 1:
                 return props.get(0);
             default:
-                return new PathProperty(props);
+                return new PathProperty(CompositeKey.DEFAULT_SPACE, props);
         }
     }
 
@@ -368,14 +373,16 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.writeObject(this.getType());
         out.writeObject(createPropertyNames());
+        out.writeObject(createAliasNames());
     }
 
-    /** Deserialization method */
-    @SuppressWarnings("unused")
+    /** De-serialization method */
+    @SuppressWarnings({"unused", "unchecked"})
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         this.type = (Class<UJO>) in.readObject();
         final String[] nameProperties = (String[]) in.readObject();
-        this.keys = restoreProperties(type, nameProperties);
+        final String[][] spaces = (String[][]) in.readObject();
+        this.keys = restoreProperties(type, nameProperties, spaces);
         this.size = keys.length;
     }
 
@@ -384,24 +391,49 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         final String[] nameProperties = new String[keys.length];
         for (int i = keys.length - 1; i >= 0; --i) {
             final Key property = keys[i];
-            nameProperties[i] = keys[i].isAscending() ? property.getName() : (property.getName() + DESCENDING_SYMBOL);
+            nameProperties[i] = keys[i].isAscending()
+                    ?  property.getName()
+                    : (property.getName() + DESCENDING_SYMBOL);
         }
         return nameProperties;
     }
 
+    /** Create a text Array for alias names */
+    private String[][] createAliasNames() {
+        final String[][] result = new String[keys.length][];
+        for (int i = keys.length - 1; i >= 0; --i) {
+            final Key property = keys[i];
+            if (property.isComposite()) {
+                final CompositeKey cKey = (CompositeKey) property;
+                if (cKey.isSpaceName()) {
+                    result[i] = new String[cKey.getCompositeCount()];
+                    for (int j = 0; j < cKey.getCompositeCount(); j++) {
+                        result[i][j] = cKey.getAlias(j);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     /** Create Keys */
-    private Key<UJO, ?>[] restoreProperties(Class type, String[] nameProperties) {
-        final KeyList propertyList = getUjoManager().readKeys(type);
-        final Key<UJO, ?>[] ps = new Key[nameProperties.length];
+    @SuppressWarnings("unchecked")
+    private Key<UJO, ?>[] restoreProperties(Class type, String[] nameProperties, String[][] spaces) {
+        final Key<UJO, ?>[] result = new Key[nameProperties.length];
+        final KeyList<?> propertyList = getUjoManager().readKeys(type);
+        List<Key<?,?>> keyList = null;
         for (int i = 0; i < nameProperties.length; i++) {
             final String pNameRaw = nameProperties[i];
             final boolean descending = pNameRaw.endsWith(DESCENDING_SYMBOL);
-            final String pName = descending ? pNameRaw.substring(0, pNameRaw.length() - DESCENDING_SYMBOL.length()) : pNameRaw;
+            final String pName = descending
+                    ? pNameRaw.substring(0, pNameRaw.length() - DESCENDING_SYMBOL.length())
+                    : pNameRaw;
             final Key property = propertyList.find(pName, true).descending(descending);
-            ps[i] = property;
+            result[i] = spaces[i] == null
+                    ? property
+                    : new PathProperty(property, spaces[i], property.isAscending());
         }
-        keys = ps;
-        return keys;
+        return result;
     }
 
     // -------------- STATIC METHOD(S) --------------
@@ -490,7 +522,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return result;
     }
 
-    /** Returns a domain type, 
+    /** Returns a domain type,
      * The result is not null always where an undefine value have got result the {@link Ujo}
      */
     private static Class<?> getDomainType(Key<?,?> key) {
@@ -505,5 +537,5 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         final String msg = String.format("The key '%s' of the class %s was not found", keyName, type);
         throw new IllegalArgumentException(msg, e);
     }
-    
+
 }

@@ -10,8 +10,10 @@ package org.ujorm.criterion;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import junit.framework.*;
 import org.ujorm.Key;
@@ -84,20 +86,11 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Serialization 1 */
-    public void testSerialization_1() throws IOException, ClassNotFoundException {
+    public void testSerialization_1() throws Exception {
         System.out.println("testSerialization_1: ");
 
         Criterion<Person> expected = Person.NAME.whereEq("Lucy");
-        Criterion<Person> result;
-
-        //
-        ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-        ObjectOutputStream encoder = new ObjectOutputStream(out);
-        encoder.writeObject(expected);
-        encoder.close();
-        //
-        ObjectInputStream inp = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
-        result = (Criterion) inp.readObject();
+        Criterion<Person> result = serialize(expected);
         //
         assertSame(expected.getLeftNode(), result.getLeftNode());
         assertSame(expected.getOperator(), result.getOperator());
@@ -110,19 +103,11 @@ public class CriterionTest extends MyTestCase {
     }
 
     /** Serialization 2 */
-    public void testSerialization_2() throws IOException, ClassNotFoundException {
+    public void testSerialization_2() throws Exception {
         System.out.println("testSerialization_2: ");
 
         Criterion<Person> expected = Person.NAME.whereEq(Person.ADDRESS);
-        Criterion<Person> result;
-        //
-        ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-        ObjectOutputStream encoder = new ObjectOutputStream(out);
-        encoder.writeObject(expected);
-        encoder.close();
-        //
-        ObjectInputStream inp = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
-        result = (Criterion) inp.readObject();
+        Criterion<Person> result = serialize(expected);
         //
         assertSame(expected.getLeftNode(), result.getLeftNode());
         assertSame(expected.getOperator(), result.getOperator());
@@ -137,19 +122,11 @@ public class CriterionTest extends MyTestCase {
 
 
     /** Serialization 3 */
-    public void testSerialization_3() throws IOException, ClassNotFoundException {
+    public void testSerialization_3() throws Exception {
         System.out.println("testSerialization_3: ");
 
         Criterion<Person> expected = Person.NAME.whereEq("Lucy").or(Person.NAME.whereEq(Person.ADDRESS));
-        Criterion<Person> result;
-        //
-        ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-        ObjectOutputStream encoder = new ObjectOutputStream(out);
-        encoder.writeObject(expected);
-        encoder.close();
-        //
-        ObjectInputStream inp = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
-        result = (Criterion) inp.readObject();
+        Criterion<Person> result = serialize(expected);
         //
         assertEquals(expected.getLeftNode().toString(), result.getLeftNode().toString());
         assertSame  (expected.getOperator(), result.getOperator());
@@ -185,6 +162,22 @@ public class CriterionTest extends MyTestCase {
         assertEquals(expected, crn3.toStringFull());
     }
 
+    /** Object serialization */
+    @SuppressWarnings("unchecked")
+    private <T extends Serializable> T serialize(T object) throws Exception {
+        ByteArrayOutputStream os = new ByteArrayOutputStream(8000);
+
+        ObjectOutputStream encoder = new ObjectOutputStream(os);
+        encoder.writeObject(object);
+        encoder.close();
+        //
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
+        ObjectInputStream decoder = new ObjectInputStream(is);
+        Object result = (Serializable) decoder.readObject();
+        decoder.close();
+
+        return (T) result;
+    }
 
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());

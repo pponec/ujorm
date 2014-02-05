@@ -16,7 +16,7 @@
 
 package org.ujorm;
 
-import java.util.List;
+import java.util.Collection;
 import org.ujorm.validator.ValidationException;
 
 /**
@@ -33,6 +33,8 @@ import org.ujorm.validator.ValidationException;
  */
 @SuppressWarnings("deprecation")
 public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
+    /** Default name space have got the {@code null} value */
+    public static final String DEFAULT_SPACE = null;
 
     /** Get the first property of the current object. The result is direct property always. */
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey();
@@ -41,7 +43,13 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey();
 
     /** Export all <string>direct</strong> keys to the list from parameter. */
-    public List<Key> exportKeys(List<Key> result);
+    public void exportKeys(Collection<Key<?,?>> result);
+
+    /** Returns a {@code directKey} for the required level.
+     * @param level Level no. 0 returns the {@link null} value always.
+     * @see #getCompositeCount()
+     */
+    public Key<?,?> getDirectKey(int level);
 
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
@@ -66,9 +74,20 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
     public Ujo getSemiValue(UJO ujo, boolean create);
 
     /** Returns a count of inner key items of this composite key
-     * @see #exportKeys(java.util.List)
+     * @see #exportKeys(java.util.Collection)
      */
     public int getCompositeCount();
 
+    /** Returns a {@code spaceName} for the required level.
+     * @param level Level no. 0 returns the {@link null} value always.
+     * @return The value is used to distinguish the same entities
+     * in different spaces. Examples of use are different alias for a table in SQL queries.
+     * <br/>The attribute is not serializable in the current Ujorm release.
+     * @see #getCompositeCount()
+     */
+    public String getAlias(int level);
+
+    /** Returns the {@code true} if the composite key contains any name space */
+    public boolean isSpaceName();
 
 }
