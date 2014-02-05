@@ -193,7 +193,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             case 1:
                 return props.get(0);
             default:
-                return new PathProperty(CompositeKey.DEFAULT_SPACE, props);
+                return new PathProperty(CompositeKey.DEFAULT_ALIAS, props);
         }
     }
 
@@ -405,7 +405,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             final Key property = keys[i];
             if (property.isComposite()) {
                 final CompositeKey cKey = (CompositeKey) property;
-                if (cKey.isSpaceName()) {
+                if (cKey.hasAlias()) {
                     result[i] = new String[cKey.getCompositeCount()];
                     for (int j = 0; j < cKey.getCompositeCount(); j++) {
                         result[i][j] = cKey.getAlias(j);

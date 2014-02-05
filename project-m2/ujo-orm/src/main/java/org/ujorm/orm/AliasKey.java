@@ -43,7 +43,7 @@ final public class AliasKey {
      * @param key Direct Key
      */
     public AliasKey(Key<?, ?> key) {
-        this(key, CompositeKey.DEFAULT_SPACE, CompositeKey.DEFAULT_SPACE);
+        this(key, CompositeKey.DEFAULT_ALIAS, CompositeKey.DEFAULT_ALIAS);
     }
 
     /**
@@ -182,7 +182,7 @@ final public class AliasKey {
     private static void addConditions(final CompositeKey<?,?> cKey, final int beg, final int end, final Collection<AliasKey> out) {
         String aliasFrom = beg > 0
                 ? cKey.getAlias(beg - 1)
-                : CompositeKey.DEFAULT_SPACE;
+                : CompositeKey.DEFAULT_ALIAS;
         for (int i = beg; i < end; i++) {
             final String aliasTo = cKey.getAlias(i);
             final Key<?, ?> directKey = cKey.getDirectKey(i);

@@ -389,7 +389,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
      * @since 0.92
      */
     public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key) {
-        return new PathListProperty<UJO, T>(PathProperty.DEFAULT_SPACE, (Key)this, key);
+        return new PathListProperty<UJO, T>(PathProperty.DEFAULT_ALIAS, (Key)this, key);
     }
 
     @SuppressWarnings("unchecked")
