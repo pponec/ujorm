@@ -79,7 +79,7 @@ public class SampleORM {
             sample.useSelectItems_6();
             sample.useSelectItems_7();
             sample.useHierarchicalQuery();
-            sample.useHierarchicalQuerySimple();
+         // sample.useHierarchicalQuerySimple();
             sample.useOptimizedSelect();
             sample.useOneRequestLoading();
             sample.useNativeCriterion();
@@ -489,6 +489,7 @@ public class SampleORM {
     }
 
     /**
+     * TODO: fix it<br/>
      * Simple hierarchical Query (to yourself) for the special case<br>
      * where the relation {@link Customer#PARENT PARENT} is created by method {@link KeyFactory#newKeyAlias(java.lang.String)}
      * and the request have got the <strong>first level</strong> of hierarchical relations only.
