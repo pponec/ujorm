@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
+import org.ujorm.Ujo;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.Immutable;
@@ -201,7 +202,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
         OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
-        for (Key property : ujoManager.readKeys(dbProperty.getItemType())) {
+        for (Key property : getUjoInstance(dbProperty).readKeys()) {
 
             if (!ujoManager.isTransientProperty(property)) {
 
@@ -528,5 +529,15 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return alias != null
              ? new TableWrapperImpl(this, alias)
              : this ;
+    }
+
+    /** Create a new instance from the argument */
+    private Ujo getUjoInstance(RelationToMany relation) {
+        try {
+            return (Ujo) relation.getItemType().newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("New instance failed for the argument: " 
+                    + relation.toStringFull(), e);
+        }
     }
 }
