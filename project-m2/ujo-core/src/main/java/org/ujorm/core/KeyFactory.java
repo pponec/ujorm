@@ -309,10 +309,21 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /** Find field */
-    private Field findField(Key p, List<Field> fields) throws Exception {
+    private Field findField(final Key p, final List<Field> fields) throws Exception {
         for (Field field : fields) {
             if (field.get(null) == p) {
                 return field;
+            }
+        }
+        // The case for a composite fields:
+        for (Field field : fields) {
+            final Object fk = field.get(null);
+            if (fk instanceof CompositeKey) {
+                final CompositeKey ck = (CompositeKey) fk;
+                if (ck.getCompositeCount() == 1
+                &&  ck.getFirstKey() == p) {
+                    return field;
+                }
             }
         }
         final String msg = String.format("Can't get a field for the property index #%d - %s.%s"
