@@ -956,6 +956,17 @@ public class UjoManager implements Comparator<Key> {
          getInstance().checkUniqueProperties(type, true);
     }
 
+    /** Create a new instance of the Ujo and initialize all static fields */
+    public static <T> T newInstance(Class<T> type) throws IllegalStateException {
+        try {
+            return Modifier.isAbstract(type.getModifiers())
+                 ? null
+                 : type.newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("New instance failed for the : " + type, e);
+        }
+    }
+
     /** Regurns information about current library. */
     public static String projectInfo() {
         final String URL = "http://ujorm.org/";

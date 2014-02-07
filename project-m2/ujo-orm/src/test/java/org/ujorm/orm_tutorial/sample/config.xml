@@ -119,14 +119,14 @@
                 <name>pin</name>
                 <dbType>INT</dbType>
             </column>
-            <column id="surename">
-                <name>surename</name>
+            <column id="firstname">
+                <name>firstname</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>
             </column>
-            <column id="lastname">
-                <name>lastname</name>
+            <column id="surename">
+                <name>surename</name>
                 <dbType>VARCHAR</dbType>
                 <maxLength>50</maxLength>
                 <uniqueIndex>idx_customer_full_name</uniqueIndex>

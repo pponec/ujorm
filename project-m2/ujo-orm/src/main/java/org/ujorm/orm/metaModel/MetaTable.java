@@ -121,10 +121,9 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
      * @param database Database for the table
      * @param dbProperty Configuration property
      * @param parTable Configuration data from a XML file
-
      */
     @SuppressWarnings({"unchecked", "LeakingThisInConstructor"})
-    public MetaTable(MetaDatabase database, RelationToMany dbProperty, MetaTable parTable) {
+    public MetaTable(MetaDatabase database, RelationToMany<?,?> dbProperty, MetaTable parTable) {
         sequencer = database.createSequencer(this);
         ID.setValue(this, dbProperty.getName());
         DATABASE.setValue(this, database);
@@ -202,7 +201,8 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
 
         OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
-        for (Key property : getUjoInstance(dbProperty).readKeys()) {
+        UjoManager.newInstance(dbProperty.getItemType()); // Initialize static Keys
+        for (Key property : ujoManager.readKeys(dbProperty.getItemType())) {
 
             if (!ujoManager.isTransientProperty(property)) {
 
@@ -529,15 +529,5 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return alias != null
              ? new TableWrapperImpl(this, alias)
              : this ;
-    }
-
-    /** Create a new instance from the argument */
-    private Ujo getUjoInstance(RelationToMany relation) {
-        try {
-            return (Ujo) relation.getItemType().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("New instance failed for the argument: " 
-                    + relation.toStringFull(), e);
-        }
     }
 }

@@ -79,7 +79,7 @@ public class SampleORM {
             sample.useSelectItems_6();
             sample.useSelectItems_7();
             sample.useHierarchicalQuery();
-         // sample.useHierarchicalQuerySimple();
+            sample.useHierarchicalQuerySimple();
             sample.useOptimizedSelect();
             sample.useOneRequestLoading();
             sample.useNativeCriterion();

@@ -122,6 +122,7 @@ final public class MetaProcedure extends AbstractMetaModel {
 
         // -----------------------------------------------
 
+        UjoManager.newInstance(dbProperty.getType());  // Initialize static Keys
         UjoManager ujoManager = UjoManager.getInstance();
         MetaTable table = new MetaTable(database, r2m, null);
 
