@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.*;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
@@ -500,6 +501,8 @@ public class SampleORM {
         Customer customer = session.createQuery(parentName.whereEq("Smith")).uniqueResult();
 
         assert customer != null : "The result have got the one customers";
+        assert Customer.PARENT instanceof CompositeKey : "The key is type of CompositeKey" + Customer.PARENT.getClass();
+        assert parentName.toStringFull().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
     }
 
     /** Create a SELECT for the one column only

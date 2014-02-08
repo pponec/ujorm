@@ -147,7 +147,7 @@ public class BeanManager<UJO,VALUE> {
 
     @Override
     public String toString() {
-        return property.toString();
+        return property.getName();
     }
 
     

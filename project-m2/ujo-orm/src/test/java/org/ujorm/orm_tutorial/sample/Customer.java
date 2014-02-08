@@ -44,7 +44,7 @@ public final class Customer extends OrmTable<Customer> {
     /** Date of creation */
     public static final Key<Customer, Date> CREATED = f.newKey();
     /** A parent (father or mother) with an alias called {@code "parent"} */
-    public static final Key<Customer, Customer> PARENT = f.newKeyAlias("parent");
+    public static final Key<Customer, Customer> PARENT = f.newKeyAlias("customerAlias");
 
     // Lock the Key factory
     static { f.lock(); }
