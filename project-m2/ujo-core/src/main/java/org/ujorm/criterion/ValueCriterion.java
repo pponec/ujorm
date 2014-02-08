@@ -113,7 +113,6 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
         return operator;
     }
 
-
     @SuppressWarnings({"unchecked", "fallthrough"})
     @Override
     public boolean evaluate(UJO ujo) {

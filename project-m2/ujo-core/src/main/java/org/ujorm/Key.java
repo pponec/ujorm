@@ -234,12 +234,13 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     @Override
     public int compareTo(Key p);
 
-    /** Returns the name of the Key without domain class.
-     * <br />Example: ID */
+    /** Returns the name of the Key without domain class.<br>
+     * If an implementation provides the attribut called 'alias', so the alias name name
+     * is showed after the name separated by the slashe pattern along the pattern: {@code RELATION[aliasName] }.
     @Override
     public String toString();
 
-    /** Returns the full name of the Key including a simple domain class.
+    /** Returns the full name of the Key including a simple domain class and aliases.
      * <br />Example: Person.ID */
     public String toStringFull();
 

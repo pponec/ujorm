@@ -25,7 +25,6 @@ import java.util.Map;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
-import org.ujorm.extensions.AbstractUjo;
 import org.ujorm.extensions.ListProperty;
 import org.ujorm.extensions.SuperAbstractUjo;
 

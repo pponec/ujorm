@@ -182,19 +182,36 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
             ;
     }
 
-    /** Full property name */
+    /** Full property names with no alias */
     final public String getName() {
-        if (name==null) {
-            StringBuilder result = new StringBuilder(32);
-            for (Key p : keys) {
-                if (result.length() > 0) {
-                    result.append('.');
-                }
-                result.append(p.getName());
-            }
-            name = result.toString();
+        if (name == null) {
+            name = getName(false);
         }
         return name;
+    }
+
+    /** Full property name with alias names, if any.
+     * @param alias A request to display an alias by the template: {@code PARENT[aliasName] }
+     * @return alias name
+     */
+    private String getName(boolean alias) {
+        final StringBuilder result = new StringBuilder(32);
+        for (int i = 0, max = keys.length; i < max; i++) {
+            final Key p = keys[i];
+            if (result.length() > 0) {
+                result.append('.');
+            }
+            result.append(p.getName());
+            if (alias) {
+                final String aliasName = getAlias(i);
+                if (aliasName != null) {
+                    result.append('[');
+                    result.append(aliasName);
+                    result.append(']');
+                }
+            }
+        }
+        return result.toString();
     }
 
     /** Property type */
@@ -345,7 +362,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     @Override
     public boolean equals(final Object property) {
         return property instanceof Key
-            && property.toString().equals(getName())
+            && property.toString().equals(toString())
             && getType().equals(((Key)property).getType())
             ;
     }
@@ -357,12 +374,12 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     @Override
     public String toString() {
-        return getName();
+        return getName(true);
     }
 
     @Override
     public String toStringFull() {
-        return getDomainType().getSimpleName() + '.' +  getName();
+        return getDomainType().getSimpleName() + '.' +  getName(true);
     }
 
     /**
@@ -508,7 +525,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Returns a {@code spaceName} for the required level.
      * Level no. 0 returns the {@link null} value always.
      */
-    public String getAlias(int level) {
+    public final String getAlias(int level) {
         return this.aliases == NO_ALIAS
             ? DEFAULT_ALIAS
             : this.aliases[level];
