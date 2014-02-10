@@ -16,6 +16,7 @@
 package org.ujorm.xsd.domains;
 
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.implementation.quick.QuickUjoMid;
@@ -27,6 +28,7 @@ import org.ujorm.implementation.quick.QuickUjoMid;
 public class Restriction extends QuickUjoMid<Restriction> {
     private static final KeyFactory<Restriction> f = newCamelFactory(Restriction.class);
 
+    public static final ListKey<Restriction, Enumeration> ENUMERATION = f.newListKey("xs:enumeration");
     public static final Key<Restriction, ComplexType> COMPLEX_TYPE = f.newKey("xs:complexType");
 
     @XmlAttribute

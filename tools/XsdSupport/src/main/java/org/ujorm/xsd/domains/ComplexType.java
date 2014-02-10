@@ -36,7 +36,23 @@ public class ComplexType extends QuickUjoMid<ComplexType> {
     // Lock the Key factory
     static { f.lock(); }
 
+    /** Set a complex type name */
+    public void setName(String name) {
+        NAME.setValue(this, name);
+    }
 
+    /** Add new Element */
+    public void addElement(String name, String type) {
+        Sequence sequence = get(SEQUENCE);
+        if (sequence == null) {
+            sequence = new Sequence();
+            set(SEQUENCE, sequence);
+        }
 
+        Element element = new Element();
+        element.set(Element.NAME, name);
+        element.set(Element.TYPE, type);
 
+        Sequence.ELEMENT.addItem(sequence, element);
+    }
 }

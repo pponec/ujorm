@@ -30,7 +30,7 @@ public class Element extends QuickUjoMid<Element> {
     public static final Key<Element, ComplexType> COMPLEX_TYPE = f.newKey("xs:complexType");
 
     @XmlAttribute
-    public static final Key<Element, String> TYPE = f.newKey("type");
+    public static final Key<Element, String> TYPE = f.newKey("type", "xs:string");
     @XmlAttribute
     public static final Key<Element, String> NAME = f.newKey("name");
 
@@ -38,7 +38,10 @@ public class Element extends QuickUjoMid<Element> {
     // Lock the Key factory
     static { f.lock(); }
 
-
-
+    /** Set name and type */
+    public void set(String name, String type) {
+        NAME.setValue(this, name);
+        TYPE.setValue(this, type);
+    }
 
 }
