@@ -67,6 +67,11 @@
             <artifactId>ujo-orm</artifactId>
             <version>1.43-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujo-core</artifactId>
+            <version>1.43-SNAPSHOT</version>
+        </dependency>
         
         <dependency>
             <groupId>junit</groupId>

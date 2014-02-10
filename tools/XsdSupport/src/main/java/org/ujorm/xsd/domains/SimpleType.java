@@ -36,6 +36,19 @@ public class SimpleType extends QuickUjoMid<SimpleType> {
     static { f.lock(); }
 
 
+    public void setName(String name) {
+        NAME.setValue(this, name);
+    }
 
+    public void addEnumerationValue(String enumValue) {
+        Restriction restriction = get(RESTRICTION);
+        if (restriction == null) {
+            restriction = new Restriction();
+            set(RESTRICTION, restriction);
+        }
 
+        Enumeration enumeration = new Enumeration();
+        enumeration.set(Enumeration.VALUE, enumValue);
+        Restriction.ENUMERATION.addItem(restriction, enumeration);
+    }
 }

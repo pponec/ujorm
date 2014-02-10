@@ -1,0 +1,137 @@
+<xs:schema attributeFormDefault="unqualified" 
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="body">
+
+        <xs:annotation>
+            <xs:documentation>The Ujorm configuration file release 1.43-SNAPSHOT was created 2014-02-09 15:34</xs:documentation>
+        </xs:annotation>
+
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="database">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded" minOccurs="0">
+                            <xs:element type="xs:string" name="schema"/>
+                            <xs:element type="xs:string" name="readOnly"/>
+                            <xs:element type="xs:string" name="dialect"/>
+                            <xs:element type="xs:string" name="jdbcUrl"/>
+                            <xs:element type="xs:string" name="jdbcDriver"/>
+                            <xs:element type="xs:string" name="user"/>
+                            <xs:element type="xs:string" name="sequencer"/>
+                            <xs:element type="xs:string" name="orm2ddlPolicy"/>
+                            <xs:element name="table">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="name"/>
+                                        <xs:element type="xs:string" name="alias"/>
+                                        <xs:element type="xs:string" name="schema"/>
+                                        <xs:element type="xs:string" name="readOnly"/>
+                                        <xs:element type="xs:string" name="orm2ddlPolicy"/>
+                                        <xs:element type="xs:string" name="sequence"/>
+                                        <xs:element type="xs:string" name="select"/>
+                                        <xs:element type="xs:string" name="comment"/>
+                                        <xs:element name="column" maxOccurs="unbounded" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="name"/>
+                                                    <xs:element type="xs:string" name="primaryKey"/>
+                                                    <xs:element type="xs:string" name="dbType"/>
+                                                    <xs:element type="xs:string" name="mandatory"/>
+                                                    <xs:element type="xs:short" name="maxLength"/>
+                                                    <xs:element type="xs:byte" name="precision"/>
+                                                    <xs:element type="xs:string" name="default"/>
+                                                    <xs:element type="xs:string" name="index"/>
+                                                    <xs:element type="xs:string" name="uniqueIndex"/>
+                                                    <xs:element type="xs:string" name="constraintName"/>
+                                                    <xs:element type="xs:string" name="converter"/>
+                                                    <xs:element type="xs:string" name="comment"/>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="id" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="relation2m" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="name"/>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="id"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="id" use="optional"/>
+                                    <xs:attribute type="xs:string" name="view" use="optional"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="procedure">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="name"/>
+                                        <xs:element type="xs:string" name="schema"/>
+                                        <xs:element name="parameter" maxOccurs="unbounded" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="name"/>
+                                                    <xs:element type="xs:string" name="primaryKey"/>
+                                                    <xs:element type="xs:string" name="dbType"/>
+                                                    <xs:element type="xs:string" name="mandatory"/>
+                                                    <xs:element type="xs:byte" name="maxLength"/>
+                                                    <xs:element type="xs:byte" name="precision"/>
+                                                    <xs:element type="xs:string" name="default"/>
+                                                    <xs:element type="xs:string" name="index"/>
+                                                    <xs:element type="xs:string" name="uniqueIndex"/>
+                                                    <xs:element type="xs:string" name="constraintName"/>
+                                                    <xs:element type="xs:string" name="converter"/>
+                                                    <xs:element type="xs:string" name="comment"/>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="id" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="id"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                        <xs:attribute type="xs:string" name="id"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="parameters">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="cachePolicy"/>
+                            <xs:element type="xs:string" name="tableAliasPrefix"/>
+                            <xs:element type="xs:string" name="tableAliasSuffix"/>
+                            <xs:element type="xs:byte" name="sequenceCache"/>
+                            <xs:element type="xs:string" name="lazyLoading"/>
+                            <xs:element type="xs:string" name="orm2ddlPolicy"/>
+                            <xs:element type="xs:string" name="commentPolicy"/>
+                            <xs:element type="xs:string" name="initializationBatch"/>
+                            <xs:element type="xs:string" name="typeService"/>
+                            <xs:element type="xs:string" name="metaDbService"/>
+                            <xs:element type="xs:string" name="sqlNameProvider"/>
+                            <xs:element type="xs:string" name="checkKeywords"/>
+                            <xs:element type="xs:short" name="maxItemCountForIN"/>
+                            <xs:element type="xs:string" name="sequenceSchemaSymbol"/>
+                            <xs:element type="xs:string" name="inheritanceMode"/>
+                            <xs:element type="xs:byte" name="insertMultirowItemLimit"/>
+                            <xs:element name="moreParams">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="DialectMySqlEngineType"/>
+                                        <xs:element type="xs:string" name="printAllJoinedTables"/>
+                                        <xs:element type="xs:string" name="enableToUnlockImmutableMeta-model"/>
+                                        <xs:element type="xs:string" name="extentedIndexNameStrategy"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="logMetamodelInfo"/>
+                            <xs:element type="xs:string" name="logSqlMultiInsert"/>
+                            <xs:element type="xs:string" name="logbackLoggingSupport"/>
+                            <xs:element type="xs:short" name="logValueLengthLimit"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
