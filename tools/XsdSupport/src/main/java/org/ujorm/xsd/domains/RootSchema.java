@@ -29,7 +29,7 @@ public class RootSchema extends QuickUjoMid<RootSchema> {
     private static final KeyFactory<RootSchema> f = newCamelFactory(RootSchema.class);
 
     public static final ListKey<RootSchema, SimpleType> SIMPLE_STYPE = f.newListKey("xs:simpleType");
-    public static final ListKey<RootSchema, ComplexType> COMPLEX_STYPE = f.newListKey("xs:complexType");
+    public static final ListKey<RootSchema, ComplexType> COMPLEX_TYPE = f.newListKey("xs:complexType");
     public static final Key<RootSchema, Element> ELEMENT = f.newKey("xs:element");
 
     // --- Attributes ---

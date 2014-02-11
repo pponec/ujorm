@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="customer1.xsd">
+
+   <title>MR</title>
+   <name>Pavel</name>
+   <age>35</age>
+
+</body>

@@ -18,28 +18,20 @@ package org.ujorm.xsd.domains;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.quick.QuickUjoMid;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class Element extends QuickUjoMid<Element> {
-    private static final KeyFactory<Element> f = newCamelFactory(Element.class);
+public class ElementList extends Element {
+    private static final KeyFactory<ElementList> f = newCamelFactory(ElementList.class);
 
-    public static final Key<Element, ComplexType> COMPLEX_TYPE = f.newKey("xs:complexType");
     @XmlAttribute
-    public static final Key<Element, String> NAME = f.newKey("name");
+    public static final Key<ElementList, Integer> MIN_OCCURS = f.newKey("minOccurs", 0);
     @XmlAttribute
-    public static final Key<Element, String> TYPE = f.newKey("type", "xs:string");
+    public static final Key<ElementList, String> MAX_OCCURS = f.newKey("maxOccurs", "unbounded");
 
     // Lock the Key factory
     static { f.lock(); }
-
-    /** Set name and type */
-    public void set(String name, String type) {
-        NAME.setValue(this, name);
-        TYPE.setValue(this, type);
-    }
 
 }
