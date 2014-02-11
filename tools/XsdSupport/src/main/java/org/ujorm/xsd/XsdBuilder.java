@@ -19,16 +19,18 @@ import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.extensions.StringWrapper;
-import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.xsd.domains.ComplexType;
 import org.ujorm.xsd.domains.Element;
 import org.ujorm.xsd.domains.RootSchema;
@@ -41,92 +43,118 @@ import org.ujorm.xsd.domains.SimpleType;
 public class XsdBuilder {
 
     /** XSD prefix */
-    private static final String XSD = "xsd:";
+    private static final String XSD = "xs:";
     private static final UjoManager manager = UjoManager.getInstance();
-    private final Ujo ujoRoot;
-    private final RootSchema schemaRoot = new RootSchema();
-    private Map<Class, String> map = new TreeMap<Class, String>();
 
-    public XsdBuilder(MetaRoot ujo) {
-        this.ujoRoot = ujo;
-        initTypes();
-        loadDataTypes(ujo.getClass());
-        saveDataTypes();
+    private final Class<? extends Ujo> rootClass;
+    private final RootSchema rootSchema = new RootSchema();
+    private final Map<Class, String> typeMap = new HashMap<Class, String>();
+    private final List<Class> typeList = new ArrayList<Class>();
+
+    public XsdBuilder(Class<? extends Ujo>  ujoClass) {
+        this.rootClass = ujoClass;
+        loadBaseTypes();
+        loadUjoType(rootClass);
+        buildMetaModel();
     }
 
     /** Init base types */
-    private void initTypes() {
-        map.put(String.class, XSD + "string");
-        map.put(Integer.class, XSD + "integer");
-        map.put(BigInteger.class, XSD + "integer");
-        map.put(Long.class, XSD + "long");
-        map.put(Short.class, XSD + "short");
-        map.put(BigDecimal.class, XSD + "decimal");
-        map.put(Float.class, XSD + "float");
-        map.put(Double.class, XSD + "double");
-        map.put(Boolean.class, XSD + "boolean");
-        map.put(Byte.class, XSD + "byte");
-        map.put(java.util.Date.class, XSD + "dateTime");
-        map.put(java.sql.Date.class, XSD + "date");
+    private void loadBaseTypes() {
+        typeMap.put(String.class, Element.TYPE.getDefault());
+        typeMap.put(Integer.class, XSD + "integer");
+        typeMap.put(BigInteger.class, XSD + "integer");
+        typeMap.put(Long.class, XSD + "long");
+        typeMap.put(Short.class, XSD + "short");
+        typeMap.put(BigDecimal.class, XSD + "decimal");
+        typeMap.put(Float.class, XSD + "float");
+        typeMap.put(Double.class, XSD + "double");
+        typeMap.put(Boolean.class, XSD + "boolean");
+        typeMap.put(Byte.class, XSD + "byte");
+        typeMap.put(java.util.Date.class, XSD + "dateTime");
+        typeMap.put(java.sql.Date.class, XSD + "date");
     }
 
-    /** Load data */
-    private void loadDataTypes(Class<?> ujoClass) {
-        if (map.containsKey(ujoClass)) {
+    /** Load type of persistent keys */
+    private void loadUjoType(Class<?> ujoClass) {
+        typeMap.put(ujoClass, ujoClass.getSimpleName());
+        typeList.add(ujoClass);
+
+        for (Key<?, ?> key : createUjo(ujoClass).readKeys()) {
+             assignKeyType(key);
+        }
+    }
+
+    /** Assign data type to the {@code typeMap} */
+    private void assignKeyType(Key<?, ?> key) {
+        if (manager.isTransientProperty(key)) {
             return;
         }
-        map.put(ujoClass, ujoClass.getSimpleName());
-        for (Key<?, ?> key : createUjo(ujoClass).readKeys()) {
-            if (!manager.isTransientProperty(key)) {
-                assignDataType(key);
+        final Class keyType = key instanceof ListKey
+                ? ((ListKey)key).getItemType()
+                :  key.getType();
+
+        if (!typeMap.containsKey(keyType)) {
+            if (Ujo.class.isInstance(keyType)) {
+                loadUjoType(keyType);
+            } else if (keyType.isEnum()) {
+                typeMap.put(keyType, keyType.getSimpleName());
+                typeList.add(keyType);
+            } else {
+                typeMap.put(keyType, Element.TYPE.getDefault());
             }
         }
     }
 
     /** Save data types */
-    private void saveDataTypes() {
+    private void buildMetaModel() {
         // Enumerators:
-        for (Class type : map.keySet()) {
+        for (Class type : typeList) {
             if (type.isEnum()) {
-                SimpleType simpleType = new SimpleType();
-                simpleType.setName(map.get(type));
-                
+                final SimpleType simpleType = new SimpleType();
+                RootSchema.SIMPLE_STYPE.addItem(rootSchema, simpleType);
+                simpleType.setName(typeMap.get(type));
+
                 for (Object enumItem : type.getEnumConstants()) {
-                    if (enumItem instanceof StringWrapper) {
-                        simpleType.addEnumerationValue(((StringWrapper)enumItem).exportToString());
-                    } else {
-                        simpleType.addEnumerationValue(((Enum)enumItem).name());
-                    }
+                    final String enumValue = enumItem instanceof StringWrapper
+                            ? ((StringWrapper)enumItem).exportToString()
+                            : ((Enum)enumItem).name() ;
+                    simpleType.addEnumerationValue(enumValue);
                 }
             }
         }
+
         // Ujo:
-        for (Class type : map.keySet()) {
+        for (Class type : typeMap.keySet()) {
             if (Ujo.class.isAssignableFrom(type)) {
                 ComplexType complexType = new ComplexType();
-                complexType.setName(map.get(complexType));
+                RootSchema.COMPLEX_TYPE.addItem(rootSchema, complexType);
+                complexType.setName(typeMap.get(type));
 
                 for (Key<?,?> key : createUjo(type).readKeys()) {
                     if (manager.isTransientProperty(key)) {
                         continue;
                     }
-                    complexType.addElement(key.getName(), map.get(key.getType()));
+                    final Class keyType = key instanceof ListKey
+                            ? ((ListKey)key).getItemType()
+                            : key.getType();
+                    complexType.addElement(key.getName(), typeMap.get(keyType));
                 }
             }
         }
 
         // The main element:
         Element mainElement = new Element();
-        mainElement.set("body", map.get(ujoRoot.getClass()));
-        RootSchema.ELEMENT.setValue(schemaRoot, mainElement);
+        mainElement.set("body", typeMap.get(rootClass));
+        RootSchema.ELEMENT.setValue(rootSchema, mainElement);
     }
 
     /** Print */
     public String print() {
         CharArrayWriter writer = new CharArrayWriter(256);
         try {
-            String xmlHeader = "";
-            UjoManagerXML.getInstance().saveXML(writer, schemaRoot, xmlHeader, schemaRoot);
+            final String xmlHeader = null;
+            final String rootElementName = XSD + "schema";
+            UjoManagerXML.getInstance().saveXML(writer, rootElementName, rootSchema, xmlHeader, rootSchema);
         } catch (IOException ex) {
             String msg = "Can't export model into XML";
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg, ex);
@@ -142,21 +170,4 @@ public class XsdBuilder {
             throw new IllegalStateException("Can't create instance for " + ujoClass, ex);
         }
     }
-
-    /** Assign data type */
-    private void assignDataType(Key<?, ?> key) {
-        final Class keyType = key.getType();
-        if (!map.containsKey(keyType)) {
-            if (Ujo.class.isInstance(keyType)) {
-                loadDataTypes(keyType);
-            }
-        } else
-        if (keyType.isEnum()) {
-           map.put(keyType, keyType.getSimpleName());
-        }
-        else {
-           map.put(keyType, map.get(String.class));
-        }
-    }
-
 }
