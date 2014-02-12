@@ -2,8 +2,8 @@
 <body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="customer.xsd">
 
+   <pid>100</pid>
    <title>MR</title>
    <name>Pavel</name>
-   <age>35</age>
 
 </body>

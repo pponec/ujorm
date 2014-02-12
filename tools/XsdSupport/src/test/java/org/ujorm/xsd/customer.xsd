@@ -11,9 +11,9 @@
 
     <xs:complexType name="Customer">
         <xs:sequence>
+            <xs:element name="pid" type="xs:int" minOccurs="0"></xs:element>
             <xs:element name="title" type="TitleEnum" minOccurs="0"></xs:element>
             <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
-            <xs:element name="age" type="xs:int" minOccurs="0"></xs:element>
         </xs:sequence>
     </xs:complexType>
 

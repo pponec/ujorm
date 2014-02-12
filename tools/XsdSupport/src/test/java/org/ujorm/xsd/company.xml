@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="company.xsd">
-    
+
     <name>Test Company</name>
 
     <director>
+        <pid>10</pid>
         <title>MR</title>
         <name>Test</name>
-        <age>30</age>
     </director>
 
     <employee>
+        <pid>20</pid>
         <title>MR</title>
         <name>Brown</name>
-        <age>20</age>
     </employee>
 
     <employee>
+        <pid>30</pid>
         <title>MR</title>
         <name>Brown</name>
-        <age>20</age>
     </employee>
 
 </body>
