@@ -17,6 +17,7 @@ package org.ujorm.xsd;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -24,8 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -38,7 +37,11 @@ import org.ujorm.xsd.domains.RootSchema;
 import org.ujorm.xsd.domains.SimpleType;
 
 /**
- *
+ * The class build XSD file according to Ujo object.<br/>
+ * Example of the use<br/>
+ * <pre class=pre>[@code
+ *    String xsd = new XsdBuilder(Company.class).print();
+ * }</pre>
  * @author Pavel Ponec
  */
 public class XsdBuilder {
@@ -157,13 +160,18 @@ public class XsdBuilder {
         CharArrayWriter writer = new CharArrayWriter(256);
         try {
             final String xmlHeader = null;
-            final String rootElementName = XSD + "schema";
-            UjoManagerXML.getInstance().saveXML(writer, rootElementName, rootSchema, xmlHeader, rootSchema);
+            print(xmlHeader, writer);
         } catch (IOException ex) {
             String msg = "Can't export model into XML";
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, msg, ex);
+            throw new IllegalStateException(msg, ex);
         }
         return writer.toString();
+    }
+
+    /** Print to writer */
+    public void print(String xmlHeader, Writer writer) throws IOException {
+        final String rootElementName = XSD + "schema";
+        UjoManagerXML.getInstance().saveXML(writer, rootElementName, rootSchema, xmlHeader, rootSchema);
     }
 
     /** Create new instance of Ujo */
