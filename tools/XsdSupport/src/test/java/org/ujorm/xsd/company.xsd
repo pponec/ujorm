@@ -8,7 +8,7 @@
             <xs:enumeration value="CHILD"></xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
-
+    
     <xs:complexType name="Customer">
         <xs:sequence>
             <xs:element name="title" type="TitleEnum" minOccurs="0"></xs:element>

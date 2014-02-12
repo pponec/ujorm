@@ -56,10 +56,20 @@ public class Element extends QuickUjoMid<Element> {
         set(MAX_OCCURS, list ? OCCURS_UNBOUNDED : null);
     }
 
+    /** Hide attribute {@link #MIN_OCCURS} */
+    public void hideMinOccurs(boolean hide) {
+        set(MIN_OCCURS, hide ? -1 : null);
+    }
+
     /** Do not print a default value of the key {@link #MAX_OCCURS}. */
     @Override
     @SuppressWarnings("unchecked")
     public boolean readAuthorization( final UjoAction action, final Key key, final Object value) {
-        return ! (key == MAX_OCCURS && key.isDefault(this) && action.getType() == ACTION_XML_EXPORT);
+        switch (action.getType()) {
+            case ACTION_XML_EXPORT:
+                return ! (key == MIN_OCCURS && ((Integer)value).intValue() < 0
+                         ||  key == MAX_OCCURS && key.isDefault(this));
+        }
+        return true;
     }
 }
