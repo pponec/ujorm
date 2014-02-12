@@ -16,7 +16,8 @@
 package org.ujorm.xsd;
 
 import junit.framework.TestCase;
-import org.ujorm.xsd.domains.Customer1;
+import org.ujorm.xsd.domains.Company;
+import org.ujorm.xsd.domains.Customer;
 
 /**
  * Test of the XSD Builder
@@ -31,11 +32,21 @@ public class XsdBuilderTest extends TestCase {
     /**
      * Test of print method, of class XsdBuilder.
      */
-    public void testBuild_1() {
-        System.out.println("testBuild_1");
-        XsdBuilder builder = new XsdBuilder(Customer1.class);
+    public void testBuildForCustomer() {
+        System.out.println("testBuildForCustomer");
+        XsdBuilder builder = new XsdBuilder(Customer.class);
         String result = builder.print();
         System.out.println("result:" + result);
-
     }
+
+    /**
+     * Test of print method, of class XsdBuilder.
+     */
+    public void testBuildForCompany() {
+        System.out.println("testBuildForCompany");
+        XsdBuilder builder = new XsdBuilder(Company.class);
+        String result = builder.print();
+        System.out.println("result:" + result);
+    }
+
 }

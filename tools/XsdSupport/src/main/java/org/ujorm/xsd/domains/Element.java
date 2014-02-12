@@ -16,9 +16,11 @@
 package org.ujorm.xsd.domains;
 
 import org.ujorm.Key;
+import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.implementation.quick.QuickUjoMid;
+import static org.ujorm.UjoAction.*;
 
 /**
  *
@@ -32,9 +34,16 @@ public class Element extends QuickUjoMid<Element> {
     public static final Key<Element, String> NAME = f.newKey("name");
     @XmlAttribute
     public static final Key<Element, String> TYPE = f.newKey("type", "xs:string");
+    @XmlAttribute
+    public static final Key<Element, Integer> MIN_OCCURS = f.newKey("minOccurs", 0);
+    @XmlAttribute
+    public static final Key<Element, String> MAX_OCCURS = f.newKey("maxOccurs", "");
 
     // Lock the Key factory
     static { f.lock(); }
+
+    /** Unbounded */
+    private static final String OCCURS_UNBOUNDED = "unbounded";
 
     /** Set name and type */
     public void set(String name, String type) {
@@ -42,4 +51,15 @@ public class Element extends QuickUjoMid<Element> {
         TYPE.setValue(this, type);
     }
 
+    /** Assign list type */
+    public void setList(boolean list) {
+        set(MAX_OCCURS, list ? OCCURS_UNBOUNDED : null);
+    }
+
+    /** Do not print a default value of the key {@link #MAX_OCCURS}. */
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean readAuthorization( final UjoAction action, final Key key, final Object value) {
+        return ! (key == MAX_OCCURS && key.isDefault(this) && action.getType() == ACTION_XML_EXPORT);
+    }
 }

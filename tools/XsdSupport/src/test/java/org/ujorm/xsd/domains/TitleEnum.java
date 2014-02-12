@@ -19,7 +19,7 @@ package org.ujorm.xsd.domains;
  *
  * @author Pavel Ponec
  */
-public enum TitleEnum1  {
+public enum TitleEnum  {
 
     MR,
     MRS,

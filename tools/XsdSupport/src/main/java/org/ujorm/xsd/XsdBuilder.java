@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ public class XsdBuilder {
     private final RootSchema rootSchema = new RootSchema();
     private final Map<Class, String> typeMap = new HashMap<Class, String>();
     private final List<Class> typeList = new ArrayList<Class>();
+    private final List<Class> enumList = new ArrayList<Class>();
 
     public XsdBuilder(Class<? extends Ujo>  ujoClass) {
         this.rootClass = ujoClass;
@@ -61,7 +63,7 @@ public class XsdBuilder {
     /** Init base types */
     private void loadBaseTypes() {
         typeMap.put(String.class, Element.TYPE.getDefault());
-        typeMap.put(Integer.class, XSD + "integer");
+        typeMap.put(Integer.class, XSD + "int");
         typeMap.put(BigInteger.class, XSD + "integer");
         typeMap.put(Long.class, XSD + "long");
         typeMap.put(Short.class, XSD + "short");
@@ -94,11 +96,11 @@ public class XsdBuilder {
                 :  key.getType();
 
         if (!typeMap.containsKey(keyType)) {
-            if (Ujo.class.isInstance(keyType)) {
+            if (Ujo.class.isAssignableFrom(keyType)) {
                 loadUjoType(keyType);
             } else if (keyType.isEnum()) {
                 typeMap.put(keyType, keyType.getSimpleName());
-                typeList.add(keyType);
+                enumList.add(keyType);
             } else {
                 typeMap.put(keyType, Element.TYPE.getDefault());
             }
@@ -107,38 +109,39 @@ public class XsdBuilder {
 
     /** Save data types */
     private void buildMetaModel() {
-        // Enumerators:
-        for (Class type : typeList) {
-            if (type.isEnum()) {
-                final SimpleType simpleType = new SimpleType();
-                RootSchema.SIMPLE_STYPE.addItem(rootSchema, simpleType);
-                simpleType.setName(typeMap.get(type));
+        // Reverse the order:
+        Collections.reverse(enumList);
+        Collections.reverse(typeList);
 
-                for (Object enumItem : type.getEnumConstants()) {
-                    final String enumValue = enumItem instanceof StringWrapper
-                            ? ((StringWrapper)enumItem).exportToString()
-                            : ((Enum)enumItem).name() ;
-                    simpleType.addEnumerationValue(enumValue);
-                }
+        // Enumerators:
+        for (Class type : enumList) {
+            final SimpleType simpleType = new SimpleType();
+            RootSchema.SIMPLE_STYPE.addItem(rootSchema, simpleType);
+            simpleType.setName(typeMap.get(type));
+
+            for (Object enumItem : type.getEnumConstants()) {
+                final String enumValue = enumItem instanceof StringWrapper
+                        ? ((StringWrapper)enumItem).exportToString()
+                        : ((Enum)enumItem).name() ;
+                simpleType.addEnumerationValue(enumValue);
             }
         }
 
-        // Ujo:
-        for (Class type : typeMap.keySet()) {
-            if (Ujo.class.isAssignableFrom(type)) {
-                ComplexType complexType = new ComplexType();
-                RootSchema.COMPLEX_TYPE.addItem(rootSchema, complexType);
-                complexType.setName(typeMap.get(type));
+        // Ujo types:
+        for (Class type : typeList) {
+            ComplexType complexType = new ComplexType();
+            RootSchema.COMPLEX_TYPE.addItem(rootSchema, complexType);
+            complexType.setName(typeMap.get(type));
 
-                for (Key<?,?> key : createUjo(type).readKeys()) {
-                    if (manager.isTransientProperty(key)) {
-                        continue;
-                    }
-                    final Class keyType = key instanceof ListKey
-                            ? ((ListKey)key).getItemType()
-                            : key.getType();
-                    complexType.addElement(key.getName(), typeMap.get(keyType));
+            for (Key<?,?> key : createUjo(type).readKeys()) {
+                if (manager.isTransientProperty(key)) {
+                    continue;
                 }
+                final boolean list = key instanceof ListKey;
+                final Class keyType = list
+                        ? ((ListKey)key).getItemType()
+                        : key.getType();
+                complexType.addElement(key.getName(), typeMap.get(keyType), list);
             }
         }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    
-    <xs:simpleType name="TitleEnum1">
+
+    <xs:simpleType name="TitleEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="MR"></xs:enumeration>
             <xs:enumeration value="MRS"></xs:enumeration>
@@ -9,13 +9,13 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="Customer1">
+    <xs:complexType name="Customer">
         <xs:sequence>
-            <xs:element name="title" type="TitleEnum1"></xs:element>
-            <xs:element name="name" type="xs:string"></xs:element>
-            <xs:element name="age" type="xs:integer"></xs:element>
+            <xs:element name="title" type="TitleEnum" minOccurs="0"></xs:element>
+            <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name="age" type="xs:int" minOccurs="0"></xs:element>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="body" type="Customer1"></xs:element>
+    <xs:element name="body" type="Customer"></xs:element>
 </xs:schema>
