@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2013 Pavel Ponec
+ *  Copyright 2007-2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.ujorm.extensions.UjoMiddle;
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujorm.implementation.quick.*;
- * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjo {
+ * <span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> SmartUjo&lt;Person&gt; {
  *
  *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,String &gt; NAME  = <span class="java-layer-method">newKey</span>();
  *    <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person,Boolean&gt; MALE  = <span class="java-layer-method">newKey</span>();
@@ -73,16 +73,9 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
 
     /** Get a not null result */
     @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, VALUE> List<VALUE> getItems(final ListKey<UJO, VALUE> key) {
+    final public <UJO extends UJO_IMPL, VALUE> List<VALUE> getList(final ListKey<UJO, VALUE> key) {
         return key.getList((UJO)this);
     }
-
-    /** Add an item to list */
-    @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, VALUE> boolean addItem(final ListKey<UJO, VALUE> key, final VALUE value) {
-        return key.addItem((UJO)this, value);
-    }
-
 
     /**
      * Returns a String value by a NULL context.

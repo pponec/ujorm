@@ -42,57 +42,18 @@ import org.ujorm.extensions.UjoMiddle;
  * @see UjoMiddle
  * @author Pavel Ponec
  * @composed 1 - * Property
+ * @deprecated  use the class {@link  SmartUjo} instead of.
  */
-abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid>
-    extends QuickUjo
-    implements UjoMiddle<UJO_IMPL>
-{
+@Deprecated
+abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid> extends SmartUjo<UJO_IMPL> {
 
     /** Constructor */
     public QuickUjoMid(Object[] aData) {
         super(aData);
     }
 
-    /** Constructor */
-    /** No parameters constuctor */
+    /** No parameters constructor */
     public QuickUjoMid() {
     }
-
-    /** Getter based on one Key */
-    @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
-        return property.of((UJO) this);
-    }
-
-    /** Setter  based on Key. Type of value is checked in the runtime. */
-    @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
-        property.setValue((UJO)this, value);
-        return this;
-    }
-
-    /**
-     * Returns a String value by a NULL context.
-     * otherwise method returns an instance of String.
-     *
-     * @param property A Property
-     * @return If property type is "container" then result is null.
-     */
-    public String getText(final Key property) {
-        return readUjoManager().getText(this, property, null);
-    }
-
-    /**
-     * Set value from a String format by a NULL context. Types Ujo, List, Object[] are not supported by default.
-     * <br>The method is an alias for a method writeValueString(...)
-     * @param property Property
-     * @param value String value
-     */
-    public void setText(final Key property, final String value) {
-        readUjoManager().setText(this, property, value, null, null);
-    }
-
-
-
 
 }
