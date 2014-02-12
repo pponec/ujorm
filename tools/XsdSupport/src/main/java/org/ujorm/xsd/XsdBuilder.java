@@ -148,6 +148,7 @@ public class XsdBuilder {
         // The main element:
         Element mainElement = new Element();
         mainElement.set("body", typeMap.get(rootClass));
+        mainElement.hideMinOccurs(true);
         RootSchema.ELEMENT.setValue(rootSchema, mainElement);
     }
 
