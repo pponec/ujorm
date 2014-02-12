@@ -42,7 +42,7 @@ public class ComplexType extends QuickUjoMid<ComplexType> {
     }
 
     /** Add new Element */
-    public void addElement(String name, String type) {
+    public void addElement(String name, String type, boolean list) {
         Sequence sequence = get(SEQUENCE);
         if (sequence == null) {
             sequence = new Sequence();
@@ -52,6 +52,7 @@ public class ComplexType extends QuickUjoMid<ComplexType> {
         Element element = new Element();
         element.set(Element.NAME, name);
         element.set(Element.TYPE, type);
+        element.setList(list);
 
         Sequence.ELEMENT.addItem(sequence, element);
     }

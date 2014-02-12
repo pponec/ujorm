@@ -16,20 +16,21 @@
 package org.ujorm.xsd.domains;
 
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.core.annot.XmlAttribute;
+import org.ujorm.implementation.quick.QuickUjoMid;
 
 /**
- *
+ * Company
  * @author Pavel Ponec
  */
-public class ElementList extends Element {
-    private static final KeyFactory<ElementList> f = newCamelFactory(ElementList.class);
+public class Company extends QuickUjoMid<Element> {
 
-    @XmlAttribute
-    public static final Key<ElementList, Integer> MIN_OCCURS = f.newKey("minOccurs", 0);
-    @XmlAttribute
-    public static final Key<ElementList, String> MAX_OCCURS = f.newKey("maxOccurs", "unbounded");
+    private static final KeyFactory<Company> f = newCamelFactory(Company.class);
+
+    public static final Key<Company, String> NAME = f.newKey();
+    public static final Key<Company, Customer> DIRECTOR = f.newKey();
+    public static final ListKey<Company, Customer> EMPLOYEE = f.newListKey();
 
     // Lock the Key factory
     static { f.lock(); }

@@ -23,13 +23,13 @@ import org.ujorm.implementation.quick.QuickUjoMid;
  *
  * @author Pavel Ponec
  */
-public class Customer1 extends QuickUjoMid<Element> {
+public class Customer extends QuickUjoMid<Element> {
 
-    private static final KeyFactory<Customer1> f = newCamelFactory(Customer1.class);
+    private static final KeyFactory<Customer> f = newCamelFactory(Customer.class);
 
-    public static final Key<Customer1, TitleEnum1> TITLE = f.newKey();
-    public static final Key<Customer1, String> NAME = f.newKey();
-    public static final Key<Customer1, Integer> AGE = f.newKey();
+    public static final Key<Customer, TitleEnum> TITLE = f.newKey();
+    public static final Key<Customer, String> NAME = f.newKey();
+    public static final Key<Customer, Integer> AGE = f.newKey();
 
     // Lock the Key factory
     static { f.lock(); }
