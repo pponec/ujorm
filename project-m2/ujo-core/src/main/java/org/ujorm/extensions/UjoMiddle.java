@@ -16,30 +16,32 @@
 
 package org.ujorm.extensions;
 
+import java.util.List;
 import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 
 /**
  * This is an <strong>middle extended Ujo</strong> interface designed for a more conventional property access evaluated by developers.
- * 
+ *
  *<br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
  *
  *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, String &gt; NAME = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Name</span><span class="java-string-literal">&quot;</span>, String.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Double &gt; CASH = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Cash</span><span class="java-string-literal">&quot;</span>, Double.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public</span> <span class="java-keywords">static final</span> Key&lt;Person, Person&gt; CHILD = newProperty(<span class="java-string-literal">&quot;</span><span class="java-string-literal">Child</span><span class="java-string-literal">&quot;</span>, Person.<span class="java-keywords">class</span>);
- *    
+ *
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;George&quot;</span>);
- *    String name = get(NAME);
- *    <span class="java-keywords">double</span> cash = get(CHILD, CASH);
+ *    String name = getList(NAME);
+ *    <span class="java-keywords">double</span> cash = getList(CHILD, CASH);
  *  }
  *}</pre>
  * @author Pavel Ponec
  * @since UJO release 0.85
  */
 public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
-    
+
     /** Getter based on one Key */
     public <UJO extends UJO_IMPL, VALUE> VALUE get
         ( Key<UJO, VALUE> key);
@@ -48,6 +50,9 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
     public <UJO extends UJO_IMPL, VALUE> Ujo set
         ( Key<UJO, VALUE> key
         , VALUE value);
+
+    /** Get a <strong>not null</strong> list result */
+    public <UJO extends UJO_IMPL, VALUE> List<VALUE> getList(final ListKey<UJO, VALUE> key);
 
     /**
      * Returns a String value by a NULL context.

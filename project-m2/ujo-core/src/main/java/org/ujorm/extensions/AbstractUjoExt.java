@@ -16,10 +16,10 @@
 
 package org.ujorm.extensions;
 
-import org.ujorm.ListKey;
 import java.util.List;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.ListKey;
+import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
@@ -29,11 +29,11 @@ import org.ujorm.swing.UjoPropertyRow;
  * This is a simple abstract implementation of Ujo. <br>
  * For implementation define only a "public static final Key" constants in a child class.
  * The code syntax is Java 1.5 complied.<br>
- * <br>Features: very simple implementaton and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
+ * <br>Features: very simple implementation and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * @author Pavel Ponec
  */
 public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstractUjo implements UjoExt<UJO_IMPL> {
-    
+
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get
@@ -47,7 +47,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
     public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
         ( final Key<UJO1, UJO2 > property1
         , final Key<UJO2, VALUE> property2) {
-        
+
         final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2);
         return get(path);    }
 
@@ -79,7 +79,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         , final Key<UJO2, VALUE> property2
         , final VALUE value
         ) {
-        
+
         final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2);
         set(path, value);
     }
@@ -93,12 +93,12 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         ) {
 
         final PathProperty<UJO1, VALUE> path = PathProperty.newInstance(property1, property2, property3);
-        set(path, value);    
+        set(path, value);
     }
 
     // ------ LIST ----------
-    
-    /** Returns a count of Items. If the property is null, method returns 0. 
+
+    /** Returns a count of Items. If the property is null, method returns 0.
      * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() internally.
      */
     @SuppressWarnings("unchecked")
@@ -107,7 +107,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         ) {
         return ((ListKey)property).getItemCount(this);
     }
-    
+
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.addItem(...) internally.
      */
@@ -132,7 +132,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         property.setItem((UJO)this, index, value);
         return (UJO_IMPL) this;
     }
-    
+
     /** Get Value
      * <br>Inside is called a method ListUjoPropertyCommon.getItem(...) internally.
      */
@@ -143,7 +143,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         ) {
         return (ITEM) ((ListKey)property).getItem(this, index);
     }
-    
+
 
     /**
      * Remove an item from the List by an index.
@@ -160,7 +160,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
     }
 
     /**
-     * Removes the first occurrence in this list of the specified element. 
+     * Removes the first occurrence in this list of the specified element.
      * @param property ListUjoPropertyCommon
      * @param item Item to remove
      * @return true if the list is not null and contains the specified element
@@ -173,8 +173,6 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         return ((ListKey)property).removeItem(this, item);
     }
 
-    
-
     /** Returns a not null List. If original list value is empty, the new List is created.
      * <br>Inside is called a method ListUjoPropertyCommon.getList() internally.
      */
@@ -184,7 +182,15 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         ) {
         return (LIST) ((ListKey)property).getList(this);
     }
-    
+
+    /** Returns a not null List. If original list value is empty, the new List is created.
+     * <br>Inside is called a method ListUjoPropertyCommon.getList() internally.
+     */
+    @SuppressWarnings("unchecked")
+    final public <UJO extends UJO_IMPL, ITEM> List<ITEM> getList(final ListKey<UJO,ITEM> key) {
+        return key.getList( (UJO) this);
+    }
+
     /** Indicates whether a parameter value "equal to" property default value. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> boolean isDefault
@@ -194,8 +200,8 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
     }
 
     // ----------- TEXT --------------
-    
-    
+
+
     /**
      * Returns a String value by a NULL context.
      * otherwise method returns an instance of String.
@@ -206,7 +212,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
     public String getText(final Key property) {
         return readUjoManager().getText(this, property, null);
     }
-    
+
     /**
      * Set value from a String format by a NULL context. Types Ujo, List, Object[] are not supported by default.
      * <br>The method is an alias for a method writeValueString(...)
@@ -215,16 +221,16 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      */
     public void setText(final Key property, final String value) {
         readUjoManager().setText(this, property, value, null, null);
-    }       
-    
-    
+    }
+
+
     // ------- UTILITIES BUT NO INTERFACE SUPPORT -------
-    
+
     /** Compare the property value with a parametrer value. The property value can be null.  */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> boolean equals(Key<UJO,VALUE> property, VALUE value) {
         return property.equals((UJO)this, value);
-    } 
+    }
 
     /**
      * Find a property by a "property name".
@@ -236,7 +242,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         final boolean throwException = true;
         return readKeys().findDirectKey(propertyName, throwException);
     }
-        
+
     /** Create a list of Key. */
     public List<UjoPropertyRow> createPropertyList() {
         return UjoManager.getInstance().createPropertyList(this, new UjoActionImpl(this));
@@ -258,11 +264,11 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
     public UJO_IMPL clone(final int depth, final Object context) {
         return (UJO_IMPL) super.clone(depth, context);
     }
-    
+
     /** Copy all attributes to the target */
     public void copyTo(Ujo target, Object context) {
         UjoManager.getInstance().copy(this, target, new UjoActionImpl(UjoAction.ACTION_COPY, context), (Key[]) null);
-    } 
+    }
 
     /** Copy selected attributes to the target */
     public void copyTo(Ujo target, Key... keys) {

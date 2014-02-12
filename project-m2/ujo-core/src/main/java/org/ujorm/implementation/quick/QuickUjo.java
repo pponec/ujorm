@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.implementation.quick;
 
@@ -41,7 +41,7 @@ import org.ujorm.extensions.Property;
  *        init(Person.<span class="java-keywords">class</span>);
  *    }
  * }</pre>
- * 
+ *
  * @see Property
  * @author Pavel Ponec
  * @composed 1 - * Property
@@ -50,7 +50,7 @@ public abstract class QuickUjo extends AbstractUjo {
 
     /** {@see Key#UNDEFINED_INDEX} */
     private static final int UNDEFINED_INDEX = -1;
-       
+
     /** Constructor */
     public QuickUjo() {
     }
@@ -59,7 +59,7 @@ public abstract class QuickUjo extends AbstractUjo {
     public QuickUjo(Object[] data) {
         super(data);
     }
-    
+
     // --------- STATIC METHODS -------------------
 
 
@@ -76,7 +76,6 @@ public abstract class QuickUjo extends AbstractUjo {
         return Property.newInstance(name, type, defaultValue, index, lock);
     }
 
-    
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
@@ -84,7 +83,7 @@ public abstract class QuickUjo extends AbstractUjo {
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name) {
         return newKey(name, null, null, UNDEFINED_INDEX, false);
     }
-    
+
     /** A Property Factory creates new property and assigns a next property index.
      * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
@@ -282,5 +281,5 @@ public abstract class QuickUjo extends AbstractUjo {
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty() {
         return ListProperty.newListProperty((String)null, null);
     }
- 
+
 }
