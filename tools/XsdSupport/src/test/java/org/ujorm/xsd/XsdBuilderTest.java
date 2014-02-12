@@ -16,6 +16,7 @@
 package org.ujorm.xsd;
 
 import junit.framework.TestCase;
+import org.ujorm.orm.metaModel.MetaRoot;
 import org.ujorm.xsd.domains.Company;
 import org.ujorm.xsd.domains.Customer;
 
@@ -48,5 +49,16 @@ public class XsdBuilderTest extends TestCase {
         String result = builder.print();
         System.out.println("result:" + result);
     }
+
+    /**
+     * Test of print method, of class XsdBuilder.
+     */
+    public void testOrmModel() {
+        System.out.println("testOrmModel");
+        XsdBuilder builder = new XsdBuilder(MetaRoot.class);
+        String result = builder.print();
+        System.out.println("result:" + result);
+    }
+
 
 }
