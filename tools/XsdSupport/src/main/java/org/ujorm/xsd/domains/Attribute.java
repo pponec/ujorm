@@ -17,19 +17,20 @@ package org.ujorm.xsd.domains;
 
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.implementation.quick.QuickUjoMid;
 
 /**
- *
+ * XSD attribute
  * @author Pavel Ponec
  */
-public class Customer extends QuickUjoMid<Element> {
+public class Attribute extends QuickUjoMid<Attribute> {
+    private static final KeyFactory<Attribute> f = newCamelFactory(Attribute.class);
 
-    private static final KeyFactory<Customer> f = newCamelFactory(Customer.class);
-
-    public static final Key<Customer, Integer> PID = f.newKey();
-    public static final Key<Customer, TitleEnum> TITLE = f.newKey();
-    public static final Key<Customer, String> NAME = f.newKey();
+    @XmlAttribute
+    public static final Key<Attribute, String> NAME = f.newKey("name");
+    @XmlAttribute
+    public static final Key<Attribute, String> TYPE = f.newKey("type", "xs:string");
 
     // Lock the Key factory
     static { f.lock(); }

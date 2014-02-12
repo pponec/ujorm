@@ -102,21 +102,20 @@
     </xs:complexType>
     <xs:complexType name="MetaProcedure">
         <xs:sequence>
-            <xs:element name="id" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="schema" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="parameter" type="MetaColumn" minOccurs="0" maxOccurs="unbounded"></xs:element>
         </xs:sequence>
+        <xs:attribute name="id" type="xs:string"></xs:attribute>
     </xs:complexType>
     <xs:complexType name="MetaRelation2Many">
         <xs:sequence>
-            <xs:element name="id" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
         </xs:sequence>
+        <xs:attribute name="id" type="xs:string"></xs:attribute>
     </xs:complexType>
     <xs:complexType name="MetaColumn">
         <xs:sequence>
-            <xs:element name="id" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="primaryKey" type="xs:boolean" minOccurs="0"></xs:element>
             <xs:element name="dbType" type="DbType" minOccurs="0"></xs:element>
@@ -130,26 +129,26 @@
             <xs:element name="converter" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="comment" type="xs:string" minOccurs="0"></xs:element>
         </xs:sequence>
+        <xs:attribute name="id" type="xs:string"></xs:attribute>
     </xs:complexType>
     <xs:complexType name="MetaTable">
         <xs:sequence>
-            <xs:element name="id" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="alias" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="schema" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="readOnly" type="xs:boolean" minOccurs="0"></xs:element>
             <xs:element name="orm2ddlPolicy" type="Orm2ddlPolicy" minOccurs="0"></xs:element>
             <xs:element name="sequence" type="xs:string" minOccurs="0"></xs:element>
-            <xs:element name="view" type="xs:boolean" minOccurs="0"></xs:element>
             <xs:element name="select" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="comment" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="column" type="MetaColumn" minOccurs="0" maxOccurs="unbounded"></xs:element>
             <xs:element name="relation2m" type="MetaRelation2Many" minOccurs="0" maxOccurs="unbounded"></xs:element>
         </xs:sequence>
+        <xs:attribute name="id" type="xs:string"></xs:attribute>
+        <xs:attribute name="view" type="xs:boolean"></xs:attribute>
     </xs:complexType>
     <xs:complexType name="MetaDatabase">
         <xs:sequence>
-            <xs:element name="id" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="schema" type="xs:string" minOccurs="0"></xs:element>
             <xs:element name="readOnly" type="xs:boolean" minOccurs="0"></xs:element>
             <xs:element name="dialect" type="xs:string" minOccurs="0"></xs:element>
@@ -163,6 +162,7 @@
             <xs:element name="table" type="MetaTable" minOccurs="0" maxOccurs="unbounded"></xs:element>
             <xs:element name="procedure" type="MetaProcedure" minOccurs="0" maxOccurs="unbounded"></xs:element>
         </xs:sequence>
+        <xs:attribute name="id" type="xs:string"></xs:attribute>
     </xs:complexType>
     <xs:complexType name="MetaRoot">
         <xs:sequence>

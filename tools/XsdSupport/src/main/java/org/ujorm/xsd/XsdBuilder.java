@@ -144,7 +144,11 @@ public class XsdBuilder {
                 final Class keyType = list
                         ? ((ListKey)key).getItemType()
                         : key.getType();
-                complexType.addElement(key.getName(), typeMap.get(keyType), list);
+                if (manager.isXmlAttribute(key)) {
+                   complexType.addAttribute(key.getName(), typeMap.get(keyType));
+                } else {
+                   complexType.addElement(key.getName(), typeMap.get(keyType), list);
+                }
             }
         }
 

@@ -16,6 +16,7 @@
 package org.ujorm.xsd.domains;
 
 import org.ujorm.Key;
+import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
 import org.ujorm.implementation.quick.QuickUjoMid;
@@ -27,11 +28,10 @@ import org.ujorm.implementation.quick.QuickUjoMid;
 public class ComplexType extends QuickUjoMid<ComplexType> {
     private static final KeyFactory<ComplexType> f = newCamelFactory(ComplexType.class);
 
-    public static final Key<ComplexType, Sequence> SEQUENCE = f.newKey("xs:sequence");
-
     @XmlAttribute
     public static final Key<ComplexType, String> NAME = f.newKey("name");
-
+    public static final Key<ComplexType, Sequence> SEQUENCE = f.newKey("xs:sequence");
+    public static final ListKey<ComplexType, Attribute> ATTRIBUTE = f.newListKey("xs:attribute");
 
     // Lock the Key factory
     static { f.lock(); }
@@ -55,5 +55,14 @@ public class ComplexType extends QuickUjoMid<ComplexType> {
         element.setList(list);
 
         Sequence.ELEMENT.addItem(sequence, element);
+    }
+
+    /** Add new Attribute */
+    public void addAttribute(String name, String type) {
+        Attribute attribute = new Attribute();
+        attribute.set(Attribute.NAME, name);
+        attribute.set(Attribute.TYPE, type);
+        ATTRIBUTE.addItem(this, attribute);
+
     }
 }
