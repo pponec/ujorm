@@ -7,22 +7,23 @@
  * and open the template in the editor.
  */
 
-package org.ujorm.implementation.quick;
+package org.ujorm.implementation.quick.domains;
 
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 
 /**
  * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
-public class QuickUjoCompany extends QuickUjoImpl {
+public class SmartUjoCompany extends SmartUjoImpl {
+    private static final KeyFactory<SmartUjoCompany> f = newFactory(SmartUjoCompany.class);
     
-    public static final Key<QuickUjoCompany, QuickUjoImplChild> DIRECTOR = newKey("director");
-
+    public static final Key<SmartUjoCompany, SmartUjoChild> DIRECTOR = f.newKey("director");
     
     // --- Mandatory initializaton ---
     static {
-        init(QuickUjoCompany.class);
+        f.lock();
     }
     
 }
