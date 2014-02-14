@@ -18,13 +18,13 @@ package org.ujorm.xsd.domains;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class SimpleType extends QuickUjoMid<SimpleType> {
+public class SimpleType extends SmartUjo<SimpleType> {
     private static final KeyFactory<SimpleType> f = newCamelFactory(SimpleType.class);
 
     public static final Key<SimpleType, Restriction> RESTRICTION = f.newKey("xs:restriction");

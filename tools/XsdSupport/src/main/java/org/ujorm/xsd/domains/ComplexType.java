@@ -19,13 +19,13 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class ComplexType extends QuickUjoMid<ComplexType> {
+public class ComplexType extends SmartUjo<ComplexType> {
     private static final KeyFactory<ComplexType> f = newCamelFactory(ComplexType.class);
 
     @XmlAttribute

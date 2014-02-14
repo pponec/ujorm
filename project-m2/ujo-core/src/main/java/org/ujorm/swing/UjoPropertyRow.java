@@ -22,7 +22,7 @@ import org.ujorm.UjoAction;
 import org.ujorm.core.UjoActionImpl;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.UjoTextable;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  * An implementation of TableModel for List of Ujo objects.
@@ -31,7 +31,7 @@ import org.ujorm.implementation.quick.QuickUjoMid;
  * @author Pavel Ponec
  */
 @SuppressWarnings("unchecked")
-public class UjoPropertyRow extends QuickUjoMid<UjoPropertyRow> {
+public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
     
     /** Index of property */
     public static final Key<UjoPropertyRow,Integer> P_INDEX   = newKey("Index");

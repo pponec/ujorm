@@ -18,13 +18,13 @@ package org.ujorm.criterion;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.extensions.PathProperty;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class Person extends QuickUjoMid<Person> {
+public class Person extends SmartUjo<Person> {
 
     protected static final KeyFactory<Person> f = KeyFactory.Builder.get(Person.class);
 

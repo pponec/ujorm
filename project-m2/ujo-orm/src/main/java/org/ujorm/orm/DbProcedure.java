@@ -20,14 +20,14 @@ package org.ujorm.orm;
 import org.ujorm.Key;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 import org.ujorm.orm.metaModel.MetaProcedure;
 
 /**
  * Abstract database procedure.
  * @author Ponec
  */
-abstract public class DbProcedure<UJO extends DbProcedure> extends QuickUjoMid<UJO> {
+abstract public class DbProcedure<UJO extends DbProcedure> extends SmartUjo<UJO> {
 
     /** Meta - model */
     transient protected MetaProcedure metaProcedure = null;

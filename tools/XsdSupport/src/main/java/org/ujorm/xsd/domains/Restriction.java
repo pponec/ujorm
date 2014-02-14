@@ -19,13 +19,13 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class Restriction extends QuickUjoMid<Restriction> {
+public class Restriction extends SmartUjo<Restriction> {
     private static final KeyFactory<Restriction> f = newCamelFactory(Restriction.class);
 
     public static final ListKey<Restriction, Enumeration> ENUMERATION = f.newListKey("xs:enumeration");

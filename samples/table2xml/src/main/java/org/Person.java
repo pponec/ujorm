@@ -1,9 +1,9 @@
 package org;
 import org.ujorm.*;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /** Person BO */
-public class Person extends QuickUjoMid<Person> {
+public class Person extends SmartUjo<Person> {
 
   public static final Key<Person,Integer> ID        = newKey("ID");
   public static final Key<Person,String>  FIRSTNAME = newKey("FirstName");

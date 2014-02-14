@@ -1,8 +1,8 @@
 package org;
-import javax.swing.*;
-import java.util.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.*;
+import javax.swing.*;
 import org.ujorm.core.UjoManagerXML;
 import org.ujorm.swing.UjoTableModel;
 import static org.Company.*;

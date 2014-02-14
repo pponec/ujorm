@@ -18,13 +18,13 @@ package org.ujorm.xsd.domains;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class Enumeration extends QuickUjoMid<Enumeration> {
+public class Enumeration extends SmartUjo<Enumeration> {
     private static final KeyFactory<Enumeration> f = newCamelFactory(Enumeration.class);
 
     @XmlAttribute

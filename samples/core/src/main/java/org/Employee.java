@@ -16,10 +16,10 @@
 package org;
 
 import org.ujorm.Key;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /** Simple Employee domain class */
-public class Employee extends QuickUjoMid<Employee> {
+public class Employee extends SmartUjo<Employee> {
 
     /** Unique key */
     public static final Key<Employee, Long> ID = newKey("id");
