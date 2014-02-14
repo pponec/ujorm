@@ -17,12 +17,12 @@ package org.ujorm.ujo_core;
 
 import java.util.Date;
 import org.ujorm.Key;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  * Simple Company domain class.
  */
-public class Company extends QuickUjoMid<Company> {
+public class Company extends SmartUjo<Company> {
 
     /** The Primary Key */
     public static final Key<Company, Long> ID = newProperty("id", Long.class);

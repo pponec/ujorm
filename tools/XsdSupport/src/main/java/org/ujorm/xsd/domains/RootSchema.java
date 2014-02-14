@@ -19,13 +19,13 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class RootSchema extends QuickUjoMid<RootSchema> {
+public class RootSchema extends SmartUjo<RootSchema> {
     private static final KeyFactory<RootSchema> f = newCamelFactory(RootSchema.class);
 
     public static final ListKey<RootSchema, SimpleType> SIMPLE_STYPE = f.newListKey("xs:simpleType");

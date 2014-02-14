@@ -17,13 +17,13 @@ package org.ujorm.xsd.domains;
 
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  *
  * @author Pavel Ponec
  */
-public class Sequence extends QuickUjoMid<Sequence> {
+public class Sequence extends SmartUjo<Sequence> {
     private static final KeyFactory<Sequence> f = newCamelFactory(Sequence.class);
 
     public static final ListKey<Sequence, Element> ELEMENT = f.newListKey("xs:element");

@@ -16,11 +16,11 @@
 
 package org;
 
-import org.ujorm.Ujo;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.criterion.*;
 import static org.Company.CITY;

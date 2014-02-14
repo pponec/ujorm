@@ -11,13 +11,13 @@ package org.ujorm.core.ujos;
 
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.quick.QuickUjoMid;
+import org.ujorm.implementation.quick.SmartUjo;
 
 /**
  * UjoCSV
  * @author Pavel Ponec
  */
-public class UjoName extends QuickUjoMid<UjoName> {
+public class UjoName extends SmartUjo<UjoName> {
 
     private static final KeyFactory<UjoName> f = newFactory(UjoName.class);
 
