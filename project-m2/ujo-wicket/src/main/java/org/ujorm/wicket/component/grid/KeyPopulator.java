@@ -86,7 +86,7 @@ public class KeyPopulator<UJO extends Ujo,T> implements ICellPopulator<UJO>, ICo
     
     @Override
     public Component getHeader(String componentId) {
-        String id = property.getFirstKey().toString();
+        String id = property.getFirstKey().getName();
         return new Label(id, id);
     }
 
