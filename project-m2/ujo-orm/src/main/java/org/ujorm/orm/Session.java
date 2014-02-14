@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import javax.transaction.Status;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.annot.PackagePrivate;
@@ -305,7 +306,7 @@ public class Session {
 
     /** Returns {@code true} if exists any database row for the required criterion. */
     final protected <UJO extends OrmUjo> boolean exists( MetaTable table, Criterion<UJO> criterion, Key pk) {
-        final UJO result = new Query<UJO>(table, criterion, this)
+        final Ujo result = new Query<UJO>(table, criterion, this)
                 .setColumn(pk)
                 .setLimit(1)
                 .uniqueResult();
