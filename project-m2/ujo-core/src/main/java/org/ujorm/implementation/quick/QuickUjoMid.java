@@ -15,9 +15,6 @@
  */
 package org.ujorm.implementation.quick;
 
-import org.ujorm.Key;
-import org.ujorm.Ujo;
-import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.UjoMiddle;
 
 /**
