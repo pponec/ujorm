@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- The Ujorm configuration file release 1.43-SNAPSHOT was created 2014-02-12 08:05 -->
 <body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="ormModel.xsd">
+      xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.43.xsd">
     <database id="Database">
         <schema>db1</schema>
         <readOnly>false</readOnly>
