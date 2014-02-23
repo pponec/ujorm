@@ -30,6 +30,7 @@ import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.XmlHeader;
 import org.ujorm.extensions.StringWrapper;
 import org.ujorm.xsd.domains.ComplexType;
 import org.ujorm.xsd.domains.Element;
@@ -174,8 +175,9 @@ public class XsdBuilder {
 
     /** Print to writer */
     public void print(String xmlHeader, Writer writer) throws IOException {
-        final String rootElementName = XSD + "schema";
-        UjoManagerXML.getInstance().saveXML(writer, rootElementName, rootSchema, xmlHeader, rootSchema);
+        final XmlHeader header = new XmlHeader(XSD + "schema");
+        header.setHeader(xmlHeader);
+        UjoManagerXML.getInstance().saveXML(writer, header, rootSchema, rootSchema);
     }
 
     /** Create new instance of Ujo */
