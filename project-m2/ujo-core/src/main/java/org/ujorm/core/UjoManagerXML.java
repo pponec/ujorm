@@ -55,17 +55,14 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     
     /** A name of Java Class of XML attribute. */
-    public static final String ATTR_CLASS      = "javaClass";
+    public static final String ATTR_CLASS = "javaClass";
     /** A name of Java List Class of a XML attribute. */
-    public static final String ATTR_LIST       = "javaList";
+    public static final String ATTR_LIST = "javaList";
     /** A name of Java Class of XML List attribute. */
-    public static final String ATTR_ITEM       = "javaItem";
-    /** Root element name */
-    protected String rootElementName = "body";
-    
+    public static final String ATTR_ITEM = "javaItem";
+
     /** Break XML file */
-    protected boolean breakLineEnabled = true;
-    
+    protected boolean breakLineEnabled = true;    
     /** A CONTEXT of the actionExport */
     protected UjoAction actionExport;
     /** A CONTEXT of the actionExport */
@@ -113,7 +110,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     
     
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
-    public void saveXML(File xmlFile, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
+    public void saveXML(File xmlFile, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
         final OutputStream os = getOutputStream(xmlFile);
         try {
             saveXML(os, ujo, xmlHeader, context);
@@ -123,7 +120,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
-    public void saveXML(OutputStream outStream, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
+    public void saveXML(OutputStream outStream, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
         final Writer writer = new OutputStreamWriter(outStream, UTF_8);
         try {
             saveXML(writer, ujo, xmlHeader, context);
@@ -133,21 +130,29 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
     
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
-    public void saveXML(Writer writer, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
-        saveXML(writer, rootElementName, ujo, xmlHeader, context);
+    public void saveXML(Writer writer, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
+        saveXML(writer, xmlHeader, ujo, context);
         writer.flush();
     }
     
     /** Write keys to XML including a XML header. */
     @SuppressWarnings("deprecation")
-    public void saveXML(Writer writer, String rootElementName, UjoTextable ujo, String xmlHeader, Object context) throws IOException {
+    public void saveXML(Writer writer, XmlHeader xmlHeader, UjoTextable ujo, Object context) throws IOException {
+        if (xmlHeader == null ) {
+            xmlHeader = new XmlHeader();
+        }
         this.actionExport  = new UjoActionImpl(UjoAction.ACTION_XML_EXPORT , context);
-        writer.write(xmlHeader!=null ? xmlHeader : XML_HEADER );
+        writer.write(xmlHeader.getHeader());
+        if (xmlHeader.getComment() != null) {
+            writeNewLine(writer);
+            writer.write("<!-- ");
+            writer.write(xmlHeader.getComment());
+            writer.write(" -->");
+        }
         
         @SuppressWarnings("unchecked")
-        Key property = Property.newInstance(rootElementName, ujo.getClass());
-        printProperty(null, property, null, ujo, writer, false);
-        
+        Key property = Property.newInstance(xmlHeader.getRootElement(), ujo.getClass());
+        printProperty(null, property, null, ujo, writer, false);        
     }
     
     /** Print attributes of the tag */
@@ -396,16 +401,5 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             printText2Xml(writer, str);
         }
     }
-
-    /** Name of the root element */
-    public String getRootElementName() {
-        return rootElementName;
-    }
-
-    /** Name of the root element */
-    public void setRootElementName(String rootElementName) {
-        this.rootElementName = rootElementName;
-    }
-
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.core.UjoManagerRBundle;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.XmlHeader;
 import samples.map.Person;
 
 /**
@@ -32,7 +33,7 @@ public class Persistence {
         Person person = new Person(); // Set attributes ...
         
         // Save XML:
-        String defaultXmlHeader = null;
+        XmlHeader defaultXmlHeader = new XmlHeader();
         UjoManagerXML.getInstance().saveXML(new File("file.xml"), person, defaultXmlHeader, "SaveContext");
         
         // Load XML:

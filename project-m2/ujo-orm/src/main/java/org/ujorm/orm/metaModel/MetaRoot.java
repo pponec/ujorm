@@ -28,6 +28,7 @@ import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.XmlHeader;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
@@ -102,17 +103,17 @@ final public class MetaRoot extends AbstractMetaModel {
     }
 
     /** Returns XML header */
-    private String getXmlHeader() {
+    private XmlHeader getXmlHeader() {
+        final XmlHeader result = new XmlHeader();
         final SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
-        final String result = new StringBuilder(128)
-          .append(UjoManagerXML.XML_HEADER)
-          .append("\n<!-- The Ujorm configuration file release ")
+        final String description = new StringBuilder(128)
+          .append("The Ujorm configuration file release ")
           .append(UjoManager.version())
           .append(" was created ")
           .append(dFormat.format(new Date()))
-          .append(" -->")
           .toString()
           ;
+        result.setComment(description);
         return result;
     }
 
