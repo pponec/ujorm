@@ -22,9 +22,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
-
-// import javax.xml.bind.*; /*JAXB*/
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.XmlHeader;
 
 
 /**
@@ -85,7 +84,7 @@ public class XmlSpeedTest extends MyTestCase {
         callGC();
         
         long time1 = System.currentTimeMillis();
-        String defaultXmlHeader = null;
+        XmlHeader defaultXmlHeader = new XmlHeader();
         UjoManagerXML.getInstance().saveXML(dataFile, tree, defaultXmlHeader, "Save");
         long time2 = System.currentTimeMillis();
         //
@@ -111,7 +110,7 @@ public class XmlSpeedTest extends MyTestCase {
         callGC();
         
         long time1 = System.currentTimeMillis();
-        String defaultXmlHeader = null;
+        XmlHeader defaultXmlHeader = new XmlHeader();
         UjoManagerXML.getInstance().saveXML(dataFile, tree, defaultXmlHeader, "Save");
         long time2 = System.currentTimeMillis();
         //
@@ -137,7 +136,7 @@ public class XmlSpeedTest extends MyTestCase {
         callGC();
         
         long time1 = System.currentTimeMillis();
-        String defaultXmlHeader = null;
+        XmlHeader defaultXmlHeader = new XmlHeader();
         UjoManagerXML.getInstance().saveXML(dataFile, tree, defaultXmlHeader, "Save");
         long time2 = System.currentTimeMillis();
         //
