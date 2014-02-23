@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
@@ -152,7 +153,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         
         @SuppressWarnings("unchecked")
         Key property = Property.newInstance(xmlHeader.getRootElement(), ujo.getClass());
-        printProperty(null, property, null, ujo, writer, false);        
+        printProperty(null, property, null, ujo, writer, false, xmlHeader.getAttributes());
     }
     
     /** Print attributes of the tag */
@@ -212,11 +213,11 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                 && ((ListKey)property).isItemTypeOf(Ujo.class)) {
                     for (Object item : (List) value) {
                         Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
-                        printProperty( ujo, property, itemClass, item, writer, false );
+                        printProperty( ujo, property, itemClass, item, writer, false, null);
                     }
                 } else {
                     final Class baseType2 = null; //value.getClass()!=property.getType() ? value.getClass() : null ;
-                    printProperty(ujo, property, baseType2, value, writer, true);
+                    printProperty(ujo, property, baseType2, value, writer, true, null);
                 }
 
 
@@ -225,7 +226,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                 printValue2XML(writer, Object.class, value, ujo, property, true);
             } else {
                 final Class baseType = value.getClass()!=property.getType() ? value.getClass() : null ;
-                printProperty(ujo, property, baseType, value, writer, false);
+                printProperty(ujo, property, baseType, value, writer, false, null);
 //          } else if (value instanceof Object[]) {
 //                // PoP:TODO - unsupported now
             }
@@ -241,6 +242,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
      * @param value
      * @param writer
      * @param simpleProperty Item is not type Ujo
+     * @param extendedAttributes Extended attributes
      * @throws java.io.IOException
      */
     private void printProperty
@@ -250,6 +252,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , final Object value
     , final Writer writer
     , final boolean simpleProperty
+    , final Map<String, String> extendedAttributes
     ) throws IOException {
 
         // --------------
@@ -263,6 +266,18 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         writeNewLine(writer);
         writer.write('<');
         writer.write(property.getName());
+        
+        // Print extended attributes:
+        if (extendedAttributes != null) {
+            for (String keyName : extendedAttributes.keySet()) {
+                writer.write(' ');
+                writer.write(keyName);
+                writer.write("=\"");
+                printText2Xml(writer, extendedAttributes.get(keyName));
+                writer.write('"');
+            }
+        }
+        
         if (value instanceof UjoTextable) {
             printAttributes((UjoTextable) value, writer);
         }
