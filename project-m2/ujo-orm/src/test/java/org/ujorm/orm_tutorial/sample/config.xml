@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.33-SNAPSHOT was created 2013/04/25 00:10 -->
-<body>
+<!-- The Ujorm configuration file release 1.43-SNAPSHOT was created 2014-02-24 17:54 -->
+<body xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.43.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <database id="Database">
         <schema>db1</schema>
         <readOnly>false</readOnly>
@@ -134,6 +134,10 @@
             <column id="created">
                 <name>created</name>
                 <dbType>TIMESTAMP</dbType>
+            </column>
+            <column id="parent">
+                <name>parent</name>
+                <dbType>BIGINT</dbType>
             </column>
         </table>
         <table id="db1">

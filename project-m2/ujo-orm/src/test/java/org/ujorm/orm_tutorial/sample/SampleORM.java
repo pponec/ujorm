@@ -146,7 +146,7 @@ public class SampleORM {
         // Do jou need to load an external confuguration from XML?
         boolean yesIWantToLoadExternalConfig = false;
         if (yesIWantToLoadExternalConfig) {
-            java.net.URL config = getClass().getResource("/org/ujorm/orm/sample/config.xml");
+            java.net.URL config = getClass().getResource("config.xml");
             handler.config(config, true);
         }
 
