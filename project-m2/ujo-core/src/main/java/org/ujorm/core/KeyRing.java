@@ -534,7 +534,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
      * "The key '%s' of the class %s was not found"
      */
     private void throwException(final String keyName, final Class type, Throwable e) throws IllegalArgumentException {
-        final String msg = String.format("The key '%s' of the class %s was not found", keyName, type);
+        final String msg = String.format("The key '%s' of the %s was not found", keyName, type);
         throw new IllegalArgumentException(msg, e);
     }
 

@@ -50,6 +50,12 @@
             </resource>
         </resources>
 
+        <testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>

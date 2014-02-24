@@ -158,7 +158,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 else       newElement().init((List)container, $itemType);
 
                 if (isUJO && !$attributes.isEmpty()) {
-                    addAttributes((UjoTextable) container);
+                    addAttributes((UjoTextable) container, ignoreMissingProp || lastElement == 0);
                 }
 
                 // Save container into parent:
@@ -267,12 +267,12 @@ final class UjoHandlerXML extends DefaultHandler {
     }
 
     /** Add all XML attributes from internal buffer to UJO. */
-    protected void addAttributes(final UjoTextable ujo) {
+    protected void addAttributes(final UjoTextable ujo, boolean ignoreMissingProp) {
         for (String[] attrib : $attributes) {
-
-            Key prop = ujo.readKeys().findDirectKey(ujo, attrib[0], actionImport, false, !ignoreMissingProp);
-            if (prop!=null){
-                ujo.writeValueString(prop, attrib[1], null, actionImport);
+            final Key key = ujo.readKeys().findDirectKey
+                    (ujo, attrib[0], actionImport, false, !ignoreMissingProp);
+            if (key != null){
+                ujo.writeValueString(key, attrib[1], null, actionImport);
             }
         }
     }
