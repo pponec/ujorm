@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.*;
 import javax.swing.*;
 import org.ujorm.core.UjoManagerXML;
+import org.ujorm.core.XmlHeader;
 import org.ujorm.swing.UjoTableModel;
 import static org.Company.*;
 import static org.Person.*;
@@ -52,7 +53,7 @@ public class TableFrame extends JFrame implements ActionListener, Runnable  {
   /** Save company to file. */
   private void saveCompany() {
     try {
-      String defaultXmlHeader = null;
+      XmlHeader defaultXmlHeader = null;
       UjoManagerXML.getInstance().saveXML(dataFile, company, defaultXmlHeader, "Save company");
     } catch (Throwable e) {
       e.printStackTrace();

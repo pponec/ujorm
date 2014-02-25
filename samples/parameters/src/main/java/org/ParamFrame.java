@@ -1,9 +1,8 @@
 package org;
 
-import javax.swing.*;
-
 import java.awt.event.*;
 import java.io.File;
+import javax.swing.*;
 import org.ujorm.core.UjoManagerRBundle;
 import org.ujorm.swing.SingleUjoTabModel;
 import org.ujorm.swing.UjoPropertyRow;

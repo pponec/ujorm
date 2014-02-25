@@ -18,8 +18,8 @@ package org.bo;
 
 
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Table;
 
 /** User implementation */
