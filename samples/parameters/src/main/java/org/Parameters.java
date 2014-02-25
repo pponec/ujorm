@@ -5,9 +5,9 @@ import java.awt.Rectangle;
 import java.util.Calendar;
 import java.util.Locale;
 import org.ujorm.Key;
-import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.implementation.quick.SmartUjo;
 
-public class Parameters extends MapUjo {
+public class Parameters extends SmartUjo {
 
     /** The SysTray action on a second mouse click. */
     public enum Action {
@@ -78,7 +78,7 @@ public class Parameters extends MapUjo {
     public static final Key<Parameters,String> P_EXIT_EVENT_DESCR
         = newKey("ExitEventDescription", "EXIT");
 
-    /** Hide Buoon Icon. */
+    /** Hide Button Icon. */
     public static final Key<Parameters,Boolean> P_HIDE_ICONS
         = newKey("HideButtonIcons", false);
 
