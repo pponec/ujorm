@@ -15,6 +15,7 @@
  */
 package benchmark;
 
+import benchmark.bo.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.logging.Level;
@@ -25,9 +26,8 @@ import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Session;
-import org.ujorm.orm.metaModel.MetaParams;
-import benchmark.bo.*;
 import org.ujorm.orm.Transaction;
+import org.ujorm.orm.metaModel.MetaParams;
 
 /**
  * OrmUjo performance test

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Paul Ponec
+ *  Copyright 2009-2014 Paul Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package benchmark;
 
-import org.ujorm.orm.annot.Db;
+import benchmark.bo.*;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
-import benchmark.bo.*;
+import org.ujorm.orm.annot.Db;
 
 
 /**
@@ -27,17 +27,17 @@ import benchmark.bo.*;
  * @hidden
  */
 @Db(schema="bmk", dialect=org.ujorm.orm.dialect.PostgreSqlDialect.class, user="sa", password="sa", jdbcUrl="jdbc:postgresql://127.0.0.1:5432/benchmark")
-//@Db(schema="db1", dialect=org.ujorm.orm.dialect.H2Dialect.class, USER="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
+//@Db(schema="db1", dialect=org.ujorm.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 public class Database extends OrmTable<Database> {
 
     /** Customer ORDER. The used annotation overwrites a database schema from the property schema. */
-    public static final RelationToMany<Database,UjoOrder> ORDER = newRelation("ujo_order", UjoOrder.class);
+    public static final RelationToMany<Database,UjoOrder> ORDER = newRelation("ujo_order");
 
     /** Items of the Customer ORDER */
-    public static final RelationToMany<Database,UjoOrderItem> ORDER_ITEM = newRelation("ujo_item", UjoOrderItem.class);
+    public static final RelationToMany<Database,UjoOrderItem> ORDER_ITEM = newRelation("ujo_item");
 
     /** View to aggregate data. */
-    public static final RelationToMany<Database,UjoUser> USER = newRelation("ujo_user", UjoUser.class);
+    public static final RelationToMany<Database,UjoUser> USER = newRelation("ujo_user");
 
 
 }

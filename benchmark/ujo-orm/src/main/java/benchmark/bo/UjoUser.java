@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Paul Ponec
+ *  Copyright 2009-2014 Paul Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,24 +20,28 @@ package benchmark.bo;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 
 /**
- *
+ * User
  * @author Pavel Ponec
  */
 public class UjoUser extends OrmTable<UjoUser> {
+    private static final OrmKeyFactory<UjoUser> f = newCamelFactory(UjoUser.class);
 
     @Column(pk=true)
-    public static final Key<UjoUser,Long> ID = newKey("id");
+    public static final Key<UjoUser,Long> ID = f.newKey("id");
     @Column(length=8)
-    public static final Key<UjoUser,String> PERSONAL_ID = newKey("personalId");
-    public static final Key<UjoUser,String> SURENAME = newKey("surename");
-    public static final Key<UjoUser,String> LASTNAME = newKey("lastname");
+    public static final Key<UjoUser,String> PERSONAL_ID = f.newKey("personalId");
+    public static final Key<UjoUser,String> SURENAME = f.newKey("surename");
+    public static final Key<UjoUser,String> LASTNAME = f.newKey("lastname");
 
+    static { f.lock(); }
 
-
-    // Optional code for better performance:
-    private static KeyList keys = init(UjoUser.class);
-    @Override public KeyList readKeys() { return keys; }
+    /** An optional method for a better performance */
+    @Override
+    public KeyList<UjoUser> readKeys() {
+        return f.getKeys();
+    }
 }
