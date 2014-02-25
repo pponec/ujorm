@@ -14,7 +14,18 @@
           <li><a href="http://www.eclipse.org/">Eclipse</a> with some Maven 2 <a href="http://m2eclipse.sonatype.org/">pluggin</a>, or use the</li>
           <li><a href="http://maven.apache.org/">Maven 2</a> toolkit if you like a console command line</li>
       </ul>
-      
+
+      <h1>How to create a 'benchmark' database for the PostgreSql on Ubuntu?</h1>
+      <p>Type from a command line:</p>
+      <ul>
+          <li>sudo apt-get install postgresql pgadmin3 -y</li>
+          <li>sudo -u postgres createdb benchmark</li>
+          <li>sudo -u postgres psql -s benchmark</li>
+          <li>&gt; CREATE USER sa PASSWORD 'sa';</li>
+          <li>&gt; GRANT ALL PRIVILEGES ON DATABASE benchmark TO sa;</li>
+          <li>&gt; Ctrl-D</li>
+      </ul>
+
       Author: Pavel Ponec, ponec@ujorm.com
   </body>
 </html>
