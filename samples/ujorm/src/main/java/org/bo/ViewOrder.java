@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Paul Ponec
+ *  Copyright 2009 Pavel  Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
 
 package org.bo;
 
-
 import org.ujorm.Key;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.View;
-
 
 /**
  * The column mapping to FROM view.
@@ -39,7 +37,7 @@ import org.ujorm.orm.annot.View;
     + ") testView WHERE true"
     , alias="testView"
     )
- public final class ViewOrder extends OrmTable<ViewOrder> {
+ public class ViewOrder extends OrmTable<ViewOrder> {
 
     /** Unique key */
     @Column(pk=true, name="id")

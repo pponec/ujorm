@@ -16,16 +16,20 @@
 
 package org.bo;
 
+import java.sql.Blob;
+import java.sql.Clob;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.UjoIterator;
-import org.ujorm.extensions.ValueExportable;
-import org.ujorm.orm.DbType;
-import org.ujorm.orm.annot.Column;
+import org.ujorm.core.annot.Transient;
+import org.ujorm.extensions.StringWrapper;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
+import org.ujorm.orm.DbType;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.orm.annot.Table;
+import org.ujorm.orm.utility.OrmTools;
 
 /**
  * The column mapping to DB table ORDER (a sample of usage).
@@ -37,7 +41,7 @@ import org.ujorm.orm.annot.Table;
 public final class Order extends OrmTable<Order> {
 
     /** Store the value like VARCHAR. */
-    public enum State implements ValueExportable {
+    public enum State implements StringWrapper {
         ACTIVE,
         DELETED;
 
@@ -61,8 +65,17 @@ public final class Order extends OrmTable<Order> {
     public static final Key<Order, String> NOTE = newKey();
     /** Date of creation */
     public static final Key<Order, Date> CREATED = newKey();
+    /** Text file */
+    @Transient
+    public static final Key<Order, Clob> TEXT_FILE = newKey();
+    /** Binary file */
+    @Transient
+    public static final Key<Order, Blob> BINARY_FILE = newKey();
     /** Reference to Items */
     public static final RelationToMany<Order, Item> ITEMS = newRelation();
+    /** Customer */
+    @Column(name="fk_customer") public static final Key<Order, Customer> CUSTOMER = newKey();
+    @Column(mandatory=true) public static final Key<Order, Integer> NEW_COLUMN = newKey(777);
 
     // --- Constructors ---
 
@@ -72,6 +85,7 @@ public final class Order extends OrmTable<Order> {
     public Order(Long id) {
         setId(id);
     }
+
     // --- An optional implementation of commonly used setters and getters ---
 
     public Long getId() {
@@ -112,6 +126,22 @@ public final class Order extends OrmTable<Order> {
 
     public void setState(State _state) {
         set(STATE, _state);
+    }
+
+    public String getTextFile() {
+        return OrmTools.getClobString(get(TEXT_FILE));
+    }
+
+    public void setTextFile(String _largeFile) {
+        set(TEXT_FILE, OrmTools.createClob(_largeFile));
+    }
+
+    public byte[] getBinaryFile() {
+        return OrmTools.getBlobBytes(get(BINARY_FILE));
+    }
+
+    public void setBinaryFile(byte[] _binaryFile) {
+        set(BINARY_FILE, OrmTools.createBlob(_binaryFile));
     }
 
     public UjoIterator<Item> getItems() {

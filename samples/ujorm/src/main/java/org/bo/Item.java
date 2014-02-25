@@ -18,10 +18,9 @@ package org.bo;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.ujorm.Key;
-import org.ujorm.KeyList;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.orm.annot.Column;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 
 /**
@@ -49,18 +48,11 @@ public final class Item extends OrmTable<Item> {
     @Comment("A reference to the Order")
     @Column(name="fk_order")
     public static final Key<Item,Order> ORDER = f.newKey();
-    /** A composed property provides a 'CREATED' attribute of the Order */
+    /** A composed (or indirect) property provides a 'CREATED' attribute of the Order */
     public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
 
     // Lock the Key factory
     static { f.lock(); }
-
-    /** An optional method for a better performance.
-     * @return Return all direct Keys (An implementation from hhe Ujo API)
-     */
-    @Override public KeyList<?> readKeys() {
-        return f.getKeys();
-    }
 
 
     // --- An optional implementation of commonly used setters and getters ---
@@ -95,6 +87,5 @@ public final class Item extends OrmTable<Item> {
         // An alternative solution for: getOrder().getCreated();
         return get($ORDER_CREATED);
     }
-
 
 }
