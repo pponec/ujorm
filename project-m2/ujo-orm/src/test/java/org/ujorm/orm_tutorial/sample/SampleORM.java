@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2013 Pavel Ponec
+ *  Copyright 2009-2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -471,7 +471,7 @@ public class SampleORM {
 
     /** Sample for a DB query with relations to yourself.<br>
      * All relations of the same entity must be marked by an unique alias name.
-     * @see Key#alias(java.lang.String) 
+     * @see Key#alias(java.lang.String)
      */
     public void useHierarchicalQuery() {
         Criterion<Customer> crn1, crn2, crn3;
@@ -649,7 +649,7 @@ public class SampleORM {
     }
 
     /** Sample for 'one to many' relation.
-     * 	Note that it is possible to use a Database configuration object too.
+     * Note that it is possible to use a Database configuration object too.
      */
     public void useRelation() {
         Database db = session.getDatabase(Database.class);
