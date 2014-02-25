@@ -1,12 +1,12 @@
 /*
  *  Copyright 2010 Ponec.
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,8 +36,9 @@ import org.ujorm.orm.annot.Procedure;
 @Procedure(name="ujorm_test")
 public final class MyProcedure extends DbProcedure<MyProcedure> {
 
-    /** The first parameter is the OUTPUT allways. If the stored procedure has no return parameter, use the type: java.lang.Void */
-    public static final Key<MyProcedure,Integer> RESULT = newProperty();
+    /** The first parameter is the OUTPUT always. <br/>
+     * If the stored procedure has no return parameter, set the first property type to: java.lang.Void */
+    public static final Key<MyProcedure,Integer> RESULT = newKey();
     /** INPUT parameter */
     @Parameter(input=true)
     public static final Key<MyProcedure,Integer> PARAM_CODE = newKey(0);

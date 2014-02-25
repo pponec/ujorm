@@ -16,6 +16,7 @@
 
 package org;
 
+import org.bo.Customer;
 import org.bo.Item;
 import org.bo.MyProcedure;
 import org.bo.Order;
@@ -49,6 +50,10 @@ public class Database extends OrmTable<Database> {
     /** Items of the Customer order */
     @Table("ord_item")
     public static final RelationToMany<Database,Item> ORDER_ITEMS = newRelation();
+
+    /** Customer order. The used annotation overwrites a database schema from the property schema. */
+    @Table("ord_customer")
+    public static final RelationToMany<Database,Customer> CUSTOMERS = newRelation();
 
     /** View to aggregate data. */
     @View("ord_order")
