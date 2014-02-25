@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Paul Ponec
+ *  Copyright 2009-2014 Paul Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.extensions.PathProperty;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.OrmKeyFactory;
 import org.ujorm.orm.annot.Column;
 
 /**
@@ -29,27 +30,32 @@ import org.ujorm.orm.annot.Column;
  * @author Pavel Ponec
  */
 public class UjoOrderItem extends OrmTable<UjoOrderItem> {
+    private static final OrmKeyFactory<UjoOrderItem> f = newCamelFactory(UjoOrderItem.class);
 
     @Column(pk=true)
-    public static final Key<UjoOrderItem,Long> ID = newKey("id");
-    public static final Key<UjoOrderItem,String> PUBLIC_ID = newKey("publicId");
-    public static final Key<UjoOrderItem,Boolean> DELETED = newKey("deleted", false);
-    public static final Key<UjoOrderItem,Date> DATE_DELETED = newKey("dateDeleted");
-    public static final Key<UjoOrderItem,BigDecimal> PRICE = newKey("price");
-    public static final Key<UjoOrderItem,BigDecimal> CHARGE = newKey("charge");
-    public static final Key<UjoOrderItem,Boolean> ARRIVAL = newKey("arrival");
+    public static final Key<UjoOrderItem,Long> ID = f.newKey("id");
+    public static final Key<UjoOrderItem,String> PUBLIC_ID = f.newKey("publicId");
+    public static final Key<UjoOrderItem,Boolean> DELETED = f.newKey("deleted", false);
+    public static final Key<UjoOrderItem,Date> DATE_DELETED = f.newKey("dateDeleted");
+    public static final Key<UjoOrderItem,BigDecimal> PRICE = f.newKey("price");
+    public static final Key<UjoOrderItem,BigDecimal> CHARGE = f.newKey("charge");
+    public static final Key<UjoOrderItem,Boolean> ARRIVAL = f.newKey("arrival");
     @Column(length=100)
-    public static final Key<UjoOrderItem,String> DESCRIPTION = newKey("description");
-    public static final Key<UjoOrderItem,UjoUser> USER = newKey("user_id");
-    public static final Key<UjoOrderItem,UjoOrder> ORDER = newKey("order_id");
-    public static final Key<UjoOrderItem,UjoOrderItem> PARENT = newKey("parent_id");
+    public static final Key<UjoOrderItem,String> DESCRIPTION = f.newKey("description");
+    public static final Key<UjoOrderItem,UjoUser> USER = f.newKey("user_id");
+    public static final Key<UjoOrderItem,UjoOrder> ORDER = f.newKey("order_id");
+    public static final Key<UjoOrderItem,UjoOrderItem> PARENT = f.newKey("parent_id");
 
     /** Indirect property: ORDER.DELETED */
     public static final PathProperty<UjoOrderItem,Boolean> _ORDER_DELETED = PathProperty.newInstance(UjoOrderItem.ORDER, UjoOrder.DELETED);
 
+    static { f.lock(); }
 
-    // Optional code for better performance:
-    private static KeyList keys = init(UjoOrderItem.class);
-    @Override public KeyList readKeys() { return keys; }
+
+    /** An optional method for a better performance */
+    @Override
+    public KeyList<UjoOrderItem> readKeys() {
+        return f.getKeys();
+    }
 
 }
