@@ -158,7 +158,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 else       newElement().init((List)container, $itemType);
 
                 if (isUJO && !$attributes.isEmpty()) {
-                    addAttributes((UjoTextable) container, ignoreMissingProp || lastElement == 0);
+                    addAttributes((UjoTextable) container, ignoreMissingProp || isRoot());
                 }
 
                 // Save container into parent:
@@ -189,6 +189,11 @@ final class UjoHandlerXML extends DefaultHandler {
         } catch (Exception e) {
             throw new IllegalArgumentException("Can't create instance of " + $elementType, e);
         }
+    }
+
+    /** The root level */
+    private boolean isRoot() {
+        return lastElement == 0;
     }
 
     /** End the scope of a prefix-URI mapping. */
