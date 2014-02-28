@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Ujorm configuration file release 1.40-SNAPSHOT was created 2013/08/31 09:55 -->
-<body>
+<!-- The Ujorm configuration file release 1.43 -->
+<body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.43.xsd">
     <database id="DatabaseMapping">
         <schema>demoHotels</schema>
         <readOnly>false</readOnly>
