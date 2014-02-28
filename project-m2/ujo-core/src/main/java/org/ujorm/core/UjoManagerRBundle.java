@@ -48,7 +48,7 @@ import org.ujorm.UjoAction;
  * @see org.ujorm.extensions.UjoTextable
  */
 public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
-    
+
     /**
      * Creates a new instance of UjoManagerRBundle
      */
@@ -62,7 +62,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     public UjoManagerRBundle(Class<UJO> ujoClass, Key ... keys) {
         super(ujoClass, keys);
     }
-    
+
     /**
      * Save Ujo into Java resource bundle
      */
@@ -74,7 +74,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
             out.close();
         }
     }
-    
+
     /**
      * Save Ujo into Java resource bundle
      */
@@ -86,20 +86,20 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
 
             final Object valueObj = prop.of(ujo);
             final String valueStr = getText(ujo, prop, valueObj, action);
-            
-            final boolean authorized 
+
+            final boolean authorized
             =  valueStr!=null
             && ujo.readAuthorization(action, prop, valueObj)
-            && !getUjoManager().isTransientProperty(prop)
+            && !getUjoManager().isTransient(prop)
             ;
-            
+
             if (authorized) {
                 props.setProperty(prop.getName(), valueStr);
             }
         }
         props.store(out, header);
     }
-    
+
     /**
      * Load an Ujo from Java resource bundle
      */
@@ -112,8 +112,8 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
             inp.close();
         }
     }
-    
-    
+
+
     /**
      * Load an Ujo from Java resource bundle
      */
@@ -136,16 +136,16 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         }
         return ujo;
     }
-    
+
     /** Create new instance */
     public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass) {
         return getInstance(ujoClass, (Key[]) null);
     }
-    
+
     /** Create new instance */
     public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass, Key ... keys) {
         return new UjoManagerRBundle<UJO>(ujoClass, keys);
     }
-    
+
 }
 

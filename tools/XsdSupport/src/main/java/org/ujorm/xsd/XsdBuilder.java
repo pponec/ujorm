@@ -92,7 +92,7 @@ public class XsdBuilder {
 
     /** Assign data type to the {@code typeMap} */
     private void assignKeyType(Key<?, ?> key) {
-        if (manager.isTransientProperty(key)) {
+        if (manager.isTransient(key)) {
             return;
         }
         final Class keyType = key instanceof ListKey
@@ -138,7 +138,7 @@ public class XsdBuilder {
             complexType.setName(typeMap.get(type));
 
             for (Key<?,?> key : createUjo(type).readKeys()) {
-                if (manager.isTransientProperty(key)) {
+                if (manager.isTransient(key)) {
                     continue;
                 }
                 final boolean list = key instanceof ListKey;

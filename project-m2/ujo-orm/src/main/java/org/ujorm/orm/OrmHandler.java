@@ -181,7 +181,7 @@ public class OrmHandler implements OrmHandlerProvider {
 
         final boolean resultFalse
         =  property.isTypeOf(List.class)
-        || UjoManager.getInstance().isTransientProperty(property)
+        || UjoManager.getInstance().isTransient(property)
         ;
         return !resultFalse;
     }
@@ -325,22 +325,25 @@ public class OrmHandler implements OrmHandlerProvider {
         }
     }
 
-    /** Find a property annotation by the required type.
-     * The property must be a public static final field in the related Ujo class.
+    /**
+     * Find a property annotation by the required type.
+     * @param key The key must be a <strong>public static final</strong> field of the related Ujo class.
+     * @param annotation Annotation type
+     * @return  An annotation instance or the {@code null} value
      */
-    public <T extends Annotation> T findAnnotation(Key property, Class<T> annotationClass) {
-        if (property.isComposite()) {
-            property = ((CompositeKey) property).getFirstKey();
+    public <T extends Annotation> T findAnnotation(Key<?,?> key, Class<T> annotation) {
+        if (key.isComposite()) {
+            key = ((CompositeKey) key).getFirstKey();
         }
         try {
-            for (Field field : findColumnModel(property, true).getTableClass().getFields()) {
+            for (Field field : findColumnModel(key, true).getTableClass().getFields()) {
                 if (field.getModifiers()==UjoManager.PROPERTY_MODIFIER
-                &&  field.get(null) == property) {
-                    return (T) field.getAnnotation(annotationClass);
+                &&  field.get(null) == key) {
+                    return (T) field.getAnnotation(annotation);
                 }
             }
         } catch (Throwable e) {
-            throw new IllegalStateException("Illegal state for: " + property, e);
+            throw new IllegalStateException("Illegal state for: " + key, e);
         }
         return null;
     }
