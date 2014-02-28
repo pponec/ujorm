@@ -31,6 +31,8 @@ public class Attribute extends SmartUjo<Attribute> {
     public static final Key<Attribute, String> NAME = f.newKey("name");
     @XmlAttribute
     public static final Key<Attribute, String> TYPE = f.newKey("type", "xs:string");
+    @XmlAttribute
+    public static final Key<Attribute, String> USE = f.newKey("use", "optional");
 
     // Lock the Key factory
     static { f.lock(); }
