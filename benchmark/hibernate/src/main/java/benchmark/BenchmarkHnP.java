@@ -15,6 +15,7 @@
  */
 package benchmark;
 
+import benchmark.bo.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
-import benchmark.bo.*;
 
 /**
  * OrmUjo performance test
@@ -272,10 +272,12 @@ public class BenchmarkHnP {
         long time = time2 - time1;
         double result = time / 1000d;
         System.out.println("TIME." + getClass().getSimpleName() + ": " + msg + ": " + result);
-
     }
 
-    /** Test */
+    /** Test
+     * <br/>Example:
+     * {@codemain(new String[]{"2000"}) }
+     */
     public static void main(String[] args) {
         try {
             BenchmarkHnP sample = newInstance(args);
@@ -294,8 +296,11 @@ public class BenchmarkHnP {
         }
     }
 
-    /**  Create new instance*/
-    public static BenchmarkHnP newInstance(String[] args) {
+    /**  Create new instance
+     * <br/>Example:
+     * {@code new Instance("2000". "yes") }
+     */
+    public static BenchmarkHnP newInstance(String... args) {
         int i = -1;
         try {
             int countOfOrder = args.length > ++i ? Integer.parseInt(args[i]) : DEFAULT_ORDER_COUNT;
