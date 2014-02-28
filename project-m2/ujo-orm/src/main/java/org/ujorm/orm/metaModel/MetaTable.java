@@ -204,7 +204,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         UjoManager.newInstance(dbProperty.getItemType()); // Initialize static Keys
         for (Key property : ujoManager.readKeys(dbProperty.getItemType())) {
 
-            if (!ujoManager.isTransientProperty(property)) {
+            if (!ujoManager.isTransient(property)) {
 
                 if (property instanceof RelationToMany) {
                     MetaRelation2Many param = parTable!=null ? parTable.findRelation(property.getName()) : null;
@@ -361,7 +361,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         }
         return result;
     }
-    
+
     /** UJO sequencer */
     public UjoSequencer getSequencer() {
         return sequencer;
@@ -374,7 +374,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         MetaIndex.UNIQUE.setValue(mIndex, isUniqueIndexExists);
         return mIndex;
     }
-    
+
     /** Create an Index For the Column */
     public String createIndexNameForColumn(MetaColumn column, boolean uniqueIndex) {
         String metaIdxName;
@@ -386,9 +386,9 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         if (metaIdxName.length() == 0 && column.isForeignKey()) {
             metaIdxName = "AUTO";
         }
-        
+
         assert metaIdxName.length() > 0;
-        
+
         // automatic indexes ("AUTO" or foreign keys)
         if (MetaColumn.AUTO_INDEX_NAME.equalsIgnoreCase(metaIdxName)) {
             final SqlNameProvider nameProvider = getDatabase().getDialect().getNameProvider();
@@ -411,7 +411,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
              ? getIndexCollectionExtended()
              : getIndexCollectionOriginal() ;
     }
-    
+
     /** Create a new collection of the table indexes.<br/>
      * The extended index name strategy.
      */
@@ -423,7 +423,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
             final String metaIdxName = MetaColumn.INDEX.of(column);
             final boolean indexExists = metaIdxName.length() > 0;
             final boolean uniqueIndexExists = metaUdxName.length() > 0;
-            
+
             if (indexExists || column.isForeignKey()) {
                 addIndex(column, mapIndex, false);
             }
@@ -473,7 +473,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         }
         MetaIndex.COLUMNS.addItem(mIndex, column);
     }
-    
+
     /** Returns a parrent of the parameter or the null if no parent was not found.<br/>
      * The method provides a parent in case of emulated inheritance.
      */
@@ -523,7 +523,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     public void clearReadOnly() {
         super.clearReadOnly(this.getDatabase().getOrmHandler());
     }
-    
+
     /** Add alias name to the new object */
     public TableWrapper addAlias(final String alias) {
         return alias != null

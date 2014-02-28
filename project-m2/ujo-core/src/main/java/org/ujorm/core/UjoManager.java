@@ -573,7 +573,7 @@ public class UjoManager implements Comparator<Key> {
     }
 
     /** Is the key an Transient? */
-    public final boolean isTransientProperty(final Key key) {
+    public final boolean isTransient(final Key<?,?> key) {
         final boolean result = transientCache!=null && transientCache.contains(key);
         return result;
     }

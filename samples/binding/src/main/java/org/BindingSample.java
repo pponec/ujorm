@@ -19,8 +19,8 @@ package org;
 import java.util.HashMap;
 import java.util.Map;
 import org.impl.*;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 
 /**
  * Example of a binding the UJO object to an UI component(s).
@@ -30,7 +30,7 @@ public class BindingSample {
 
     protected Map<Key, UIComponent> binding = new HashMap<Key, UIComponent>();
 
-     /** Plain mapping any UIComponent to UJO Property. 
+     /** Plain mapping any UIComponent to UJO Property.
       * The type unsafe solution.
       */
     public void plainMapping() {

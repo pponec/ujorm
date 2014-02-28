@@ -51,10 +51,10 @@ import org.xml.sax.SAXException;
  * @author Pavel Ponec
  */
 public class UjoManagerXML extends UjoService<UjoTextable> {
-    
+
     /** A default XML header: &lt;?xml version="1.0" encoding="UTF-8"?&gt; */
     public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-    
+
     /** A name of Java Class of XML attribute. */
     public static final String ATTR_CLASS = "javaClass";
     /** A name of Java List Class of a XML attribute. */
@@ -63,28 +63,28 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     public static final String ATTR_ITEM = "javaItem";
 
     /** Break XML file */
-    protected boolean breakLineEnabled = true;    
+    protected boolean breakLineEnabled = true;
     /** A CONTEXT of the actionExport */
     protected UjoAction actionExport;
     /** A CONTEXT of the actionExport */
     protected UjoAction actionElement;
 
-    
+
     /** Constructor. */
     protected UjoManagerXML() {
         super(UjoTextable.class);
     }
-    
+
     /** Create Instance */
     public static UjoManagerXML getInstance() {
         return new UjoManagerXML();
     }
-    
+
     /** Create Ujo from XMl file */
     public <T extends UjoTextable> T parseXML(File inputFile, Class<T> classType, Object context) throws ParserConfigurationException, SAXException, IOException {
         return parseXML(inputFile, classType, true, context);
     }
-    
+
     /** Create Ujo from XMl file */
     public <T extends UjoTextable> T parseXML(File inputFile, Class<T> classType, boolean validating, Object context) throws ParserConfigurationException, SAXException, IOException {
         final InputStream bis = getInputStream(inputFile);
@@ -94,22 +94,22 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             bis.close();
         }
     }
-    
+
     /**
      * An Deserialization of Ujo object.
      */
     public <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, Object context) throws ParserConfigurationException, SAXException, IOException {
         return parseXML(inputStream, classType, true, context);
     }
-    
+
     /**
      * An Deserialization of Ujo object.
      */
     public <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context) throws ParserConfigurationException, SAXException, IOException {
         return UjoHandlerXML.parseXML(inputStream, classType, validate, context, getUjoManager());
     }
-    
-    
+
+
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
     public void saveXML(File xmlFile, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
         final OutputStream os = getOutputStream(xmlFile);
@@ -119,7 +119,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             os.close();
         }
     }
-    
+
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
     public void saveXML(OutputStream outStream, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
         final Writer writer = new OutputStreamWriter(outStream, UTF_8);
@@ -129,13 +129,13 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             writer.close();
         }
     }
-    
+
     /** Write keys to XML including a XML header. A root tag is "body" by default. */
     public void saveXML(Writer writer, UjoTextable ujo, XmlHeader xmlHeader, Object context) throws IOException {
         saveXML(writer, xmlHeader, ujo, context);
         writer.flush();
     }
-    
+
     /** Write keys to XML including a XML header. */
     @SuppressWarnings("deprecation")
     public void saveXML(Writer writer, XmlHeader xmlHeader, UjoTextable ujo, Object context) throws IOException {
@@ -150,28 +150,28 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             writer.write(xmlHeader.getComment());
             writer.write(" -->");
         }
-        
+
         @SuppressWarnings("unchecked")
         Key property = Property.newInstance(xmlHeader.getRootElement(), ujo.getClass());
         printProperty(null, property, null, ujo, writer, false, xmlHeader.getAttributes());
     }
-    
+
     /** Print attributes of the tag */
     @SuppressWarnings("unchecked")
     protected void printAttributes
     ( final UjoTextable ujo
     , final Writer writer
     ) throws IOException {
-        
+
         // Write attributes:
         for (Key property : ujo.readKeys()) {
             Object value = property.of(ujo);
-            
+
             if (value!=null
             && !Ujo.class.isAssignableFrom(property.getType())
             &&  getUjoManager().isXmlAttribute(property)
             &&  ujo.readAuthorization(actionExport, property, value)
-            && !getUjoManager().isTransientProperty(property)
+            && !getUjoManager().isTransient(property)
             ){
                 final String valueStr = ujo.readValueString(property, actionExport);
                 writer.write(' ');
@@ -182,12 +182,12 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             }
         }
     }
-    
+
     /** Write required keys to XML writer. */
     public void printProperties(Writer writer, UjoTextable ujo) throws IOException {
         printProperties(writer, ujo, ujo.readKeys());
     }
-    
+
     /** Write required keys to a XML writer. */
     @SuppressWarnings("unchecked")
     public void printProperties(final Writer writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
@@ -195,17 +195,17 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
         for (Key property : keys) {
             Object value = property.of(ujo);
-            
+
             if (value==null
             || !ujo.readAuthorization(actionExport, property, value)
             || getUjoManager().isXmlAttribute(property)
             || (value instanceof List && ((List)value).isEmpty())
-            || getUjoManager().isTransientProperty(property)
+            || getUjoManager().isTransient(property)
             ){
                 continue;
             }
 
-            
+
             if (value instanceof List) {
                 final Class itemType = property instanceof ListKey ? ((ListKey)property).getItemType() : null ;
 
@@ -232,7 +232,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             }
         }
     }
-    
+
     /**
      * Print one Property
      * @param ujo       Ujo object
@@ -256,17 +256,17 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     ) throws IOException {
 
         // --------------
-        
+
         if (value==null
         ||  ujo!=null // NOT Root
         && !ujo.readAuthorization(actionExport, property, value)) {
             return; // listType;
         }
-        
+
         writeNewLine(writer);
         writer.write('<');
         writer.write(property.getName());
-        
+
         // Print extended attributes:
         if (extendedAttributes != null) {
             for (String keyName : extendedAttributes.keySet()) {
@@ -277,11 +277,11 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                 writer.write('"');
             }
         }
-        
+
         if (value instanceof UjoTextable) {
             printAttributes((UjoTextable) value, writer);
         }
-        
+
         // Attributes: Class of a Value
         if (valueType!=null) {
             writer.write(' ');
@@ -290,7 +290,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             writer.write(valueType.getName());
             writer.write('"');
         }
-        
+
         writer.write('>');
         if (simpleProperty && property instanceof ListKey) {
             List valueList = (List) value;
@@ -303,7 +303,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                     writer.write('<');
                     writer.write(property.getName());
                     writer.write('>');
-                }                
+                }
                 printText2Xml(writer, getUjoManager().encodeValue(valueList.get(i), false));
             }
         } else {
@@ -312,10 +312,10 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         writer.write("</");
         writer.write(property.getName());
         writer.write('>');
-        
+
         //return listType;
     }
-    
+
     /** Print "value" to XML. */
     public void printItem
     ( final Writer writer
@@ -324,7 +324,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , final UjoTextable ujo
     , final Key prop
     ) throws IOException {
-        
+
         writeNewLine(writer);
         writer.write('<');
         writer.write(ATTR_ITEM);
@@ -344,8 +344,8 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         writer.write(ATTR_ITEM);
         writer.write('>');
     }
-    
-    
+
+
     /** Print escaped text to XML */
     public void printText2Xml(final Appendable out, final String text) throws IOException {
         int length = text.length();
@@ -369,17 +369,17 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
             }
         }
     }
-    
-    
+
+
     /** Conditionaly write new line. */
     public final void writeNewLine(final Appendable out) throws IOException {
         if (breakLineEnabled) {
             out.append('\n');
         }
     }
-    
+
     // =========== VALUE CONVERSIONS ==========================
-    
+
     /** Print "value" to XML. */
     @SuppressWarnings("unchecked")
     public void printValue2XML
@@ -390,7 +390,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     , final Key prop
     , final boolean simpleProperty
     ) throws IOException {
-        
+
         if (value == null) {
             // NOTHING;
         } else if (value instanceof UjoTextable) {
