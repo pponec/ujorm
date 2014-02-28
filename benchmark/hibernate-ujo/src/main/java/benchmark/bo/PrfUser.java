@@ -19,6 +19,7 @@ package benchmark.bo;
 
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.QuickUjo;
 
 /**
@@ -26,48 +27,49 @@ import org.ujorm.implementation.quick.QuickUjo;
  * @author Ponec
  */
 public class PrfUser extends QuickUjo {
+    private static final KeyFactory<PrfUser> f = newCamelFactory(PrfUser.class);
 
-    public static final Key<PrfUser,Long> id = newKey();
-    public static final Key<PrfUser,String> personalId = newKey();
-    public static final Key<PrfUser,String> surename = newKey();
-    public static final Key<PrfUser,String> lastname = newKey();
+    public static final Key<PrfUser,Long> ID = f.newKey();
+    public static final Key<PrfUser,String> PERSONAL_ID = f.newKey();
+    public static final Key<PrfUser,String> SURENAME = f.newKey();
+    public static final Key<PrfUser,String> LASTNAME = f.newKey();
 
     // Optional code for better performance when creating instance:
-    private static KeyList keys = init(PrfUser.class);
-    @Override public KeyList readKeys() { return keys; }
+    static { f.lock(); }
 
+    @Override
+    public KeyList<PrfUser> readKeys() { return f.getKeys(); }
 
-    // Setters and Getters:
     public Long getId() {
-        return id.of(this);
+        return ID.of(this);
     }
 
-    public void setId(Long anId) {
-        id.setValue(this, anId);
-    }
-
-    public String getLastname() {
-        return lastname.of(this);
-    }
-
-    public void setLastname(String aLastname) {
-        lastname.setValue(this, aLastname);
+    public void setId(Long id) {
+        PrfUser.ID.setValue(this, id);
     }
 
     public String getPersonalId() {
-        return personalId.of(this);
+        return PERSONAL_ID.of(this);
     }
 
-    public void setPersonalId(String aPersonalId) {
-        personalId.setValue(this, aPersonalId);
+    public void setPersonalId(String personalId) {
+        PrfUser.PERSONAL_ID.setValue(this, personalId);
     }
 
     public String getSurename() {
-        return surename.of(this);
+        return SURENAME.of(this);
     }
 
-    public void setSurename(String aSurename) {
-        surename.setValue(this, aSurename);
+    public void setSurename(String surename) {
+        PrfUser.SURENAME.setValue(this, surename);
+    }
+
+    public String getLastname() {
+        return LASTNAME.of(this);
+    }
+
+    public void setLastname(String lastname) {
+        PrfUser.LASTNAME.setValue(this, lastname);
     }
 
 }
