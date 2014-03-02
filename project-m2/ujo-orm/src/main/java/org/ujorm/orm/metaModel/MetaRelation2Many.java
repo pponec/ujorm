@@ -38,7 +38,7 @@ import org.ujorm.orm.annot.Column;
 public class MetaRelation2Many extends AbstractMetaModel {
     private static final Class<MetaRelation2Many> CLASS = MetaRelation2Many.class;
 
-    /** Property Factory */
+    /** Key Factory */
     private static final KeyFactory<MetaRelation2Many> fa = KeyFactory.CamelBuilder.get(CLASS);
     /** The meta-model ID. */
     @XmlAttribute
@@ -48,31 +48,36 @@ public class MetaRelation2Many extends AbstractMetaModel {
      * then the several names can be separated by a space or comma character.
      */
     public static final Key<MetaRelation2Many,String> NAME = fa.newKey("name", "");
-    /** Table key */
+    /** The direct table key */
     @Transient
-    public static final Key<MetaRelation2Many,Key> TABLE_KEY = fa.newKey("tableProperty");
+    public static final Key<MetaRelation2Many,Key> TABLE_KEY = fa.newKey("tableKey");
     /** DB table */
     @Transient
     public static final Key<MetaRelation2Many,MetaTable> TABLE = fa.newKey("table");
-    /** The property initialization */
+    /** The factory initialization */
     static{fa.lock();}
 
     /** Table alias for a better performance, the resource is: {@code TABLE.of(this).getAlias()} */
     private final String tableAlias;
-    
+
     public MetaRelation2Many() {
         this.tableAlias = MetaTable.ALIAS.getDefault();
     }
 
-    public MetaRelation2Many(MetaTable table, Key tableProperty, MetaRelation2Many param) {
+    /**
+     * Meta-model for a relation to many
+     * @param table Related Table
+     * @param tableKey The direct Key
+     * @param param XML content
+     */    public MetaRelation2Many(MetaTable table, Key tableKey, MetaRelation2Many param) {
         this.tableAlias = table.getAlias();
-        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableProperty, false);
+        Field field = UjoManager.getInstance().getPropertyField(table.getType(), tableKey, false);
         Column column = field!=null ? field.getAnnotation(Column.class) : null;
 
         if (true) {
-            ID.setValue(this, tableProperty.getName());
+            ID.setValue(this, tableKey.getName());
             TABLE.setValue(this, table);
-            TABLE_KEY.setValue(this, tableProperty);
+            TABLE_KEY.setValue(this, tableKey);
         }
         if (column!=null) {
             changeDefault(this, NAME, column.name());
@@ -81,7 +86,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         if (param!=null) {
             changeDefault(this, NAME, NAME.of(param));
         }
-        changeDefault(this, NAME, tableProperty.getName());
+        changeDefault(this, NAME, tableKey.getName());
 
         assert !getKey().isComposite() : String.format("The key %s must be direct.", getKey().toStringFull());
     }
@@ -98,7 +103,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return false;
     }
 
-    /** Returns a column property */
+    /** Returns a column direct key  */
     public final Key getKey() {
         return TABLE_KEY.of(this);
     }
@@ -108,7 +113,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return false;
     }
 
-    /** Returns true if the property type is a type or subtype of the parameter class. */
+    /** Returns true if the key type is a type or subtype of the parameter class. */
     public final boolean isTypeOf(Class type) {
         return getKey().isTypeOf(type);
     }
@@ -129,7 +134,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return result;
     }
 
-    /** Get property value */
+    /** Get key value */
     @SuppressWarnings("unchecked")
     final public Object getValue(Ujo ujo) {
         final Object result = getKey().of(ujo);
@@ -142,7 +147,7 @@ public class MetaRelation2Many extends AbstractMetaModel {
         return result;
     }
 
-    /** Property name */
+    /** Key name */
     @Override
     public String toString() {
         return TABLE_KEY.of(this).toStringFull();

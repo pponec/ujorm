@@ -29,11 +29,14 @@ import org.ujorm.orm.metaModel.MetaColumn;
  */
 final public class AliasKey {
 
+    /** The default relation alias contains an unsupported character(s) (e.g. space) */
+    @PackagePrivate static final String DEFAULT_RELATION_ALIAS = new String("[RELATION ALIAS]");
+
     /** The Key is not null always */
     @PackagePrivate Key<?,?> key;
-    /** Nullable alias */
+    /** Nullable alias for the previous table */
     @PackagePrivate String aliasFrom;
-    /** Nullable alias */
+    /** Nullable alias for the next table */
     @PackagePrivate String aliasTo;
     /** Hash */
     @PackagePrivate int hashCode;
@@ -49,8 +52,8 @@ final public class AliasKey {
     /**
      * Constructor
      * @param key direct Key
-     * @param aliasFrom Alias previous table
-     * @param aliasTo Alias the next table
+     * @param aliasFrom Alias for the previous table
+     * @param aliasTo Alias for the next table
      */
     public AliasKey(Key<?, ?> key, String aliasFrom, String aliasTo) {
         this.key = key;
