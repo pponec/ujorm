@@ -76,7 +76,7 @@ import org.ujorm.core.WeakKeyFactory;
  *     <li>the WeakKey can be useful on support any Map with a String key for better type-safe features</li>
  *     <li>a Map implementation can be simply replaced by the List if you like</li>
  *     <li>support to building URL parameters</li>
- *     <li>Spring module provides a special class <code>AbstractAplicationContextAdapter</code> to get Spring services by the WeakKey, see <a href="http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-spring/src/test/java/org/ujorm/spring/AplicationContextAdapter.java?view=markup">the example</a></li>
+ *     <li>Spring module provides a special class <code>AbstractAplicationContextAdapter</code> to get Spring services by the WeakKey, see <a href="http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-spring/src/test/java/org/ujorm/spring/AplicationContextAdapter.java?view=markup">the example</a></li>
  *     <li>understanding the WeakKey serves as a great introduction to the Ujo architecture.</li>
  * </ul>
  * 
