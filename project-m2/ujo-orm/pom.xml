@@ -21,7 +21,7 @@
     </contributors>
 
     <scm>
-        <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/project-m2/ujo-orm/</url>
+        <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-orm/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk/project-m2ujo-orm</connection>
     </scm>
 
