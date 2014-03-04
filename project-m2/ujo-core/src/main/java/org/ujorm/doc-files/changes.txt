@@ -1,8 +1,11 @@
 The Ujorm release notes
 *******************************
-release 1.43 (2014-02-*)
-+ supporting the hierarchical queries (with a relation to yourself) is done using the new method Key.alias()
-+ some code cleaning
+
+release 1.43 (2014-03-*)
++ hierarchical queries (with a relation to yourself) are supported using an alias of the key (see the new method Key.alias())
++ an XSD generator is implemented to get an Ujo class structure in a XML format
++ new XSD file for ORM configuration files is available to a check
++ code cleaning is done
 + documentation was extended
 
 release 1.42 (2014-01-17)
