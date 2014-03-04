@@ -112,7 +112,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add a Combo-box for a persistent entity */
-    public <T extends OrmUjo> void add(Key<U, T> key, Criterion<T> crn, Key<T,?> display) {
+    public <T extends OrmUjo> void add(Key<U, T> key, Key<T,?> display, Criterion<T> crn) {
         add(ComboField.of(key, crn, display));
     }
 
