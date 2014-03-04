@@ -25,7 +25,7 @@
     </contributor>
     -->
     <scm>
-        <url>http://ujoframework.svn.sourceforge.net/viewvc/ujoframework/trunk/</url>
+        <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</connection>
     </scm>
 
