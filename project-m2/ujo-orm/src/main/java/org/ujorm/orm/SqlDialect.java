@@ -690,15 +690,15 @@ abstract public class SqlDialect {
 
     /**
      * Write a right value form criterion
-     * @return return {@code false} if no right value was written.
+     * @return A value criterion to assign into the SQL query.
      */
     protected ValueCriterion printCriterionValue(String template, ColumnWrapper column, ValueCriterion crit, Appendable out) throws IOException {
         final Object right = crit.getRightNode();
         if (right instanceof Key) {
             final Key rightProperty = (Key) right;
-            final MetaColumn col2 = (MetaColumn) ormHandler.findColumnModel(rightProperty, true);
+            final ColumnWrapper col2 = AliasKey.getLastKey(rightProperty).getColumn(ormHandler);
 
-            if (col2.isForeignKey()) {
+            if (col2.getModel().isForeignKey()) {
                 throw new UnsupportedOperationException("Foreign key is not supported yet");
             }
             if (true) {
