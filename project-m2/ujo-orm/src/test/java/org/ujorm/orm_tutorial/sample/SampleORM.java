@@ -81,6 +81,7 @@ public class SampleORM {
             sample.useSelectItems_7();
             sample.useHierarchicalQuery();
             sample.useHierarchicalQuerySimple();
+            sample.useHierarchicalQueryMore();
             sample.useOptimizedSelect();
             sample.useOneRequestLoading();
             sample.useNativeCriterion();
@@ -505,6 +506,18 @@ public class SampleORM {
         assert parentName.toStringFull().equals("Customer.parent[customerAlias].surename") : "The wong implementation CompositeKey.toString()";
     }
 
+    /** DB query with relations to yourself as a value of Criterion */
+    public void useHierarchicalQueryMore() {
+        Criterion<Customer> crn1;
+        crn1 = Customer.FIRSTNAME.whereEq(
+               Customer.PARENT.alias("parent1")
+               .add(Customer.PARENT).alias("parent2")
+               .add(Customer.SURENAME));
+
+        Customer customer = session.createQuery(crn1).uniqueResult();
+        assert customer != null : "The result have got the one customers";
+    }
+
     /** Create a SELECT for the one column only
      * with no duplicate rows for a better performance.
      */
@@ -861,7 +874,7 @@ public class SampleORM {
             //
             Customer c0 = new Customer();
             Customer.SURENAME.setValue(c0, currentName);
-            Customer.FIRSTNAME.setValue(c0, "Lucy");
+            Customer.FIRSTNAME.setValue(c0, superName);
             Customer.PARENT.setValue(c0, c1);
             //
             session.save(c2);
