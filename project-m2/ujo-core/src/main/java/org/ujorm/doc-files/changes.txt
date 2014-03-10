@@ -1,7 +1,10 @@
 The Ujorm release notes
 *******************************
 
-release 1.43 (2014-03-*)
+release 1.44 (2014-03-16)
++ hierarchical database queries support an hierarchical UJO Key as a Criterion value argument
+
+release 1.43 (2014-03-05)
 + hierarchical queries (with a relation to yourself) are supported using an alias of the key (see the new method Key.alias())
 + an XSD generator is implemented to get an Ujo class structure in a XML format
 + new XSD file for ORM configuration files is available to a check
