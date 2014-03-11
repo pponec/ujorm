@@ -30,8 +30,8 @@ import org.ujorm.orm.metaModel.MetaColumn;
  * import static org.ujorm.orm.template.AliasTable.Build.*;
  * public void example() {
  *     OrmHandler handler = createHandler();
- *     AliasTable<Order> order = AliasTable.of(Order.class, "order", handler);
- *     AliasTable<Item> item = AliasTable.of(Item.class, "item", handler);
+ *     AliasTable<Order> order = handler.tableOf(Order.class, "order");
+ *     AliasTable<Item> item = handler.tableOf(Item.class, "item");
  *
  *     String sql
  *             = SELECT(order.column(Order.CREATED), item.column(Item.NOTE))

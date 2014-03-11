@@ -379,8 +379,8 @@ public class OrmHandler implements OrmHandlerProvider {
         return (T) result;
     }
 
-    /** Find a table model by the dbClass.
-     * If the table model is not found then the IllegalStateException is throwed.
+    /** Find a tableOf model by the dbClass.
+     * If the tableOf model is not found then the IllegalStateException is throwed.
      */
     public MetaTable findTableModel(Class<? extends OrmUjo> dbClass) throws IllegalStateException {
         MetaTable result = entityMap.get(dbClass);
@@ -442,9 +442,20 @@ public class OrmHandler implements OrmHandlerProvider {
         return this;
     }
 
-    /** Create new Alias table */
-    public <UJO extends OrmUjo> AliasTable<UJO> alias(Class<UJO> entity, String alias) {
+    /** Create a new instance of the class {@link AliasTable} */
+    public <UJO extends OrmUjo> AliasTable<UJO> tableOf(Class<UJO> entity, String alias) {
         return AliasTable.of(entity, alias, this);
     }
 
+    /** Create a new instance of the class {@link AliasTable} */
+    public <UJO extends OrmUjo> AliasTable<UJO> tableOf(Class<UJO> entity) {
+        return AliasTable.of(entity, this);
+    }
+
+    /** Create a new instance of the class {@link AliasTable}.
+     * Use the new method {@link OrmHandler#tableOf(java.lang.Class, java.lang.String)} rather */
+    @Deprecated
+    public <UJO extends OrmUjo> AliasTable<UJO> alias(Class<UJO> entity, String alias) {
+        return tableOf(entity, alias);
+    }
 }
