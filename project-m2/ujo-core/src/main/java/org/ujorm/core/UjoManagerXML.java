@@ -205,7 +205,6 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
                 continue;
             }
 
-
             if (value instanceof List) {
                 final Class itemType = property instanceof ListKey ? ((ListKey)property).getItemType() : null ;
 

@@ -101,14 +101,14 @@ final class UjoHandlerXML extends DefaultHandler {
     , String qualifiedName
     , Attributes attribs
     ) throws SAXException {
-        
+
         addBodyText($value);
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
         $parentObj   = lastElement<0 ? new Element() : getLastElement() ;
         $property    = $parentObj.isUjo()
                      ? $parentObj.ujo.readKeys().findDirectKey($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
                      : null ;
-        $propertyList = $property instanceof ListKey ? (ListKey) $property : null;       
+        $propertyList = $property instanceof ListKey ? (ListKey) $property : null;
         $elementType = $parentObj.isRoot() ? rootType : null ;
         $listType    = null;
         $itemType    = null;
@@ -158,7 +158,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 else       newElement().init((List)container, $itemType);
 
                 if (isUJO && !$attributes.isEmpty()) {
-                    addAttributes((UjoTextable) container, ignoreMissingProp || isRoot());
+                    addAttributes((UjoTextable) container, ignoreMissingProp || $parentObj.isRoot());
                 }
 
                 // Save container into parent:
@@ -168,7 +168,7 @@ final class UjoHandlerXML extends DefaultHandler {
                     if ($propertyList != null) {
                         List list = (List) $propertyList.of(ujoParent);
                         if (list==null) {
-                            if ($listType==null 
+                            if ($listType==null
                             ||  $listType.isInterface()) {
                                 list = $propertyList.getList(ujoParent);
                             } else {
@@ -191,11 +191,6 @@ final class UjoHandlerXML extends DefaultHandler {
         }
     }
 
-    /** The root level */
-    private boolean isRoot() {
-        return lastElement == 0;
-    }
-
     /** End the scope of a prefix-URI mapping. */
     @Override
     public void endElement
@@ -204,7 +199,7 @@ final class UjoHandlerXML extends DefaultHandler {
     , String qualifiedName
     ) throws SAXException {
         // String elementName = simpleName.length()!=0 ? simpleName : qualifiedName ;
-        
+
         if ($elementCont) {
 
             addBodyText($value);
@@ -217,12 +212,12 @@ final class UjoHandlerXML extends DefaultHandler {
             // Vrite Value:
             if ($propertyList != null) {
                 List oldValue = (List) $parentObj.ujo.readValue($property); // The original solution for a back compatibility
-                if (oldValue != null) {                    
+                if (oldValue != null) {
                    final Object value = ujoManager.decodeValue($elementType, $value.toString());
                    oldValue.add(value);
                 } else {
-                   ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);                    
-                }                        
+                   ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);
+                }
             } else {
                ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);
             }
@@ -234,10 +229,9 @@ final class UjoHandlerXML extends DefaultHandler {
             $value.setLength(0);
             $elementCont = true;
         }
-
     }
 
-    /** Appned an part of tag value. */
+    /** Append an part of tag value. */
     @Override
     public void characters(char[] buf, int offset, int len) throws SAXException {
         $value.append(buf, offset, len);
@@ -246,7 +240,7 @@ final class UjoHandlerXML extends DefaultHandler {
     // === UTILITIES ==============================
 
     /** Returns true, if text in not empty. */
-    protected final boolean isEmpty(CharSequence text) {
+    protected final boolean isEmpty(final CharSequence text) {
         return text==null || text.length()==0;
     }
 
