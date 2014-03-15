@@ -50,14 +50,14 @@ public class SampleCORE {
 
         try {
             sample.writeAndRead();
-            sample.copyAllProperties();
+            sample.copyAttributes();
             sample.copyAttributesByType();
             sample.restoreDefaultValues();
             sample.compositeKey();
-            sample.valueOfCompositeKey();
-            sample.employeeValidator();
-            sample.filterEmployeeListByConstant();
-            sample.filterEmployeeListByKey();
+            sample.compositeKeyAsFactory();
+            sample.criterionAsValidator();
+            sample.criterionAsFilter();
+            sample.criterionAsFilterWithKey();
             sample.sortEmployeeList();
             sample.filterAndSortList();
 
@@ -93,7 +93,7 @@ public class SampleCORE {
     }
 
    /** How to copy all key values from BO to another object? */
-    public void copyAllProperties() throws Exception {
+    public void copyAttributes() throws Exception {
         Ujo employee1 = getEmployee();
         Ujo employee2 = employee1.getClass().newInstance();
 
@@ -148,17 +148,17 @@ public class SampleCORE {
                 : "Check composite key name";
     }
 
-    /** Setter by a composite key does not need references */
-    public void valueOfCompositeKey() {
+    /** Setter with a composite key can create instances of a reference */
+    public void compositeKeyAsFactory() {
         Employee employee = new Employee();
-        employee.set(COMPANY.add(CITY), "Prague"); // method creates new instance of Compopany
+        employee.set(COMPANY.add(CITY), "Prague"); // method creates a new instance of Company
 
         assert employee.get(COMPANY).get(CITY) == "Prague"
                 : "Check the value";
     }
 
-    /** Employee validator */
-    public void employeeValidator() {
+    /** Employee validator example */
+    public void criterionAsValidator() {
         Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
         try {
             validator.validate(getEmployee(), "Minimal WAGE is: %f.", validator.getRightNode());
@@ -168,7 +168,7 @@ public class SampleCORE {
     }
 
     /** Filter all employees, where a city name of a company equals employee name. */
-    public void filterEmployeeListByConstant() {
+    public void criterionAsFilter() {
         List<Employee> employees = COMPANY.add(CITY)
                 .whereEq("Prague")
                 .evaluate(getEmployees());
@@ -180,8 +180,8 @@ public class SampleCORE {
     }
 
     /** Filter all employees, where a <strong>city name</strong> equals to the <strong>employee's name</strong>.
-     * Note: the result Employee name is 'Prague'. */
-    public void filterEmployeeListByKey() {
+     * Note: the result if Employee's name is 'Prague'. */
+    public void criterionAsFilterWithKey() {
         List<Employee> employees = COMPANY.add(CITY)
                 .whereEq(NAME)
                 .evaluate(getEmployees());
@@ -191,6 +191,7 @@ public class SampleCORE {
         }
 
         assert employees.size() == 1 : "Check the result count";
+        assert employees.get(0).get(NAME).equals("Prague") : "Check the result value";
     }
 
     /** How to sort the List?  */
