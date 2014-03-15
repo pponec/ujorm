@@ -77,11 +77,10 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
      * <h4>See the next correct use case:</h4>
      * <pre class="pre">
      *   Person person = new Person();
-     *   person.set(Person.MOTHER.add(Person.NAME), "mothersName");
      *   person.set(Person.MOTHER.add(Person.MOTHER).add(Person.NAME), "grandMothersName");
      * </pre>
      * Every <strong>set()</strong> method creates a new mother's instance (type of Person)  before assigning its name.
-     * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean) 
+     * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
      */
     @SuppressWarnings("unchecked")
     final public <UJO extends UJO_IMPL, VALUE> Ujo set(final CompositeKey<UJO, VALUE> key, final VALUE value) {

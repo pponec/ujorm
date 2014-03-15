@@ -1,6 +1,9 @@
 The Ujorm release notes
 *******************************
 
+release 1.45 (2014-04-?)
++ the new method SmartUjo.set(CompositeKey, VALUE) is ready to create all missing relations before assigning the VALUE
+
 release 1.44 (2014-03-16)
 + hierarchical database queries support an hierarchical UJO Key as a Criterion value argument
 
