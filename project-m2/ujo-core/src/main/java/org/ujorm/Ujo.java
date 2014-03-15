@@ -19,13 +19,13 @@ package org.ujorm;
 /**
  * <a href="http://ujorm.org/" class="undecor"><img style="width: 32px; height: 32px;" alt="UJO Icons" src="doc-files/ujo32.png">
  * UJO</a> means a <i>Unified Java Object</i> and its implementations provides a similar service like a JavaBeans class.
- * Ujo is a basic inteface of the <strong>Ujorm</strong> together with an interface <code>Key</code> .
+ * Ujo is a basic interface of the <strong>Ujorm</strong> together with an interface <code>Key</code> .
  * <p>Basic two methods are <code>writeProperty(..)</code> and <code>readProperty(..)</code> for a manipulation with a value;
- * next method <code>readAuthorization(..)</code> recommends an authorizaton for a required action, selected Property and context;
+ * next method <code>readAuthorization(..)</code> recommends an authorization for a required action, selected Property and context;
  * the last method returns all keys of current UJO object...</p>
  * See a <a href="package-summary.html#UJO">general prologue</a> for more information or see some implementations.
  *
- *<p>The fastest way to use the interface is to extend an abstract parrent:.</p>
+ *<p>The fastest way to use the interface is to extend an abstract parent:.</p>
  * <pre class="pre">
  * <span class="java-keywords">import</span> org.ujorm.core.*;
  * <span class="java-keywords">public class</span> Person <span class="java-keywords">extends</span> AbstractUjo {
@@ -41,7 +41,7 @@ package org.ujorm;
  *    }
  * }
  * </pre>
- * 
+ *
  * @author Pavel Ponec
  * @see Key
  * @assoc - - - Key
@@ -50,12 +50,12 @@ package org.ujorm;
  * @opt operations
  */
 public interface Ujo {
-    
-    
+
+
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#getValue(org.ujorm.Ujo)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br />NOTE: A reaction on an incorrect property depends on the implementation.
      *
      * @param property Property must be a direct type only!
@@ -64,12 +64,12 @@ public interface Ujo {
      * @see Key#isDirect()
      */
     public Object readValue(Key<?,?> property);
-    
-    
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+
+
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(Ujo,Object)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
      * <br>NOTE: A reaction on an incorrect property depends on the implementation.
      *
      * @param property Property must be a direct type only!
@@ -77,7 +77,7 @@ public interface Ujo {
      * @see Key#isDirect()
      */
     public void writeValue(Key<?,?> property, Object value);
-    
+
     /** Returns all direct keys.
      * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).
      * Two attributes with the same "name" must be demarked by a different annotation {@link XmlElementBody} for a XML export.
@@ -86,13 +86,13 @@ public interface Ujo {
      * @see Key#isDirect()
      */
     public <T extends Ujo> KeyList<T> readKeys();
-    
+
     /**
      * Get an authorization of the property for different actions.
      * <br>There is recommended to return a true value for all actions by a default.
-     * <br>Note: An implemetace may return the original property array so it is possible to change some original property in the array from an extefnal code.
+     * <br>Note: An implementation may return the original property array so it is possible to change some original property in the array from an external code.
      *
-     * @param action Type of request. See constant(s) UjoAction.ACTION_* for more information. 
+     * @param action Type of request. See constant(s) UjoAction.ACTION_* for more information.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY.
      * @param property A property of the Ujo
      * @param value A property value
@@ -100,5 +100,5 @@ public interface Ujo {
      * @see UjoAction
      */
     public boolean readAuthorization(UjoAction action, Key<?,?> property, Object value);
-    
+
 }

@@ -62,10 +62,10 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
     protected UjoManager readUjoManager() {
         return UjoManager.getInstance();
     }
-    
+
     /** Returns all direct keys.
      * <br>Note 1: An order of keys is sorted by a value of the index attribute.
-     * <br>Note 2: The implemetation returns the original property array so it is possible to change some original property in the array from an extefnal code.
+     * <br>Note 2: The implementation returns the original property array so it is possible to change some original property in the array from an extefnal code.
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see Key#isDirect()
      */
@@ -89,7 +89,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
     public boolean readAuthorization(final UjoAction action, final Key property, final Object value) {
         return true;
     }
-    
+
     /**
      * Is the object equals to a parameter Ujo?
      */
@@ -101,15 +101,15 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
         ;
         return result;
     }
-    
-    
+
+
     /** A String representation. */
     @Override
     public String toString() {
         final String result = readUjoManager().toString(this);
         return result;
     }
-    
+
     /**
      * Object is Cloneable
      * <br>Note: There are supported attributes
@@ -120,7 +120,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * <li>List</li>
      * <li>array of privitive values</li>
      * <ul>
-     * 
+     *
      * @param depth Depth of clone.
      * @param context A context of the action.
      * <br>Sample: value "0" returns the same object, value "1" returns the same attribute values, etc.
@@ -129,9 +129,9 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
     public Object clone(final int depth, final Object context) {
         return readUjoManager().clone(this, depth, context);
     }
-    
+
     // ---- An UjoTextable implementation -----
-    
+
     /**
      * Get an original value in a String format. Property must be an direct type.
      * otherwise method returns an instance of String.
@@ -147,7 +147,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
         final String result = readUjoManager().encodeValue(value, false);
         return result;
     }
-    
+
     /**
      * Set value from a String format. Property must be an direct type.
      *

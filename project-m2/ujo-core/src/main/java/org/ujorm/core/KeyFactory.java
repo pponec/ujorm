@@ -449,11 +449,10 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
     }
 
     /* ================== STATIC METHOD ================== */
-    /** Regurns array of generic parameters */
-    /**
-     *
+
+    /** Returns array of generic parameters
      * @param field Base field
-     * @param typeResult Value {@code true} neans a key TYPE, other is required key DOMAIN.
+     * @param typeResult Value {@code true} means a key TYPE, other it is required key DOMAIN.
      * @return type
      * @throws IllegalArgumentException
      */
@@ -486,7 +485,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         private static final InnerDataStore<Ujo> EMPTY = new InnerDataStore<Ujo>(Ujo.class, false, null);
         /** External keys */
         private final Iterable<? extends Key<?,?>> superKeys;
-        /** The Ujo type is serializad holder of the Fields*/
+        /** The Ujo type is serialized holder of the Fields*/
         private final Class<?> holder;
         /** Convert <strong>field names<strong> to a camelCase name.*/
         private final boolean camelCase;
@@ -494,7 +493,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         private final List<Key<UJO, ?>> propertyList;
         /** Property annotations */
         private final Map<Key<UJO, ?>, Map<Class<? extends Annotation>, Annotation>> annotationsMap;
-        /** The Ujo type is serializad holder of the Fields*/
+        /** The Ujo type is serialized holder of the Fields*/
         private Class<?> type;
 
         /** Constructor */
