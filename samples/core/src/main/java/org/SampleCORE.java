@@ -81,28 +81,31 @@ public class SampleCORE {
         // Read:
         Long id = person.get(ID);
         String name = person.get(NAME);
-        double wage = person.get(WAGE); // result is not null allways
-        Company address = person.get(COMPANY);
+        double wage = person.get(WAGE); // result is not never null due the default value
+        Company company = person.get(COMPANY);
 
-        System.out.println("Employee: " + id + " " + name + " " + wage + " " + address);
+        assert id.equals(7L);
+        assert name.equals("Pavel");
+        assert wage == 20.00;
+        assert company != null;
 
-        // == Sample of compilation bugs: ==
-        // person.set(AnotherID, 7L);  // Key from another object is not allowed
-        // person.set(ID, "Pavel");    // Wrong data type of the parameter
-        // String id = person.get(ID); // Wrong the return data type
+        // === Code sample where the compiler fails: ===
+        // person.set(Company.ID, 7L);  // Key from another domain is not allowed
+        // person.set(Employee.ID, "Pavel");    // Wrong data type of the argument value
+        // String id = person.get(Employee.ID); // Wrong return class
     }
 
-   /** How to copy all key values from BO to another object? */
+   /** How to copy all attributes from a source to a target object? */
     public void copyAttributes() throws Exception {
-        Ujo employee1 = getEmployee();
-        Ujo employee2 = employee1.getClass().newInstance();
+        Employee employee1 = getEmployee();
+        Employee employee2 = employee1.getClass().newInstance();
 
         for (Key<Ujo,?> key : employee1.readKeys()) {
             key.copy(employee1, employee2);
         }
 
-        assert ((Employee)employee1).getId()
-            == ((Employee)employee2).getId() : "Compare the IDs";
+        assert employee1.getId()
+            == employee2.getId() : "Compare the IDs";
     }
 
    /** How to copy some key values to another object? */
@@ -248,12 +251,10 @@ public class SampleCORE {
              return person;
     }
 
-
     /** Find an Company somewhere */
     private Company getCompany() {
         return createCompany(20L, "My Company", "Prague");
     }
-
 
     /** Find an Company somewhere */
     private Company createCompany(Long id, String name, String city) {
