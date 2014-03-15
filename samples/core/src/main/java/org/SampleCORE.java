@@ -51,12 +51,13 @@ public class SampleCORE {
         try {
             sample.writeAndRead();
             sample.copyAllProperties();
-            sample.copySomeProperties();
+            sample.copyAttributesByType();
             sample.restoreDefaultValues();
-            sample.concatenateProperties();
+            sample.compositeKey();
+            sample.valueOfCompositeKey();
             sample.employeeValidator();
             sample.filterEmployeeListByConstant();
-            sample.filterEmployeeListByProperty();
+            sample.filterEmployeeListByKey();
             sample.sortEmployeeList();
             sample.filterAndSortList();
 
@@ -82,11 +83,11 @@ public class SampleCORE {
         String name = person.get(NAME);
         double wage = person.get(WAGE); // result is not null allways
         Company address = person.get(COMPANY);
-        
+
         System.out.println("Employee: " + id + " " + name + " " + wage + " " + address);
 
         // == Sample of compilation bugs: ==
-        // person.set(AnotherID, 7L);  // Property from another object is not allowed
+        // person.set(AnotherID, 7L);  // Key from another object is not allowed
         // person.set(ID, "Pavel");    // Wrong data type of the parameter
         // String id = person.get(ID); // Wrong the return data type
     }
@@ -96,62 +97,73 @@ public class SampleCORE {
         Ujo employee1 = getEmployee();
         Ujo employee2 = employee1.getClass().newInstance();
 
-        for (Key p : employee1.readKeys()) {
-            p.copy(employee1, employee2);
+        for (Key<Ujo,?> key : employee1.readKeys()) {
+            key.copy(employee1, employee2);
         }
-        System.out.println("Employee 2: " + employee2);
+
+        assert ((Employee)employee1).getId()
+            == ((Employee)employee2).getId() : "Compare the IDs";
     }
 
    /** How to copy some key values to another object? */
-    public void copySomeProperties() {
+    public void copyAttributesByType() {
         Employee employee1 = getEmployee();
         Employee employee2 = new Employee();
 
-        for (Key p : employee1.readKeys()) {
-            if (p.isTypeOf(String.class)) {
-                p.copy(employee1, employee2);
+        for (Key<Ujo,?> key : employee1.readKeys()) {
+            if (key.isTypeOf(String.class)) {
+                key.copy(employee1, employee2);
             }
-            if (p==Employee.WAGE) { // Property have got an unique instance
-                p.copy(employee1, employee2);
+            if (key.equals(Employee.WAGE)) { // Key have got an unique instance
+                key.copy(employee1, employee2);
             }
         }
-        System.out.println("employee 2: " + employee2);
+
+        assert employee1.get(ID) != employee2.get(ID) : "Compare the IDs";
+        assert employee1.get(NAME) == employee2.get(NAME) : "Compare the NAMEs";
     }
 
     /** How to restore default values) */
+    @SuppressWarnings("unchecked")
     public void restoreDefaultValues() {
         Employee employee = getEmployee();
 
-        for (Key p : employee.readKeys()) {
-             employee.set(p, p.getDefault());
+        for (Key key : employee.readKeys()) {
+             employee.set(key, null);
         }
-
-        // Another solution:
-        employee.set(WAGE, null);
-        double newWage = employee.get(WAGE) + 10L; // type safe
-
-        System.out.println("Employee: " + employee + " wage: " + newWage);
+        assert employee.get(WAGE).equals(WAGE.getDefault())
+                : "Check the default value";
     }
 
     /** How to concatenate UJO Keys? */
-    public void concatenateProperties() {
+    public void compositeKey() {
         Employee employee = getEmployee();
 
         final String city1, city2;
         city1 = employee.get(COMPANY).get(CITY);
         city2 = employee.get(COMPANY.add(CITY)); // If the Company is null then the result is null too.
 
-        System.out.println("The same streets: " + (city1==city2) );
-        System.out.println("The composite property: " + COMPANY.add(CITY) );
+        assert (city1==city2) : "The same streets ";
+        assert COMPANY.add(CITY).toString().equals("company.city")
+                : "Check composite key name";
+    }
+
+    /** Setter by a composite key does not need references */
+    public void valueOfCompositeKey() {
+        Employee employee = new Employee();
+        employee.set(COMPANY.add(CITY), "Prague"); // method creates new instance of Compopany
+
+        assert employee.get(COMPANY).get(CITY) == "Prague"
+                : "Check the value";
     }
 
     /** Employee validator */
     public void employeeValidator() {
         Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
         try {
-          validator.validate(getEmployee(), "Minimal WAGE is: %f.", validator.getRightNode());
+            validator.validate(getEmployee(), "Minimal WAGE is: %f.", validator.getRightNode());
         } catch (IllegalArgumentException e) {
-           System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -167,8 +179,9 @@ public class SampleCORE {
         System.out.println(employees.size());
     }
 
-    /** Filter all employees, where a city name equals the Prague. */
-    public void filterEmployeeListByProperty() {
+    /** Filter all employees, where a <strong>city name</strong> equals to the <strong>employee's name</strong>.
+     * Note: the result Employee name is 'Prague'. */
+    public void filterEmployeeListByKey() {
         List<Employee> employees = COMPANY.add(CITY)
                 .whereEq(NAME)
                 .evaluate(getEmployees());
@@ -176,7 +189,8 @@ public class SampleCORE {
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
         }
-        System.out.println(employees.size());
+
+        assert employees.size() == 1 : "Check the result count";
     }
 
     /** How to sort the List?  */
@@ -188,7 +202,8 @@ public class SampleCORE {
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
         }
-        System.out.println(employees.size());
+
+        assert employees.size() == 4 : "Check the result count";
     }
 
     /** Filter and sort a Employee list using the class CriteriaTool. */
@@ -205,7 +220,7 @@ public class SampleCORE {
         for (Employee employee : employees) {
             System.out.println("Filtered employee: " + employee);
         }
-        System.out.println(employees.size());
+        assert employees.size() == 3 : "Check the result count";
     }
 
     /** Samples of WeakKey using are located in a separated class. */
@@ -238,7 +253,7 @@ public class SampleCORE {
         return createCompany(20L, "My Company", "Prague");
     }
 
-    
+
     /** Find an Company somewhere */
     private Company createCompany(Long id, String name, String city) {
         Company result = new Company();
@@ -253,7 +268,7 @@ public class SampleCORE {
     /** Create the List of Persons */
     private List<Employee> getEmployees() {
         final List<Employee> result = new ArrayList<Employee>();
-        
+
         result.add(createEmployee(10L, "Pavel", 50.00, getCompany()));
         result.add(createEmployee(20L, "Petr", 80.00, getCompany()));
         result.add(createEmployee(30L, "Kamil", 20.00, getCompany()));
