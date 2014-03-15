@@ -17,19 +17,25 @@ package org;
 
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.SmartUjo;
 
 /** Simple Company domain class. */
 public class Company extends SmartUjo<Company> {
+    /** Key factory */
+    private static final KeyFactory<Company> f = newCamelFactory(Company.class);
+
 
     /** The Primary Key */
-    public static final Key<Company, Long> ID = newKey("id");
+    public static final Key<Company, Long> ID = f.newKey();
     /** Company name */
-    public static final Key<Company, String> NAME = newKey("name");
+    public static final Key<Company, String> NAME = f.newKey();
     /** City name */
-    public static final Key<Company, String> CITY = newKey("city");
+    public static final Key<Company, String> CITY = f.newKey();
     /** Registration date */
-    public static final Key<Company, Date> CREATED = newKey("created");
+    public static final Key<Company, Date> CREATED = f.newKey();
+
+    static { f.lock(); } // Lock the factory;
 
     // --- An optional implementation of commonly used setters and getters ---
 
