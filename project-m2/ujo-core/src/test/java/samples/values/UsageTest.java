@@ -56,7 +56,7 @@ public class UsageTest extends TestCase {
         person = new Person();
         try {
             person.set((Key) mothersName, "name4");
-            assertTrue("The method must thow an exception, because the mother is not assigned", false);
+            assertFalse("The method must thow an exception, because the mother is not assigned", true);
         } catch (NullPointerException e) {
             // The method must thow an exception, because the mother is not assigned
         }
