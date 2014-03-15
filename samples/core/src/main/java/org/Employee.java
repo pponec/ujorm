@@ -55,15 +55,15 @@ public class Employee extends SmartUjo<Employee> {
     public void setWage(Double cache) {
         set(WAGE, cache);
     }
-    public Company getAddress() {
+    public Company getCompany() {
         return get(COMPANY);
     }
-    public void setAddress(Company address) {
+    public void setCompany(Company address) {
         set(COMPANY, address);
     }
 
     /** Example of the <strong>Composed property</strong> */
-    public String getCompnyCity() {
+    public String getCompanyCity() {
         return get(COMPANY.add(Company.CITY));
     }
 }

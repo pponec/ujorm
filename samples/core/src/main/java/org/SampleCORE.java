@@ -21,8 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.Validator;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.criterion.*;
+import org.ujorm.validator.ValidationError;
 import static org.Company.CITY;
 import static org.Employee.*;
 
@@ -31,12 +33,13 @@ import static org.Employee.*;
  * ------------------------------------------ <br>
  * Learn the basic skills in 15 minutes by a live Java code.
  *
- * Entities: <pre>
- *  - Employee [id, name, wage, address]
- *  - Company [id, city, country]
- * </pre>
+ * Entities:
+ * <ul>
+ *   <li>{@link Employee} [id, name, wage, company]</li>
+ *   <li>{@link Company} [id, name, city, created]</li>
+ * </ul>
  *
- * Copyright 2011, Pavel Ponec
+ * Copyright 2011-2014, Pavel Ponec
  *
  * @see Employee
  * @see Company
@@ -49,17 +52,18 @@ public class SampleCORE {
         SampleCORE sample = new SampleCORE();
 
         try {
-            sample.writeAndRead();
+            sample.readWriteAsBean();
+            sample.readWriteAsUjo();
+            sample.defaultValues();
+            sample.keyValidator();
             sample.copyAttributes();
             sample.copyAttributesByType();
-            sample.restoreDefaultValues();
             sample.compositeKey();
             sample.compositeKeyAsFactory();
             sample.criterionAsValidator();
             sample.criterionAsFilter();
             sample.criterionAsFilterWithKey();
             sample.sortEmployeeList();
-            sample.filterAndSortList();
 
         } catch (Exception e) {
             Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
@@ -68,8 +72,30 @@ public class SampleCORE {
 
     // ======= CHAPTERS: =======
 
-    /** How to write and read data of the UJO object? */
-    public void writeAndRead() {
+    /** See a common data access for the JavaBean object */
+    public void readWriteAsBean() {
+        Employee person = new Employee();
+
+        // Write:
+        person.setId(7L);
+        person.setName("Pavel");
+        person.setWage(20.00);
+        person.setCompany(new Company());
+
+        // Read:
+        Long id = person.getId();
+        String name = person.getName();
+        double wage = person.getWage();
+        Company company = person.getCompany();
+
+        assert id.equals(7L);
+        assert name.equals("Pavel");
+        assert wage == 20.00;
+        assert company != null;
+    }
+
+    /** See a data access using API of the {@link Ujo} object */
+    public void readWriteAsUjo() {
         Employee person = new Employee();
 
         // Write:
@@ -95,56 +121,91 @@ public class SampleCORE {
         // String id = person.get(Employee.ID); // Wrong return class
     }
 
-   /** How to copy all attributes from a source to a target object? */
-    public void copyAttributes() throws Exception {
-        Employee employee1 = getEmployee();
-        Employee employee2 = employee1.getClass().newInstance();
-
-        for (Key<Ujo,?> key : employee1.readKeys()) {
-            key.copy(employee1, employee2);
-        }
-
-        assert employee1.getId()
-            == employee2.getId() : "Compare the IDs";
-    }
-
-   /** How to copy some key values to another object? */
-    public void copyAttributesByType() {
-        Employee employee1 = getEmployee();
-        Employee employee2 = new Employee();
-
-        for (Key<Ujo,?> key : employee1.readKeys()) {
-            if (key.isTypeOf(String.class)) {
-                key.copy(employee1, employee2);
-            }
-            if (key.equals(Employee.WAGE)) { // Key have got an unique instance
-                key.copy(employee1, employee2);
-            }
-        }
-
-        assert employee1.get(ID) != employee2.get(ID) : "Compare the IDs";
-        assert employee1.get(NAME) == employee2.get(NAME) : "Compare the NAMEs";
-    }
-
     /** How to restore default values) */
     @SuppressWarnings("unchecked")
-    public void restoreDefaultValues() {
+    public void defaultValues() {
         Employee employee = getEmployee();
 
         for (Key key : employee.readKeys()) {
-             employee.set(key, null);
+            employee.set(key, null);
         }
         assert employee.get(WAGE).equals(WAGE.getDefault())
                 : "Check the default value";
     }
 
-    /** How to concatenate UJO Keys? */
-    public void compositeKey() {
-        Employee employee = getEmployee();
+    /** There is a {@link Validator} class which checks an input data using the method
+     * {@link Validator#checkValue(java.lang.Object, org.ujorm.Key, org.ujorm.Ujo) checkValue(value ...)}
+     * to ensure an integration.
+     * <h3>Features:</h3>
+     * <ul>
+     *    <li>two Validators can be joined using operator AND/OR to a new composite Validator</li>
+     *    <li>one (composite) Validator can be assigned into an object type of {@link Key}</li>
+     *    <li>the Validator can be assigned to the {@link Key} to check all input data in the <strong>writing time</strong> always</li>
+     * </ul>
+     */
+    public void keyValidator() {
+        final Integer wrongValue = 3;
+        final Integer minValue = 10;
+        final Integer maxValue = 20;
+        final Validator<Integer> validator = Validator.Build.range(minValue, maxValue);
 
+        // check the wrong input value:
+        ValidationError error = validator.validate(wrongValue, null, null);
+
+        // get a localization message using a custom template:
+        String expected = "My input 3 must be before 10 and 20 including";
+        String template = "My input ${INPUT} must be before ${MIN} and ${MAX} including";
+        String realMessage = error.getMessage(template);
+        assert expected.equals(realMessage);
+
+        // Composite validator:
+        final Validator<Integer> compositeValidator = validator.and(Validator.Build.notNull(Integer.class));
+        error = compositeValidator.validate(wrongValue, null, null);
+        assert error!=null;
+    }
+
+   /** How to copy all attributes from a source to a target object? */
+    public void copyAttributes() throws Exception {
+        Employee source = getEmployee();
+        Employee target = source.getClass().newInstance();
+
+        for (Key<Ujo,?> key : source.readKeys()) {
+            key.copy(source, target);
+        }
+
+        assert source.getId()
+            == target.getId() : "Compare the same IDs";
+    }
+
+   /** How to copy some key values to another object? */
+    public void copyAttributesByType() {
+        Employee source = getEmployee();
+        Employee target = new Employee();
+
+        for (Key<Ujo,?> key : source.readKeys()) {
+            if (key.isTypeOf(String.class)) {
+                key.copy(source, target);
+            }
+            if (key.equals(Employee.WAGE)) { // The direct key have got an unique instance always
+                key.copy(source, target);
+            }
+        }
+
+        assert source.get(ID) != target.get(ID) : "Compare the IDs";
+        assert source.get(NAME) == target.get(NAME) : "Compare the NAMEs";
+    }
+
+    /** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.
+     * New key can be used also to reading and writing values too.
+     */
+    public void compositeKey() {
+        final Key<Employee,String> companyCity = COMPANY.add(CITY);
+
+        Employee employee = getEmployee();
         final String city1, city2;
-        city1 = employee.get(COMPANY).get(CITY);
-        city2 = employee.get(COMPANY.add(CITY)); // If the Company is null then the result is null too.
+
+        city1 = employee.get(companyCity);         // If the Company is null then the result is null too.
+        city2 = employee.getCompany().getCity(); // In this case the statement have got the same result
 
         assert (city1==city2) : "The same streets ";
         assert COMPANY.add(CITY).toString().equals("company.city")
@@ -182,11 +243,11 @@ public class SampleCORE {
         System.out.println(employees.size());
     }
 
-    /** Filter all employees, where a <strong>city name</strong> equals to the <strong>employee's name</strong>.
+    /** Filter all employees, where a <strong>company.city</strong> equals to the <strong>employee's name</strong>.
      * Note: the result if Employee's name is 'Prague'. */
     public void criterionAsFilterWithKey() {
         List<Employee> employees = COMPANY.add(CITY)
-                .whereEq(NAME)
+                .whereEq(Employee.NAME) // The employee NAME can be a correct value of the Criterion
                 .evaluate(getEmployees());
 
         for (Employee employee : employees) {
@@ -208,23 +269,6 @@ public class SampleCORE {
         }
 
         assert employees.size() == 4 : "Check the result count";
-    }
-
-    /** Filter and sort a Employee list using the class CriteriaTool. */
-    public void filterAndSortList() {
-        CriteriaTool<Employee> tool = CriteriaTool.newInstance();
-
-        // Select including sorting informations:
-        List<Employee> employees = tool.select
-                ( getEmployees()
-                , WAGE.whereGt(5.0)
-                , UjoComparator.newInstance(Employee.NAME.descending())
-                );
-
-        for (Employee employee : employees) {
-            System.out.println("Filtered employee: " + employee);
-        }
-        assert employees.size() == 3 : "Check the result count";
     }
 
     /** Samples of WeakKey using are located in a separated class. */
