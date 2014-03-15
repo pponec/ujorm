@@ -16,6 +16,7 @@
 package org.ujorm.implementation.quick;
 
 import java.util.List;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
 import org.ujorm.Ujo;
@@ -64,10 +65,27 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
         return key.of((UJO) this);
     }
 
-    /** Setter  based on Key. Type of value is checked in the runtime. */
+    /** The setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
     final public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> key, final VALUE value) {
         key.setValue((UJO)this, value);
+        return this;
+    }
+
+    /** The setter  based on a composite Key.
+     * The method creates all missing relations of the CompositeKey.
+     * <h4>See the next correct use case:</h4>
+     * <pre class="pre">
+     *   Person person = new Person();
+     *   person.set(Person.MOTHER.add(Person.NAME), "mothersName");
+     *   person.set(Person.MOTHER.add(Person.MOTHER).add(Person.NAME), "grandMothersName");
+     * </pre>
+     * Every <strong>set()</strong> method creates a new mother's instance (type of Person)  before assigning its name.
+     * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean) 
+     */
+    @SuppressWarnings("unchecked")
+    final public <UJO extends UJO_IMPL, VALUE> Ujo set(final CompositeKey<UJO, VALUE> key, final VALUE value) {
+        key.setValue((UJO)this, value, true);
         return this;
     }
 
