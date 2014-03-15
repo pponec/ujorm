@@ -12,10 +12,6 @@ import java.util.List;
 import junit.framework.*;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
-import org.ujorm.criterion.CriteriaTool;
-import org.ujorm.criterion.Criterion;
-import org.ujorm.criterion.BinaryOperator;
-import org.ujorm.criterion.Operator;
 import static org.ujorm.criterion.Person.*;
 
 /**
@@ -23,51 +19,51 @@ import static org.ujorm.criterion.Person.*;
  * @author Pavel Ponec
  */
 public class CriteriaWeakTest extends MyTestCase {
-    
+
     PathProperty<Person,Double> MOTHER_CASH  = PathProperty.newInstance(MOTHER, CASH);
     PathProperty<Person,Double> GMOTHER_CASH = PathProperty.newInstance(MOTHER, MOTHER, CASH);
-    
+
     private List<Person> persons;
-    
+
     public CriteriaWeakTest(String testName) {
         super(testName);
     }
-    
+
     public static TestSuite suite() {
         TestSuite suite = new TestSuite(CriteriaWeakTest.class);
         return suite;
     }
-    
+
     private Person newPerson(String name, Double cash) {
         Person result = new Person();
         result.set(NAME, name);
         result.set(CASH, cash);
-        
+
         persons.add(result);
         return result;
     }
-    
+
     protected void setUp() throws Exception {
         persons = new ArrayList<Person>();
-        
+
         Person p = newPerson("John" , 10.0);
         Person m = newPerson("Marry", 20.0);
         Person g = newPerson("Julia", 30.0);
         Person e = newPerson("Eva"  , 40.0);
-        
+
         p.set(MOTHER, m);
         m.set(MOTHER, g);
         g.set(MOTHER, e);
-        
+
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
         persons = null;
     }
-    
 
-    
+
+
     @SuppressWarnings("unchecked")
     public void testInit_01() {
         CriteriaTool uc  = CriteriaTool.newInstance();
@@ -76,7 +72,7 @@ public class CriteriaWeakTest extends MyTestCase {
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
     }
-    
+
     @SuppressWarnings("unchecked")
     public void testInit_02a() {
         CriteriaTool ct  = CriteriaTool.newInstance();
@@ -88,7 +84,7 @@ public class CriteriaWeakTest extends MyTestCase {
 
     /** For documentation (!) */
     public void testDoc() {
-        
+
         // Make a criterion:
         Criterion<Person> crn1 = Criterion.where(CASH, Operator.GT, 10.0);
         Criterion<Person> crn2 = Criterion.where(CASH, Operator.LE, 20.0);
@@ -115,8 +111,8 @@ public class CriteriaWeakTest extends MyTestCase {
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
     }
-    
-    
+
+
     @SuppressWarnings("unchecked")
     public void testInit_03a() {
         CriteriaTool uc  = CriteriaTool.newInstance();
@@ -124,7 +120,7 @@ public class CriteriaWeakTest extends MyTestCase {
         List<Person> result = uc.select(persons, ex1);
         assertEquals(2, result.size());
     }
-    
+
     @SuppressWarnings("unchecked")
     public void testInit_03b() {
         CriteriaTool uc  = CriteriaTool.newInstance();
@@ -133,7 +129,7 @@ public class CriteriaWeakTest extends MyTestCase {
         assertEquals(1, result.size());
         assertEquals("John", result.get(0).get(NAME) );
     }
-    
+
     @SuppressWarnings("unchecked")
     public void testInit_04a() {
         CriteriaTool uc  = CriteriaTool.newInstance();
@@ -145,11 +141,11 @@ public class CriteriaWeakTest extends MyTestCase {
         assertEquals("Marry", result.get(0).get(NAME) );
         assertEquals(20.0, result.get(0).get(CASH) );
     }
-    
-    
-    
+
+
+
     public static void main(java.lang.String[] argList) {
         junit.textui.TestRunner.run(suite());
     }
-    
+
 }
