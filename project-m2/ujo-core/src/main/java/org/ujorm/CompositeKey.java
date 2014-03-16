@@ -58,7 +58,7 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
      * always.
      * @param ujo Related Ujo object
      * @param value A value to assign.
-     * @param createRelations create related UJO objects in case of the composite key
+     * @param createRelations  Value {@code true} creates missing domain relations (but no based entity)
      * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
      * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
      */
