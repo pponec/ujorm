@@ -19,6 +19,7 @@ package org;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
@@ -195,8 +196,11 @@ public class SampleCORE {
     }
 
     /** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.
-     * <br/>New key can be used also to reading and writing values too.
-     * <br/>Note the setter with a composite key can create instances of a reference in case of implementation of the {@link SmartUjo}
+     * The CompositeKeys can be used to reading and writing attributes of related domain objects.
+     * <h4>Note</h4>
+     * The setter with a composite key can <create>create</create> missing domain relations of the CompositeKey.in case the base domain object is type of {@link SmartUjo}.
+     * For other cases you can use the special method
+     * {@link CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean) CompositeKey.setValue(ujo,value,createRelations)}.
      */
     public void compositeKey() {
         final Key<Employee, String> companyCity = COMPANY.add(CITY);
