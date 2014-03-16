@@ -50,13 +50,13 @@ import org.ujorm.UjoAction;
  */
 public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
-    /** Quotation */
+    /** Quotation, the default value is {@code "} */
     final private char quotation = '"';
-    /** CSV Separator */
+    /** CSV Separator, the default value is {@code ;} */
     private char separator = ';';
     /** New Line */
     private String newLine = System.getProperty("line.separator");
-    /** Enable to print a CSV header */
+    /** Enable to print a CSV header, the default value is {@code true} */
     private boolean printHeader = true;
     /** Skip empty lines on reading, the default value is {@code true}. */
     private boolean skipEmptyLines = true;
@@ -306,10 +306,12 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
 
     // ----------- ATTRIBUTES -----------------
 
+    /** Get CSV separator */
     public char getSeparator() {
         return separator;
     }
 
+    /** CSV Separator, the default value is {@code ;} */
     public UjoManagerCSV setSeparator(char separator) {
         this.separator = separator;
         return this;
@@ -330,7 +332,7 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         return printHeader;
     }
 
-    /** Print CSV Header */
+    /** Print CSV Header, the defalt value is {@code true} */
     public UjoManagerCSV setPrintHeader(boolean printHeader) {
         this.printHeader = printHeader;
         return this;

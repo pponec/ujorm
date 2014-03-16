@@ -24,7 +24,9 @@ import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoComparator;
+import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
+import org.ujorm.implementation.quick.SmartUjo;
 import org.ujorm.validator.ValidationError;
 import static org.Company.CITY;
 import static org.Employee.*;
@@ -64,9 +66,11 @@ public class SampleCORE {
             sample.criterionAsFilter();
             sample.criterionAsFilterWithKey();
             sample.sortEmployeeList();
+            sample.importCSV();
 
         } catch (Exception e) {
             Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
+            throw new IllegalStateException("Sample CORE", e);
         }
     }
 
@@ -203,7 +207,7 @@ public class SampleCORE {
      * {@link CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean) CompositeKey.setValue(ujo,value,createRelations)}.
      */
     public void compositeKey() {
-        final Key<Employee, String> companyCity = COMPANY.add(CITY);
+        final CompositeKey<Employee, String> companyCity = COMPANY.add(CITY);
 
         Employee employee = new Employee();
         String city = employee.get(companyCity);
@@ -272,6 +276,25 @@ public class SampleCORE {
         }
 
         assert employees.size() == 4 : "Check the result count";
+    }
+
+    /** Import the CSV file using a Composite Keys */
+    public void importCSV() throws Exception {
+        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+        UjoManagerCSV<Employee> manager = UjoManagerCSV.getInstance
+                ( Employee.ID
+                , Employee.NAME
+                , Employee.WAGE
+                , Employee.COMPANY.add(Company.NAME)
+                , Employee.COMPANY.add(Company.CITY)
+                , Employee.COMPANY.add(Company.CREATED)
+                );
+        List<Employee> employes = manager.loadCSV(scanner, this);
+
+        assert employes.size() == 3;
+        assert employes.get(0).getName().equals("Pavel");
+        assert employes.get(0).getCompany().getName().equals("Test a.s.");
+        assert employes.get(0).getCompany().getCity().equals("Prague");
     }
 
     /** Samples of WeakKey using are located in a separated class. */

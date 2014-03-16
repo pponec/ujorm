@@ -9,6 +9,16 @@
     <description>The project learns to you how to use basic skils from core module</description>
     <url>http://ujorm.org</url>
     <build>
+        <resources>
+            <resource>
+                <includes>
+                    <include>**/*.csv</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <directory>src/main/java</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -41,7 +51,6 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>
 
