@@ -59,8 +59,7 @@ public class SampleCORE {
             sample.copyAttributes();
             sample.copyAttributesByType();
             sample.compositeKey();
-            sample.compositeKeyAsFactory();
-            sample.criterionAsValidator();
+            sample.theCriterion();
             sample.criterionAsFilter();
             sample.criterionAsFilterWithKey();
             sample.sortEmployeeList();
@@ -196,33 +195,33 @@ public class SampleCORE {
     }
 
     /** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.
-     * New key can be used also to reading and writing values too.
+     * <br/>New key can be used also to reading and writing values too.
+     * <br/>Note the setter with a composite key can create instances of a reference in case of implementation of the {@link SmartUjo}
      */
     public void compositeKey() {
-        final Key<Employee,String> companyCity = COMPANY.add(CITY);
+        final Key<Employee, String> companyCity = COMPANY.add(CITY);
 
-        Employee employee = getEmployee();
-        final String city1, city2;
-
-        city1 = employee.get(companyCity);         // If the Company is null then the result is null too.
-        city2 = employee.getCompany().getCity(); // In this case the statement have got the same result
-
-        assert (city1==city2) : "The same streets ";
-        assert COMPANY.add(CITY).toString().equals("company.city")
-                : "Check composite key name";
-    }
-
-    /** Setter with a composite key can create instances of a reference */
-    public void compositeKeyAsFactory() {
         Employee employee = new Employee();
-        employee.set(COMPANY.add(CITY), "Prague"); // method creates a new instance of Company
+        String city = employee.get(companyCity);
+        assert city == null;
 
-        assert employee.get(COMPANY).get(CITY) == "Prague"
-                : "Check the value";
+        employee.set(companyCity, "Prague");
+        city = employee.get(companyCity);
+        assert city == "Prague";
+        assert employee.getCompany() != null;
+
+        // Note, the next code throws an exception:
+        try {
+            employee = new Employee();
+            employee.set((Key<Employee, String>) companyCity, "Prague");
+            assert false : "Method throws an excpeton due the company instance is NULL";
+        } catch (NullPointerException e) {
+            assert true : "OK";
+        }
     }
 
-    /** Employee validator example */
-    public void criterionAsValidator() {
+    /** Employee theCriterion example */
+    public void theCriterion() {
         Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
         try {
             validator.validate(getEmployee(), "Minimal WAGE is: %f.", validator.getRightNode());
