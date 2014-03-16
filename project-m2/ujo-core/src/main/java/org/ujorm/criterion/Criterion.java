@@ -173,7 +173,7 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
 
     /** Print the Criteron including the main domain name along the example: Order(id EQ 1)  */
     public String toStringFull() {
-        Class domain = getDomain();
+        final Class domain = getDomain();
         return domain.getSimpleName() + this;
     }
 
