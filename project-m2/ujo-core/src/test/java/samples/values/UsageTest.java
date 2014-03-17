@@ -33,8 +33,8 @@ public class UsageTest extends TestCase {
         assertEquals(null, person.get(MOTHER.add(MOTHER)));
 
         final Key<Person,String> myName = NAME;
-        final CompositeKey<Person,String> mothersName = MOTHER.add(NAME);
-        final CompositeKey<Person,String> grandMothersName = MOTHER.add(MOTHER).add(NAME);
+        final Key<Person,String> mothersName = MOTHER.add(NAME);
+        final Key<Person,String> grandMothersName = MOTHER.add(MOTHER).add(NAME);
 
         assertEquals("NAME", myName.toString());
         assertEquals("MOTHER.NAME", mothersName.toString());
@@ -51,16 +51,6 @@ public class UsageTest extends TestCase {
         assertEquals("name1", person.get(myName));
         assertEquals("name2", person.get(mothersName));
         assertEquals("name3", person.get(grandMothersName));
-
-        // Hovewer the setter with a composite key type of Key throws an exception:
-        person = new Person();
-        try {
-            person.set((Key) mothersName, "name4");
-            assertFalse("The method must thow an exception, because the mother is not assigned", true);
-        } catch (NullPointerException e) {
-            // The method must thow an exception, because the mother is not assigned
-        }
-
     }
 
 

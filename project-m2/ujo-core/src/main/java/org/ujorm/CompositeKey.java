@@ -51,6 +51,20 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
      */
     public Key<?,?> getDirectKey(int level);
 
+    /** The method writes a {@code value} to the domain object
+     * and creates all missing relations.
+     * <br/>The method calls a method
+     * {@link Ujo#writeValue(org.ujorm.Key, java.lang.Object)}
+     * always.
+     * @param ujo Related Ujo object
+     * @param value A value to assign.
+     * @param createRelations  Value {@code true} creates missing domain relations (but no based entity)
+     * @throws ValidationException can be throwed from an assigned input validator{@Link Validator};
+     * @see Ujo#writeValue(org.ujorm.Key, java.lang.Object)
+     */
+    @Override
+    public void setValue(final UJO ujo, final VALUE value) throws ValidationException;
+
     /**
      * It is a basic method for setting an appropriate type safe value to an Ujo object.
      * <br>The method calls a method

@@ -65,15 +65,8 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
         return key.of((UJO) this);
     }
 
-    /** The setter  based on Key. Type of value is checked in the runtime. */
-    @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> key, final VALUE value) {
-        key.setValue((UJO)this, value);
-        return this;
-    }
-
     /** The setter  based on a composite Key.
-     * The method creates all missing relations of the CompositeKey.
+     * If the {@link Key} argument is type of {@link CompositeKey} the method creates all missing relations.
      * <h4>See the next correct use case:</h4>
      * <pre class="pre">
      *   Person person = new Person();
@@ -83,8 +76,8 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
      * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
      */
     @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, VALUE> Ujo set(final CompositeKey<UJO, VALUE> key, final VALUE value) {
-        key.setValue((UJO)this, value, true);
+    final public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> key, final VALUE value) {
+        key.setValue((UJO)this, value);
         return this;
     }
 
