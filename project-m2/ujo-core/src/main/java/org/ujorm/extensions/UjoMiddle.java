@@ -46,7 +46,16 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
     public <UJO extends UJO_IMPL, VALUE> VALUE get
         ( Key<UJO, VALUE> key);
 
-    /** Setter  based on Key. Type of value is checked in the runtime. */
+    /** The setter  based on a composite Key.
+     * If the {@code Key} argument is type of {@link CompositeKey} the method creates all missing relations.
+     * <h4>See the next correct use case:</h4>
+     * <pre class="pre">
+     *   Person person = new Person();
+     *   person.set(Person.MOTHER.add(Person.MOTHER).add(Person.NAME), "grandMothersName");
+     * </pre>
+     * Every <strong>set()</strong> method creates a new mother's instance (type of Person)  before assigning its name.
+     * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
+     */
     public <UJO extends UJO_IMPL, VALUE> Ujo set
         ( Key<UJO, VALUE> key
         , VALUE value);

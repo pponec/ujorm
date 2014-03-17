@@ -233,20 +233,20 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     @SuppressWarnings("unchecked")
     @Override
     public Ujo getSemiValue(final UJO ujo, final boolean create) {
-        if (ujo==null) {
+        if (ujo == null) {
             return ujo;
         }
         Ujo result = ujo;
         for (int i = 0, max = keys.length - 1; i < max; i++) {
             Ujo value = (Ujo) keys[i].of(result);
-            if (value==null) {
+            if (value == null) {
                 if (create) {
                     try {
-                       value = (Ujo) keys[i].getType().newInstance();
-                       result.writeValue(keys[i], value);
-                   } catch (Throwable e) {
-                       throw new IllegalStateException("Can't create new instance for the key: " + keys[i].toStringFull(), e);
-                   }
+                        value = (Ujo) keys[i].getType().newInstance();
+                        result.writeValue(keys[i], value);
+                    } catch (Throwable e) {
+                        throw new IllegalStateException("Can't create new instance for the key: " + keys[i].toStringFull(), e);
+                    }
                 } else {
                     return value;
                 }
@@ -266,10 +266,14 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return of(ujo);
     }
 
-    /** {@inheritDoc} */
+    /** The method writes a {@code value} to the domain object
+     * and creates all missing relations.
+     * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
+     * @since 1.45
+     */
     @Override
     final public void setValue(final UJO ujo, final VALUE value) throws ValidationException {
-        setValue(ujo, value, false);
+        setValue(ujo, value, true);
     }
 
     @Override
