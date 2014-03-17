@@ -19,7 +19,6 @@ package org;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
@@ -58,9 +57,9 @@ public class SampleCORE {
             sample.readWriteAsBean();
             sample.readWriteAsUjo();
             sample.defaultValues();
+            sample.numericDefaultValues();
             sample.keyValidator();
             sample.copyAttributes();
-            sample.copyAttributesByType();
             sample.compositeKey();
             sample.theCriterion();
             sample.criterionAsFilter();
@@ -137,6 +136,21 @@ public class SampleCORE {
                 : "Check the default value";
     }
 
+    /** See how to restore a default value for all Numbers only.
+     * A type of the Key can be checked by the method {@link Key#isTypeOf(java.lang.Class) }.
+     */
+    @SuppressWarnings("unchecked")
+    public void numericDefaultValues() {
+        Employee employee = getEmployee();
+
+        for (Key key : employee.readKeys()) {
+            if (key.isTypeOf(Number.class)) {
+                employee.set(key, null);
+            }
+        }
+        assert employee.get(WAGE).equals(WAGE.getDefault()) : "Check the default value";
+    }
+
     /** There is a {@link Validator} class which checks an input data using the method
      * {@link Validator#checkValue(java.lang.Object, org.ujorm.Key, org.ujorm.Ujo) checkValue(value ...)}
      * to ensure an integration.
@@ -177,26 +191,8 @@ public class SampleCORE {
             key.copy(source, target);
         }
 
-        assert source.getId()
-            == target.getId() : "Compare the same IDs";
-    }
-
-   /** How to copy some key values to another object? */
-    public void copyAttributesByType() {
-        Employee source = getEmployee();
-        Employee target = new Employee();
-
-        for (Key<Ujo,?> key : source.readKeys()) {
-            if (key.isTypeOf(String.class)) {
-                key.copy(source, target);
-            }
-            if (key.equals(Employee.WAGE)) { // The direct key have got an unique instance always
-                key.copy(source, target);
-            }
-        }
-
-        assert source.get(ID) != target.get(ID) : "Compare the IDs";
-        assert source.get(NAME) == target.get(NAME) : "Compare the NAMEs";
+        assert source.getId() == target.getId()
+                : "Compare the same IDs";
     }
 
     /** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.
@@ -207,7 +203,7 @@ public class SampleCORE {
      * {@link CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean) CompositeKey.setValue(ujo,value,createRelations)}.
      */
     public void compositeKey() {
-        final CompositeKey<Employee, String> companyCity = COMPANY.add(CITY);
+        final Key<Employee, String> companyCity = COMPANY.add(CITY);
 
         Employee employee = new Employee();
         String city = employee.get(companyCity);
@@ -217,15 +213,6 @@ public class SampleCORE {
         city = employee.get(companyCity);
         assert city == "Prague";
         assert employee.getCompany() != null;
-
-        // Note, the next code throws an exception:
-        try {
-            employee = new Employee();
-            employee.set((Key<Employee, String>) companyCity, "Prague");
-            assert false : "Method throws an excpeton due the company instance is NULL";
-        } catch (NullPointerException e) {
-            assert true : "OK";
-        }
     }
 
     /** Employee theCriterion example */
