@@ -267,21 +267,18 @@ public class SampleCORE {
 
     /** Import the CSV file using a Composite Keys */
     public void importCSV() throws Exception {
-        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
-        UjoManagerCSV<Employee> manager = UjoManagerCSV.getInstance
-                ( Employee.ID
-                , Employee.NAME
-                , Employee.WAGE
-                , Employee.COMPANY.add(Company.NAME)
-                , Employee.COMPANY.add(Company.CITY)
-                , Employee.COMPANY.add(Company.CREATED)
-                );
-        List<Employee> employes = manager.loadCSV(scanner, this);
+    Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+    UjoManagerCSV<Employee> manager = UjoManagerCSV.getInstance
+            ( Employee.ID
+            , Employee.NAME
+            , Employee.COMPANY.add(Company.ID)
+            );
+    List<Employee> employes = manager.loadCSV(scanner, this);
 
-        assert employes.size() == 3;
-        assert employes.get(0).getName().equals("Pavel");
-        assert employes.get(0).getCompany().getName().equals("Test a.s.");
-        assert employes.get(0).getCompany().getCity().equals("Prague");
+    assert employes.size() == 3;
+    assert employes.get(0).getId().equals(1L);
+    assert employes.get(0).getName().equals("Pavel");
+    assert employes.get(0).getCompany().getId().equals(10L);
     }
 
     /** Samples of WeakKey using are located in a separated class. */
