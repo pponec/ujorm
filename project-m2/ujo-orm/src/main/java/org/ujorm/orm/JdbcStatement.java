@@ -151,7 +151,7 @@ public class JdbcStatement {
         for (int i=0, max=params.getCount(); i<max; i++) {
             final Object value = params.getParameter(i);
             final Class type = value!=null ? value.getClass() : Void.class;
-            final Property property = Property.newInstance("[sqlParameter]", type);
+            final Property property = Property.of("[sqlParameter]", type);
             final MetaColumn column = new MetaColumn(typeService);
 
             MetaColumn.TABLE.setValue(column, query.getTableModel());

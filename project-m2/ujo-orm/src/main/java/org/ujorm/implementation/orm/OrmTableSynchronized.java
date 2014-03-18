@@ -262,7 +262,7 @@ public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUj
     , int index
     , boolean lock
     ) {
-        return Property.newInstance(name, type, defaultValue, index, lock);
+        return Property.of(name, type, defaultValue, index, lock);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -281,7 +281,7 @@ public abstract class OrmTableSynchronized<UJO_IMPL extends Ujo> extends QuickUj
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key p) {
-        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+        return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
     // ------------- DEPRECATED METHODS ---------------------
