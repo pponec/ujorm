@@ -132,7 +132,7 @@ public class SampleCORE {
         for (Key key : employee.readKeys()) {
             employee.set(key, null);
         }
-        assert employee.get(WAGE).equals(WAGE.getDefault())
+        assert employee.getWage().equals(WAGE.getDefault())
                 : "Check the default value";
     }
 
@@ -148,7 +148,8 @@ public class SampleCORE {
                 employee.set(key, null);
             }
         }
-        assert employee.get(WAGE).equals(WAGE.getDefault()) : "Check the default value";
+        assert employee.getWage().equals(WAGE.getDefault())
+                : "Check the default value";
     }
 
     /** There is a {@link Validator} class which checks an input data using the method
@@ -220,8 +221,9 @@ public class SampleCORE {
         Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
         try {
             validator.validate(getEmployee(), "Minimal WAGE is: %f.", validator.getRightNode());
+            assert false : Employee.WAGE + " is not valid";
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            assert e.getMessage() != null;
         }
     }
 
@@ -234,7 +236,7 @@ public class SampleCORE {
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
         }
-        System.out.println(employees.size());
+        assert employees.size() == 4;
     }
 
     /** Filter all employees, where a <strong>company.city</strong> equals to the <strong>employee's name</strong>.
@@ -249,7 +251,7 @@ public class SampleCORE {
         }
 
         assert employees.size() == 1 : "Check the result count";
-        assert employees.get(0).get(NAME).equals("Prague") : "Check the result value";
+        assert employees.get(0).getName().equals("Prague") : "Check the result value";
     }
 
     /** How to sort the List?  */
@@ -267,18 +269,18 @@ public class SampleCORE {
 
     /** Import the CSV file using a Composite Keys */
     public void importCSV() throws Exception {
-    Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
-    UjoManagerCSV<Employee> manager = UjoManagerCSV.getInstance
-            ( Employee.ID
-            , Employee.NAME
-            , Employee.COMPANY.add(Company.ID)
-            );
-    List<Employee> employes = manager.loadCSV(scanner, this);
+        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+        UjoManagerCSV<Employee> manager = UjoManagerCSV.getInstance
+                ( Employee.ID
+                , Employee.NAME
+                , Employee.COMPANY.add(Company.ID)
+                );
+        List<Employee> employes = manager.loadCSV(scanner, this);
 
-    assert employes.size() == 3;
-    assert employes.get(0).getId().equals(1L);
-    assert employes.get(0).getName().equals("Pavel");
-    assert employes.get(0).getCompany().getId().equals(10L);
+        assert employes.size() == 3;
+        assert employes.get(0).getId().equals(1L);
+        assert employes.get(0).getName().equals("Pavel");
+        assert employes.get(0).getCompany().getId().equals(10L);
     }
 
     /** Samples of WeakKey using are located in a separated class. */
