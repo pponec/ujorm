@@ -382,7 +382,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     @SuppressWarnings("unchecked")
     @Override
     public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> key) {
-        return PathProperty.newInstance((Key) this, key);
+        return PathProperty.of((Key) this, key);
     }
 
     /** Create new composite (indirect) instance for an object type of ListKey.
@@ -513,102 +513,6 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
             + ", domainType=" + key.getDomainType()
             + ", class=" + key.getClass().getName()
             + "}" ;
-    }
-
-    // --------- STATIC METHODS -------------------
-
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
-        return newInstance(name, type, value, index, (Validator) null, lock);
-    }
-
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
-        return new Property<UJO,VALUE>(index)
-                .init(NAME, name)
-                .init(TYPE, type)
-                .init(DEFAULT_VALUE, value)
-                .init(VALIDATOR, validator)
-                .init(LOCK, lock);
-    }
-
-
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, Class<UJO> domainType, int index) {
-        final boolean lock = type!=null
-                    && domainType!=null;
-        return new Property<UJO,VALUE>(index)
-                .init(NAME, name)
-                .init(TYPE, type)
-                .init(DOMAIN_TYPE, domainType)
-                .init(LOCK, lock);
-    }
-
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
-        final Class<UJO> domainType = null;
-        return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
-    }
-
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, Class<UJO> domainType) {
-        return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
-    }
-
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value, int index) {
-        @SuppressWarnings("unchecked")
-        Class<VALUE> type = (Class) value.getClass();
-        return new Property<UJO,VALUE>(index)
-                .init(NAME, name)
-                .init(TYPE, type)
-                .init(DEFAULT_VALUE, value);
-    }
-
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
-     * @hidden
-     */
-    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value) {
-         return newInstance(name, value, UNDEFINED_INDEX);
-    }
-
-
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
-     * @hidden
-     */
-    @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(Key p, int index) {
-         return newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
-    }
-
-
-    /** A Property Factory where a property type is related from from default value.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
-     * @hidden
-     */
-    @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(Key p) {
-         return newInstance(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
     }
 
     /** {@inheritDoc} */
@@ -762,5 +666,207 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     public Criterion<UJO> forNone() {
         return Criterion.forNone(this);
     }
+
+    // --------- STATIC METHODS -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
+        return of(name, type, value, index, (Validator) null, lock);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DEFAULT_VALUE, value)
+                .init(VALIDATOR, validator)
+                .init(LOCK, lock);
+    }
+
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, Class<UJO> domainType, int index) {
+        final boolean lock = type!=null
+                    && domainType!=null;
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DOMAIN_TYPE, domainType)
+                .init(LOCK, lock);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type) {
+        final Class<UJO> domainType = null;
+        return of(name, type, domainType, Property.UNDEFINED_INDEX);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, Class<UJO> domainType) {
+        return of(name, type, domainType, Property.UNDEFINED_INDEX);
+    }
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> of(String name, VALUE value, int index) {
+        @SuppressWarnings("unchecked")
+        Class<VALUE> type = (Class) value.getClass();
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DEFAULT_VALUE, value);
+    }
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> of(String name, VALUE value) {
+         return of(name, value, UNDEFINED_INDEX);
+    }
+
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> of(Key p, int index) {
+         return of(p.getName(), p.getType(), p.getDefault(), index, true);
+    }
+
+
+    /** A Property Factory where a property type is related from from default value.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(Key p) {
+         return of(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
+    }
+
+    // --------- DEPRECATED STATIC METHODS -------------------
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
+        return newInstance(name, type, value, index, (Validator) null, lock);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DEFAULT_VALUE, value)
+                .init(VALIDATOR, validator)
+                .init(LOCK, lock);
+    }
+
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, Class<UJO> domainType, int index) {
+        final boolean lock = type!=null
+                    && domainType!=null;
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DOMAIN_TYPE, domainType)
+                .init(LOCK, lock);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type) {
+        final Class<UJO> domainType = null;
+        return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
+    }
+
+    /** Returns a new instance of property where the default value is null.
+     * The method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newInstance(String name, Class<VALUE> type, Class<UJO> domainType) {
+        return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
+    }
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value, int index) {
+        @SuppressWarnings("unchecked")
+        Class<VALUE> type = (Class) value.getClass();
+        return new Property<UJO,VALUE>(index)
+                .init(NAME, name)
+                .init(TYPE, type)
+                .init(DEFAULT_VALUE, value);
+    }
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(String name, VALUE value) {
+         return newInstance(name, value, UNDEFINED_INDEX);
+    }
+
+
+    /** A Property Factory where a property type is related from from default value.
+     * Method assigns a next property index.
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newInstance(Key p, int index) {
+         return newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
+    }
+
+
+    /** A Property Factory where a property type is related from from default value.
+     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+     * @deprecated Use the of(...) operator
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(Key p) {
+         return newInstance(p.getName(), p.getType(), p.getDefault(), UNDEFINED_INDEX, false);
+    }
+
 
 }

@@ -32,21 +32,21 @@ import org.ujorm.extensions.ListProperty;
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, String&gt; NAME  = newKey(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Double&gt; CASH  = newKey(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public static</span> <span class="java-keywords">final</span> Key&lt;Person, Person&gt; CHILD = newKey(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
- *    
+ *
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
  *    set(CHILD, <span class="java-keywords">new</span> Person());
  *    set(CHILD, NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">Jane</span><span class="java-string-literal">&quot;</span>);
  *    set(CHILD, CASH, 200d);
- *        
+ *
  *    String name = get(CHILD, NAME);
  *    <span class="java-keywords">double</span> cash = get(CHILD, CASH);
  *  }
  *}</pre>
- * 
+ *
  * @see Property
  * @author Pavel Ponec
- * @since UJO release 0.80 
+ * @since UJO release 0.80
  */
 abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJO> implements Serializable {
 
@@ -66,10 +66,10 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
         data = aData;
     }
 
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
      * <br>NOTE: If property is an incorrect then no exception is throwed.
      *
      * @see Key#setValue(Ujo,Object)
@@ -80,10 +80,10 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
         data.put(property, value);
     }
 
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br>NOTE: If property is an incorrect then method returns a null value.
      *
      * @see Key#of(Ujo)
@@ -92,7 +92,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
     public Object readValue(final Key property) {
         return data.get(property);
     }
-    
+
     // --------- STATIC METHODS -------------------
 
     /** Returns a new instance of property where the default value is null.
@@ -100,7 +100,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * @hidden
      */
     public static <UJO extends MapUjoExt,VALUE> Property<UJO,VALUE> newKey(String name) {
-        return Property.newInstance(name, (Class)null);
+        return Property.of(name, (Class)null);
     }
 
     /** A Property Factory
@@ -108,7 +108,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * @hidden
      */
     protected static <UJO extends MapUjoExt, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
-        return Property.newInstance(name, value);
+        return Property.of(name, value);
     }
 
     /** A ListProperty Factory

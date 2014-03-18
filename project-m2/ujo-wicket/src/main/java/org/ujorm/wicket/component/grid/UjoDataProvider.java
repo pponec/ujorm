@@ -350,7 +350,7 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
         this.fetchDatabaseColumns = fetchDatabaseColumns;
     }
 
-    /** Transient table columns */
+    /** Transient tableOf columns */
     public List<IColumn<T, ?>> getColumns() {
         return columns;
     }

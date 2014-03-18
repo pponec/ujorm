@@ -72,8 +72,8 @@ public class Person extends SmartUjo<Person> {
         set(MOTHER.add(MOTHER).add(MOTHER).add(NAME), "Jack");
         set(MOTHER.add(MOTHER).add(MOTHER).add(CASH), 1.1);
 
-        String name = get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, NAME));
-        Double cash = get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, CASH));
+        String name = get(PathProperty.of(MOTHER, MOTHER, MOTHER, NAME));
+        Double cash = get(PathProperty.of(MOTHER, MOTHER, MOTHER, CASH));
 
         String name2 = get(MOTHER.add(MOTHER).add(NAME));
         Double cash2 = get(MOTHER.add(MOTHER).add(CASH));

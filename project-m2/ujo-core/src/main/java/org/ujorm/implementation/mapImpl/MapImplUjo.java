@@ -58,13 +58,13 @@ import org.ujorm.extensions.SuperAbstractUjo;
  * @composed 1 - * Property
  */
 public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSequence,Object>, Serializable {
-    
+
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 977565L;
 
     /** Object data. Unauthorized writing is not allowed. */
     final private HashMap<String,Object> data;
-    
+
     /** Constructor */
     public MapImplUjo() {
         data = new HashMap<String,Object>();
@@ -74,12 +74,12 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     protected MapImplUjo(HashMap<String,Object> aData) {
         data = aData;
     }
-    
 
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
      * <br>NOTE: If property is an incorrect then no exception is throwed.
      *
      * @see Key#setValue(Ujo,Object)
@@ -88,12 +88,12 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
         assert UjoManager.assertDirectAssign(property, value, this);
         put(property, value);
     }
-    
 
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br>NOTE: If property is an incorrect then method returns a null value.
      *
      * @see Key#of(org.ujorm.Ujo)
@@ -102,7 +102,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     public Object readValue(final Key property) {
         return get(property);
     }
-    
+
     // --------- MAP IMPLEMENTATION -------------------
 
     /**  Returns the number of key-value mappings in this map */
@@ -194,7 +194,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * @hidden
      */
     public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newKey(String name) {
-        return Property.newInstance(name, (Class)null, (Class)null);
+        return Property.of(name, (Class)null, (Class)null);
     }
 
     /** A Property Factory
@@ -202,7 +202,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * @hidden
      */
     protected static <UJO extends MapImplUjo, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
-        return Property.newInstance(name, value);
+        return Property.of(name, value);
     }
 
     /** A ListProperty Factory
@@ -220,7 +220,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * @hidden
      */
     public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return Property.newInstance(name, type);
+        return Property.of(name, type);
     }
 
     /** A Property Factory
@@ -228,7 +228,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * @hidden
      */
     protected static <UJO extends MapImplUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
-        return Property.newInstance(name, value);
+        return Property.of(name, value);
     }
 
     /** A ListProperty Factory

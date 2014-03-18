@@ -60,9 +60,9 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /** The main constructor. It is recommended to use the factory method
-     * {@link #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)}
+     * {@link #of(org.ujorm.Key, org.ujorm.Key) of(..)}
      * for better performance in some cases.
-     * @see #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)
+     * @see #of(org.ujorm.Key, org.ujorm.Key) of(..)
      */
     public PathProperty(String lastSpaceName, Key... keys) {
         this(null, lastSpaceName, keys);
@@ -563,85 +563,6 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return this.keys.length;
     }
 
-    // ================ STATIC ================
-
-    /** Create a new instance of property with a new sort attribute value.
-     * @hidden
-     */
-    @SuppressWarnings("deprecation")
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<UJO, VALUE> property, final boolean ascending) {
-        if (property.isAscending()==ascending) {
-            return (Key<UJO, VALUE>) property;
-        }
-        return property.isComposite()
-            ? new PathProperty<UJO, VALUE>(ascending, DEFAULT_ALIAS, property)
-            : new PathProperty<UJO, VALUE>(new Key[]{property}, NO_ALIAS, ascending)
-            ;
-    }
-
-    /** Create a new instance of property with a new sort attribute value.
-     * This is an alias for the static method {@link #sort(org.ujorm.Key, boolean) sort()}.
-     * @hidden
-     * @see #sort(org.ujorm.Key, boolean) sort(..)
-     */
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(final Key<UJO, VALUE> property, final boolean ascending) {
-        return sort(property, ascending);
-    }
-
-    /** Quick instance for the direct property.
-     * @hidden
-     */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final Key<UJO, VALUE> property) {
-        return property.isComposite()
-            ? new PathProperty<UJO, VALUE>(property.isAscending(), CompositeKey.DEFAULT_ALIAS, property)
-            : new PathProperty<UJO, VALUE>(new Key[]{property}, NO_ALIAS, property.isAscending())
-            ;
-    }
-
-    /** Quick instance for the direct properites
-     * @hidden
-     */
-    public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<UJO1, UJO2> property1
-        , final Key<UJO2, VALUE> property2
-        ) {
-        return property1.isComposite() || property2.isComposite()
-            ? new PathProperty<UJO1, VALUE>(property2.isAscending(), DEFAULT_ALIAS, property1, property2)
-            : new PathProperty<UJO1, VALUE>(new Key[]{property1,property2}, NO_ALIAS, property2.isAscending())
-            ;
-    }
-
-    /** Create new instance
-     * @hidden
-     */
-    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<UJO1, UJO2> property1
-        , final Key<UJO2, UJO3> property2
-        , final Key<UJO3, VALUE> property3
-        ) {
-        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, property1, property2, property3);
-    }
-
-    /** Create new instance
-     * @hidden
-     */
-    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<UJO1, UJO2> property1
-        , final Key<UJO2, UJO3> property2
-        , final Key<UJO3, UJO4> property3
-        , final Key<UJO4, VALUE> property4
-        ) {
-        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, property1, property2, property3, property4);
-    }
-
-    /** Create new instance
-     * @hidden
-     */
-    @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... keys) {
-        return new PathProperty(DEFAULT_ALIAS, keys);
-    }
-
     /** {@inheritDoc} */
     @Override
     public Criterion<UJO> where(Operator operator, VALUE value) {
@@ -800,4 +721,144 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     public Criterion<UJO> forNone() {
         return Criterion.forNone(this);
     }
+
+    // ============= STATIC METHODS =============
+
+    /** Create a new instance of property with a new sort attribute value.
+     * @hidden
+     */
+    @SuppressWarnings("deprecation")
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<UJO, VALUE> key, final boolean ascending) {
+        if (key.isAscending()==ascending) {
+            return (Key<UJO, VALUE>) key;
+        }
+        return key.isComposite()
+            ? new PathProperty<UJO, VALUE>(ascending, DEFAULT_ALIAS, key)
+            : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, ascending)
+            ;
+    }
+
+    /** Create a new instance of property with a new sort attribute value.
+     * This is an alias for the static method {@link #sort(org.ujorm.Key, boolean) sort()}.
+     * @hidden
+     * @see #sort(org.ujorm.Key, boolean) sort(..)
+     */
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(final Key<UJO, VALUE> key, final boolean ascending) {
+        return sort(key, ascending);
+    }
+
+    /** Quick instance for the direct property.
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> of(final Key<UJO, VALUE> key) {
+        return key.isComposite()
+            ? new PathProperty<UJO, VALUE>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
+            : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, key.isAscending())
+            ;
+    }
+
+    /** Quick instance for the direct keys
+     * @hidden
+     */
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
+        ( final Key<UJO1, UJO2> key1
+        , final Key<UJO2, VALUE> key2
+        ) {
+        return key1.isComposite() || key2.isComposite()
+            ? new PathProperty<UJO1, VALUE>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
+            : new PathProperty<UJO1, VALUE>(new Key[]{key1,key2}, NO_ALIAS, key2.isAscending())
+            ;
+    }
+
+    /** Create new instance
+     * @hidden
+     */
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
+        ( final Key<UJO1, UJO2> key1
+        , final Key<UJO2, UJO3> key2
+        , final Key<UJO3, VALUE> key3
+        ) {
+        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3);
+    }
+
+    /** Create new instance
+     * @hidden
+     */
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
+        ( final Key<UJO1, UJO2> key1
+        , final Key<UJO2, UJO3> key2
+        , final Key<UJO3, UJO4> key3
+        , final Key<UJO4, VALUE> key4
+        ) {
+        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3, key4);
+    }
+
+    /** Create new instance
+     * @hidden
+     */
+    @SuppressWarnings("unchecked")
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... keys) {
+        return new PathProperty(DEFAULT_ALIAS, keys);
+    }
+
+    /** Create a new instance of property with a new sort attribute value.
+     * This is an alias for the static method {@link #sort(org.ujorm.Key, boolean) sort()}.
+     * @see #sort(org.ujorm.Key, boolean) sort(..)
+     * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key)
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> newInstance(final Key<UJO, VALUE> key, final boolean ascending) {
+        return sort(key, ascending);
+    }
+
+    /** Quick instance for the direct property.
+     * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key)
+     * @hidden
+     */
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> newInstance(final Key<UJO, VALUE> key) {
+        return key.isComposite()
+            ? new PathProperty<UJO, VALUE>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
+            : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, key.isAscending())
+            ;
+    }
+
+    /** Quick instance for the direct properites
+     * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key)
+     * @hidden
+     */
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+        ( final Key<UJO1, UJO2> key1
+        , final Key<UJO2, VALUE> key2
+        ) {
+        return key1.isComposite() || key2.isComposite()
+            ? new PathProperty<UJO1, VALUE>(key2.isAscending(), DEFAULT_ALIAS, key1, key2)
+            : new PathProperty<UJO1, VALUE>(new Key[]{key1,key2}, NO_ALIAS, key2.isAscending())
+            ;
+    }
+
+    /** Create new instance
+     * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key, org.ujorm.Key)
+     * @hidden
+     */
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+        ( final Key<UJO1, UJO2> key1
+        , final Key<UJO2, UJO3> key2
+        , final Key<UJO3, VALUE> key3
+        ) {
+        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3);
+    }
+
+    /** Create new instance
+     * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key, org.ujorm.Key, org.ujorm.Key) )
+     * @hidden
+     */
+    public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
+        ( final Key<UJO1, UJO2> key1
+        , final Key<UJO2, UJO3> key2
+        , final Key<UJO3, UJO4> key3
+        , final Key<UJO4, VALUE> key4
+        ) {
+        return new PathProperty<UJO1, VALUE>(DEFAULT_ALIAS, key1, key2, key3, key4);
+    }
+
 }

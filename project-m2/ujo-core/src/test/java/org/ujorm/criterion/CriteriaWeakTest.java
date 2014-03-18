@@ -10,6 +10,7 @@ package org.ujorm.criterion;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.*;
+import org.ujorm.CompositeKey;
 import org.ujorm.MyTestCase;
 import org.ujorm.extensions.PathProperty;
 import static org.ujorm.criterion.Person.*;
@@ -20,8 +21,8 @@ import static org.ujorm.criterion.Person.*;
  */
 public class CriteriaWeakTest extends MyTestCase {
 
-    PathProperty<Person,Double> MOTHER_CASH  = PathProperty.newInstance(MOTHER, CASH);
-    PathProperty<Person,Double> GMOTHER_CASH = PathProperty.newInstance(MOTHER, MOTHER, CASH);
+    CompositeKey<Person,Double> MOTHER_CASH  = PathProperty.of(MOTHER, CASH);
+    CompositeKey<Person,Double> GMOTHER_CASH = PathProperty.of(MOTHER, MOTHER, CASH);
 
     private List<Person> persons;
 

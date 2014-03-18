@@ -46,13 +46,13 @@ import org.ujorm.extensions.SuperAbstractUjo;
  * @composed 1 - * Property
  */
 public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
-    
+
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
     private static final long serialVersionUID = 977567L;
 
     /** Object data. Unauthorized writing is not allowed. */
     final private HashMap<Key,Object> data;
-    
+
     /** Constructor */
     public MapUjo() {
         data = new HashMap<Key,Object>();
@@ -62,12 +62,12 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     protected MapUjo(HashMap<Key,Object> aData) {
         data = aData;
     }
-    
 
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
      * <br>NOTE: If property is an incorrect then no exception is throwed.
      *
      * @see Key#setValue(Ujo,Object)
@@ -76,12 +76,12 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
         assert UjoManager.assertDirectAssign(property, value, this);
         data.put(property, value);
     }
-    
 
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
      * <br>NOTE: If property is an incorrect then method returns a null value.
      *
      * @see Key#of(Ujo)
@@ -90,15 +90,15 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
         assert !property.isComposite() : "Property must be direct only.";
         return data.get(property);
     }
-    
+
     // --------- STATIC METHODS -------------------
-    
+
     /** Returns a new instance of property where the default value is null.
      * Method assigns a next property index.
      * @hidden
      */
     public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newKey(String name) {
-        return Property.newInstance(name, (Class)null);
+        return Property.of(name, (Class)null);
     }
 
     /** A Property Factory
@@ -106,15 +106,15 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      * @hidden
      */
     protected static <UJO extends MapUjo, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
-        return Property.newInstance(name, value);
+        return Property.of(name, value);
     }
-    
+
     /** Returns a new instance of property where the default value is null.
      * @hidden
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newKey(Key p, int index) {
-        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
+        return Property.of(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
     /** A ListProperty Factory
@@ -134,7 +134,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      */
     @Deprecated
     public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
-        return Property.newInstance(name, type);
+        return Property.of(name, type);
     }
 
     /** A Property Factory
@@ -144,7 +144,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      */
     @Deprecated
     protected static <UJO extends MapUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
-        return Property.newInstance(name, value);
+        return Property.of(name, value);
     }
 
     /** Returns a new instance of property where the default value is null.
@@ -154,7 +154,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     @SuppressWarnings("unchecked")
     @Deprecated
     public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newProperty(Key p, int index) {
-        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), index, true);
+        return Property.of(p.getName(), p.getType(), p.getDefault(), index, true);
     }
 
     /** A ListProperty Factory
