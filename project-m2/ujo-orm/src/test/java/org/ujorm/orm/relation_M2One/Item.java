@@ -38,7 +38,7 @@ public class Item extends OrmTable<Item> {
     /** A reference to common Order */
     @Column(name="fk_order")
     //public static final Key<Item,Order> order = newKey(Order.class);
-    public static final Key<Item,Order> order= RelationToOne.newInstance(Order.class, Order.sid);
+    public static final Key<Item,Order> order= RelationToOne.of(Order.class, Order.sid);
 
     // --- An optional implementation of commonly used setters and getters ---
 
