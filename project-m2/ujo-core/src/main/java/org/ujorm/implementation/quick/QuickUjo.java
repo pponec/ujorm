@@ -73,7 +73,7 @@ public abstract class QuickUjo extends AbstractUjo {
     , int index
     , boolean lock
     ) {
-        return Property.newInstance(name, type, defaultValue, index, lock);
+        return Property.of(name, type, defaultValue, index, lock);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -119,7 +119,7 @@ public abstract class QuickUjo extends AbstractUjo {
      */
     @SuppressWarnings("unchecked")
     public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newKey(Key p) {
-        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+        return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -152,7 +152,7 @@ public abstract class QuickUjo extends AbstractUjo {
     , int index
     , boolean lock
     ) {
-        return Property.newInstance(name, type, defaultValue, index, lock);
+        return Property.of(name, type, defaultValue, index, lock);
     }
 
     /** A Property Factory creates new property and assigns a next property index.
@@ -233,7 +233,7 @@ public abstract class QuickUjo extends AbstractUjo {
     @SuppressWarnings("unchecked")
     @Deprecated
     public static <UJO extends QuickUjo,VALUE> Property<UJO,VALUE> newProperty(Key p) {
-        return Property.newInstance(p.getName(), p.getType(), p.getDefault(), -1, false);
+        return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
     /** A Property Factory creates new property and assigns a next property index.

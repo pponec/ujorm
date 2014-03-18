@@ -413,7 +413,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Common protected factory method */
     protected <T> Key<UJO, T> createKey(String name, T defaultValue, Validator<T> validator) {
-        final Property<UJO, T> p = Property.newInstance(name, null, defaultValue, Property.UNDEFINED_INDEX, validator, false);
+        final Property<UJO, T> p = Property.of(name, null, defaultValue, Property.UNDEFINED_INDEX, validator, false);
         addKey(p);
         return p;
     }

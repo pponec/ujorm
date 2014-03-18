@@ -79,8 +79,8 @@ public final class Employee extends MapUjoExt<Employee> {
         get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 10D);
         get(MOTHER, MOTHER, MOTHER).set(NAME, "Jack").set(CASH, 1.1);
 
-        String name = get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, NAME));
-        Double cash = get(PathProperty.newInstance(MOTHER, MOTHER, MOTHER, CASH));
+        String name = get(PathProperty.of(MOTHER, MOTHER, MOTHER, NAME));
+        Double cash = get(PathProperty.of(MOTHER, MOTHER, MOTHER, CASH));
 
         String name2 = get(MOTHER, MOTHER, NAME);
         Double cash2 = get(MOTHER, MOTHER, CASH);

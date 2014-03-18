@@ -152,7 +152,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
 
         @SuppressWarnings("unchecked")
-        Key property = Property.newInstance(xmlHeader.getRootElement(), ujo.getClass());
+        Key property = Property.of(xmlHeader.getRootElement(), ujo.getClass());
         printProperty(null, property, null, ujo, writer, false, xmlHeader.getAttributes());
     }
 

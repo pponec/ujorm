@@ -44,9 +44,9 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
     }
 
     /** The main constructor. It is recommended to use the factory method
-     * {@link #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)}
+     * {@link #of(org.ujorm.Key, org.ujorm.Key) of(..)}
      * for better performance in some cases.
-     * @see #newInstance(org.ujorm.Key, org.ujorm.Key) newInstance(..)
+     * @see #of(org.ujorm.Key, org.ujorm.Key) of(..)
      */
     public PathListProperty(String lastSpaceName, Key... keys) {
         super(lastSpaceName, keys);

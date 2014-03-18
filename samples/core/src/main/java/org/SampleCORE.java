@@ -193,27 +193,25 @@ public class SampleCORE {
         }
 
         assert source.getId() == target.getId()
-                : "Compare the same IDs";
+                : "The same IDs";
     }
 
     /** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.
-     * The CompositeKeys can be used to reading and writing attributes of related domain objects.
-     * <h4>Note</h4>
-     * The setter with a composite key can <create>create</create> missing domain relations of the CompositeKey.in case the base domain object is type of {@link SmartUjo}.
-     * For other cases you can use the special method
-     * {@link CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean) CompositeKey.setValue(ujo,value,createRelations)}.
+     * A CompositeKey can be used to reading and writing attributes of related domain objects,
+     * however the setter with the CompositeKey <create>creates</create> missing domain relations automatically.
      */
     public void compositeKey() {
-        final Key<Employee, String> companyCity = COMPANY.add(CITY);
+        Key<Employee, String> companyNameKey = COMPANY.add(Company.NAME);
 
         Employee employee = new Employee();
-        String city = employee.get(companyCity);
-        assert city == null;
+        String companyName = employee.get(companyNameKey);
+        assert companyName == null;
 
-        employee.set(companyCity, "Prague");
-        city = employee.get(companyCity);
-        assert city == "Prague";
+        employee.set(companyNameKey, "Prague");
+        companyName = employee.get(companyNameKey);
+
         assert employee.getCompany() != null;
+        assert companyName == "Prague";
     }
 
     /** Employee theCriterion example */

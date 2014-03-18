@@ -1,5 +1,5 @@
 /*
- ** Copyright 2013, Pavel Ponec
+ ** Copyright 2013-2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,9 +125,9 @@ public class DatabaseTest extends AbstractServiceImpl {
     @Transactional
     public void testNativeQuery_1() {
         OrmHandler handler = getSession().getHandler();
-        AliasTable<Booking> booking = handler.alias(Booking.class, "a");
-        AliasTable<Hotel> hotel = handler.alias(Hotel.class, "b");
-        AliasTable<City> city = handler.alias(City.class, "c");
+        AliasTable<Booking> booking = handler.tableOf(Booking.class, "a");
+        AliasTable<Hotel> hotel = handler.tableOf(Hotel.class, "b");
+        AliasTable<City> city = handler.tableOf(City.class, "c");
 
         String sql
                 = SELECT( booking.column(Booking.ID)
