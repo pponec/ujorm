@@ -39,7 +39,6 @@ public class Person extends SmartUjo<Person> {
 
     public void init() {
         set(NAME, "Jack");
-        set(MOTHER, new Person());
         set(MOTHER.add(NAME), "Jane");
         set(MOTHER.add(CASH), 200d);
 
@@ -52,7 +51,6 @@ public class Person extends SmartUjo<Person> {
     public void init2() {
         set(NAME, "Jack");
         set(CASH, 50d);
-        set(MOTHER, new Person());
         get(MOTHER).set(NAME, "Jackie");
         set(CASH, 10D);
 
@@ -65,10 +63,7 @@ public class Person extends SmartUjo<Person> {
     public void init3() {
         set(NAME, "Jack");
         set(CASH, 50D);
-        set(MOTHER, new Person());
-        set(MOTHER.add(MOTHER), new Person());
         set(MOTHER.add(MOTHER).add(CASH), 20D);
-        set(MOTHER.add(MOTHER).add(MOTHER), new Person());
         set(MOTHER.add(MOTHER).add(MOTHER).add(NAME), "Jack");
         set(MOTHER.add(MOTHER).add(MOTHER).add(CASH), 1.1);
 

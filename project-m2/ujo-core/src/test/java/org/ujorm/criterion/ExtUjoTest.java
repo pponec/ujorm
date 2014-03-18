@@ -44,7 +44,6 @@ public class ExtUjoTest extends MyTestCase {
         Person person = new Person();
 
         person.set(NAME, nameExp1);
-        person.set(MOTHER, new Person());
         person.set(MOTHER.add(NAME), nameExp2);
         person.set(MOTHER.add(CASH), cashExp);
 
