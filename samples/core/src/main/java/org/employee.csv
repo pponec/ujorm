@@ -1,4 +1,4 @@
-id;name;wage;companyName;companyCity
-1;Pavel;10;Test a.s.;Prague
-2;Petr;30;MyCompany c.s.;Brno
-3;Kamil;50;Družba Consulting s.r.o;Horní Dolní
+id;name;companyId
+1;Pavel;10
+2;Petr;30
+3;Kamil;50
