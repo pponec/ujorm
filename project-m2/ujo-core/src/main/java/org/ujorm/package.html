@@ -255,9 +255,9 @@ document.body.appendChild(oLink);
   }
 }</pre>
 
-        or more easy implementation <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/QuickUjo.html">QuickUjo</a>:
+        or more easy implementation <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/SmartUjo.html">SmartUjo</a>:
 
-<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> QuickUjo {<br>
+<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">Person</span> <span class="java-keywords">extends</span> SmartUjo {<br>
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,String &gt; NAME = <span class="java-layer-method">newKey</span>();
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Boolean&gt; MALE = <span class="java-layer-method">newKey</span>();
   <span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;<span class="highlight">Person</span>,Double &gt; CASH = <span class="java-layer-method">newKey</span>();<br>
@@ -384,15 +384,8 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, Key property, Object value) {
         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
     }
-
-    <span class="comment">/** The deprecated method will be removed in the next Ujo release */</span>
-    <span class="keyword-directive">public</span> UjoPropertyList readProperties() {
-        <span class="keyword-directive">return</span> <span class="keyword-directive">new</span> UjoPropertyListImpl(readKeys());
-    }
 }
 </pre>
-
-     Note, that a method <code>readProperties()</code> can be removed in a next Ujorm release.
      <p>&nbsp;</p>
 
      <h2 id="defaultvalues">Default values</h2>
@@ -412,7 +405,7 @@ String  name = person.<span class="java-layer-method">get</span>(NAME);
         Note, you can change a default <strong>key name</strong> also using the first text parameter.
         The default property name have got
         <ul>
-        <li>the same value as its property field in the QuickUjo implementation</li>
+        <li>the same value as its property field in the SmartUjo implementation</li>
         <li>key name created by the KeyFactory depemds on its KeyFactory implementations, you can choice a "cammelCase" key name name builder for example</li>
         </ul>
 
@@ -602,7 +595,7 @@ See the <a href="validator/AbstractValidator.html">JavaDoc</a> for some more val
         <h2 id="javabean">The JavaBean implements Ujo</h2>
         It´s easy to create a JavaBean from an UJO object. It´s enough to implement a setter and a getter for each attribute. An example of usage:
 <pre class="pre">
-<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> QuickUjo {<br>
+<span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> SmartUjo {<br>
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, String&gt; NAME = <span class="java-layer-method">newKey</span>();
   <span class="java-keywords">public</span> <span class="java-keywords">static</span> <span class="java-keywords">final</span> Key&lt;Person, Double&gt; CASH = <span class="java-layer-method">newKey</span>();<br>
   <span class="java-keywords">public</span> <span class="java-keywords">void</span> <span class="java-layer-method">setName</span>(String name) {
@@ -842,7 +835,7 @@ model.<span class="java-layer-method">sort</span>(Person.NAME.<span class="java-
   }
 }</pre>
 
-        Or the similar example <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/QuickUjo.html">QuickUjo</a>:
+        Or the similar example <strong>without</strong> the class <a href="core/KeyFactory.html">KeyFactory</a> for a child of the class <a href="implementation/quick/SmartUjo.html">SmartUjo</a>:
 
         <pre class="pre"><span class="java-keywords"></span><span class="java-keywords">public</span> <span class="java-keywords">class</span> <span class="highlight">PersonExt</span> <span class="java-keywords">extends</span> Person {
 
