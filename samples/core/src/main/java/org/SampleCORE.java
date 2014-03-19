@@ -258,8 +258,8 @@ public class SampleCORE {
     public void sortEmployeeList() {
         List<Employee> employees = UjoComparator.of
                 ( COMPANY.add(CITY)
-                , NAME.descending())
-                .sort(getEmployees());
+                , NAME.descending()
+                ).sort(getEmployees());
 
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
