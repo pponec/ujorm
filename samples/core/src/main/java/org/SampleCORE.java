@@ -54,8 +54,8 @@ public class SampleCORE {
         SampleCORE sample = new SampleCORE();
 
         try {
-            sample.readWriteAsBean();
-            sample.readWriteAsUjo();
+            sample.readWriteBean();
+            sample.readWriteUjo();
             sample.defaultValues();
             sample.numericDefaultValues();
             sample.keyValidator();
@@ -76,7 +76,7 @@ public class SampleCORE {
     // ======= CHAPTERS: =======
 
     /** See a common data access for the JavaBean object */
-    public void readWriteAsBean() {
+    public void readWriteBean() {
         Employee person = new Employee();
 
         // Write:
@@ -98,7 +98,7 @@ public class SampleCORE {
     }
 
     /** See a data access using API of the {@link Ujo} object */
-    public void readWriteAsUjo() {
+    public void readWriteUjo() {
         Employee person = new Employee();
 
         // Write:
