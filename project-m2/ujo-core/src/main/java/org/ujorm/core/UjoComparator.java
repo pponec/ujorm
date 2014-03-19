@@ -32,12 +32,12 @@ import org.ujorm.Key;
  * @see Key#descending()
  */
 final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
-    
+
     final Key[] keys;
     final private Locale collatorLocale;
     final private int collatorStrength;
     private Collator collator;
-    
+
     /** Creates a new instance of UjoComparator. The String are compared as Collator.IDENTICAL by English locale by default.
      * @param keys sorting criteria are ordered by importance to down.
      *        A direction of the sorting is used by a method Key#isAscending().
@@ -102,7 +102,7 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
 
             final Comparable c1 = (Comparable) property.of(u1);
             final Comparable c2 = (Comparable) property.of(u2);
-            
+
             if (c1==c2  ) { continue;  }
             if (c1==null) { return +1; }
             if (c2==null) { return -1; }
@@ -153,15 +153,57 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
         }
         return sb.toString();
     }
-    
+
     /** An equals test */
     final public boolean equals(final UJO u1, final UJO u2) {
         final boolean result = compare(u1, u2)==0;
         return result;
     }
-    
+
     // ------------ STATIC ------------
-    
+
+    /** Creates a new instance of UjoComparator. The String are compared as Collator.IDENTICAL by English locale by default.
+     * Sample:
+     * <pre class="pre">
+     * List&lt;Person&gt; result = UjoComparator.&lt;Person&gt;of(Person.NAME).sort(persons);
+     * </pre>
+     * @param keys sorting criteria are ordered by importance to down.
+     *        A direction of the sorting is used by a method Key#isAscending().
+     * @see Key#isAscending()
+     * @see Key#descending()
+     */
+    public static <UJO extends Ujo> UjoComparator<UJO> of(Key<UJO,?> ... keys) {
+        return new UjoComparator<UJO>(keys);
+    }
+
+    /** @see #of(org.ujorm.Key<UJO,?>[])  */
+    public static <UJO extends Ujo> UjoComparator<UJO> of(Key<UJO,?> p1) {
+        return new UjoComparator<UJO>(p1);
+    }
+
+    /** @see #of(org.ujorm.Key<UJO,?>[])  */
+    public static <UJO extends Ujo> UjoComparator<UJO> of(Key<UJO,?> p1, Key<UJO,?> p2) {
+        return new UjoComparator<UJO>(p1, p2);
+    }
+
+    /** @see #of(org.ujorm.Key<UJO,?>[])  */
+    public static <UJO extends Ujo> UjoComparator<UJO> of(Key<UJO,?> p1, Key<UJO,?> p2, Key<UJO,?> p3) {
+        return new UjoComparator<UJO>(p1, p2, p3);
+    }
+
+    /** Creates a new instance of UjoComparator
+     * @param locale Locale for a String comparator
+     * @param collatorStrength Cllator Strength for String comparations
+     * @param keys sorting criteria are ordered by importance to down.
+     *        A direction of the sorting is used by a method Key#isAscending().
+     * @see Key#isAscending()
+     * @see Key#descending()
+     */
+    public static <UJO extends Ujo> UjoComparator<UJO> of(Locale locale, int collatorStrength, final Key<UJO,?> ... keys) {
+        return new UjoComparator<UJO>(keys);
+    }
+
+
     /** Creates a new instance of UjoComparator. The String are compared as Collator.IDENTICAL by English locale by default.
      * Sample:
      * <pre class="pre">
@@ -171,22 +213,29 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      *        A direction of the sorting is used by a method Key#isAscending().
      * @see Key#isAscending()
      * @see Key#descending()
+     * @deprecated Use the {@code of(..)} method instead of
      */
     public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Key<UJO,?> ... keys) {
         return new UjoComparator<UJO>(keys);
     }
-    
-    /** @see #newInstance(org.ujorm.Key<UJO,?>[])  */
+
+    /** @see #newInstance(org.ujorm.Key<UJO,?>[])
+     * @deprecated Use the {@code of(..)} method instead of
+     */
     public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Key<UJO,?> p1) {
         return new UjoComparator<UJO>(p1);
     }
 
-    /** @see #newInstance(org.ujorm.Key<UJO,?>[])  */
+    /** @see #newInstance(org.ujorm.Key<UJO,?>[])
+     * @deprecated Use the {@code of(..)} method instead of
+     */
     public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Key<UJO,?> p1, Key<UJO,?> p2) {
         return new UjoComparator<UJO>(p1, p2);
     }
 
-    /** @see #newInstance(org.ujorm.Key<UJO,?>[])  */
+    /** @see #newInstance(org.ujorm.Key<UJO,?>[])
+     * @deprecated Use the {@code of(..)} method instead of
+     */
     public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Key<UJO,?> p1, Key<UJO,?> p2, Key<UJO,?> p3) {
         return new UjoComparator<UJO>(p1, p2, p3);
     }
@@ -198,10 +247,10 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      *        A direction of the sorting is used by a method Key#isAscending().
      * @see Key#isAscending()
      * @see Key#descending()
+     * @deprecated Use the {@code of(..)} method instead of
      */
     public static <UJO extends Ujo> UjoComparator<UJO> newInstance(Locale locale, int collatorStrength, final Key<UJO,?> ... keys) {
         return new UjoComparator<UJO>(keys);
     }
 
-    
 }

@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
-   
+ */
+
 
 package org.ujorm.criterion;
 
@@ -41,7 +41,7 @@ import org.ujorm.core.UjoComparator;
  * UjoComparator&lt;Person&gt; sort = UjoComparator.create(HIGH, NAME);
  * List&lt;Person&gt; <strong style="color:blue;">result</strong> = CriteriaTool.where().select(persons, exp, sort);
 </pre>
- * 
+ *
  * @author Pavel Ponec
  * @since 0.90
  */
@@ -62,8 +62,8 @@ public class CriteriaTool<UJO extends Ujo> {
         return comparator.sort(new ArrayList<UJO>(list));
     }
 
-    /** Filter the list from parameter by a Criterion. 
-     * @see Criterion#evaluate(java.lang.Iterable) 
+    /** Filter the list from parameter by a Criterion.
+     * @see Criterion#evaluate(java.lang.Iterable)
      */
     public List<UJO> select(List<UJO> list, Criterion<UJO> criterion) {
         return criterion.evaluate(list);

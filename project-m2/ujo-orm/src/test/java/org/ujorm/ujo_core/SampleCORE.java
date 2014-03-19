@@ -86,7 +86,7 @@ public class SampleCORE {
         String name = person.get(NAME);
         double wage = person.get(WAGE); // result is not null allways
         Company address = person.get(COMPANY);
-        
+
         System.out.println("Employee: " + id + " " + name + " " + wage + " " + address);
 
         // == Sample of compilation bugs: ==
@@ -153,7 +153,9 @@ public class SampleCORE {
     /** How to sort the List?  */
     public void sortEmployeeList() {
         List<Employee> employeeList = findEmployeeList();
-        Comparator comparator = UjoComparator.newInstance(COMPANY.add(CITY), NAME);
+        Comparator comparator = UjoComparator.of
+                ( COMPANY.add(CITY)
+                , NAME);
         Collections.sort(employeeList, comparator);
 
         for (Employee employee : employeeList) {
@@ -180,7 +182,7 @@ public class SampleCORE {
         // Select including sorting informations:
         employees = ct.select(findEmployeeList()
                 , Criterion.where(WAGE, GT, 5.0)
-                , UjoComparator.newInstance(Employee.NAME)
+                , UjoComparator.of(Employee.NAME)
                 );
 
         for (Employee employee : employees) {
@@ -246,7 +248,7 @@ public class SampleCORE {
     /** Create the new Ujorm session */
     private Session createSession() {
         logErrors();
-        
+
         OrmHandler handler = new OrmHandler(Database.class);
         return handler.createSession();
     }
