@@ -18,6 +18,7 @@ package org;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.SmartUjo;
+import static org.ujorm.Validator.Build.*;
 
 /** Simple Employee domain class */
 public class Employee extends SmartUjo<Employee> {
@@ -26,8 +27,8 @@ public class Employee extends SmartUjo<Employee> {
 
     /** Unique key */
     public static final Key<Employee, Long> ID = f.newKey();
-    /** User first name, where the default value is {@code null} */
-    public static final Key<Employee, String> NAME = f.newKey();
+    /** User first name, where the default value is {@code null}. The max length is 7 characters */
+    public static final Key<Employee, String> NAME = f.newKey(length(7));
     /** Hourly wage with the default value: 0.0 */
     public static final Key<Employee, Double> WAGE = f.newKeyDefault(0.0);
     /** A reference to Company */
