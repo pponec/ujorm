@@ -26,6 +26,7 @@ import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
 import org.ujorm.validator.ValidationError;
+import org.ujorm.validator.ValidationException;
 import static org.Company.CITY;
 import static org.Employee.*;
 
@@ -57,8 +58,8 @@ public class SampleCORE {
             sample.readWriteUjo();
             sample.defaultValues();
             sample.numericDefaultValues();
-            sample.validator();
             sample.keyValidator();
+            sample.localizedMessageOfValidator();
             sample.copyAttributes();
             sample.compositeKey();
             sample.theCriterion();
@@ -161,44 +162,43 @@ public class SampleCORE {
      *    <li>one (composite) Validator can be assigned into an object type of {@link Key}</li>
      *    <li>the Validator can be assigned to the {@link Key} to check all input data in the <strong>writing time</strong> always</li>
      * </ul>
+     * The {@link Employee#NAME} has got allowed max 7 characters length.
+     * <br/>The key definition in the {@link Employee} class is:
+     * <pre>{@code public static final Key<Employee, String> NAME = factory.newKey(length(7));
+     *  }</pre>
      */
-    public void validator() {
-        final Integer wrongValue = 3;
-        final Integer minValue = 10;
-        final Integer maxValue = 20;
-        final Validator<Integer> validator = Validator.Build.range(minValue, maxValue);
-
-        // check the wrong input value:
-        ValidationError error = validator.validate(wrongValue, null, null);
-
-        // get a localization message using a custom template:
-        String expected = "My input 3 must be before 10 and 20 including";
-        String template = "My input ${INPUT} must be before ${MIN} and ${MAX} including";
-        String realMessage = error.getMessage(template);
-        assert expected.equals(realMessage);
-
-        // Composite validator:
-        final Validator<Integer> compositeValidator = validator.and(Validator.Build.notNull(Integer.class));
-        error = compositeValidator.validate(wrongValue, null, null);
-        assert error!=null;
-    }
-
-    /** The {@link Employee#NAME} has got allowed max 7 characters length..*/
     public void keyValidator() {
         final String correctName = "1234567";
         final String wrongName = "12345678";
 
         Employee employee = new Employee();
         employee.set(NAME, correctName);
-
         try {
             employee.set(NAME, wrongName);
-        } catch (IllegalArgumentException e) {
-            String expected = "Text length for Employee.name must be between 0 and 7, but the input length is: 8";
+        } catch (ValidationException e) {
+            String expected
+                    = "Text length for Employee.name must be between 0 and 7, "
+                    + "but the input length is: 8";
             assert e.getMessage().equals(expected);
         }
-
         assert employee.getName() == correctName;
+    }
+
+    /** Messages from validator can be located using the templates */
+    public void localizedMessageOfValidator() {
+        ValidationException exception = null;
+        final String wrongName = "12345678";
+
+        try {
+            new Employee().set(NAME, wrongName);
+        } catch (ValidationException e) {
+            exception = e;
+        }
+
+        String expected = "The name can be up to 7 characters long, not 8.";
+        String template = "The name can be up to ${MAX} characters long, not ${LENGTH}.";
+        String result = exception.getError().getMessage(template);
+        assert expected.equals(result);
     }
 
    /** How to copy all attributes from a source to a target object? */
