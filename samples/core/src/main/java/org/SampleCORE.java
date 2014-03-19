@@ -25,7 +25,6 @@ import org.ujorm.Validator;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
-import org.ujorm.implementation.quick.SmartUjo;
 import org.ujorm.validator.ValidationError;
 import static org.Company.CITY;
 import static org.Employee.*;
@@ -58,6 +57,7 @@ public class SampleCORE {
             sample.readWriteUjo();
             sample.defaultValues();
             sample.numericDefaultValues();
+            sample.validator();
             sample.keyValidator();
             sample.copyAttributes();
             sample.compositeKey();
@@ -162,7 +162,7 @@ public class SampleCORE {
      *    <li>the Validator can be assigned to the {@link Key} to check all input data in the <strong>writing time</strong> always</li>
      * </ul>
      */
-    public void keyValidator() {
+    public void validator() {
         final Integer wrongValue = 3;
         final Integer minValue = 10;
         final Integer maxValue = 20;
@@ -181,6 +181,24 @@ public class SampleCORE {
         final Validator<Integer> compositeValidator = validator.and(Validator.Build.notNull(Integer.class));
         error = compositeValidator.validate(wrongValue, null, null);
         assert error!=null;
+    }
+
+    /** The {@link Employee#NAME} has got allowed max 7 characters length..*/
+    public void keyValidator() {
+        final String correctName = "1234567";
+        final String wrongName = "12345678";
+
+        Employee employee = new Employee();
+        employee.set(NAME, correctName);
+
+        try {
+            employee.set(NAME, wrongName);
+        } catch (IllegalArgumentException e) {
+            String expected = "Text length for Employee.name must be between 0 and 7, but the input length is: 8";
+            assert e.getMessage().equals(expected);
+        }
+
+        assert employee.getName() == correctName;
     }
 
    /** How to copy all attributes from a source to a target object? */
