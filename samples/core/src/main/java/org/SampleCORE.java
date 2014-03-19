@@ -127,7 +127,7 @@ public class SampleCORE {
     /** How to restore default values) */
     @SuppressWarnings("unchecked")
     public void defaultValues() {
-        Employee employee = getEmployee();
+        Employee employee = service.getEmployee();
 
         for (Key key : employee.readKeys()) {
             employee.set(key, null);
@@ -141,7 +141,7 @@ public class SampleCORE {
      */
     @SuppressWarnings("unchecked")
     public void numericDefaultValues() {
-        Employee employee = getEmployee();
+        Employee employee = service.getEmployee();
 
         for (Key key : employee.readKeys()) {
             if (key.isTypeOf(Number.class)) {
@@ -185,7 +185,7 @@ public class SampleCORE {
 
    /** How to copy all attributes from a source to a target object? */
     public void copyAttributes() throws Exception {
-        Employee source = getEmployee();
+        Employee source = service.getEmployee();
         Employee target = source.getClass().newInstance();
 
         for (Key<Ujo,?> key : source.readKeys()) {
@@ -218,7 +218,7 @@ public class SampleCORE {
     public void theCriterion() {
         Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
         try {
-            validator.validate(getEmployee()
+            validator.validate(service.getEmployee()
                     , "Minimal WAGE is: %s units"
                     , validator.getRightNode());
             assert false : Employee.WAGE + " is not valid";
@@ -231,7 +231,7 @@ public class SampleCORE {
     public void criterionAsFilter() {
         List<Employee> employees = COMPANY.add(CITY)
                 .whereEq("Prague")
-                .evaluate(getEmployees());
+                .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
@@ -244,7 +244,7 @@ public class SampleCORE {
     public void criterionAsFilterWithKey() {
         List<Employee> employees = COMPANY.add(CITY)
                 .whereEq(Employee.NAME) // The employee NAME can be a correct value of the Criterion
-                .evaluate(getEmployees());
+                .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
@@ -259,7 +259,7 @@ public class SampleCORE {
         List<Employee> employees = UjoComparator.of
                 ( COMPANY.add(CITY)
                 , NAME.descending()
-                ).sort(getEmployees());
+                ).sort(service.getEmployees());
 
         for (Employee employee : employees) {
             System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
@@ -291,54 +291,55 @@ public class SampleCORE {
         new SampleWeakKeyService().testWeakKeyAttributes();
     }
 
-    // ======= Helper methods =======
+    // ===========- HELPER CODE ===========-
 
-    /** Find an Employee somewhere */
-    private Employee getEmployee() {
-        return createEmployee(10L, "Pavel", 50.00, getCompany());
+    /** Helper methods */
+    private final Service service = new Service();
+
+    /** Helper methods */
+    private static class Service {
+
+        /** Find an Employee somewhere */
+        private Employee getEmployee() {
+            return createEmployee(10L, "Pavel", 50.00, getCompany());
+        }
+
+        /** Create the List of Persons */
+        private Employee createEmployee(Long id, String name, Double wage, Company company) {
+            Employee person = new Employee();
+            person.set(ID, id);
+            person.set(NAME, name);
+            person.set(WAGE, wage);
+            person.set(COMPANY, company);
+            return person;
+        }
+
+        /** Find an Company somewhere */
+        private Company getCompany() {
+            return createCompany(20L, "My Company", "Prague");
+        }
+
+        /** Find an Company somewhere */
+        private Company createCompany(Long id, String name, String city) {
+            Company result = new Company();
+            result.set(Company.ID, id);
+            result.set(Company.NAME, name);
+            result.set(Company.CITY, city);
+            result.set(Company.CREATED, new Date());
+
+            return result;
+        }
+
+        /** Create the List of Persons */
+        private List<Employee> getEmployees() {
+            final List<Employee> result = new ArrayList<Employee>();
+
+            result.add(createEmployee(10L, "Pavel", 50.00, getCompany()));
+            result.add(createEmployee(20L, "Petr", 80.00, getCompany()));
+            result.add(createEmployee(30L, "Kamil", 20.00, getCompany()));
+            result.add(createEmployee(40L, "Prague", 00.00, getCompany()));
+
+            return result;
+        }
     }
-
-    /** Create the List of Persons */
-    private Employee createEmployee(Long id, String name, Double wage, Company company) {
-             Employee person = new Employee();
-             person.set(ID, id);
-             person.set(NAME, name);
-             person.set(WAGE, wage);
-             person.set(COMPANY, company);
-             return person;
-    }
-
-    /** Find an Company somewhere */
-    private Company getCompany() {
-        return createCompany(20L, "My Company", "Prague");
-    }
-
-    /** Find an Company somewhere */
-    private Company createCompany(Long id, String name, String city) {
-        Company result = new Company();
-        result.set(Company.ID, id);
-        result.set(Company.NAME, name);
-        result.set(Company.CITY, city);
-        result.set(Company.CREATED, new Date());
-
-        return result;
-    }
-
-    /** Create the List of Persons */
-    private List<Employee> getEmployees() {
-        final List<Employee> result = new ArrayList<Employee>();
-
-        result.add(createEmployee(10L, "Pavel", 50.00, getCompany()));
-        result.add(createEmployee(20L, "Petr", 80.00, getCompany()));
-        result.add(createEmployee(30L, "Kamil", 20.00, getCompany()));
-        result.add(createEmployee(40L, "Prague", 00.00, getCompany()));
-
-        return result;
-    }
-
-    /** Set logging to the level SEVERE. */
-    private void logSevere() {
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
-    }
-
 }
