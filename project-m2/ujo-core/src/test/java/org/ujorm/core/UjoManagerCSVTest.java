@@ -39,7 +39,7 @@ public class UjoManagerCSVTest extends MyTestCase {
     }
 
     protected void setUp() throws Exception {
-        manager = UjoManagerCSV.getInstance(UjoCSV.class);
+        manager = UjoManagerCSV.of(UjoCSV.class);
         context = "CSV-Context";
         ujo = new UjoCSV();
         ujoList = new ArrayList<UjoCSV>();
@@ -56,7 +56,7 @@ public class UjoManagerCSVTest extends MyTestCase {
         ujo.set(P2, "B");
         ujo.set(P3, "C");
 
-        UjoManagerCSV manager = UjoManagerCSV.getInstance(UjoCSV.class);
+        UjoManagerCSV manager = UjoManagerCSV.of(UjoCSV.class);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         // Save the ujoList to an outputStream:
@@ -154,7 +154,7 @@ public class UjoManagerCSVTest extends MyTestCase {
         UjoCSV.P3.setValue(ujo, "C");
         //
         ByteArrayOutputStream out = createOutputStream();
-        UjoManagerCSV manager5 = UjoManagerCSV.getInstance(UjoCSV.class);
+        UjoManagerCSV manager5 = UjoManagerCSV.of(UjoCSV.class);
         manager5.setHeaderContent("Ah","Bh","Ch");
 
         manager5.saveCSV(out, null, ujoList, context);

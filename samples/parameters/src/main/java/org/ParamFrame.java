@@ -38,7 +38,7 @@ public class ParamFrame extends JFrame implements ActionListener, Runnable {
   /** Load company from file. */
   private Parameters loadParameters() {
     if (dataFile.isFile()) try {
-      return UjoManagerRBundle.getInstance(Parameters.class).loadResourceBundle(dataFile, false, this);
+      return UjoManagerRBundle.of(Parameters.class).loadResourceBundle(dataFile, false, this);
     } catch (Throwable e) {
       e.printStackTrace();
     }
@@ -49,7 +49,7 @@ public class ParamFrame extends JFrame implements ActionListener, Runnable {
   private void saveParameters() {
     try {
       final String msg = "Configuration file:" ;
-      UjoManagerRBundle.getInstance(Parameters.class).saveResourceBundle(dataFile, parameters, msg, this);
+      UjoManagerRBundle.of(Parameters.class).saveResourceBundle(dataFile, parameters, msg, this);
     } catch (Throwable e) {
       e.printStackTrace();
     }

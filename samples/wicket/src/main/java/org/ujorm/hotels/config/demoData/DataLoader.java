@@ -51,7 +51,7 @@ public class DataLoader implements InitializationBatch {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
-        UjoManagerCSV manager = UjoManagerCSV.getInstance
+        UjoManagerCSV manager = UjoManagerCSV.of
                 ( City.ID
                 , City.NAME
                 , City.COUNTRY
@@ -67,7 +67,7 @@ public class DataLoader implements InitializationBatch {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
-        UjoManagerCSV manager = UjoManagerCSV.getInstance
+        UjoManagerCSV manager = UjoManagerCSV.of
                 ( Hotel.NAME
                 , Hotel.NOTE
                 , Hotel.CITY.add(City.ID) // The value is a foreign key!
@@ -90,7 +90,7 @@ public class DataLoader implements InitializationBatch {
     /** Get hotels from CSV file */
     @PackagePrivate List<Customer> getCustomers() throws Exception {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8.name());
-        UjoManagerCSV manager = UjoManagerCSV.getInstance
+        UjoManagerCSV manager = UjoManagerCSV.of
                 ( Customer.LOGIN
                 , Customer.PASSWORD
                 , Customer.PASSWORD_HASH
