@@ -43,7 +43,7 @@ public class Persistence {
     void showCSV() throws Exception {
         
         List<Person> people = new ArrayList<Person>(0);
-        UjoManagerCSV<Person> manager = UjoManagerCSV.getInstance(Person.class);
+        UjoManagerCSV<Person> manager = UjoManagerCSV.of(Person.class);
         
         // Save CSV:
         manager.saveCSV(new File("file.csv"), people, "SaveContext");
@@ -56,7 +56,7 @@ public class Persistence {
     void showRBundle() throws Exception  {
         
         Person person = new Person(); // Set attributes ...
-        UjoManagerRBundle<Person> manager = UjoManagerRBundle.getInstance(Person.class);
+        UjoManagerRBundle<Person> manager = UjoManagerRBundle.of(Person.class);
         
         // Save CSV:
         String header = "Header Description";

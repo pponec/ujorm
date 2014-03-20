@@ -137,12 +137,28 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
         return ujo;
     }
 
+    // -------------- STATIC METHODS --------------
+
     /** Create new instance */
+    public static <UJO extends Ujo> UjoManagerRBundle<UJO> of(Class<UJO> ujoClass) {
+        return of(ujoClass, (Key[]) null);
+    }
+
+    /** Create new instance */
+    public static <UJO extends Ujo> UjoManagerRBundle<UJO> of(Class<UJO> ujoClass, Key ... keys) {
+        return new UjoManagerRBundle<UJO>(ujoClass, keys);
+    }
+
+    /** Create new instance
+     * @deprecated Use the method {@code of(...)}
+     */
     public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass) {
         return getInstance(ujoClass, (Key[]) null);
     }
 
-    /** Create new instance */
+    /** Create new instance
+     * @deprecated Use the method {@code of(...)}
+     */
     public static <UJO extends Ujo> UjoManagerRBundle<UJO> getInstance(Class<UJO> ujoClass, Key ... keys) {
         return new UjoManagerRBundle<UJO>(ujoClass, keys);
     }

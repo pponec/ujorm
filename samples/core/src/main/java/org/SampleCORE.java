@@ -289,7 +289,7 @@ public class SampleCORE {
     /** Import the CSV file using a Composite Keys */
     public void importCSV() throws Exception {
         Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
-        UjoManagerCSV<Employee> manager = UjoManagerCSV.getInstance
+        UjoManagerCSV<Employee> manager = UjoManagerCSV.of
                 ( Employee.ID
                 , Employee.NAME
                 , Employee.COMPANY.add(Company.ID)

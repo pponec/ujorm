@@ -409,16 +409,37 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     // -------------- STATIC ----------------
 
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass) {
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> of(Class<UJO> ujoClass) {
         return new UjoManagerCSV<UJO>(ujoClass, (KeyList<UJO>) null);
     }
 
     /** Create new instance */
-    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key... keys) {
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> of(Class<UJO> ujoClass, Key... keys) {
         return new UjoManagerCSV<UJO>(ujoClass, keys);
     }
 
     /** Create new instance where the domain class is get from an array of the keys. */
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> of(Key... keys) {
+        return new UjoManagerCSV<UJO>(KeyRing.getBaseType(keys), keys);
+    }
+
+    /** Create new instance
+     * @deprecated Use the method {@code of(...)}
+     */
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass) {
+        return new UjoManagerCSV<UJO>(ujoClass, (KeyList<UJO>) null);
+    }
+
+    /** Create new instance
+     * @deprecated Use the method {@code of(...)}
+     */
+    public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Class<UJO> ujoClass, Key... keys) {
+        return new UjoManagerCSV<UJO>(ujoClass, keys);
+    }
+
+    /** Create new instance where the domain class is get from an array of the keys.
+     * @deprecated Use the method {@code of(...)}
+     */
     public static <UJO extends Ujo> UjoManagerCSV<UJO> getInstance(Key... keys) {
         return new UjoManagerCSV<UJO>(KeyRing.getBaseType(keys), keys);
     }
