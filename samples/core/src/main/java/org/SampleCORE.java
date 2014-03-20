@@ -25,7 +25,6 @@ import org.ujorm.Validator;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
-import org.ujorm.validator.ValidationError;
 import org.ujorm.validator.ValidationException;
 import static org.Company.CITY;
 import static org.Employee.*;
@@ -58,9 +57,9 @@ public class SampleCORE {
             sample.readWriteUjo();
             sample.defaultValues();
             sample.numericDefaultValues();
+            sample.copyAttributes();
             sample.keyValidator();
             sample.localizedMessageOfValidator();
-            sample.copyAttributes();
             sample.compositeKey();
             sample.theCriterion();
             sample.criterionAsFilter();
@@ -125,7 +124,7 @@ public class SampleCORE {
         // String id = person.get(Employee.ID); // Wrong return class
     }
 
-    /** How to restore default values) */
+    /** How to restore default values? */
     @SuppressWarnings("unchecked")
     public void defaultValues() {
         Employee employee = service.getEmployee();
@@ -151,6 +150,19 @@ public class SampleCORE {
         }
         assert employee.getWage().equals(WAGE.getDefault())
                 : "Check the default value";
+    }
+
+    /** How to copy all attributes from a source to a target object? */
+    public void copyAttributes() throws Exception {
+        Employee source = service.getEmployee();
+        Employee target = source.getClass().newInstance();
+
+        for (Key<Ujo,?> key : source.readKeys()) {
+            key.copy(source, target);
+        }
+
+        assert source.getId() == target.getId()
+                : "The same IDs";
     }
 
     /** There is a {@link Validator} class which checks an input data using the method
@@ -186,8 +198,8 @@ public class SampleCORE {
 
     /** Messages from validator can be located using the templates */
     public void localizedMessageOfValidator() {
-        ValidationException exception = null;
         final String wrongName = "12345678";
+        ValidationException exception = null;
 
         try {
             new Employee().set(NAME, wrongName);
@@ -195,23 +207,10 @@ public class SampleCORE {
             exception = e;
         }
 
-        String expected = "The name can be up to 7 characters long, not 8.";
         String template = "The name can be up to ${MAX} characters long, not ${LENGTH}.";
+        String expected = "The name can be up to 7 characters long, not 8.";
         String result = exception.getError().getMessage(template);
         assert expected.equals(result);
-    }
-
-   /** How to copy all attributes from a source to a target object? */
-    public void copyAttributes() throws Exception {
-        Employee source = service.getEmployee();
-        Employee target = source.getClass().newInstance();
-
-        for (Key<Ujo,?> key : source.readKeys()) {
-            key.copy(source, target);
-        }
-
-        assert source.getId() == target.getId()
-                : "The same IDs";
     }
 
     /** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.
@@ -252,7 +251,7 @@ public class SampleCORE {
                 .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
+            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
         }
         assert employees.size() == 4;
     }
@@ -265,7 +264,7 @@ public class SampleCORE {
                 .evaluate(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
+            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
         }
 
         assert employees.size() == 1 : "Check the result count";
@@ -280,13 +279,18 @@ public class SampleCORE {
                 ).sort(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
+            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
         }
 
         assert employees.size() == 4 : "Check the result count";
     }
 
-    /** Import the CSV file using a Composite Keys */
+    /** Import the CSV file using a Composite Keys from the file content:
+     * <pre>{@code id;name;companyId
+     * 1;Pavel;10
+     * 2;Petr;30
+     * 3;Kamil;50}</pre>
+     */
     public void importCSV() throws Exception {
         Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
         UjoManagerCSV<Employee> manager = UjoManagerCSV.of
