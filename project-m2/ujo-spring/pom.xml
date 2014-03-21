@@ -19,9 +19,9 @@
             <timezone>+1</timezone>
         </contributor>
     </contributors>
-    
+
     <properties>
-        <spring.version>2.5.6</spring.version>
+        <spring.version>3.2.2.RELEASE</spring.version>
     </properties>
 
     <scm>
@@ -100,14 +100,14 @@
             <artifactId>spring-aspects</artifactId>
             <version>${spring.version}</version>
             <scope>test</scope>
-        </dependency>     
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
             <scope>test</scope>
-        </dependency>     
-           
+        </dependency>
+
         <dependency>
             <groupId>aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
@@ -140,7 +140,7 @@
             <version>3.8.2</version>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Database H2 -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -149,14 +149,14 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JTA (Java Transacton API) -->        
+        <!-- JTA (Java Transacton API) -->
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>jta</artifactId>
             <version>1.1</version>
             <scope>provided</scope>
-        </dependency>        
-        
+        </dependency>
+
     </dependencies>
 
     <parent>
