@@ -221,10 +221,10 @@ public class SampleCORE {
         Key<Employee, String> companyNameKey = COMPANY.add(Company.NAME);
 
         Employee employee = new Employee();
-        String companyName = employee.get(companyNameKey);
+        String companyName = employee.get(companyNameKey); //!
         assert companyName == null;
 
-        employee.set(companyNameKey, "Prague");
+        employee.set(companyNameKey, "Prague"); //!
         companyName = employee.get(companyNameKey);
 
         assert employee.getCompany() != null;
