@@ -2,7 +2,10 @@ The Ujorm release notes
 *******************************
 
 release 1.45 (2014-04-?)
-+ the new method SmartUjo.set(CompositeKey, VALUE) is ready to create all missing relations before assigning the VALUE
++ the Ujorm release 1.45 is Java 8.0 ready
++ the method CompositeKey.setValue() creates all missing relations by default
++ many small code cleanings
++ documentation is updated for the CORE module
 
 release 1.44 (2014-03-16)
 + hierarchical database queries support an hierarchical UJO Key as a Criterion value argument
