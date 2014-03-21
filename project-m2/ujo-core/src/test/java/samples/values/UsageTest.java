@@ -16,7 +16,6 @@
 package samples.values;
 
 import junit.framework.TestCase;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import static samples.values.Person.*;
 
