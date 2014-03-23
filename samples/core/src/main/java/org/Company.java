@@ -39,28 +39,43 @@ public class Company extends SmartUjo<Company> {
 
     // --- An optional implementation of commonly used setters and getters ---
 
+    /** The Primary Key */
     public Long getId() {
-        return get(ID);
+        return ID.of(this);
     }
+
+    /** The Primary Key */
     public void setId(Long id) {
-        set(ID, id);
+        Company.ID.setValue(this, id);
     }
+
+    /** Company name */
     public String getName() {
-        return get(NAME);
+        return NAME.of(this);
     }
+
+    /** Company name */
     public void setName(String name) {
-        set(NAME, name);
+        Company.NAME.setValue(this, name);
     }
+
+    /** City name */
     public String getCity() {
-        return get(CITY);
+        return CITY.of(this);
     }
-    public void setCity(String street) {
-        set(CITY, street);
+
+    /** City name */
+    public void setCity(String city) {
+        Company.CITY.setValue(this, city);
     }
+
+    /** Registration date */
     public Date getCreated() {
-        return get(CREATED);
+        return CREATED.of(this);
     }
+
+    /** Registration date */
     public void setCreated(Date created) {
-        set(CREATED, created);
+        Company.CREATED.setValue(this, created);
     }
 }
