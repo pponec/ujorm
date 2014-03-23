@@ -38,29 +38,44 @@ public class Employee extends SmartUjo<Employee> {
 
     // --- An optional implementation of commonly used setters and getters ---
 
+    /** Unique key */
     public Long getId() {
-        return get(ID);
+        return ID.of(this);
     }
+
+    /** Unique key */
     public void setId(Long id) {
-        set(ID, id);
+        Employee.ID.setValue(this, id);
     }
+
+    /** User first name, where the default value is {@code null}. The max length is 7 characters */
     public String getName() {
-        return get(NAME);
+        return NAME.of(this);
     }
+
+    /** User first name, where the default value is {@code null}. The max length is 7 characters */
     public void setName(String name) {
-        set(NAME, name);
+        Employee.NAME.setValue(this, name);
     }
+
+    /** Hourly wage with the default value: 0.0 */
     public Double getWage() {
-        return get(WAGE);
+        return WAGE.of(this);
     }
-    public void setWage(Double cache) {
-        set(WAGE, cache);
+
+    /** Hourly wage with the default value: 0.0 */
+    public void setWage(Double wage) {
+        Employee.WAGE.setValue(this, wage);
     }
+
+    /** A reference to Company */
     public Company getCompany() {
-        return get(COMPANY);
+        return COMPANY.of(this);
     }
-    public void setCompany(Company address) {
-        set(COMPANY, address);
+
+    /** A reference to Company */
+    public void setCompany(Company company) {
+        Employee.COMPANY.setValue(this, company);
     }
 
     /** Example of the <strong>Composed property</strong> */
