@@ -12,7 +12,7 @@
 /* clear styles */
 .dp-highlighter ol,
 .dp-highlighter ol li,
-.dp-highlighter ol li span 
+.dp-highlighter ol li span
 {
 	margin: 0;
 	padding: 0;
@@ -181,5 +181,5 @@
 
 .dp-highlighter .comment, .dp-highlighter .comments { color: #008200; background-color: inherit; }
 .dp-highlighter .string { color: blue; background-color: inherit; }
-.dp-highlighter .keyword { color: #069; font-weight: bold; background-color: inherit; }
+.dp-highlighter .keyword { color: #7F0055; font-weight: bold; background-color: inherit; }
 .dp-highlighter .preprocessor { color: gray; background-color: inherit; }
