@@ -43,6 +43,10 @@
             .intro a, .toc a {
                 text-decoration: none;
             }
+            pre {
+                font-family: monospace;
+                font-size: 14px;
+            }
         </style>
   <!-- SyntaxHighlighter -->
   <link type="text/css" rel="stylesheet"
@@ -163,8 +167,8 @@ zápisu:</p>
 import static org.Employee.*;</pre>
 
 <p>Z předchozího příkladu by mělo být zřejmé použití Klíčů pro přístup a atributům objektu,
-ale zatím se nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s POJO objekty.
-O výhodách řešení se vás pokusím přesvědčit v následujících kapitolách.
+zatím se však nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s POJO objekty.
+O výhodách řešení se vás pokusím přesvědčit v následujících kapitolách, které popisují další vlastnosti Klíčů.
 </p>
 
 <h2 id="default">Obnovení defaultních hodnot</h2>
@@ -207,7 +211,7 @@ href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29"
 
 <h2 id="copy">Mělká kopie objektu</h2>
 
-<p>Protože teď už víme, jak z Ujo objektu získat seznam všech jeho
+<p>Protože už víme, jak z Ujo objektu získat seznam všech jeho
 <strong>přímých</strong> klíčů (popis kompozitních Klíčů bude brzy
 následovat), tak můžeme záměnou těla cyklu vytvořit snadno mělkou kopii
 objektu:</p>
@@ -278,7 +282,7 @@ zajímavé vlastnosti při čtení a zápisu hodnot:</p>
 <ul>
   <li>pokud je při čtení atributu některá <strong>relace</strong> NULL,
     výsledkem je také hodnota NULL, nevzniká tedy výjimka
-    <strong>NullPointerException</strong> typická pro JavaBeans. Toto pravidlo
+    <strong>NullPointerException</strong> typická pro řetězení getterů JavaBeans. Toto pravidlo
     se netýká výchozího objektu.</li>
   <li>při zápisu hodnoty pomocí kompozitního Klíče se automaticky
     vytvoří všechny chybějící relační objekty. Pokud nám z nějakého
@@ -307,12 +311,12 @@ instanci objektu firmy a pak do ní zapíše její název.</p>
 
 <p>Pokud chování kompozitních Klíčů někoho zaujalo, je možné je
 studovat další příklady na tomto <a
-href="http://sourceforge.net/p/ujoframework/svn/2179/tree/trunk/project-m2/ujo-core/src/test/java/samples/values/UsageTest.java#l27">TestCase</a>.</p>
+href="http://sourceforge.net/p/ujoframework/svn/2205/tree//trunk/project-m2/ujo-core/src/test/java/samples/values/UsageTest.java#l27">TestCase</a>.</p>
 
 <h2 id="criterionAsValidator">Criterion jako popis podmínky</h2>
 
 <p>Pomocí Klíče, hodnoty a operátoru je možné popsat logickou podmínku
-Ujo objektu, pro kterou je určena třída Criterion. Objekty typu Criterion
+Ujo objektu, pro kterou je určena třída <a href="http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html">Criterion</a>. Objekty typu Criterion
 jsou neměnné serializovatelné instance, které je možné spojovat
 operátorem AND/OR do binárního stromu. Objekt typu Criterion slouží také
 v ORM modulu jako předloha pro sestavení fráze WHERE v SQL přákazech,
