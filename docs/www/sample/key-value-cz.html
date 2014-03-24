@@ -132,7 +132,7 @@ settery a gettery tak, aby objekt splňoval specifikaci
 <p></p>
 
 <p><img alt="key-value-model" src="image-key-value/key-value-model.png"
-width="355" height="120" style="margin-left: 80px;" /> 
+width="355" height="120" style="margin-left: 80px;" />
 <h2 id="reading">Zápis a čtení hodnot</h2>
 
 <p>Popis čtení a zápisu attributů JavaBeans tady přeskočíme a pustíme
@@ -162,11 +162,10 @@ zápisu:</p>
 <pre name="code" class="java">import static org.Company.CITY;
 import static org.Employee.*;</pre>
 
-<p>Výše uvedený kód pro zápis a čtení hodnot pomocí klíčů je
-pravěpodobně srozumitelný, na duhou stranu se však nezdá, že by
-přinášel nějakou přidanou hodnotu ve srovnání s POJO objekty. Výhody
-klíčů se začnou projevovat až při využití dalších služeb a o tom se
-vás pokusím přesvědčit v následujících kapitolách.</p>
+<p>Z předchozího příkladu by mělo být zřejmé použití Klíčů pro přístup a atributům objektu,
+ale zatím se nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s POJO objekty.
+O výhodách řešení se vás pokusím přesvědčit v následujících kapitolách.
+</p>
 
 <h2 id="default">Obnovení defaultních hodnot</h2>
 
@@ -179,15 +178,18 @@ defaultní hodnotu. Pokud je defaultní hodnota Klíče také NULL, je záměna
 nevýznamná. Pro obnovu všech defautlních hodnot tedy stačí přiřadit
 každému atributu hodnotu NULL podle vzoru:</p>
 <pre name="code" class="java">            Employee employee = getEmployee();
+
             for (Key key : employee.readKeys()) {
                 employee.set(key, null);
             }
+
             assert employee.getWate().equals(WAGE.getDefault())
                  : "Check the default value";</pre>
 
 <p>Jiná varianta předchozího příkladu obnovuje defautlní hodnoty pouze
 pro číselné typy;</p>
 <pre name="code" class="java">            Employee employee = getEmployee();
+
             for (Key key : employee.readKeys()) {
                 if (key.isTypeOf(Number.class)) {
                     employee.set(key, null);
@@ -215,6 +217,7 @@ objektu:</p>
             for (Key&lt;Ujo,?&gt; key : source.readKeys()) {
                 key.copy(source, target);
             }
+
             assert source.getId() == target.getId()</pre>
 
 <h2 id="validation">Validace atributů při zápisu</h2>
@@ -239,6 +242,7 @@ try {
         + "but the input length is: 8";
     assert e.getMessage().equals(expected);
 }
+
 assert employee.getName() == correctName;</pre>
 
 <p>API validátorů nabízí podporu lokalizovaných chybových zpráv pomocí
@@ -269,7 +273,7 @@ href="http://ujorm.org/javadoc/org/ujorm/CompositeKey.html">CompositeKey</a>,
 který je potomkem i toho původního interface typu Key. S komozitním
 Klíčem tedy lze pracovat stejně jako s Klíčem přímým - včetně zápisu
 a čtení hodnot doménových objektů či spojování s dalšími Klíči.
-Práce s kompozitním Klíčem nám také přináší i nějaké nové,
+Práce s kompozitním Klíčem nám přináší také nové,
 zajímavé vlastnosti při čtení a zápisu hodnot:</p>
 <ul>
   <li>pokud je při čtení atributu některá <strong>relace</strong> NULL,
@@ -345,13 +349,15 @@ Klíče:</p>
 	for (Employee employee : employees) {
 	    System.out.println(employee);
 	}
+
 	assert employees.size() == 4;</pre>
 
 <p>Je užitečné vědět, že hodnotu Criterionu může být také Klíč:</p>
-<pre name="code" class="java">	List&lt;Employee&gt; employees = COMPANY.add(CITY)
+<pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
             .whereEq(Employee.NAME)
             .evaluate(getEmployees());
-	assert employee.size() == 1; </pre>
+
+        assert employee.size() == 1; </pre>
 
 <p>Druhý příklad filtruje všechny zaměstnance, jejichž jméno se shoduje
 s názvem města (sídla) jejich firmy. Jinak souhlasím s každým, kdo si
@@ -396,13 +402,13 @@ následuje:</p>
     3;Kamil;50</pre>
 
 <p>Java kód pro import CSV souboru:</p>
-<pre name="code" class="java">Scanner scanner = new Scanner(getClass().getResourceAsStream
-        ("employee.csv"), "utf-8");
+<pre name="code" class="java">Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+
 UjoManagerCSV&lt;Employee&gt; manager = UjoManagerCSV.of
         ( Employee.ID
         , Employee.NAME
-        , Employee.COMPANY.add(Company.ID)
-        );
+        , Employee.COMPANY.add(Company.ID));
+
 List&lt;Employee&gt; employes = manager.loadCSV(scanner, this);
 
 assert employes.size() == 3;
@@ -449,7 +455,7 @@ třída je k dispozici <a href="key-value-sample.html#l48">tady</a>.</p>
                     var pageTracker = _gat._getTracker("UA-9284194-1");
                     pageTracker._trackPageview();
                 } catch(err) {}</script>
-<!-- google analytics end --> 
+<!-- google analytics end -->
 <div style="display: none;">
 <script type="text/javascript"
 src="http://c1.navrcholu.cz/code?site=111542;t=lb14">
