@@ -40,12 +40,12 @@ public class UsageTest extends TestCase {
         assertEquals("MOTHER.MOTHER.NAME", grandMothersName.toString());
 
         assertEquals(null, person.get(myName));
-        assertEquals(null, person.get(mothersName));         // The old feature
-        assertEquals(null, person.get(grandMothersName)); // The old feature
+        assertEquals(null, person.get(mothersName));   // Mother object is missing !
+        assertEquals(null, person.get(grandMothersName)); // Grandmother is missing !
 
         person.set(myName, "name1");
-        person.set(mothersName, "name2");          // Wow, it is a new feature
-        person.set(grandMothersName, "name3");  // Wow, it is a new feature
+        person.set(mothersName, "name2");    // Wow, method creates a mother object !
+        person.set(grandMothersName, "name3");  // Wow, method creates a grandmother !
 
         assertEquals("name1", person.get(myName));
         assertEquals("name2", person.get(mothersName));
