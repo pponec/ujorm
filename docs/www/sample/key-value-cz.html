@@ -3,7 +3,7 @@
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Demo WEB aplikace s Ujorm a Wicket</title>
+  <title>Demo WEB aplikace s&nbsp;Ujorm a Wicket</title>
   <meta name="keywords"
   content="Ujorm, CRUD, WEB, application, demo-hotels, wicket, spring, framework"
   />
@@ -120,8 +120,8 @@ href="http://www.joda.org/joda-beans/apidocs/org/joda/beans/Property.html">Prope
 href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO">starší
 odkaz</a>, v tomto článku bych spíše demonstroval některé zajímavé či
 nové vlastnosti Ujorm na krátkých příkladech. Všechny ukázky se týkají
-pouze modulu <strong>ujo-core</strong> a nesouvisí tedy přímo s ORM modulem,
-který usnadňuje práci s relační databází. Modul <strong>core</strong>
+pouze modulu <strong>ujo-core</strong> a nesouvisí tedy přímo s&nbsp;ORM modulem,
+který usnadňuje práci s&nbsp;relační databází. Modul <strong>core</strong>
 lze připojit do vlastního projektu pomocí Maven závislosti: </p>
 <pre name="code" class="xml">        &lt;dependency&gt;
             &lt;groupId&gt;org.ujorm&lt;/groupId&gt;
@@ -169,7 +169,7 @@ zápisu:</p>
         import static org.Employee.*;</pre>
 
 <p>Z předchozího příkladu by mělo být zřejmé použití Klíčů pro přístup a atributům objektu,
-zatím se však nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s POJO objekty.
+zatím se však nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s&nbsp;POJO objekty.
 O výhodách řešení se vás pokusím přesvědčit v následujících kapitolách, které popisují další vlastnosti Klíčů.
 </p>
 
@@ -178,7 +178,7 @@ O výhodách řešení se vás pokusím přesvědčit v následujících kapitol
 <p>Kaźdý Klíč obsahuje svoji defaultní hodnotu, kterou lze získat metodou
 Key.<a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDefault%28%29">getDefault</a>().
-Zajímavější však je chování klíče při čtení atributu s hodnotu
+Zajímavější však je chování klíče při čtení atributu s&nbsp;hodnotu
 NULL, protože klíč každou takovou hodnotu zaměňuje automaticky za svoji
 defaultní hodnotu. Pokud je defaultní hodnota Klíče také NULL, je záměna
 nevýznamná. Pro obnovu všech defautlních hodnot tedy stačí přiřadit
@@ -280,9 +280,9 @@ Key.<strong>and</strong>(key), přitom výsledkem je instance tzv.
 <strong>kompozitního</strong> (chcete-li složeného) Klíče typu <a
 href="http://ujorm.org/javadoc/org/ujorm/CompositeKey.html">CompositeKey</a>,
 který je potomkem i toho původního interface typu Key. S komozitním
-Klíčem tedy lze pracovat stejně jako s Klíčem přímým - včetně zápisu
-a čtení hodnot doménových objektů či spojování s dalšími Klíči.
-Práce s kompozitním Klíčem nám přináší také nové,
+Klíčem tedy lze pracovat stejně jako s&nbsp;Klíčem přímým - včetně zápisu
+a čtení hodnot doménových objektů či spojování s&nbsp;dalšími Klíči.
+Práce s&nbsp;kompozitním Klíčem nám přináší také nové,
 zajímavé vlastnosti při čtení a zápisu hodnot:</p>
 <ul>
   <li>pokud je při čtení atributu některá <strong>relace</strong> NULL,
@@ -292,7 +292,7 @@ zajímavé vlastnosti při čtení a zápisu hodnot:</p>
   <li>při zápisu hodnoty pomocí kompozitního Klíče se automaticky
     vytvoří všechny chybějící relační objekty. Pokud nám z nějakého
     důvodu takové chování nevyhovuje, můžeme použít meotdu:
-    CompositeKey.setValue(ujo, value, createRelations) s posledním parametrem
+    CompositeKey.setValue(ujo, value, createRelations) s&nbsp;posledním parametrem
     <strong>false</strong>.</li>
 </ul>
 
@@ -371,7 +371,7 @@ Klíče:</p>
         assert employee.size() == 1; </pre>
 
 <p>Druhý příklad filtruje všechny zaměstnance, jejichž jméno se shoduje
-s názvem města (sídla) jejich firmy. Jinak souhlasím s každým, kdo si
+s názvem města (sídla) jejich firmy. Jinak souhlasím s&nbsp;každým, kdo si
 myslí, že to není úplně typický příklad :).</p>
 
 <h2 id="ordering">Řazení kolekcí</h2>
@@ -381,9 +381,9 @@ href="http://ujorm.org/javadoc/org/ujorm/core/UjoComparator.html">UjoComparator<
 Pro velkou skupinu požadavků není třeba implementovat novou třídu (na
 rozdíl od řazení kolekce JavaBenas i když v Java 8 přináší
 zjednodušení), stačí jen dodat tovární metodě požadovaný seznam
-klíčů spolu s informací o směru řazení, viz metoda <a
+klíčů spolu s&nbsp;informací o směru řazení, viz metoda <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descending</a>().
-Uvedená meoda vytváří vždy novou instanci Klíče s příznakem
+Uvedená meoda vytváří vždy novou instanci Klíče s&nbsp;příznakem
 <strong>sestupného</strong> řazení.</p>
 <pre name="code" class="java">        List&lt;Employee&gt; employees = UjoComparator.of
             ( COMPANY.add(CITY)
@@ -395,7 +395,7 @@ Uvedená meoda vytváří vždy novou instanci Klíče s příznakem
         }</pre>
 
 <p>Metoda <strong>descending</strong>() vytváří ve skutečnosti nový
-kompozitní Klíč s jediným členem, který poskytuje informaci o sestupném
+kompozitní Klíč s&nbsp;jediným členem, který poskytuje informaci o sestupném
 řazení. Modelování sestupného řazení se využívá také v ORM
 modulu.</p>
 
@@ -405,7 +405,7 @@ modulu.</p>
 Value), kde se nabízí možnost importovat atributy i pomocí
 <strong>kompozitních</strong> Klíčů, a tak lze importovat také atributy
 relačních entit. Popis CSV sloupců se definuje výčtem Klíčů
-(importovaného) Ujo objektu. Obsah textového CSV souboru s hlavičkou
+(importovaného) Ujo objektu. Obsah textového CSV souboru s&nbsp;hlavičkou
 následuje:</p>
 <pre name="code" class="xml">        id;name;companyId
         1;Pavel;10
@@ -430,7 +430,7 @@ následuje:</p>
 <p>Pokud na místo seznamu Klíčů použijeme třídu typu Ujo, importuje se
 obsah CSV souboru podle <strong>všech přímých</strong> Klíčů dané
 třídy. Pořadí statických Klíčů Ujo je ve frameworku Ujorm garantováno
-a je shodné s pořadím statických fieldů uvedených v doménové třídě -
+a je shodné s&nbsp;pořadím statických fieldů uvedených v doménové třídě -
 na rozdíl od <a
 href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html#getDeclaredFields%28%29">nedefinovaného
 pořadí</a> fieldů z JavaBeans.</p>
@@ -446,9 +446,8 @@ nějakém samostatném článku někdy příště.</p>
 
 <p>Všechny vzorové příklady jsou součástí projektu Ujorm a hlavní
 třída je k dispozici <a href="key-value-sample.html#l48">tady</a>.</p>
-</p>
 
-<p><h3 id="links" style="margin-bottom: 2px;">Internetové odkazy</h3>
+<h3 id="links" style="margin-bottom: 2px;">Internetové odkazy</h3>
 <ul>
   <li>domovská stránka <a href="http://ujorm.org/">Ujorm</a> </li>
   <li>zdrojový <a href="key-value-sample.html#l48">kód příkladů</a> pod
@@ -459,29 +458,21 @@ třída je k dispozici <a href="key-value-sample.html#l48">tady</a>.</p>
     href="http://ujorm-cs.blogspot.cz/2014/03/key-value-programovani-v-jazyce-java.html">na
     blog</a> a případné komentáře</li>
 </ul>
-<!-- google analytics beg --> <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script>
+<!-- google analytics beg -->
 <script type="text/javascript">
-            try {
-                var pageTracker = _gat._getTracker("UA-9284194-1");
-                pageTracker._trackPageview();
-            } catch(err) {}</script>
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9284194-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
 <!-- google analytics end -->
+
 <div style="display: none;">
-<script type="text/javascript"
-src="http://c1.navrcholu.cz/code?site=111542;t=lb14">
-            </script>
-
-<noscript>
-
-<div>
-<a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz"
-style="border:none"
-src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"
-/></a></div>
-</noscript>
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
 </div>
-</p>
+
 </body>
 </html>
