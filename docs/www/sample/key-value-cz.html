@@ -80,7 +80,7 @@ width="80" height="80" /></h1>
 <div class="intro">
 Průvodce vzorovými příklady modulu <strong>ujo-core</strong> z frameworku
 <strong>Ujorm</strong><br />
-Author: Pavel Ponec, březen, 2014<br />
+Autor: Pavel Ponec, březen, 2014<br />
 Licence dokumentu: <a
 href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons
 BY-ND</a></div>
@@ -177,7 +177,7 @@ href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDefault%28%29">getDefault</
 Zajímavější však je chování klíče při čtení atributu s&nbsp;hodnotu
 NULL, protože klíč každou takovou hodnotu zaměňuje automaticky za svoji
 defaultní hodnotu. Pokud je defaultní hodnota Klíče také NULL, je záměna
-nevýznamná. Pro obnovu všech defautlních hodnot tedy stačí přiřadit
+nevýznamná. Pro obnovu všech defaultních hodnot tedy stačí přiřadit
 každému atributu hodnotu NULL podle vzoru:</p>
 <pre name="code" class="java">        Employee employee = getEmployee();
 
@@ -187,7 +187,7 @@ každému atributu hodnotu NULL podle vzoru:</p>
 
         assert employee.getWate().equals(WAGE.getDefault()) : "Check the default value";</pre>
 
-<p>Jiná varianta předchozího příkladu obnovuje defautlní hodnoty pouze
+<p>Jiná varianta předchozího příkladu obnovuje defaultní hodnoty pouze
 pro číselné typy;</p>
 <pre name="code" class="java">        Employee employee = getEmployee();
 
@@ -273,7 +273,7 @@ jako alternativu k přímému vkládání klíčů pomocí Java kódu - v někte
 Key.<strong>and</strong>(key), přitom výsledkem je instance tzv.
 <strong>kompozitního</strong> (chcete-li složeného) Klíče typu <a
 href="http://ujorm.org/javadoc/org/ujorm/CompositeKey.html">CompositeKey</a>,
-který je potomkem i toho původního interface typu Key. S komozitním
+který je potomkem i toho původního interface typu Key. S kompozitním
 Klíčem tedy lze pracovat stejně jako s&nbsp;Klíčem přímým - včetně zápisu
 a čtení hodnot doménových objektů či spojování s&nbsp;dalšími Klíči.
 Práce s&nbsp;kompozitním Klíčem nám přináší také nové,
