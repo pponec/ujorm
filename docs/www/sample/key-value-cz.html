@@ -117,7 +117,7 @@ poskytuje různé služby. Klíč v Ujorm nikdy neobsahuje business data - na ro
 <p>Pro popis architektury <a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo</a> objektu doporučuji využít starší <a
 href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO">
 odkaz</a>, cílem tohoto článku bude spíše demonstrovat zajímavé využití  Ujo objektů na krátkých příkladech.
-Ukázky využívají modul <strong>ujo-core</strong> a nesouvisí s dotazy na tabulky relačních databází ORM modulu.
+Ukázky využívají modul <strong>ujo-core</strong> a nesouvisí přímo s dotazy na tabulky relačních databází ORM modulu.
 Modul <strong>core</strong> lze připojit do vlastního projektu pomocí Maven závislosti:</p>
 <pre name="code" class="xml">        &lt;dependency&gt;
             &lt;groupId&gt;org.ujorm&lt;/groupId&gt;
@@ -197,13 +197,12 @@ pro číselné typy;</p>
             }
         }</pre>
 
-<p>Použitá metoda <a
+<p>Metoda <a
 href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
-vrací všechny přímé klíče i ode všech <strong>rodičů</strong> Ujo
+vrací všechny přímé klíče i ode všech <strong>rodičů</strong> použité
 třídy, a tak se obnova výchozích hodnot bude týkat také atributů
-případných rodičů. Pro porovnání typu hodnoty Klíče jsme využili
-metodu <a
-href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29">Key.isTypeOf</a>(class)
+případných rodičů. Pro porovnání typu hodnoty Klíče je užitečná metoda <a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29">Key.isTypeOf</a>(Class)
  .</p>
 
 <h2 id="copy">Mělká kopie objektu</h2>
@@ -285,27 +284,27 @@ zajímavé vlastnosti při čtení a zápisu hodnot:</p>
     <strong>NullPointerException</strong> typická pro řetězení getterů JavaBeans. Toto pravidlo
     se netýká výchozího objektu.</li>
   <li>při zápisu hodnoty pomocí kompozitního Klíče se automaticky
-    vytvoří všechny chybějící relační objekty. Pokud nám z nějakého
+      <strong>vytvářejí</strong> všechny chybějící relační objekty. Pokud nám z nějakého
     důvodu takové chování nevyhovuje, můžeme použít metodu:
-    CompositeKey.setValue(ujo, value, createRelations) s&nbsp;posledním parametrem
+    CompositeKey.<strong>setValue</strong>(ujo, value, createRelations) s&nbsp;posledním parametrem
     <strong>false</strong>.</li>
 </ul>
 
 <p>Ukázka použití:</p>
 
-<pre name="code" class="java">        Key&lt;Employee,String&gt; companyNameKey = COMPANY.add(Company.NAME);
+<pre name="code" class="java">        Key&lt;Employee,String&gt; companyNameKey = Employee.COMPANY.add(Company.NAME);
 
         Employee employee = new Employee();
-        String companyName = employee.get(companyNameKey); //!
+        String companyName = employee.get(companyNameKey); // !1
         assert companyName == null;
 
-        employee.set(companyNameKey, "Prague"); //!
+        employee.set(companyNameKey, "Prague"); // !2
         companyName = employee.get(companyNameKey);
 
         assert employee.getCompany() != null;
         assert companyName == "Prague";</pre>
 
-<p>Řádek označený prvním vykřičníkem nám vrátí název firmy
+<p>První řádek sestaví kompozitní klíč. Řádek označený prvním vykřičníkem nám vrátí název firmy
 zaměstnance jako hodnotu NULL, i když firma ještě nebyla vytvořena.
 Řádek označený druhým vykřičníkem nejdříve doplní chybějící
 instanci objektu firmy a pak do ní zapíše její název.</p>
@@ -337,9 +336,9 @@ oblast ORM - například pro validování objektů.</p>
 vyšší mzdu jak 100 (jednotek).</p>
 
 <p>Hlavní význam Criterionu však zůstává v jeho schopnosti předat
-<strong>popis</strong> podmínky jiným modulům (nebo systémům), které pak
+<strong>popis</strong> podmínky jiným modulům, které pak
 mohou nabízet nějakou vlastní implementaci řešení. Třída Criterion
-patří mezi důležité části frameworku. </p>
+je důležitá pro popis podmínek v ORM.</p>
 
 <h2 id="criterionAsFilter">Criterion pro filtrování kolekce</h2>
 
