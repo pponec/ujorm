@@ -164,8 +164,8 @@ zápisu:</p>
 <pre name="code" class="java">        import static org.Company.CITY;
         import static org.Employee.*;</pre>
 
-<p>Z předchozího příkladu by mělo být zřejmé použití Klíčů pro přístup a atributům objektu,
-zatím se však nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s&nbsp;POJO objekty.
+<p>Z předchozího příkladu by mělo být zřejmé použití Klíčů pro přístup k atributům objektu,
+zatím se však nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s&nbsp;POJO.
 O výhodách řešení se vás pokusím přesvědčit v následujících kapitolách, které popisují další vlastnosti Klíčů.
 </p>
 
@@ -201,16 +201,16 @@ pro číselné typy;</p>
 href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
 vrací všechny přímé klíče i ode všech <strong>rodičů</strong> použité
 třídy, a tak se obnova výchozích hodnot bude týkat také atributů
-případných rodičů. Pro porovnání typu hodnoty Klíče je užitečná metoda <a
+případných rodičů. Pro porovnání typu hodnoty Klíče je vhodná metoda <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29">Key.isTypeOf</a>(Class)
  .</p>
 
 <h2 id="copy">Mělká kopie objektu</h2>
 
 <p>Protože už víme, jak z Ujo objektu získat seznam všech jeho
-<strong>přímých</strong> klíčů (popis kompozitních Klíčů bude brzy
-následovat), tak můžeme záměnou těla cyklu vytvořit snadno mělkou kopii
-objektu:</p>
+<strong>přímých</strong> klíčů (popis kompozitních Klíčů bude následovat),
+tak můžeme záměnou těla cyklu vytvořit snadno mělkou kopii objektu:</p>
+
 <pre name="code" class="java">        Employee source = getEmployee();
         Employee target = source.getClass().newInstance();
 
@@ -309,8 +309,7 @@ zaměstnance jako hodnotu NULL, i když firma ještě nebyla vytvořena.
 Řádek označený druhým vykřičníkem nejdříve doplní chybějící
 instanci objektu firmy a pak do ní zapíše její název.</p>
 
-<p>Pokud chování kompozitních Klíčů někoho zaujalo, je možné je
-studovat další příklady na tomto <a
+<p>Pokud chování kompozitních Klíčů někoho zaujalo, je možné studovat další příklady na tomto <a
 href="http://sourceforge.net/p/ujoframework/svn/2205/tree//trunk/project-m2/ujo-core/src/test/java/samples/values/UsageTest.java#l27">TestCase</a>.</p>
 
 <h2 id="criterionAsValidator">Criterion jako popis podmínky</h2>
