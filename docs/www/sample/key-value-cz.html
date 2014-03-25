@@ -135,9 +135,11 @@ settery a gettery tak, aby objekt splňoval specifikaci
 
 <p></p>
 
-<p><img alt="key-value-model" src="image-key-value/key-value-model.png"
-width="355" height="120" style="margin-left: 80px;" />
-<h2 id="reading">Zápis a čtení hodnot</h2>
+
+<h2 id="reading">Zápis a čtení hodnot
+<img alt="key-value-model" src="image-key-value/key-value-model.png"
+width="355" height="120" style="margin-left: 80px; vertical-align: top" />
+</h2>
 
 <p>Popis čtení a zápisu attributů JavaBeans tady přeskočíme a pustíme
 se rovnou do čtení a zápisu hodnot pomocí API z frameworku Ujorm.</p>
@@ -262,11 +264,13 @@ assert expected.equals(result);</pre>
 
 <p>Každý objekt typu <a
 href="http://ujorm.org/javadoc/org/ujorm/validator/ValidationError.html">ValidationError</a>
-má k dispozici jednu výchozí šablonu pro potřeby logování.</p>
+má k dispozici jednu výchozí šablonu pro potřeby logování.
+Další příklady použití validátorů jsou k dispozici
+<a href="http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-core/src/test/java/org/ujorm/validator/ValidatorTest.java#l25">tady</a>.</p>
 
-<p>Pro nějakou další verzí Ujorm zvažuji použití anotací z <a
+<p>Zvažuji použití anotací z <a
 href="http://beanvalidation.org/1.0/spec/">JSR 303</a> nad definicí Klíčů
-jako alternativu k přímému vkládání klíčů pomocí Java kódu.</p>
+jako alternativu k přímému vkládání klíčů pomocí Java kódu - v některém z dalších verzí Ujorm.</p>
 
 <h2 id="compositeKey">Kompozitní Klíče</h2>
 
@@ -445,7 +449,8 @@ třída je k dispozici <a href="key-value-sample.html#l48">tady</a>.</p>
 <ul>
   <li>domovská stránka <a href="http://ujorm.org/">Ujorm</a> </li>
   <li>zdrojový <a href="key-value-sample.html#l48">kód příkladů</a> pod
-    licencí Apache License 2.0 </li>
+    licencí Apache License 2.0 včetně odkazu pro
+    <a href="http://sourceforge.net/projects/ujoframework/files/ujorm/1.45/Example-KeyValue-1.45.zip/">stažení projektu</a></li>
   <li>popis demo <a href="hotels-cz.html">ORM aplikace</a></li>
   <li>odkaz <a
     href="http://ujorm-cs.blogspot.cz/2014/03/key-value-programovani-v-jazyce-java.html">na
