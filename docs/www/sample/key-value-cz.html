@@ -12,41 +12,45 @@
   href="http://fonts.googleapis.com/css?family=Titillium+Web:300,300italic,600&amp;subset=latin,latin-ext"
   rel="stylesheet" type="text/css" />
   <style type="text/css">
-            body {
-                margin: 0;
-                padding: 0;
-                font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif;
-                font-size: 16px;
-                width: 710px;
-                padding: 15px;
-            }
-            h1, h2, h3 {
-                color: darkblue;
-                margin-bottom: 20px;
-            }
-            h2 {
-                font-size: 24px;
-                margin: 30px 0 10px
-            }
-            img {
-                border: 0;
-            }
-            div.img.code {
-                border: silver solid 1px;
-                border-radius: 10px;
-            }
-            .intro {
-                color: gray;
-                font-style: italic;
-                margin-left: 25px;
-            }
-            .intro a, .toc a {
-                text-decoration: none;
-            }
-            pre {
-                font-family: monospace;
-                font-size: 14px;
-            }
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 16px;
+		width: 710px;
+		padding: 15px;
+	}
+	h1, h2, h3 {
+		color: darkblue;
+		margin-bottom: 20px;
+	}
+	h2 {
+		font-size: 24px;
+		margin: 30px 0 10px
+	}
+	img {
+		border: 0;
+	}
+	div.img.code {
+		border: silver solid 1px;
+		border-radius: 10px;
+	}
+	.intro {
+		color: gray;
+		font-style: italic;
+		margin-left: 25px;
+	}
+	.intro a, .toc a {
+		text-decoration: none;
+	}
+	pre {
+		font-family: monospace;
+		font-size: 13px;
+		color: darkgray;
+	}
+	.dp-highlighter {
+		font-size: 13px;
+	}
         </style>
   <!-- SyntaxHighlighter -->
   <link type="text/css" rel="stylesheet"
@@ -61,10 +65,10 @@
   src="../orm/SyntaxHighlighter/Scripts/shBrushXml.js">
         </script>
   <script type="text/javascript">
-            window.onload = function () {
-                dp.SyntaxHighlighter.ClipboardSwf = 'SyntaxHighlighter/Scripts/clipboard.swf';
-                dp.SyntaxHighlighter.HighlightAll('code');
-            }
+        window.onload = function () {
+            dp.SyntaxHighlighter.ClipboardSwf = 'SyntaxHighlighter/Scripts/clipboard.swf';
+            dp.SyntaxHighlighter.HighlightAll('code');
+        }
         </script>
 </head>
 
@@ -119,12 +123,11 @@ nové vlastnosti Ujorm na krátkých příkladech. Všechny ukázky se týkají
 pouze modulu <strong>ujo-core</strong> a nesouvisí tedy přímo s ORM modulem,
 který usnadňuje práci s relační databází. Modul <strong>core</strong>
 lze připojit do vlastního projektu pomocí Maven závislosti: </p>
-<pre name="code" class="xml">    &lt;dependency&gt;
-        &lt;groupId&gt;org.ujorm&lt;/groupId&gt;
-        &lt;artifactId&gt;ujo-core&lt;/artifactId&gt;
-        &lt;version&gt;1.45&lt;/version&gt;
-    &lt;/dependency&gt;
-        </pre>
+<pre name="code" class="xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.ujorm&lt;/groupId&gt;
+            &lt;artifactId&gt;ujo-core&lt;/artifactId&gt;
+            &lt;version&gt;1.45&lt;/version&gt;
+        &lt;/dependency&gt;</pre>
 
 <p>Použité ukázky kódu jsou postavené na dvou entitách
 <strong>Employee</strong> a <strong>Company</strong> typu <strong>Ujo</strong>,
@@ -133,40 +136,37 @@ href="http://ujorm-cs.blogspot.cz/2012/12/generator-getteru-pro-netbeans.html">g
 settery a gettery tak, aby objekt splňoval specifikaci
 <strong>JavaBeans</strong>. </p>
 
-<p></p>
+<p><img alt="key-value-model" src="image-key-value/key-value-model.png"
+width="355" height="120" style="margin: 15px 80px; vertical-align: top" /></p>
 
-
-<h2 id="reading">Zápis a čtení hodnot
-<img alt="key-value-model" src="image-key-value/key-value-model.png"
-width="355" height="120" style="margin-left: 80px; vertical-align: top" />
-</h2>
+<h2 id="reading">Zápis a čtení hodnot</h2>
 
 <p>Popis čtení a zápisu attributů JavaBeans tady přeskočíme a pustíme
 se rovnou do čtení a zápisu hodnot pomocí API z frameworku Ujorm.</p>
-<pre name="code" class="java">Employee person = new Employee();
+<pre name="code" class="java">        Employee person = new Employee();
 
-// Write:
-person.set(ID, 7L);
-person.set(NAME, "Pavel");
-person.set(WAGE, 20.00);
-person.set(COMPANY, new Company());
+        // Write:
+        person.set(ID, 7L);
+        person.set(NAME, "Pavel");
+        person.set(WAGE, 20.00);
+        person.set(COMPANY, new Company());
 
-// Read:
-Long id = person.get(ID);
-String name = person.get(NAME);
-Double wage = person.get(WAGE);
-Company company = person.get(COMPANY);
+        // Read:
+        Long id = person.get(ID);
+        String name = person.get(NAME);
+        Double wage = person.get(WAGE);
+        Company company = person.get(COMPANY);
 
-assert id.equals(7L);
-assert name.equals("Pavel");
-assert wage == 20.00;
-assert company != null;</pre>
+        assert id.equals(7L);
+        assert name.equals("Pavel");
+        assert wage == 20.00;
+        assert company != null;</pre>
 
 <p>Pro zkrácení kódu uvedených příkladu byly v hlavičce třídy
 naimportované potřebné statické Klíče použitých Ujo objektů pomocí
 zápisu:</p>
-<pre name="code" class="java">import static org.Company.CITY;
-import static org.Employee.*;</pre>
+<pre name="code" class="java">        import static org.Company.CITY;
+        import static org.Employee.*;</pre>
 
 <p>Z předchozího příkladu by mělo být zřejmé použití Klíčů pro přístup a atributům objektu,
 zatím se však nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s POJO objekty.
@@ -183,24 +183,23 @@ NULL, protože klíč každou takovou hodnotu zaměňuje automaticky za svoji
 defaultní hodnotu. Pokud je defaultní hodnota Klíče také NULL, je záměna
 nevýznamná. Pro obnovu všech defautlních hodnot tedy stačí přiřadit
 každému atributu hodnotu NULL podle vzoru:</p>
-<pre name="code" class="java">            Employee employee = getEmployee();
+<pre name="code" class="java">        Employee employee = getEmployee();
 
-            for (Key key : employee.readKeys()) {
-                employee.set(key, null);
-            }
+        for (Key key : employee.readKeys()) {
+            employee.set(key, null);
+        }
 
-            assert employee.getWate().equals(WAGE.getDefault())
-                 : "Check the default value";</pre>
+        assert employee.getWate().equals(WAGE.getDefault()) : "Check the default value";</pre>
 
 <p>Jiná varianta předchozího příkladu obnovuje defautlní hodnoty pouze
 pro číselné typy;</p>
-<pre name="code" class="java">            Employee employee = getEmployee();
+<pre name="code" class="java">        Employee employee = getEmployee();
 
-            for (Key key : employee.readKeys()) {
-                if (key.isTypeOf(Number.class)) {
-                    employee.set(key, null);
-                }
-            }</pre>
+        for (Key key : employee.readKeys()) {
+            if (key.isTypeOf(Number.class)) {
+                employee.set(key, null);
+            }
+        }</pre>
 
 <p>Použitá metoda <a
 href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
@@ -217,50 +216,52 @@ href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29"
 <strong>přímých</strong> klíčů (popis kompozitních Klíčů bude brzy
 následovat), tak můžeme záměnou těla cyklu vytvořit snadno mělkou kopii
 objektu:</p>
-<pre name="code" class="java">            Employee source = getEmployee();
-            Employee target = source.getClass().newInstance();
+<pre name="code" class="java">        Employee source = getEmployee();
+        Employee target = source.getClass().newInstance();
 
-            for (Key&lt;Ujo,?&gt; key : source.readKeys()) {
-                key.copy(source, target);
-            }
+        for (Key&lt;Ujo,?&gt; key : source.readKeys()) {
+            key.copy(source, target);
+        }
 
-            assert source.getId() == target.getId()</pre>
+        assert source.getId() == target.getId()</pre>
 
 <h2 id="validation">Validace atributů při zápisu</h2>
 
 <p>Validátory jsou neměnné objekty, které je možné spojovat operátorem
 AND/OR a které lze vkládat volitelně do Klíče při jeho sestavení.</p>
-<pre name="code" class="java">Key&lt;Employee, String&gt; NAME = keyFactory.newKey(length(7));</pre>
+<pre name="code" class="java">        Key&lt;Employee, String&gt; NAME = keyFactory.newKey(length(7));</pre>
 
 <p>Pokud Klíč jednou dostane validátor, tak bude navždy kontrolovat každou
 novou hodnotu v době zápisu do Ujo objektu.</p>
-<pre name="code" class="java">final String correctName = "1234567";
-final String wrongName = "12345678";
 
-Employee employee = new Employee();
-employee.set(NAME, correctName);
+<pre name="code" class="java">        final String correctName = "1234567";
+        final String wrongName = "12345678";
 
-try {
-    employee.set(NAME, wrongName);
-} catch (ValidationException e) {
-    String expected
-        = "Text length for Employee.name must be between 0 and 7, "
-        + "but the input length is: 8";
-    assert e.getMessage().equals(expected);
-}
+        Employee employee = new Employee();
+        employee.set(NAME, correctName);
 
-assert employee.getName() == correctName;</pre>
+        try {
+            employee.set(NAME, wrongName);
+        } catch (ValidationException e) {
+            String expected
+                = "Text length for Employee.name must be between 0 and 7, "
+                + "but the input length is: 8";
+            assert e.getMessage().equals(expected);
+        }
+
+        assert employee.getName() == correctName;</pre>
 
 <p>API validátorů nabízí podporu lokalizovaných chybových zpráv pomocí
 tzv. <strong>šablon</strong>.</p>
-<pre name="code" class="java">final ValidationException exception = getException();
 
-String template = "The name can be up to ${MAX} “
-                + ”characters long,not ${LENGTH}.";
-String expected = "The name can be up to 7 characters long, not 8.";
-String result = exception.getError().getMessage(template);
+<pre name="code" class="java">        final ValidationException exception = getException();
 
-assert expected.equals(result);</pre>
+        String template = "The name can be up to ${MAX} "
+                    + "characters long,not ${LENGTH}.";
+        String expected = "The name can be up to 7 characters long, not 8.";
+        String result = exception.getError().getMessage(template);
+
+        assert expected.equals(result);</pre>
 
 <p>Každý objekt typu <a
 href="http://ujorm.org/javadoc/org/ujorm/validator/ValidationError.html">ValidationError</a>
@@ -296,17 +297,18 @@ zajímavé vlastnosti při čtení a zápisu hodnot:</p>
 </ul>
 
 <p>Ukázka použití:</p>
-<pre name="code" class="java">    Key&lt;Employee,String&gt; companyNameKey = COMPANY.add(Company.NAME);
 
-    Employee employee = new Employee();
-    String companyName = employee.get(companyNameKey); //!
-    assert companyName == null;
+<pre name="code" class="java">        Key&lt;Employee,String&gt; companyNameKey = COMPANY.add(Company.NAME);
 
-    employee.set(companyNameKey, "Prague"); //!
-    companyName = employee.get(companyNameKey);
+        Employee employee = new Employee();
+        String companyName = employee.get(companyNameKey); //!
+        assert companyName == null;
 
-    assert employee.getCompany() != null;
-    assert companyName == "Prague";</pre>
+        employee.set(companyNameKey, "Prague"); //!
+        companyName = employee.get(companyNameKey);
+
+        assert employee.getCompany() != null;
+        assert companyName == "Prague";</pre>
 
 <p>Řádek označený prvním vykřičníkem nám vrátí název firmy
 zaměstnance jako hodnotu NULL, i když firma ještě nebyla vytvořena.
@@ -326,15 +328,15 @@ operátorem AND/OR do binárního stromu. Objekt typu Criterion slouží také
 v ORM modulu jako předloha pro sestavení fráze WHERE v SQL přákazech,
 nicméně tento objekt je zcela autonomní a můžeme ho využívat i mimo
 oblast ORM - například pro validování objektů.</p>
-<pre name="code" class="java">    Criterion&lt;Employee&gt; validator = Employee.WAGE.whereGt(100.0);
+<pre name="code" class="java">        Criterion&lt;Employee&gt; validator = Employee.WAGE.whereGt(100.0);
 
-    try {
-        validator.validate(getEmployee()
+        try {
+            validator.validate(getEmployee()
             , "Minimal WAGE is: %f."
             , validator.getRightNode());
-    } catch (IllegalArgumentException e) {
-        assert e.getMessage() != null;
-    }</pre>
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage() != null;
+        }</pre>
 
 <p>V této ukázce využíváme Criterion pro kontrolu, že zaměstnanec má
 vyšší mzdu jak 100 (jednotek).</p>
@@ -350,17 +352,18 @@ patří mezi důležité části frameworku. </p>
 slouží pro filtrování kolekce zaměstnanců, jejichž firma má sídlo v
 Praze. Na ukázce vidíme, že do Criterionu mohou vstupovat také kompozitní
 Klíče:</p>
-<pre name="code" class="java">	List&lt;Employee&gt; employees = COMPANY.add(CITY)
-	    .whereEq("Prague")
-	    .evaluate(getEmployees());
+<pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
+            .whereEq("Prague")
+            .evaluate(getEmployees());
 
-	for (Employee employee : employees) {
-	    System.out.println(employee);
-	}
+        for (Employee employee : employees) {
+            System.out.println(employee);
+        }
 
-	assert employees.size() == 4;</pre>
+        assert employees.size() == 4;</pre>
 
 <p>Je užitečné vědět, že hodnotu Criterionu může být také Klíč:</p>
+
 <pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
             .whereEq(Employee.NAME)
             .evaluate(getEmployees());
@@ -383,12 +386,12 @@ href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descendi
 Uvedená meoda vytváří vždy novou instanci Klíče s příznakem
 <strong>sestupného</strong> řazení.</p>
 <pre name="code" class="java">        List&lt;Employee&gt; employees = UjoComparator.of
-              ( COMPANY.add(CITY)
-              , NAME.descending())
-              .sort(getEmployees());
+            ( COMPANY.add(CITY)
+            , NAME.descending())
+            .sort(getEmployees());
 
         for (Employee employee : employees) {
-              System.out.println(employee);
+            System.out.println(employee);
         }</pre>
 
 <p>Metoda <strong>descending</strong>() vytváří ve skutečnosti nový
@@ -404,25 +407,25 @@ Value), kde se nabízí možnost importovat atributy i pomocí
 relačních entit. Popis CSV sloupců se definuje výčtem Klíčů
 (importovaného) Ujo objektu. Obsah textového CSV souboru s hlavičkou
 následuje:</p>
-<pre name="code" class="xml">    id;name;companyId
-    1;Pavel;10
-    2;Petr;30
-    3;Kamil;50</pre>
+<pre name="code" class="xml">        id;name;companyId
+        1;Pavel;10
+        2;Petr;30
+        3;Kamil;50</pre>
 
 <p>Java kód pro import CSV souboru:</p>
-<pre name="code" class="java">Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+<pre name="code" class="java">        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
 
-UjoManagerCSV&lt;Employee&gt; manager = UjoManagerCSV.of
-        ( Employee.ID
-        , Employee.NAME
-        , Employee.COMPANY.add(Company.ID));
+        UjoManagerCSV&lt;Employee&gt; manager = UjoManagerCSV.of
+            ( Employee.ID
+            , Employee.NAME
+            , Employee.COMPANY.add(Company.ID));
 
-List&lt;Employee&gt; employes = manager.loadCSV(scanner, this);
+        List&lt;Employee&gt; employes = manager.loadCSV(scanner, this);
 
-assert employes.size() == 3;
-assert employes.get(0).getId().equals(1L);
-assert employes.get(0).getName().equals("Pavel");
-assert employes.get(0).getCompany().getId().equals(10L);</pre>
+        assert employes.size() == 3;
+        assert employes.get(0).getId().equals(1L);
+        assert employes.get(0).getName().equals("Pavel");
+        assert employes.get(0).getCompany().getId().equals(10L);</pre>
 
 <p>Pokud na místo seznamu Klíčů použijeme třídu typu Ujo, importuje se
 obsah CSV souboru podle <strong>všech přímých</strong> Klíčů dané
@@ -457,18 +460,18 @@ třída je k dispozici <a href="key-value-sample.html#l48">tady</a>.</p>
     blog</a> a případné komentáře</li>
 </ul>
 <!-- google analytics beg --> <script type="text/javascript">
-                var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-                document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script>
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script>
 <script type="text/javascript">
-                try {
-                    var pageTracker = _gat._getTracker("UA-9284194-1");
-                    pageTracker._trackPageview();
-                } catch(err) {}</script>
+            try {
+                var pageTracker = _gat._getTracker("UA-9284194-1");
+                pageTracker._trackPageview();
+            } catch(err) {}</script>
 <!-- google analytics end -->
 <div style="display: none;">
 <script type="text/javascript"
 src="http://c1.navrcholu.cz/code?site=111542;t=lb14">
-                </script>
+            </script>
 
 <noscript>
 
