@@ -110,19 +110,15 @@ BY-ND</a></div>
 přistupují ke svým atributům výhradně pomocí objektů zvaných Klíče.
 <a href="http://ujorm.org/javadoc/org/ujorm/Key.html">Klíč</a> tvoří
 neměnný statický objekt, který je součástí doménové třídy a který
-poskytuje služby. Klíč v Ujorm nikdy neobsahuje business data - na rozdíl
-třeba od frameworku <a href="http://www.joda.org/joda-beans/">Joda Beans</a> s
-podobnou architekturou, kde však ekvivalentní objekt typu <a
-href="http://www.joda.org/joda-beans/apidocs/org/joda/beans/Property.html">Property</a>
-<strong>hodnotu</strong> atributu naopak obsahuje. </p>
+poskytuje různé služby. Klíč v Ujorm nikdy neobsahuje business data - na rozdíl
+ od podobného frameworku <a href="http://www.joda.org/joda-beans/">Joda Beans</a>,
+ kde atributy jsou obsaženy v objektu typu <a href="http://www.joda.org/joda-beans/apidocs/org/joda/beans/Property.html">Property</a>.</p>
 
-<p>Pro popis architektury Ujo objektu doporučuji využít <a
-href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO">starší
-odkaz</a>, v tomto článku bych spíše demonstroval některé zajímavé či
-nové vlastnosti Ujorm na krátkých příkladech. Všechny ukázky se týkají
-pouze modulu <strong>ujo-core</strong> a nesouvisí tedy přímo s&nbsp;ORM modulem,
-který usnadňuje práci s&nbsp;relační databází. Modul <strong>core</strong>
-lze připojit do vlastního projektu pomocí Maven závislosti: </p>
+<p>Pro popis architektury <a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo</a> objektu doporučuji využít starší <a
+href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO">
+odkaz</a>, cílem tohoto článku bude spíše demonstrovat zajímavé využití  Ujo objektů na krátkých příkladech.
+Ukázky využívají modul <strong>ujo-core</strong> a nesouvisí s dotazy na tabulky relačních databází ORM modulu.
+Modul <strong>core</strong> lze připojit do vlastního projektu pomocí Maven závislosti:</p>
 <pre name="code" class="xml">        &lt;dependency&gt;
             &lt;groupId&gt;org.ujorm&lt;/groupId&gt;
             &lt;artifactId&gt;ujo-core&lt;/artifactId&gt;
@@ -141,7 +137,7 @@ width="355" height="120" style="margin: 15px 80px; vertical-align: top" /></p>
 
 <h2 id="reading">Zápis a čtení hodnot</h2>
 
-<p>Popis čtení a zápisu attributů JavaBeans tady přeskočíme a pustíme
+<p>Popis čtení a zápisu atributů JavaBeans tady přeskočíme a pustíme
 se rovnou do čtení a zápisu hodnot pomocí API z frameworku Ujorm.</p>
 <pre name="code" class="java">        Employee person = new Employee();
 
@@ -175,7 +171,7 @@ O výhodách řešení se vás pokusím přesvědčit v následujících kapitol
 
 <h2 id="default">Obnovení defaultních hodnot</h2>
 
-<p>Kaźdý Klíč obsahuje svoji defaultní hodnotu, kterou lze získat metodou
+<p>Každý Klíč obsahuje svoji defaultní hodnotu, kterou lze získat metodou
 Key.<a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDefault%28%29">getDefault</a>().
 Zajímavější však je chování klíče při čtení atributu s&nbsp;hodnotu
@@ -256,8 +252,7 @@ tzv. <strong>šablon</strong>.</p>
 
 <pre name="code" class="java">        final ValidationException exception = getException();
 
-        String template = "The name can be up to ${MAX} "
-                    + "characters long,not ${LENGTH}.";
+        String template = "The name can be up to ${MAX} characters long,not ${LENGTH}.";
         String expected = "The name can be up to 7 characters long, not 8.";
         String result = exception.getError().getMessage(template);
 
@@ -291,7 +286,7 @@ zajímavé vlastnosti při čtení a zápisu hodnot:</p>
     se netýká výchozího objektu.</li>
   <li>při zápisu hodnoty pomocí kompozitního Klíče se automaticky
     vytvoří všechny chybějící relační objekty. Pokud nám z nějakého
-    důvodu takové chování nevyhovuje, můžeme použít meotdu:
+    důvodu takové chování nevyhovuje, můžeme použít metodu:
     CompositeKey.setValue(ujo, value, createRelations) s&nbsp;posledním parametrem
     <strong>false</strong>.</li>
 </ul>
@@ -383,7 +378,7 @@ rozdíl od řazení kolekce JavaBenas i když v Java 8 přináší
 zjednodušení), stačí jen dodat tovární metodě požadovaný seznam
 klíčů spolu s&nbsp;informací o směru řazení, viz metoda <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descending</a>().
-Uvedená meoda vytváří vždy novou instanci Klíče s&nbsp;příznakem
+Uvedená metoda vytváří vždy novou instanci Klíče s&nbsp;příznakem
 <strong>sestupného</strong> řazení.</p>
 <pre name="code" class="java">        List&lt;Employee&gt; employees = UjoComparator.of
             ( COMPANY.add(CITY)
