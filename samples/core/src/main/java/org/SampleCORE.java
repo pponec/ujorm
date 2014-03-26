@@ -91,8 +91,8 @@ public class SampleCORE {
         double wage = person.getWage();
         Company company = person.getCompany();
 
-        assert id.equals(7L);
-        assert name.equals("Pavel");
+        assert id == 7L;
+        assert name == "Pavel";
         assert wage == 20.00;
         assert company != null;
     }
@@ -113,8 +113,8 @@ public class SampleCORE {
         double wage = person.get(WAGE); // result is not never null due the default value
         Company company = person.get(COMPANY);
 
-        assert id.equals(7L);
-        assert name.equals("Pavel");
+        assert id == 7L;
+        assert name == "Pavel";
         assert wage == 20.00;
         assert company != null;
 
@@ -132,8 +132,8 @@ public class SampleCORE {
         for (Key key : employee.readKeys()) {
             employee.set(key, null);
         }
-        assert employee.getWage().equals(WAGE.getDefault())
-                : "Check the default value";
+
+        assert employee.getWage() == WAGE.getDefault() : "Check the default value";
     }
 
     /** See how to restore a default value for all Numbers only.
@@ -148,8 +148,7 @@ public class SampleCORE {
                 employee.set(key, null);
             }
         }
-        assert employee.getWage().equals(WAGE.getDefault())
-                : "Check the default value";
+        assert employee.getWage() == WAGE.getDefault() : "Check the default value";
     }
 
     /** How to copy all attributes from a source to a target object? */
@@ -301,7 +300,7 @@ public class SampleCORE {
         List<Employee> employes = manager.loadCSV(scanner, this);
 
         assert employes.size() == 3;
-        assert employes.get(0).getId().equals(1L);
+        assert employes.get(0).getId() .equals(1L);
         assert employes.get(0).getName().equals("Pavel");
         assert employes.get(0).getCompany().getId().equals(10L);
     }

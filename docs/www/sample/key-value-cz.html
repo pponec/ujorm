@@ -153,8 +153,8 @@ se rovnou do čtení a zápisu hodnot pomocí API z frameworku Ujorm.</p>
         Double wage = person.get(WAGE);
         Company company = person.get(COMPANY);
 
-        assert id.equals(7L);
-        assert name.equals("Pavel");
+        assert id == 7L;
+        assert name == "Pavel";
         assert wage == 20.00;
         assert company != null;</pre>
 
@@ -185,7 +185,7 @@ každému atributu hodnotu NULL podle vzoru:</p>
             employee.set(key, null);
         }
 
-        assert employee.getWate().equals(WAGE.getDefault()) : "Check the default value";</pre>
+        assert employee.getWate() == WAGE.getDefault() : "Check the default value";</pre>
 
 <p>Jiná varianta předchozího příkladu obnovuje defaultní hodnoty pouze
 pro číselné typy;</p>
@@ -335,8 +335,7 @@ vyšší mzdu jak 100 (jednotek).</p>
 
 <p>Hlavní význam Criterionu však zůstává v jeho schopnosti předat
 <strong>popis</strong> podmínky jiným modulům, které pak
-mohou nabízet nějakou vlastní implementaci řešení. Třída Criterion
-je důležitá pro popis podmínek v ORM.</p>
+mohou nabízet nějakou vlastní implementaci řešení.</p>
 
 <h2 id="criterionAsFilter">Criterion pro filtrování kolekce</h2>
 
