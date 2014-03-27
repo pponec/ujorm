@@ -98,6 +98,7 @@ BY-ND</a></div>
   <li><a href="#criterionAsValidator">Criterion jako popis podmínky</a></li>
   <li><a href="#criterionAsFilter">Criterion pro filtrování kolekce</a></li>
   <li><a href="#ordering">Řazení kolekcí</a></li>
+  <li><a href="#serialization">Serializace klíčů</a></li>
   <li><a href="#importCsv">Import CSV formátu</a></li>
   <li><a href="#conclusion">Závěr</a></li>
 </ul>
@@ -392,6 +393,25 @@ Uvedená metoda vytváří vždy novou instanci Klíče s&nbsp;příznakem
 kompozitní Klíč s&nbsp;jediným členem, který poskytuje informaci o sestupném
 řazení. Modelování sestupného řazení se využívá také v ORM
 modulu.</p>
+
+<h2 id="serialization">Serializace klíčů</h2>
+
+<p>Každý <strong>přímý</strong> Klíč má v rámci classloaderu svoji unikátní instanci podobně jako položka výčtového typu
+<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Enum.html">Enum</a>.
+Aby bylo možné klíče serializovat, je třeba je vložit do <strong>klíčenky</strong> reprezentované
+třídou <a href="http://ujorm.org/javadoc/org/ujorm/core/KeyRing.html">KeyRing</a>.
+Objekty tohoto typu nejsou pro nás úplně neznámé, protože dříve použitá metoda
+<a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys()">Ujo.readKeys</a>()
+vrací (ve výchozí implementaci) právě tento typ.</p>
+
+<pre name="code" class="java">        final KeyRing&lt;Employee&gt; keyRing1, keyRing2;
+        keyRing1 = KeyRing.of(Employee.ID, Employee.COMPANY.add(Company.NAME));
+        keyRing2 = service.serialize(keyRing1);
+
+        assert keyRing1 != keyRing2 : "Different instances";
+        assert keyRing1.get(0) == keyRing2.get(0) : "The same direct keys";
+        assert keyRing1.get(1).equals(keyRing2.get(1)) : "The equal composite keys";
+        assert new Employee().readKeys() instanceof KeyRing : "readKeys() returns the KeyRing";</pre>
 
 <h2 id="importCsv">Import CSV formátu</h2>
 
