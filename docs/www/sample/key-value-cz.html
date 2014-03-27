@@ -105,7 +105,7 @@ BY-ND</a></div>
 
 <h2 id="introduction">Úvod</h2>
 
-<p>Ujorm je nástroj pro vývoj Java aplikací postavený na
+<p>Ujorm je knihovna pro vývoj Java aplikací postavená na
 <strong>key-value</strong> architektuře doménových objektů, které
 přistupují ke svým atributům výhradně pomocí objektů zvaných Klíče.
 <a href="http://ujorm.org/javadoc/org/ujorm/Key.html">Klíč</a> tvoří
@@ -223,11 +223,14 @@ tak můžeme záměnou těla cyklu vytvořit snadno mělkou kopii objektu:</p>
 <h2 id="validation">Validace atributů při zápisu</h2>
 
 <p>Validátory jsou neměnné objekty, které je možné spojovat operátorem
-AND/OR a které lze vkládat volitelně do Klíče při jeho sestavení.</p>
+AND/OR a které lze vkládat volitelně do Klíče při jeho sestavení.
+Pokud Klíč dostane jednou validátor, tak bude navždy kontrolovat každou
+hodnotu v době zápisu do Ujo objektu.
+</p>
 <pre name="code" class="java">        Key&lt;Employee, String&gt; NAME = keyFactory.newKey(length(7));</pre>
 
-<p>Pokud Klíč jednou dostane validátor, tak bude navždy kontrolovat každou
-novou hodnotu v době zápisu do Ujo objektu.</p>
+<p>Do klíče NAME jsme teď vložili validátor, který povolí zápis jména zaměstnance s maximáln délkou 7&nbsp;znaků.
+Na následujícím příkladě vyzkoušíme zápis jednoho korektního jména a jednoho příliš dlouhého jména:</p>
 
 <pre name="code" class="java">        final String correctName = "1234567";
         final String wrongName = "12345678";
@@ -251,7 +254,7 @@ tzv. <strong>šablon</strong>.</p>
 
 <pre name="code" class="java">        final ValidationException exception = getException();
 
-        String template = "The name can be up to ${MAX} characters long,not ${LENGTH}.";
+        String template = "The name can be up to ${MAX} characters long, not ${LENGTH}.";
         String expected = "The name can be up to 7 characters long, not 8.";
         String result = exception.getError().getMessage(template);
 
