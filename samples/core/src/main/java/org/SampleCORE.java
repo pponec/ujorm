@@ -16,12 +16,19 @@
 
 package org;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
+import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
@@ -65,6 +72,7 @@ public class SampleCORE {
             sample.criterionAsFilter();
             sample.criterionAsFilterWithKey();
             sample.sortEmployeeList();
+            sample.keySerialization();
             sample.importCSV();
 
         } catch (Exception e) {
@@ -284,6 +292,21 @@ public class SampleCORE {
         assert employees.size() == 4 : "Check the result count";
     }
 
+    /** Each direct Key has an unique instance in a classloader,
+     * similar like an item of the {@link Enum} type.
+     * For the serialization use a {@link KeyRing} envelope.
+     */
+    public void keySerialization() {
+        final KeyRing<Employee> keyRing1, keyRing2;
+        keyRing1 = KeyRing.of(Employee.ID, Employee.COMPANY.add(Company.NAME));
+        keyRing2 = service.serialize(keyRing1);
+
+        assert keyRing1 != keyRing2 : "Different instances";
+        assert keyRing1.get(0) == keyRing2.get(0) : "The same direct keys";
+        assert keyRing1.get(1).equals(keyRing2.get(1)) : "The equal composite keys";
+        assert new Employee().readKeys() instanceof KeyRing : "readKeys() returns the KeyRing";
+    }
+
     /** Import the CSV file using a Composite Keys from the file content:
      * <pre>{@code id;name;companyId
      * 1;Pavel;10
@@ -361,6 +384,26 @@ public class SampleCORE {
             result.add(createEmployee(40L, "Prague", 00.00, getCompany()));
 
             return result;
+        }
+
+        /** Object serialization */
+        @SuppressWarnings("unchecked")
+        private <T extends Serializable> T serialize(T object) {
+            try {
+                ByteArrayOutputStream os = new ByteArrayOutputStream(1000);
+                ObjectOutputStream encoder = new ObjectOutputStream(os);
+                encoder.writeObject(object);
+                encoder.close();
+
+                InputStream is = new ByteArrayInputStream(os.toByteArray());
+                ObjectInputStream decoder = new ObjectInputStream(is);
+                Object result = (Serializable) decoder.readObject();
+                decoder.close();
+
+                return (T) result;
+            } catch (Exception e) {
+                throw new IllegalStateException("Serializaton error", e);
+            }
         }
     }
 }
