@@ -127,7 +127,7 @@ abstract public class UjoService<UJO extends Ujo> {
         if (prop.isComposite()) {
             final CompositeKey pp = (CompositeKey) prop;
             final Object o = ujoManager.decodeValue(prop, value, type);
-            pp.setValue(ujo, o, true);
+            pp.setValue(ujo, o);
         } else if (textable) {
             ((UjoTextable) ujo).writeValueString(prop, value, type, action);
         } else {
