@@ -17,7 +17,6 @@ package org.ujorm.extensions;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 
@@ -69,36 +68,24 @@ public class KeyPairs<SRC extends Ujo, TRG extends Ujo> {
 
         private final Key<? super SRC, V> srcKey;
         private final Key<? super TRG, V> trgKey;
-        private final boolean compositeSrc;
-        private final boolean compositeTrg;
 
         public PairItem(Key<? super SRC, V> srcKey, Key<? super TRG, V> tgtKey) {
             this.srcKey = srcKey;
             this.trgKey = tgtKey;
-            this.compositeSrc = srcKey.isComposite();
-            this.compositeTrg = tgtKey.isComposite();
         }
 
         /** Copy value to target */
         @SuppressWarnings("unchecked")
         private void copyToTarget(SRC source, TRG target) {
             final Object value = srcKey.of(source);
-            if (compositeTrg) {
-                ((CompositeKey) trgKey).setValue(target, value, true);
-            } else {
-                trgKey.setValue(target, (V) value);
-            }
+            trgKey.setValue(target, (V) value);
         }
 
         /** Copy value to source */
         @SuppressWarnings("unchecked")
         private void copyToSource(TRG target, SRC source) {
             final Object value = trgKey.of(target);
-            if (compositeSrc) {
-                ((CompositeKey) srcKey).setValue(source, value, true);
-            } else {
-                srcKey.setValue(source, (V) value);
-            }
+            srcKey.setValue(source, (V) value);
         }
     }
 
