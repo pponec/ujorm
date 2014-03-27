@@ -6,7 +6,7 @@
       <generator class="native"/>
     </id>
     <property length="8" name="personalId"/>
-    <property length="128" name="surename"/>
-    <property length="128" name="lastname"/>
+    <property length="128" name="forename"/>
+    <property length="128" name="surname"/>
   </class>
 </hibernate-mapping>

@@ -36,9 +36,9 @@ public class HbmUser implements Serializable {
     private Long id;
     private String personalId;
     @Column(length=128)
-    private String surename;
+    private String forename;
     @Column(length=128)
-    private String lastname;
+    private String surname;
 
     public Long getId() {
         return id;
@@ -46,14 +46,6 @@ public class HbmUser implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public String getPersonalId() {
@@ -64,14 +56,20 @@ public class HbmUser implements Serializable {
         this.personalId = personalId;
     }
 
-    public String getSurename() {
-        return surename;
+    public String getForename() {
+        return forename;
     }
 
-    public void setSurename(String surename) {
-        this.surename = surename;
+    public void setForename(String forename) {
+        this.forename = forename;
     }
 
+    public String getSurname() {
+        return surname;
+    }
 
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
 }

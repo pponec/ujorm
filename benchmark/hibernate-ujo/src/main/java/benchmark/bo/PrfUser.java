@@ -31,8 +31,8 @@ public class PrfUser extends QuickUjo {
 
     public static final Key<PrfUser,Long> ID = f.newKey();
     public static final Key<PrfUser,String> PERSONAL_ID = f.newKey();
-    public static final Key<PrfUser,String> SURENAME = f.newKey();
-    public static final Key<PrfUser,String> LASTNAME = f.newKey();
+    public static final Key<PrfUser,String> FORENAME = f.newKey();
+    public static final Key<PrfUser,String> SURNAME = f.newKey();
 
     // Optional code for better performance when creating instance:
     static { f.lock(); }
@@ -56,20 +56,20 @@ public class PrfUser extends QuickUjo {
         PrfUser.PERSONAL_ID.setValue(this, personalId);
     }
 
-    public String getSurename() {
-        return SURENAME.of(this);
+    public String getForename() {
+        return FORENAME.of(this);
     }
 
-    public void setSurename(String surename) {
-        PrfUser.SURENAME.setValue(this, surename);
+    public void setForename(String forename) {
+        PrfUser.FORENAME.setValue(this, forename);
     }
 
-    public String getLastname() {
-        return LASTNAME.of(this);
+    public String getSurname() {
+        return SURNAME.of(this);
     }
 
-    public void setLastname(String lastname) {
-        PrfUser.LASTNAME.setValue(this, lastname);
+    public void setSurname(String surname) {
+        PrfUser.SURNAME.setValue(this, surname);
     }
 
 }
