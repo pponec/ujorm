@@ -76,14 +76,14 @@ public class BenchmarkHnU {
         Transaction tr = session.beginTransaction();
 
         PrfUser user1 = new PrfUser();
-        user1.setLastname("Lorem ipsum dolor");
-        user1.setSurename("Sit amet consectetur");
+        user1.setForename("Lorem ipsum dolor");
+        user1.setSurname("Sit amet consectetur");
         user1.setPersonalId("12345678");
         session.save(user1);
 
         PrfUser user2 = new PrfUser();
-        user2.setLastname("Lorem ipsum dolor");
-        user2.setSurename("Sit amet consectetur");
+        user2.setForename("Lorem ipsum dolor");
+        user2.setSurname("Sit amet consectetur");
         user2.setPersonalId("12345678");
         session.save(user2);
 
@@ -183,7 +183,7 @@ public class BenchmarkHnU {
 
         int i = 0;
         for (PrfOrder order : orders) {
-            String surename = order.getUser().getSurename();
+            String surename = order.getUser().getSurname();
             if (false) { System.out.println("Usr.surename: " + surename); }
 
             hql = "from PrfOrderItem where deleted = :deleted and order = :order";
@@ -198,7 +198,7 @@ public class BenchmarkHnU {
                 BigDecimal charge = item.getCharge();
                 if (true) {
                     String lang = item.getOrder().getLanguage();
-                    String name = item.getUser().getLastname();
+                    String name = item.getUser().getForename();
                     if (false) { System.out.println(">>> Order.lang: " + lang + " User.lastname" + name); }
                 }
             }

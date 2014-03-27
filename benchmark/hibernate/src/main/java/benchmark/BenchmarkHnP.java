@@ -76,14 +76,14 @@ public class BenchmarkHnP {
         Transaction tr = session.beginTransaction();
 
         HbmUser user1 = new HbmUser();
-        user1.setLastname("Lorem ipsum dolor");
-        user1.setSurename("Sit amet consectetur");
+        user1.setForename("Lorem ipsum dolor");
+        user1.setSurname("Sit amet consectetur");
         user1.setPersonalId("12345678");
         session.save(user1);
 
         HbmUser user2 = new HbmUser();
-        user2.setLastname("Lorem ipsum dolor");
-        user2.setSurename("Sit amet consectetur");
+        user2.setForename("Lorem ipsum dolor");
+        user2.setSurname("Sit amet consectetur");
         user2.setPersonalId("12345678");
         session.save(user2);
 
@@ -182,7 +182,7 @@ public class BenchmarkHnP {
 
         int i = 0;
         for (HbmOrder order : orders) {
-            String surename = order.getUser().getSurename();
+            String surename = order.getUser().getSurname();
             if (false) { System.out.println("Usr.surename: " + surename); }
 
             hql = "from HbmOrderItem where deleted = :deleted and order = :order";
@@ -197,7 +197,7 @@ public class BenchmarkHnP {
                 BigDecimal charge = item.getCharge();
                 if (true) {
                     String lang = item.getOrder().getLanguage();
-                    String name = item.getUser().getLastname();
+                    String name = item.getUser().getForename();
                     if (false) { System.out.println(">>> Order.lang: " + lang + " User.lastname" + name); }
                 }
             }
