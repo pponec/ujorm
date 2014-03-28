@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.ujorm.core.UjoService;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.services.*;
-import org.ujorm.validator.ValidationException;
 /**
  * Common database service implementations
  * @author Pavel Ponec
@@ -38,9 +37,10 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     /** Authenticate the user and save the result to the Wicket session */
     @Override
     public boolean authenticate(Customer customer) {
-        Customer result = customer==null ? customer : dbService.findCustomer
-             ( customer.get(Customer.LOGIN)
-             , customer.get(Customer.PASSWORD));
+        Customer result = customer==null ? customer
+             : dbService.findCustomer
+             ( customer.getLogin()
+             , customer.getPassword());
 
         if (result != null) {
             result.writeSession(null);
@@ -86,7 +86,7 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     @Override
     public boolean isAdmin() {
         final Customer customer = (Customer) getThreadSession().getAttribute(CUSTOMER_ATTR);
-        return customer !=null && customer.get(Customer.ADMIN);
+        return customer !=null && customer.getAdmin();
     }
 
     /** Is logged selected user */

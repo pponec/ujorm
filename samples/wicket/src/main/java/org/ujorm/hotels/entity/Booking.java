@@ -15,7 +15,7 @@ import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
 
-/** Hotel */
+/** Reservation */
 public class Booking extends OrmTable<Booking> {
 
     private static final String INDEX_NAME="idx_booking";
