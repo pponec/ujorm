@@ -321,7 +321,7 @@ href="http://sourceforge.net/p/ujoframework/svn/2205/tree//trunk/project-m2/ujo-
 Ujo objektu, pro kterou je určena třída <a href="http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html">Criterion</a>. Objekty typu Criterion
 jsou neměnné serializovatelné instance, které je možné spojovat
 operátorem AND/OR do binárního stromu. Objekt typu Criterion slouží také
-v ORM modulu jako předloha pro sestavení fráze WHERE v SQL přákazech,
+v ORM modulu jako předloha pro sestavení fráze WHERE v SQL příkazech,
 nicméně tento objekt je zcela autonomní a můžeme ho využívat i mimo
 oblast ORM - například pro validování objektů.</p>
 <pre name="code" class="java">        Criterion&lt;Employee&gt; validator = Employee.WAGE.whereGt(100.0);
@@ -400,7 +400,7 @@ modulu.</p>
 <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Enum.html">Enum</a>.
 Aby bylo možné klíče serializovat, je třeba je vložit do <strong>klíčenky</strong> reprezentované
 třídou <a href="http://ujorm.org/javadoc/org/ujorm/core/KeyRing.html">KeyRing</a>.
-Objekty tohoto typu nejsou pro nás úplně neznámé, protože dříve použitá metoda
+Tyto klíčenky však nejsou pro nás úplně nové, protože výše použitá metoda
 <a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys()">Ujo.readKeys</a>()
 vrací (ve výchozí implementaci) právě tento typ.</p>
 
