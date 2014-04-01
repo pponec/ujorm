@@ -16,6 +16,6 @@
 package org.ujorm.wicket.component.dialog;
 
 /** New implementations are based on the jQuery panel where
- * the default name will be the {AbstractDialogPlate}. */
+ * the default name will be the {AbstractDialogPanel}. */
 
 
