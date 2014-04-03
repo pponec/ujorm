@@ -96,7 +96,7 @@ public class DataLoader implements InitializationBatch {
                 , Customer.PASSWORD_HASH
                 , Customer.TITLE
                 , Customer.FIRSTNAME
-                , Customer.SURENAME
+                , Customer.SURNAME
                 , Customer.EMAIL
                 , Customer.ADMIN
                 , Customer.ACTIVE

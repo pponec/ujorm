@@ -61,7 +61,7 @@ public class CustomerTable extends Panel {
         columns.add(Customer.LOGIN);
         columns.add(Customer.TITLE);
         columns.add(Customer.FIRSTNAME);
-        columns.add(Customer.SURENAME);
+        columns.add(Customer.SURNAME);
         columns.add(Customer.EMAIL);
         columns.add(Customer.ADMIN);
         columns.add(Customer.ACTIVE);
