@@ -131,8 +131,8 @@
                 <maxLength>60</maxLength>
                 <comment>Firstname</comment>
             </column>
-            <column id="SURENAME">
-                <name>SURENAME</name>
+            <column id="SURNAME">
+                <name>SURNAME</name>
                 <dbType>VARCHAR</dbType>
                 <mandatory>true</mandatory>
                 <maxLength>60</maxLength>

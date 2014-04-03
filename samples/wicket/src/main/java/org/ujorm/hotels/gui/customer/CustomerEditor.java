@@ -41,7 +41,7 @@ public class CustomerEditor extends EntityDialogPane<Customer> {
         fields.add(Customer.PASSWORD);
         fields.add(Customer.TITLE);
         fields.add(Customer.FIRSTNAME);
-        fields.add(Customer.SURENAME);
+        fields.add(Customer.SURNAME);
         fields.add(Customer.EMAIL);
         fields.add(Customer.ADMIN);
         fields.add(Customer.ACTIVE);

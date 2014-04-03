@@ -46,7 +46,7 @@ public class Customer extends OrmTable<Customer> {
     public static final Key<Customer, String> FIRSTNAME = f.newKey(length(MANDATORY, 2, 60));
     /** Firstname */
     @Comment("Lastname")
-    public static final Key<Customer, String> SURENAME = f.newKey(length(MANDATORY, 2, 60));
+    public static final Key<Customer, String> SURNAME = f.newKey(length(MANDATORY, 2, 60));
     /** Email */
     @Comment("Email")
     public static final Key<Customer, String> EMAIL = f.newKey(email(MANDATORY));
@@ -127,13 +127,13 @@ public class Customer extends OrmTable<Customer> {
     }
 
     /** Firstname */
-    public String getSurename() {
-        return SURENAME.of(this);
+    public String getSurname() {
+        return SURNAME.of(this);
     }
 
     /** Firstname */
-    public void setSurename(String surename) {
-        Customer.SURENAME.setValue(this, surename);
+    public void setSurname(String surname) {
+        Customer.SURNAME.setValue(this, surname);
     }
 
     /** Email */
