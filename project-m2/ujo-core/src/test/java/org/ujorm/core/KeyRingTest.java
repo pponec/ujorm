@@ -24,7 +24,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import junit.framework.TestCase;
 import org.ujorm.CompositeKey;
-import org.ujorm.core.KeyRing;
 import org.ujorm.core.ujos.UjoCSV;
 import org.ujorm.core.ujos.UjoName;
 import static org.ujorm.core.ujos.UjoName.*;
@@ -52,20 +51,20 @@ public class KeyRingTest extends TestCase {
     /**
      * Test of getType method, of class KeyRing.
      */
-    public void XX_testKeyName() {
+    public void testKeyName() {
         assertEquals("P1", UjoCSV.P1.getName());
         assertEquals("P2", UjoCSV.P2.getName());
         assertEquals("P3", UjoCSV.P3.getName());
         //
-        assertEquals("P1", UjoCSV.P1.toString());
-        assertEquals("P2", UjoCSV.P2.toString());
-        assertEquals("P3", UjoCSV.P3.toString());
+        assertEquals("P1"    , UjoCSV.P1.toString());
+        assertEquals("P2"    , UjoCSV.P2.toString());
+        assertEquals("P3[a3]", UjoCSV.P3.toString());
     }
 
     /**
      * Test of getType method, of class KeyRing.
      */
-    public void XX_testGetBaseClass() throws Exception {
+    public void testGetBaseClass() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
@@ -77,7 +76,8 @@ public class KeyRingTest extends TestCase {
         assertSame(props1.getFirstKey(), props2.getFirstKey());
         assertSame(props1.getFirstKey().of(ujo), props2.getFirstKey().of(ujo));
         assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
-        assertSame(props1.getLastKey(), props2.getLastKey());
+        assertEquals(props1.getLastKey(), props2.getLastKey());
+        assertEquals(((CompositeKey)props1.getLastKey()).getAlias(0), ((CompositeKey)props2.getLastKey()).getAlias(0));
         assertSame(props1.getLastKey().of(ujo), props2.getLastKey().of(ujo));
         assertTrue(props2.contains(props1.getFirstKey()));
         assertFalse(props2.contains(UjoCSV.P2));
@@ -87,34 +87,12 @@ public class KeyRingTest extends TestCase {
     /**
      * Test of getType method, of class KeyRing.
      */
-    public void XX_testGetBaseClass_2() throws Exception {
+    public void testGetBaseClass_2() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 
         KeyRing<UjoCSV> props1, props2;
         props1 = KeyRing.of(UjoCSV.P1, UjoCSV.P3);
-        props2 = serialize(props1);
-
-        assertEquals(props1.size(), props2.size());
-        assertSame(props1.getFirstKey(), props2.getFirstKey());
-        assertSame(props1.getFirstKey().of(ujo), props2.getFirstKey().of(ujo));
-        assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
-        assertSame(props1.getLastKey(), props2.getLastKey());
-        assertSame(props1.getLastKey().of(ujo), props2.getLastKey().of(ujo));
-        assertTrue(props2.contains(props1.getFirstKey()));
-        assertFalse(props2.contains(UjoCSV.P2));
-        assertTrue(props2.equals(props1));
-    }
-
-    /**
-     * Test of getType method, of class KeyRing.
-     */
-    public void XX_testGetBaseClassDesc() throws Exception {
-        System.out.println("getBaseClass");
-        UjoCSV ujo = createUjoInstance();
-
-        KeyRing<UjoCSV> props1, props2;
-        props1 = KeyRing.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3.descending()); // !!!
         props2 = serialize(props1);
 
         assertEquals(props1.size(), props2.size());
@@ -131,7 +109,30 @@ public class KeyRingTest extends TestCase {
     /**
      * Test of getType method, of class KeyRing.
      */
-    public void XX_testGetBaseClassDesc_2() throws Exception {
+    public void testGetBaseClassDesc() throws Exception {
+        System.out.println("getBaseClass");
+        UjoCSV ujo = createUjoInstance();
+
+        KeyRing<UjoCSV> props1, props2;
+        props1 = KeyRing.of(UjoCSV.class, UjoCSV.P1, UjoCSV.P3.descending()); // !!!
+        props2 = serialize(props1);
+
+        assertEquals(props1.size(), props2.size());
+        assertSame(props1.getFirstKey(), props2.getFirstKey());
+        assertSame(props1.getFirstKey().of(ujo), props2.getFirstKey().of(ujo));
+        assertSame(props1.getFirstKey().isAscending(), props2.getFirstKey().isAscending());
+        assertEquals(props1.getLastKey(), props2.getLastKey());
+        assertEquals(((CompositeKey)props1.getLastKey()).getAlias(0), ((CompositeKey)props2.getLastKey()).getAlias(0));
+        assertSame(props1.getLastKey().of(ujo), props2.getLastKey().of(ujo));
+        assertTrue(props2.contains(props1.getFirstKey()));
+        assertFalse(props2.contains(UjoCSV.P2));
+        assertTrue(props2.equals(props1));
+    }
+
+    /**
+     * Test of getType method, of class KeyRing.
+     */
+    public void testGetBaseClassDesc_2() throws Exception {
         System.out.println("getBaseClass");
         UjoCSV ujo = createUjoInstance();
 

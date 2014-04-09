@@ -23,7 +23,7 @@ public class UjoCSV extends SmartUjo<UjoCSV> {
 
     public static final Key<UjoCSV, String> P1 = f.newKey();
     public static final Key<UjoCSV, String> P2 = f.newKey();
-    public static final Key<UjoCSV, String> P3 = f.newKey();
+    public static final Key<UjoCSV, String> P3 = f.newKeyAlias("a3");
 
     static {
         f.lock();

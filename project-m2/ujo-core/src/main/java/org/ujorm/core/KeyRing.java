@@ -421,7 +421,6 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     private Key<UJO, ?>[] restoreProperties(Class type, String[] nameProperties, String[][] spaces) {
         final Key<UJO, ?>[] result = new Key[nameProperties.length];
         final KeyList<?> propertyList = getUjoManager().readKeys(type);
-        List<Key<?,?>> keyList = null;
         for (int i = 0; i < nameProperties.length; i++) {
             final String pNameRaw = nameProperties[i];
             final boolean descending = pNameRaw.endsWith(DESCENDING_SYMBOL);
