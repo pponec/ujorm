@@ -188,8 +188,7 @@ každému atributu hodnotu NULL podle vzoru:</p>
 
         assert employee.getWate() == WAGE.getDefault() : "Check the default value";</pre>
 
-<p>Jiná varianta předchozího příkladu obnovuje defaultní hodnoty pouze
-pro číselné typy;</p>
+<p>Jiná varianta předchozího příkladu obnovuje pouze defaultní hodnoty číselných atributů:</p>
 <pre name="code" class="java">        Employee employee = getEmployee();
 
         for (Key key : employee.readKeys()) {
@@ -245,7 +244,7 @@ Na následujícím příkladě vyzkoušíme zápis jednoho korektního jména a 
             String expected
                 = "Text length for Employee.name must be between 0 and 7, "
                 + "but the input length is: 8";
-            assert e.getMessage().equals(expected);
+            assert expected.equals(e.getMessage());
         }
 
         assert employee.getName() == correctName;</pre>
