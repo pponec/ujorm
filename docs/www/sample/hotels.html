@@ -57,7 +57,26 @@ for Ujorm and Wicket</h1>
 Author: Pavel Ponec, 2013-2014<br />
 Document license: <a
 href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons
-BY-ND</a> </p>
+BY-ND</a></p>
+
+<h2 id="menu">Content</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#classModel">Class Model</a></li>
+  <li><a href="#hotelTableList">Hotel table list</a></li>
+  <li><a href="#editingForm">Editing Form</a></li>
+  <li><a href="#databaseQueries">Database queries</a></li>
+  <li><a href="#applEvents">Application events</a></li>
+  <li><a href="#domainObject">Domain object</a></li>
+  <li><a href="#dbConnection">Database connection</a></li>
+  <li><a href="#conclusion">Conclusion</a></li>
+  <li><a href="#links">Websites</a></li>
+</ul>
+</div>
+
+<h2 id="introduction">Introduction</h2>
 
 <p>The java library <strong>Ujorm</strong> was <a
 href="http://www.theserverside.com/discussions/thread.tss?thread_id=50604">introduced</a>
@@ -102,6 +121,23 @@ During the development, several classes have been optimized for general use so
 I moved them into a separate module called <strong>ujo-wicket</strong>. All the
 Java libraries have an open license and they are available at the central Maven
 repository.</p>
+
+<h2 id="classModel">Class Model</h2>
+
+<p>The following figure describes the use of class model of the persistent
+classes:</p>
+
+<div class="img">
+<img style="width:529px; height:153px; margin-left: 30px;"
+src="image-hotels/classModel.png" alt="classModel" /></div>
+
+<p>Entity <strong>Booking</strong> is a relation of type M:N between the
+<strong>Hotel</strong> and the <strong>Customer</strong>. The customer can
+therefore book an accommodation in more hotels, and one hotel reservation holds
+more customers. To simplify, we do not care about the capacity of the hotel. To
+make the data model more interesting, we should add next entity called City,
+which is an attribute of the Hotel, however the project have no administration
+for the <strong>City</strong> entity.</p>
 
 <h2 id="hotelTableList">Hotel table list</h2>
 
@@ -205,24 +241,6 @@ href="https://sourceforge.net/p/ujoframework/svn/2019/tree/trunk/samples/wicket/
 style="width: 1031; height: 728px" src="image-hotels/hotelDomainObject.png"
 alt="hotelDomainObject" /></a></div>
 
-
-<h2 id="classModel">Class Model</h2>
-
-<p>The following figure describes the use of class model of the persistent
-classes:</p>
-
-<div class="img">
-<img style="width:529px; height:153px; margin-left: 30px;"
-src="image-hotels/classModel.png" alt="classModel" /></div>
-
-<p>Entity <strong>Booking</strong> is a relation of type M:N between the
-<strong>Hotel</strong> and the <strong>Customer</strong>. The customer can
-therefore book an accommodation in more hotels, and one hotel reservation holds
-more customers. To simplify, we do not care about the capacity of the hotel. To
-make the data model more interesting, we should add next entity called City,
-which is an attribute of the Hotel, however the project have no administration
-for the <strong>City</strong> entity.</p>
-
 <h2 id="dbConnection">Database connection</h2>
 
 <p>Application Demo-Hotels uses the H2 database running under in-memory in the
@@ -269,7 +287,7 @@ href="http://sourceforge.net/projects/webfort/">WebFort</a> project from the
 end of 2008, but I cannot exclude the possibility that a similar code did not
 appear ever before. Thank you for your constructive feedback.</p>
 
-<h2>Websites:</h2>
+<h2 id="links">Websites</h2>
 <ul>
   <li>project <a
     href="http://sourceforge.net/projects/ujoframework/files/ujorm/1.45/Example-DemoHotels-1.45.zip">source
