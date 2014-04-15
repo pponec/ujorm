@@ -62,12 +62,12 @@ BY-ND</a></div>
 <div class="toc">
 <ul>
   <li><a href="#introduction">Úvod</a></li>
+  <li><a href="#classModel">Objektový model</a></li>
   <li><a href="#hotelTableGui">Přehled hotelů</a></li>
   <li><a href="#hotelFormGui">Ukázka editačního dialogu</a></li>
   <li><a href="#databaseQueries">Tvorba databázových dotazů</a></li>
   <li><a href="#onEvent">Události</a></li>
   <li><a href="#ujoImpl">Implementace UJO objektu</a></li>
-  <li><a href="#classModel">Objektový model</a></li>
   <li><a href="#dbConnection">Volba databázového připojení</a></li>
   <li><a href="#conclusion">Závěr</a></li>
   <li><a href="#links">Internetové odkazy</a></li>
@@ -121,6 +121,23 @@ projektu vzniklo několik tříd vhodných pro obecné použití, které jsem
 přesunul do samostatného modulu zvaného <strong>ujo-wicket</strong>.
 Všechny použité Java knihovny mají otevřenou licenci a jsou dostupné z
 centrálního Maven repositáře.</p>
+
+
+<h2 id="classModel">Objektový model</h2>
+<p>Následující obrázek popisuje použitý class model perzistentních
+tříd:</p>
+
+<div class="img">
+<img style="width:529px; height:153px; margin-left: 30px;"
+src="image-hotels/classModel.png" alt="classModel" /></div>
+
+<p>Entita <strong>rezervace</strong> (Booking) je relací typu M:N mezi
+<strong>hotelem</strong> a <strong>zákazníkem</strong>, jeden zákazník
+tedy může rezervovat ubytování ve více hotelech a jeden hotel pojme
+rezervace více zákazníků, kapacitu hotelu pro zjednodušení neřešíme.
+Aby byl datový model zajímavější, doplníme ještě entitu zvanou
+<strong>město</strong> (City), která bude atributem hotelu, entita
+město však v projektu nemá vlastní administraci.</p>
 
 <h2 id="hotelTableGui">Přehled hotelů</h2>
 
@@ -220,23 +237,6 @@ href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">plugi
 pro generování potřebných metod podle klíčů, podobný plugin pro Eclipse
 zatím bohužel chybí, snad to bude výzva pro nějakého nového příznivce
 :).</p>
-
-
-<h2 id="classModel">Objektový model</h2>
-<p>Následující obrázek popisuje použitý class model perzistentních
-tříd:</p>
-
-<div class="img">
-<img style="width:529px; height:153px; margin-left: 30px;"
-src="image-hotels/classModel.png" alt="classModel" /></div>
-
-<p>Entita <strong>rezervace</strong> (Booking) je relací typu M:N mezi
-<strong>hotelem</strong> a <strong>zákazníkem</strong>, jeden zákazník
-tedy může rezervovat ubytování ve více hotelech a jeden hotel pojme
-rezervace více zákazníků, kapacitu hotelu pro zjednodušení neřešíme.
-Aby byl datový model zajímavější, doplníme ještě entitu zvanou
-<strong>město</strong> (City), která bude atributem hotelu, entita
-město však v projektu nemá vlastní administraci.</p>
 
 <h2 id="dbConnection">Volba databázového připojení</h2>
 
