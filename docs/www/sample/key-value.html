@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Key-value coding in Java</title>
+  <meta name="keywords"
+  content="Ujorm, CRUD, WEB, application, demo-hotels, key-value, javabenas, joda-beans"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <link
+  href="http://fonts.googleapis.com/css?family=Titillium+Web:300,300italic,600&amp;subset=latin,latin-ext"
+  rel="stylesheet" type="text/css" />
+  <style type="text/css">
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 16px;
+		width: 710px;
+		padding: 15px;
+	}
+	h1, h2, h3 {
+		color: darkblue;
+		margin-bottom: 20px;
+	}
+	h2 {
+		font-size: 24px;
+		margin: 30px 0 10px
+	}
+	img {
+		border: 0;
+	}
+	div.img.code {
+		border: silver solid 1px;
+		border-radius: 10px;
+	}
+	.intro {
+		color: gray;
+		font-style: italic;
+		margin-left: 25px;
+	}
+	.intro a, .toc a {
+		text-decoration: none;
+	}
+	pre {
+		font-family: monospace;
+		font-size: 13px;
+		color: darkgray;
+	}
+	.dp-highlighter {
+		font-size: 13px;
+	}
+        </style>
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet"
+  href="../orm/SyntaxHighlighter/Styles/SyntaxHighlighter.css" />
+  <script type="text/javascript"
+  src="../orm/SyntaxHighlighter/Scripts/shCore.js">
+        </script>
+  <script type="text/javascript"
+  src="../orm/SyntaxHighlighter/Scripts/shBrushJava.js">
+        </script>
+  <script type="text/javascript"
+  src="../orm/SyntaxHighlighter/Scripts/shBrushXml.js">
+        </script>
+  <script type="text/javascript">
+        window.onload = function () {
+            dp.SyntaxHighlighter.ClipboardSwf = 'SyntaxHighlighter/Scripts/clipboard.swf';
+            dp.SyntaxHighlighter.HighlightAll('code');
+        }
+        </script>
+</head>
+
+<body>
+<h1>Key-value coding in Java <img alt="logo" src="image-key-value/ujo128.png"
+style=" vertical-align: top; float: right" width="80" height="80" /></h1>
+
+<div class="intro">
+The guide to the <strong>ujo-core</strong> module of the <strong>Ujorm</strong>
+framework<br />
+Autor: Pavel Ponec, April, 2014<br />
+Document license: <a
+href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons
+BY-ND</a></div>
+
+<h2 id="menu">Content</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#reading">Writing and reading values</a></li>
+  <li><a href="#default">Restoring default values</a></li>
+  <li><a href="#copy">Shallow copy of an object</a></li>
+  <li><a href="#validation">Validation attributes when writing</a></li>
+  <li><a href="#compositeKey">Composite Keys</a></li>
+  <li><a href="#criterionAsValidator">Criterion as a condition model</a></li>
+  <li><a href="#criterionAsFilter">Criterion for filtering collection</a></li>
+  <li><a href="#ordering">Collection sorting</a></li>
+  <li><a href="#serialization">Serialization keys</a></li>
+  <li><a href="#importCsv">Import from CSV format</a></li>
+  <li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Ujorm is a library for developing Java applications built on a
+<strong>key-value</strong> architecture of domain objects that access their
+attributes using objects called keys only. A <a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html">Key</a> consists of an
+immutable static object that is part of a domain class and provides several
+services. A Key in Ujorm never contains business data - unlike a similar
+framework, <a href="http://blog.joda.org/2011/05/beans-and-properties_1963.html">Joda Beans</a> by author Stephen Colebourne, where
+attributes are contained in the <a
+href="http://www.joda.org/joda-beans/apidocs/org/joda/beans/Property.html">Property</a>
+object type.</p>
+
+<p>The architercure of <a
+href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo</a> objects was
+described in the original <a
+href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO">documentation</a>,
+this article demonstrates some new or interesting uses of Ujo on short examples
+that are based on the <strong>ujo-core</strong> module and therefore are not
+related with database queries. The <strong>core</strong> module can be loaded
+into your project using the Maven dependency:</p>
+<pre name="code" class="xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.ujorm&lt;/groupId&gt;
+            &lt;artifactId&gt;ujo-core&lt;/artifactId&gt;
+            &lt;version&gt;1.45&lt;/version&gt;
+        &lt;/dependency&gt;</pre>
+
+<p>Code samples are based on two entities, <strong>Employee</strong> and
+<strong>Company</strong>, of the Ujo type, while each of them contains (<a
+href="http://ujorm-cs.blogspot.cz/2012/12/generator-getteru-pro-netbeans.html">generated</a>)
+setters and getters so that the object meets the <strong>JavaBeans</strong>
+specification.</p>
+
+<p><img alt="key-value-model" src="image-key-value/key-value-model.png"
+width="355" height="120" style="margin: 15px 80px; vertical-align: top" /></p>
+
+<h2 id="reading">Writing and reading values</h2>
+
+<p>We can skip the description of reading and writing attributes to JavaBeans
+here and go straight to reading and writing values ​​using the API of the
+Ujorm framework.</p>
+
+<pre name="code" class="java">        Employee person = new Employee();
+
+        // Write:
+        person.set(ID, 7L);
+        person.set(NAME, "Pavel");
+        person.set(WAGE, 20.00);
+        person.set(COMPANY, new Company());
+
+        // Read:
+        Long id = person.get(ID);
+        String name = person.get(NAME);
+        Double wage = person.get(WAGE);
+        Company company = person.get(COMPANY);
+
+        assert id == 7L;
+        assert name == "Pavel";
+        assert wage == 20.00;
+        assert company != null;</pre>
+
+<p>To shorten the code in the above examples, the necessary static keys of the
+used Ujo objects were imported in the head of the class by writing:</p>
+<pre name="code" class="java">        import static org.Company.CITY;
+        import static org.Employee.*;</pre>
+
+<p>The above example explains how to use the key to access the related object
+attributes, however it does not now seem that the keys would have any benefits
+in comparison with POJO. I will try to convince you about the benefits of this
+solution in the following sections. </p>
+
+<h2 id="default">Restoring default values</h2>
+
+<p>Each Key contains its default value, which can be obtained using the <a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDefault%28%29">Key.getDefault</a>()
+method. What is more interesting is reading an attribute with a NULL value,
+because the Key replaces NULL attributes with its default value automatically.
+If the default value is NULL too, the replacement is insignificant. To restore
+all default values ​​it is therefore sufficient to assign each attribute
+with a NULL value this way:</p>
+
+<p></p>
+<pre name="code" class="java">        Employee employee = getEmployee();
+
+        for (Key key : employee.readKeys()) {
+            employee.set(key, null);
+        }
+
+        assert employee.getWate() == WAGE.getDefault() : "Check the default value";</pre>
+
+<p>Another version of the previous example restores the default values
+​​for numeric attributes only:</p>
+<pre name="code" class="java">        Employee employee = getEmployee();
+
+        for (Key key : employee.readKeys()) {
+            if (key.isTypeOf(Number.class)) {
+                employee.set(key, null);
+            }
+        }</pre>
+
+<p>The <a
+href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
+method returns all the direct keys of the current class, including parent
+classes, so restoring default values ​will affect all parrent attributes, if
+there are any. For comparison of the type of the key value, the appropriate
+method is <a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29">Key.isTypeOf</a>(Class).</p>
+
+<h2 id="copy">Shallow copy of an object</h2>
+
+<p>Because we know how to get a list of all <strong>direct</strong> keys from
+the Ujo object (description of composite keys will follow), we can modify the
+body cycle easily to create a shallow copy of the source object:</p>
+<pre name="code" class="java">        Employee source = getEmployee();
+        Employee target = source.getClass().newInstance();
+
+        for (Key&lt;Ujo,?&gt; key : source.readKeys()) {
+            key.copy(source, target);
+        }
+
+        assert source.getId() == target.getId()</pre>
+
+<h2 id="validation">Validation of attributes when writing</h2>
+
+<p>Validators are immutable objects that can be combined using AND / OR
+operators and which can be inserted into the key optionally when it is being
+built. If the key gets a validator once, it will keep chcecking every value at
+the time of entry into the Ujo object forever. </p>
+<pre name="code" class="java">        Key&lt;Employee, String&gt; NAME = keyFactory.newKey(length(7));</pre>
+
+<p>The NAME key has now got a validator to check any employee name is up to 7
+characters long. The next example tests the validator on a name that meets the
+limit and a name that is too long.</p>
+<pre name="code" class="java">        final String correctName = "1234567";
+        final String wrongName = "12345678";
+
+        Employee employee = new Employee();
+        employee.set(NAME, correctName);
+
+        try {
+            employee.set(NAME, wrongName);
+        } catch (ValidationException e) {
+            String expected
+                = "Text length for Employee.name must be between 0 and 7, "
+                + "but the input length is: 8";
+            assert expected.equals(e.getMessage());
+        }
+
+        assert employee.getName() == correctName;</pre>
+
+<p>The API of validators offers support for localised error messages using
+<strong>templates</strong>.</p>
+
+<pre name="code" class="java">        final ValidationException exception = getException();
+
+        String template = "The name can be up to ${MAX} characters long, not ${LENGTH}.";
+        String expected = "The name can be up to 7 characters long, not 8.";
+        String result = exception.getError().getMessage(template);
+
+        assert expected.equals(result);</pre>
+
+<p>Each object of the <a
+href="http://ujorm.org/javadoc/org/ujorm/validator/ValidationError.html">ValidationError</a>
+type has one default template for the logging. Other examples of the use of
+validators are available from <a
+href="http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-core/src/test/java/org/ujorm/validator/ValidatorTest.java#l25">here</a>.</p>
+
+<p></p>
+
+<p>I am considering using annotations from <a
+href="http://beanvalidation.org/1.0/spec/">JSR 303</a> over the key definition
+as an alternative to direct insertion of keys using Java code - in one of the
+next versions of Ujorm.</p>
+
+<h2 id="compositeKey">Composite Keys</h2>
+
+<p>Two logically related keys can be joined using the
+Key.<strong>and</strong>(key) method, where the result is an instance of a
+<strong>composite</strong> key of the <a
+href="http://ujorm.org/javadoc/org/ujorm/CompositeKey.html">CompositeKey</a>
+type which is also a type of the original interface Key. Because of this,
+composite keys can be used the same way as direct keys - including reading and
+writing values ​​of domain objects or joining with other composite keys.
+Working with composite keys also brings us some new interesting features when
+reading and writing values:</p>
+<ul>
+  <li>If you are reading any attribute of an object with missing
+    <strong>relations</strong>, the result is always NULL, therefore there is
+    no <strong>NullPointerException</strong>, which is typical for chaining of
+    JavaBeans getters. This rule does not apply to the default object.</li>
+  <li>If you are writting a new value to an attribute of undefined relation,
+    the composite Key automatically <strong>creates</strong> the missing
+    related objects in all cases. If we are dissatisfied with such behavior for
+    some reason, we can use the CompositeKey.<strong>setValue</strong>(Ujo,
+    value, createRelations) method with the last parameter being
+    <strong>false</strong>.</li>
+</ul>
+
+<p>Example of use:</p>
+
+<pre name="code" class="java">        Key&lt;Employee,String&gt; companyNameKey = Employee.COMPANY.add(Company.NAME);
+
+        Employee employee = new Employee();
+        String companyName = employee.get(companyNameKey); // !1
+        assert companyName == null;
+
+        employee.set(companyNameKey, "Prague"); // !2
+        companyName = employee.get(companyNameKey);
+
+        assert employee.getCompany() != null;
+        assert companyName == "Prague";</pre>
+
+<p>The first line builds a composite key. The line marked with the first
+exclamation mark returns the name of the company of the employee as NULL, even
+though the company has not been created yet. The line marked with the second
+exclamation mark first adds the missing instance of the company and then writes
+its name into it.</p>
+
+<p>If you are interested in composite keys behaviour, you can study other
+examples in this <a
+href="http://sourceforge.net/p/ujoframework/svn/2205/tree//trunk/project-m2/ujo-core/src/test/java/samples/values/UsageTest.java#l27">TestCase</a>.</p>
+
+<h2 id="criterionAsValidator">Criterion as a condition model</h2>
+
+<p>Using keys, values, and operators it is possible to describe the logical
+condition of a Ujo object for which the Criterion class is to be used. Objects
+of the Criterion type are immutable serializable instances that can be combined
+into a binary tree using AND / OR. A Criterion object is also used in the ORM
+module as a template to build WHERE phrases in SQL commands, however this
+object is completely autonomous and can be used even outside the ORM - for
+example to validate objects.</p>
+
+<pre name="code" class="java">        Criterion&lt;Employee&gt; validator = Employee.WAGE.whereGt(100.0);
+
+        try {
+            validator.validate(getEmployee()
+            , "Minimal WAGE is: %f."
+            , validator.getRightNode());
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage() != null;
+        }</pre>
+
+<p>In this example we use Criterion to check that the employee has a salary
+higher than 100 (units).</p>
+
+<p>The significance of the Criterion remains in its ability to convey a
+<strong>description</strong> of conditions to other modules or systems, which
+can then provide a custom implementation solution.</p>
+
+<h2 id="criterionAsFilter">Criterion for filtering collections</h2>
+
+<p>The following example is a different version of the previous example and is
+used for filtering a collection of employees whose company is based in Prague.
+The example shows that composite keys can enter into Criterion:</p>
+<pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
+            .whereEq("Prague")
+            .evaluate(getEmployees());
+
+        for (Employee employee : employees) {
+            System.out.println(employee);
+        }
+
+        assert employees.size() == 4;</pre>
+
+<p>It is useful to know that the value of the Criterion can also be a key:</p>
+
+<pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
+            .whereEq(Employee.NAME)
+            .evaluate(getEmployees());
+
+        assert employee.size() == 1; </pre>
+
+<p>The second example filters all employees whose name
+    matches the name of the town (seat) of their company.
+    By the way, I agree with everyone who thinks this is not
+    really a typical example :).</p>
+
+<h2 id="ordering">Collection Sorting</h2>
+
+<p>Ujorm provides a useful class for collection sorting called <a
+href="http://ujorm.org/javadoc/org/ujorm/core/UjoComparator.html">UjoComparator</a>.
+It is not necessary to implement a new class for a large group of requirements
+(unlike tuple JavaBeans, although Java 8 has brought a simplification), just
+supply the factory method with the required list of keys along with information
+about the direction of sort; see <a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descending</a>().
+The method always creates a new instance of Key, flagged descending sort.</p>
+<pre name="code" class="java">        List&lt;Employee&gt; employees = UjoComparator.of
+            ( COMPANY.add(CITY)
+            , NAME.descending())
+            .sort(getEmployees());
+
+        for (Employee employee : employees) {
+            System.out.println(employee);
+        }</pre>
+
+<p>The <strong>descending</strong>() method actually creates a new composite
+key with one member, which provides information about the descending sort.
+Modeling the downward shift is also used in the ORM module.</p>
+
+<h2 id="serialization">Serialization of keys</h2>
+
+<p>Each <strong>direct</strong> key in ClassLoader has its own unique instance,
+like an item of the enumerated type <strong>Enum</strong>. In order to
+serialize the keys, you must insert them into a keyring represented by the
+class <a
+href="http://ujorm.org/javadoc/org/ujorm/core/KeyRing.html">KeyRing</a>. These
+key chains are not entirely new to us because the <a
+href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
+method used above returns (in the default implementation) this type.</p>
+<pre name="code" class="java">        final KeyRing&lt;Employee&gt; keyRing1, keyRing2;
+        keyRing1 = KeyRing.of(Employee.ID, Employee.COMPANY.add(Company.NAME));
+        keyRing2 = service.serialize(keyRing1);
+
+        assert keyRing1 != keyRing2 : "Different instances";
+        assert keyRing1.get(0) == keyRing2.get(0) : "The same direct keys";
+        assert keyRing1.get(1).equals(keyRing2.get(1)) : "The equal composite keys";
+        assert new Employee().readKeys() instanceof KeyRing : "readKeys() returns the KeyRing";</pre>
+
+<h2 id="importCsv">Import from CSV format</h2>
+
+<p>The last example describes how to import text from CSV (Comma Separated
+Value), which offers the possibility to import attributes using
+<strong>composite</strong> Keys too, so you can import the attributes of
+relational entities. The description of CSV columns is defined by a list of
+keys of the (imported) Ujo object. Contents of a text CSV file with a header
+are the following:</p>
+<pre name="code" class="xml">        id;name;companyId
+        1;Pavel;10
+        2;Petr;30
+        3;Kamil;50</pre>
+
+<p>Java code to import CSV file:</p>
+<pre name="code" class="java">        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+
+        UjoManagerCSV&lt;Employee&gt; manager = UjoManagerCSV.of
+            ( Employee.ID
+            , Employee.NAME
+            , Employee.COMPANY.add(Company.ID));
+
+        List&lt;Employee&gt; employes = manager.loadCSV(scanner, this);
+
+        assert employes.size() == 3;
+        assert employes.get(0).getId().equals(1L);
+        assert employes.get(0).getName().equals("Pavel");
+        assert employes.get(0).getCompany().getId().equals(10L);</pre>
+
+<p>If we use a class of type Ujo instead of a list of keys, the CSV file
+contents are imported by all direct Keys of the class. The order of the static
+Ujo Keys is guaranteed in the Ujorm framework and is same as the order of the
+static field specified in the domain class - as opposed to an <a
+href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html#getDeclaredFields%28%29">undefined
+order</a> field of JavaBeans.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The <strong>ujo-core</strong> module of the Ujorm framework provides various
+other tools for general use, another issue is the use of Ujo objects in ORM.
+There is a motivating application Demo Hotels for more examples including an
+ORM code to more study. Maybe some parts of the application need special
+descriptions, perhaps this will be done in a separate article some other time.
+All model examples are included in the Ujorm project and the main class is
+available from here.</p>
+
+<h3 id="links" style="margin-bottom: 2px;">Web Links</h3>
+<ul>
+  <li><a href="http://ujorm.org/">Home page</a> for Ujorm</li>
+  <li>example <a href="key-value-sample.html#l48">source code</a> licensed
+    under the Apache License 2.0, including a link to download the <a
+    href="http://sourceforge.net/projects/ujoframework/files/ujorm/1.45/Example-KeyValue-1.45.zip/">full
+    project</a></li>
+  <li>article about the motivatoin ORM application called <a
+    href="http://ujorm.org/sample/hotels.html">Demo Hotels</a></li>
+  <li>link to blog and comments</li>
+</ul>
+<!-- google analytics beg -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9284194-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- google analytics end -->
+
+<div style="display: none;">
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+</div>
+
+</body>
+</html>
