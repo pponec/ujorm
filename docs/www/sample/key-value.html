@@ -132,7 +132,7 @@ into your project using the Maven dependency:</p>
 
 <p>Code samples are based on two entities, <strong>Employee</strong> and
 <strong>Company</strong>, of the Ujo type, while each of them contains (<a
-href="http://ujorm-cs.blogspot.cz/2012/12/generator-getteru-pro-netbeans.html">generated</a>)
+href="http://ujorm.blogspot.cz/2012/12/getter-generator-for-netbeans.html">generated</a>)
 setters and getters so that the object meets the <strong>JavaBeans</strong>
 specification.</p>
 
@@ -389,7 +389,7 @@ It is not necessary to implement a new class for a large group of requirements
 supply the factory method with the required list of keys along with information
 about the direction of sort; see <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descending</a>().
-The method always creates a new instance of Key, flagged descending sort.</p>
+The method always creates a new instance of Key, flagged <strong>descending</strong> sort.</p>
 <pre name="code" class="java">        List&lt;Employee&gt; employees = UjoComparator.of
             ( COMPANY.add(CITY)
             , NAME.descending())
@@ -476,7 +476,7 @@ available from here.</p>
     project</a></li>
   <li>article about the motivatoin ORM application called <a
     href="http://ujorm.org/sample/hotels.html">Demo Hotels</a></li>
-  <li>link to blog and comments</li>
+  <li>link to the <a href="http://ujorm.blogspot.cz/">blog</a> and comments</li>
 </ul>
 <!-- google analytics beg -->
 <script type="text/javascript">
