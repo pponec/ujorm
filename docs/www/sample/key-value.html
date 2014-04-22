@@ -206,7 +206,7 @@ with a NULL value this way:</p>
 <p>The <a
 href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
 method returns all the direct keys of the current class, including parent
-classes, so restoring default values ​will affect all parrent attributes, if
+classes, so restoring default values ​will affect all parent attributes, if
 there are any. For comparison of the type of the key value, the appropriate
 method is <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29">Key.isTypeOf</a>(Class).</p>
@@ -229,7 +229,7 @@ body cycle easily to create a shallow copy of the source object:</p>
 
 <p>Validators are immutable objects that can be combined using AND / OR
 operators and which can be inserted into the key optionally when it is being
-built. If the key gets a validator once, it will keep chcecking every value at
+built. If the key gets a validator once, it will keep checking every value at
 the time of entry into the Ujo object forever. </p>
 <pre name="code" class="java">        Key&lt;Employee, String&gt; NAME = keyFactory.newKey(length(7));</pre>
 
@@ -385,9 +385,9 @@ The example shows that composite keys can enter into Criterion:</p>
 <p>Ujorm provides a useful class for collection sorting called <a
 href="http://ujorm.org/javadoc/org/ujorm/core/UjoComparator.html">UjoComparator</a>.
 It is not necessary to implement a new class for a large group of requirements
-(unlike tuple JavaBeans, although Java 8 has brought a simplification), just
+(unlike JavaBeans collections, although Java 8 has brought a simplification), just
 supply the factory method with the required list of keys along with information
-about the direction of sort; see <a
+about the direction of sort, see <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descending</a>().
 The method always creates a new instance of Key, flagged <strong>descending</strong> sort.</p>
 <pre name="code" class="java">        List&lt;Employee&gt; employees = UjoComparator.of
@@ -461,11 +461,11 @@ order</a> field of JavaBeans.</p>
 
 <p>The <strong>ujo-core</strong> module of the Ujorm framework provides various
 other tools for general use, another issue is the use of Ujo objects in ORM.
-There is a motivating application Demo Hotels for more examples including an
-ORM code to more study. Maybe some parts of the application need special
+There is a motivating application <a href="http://ujorm.org/sample/hotels.html">Demo Hotels</a>
+for more examples including an ORM code to more study. Maybe some parts of the application need special
 descriptions, perhaps this will be done in a separate article some other time.
 All model examples are included in the Ujorm project and the main class is
-available from here.</p>
+available from <a href="key-value-sample.html#l48">here</a>.</p>
 
 <h3 id="links" style="margin-bottom: 2px;">Web Links</h3>
 <ul>
