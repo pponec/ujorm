@@ -97,7 +97,7 @@ BY-ND</a></div>
   <li><a href="#criterionAsValidator">Criterion as a condition model</a></li>
   <li><a href="#criterionAsFilter">Criterion for filtering collection</a></li>
   <li><a href="#ordering">Collection sorting</a></li>
-  <li><a href="#serialization">Serialization keys</a></li>
+  <li><a href="#serialization">Serialization of Keys</a></li>
   <li><a href="#importCsv">Import from CSV format</a></li>
   <li><a href="#conclusion">Conclusion</a></li>
 </ul>
@@ -164,13 +164,13 @@ Ujorm framework.</p>
         assert wage == 20.00;
         assert company != null;</pre>
 
-<p>To shorten the code in the above examples, the necessary static keys of the
+<p>To shorten the code in the above examples, the necessary static Keys of the
 used Ujo objects were imported in the head of the class by writing:</p>
 <pre name="code" class="java">        import static org.Company.CITY;
         import static org.Employee.*;</pre>
 
-<p>The above example explains how to use the key to access the related object
-attributes, however it does not now seem that the keys would have any benefits
+<p>The above example explains how to use the Key to access the related object
+attributes, however it does not now seem that the Keys would have any benefits
 in comparison with POJO. I will try to convince you about the benefits of this
 solution in the following sections. </p>
 
@@ -205,16 +205,16 @@ with a NULL value this way:</p>
 
 <p>The <a
 href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
-method returns all the direct keys of the current class, including parent
+method returns all the direct Keys of the current class, including parent
 classes, so restoring default values ​will affect all parent attributes, if
-there are any. For comparison of the type of the key value, the appropriate
+there are any. For comparison of the type of the Key value, the appropriate
 method is <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29">Key.isTypeOf</a>(Class).</p>
 
 <h2 id="copy">Shallow copy of an object</h2>
 
-<p>Because we know how to get a list of all <strong>direct</strong> keys from
-the Ujo object (description of composite keys will follow), we can modify the
+<p>Because we know how to get a list of all <strong>direct</strong> Keys from
+the Ujo object (description of composite Keys will follow), we can modify the
 body cycle easily to create a shallow copy of the source object:</p>
 <pre name="code" class="java">        Employee source = getEmployee();
         Employee target = source.getClass().newInstance();
@@ -228,12 +228,12 @@ body cycle easily to create a shallow copy of the source object:</p>
 <h2 id="validation">Validation of attributes when writing</h2>
 
 <p>Validators are immutable objects that can be combined using AND / OR
-operators and which can be inserted into the key optionally when it is being
-built. If the key gets a validator once, it will keep checking every value at
+operators and which can be inserted into the Key optionally when it is being
+built. If the Key gets a validator once, it will keep checking every value at
 the time of entry into the Ujo object forever. </p>
-<pre name="code" class="java">        Key&lt;Employee, String&gt; NAME = keyFactory.newKey(length(7));</pre>
+<pre name="code" class="java">        Key&lt;Employee, String&gt; NAME = KeyFactory.newKey(length(7));</pre>
 
-<p>The NAME key has now got a validator to check any employee name is up to 7
+<p>The NAME Key has now got a validator to check any employee name is up to 7
 characters long. The next example tests the validator on a name that meets the
 limit and a name that is too long.</p>
 <pre name="code" class="java">        final String correctName = "1234567";
@@ -273,20 +273,20 @@ href="http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-c
 <p></p>
 
 <p>I am considering using annotations from <a
-href="http://beanvalidation.org/1.0/spec/">JSR 303</a> over the key definition
-as an alternative to direct insertion of keys using Java code - in one of the
+href="http://beanvalidation.org/1.0/spec/">JSR 303</a> over the Key definition
+as an alternative to direct insertion of Keys using Java code - in one of the
 next versions of Ujorm.</p>
 
 <h2 id="compositeKey">Composite Keys</h2>
 
-<p>Two logically related keys can be joined using the
+<p>Two logically related Keys can be joined using the
 Key.<strong>and</strong>(key) method, where the result is an instance of a
-<strong>composite</strong> key of the <a
+<strong>composite</strong> Key of the <a
 href="http://ujorm.org/javadoc/org/ujorm/CompositeKey.html">CompositeKey</a>
 type which is also a type of the original interface Key. Because of this,
-composite keys can be used the same way as direct keys - including reading and
-writing values ​​of domain objects or joining with other composite keys.
-Working with composite keys also brings us some new interesting features when
+composite Keys can be used the same way as direct Keys - including reading and
+writing values ​​of domain objects or joining with other composite Keys.
+Working with composite Keys also brings us some new interesting features when
 reading and writing values:</p>
 <ul>
   <li>If you are reading any attribute of an object with missing
@@ -315,19 +315,19 @@ reading and writing values:</p>
         assert employee.getCompany() != null;
         assert companyName == "Prague";</pre>
 
-<p>The first line builds a composite key. The line marked with the first
+<p>The first line builds a composite Key. The line marked with the first
 exclamation mark returns the name of the company of the employee as NULL, even
 though the company has not been created yet. The line marked with the second
 exclamation mark first adds the missing instance of the company and then writes
 its name into it.</p>
 
-<p>If you are interested in composite keys behaviour, you can study other
+<p>If you are interested in composite Keys behaviour, you can study other
 examples in this <a
 href="http://sourceforge.net/p/ujoframework/svn/2205/tree//trunk/project-m2/ujo-core/src/test/java/samples/values/UsageTest.java#l27">TestCase</a>.</p>
 
 <h2 id="criterionAsValidator">Criterion as a condition model</h2>
 
-<p>Using keys, values, and operators it is possible to describe the logical
+<p>Using Keys, values, and operators it is possible to describe the logical
 condition of a Ujo object for which the Criterion class is to be used. Objects
 of the Criterion type are immutable serializable instances that can be combined
 into a binary tree using AND / OR. A Criterion object is also used in the ORM
@@ -356,7 +356,7 @@ can then provide a custom implementation solution.</p>
 
 <p>The following example is a different version of the previous example and is
 used for filtering a collection of employees whose company is based in Prague.
-The example shows that composite keys can enter into Criterion:</p>
+The example shows that composite Keys can enter into Criterion:</p>
 <pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
             .whereEq("Prague")
             .evaluate(getEmployees());
@@ -367,7 +367,7 @@ The example shows that composite keys can enter into Criterion:</p>
 
         assert employees.size() == 4;</pre>
 
-<p>It is useful to know that the value of the Criterion can also be a key:</p>
+<p>It is useful to know that the value of the Criterion can also be a Key:</p>
 
 <pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
             .whereEq(Employee.NAME)
@@ -386,7 +386,7 @@ The example shows that composite keys can enter into Criterion:</p>
 href="http://ujorm.org/javadoc/org/ujorm/core/UjoComparator.html">UjoComparator</a>.
 It is not necessary to implement a new class for a large group of requirements
 (unlike JavaBeans collections, although Java 8 has brought a simplification), just
-supply the factory method with the required list of keys along with information
+supply the factory method with the required list of Keys along with information
 about the direction of sort, see <a
 href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descending</a>().
 The method always creates a new instance of Key, flagged <strong>descending</strong> sort.</p>
@@ -400,17 +400,17 @@ The method always creates a new instance of Key, flagged <strong>descending</str
         }</pre>
 
 <p>The <strong>descending</strong>() method actually creates a new composite
-key with one member, which provides information about the descending sort.
+Key with one member, which provides information about the descending sort.
 Modeling the downward shift is also used in the ORM module.</p>
 
-<h2 id="serialization">Serialization of keys</h2>
+<h2 id="serialization">Serialization of Keys</h2>
 
-<p>Each <strong>direct</strong> key in ClassLoader has its own unique instance,
+<p>Each <strong>direct</strong> Key in ClassLoader has its own unique instance,
 like an item of the enumerated type <strong>Enum</strong>. In order to
-serialize the keys, you must insert them into a keyring represented by the
+serialize the Keys, you must insert them into a keyring represented by the
 class <a
 href="http://ujorm.org/javadoc/org/ujorm/core/KeyRing.html">KeyRing</a>. These
-key chains are not entirely new to us because the <a
+Key chains are not entirely new to us because the <a
 href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
 method used above returns (in the default implementation) this type.</p>
 <pre name="code" class="java">        final KeyRing&lt;Employee&gt; keyRing1, keyRing2;
@@ -428,7 +428,7 @@ method used above returns (in the default implementation) this type.</p>
 Value), which offers the possibility to import attributes using
 <strong>composite</strong> Keys too, so you can import the attributes of
 relational entities. The description of CSV columns is defined by a list of
-keys of the (imported) Ujo object. Contents of a text CSV file with a header
+Keys of the (imported) Ujo object. Contents of a text CSV file with a header
 are the following:</p>
 <pre name="code" class="xml">        id;name;companyId
         1;Pavel;10
@@ -450,7 +450,7 @@ are the following:</p>
         assert employes.get(0).getName().equals("Pavel");
         assert employes.get(0).getCompany().getId().equals(10L);</pre>
 
-<p>If we use a class of type Ujo instead of a list of keys, the CSV file
+<p>If we use a class of type Ujo instead of a list of Keys, the CSV file
 contents are imported by all direct Keys of the class. The order of the static
 Ujo Keys is guaranteed in the Ujorm framework and is same as the order of the
 static field specified in the domain class - as opposed to an <a
