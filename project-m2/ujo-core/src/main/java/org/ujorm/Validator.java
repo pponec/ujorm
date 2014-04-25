@@ -82,9 +82,6 @@ public interface Validator<VALUE> {
     public Validator<VALUE> or(Validator<VALUE> validator);
 
     /** Validator Factory */
-    public static final class Build extends ValidatorFactory{
-        private Build() {
-        }
-    }
+    public static abstract class Build extends ValidatorFactory{}
 
 }

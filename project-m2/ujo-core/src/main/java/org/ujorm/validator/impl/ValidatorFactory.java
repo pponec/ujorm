@@ -29,7 +29,7 @@ import static org.ujorm.validator.impl.NotNullValidator.*;
  * @see Validator
  */
 @SuppressWarnings("unchecked")
-public class ValidatorFactory {
+public abstract class ValidatorFactory {
 
     /** A modifier of the validator */
     public static enum CheckType {
@@ -313,7 +313,7 @@ public class ValidatorFactory {
      */
     public static Validator<String> length(CheckType type, int min, int max) {
         final Validator<String> result = length(min, max);
-        return type == MANDATORY 
+        return type == MANDATORY
              ? NOT_NULL.and(result)
              : result;
     }
@@ -340,14 +340,14 @@ public class ValidatorFactory {
     public static <T> Validator<T> readOnly(Class<T> valueType) {
         return new ReadOnlyValidator<T>(true);
     }
-    
+
     /** It is a logical empty validator. Each value is allowed.
      * @deprecated Use the {@link #everything()} method rather */
     @Deprecated
     public static Validator allAllowed() {
         return new ReadOnlyValidator<String>(false);
     }
-    
+
     /** It is a logical empty validator. Each value is allowed. */
     public static <T> Validator<T> everything(Class<T> valueTYpe) {
         return new ReadOnlyValidator(false);
