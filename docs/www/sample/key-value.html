@@ -191,7 +191,8 @@ with a NULL value this way:</p>
             employee.set(key, null);
         }
 
-        assert employee.getWate() == WAGE.getDefault() : "Check the default value";</pre>
+        assert employee.getWage() == 0 : "Default value is zero";
+        assert employee.getWage() == WAGE.getDefault() : "Check the default value";</pre>
 
 <p>Another version of the previous example restores the default values
 ​​for numeric attributes only:</p>
