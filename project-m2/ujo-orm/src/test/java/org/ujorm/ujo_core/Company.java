@@ -17,46 +17,64 @@ package org.ujorm.ujo_core;
 
 import java.util.Date;
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.SmartUjo;
 
-/**
- * Simple Company domain class.
- */
+/** Simple Company domain class. */
 public class Company extends SmartUjo<Company> {
+    /** Key factory */
+    private static final KeyFactory<Company> f = newCamelFactory(Company.class);
 
     /** The Primary Key */
-    public static final Key<Company, Long> ID = newProperty("id", Long.class);
+    public static final Key<Company, Long> ID = f.newKey();
     /** Company name */
-    public static final Key<Company, String> NAME = newProperty("name", String.class);
+    public static final Key<Company, String> NAME = f.newKey();
     /** City name */
-    public static final Key<Company, String> CITY = newProperty("city", String.class);
+    public static final Key<Company, String> CITY = f.newKey();
     /** Registration date */
-    public static final Key<Company, Date> CREATED = newProperty("created", Date.class);
+    public static final Key<Company, Date> CREATED = f.newKey();
+
+    static { f.lock(); } // Lock the factory;
 
     // --- An optional implementation of commonly used setters and getters ---
 
+    /** The Primary Key */
     public Long getId() {
-        return get(ID);
+        return ID.of(this);
     }
+
+    /** The Primary Key */
     public void setId(Long id) {
-        set(ID, id);
+        Company.ID.setValue(this, id);
     }
+
+    /** Company name */
     public String getName() {
-        return get(NAME);
+        return NAME.of(this);
     }
+
+    /** Company name */
     public void setName(String name) {
-        set(NAME, name);
+        Company.NAME.setValue(this, name);
     }
+
+    /** City name */
     public String getCity() {
-        return get(CITY);
+        return CITY.of(this);
     }
-    public void setCity(String street) {
-        set(CITY, street);
+
+    /** City name */
+    public void setCity(String city) {
+        Company.CITY.setValue(this, city);
     }
+
+    /** Registration date */
     public Date getCreated() {
-        return get(CREATED);
+        return CREATED.of(this);
     }
+
+    /** Registration date */
     public void setCreated(Date created) {
-        set(CREATED, created);
+        Company.CREATED.setValue(this, created);
     }
 }

@@ -16,50 +16,70 @@
 package org.ujorm.ujo_core;
 
 import org.ujorm.Key;
+import org.ujorm.core.KeyFactory;
 import org.ujorm.implementation.quick.SmartUjo;
+import static org.ujorm.Validator.Build.*;
 
-/**
- * Simple Employee domain class
- */
+/** Simple Employee domain class */
 public class Employee extends SmartUjo<Employee> {
+    /** Key factory */
+    private static final KeyFactory<Employee> f = newCamelFactory(Employee.class);
 
     /** Unique key */
-    public static final Key<Employee, Long> ID = newProperty("id", Long.class);
-    /** User name */
-    public static final Key<Employee, String> NAME = newProperty("name", String.class);
-    /** hourly wage */
-    public static final Key<Employee, Double> WAGE = newKey("wage", 0.0);
+    public static final Key<Employee, Long> ID = f.newKey();
+    /** User first name, where the default value is {@code null}. The max length is 7 characters */
+    public static final Key<Employee, String> NAME = f.newKey(length(7));
+    /** Hourly wage with the default value: 0.0 */
+    public static final Key<Employee, Double> WAGE = f.newKeyDefault(0.0);
     /** A reference to Company */
-    public static final Key<Employee, Company> COMPANY = newProperty("company", Company.class);
+    public static final Key<Employee, Company> COMPANY = f.newKey();
+
+    static { f.lock(); } // Lock the factory;
 
     // --- An optional implementation of commonly used setters and getters ---
-    
+
+    /** Unique key */
     public Long getId() {
-        return get(ID);
+        return ID.of(this);
     }
+
+    /** Unique key */
     public void setId(Long id) {
-        set(ID, id);
+        Employee.ID.setValue(this, id);
     }
+
+    /** User first name, where the default value is {@code null}. The max length is 7 characters */
     public String getName() {
-        return get(NAME);
+        return NAME.of(this);
     }
+
+    /** User first name, where the default value is {@code null}. The max length is 7 characters */
     public void setName(String name) {
-        set(NAME, name);
+        Employee.NAME.setValue(this, name);
     }
+
+    /** Hourly wage with the default value: 0.0 */
     public Double getWage() {
-        return get(WAGE);
+        return WAGE.of(this);
     }
-    public void setWage(Double cache) {
-        set(WAGE, cache);
+
+    /** Hourly wage with the default value: 0.0 */
+    public void setWage(Double wage) {
+        Employee.WAGE.setValue(this, wage);
     }
-    public Company getAddress() {
-        return get(COMPANY);
+
+    /** A reference to Company */
+    public Company getCompany() {
+        return COMPANY.of(this);
     }
-    public void setAddress(Company address) {
-        set(COMPANY, address);
+
+    /** A reference to Company */
+    public void setCompany(Company company) {
+        Employee.COMPANY.setValue(this, company);
     }
-    /** Example of the Composed property */
-    public String getCompnyCity() {
+
+    /** Example of the <strong>Composed property</strong> */
+    public String getCompanyCity() {
         return get(COMPANY.add(Company.CITY));
     }
 }

@@ -16,18 +16,23 @@
 
 package org.ujorm.ujo_core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.Validator;
+import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoComparator;
+import org.ujorm.core.UjoManagerCSV;
 import org.ujorm.criterion.*;
-import org.ujorm.orm.*;
-import org.ujorm.orm_tutorial.sample.Database;
-import org.ujorm.orm_tutorial.sample.Item;
-import org.ujorm.orm_tutorial.sample.Order;
-import static org.ujorm.criterion.Operator.*;
+import org.ujorm.validator.ValidationException;
 import static org.ujorm.ujo_core.Company.CITY;
 import static org.ujorm.ujo_core.Employee.*;
 
@@ -36,12 +41,13 @@ import static org.ujorm.ujo_core.Employee.*;
  * ------------------------------------------ <br>
  * Learn the basic skills in 15 minutes by a live Java code.
  *
- * Entities: <pre>
- *  - Employee [ID, NAME, WAGE, ADDRESS]
- *  - Company [ID, CITY, COUNTRY]
- * </pre>
+ * Entities:
+ * <ul>
+ *   <li>{@link Employee} [id, name, wage, company]</li>
+ *   <li>{@link Company} [id, name, city, created]</li>
+ * </ul>
  *
- * Copyright 2011, Pavel Ponec
+ * Copyright 2011-2014, Pavel Ponec
  *
  * @see Employee
  * @see Company
@@ -54,25 +60,53 @@ public class SampleCORE {
         SampleCORE sample = new SampleCORE();
 
         try {
-            sample.writeAndRead();
-            sample.copyAllProperties();
-            sample.copySomeProperties();
-            sample.restoreDefaultValues();
-            sample.concatenateProperties();
+            sample.readWriteBean();
+            sample.readWriteUjo();
+            sample.defaultValues();
+            sample.numericDefaultValues();
+            sample.copyAttributes();
+            sample.keyValidator();
+            sample.localizedMessageOfValidator();
+            sample.compositeKey();
+            sample.theCriterion();
+            sample.criterionAsFilter();
+            sample.criterionAsFilterWithKey();
             sample.sortEmployeeList();
-            sample.employeeValidator();
-            sample.selectFromList();
-            sample.selectFromDatabase();
+            sample.keySerialization();
+            sample.importCSV();
 
         } catch (Exception e) {
             Logger.getLogger(SampleCORE.class.getName()).log(Level.SEVERE, "Sample CORE", e);
+            throw new IllegalStateException("Sample CORE", e);
         }
     }
 
     // ======= CHAPTERS: =======
 
-    /** How to write and read data of the UJO object? */
-    public void writeAndRead() {
+    /** See a common data access for the JavaBean object */
+    public void readWriteBean() {
+        Employee person = new Employee();
+
+        // Write:
+        person.setId(7L);
+        person.setName("Pavel");
+        person.setWage(20.00);
+        person.setCompany(new Company());
+
+        // Read:
+        Long id = person.getId();
+        String name = person.getName();
+        double wage = person.getWage();
+        Company company = person.getCompany();
+
+        assert id == 7L;
+        assert name == "Pavel";
+        assert wage == 20.00;
+        assert company != null;
+    }
+
+    /** See a data access using API of the {@link Ujo} object */
+    public void readWriteUjo() {
         Employee person = new Employee();
 
         // Write:
@@ -84,178 +118,285 @@ public class SampleCORE {
         // Read:
         Long id = person.get(ID);
         String name = person.get(NAME);
-        double wage = person.get(WAGE); // result is not null allways
-        Company address = person.get(COMPANY);
+        double wage = person.get(WAGE); // result is not never null due the default value
+        Company company = person.get(COMPANY);
 
-        System.out.println("Employee: " + id + " " + name + " " + wage + " " + address);
+        assert id == 7L;
+        assert name == "Pavel";
+        assert wage == 20.00;
+        assert company != null;
 
-        // == Sample of compilation bugs: ==
-        // person.set(AnotherID, 7L);  // Property from another object is not allowed
-        // person.set(ID, "Pavel");    // Wrong data type of the parameter
-        // String ID = person.get(ID); // Wrong the return data type
+        // === Code sample where the compiler fails: ===
+        // person.set(Company.ID, 7L);  // Key from another domain is not allowed
+        // person.set(Employee.ID, "Pavel");    // Wrong data type of the argument value
+        // String id = person.get(Employee.ID); // Wrong return class
     }
 
-   /** How to copy all keys from BO to another object? */
-    public void copyAllProperties() throws Exception {
-        Ujo employee1 = findEmployee();
-        Ujo employee2 = employee1.getClass().newInstance();
+    /** How to restore default values? */
+    @SuppressWarnings("unchecked")
+    public void defaultValues() {
+        Employee employee = service.getEmployee();
 
-        for (Key p : employee1.readKeys()) {
-            p.copy(employee1, employee2);
+        for (Key key : employee.readKeys()) {
+            employee.set(key, null);
         }
-        System.out.println("Employee 2: " + employee2);
+
+        assert employee.getWage() == WAGE.getDefault() : "Check the default value";
     }
 
-   /** How to copy some keys to another object? */
-    public void copySomeProperties() {
-        Employee employee1 = findEmployee();
-        Employee employee2 = new Employee();
+    /** See how to restore a default value for all Numbers only.
+     * A type of the Key can be checked by the method {@link Key#isTypeOf(java.lang.Class) }.
+     */
+    @SuppressWarnings("unchecked")
+    public void numericDefaultValues() {
+        Employee employee = service.getEmployee();
 
-        for (Key p : employee1.readKeys()) {
-            if (p.isTypeOf(String.class)) {
-                p.copy(employee1, employee2);
-            }
-            if (p==Employee.WAGE) { // Property have got an unique instance
-                p.copy(employee1, employee2);
+        for (Key key : employee.readKeys()) {
+            if (key.isTypeOf(Number.class)) {
+                employee.set(key, null);
             }
         }
-        System.out.println("employee 2: " + employee2);
+        assert employee.getWage() == WAGE.getDefault() : "Check the default value";
     }
 
-    /** How to restore default values) */
-    public void restoreDefaultValues() {
+    /** How to copy all attributes from a source to a target object? */
+    public void copyAttributes() throws Exception {
+        Employee source = service.getEmployee();
+        Employee target = source.getClass().newInstance();
+
+        for (Key<Ujo,?> key : source.readKeys()) {
+            key.copy(source, target);
+        }
+
+        assert source.getId() == target.getId()
+                : "The same IDs";
+    }
+
+    /** There is a {@link Validator} class which checks an input data using the method
+     * {@link Validator#checkValue(java.lang.Object, org.ujorm.Key, org.ujorm.Ujo) checkValue(value ...)}
+     * to ensure an integration.
+     * <h3>Features:</h3>
+     * <ul>
+     *    <li>two Validators can be joined using operator AND/OR to a new composite Validator</li>
+     *    <li>one (composite) Validator can be assigned into an object type of {@link Key}</li>
+     *    <li>the Validator can be assigned to the {@link Key} to check all input data in the <strong>writing time</strong> always</li>
+     * </ul>
+     * The {@link Employee#NAME} has got allowed max 7 characters length.
+     * <br/>The key definition in the {@link Employee} class is:
+     * <pre>{@code public static final Key<Employee, String> NAME = factory.newKey(length(7));
+     *  }</pre>
+     */
+    public void keyValidator() {
+        final String correctName = "1234567";
+        final String wrongName = "12345678";
+
         Employee employee = new Employee();
-
-        employee.set(WAGE, 123.00);
-        for (Key p : employee.readKeys()) {
-             employee.set(p, p.getDefault());
+        employee.set(NAME, correctName);
+        try {
+            employee.set(NAME, wrongName);
+        } catch (ValidationException e) {
+            String expected
+                    = "Text length for Employee.name must be between 0 and 7, "
+                    + "but the input length is: 8";
+            assert e.getMessage().equals(expected);
         }
-
-        // Another solution:
-        employee.set(WAGE, null);
-        double newWage = employee.get(WAGE) + 10L; // type safe
-
-        System.out.println("Employee: " + employee + " wage: " + newWage);
+        assert employee.getName() == correctName;
     }
 
-    /** How to concatenate UJO Keys? */
-    public void concatenateProperties() {
-        final String city1, city2;
-        Employee employee = findEmployee();
+    /** Messages from validator can be located using the templates */
+    public void localizedMessageOfValidator() {
+        final String wrongName = "12345678";
+        ValidationException exception = null;
 
-        city1 = employee.get(COMPANY).get(CITY);
-        city2 = employee.get(COMPANY.add(CITY)); // Case: Company is NULL ?
+        try {
+            new Employee().set(NAME, wrongName);
+        } catch (ValidationException e) {
+            exception = e;
+        }
 
-        System.out.println("The same streets: " + (city1==city2) );
-        System.out.println("The composite property: " + COMPANY.add(CITY) );
+        String template = "The name can be up to ${MAX} characters long, not ${LENGTH}.";
+        String expected = "The name can be up to 7 characters long, not 8.";
+        String result = exception.getError().getMessage(template);
+        assert expected.equals(result);
+    }
+
+    /** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.
+     * A CompositeKey can be used to reading and writing attributes of related domain objects,
+     * however the setter with the CompositeKey <create>creates</create> missing domain relations automatically.
+     */
+    public void compositeKey() {
+        Key<Employee, String> companyNameKey = COMPANY.add(Company.NAME);
+
+        Employee employee = new Employee();
+        String companyName = employee.get(companyNameKey); //!
+        assert companyName == null;
+
+        employee.set(companyNameKey, "Prague"); //!
+        companyName = employee.get(companyNameKey);
+
+        assert employee.getCompany() != null;
+        assert companyName == "Prague";
+    }
+
+    /** Employee theCriterion example */
+    public void theCriterion() {
+        Criterion<Employee> validator = Employee.WAGE.whereGt(100.0);
+        try {
+            validator.validate(service.getEmployee()
+                    , "Minimal WAGE is: %s units"
+                    , validator.getRightNode());
+            assert false : Employee.WAGE + " is not valid";
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage() != null;
+        }
+    }
+
+    /** Filter all employees, where a city name of a company equals employee name. */
+    public void criterionAsFilter() {
+        List<Employee> employees = COMPANY.add(CITY)
+                .whereEq("Prague")
+                .evaluate(service.getEmployees());
+
+        for (Employee employee : employees) {
+            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+        }
+        assert employees.size() == 4;
+    }
+
+    /** Filter all employees, where a <strong>company.city</strong> equals to the <strong>employee's name</strong>.
+     * Note: the result if Employee's name is 'Prague'. */
+    public void criterionAsFilterWithKey() {
+        List<Employee> employees = COMPANY.add(CITY)
+                .whereEq(Employee.NAME) // The employee NAME can be a correct value of the Criterion
+                .evaluate(service.getEmployees());
+
+        for (Employee employee : employees) {
+            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
+        }
+
+        assert employees.size() == 1 : "Check the result count";
+        assert employees.get(0).getName().equals("Prague") : "Check the result value";
     }
 
     /** How to sort the List?  */
     public void sortEmployeeList() {
-        List<Employee> employeeList = findEmployeeList();
-        Comparator comparator = UjoComparator.of
+        List<Employee> employees = UjoComparator.of
                 ( COMPANY.add(CITY)
-                , NAME);
-        Collections.sort(employeeList, comparator);
-
-        for (Employee employee : employeeList) {
-            System.out.println(employee.get(COMPANY.add(CITY)) + " " + employee.get(NAME));
-        }
-        System.out.println(employeeList.size());
-    }
-
-    public void employeeValidator() {
-        final Criterion<Employee> validWage, validStreet, validator;
-        validWage = Criterion.where(WAGE, GT, 10.0);
-        validStreet = Criterion.where(COMPANY.add(CITY), "Brno");
-        validator = validWage.or(validStreet);
-
-        Employee employee = findEmployee();
-        boolean isValid = validator.evaluate(employee);
-        System.out.println("Is valid: " + isValid + " for " + employee);
-    }
-
-    public void selectFromList() {
-        CriteriaTool<Employee> ct = CriteriaTool.newInstance();
-        List<Employee> employees = ct.select(findEmployeeList(), Criterion.where(WAGE, GT, 5.0));
-
-        // Select including sorting informations:
-        employees = ct.select(findEmployeeList()
-                , Criterion.where(WAGE, GT, 5.0)
-                , UjoComparator.of(Employee.NAME)
-                );
+                , NAME.descending()
+                ).sort(service.getEmployees());
 
         for (Employee employee : employees) {
-            System.out.println("Employee: " + employee);
+            System.out.println(employee.getCompany().getCity() + " " + employee.getName());
         }
-        System.out.println(employees.size());
+
+        assert employees.size() == 4 : "Check the result count";
     }
 
-    /** A small introduction to database Object-Relation-Mapping */
-    public void selectFromDatabase() {
-         Session session = createSession();
-         Criterion<Item> crn1, crn2, criterion;
+    /** Each direct Key has an unique instance in a classloader,
+     * similar like an item of the {@link Enum} type.
+     * For the serialization use a {@link KeyRing} envelope.
+     */
+    public void keySerialization() {
+        final KeyRing<Employee> keyRing1, keyRing2;
+        keyRing1 = KeyRing.of(Employee.ID, Employee.COMPANY.add(Company.NAME));
+        keyRing2 = service.serialize(keyRing1);
 
-         crn1 = Criterion.where( Item.ID, GE, 1L );
-         crn2 = Criterion.where( Item.ORDER.add(Order.NOTE)
-                               , "My order" );
-         criterion = crn1.and(crn2);
-
-         for (Item item : session.createQuery(criterion)) {
-             Date created = item.getOrder().getCreated();
-             System.out.println( item + " : " + created );
-         }
-         session.close();
+        assert keyRing1 != keyRing2 : "Different instances";
+        assert keyRing1.get(0) == keyRing2.get(0) : "The same direct keys";
+        assert keyRing1.get(1).equals(keyRing2.get(1)) : "The equal composite keys";
+        assert new Employee().readKeys() instanceof KeyRing : "readKeys() returns the KeyRing";
     }
 
-    // ======= Helper methods =======
+    /** Import the CSV file using a Composite Keys from the file content:
+     * <pre>{@code id;name;companyId
+     * 1;Pavel;10
+     * 2;Petr;30
+     * 3;Kamil;50}</pre>
+     */
+    public void importCSV() throws Exception {
+        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+        UjoManagerCSV<Employee> manager = UjoManagerCSV.of
+                ( Employee.ID
+                , Employee.NAME
+                , Employee.COMPANY.add(Company.ID)
+                );
+        List<Employee> employes = manager.loadCSV(scanner, this);
 
-    /** Find an Employee somewhere */
-    private Employee findEmployee() {
-        Employee result = new Employee();
-        result.set(ID, 10L);
-        result.set(NAME, "Pavel");
-        result.set(WAGE, 50.00);
-        result.set(COMPANY, findCompany());
-
-        return result;
+        assert employes.size() == 3;
+        assert employes.get(0).getId() .equals(1L);
+        assert employes.get(0).getName().equals("Pavel");
+        assert employes.get(0).getCompany().getId().equals(10L);
     }
 
-    /** Find an Company somewhere */
-    private Company findCompany() {
-        Company result = new Company();
-        result.set(Company.ID, 20L);
-        result.set(Company.NAME, "My Company");
-        result.set(Company.CITY, "Prague");
-        result.set(Company.CREATED, new Date());
+    // ===========- HELPER CODE ===========-
 
-        return result;
-    }
+    /** Helper methods */
+    private final Service service = new Service();
 
-    /** Create the List of Persons */
-    private List<Employee> findEmployeeList() {
-        List<Employee> result = new ArrayList<Employee>();
+    /** Helper methods */
+    private static class Service {
 
-        for (long i=1; i<=3; ++i) {
-             Employee person = findEmployee();
-             person.set(ID, i);
-             person.set(NAME, "Name-" + i);
-             result.add(person);
+        /** Find an Employee somewhere */
+        private Employee getEmployee() {
+            return createEmployee(10L, "Pavel", 50.00, getCompany());
         }
-        return result;
+
+        /** Create the List of Persons */
+        private Employee createEmployee(Long id, String name, Double wage, Company company) {
+            Employee person = new Employee();
+            person.set(ID, id);
+            person.set(NAME, name);
+            person.set(WAGE, wage);
+            person.set(COMPANY, company);
+            return person;
+        }
+
+        /** Find an Company somewhere */
+        private Company getCompany() {
+            return createCompany(20L, "My Company", "Prague");
+        }
+
+        /** Find an Company somewhere */
+        private Company createCompany(Long id, String name, String city) {
+            Company result = new Company();
+            result.set(Company.ID, id);
+            result.set(Company.NAME, name);
+            result.set(Company.CITY, city);
+            result.set(Company.CREATED, new Date());
+
+            return result;
+        }
+
+        /** Create the List of Persons */
+        private List<Employee> getEmployees() {
+            final List<Employee> result = new ArrayList<Employee>();
+
+            result.add(createEmployee(10L, "Pavel", 50.00, getCompany()));
+            result.add(createEmployee(20L, "Petr", 80.00, getCompany()));
+            result.add(createEmployee(30L, "Kamil", 20.00, getCompany()));
+            result.add(createEmployee(40L, "Prague", 00.00, getCompany()));
+
+            return result;
+        }
+
+        /** Object serialization */
+        @SuppressWarnings("unchecked")
+        private <T extends Serializable> T serialize(T object) {
+            try {
+                ByteArrayOutputStream os = new ByteArrayOutputStream(1000);
+                ObjectOutputStream encoder = new ObjectOutputStream(os);
+                encoder.writeObject(object);
+                encoder.close();
+
+                InputStream is = new ByteArrayInputStream(os.toByteArray());
+                ObjectInputStream decoder = new ObjectInputStream(is);
+                Object result = (Serializable) decoder.readObject();
+                decoder.close();
+
+                return (T) result;
+            } catch (Exception e) {
+                throw new IllegalStateException("Serializaton error", e);
+            }
+        }
     }
-
-    /** Create the new Ujorm session */
-    private Session createSession() {
-        logErrors();
-
-        OrmHandler handler = new OrmHandler(Database.class);
-        return handler.createSession();
-    }
-
-    /** Set logging to the level SEVERE. */
-    private void logErrors() {
-        Logger.getLogger(Ujo.class.getPackage().getName()).setLevel(Level.SEVERE);
-    }
-
 }
