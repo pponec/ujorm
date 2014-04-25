@@ -140,8 +140,8 @@ public class SampleCORE {
         for (Key key : employee.readKeys()) {
             employee.set(key, null);
         }
-        
-        assert employee.getWage() == 0 : "Default value is zero";
+
+        assert employee.getWage() == 0.0 : "Default value is zero";
         assert employee.getWage() == WAGE.getDefault() : "Check the default value";
     }
 
