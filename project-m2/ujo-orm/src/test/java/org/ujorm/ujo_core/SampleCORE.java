@@ -141,7 +141,7 @@ public class SampleCORE {
             employee.set(key, null);
         }
 
-        assert employee.getWage() == 0 : "Default value is zero";
+        assert employee.getWage() == 0.0 : "Default value is zero";
         assert employee.getWage() == WAGE.getDefault() : "Check the default value";
     }
 
@@ -315,7 +315,7 @@ public class SampleCORE {
      * 3;Kamil;50}</pre>
      */
     public void importCSV() throws Exception {
-        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+        Scanner scanner = service.getCsvData();
         UjoManagerCSV<Employee> manager = UjoManagerCSV.of
                 ( Employee.ID
                 , Employee.NAME
@@ -398,6 +398,14 @@ public class SampleCORE {
             } catch (Exception e) {
                 throw new IllegalStateException("Serializaton error", e);
             }
+        }
+
+        /** CSV data */
+        private Scanner getCsvData() {
+            return new Scanner(" id;name;companyId"
+                    + "\n1;Pavel;10"
+                    + "\n2;Petr;30"
+                    + "\n3;Kamil;50");
         }
     }
 }
