@@ -186,7 +186,8 @@ každému atributu hodnotu NULL podle vzoru:</p>
             employee.set(key, null);
         }
 
-        assert employee.getWate() == WAGE.getDefault() : "Check the default value";</pre>
+        assert employee.getWage() == 0 : "Default value is zero";
+        assert employee.getWage() == WAGE.getDefault() : "Check the default value";</pre>
 
 <p>Jiná varianta předchozího příkladu obnovuje pouze defaultní hodnoty číselných atributů:</p>
 <pre name="code" class="java">        Employee employee = getEmployee();

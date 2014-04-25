@@ -141,6 +141,7 @@ public class SampleCORE {
             employee.set(key, null);
         }
 
+        assert employee.getWage() == 0 : "Default value is zero";
         assert employee.getWage() == WAGE.getDefault() : "Check the default value";
     }
 
