@@ -101,7 +101,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
                         final Session tempSession = mySession.getHandler().createSession();
                         try {
                             List<ITEM> list = (List) tempSession.iterateInternal((RelationToMany) this, ujo).toList();
-                            return UjoIterator.getInstance(list);
+                            return UjoIterator.of(list);
                         } finally {
                             tempSession.close();
                         }

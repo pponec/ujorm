@@ -823,7 +823,7 @@ public class Session {
                 ? Criterion.where(fColumn.getKey(), value)
                 : Criterion.constant(table.getFirstPK().getKey(), true);
         Query query = createQuery(crit, table.getType());
-        UjoIterator result = UjoIterator.getInstance(query);
+        UjoIterator result = UjoIterator.of(query);
 
         return result;
     }
