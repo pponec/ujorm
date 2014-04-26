@@ -245,8 +245,8 @@ public class UjoTableModel<ROW extends Ujo> extends AbstractTableModel {
     // ============ UTILS ===================
     
     /**
-     * Sort data by a property list.
-     * @param keys Array of keys. A property value must be comparable.
+     * Sort data by a key list.
+     * @param keys Array of keys. A key value must be comparable.
      */
     public void sort(Key ... keys) {
         final Comparator<Ujo> comp = new UjoComparator(keys);

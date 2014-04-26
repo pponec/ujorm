@@ -40,6 +40,6 @@ public class UjoName extends SmartUjo<UjoName> {
         this.onZeroManager = onZeroManager;
     }
 
-    //public boolean readAuthorization(ACTION_ZERO_REPLACE, property, result, null) {}
+    //public boolean readAuthorization(ACTION_ZERO_REPLACE, key, result, null) {}
 
 }

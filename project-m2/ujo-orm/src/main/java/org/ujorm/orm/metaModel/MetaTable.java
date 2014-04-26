@@ -89,20 +89,20 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     public static final ListKey<MetaTable,MetaColumn> COLUMNS = fa.newListKey("column");
     /** Table relations to many */
     public static final ListKey<MetaTable,MetaRelation2Many> RELATIONS = fa.newListKey("relation2m");
-    /** SQL SELECT model. Note: this property must not be persistent due a blank spaces in key names! */
+    /** SQL SELECT model. Note: this key must not be persistent due a blank spaces in key names! */
     @Transient
     public static final Key<MetaTable,MetaSelect> SELECT_MODEL = fa.newKey("selectModel");
     /** Unique Primary Key */
     @Transient
     public static final Key<MetaTable,MetaPKey> PK = fa.newKey("pk");
-    /** Database relative <strong>property</strong> (a base definition of table) */
+    /** Database relative <strong>key</strong> (a base definition of table) */
     @Transient
     public static final Key<MetaTable,RelationToMany> DB_PROPERTY = fa.newKey("dbProperty");
     /** Database */
     @Transient
     public static final Key<MetaTable,MetaDatabase> DATABASE = fa.newKey("database");
 
-    /** The property initialization */
+    /** The Key initialization */
     static{fa.lock();}
 
     /** Ujo sequencer */
@@ -119,7 +119,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
     /**
      * Create new MetaTable.
      * @param database Database for the table
-     * @param dbProperty Configuration property
+     * @param dbProperty Configuration key
      * @param parTable Configuration data from a XML file
      */
     @SuppressWarnings({"unchecked", "LeakingThisInConstructor"})
@@ -202,19 +202,19 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         OrmHandler dbHandler = database.getOrmHandler();
         UjoManager ujoManager = UjoManager.getInstance();
         UjoManager.newInstance(dbProperty.getItemType()); // Initialize static Keys
-        for (Key property : ujoManager.readKeys(dbProperty.getItemType())) {
+        for (Key key : ujoManager.readKeys(dbProperty.getItemType())) {
 
-            if (!ujoManager.isTransient(property)) {
+            if (!ujoManager.isTransient(key)) {
 
-                if (property instanceof RelationToMany) {
-                    MetaRelation2Many param = parTable!=null ? parTable.findRelation(property.getName()) : null;
-                    MetaRelation2Many column = new MetaRelation2Many(this, property, param);
+                if (key instanceof RelationToMany) {
+                    MetaRelation2Many param = parTable!=null ? parTable.findRelation(key.getName()) : null;
+                    MetaRelation2Many column = new MetaRelation2Many(this, key, param);
                     RELATIONS.addItem(this, column);
                     dbHandler.addColumnModel(column);
 
                 } else {
-                    MetaColumn param  = parTable!=null ? parTable.findColumn(property.getName()) : null;
-                    MetaColumn column = new MetaColumn(this, property, param);
+                    MetaColumn param  = parTable!=null ? parTable.findColumn(key.getName()) : null;
+                    MetaColumn column = new MetaColumn(this, key, param);
                     COLUMNS.addItem(this, column);
                     dbHandler.addColumnModel(column);
 
@@ -307,7 +307,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         return SELECT_MODEL.of(this)!=null;
     }
 
-    /** Database model is not persistent. A side efect is that the DATABASE property has hot a null value. */
+    /** Database model is not persistent. A side efect is that the DATABASE key has hot a null value. */
     public void setNotPersistent() {
         DATABASE.setValue(this, null);
     }
@@ -474,7 +474,7 @@ final public class MetaTable extends AbstractMetaModel implements TableWrapper {
         MetaIndex.COLUMNS.addItem(mIndex, column);
     }
 
-    /** Returns a parrent of the parameter or the null if no parent was not found.<br/>
+    /** Returns a parent of the parameter or the null if no parent was not found.<br/>
      * The method provides a parent in case of emulated inheritance.
      */
     public OrmUjo getParent(final OrmUjo bo) {

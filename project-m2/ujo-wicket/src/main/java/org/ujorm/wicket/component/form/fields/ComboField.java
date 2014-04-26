@@ -39,14 +39,14 @@ public class ComboField<T extends Ujo> extends Field {
     private KeyRing<T> keys;
     private List<T> items;
 
-    public ComboField(Key property, List<T> items, Key<T, ?> selectId, Key<T, ?> display) {
-        super(property.getName(), property, null);
+    public ComboField(Key key, List<T> items, Key<T, ?> selectId, Key<T, ?> display) {
+        super(key.getName(), key, null);
         this.keys = KeyRing.of(selectId, display);
         this.items = items;
     }
 
-    public ComboField(String componentId, Key<?, T> property, List<T> items, Key<T, ?> selectId, Key<T, ?> display, String cssClass) {
-        super(componentId, property, cssClass);
+    public ComboField(String componentId, Key<?, T> key, List<T> items, Key<T, ?> selectId, Key<T, ?> display, String cssClass) {
+        super(componentId, key, cssClass);
         this.keys = KeyRing.of(selectId, display);
         this.items = items;
     }
@@ -115,7 +115,7 @@ public class ComboField<T extends Ujo> extends Field {
     // ----------- FACTORIES -------------
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo> ComboField<T> of(Key<?, T> property, Criterion<T> items, Key<T, ?> display) {
+    public static <T extends OrmUjo> ComboField<T> of(Key<?, T> key, Criterion<T> items, Key<T, ?> display) {
         final OrmSessionProvider session = new OrmSessionProvider();
         try {
             final Query<T> query = session.getSession().createQuery(items);
@@ -124,16 +124,16 @@ public class ComboField<T extends Ujo> extends Field {
             }
             query.setColumns(true, display);
             query.orderBy(display);
-            return of(property, query, display);
+            return of(key, query, display);
         } finally {
             session.closeSession();
         }
     }
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo> ComboField<T> of(Key<?, ?> property, Query<T> query, Key<T, ?> display) {
+    public static <T extends OrmUjo> ComboField<T> of(Key<?, ?> key, Query<T> query, Key<T, ?> display) {
         final Key idKey = query.getTableModel().getFirstPK().getKey();
-        return new ComboField<T>(property, query.list(), idKey, display);
+        return new ComboField<T>(key, query.list(), idKey, display);
     }
 
 }

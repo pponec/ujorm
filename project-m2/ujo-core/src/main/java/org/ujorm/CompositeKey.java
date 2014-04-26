@@ -25,7 +25,7 @@ import org.ujorm.validator.ValidationException;
  * do not send the CompositeKey object to methods Ujo.readValue(...) and Ujo.writeValue(...) directly!!!
  * <p/>There is prefered two methods UjoManager.setValue(...) / UjoManager.getValue(...)
  * to write and read a value instead of this - or use some type safe solution by UjoExt or a method of Key.
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included
+ * <p/>Note that method isDirect() returns a false in this class. For this reason, the key is not included
  * in the list returned by Ujo.readProperties().
  *
  * @author Pavel Ponec
@@ -36,10 +36,10 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
     /** Default name space have got the {@code null} value */
     public static final String DEFAULT_ALIAS = null;
 
-    /** Get the first property of the current object. The result is direct property always. */
+    /** Get the first key of the current object. The result is direct key always. */
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey();
 
-    /** Get the first property of the current object. The result is direct property always. */
+    /** Get the first key of the current object. The result is direct key always. */
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey();
 
     /** Export all <string>direct</strong> keys to the list from parameter. */

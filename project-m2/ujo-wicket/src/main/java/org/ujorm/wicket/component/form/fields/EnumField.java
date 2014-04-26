@@ -38,13 +38,13 @@ public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
     /** Available items */
     private List<E> items;
 
-    public EnumField(Key<T, E> property) {
-        this(property, null);
+    public EnumField(Key<T, E> key) {
+        this(key, null);
     }
 
-    public EnumField(Key<T, E> property, String cssClass) {
-        super(property.getName(), property, null);
-        this.items = Arrays.asList(property.getType().getEnumConstants());
+    public EnumField(Key<T, E> key, String cssClass) {
+        super(key.getName(), key, null);
+        this.items = Arrays.asList(key.getType().getEnumConstants());
         if (NULL_SUPPORT && !isRequired()) {
             ArrayList list = new ArrayList(items.size() + 1);
             list.add(null);

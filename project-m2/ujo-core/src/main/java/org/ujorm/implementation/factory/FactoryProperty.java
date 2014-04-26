@@ -24,7 +24,7 @@ import org.ujorm.extensions.ValueAgent;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
- * A Factory property implementation.
+ * A Factory key implementation.
  * @see FactoryProperty
  * @author Pavel Ponec
  * @since ujo-tool
@@ -33,7 +33,7 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
     extends Property<UJO,VALUE>
     implements ValueAgent<UJO, VALUE>
    {
-    
+
     /** Constructor */
     final protected Constructor<VALUE> constructor;
 
@@ -63,15 +63,15 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
         }
         constructor = c;
     }
-    
+
     /** Create new Value.
      * <br>WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */
     public VALUE readValue(final UJO ujo) throws IllegalArgumentException {
         try {
-            final VALUE result = constructor!=null 
-                ? constructor.newInstance(ujo, this) 
+            final VALUE result = constructor!=null
+                ? constructor.newInstance(ujo, this)
                 : getType().newInstance()
                 ;
             return result;
@@ -81,15 +81,15 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
         }
     }
 
-    /** The method os not implemented. 
+    /** The method os not implemented.
      * <br>WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
     public void writeValue(final UJO ujo, final VALUE value) throws IllegalArgumentException {
         throw new UnsupportedOperationException();
     }
-    
-    
+
+
     /** Throw an RuntimeException */
     protected void throwException(Throwable e) throws RuntimeException {
        throw new IllegalArgumentException("The class " + getType().getName()
@@ -98,14 +98,14 @@ public class FactoryProperty<UJO extends Ujo,VALUE>
 
     // --------- STATIC METHODS -------------------
 
-    /** Returns a new instance of property where the default value is null.
+    /** Returns a new instance of the Key where the default value is null.
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> FactoryProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type, int index) {
         return new FactoryProperty<UJO,VALUE>(name, type, index);
     }
 
-    /** Returns a new instance of property where the default value is null.
+    /** Returns a new instance of the Key where the default value is null.
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> FactoryProperty<UJO,VALUE> newInstance(String name, Class<VALUE> type) {

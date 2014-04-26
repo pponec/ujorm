@@ -25,13 +25,13 @@ import org.ujorm.orm.Session;
 import static org.ujorm.extensions.PropertyModifier.*;
 import static org.ujorm.orm.ao.LazyLoading.*;
 
-/** The special property pro LazyLoadiing */
+/** The special Key pro LazyLoadiing */
 public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(OrmProperty.class);
 
-    // /** Is the property type of Relation  */
+    // /** Is the Key type of Relation  */
     // private boolean relation;
 
     public OrmProperty(int index) {
@@ -99,7 +99,7 @@ public class OrmProperty<U extends OrmUjo, VALUE> extends Property<U, VALUE> {
                 } else {
                     result = mySession.loadInternal(this, ((ForeignKey) result).getValue(), true);
                 }
-                ujo.writeSession(null); // Replacing of the foreign key is not a property change
+                ujo.writeSession(null); // Replacing of the foreign key is not a key change
                 ujo.writeValue(this, result);
                 ujo.writeSession(mySession); // Restore the Session
             } else if (result != null

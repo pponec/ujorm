@@ -22,7 +22,7 @@ import org.ujorm.Ujo;
 import org.ujorm.Key;
 
 /**
- * This is an <strong>extended Ujo</strong> interface designed for a more conventional property access evaluated by developers.
+ * This is an <strong>extended Ujo</strong> interface designed for a more conventional key access evaluated by developers.
  * Most of the functions have been a similar reason like methods in the Key class.
  * The new solution allows to the developers to chain more keys according to 
  * a model of a some new popular languages.
@@ -77,25 +77,25 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
 
     // ------ LIST ----------
     
-    /** Returns a count of Items. If the property is null, method returns 0. 
+    /** Returns a count of Items. If the key is null, method returns 0. 
      * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() .
      */
     public <UJO extends UJO_IMPL, ITEM> int getItemCount
-        ( ListKey<UJO,ITEM> property);
+        ( ListKey<UJO,ITEM> key);
 
     
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.addItem(...) .
      */
     public <UJO extends UJO_IMPL, ITEM> Ujo add
-        ( ListKey<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> key
         , ITEM value);
 
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.setItem(...) .
      */
     public <UJO extends UJO_IMPL, ITEM> Ujo set
-        ( ListKey<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> key
         , int index
         , ITEM value);
     
@@ -103,24 +103,24 @@ public interface UjoExt<UJO_IMPL extends UjoExt> extends UjoMiddle<UJO_IMPL> {
      * <br>Inside is called a method ListUjoPropertyCommon.getItem(...) .
      */
     public <UJO extends UJO_IMPL, ITEM> ITEM get
-        ( ListKey<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> key
         , int index);
     
     /** Get Value */
     public <UJO extends UJO_IMPL, ITEM> ITEM remove
-        ( ListKey<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> key
         , int index);
 
     /** Returns a not null List. If original list value is empty, the new List is created.
      * <br>Inside is called a method ListUjoPropertyCommon.getList() .
      */
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( ListKey<UJO,ITEM> property
+        ( ListKey<UJO,ITEM> key
         );
 
 
-    /** Indicates whether a parameter value "equal to" property default value. */
+    /** Indicates whether a parameter value "equal to" key default value. */
     public <UJO extends UJO_IMPL, VALUE> boolean isDefault
-        ( Key<UJO, VALUE> property);
+        ( Key<UJO, VALUE> key);
     
 }

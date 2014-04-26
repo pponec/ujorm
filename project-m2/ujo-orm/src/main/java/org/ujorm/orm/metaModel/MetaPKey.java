@@ -43,7 +43,7 @@ final public class MetaPKey extends AbstractMetaModel {
     /** DB columns */
     public static final ListKey<MetaPKey,MetaColumn> COLUMNS = fa.newListKey("columns");
 
-    /** The property initialization */
+    /** The key initialization */
     static{fa.lock();}
 
     public MetaPKey(MetaTable table) {
@@ -73,27 +73,27 @@ final public class MetaPKey extends AbstractMetaModel {
         if (count==1) {
 
             MetaColumn column = COLUMNS.getItem(this, 0);
-            Key property = column.getKey();
-            if (property.of(bo)!=null) {
+            Key key = column.getKey();
+            if (key.of(bo)!=null) {
                 return false;
             }
 
             final long value = TABLE.of(this).getSequencer().nextValue(session);
 
             switch (column.getTypeCode()) {
-                case TypeService.LONG    : bo.writeValue(property,         value); return true;
-                case TypeService.INT     : bo.writeValue(property, (int  ) value); return true;
-                case TypeService.SHORT   : bo.writeValue(property, (short) value); return true;
-                case TypeService.BYTE    : bo.writeValue(property, (byte ) value); return true;
-                case TypeService.BIG_INTE: bo.writeValue(property, BigInteger.valueOf(value)); return true;
-                case TypeService.STRING  : bo.writeValue(property, String.valueOf(value)); return true;
+                case TypeService.LONG    : bo.writeValue(key,         value); return true;
+                case TypeService.INT     : bo.writeValue(key, (int  ) value); return true;
+                case TypeService.SHORT   : bo.writeValue(key, (short) value); return true;
+                case TypeService.BYTE    : bo.writeValue(key, (byte ) value); return true;
+                case TypeService.BIG_INTE: bo.writeValue(key, BigInteger.valueOf(value)); return true;
+                case TypeService.STRING  : bo.writeValue(key, String.valueOf(value)); return true;
                 default: return false;
             }
         } else {
             for (int i = 0; i < count; i++) {
                 final MetaColumn column = COLUMNS.getItem(this, i);
-                final Key property = column.getKey();
-                if (property.of(bo) == null) {
+                final Key key = column.getKey();
+                if (key.of(bo) == null) {
                     String msg = "Table " + bo + " must have defined only one primary key type of Long, Integer, Short, Byte, BigInteger or String for an auto-increment support";
                     throw new IllegalArgumentException(msg);
                 }

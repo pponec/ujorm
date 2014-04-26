@@ -60,9 +60,9 @@ public @interface Db {
      * @see Table#readOnly()
      */
     boolean readOnly() default false;
-    /** Parameter to controll how the DLL (Data Definition Language) statmenets will be used
+    /** Parameter to control how the DLL (Data Definition Language) statements will be used
      * to a defining data structure modification.
-     * The value can be defined a parent, so the hiearchy from the parrent to a child is:
+     * The value can be defined a parent, so the hierarchy from the parent to a child is:
      * <ul>
      *   <li>Meta Parameters</li>
      *   <li>Database</li>

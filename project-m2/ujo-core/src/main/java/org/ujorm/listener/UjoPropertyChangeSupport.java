@@ -61,11 +61,11 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
         this.before = before;
     }
     
-    /** Get a not null listener list for the required property. 
+    /** Get a not null listener list for the required key. 
      * <br>The method creates an empty list if the one was not found.
      */
     private final List<UjoPropertyChangeListener> getListeners
-        ( final Key property
+        ( final Key key
         , final boolean before
         ){
         
@@ -83,52 +83,52 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
             }
         }
         
-        List<UjoPropertyChangeListener> result = listenerMap.get(property);
+        List<UjoPropertyChangeListener> result = listenerMap.get(key);
         
         if (result==null) {
             result = new ArrayList<UjoPropertyChangeListener>(1);
-            listenerMap.put(property, result);
+            listenerMap.put(key, result);
         }
         return result;
     }
     
     /** Add listener */
     public boolean addPropertyChangeListener
-        ( final Key property
+        ( final Key key
         , final Boolean before
         , final UjoPropertyChangeListener listener
         ){
         testSupport(before);
         
         if (before==null) {
-            boolean b1 = getListeners(property, true ).add(listener);
-            boolean b2 = getListeners(property, false).add(listener);
+            boolean b1 = getListeners(key, true ).add(listener);
+            boolean b2 = getListeners(key, false).add(listener);
             return  b1 && b2;
         } else {
-            return getListeners(property, before).add(listener);
+            return getListeners(key, before).add(listener);
         }
     }
 
     /** Remove listener */
     public boolean removePropertyChangeListener
-        ( final Key property
+        ( final Key key
         , final Boolean before
         , final UjoPropertyChangeListener listener
         ){
         testSupport(before);
         
         if (before==null) {
-            boolean b1 = getListeners(property, true ).remove(listener);
-            boolean b2 = getListeners(property, false).remove(listener);
+            boolean b1 = getListeners(key, true ).remove(listener);
+            boolean b2 = getListeners(key, false).remove(listener);
             return  b1 && b2;
         } else {
-            return getListeners(property, before).remove(listener);
+            return getListeners(key, before).remove(listener);
         }
     }
     
-    /** Fire event for the property */
+    /** Fire event for the key */
     public void firePropertyChange
-        ( final Key property
+        ( final Key key
         , final Object oldValue
         , final Object newValue
         , final boolean beforeChange
@@ -141,10 +141,10 @@ public class UjoPropertyChangeSupport /*<Ujo extends Ujo> implements EventRegist
           
           if (listenerMap==null) { return; }
         
-          List<UjoPropertyChangeListener> listeners = listenerMap.get(property);
+          List<UjoPropertyChangeListener> listeners = listenerMap.get(key);
         
           if (listeners!=null) {
-             UjoPropertyChangeEvent event = new UjoPropertyChangeEvent(source, property, oldValue, newValue, beforeChange);
+             UjoPropertyChangeEvent event = new UjoPropertyChangeEvent(source, key, oldValue, newValue, beforeChange);
             
              for (UjoPropertyChangeListener listener : listeners) {
                  listener.propertyChange(event);

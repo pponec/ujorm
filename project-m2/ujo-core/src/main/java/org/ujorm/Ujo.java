@@ -56,49 +56,49 @@ public interface Ujo {
      * {@link Key#getValue(org.ujorm.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
-     * <br />NOTE: A reaction on an incorrect property depends on the implementation.
+     * <br />NOTE: A reaction on an incorrect key depends on the implementation.
      *
-     * @param property Property must be a direct type only!
+     * @param key The Key must be a direct type only!
      * @return Property value
      * @see Key#getValue(org.ujorm.Ujo)
      * @see Key#isDirect()
      */
-    public Object readValue(Key<?,?> property);
+    public Object readValue(Key<?,?> key);
 
 
     /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
      * {@link Key#setValue(Ujo,Object)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
-     * <br>NOTE: A reaction on an incorrect property depends on the implementation.
+     * <br>NOTE: A reaction on an incorrect key depends on the implementation.
      *
-     * @param property Property must be a direct type only!
+     * @param key Property must be a direct type only!
      * @see Key#setValue(Ujo,Object)
      * @see Key#isDirect()
      */
-    public void writeValue(Key<?,?> property, Object value);
+    public void writeValue(Key<?,?> key, Object value);
 
     /** Returns all direct keys.
-     * There is recommended to be a "name" of each property is unique (but it is NOT a necessary condition).
+     * There is recommended to be a "name" of each key is unique (but it is NOT a necessary condition).
      * Two attributes with the same "name" must be demarked by a different annotation {@link XmlElementBody} for a XML export.
      *
-     * <br>An index property in the array UJO must be unique a continuous, an order of property array depends on an implementation of UJO object.
+     * <br>An index key in the array UJO must be unique a continuous, an order of key array depends on an implementation of UJO object.
      * @see Key#isDirect()
      */
     public <T extends Ujo> KeyList<T> readKeys();
 
     /**
-     * Get an authorization of the property for different actions.
+     * Get an authorization of the key for different actions.
      * <br>There is recommended to return a true value for all actions by a default.
-     * <br>Note: An implementation may return the original property array so it is possible to change some original property in the array from an external code.
+     * <br>Note: An implementation may return the original key array so it is possible to change some original key in the array from an external code.
      *
      * @param action Type of request. See constant(s) UjoAction.ACTION_* for more information.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY.
-     * @param property A property of the Ujo
-     * @param value A property value
-     * @return Returns a TRUE value in case the property is authorized successfully.
+     * @param key A key of the Ujo
+     * @param value A key value
+     * @return Returns a TRUE value in case the key is authorized successfully.
      * @see UjoAction
      */
-    public boolean readAuthorization(UjoAction action, Key<?,?> property, Object value);
+    public boolean readAuthorization(UjoAction action, Key<?,?> key, Object value);
 
 }

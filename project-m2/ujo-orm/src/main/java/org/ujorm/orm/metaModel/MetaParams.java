@@ -120,7 +120,7 @@ final public class MetaParams extends AbstractMetaModel {
      */
     public static final Key<MetaParams,Boolean> SEQUENCE_SCHEMA_SYMBOL = f.newKey("sequenceSchemaSymbol", false);
 
-    /** Any action type or CREATE, UPDATE, DELETE on inheritance objects calls the same action to its 'parrent' object.
+    /** Any action type or CREATE, UPDATE, DELETE on inheritance objects calls the same action to its 'parent' object.
      * If the mode is off than you must take care of all its parents in the code handy.
      * The default falue is TRUE.<br />
      * Note: the parameter does not affect the opearations
@@ -166,7 +166,7 @@ final public class MetaParams extends AbstractMetaModel {
     @Transient
     public static final Key<MetaParams,Object> APPL_CONTEXT = f.newKey("applContext");
 
-    /** The property initialization */
+    /** The key initialization */
     static{f.lock();}
 
     /** The type service cache */
@@ -180,18 +180,18 @@ final public class MetaParams extends AbstractMetaModel {
     }
 
     @Override
-    public void writeValue(Key property, Object value) {
+    public void writeValue(Key key, Object value) {
 
         // Sequence validation:
-        if (SEQUENCE_CACHE==property) {
+        if (SEQUENCE_CACHE==key) {
             int val = (Integer) value;
             if (val<1) {
                 value = 1;
-                final String msg = "The smallest possible value of property '"+property+"' is 1, not " + val;
+                final String msg = "The smallest possible value of key '"+key+"' is 1, not " + val;
                 LOGGER.log(UjoLogger.WARN, msg);
             }
         }
-        super.writeValue(property, value);
+        super.writeValue(key, value);
     }
 
     /** Returns a converter instance.
@@ -218,8 +218,8 @@ final public class MetaParams extends AbstractMetaModel {
 
     /** Set a parameter value */
     @SuppressWarnings("unchecked")
-    public <UJO extends MetaParams, VALUE> MetaParams set(Key<UJO, VALUE> property, VALUE value) {
-        property.setValue((UJO) this,value);
+    public <UJO extends MetaParams, VALUE> MetaParams set(Key<UJO, VALUE> key, VALUE value) {
+        key.setValue((UJO) this,value);
         return this;
     }
 

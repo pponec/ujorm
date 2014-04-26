@@ -56,7 +56,7 @@ public @interface Column {
     /** A name of the constraint for the case a foreign key */
     String constraintName() default Table.NULL;
     /** Convert, save and read an application data to/from the ResultSet.
-     * If the property have got a default value, so the instance for the real converter will be defined 
+     * If the key have got a default value, so the instance for the real converter will be defined 
      * along the parameter {@link org.ujorm.orm.metaModel.MetaParams.MetaParams#TYPE_SERVICE}.
      * @see ITypeService
      */

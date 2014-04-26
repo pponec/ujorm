@@ -124,8 +124,8 @@ public class JdbcStatement {
     public void assignValues(OrmUjo table, List<MetaColumn> columns) throws SQLException {
         for (MetaColumn column : columns) {
             if (column.isForeignKey()) {
-                Key property = column.getKey();
-                Object value = table!=null ? property.of(table) : null ;
+                Key key = column.getKey();
+                Object value = table!=null ? key.of(table) : null ;
                 assignValues((OrmUjo) value, column.getForeignColumns());
             } else if (column.isColumn()) {
                 assignValue(table, column);
@@ -151,18 +151,18 @@ public class JdbcStatement {
         for (int i=0, max=params.getCount(); i<max; i++) {
             final Object value = params.getParameter(i);
             final Class type = value!=null ? value.getClass() : Void.class;
-            final Property property = Property.of("[sqlParameter]", type);
+            final Property key = Property.of("[sqlParameter]", type);
             final MetaColumn column = new MetaColumn(typeService);
 
             MetaColumn.TABLE.setValue(column, query.getTableModel());
-            MetaColumn.TABLE_KEY.setValue(column, property);
+            MetaColumn.TABLE_KEY.setValue(column, key);
             query.getTableModel().getDatabase().changeDbType(column);
             query.getTableModel().getDatabase().changeDbLength(column);
             column.initTypeCode();
 
             if (logValues) {
                 String textValue = UjoManager.getInstance().encodeValue(value, false);
-                logValue(textValue, property);
+                logValue(textValue, key);
             }
 
             try {
@@ -170,7 +170,7 @@ public class JdbcStatement {
                 column.getConverter().setValue(column, ps, value, parameterPointer);
             } catch (Throwable e) {
                 String textValue = UjoManager.getInstance().encodeValue(value, false);
-                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", property.getType().getSimpleName(), column, parameterPointer, textValue);
+                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", key.getType().getSimpleName(), column, parameterPointer, textValue);
                 throw new IllegalStateException(msg, e);
             }
         }
@@ -196,12 +196,12 @@ public class JdbcStatement {
                     for (int j=0; j<ujoValues.length; j++) {
                         final Object ujoValue = ujoValues[j];
                         if (isUjo) {
-                            // if instance is OrmUjo, then assing value of key
+                            // if instance is OrmUjo, then assign value of key
                             final OrmUjo bo = (OrmUjo) ujoValue;
                             final Object rValue = rColumn.getValue(bo);
                             rValues[j] = rValue;
                         } else {
-                            // if instance is not OrmUjo, then assing directly value (it's key)
+                            // if instance is not OrmUjo, then assign directly value (it's key)
                             rValues[j] = ujoValue;
                         }
                     }
@@ -226,8 +226,8 @@ public class JdbcStatement {
     @SuppressWarnings("unchecked")
     public void assignValue(final OrmUjo table, final MetaColumn column) throws SQLException {
 
-        final Key property = column.getKey();
-        final Object value = table!=null ? property.of(table) : null ;
+        final Key key = column.getKey();
+        final Object value = table!=null ? key.of(table) : null ;
 
         assignValue(column, value, table);
     }
@@ -241,16 +241,16 @@ public class JdbcStatement {
         , final OrmUjo bo
         ) throws SQLException {
 
-        final Key property = column.getKey();
+        final Key key = column.getKey();
 
         if (logValues) {
             if (bo != null) {
-                logValue(bo, property);
+                logValue(bo, key);
             } else {
                 String textValue = value instanceof Object[]
                         ? arrayToString( (Object[]) value)
                         : UjoManager.getInstance().encodeValue(value, false) ;
-                logValue(textValue, property);
+                logValue(textValue, key);
             }
         }
 
@@ -264,7 +264,7 @@ public class JdbcStatement {
             }
         } catch (Throwable e) {
             String textValue = bo!=null
-                ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)
+                ? UjoManager.getInstance().getText(bo, key, UjoAction.DUMMY)
                 : UjoManager.getInstance().encodeValue(value, false)
                 ;
             String msg = String.format
@@ -287,20 +287,20 @@ public class JdbcStatement {
         Object value = null;
 
         for (MetaColumn metaParam : MetaProcedure.PARAMETERS.getList(procedure)) {
-            final Key property = metaParam.getKey();
+            final Key key = metaParam.getKey();
 
-            if (!property.isTypeOf(Void.class)) try {
+            if (!key.isTypeOf(Void.class)) try {
 
                 ++parameterPointer;
                 int sqlType = MetaColumn.DB_TYPE.of(metaParam).getSqlType();
 
                 if (procedure.isInput(metaParam)) {
-                    value = property.of(bo);
+                    value = key.of(bo);
                     metaParam.getConverter().setValue(metaParam, ps, value, parameterPointer);
 
                     if (logValues) {
                         String textValue = UjoManager.getInstance().encodeValue(value, false);
-                        logValue(textValue, property);
+                        logValue(textValue, key);
                     }
 
                 }
@@ -310,9 +310,9 @@ public class JdbcStatement {
 
             } catch (Throwable e) {
                 String textValue = bo != null
-                    ? UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY)
+                    ? UjoManager.getInstance().getText(bo, key, UjoAction.DUMMY)
                     : UjoManager.getInstance().encodeValue(value, false);
-                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", bo != null ? bo.getClass().getSimpleName() : "null", property, parameterPointer, textValue);
+                String msg = String.format("table: %s, column %s, columnOffset: %d, value: %s", bo != null ? bo.getClass().getSimpleName() : "null", key, parameterPointer, textValue);
                 throw new IllegalStateException(msg, e);
             }
         }
@@ -343,15 +343,15 @@ public class JdbcStatement {
     }
 
     /** Log a value value into a text format. */
-    protected void logValue(final Ujo bo, final Key property) {
-        String textValue = UjoManager.getInstance().getText(bo, property, UjoAction.DUMMY);
-        logValue(textValue, property);
+    protected void logValue(final Ujo bo, final Key key) {
+        String textValue = UjoManager.getInstance().getText(bo, key, UjoAction.DUMMY);
+        logValue(textValue, key);
     }
 
     /** Log a value value into a text format. */
-    protected void logValue(final String textValue, final Key property) {
-        final boolean quotaType = property.isTypeOf(CharSequence.class)
-                               || property.isTypeOf(java.util.Date.class)
+    protected void logValue(final String textValue, final Key key) {
+        final boolean quotaType = key.isTypeOf(CharSequence.class)
+                               || key.isTypeOf(java.util.Date.class)
                                 ;
         final String textSeparator = quotaType ? "\'" : "";
 

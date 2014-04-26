@@ -30,9 +30,9 @@ public interface ExtendedOrmUjo<UJO_IMPL extends Ujo> extends OrmUjo {
      * If the lazy object is loaded, the method will need the Session to build the ForeignKey instance.
      * <br>NOTE: The method is designed for developers only, the Ujorm doesn't call it newer.
      * @return If no related object is available, then the result has the NULL value.
-     * @throws IllegalStateException Method throws an exception for a wrong property type.
-     * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
+     * @throws IllegalStateException Method throws an exception for a wrong key type.
+     * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the key.
      */
-    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> property) throws IllegalStateException;
+    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException;
 
 }

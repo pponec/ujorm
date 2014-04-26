@@ -30,7 +30,7 @@ import org.ujorm.wicket.KeyModel;
 
 /**
  * A convenience implementation of {@link ICellPopulator} that adds a label that will display the
- * value of the specified property. Non-string properties will be converted to a string before
+ * value of the specified key. Non-string properties will be converted to a string before
  * display.
  * <p>
  * Example:
@@ -58,14 +58,14 @@ import org.ujorm.wicket.KeyModel;
 public class KeyPopulator<UJO extends Ujo,T> implements ICellPopulator<UJO>, IColumn<UJO,Key<UJO,T>> {
 
     private static final long serialVersionUID = 1L;
-    private final KeyRing<UJO> property;
+    private final KeyRing<UJO> key;
 
-    public KeyPopulator(KeyRing<UJO> property) {
-        this.property = property;
+    public KeyPopulator(KeyRing<UJO> key) {
+        this.key = key;
     }
 
-    public KeyPopulator(Key<UJO, ?> property) {
-        this((KeyRing<UJO>) KeyRing.of(property));
+    public KeyPopulator(Key<UJO, ?> key) {
+        this((KeyRing<UJO>) KeyRing.of(key));
     }
 
     /**
@@ -81,18 +81,18 @@ public class KeyPopulator<UJO extends Ujo,T> implements ICellPopulator<UJO>, ICo
      */
     @Override
     public void populateItem(final Item<ICellPopulator<UJO>> cellItem, final String componentId, final IModel<UJO> rowModel) {
-        cellItem.add(new Label(componentId, KeyModel.of(rowModel.getObject(), (Key<UJO, ?>) property.getFirstKey())));
+        cellItem.add(new Label(componentId, KeyModel.of(rowModel.getObject(), (Key<UJO, ?>) key.getFirstKey())));
     }
     
     @Override
     public Component getHeader(String componentId) {
-        String id = property.getFirstKey().getName();
+        String id = key.getFirstKey().getName();
         return new Label(id, id);
     }
 
     @Override
     public Key<UJO,T> getSortProperty() {
-        return (Key<UJO, T>) property.getFirstKey();
+        return (Key<UJO, T>) key.getFirstKey();
     }
 
     @Override

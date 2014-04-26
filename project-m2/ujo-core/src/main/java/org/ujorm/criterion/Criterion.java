@@ -154,9 +154,9 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
         return new BinaryCriterion<UJO>(this, BinaryOperator.NOT, this);
     }
 
-    /** Returns the left node of the parrent. */
+    /** Returns the left node of the parent. */
     abstract public Object getLeftNode();
-    /** Returns the right node of the parrent */
+    /** Returns the right node of the parent */
     abstract public Object getRightNode();
     /** Returns an operator */
     abstract public AbstractOperator getOperator();
@@ -182,7 +182,7 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
 
     /**
      * New criterion instance
-     * @param property Key
+     * @param key Key
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -192,16 +192,16 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      * @return A new criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> where
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Operator operator
         , TYPE value
         ) {
-        return new ValueCriterion<UJO>(property, operator, value);
+        return new ValueCriterion<UJO>(key, operator, value);
     }
 
     /**
      * New criterion instance
-     * @param property Key
+     * @param key Key
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -211,16 +211,16 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      * @return A new criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> where
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Operator operator
         , Key<?,TYPE> value
         ) {
-        return new ValueCriterion<UJO>(property, operator, value);
+        return new ValueCriterion<UJO>(key, operator, value);
     }
 
     /**
      * New equals instance
-     * @param property Key
+     * @param key Key
      * <ul>
      * <li>TYPE - parameter value</li>
      * <li>List&lt;TYPE&gt; - list of values</li>
@@ -229,111 +229,111 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      * @return A the new immutable Criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> where
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , TYPE value
         ) {
-        return new ValueCriterion<UJO>(property, null, value);
+        return new ValueCriterion<UJO>(key, null, value);
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param property A direct or indeirect Ujo property
+     * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion.
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereIn
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Collection<TYPE> list
         ) {
 
         return list.isEmpty()
-                ? Criterion.constant(property, false)
-                : new ValueCriterion<UJO>(property, Operator.IN, list.toArray())
+                ? Criterion.constant(key, false)
+                : new ValueCriterion<UJO>(key, Operator.IN, list.toArray())
                 ;
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param property A direct or indeirect Ujo property
+     * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotIn
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Collection<TYPE> list
         ) {
         return list.isEmpty()
-                ? Criterion.constant(property, true)
-                : new ValueCriterion<UJO>(property, Operator.NOT_IN, list.toArray())
+                ? Criterion.constant(key, true)
+                : new ValueCriterion<UJO>(key, Operator.NOT_IN, list.toArray())
                 ;
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants
-     * @param property A reference to a related entity
+     * @param key A reference to a related entity
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereIn
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , TYPE... list
         ) {
         return list.length==0
-                ? Criterion.constant(property, false)
-                : new ValueCriterion<UJO>(property, Operator.IN, list);
+                ? Criterion.constant(key, false)
+                : new ValueCriterion<UJO>(key, Operator.IN, list);
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param property A property direct or indeirect Ujo property
+     * @param key A key direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotIn
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , TYPE... list
         ) {
         return list.length==0
-                ? Criterion.constant(property, true)
-                : new ValueCriterion<UJO>(property, Operator.NOT_IN, list)
+                ? Criterion.constant(key, true)
+                : new ValueCriterion<UJO>(key, Operator.NOT_IN, list)
                 ;
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param property A direct or indeirect Ujo property
+     * @param key A direct or indirect Ujo key
      * @param list A collection of the UJO values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @param relatedKey The one key related to the one attribute of TYPE object.
      * @return A the new immutable Criterion.
      */
     public static <UJO extends Ujo, ITEM extends Ujo, TYPE> Criterion<UJO> whereIn
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Collection<ITEM> list
         , Key<ITEM, TYPE> relatedKey
         ) {
 
-        return whereIn(true, property, list, relatedKey);
+        return whereIn(true, key, list, relatedKey);
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param property A direct or indeirect Ujo property
+     * @param key A direct or indirect Ujo key
      * @param list A collection of the UJO values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @param relatedKey The one key related to the one attribute of TYPE object.
      * @return A the new immutable Criterion.
      */
     public static <UJO extends Ujo, ITEM extends Ujo, TYPE> Criterion<UJO> whereNotIn
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Collection<ITEM> list
         , Key<ITEM, TYPE> relatedKey
         ) {
 
-        return whereIn(false, property, list, relatedKey);
+        return whereIn(false, key, list, relatedKey);
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param property A direct or indeirect Ujo property
+     * @param key A direct or indirect Ujo key
      * @param list A collection of the UJO values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @param relatedKey The one key related to the one attribute of TYPE object.
      * @param positive The false value uses the NOT_IN operator.
@@ -341,20 +341,20 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      */
     private static <UJO extends Ujo, ITEM extends Ujo, TYPE> Criterion<UJO> whereIn
         ( boolean positive
-        , Key<UJO,TYPE> property
+        , Key<UJO,TYPE> key
         , Collection<ITEM> list
         , Key<ITEM, TYPE> relatedKey
         ) {
 
         if (list.isEmpty()) {
-            return Criterion.constant(property, !positive);
+            return Criterion.constant(key, !positive);
         } else {
             final Iterator<ITEM> it = list.iterator();
             final Object[] values = new Object[list.size()];
             for (int i = 0, max = values.length; i < max; i++) {
                 values[i] = relatedKey.of(it.next());
             }
-            return new ValueCriterion<UJO>(property
+            return new ValueCriterion<UJO>(key
                     , positive ? Operator.IN : Operator.NOT_IN
                     , values
                     );
@@ -364,43 +364,43 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
 
     /**
      * New equals instance
-     * @param property Key
-     * @param value Value or Key can be type a direct of indirect (for a relation) property
+     * @param key Key
+     * @param value Value or Key can be type a direct of indirect (for a relation) key
      * @return A the new immutable Criterion
      */
     public static <UJO extends Ujo, TYPE> Criterion<UJO> where
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Key<UJO,TYPE> value
         ) {
-        return new ValueCriterion<UJO>(property, null, value);
+        return new ValueCriterion<UJO>(key, null, value);
     }
 
     /**
-     * Create new Criterion where a property value equals to the NULL.
+     * Create new Criterion where a key value equals to the NULL.
      * The method is a shortcut to the next full expression:
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
-     * for the String property type in this case.
-     * @param property Key
+     * for the String key type in this case.
+     * @param key Key
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNull(Key<UJO,TYPE> property) {
-        return new ValueCriterion<UJO>(property, Operator.EQ, (TYPE)null);
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNull(Key<UJO,TYPE> key) {
+        return new ValueCriterion<UJO>(key, Operator.EQ, (TYPE)null);
     }
 
     /**
-     * Create new Criterion where a property value not equals to the NULL.
+     * Create new Criterion where a key value not equals to the NULL.
      * The method is a shortcut to the next full expression:
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
-     * for the String property type in this case.
-     * @param property Key
+     * for the String key type in this case.
+     * @param key Key
      * @see #whereNull(org.ujorm.Key)
      * @see Operator#NOT_EQ
      */
-    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotNull(Key<UJO,TYPE> property) {
-        return new ValueCriterion<UJO>(property, Operator.NOT_EQ, (TYPE)null);
+    public static <UJO extends Ujo, TYPE> Criterion<UJO> whereNotNull(Key<UJO,TYPE> key) {
+        return new ValueCriterion<UJO>(key, Operator.NOT_EQ, (TYPE)null);
     }
 
     /** This is an constane criterion independed on an entity.
@@ -418,12 +418,12 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
             );
     }
 
-    /** This is a special constant criterion independed on the property or the ujo entity. A result is the same like the parameter constant allways.
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+    /** This is a special constant criterion independed on the key or the ujo entity. A result is the same like the parameter constant allways.
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @see Operator#XFIXED
      */
-    public static <UJO extends Ujo> Criterion<UJO> constant(Key<UJO,?> property, boolean constant) {
-        return new ValueCriterion<UJO>(property, Operator.XFIXED, constant);
+    public static <UJO extends Ujo> Criterion<UJO> constant(Key<UJO,?> key, boolean constant) {
+        return new ValueCriterion<UJO>(key, Operator.XFIXED, constant);
     }
 
     /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
@@ -436,13 +436,13 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
-    public static <UJO extends Ujo> Criterion<UJO> forSql(Key<UJO,?> property, String sqlCondition) {
-        return new ValueCriterion<UJO>(property, Operator.XSQL, sqlCondition);
+    public static <UJO extends Ujo> Criterion<UJO> forSql(Key<UJO,?> key, String sqlCondition) {
+        return new ValueCriterion<UJO>(key, Operator.XSQL, sqlCondition);
     }
 
     /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
@@ -455,15 +455,15 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
      * @param value a codition value
      * A substring {@code {1}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
-    public static <UJO extends Ujo, VALUE> Criterion<UJO> forSql(Key<UJO,VALUE> property, String sqlTemplate, VALUE value) {
-        return new ValueCriterion<UJO>(property, Operator.XSQL, new TemplateValue(sqlTemplate, value));
+    public static <UJO extends Ujo, VALUE> Criterion<UJO> forSql(Key<UJO,VALUE> key, String sqlTemplate, VALUE value) {
+        return new ValueCriterion<UJO>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
     }
 
     /** The method creates a new Criterion for a native condition (called Native Criterion) in SQL statejemt format.
@@ -476,31 +476,31 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
      * @param value a codition value, array, list or an another key
      * A substring {@code {1}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
-    public static <UJO extends Ujo, VALUE> Criterion<UJO> forSqlUnchecked(Key<UJO,VALUE> property, String sqlTemplate, Object value) {
-        return new ValueCriterion<UJO>(property, Operator.XSQL, new TemplateValue(sqlTemplate, value));
+    public static <UJO extends Ujo, VALUE> Criterion<UJO> forSqlUnchecked(Key<UJO,VALUE> key, String sqlTemplate, Object value) {
+        return new ValueCriterion<UJO>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
     }
 
-    /** This is a constant criterion independed on the property value or the ujo entity.
+    /** This is a constant criterion independed on the key value or the ujo entity.
      *  The method evaluate(ujo) returns TRUE always.
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
-    public static <UJO extends Ujo> Criterion<UJO> forAll(Key<UJO,?> property) {
-        return constant(property, true);
+    public static <UJO extends Ujo> Criterion<UJO> forAll(Key<UJO,?> key) {
+        return constant(key, true);
     }
 
-    /** This is a constant criterion independed on the property value or the ujo entity.
+    /** This is a constant criterion independed on the key value or the ujo entity.
      *  The  method evaluate(method) returns FALSE always.
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
-    public static <UJO extends Ujo> Criterion<UJO> forNone(Key<UJO,?> property) {
-        return constant(property, false);
+    public static <UJO extends Ujo> Criterion<UJO> forNone(Key<UJO,?> key) {
+        return constant(key, false);
     }
 
     // ----------------------- DEPRECATED -----------------------
@@ -508,7 +508,7 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
 
     /**
      * New criterion instance
-     * @param property Key
+     * @param key Key
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -520,16 +520,16 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      */
     @Deprecated
     public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Operator operator
         , TYPE value
         ) {
-        return where(property, operator, value);
+        return where(key, operator, value);
     }
 
     /**
      * New criterion instance
-     * @param property Key
+     * @param key Key
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -541,16 +541,16 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      */
     @Deprecated
     public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Operator operator
         , Key<?,TYPE> value
         ) {
-        return where(property, operator, value);
+        return where(key, operator, value);
     }
 
     /**
      * New equals instance
-     * @param property Key
+     * @param key Key
      * <ul>
      * <li>TYPE - parameter value</li>
      * <li>List&lt;TYPE&gt; - list of values</li>
@@ -561,25 +561,25 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
      */
     @Deprecated
     public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , TYPE value
         ) {
-        return where(property, value);
+        return where(key, value);
     }
 
     /**
      * New equals instance
-     * @param property Key
-     * @param value Value or Key can be type a direct of indirect (for a relation) property
+     * @param key Key
+     * @param value Value or Key can be type a direct of indirect (for a relation) key
      * @return A the new immutable Criterion
      * @deprecated See the {@link Criterion#where(org.ujorm.Key, org.ujorm.criterion.Operator, java.lang.Object) where(...) } method.
      */
     @Deprecated
     public static <UJO extends Ujo, TYPE> Criterion<UJO> newInstance
-        ( Key<UJO,TYPE> property
+        ( Key<UJO,TYPE> key
         , Key<UJO,TYPE> value
         ) {
-        return where(property, value);
+        return where(key, value);
     }
 
 }

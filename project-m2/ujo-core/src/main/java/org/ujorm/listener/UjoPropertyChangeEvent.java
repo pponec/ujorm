@@ -21,7 +21,7 @@ import org.ujorm.Key;
 
 /**
  * A "PropertyChange" event gets delivered whenever a bean changes a "bound"
- * or "constrained" property.  A PropertyChangeEvent object is sent as an
+ * or "constrained" key.  A PropertyChangeEvent object is sent as an
  * argument to the PropertyChangeListener and VetoableChangeListener methods.
  * <P>See more information in a PropertyChangeEvent.
  * @since ujo-tool
@@ -29,24 +29,24 @@ import org.ujorm.Key;
  */
 public class UjoPropertyChangeEvent extends PropertyChangeEvent {
     
-    final Key property;
+    final Key key;
     final boolean beforeChange;
 
     public UjoPropertyChangeEvent
         ( final Object source
-        , final Key property
+        , final Key key
         , final Object oldValue
         , final Object newValue
         , final boolean beforeChange
         ){
-        super(source, property.getName(), oldValue, newValue);
-        this.property = property;
+        super(source, key.getName(), oldValue, newValue);
+        this.key = key;
         this.beforeChange = beforeChange;
     }
 
-    /** Returns property */
+    /** Returns key */
     public Key getProperty() {
-        return property;
+        return key;
     }
 
     /** Before change return true else returns false */

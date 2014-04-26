@@ -27,20 +27,20 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
     /** Object model */
     private final UJO modelObject;
     /** Serializable key. */
-    private final KeyRing<UJO> property;
+    private final KeyRing<UJO> key;
 
     /**
-     * Protected Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a property expression
+     * Protected Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a key expression
      * that works on the given model. To create instance use the method {@link #of(org.ujorm.Ujo, org.ujorm.Key of(...)) }
      *
      * @param modelObject The model object, which may or may not implement IModel
-     * @param property Instance of the Key
-     * @see #of(org.ujorm.Ujo, org.ujorm.Key) 
+     * @param key Instance of the Key
+     * @see #of(org.ujorm.Ujo, org.ujorm.Key)
      */
     @SuppressWarnings("unchecked")
-    protected KeyModel(final UJO modelObject, final Key<UJO, T> property) {
+    protected KeyModel(final UJO modelObject, final Key<UJO, T> key) {
         this.modelObject = modelObject;
-        this.property = KeyRing.of(property);
+        this.key = KeyRing.of(key);
     }
 
     /**
@@ -48,23 +48,23 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
      */
     @Override
     public String toString() {
-        return property.toString();
+        return key.toString();
     }
 
     /** Rerurn Key
      * @deprecated Use the {@link #getKey()}.
-     */    
+     */
     @Deprecated
     final public Key<UJO, T> getProperty() {
         return getKey();
     }
-    
+
     /**
      * Rerurn Key
      */
     @SuppressWarnings("unchecked")
     final public Key<UJO, T> getKey() {
-        return (Key<UJO, T>) property.getFirstKey();
+        return (Key<UJO, T>) key.getFirstKey();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
 
     /** Return a class of the base domainObject */
     public Class<? super UJO> getBaseClass() {
-        return property.getType();
+        return key.getType();
     }
 
     @Override
@@ -90,41 +90,41 @@ public class KeyModel<UJO extends Ujo, T> implements IModel<T> {
 
     /**
      * Type-infering factory method
-     * @param parent object that contains the property
-     * @param property property path
+     * @param parent object that contains the key
+     * @param key key path
      * @return {@link PropertyModel} instance
      */
-    public static <UJO extends Ujo, T> KeyModel<UJO, T> of(UJO parent, Key<UJO, T> property) {
-        return new KeyModel<UJO, T>(parent, property);
+    public static <UJO extends Ujo, T> KeyModel<UJO, T> of(UJO parent, Key<UJO, T> key) {
+        return new KeyModel<UJO, T>(parent, key);
     }
 
     /**
      * Type-infering factory method
-     * @param parent object that contains the property
-     * @param property the first property (path)
+     * @param parent object that contains the key
+     * @param key the first key (path)
      * @return {@link PropertyModel} instance
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, T> KeyModel<UJO, T> of(IModel<UJO> parent, KeyRing<UJO> property) {
-        return (KeyModel<UJO, T>) of(parent.getObject(), property.getFirstKey());
+    public static <UJO extends Ujo, T> KeyModel<UJO, T> of(IModel<UJO> parent, KeyRing<UJO> key) {
+        return (KeyModel<UJO, T>) of(parent.getObject(), key.getFirstKey());
     }
-    
+
     /**
      * Create a Wicket model from a domain model type of Ujo or JavaBean.
      * @param <T> The Model object type
      * @param bo A model business object
-     * @param property Property expression for property access
-     * @return An instance type of PropertyModel or KeyModel according to the [@code bo} parameter type. 
-     * @throws IllegalArgumentException 
+     * @param key Property expression for key access
+     * @return An instance type of PropertyModel or KeyModel according to the [@code bo} parameter type.
+     * @throws IllegalArgumentException
      */
     @SuppressWarnings("unchecked")
-    public static <T> IModel<T> of(Object bo, String property) throws IllegalArgumentException {
+    public static <T> IModel<T> of(Object bo, String key) throws IllegalArgumentException {
         if (bo instanceof Ujo) {
             final Ujo ubo = (Ujo) bo;
-            final Key key = ubo.readKeys().find(property);
-            return (IModel<T>) KeyModel.of(ubo, key);
+            final Key k = ubo.readKeys().find(key);
+            return (IModel<T>) KeyModel.of(ubo, k);
         } else {
-            return new PropertyModel<T>(bo, property);
+            return new PropertyModel<T>(bo, key);
         }
-    }    
+    }
 }

@@ -52,25 +52,25 @@ abstract public class MyTestCase extends TestCase {
         
         if (expected instanceof UjoTextable) {
             for (int i=keys.size()-1; i>=0; i--) {
-                Key property = keys.get(i);
-                String o1 = String.valueOf(((UjoTextable)expected).readValueString(property, null));
-                String o2 = String.valueOf(((UjoTextable)actual  ).readValueString(property, null));
-                assertEquals("Property \"" + property.getName() + "\"", o1, o2);
+                Key key = keys.get(i);
+                String o1 = String.valueOf(((UjoTextable)expected).readValueString(key, null));
+                String o2 = String.valueOf(((UjoTextable)actual  ).readValueString(key, null));
+                assertEquals("Property \"" + key.getName() + "\"", o1, o2);
             }
         }
        
         
         for (int i=keys.size()-1; i>=0; i--) {
-            Key<? super Ujo,?> property = keys.get(i);
-            Object o1 = property.of(expected);
-            Object o2 = property.of(actual);
+            Key<? super Ujo,?> key = keys.get(i);
+            Object o1 = key.of(expected);
+            Object o2 = key.of(actual);
             
-            String item = "Property \"" + property.getName() + "\"";
-            if (byte[].class.equals(property.getType())) {
+            String item = "Property \"" + key.getName() + "\"";
+            if (byte[].class.equals(key.getType())) {
                 assertEquals(item, (byte[]) o1, (byte[]) o2);
-            } else if (char[].class.equals(property.getType())) {
+            } else if (char[].class.equals(key.getType())) {
                 assertEquals(item, (char[]) o1, (char[]) o2);
-            } else if (property.isTypeOf(List.class)) {
+            } else if (key.isTypeOf(List.class)) {
                 assertEquals(item, (List) o1, (List) o2);
             } else {
                 assertEquals(item, o1, o2);

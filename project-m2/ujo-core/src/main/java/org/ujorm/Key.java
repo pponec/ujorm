@@ -22,8 +22,8 @@ import org.ujorm.core.annot.Immutable;
 import org.ujorm.validator.ValidationException;
 
 /**
- * This interface is a descriptor of the {@link Ujo} attribute. The property contains only property meta-data
- * and therefore the UjoPropertry implementation never contains business data. 
+ * This interface is a descriptor of the {@link Ujo} attribute. The Key contains only meta-data
+ * and therefore the Propertry implementation never contains business data. 
  * Each instance of the Key must be located in the {@code public static final} field of some Ujo implementation.
  * The Key can't have a serializable feature never, because its instance is the unique for a related java field.
  * An appropriate solution solution for serialization is to use a decorator class KeyRing.
@@ -42,7 +42,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     /** Returns a name of the Key. */
     public String getName();
 
-    /** Returns a class of the current property. */
+    /** Returns a class of the current key. */
     public Class<VALUE> getType();
 
     /** Returns a class of the domain Ujo object. */
@@ -105,7 +105,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
 //     */
 //    public VALUE takeFrom(UJO ujo);
 
-    /** Returns a property index or value -1 if the property index is not defined.
+    /** Returns a key index or value -1 if the key index is not defined.
      * <br>The index is reasonable for an implementation an <code>ArrayUjo</code> class and the value is used is used
      * <br>for a sorting of Keys in a method <code>UjoManager.readProperties(Class type)</code> .
      * @see org.ujorm.implementation.array.ArrayUjo
@@ -113,18 +113,18 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      */
     public int getIndex();
 
-    /** Method returns a default value for substitution of the <code>null</code> value for the current property.
+    /** Method returns a default value for substitution of the <code>null</code> value for the current key.
      * The feature is purposeful only if the default value is not <code>null</code> and a propert value is <code>null</code> .
      * @see Ujo#readValue(Key)
      */
     public VALUE getDefault();
 
 
-    /** Indicates whether a parameter value of the ujo "equal to" this property default value. */
+    /** Indicates whether a parameter value of the ujo "equal to" this key default value. */
     public boolean isDefault(UJO ujo);
 
     /**
-     * Returns true, if the property value equals to a parameter value. The property value can be null.
+     * Returns true, if the key value equals to a parameter value. The key value can be null.
      *
      * @param ujo A basic Ujo.
      * @param value Null value is supported.
@@ -133,14 +133,14 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     public boolean equals(UJO ujo, VALUE value);
 
     /**
-     * Returns true, if the property name equals to the parameter value.
-     * @param name The name of a property
+     * Returns true, if the key name equals to the parameter value.
+     * @param name The name of a key
      */
     public boolean equalsName(CharSequence name);
 
     /**
-     * If the property is the direct property of the related UJO class then method returns the TRUE value.
-     * The return value false means, that property is type of {@link CompositeKey}.
+     * If the key is the direct key of the related UJO class then method returns the TRUE value.
+     * The return value false means, that key is type of {@link CompositeKey}.
      * <br />
      * Note: The composite keys are excluded from from function Ujo.readProperties() by default
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
@@ -163,7 +163,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      */
     public boolean isComposite();
 
-    /** Returns true if the property type is a type or subtype of the parameter class. */
+    /** Returns true if the key type is a type or subtype of the parameter class. */
     public boolean isTypeOf(Class type);
 
     /** A flag for an ascending direction of sorting. It is recommended that the default result was true.
@@ -172,7 +172,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      */
     public boolean isAscending();
 
-    /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
+    /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
      * @since 0.85
      * @see #isAscending()
@@ -180,7 +180,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      */
     public Key<UJO,VALUE> descending();
 
-    /** Create new instance of an <strong>indirect</strong> property with the descending direction of sorting.
+    /** Create new instance of an <strong>indirect</strong> Key with the descending direction of sorting.
      * @return returns a new instance of the indirect Key
      * @since 1.21
      * @see #isAscending()
@@ -212,7 +212,7 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @since 1.36
      */
     public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key);
-    
+
     /** Create new composite (indirect) instance with a required alias name
      * @param alias This attribute is used to distinguish the same entities
      * in different spaces. Examples of use are different alias for a table in SQL queries.
@@ -221,22 +221,22 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
      * @return An instance of the CompositeKey interface
      * @since 1.43
      * @see CompositeKey#getSpaceName(int)
-     * @see KeyFactory#newKeyAlias(java.lang.String) 
+     * @see KeyFactory#newKeyAlias(java.lang.String)
      */
     public CompositeKey<UJO, VALUE> alias(String alias);
 
     /** Copy a value from the first UJO object to second one. A null value is not replaced by the default. */
     public void copy(UJO from, UJO to);
 
-    /** Compare to another Key object by the index and name of the property.
+    /** Compare to another Key object by the index and name of the Key.
      * @since 1.20
      */
     @Override
     public int compareTo(Key p);
 
     /** Returns the name of the Key without domain class.<br>
-     * If an implementation provides the attribut called 'alias', so the alias name name
-     * is showed after the name separated by the slashe pattern along the pattern: {@code RELATION[aliasName] }.
+     * If an implementation provides the attribute called 'alias', so the alias name name
+     * is showed after the name separated by the slash pattern along the pattern: {@code RELATION[aliasName] }.
     @Override
     public String toString();
 
@@ -245,10 +245,10 @@ public interface Key <UJO extends Ujo,VALUE> extends CharSequence, Comparable<Ke
     public String toStringFull();
 
     /**
-     * Returns the full name of the Key including all atributes.
+     * Returns the full name of the Key including all attributes.
      * <br />Example: Person.id {index=0, ascending=false, ...}
-     * @param extended argumenta false calls the method {@link #toStringFull()} only.
-     * @return the full name of the Key including all atributes.
+     * @param extended arguments false calls the method {@link #toStringFull()} only.
+     * @return the full name of the Key including all attributes.
      */
     public String toStringFull(boolean extended);
 

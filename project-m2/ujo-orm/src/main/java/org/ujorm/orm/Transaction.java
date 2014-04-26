@@ -76,7 +76,7 @@ final public class Transaction implements javax.transaction.Transaction{
     }
 
     /** Commit the current level of the beginTransaction.
-     * @return Return a parrent Transaction or the value [@code null} for the root transaction.
+     * @return Return a parent Transaction or the value [@code null} for the root transaction.
      */
     @Override
     public void commit() throws IllegalStateException {
@@ -91,7 +91,7 @@ final public class Transaction implements javax.transaction.Transaction{
     }
 
     /** Rollback the current level of the beginTransaction.
-     * @return Return a parrent Transaction or the value [@code null} for the root transaction.
+     * @return Return a parent Transaction or the value [@code null} for the root transaction.
      */
     @Override
     public void rollback() throws IllegalStateException {
@@ -116,7 +116,7 @@ final public class Transaction implements javax.transaction.Transaction{
         return session;
     }
 
-    /** Returns a parrent transaction.
+    /** Returns a parent transaction.
      * @return  The null value means a root transaction-
      */
     @PackagePrivate Transaction getParent() {

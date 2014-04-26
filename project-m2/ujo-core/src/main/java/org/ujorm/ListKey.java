@@ -20,29 +20,29 @@ import java.util.List;
 import org.ujorm.core.annot.Immutable;
 
 /**
- * A property metadata interface for value type of {@code List<ITEM>}.
+ * A key metadata interface for value type of {@code List<ITEM>}.
  * @author Pavel Ponec
  */
 @Immutable
 public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
 
-    /** Returns a class of the property. */
+    /** Returns a class of the key. */
     public Class<ITEM> getItemType();
 
-    /** Returns a count of Items. If the property is null, method returns 0. */
+    /** Returns a count of Items. If the key is null, method returns 0. */
     public int getItemCount(UJO ujo);
 
     /** Returns true if the item type is a type or subtype of the parameter class. */
     public boolean isItemTypeOf(Class type);
 
     /**
-     * Returns a value of property. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
+     * Returns a value of key. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
      */
     public ITEM getItem(UJO ujo, int index);
 
     /**
      * An alias for {@link #getItem(org.ujorm.Ujo, int)}.
-     * @return Returns a value of property. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
+     * @return Returns a value of key. The result is the same, like Ujo#readValue(ListUjoPropertyCommon).
      */
     public ITEM of(UJO ujo, int index);
 
@@ -52,12 +52,12 @@ public interface ListKey<UJO extends Ujo, ITEM> extends Key<UJO,List<ITEM>> {
      */
     public List<ITEM> getList(UJO ujo);
 
-    /** Set a property item value.
+    /** Set a key item value.
      * @return the element previously at the specified position.
      */
     public ITEM setItem(UJO ujo, int index, ITEM value);
 
-    /** Add an Item value to a List property. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
+    /** Add an Item value to a List key. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
      * The method works like a simolar code:
      * <pre class="pre">
      * if (ujo.get(VALUE_LIST)==null) {

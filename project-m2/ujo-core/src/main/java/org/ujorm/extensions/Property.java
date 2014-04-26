@@ -34,7 +34,7 @@ import org.ujorm.validator.ValidationException;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
- * The main implementation of the interface Key.
+ * The main implementation of the interface {@link Key}.
  * @see AbstractUjo
  * @author Pavel Ponec
  */
@@ -71,13 +71,13 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     private boolean lock;
 
 
-    /** A property sequencer for an index attribute
+    /** A key sequencer for an index attribute
      * @see #_nextSequence()
      */
     private static int _sequencer = Integer.MIN_VALUE;
 
-    /** Returns a next property index by a synchronized method.
-     * The UJO property indexed by this method may not be in continuous series
+    /** Returns a next key index by a synchronized method.
+     * The UJO key indexed by this method may not be in continuous series
      * however numbers have the <strong>upward direction</strong> always.
      */
     protected static synchronized int _nextRawSequence() {
@@ -93,11 +93,11 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     /**
      * Property initialization.
-     * @param name Replace the Name of property if the one is NULL.
+     * @param name Replace the Name of key if the one is NULL.
      * @param index Replace index always, the value -1 invoke a next number from the internal sequencer.
-     * @param type Replace the Type of property if the one is NULL.
+     * @param type Replace the Type of key if the one is NULL.
      * @param defaultValue Replace the Optional default value if the one is NULL.
-     * @param lock Lock the property.
+     * @param lock Lock the key.
      */
     @SuppressWarnings("unchecked")
     protected final Property<UJO,VALUE> init(final int field, final Object value) {
@@ -154,7 +154,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     /** Check an internal log and throw an {@code IllegalStateException} if the object is locked. */
     protected final void checkLock() throws IllegalStateException {
         if (this.lock) {
-            throw new IllegalArgumentException("The property is already initialized: " + this);
+            throw new IllegalArgumentException("The key is already initialized: " + this);
         }
     }
 
@@ -179,7 +179,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     /** Method returns the {@code true} in case the {@link #PROPERTY_SEPARATOR}
-     * character is disabled in a property name.
+     * character is disabled in a key name.
      * The method can be overriden.
      * The {@code true} is a default value.
      */
@@ -187,7 +187,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return true;
     }
 
-    /** Is the property Locked? */
+    /** Is the key Locked? */
     @PackagePrivate final boolean isLock() {
         return lock;
     }
@@ -195,7 +195,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     /** Check validity of keys */
     protected void checkValidity() throws IllegalArgumentException {
         if (name == null) {
-            throw new IllegalArgumentException("Name must not be null for property index: #" + index);
+            throw new IllegalArgumentException("Name must not be null for key index: #" + index);
         }
         if (type == null) {
             throw new IllegalArgumentException("Type must not be null in the " + this);
@@ -204,7 +204,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
             throw new IllegalArgumentException("Default value have not properly type in the " + this);
         }
         if (this.domainType==null) {
-            throw new IllegalArgumentException("Domain type is missing for the property: " + name);
+            throw new IllegalArgumentException("Domain type is missing for the key: " + name);
         }
     }
 
@@ -287,7 +287,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return result!= null ? (VALUE) result : defaultValue;
     }
 
-    /** Returns a Default property value. The value replace the <code>null<code> value in the method Ujo.readValue(...).
+    /** Returns a Default key value. The value replace the <code>null<code> value in the method Ujo.readValue(...).
      * If the default value is not modified, returns the <code>null<code>.
      */
     @Override
@@ -296,7 +296,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     /** Assign a Default value. The default value may be modified after locking - at your own risk.
-     * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current property!
+     * <br />WARNING: the change of the default value modifies all values in all instances with the null value of the current key!
      */
     @SuppressWarnings("unchecked")
     public <PROPERTY extends Property> PROPERTY writeDefault(VALUE value) {
@@ -305,7 +305,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return (PROPERTY) this;
     }
 
-    /** Assing a value from the default value. */
+    /** Assign a value from the default value. */
     public void setValueFromDefault(UJO ujo) {
         setValue(ujo, defaultValue);
     }
@@ -322,8 +322,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     /**
-     * If the property is the direct property of the related UJO class then method returns the TRUE value.
-     * The return value false means, that property is type of {@link CompositeKey}.
+     * If the key is the direct key of the related UJO class then method returns the TRUE value.
+     * The return value false means, that key is type of {@link CompositeKey}.
      * <br />
      * Note: The composite keys are excluded from from function Ujo.readProperties() by default
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
@@ -351,7 +351,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return true;
     }
 
-    /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
+    /** Create a new instance of the <strong>indirect</strong> key with a descending direction of order.
      * @since 0.85
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
@@ -361,7 +361,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return descending(true);
     }
 
-    /** Create a new instance of the <strong>indirect</strong> property with a descending direction of order.
+    /** Create a new instance of the <strong>indirect</strong> key with a descending direction of order.
      * @since 1.21
      * @see #isAscending()
      * @see org.ujorm.core.UjoComparator
@@ -411,7 +411,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         to.writeValue(this, from.readValue(this));
     }
 
-    /** Returns true if the property type is a type or subtype of the parameter class. */
+    /** Returns true if the key type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     @Override
     public boolean isTypeOf(final Class type) {
@@ -419,7 +419,7 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     /**
-     * Returns true, if the property value equals to a parameter value. The property value can be null.
+     * Returns true, if the key value equals to a parameter value. The key value can be null.
      *
      * @param ujo A basic Ujo.
      * @param value Null value is supported.
@@ -439,14 +439,14 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
     /**
-     * Returns true, if the property name equals to the parameter value.
+     * Returns true, if the key name equals to the parameter value.
      */
     @Override
     public boolean equalsName(final CharSequence name) {
         return name!=null && name.toString().equals(this.name);
     }
 
-    /** Compare to another Key object by the index and name of the property.
+    /** Compare to another Key object by the index and name of the key.
      * @since 1.20
      */
     public int compareTo(final Key p) {
@@ -669,16 +669,16 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     // --------- STATIC METHODS -------------------
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, boolean lock) {
         return of(name, type, value, index, (Validator) null, lock);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, VALUE value, Integer index, Validator validator, boolean lock) {
@@ -691,8 +691,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, Class<UJO> domainType, int index) {
@@ -705,8 +705,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
                 .init(LOCK, lock);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type) {
@@ -714,16 +714,16 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return of(name, type, domainType, Property.UNDEFINED_INDEX);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo,VALUE> Property<UJO,VALUE> of(String name, Class<VALUE> type, Class<UJO> domainType) {
         return of(name, type, domainType, Property.UNDEFINED_INDEX);
     }
 
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
+    /** A Property Factory where a key type is related from from default value.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> of(String name, VALUE value, int index) {
@@ -735,8 +735,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
                 .init(DEFAULT_VALUE, value);
     }
 
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
+    /** A Property Factory where a key type is related from from default value.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo, VALUE> Property<UJO, VALUE> of(String name, VALUE value) {
@@ -744,8 +744,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
 
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
+    /** A Property Factory where a key type is related from from default value.
+     * Method assigns a next key index.
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -754,8 +754,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
 
-    /** A Property Factory where a property type is related from from default value.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory where a key type is related from from default value.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -765,8 +765,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
 
     // --------- DEPRECATED STATIC METHODS -------------------
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -774,8 +774,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return newInstance(name, type, value, index, (Validator) null, lock);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -789,8 +789,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -804,8 +804,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
                 .init(LOCK, lock);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -814,8 +814,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * The method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * The method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -823,8 +823,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
         return newInstance(name, type, domainType, Property.UNDEFINED_INDEX);
     }
 
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
+    /** A Property Factory where a key type is related from from default value.
+     * Method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -837,8 +837,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
                 .init(DEFAULT_VALUE, value);
     }
 
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
+    /** A Property Factory where a key type is related from from default value.
+     * Method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -847,8 +847,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
 
-    /** A Property Factory where a property type is related from from default value.
-     * Method assigns a next property index.
+    /** A Property Factory where a key type is related from from default value.
+     * Method assigns a next key index.
      * @deprecated Use the of(...) operator
      * @hidden
      */
@@ -858,8 +858,8 @@ public class Property<UJO extends Ujo,VALUE> implements Key<UJO,VALUE> {
     }
 
 
-    /** A Property Factory where a property type is related from from default value.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory where a key type is related from from default value.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the of(...) operator
      * @hidden
      */

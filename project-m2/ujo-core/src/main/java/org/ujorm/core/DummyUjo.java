@@ -34,11 +34,11 @@ final class DummyUjo implements Ujo {
 
     /** A dummy implementation. */
     @Override
-    public void writeValue(Key property, Object value) {}
+    public void writeValue(Key key, Object value) {}
 
     /** A dummy implementation. */
     @Override
-    public Object readValue(Key property) { return null;  }
+    public Object readValue(Key key) { return null;  }
 
     /** Returns unsorted keys. */
     @Override
@@ -56,9 +56,9 @@ final class DummyUjo implements Ujo {
     }
 
     /**
-     * Get a visibility of the property for different actions.
+     * Get a visibility of the key for different actions.
      */
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }
 

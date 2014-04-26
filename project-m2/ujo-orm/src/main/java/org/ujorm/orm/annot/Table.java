@@ -18,7 +18,7 @@ package org.ujorm.orm.annot;
 import java.lang.annotation.*;
 import org.ujorm.orm.ao.Orm2ddlPolicy;
 
-/** 
+/**
  * Use the annotation to mark a Key static field like XML Attribute.
  * @see View
  */
@@ -29,7 +29,7 @@ public @interface Table {
     /** A String for the NULL value. */
     public static final String NULL = ""; // TODO: try to use: "<NULL>"
 
-    /** A named parameter for the table name. Default value is taken from a relation property name. */
+    /** A named parameter for the table name. Default value is taken from a related key name. */
     String name() default NULL;
     /** A shortcut for the attribute "name" of Table.
      * @see #name()
@@ -49,9 +49,9 @@ public @interface Table {
      * @see Db#readOnly()
      */
     boolean readOnly() default false;
-    /** Parameter to controll how the DLL (Data Definition Language) statmenets will be used
+    /** Parameter to control how the DLL (Data Definition Language) statements will be used
      * to a defining data structure modification.
-     * The value can be defined a parent, so the hiearchy from the parrent to a child is:
+     * The value can be defined a parent, so the hierarchy from the parent to a child is:
      * <ul>
      *   <li>Meta Parameters</li>
      *   <li>Database</li>

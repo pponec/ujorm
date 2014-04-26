@@ -40,7 +40,7 @@ import org.ujorm.orm.dialect.*;
 //@Db(schema="db1", dialect=org.ujorm.orm.dialect.MSSqlDialect.class, user="sa", password="datamaster", jdbcUrl="jdbc:sqlserver://127.0.0.1:1433")
 public class Database extends OrmTable<Database> {
 
-    /** Customer order. The used annotation overwrites a database schema from the property schema. */
+    /** Customer order. The used annotation overwrites a database schema from the key schema. */
     @Table("ord_order")
     public static final RelationToMany<Database,Order> ORDERS = newRelation();
 

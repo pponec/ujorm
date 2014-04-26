@@ -18,10 +18,10 @@ package org.ujorm.core.annot;
 import java.lang.annotation.*;
 
 /**
- * The annotation select an property containing a <strong>body of the element</strong>.
- * There is recommended that only one property was signed by the annoataton in the class.
- * If more annotated keys are identified, than the framework will be considered the valid property with the highest index.
- * <br/>NOTE: If a property has an annotation {@link XmlAttribute} than the {@link XmlElementBody} is ignored.
+ * The annotation select an key containing a <strong>body of the element</strong>.
+ * There is recommended that only one key was signed by the anoatation in the class.
+ * If more annotated keys are identified, than the framework will be considered the valid key with the highest index.
+ * <br/>NOTE: If a key has an annotation {@link XmlAttribute} than the {@link XmlElementBody} is ignored.
  */
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)

@@ -48,13 +48,13 @@ public final class Item extends OrmTable<Item> {
     @Comment("A reference to the Order")
     @Column(name="fk_order")
     public static final Key<Item,Order> ORDER = f.newKey();
-    /** A composed (or indirect) property provides a 'CREATED' attribute of the Order */
+    /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
 
 
     // --- An optional implementation of commonly used setters and getters ---
 
-    /** Example of the composed property */
+    /** Example of the composed key */
     public Date getOrderCreated() {
         // An alternative solution for: getOrder().getCreated();
         return get($ORDER_CREATED);
@@ -112,12 +112,12 @@ public final class Item extends OrmTable<Item> {
         Item.ORDER.setValue(this, order);
     }
     
-    /** A composed (or indirect) property provides a 'CREATED' attribute of the Order */
+    /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public Date get$orderCreated() {
         return $ORDER_CREATED.of(this);
     }
     
-    /** A composed (or indirect) property provides a 'CREATED' attribute of the Order */
+    /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public void set$orderCreated(Date $orderCreated) {
         Item.$ORDER_CREATED.setValue(this, $orderCreated);
     }

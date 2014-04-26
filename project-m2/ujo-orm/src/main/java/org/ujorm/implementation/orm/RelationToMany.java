@@ -55,7 +55,7 @@ public class RelationToMany<UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrm
     /** Constructor
      * @param name Property name.
      * @param itemType The type of item (optional)
-     * @param index An property order (optional)
+     * @param index An key order (optional)
      */
     @SuppressWarnings("unchecked")
     public RelationToMany(String name, Class<ITEM> itemType, int index, boolean lock) {

@@ -30,7 +30,7 @@ import org.ujorm.UjoAction;
 
 /**
  * A Manager for Java Property Resources Bundle.
- * If you need take a control of a non UJO property object serialization then use a UjoTextable object.
+ * If you need take a control of a non UJO key object serialization then use a UjoTextable object.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  *  Person person = <span class="java-keywords">new</span> <span class="java-layer-method">Person</span>(); <span class="java-block-comment">// Set attributes ...</span>

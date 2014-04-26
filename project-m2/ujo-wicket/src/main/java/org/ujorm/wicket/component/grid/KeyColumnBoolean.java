@@ -82,7 +82,7 @@ public class KeyColumnBoolean<UJO extends Ujo> extends KeyColumn<UJO, Boolean> {
     // =============== STATIC FACTORY METHODS ===============
 
     /**
-     * A factory method where a default property {@link #getCssOkClass()} have got value {@link #DEFAULT_CSS_OK_CLASS}
+     * A factory method where a default key {@link #getCssOkClass()} have got value {@link #DEFAULT_CSS_OK_CLASS}
      * @param key Domain Key
      * @param sorted A sorting request
      * @return New instance of the KeyColumn class

@@ -34,12 +34,12 @@ public class DateField extends Field {
     /** Default CSS class have got value {@code datepicker} */
     public static final String CSS_DATEPICKER = "datePickerComponent";
 
-    public DateField(Key property) {
-        super(property.getName(), property, null);
+    public DateField(Key key) {
+        super(key.getName(), key, null);
     }
 
-    public DateField(String componentId, Key property, String cssClass) {
-        super(componentId, property, cssClass);
+    public DateField(String componentId, Key key, String cssClass) {
+        super(componentId, key, cssClass);
     }
 
     /** Create Form inputComponent */

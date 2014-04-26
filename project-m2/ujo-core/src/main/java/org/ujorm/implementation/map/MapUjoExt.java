@@ -70,33 +70,33 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
      * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
-     * <br>NOTE: If property is an incorrect then no exception is throwed.
+     * <br>NOTE: If key is an incorrect then no exception is throwed.
      *
      * @see Key#setValue(Ujo,Object)
      */
     @Override
-    public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        data.put(property, value);
+    public void writeValue(final Key key, final Object value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        data.put(key, value);
     }
 
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
-     * <br>NOTE: If property is an incorrect then method returns a null value.
+     * <br>NOTE: If key is an incorrect then method returns a null value.
      *
      * @see Key#of(Ujo)
      */
     @Override
-    public Object readValue(final Key property) {
-        return data.get(property);
+    public Object readValue(final Key key) {
+        return data.get(key);
     }
 
     // --------- STATIC METHODS -------------------
 
-    /** Returns a new instance of property where the default value is null.
-     * Method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends MapUjoExt,VALUE> Property<UJO,VALUE> newKey(String name) {
@@ -104,7 +104,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
     }
 
     /** A Property Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     protected static <UJO extends MapUjoExt, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
@@ -112,7 +112,7 @@ abstract public class MapUjoExt<UJO extends MapUjoExt> extends AbstractUjoExt<UJ
     }
 
     /** A ListProperty Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     @SuppressWarnings("unchecked")

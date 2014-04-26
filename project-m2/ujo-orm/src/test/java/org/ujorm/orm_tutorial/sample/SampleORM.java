@@ -282,8 +282,8 @@ public class SampleORM {
     }
 
     /** Sort items by a <strong>composite</strong> propertry. <br>
-     * Note 1: see how a composite property can be used for reading values too. <br>
-     * Note 2: the metod loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
+     * Note 1: see how a composite key can be used for reading values too. <br>
+     * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
      */
     public void useSortOrderItems() {
 
@@ -294,7 +294,7 @@ public class SampleORM {
             OrmTools.loadLazyValues(item, 2);
             logInfo("Created: %s of %s", item.get(Item.ORDER.add(Order.CREATED)), item);
         }
-        // Another way to avoid the lazy loading by a bulk property loading:
+        // Another way to avoid the lazy loading by a bulk key loading:
         List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
         logInfo("ItemList: %s", itemList);
     }
@@ -399,7 +399,7 @@ public class SampleORM {
     }
 
     /** Select an Order by ID and print its Items
-     * by a 'one to many' relation property
+     * by a 'one to many' relation key
      */
     public void useSelectItems_3() {
         Order order = session.load(Order.class, anyOrderId);
@@ -410,7 +410,7 @@ public class SampleORM {
         }
     }
 
-    /** Select items by a composed property.
+    /** Select items by a composed key.
      * It is a sample of a multi-table query.
      * @see Item#$ORDER_CREATED
      */
@@ -423,7 +423,7 @@ public class SampleORM {
         }
     }
 
-    /** Select items by a composed property.
+    /** Select items by a composed key.
      * It is a sample of a multi-table query.
      * See used Criterion with the whereIn method. The value list can be empty and the RESULT returns FALSE always in this case.
      * @see Item#$ORDER_CREATED
@@ -589,14 +589,14 @@ public class SampleORM {
         }
     }
 
-    /** How to reload the object property values from the database ? */
+    /** How to reload the object key values from the database ? */
     public void useReloading() {
         Order order = new Order(anyOrderId);
         boolean result = session.reload(order);
         logInfo("Reloading result: %s for Order: %s", result, order);
     }
 
-    /** How to reload the object property values from the database ? */
+    /** How to reload the object key values from the database ? */
     public void useLazyLoadingOnClosedSession() {
         Item item = handler.createSession().createQuery(Item.ID.forAll())
                 .orderBy(Item.ID)
@@ -821,7 +821,7 @@ public class SampleORM {
         logInfo("There are DELETED rows:  %s", count);
     }
 
-    /** Print some meta-data of the property Order.NOTE. */
+    /** Print some meta-data of the key Order.NOTE. */
     public void useMetadata() {
         MetaColumn col = (MetaColumn) handler.findColumnModel(Order.NOTE);
 

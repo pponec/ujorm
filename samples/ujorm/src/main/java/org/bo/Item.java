@@ -48,7 +48,7 @@ public final class Item extends OrmTable<Item> {
     @Comment("A reference to the Order")
     @Column(name="fk_order")
     public static final Key<Item,Order> ORDER = f.newKey();
-    /** A composed (or indirect) property provides a 'CREATED' attribute of the Order */
+    /** A composed (or indirect) key provides a 'CREATED' attribute of the Order */
     public static final Key<Item,Date> $ORDER_CREATED = Item.ORDER.add(Order.CREATED);
 
     // Lock the Key factory
@@ -82,7 +82,7 @@ public final class Item extends OrmTable<Item> {
         set(ORDER, _descr);
     }
 
-    /** Example of the composed property */
+    /** Example of the composed key */
     public Date getOrderCreated() {
         // An alternative solution for: getOrder().getCreated();
         return get($ORDER_CREATED);

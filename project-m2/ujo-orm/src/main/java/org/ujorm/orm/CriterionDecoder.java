@@ -205,7 +205,7 @@ public class CriterionDecoder {
         return sql.length()==0;
     }
 
-    /** Returns the first direct property. */
+    /** Returns the first direct key. */
     public Key getBaseProperty() {
         Key result = null;
         for (ValueCriterion eval : values) {
@@ -232,14 +232,14 @@ public class CriterionDecoder {
         }
 
         boolean andOperator = false;
-        for (AliasKey property : relations) try {
-            final ColumnWrapper fk1 = property.getColumn(handler);
+        for (AliasKey key : relations) try {
+            final ColumnWrapper fk1 = key.getColumn(handler);
             final MetaTable tab1 = fk1.getModel().getTable();
-            final ColumnWrapper pk2 = fk1.getModel().getForeignColumns().get(0).addTableAlias(property.aliasTo);
+            final ColumnWrapper pk2 = fk1.getModel().getForeignColumns().get(0).addTableAlias(key.aliasTo);
             final MetaTable tab2 = pk2.getModel().getTable();
             //
-            tables.add(tab1.addAlias(property.getAliasFrom()));
-            tables.add(tab2.addAlias(property.getAliasTo()));
+            tables.add(tab1.addAlias(key.getAliasFrom()));
+            tables.add(tab2.addAlias(key.getAliasTo()));
             
             {// TODO: for all foreign columns:
                 if (andOperator) {
@@ -261,7 +261,7 @@ public class CriterionDecoder {
         }
     }
 
-    /** Returns the unique direct property relations. */
+    /** Returns the unique direct key relations. */
     @SuppressWarnings("unchecked")
     protected Collection<AliasKey> getPropertyRelations() {
         final Set<AliasKey> result = new HashSet<AliasKey>();

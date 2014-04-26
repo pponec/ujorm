@@ -30,29 +30,29 @@ import org.ujorm.extensions.ValueAgent;
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> Person <span class="keyword-directive">extends</span> FieldUjo {
- *   
+ *
  *   <span class="keyword-directive">private</span> Long cash;
  *   <span class="keyword-directive">private</span> List&lt;Person&gt; childs;
- *   
+ *
  *   <span class="keyword-directive">public static</span> Key&lt;Person,Long&gt; CASH
  *     = newKey(<span class="character">"CASH"</span>, Long.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,Long&gt;() {
- *     <span class="keyword-directive">public void</span> writeValue(Person ujo, Long value) { 
- *            ujo.cash = value; 
+ *     <span class="keyword-directive">public void</span> writeValue(Person ujo, Long value) {
+ *            ujo.cash = value;
  *         }
- *     <span class="keyword-directive">public</span> Long readValue (Person ujo) { 
- *         <span class="keyword-directive">return</span> ujo.cash;  
+ *     <span class="keyword-directive">public</span> Long readValue (Person ujo) {
+ *         <span class="keyword-directive">return</span> ujo.cash;
  *     }
- *   });    
- *   
+ *   });
+ *
  *   <span class="keyword-directive">public static</span> FieldPropertyList&lt;Person,Person&gt; CHILDS
  *     = newListKey(<span class="character">"CHILDS"</span>, Person.<span class="keyword-directive">class</span>
  *     , <span class="keyword-directive">new</span> ValueAgent&lt;Person,List&lt;Person&gt;&gt;() {
  *     <span class="keyword-directive">public void</span> writeValue(Person ujo, List&lt;Person&gt; value) {
- *         ujo.childs = value; 
+ *         ujo.childs = value;
  *     }
  *     <span class="keyword-directive">public</span> List&lt;Person&gt; readValue(Person ujo) {
- *         <span class="keyword-directive">return</span> ujo.childs; 
+ *         <span class="keyword-directive">return</span> ujo.childs;
  *     }
  *   });
  * }</pre>
@@ -63,49 +63,49 @@ import org.ujorm.extensions.ValueAgent;
  * @composed 1 - * Property
   */
 public abstract class FieldUjo extends SuperAbstractUjo {
-    
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * FieldProperty.setValue(Ujo,Object) 
+
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
+     * FieldProperty.setValue(Ujo,Object)
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
-     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
+     * <br>NOTE: If the Key is an incorrect then method throws an IllegalArgumentException.
      *
      * @see FieldProperty#setValue(Ujo,Object) FieldProperty.setValue(Ujo,Object)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        ((ValueAgent) property).writeValue(this, value);
+    public void writeValue(final Key key, final Object value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        ((ValueAgent) key).writeValue(this, value);
     }
-    
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * FieldProperty.getValue(Ujo)
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
-     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
+     * <br>NOTE: If the Key is an incorrect then method throws an IllegalArgumentException.
      *
      * @see FieldProperty#getValue(Ujo) FieldProperty.getValue(Ujo)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object readValue(final Key property) {
-        return ((ValueAgent) property).readValue(this);
+    public Object readValue(final Key key) {
+        return ((ValueAgent) key).readValue(this);
     }
-    
+
     // --------- STATIC METHODS -------------------
-    
-    /** Returns a new instance of property where the default value is null.
-     * @hidden     
+
+    /** Returns a new instance of key where the default value is null.
+     * @hidden
      */
     protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newKey
         ( String name, ValueAgent<UJO, VALUE> agent
         ) {
         return new FieldProperty<UJO,VALUE> (name, (Class) null, -1, agent);
     }
-    
-    /** A Property Factory creates a new property and assigns a next property index.
-     * @hidden     
+
+    /** A Property Factory creates a new key and assigns a next key index.
+     * @hidden
      */
     protected static <UJO extends Ujo, VALUE> FieldProperty<UJO, VALUE> newKey
         ( String name
@@ -116,7 +116,7 @@ public abstract class FieldUjo extends SuperAbstractUjo {
     }
 
     /** A ListProperty Factory for a <strong>FieldUjo</strong> object
-     * @hidden     
+     * @hidden
      */
     protected static <UJO extends Ujo, ITEM> FieldPropertyList<UJO, ITEM> newListKey
         ( String name

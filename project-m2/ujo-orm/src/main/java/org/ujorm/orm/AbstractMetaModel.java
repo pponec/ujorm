@@ -98,35 +98,35 @@ abstract public class AbstractMetaModel extends AbstractUjo {
     }
 
     @Override
-    public void writeValue(final Key property, final Object value) {
+    public void writeValue(final Key key, final Object value) {
         this.checkReadOnly(true);
-        super.writeValue(property, value);
+        super.writeValue(key, value);
     }
 
-    /** Assign a 'valid value' over a default UJO property value only */
+    /** Assign a 'valid value' over a default UJO key value only */
     protected <UJO extends Ujo, VALUE> void changeDefault
     ( final UJO ujo
-    , final Key<UJO, VALUE> property
+    , final Key<UJO, VALUE> key
     , final VALUE value
     ) {
-        if (property.isDefault(ujo) && OrmTools.isFilled(value)) {
-            property.setValue(ujo, value);
+        if (key.isDefault(ujo) && OrmTools.isFilled(value)) {
+            key.setValue(ujo, value);
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key key, Object value) {
         if (action.getType()==UjoAction.ACTION_XML_EXPORT) {
-            return !property.isDefault(this);
+            return !key.isDefault(this);
         }
-        return super.readAuthorization(action, property, value);
+        return super.readAuthorization(action, key, value);
     }
 
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends AbstractMetaModel, VALUE> VALUE get ( Key<UJO, VALUE> property) {
-        return property.of((UJO) this);
+    public <UJO extends AbstractMetaModel, VALUE> VALUE get ( Key<UJO, VALUE> key) {
+        return key.of((UJO) this);
     }
 
 }

@@ -33,9 +33,9 @@ public enum Operator implements AbstractOperator {
     LT,
     /** Less or equals the value */
     LE,
-    /** Operator to compare a property to collection */
+    /** Operator to compare a key to collection */
     IN,
-    /** Negation operator to compare a property to collection */
+    /** Negation operator to compare a key to collection */
     NOT_IN,
     /** Regular expression */
     REGEXP,

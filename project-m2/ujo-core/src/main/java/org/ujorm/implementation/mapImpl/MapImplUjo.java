@@ -80,13 +80,13 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
-     * <br>NOTE: If property is an incorrect then no exception is throwed.
+     * <br>NOTE: If key is an incorrect then no exception is throwed.
      *
      * @see Key#setValue(Ujo,Object)
      */
-    public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        put(property, value);
+    public void writeValue(final Key key, final Object value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        put(key, value);
     }
 
 
@@ -94,13 +94,13 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
      * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
-     * <br>NOTE: If property is an incorrect then method returns a null value.
+     * <br>NOTE: If key is an incorrect then method returns a null value.
      *
      * @see Key#of(org.ujorm.Ujo)
      */
     @Override
-    public Object readValue(final Key property) {
-        return get(property);
+    public Object readValue(final Key key) {
+        return get(key);
     }
 
     // --------- MAP IMPLEMENTATION -------------------
@@ -189,8 +189,8 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
 
     // --------- STATIC METHODS -------------------
 
-    /** Returns a new instance of property where the default value is null.
-     * Method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newKey(String name) {
@@ -198,7 +198,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     }
 
     /** A Property Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     protected static <UJO extends MapImplUjo, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
@@ -206,7 +206,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     }
 
     /** A ListProperty Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     protected static <UJO extends MapImplUjo, ITEM> ListProperty<UJO,ITEM> newListKey(String name) {
@@ -215,8 +215,8 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
 
     // --------- DEPRECATED -------------------
 
-    /** Returns a new instance of property where the default value is null.
-     * Method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends MapImplUjo,VALUE> Property<UJO,VALUE> newProperty(String name, Class<VALUE> type) {
@@ -224,7 +224,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     }
 
     /** A Property Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     protected static <UJO extends MapImplUjo, VALUE> Property<UJO, VALUE> newProperty(String name, VALUE value) {
@@ -232,7 +232,7 @@ public abstract class MapImplUjo extends SuperAbstractUjo implements Map<CharSeq
     }
 
     /** A ListProperty Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     protected static <UJO extends MapImplUjo, ITEM> ListProperty<UJO,ITEM> newListProperty(String name, Class<ITEM> type) {

@@ -325,12 +325,12 @@ public class Session {
         if (exprValue.getLeftNode() == null) {
             return null;
         }
-        Key property = exprValue.getLeftNode();
-        while (property.isComposite()) {
-            property = ((CompositeKey) property).getFirstKey();
+        Key key = exprValue.getLeftNode();
+        while (key.isComposite()) {
+            key = ((CompositeKey) key).getFirstKey();
         }
 
-        MetaRelation2Many result = handler.findColumnModel(property, true);
+        MetaRelation2Many result = handler.findColumnModel(key, true);
         return result;
     }
 
@@ -614,7 +614,7 @@ public class Session {
             removeCache(bo, MetaTable.PK.of(table));
         }
 
-        // Delete parrent
+        // Delete parent
         if (MetaParams.INHERITANCE_MODE.of(params)) {
             OrmUjo parent = table.getParent(bo);
             if (parent != null) {
@@ -697,12 +697,12 @@ public class Session {
         }
     }
 
-    /** Convert a property array to a column list. */
+    /** Convert a key array to a column list. */
     protected List<MetaColumn> getOrmColumns(final Key... keys) {
         final List<MetaColumn> result = new ArrayList<MetaColumn>(keys.length);
 
-        for (Key property : keys) {
-            MetaRelation2Many column = handler.findColumnModel(property);
+        for (Key key : keys) {
+            MetaRelation2Many column = handler.findColumnModel(key);
             if (column instanceof MetaColumn) {
                 result.add((MetaColumn) column);
             }
@@ -801,13 +801,13 @@ public class Session {
         return null;
     }
 
-    /** Iterate property of values
-     * @param property Table property type of the RelationToMany.
+    /** Iterate key of values
+     * @param key Table key type of the RelationToMany.
      * @param value A value type of OrmUjo
      */
-    public <UJO extends OrmUjo> UjoIterator<UJO> iterateInternal(RelationToMany property, OrmUjo value) {
+    public <UJO extends OrmUjo> UjoIterator<UJO> iterateInternal(RelationToMany key, OrmUjo value) {
 
-        final Class tableClass = property.getItemType();
+        final Class tableClass = key.getItemType();
         final MetaTable table = handler.findTableModel(tableClass);
         final MetaColumn fColumn = findOrmColumn(table, value.getClass());
 
@@ -959,7 +959,7 @@ public class Session {
     /** Reload values of the persistent object. <br>
      * Note: If the object has implemented the interface
      * {@link ExtendedOrmUjo ExtendedOrmUjo} than foreign keys are reloaded
-     * else a lazy initialization is loaded - for the first property depth.
+     * else a lazy initialization is loaded - for the first key depth.
      * @param ujo The persistent object to relading values.
      * @return The FALSE value means that the object is missing in the database.
      */
@@ -997,7 +997,7 @@ public class Session {
 
     /**
      * Load UJO by a unique id. If the result is not unique, then an exception is throwed.
-     * @param relatedProperty Related property
+     * @param relatedProperty Related key
      * @param id Valid ID
      * @param mandatory If result is mandatory then the method throws an exception if no object was found else returns null;
      */
@@ -1161,17 +1161,17 @@ public class Session {
     }
 
     /** Build new Forign key.
-     * @param property The property must be a relalation type of "many to one".
-     * @throws IllegalStateException If a parameter property is not a foreign key.
+     * @param key The key must be a relalation type of "many to one".
+     * @throws IllegalStateException If a parameter key is not a foreign key.
      */
-    public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> property) throws IllegalStateException {
-        final MetaColumn column = handler.findColumnModel(property);
+    public ForeignKey readFK(final OrmUjo ujo, final Key<?, ? extends OrmUjo> key) throws IllegalStateException {
+        final MetaColumn column = handler.findColumnModel(key);
         if (column!=null && column.isForeignKey()) {
             final Object result = column.getForeignColumns().get(0).getKey().of(ujo);
             return new ForeignKey(result);
         } else {
-            final String propertyName = ujo.getClass().getSimpleName() + "." + property;
-            throw new IllegalStateException("The property '" + propertyName + "' is not a foreign key");
+            final String propertyName = ujo.getClass().getSimpleName() + "." + key;
+            throw new IllegalStateException("The key '" + propertyName + "' is not a foreign key");
         }
     }
 

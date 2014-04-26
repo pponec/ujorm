@@ -68,9 +68,9 @@ public interface UjoLogger {
      * which is forwarded to all registered output handlers.
      * <p>
      * Note that the thrown argument is stored in the LogRecord thrown
-     * property, rather than the LogRecord parameters property.  Thus is it
+     * key, rather than the LogRecord parameters key.  Thus is it
      * processed specially by output Formatters and is not treated
-     * as a formatting parameter to the LogRecord message property.
+     * as a formatting parameter to the LogRecord message key.
      * <p>
      * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
      * @param   msg	The string message (or a key in the message catalog)

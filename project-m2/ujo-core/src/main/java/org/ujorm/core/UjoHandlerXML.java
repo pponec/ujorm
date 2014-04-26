@@ -46,13 +46,13 @@ final class UjoHandlerXML extends DefaultHandler {
     /** UjoManager */
     final protected UjoManager ujoManager;
 
-    /** Ignore missing property related to an ELEMENT or ATTRIBUTE during XML import. */
+    /** Ignore missing key related to an ELEMENT or ATTRIBUTE during XML import. */
     private boolean ignoreMissingProp = false;
 
     // -- Temporarry fields --
     protected String  $elementName  = null;
     protected Class   $elementType  = null;
-    protected Key     $property     = null;
+    protected Key     $key     = null;
     protected ListKey $propertyList = null;
     protected Class   $listType     = null;
     protected Class   $itemType     = null;
@@ -105,10 +105,10 @@ final class UjoHandlerXML extends DefaultHandler {
         addBodyText($value);
         $elementName = localName.length()!=0 ? localName : qualifiedName ;
         $parentObj   = lastElement<0 ? new Element() : getLastElement() ;
-        $property    = $parentObj.isUjo()
+        $key    = $parentObj.isUjo()
                      ? $parentObj.ujo.readKeys().findDirectKey($parentObj.ujo, $elementName, actionImport, true, !ignoreMissingProp)
                      : null ;
-        $propertyList = $property instanceof ListKey ? (ListKey) $property : null;
+        $propertyList = $key instanceof ListKey ? (ListKey) $key : null;
         $elementType = $parentObj.isRoot() ? rootType : null ;
         $listType    = null;
         $itemType    = null;
@@ -140,7 +140,7 @@ final class UjoHandlerXML extends DefaultHandler {
                 throw new IllegalStateException("Tag <" + $elementName  + "> is missing attribute '" + UjoManagerXML.ATTR_CLASS + "'");
             }
             $elementType = $parentObj.isUjo()
-            ? ($propertyList != null ? $propertyList.getItemType() : $property.getType())
+            ? ($propertyList != null ? $propertyList.getItemType() : $key.getType())
             : ($parentObj.itemType)
             ;
         }
@@ -173,12 +173,12 @@ final class UjoHandlerXML extends DefaultHandler {
                                 list = $propertyList.getList(ujoParent);
                             } else {
                                 list = (List) $listType.newInstance();
-                                ujoParent.writeValue($property, list);
+                                ujoParent.writeValue($key, list);
                             }
                         }
                         list.add(container);
-                    } else if ($property!=null) {
-                        ujoParent.writeValue($property, container);
+                    } else if ($key!=null) {
+                        ujoParent.writeValue($key, container);
                     }
 
                 } else if ($parentObj.isList()) {
@@ -211,21 +211,21 @@ final class UjoHandlerXML extends DefaultHandler {
         } else if ($parentObj.ujo instanceof UjoTextable) {
             // Vrite Value:
             if ($propertyList != null) {
-                List oldValue = (List) $parentObj.ujo.readValue($property); // The original solution for a back compatibility
+                List oldValue = (List) $parentObj.ujo.readValue($key); // The original solution for a back compatibility
                 if (oldValue != null) {
                    final Object value = ujoManager.decodeValue($elementType, $value.toString());
                    oldValue.add(value);
                 } else {
-                   ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);
+                   ((UjoTextable) $parentObj.ujo).writeValueString($key, $value.toString(), $elementType, actionImport);
                 }
             } else {
-               ((UjoTextable) $parentObj.ujo).writeValueString($property, $value.toString(), $elementType, actionImport);
+               ((UjoTextable) $parentObj.ujo).writeValueString($key, $value.toString(), $elementType, actionImport);
             }
             $value.setLength(0);
             $elementCont = true;
         } else if ($parentObj.isList()) {
             // Vrite Value/Container:
-            $parentObj.list.add( ujoManager.decodeValue($property, $value.toString(), $elementType) );
+            $parentObj.list.add( ujoManager.decodeValue($key, $value.toString(), $elementType) );
             $value.setLength(0);
             $elementCont = true;
         }
@@ -277,12 +277,12 @@ final class UjoHandlerXML extends DefaultHandler {
     }
 
 
-    /** Ignore missing property related to an ELEMENT or ATTRIBUTE during XML import. */
+    /** Ignore missing key related to an ELEMENT or ATTRIBUTE during XML import. */
     public boolean isIgnoreMissingProp() {
         return ignoreMissingProp;
     }
 
-    /** Ignore missing property related to an ELEMENT or ATTRIBUTE during XML import. */
+    /** Ignore missing key related to an ELEMENT or ATTRIBUTE during XML import. */
     public void setIgnoreMissingProp(boolean ignoreMissingProp) {
         this.ignoreMissingProp = ignoreMissingProp;
     }
@@ -368,7 +368,7 @@ final class UjoHandlerXML extends DefaultHandler {
             }
         }
 
-        /** Save body by the body property. */
+        /** Save body by the body key. */
         public void saveBody() {
             if (body!=null) {
                 String bodyText = body.toString().trim();

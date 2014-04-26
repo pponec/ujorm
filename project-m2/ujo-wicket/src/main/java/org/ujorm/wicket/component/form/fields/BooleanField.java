@@ -28,12 +28,12 @@ public class BooleanField extends Field {
 
     private static final long serialVersionUID = 20130621L;
 
-    public BooleanField(Key property) {
-        super(property.getName(), property, null);
+    public BooleanField(Key key) {
+        super(key.getName(), key, null);
     }
 
-    public BooleanField(String componentId, Key property, String cssClass) {
-        super(componentId, property, cssClass);
+    public BooleanField(String componentId, Key key, String cssClass) {
+        super(componentId, key, cssClass);
     }
 
     /** Create Form inputComponent */

@@ -152,8 +152,8 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
 
         @SuppressWarnings("unchecked")
-        Key property = Property.of(xmlHeader.getRootElement(), ujo.getClass());
-        printProperty(null, property, null, ujo, writer, false, xmlHeader.getAttributes());
+        Key key = Property.of(xmlHeader.getRootElement(), ujo.getClass());
+        printProperty(null, key, null, ujo, writer, false, xmlHeader.getAttributes());
     }
 
     /** Print attributes of the tag */
@@ -164,18 +164,18 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     ) throws IOException {
 
         // Write attributes:
-        for (Key property : ujo.readKeys()) {
-            Object value = property.of(ujo);
+        for (Key key : ujo.readKeys()) {
+            Object value = key.of(ujo);
 
             if (value!=null
-            && !Ujo.class.isAssignableFrom(property.getType())
-            &&  getUjoManager().isXmlAttribute(property)
-            &&  ujo.readAuthorization(actionExport, property, value)
-            && !getUjoManager().isTransient(property)
+            && !Ujo.class.isAssignableFrom(key.getType())
+            &&  getUjoManager().isXmlAttribute(key)
+            &&  ujo.readAuthorization(actionExport, key, value)
+            && !getUjoManager().isTransient(key)
             ){
-                final String valueStr = ujo.readValueString(property, actionExport);
+                final String valueStr = ujo.readValueString(key, actionExport);
                 writer.write(' ');
-                writer.write(property.getName());
+                writer.write(key.getName());
                 writer.write("=\"");
                 printText2Xml(writer, valueStr);
                 writer.write('"');
@@ -193,39 +193,39 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     public void printProperties(final Writer writer, UjoTextable ujo, final KeyList<?> keys) throws IOException {
         Key bodyProperty = getUjoManager().getXmlElementBody(ujo.getClass());
 
-        for (Key property : keys) {
-            Object value = property.of(ujo);
+        for (Key key : keys) {
+            Object value = key.of(ujo);
 
             if (value==null
-            || !ujo.readAuthorization(actionExport, property, value)
-            || getUjoManager().isXmlAttribute(property)
+            || !ujo.readAuthorization(actionExport, key, value)
+            || getUjoManager().isXmlAttribute(key)
             || (value instanceof List && ((List)value).isEmpty())
-            || getUjoManager().isTransient(property)
+            || getUjoManager().isTransient(key)
             ){
                 continue;
             }
 
             if (value instanceof List) {
-                final Class itemType = property instanceof ListKey ? ((ListKey)property).getItemType() : null ;
+                final Class itemType = key instanceof ListKey ? ((ListKey)key).getItemType() : null ;
 
                 if (itemType!=null
-                && ((ListKey)property).isItemTypeOf(Ujo.class)) {
+                && ((ListKey)key).isItemTypeOf(Ujo.class)) {
                     for (Object item : (List) value) {
                         Class itemClass = itemType!=item.getClass() ? item.getClass() : null ;
-                        printProperty( ujo, property, itemClass, item, writer, false, null);
+                        printProperty( ujo, key, itemClass, item, writer, false, null);
                     }
                 } else {
-                    final Class baseType2 = null; //value.getClass()!=property.getType() ? value.getClass() : null ;
-                    printProperty(ujo, property, baseType2, value, writer, true, null);
+                    final Class baseType2 = null; //value.getClass()!=key.getType() ? value.getClass() : null ;
+                    printProperty(ujo, key, baseType2, value, writer, true, null);
                 }
 
 
-            } else if (bodyProperty==property) {
+            } else if (bodyProperty==key) {
                 writeNewLine(writer);
-                printValue2XML(writer, Object.class, value, ujo, property, true);
+                printValue2XML(writer, Object.class, value, ujo, key, true);
             } else {
-                final Class baseType = value.getClass()!=property.getType() ? value.getClass() : null ;
-                printProperty(ujo, property, baseType, value, writer, false, null);
+                final Class baseType = value.getClass()!=key.getType() ? value.getClass() : null ;
+                printProperty(ujo, key, baseType, value, writer, false, null);
 //          } else if (value instanceof Object[]) {
 //                // PoP:TODO - unsupported now
             }
@@ -235,7 +235,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     /**
      * Print one Property
      * @param ujo       Ujo object
-     * @param property  Property
+     * @param key  Ujo Key
      * @param valueType Is NOT mandatory attribute (can be null).
      * @param listType  Is NOT mandatory attribute (can be null).
      * @param value
@@ -246,7 +246,7 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
      */
     private void printProperty
     ( final UjoTextable ujo
-    , final Key property
+    , final Key key
     , final Class valueType
     , final Object value
     , final Writer writer
@@ -258,13 +258,13 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
 
         if (value==null
         ||  ujo!=null // NOT Root
-        && !ujo.readAuthorization(actionExport, property, value)) {
+        && !ujo.readAuthorization(actionExport, key, value)) {
             return; // listType;
         }
 
         writeNewLine(writer);
         writer.write('<');
-        writer.write(property.getName());
+        writer.write(key.getName());
 
         // Print extended attributes:
         if (extendedAttributes != null) {
@@ -291,25 +291,25 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         }
 
         writer.write('>');
-        if (simpleProperty && property instanceof ListKey) {
+        if (simpleProperty && key instanceof ListKey) {
             List valueList = (List) value;
             for (int i = 0, max = valueList.size(); i < max; i++) {
                 if (i>0) {
                     writer.write("</");
-                    writer.write(property.getName());
+                    writer.write(key.getName());
                     writer.write('>');
                     writeNewLine(writer);
                     writer.write('<');
-                    writer.write(property.getName());
+                    writer.write(key.getName());
                     writer.write('>');
                 }
                 printText2Xml(writer, getUjoManager().encodeValue(valueList.get(i), false));
             }
         } else {
-           printValue2XML(writer, Object.class, value, ujo, property, simpleProperty);
+           printValue2XML(writer, Object.class, value, ujo, key, simpleProperty);
         }
         writer.write("</");
-        writer.write(property.getName());
+        writer.write(key.getName());
         writer.write('>');
 
         //return listType;

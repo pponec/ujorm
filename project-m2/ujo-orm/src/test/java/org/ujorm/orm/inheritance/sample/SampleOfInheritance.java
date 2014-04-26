@@ -97,7 +97,7 @@ public class SampleOfInheritance {
         System.out.println("Count: " + count);
     }
 
-    /** Print some meta-data of the property Order.note. */
+    /** Print some meta-data of the key Order.note. */
     public void printMetadata() {
         MetaColumn col = handler.findColumnModel(Customer.discount);
 

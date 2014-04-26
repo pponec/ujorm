@@ -28,7 +28,7 @@ public @interface Procedure {
     /** A String for the NULL value. */
     public static final String NULL = Table.NULL;
 
-    /** A named parameter for the stored prodedure. Default value is taken from a relation property name. */
+    /** A named parameter for the stored prodedure. Default value is taken from a relation key name. */
     String name() default NULL;
     /** A shortcut for the attribute "name" of Table.
      * @see #name()

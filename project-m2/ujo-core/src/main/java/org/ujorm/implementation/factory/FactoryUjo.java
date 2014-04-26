@@ -22,8 +22,8 @@ import org.ujorm.extensions.Property;
 import org.ujorm.extensions.SuperAbstractUjo;
 
 /**
- * The Ujo Factory. A method called readValue() create new instance of the property always by a property type.
- * <br>Each the property type class (see getType() method) must have got at least one of constructor:
+ * The Ujo Factory. A method called readValue() create new instance of the key always by a key type.
+ * <br>Each the key type class (see getType() method) must have got at least one of constructor:
  * <ul>
  * <li>an two parameters constructor with types <code>Ujo</code> and <code>Key</code> or</li>
  * <li>a no parameter constructor</li>
@@ -36,22 +36,22 @@ public abstract class FactoryUjo extends SuperAbstractUjo {
 
     /** It is an unsupported function in this implementation. */
     @Override
-    public void writeValue(final Key property, final Object value) {
+    public void writeValue(final Key key, final Object value) {
         throw new UnsupportedOperationException();
     }
     
-    /** Method readValue() creates a new instance of the property always.
+    /** Method readValue() creates a new instance of the key always.
      * @see FactoryProperty#getValue(Ujo) FactoryProperty.getValue(Ujo)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object readValue(final Key property) {
-        return ((FactoryProperty) property).readValue(this);
+    public Object readValue(final Key key) {
+        return ((FactoryProperty) key).readValue(this);
     }
     
     // --------- STATIC METHODS -------------------
     
-    /** Returns a new instance of property where the default value is null.
+    /** Returns a new instance of key where the default value is null.
      * @hidden     
      */
     @SuppressWarnings("unchecked")

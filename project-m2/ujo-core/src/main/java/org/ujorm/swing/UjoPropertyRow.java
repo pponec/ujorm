@@ -33,11 +33,11 @@ import org.ujorm.implementation.quick.SmartUjo;
 @SuppressWarnings("unchecked")
 public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
     
-    /** Index of property */
+    /** Index of key */
     public static final Key<UjoPropertyRow,Integer> P_INDEX   = newKey("Index");
-    /** Name of property */
+    /** Name of key */
     public static final Key<UjoPropertyRow,String> P_NAME     = newKey("Name");
-    /** Type of property */
+    /** Type of key */
     public static final Key<UjoPropertyRow,Class>  P_TYPE     = newKey("Class");
     /** Class name without packages */
     public static final Key<UjoPropertyRow,String> P_TYPENAME = newKey("Type");
@@ -57,22 +57,22 @@ public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
     }
     
     final protected Ujo content;
-    final protected Key property;
+    final protected Key key;
     
-    public UjoPropertyRow(Ujo content, Key property) {
+    public UjoPropertyRow(Ujo content, Key key) {
         this.content = content;
-        this.property = property;
+        this.key = key;
     }
     
     /** Write value */
     @Override
     public void writeValue(Key aProperty, Object value) {
         if (aProperty==P_VALUE) {
-            content.writeValue(property, value);
+            content.writeValue(key, value);
         } else if (aProperty==P_TEXT) {
-            UjoManager.getInstance().setText(content, property, (String) value, null, new UjoActionImpl(this));
+            UjoManager.getInstance().setText(content, key, (String) value, null, new UjoActionImpl(this));
         } else {
-            throw new UnsupportedOperationException("Can't write property " + property);
+            throw new UnsupportedOperationException("Can't write key " + key);
         }
     }
     
@@ -81,42 +81,42 @@ public class UjoPropertyRow extends SmartUjo<UjoPropertyRow> {
     public void writeValueString(Key aProperty, String value, Class subtype, UjoAction action) {
         if (aProperty==P_VALUE) {
             if (content instanceof UjoTextable) {
-                ((UjoTextable) content).writeValueString(property, value, subtype, action);
+                ((UjoTextable) content).writeValueString(key, value, subtype, action);
             } else {
-                final Object objValue = readUjoManager().decodeValue(property, value, subtype);
-                content.writeValue(property, objValue);
+                final Object objValue = readUjoManager().decodeValue(key, value, subtype);
+                content.writeValue(key, objValue);
             }
         } else {
-            throw new UnsupportedOperationException("Can't write property " + property);
+            throw new UnsupportedOperationException("Can't write key " + key);
         }
     }
     
     /** Read Value */
     @Override
     public Object readValue(final Key aProperty) {
-        if (aProperty==P_INDEX)   { return property.getIndex(); }
-        if (aProperty==P_NAME)    { return property.getName(); }
-        if (aProperty==P_TYPE)    { return property.getType(); }
-        if (aProperty==P_DEFAULT) { return property.getDefault(); }
-        if (aProperty==P_VALUE)   { return property.of(content); }
-        if (aProperty==P_TEXT)    { return UjoManager.getInstance().getText(content, property, new UjoActionImpl(this)); }
+        if (aProperty==P_INDEX)   { return key.getIndex(); }
+        if (aProperty==P_NAME)    { return key.getName(); }
+        if (aProperty==P_TYPE)    { return key.getType(); }
+        if (aProperty==P_DEFAULT) { return key.getDefault(); }
+        if (aProperty==P_VALUE)   { return key.of(content); }
+        if (aProperty==P_TEXT)    { return UjoManager.getInstance().getText(content, key, new UjoActionImpl(this)); }
         if (aProperty==P_TYPENAME){
-            final String result = property.getType().getName();
+            final String result = key.getType().getName();
             final int i = 1 + result.lastIndexOf('.');
             return result.substring(i);
         }
-        throw new UnsupportedOperationException("Can't read property " + property);
+        throw new UnsupportedOperationException("Can't read key " + key);
     }
     
-    /** Returns an assigned property (a parameter e.g.) */
+    /** Returns an assigned key (a parameter e.g.) */
     public final Key getProperty() {
-        return property;
+        return key;
     }
     
     /** Property name + value */
     @Override
     public String toString() {
-       final String result = property.getName() + ":" + property.of(content);
+       final String result = key.getName() + ":" + key.of(content);
        return result;
     }
 

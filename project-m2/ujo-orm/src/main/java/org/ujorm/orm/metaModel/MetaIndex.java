@@ -46,7 +46,7 @@ final public class MetaIndex extends AbstractMetaModel {
     @Transient
     public static final ListKey<MetaIndex,MetaColumn> COLUMNS = fa.newListKey("column");
 
-    /** The property initialization */
+    /** The key initialization */
     static{fa.lock();}
 
     public MetaIndex(String index, MetaTable table) {

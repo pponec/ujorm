@@ -52,7 +52,7 @@ package org.ujorm.extensions;
  *   <li>Class</li>
  *   <li>Charset</li>
  *   <li>List&lt;some-type-above&gt; with some restrictions for <strong>deserialization</strong>:<br />
- *       value property must be type of UjoPropertyList and
+ *       value key must be type of UjoPropertyList and
  *       the serialized text must not contain a separator character comma ','
  *   </li>
  * </ul>

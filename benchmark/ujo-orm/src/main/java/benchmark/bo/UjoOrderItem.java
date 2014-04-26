@@ -46,7 +46,7 @@ public class UjoOrderItem extends OrmTable<UjoOrderItem> {
     public static final Key<UjoOrderItem,UjoOrder> ORDER = f.newKey("order_id");
     public static final Key<UjoOrderItem,UjoOrderItem> PARENT = f.newKey("parent_id");
 
-    /** Indirect property: ORDER.DELETED */
+    /** Indirect key: ORDER.DELETED */
     public static final PathProperty<UjoOrderItem,Boolean> _ORDER_DELETED = PathProperty.of(UjoOrderItem.ORDER, UjoOrder.DELETED);
 
     static { f.lock(); }

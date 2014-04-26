@@ -24,7 +24,7 @@ import org.ujorm.extensions.Property;
 
 /**
  * This is a fast implementation of the <code>Ujo</code>.
- * For implementation define only a "public static final Key" constants call a static method init() from the static block located after the latest property.
+ * For implementation define only a "public static final Key" constants call a static method init() from the static block located after the latest key.
  * The class can be Serializable.
  * <br>All keys must be objects (no primitive types) in the current version of Ujorm.
  * <br>Features: good performance, simple code.
@@ -63,7 +63,7 @@ public abstract class QuickUjo extends AbstractUjo {
     // --------- STATIC METHODS -------------------
 
 
-    /** A Property Factory creates new property and assigns a next property index.
+    /** A Property Factory creates new key and assigns a next key index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey
@@ -76,16 +76,16 @@ public abstract class QuickUjo extends AbstractUjo {
         return Property.of(name, type, defaultValue, index, lock);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name) {
         return newKey(name, null, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newKey
@@ -95,8 +95,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newKey(name, null, value, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newKey
@@ -105,16 +105,16 @@ public abstract class QuickUjo extends AbstractUjo {
         return newKey(null, null, value, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newKey() {
         return newKey(null, null, null, UNDEFINED_INDEX, false);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** Returns a new instance of key where the default value is null.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -122,16 +122,16 @@ public abstract class QuickUjo extends AbstractUjo {
         return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListKey( String name) {
         return ListProperty.newListProperty(name, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a name and next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a name and next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListKey() {
@@ -140,7 +140,7 @@ public abstract class QuickUjo extends AbstractUjo {
 
     // ------------- DEPRECATED METHODS ---------------------
 
-    /** A Property Factory creates new property and assigns a next property index.
+    /** A Property Factory creates new key and assigns a next key index.
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -155,8 +155,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return Property.of(name, type, defaultValue, index, lock);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty(java.lang.String)} instead of this.
      * @hidden
      */
@@ -168,8 +168,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newProperty(name, type, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -178,8 +178,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newProperty(name, null, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -191,8 +191,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newProperty(name, null, value, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty()} instead of this,
      * @hidden
      */
@@ -203,8 +203,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newProperty(null, type, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */
@@ -215,8 +215,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newProperty(null, null, value, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */
@@ -225,8 +225,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newProperty(null, null, null, UNDEFINED_INDEX, false);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** Returns a new instance of key where the default value is null.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -236,8 +236,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return Property.of(p.getName(), p.getType(), p.getDefault(), -1, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather {@link #newListProperty(java.lang.String) }
      * @hidden
      * @deprecated Use the method newKey(...)
@@ -250,8 +250,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return ListProperty.newListProperty(name, itemType, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */
@@ -260,8 +260,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return ListProperty.newListProperty(name, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a name and next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a name and next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather {@link #newListProperty() }
      * @hidden
      */
@@ -272,8 +272,8 @@ public abstract class QuickUjo extends AbstractUjo {
         return newListProperty(null, itemType);
     }
 
-    /** A Property Factory creates new property and assigns a name and next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a name and next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */

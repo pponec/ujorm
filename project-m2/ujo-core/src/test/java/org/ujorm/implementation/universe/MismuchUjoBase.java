@@ -45,16 +45,16 @@ public class MismuchUjoBase extends AbstractUjo {
     }
 
     @Override
-    public Object readValue(Key<?,?> property) {
-        return data==null ? data : data[property.getIndex()];
+    public Object readValue(Key<?,?> key) {
+        return data==null ? data : data[key.getIndex()];
     }
 
     @Override
-    public void writeValue(Key<?,?> property, Object value) {
+    public void writeValue(Key<?,?> key, Object value) {
         if (data==null) {
             data = new Object[readKeys().size()];
         }
-        data[property.getIndex()] = value;
+        data[key.getIndex()] = value;
     }
 
 }
