@@ -59,14 +59,14 @@ public class UjoCoder {
     public static final Class[] CONSTRUCTOR_TYPE = new Class[]{String.class};
 
     // === CONVERTING VALUES ===
-    
+
     /** Returns a list separator */
     public char getSeparator() {
         return ',';
     }
 
     /**
-     * Convert value to a String representation. 
+     * Convert value to a String representation.
      * @param value The value
      * @param regenerationTest Perform a decoding for an unknown data types.
      */
@@ -108,9 +108,9 @@ public class UjoCoder {
             result = ((File) value).getPath();
         } else if (value instanceof Dimension) {
             result = ((Dimension) value).width + "," + ((Dimension) value).height;
-        } else if (value instanceof StringWrapper) {            
+        } else if (value instanceof StringWrapper) {
             result = ((StringWrapper) value).exportToString();
-        } else if (value instanceof Enum) {            
+        } else if (value instanceof Enum) {
             result = ((Enum) value).name();
         } else if (value instanceof Rectangle) {
             Rectangle r = (Rectangle) value;
@@ -191,7 +191,7 @@ public class UjoCoder {
 
         try {
             if (aValue == null
-            ||  String.class==type) {  
+            ||  String.class==type) {
                 return aValue;
             }
             if (aValue.length() == 0) {
@@ -263,7 +263,7 @@ public class UjoCoder {
                     final int hash = aValue.hashCode();
                     for (Object en : type.getEnumConstants()) {
                         final String exportedTxt = ((StringWrapper)en).exportToString();
-                        if (hash == exportedTxt.hashCode() 
+                        if (hash == exportedTxt.hashCode()
                         && aValue.equals(exportedTxt)) {
                             return en;
                         }
@@ -330,6 +330,7 @@ public class UjoCoder {
      * Decode HexaString into byte array.
      * @param hexString NULL value is not supported.
      * @return Byte array
+     * @see javax.xml.bind.DatatypeConverter#parseHexBinary(java.lang.String) 
      */
     protected byte[] decodeBytes(String hexString) {
         byte[] bytes = new byte[hexString.length() >> 1];
@@ -343,6 +344,7 @@ public class UjoCoder {
      * Encode bytes to hexadecimal String.
      * @param bytes NULL value is not supported
      * @return A hexadecimal text
+     * @see javax.xml.bind.DatatypeConverter#printHexBinary(byte[])
      */
     protected String encodeBytes(byte[] bytes) {
         // table to convert a nibble to a hex char.
@@ -361,7 +363,7 @@ public class UjoCoder {
      * Returns true, if the Class is type of Ujo, List or Object[].
      */
     public boolean isContainerType(final Class baseType) {
-        final boolean result 
+        final boolean result
             =  Ujo.class.isAssignableFrom(baseType)
             || List.class.isAssignableFrom(baseType)
             || Object[].class.isAssignableFrom(baseType)
