@@ -19,19 +19,19 @@ public class UniUjoChildImpl implements UniUjoInterfaceChild {
     
     private Object[] data = new Object[KEY_SIZE];
 
-    public Object readValue(Key property) {
-        return data[property.getIndex()];
+    public Object readValue(Key key) {
+        return data[key.getIndex()];
     }
 
-    public void writeValue(Key property, Object value) {
-        data[property.getIndex()] = value;
+    public void writeValue(Key key, Object value) {
+        data[key.getIndex()] = value;
     }
 
     public KeyList readKeys() {
         return $factory2.getKeys();
     }
 
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }
 

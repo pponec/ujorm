@@ -30,7 +30,7 @@ import org.ujorm.orm.annot.View;
 
 abstract public class _Database extends OrmTable<_Database> {
 
-    /** Customer order. The used annotation overwrites a database schema from the property schema. */
+    /** Customer order. The used annotation overwrites a database schema from the key schema. */
     @Table("ord_order")
     public static final RelationToMany<Database,Order> ORDERS = newRelation(Order.class);
 

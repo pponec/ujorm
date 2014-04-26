@@ -41,7 +41,7 @@ import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 
 /**
- * Serializable property factory is the best tool of Ujorm to create Property implementations.
+ * Serializable key factory is the best tool of Ujorm to create Property implementations.
  * <h3>Sample of usage</h3>
  * <pre class="pre">
  * <span class="keyword-directive">public class</span> Person <span class="keyword-directive">implements</span> Ujo {
@@ -59,22 +59,22 @@ import org.ujorm.logger.UjoLoggerFactory;
  *     <span class="comment">/&#42;&#42; Data container &#42;/</span>
  *     <span class="keyword-directive">protected</span> Object[] data;
  *
- *     <span class="keyword-directive">public</span> Object readValue(Key property) {
- *         <span class="keyword-directive">return</span> data==<span class="keyword-directive">null</span> ? data : data[property.getIndex()];
+ *     <span class="keyword-directive">public</span> Object readValue(Key key) {
+ *         <span class="keyword-directive">return</span> data==<span class="keyword-directive">null</span> ? data : data[key.getIndex()];
  *     }
  *
- *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key property, Object value) {
+ *     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key key, Object value) {
  *         <span class="keyword-directive">if</span> (data==<span class="keyword-directive">null</span>) {
  *             data = <span class="keyword-directive">new</span> Object[readKeys().size()];
  *         }
- *         data[property.getIndex()] = value;
+ *         data[key.getIndex()] = value;
  *     }
  *
  *     <span class="keyword-directive">public</span> KeyList&lt;?&gt; readKeys() {
  *         <span class="keyword-directive">return</span> factory.getKeys();
  *     }
  *
- *     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, Key property, Object value) {
+ *     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> readAuthorization(UjoAction action, Key key, Object value) {
  *         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
  *     }
  * }
@@ -91,11 +91,11 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(KeyFactory.class);
-    /** Generate property name using the cammel case. */
+    /** Generate key name using the cammel case. */
     protected static final boolean CAMEL_CASE = true;
-    /** Requested modifier of property definitions. */
+    /** Requested modifier of key definitions. */
     public static final int PROPERTY_MODIFIER = Modifier.STATIC | Modifier.PUBLIC | Modifier.FINAL;
-    /** Transient property list */
+    /** Transient key list */
     transient private InnerDataStore<UJO> tmpStore;
     /** Property Store */
     private KeyList<UJO> propertyStore;
@@ -204,18 +204,18 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         return null;
     }
 
-    /** Add an new property for an internal use. */
+    /** Add an new key for an internal use. */
     protected boolean addKey(Property<?, ?> p) {
         checkLock();
         return tmpStore.addKey(p);
     }
 
-    /** Lock the property factory */
+    /** Lock the key factory */
     public final void lock() {
         lockAndSize();
     }
 
-    /** Lock the property factory
+    /** Lock the key factory
      * @return count of the direct keys.
      */
     public final int lockAndSize() {
@@ -243,7 +243,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         return propertyStore;
     }
 
-    /** Create a property List */
+    /** Create a key List */
     protected KeyList<UJO> createKeyList() throws IllegalStateException {
         final List<Key<UJO,?>> result = new ArrayList<Key<UJO,?>>(tmpStore.propertyList.size() + 8);
         try {
@@ -282,12 +282,12 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 }
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Can't initialize a property of the " + tmpStore.holder, e);
+            throw new IllegalStateException("Can't initialize a key of the " + tmpStore.holder, e);
         }
         return tmpStore.createKeyList(result);
     }
 
-    /** Create a property name along the field. */
+    /** Create a key name along the field. */
     protected String createKeyName(Field field, boolean camelCase) {
         if (camelCase) {
             final StringBuilder result = new StringBuilder(32);
@@ -326,7 +326,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
                 }
             }
         }
-        final String msg = String.format("Can't get a field for the property index #%d - %s.%s"
+        final String msg = String.format("Can't get a field for the key index #%d - %s.%s"
                 , p.getIndex()
                 , tmpStore.holder.getSimpleName()
                 , p.getName());
@@ -489,7 +489,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
         private final Class<?> holder;
         /** Convert <strong>field names<strong> to a camelCase name.*/
         private final boolean camelCase;
-        /** Transient property list */
+        /** Transient key list */
         private final List<Key<UJO, ?>> propertyList;
         /** Property annotations */
         private final Map<Key<UJO, ?>, Map<Class<? extends Annotation>, Annotation>> annotationsMap;
@@ -505,7 +505,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             this.annotationsMap = new HashMap<Key<UJO, ?>, Map<Class<? extends Annotation>, Annotation>>();
         }
 
-        /** Add all annotation for required property. */
+        /** Add all annotation for required key. */
         public void addAnnotations(Key<UJO, ?> p, Field field) {
             final Annotation[] annotations = field.getAnnotations();
             Map<Class<? extends Annotation>, Annotation> annots = annotationsMap.get(field);
@@ -518,7 +518,7 @@ public class KeyFactory<UJO extends Ujo> implements Serializable {
             }
         }
 
-        /** Add property to a list */
+        /** Add key to a list */
         public boolean addKey(Key p) {
             return propertyList.add(p);
         }

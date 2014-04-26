@@ -17,8 +17,8 @@
 package org.ujorm.listener;
 
 /**
- * A "PropertyChange" event gets fired whenever a bean changes a "bound" property.  
- * You can register a PropertyChangeListener with a source bean so as to be notified of any bound property updates.
+ * A "PropertyChange" event gets fired whenever a bean changes a "bound" key.  
+ * You can register a PropertyChangeListener with a source bean so as to be notified of any bound key updates.
  * @see java.beans.PropertyChangeListener
  * @since ujo-tool
  * @author Pavel Ponec
@@ -26,9 +26,9 @@ package org.ujorm.listener;
 public interface UjoPropertyChangeListener {
     
     /**
-     * This method gets called when a bound property is changed.
+     * This method gets called when a bound key is changed.
      * @param evt A PropertyChangeEvent object describing the event source 
-     * and the property that has changed.
+     * and the key that has changed.
      */
     void propertyChange(UjoPropertyChangeEvent evt); 
 

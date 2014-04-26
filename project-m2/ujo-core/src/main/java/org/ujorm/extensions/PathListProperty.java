@@ -27,7 +27,7 @@ import org.ujorm.core.annot.Immutable;
  * A <strong>PathListProperty</strong> class is an composite ending wtih a ListKey objects.
  * The PathListProperty class can be used wherever is used ListKey - with a one important <strong>exception</strong>:
  * do not send the PathListProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included
+ * <p/>Note that method isDirect() returns a false in this class. For this reason, the Key is not included
  * in the list returned by Ujo.readProperties().
  *
  * @author Pavel Ponec
@@ -52,7 +52,7 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
         super(lastSpaceName, keys);
     }
 
-    /** Get the last property of the current object. The result may not be the direct property. */
+    /** Get the last Key of the current object. The result may not be the direct key. */
     @SuppressWarnings("unchecked")
     @Override
     public final <UJO_IMPL extends Ujo> ListKey<UJO_IMPL, VALUE> getLastPartialProperty() {
@@ -104,12 +104,12 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
     }
 
     @Override
-    public CompositeKey add(Key property) {
+    public CompositeKey add(Key key) {
         return throwException();
     }
 
     @Override
-    public ListKey add(ListKey property) {
+    public ListKey add(ListKey key) {
         return throwException();
     }
 

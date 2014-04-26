@@ -30,27 +30,27 @@ import org.ujorm.implementation.map.MapUjo;
  *     
  *   <span class="keyword-directive">final</span> <span class="keyword-directive">private</span> UjoPropertyChangeSupport eventRegistrar = <span class="keyword-directive">new</span> UjoPropertyChangeSupport(<span class="keyword-directive">this</span>, <span class="keyword-directive">null</span>);
  * 
- *   <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key property, Object value) {
- *     Object oldValue = readValue(property);
- *     eventRegistrar.firePropertyChange(property, oldValue, value, <span class="keyword-directive">true</span>);
- *     <span class="keyword-directive">super</span>.writeValue(property, value);
- *     eventRegistrar.firePropertyChange(property, oldValue, value, <span class="keyword-directive">false</span>);
+ *   <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key key, Object value) {
+ *     Object oldValue = readValue(key);
+ *     eventRegistrar.firePropertyChange(key, oldValue, value, <span class="keyword-directive">true</span>);
+ *     <span class="keyword-directive">super</span>.writeValue(key, value);
+ *     eventRegistrar.firePropertyChange(key, oldValue, value, <span class="keyword-directive">false</span>);
  *   }
  * 
  *   <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> addPropertyChangeListener
- *     ( Key&lt;UJO,?&gt; property
+ *     ( Key&lt;UJO,?&gt; key
  *     , Boolean before
  *     , UjoPropertyChangeListener listener
  *     ) {
- *     <span class="keyword-directive">return</span> eventRegistrar.addPropertyChangeListener(property, before, listener);
+ *     <span class="keyword-directive">return</span> eventRegistrar.addPropertyChangeListener(key, before, listener);
  *   }
  * 
  *   <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> removePropertyChangeListener
- *     ( Key&lt;UJO,?&gt; property
+ *     ( Key&lt;UJO,?&gt; key
  *     , Boolean before
  *     , UjoPropertyChangeListener listener
  *     ) {
- *      <span class="keyword-directive">return</span> eventRegistrar.removePropertyChangeListener(property, before, listener);
+ *      <span class="keyword-directive">return</span> eventRegistrar.removePropertyChangeListener(key, before, listener);
  *   }
  * }</pre>
  * @since ujo-tool
@@ -62,29 +62,29 @@ public class RegistrarUjo<UJO extends Ujo> extends MapUjo implements EventRegist
     transient final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this, null);
 
     @Override
-    public void writeValue(Key property, Object value) {
+    public void writeValue(Key key, Object value) {
         @SuppressWarnings("unchecked")
-        Object oldValue = property.of(this);
-        eventRegistrar.firePropertyChange(property, oldValue, value, true);
-        super.writeValue(property, value);
-        eventRegistrar.firePropertyChange(property, oldValue, value, false);
+        Object oldValue = key.of(this);
+        eventRegistrar.firePropertyChange(key, oldValue, value, true);
+        super.writeValue(key, value);
+        eventRegistrar.firePropertyChange(key, oldValue, value, false);
     }
 
-    /** Add property Listener */
+    /** Add key Listener */
     public boolean addPropertyChangeListener
-        ( Key<UJO,?> property
+        ( Key<UJO,?> key
         , Boolean before
         , UjoPropertyChangeListener listener
         ) {
-        return eventRegistrar.addPropertyChangeListener(property, before, listener);
+        return eventRegistrar.addPropertyChangeListener(key, before, listener);
     }
 
-    /** Remove property Listener */
+    /** Remove key Listener */
     public boolean removePropertyChangeListener
-        ( Key<UJO,?> property
+        ( Key<UJO,?> key
         , Boolean before
         , UjoPropertyChangeListener listener
         ) {
-         return eventRegistrar.removePropertyChangeListener(property, before, listener);
+         return eventRegistrar.removePropertyChangeListener(key, before, listener);
     }
 }

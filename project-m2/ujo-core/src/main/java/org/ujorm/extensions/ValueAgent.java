@@ -17,7 +17,7 @@
 package org.ujorm.extensions;
 
 /**
- * The ValueAgent make reading or writing a property value.
+ * The ValueAgent make reading or writing a key value.
  * The interface is designed for implementation to a Key.
  * @author Pavel Ponec
  */

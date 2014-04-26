@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 
 /** 
  * A parameter annotation of the stored procedure.
- * The first property/parameter has allways the output type and it provides a result of the stored procedure. If prcedure does not have a return value, the property type must be Void.
+ * The first key/parameter has always the output type and it provides a result of the stored procedure. If prcedure does not have a return value, the key type must be Void.
  * The next keys/parameters have an input type by default, there is possible to change this type by this annotations.
  * @see Procedure
  */
@@ -29,7 +29,7 @@ public @interface Parameter {
 
     /** An input parameter of the stored procedure. */
     boolean input() default false;
-    /** An outpue parameter of the stored procedure. */
+    /** An output parameter of the stored procedure. */
     boolean output() default false;
     
 }

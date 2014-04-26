@@ -70,56 +70,56 @@ import org.ujorm.extensions.ValueAgent;
   */
 public abstract class BeanUjo extends SuperAbstractUjo {
 
-    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method 
-     * BeanProperty.setValue(Ujo,Object) 
+    /** It is a <strong>common</strong> method for writing all object values, however there is strongly recomended to use a method
+     * BeanProperty.setValue(Ujo,Object)
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
-     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
+     * <br>NOTE: If key is an incorrect then method throws an IllegalArgumentException.
      *
      * @see BeanProperty#setValue(Ujo,Object) BeanProperty.setValue(Ujo,Object)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        ((ValueAgent) property).writeValue(this, value);
+    public void writeValue(final Key key, final Object value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        ((ValueAgent) key).writeValue(this, value);
     }
-    
-    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
+
+    /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method
      * BeanProperty.getValue(Ujo)
      * to an external access for a better type safe.
-     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
-     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
+     * <br>NOTE: If key is an incorrect then method throws an IllegalArgumentException.
      *
      * @see BeanProperty#getValue(Ujo) BeanProperty.getValue(Ujo)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object readValue(final Key property) {
-        return ((ValueAgent) property).readValue(this);
+    public Object readValue(final Key key) {
+        return ((ValueAgent) key).readValue(this);
     }
-    
+
     // --------- STATIC METHODS -------------------
-    
-    /** Returns a new instance of property where the default value is null.
-     * Method assigns a next property index.
-     * @hidden     
+
+    /** Returns a new instance of key where the default value is null.
+     * Method assigns a next key index.
+     * @hidden
      */
     protected static <UJO extends Ujo,VALUE> BeanProperty<UJO, VALUE> newKey(String name) {
         return new BeanProperty<UJO,VALUE> (name, (Class)null, Property.UNDEFINED_INDEX);
     }
-    
-    /** A Property Factory, a property type is related from the default value.
-     *  Method assigns a next property index.
-     * @hidden     
+
+    /** A Property Factory, a key type is related from the default value.
+     *  Method assigns a next key index.
+     * @hidden
      */
     protected static <UJO extends Ujo, VALUE> BeanProperty<UJO, VALUE> newKey(String name, VALUE value) {
         return new BeanProperty<UJO, VALUE>(name, value, Property.UNDEFINED_INDEX);
     }
 
     /** A ListProperty Factory for a <strong>BeanUjo</strong> object.
-     * Method assigns a next property index.
-     * @hidden     
+     * Method assigns a next key index.
+     * @hidden
      */
     protected static <UJO extends Ujo, ITEM> BeanPropertyList<UJO, ITEM> newListKey(String name) {
         return new BeanPropertyList<UJO,ITEM> (name, null, Property.UNDEFINED_INDEX);

@@ -52,16 +52,16 @@ public class UjoManagerCache {
         return result;
     }
 
-    /** Is the property an XML attribute? */
-    public final boolean isXmlAttribute(final Key property) {
+    /** Is the key an XML attribute? */
+    public final boolean isXmlAttribute(final Key key) {
         final boolean result 
             =  attributesCache!=null
-            && attributesCache.contains(property)
+            && attributesCache.contains(key)
             ;
         return result;
     }
 
-    /** Returns a Element body of the class or the null if no property was found. */
+    /** Returns a Element body of the class or the null if no key was found. */
     public final Key getXmlElementBody(final Class type) {
 
         final Key result
@@ -72,9 +72,9 @@ public class UjoManagerCache {
         return result;
     }
 
-    /** Is the property an Transient? */
-    public final boolean isTransientProperty(final Key property) {
-        final boolean result = transientCache!=null && transientCache.contains(property);
+    /** Is the key an Transient? */
+    public final boolean isTransientProperty(final Key key) {
+        final boolean result = transientCache!=null && transientCache.contains(key);
         return result;
     }
 }

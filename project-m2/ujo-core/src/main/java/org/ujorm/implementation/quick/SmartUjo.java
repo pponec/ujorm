@@ -24,7 +24,7 @@ import org.ujorm.extensions.UjoMiddle;
 
 /**
  * This is a fast implementation of the <code>UjoMiddle</code>.
- * For implementation define only a "public static final Key" constants call a static method init() from the static block located after the latest property.
+ * For implementation define only a "public static final Key" constants call a static method init() from the static block located after the latest Key.
  * <br>All keys must be objects (no primitive types) in the current version of Ujorm.
  * <br>Features: good performance, simple code.
  * <h3>Sample of usage</h3>
@@ -91,21 +91,21 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
      * Returns a String value by a NULL context.
      * otherwise method returns an instance of String.
      *
-     * @param property A Property
-     * @return If property type is "container" then result is null.
+     * @param key A Property
+     * @return If key type is "container" then result is null.
      */
-    public String getText(final Key property) {
-        return readUjoManager().getText(this, property, null);
+    public String getText(final Key key) {
+        return readUjoManager().getText(this, key, null);
     }
 
     /**
      * Set value from a String format by a NULL context. Types Ujo, List, Object[] are not supported by default.
      * <br>The method is an alias for a method writeValueString(...)
-     * @param property Property
+     * @param key Property
      * @param value String value
      */
-    public void setText(final Key property, final String value) {
-        readUjoManager().setText(this, property, value, null, null);
+    public void setText(final Key key, final String value) {
+        readUjoManager().setText(this, key, value, null, null);
     }
 
 }

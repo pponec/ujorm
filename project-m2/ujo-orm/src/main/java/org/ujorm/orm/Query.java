@@ -149,7 +149,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         return result;
     }
 
-    public <ITEM> void setParameter(Key<UJO,ITEM> property, ITEM value) {
+    public <ITEM> void setParameter(Key<UJO,ITEM> key, ITEM value) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -529,21 +529,21 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
     }
 
     /** Add an item to the end of order list. */
-    public Query<UJO> addOrderBy(Key<UJO,?> property) {
+    public Query<UJO> addOrderBy(Key<UJO,?> key) {
         clearDecoder();
-        orderBy.add(property);
+        orderBy.add(key);
         return this;
     }
 
     /** Returns an order column. A method for an internal use only.  */
     public MetaColumn readOrderColumn(int i) throws IllegalStateException {
-        final Key property = orderBy.get(i);
-        final MetaRelation2Many result = session.getHandler().findColumnModel(property);
+        final Key key = orderBy.get(i);
+        final MetaRelation2Many result = session.getHandler().findColumnModel(key);
 
         if (result instanceof MetaColumn) {
             return (MetaColumn) result;
         } else {
-            String msg = "Property '" + table.getType().getSimpleName() + "." + property + "' is not a persistent table column";
+            String msg = "Property '" + table.getType().getSimpleName() + "." + key + "' is not a persistent table column";
             throw new IllegalStateException(msg);
         }
     }

@@ -65,15 +65,15 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
 
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
-        return property.of((UJO)this);
+    public <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> key) {
+        return key.of((UJO)this);
     }
 
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> property, final VALUE value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        property.setValue((UJO)this, value);
+    public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> key, final VALUE value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        key.setValue((UJO)this, value);
         return this;
     }
 
@@ -81,21 +81,21 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
      * Returns a String value by a NULL context.
      * otherwise method returns an instance of String.
      *
-     * @param property A Property
-     * @return If property type is "container" then result is null.
+     * @param key A Property
+     * @return If key type is "container" then result is null.
      */
-    public String getText(final Key property) {
-        return readUjoManager().getText(this, property, null);
+    public String getText(final Key key) {
+        return readUjoManager().getText(this, key, null);
     }
 
     /**
      * Set value from a String format by a NULL context. Types Ujo, List, Object[] are not supported by default.
      * <br>The method is an alias for a method writeValueString(...)
-     * @param property Property
+     * @param key Property
      * @param value String value
      */
-    public void setText(final Key property, final String value) {
-        readUjoManager().setText(this, property, value, null, null);
+    public void setText(final Key key, final String value) {
+        readUjoManager().setText(this, key, value, null, null);
     }
 
 

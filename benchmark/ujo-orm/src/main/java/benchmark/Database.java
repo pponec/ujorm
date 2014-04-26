@@ -30,7 +30,7 @@ import org.ujorm.orm.annot.Db;
 //@Db(schema="db1", dialect=org.ujorm.orm.dialect.H2Dialect.class, user="sa", password="", jdbcUrl="jdbc:h2:mem:db1")
 public class Database extends OrmTable<Database> {
 
-    /** Customer ORDER. The used annotation overwrites a database schema from the property schema. */
+    /** Customer ORDER. The used annotation overwrites a database schema from the key schema. */
     public static final RelationToMany<Database,UjoOrder> ORDER = newRelation("ujo_order");
 
     /** Items of the Customer ORDER */

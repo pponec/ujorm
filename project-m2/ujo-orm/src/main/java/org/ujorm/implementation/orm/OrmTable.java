@@ -88,21 +88,21 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
 
     /** A method for an internal use only. */
     @Override
-    public void writeValue(Key property, Object value) {
+    public void writeValue(Key key, Object value) {
         if (session!=null) {
             if (changes==null) {
                 changes = new HashSet<Key>(8);
             }
-            changes.add(property);
+            changes.add(key);
         }
-        super.writeValue(property, value);
+        super.writeValue(key, value);
     }
 
     /**
      * Returns keys of changed values in a time when any <strong>session</strong> is assigned.
      * The method is used by a SQL UPDATE statement to update assigned values only.
      * Implementation tip: create a new property type of {@link Set<Key>}
-     * and in the method writeValue assing the current Key allways.
+     * and in the method writeValue assign the current Key always.
      * @param clear True value clears all the key changes.
      * @return Key array of the modified values.
      */
@@ -121,8 +121,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
 
     /** Getter based on Key implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
-    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> property) {
-        final VALUE result = property.of((UJO)this);
+    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> key) {
+        final VALUE result = key.of((UJO)this);
         return result;
     }
 
@@ -131,22 +131,22 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
      */
     @SuppressWarnings({"unchecked"})
     public final <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
-        ( final Key<UJO, VALUE> property
+        ( final Key<UJO, VALUE> key
         , final VALUE value
         ) {
-        UjoManager.assertAssign(property, value);
-        property.setValue((UJO)this, value);
+        UjoManager.assertAssign(key, value);
+        key.setValue((UJO)this, value);
         return (UJO_IMPL) this;
     }
 
     /** Test an authorization of the action. */
     @Override
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key key, Object value) {
         switch (action.getType()) {
             case UjoAction.ACTION_TO_STRING:
-                return !(property instanceof RelationToMany);
+                return !(key instanceof RelationToMany);
             default:
-                return super.readAuthorization(action, property, value);
+                return super.readAuthorization(action, key, value);
         }
     }
 
@@ -154,35 +154,35 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
      * This is useful to obtain the foreign key value without (lazy) loading the entire object.
      * If the lazy object is loaded, the method will need the Session to build the ForeignKey instance.
      * <br>NOTE: The method is designed for developers only, the Ujorm doesn't call it newer.
-     * @param property Must be direct property only ({@link Key#isDirect()}==true)
+     * @param key Must be direct key only ({@link Key#isDirect()}==true)
      * @return If no related object is available, then the result has the NULL value.
-     * @throws IllegalStateException Method throws an exception for a wrong property type.
-     * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the property.
+     * @throws IllegalStateException Method throws an exception for a wrong key type.
+     * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the key.
      */
     @Override
-    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> property) throws IllegalStateException {
-        final Object value = super.readValue(property);
+    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
+        final Object value = super.readValue(key);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
         }
-//      if (property instanceof RelationToOne) {
+//      if (key instanceof RelationToOne) {
 //          // TODO: fix the case the key is a relation:
-//          final Key key = ((RelationToOne)property).getRelatedKey();
+//          final Key key = ((RelationToOne)key).getRelatedKey();
 //          return value instanceof ExtendedOrmUjo
 //                  ? ((ExtendedOrmUjo)value).readFK(key)
 //                  : new ForeignKey(key.of((Ujo)value));
 //      }
-// Effectiva: toto se volá cyklicky a navíc se předává špatná property (z původního objektu místo z cizího), pak se vrací nesmysly
+// Effectiva: toto se volá cyklicky a navíc se předává špatná key (z původního objektu místo z cizího), pak se vrací nesmysly
 //        if (value instanceof ExtendedOrmUjo) {
-//            return ((ExtendedOrmUjo) value).readFK(property);
+//            return ((ExtendedOrmUjo) value).readFK(key);
 //        }
         if (session!=null) {
             final OrmUjo ujo = value instanceof OrmUjo
                     ? (OrmUjo) value
                     : this ;
-            return session.readFK(ujo, property);
+            return session.readFK(ujo, key);
         }
-        throw new NullPointerException("Can't get FK form the property '"+property+"' due the missing Session");
+        throw new NullPointerException("Can't get FK form the key '"+key+"' due the missing Session");
     }
 
     // ===== STATIC METHODS: Key Facotory =====
@@ -194,14 +194,14 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return (FACTORY) new OrmKeyFactory(ujoClass, true);
     }
 
-    /** Create a base factory Key name generator where property name is the same as its field name.
+    /** Create a base factory Key name generator where key name is the same as its field name.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      */
     protected static <UJO extends Ujo, FACTORY extends KeyFactory<UJO>> FACTORY newFactory(Class<? extends UJO> ujoClass) {
         return (FACTORY) new OrmKeyFactory(ujoClass, false);
     }
 
-    /** A PropertyIterator Factory creates an new property and assign a next index.
+    /** A PropertyIterator Factory creates an new key and assign a next index.
      * @hidden
      * @deprecated use the {@link #newRelation(java.lang.String)} instead of this.
      */
@@ -210,14 +210,14 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return new RelationToMany<UJO,ITEM> (name, type, UNDEFINED_INDEX, false);
     }
 
-    /** A PropertyIterator Factory creates an new property and assign a next index.
+    /** A PropertyIterator Factory creates an new key and assign a next index.
      * @hidden
      */
     protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation(String name) {
         return new RelationToMany<UJO,ITEM> (name, null, UNDEFINED_INDEX, false);
     }
 
-    /** A PropertyIterator Factory creates an new property and assign a next index.
+    /** A PropertyIterator Factory creates an new key and assign a next index.
      * @hidden
      * @deprecated use the {@link #newRelation()} instead of this.
      */
@@ -226,35 +226,35 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return newRelation(null, type);
     }
 
-    /** A PropertyIterator Factory creates an new property and assign a next index.
+    /** A PropertyIterator Factory creates an new key and assign a next index.
      * @hidden
      */
     protected static <UJO extends ExtendedOrmUjo, ITEM extends ExtendedOrmUjo> RelationToMany<UJO,ITEM> newRelation() {
         return newRelation(null, null);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
+    /** A Property Factory creates new key and assigns a next key index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey() {
         return new OrmProperty(UNDEFINED_INDEX);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
+    /** A Property Factory creates new key and assigns a next key index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name) {
         return new OrmProperty(UNDEFINED_INDEX, name, null, null);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
+    /** A Property Factory creates new key and assigns a next key index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey(String name, VALUE defaultValue) {
         return new OrmProperty(UNDEFINED_INDEX, name, defaultValue, null);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
+    /** A Property Factory creates new key and assigns a next key index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKeyDefault(VALUE defaultValue) {
@@ -264,7 +264,7 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
     // --------- STATIC METHODS -------------------
 
 
-    /** A Property Factory creates new property and assigns a next property index.
+    /** A Property Factory creates new key and assigns a next key index.
      * @hidden
      */
     protected static <UJO extends Ujo,VALUE> Property<UJO,VALUE> newKey
@@ -277,8 +277,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return (Property<UJO, VALUE>) new OrmProperty(index, name, defaultValue, null);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     protected static <UJO extends Ujo, VALUE> Property<UJO, VALUE> newKey
@@ -287,8 +287,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return newKey(null, null, value, UNDEFINED_INDEX, false);
     }
 
-    /** Returns a new instance of property where the default value is null.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** Returns a new instance of key where the default value is null.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -298,8 +298,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
 
     // ------------- DEPRECATED METHODS ---------------------
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty(java.lang.String)} instead of this.
      * @hidden
      */
@@ -311,8 +311,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return newProperty(name, type, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -321,8 +321,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return newProperty(name, null, null, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use the method newKey(...)
      * @hidden
      */
@@ -334,8 +334,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return newProperty(name, null, value, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @deprecated Use rather a method {@link QuickUjo#newProperty()} instead of this,
      * @hidden
      */
@@ -357,8 +357,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return new OrmProperty(index, name, defaultValue, null);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */
@@ -376,8 +376,8 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return newProperty(null, null, value, UNDEFINED_INDEX, false);
     }
 
-    /** A Property Factory creates new property and assigns a next property index.
-     * <br />Warning: Method does not lock the property so you must call AbstractUjo.init(..) method after initialization!
+    /** A Property Factory creates new key and assigns a next key index.
+     * <br />Warning: Method does not lock the key so you must call AbstractUjo.init(..) method after initialization!
      * @hidden
      * @deprecated Use the method newKey(...)
      */

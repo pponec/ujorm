@@ -125,13 +125,13 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     /**
      * Sets the current sort state and assign the BaseClass
      *
-     * @param property
-     * sort property
+     * @param key
+     * sort key
      * @param order
      * sort order
      */
-    final public void setSort(Key<T, ?> property) {
-        super.setSort((KeyRing)KeyRing.of(property), property.isAscending()
+    final public void setSort(Key<T, ?> key) {
+        super.setSort((KeyRing)KeyRing.of(key), key.isAscending()
                 ? SortOrder.ASCENDING
                 : SortOrder.DESCENDING);
     }
@@ -140,9 +140,9 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     public Key<T,?> getSortKey() {
         final SortParam<Object> sort = getSort();
         if (sort != null) {
-            final Object property = getSort().getProperty();
-            return property instanceof KeyRing
-            ? ((KeyRing<T>)property).getFirstKey().descending(!sort.isAscending())
+            final Object key = getSort().getProperty();
+            return key instanceof KeyRing
+            ? ((KeyRing<T>)key).getFirstKey().descending(!sort.isAscending())
             : null ;
         } else {
             return null;

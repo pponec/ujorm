@@ -98,23 +98,23 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
      */
     @SuppressWarnings("unchecked")
     public int compare(UJO u1, UJO u2) {
-        for (Key property : keys) {
+        for (Key key : keys) {
 
-            final Comparable c1 = (Comparable) property.of(u1);
-            final Comparable c2 = (Comparable) property.of(u2);
+            final Comparable c1 = (Comparable) key.of(u1);
+            final Comparable c2 = (Comparable) key.of(u2);
 
             if (c1==c2  ) { continue;  }
             if (c1==null) { return +1; }
             if (c2==null) { return -1; }
 
             int result;
-            if (property.isTypeOf(String.class)) {
-                result = property.isAscending()
+            if (key.isTypeOf(String.class)) {
+                result = key.isAscending()
                 ? getCollator().compare(c1, c2)
                 : getCollator().compare(c2, c1)
                 ;
             } else {
-                result = property.isAscending()
+                result = key.isAscending()
                 ? c1.compareTo(c2)
                 : c2.compareTo(c1)
                 ;
@@ -142,13 +142,13 @@ final public class UjoComparator <UJO extends Ujo> implements Comparator<UJO> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(32);
-        for (Key property : keys) {
+        for (Key key : keys) {
             if (sb.length()>0) {
                 sb.append(", ");
             }
-            sb.append(property.getName());
+            sb.append(key.getName());
             sb.append("[");
-            sb.append(property.isAscending() ? "ASC" : "DESC");
+            sb.append(key.isAscending() ? "ASC" : "DESC");
             sb.append("]");
         }
         return sb.toString();

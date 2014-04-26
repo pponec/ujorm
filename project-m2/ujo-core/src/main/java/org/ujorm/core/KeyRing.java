@@ -45,7 +45,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
 
     /** Property Separator */
     protected static final char PROPERTY_SEPARATOR = '.';
-    /** A text to mark a descending sort of a property in a de-serialization process. */
+    /** A text to mark a descending sort of a key in a de-serialization process. */
     protected static final String DESCENDING_SYMBOL = ""
             + PROPERTY_SEPARATOR
             + PROPERTY_SEPARATOR
@@ -92,9 +92,9 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /**
-     * Find a direct property by property name from parameter.
+     * Find a direct key by its name from the parameter.
      *
-     * @param name A property name.
+     * @param name A key name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return .
      */
@@ -122,9 +122,9 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /**
-     * Find a direct property by property name from parameter.
+     * Find a direct key by key name from parameter.
      * @param ujo An Ujo object
-     * @param name A property name.
+     * @param name A key name.
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
@@ -152,8 +152,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /**
-     * Find <strong>indirect</strong> property by the name. Empty result can trhow NULL value if parameter throwException==false.
-     * @param names Not null property name inclukde composite keys (indirect keys).
+     * Find <strong>indirect</strong> key by the name. Empty result can trhow NULL value if parameter throwException==false.
+     * @param names Not null key name inclukde composite keys (indirect keys).
      * @param throwException
      * @return new Key
      */
@@ -198,8 +198,8 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     }
 
     /**
-     * Find (both direct or indirect) property by property name from parameter.
-     * @param name A property name by sample "user.address.street".
+     * Find (both direct or indirect) key by key name from parameter.
+     * @param name A key name by sample "user.address.street".
      * @return .
      */
     @Override
@@ -300,14 +300,14 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return type.getName();
     }
 
-//    /** Test collection if it contains a property parameter  */
+//    /** Test collection if it contains a key parameter  */
 //    @SuppressWarnings("element-type-mismatch")
-//    public boolean contains(Object property) {
-//        return Arrays.asList(keys).contains(property);
+//    public boolean contains(Object key) {
+//        return Arrays.asList(keys).contains(key);
 //    }
 //
 
-    /** Returns true if list contains property from the parameter. */
+    /** Returns true if list contains key from the parameter. */
     @Override
     public boolean contains(Key<?, ?> o) {
         for (Key p : keys) {
@@ -318,7 +318,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return false;
     }
 
-    /** Returns the property names */
+    /** Returns the key names */
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(32);
@@ -386,14 +386,14 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         this.size = keys.length;
     }
 
-    /** Create a new text Array of property names */
+    /** Create a new text Array of key names */
     private String[] createPropertyNames() {
         final String[] nameProperties = new String[keys.length];
         for (int i = keys.length - 1; i >= 0; --i) {
-            final Key property = keys[i];
+            final Key key = keys[i];
             nameProperties[i] = keys[i].isAscending()
-                    ?  property.getName()
-                    : (property.getName() + DESCENDING_SYMBOL);
+                    ?  key.getName()
+                    : (key.getName() + DESCENDING_SYMBOL);
         }
         return nameProperties;
     }
@@ -402,9 +402,9 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     private String[][] createAliasNames() {
         final String[][] result = new String[keys.length][];
         for (int i = keys.length - 1; i >= 0; --i) {
-            final Key property = keys[i];
-            if (property.isComposite()) {
-                final CompositeKey cKey = (CompositeKey) property;
+            final Key key = keys[i];
+            if (key.isComposite()) {
+                final CompositeKey cKey = (CompositeKey) key;
                 if (cKey.hasAlias()) {
                     result[i] = new String[cKey.getCompositeCount()];
                     for (int j = 0; j < cKey.getCompositeCount(); j++) {
@@ -427,10 +427,10 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
             final String pName = descending
                     ? pNameRaw.substring(0, pNameRaw.length() - DESCENDING_SYMBOL.length())
                     : pNameRaw;
-            final Key property = propertyList.find(pName, true).descending(descending);
+            final Key key = propertyList.find(pName, true).descending(descending);
             result[i] = spaces[i] == null
-                    ? property
-                    : new PathProperty(property, spaces[i], property.isAscending());
+                    ? key
+                    : new PathProperty(key, spaces[i], key.isAscending());
         }
         return result;
     }

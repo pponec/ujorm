@@ -34,7 +34,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
 
     /**
      * Initializa all keys. If the keys are unlocked than recalculate index
-     * and set an undefined property name by its static field.
+     * and set an undefined key name by its static field.
      * @param ujoClass Ujo class
      */
     @SuppressWarnings("unchecked")
@@ -45,7 +45,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
 
     /**
      * Initializa all keys. If the keys are unlocked than recalculate index
-     * and set an undefined property name by its static field.
+     * and set an undefined key name by its static field.
      * @param ujoClass Ujo class
      * @param checkUniqueProperties Check unique keys
      */
@@ -65,7 +65,7 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
 
     /** Returns all direct keys.
      * <br>Note 1: An order of keys is sorted by a value of the index attribute.
-     * <br>Note 2: The implementation returns the original property array so it is possible to change some original property in the array from an extefnal code.
+     * <br>Note 2: The implementation returns the original key array so it is possible to change some original key in the array from an extefnal code.
      *            Overwrite the method to return a copy array in case you need an assurance of immutable!
      * @see Key#isDirect()
      */
@@ -75,18 +75,18 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
     }
 
     /**
-     * Get an authorization of the property for different actions.
+     * Get an authorization of the key for different actions.
      * <br>A Default value is TRUE for all actions, keys and values.
      *
      *
      * @param action Type of request. See constant(s) ACTION_* for more information.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
-     * @param property A property of the Ujo
+     * @param key A key of the Ujo
      * @param value A value
-     * @return Returns TRUE, if property is authorized.
+     * @return Returns TRUE, if key is authorized.
      * @see UjoAction Action Constants
      */
-    public boolean readAuthorization(final UjoAction action, final Key property, final Object value) {
+    public boolean readAuthorization(final UjoAction action, final Key key, final Object value) {
         return true;
     }
 
@@ -136,14 +136,14 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
      * Get an original value in a String format. Property must be an direct type.
      * otherwise method returns an instance of String.
      *
-     * @param property A direct property only. See a method Key.isDirect().
+     * @param key A direct key only. See a method Key.isDirect().
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
-     * @return If property type is "container" then result is null.
+     * @return If key type is "container" then result is null.
      */
     @SuppressWarnings("unchecked")
-    public String readValueString(final Key property, final UjoAction action) {
-        final Object value  = property.of(this);
+    public String readValueString(final Key key, final UjoAction action) {
+        final Object value  = key.of(this);
         final String result = readUjoManager().encodeValue(value, false);
         return result;
     }
@@ -151,15 +151,15 @@ public abstract class SuperAbstractUjo implements Ujo, UjoTextable, UjoCloneable
     /**
      * Set value from a String format. Property must be an direct type.
      *
-     * @param property A direct property only. See a method Key.isDirect().
+     * @param key A direct key only. See a method Key.isDirect().
      * @param value String value
-     * @param type Type can be a subtype of a Property.type. If type is null, then a property.type is used.
+     * @param type Type can be a subtype of a Property.type. If type is null, then a key.type is used.
      * @param action A context of the action.
      *        The action must not be null, however there is allowed to use a dummy constant UjoAction.DUMMY .
      */
-    public void writeValueString(final Key property, final String value, final Class type, final UjoAction action) {
-        final Object valueObj = readUjoManager().decodeValue(property, value, type);
-        writeValue(property, valueObj);
+    public void writeValueString(final Key key, final String value, final Class type, final UjoAction action) {
+        final Object valueObj = readUjoManager().decodeValue(key, value, type);
+        writeValue(key, valueObj);
     }
 
 }

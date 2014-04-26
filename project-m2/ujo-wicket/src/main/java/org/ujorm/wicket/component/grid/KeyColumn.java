@@ -31,7 +31,7 @@ import org.ujorm.wicket.KeyModel;
 
 /**
  * A convenience implementation of column that adds a Ujo Property to the cell whose model is determined by
- * the provided wicket property expression (same as used by {@link PropertyModel}) that is evaluated
+ * the provided wicket key expression (same as used by {@link PropertyModel}) that is evaluated
  * against the current row's model object
  * <p>
  * Example:
@@ -53,7 +53,7 @@ import org.ujorm.wicket.KeyModel;
  * }
  * </pre>
  *
- * The above will attach a label to the cell with a property model for the expression
+ * The above will attach a label to the cell with a key model for the expression
  * &quot;name.first&quot;
  *
  * @see KeyModel
@@ -67,7 +67,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     public static final boolean SORTING_ON = true;
     /** Disable a grid column sorting */
     public static final boolean SORTING_OFF = false;
-    /** Localization property prefix */
+    /** Localization key prefix */
     public static final String PROPERTY_PREFIX = "column.";
 
     /** Data key */
@@ -76,9 +76,9 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     protected String cssClass;
 
     /**
-     * Creates a sortable property column
+     * Creates a sortable key column
      * @param key Ujorm key to display in the column
-     * @param sortKey Optional persistent ujorm property to sorting
+     * @param sortKey Optional persistent ujorm key to sorting
      * @param cssClass optional argument for a CSS class
      */
     public KeyColumn(final KeyRing<UJO> key, final KeyRing<UJO> sortKey) {
@@ -89,10 +89,10 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     /**
-     * Creates a sortable property column
+     * Creates a sortable key column
      * @param label Column label
      * @param key Ujorm key to display in the column
-     * @param sortKey Optional persistent ujorm property to sorting
+     * @param sortKey Optional persistent ujorm key to sorting
      * @param cssClass optional argument for a CSS class
      */
     public KeyColumn
@@ -105,7 +105,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
 
     /**
      * Implementation of populateItem which adds a label to the cell whose model is the provided
-     * property expression evaluated against rowModelObject
+     * key expression evaluated against rowModelObject
      *
      * @see ICellPopulator#populateItem(Item, String, IModel)
      */
@@ -136,7 +136,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
 
     /**
      * Factory method for generating a model that will generated the displayed value. Typically the
-     * model is a property model using the {@link #keySerializable} specified in the constructor.
+     * model is a key model using the {@link #keySerializable} specified in the constructor.
      *
      * @param rowModel
      * @return model
@@ -147,7 +147,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     /**
-     * @return wicket property expression
+     * @return wicket key expression
      */
     public String getPropertyExpression() {
         return keySerializable.toString();

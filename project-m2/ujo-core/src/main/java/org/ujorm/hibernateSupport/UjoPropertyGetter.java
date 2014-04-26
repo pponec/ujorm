@@ -47,7 +47,7 @@ final public class UjoPropertyGetter implements Getter {
 
     /**
      * @param target BO
-     * @return actual value of property
+     * @return actual value of key
      * @throws org.hibernate.HibernateException
      */
     @Override  @SuppressWarnings("unchecked")

@@ -262,7 +262,7 @@ final public class OrmTools {
         return session.reload(ujo);
     }
 
-        /** Load lazy value for all items and required property by the one SQL statement.
+        /** Load lazy value for all items and required keys by the one SQL statement.
      * @param ujos The parameter can be the
      *        {@link org.ujorm.orm.Query Query},
      *        {@link org.ujorm.core.UjoIterator UjoIterator} and some
@@ -271,16 +271,16 @@ final public class OrmTools {
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, Key<UJO, ? extends OrmUjo> property) {
+    public static <UJO extends ExtendedOrmUjo> List<UJO> loadLazyValuesAsBatch(final Iterable<UJO> ujos, Key<UJO, ? extends OrmUjo> key) {
 
         final List<UJO> result = new ArrayList<UJO>(ujos instanceof List ? ((List) ujos).size() : 128);
         final HashMap<Object, OrmUjo> map = new HashMap<Object, OrmUjo>(64);
-        while (property.isComposite()) {
-            property = ((CompositeKey)property).getFirstKey();
+        while (key.isComposite()) {
+            key = ((CompositeKey)key).getFirstKey();
         }
         for (UJO u : ujos) {
             result.add(u);
-            ForeignKey fk = u.readFK(property);
+            ForeignKey fk = u.readFK(key);
             if (fk!=null) {
                 map.put(fk.getValue(), null);
             }
@@ -289,7 +289,7 @@ final public class OrmTools {
             return result;
         }
         final Session session = result.get(0).readSession();
-        final MetaColumn column = (MetaColumn) session.getHandler().findColumnModel(property, true);
+        final MetaColumn column = (MetaColumn) session.getHandler().findColumnModel(key, true);
         final MetaColumn pkColumn = column.getForeignColumns().get(0);
         final Query<OrmUjo> query = session.createQuery(pkColumn.getTable().getType());
         final int limit = session.getParameters().get(MetaParams.MAX_ITEM_COUNT_4_IN);
@@ -309,17 +309,17 @@ final public class OrmTools {
             }
         }
         for (UJO u : result) {
-            ForeignKey fk = u.readFK(property);
+            ForeignKey fk = u.readFK(key);
             if (fk!=null) {
                 u.writeSession(null); // switch off the change management
-                u.writeValue(property, map.get(fk.getValue()));
+                u.writeValue(key, map.get(fk.getValue()));
                 u.writeSession(session);
             }
         }
         return result;
     }
 
-    /** Load lazy value for all items and all relation keys by the rule: a one SQL statement per relation property.
+    /** Load lazy value for all items and all relation keys by the rule: a one SQL statement per relation key.
      * @param query An Ujorm query
      * @return Returns a list of items or the parameter ujos.
      *         If the 'ujos' parameter is type of List, than method returns the parameter directly.

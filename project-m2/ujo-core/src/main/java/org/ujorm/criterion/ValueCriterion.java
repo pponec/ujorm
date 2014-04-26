@@ -50,8 +50,8 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     }
 
     /** An undefined operator (null) is replaced by EQ. */
-    public ValueCriterion(Key<UJO,? extends Object> property, Operator operator, Key<UJO,Object> value) {
-        this(property, operator, (Object) value);
+    public ValueCriterion(Key<UJO,? extends Object> key, Operator operator, Key<UJO,Object> value) {
+        this(key, operator, (Object) value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
@@ -95,13 +95,13 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
         this.operator = operator;
     }
 
-    /** Returns the left node of the parrent */
+    /** Returns the left node of the parent */
     @Override
     public final Key<?,?> getLeftNode() {
         return key;
     }
 
-    /** Returns the right node of the parrent */
+    /** Returns the right node of the parent */
     @Override
     public final Object getRightNode() {
         return value;

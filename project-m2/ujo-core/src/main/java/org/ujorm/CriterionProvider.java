@@ -22,7 +22,7 @@ import org.ujorm.criterion.*;
 public interface CriterionProvider<UJO extends Ujo, VALUE> {
 
     /**
-     * Create a new Criterion where this property value is related to a parameter value along the {@link Operator}.
+     * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -37,8 +37,8 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create a new Criterion where this property is related to the value along the parameter {@link Operator}.
-     * @param property Key
+     * Create a new Criterion where this key is related to the value along the parameter {@link Operator}.
+     * @param key Key
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -53,8 +53,8 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create a new Criterion where this property equals the parameter value.
-     * @param property Key
+     * Create a new Criterion where this key equals the parameter value.
+     * @param key Key
      * <ul>
      * <li>TYPE - parameter value</li>
      * <li>List&lt;TYPE&gt; - list of values</li>
@@ -65,15 +65,15 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
     public Criterion<UJO> whereEq(VALUE value);
 
     /**
-     * Create a new Criterion where this property value equals the parameter value.
-     * @param property Key can be type a direct of indirect (for a relation) property
+     * Create a new Criterion where this key value equals the parameter value.
+     * @param key Key can be type a direct of indirect (for a relation) key
      * @return A the new immutable Criterion
      */
-    public Criterion<UJO> whereEq(Key<UJO,VALUE> property);
+    public Criterion<UJO> whereEq(Key<UJO,VALUE> key);
 
     /**
-     * Create new Criterion where this property value is in the one of parameter values.
-     * @param property A direct or indeirect Ujo property
+     * Create new Criterion where this key value is in the one of parameter values.
+     * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion.
      */
@@ -82,8 +82,8 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create new Criterion where this property value is not in any of parameter values.
-     * @param property A direct or indeirect Ujo property
+     * Create new Criterion where this key value is not in any of parameter values.
+     * @param key A direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
      */
@@ -92,8 +92,8 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create new Criterion where this property value is in the one of parameter values.
-     * @param property A reference to a related entity
+     * Create new Criterion where this key value is in the one of parameter values.
+     * @param key A reference to a related entity
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion
      */
@@ -102,8 +102,8 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         );
 
     /**
-     * Create new Criterion where this property value is not in any of parameter values.
-     * @param property A property direct or indeirect Ujo property
+     * Create new Criterion where this key value is not in any of parameter values.
+     * @param key A key direct or indirect Ujo key
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
      */
@@ -111,61 +111,61 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
         ( VALUE... list
         );
 
-    /** Create a new Criterion where this property value is not equals the value
+    /** Create a new Criterion where this key value is not equals the value
      * @see org.ujorm.criterion.Operator#NOT_EQ */
     public Criterion<UJO> whereNeq(VALUE value);
 
-    /** Create a new Criterion where this property is great then the value
+    /** Create a new Criterion where this key is great then the value
      * @see org.ujorm.criterion.Operator#GT */
     public Criterion<UJO> whereGt(VALUE value);
 
-    /** Create a new Criterion where this property is great or equals the value
+    /** Create a new Criterion where this key is great or equals the value
      * @see org.ujorm.criterion.Operator#GE */
     public Criterion<UJO> whereGe(VALUE value);
 
-    /** Create a new Criterion where this property is less then the value
+    /** Create a new Criterion where this key is less then the value
      * @see org.ujorm.criterion.Operator#LT */
     public Criterion<UJO> whereLt(VALUE value);
 
-    /** Create a new Criterion where this property is less or equals than the value
+    /** Create a new Criterion where this key is less or equals than the value
      * @see org.ujorm.criterion.Operator#LE */
     public Criterion<UJO> whereLe(VALUE value);
 
     /**
-     * Create a new Criterion where this property is {@code null}.
+     * Create a new Criterion where this key is {@code null}.
      * The method is a shortcut to the next full expression:
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
-     * for the String property type in this case.
-     * @param property Key
+     * for the String key type in this case.
+     * @param key Key
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
     public Criterion<UJO> whereNull();
 
     /**
-     * Create a new Criterion where this property is not {@code null}.
+     * Create a new Criterion where this key is not {@code null}.
      * The method is a shortcut to the next full expression:
      * <pre class="pre">
      * Criterin.where(Order.NOTE_PROPERTY, Operator.EQ, (String) null) </pre>
-     * for the String property type in this case.
-     * @param property Key
+     * for the String key type in this case.
+     * @param key Key
      * @see #whereNull(org.ujorm.Key)
      * @see Operator#NOT_EQ
      */
     public Criterion<UJO> whereNotNull();
 
     /**
-     * Create a new Criterion where this property is not {@code null} and is no empty text or empty list.
-     * @param property Key
+     * Create a new Criterion where this key is not {@code null} and is no empty text or empty list.
+     * @param key Key
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
     public Criterion<UJO> whereFilled();
 
     /**
-     * Create a new Criterion where this property is a {@code null} or it is empty string or list.
-     * @param property Key
+     * Create a new Criterion where this key is a {@code null} or it is empty string or list.
+     * @param key Key
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
@@ -181,7 +181,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name;
      * @see Operator#XSQL
@@ -197,7 +197,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name
      * and the substring {@code {1}} will be replaced for the required value.
@@ -215,7 +215,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted.
      * A substring {@code {0}} will be replaced for the current column name
      * and the substring {@code {1}} will be replaced for the required value.
@@ -224,15 +224,15 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      */
     public Criterion<UJO> forSqlUnchecked(String sqlTemplate, Object value);
 
-    /** Create a new Criterion for this property where all results will be true (the result is independed on the value).
+    /** Create a new Criterion for this key where all results will be true (the result is independed on the value).
      *  The method evaluate(ujo) returns TRUE always.
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
     public Criterion<UJO> forAll();
 
-    /** Create a new Criterion for this property where all results will be false (the result is independed on the value).
+    /** Create a new Criterion for this key where all results will be false (the result is independed on the value).
      *  The  method evaluate(method) returns FALSE always.
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
     public Criterion<UJO> forNone();
 

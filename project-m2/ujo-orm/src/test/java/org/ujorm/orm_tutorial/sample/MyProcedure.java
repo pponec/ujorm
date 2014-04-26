@@ -35,8 +35,8 @@ import org.ujorm.orm.annot.Procedure;
 @Procedure(name="ujorm_test")
 public final class MyProcedure extends DbProcedure<MyProcedure> {
 
-    /** The first parameter is the OUTPUT allways. <br/>
-     * If the stored procedure has no return parameter, set the first property type to: java.lang.Void */
+    /** The first parameter is the OUTPUT always. <br/>
+     * If the stored procedure has no return parameter, set the first key type to: java.lang.Void */
     public static final Key<MyProcedure,Integer> RESULT = newKey();
     /** INPUT parameter */
     @Parameter(input=true)

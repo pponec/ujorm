@@ -208,8 +208,8 @@ public class SampleORM {
     }
 
     /** Sort items by a <strong>composite</strong> propertry. <br>
-     * Note 1: see how a composite property can be used for reading values too. <br>
-     * Note 2: the metod loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
+     * Note 1: see how a composite key can be used for reading values too. <br>
+     * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
      */
     public void useSortOrderItems() {
 
@@ -221,7 +221,7 @@ public class SampleORM {
             System.out.println(item.get(Item.order.add(Order.created)) + " " + item);
         }
 
-        // Another way to avoid the lazy loading by a bulk property loading:
+        // Another way to avoid the lazy loading by a bulk key loading:
         List<Item> itemList = OrmTools.loadLazyValuesAsBatch(items);
         System.out.println("itemList: " + itemList);
     }
@@ -266,7 +266,7 @@ public class SampleORM {
     }
 
     /** Select an Order by id and print its Items
-     * by a 'one to many' relation property
+     * by a 'one to many' relation key
      */
     public void useSelectItems_3() {
         Order order = session.load(Order.class, 1L);
@@ -277,7 +277,7 @@ public class SampleORM {
         }
     }
 
-    /** Select items by a composed property.
+    /** Select items by a composed key.
      * It is a sample of a multi-table query.
      * @see Item#$orderDate
      */
@@ -291,7 +291,7 @@ public class SampleORM {
         }
     }
 
-    /** Select items by a composed property.
+    /** Select items by a composed key.
      * It is a sample of a multi-table query.
      * See used Criterion with the <strong>whereIn</string> method.
      * The value list can be empty and the result returns FALSE always in this case.
@@ -335,7 +335,7 @@ public class SampleORM {
         }
     }
 
-    /** How to reload the object property values from the database ? */
+    /** How to reload the object key values from the database ? */
     public void useReloading() {
         Order order = new Order();
         order.setId(1L);
@@ -498,7 +498,7 @@ public class SampleORM {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Print some meta-data of the property Order.descr. */
+    /** Print some meta-data of the key Order.descr. */
     public void useMetadata() {
         MetaColumn col = (MetaColumn) handler.findColumnModel(Order.descr);
 

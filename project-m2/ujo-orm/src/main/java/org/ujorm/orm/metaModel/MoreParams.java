@@ -47,7 +47,7 @@ final public class MoreParams extends AbstractMetaModel {
     public static final Key<MoreParams,Boolean> EXTENTED_INDEX_NAME_STRATEGY = f.newKey("extentedIndexNameStrategy", false);
 
     static {
-        f.lock(); // Lock property factory
+        f.lock(); // Lock the Key factory
     }
 
 }

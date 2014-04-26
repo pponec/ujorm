@@ -35,7 +35,7 @@ import org.ujorm.orm.dialect.*;
 //@Db(schema="db1", dialect=OracleDialect.class, user="sa", password="", jdbcUrl="jdbc:oracle:thin:@myhost:1521:orcl")
 public class Database extends OrmTable<Database> {
 
-    /** Customer order. The used annotation overwrites a database schema from the property schema. */
+    /** Customer order. The used annotation overwrites a database schema from the key schema. */
     @Table("ord_order")
     public static final RelationToMany<Database,Order> ORDERS = newRelation();
 

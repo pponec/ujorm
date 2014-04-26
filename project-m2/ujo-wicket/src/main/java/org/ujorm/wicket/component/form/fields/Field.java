@@ -59,7 +59,7 @@ public class Field extends Panel {
     /** CSS required style for the Label */
     public static final String CSS_REQUIRED = "required";
 
-    /** Localization property prefix */
+    /** Localization key prefix */
     public static final String PROPERTY_PREFIX = "label.";
 
     /** A form component */
@@ -71,20 +71,20 @@ public class Field extends Panel {
     protected KeyRing key;
     protected List<Behavior> behaviors;
 
-    public Field(Key property) {
-        this(property.getName(), property, null);
+    public Field(Key key) {
+        this(key.getName(), key, null);
         this.setOutputMarkupPlaceholderTag(true);
     }
 
     /**
      * The default constructor
      * @param componentId Required component
-     * @param property Optional Ujorm Key
+     * @param key Optional Ujorm Key
      * @param cssClass Optional CSS class
      */
-    public Field(String componentId, Key property, String cssClass) {
+    public Field(String componentId, Key key, String cssClass) {
         super(componentId, Model.of());
-        this.key = KeyRing.of(property);
+        this.key = KeyRing.of(key);
         this.cssClass = cssClass;
     }
 

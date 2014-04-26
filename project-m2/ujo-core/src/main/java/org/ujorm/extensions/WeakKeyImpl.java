@@ -146,7 +146,7 @@ public class WeakKeyImpl<VALUE>
     /** The WeakKeyImpl does not support chaining of the Keys. */
     @Override
     @Deprecated
-    public <T> CompositeKey<Ujo, T> add(Key<? super VALUE, T> property) {
+    public <T> CompositeKey<Ujo, T> add(Key<? super VALUE, T> key) {
         throw new UnsupportedOperationException("An unsupported operation in the " + getClass());
     }
 }

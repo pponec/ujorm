@@ -28,16 +28,16 @@ import java.util.Iterator;
 public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
 
     /**
-     * Find (both direct or indirect) property by property name from parameter.
-     * @param name A property name by sample "user.address.street".
+     * Find (both direct or indirect) key by key name from parameter.
+     * @param name A key name by sample "user.address.street".
      * @return Key
      */
     public Key<UJO,?> find(String name) throws IllegalArgumentException;
 
     /**
-     * Find (both direct or indirect) direct or indirect property by property name from parameter.
+     * Find (both direct or indirect) direct or indirect key by key name from parameter.
      *
-     * @param name A property name.
+     * @param name A key name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      */
     public Key<UJO,?> find
@@ -46,9 +46,9 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
     ) throws IllegalArgumentException;
 
     /**
-     * Find a property by property name from parameter.
+     * Find a key by key name from parameter.
      * @param ujo An Ujo object
-     * @param name A property name.
+     * @param name A key name.
      * @param action Action type UjoAction.ACTION_* .
      * @param result Required result of action.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
@@ -64,9 +64,9 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
     ) throws IllegalArgumentException;
 
     /**
-     * Find a property by property name from parameter.
+     * Find a key by key name from parameter.
      *
-     * @param name A property name.
+     * @param name A key name.
      * @param throwException If result not found an Exception is throwed, or a null can be returned.
      * @return Key
      */
@@ -104,7 +104,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
 
     // ----------------- LIST IMPLEMENTATION ------------------------
 
-    /** Get property on requered index */
+    /** Get key on requered index */
     public Key get(final int index);
 
     /** Returns a total count of its keys */
@@ -113,7 +113,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
     /** Is the collection empty? */
     public boolean isEmpty();
 
-    /** Returns true if list contains property from the parameter. */
+    /** Returns true if list contains key from the parameter. */
     public boolean contains(final Key<?,?> key);
 
     /** Create an interator for all keys.

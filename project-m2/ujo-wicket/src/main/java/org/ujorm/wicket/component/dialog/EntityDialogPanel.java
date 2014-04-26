@@ -53,7 +53,7 @@ public class EntityDialogPanel<T extends Ujo> extends AbstractDialogPanel<T> {
      * Show dialog and assign a data from domain object
      * @param title Dialog title
      * @param body Dialog body
-     * @param actionButtonProperty Action button property
+     * @param actionButtonProperty Action button key
      * @param target Target
      */
     @Override

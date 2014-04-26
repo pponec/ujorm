@@ -29,12 +29,12 @@ public class TextAreaField extends Field {
 
     private static final long serialVersionUID = 20130621L;
 
-    public TextAreaField(Key property) {
-        super(property.getName(), property, null);
+    public TextAreaField(Key key) {
+        super(key.getName(), key, null);
     }
 
-    public TextAreaField(String componentId, Key property, String cssClass) {
-        super(componentId, property, cssClass);
+    public TextAreaField(String componentId, Key key, String cssClass) {
+        super(componentId, key, cssClass);
     }
 
     /** Create Form inputComponent */

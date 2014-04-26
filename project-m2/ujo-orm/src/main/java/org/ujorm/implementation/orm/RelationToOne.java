@@ -22,7 +22,7 @@ import static org.ujorm.extensions.PropertyModifier.*;
 
 
 /**
- * Foreign key property
+ * Foreign key key
  * @author Pavel Ponec
  */
 public class RelationToOne<UJO extends ExtendedOrmUjo, VALUE> extends OrmProperty<UJO, VALUE> {

@@ -46,7 +46,7 @@ import org.ujorm.orm.metaModel.MetaTable;
 
 /**
  * Special UJO PreparedStatement to get an assigned value.
- * <br>The class was designed to get an property value due a bug pro PostgreSQL:
+ * <br>The class was designed to get an key value due a bug pro PostgreSQL:
  * There is an error when I create/alter a table using PreparedStatement with some parameters "?".
  * <br>See the <a href="http://archives.postgresql.org/pgsql-jdbc/2006-09/msg00049.php">link</a> for more information.;
  *

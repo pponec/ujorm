@@ -207,7 +207,7 @@ public abstract class AbstractDialogPanel<T> extends Panel {
      * Show dialog and assign a data from domain object
      * @param title Dialog title
      * @param body Dialog body as a default mode
-     * @param actionButtonProperty Action button property
+     * @param actionButtonProperty Action button key
      * @param target Target
      */
     public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body, String actionButtonProperty) {
@@ -228,7 +228,7 @@ public abstract class AbstractDialogPanel<T> extends Panel {
         return modalWindow;
     }
 
-    /** Get Save button property key */
+    /** Get Save button key key */
     protected IModel<String> getButtonModel(String propertyName) {
         return new ResourceModel(BUTTON_PREFIX + propertyName, propertyName);
     }

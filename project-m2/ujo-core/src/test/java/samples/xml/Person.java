@@ -24,12 +24,12 @@ public class Person extends MapUjo {
   public static final Key<Person,Integer> HEIGHT = newKey("Height");
 
     @Override
-  public boolean readAuthorization(UjoAction action, Key property, Object value) {
+  public boolean readAuthorization(UjoAction action, Key key, Object value) {
     switch(action.getType()) {
       case ACTION_XML_EXPORT: 
-          return property!=NAME;
+          return key!=NAME;
       default: {
-          return super.readAuthorization(action, property, value);
+          return super.readAuthorization(action, key, value);
       }
     }
   }

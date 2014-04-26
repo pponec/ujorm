@@ -55,7 +55,7 @@ final public class MetaRoot extends AbstractMetaModel {
     public static final ListKey<MetaRoot,MetaDatabase> DATABASES = fa.newListKey("database");
     /** ORM parameters */
     public static final Key<MetaRoot,MetaParams> PARAMETERS = fa.newKey("parameters");
-    /** The property initialization */
+    /** The key initialization */
     static{fa.lock();}
 
     public MetaRoot() {

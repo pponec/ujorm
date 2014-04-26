@@ -30,7 +30,7 @@ public class PropertyModifier {
     public static final int INDEX = 902;
     /** Property type (class) */
     public static final int TYPE = 903;
-    /** Doman type type (class) */
+    /** Domain type type (class) */
     public static final int DOMAIN_TYPE = 904;
     /** Property default value */
     public static final int DEFAULT_VALUE = 905;
@@ -40,69 +40,69 @@ public class PropertyModifier {
     public static final int LOCK = 999;
 
 
-    /** Write property type into property if it is not locked yet. */
+    /** Write key type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setType(Class type, Property property) {
-        if (!property.isLock()) {
-            property.init(TYPE, type);
-            property.init(INDEX, property.getIndex());
+    public static void setType(Class type, Property key) {
+        if (!key.isLock()) {
+            key.init(TYPE, type);
+            key.init(INDEX, key.getIndex());
         }
     }
 
-    /** Write domain type into property if it is not locked yet. */
+    /** Write domain type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setDomainType(Class domainType, Property property) {
-        if (!property.isLock()) {
-            property.init(DOMAIN_TYPE, domainType);
-            property.init(INDEX, property.getIndex());
+    public static void setDomainType(Class domainType, Property key) {
+        if (!key.isLock()) {
+            key.init(DOMAIN_TYPE, domainType);
+            key.init(INDEX, key.getIndex());
         }
     }
 
-    /** Write an item type into property if it is not locked yet. */
+    /** Write an item type into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setItemType(Class itemType, AbstractCollectionProperty property) {
+    public static void setItemType(Class itemType, AbstractCollectionProperty key) {
         if (itemType==null) {
-            throw new IllegalArgumentException("Item type is undefined for property: " + property);
+            throw new IllegalArgumentException("Item type is undefined for key: " + key);
         }
-        if (!property.isLock()) {
-            property.initItemType(itemType);
-        }
-    }
-    
-    /** Write name into property if it is not locked yet. */
-    @SuppressWarnings("unchecked")
-    public static void setName(String name, Property property) {
-        if (!property.isLock()) {
-            property.init(NAME, name);
+        if (!key.isLock()) {
+            key.initItemType(itemType);
         }
     }
     
-    /** Set the new index and lock the property if it is not locked yet. */
+    /** Write name into key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void setIndex(int anIndex, Property property) {
-        setIndex(anIndex, property, true);
+    public static void setName(String name, Property key) {
+        if (!key.isLock()) {
+            key.init(NAME, name);
+        }
+    }
+    
+    /** Set the new index and lock the key if it is not locked yet. */
+    @SuppressWarnings("unchecked")
+    public static void setIndex(int anIndex, Property key) {
+        setIndex(anIndex, key, true);
     }    
 
     /** Set the new index */
     @SuppressWarnings("unchecked")
-    public static void setIndex(int index, Property property, boolean lock) {
-        if (!property.isLock() && property.getIndex()!=index) {
-            property.init(INDEX, index);
-            property.init(LOCK, lock);
+    public static void setIndex(int index, Property key, boolean lock) {
+        if (!key.isLock() && key.getIndex()!=index) {
+            key.init(INDEX, index);
+            key.init(LOCK, lock);
         }
     }
 
-    /** Set the new index and lock the property if it is not locked yet. */
+    /** Set the new index and lock the key if it is not locked yet. */
     @SuppressWarnings("unchecked")
-    public static void lock(Property property) {
-        if (!property.isLock()) {
-            property.init(LOCK, true);
+    public static void lock(Property key) {
+        if (!key.isLock()) {
+            key.init(LOCK, true);
         }
     }
 
-    /** Lock the property */
-    public static boolean isLock(Property property) {
-        return property.isLock();
+    /** Lock the key */
+    public static boolean isLock(Property key) {
+        return key.isLock();
     }
 
 }

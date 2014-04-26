@@ -45,13 +45,13 @@ public class BinaryCriterion<UJO extends Ujo> extends Criterion<UJO> {
         this.operator = operator;
     }
 
-    /** Returns the left node of the parrent */
+    /** Returns the left node of the parent */
     @Override
     public final Criterion<UJO> getLeftNode() {
         return crn1;
     }
 
-    /** Returns the right node of the parrent */
+    /** Returns the right node of the parent */
     @Override
     public final Criterion<UJO> getRightNode() {
         return crn2;

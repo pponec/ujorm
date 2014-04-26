@@ -96,20 +96,20 @@ public class BindingSample {
     }
 
     /** Type safe <build>getComponent binding</build> */
-    public <T> void bind(Key<?, T> property, UIComponent<T> component) {
-        binding.put(property, component);
+    public <T> void bind(Key<?, T> key, UIComponent<T> component) {
+        binding.put(key, component);
     }
 
     /** Auto-binding implementation */
-    public void bind(Key property) {
-        if (property.isTypeOf(String.class)) {
-             binding.put(property, new UIComponentString());
-        } else if (property.isTypeOf(Integer.class)) {
-             binding.put(property, new UIComponentInt());
-        } else if (property.isTypeOf(Boolean.class)) {
-             binding.put(property, new UIComponentBoolean());
-        } else if (property.isTypeOf(Double.class)) {
-             binding.put(property, new UIComponentDouble());
+    public void bind(Key key) {
+        if (key.isTypeOf(String.class)) {
+             binding.put(key, new UIComponentString());
+        } else if (key.isTypeOf(Integer.class)) {
+             binding.put(key, new UIComponentInt());
+        } else if (key.isTypeOf(Boolean.class)) {
+             binding.put(key, new UIComponentBoolean());
+        } else if (key.isTypeOf(Double.class)) {
+             binding.put(key, new UIComponentDouble());
         }
     }
 
@@ -122,7 +122,7 @@ public class BindingSample {
 
     /** Type safe <build>getComponent binding</build> */
     @SuppressWarnings("unchecked")
-	public <T> UIComponent<T> getComponent(Key<?, T> property) {
-        return binding.get(property);
+	public <T> UIComponent<T> getComponent(Key<?, T> key) {
+        return binding.get(key);
     }
 }

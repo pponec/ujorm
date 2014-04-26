@@ -48,7 +48,7 @@ final public class MetaSelect extends AbstractMetaModel {
     public static final Key<MetaSelect,String> LIMIT  = fa.newKey(" LIMIT "   , "");
     public static final Key<MetaSelect,String> OFFSET = fa.newKey(" OFFSET "  , "");
 
-    /** The property initialization */
+    /** The key initialization */
     static{fa.lock();}
 
     private static String END_CHAR = ";";

@@ -64,9 +64,9 @@ public class Order extends OrmTable<Order> {
     // -----------------------------------------------------------------------
 
     @Override
-    public void writeValue(Key property, Object value) {
-        super.writeValue(property, value);
-        if (property==id && sid.isDefault(this)) {
+    public void writeValue(Key key, Object value) {
+        super.writeValue(key, value);
+        if (key==id && sid.isDefault(this)) {
             super.writeValue(sid, "S"+value);
         }
     }

@@ -66,7 +66,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
 
     /** Logger */
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDatabase.class);
-    /** Add a DB relation into table models. The {@code true} value allows to use a property RelationToMany of Database model
+    /** Add a DB relation into table models. The {@code true} value allows to use a key RelationToMany of Database model
      * by the same way as a RelationToMany on any persistent table. A sample of the use:
      * <pre class="pre">
      * for (Order order: database.get(Database.ORDER)) {
@@ -118,7 +118,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     @Transient
     public static final Key<MetaDatabase,OrmUjo> ROOT = fa.newKey("root");
 
-    /** The property initialization */
+    /** The key initialization */
     static{fa.lock();}
 
     // --------------------
@@ -227,7 +227,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         return dialect;
     }
 
-    /** Change DbType by a Java property */
+    /** Change DbType by a Java key */
     public void changeDbType(MetaColumn column) {
         final Class type = column.getDbTypeClass();
 
@@ -285,7 +285,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         }
     }
 
-    /** Change DbType by a Java property */
+    /** Change DbType by a Java key */
     public void changeDbLength(final MetaColumn column) {
 
         switch (MetaColumn.DB_TYPE.of(column)) {
@@ -574,14 +574,14 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         return i1.compareTo(i2);
     }
 
-    /** The PASSWORD property is not exported to XML for a better security. */
+    /** The PASSWORD key is not exported to XML for a better security. */
     @Override
-    public boolean readAuthorization(final UjoAction action, final Key property, final Object value) {
+    public boolean readAuthorization(final UjoAction action, final Key key, final Object value) {
         switch (action.getType()) {
             case UjoAction.ACTION_XML_EXPORT:
-                return property != PASSWORD;
+                return key != PASSWORD;
             default:
-                return super.readAuthorization(action, property, value);
+                return super.readAuthorization(action, key, value);
         }
     }
 

@@ -53,7 +53,7 @@ final public class MetaProcedure extends AbstractMetaModel {
     public static final Key<MetaProcedure,String> SCHEMA = fa.newKey("schema", Table.NULL);
     /** Procedure parameters */
     public static final ListKey<MetaProcedure,MetaColumn> PARAMETERS = fa.newListKey("parameter");
-    /** Procedure <strong>property</strong> (a base definition of the procedure) */
+    /** Procedure <strong>key</strong> (a base definition of the procedure) */
     @Transient
     public static final Key<MetaProcedure,Key> DB_PROPERTY = fa.newKey("dbProperty");
     /** Database */
@@ -64,7 +64,7 @@ final public class MetaProcedure extends AbstractMetaModel {
     @SuppressWarnings("unchecked")
     private static final RelationToMany r2m = new RelationToMany("[PROCEDURE]", DbProcedure.class);
 
-    /** The property initialization */
+    /** The key initialization */
     static{ fa.lock(); }
 
     /** Full procedure name */
@@ -152,13 +152,13 @@ final public class MetaProcedure extends AbstractMetaModel {
         return DATABASE.of(this);
     }
 
-    /** Is it an INPUT property ? */
+    /** Is it an INPUT key ? */
     public boolean isInput(final MetaColumn column) {
         boolean result = input[column.getKey().getIndex()];
         return result;
     }
 
-    /** Is it an OUTPUT property ? */
+    /** Is it an OUTPUT key ? */
     public boolean isOutput(final MetaColumn column) {
         int index = column.getKey().getIndex();
         final boolean result = index==0 || output[index];

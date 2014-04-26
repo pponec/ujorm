@@ -27,7 +27,7 @@ public class TableFrame extends JFrame implements ActionListener, Runnable  {
     // model = new UjoTableModel<Person>(Person.class);
     table.setModel(model);
 
-    // Assing Data into TableModel:
+    // Assign Data into TableModel:
     company = loadCompany();
     List<Person> persons = PERSONS.getList(company); // returns a not null list always
     model.setRows(persons);

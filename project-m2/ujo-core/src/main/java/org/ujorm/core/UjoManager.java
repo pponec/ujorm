@@ -934,12 +934,12 @@ public class UjoManager implements Comparator<Key> {
      */
     protected void checkUniqueProperties(final Class<? extends Ujo> type, final boolean enabled) throws IllegalStateException {
         final HashSet<String> names = new HashSet<String>(16);
-        if (enabled) for (Key property : readKeys(type)) {
-            //final UjoProperty property = (UjoProperty) _property;
-            if (!names.add(property.getName())) {
+        if (enabled) for (Key key : readKeys(type)) {
+            //final UjoProperty key = (UjoProperty) _property;
+            if (!names.add(key.getName())) {
                 throw new IllegalStateException
-                    ( "Property '"
-                    + property
+                    ( "Key '"
+                    + key
                     + "' is duplicate in the "
                     + type
                     );

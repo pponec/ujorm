@@ -29,8 +29,8 @@ import org.ujorm.implementation.orm.RelationToMany;
  *   <li>A Key for a relation type of many-to-one (for lazy lodading) must be an instance of {@link OrmKey}</li>
  *   <li>reference to a foreign BO must be able to store an object of any type by the method Ujo.writeProperty(...).
  *       This feature is necessary for the proper functioning of the lazy initialization</li>
- *   <li>relation many to one can be mapped by a RelationToMany property</li>
- *   <li>each table OrmUjo must be registered in the Database by a property type of RelationToMany</li>
+ *   <li>relation many to one can be mapped by a RelationToMany key</li>
+ *   <li>each table OrmUjo must be registered in the Database by a key type of RelationToMany</li>
  * </ul>
  *
  * @author Ponec
@@ -40,7 +40,7 @@ import org.ujorm.implementation.orm.RelationToMany;
  */
 public interface OrmUjo extends Ujo {
 
-    /** Read an ORM session where the session is an transient property. */
+    /** Read an ORM session where the session is an transient key. */
     public Session readSession();
 
     /** Write an ORM session. */
@@ -49,8 +49,8 @@ public interface OrmUjo extends Ujo {
     /**
      * Returns keys of changed values in a time when any <strong>session</strong> is assigned.
      * The method is used by a SQL UPDATE statement to update assigned values only.
-     * Implementation tip: create a new property type of {@link Set<Key>}
-     * and in the method writeValue assing the current Key allways.
+     * Implementation tip: create a new key type of {@link Set<Key>}
+     * and in the method writeValue assign the current Key always.
      * @param clear True value clears all the key changes.
      * @return Key array of the modified values.
      */

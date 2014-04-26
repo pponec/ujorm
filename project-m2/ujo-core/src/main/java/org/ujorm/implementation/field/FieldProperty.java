@@ -22,18 +22,18 @@ import org.ujorm.extensions.ValueAgent;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
- * A Field property implementation.
+ * A Field property key implementation.
  * @see FieldProperty
  * @since ujo-tool
  * @author Pavel Ponec
  */
-public class FieldProperty<UJO extends Ujo,VALUE> 
+public class FieldProperty<UJO extends Ujo,VALUE>
     extends Property<UJO,VALUE>
     implements ValueAgent<UJO,VALUE> {
 
     /** Property Agent */
     private final ValueAgent<UJO,VALUE> agent;
-    
+
     /**
      * Constructor
      * @param name The parameter MUST be a JavaBeans property name. The name will be used for building a Java reflection method name in a time of the first call.
@@ -45,7 +45,7 @@ public class FieldProperty<UJO extends Ujo,VALUE>
         init(TYPE, type);
         this.agent = agent;
     }
-    
+
     /** Constructor with a default value
      * @param name The parameter MUST be a JavaBeans property name. The name will be used for building a Java reflection method name in a time of the first call.
      * @param defaultValue The value must be type of VALUE exactly (no child).
@@ -57,14 +57,14 @@ public class FieldProperty<UJO extends Ujo,VALUE>
         init(DEFAULT_VALUE, defaultValue);
         this.agent = agent;
     }
-    
+
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
      * <br>A direct call can bypass a important actions implemented in the writeProperty(method).
      */
     public void writeValue(final UJO ujo, final VALUE value) throws IllegalArgumentException {
         agent.writeValue(ujo, value);
     }
-    
+
     /** WARNING: There is recommended to call the method from the method <code>Ujo.readProperty(...)</code> only.
      * <br>A direct call can bypass a important actions implemented in the <code>readProperty(method)</code>.
      */

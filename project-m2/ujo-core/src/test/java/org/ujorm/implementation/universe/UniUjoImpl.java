@@ -24,17 +24,17 @@ public class UniUjoImpl implements UniUjoInterface {
     }
 
     @Override
-    public Object readValue(Key property) {
-        return data[property.getIndex()];
+    public Object readValue(Key key) {
+        return data[key.getIndex()];
     }
 
     @Override
-    public void writeValue(Key property, Object value) {
-        data[property.getIndex()] = value;
+    public void writeValue(Key key, Object value) {
+        data[key.getIndex()] = value;
     }
 
     @Override
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }
 

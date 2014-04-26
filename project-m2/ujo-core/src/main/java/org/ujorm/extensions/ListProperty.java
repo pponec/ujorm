@@ -46,7 +46,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
         init(INDEX, index);
     }
 
-    /** Returns a count of Items. If a property value is null, method returns 0. */
+    /** Returns a count of Items. If a key value is null, method returns 0. */
     @Override
     public int getItemCount(final UJO ujo) {
         List<ITEM> list = of(ujo);
@@ -54,7 +54,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     }
 
     /**
-     * Returns a value of property. The result is the same, like Ujo#of(UjoPropertyList) .get(index) .
+     * Returns a value of key. The result is the same, like Ujo#of(UjoPropertyList) .get(index) .
      */
     @Override
     public ITEM getItem(final UJO ujo, final int index) {
@@ -63,14 +63,14 @@ public class ListProperty<UJO extends Ujo, ITEM>
 
     /**
      * The alias for {@link #getItem(org.ujorm.Ujo, int) }.
-     * @return Returns a value of property. The result is the same, like Ujo#of(UjoPropertyList) .get(index) .
+     * @return Returns a value of key. The result is the same, like Ujo#of(UjoPropertyList) .get(index) .
      */
     @Override
     public ITEM of(final UJO ujo, final int index) {
         return of(ujo).get(index);
     }
 
-    /** Set a property item value. The action is the same, like Ujo#of(UjoPropertyList) .set(indexm, value).
+    /** Set a key item value. The action is the same, like Ujo#of(UjoPropertyList) .set(indexm, value).
      * @return the element previously at the specified position.
      */
     @Override
@@ -78,7 +78,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
         return of(ujo).set(index, value);
     }
 
-    /** Add an Item value to a List property. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
+    /** Add an Item value to a List key. If the list is {@code null}, than the method create a new instance of List (for exact behaviour see an implementation).
      * The method works like a simolar code:
      * <pre class="pre">
      * if (ujo.get(VALUE_LIST)==null) {
@@ -105,8 +105,8 @@ public class ListProperty<UJO extends Ujo, ITEM>
     }
 
     /**
-     * Returns a not null List. If original list value is null, then a new List is created by a property type.
-     * If the property type is an interface then the ArrayList instance is used.
+     * Returns a not null List. If original list value is null, then a new List is created by a key type.
+     * If the key type is an interface then the ArrayList instance is used.
      * @see #getItem(Ujo,int)
      */
     @SuppressWarnings("unchecked")
@@ -146,7 +146,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     // --------- STATIC METHODS -------------------
 
     /** A ListKey Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -164,7 +164,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
     }
 
     /** A ListKey Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty
@@ -177,7 +177,7 @@ public class ListProperty<UJO extends Ujo, ITEM>
 
 
     /** A ListKey Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends Ujo, ITEM> ListProperty<UJO,ITEM> newListProperty

@@ -22,7 +22,7 @@ import org.ujorm.Key;
 import org.ujorm.ListKey;
 
 /**
- * This is an <strong>middle extended Ujo</strong> interface designed for a more conventional property access evaluated by developers.
+ * This is an <strong>middle extended Ujo</strong> interface designed for a more conventional key access evaluated by developers.
  *
  *<br>Sample of usage:
  *<pre class="pre"><span class="java-keywords">public</span> <span class="java-keywords">class</span> Person <span class="java-keywords">extends</span> MapUjoExt {
@@ -69,7 +69,7 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
      * <br>The method can be an alias for a method readValueString(...)
      *
      * @param key A Property
-     * @return If property type is "container" then result is null.
+     * @return If key type is "container" then result is null.
      */
     public String getText(final Key key);
 
@@ -78,10 +78,10 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
     /**
      * Set value from a String format by a NULL context. Property can't be an "container" type (Ujo, List, Object[]).
      * <br>The method can be an alias for a method writeValueString(...)
-     * @param property Property
+     * @param key Property
      * @param Key String value
      */
-    public void setText(final Key property, final String Key);
+    public void setText(final Key key, final String Key);
 
 
 }

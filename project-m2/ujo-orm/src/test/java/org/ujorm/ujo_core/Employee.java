@@ -78,7 +78,7 @@ public class Employee extends SmartUjo<Employee> {
         Employee.COMPANY.setValue(this, company);
     }
 
-    /** Example of the <strong>Composed property</strong> */
+    /** Example of the <strong>Composed key</strong> */
     public String getCompanyCity() {
         return get(COMPANY.add(Company.CITY));
     }

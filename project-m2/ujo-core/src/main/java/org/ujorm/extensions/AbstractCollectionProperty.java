@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */   
+ */
 
 package org.ujorm.extensions;
 
@@ -21,7 +21,7 @@ import org.ujorm.core.annot.Immutable;
 import static org.ujorm.extensions.PropertyModifier.*;
 
 /**
- * The abstract implementation for property of the collection type.
+ * The abstract implementation for the {@link Key} of the collection type.
  * @see AbstracCollectionProperty
  * @author Pavel Ponec
  */
@@ -42,20 +42,20 @@ abstract public class AbstractCollectionProperty<UJO extends Ujo,VALUE,ITEM> ext
         init(TYPE, collectionType);
         init(INDEX, index);
     }
-    
+
     /** Return a Class of the Item. */
     public Class<ITEM> getItemType() {
         return itemType;
     }
-    
+
     /** Returns true if the item type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     public boolean isItemTypeOf(final Class type) {
         return type.isAssignableFrom(this.itemType);
-    }    
-    
+    }
+
     /**
-     * Item type property initialization.
+     * Item type key initialization.
      * @param itemType Item type
      */
     @SuppressWarnings("unchecked")

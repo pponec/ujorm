@@ -18,7 +18,7 @@
 package org.ujorm.orm.ao;
 
 /**
- * Values list to controll how the DLL (Data Definition Language) statmenets will be used
+ * Values list to control how the DLL (Data Definition Language) statements will be used
  * to a defining data structure modification.
  * The default value is {@link #CREATE_OR_UPDATE_DDL CREATE_OR_UPDATE_DDL}.
  * @author Pavel Ponec
@@ -43,7 +43,7 @@ public enum Orm2ddlPolicy {
     /** Throw the IllegalStateException in case missing a table, index, or column in the connected database. */
     VALIDATE,
     /** The value is defined from a parent. 
-     * The hiearchy from the parrent to a child is:
+     * The hierarchy from the parent to a child is:
      * <ul>
      *   <li>Meta Parameters</li>
      *   <li>Database</li>

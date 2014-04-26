@@ -192,7 +192,7 @@ public class UjoSequencer {
 
     /** Returns current db sequence for an actual table with a performance optimizations.
      * @param connection Connection
-     * @param sql Temporarry buffer for a better performance. The value can be {@code null} a not null will be cleaned allways.
+     * @param sql Temporarry buffer for a better performance. The value can be {@code null} a not null will be cleaned always.
      * @return Returns current db sequence for an actual table with a value order:
      * <br/>[SEQ_LIMIT, SEQ_STEP, SEQ_MAX_VALUE].
      * <br/>If no sequence is found then the method returns the value {@code null}.

@@ -37,9 +37,9 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( final Key<UJO, VALUE> property
+        ( final Key<UJO, VALUE> key
         ) {
-        return property.of((UJO)this);
+        return key.of((UJO)this);
     }
 
     /** Getter based on two keys */
@@ -65,11 +65,11 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings({"unchecked"})
     public <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
-        ( final Key<UJO, VALUE> property
+        ( final Key<UJO, VALUE> key
         , final VALUE value
         ) {
-        UjoManager.assertAssign(property, value);
-        property.setValue((UJO)this, value);
+        UjoManager.assertAssign(key, value);
+        key.setValue((UJO)this, value);
         return (UJO_IMPL) this;
     }
 
@@ -98,14 +98,14 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
 
     // ------ LIST ----------
 
-    /** Returns a count of Items. If the property is null, method returns 0.
+    /** Returns a count of Items. If the key is null, method returns 0.
      * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() internally.
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> int getItemCount
-        ( final ListKey<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> key
         ) {
-        return ((ListKey)property).getItemCount(this);
+        return ((ListKey)key).getItemCount(this);
     }
 
     /** Add Value, if the List is null then the list will be created.
@@ -113,10 +113,10 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> UJO_IMPL add
-        ( final ListKey<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> key
         , final ITEM value
         ) {
-        property.addItem((UJO) this, value);
+        key.addItem((UJO) this, value);
         return (UJO_IMPL) this;
     }
 
@@ -125,11 +125,11 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> UJO_IMPL set
-        ( final ListKey<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> key
         , final int index
         , final ITEM value
         ) {
-        property.setItem((UJO)this, index, value);
+        key.setItem((UJO)this, index, value);
         return (UJO_IMPL) this;
     }
 
@@ -138,39 +138,39 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> ITEM get
-        ( final ListKey<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> key
         , final int index
         ) {
-        return (ITEM) ((ListKey)property).getItem(this, index);
+        return (ITEM) ((ListKey)key).getItem(this, index);
     }
 
 
     /**
      * Remove an item from the List by an index.
-     * @param property
+     * @param key
      * @param index
      * @return removed item
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> ITEM remove
-        ( final ListKey<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> key
         , final int index
         ) {
-        return (ITEM) ((ListKey)property).getList(this).remove(index);
+        return (ITEM) ((ListKey)key).getList(this).remove(index);
     }
 
     /**
      * Removes the first occurrence in this list of the specified element.
-     * @param property ListUjoPropertyCommon
+     * @param key ListUjoPropertyCommon
      * @param item Item to remove
      * @return true if the list is not null and contains the specified element
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, ITEM> boolean remove
-        ( final ListKey<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> key
         , final ITEM item
         ) {
-        return ((ListKey)property).removeItem(this, item);
+        return ((ListKey)key).removeItem(this, item);
     }
 
     /** Returns a not null List. If original list value is empty, the new List is created.
@@ -178,9 +178,9 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( final ListKey<UJO,ITEM> property
+        ( final ListKey<UJO,ITEM> key
         ) {
-        return (LIST) ((ListKey)property).getList(this);
+        return (LIST) ((ListKey)key).getList(this);
     }
 
     /** Returns a not null List. If original list value is empty, the new List is created.
@@ -191,11 +191,11 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
         return key.getList( (UJO) this);
     }
 
-    /** Indicates whether a parameter value "equal to" property default value. */
+    /** Indicates whether a parameter value "equal to" key default value. */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> boolean isDefault
-        ( final Key<UJO, VALUE> property) {
-        final boolean result = ((Key) property).isDefault(this);
+        ( final Key<UJO, VALUE> key) {
+        final boolean result = ((Key) key).isDefault(this);
         return result;
     }
 
@@ -206,37 +206,37 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      * Returns a String value by a NULL context.
      * otherwise method returns an instance of String.
      *
-     * @param property A Property
-     * @return If property type is "container" then result is null.
+     * @param key A Property
+     * @return If key type is "container" then result is null.
      */
-    public String getText(final Key property) {
-        return readUjoManager().getText(this, property, null);
+    public String getText(final Key key) {
+        return readUjoManager().getText(this, key, null);
     }
 
     /**
      * Set value from a String format by a NULL context. Types Ujo, List, Object[] are not supported by default.
      * <br>The method is an alias for a method writeValueString(...)
-     * @param property Property
+     * @param key Property
      * @param value String value
      */
-    public void setText(final Key property, final String value) {
-        readUjoManager().setText(this, property, value, null, null);
+    public void setText(final Key key, final String value) {
+        readUjoManager().setText(this, key, value, null, null);
     }
 
 
     // ------- UTILITIES BUT NO INTERFACE SUPPORT -------
 
-    /** Compare the property value with a parametrer value. The property value can be null.  */
+    /** Compare the key value with a parametrer value. The key value can be null.  */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> boolean equals(Key<UJO,VALUE> property, VALUE value) {
-        return property.equals((UJO)this, value);
+    public <UJO extends UJO_IMPL, VALUE> boolean equals(Key<UJO,VALUE> key, VALUE value) {
+        return key.equals((UJO)this, value);
     }
 
     /**
-     * Find a property by a "property name".
-     * @param propertyName The name of property
+     * Find a key by a "key name".
+     * @param propertyName The name of key
      * @return The first Key with the same name.
-     * @throws java.lang.IllegalArgumentException If property not found.
+     * @throws java.lang.IllegalArgumentException If key not found.
      */
     public Key findProperty(final String propertyName) throws IllegalArgumentException {
         final boolean throwException = true;

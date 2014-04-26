@@ -25,7 +25,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface View {
 
-    /** A named parameter for the view name. Default value is taken from a relation property name. */
+    /** A named parameter for the view name. Default value is taken from a relation key name. */
     String name() default Table.NULL;
     /** A shortcut for the attribute "name" of View.
      * @see #name()

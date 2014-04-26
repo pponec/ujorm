@@ -22,13 +22,13 @@ public class Person implements Ujo {
     // --- The begin of the Ujo implementation ---
     private HashMap map = new HashMap();
 
-    public Object readValue(Key property) {
-        return map.get(property);
+    public Object readValue(Key key) {
+        return map.get(key);
     }
 
     @SuppressWarnings("unchecked")
-    public void writeValue(Key property, Object value) {
-        map.put(property, value);
+    public void writeValue(Key key, Object value) {
+        map.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
@@ -36,7 +36,7 @@ public class Person implements Ujo {
         return (KeyList<T>) f.getKeys();
     }
 
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }
     // --- The end of UJO implementation --

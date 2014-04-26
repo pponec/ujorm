@@ -70,35 +70,35 @@ abstract public class FieldUjoExt<UJO extends FieldUjoExt> extends AbstractUjoEx
      * FieldProperty.setValue(Ujo,Object) 
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators. 
-     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     * <br>NOTE: If key is an incorrect then method throws an IllegalArgumentException.
      *
      * @see FieldProperty#setValue(Ujo,Object) FieldProperty.setValue(Ujo,Object)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        ((ValueAgent) property).writeValue(this, value);
+    public void writeValue(final Key key, final Object value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        ((ValueAgent) key).writeValue(this, value);
     }
     
     /** It is a <strong>common</strong> method for reading all object values, however there is strongly recomended to use a method 
      * FieldProperty.getValue(Ujo)
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors. 
-     * <br>NOTE: If property is an incorrect then method throws an IllegalArgumentException.
+     * <br>NOTE: If key is an incorrect then method throws an IllegalArgumentException.
      *
      * @see FieldProperty#getValue(Ujo) FieldProperty.getValue(Ujo)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object readValue(final Key property) {
-        return ((ValueAgent) property).readValue(this);
+    public Object readValue(final Key key) {
+        return ((ValueAgent) key).readValue(this);
     }
     
     
     // --------- STATIC METHODS -------------------
     
-    /** Returns a new instance of property where the default value is null.
+    /** Returns a new instance of key where the default value is null.
      * @hidden     
      */
     protected static <UJO extends Ujo,VALUE> FieldProperty<UJO, VALUE> newProperty

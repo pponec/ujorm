@@ -176,12 +176,12 @@ public class OrmHandler implements OrmHandlerProvider {
         }
     }
 
-    /** Is the parameter a persistent property? */
-    public boolean isPersistent(Key property) {
+    /** Is the parameter a persistent key? */
+    public boolean isPersistent(Key key) {
 
         final boolean resultFalse
-        =  property.isTypeOf(List.class)
-        || UjoManager.getInstance().isTransient(property)
+        =  key.isTypeOf(List.class)
+        || UjoManager.getInstance().isTransient(key)
         ;
         return !resultFalse;
     }
@@ -294,39 +294,39 @@ public class OrmHandler implements OrmHandlerProvider {
         return result;
     }
 
-    /** Map a property to the table */
+    /** Map a key to the table */
     @SuppressWarnings("unchecked")
     public void addProcedureModel(MetaProcedure metaProcedure) {
         procedureMap.put(MetaProcedure.DB_PROPERTY.of(metaProcedure).getType(), metaProcedure);
     }
 
-    /** Map a property to the table */
+    /** Map a key to the table */
     @SuppressWarnings("unchecked")
     public void addTableModel(MetaTable metaTable) {
         entityMap.put(metaTable.getType(), metaTable);
     }
 
-    /** Map a property to the table */
+    /** Map a key to the table */
     @SuppressWarnings("unchecked")
     public void addColumnModel(MetaRelation2Many column) {
-        Key property = column.getKey();
-        MetaRelation2Many oldColumn = findColumnModel(property);
+        Key key = column.getKey();
+        MetaRelation2Many oldColumn = findColumnModel(key);
 
         if (oldColumn == null) {
-            propertyMap.put(property, column);
+            propertyMap.put(key, column);
         } else {
             final Class oldType = oldColumn.getTableClass();
             final Class newType = column.getTableClass();
 
             if (newType.isAssignableFrom(oldType)) {
                 // Only a parent can be assigned:
-                propertyMap.put(property, column);
+                propertyMap.put(key, column);
             }
         }
     }
 
     /**
-     * Find a property annotation by the required type.
+     * Find a key annotation by the required type.
      * @param key The key must be a <strong>public static final</strong> field of the related Ujo class.
      * @param annotation Annotation type
      * @return  An annotation instance or the {@code null} value
@@ -348,7 +348,7 @@ public class OrmHandler implements OrmHandlerProvider {
         return null;
     }
 
-    /** Find a Relation/Column model of the paramemeter property.
+    /** Find a Relation/Column model of the paramemeter key.
      * The column result is type of {@link MetaColumn}.
      * @param pathProperty Parameter can be type of Key of CompositeKey (direct or indirect);
      * @return Returns an object type of {@link MetaColumn} for database column
@@ -359,7 +359,7 @@ public class OrmHandler implements OrmHandlerProvider {
         return findColumnModel(pathProperty, false);
     }
 
-    /** Find a Relation/Column model of the paramemeter property.
+    /** Find a Relation/Column model of the paramemeter key.
      * The column result is type of {@link MetaColumn}.
      * @param pathProperty Parameter can be type of Property of CompositeKey (direct or indirect);
      * @param throwException Throw the IllegalArgument exception of no Model was not found

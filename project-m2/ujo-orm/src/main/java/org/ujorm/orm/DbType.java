@@ -24,7 +24,7 @@ import java.sql.Types;
  */
 public enum DbType {
 
-    /** Get the type by a Java property */
+    /** Get the type by a Java key */
     Automatic(Integer.MIN_VALUE),
     INT(Types.INTEGER),
     BOOLEAN(Types.BOOLEAN),

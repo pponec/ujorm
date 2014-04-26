@@ -35,7 +35,7 @@ import org.ujorm.validator.ValidationException;
  * A <strong>PathProperty</strong> class is an composite of a Key objects.
  * The PathProperty class can be used wherever is used Key - with a one important <strong>exception</strong>:
  * do not send the PathProperty object to methods Ujo.readValue(...) and Ujo.writeValue(...) !!!
- * <p/>Note that method isDirect() returns a false in this class. For this reason, the property is not included
+ * <p/>Note that method isDirect() returns a false in this class. For this reason, the Key is not included
  * in the list returned by Ujo.readProperties().
  *
  * @author Pavel Ponec
@@ -51,7 +51,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     private final Key[] keys;
     /** Array of <strong>aliases</strong> keys */
     private final String[] aliases;
-    /** Is property ascending / descending */
+    /** Is key ascending / descending */
     private final boolean ascending;
     private String name;
 
@@ -154,13 +154,13 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         }
     }
 
-    /** Get the last property of the current object. The result may not be the direct property. */
+    /** Get the last key of the current object. The result may not be the direct key. */
     @SuppressWarnings("unchecked")
     public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastPartialProperty() {
         return keys[keys.length - 1];
     }
 
-    /** Get the first property of the current object. The result is direct property always. */
+    /** Get the first key of the current object. The result is direct key always. */
     @SuppressWarnings("unchecked")
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey() {
@@ -171,7 +171,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
             ;
     }
 
-    /** Get the first property of the current object. The result is direct property always. */
+    /** Get the first key of the current object. The result is direct key always. */
     @SuppressWarnings("unchecked")
     @Override
     final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey() {
@@ -182,7 +182,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
             ;
     }
 
-    /** Full property names with no alias */
+    /** Full key names with no alias */
     final public String getName() {
         if (name == null) {
             name = getName(false);
@@ -190,7 +190,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return name;
     }
 
-    /** Full property name with alias names, if any.
+    /** Full key name with alias names, if any.
      * @param alias A request to display an alias by the template: {@code PARENT[aliasName] }
      * @return alias name
      */
@@ -322,7 +322,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         getLastPartialProperty().copy(from2, to2);
     }
 
-    /** Returns true if the property type is a type or subtype of the parameter class. */
+    /** Returns true if the key type is a type or subtype of the parameter class. */
     @SuppressWarnings("unchecked")
     @Override
     final public boolean isTypeOf(final Class type) {
@@ -330,7 +330,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /**
-     * Returns true, if the property value equals to a parameter value. The property value can be null.
+     * Returns true, if the key value equals to a parameter value. The key value can be null.
      *
      * @param ujo A basic Ujo.
      * @param value Null value is supported.
@@ -350,7 +350,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /**
-     * Returns true, if the property name equals to the parameter value.
+     * Returns true, if the key name equals to the parameter value.
      */
     @Override
     public boolean equalsName(final CharSequence name) {
@@ -358,16 +358,16 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /**
-     * Returns true, if the property value equals to a parameter value. The property value can be null.
+     * Returns true, if the key value equals to a parameter value. The key value can be null.
      *
-     * @param property A basic CujoProperty.
+     * @param key A basic CujoProperty.
      * @param value Null value is supported.
      */
     @Override
-    public boolean equals(final Object property) {
-        return property instanceof Key
-            && property.toString().equals(toString())
-            && getType().equals(((Key)property).getType())
+    public boolean equals(final Object key) {
+        return key instanceof Key
+            && key.toString().equals(toString())
+            && getType().equals(((Key)key).getType())
             ;
     }
 
@@ -418,8 +418,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
     /**
-     * If the property is the direct property of the related UJO class then method returns the TRUE value.
-     * The return value false means, that property is type of {@link CompositeKey}.
+     * If the key is the direct key of the related UJO class then method returns the TRUE value.
+     * The return value false means, that key is type of {@link CompositeKey}.
      * <br />
      * Note: The composite keys are excluded from from function Ujo.readProperties() by default
      * and these keys should not be sent to methods Ujo.writeValue() and Ujo.readValue().
@@ -439,7 +439,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return true;
     }
 
-    /** A flag for an ascending direction of order. For the result is significant only the last property.
+    /** A flag for an ascending direction of order. For the result is significant only the last key.
      * @see org.ujorm.core.UjoComparator
      */
     @Override
@@ -447,7 +447,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return ascending;
     }
 
-    /** Create a new instance of the property with a descending direction of order.
+    /** Create a new instance of the key with a descending direction of order.
      * @see org.ujorm.core.UjoComparator
      */
     @Override
@@ -456,7 +456,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return descending(true);
     }
 
-    /** Create a new instance of the property with a descending direction of order.
+    /** Create a new instance of the key with a descending direction of order.
      * @see org.ujorm.core.UjoComparator
      */
     @Override
@@ -495,8 +495,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> property) {
-        return new PathProperty(DEFAULT_ALIAS, this, property);
+    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> key) {
+        return new PathProperty(DEFAULT_ALIAS, this, key);
     }
 
     /** Create new composite (indirect) instance.
@@ -504,16 +504,16 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> property, String alias) {
-        return new PathProperty(alias, this, property);
+    public <T> CompositeKey<UJO, T> add(final Key<? super VALUE, T> key, String alias) {
+        return new PathProperty(alias, this, key);
     }
 
     /** ListKey, method does not support the name spaces */
     @SuppressWarnings("unchecked")
-    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> property) {
+    public <T> ListKey<UJO, T> add(ListKey<? super VALUE, T> key) {
         Key[] props = new Key[keys.length+1];
         System.arraycopy(keys, 0, props, 0, keys.length);
-        props[keys.length] = property;
+        props[keys.length] = key;
 
         return new PathListProperty(DEFAULT_ALIAS, props);
     }
@@ -541,7 +541,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     }
 
 
-    /** Compare to another Key object by the index and name of the property.
+    /** Compare to another Key object by the index and name of the key.
      * @since 1.20
      */
     public int compareTo(final Key p) {
@@ -694,7 +694,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      *   <li>native Criterion dependents on a selected database so application developers should to create support for each supported database
      *       of target application to ensure database compatibility</li>
      * </ul>
-     * @param property The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
+     * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * A substring {@code {0}} will be replaced for the current column name;
      * @param value a codition value
@@ -724,7 +724,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     // ============= STATIC METHODS =============
 
-    /** Create a new instance of property with a new sort attribute value.
+    /** Create a new instance of key with a new sort attribute value.
      * @hidden
      */
     @SuppressWarnings("deprecation")
@@ -738,7 +738,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
             ;
     }
 
-    /** Create a new instance of property with a new sort attribute value.
+    /** Create a new instance of key with a new sort attribute value.
      * This is an alias for the static method {@link #sort(org.ujorm.Key, boolean) sort()}.
      * @hidden
      * @see #sort(org.ujorm.Key, boolean) sort(..)
@@ -747,7 +747,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return sort(key, ascending);
     }
 
-    /** Quick instance for the direct property.
+    /** Quick instance for the direct key.
      * @hidden
      */
     public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> of(final Key<UJO, VALUE> key) {
@@ -801,7 +801,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return new PathProperty(DEFAULT_ALIAS, keys);
     }
 
-    /** Create a new instance of property with a new sort attribute value.
+    /** Create a new instance of key with a new sort attribute value.
      * This is an alias for the static method {@link #sort(org.ujorm.Key, boolean) sort()}.
      * @see #sort(org.ujorm.Key, boolean) sort(..)
      * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key)
@@ -811,7 +811,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
         return sort(key, ascending);
     }
 
-    /** Quick instance for the direct property.
+    /** Quick instance for the direct key.
      * @deprecated See the {@link #of(org.ujorm.Key, org.ujorm.Key)
      * @hidden
      */

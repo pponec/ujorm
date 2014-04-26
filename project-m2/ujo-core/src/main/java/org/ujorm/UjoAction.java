@@ -76,7 +76,7 @@ public interface UjoAction {
      * @deprecated use the Key.getDefault() value instead of.
      */
     public static final int ACTION_ZERO_REPLACE = 30;
-    /** An authorization action for class UjoContentTabModel. Can by displayed the property in a JTable like a row?.
+    /** An authorization action for class UjoContentTabModel. Can by displayed the key in a JTable like a row?.
      * @see Ujo#readAuthorization(UjoAction, Key, Object)
      */
     public static final int ACTION_TABLE_SHOW = 100;

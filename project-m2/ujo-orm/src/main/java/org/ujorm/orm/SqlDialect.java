@@ -637,9 +637,9 @@ abstract public class SqlDialect {
      */
     public ValueCriterion printCriterion(ValueCriterion crit, Appendable out) throws IOException {
         final Operator operator = crit.getOperator();
-        final Key property = crit.getLeftNode();
-        final ColumnWrapper column = property != null
-                ? AliasKey.getLastKey(property).getColumn(ormHandler) : null;
+        final Key key = crit.getLeftNode();
+        final ColumnWrapper column = key != null
+                ? AliasKey.getLastKey(key).getColumn(ormHandler) : null;
         Object right = crit.getRightNode();
 
         if (right==null ) {
@@ -1049,7 +1049,7 @@ abstract public class SqlDialect {
 
     /**
      * Print SQL CURRENT SEQUENCE VALUE. Returns a new sequence limit and the.
-     * The SQL columns are allways selected in the order: sequence, cache, maxValue.
+     * The SQL columns are always selected in the order: sequence, cache, maxValue.
      * current cache.
      */
     public Appendable printSequenceCurrentValue(final UjoSequencer sequence, final Appendable out) throws IOException {

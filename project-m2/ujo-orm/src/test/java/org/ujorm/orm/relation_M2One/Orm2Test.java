@@ -184,8 +184,8 @@ public class Orm2Test extends TestCase {
     }
 
     /** Sort items by a <strong>composite</strong> propertry. <br>
-     * Note 1: see how a composite property can be used for reading values too. <br>
-     * Note 2: the metod loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
+     * Note 1: see how a composite key can be used for reading values too. <br>
+     * Note 2: the method loadLazyValues(..) is able to load all lazy keys for the Item and its related Order<br>
      */
     public void useSortOrderItems() {
 
@@ -243,7 +243,7 @@ public class Orm2Test extends TestCase {
     }
 
     /** Select an Order by id and print its Items
-     * by a 'one to many' relation property
+     * by a 'one to many' relation key
      */
     public void useSelectItems_3() {
         Order order = session.load(Order.class, 1L);
@@ -254,7 +254,7 @@ public class Orm2Test extends TestCase {
         }
     }
 
-    /** Select items by a composed property.
+    /** Select items by a composed key.
      * It is a sample of a multi-table query.
      * @see Item#$orderDate
      */
@@ -268,7 +268,7 @@ public class Orm2Test extends TestCase {
         }
     }
 
-    /** How to reload the object property values from the database ? */
+    /** How to reload the object key values from the database ? */
     public void useReloading() {
         Order order = new Order();
         order.setId(1L);
@@ -429,7 +429,7 @@ public class Orm2Test extends TestCase {
         System.out.println("There are DELETED rows: " + count);
     }
 
-    /** Print some meta-data of the property Order.note. */
+    /** Print some meta-data of the key Order.note. */
     public void useMetadata() {
         MetaColumn c = (MetaColumn) handler.findColumnModel(Order.note);
 

@@ -68,13 +68,13 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      * {@link Key#setValue(org.ujorm.Ujo, java.lang.Object) }
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
-     * <br>NOTE: If property is an incorrect then no exception is throwed.
+     * <br>NOTE: If the Key is an incorrect then no exception is throwed.
      *
      * @see Key#setValue(Ujo,Object)
      */
-    public void writeValue(final Key property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        data.put(property, value);
+    public void writeValue(final Key key, final Object value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        data.put(key, value);
     }
 
 
@@ -82,19 +82,19 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
      * {@link Key#of(org.ujorm.Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
-     * <br>NOTE: If property is an incorrect then method returns a null value.
+     * <br>NOTE: If key is an incorrect then method returns a null value.
      *
      * @see Key#of(Ujo)
      */
-    public Object readValue(final Key property) {
-        assert !property.isComposite() : "Property must be direct only.";
-        return data.get(property);
+    public Object readValue(final Key key) {
+        assert !key.isComposite() : "Property must be direct only.";
+        return data.get(key);
     }
 
     // --------- STATIC METHODS -------------------
 
-    /** Returns a new instance of property where the default value is null.
-     * Method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * Method assigns a next key index.
      * @hidden
      */
     public static <UJO extends MapUjo,VALUE> Property<UJO,VALUE> newKey(String name) {
@@ -102,14 +102,14 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     }
 
     /** A Property Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     protected static <UJO extends MapUjo, VALUE> Property<UJO, VALUE> newKey(String name, VALUE value) {
         return Property.of(name, value);
     }
 
-    /** Returns a new instance of property where the default value is null.
+    /** Returns a new instance of key where the default value is null.
      * @hidden
      */
     @SuppressWarnings("unchecked")
@@ -118,7 +118,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     }
 
     /** A ListProperty Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @hidden
      */
     protected static <UJO extends MapUjo, ITEM> ListProperty<UJO,ITEM> newListKey(String name) {
@@ -127,8 +127,8 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
 
     // --------- DEPRECATED -------------------
 
-    /** Returns a new instance of property where the default value is null.
-     * Method assigns a next property index.
+    /** Returns a new instance of key where the default value is null.
+     * Method assigns a next key index.
      * @deprecated Use method newKey(..) rather
      * @hidden
      */
@@ -138,7 +138,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     }
 
     /** A Property Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @deprecated Use method newKey(..) rather
      * @hidden
      */
@@ -147,7 +147,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
         return Property.of(name, value);
     }
 
-    /** Returns a new instance of property where the default value is null.
+    /** Returns a new instance of key where the default value is null.
      * @deprecated Use method newKey(..) rather
      * @hidden
      */
@@ -158,7 +158,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     }
 
     /** A ListProperty Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @deprecated Use method newKey(..) rather
      * @hidden
      */
@@ -168,7 +168,7 @@ public abstract class MapUjo extends SuperAbstractUjo implements Serializable {
     }
 
     /** A ListProperty Factory
-     * Method assigns a next property index.
+     * Method assigns a next key index.
      * @deprecated Use newListProperty(...) instead of this.
      * @hidden
      */

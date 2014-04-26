@@ -33,8 +33,8 @@ abstract public class FactoryUjoExt<UJO_IMPL extends FactoryUjoExt> extends Fact
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
     public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( Key<UJO, VALUE> property) {
-        return property.of((UJO) this);
+        ( Key<UJO, VALUE> key) {
+        return key.of((UJO) this);
     }
 
 }    

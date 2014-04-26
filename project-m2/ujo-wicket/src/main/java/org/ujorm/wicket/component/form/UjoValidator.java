@@ -31,7 +31,7 @@ import org.ujorm.validator.ValidationError;
  */
 public class UjoValidator<T> implements IValidator<T>, INullAcceptingValidator<T>, Serializable {
 
-    /** Localization property prefix */
+    /** Localization key prefix */
     public static final String PROPERTY_PREFIX = "validator.";
 
     /** Native Ujorm validator */

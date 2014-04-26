@@ -27,14 +27,14 @@ import org.ujorm.ListKey;
  */
 public class BeanManager<UJO,VALUE> {
     
-    private final Key property;
+    private final Key key;
     
     /** An empty array of classes. */
     private Method setter;
     private Method getter;    
     
-    public BeanManager(Key property) {
-        this.property = property;
+    public BeanManager(Key key) {
+        this.key = key;
     }
     
     /** WARNING: There is recommended to call the method from the method Ujo.writeProperty(...) only.
@@ -44,7 +44,7 @@ public class BeanManager<UJO,VALUE> {
         try {
             getMethod(bean, true).invoke(bean, value);
         } catch (Exception e) {
-            throw new IllegalArgumentException("BeanProperty:"+property.getName()+"="+value, e);
+            throw new IllegalArgumentException("BeanProperty:"+key.getName()+"="+value, e);
         }
     }
     
@@ -55,7 +55,7 @@ public class BeanManager<UJO,VALUE> {
         try {
             return getMethod(bean, false).invoke(bean);
         } catch (Exception e) {
-            throw new IllegalArgumentException("BeanProperty:"+property.getName(), e);
+            throw new IllegalArgumentException("BeanProperty:"+key.getName(), e);
         }
     }
     
@@ -73,11 +73,11 @@ public class BeanManager<UJO,VALUE> {
             Exception ex = null ;
             try {
                 Class ujoClass = ujo.getClass();
-                Class type = set ? property.getType() : null;
+                Class type = set ? key.getType() : null;
                 
                 result = getMethodPlain(ujoClass, type, methodName);
                 if (result==null) {
-                    if (ListKey.class.isInstance(property) && !methodName.endsWith("s")) {
+                    if (ListKey.class.isInstance(key) && !methodName.endsWith("s")) {
                         // TAG name is a singular:
                         result = getMethodPlain(ujoClass, type, methodName+'s');
                     } else if ((type=getPrimitive(type))!=null) {
@@ -94,7 +94,7 @@ public class BeanManager<UJO,VALUE> {
                 ex = e;
             }
             if (result==null) {
-                throw new IllegalArgumentException("Can't find method: " + methodName+'('+property.getType().getName()+')', ex);
+                throw new IllegalArgumentException("Can't find method: " + methodName+'('+key.getType().getName()+')', ex);
             }
         }
         return result;
@@ -133,21 +133,21 @@ public class BeanManager<UJO,VALUE> {
     
     /** Returns a method name by a name */
     protected String getMethodName(final boolean set) {
-        String result = (set ? "set" : Boolean.class.equals(property.getType()) ? "is" : "get")
-        + Character.toUpperCase(property.getName().charAt(0))
-        + property.getName().substring(1)
+        String result = (set ? "set" : Boolean.class.equals(key.getType()) ? "is" : "get")
+        + Character.toUpperCase(key.getName().charAt(0))
+        + key.getName().substring(1)
         ;
         return result;
     }    
     
     /** Create new instance of BeanManager */
-    public static <UJO,VALUE> BeanManager<UJO,VALUE> getInstance(Key property) {
-        return new BeanManager<UJO,VALUE>(property);
+    public static <UJO,VALUE> BeanManager<UJO,VALUE> getInstance(Key key) {
+        return new BeanManager<UJO,VALUE>(key);
     }
 
     @Override
     public String toString() {
-        return property.getName();
+        return key.getName();
     }
 
     

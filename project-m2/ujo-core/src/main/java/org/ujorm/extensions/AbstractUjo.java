@@ -70,15 +70,15 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      * {@link Key#setValue(Ujo,Object)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and validators.
-     * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
+     * <br>NOTE: If the Key is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#setValue(Ujo,Object)
      */
 
     @Override
-    public void writeValue(final Key<?,?> property, final Object value) {
-        assert UjoManager.assertDirectAssign(property, value, this);
-        data[property.getIndex()] = value;
+    public void writeValue(final Key<?,?> key, final Object value) {
+        assert UjoManager.assertDirectAssign(key, value, this);
+        data[key.getIndex()] = value;
     }
 
 
@@ -86,14 +86,14 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
      * {@link Key#of(Ujo)}
      * to an external access for a better type safe.
      * The method have got a <strong>strategy place</strong> for an implementation of several listeners and convertors.
-     * <br>NOTE: If property is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
+     * <br>NOTE: If key is an incorrect then method can throws an ArrayIndexOutOfBoundsException.
      *
      * @see Key#of(Ujo)
      */
     @Override
-    public Object readValue(final Key<?,?> property) {
-        assert !property.isComposite() : "Property must be direct only.";
-        return data[property.getIndex()];
+    public Object readValue(final Key<?,?> key) {
+        assert !key.isComposite() : "Property must be direct only.";
+        return data[key.getIndex()];
     }
 
     // ===== STATIC METHODS =====
@@ -107,7 +107,7 @@ public abstract class AbstractUjo extends SuperAbstractUjo implements Serializab
         return (FACTORY) KeyFactory.CamelBuilder.get(ujoClass);
     }
 
-    /** Create a base factory Key name generator where property name is the same as its field name.
+    /** Create a base factory Key name generator where key name is the same as its field name.
      * <br>Note: after declarations of all properties is recommend to call method {@code KeyFactory.close()};
      * <br>In case of OrmUjo the method is called by a Ujorm framework
      */

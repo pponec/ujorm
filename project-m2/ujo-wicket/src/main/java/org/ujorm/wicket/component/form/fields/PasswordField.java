@@ -28,12 +28,12 @@ public class PasswordField extends Field {
 
     private static final long serialVersionUID = 20130621L;
 
-    public PasswordField(Key property) {
-        super(property.getName(), property, null);
+    public PasswordField(Key key) {
+        super(key.getName(), key, null);
     }
 
-    public PasswordField(String componentId, Key property, String cssClass) {
-        super(componentId, property, cssClass);
+    public PasswordField(String componentId, Key key, String cssClass) {
+        super(componentId, key, cssClass);
     }
 
     /** Create Form inputComponent */

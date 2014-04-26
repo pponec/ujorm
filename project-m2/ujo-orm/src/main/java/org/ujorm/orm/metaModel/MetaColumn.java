@@ -82,7 +82,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     public static final Key<MetaColumn,Class<? extends ITypeService>> CONVERTER = fa.newClassKey("converter", ITypeService.class);
     /** Comment of the database column */
     public static final Key<MetaColumn,String> COMMENT = fa.newKey("comment", Comment.NULL);
-    /** The property initialization */
+    /** The key initialization */
     static{fa.lock();}
 
     /** If current column is a foreign key than related model is a related table column (primarky key by default). */
@@ -200,14 +200,14 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
     }
 
     /** Returns a maximal db column length in the database.
-     * @return If property is undefined then the method returns value -1.
+     * @return If key is undefined then the method returns value -1.
      */
     public int getMaxLength() {
         return MAX_LENGTH.of(this);
     }
 
     /** Returns the db column precision.
-     * @return If property is undefined then the method returns value -1.
+     * @return If key is undefined then the method returns value -1.
      */
     public int getPrecision() {
         return PRECISION.of(this);
@@ -300,15 +300,15 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return result;
     }
 
-    /** Returns a property value from a table */
+    /** Returns a key value from a table */
     @SuppressWarnings("unchecked")
     public Object getValue(final OrmUjo bo) {
-        final Key property = super.getKey();
-        final Object result = property.of(bo);
+        final Key key = super.getKey();
+        final Object result = key.of(bo);
         return result;
     }
 
-    /** Returns a property value from a table
+    /** Returns a key value from a table
      * @param ujo Related Ujo object
      * @param value A value to assign.
      */
@@ -382,7 +382,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         return typeCode;
     }
 
-    /** Has the property a default value (not null) ?
+    /** Has the key a default value (not null) ?
      * If the default value is an empty String than method returns false.
      */
     public boolean hasDefaultValue() {
@@ -432,7 +432,7 @@ public final class MetaColumn extends MetaRelation2Many implements ColumnWrapper
         }
     }
 
-    /** Is the related property type void? */
+    /** Is the related key type void? */
     public boolean isVoid() {
         return isTypeOf(Void.class);
     }

@@ -44,24 +44,24 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
     /** A delegat for the method {@link #getBean(org.ujorm.Key). */
     @Override
     @SuppressWarnings("unchecked")
-    final public Object readValue(Key property) {
-        return getBean(property);
+    final public Object readValue(Key key) {
+        return getBean(key);
     }
 
     /** The bean is a factory type, the writeValue method is not supported. */
     @Deprecated
     @Override
-    final public void writeValue(Key property, Object value) throws UnsupportedOperationException {
+    final public void writeValue(Key key, Object value) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Method is not supported");
     }
 
     /** An delegat for the method {@link ApplicationContext#getBean(java.lang.String, java.lang.Class)} */
     @SuppressWarnings("unchecked")
-    public <T> T getBean(Key<? extends Ujo, T> property) throws BeansException {
-        return (T) context.getBean(property.getName(), property.getType());
+    public <T> T getBean(Key<? extends Ujo, T> key) throws BeansException {
+        return (T) context.getBean(key.getName(), key.getType());
     }
 
-    /** Assing the application context by Spring framework only. Do not call the method directly. */
+    /** Assign the application context by Spring framework only. Do not call the method directly. */
     @Override
     final public void setApplicationContext(ApplicationContext ac) throws BeansException {
         if (this.context != null) {
@@ -84,7 +84,7 @@ abstract public class AbstractAplicationContextAdapter implements Ujo, Applicati
     // ------------- STATIC METHODS -------------------
 
     @Override
-    public boolean readAuthorization(UjoAction action, Key property, Object value) {
+    public boolean readAuthorization(UjoAction action, Key key, Object value) {
         return true;
     }
 

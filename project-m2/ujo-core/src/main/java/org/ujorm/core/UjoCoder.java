@@ -163,11 +163,11 @@ public class UjoCoder {
      * <br>If value can't be decoded, an IllegalArgumentException is throwed.
      */
     @SuppressWarnings("unchecked")
-    public Object decodeValue(final Key property, final String aValue, final Class type) throws IllegalArgumentException {
-        if (property instanceof ListKey) {
+    public Object decodeValue(final Key key, final String aValue, final Class type) throws IllegalArgumentException {
+        if (key instanceof ListKey) {
             if (aValue==null || aValue.length()==0) { return null; }
             List result = new ArrayList();
-            ListKey propertyList = (ListKey) property;
+            ListKey propertyList = (ListKey) key;
             String separator = String.valueOf(getSeparator());
             StringTokenizer st = new StringTokenizer(aValue, separator);
             while (st.hasMoreTokens()) {
@@ -177,7 +177,7 @@ public class UjoCoder {
             }
             return result;
         } else {
-            final Object result = decodeValue(type!=null ? type : property.getType(), aValue);
+            final Object result = decodeValue(type!=null ? type : key.getType(), aValue);
             return result;
         }
     }

@@ -39,11 +39,11 @@ public class XItem extends OrmTable<XItem> {
     @Column(name="fk_order")
     public static final Key<XItem,XOrder> ORDER = newKey();
     //
-    /** A composed (indirect) property provides a 'created' attribute of the XOrder */
+    /** A composed (indirect) key provides a 'created' attribute of the XOrder */
     public static final Key<XItem,Date> $ORDER_DATE = XItem.ORDER.add(XOrder.CREATED);
-    /** A composed (indirect) property provides an 'name' attribute of the XOrder */
+    /** A composed (indirect) key provides an 'name' attribute of the XOrder */
     public static final Key<XItem,String> $ORDER_NOTE = XItem.ORDER.add(XOrder.NOTE);
-    /** A composed (indirect) property provides an 'name' attribute of the XOrder */
+    /** A composed (indirect) key provides an 'name' attribute of the XOrder */
     public static final Key<XItem,String> $CUST_FIRSTNAME = XItem.ORDER.add(XOrder.CUSTOMER).add(XCustomer.FIRSTNAME);
 
     // --- An optional implementation of commonly used setters and getters ---
@@ -73,7 +73,7 @@ public class XItem extends OrmTable<XItem> {
         set(ORDER, order);
     }
 
-    /** Example of the composed PATH property */
+    /** Example of the composed PATH key */
     public Date getOrderDate() {
         // An alternative solution for: getOrder().getCreated();
         return get($ORDER_DATE);
