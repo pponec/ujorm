@@ -262,7 +262,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
      */
     @Override
     public UjoIterator<UJO> iterator() {
-        final UjoIterator<UJO> result = UjoIterator.getInstance(this);
+        final UjoIterator<UJO> result = UjoIterator.of(this);
         return result;
     }
 
@@ -408,7 +408,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         if (mc==null) {
             throw new IllegalArgumentException("Column " + column.toStringFull() + " was not foud in the meta-model");
         }
-        final ColumnWrapper wColumn = column.isComposite() 
+        final ColumnWrapper wColumn = column.isComposite()
                 ? new ColumnWrapperImpl(mc, column)
                 : mc;
         if (columns==null) {
@@ -463,7 +463,7 @@ public class Query<UJO extends OrmUjo> implements Iterable<UJO> {
         final OrmHandler handler = getHandler();
         for (Key column : columns) {
             final MetaColumn mc = (MetaColumn) handler.findColumnModel(getLastProperty(column), true);
-            final ColumnWrapper cw = column.isComposite() 
+            final ColumnWrapper cw = column.isComposite()
                     ? new ColumnWrapperImpl(mc, column)
                     : mc;
             addMissingColumn(cw, addChilds, false);

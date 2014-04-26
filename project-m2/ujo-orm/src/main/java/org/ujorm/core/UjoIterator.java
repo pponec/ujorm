@@ -102,20 +102,49 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
 
     // --- STATIC FACTORY ---------
 
+    /** Create an instance */
+    @SuppressWarnings("unchecked")
+    final public static <T> UjoIterator<T> of(final Iterator<T> iterator) {
+        return new UjoIteratorImpl(iterator);
+    }
+
+    /** Create an instance */
+    @SuppressWarnings("unchecked")
+    final public static <T> UjoIterator<T> of(final Collection<T> collection) {
+        return new UjoIteratorImpl(collection.iterator(), collection.size());
+    }
+
+    /** Create an instance */
+    @SuppressWarnings("unchecked")
+    final public static <T extends OrmUjo> UjoIterator<T> of(Query<T> query) {
+        return new ResultSetIterator(query);
+    }
+
+    /** Create an instance
+     * @deprecated Use the method {@link #of(java.util.Iterator) } rather
+     */
+    @Deprecated
     @SuppressWarnings("unchecked")
     final public static <T> UjoIterator<T> getInstance(final Iterator<T> iterator) {
         return new UjoIteratorImpl(iterator);
     }
 
+    /** Create an instance
+     * @deprecated Use the method {@link #of(java.util.Collection) rather
+     */
+    @Deprecated
     @SuppressWarnings("unchecked")
     final public static <T> UjoIterator<T> getInstance(final Collection<T> collection) {
         return new UjoIteratorImpl(collection.iterator(), collection.size());
     }
 
+    /** Create an instance
+     * @deprecated Use the method {@link #of(org.ujorm.orm.Query)  rather
+     */
+    @Deprecated
     @SuppressWarnings("unchecked")
     final public static <T extends OrmUjo> UjoIterator<T> getInstance(Query<T> query) {
         return new ResultSetIterator(query);
     }
-
 
 }
