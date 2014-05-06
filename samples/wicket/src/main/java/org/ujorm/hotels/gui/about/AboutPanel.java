@@ -29,6 +29,7 @@ public class AboutPanel extends Panel {
     public AboutPanel(String id) {
         super(id);
 
+       add(new Label("javaVersion", System.getProperty("java.version")));
        add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
        add(new Label("ujormVersion", UjoManager.version()));
        add(new Label("springVersion", SpringVersion.getVersion()));
@@ -36,5 +37,5 @@ public class AboutPanel extends Panel {
 
 
     }
-    
+
 }
