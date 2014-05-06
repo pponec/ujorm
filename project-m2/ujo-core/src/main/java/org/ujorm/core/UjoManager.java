@@ -988,7 +988,7 @@ public class UjoManager implements Comparator<Key> {
     /** Regurns information about current library. */
     public static String version() {
         final Package packge = Ujo.class.getPackage();
-        final String result = packge!=null ? Ujo.class.getPackage().getSpecificationVersion() : null;
+        final String result = packge!=null ? packge.getSpecificationVersion() : null;
         return result!=null ? result : "UNDEFINED" ;
     }
 
