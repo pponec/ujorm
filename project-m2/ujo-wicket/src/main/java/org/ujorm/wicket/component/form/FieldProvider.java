@@ -111,7 +111,20 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         add(field);
     }
 
-    /** Add a Combo-box for a persistent entity */
+    /** Create a field of the required instance and set the result into container.
+     * @param <T> Ujo type
+     * @param key Related Key
+     * @param fieldClass Class must have got a one argument constructor type of {@link Key}.
+     */
+    public <T extends Ujo> void add(Key<U, T> key, Class<? extends Field> fieldClass) {
+        try {
+            add(fieldClass.getConstructor(Key.class).newInstance(key));
+        } catch (Exception ex) {
+            throw new IllegalStateException("Can't create instance of the " + fieldClass, ex);
+        }
+    }
+
+    /** Add a Combo-box for a <string>persistent</strong> entity */
     public <T extends OrmUjo> void add(Key<U, T> key, Key<T,?> display, Criterion<T> crn) {
         add(ComboField.of(key, crn, display));
     }
