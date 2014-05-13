@@ -251,7 +251,7 @@ final class UjoHandlerXML extends DefaultHandler {
 
     @SuppressWarnings("unchecked")
     public static <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context, UjoManager ujoManager)
-    throws ParserConfigurationException, SAXException, IOException {
+    throws IllegalStateException {
 
         // Parser Factory
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -259,8 +259,12 @@ final class UjoHandlerXML extends DefaultHandler {
 
         // Parse the input
         UjoHandlerXML handler = new UjoHandlerXML(classType, context, ujoManager);
-        SAXParser saxParser = factory.newSAXParser();
-        saxParser.parse( inputStream, handler);
+        try {
+            SAXParser saxParser = factory.newSAXParser();
+            saxParser.parse(inputStream, handler);
+        } catch (Exception e) {
+            throw new IllegalStateException("Parser exception with context: " + context, e);
+        }
 
         return (T) handler.getRoot();
     }

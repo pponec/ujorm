@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -33,7 +34,7 @@ import org.ujorm.orm.Query;
  * </ul>
  * @author Pavel Ponec
  */
-abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
+abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T>, Closeable {
 
 
     /** Tests if this enumeration contains more elements. */
@@ -91,6 +92,7 @@ abstract public class UjoIterator<T> implements Iterable<T>, Iterator<T> {
     /** Close all resources, if any.
      * You may call this method if a data source was not read until the end.
      */
+    @Override
     public void close() {
     }
 

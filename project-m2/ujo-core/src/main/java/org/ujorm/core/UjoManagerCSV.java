@@ -16,6 +16,7 @@
 package org.ujorm.core;
 
 import java.io.CharArrayWriter;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -90,13 +91,15 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
     }
 
     /** Save Ujo into CSV format by codepage UTF-8. */
-    public void saveCSV(File file, List<UJO> ujoList, Object context)
-            throws IOException, InstantiationException, IllegalAccessException {
-        final OutputStream os = getOutputStream(file);
+    public void saveCSV(File file, List<UJO> ujoList, Object context) throws IllegalStateException {
+        OutputStream os = null;
         try {
+            os = getOutputStream(file);
             saveCSV(os, UTF_8, ujoList, context);
+        } catch (Exception e) {
+            throwsCsvFailed(e, context);
         } finally {
-            os.close();
+            close(os, context);
         }
     }
 
@@ -106,65 +109,69 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @param cs Character set
      * @param ujoList List of UJO objects
      * @param context
-     * @throws java.io.IOException
-     * @throws java.lang.InstantiationException
-     * @throws java.lang.IllegalAccessException
      */
-    public void saveCSV(OutputStream out, Charset cs, List<UJO> ujoList, Object context) throws IOException, InstantiationException, IllegalAccessException {
+    public void saveCSV(OutputStream out, Charset cs, List<UJO> ujoList, Object context)
+            throws IllegalStateException {
         final Writer writer = new OutputStreamWriter(out, cs != null ? cs : UTF_8);
         try {
             saveCSV(writer, ujoList, context);
+        } catch (Exception e) {
+            throwsCsvFailed(e, context);
         } finally {
-            writer.close();
+            close(writer, context);
         }
     }
 
     /** Save Ujo into CSV format */
     @SuppressWarnings("unchecked")
     public void saveCSV(Writer out, List<UJO> ujoList, Object context)
-            throws IOException, InstantiationException, IllegalAccessException {
-        if (printHeader) {
-            if (isHeaderFilled()) {
-                printHeaders(out);
-            } else {
-                UJO ujo = ujoList.size()>0
-                        ? ujoList.get(0)
-                        : getUjoClass().newInstance();
+            throws IllegalStateException {
+        try {
+            if (printHeader) {
+                if (isHeaderFilled()) {
+                    printHeaders(out);
+                } else {
+                    UJO ujo = ujoList.size() > 0
+                            ? ujoList.get(0)
+                            : getUjoClass().newInstance();
+                    boolean printSepar = false;
+                    for (Key p : getKeys()) {
+                        if (!getUjoManager().isTransient(p)
+                                && (ujo == null
+                                || ujo.readAuthorization(new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context), p, null))
+                        ){
+                            if (printSepar) {
+                                out.write(separator);
+                            } else {
+                                printSepar = true;
+                            }
+                            printValue(out, getHeaderTitle(p));
+                        }
+                    }
+                }
+                out.write(newLine);
+            }
+
+            for (UJO ujo : ujoList) {
                 boolean printSepar = false;
                 for (Key p : getKeys()) {
-                    if (!getUjoManager().isTransient(p)
-                    && (ujo == null
-                    || ujo.readAuthorization(new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context), p, null))
+                    UjoAction action = new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context);
+                    final String value = getText(ujo, p, UNDEFINED, action);
+                    if (ujo.readAuthorization(action, p, value)
+                            && !getUjoManager().isTransient(p)
                     ){
                         if (printSepar) {
                             out.write(separator);
                         } else {
                             printSepar = true;
                         }
-                        printValue(out, getHeaderTitle(p));
+                        printValue(out, value);
                     }
                 }
+                out.write(newLine);
             }
-            out.write(newLine);
-        }
-
-        for (UJO ujo : ujoList) {
-            boolean printSepar = false;
-            for (Key p : getKeys()) {
-                UjoAction action = new UjoActionImpl(UjoAction.ACTION_CSV_EXPORT, context);
-                final String value = getText(ujo, p, UNDEFINED, action);
-                if (ujo.readAuthorization(action, p, value)
-                && !getUjoManager().isTransient(p)
-                ){
-                    if (printSepar) {
-                        out.write(separator);
-                    } else {
-                        printSepar = true;
-                    }
-                    printValue(out, value);
-                }
-            }
-            out.write(newLine);
+        } catch (Exception e) {
+            throwsCsvFailed(e, context);
         }
     }
 
@@ -185,14 +192,17 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @return List of UJO
      * @throws IllegalStateException can be throwed in case the header check failed
      */
-    public List<UJO> loadCSV(File file, Object context)
-            throws IOException, InstantiationException, IllegalAccessException, IllegalStateException {
-        final Reader reader = RingBuffer.createReader(file);
+    public List<UJO> loadCSV(File file, Object context) throws IllegalStateException {
+        Reader reader = null;
         try {
+            reader = RingBuffer.createReader(file);
             return loadCSV(new Scanner(reader), context);
+        } catch (Exception e) {
+            throwsCsvFailed(e, context);
         } finally {
-            reader.close();
+            close(reader, context);
         }
+        return null;
     }
 
     /** Load an Ujo from CSV format by UTF-8 code-page.
@@ -404,6 +414,22 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
         }
         final CharSequence[] params = {headerContent};
         setHeaderContent(params);
+    }
+
+    /** Close an {@link Closeable} object */
+    private void close(final Closeable closeable, Object context) throws IllegalStateException {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException e) {
+            throwsCsvFailed(e, context);
+        }
+    }
+
+    /** Throws an CSV exception. */
+    private void throwsCsvFailed(Throwable e, Object context) throws IllegalStateException {
+        throw new IllegalStateException("CSV failed for a context: " + context, e);
     }
 
     // -------------- STATIC ----------------

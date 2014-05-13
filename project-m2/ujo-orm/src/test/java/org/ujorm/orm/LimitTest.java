@@ -152,10 +152,8 @@ public class LimitTest extends TestCase {
         }
         assertEquals(expected, myCount);
 
-
         // CLOSE
         session.close();
-
     }
 
     // ---------- TOOLS -----------------------
