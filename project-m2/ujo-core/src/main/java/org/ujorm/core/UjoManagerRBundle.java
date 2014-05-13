@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,9 +24,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.PropertyResourceBundle;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 
 /**
@@ -66,12 +67,15 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
     /**
      * Save Ujo into Java resource bundle
      */
-    public void saveResourceBundle(File outputFile, UJO ujo, String header, Object context) throws IOException {
-        final OutputStream out = getOutputStream(outputFile);
+    public void saveResourceBundle(File outputFile, UJO ujo, String header, Object context) throws IllegalStateException {
+        OutputStream out = null;
         try {
+            out = getOutputStream(outputFile);
             saveResourceBundle(out, ujo, header, context);
+        } catch (FileNotFoundException e) {
+            throwsPropFailed(e, context);
         } finally {
-            out.close();
+            close(out, context);
         }
     }
 
@@ -79,7 +83,7 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
      * Save Ujo into Java resource bundle
      */
     @SuppressWarnings("unchecked")
-    public void saveResourceBundle(OutputStream out, UJO ujo, String header, Object context) throws IOException {
+    public void saveResourceBundle(OutputStream out, UJO ujo, String header, Object context) throws IllegalStateException {
         java.util.Properties props = new java.util.Properties();
         UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_EXPORT, context);
         for (Key prop : getKeys()) {
@@ -97,20 +101,28 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
                 props.setProperty(prop.getName(), valueStr);
             }
         }
-        props.store(out, header);
+        try {
+            props.store(out, header);
+        } catch (IOException e) {
+            throwsPropFailed(e, context);
+        }
     }
 
     /**
      * Load an Ujo from Java resource bundle
      */
     public UJO loadResourceBundle(File inputFile, boolean validate, Object context)
-    throws FileNotFoundException, IOException, InstantiationException, IllegalAccessException {
-        final InputStream inp = getInputStream(inputFile);
+    throws IllegalStateException {
+        InputStream inp = null;
         try {
+            inp = getInputStream(inputFile);
             return loadResourceBundle(inp, validate, context);
+        } catch (Exception e) {
+            throwsPropFailed(e, context);
         } finally {
-            inp.close();
+            close(inp, context);
         }
+        return null;
     }
 
 
@@ -118,23 +130,44 @@ public class UjoManagerRBundle<UJO extends Ujo> extends UjoService<UJO> {
      * Load an Ujo from Java resource bundle
      */
     public UJO loadResourceBundle(InputStream inp, boolean validate, Object context)
-    throws IOException, InstantiationException, IllegalAccessException {
-        UJO ujo = getUjoClass().newInstance();
-        PropertyResourceBundle bundle = new PropertyResourceBundle(inp);
-        UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_IMPORT, context);
+    throws IllegalStateException {
+        UJO ujo = null;
+        try {
+            ujo = getUjoClass().newInstance();
+            PropertyResourceBundle bundle = new PropertyResourceBundle(inp);
+            UjoAction action = new UjoActionImpl(UjoAction.ACTION_RESBUNDLE_IMPORT, context);
 
-        Enumeration<String> keys = bundle.getKeys();
-        while (keys.hasMoreElements()) {
-            final String key = keys.nextElement();
-            final String value = bundle.getString(key);
-            final Key prop = ujo.readKeys().findDirectKey(key, false);
-            if (prop!=null) {
-                setText(ujo, prop, null, value, action);
-            } else if (validate) {
-                throw new IllegalArgumentException("An attribute \""+key+"\" was not found in " + ujo.getClass());
+            Enumeration<String> keys = bundle.getKeys();
+            while (keys.hasMoreElements()) {
+                final String key = keys.nextElement();
+                final String value = bundle.getString(key);
+                final Key prop = ujo.readKeys().findDirectKey(key, false);
+                if (prop!=null) {
+                    setText(ujo, prop, null, value, action);
+                } else if (validate) {
+                    throw new IllegalArgumentException("An attribute \""+key+"\" was not found in " + ujo.getClass());
+                }
             }
+        } catch (Exception e) {
+            throwsPropFailed(e, context);
         }
         return ujo;
+    }
+
+    /** Close an {@link Closeable} object */
+    private void close(final Closeable closeable, Object context) throws IllegalStateException {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException e) {
+            throwsPropFailed(e, context);
+        }
+    }
+
+    /** Throws an CSV exception. */
+    private void throwsPropFailed(Throwable e, Object context) throws IllegalStateException {
+        throw new IllegalStateException("PROPERTIES failed for a context: " + context, e);
     }
 
     // -------------- STATIC METHODS --------------

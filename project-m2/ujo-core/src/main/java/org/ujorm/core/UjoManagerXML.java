@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +25,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -32,7 +32,6 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoTextable;
-import org.xml.sax.SAXException;
 
 /**
  * Ujo Manager for instances type of UjoTextAccess.
@@ -81,31 +80,35 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
     }
 
     /** Create Ujo from XMl file */
-    public <T extends UjoTextable> T parseXML(File inputFile, Class<T> classType, Object context) throws ParserConfigurationException, SAXException, IOException {
+    public <T extends UjoTextable> T parseXML(File inputFile, Class<T> classType, Object context) throws IllegalStateException {
         return parseXML(inputFile, classType, true, context);
     }
 
     /** Create Ujo from XMl file */
-    public <T extends UjoTextable> T parseXML(File inputFile, Class<T> classType, boolean validating, Object context) throws ParserConfigurationException, SAXException, IOException {
-        final InputStream bis = getInputStream(inputFile);
+    public <T extends UjoTextable> T parseXML(File inputFile, Class<T> classType, boolean validating, Object context) throws IllegalStateException {
+        InputStream bis = null;
         try {
+            bis = getInputStream(inputFile);
             return parseXML(bis, classType, validating, context);
+        } catch (Exception e) {
+            throwsXmlFailed(e, context);
         } finally {
-            bis.close();
+            close(bis, context);
         }
+        return null;
     }
 
     /**
      * An Deserialization of Ujo object.
      */
-    public <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, Object context) throws ParserConfigurationException, SAXException, IOException {
+    public <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, Object context) throws IllegalStateException {
         return parseXML(inputStream, classType, true, context);
     }
 
     /**
      * An Deserialization of Ujo object.
      */
-    public <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context) throws ParserConfigurationException, SAXException, IOException {
+    public <T extends UjoTextable> T parseXML(InputStream inputStream, Class<T> classType, boolean validate, Object context) throws IllegalStateException {
         return UjoHandlerXML.parseXML(inputStream, classType, validate, context, getUjoManager());
     }
 
@@ -154,6 +157,22 @@ public class UjoManagerXML extends UjoService<UjoTextable> {
         @SuppressWarnings("unchecked")
         Key key = Property.of(xmlHeader.getRootElement(), ujo.getClass());
         printProperty(null, key, null, ujo, writer, false, xmlHeader.getAttributes());
+    }
+
+    /** Close an {@link Closeable} object */
+    private void close(final Closeable closeable, final Object context) throws IllegalStateException {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException e) {
+            throwsXmlFailed(e, context);
+        }
+    }
+
+    /** Throws an CSV exception. */
+    private void throwsXmlFailed(Throwable e, Object context) throws IllegalStateException {
+        throw new IllegalStateException("XML failed for a context: " + context, e);
     }
 
     /** Print attributes of the tag */

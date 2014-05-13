@@ -79,6 +79,7 @@ public class JdbcStatement {
         }
     }
 
+    /** Close the session */
     public void close() throws SQLException {
         ps.close();
     }

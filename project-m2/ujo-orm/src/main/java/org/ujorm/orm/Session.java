@@ -15,6 +15,7 @@
  */
 package org.ujorm.orm;
 
+import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -59,7 +60,7 @@ import org.ujorm.orm.metaModel.MetaTable;
  * @assoc - - - JdbcStatement
  */
 @SuppressWarnings(value = "unchecked")
-public class Session {
+public class Session implements Closeable {
 
     /** Common title to print the SQL VALUES */
     private static final String SQL_VALUES = "-- SQL VALUES: ";
@@ -1041,6 +1042,7 @@ public class Session {
      * @throws java.lang.IllegalStateException The exception contains a bug from Connection close;
      */
     @SuppressWarnings("unchecked")
+    @Override
     public void close() throws IllegalStateException {
 
         closed = true;

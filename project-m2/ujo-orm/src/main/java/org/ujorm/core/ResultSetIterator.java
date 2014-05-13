@@ -16,6 +16,7 @@
 
 package org.ujorm.core;
 
+import java.io.Closeable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,7 +34,7 @@ import org.ujorm.orm.metaModel.MetaColumn;
  * ResultSet iterator. It is not a thread safe implementation.
  * @author Pavel Ponec
  */
-final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> {
+final class ResultSetIterator<T extends OrmUjo> extends UjoIterator<T> implements Closeable {
 
     /** Base query */
     private final Query query;
