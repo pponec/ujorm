@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Pavel Ponec
+ *  Copyright 2013 - 2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,17 +58,28 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     public static final String PASSWORD_KEY_NAME = "PASSWORD";
 
     private RepeatingView repeatingView;
-    private Map<String, Field> fields = new LinkedHashMap<String, Field>(16);
+    private Map<String, Field> fields;
     private U domain;
+    private transient OrmHandler ormHandler;
 
-    transient private OrmHandler ormHandler;
-
+    /** Defalt constructor */
     public FieldProvider(String repeatingViewId) {
         this(new RepeatingView(repeatingViewId));
     }
 
+    /** Defalt constructor with a repeatingView */
     public FieldProvider(RepeatingView repeatingView) {
+        this(repeatingView, new LinkedHashMap<String, Field>(16) ) ;
+    }
+
+    /**
+     * Final constructor
+     * @param repeatingView a repeating views
+     * @param fields Serializabe field map
+     */
+    public FieldProvider(RepeatingView repeatingView, Map<String, Field> fields) {
         this.repeatingView = repeatingView;
+        this.fields = fields;
     }
 
     /** Add any field to a repeating view */
@@ -333,4 +344,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
 
+    /** Get the last field */
+    public Field getLast() {
+        return (Field) repeatingView.get(repeatingView.size() - 1);
+    }
 }

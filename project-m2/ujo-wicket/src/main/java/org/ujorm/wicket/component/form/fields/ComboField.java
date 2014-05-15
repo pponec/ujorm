@@ -16,6 +16,10 @@
 package org.ujorm.wicket.component.form.fields;
 
 import java.util.List;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -28,6 +32,7 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.orm.OrmUjo;
 import org.ujorm.orm.Query;
 import org.ujorm.wicket.OrmSessionProvider;
+import org.ujorm.wicket.component.form.FieldEvent;
 
 /**
  * CheckBox field with a Label includding a feedback message.
@@ -110,6 +115,25 @@ public class ComboField<T extends Ujo> extends Field {
     /** Get a key to display */
     final public Key<T, ?> getKeyDisplay() {
         return keys.get(1);
+    }
+
+    /** Create an Updating Behavior with "keyup" event
+     * @param field Field is not used by default, however it can be a switch for different results for example.
+     * @return
+     */
+    @Override
+    public void onChange(final String action) {
+        addBehaviour(createChangeBehaviour(action, "onchange"));
+    }
+
+    /** Create new AjaxFormComponentUpdatingBehavior with delay 300 ms. */
+    @Override
+    protected AjaxEventBehavior createChangeBehaviour(final String action, final String jsEvent) {
+        return new AjaxFormComponentUpdatingBehavior(jsEvent) {
+            @Override protected void onUpdate(AjaxRequestTarget target) {
+                send(ComboField.this, Broadcast.BUBBLE, new FieldEvent(action, key, target));
+            }
+        };
     }
 
     // ----------- FACTORIES -------------
