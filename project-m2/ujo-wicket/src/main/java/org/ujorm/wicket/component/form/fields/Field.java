@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Pavel Ponec
+ *  Copyright 2013 - 2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class Field extends Panel {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        this.add(new CssAppender(getCssClass()));
+        add(new CssAppender(getCssClass()));
 
         if (cssClass!=null) {
             add(new CssAppender(cssClass));
@@ -101,6 +101,13 @@ public class Field extends Panel {
         add(input = createInput("input", getDefaultModel()));
         add(createLabel(input));
         add(feedback = new FeedbackLabel("message", input, (IModel)null));
+        feedback.setOutputMarkupId(true);
+    }
+
+    /** On configure */
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
 
         if (behaviors!=null) {
             for (Behavior behavior : behaviors) {
@@ -108,7 +115,6 @@ public class Field extends Panel {
             }
             behaviors = null;
         }
-        feedback.setOutputMarkupId(true);
     }
 
     /** Create Form inputComponent */
@@ -243,6 +249,14 @@ public class Field extends Panel {
                 super.updateAjaxAttributes(attributes);
                 attributes.setThrottlingSettings(new ThrottlingSettings("thr2Id", DEFAULT_DELAY, true));
             }
+        };
+    }
+
+    /** Add a new {@link AjaxFormComponentUpdatingBehavior|Behavior}
+     * to updating a component model on blur events. */
+    public AjaxEventBehavior addBehaviourOnBlur() {
+        return new AjaxFormComponentUpdatingBehavior("onblur") {
+            @Override protected void onUpdate(AjaxRequestTarget t) {}
         };
     }
 }
