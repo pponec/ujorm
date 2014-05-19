@@ -35,7 +35,7 @@ import org.ujorm.wicket.OrmSessionProvider;
 import org.ujorm.wicket.component.form.FieldEvent;
 
 /**
- * CheckBox field with a Label includding a feedback message.
+ * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
 public class ComboField<T extends Ujo> extends Field {

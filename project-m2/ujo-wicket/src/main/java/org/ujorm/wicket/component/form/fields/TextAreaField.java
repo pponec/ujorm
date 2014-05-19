@@ -22,7 +22,7 @@ import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
 
 /**
- * CheckBox field with a Label includding a feedback message.
+ * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
 public class TextAreaField extends Field {
