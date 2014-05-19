@@ -29,6 +29,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoManager;
@@ -120,6 +121,19 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             field = new Field(key); // The common field
         }
         add(field);
+    }
+
+    /** Add all fields of  a domain class to the form */
+    public <U extends Ujo> void add(Class<U> domainClass) {
+        final KeyList<U> keyList;
+        try {
+            keyList = domainClass.newInstance().readKeys();
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't get keys of the domain " + domainClass, e);
+        }
+        for (Key<U, ?> key : keyList) {
+            add(key);
+        }
     }
 
     /** Create a field of the required instance and set the result into container.
