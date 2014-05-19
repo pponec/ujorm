@@ -88,6 +88,11 @@ public class Field extends Panel {
         this.cssClass = cssClass;
     }
 
+    /** Initialize a super class for special cases */
+    protected final void onSuperInitialize() {
+        super.onInitialize();
+    }
+
     /** On initialize */
     @Override
     protected void onInitialize() {

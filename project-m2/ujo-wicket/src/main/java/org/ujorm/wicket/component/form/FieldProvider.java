@@ -30,6 +30,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
+import org.ujorm.ListKey;
 import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.UjoManager;
@@ -46,6 +47,7 @@ import org.ujorm.wicket.component.form.fields.ComboField;
 import org.ujorm.wicket.component.form.fields.DateField;
 import org.ujorm.wicket.component.form.fields.EnumField;
 import org.ujorm.wicket.component.form.fields.Field;
+import org.ujorm.wicket.component.form.fields.GridField;
 import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
 
@@ -117,6 +119,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             field = new DateField(key);
         } else if (key.isTypeOf(java.util.Date.class)) {
             field = new DateField(key); // TODO DateTime field
+        } else if (key instanceof ListKey && Ujo.class.isAssignableFrom( ((ListKey)key).getItemType())) {
+            field = new GridField(key);
         } else {
             field = new Field(key); // The common field
         }
