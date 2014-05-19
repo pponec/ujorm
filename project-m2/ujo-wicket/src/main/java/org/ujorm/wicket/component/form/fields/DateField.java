@@ -26,7 +26,7 @@ import org.ujorm.Key;
 import org.ujorm.wicket.CssAppender;
 
 /**
- * CheckBox field with a Label includding a feedback message.
+ * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
 public class DateField extends Field {

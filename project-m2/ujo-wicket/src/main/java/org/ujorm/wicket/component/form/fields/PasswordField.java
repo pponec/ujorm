@@ -21,7 +21,7 @@ import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
 
 /**
- * Text field for a password includding a feedback message.
+ * Text field for a password including a feedback message.
  * @author Pavel Ponec
  */
 public class PasswordField extends Field {

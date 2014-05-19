@@ -47,7 +47,7 @@ import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.form.UiValidator;
 
 /**
- * Input textfield with a Label includding a feedback message.
+ * Input textfield with a Label including a feedback message.
  * @author Pavel Ponec
  */
 public class Field extends Panel {

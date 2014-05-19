@@ -28,7 +28,7 @@ import org.ujorm.Ujo;
 import org.ujorm.wicket.component.tools.ChoiceRendererNullable;
 
 /**
- * CheckBox field with a Label includding a feedback message.
+ * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
 public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
