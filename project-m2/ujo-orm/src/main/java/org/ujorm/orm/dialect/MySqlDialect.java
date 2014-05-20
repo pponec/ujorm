@@ -62,7 +62,9 @@ public class MySqlDialect extends SqlDialect {
         , Appendable out
         ) throws IOException
     {
-        out.append("DELETE FROM ");
+        out.append("DELETE ");
+        printQuotedName(decoder.getBaseTable().getAlias(), out);
+        out.append(" FROM ");
 
         final TableWrapper[] tables = decoder.getTablesSorted();
         if (tables.length==1) {
@@ -154,7 +156,7 @@ public class MySqlDialect extends SqlDialect {
             case CLOB:
                 //mysql dont have clob but text
                 //http://dev.mysql.com/doc/refman/5.0/en/blob.html
-                //http://www.htmlite.com/mysql003.php
+               //http://www.htmlite.com/mysql003.php
                 return "LONGTEXT";
             case BLOB:
                 return "LONGBLOB";
