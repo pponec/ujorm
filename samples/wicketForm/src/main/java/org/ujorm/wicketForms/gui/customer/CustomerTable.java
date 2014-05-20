@@ -19,6 +19,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -26,18 +27,17 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.wicketForms.entity.Customer;
-import org.ujorm.wicketForms.gui.customer.action.CustActionPanel;
-import org.ujorm.wicketForms.gui.customer.action.InsertCustomer;
-import org.ujorm.wicketForms.gui.hotel.action.Toolbar;
-import org.ujorm.wicketForms.services.AuthService;
-import org.ujorm.wicketForms.services.DbService;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
+import org.ujorm.wicket.component.form.FieldProvider;
 import org.ujorm.wicket.component.grid.KeyColumn;
-import org.ujorm.wicket.component.grid.UjoDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
+import org.ujorm.wicketForms.entity.Customer;
+import org.ujorm.wicketForms.gui.customer.action.CustActionPanel;
+import org.ujorm.wicketForms.gui.hotel.action.Toolbar;
+import org.ujorm.wicketForms.services.AuthService;
+import org.ujorm.wicketForms.services.DbService;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
 
@@ -56,18 +56,27 @@ public class CustomerTable extends Panel {
 
     public CustomerTable(String id) {
         super(id);
+    }
 
-//        UjoDataProvider<Customer> columns = UjoDataProvider.of(getCriterion());
-//        columns.add(Customer.LOGIN);
-//        columns.add(Customer.TITLE);
-//        columns.add(Customer.FIRSTNAME);
-//        columns.add(Customer.SURNAME);
-//        columns.add(Customer.EMAIL);
-//        columns.add(Customer.ADMIN);
-//        columns.add(Customer.ACTIVE);
-//        columns.add(createActionColumn());
-//        columns.setSort(Customer.LOGIN);
-//        add(columns.createDataTable(10));
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        final Form form = new Form("form");
+        add(form);
+
+        FieldProvider<Customer> fields = new FieldProvider("fields");
+
+        fields.add(Customer.LOGIN);
+        fields.add(Customer.PASSWORD);
+        fields.add(Customer.TITLE);
+        fields.add(Customer.FIRSTNAME);
+        fields.add(Customer.SURNAME);
+        fields.add(Customer.EMAIL);
+        fields.add(Customer.ADMIN);
+        fields.add(Customer.ACTIVE);
+        form.add(fields.getRepeatingView());
+
+        fields.setDomain(new Customer());
 
         // Dialogs:
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
