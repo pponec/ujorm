@@ -19,11 +19,9 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.wicketForms.entity.Booking;
 import org.ujorm.wicketForms.entity.Customer;
@@ -32,12 +30,10 @@ import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicketForms.services.DbService;
-import static org.ujorm.core.UjoManager.*;
 /**
  * Common database service implementations
  * @author ponec
  */
-@Transactional
 public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbServiceImpl.class);
 
@@ -68,69 +64,30 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     /** Load Customer by login using a transaction. */
     @Override
     public Customer getCustomer(String login) {
-        return super.createQuery(Customer.LOGIN.whereEq(login)).uniqueResult();
+        return null;
     }
 
     /** {@inheritDoc } */
     @Override
     public void deleteHotel(Hotel hotel) {
         LOGGER.info("Delete hotel {}", hotel);
-        checkReadOnly(hotel);
-
-        boolean booking = getSession().exists(Booking.HOTEL.whereEq(hotel));
-        if (booking) {
-            hotel.setActive(false);
-            getSession().update(hotel);
-        } else {
-           getSession().update(hotel);
-        }
     }
 
     /** {@inheritDoc } */
     @Override
     public void saveOrUpdateHotel(Hotel hotel) {
         LOGGER.info("Save or update hotel {}", hotel);
-        checkReadOnly(hotel);
-        getSession().saveOrUpdate(hotel);
     }
 
     @Override
     public void deleteCustomer(Customer customer) {
         LOGGER.info("Delete customer {}", customer);
-        checkReadOnly(customer);
-
-        boolean booking = getSession().exists(Booking.CUSTOMER.whereEq(customer));
-        if (booking) {
-            customer.setActive(false);
-            getSession().update(customer);
-        } else {
-           getSession().update(customer);
-        }
     }
 
     /** Insert or update customer */
     @Override
     public void saveOrUpdateCustomer(Customer customer) {
         LOGGER.info("Update customer {}", customer);
-        checkReadOnly(customer);
-        final boolean newMode = customer.getId() == null;
-
-        // Check a unique login:
-        if (newMode && getSession().exists(Customer.LOGIN.whereEq(customer.getLogin()))) {
-            throw new ValidationException("login.occupied", "Login is occupied");
-        }
-
-        // Check the not-null password:
-        if (newMode && customer.getPassword()==null) {
-            throw new ValidationException("password.empty", "The password must not be empty");
-        }
-
-        final String password = customer.getPassword();
-        if (isFilled(password)) {
-            customer.writeSession(newMode ? null : getSession() ); // Activate modifications for EditMode
-            customer.setPasswordHash(authService.getHash(password));
-        }
-        getSession().saveOrUpdate(customer);
     }
 
     /** Authenticate the user */
@@ -142,7 +99,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         crn3 = Customer.ACTIVE.whereEq(true);
         crn4 = crn1.and(crn2).and(crn3);
 
-        return getSession().createQuery(crn4).uniqueResult();
+        return null;
     }
 
     /** Check a read-only state */
@@ -175,7 +132,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     @Override
     public IModel<Booking> prepareBooking(final UjoEvent<Hotel> event) {
         Booking result = new Booking();
-        result.setHotel(getSession().loadBy(event.getDomain()));
+        result.setHotel(null);
         result.setPrice(result.getHotel().getPrice());
         result.setCurrency(result.getHotel().getCurrency());
         result.setDateFrom(new java.sql.Date(System.currentTimeMillis() + DAY_AS_MILISEC));
@@ -188,18 +145,6 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     /** Save new booking */
     @Override
     public void saveBooking(Booking booking) {
-        Customer cust = Args.notNull(booking.getCustomer(), Booking.CUSTOMER.toStringFull());
-        if (cust.getId()==null) {
-            if (!authService.authenticate(cust)) {
-                throw new ValidationException("login.failed", "Login failed");
-            }
-            booking.setCustomer(authService.getCurrentCustomer());
-        }
-        // TODO: validations ...
-
-        booking.setPrice(totalPrice(booking));
-        booking.setReservationDate(new java.sql.Date(System.currentTimeMillis()));
-        getSession().save(booking);
     }
 
     /** Booking in the feature can be removed by its customer, or an administrator */
@@ -207,21 +152,12 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     public void deleteBooking(Booking booking) {
         // TODO: check permissions, ...
         LOGGER.info("Delete Booking {}", booking);
-        getSession().delete(booking);
     }
 
     /** Returns a booking criterion */
     @Override
     public Criterion<Booking> getBookingPreview() {
-        Customer cust = authService.getCurrentCustomer();
-        if (cust == null) {
-            return Booking.ID.forNone();
-        }
-        Criterion<Booking> result = Booking.DATE_FROM.whereGe(now(-DAY_AS_MILISEC));
-        if (!cust.getAdmin()) {
-            result = result.and(Booking.CUSTOMER.whereEq(cust));
-        }
-        return result;
+        return null;
     }
 
     /** Get Current SQL time */

@@ -24,6 +24,10 @@ import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.ujorm.validator.ValidationException;
+import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicket.component.tabs.UjoTab;
+import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 import org.ujorm.wicketForms.entity.Customer;
 import org.ujorm.wicketForms.gui.about.AboutPanel;
 import org.ujorm.wicketForms.gui.about.MeasuringCode;
@@ -31,10 +35,6 @@ import org.ujorm.wicketForms.gui.booking.BookingTable;
 import org.ujorm.wicketForms.gui.customer.CustomerTable;
 import org.ujorm.wicketForms.gui.hotel.HotelTable;
 import org.ujorm.wicketForms.services.AuthService;
-import org.ujorm.validator.ValidationException;
-import org.ujorm.wicket.UjoEvent;
-import org.ujorm.wicket.component.tabs.UjoTab;
-import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 import static org.ujorm.wicket.CommonActions.*;
 
 public class HomePage extends WebPage {
@@ -49,8 +49,8 @@ public class HomePage extends WebPage {
 
         // create a list of ITab objects used to feed the tabbed panel
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add(new UjoTab("Hotels", "hotel", HotelTable.class));
-        tabs.add(new UjoTab("Booking", "booking", BookingTable.class));
+        //tabs.add(new UjoTab("Hotels", "hotel", HotelTable.class));
+        //tabs.add(new UjoTab("Booking", "booking", BookingTable.class));
         tabs.add(new UjoTab("Customer", "customer", CustomerTable.class));
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoTabbedPanel("tabs", tabs));

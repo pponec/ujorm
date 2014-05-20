@@ -20,7 +20,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.OrmHandlerProvider;
 
 /**
@@ -30,11 +29,7 @@ import org.ujorm.orm.OrmHandlerProvider;
  * @see com.mycompany.Start#main(String[])
  */
 @Component("wicketApplicationSpringBean")
-public class HotelsApplication extends WebApplication implements OrmHandlerProvider {
-
-    /** OrmHandler Provider */
-    @Autowired
-    private OrmHandlerProvider ormProvider;
+public class HotelsApplication extends WebApplication {
 
     @Override
     protected void init() {
@@ -48,12 +43,6 @@ public class HotelsApplication extends WebApplication implements OrmHandlerProvi
     @Override
     public Class<? extends WebPage> getHomePage() {
         return HomePage.class;
-    }
-
-    /** Returns ORM handler */
-    @Override
-    public OrmHandler getOrmHandler() {
-         return ormProvider.getOrmHandler();
     }
 
 }

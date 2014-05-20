@@ -57,17 +57,17 @@ public class CustomerTable extends Panel {
     public CustomerTable(String id) {
         super(id);
 
-        UjoDataProvider<Customer> columns = UjoDataProvider.of(getCriterion());
-        columns.add(Customer.LOGIN);
-        columns.add(Customer.TITLE);
-        columns.add(Customer.FIRSTNAME);
-        columns.add(Customer.SURNAME);
-        columns.add(Customer.EMAIL);
-        columns.add(Customer.ADMIN);
-        columns.add(Customer.ACTIVE);
-        columns.add(createActionColumn());
-        columns.setSort(Customer.LOGIN);
-        add(columns.createDataTable(10));
+//        UjoDataProvider<Customer> columns = UjoDataProvider.of(getCriterion());
+//        columns.add(Customer.LOGIN);
+//        columns.add(Customer.TITLE);
+//        columns.add(Customer.FIRSTNAME);
+//        columns.add(Customer.SURNAME);
+//        columns.add(Customer.EMAIL);
+//        columns.add(Customer.ADMIN);
+//        columns.add(Customer.ACTIVE);
+//        columns.add(createActionColumn());
+//        columns.setSort(Customer.LOGIN);
+//        add(columns.createDataTable(10));
 
         // Dialogs:
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
@@ -75,7 +75,7 @@ public class CustomerTable extends Panel {
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
 
         DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
-        table.addBottomToolbar(new InsertCustomer(table));
+     //   table.addBottomToolbar(new InsertCustomer(table));
     }
 
     /** Create a criterion for the table */

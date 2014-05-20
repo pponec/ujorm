@@ -31,25 +31,11 @@ import org.ujorm.wicketForms.services.DbService;
 public class AuthServiceImpl extends AbstractServiceImpl implements AuthService {
 
     private static final String CUSTOMER_ATTR = "CUSTOMER_ATTR";
-
-    @Autowired
-    private DbService dbService;
-
+    
     /** Authenticate the user and save the result to the Wicket session */
     @Override
     public boolean authenticate(Customer customer) {
-        Customer result = customer==null ? customer
-             : dbService.findCustomer
-             ( customer.getLogin()
-             , customer.getPassword());
-
-        if (result != null) {
-            result.writeSession(null);
-            getThreadSession().setAttribute(CUSTOMER_ATTR, result);
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     /** Logout */
