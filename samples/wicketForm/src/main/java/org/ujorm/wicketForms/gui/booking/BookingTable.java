@@ -50,19 +50,19 @@ public class BookingTable extends Panel {
     public BookingTable(String id) {
         super(id);
 
-        UjoDataProvider<Booking> columns = UjoDataProvider.of(getCriterionModel());
-        columns.add(Booking.DATE_FROM);
-        columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
-        columns.add(Booking.HOTEL.add(Hotel.NAME));
-        columns.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
-        columns.add(Booking.PERSONS);
-        columns.add(Booking.NIGHTS);
-        columns.add(Booking.PRICE);
-        columns.add(Booking.CURRENCY);
-        columns.add(Booking.CREATION_DATE);
-        columns.add(newActionColumn());
-        columns.setSort(Booking.DATE_FROM);
-        add(columns.createDataTable(10));
+//        UjoDataProvider<Booking> columns = UjoDataProvider.of(getCriterionModel());
+//        columns.add(Booking.DATE_FROM);
+//        columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
+//        columns.add(Booking.HOTEL.add(Hotel.NAME));
+//        columns.add(Booking.HOTEL.add(Hotel.CITY).add(City.NAME));
+//        columns.add(Booking.PERSONS);
+//        columns.add(Booking.NIGHTS);
+//        columns.add(Booking.PRICE);
+//        columns.add(Booking.CURRENCY);
+//        columns.add(Booking.CREATION_DATE);
+//        columns.add(newActionColumn());
+//        columns.setSort(Booking.DATE_FROM);
+//        add(columns.createDataTable(10));
 
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
     }

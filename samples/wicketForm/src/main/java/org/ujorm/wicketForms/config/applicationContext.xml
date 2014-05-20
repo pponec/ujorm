@@ -14,21 +14,11 @@
     <!-- Annotation-based configuration-->
     <context:component-scan base-package="org.ujorm.wicketForms.services.impl;org.ujorm.wicketForms.gui" />
     <context:annotation-config />
-    <tx:annotation-driven transaction-manager="ujormTransactionManager" />
 
-    <!-- ORM Ujorm config -->
-    <bean name="ormConfigProvider" class="org.ujorm.wicketForms.config.DatabaseConfig"
-          init-method="init" lazy-init="true" />
-
-    <bean id="ujormTransactionManager" class="org.ujorm.spring.UjormTransactionManager">
-        <property name="ormHandlerProvider" ref="ormConfigProvider"/>
-    </bean>
-
-    <!-- Database services -->
     <bean id="authService" class="org.ujorm.wicketForms.services.impl.AuthServiceImpl" />
     <bean id="dbService" class="org.ujorm.wicketForms.services.impl.DbServiceImpl">
-        <property name="readOnly" value="true"/>
-        <property name="measuringCode" value="true"/>
+        <property name="readOnly" value="false"/>
+        <property name="measuringCode" value="false"/>
     </bean>
 
 </beans>

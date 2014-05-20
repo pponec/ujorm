@@ -9,13 +9,16 @@ package org.ujorm.wicketForms.entity;
 import java.math.BigDecimal;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.quick.SmartUjo;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.Validator.Build.*;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.mandatory;
+import static org.ujorm.validator.impl.ValidatorFactory.min;
 
 /** Hotel */
-public class Hotel extends OrmTable<Hotel> {
+public class Hotel extends SmartUjo<Hotel> {
 
     private static final String INDEX_HOTEL_NAME="idx_hotel_name";
 

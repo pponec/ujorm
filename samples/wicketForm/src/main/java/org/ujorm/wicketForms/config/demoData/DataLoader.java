@@ -35,15 +35,15 @@ public class DataLoader implements InitializationBatch {
     /** Load data from a CSV file */
     @Override
     public void run(Session session) throws Exception {
-        if (!session.exists(City.class)) {
-            session.save(getCities());
-        }
-        if (!session.exists(Hotel.class)) {
-            session.save(getHotels());
-        }
-        if (!session.exists(Customer.class)) {
-            session.save(getCustomers());
-        }
+//        if (!session.exists(City.class)) {
+//            session.save(getCities());
+//        }
+//        if (!session.exists(Hotel.class)) {
+//            session.save(getHotels());
+//        }
+//        if (!session.exists(Customer.class)) {
+//            session.save(getCustomers());
+//        }
     }
 
     /** Get hotels from CSV file */

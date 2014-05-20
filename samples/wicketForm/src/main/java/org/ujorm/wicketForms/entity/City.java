@@ -7,13 +7,15 @@ package org.ujorm.wicketForms.entity;
 
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.quick.SmartUjo;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.Validator.Build.*;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.range;
 
 /** City with Country */
-public class City extends OrmTable<City> {
+public class City extends SmartUjo<City> {
 
     /** Index name */
     private static final String UNIQUE_CITY = "idx_unique_city";

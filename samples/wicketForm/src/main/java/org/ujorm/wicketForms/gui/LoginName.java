@@ -21,12 +21,12 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.wicketForms.entity.Customer;
-import org.ujorm.wicketForms.gui.customer.LoginDialog;
-import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.link.MessageLink;
 import org.ujorm.wicket.component.tools.LocalizedModel;
+import org.ujorm.wicketForms.entity.Customer;
+import org.ujorm.wicketForms.gui.customer.LoginDialog;
+import org.ujorm.wicketForms.services.AuthService;
 import static org.ujorm.wicket.CommonActions.*;
 
 /**
@@ -50,24 +50,11 @@ public class LoginName extends MessageLink {
 
     @Override
     public void onClick(AjaxRequestTarget target) {
-        if (authService.isCustomer()) {
-            authService.logout();
-            target.add(this);
-            send(getWebPage(), Broadcast.EXACT, new UjoEvent(LOGIN_CHANGED, null, target));
-        } else {
-            dialog.show(new UjoEvent(LOGIN_CHANGED, new Customer(), target), new LocalizedModel("dialog.login.title"));
-        }
     }
 
     /** Manage events */
     @Override
     public void onEvent(IEvent<?> argEvent) {
-        if (argEvent.getPayload() instanceof UjoEvent) {
-            final UjoEvent event = (UjoEvent) argEvent.getPayload();
-            if (event.isAction(LOGIN_CHANGED)) {
-                event.addTarget(this);
-            }
-        }
     }
 
     /** Login model */

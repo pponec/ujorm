@@ -10,13 +10,18 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
-import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.quick.SmartUjo;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
-import static org.ujorm.Validator.Build.*;
+import static org.ujorm.validator.impl.ValidatorFactory.MANDATORY;
+import static org.ujorm.validator.impl.ValidatorFactory.length;
+import static org.ujorm.validator.impl.ValidatorFactory.mandatory;
+import static org.ujorm.validator.impl.ValidatorFactory.min;
+import static org.ujorm.validator.impl.ValidatorFactory.notNull;
+import static org.ujorm.validator.impl.ValidatorFactory.range;
 
 /** Reservation */
-public class Booking extends OrmTable<Booking> {
+public class Booking extends SmartUjo<Booking> {
 
     private static final String INDEX_NAME="idx_booking";
 

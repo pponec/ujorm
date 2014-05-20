@@ -60,17 +60,17 @@ public class HotelTable extends Panel {
     public HotelTable(String id) {
         super(id);
 
-        UjoDataProvider<Hotel> columns = UjoDataProvider.of(toolbar.getCriterion());
-        columns.add(Hotel.NAME);
-        columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
-        columns.add(Hotel.STREET);
-        columns.add(Hotel.PRICE);
-        columns.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
-        columns.add(Hotel.STARS);
-        columns.add(Hotel.PHONE);
-        columns.add(newActionColumn());
-        columns.setSort(Hotel.NAME);
-        add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
+//        UjoDataProvider<Hotel> columns = UjoDataProvider.of(toolbar.getCriterion());
+//        columns.add(Hotel.NAME);
+//        columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
+//        columns.add(Hotel.STREET);
+//        columns.add(Hotel.PRICE);
+//        columns.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
+//        columns.add(Hotel.STARS);
+//        columns.add(Hotel.PHONE);
+//        columns.add(newActionColumn());
+//        columns.setSort(Hotel.NAME);
+//        add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
 
         add(toolbar);
         add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());
@@ -79,8 +79,8 @@ public class HotelTable extends Panel {
 
         DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
         table.addBottomToolbar(new InsertHotel(table));
-        columns.setCssClass(Hotel.NAME, "hotelName");
-        columns.setCssClass(Hotel.STREET, "streetName");
+//        columns.setCssClass(Hotel.NAME, "hotelName");
+//        columns.setCssClass(Hotel.STREET, "streetName");
     }
 
     /** Manage events */
