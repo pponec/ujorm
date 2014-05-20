@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Ujorm configuration file release 1.43 -->
+<body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://ujorm.org/ujorm-1.43.xsd">
+    <database id="DatabaseMapping">
+        <schema>demoHotels</schema>
+        <dialect>org.ujorm.orm.dialect.PostgreSqlDialect</dialect>
+        <jdbcUrl>jdbc:postgresql://127.0.0.1:5432/demoHotels</jdbcUrl>
+        <jdbcDriver>org.postgresql.Driver</jdbcDriver>
+        <user>demoHotels</user>
+        <password>demoHotels</password>
+        <orm2ddlPolicy>CREATE_OR_UPDATE_DDL</orm2ddlPolicy>
+        <!-- <jndi>java:comp/env/jdbc/demoHotels</jndi> -->
+    </database>
+    <parameters>
+        <initializationBatch>org.ujorm.hotels.config.demoData.DataLoader</initializationBatch>
+        <sequenceSchemaSymbol>true</sequenceSchemaSymbol>
+    </parameters>
+</body>
