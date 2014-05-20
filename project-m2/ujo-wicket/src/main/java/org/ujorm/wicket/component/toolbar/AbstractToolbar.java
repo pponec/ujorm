@@ -28,8 +28,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.time.Duration;
+import org.ujorm.Ujo;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.orm.OrmUjo;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.UjoEvent;
 
@@ -37,7 +37,7 @@ import org.ujorm.wicket.UjoEvent;
  * The common Toolbar panel
  * @author Pavel Ponec
  */
-abstract public class AbstractToolbar<U extends OrmUjo> extends Panel {
+abstract public class AbstractToolbar<U extends Ujo> extends Panel {
 
     /** Delay for searching fields is 400 [ms] by default */
     protected static final Duration DEFAULT_DELAY = Duration.milliseconds(400);
