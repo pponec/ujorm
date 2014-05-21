@@ -1,0 +1,96 @@
+/*
+ * Copyright 2013-2014, Pavel Ponec
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.ujorm.hotels.gui.customer.action;
+
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.ResourceModel;
+import org.ujorm.Ujo;
+import org.ujorm.wicket.UjoEvent;
+import static org.ujorm.wicket.CommonActions.*;
+
+/**
+ * The common action Toolbar for an insert
+ * @author Pavel Ponec
+ */
+public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
+
+    /** Type of a domain object */
+    private final Class<U> type;
+
+    /**
+     * Constructor with a default action name {@link org.ujorm.wicket.CommonActions#UPDATE}
+     * @param dataTable DataTable
+     * @param type Type of the domain object
+     */
+    public InsertToolbar(DataTable dataTable, Class<U> type) {
+        this(dataTable, type, UPDATE);
+    }
+
+    /**
+     * Constructor
+     * @param dataTable DataTable
+     * @param type Type of the domain object
+     */
+    public InsertToolbar(DataTable dataTable, Class<U> type, String actionName) {
+        super(dataTable);
+        super.setOutputMarkupPlaceholderTag(true);
+        this.type = type;
+
+        final WebMarkupContainer td = new WebMarkupContainer("space");
+        td.add(new AttributeModifier("colspan", Math.max(1, dataTable.getColumns().size() - 1)));
+        add(td);
+
+        final AjaxLink link = createLink(actionName);
+        add(link);
+        link.add(createLabel("label"));
+    }
+
+    /** Create action Link and registre an event on the click */
+    protected AjaxLink createLink(final String action) {
+        return new AjaxLink("insert") {
+            @Override public void onClick(AjaxRequestTarget target) {
+                send(getPage(), Broadcast.BREADTH, new UjoEvent(action, newTypeInstance(), target));
+            }
+        };
+    }
+
+    /** Create a Label compoment */
+    protected Label createLabel(String id) {
+        return new Label("label", new ResourceModel("action.insert", "Insert"));
+    }
+
+    /** Return an instance of the type */
+    protected U newTypeInstance() throws IllegalStateException {
+        try {
+            return getType().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't create instance of the " + getType(), e);
+        }
+    }
+
+    /** Type of a domain object */
+    public Class<U> getType() {
+        return type;
+    }
+
+}
