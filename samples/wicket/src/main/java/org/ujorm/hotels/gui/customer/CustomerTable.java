@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,15 +67,12 @@ public class CustomerTable extends Panel {
         columns.add(Customer.ACTIVE);
         columns.add(createActionColumn());
         columns.setSort(Customer.LOGIN);
-        add(columns.createDataTable(10));
+        add(columns.createDataTable(10, true));
 
         // Dialogs:
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
-
-        DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
-        table.addBottomToolbar(new InsertToolbar(table, Customer.class));
     }
 
     /** Create a criterion for the table */
