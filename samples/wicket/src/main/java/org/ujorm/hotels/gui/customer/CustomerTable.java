@@ -28,7 +28,7 @@ import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.customer.action.CustActionPanel;
-import org.ujorm.hotels.gui.customer.action.InsertCustomer;
+import org.ujorm.hotels.gui.customer.action.InsertToolbar;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
@@ -75,7 +75,7 @@ public class CustomerTable extends Panel {
         add((loginDialog = LoginDialog.create("loginDialog", 600, 150)).getModalWindow());
 
         DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
-        table.addBottomToolbar(new InsertCustomer(table));
+        table.addBottomToolbar(new InsertToolbar(table, Customer.class));
     }
 
     /** Create a criterion for the table */
