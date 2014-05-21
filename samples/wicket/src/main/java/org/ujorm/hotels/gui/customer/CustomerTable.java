@@ -28,7 +28,6 @@ import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.gui.customer.action.CustActionPanel;
-import org.ujorm.hotels.gui.customer.action.InsertToolbar;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
@@ -37,6 +36,7 @@ import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
@@ -95,7 +95,7 @@ public class CustomerTable extends Panel {
                     String key = event.getDomain().getId() == null
                             ? "dialog.create.title"
                             : "dialog.edit.title";
-                    editDialog.show(event, new LocalizedModel("dialog.edit.title"));
+                    editDialog.show(event, new LocalizedModel(key));
                 } else {
                     dbService.saveOrUpdateCustomer(event.getDomain());
                     reloadTable(event);
