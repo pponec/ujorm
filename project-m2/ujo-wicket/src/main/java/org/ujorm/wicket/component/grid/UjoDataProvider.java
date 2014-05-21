@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Pavel Ponec
+ *  Copyright 2013-2014 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import org.ujorm.orm.Query;
 import org.ujorm.orm.Session;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.OrmSessionProvider;
+import org.ujorm.wicket.component.toolbar.InsertToolbar;
 
 /**
  * <p>This class called <strong>UjoDataProvider</strong> is an database
@@ -240,12 +241,27 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
     }
 
     /** Create AJAX-based DataTable with a {@link #DEFAULT_DATATABLE_ID} */
-    public <S> DataTable<T,S> createDataTable(final int rowsPerPage) {
+    public final <S> DataTable<T,S> createDataTable(final int rowsPerPage) {
         return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage);
     }
 
     /** Create AJAX-based DataTable */
-    public <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage) {
+    public final <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage) {
+        return createDataTable(id, rowsPerPage, false);
+    }
+
+    /** Create AJAX-based DataTable */
+    public final <S> DataTable<T,S> createDataTable(final int rowsPerPage, boolean insertToolbar) {
+        return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage, insertToolbar);
+    }
+
+    /** Create AJAX-based DataTable
+     * @param id Component ID
+     * @param rowsPerPage Row count per the one page
+     * @param insertToolbar Append a generic toolbar for an insert action.
+     * @return Create AJAX-based DataTable
+     */
+    public <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage, boolean insertToolbar) {
         final DataTable<T,S> result = new DataTable<T,S>(id, (List)columns, this, rowsPerPage) {
             @Override protected Item<T> newRowItem
                     ( final String id
@@ -259,6 +275,11 @@ public class UjoDataProvider<T extends OrmUjo> extends SortableDataProvider<T, O
         result.addTopToolbar(new HeadersToolbar(result, this));
         result.addBottomToolbar(new NoRecordsToolbar(result));
         result.setOutputMarkupId(true);
+
+        if (insertToolbar) {
+            result.addBottomToolbar(new InsertToolbar(result, getModel().getType()));
+        }
+
         return result;
     }
 
