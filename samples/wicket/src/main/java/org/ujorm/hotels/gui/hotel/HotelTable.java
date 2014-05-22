@@ -30,7 +30,6 @@ import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Hotel;
 import org.ujorm.hotels.gui.booking.BookingEditor;
 import org.ujorm.hotels.gui.hotel.action.ActionPanel;
-import org.ujorm.hotels.gui.hotel.action.InsertHotel;
 import org.ujorm.hotels.gui.hotel.action.Toolbar;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.hotels.services.DbService;
@@ -38,6 +37,7 @@ import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.UjoDataProvider;
+import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
@@ -78,7 +78,11 @@ public class HotelTable extends Panel {
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
 
         DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
-        table.addBottomToolbar(new InsertHotel(table));
+        table.addBottomToolbar(new InsertToolbar(table, Hotel.class) {
+            @Override public boolean isVisible() {
+                return authService.isAdmin();
+            }
+        } );
         columns.setCssClass(Hotel.NAME, "hotelName");
         columns.setCssClass(Hotel.STREET, "streetName");
     }

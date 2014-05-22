@@ -35,26 +35,26 @@ import static org.ujorm.wicket.CommonActions.*;
 public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
 
     /** Type of a domain object */
-    private final Class<U> type;
+    private final Class<U> domainType;
 
     /**
      * Constructor with a default action name {@link org.ujorm.wicket.CommonActions#UPDATE}
      * @param dataTable DataTable
-     * @param type Type of the domain object
+     * @param domainType Type of the domain object
      */
-    public InsertToolbar(DataTable dataTable, Class<U> type) {
-        this(dataTable, type, UPDATE);
+    public InsertToolbar(DataTable dataTable, Class<U> domainType) {
+        this(dataTable, domainType, UPDATE);
     }
 
     /**
      * Constructor
      * @param dataTable DataTable
-     * @param type Type of the domain object
+     * @param domainType Type of the domain object
      */
-    public InsertToolbar(DataTable dataTable, Class<U> type, String actionName) {
+    public InsertToolbar(DataTable dataTable, Class<U> domainType, String actionName) {
         super(dataTable);
         super.setOutputMarkupPlaceholderTag(true);
-        this.type = type;
+        this.domainType = domainType;
 
         final WebMarkupContainer td = new WebMarkupContainer("space");
         td.add(new AttributeModifier("colspan", Math.max(1, dataTable.getColumns().size() - 1)));
@@ -69,28 +69,37 @@ public class InsertToolbar<U extends Ujo> extends AbstractToolbar {
     protected AjaxLink createLink(final String action) {
         return new AjaxLink("insert") {
             @Override public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BREADTH, new UjoEvent(action, newTypeInstance(), target));
+                onLinkClick(target, action);
             }
         };
     }
 
+    /**
+     * Default implementation on Link click
+     * @param target AJAX target
+     * @param action Action name
+     */
+    protected void onLinkClick(final AjaxRequestTarget target, final String action) {
+        send(getPage(), Broadcast.BREADTH, new UjoEvent(action, newTypeInstance(), target));
+    }
+
     /** Create a Label compoment */
     protected Label createLabel(String id) {
-        return new Label("label", new ResourceModel("action.insert", "Insert"));
+        return new Label("label", new ResourceModel("action.insert", "Create"));
     }
 
     /** Return an instance of the type */
     protected U newTypeInstance() throws IllegalStateException {
         try {
-            return getType().newInstance();
+            return getDomainType().newInstance();
         } catch (Exception e) {
-            throw new IllegalStateException("Can't create instance of the " + getType(), e);
+            throw new IllegalStateException("Can't create instance of the " + getDomainType(), e);
         }
     }
 
-    /** Type of a domain object */
-    public Class<U> getType() {
-        return type;
+    /** The type of a domain object */
+    public Class<U> getDomainType() {
+        return domainType;
     }
 
 }
