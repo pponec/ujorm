@@ -1,5 +1,6 @@
 /*
  *  Copyright 2008 Daan, StuQ.nl
+ *  Copyright 2014 Pavel Ponec
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -36,18 +37,18 @@ import org.apache.wicket.model.Model;
 public class FeedbackLabel extends MultiLineLabel {
 
     /** Field component holds a reference to the {@link Component} this FeedbackLabel belongs to */
-    private Component input;
+    private final Component input;
     /** Field text holds a model of the text to be shown in the FeedbackLabel */
-    private IModel text = null;
+    private final IModel text;
 
     /**
-     * Call this constructor if you just want to display the FeedbackMessage of the component
+     * Call this constructor if you just want to display the FeedbackMessage of the component.
+     * The constructor set the attribute {@link #setOutputMarkupId(boolean)} using the value {@code true}.
      * @param id The non-null id of this component
      * @param input The {@link FormComponent} to show the FeedbackMessage for.
      */
     public FeedbackLabel(String id, Component input) {
-        super(id);
-        this.input = input;
+        this(id, input, (IModel) null);
     }
 
     /**
@@ -70,6 +71,7 @@ public class FeedbackLabel extends MultiLineLabel {
         super(id);
         this.input = input;
         this.text = iModel;
+        setOutputMarkupPlaceholderTag(true);
     }
 
     /**
@@ -86,21 +88,22 @@ public class FeedbackLabel extends MultiLineLabel {
      * @see Component
      */
     @Override
-    protected void onBeforeRender() {
-        if (input.hasFeedbackMessage()) {
+    protected void onConfigure() {
+        super.onConfigure();
+        final boolean visible = input.hasFeedbackMessage();
+        super.setVisibilityAllowed(visible);
+        if (visible) {
             if (this.text != null) {
                 this.setDefaultModel(text);
             } else {
                 this.setDefaultModel(new Model(input.getFeedbackMessages().first().getMessage()));
             }
-
             // Assign an error level as a CSS class: (wrong implementation)
             // final String css = input.getFeedbackMessages().first().getLevelAsString();
             // this.add(new CssAppender(css));
         } else {
             this.setDefaultModel(null);
         }
-        super.onBeforeRender();
     }
 
     /**  Insert feedback message */
