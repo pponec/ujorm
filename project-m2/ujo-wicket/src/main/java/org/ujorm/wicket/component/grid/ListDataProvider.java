@@ -24,6 +24,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
@@ -68,6 +69,8 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     private List<T> dataRows;
     /** Filtered list rows */
     private List<T> filteredRows;
+    /** Sort request */
+    private boolean sortRequest;
     
     /** Constructor
      * @param criterion Condition to a database query
@@ -82,6 +85,7 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
      */
     public ListDataProvider(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
         super(criterion, defaultSort);
+        this.sortRequest = defaultSort != null;
     }
 
     public void setRows(List<T> dataRows) {
@@ -119,20 +123,26 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     @Override
     public Iterator<T> iterator(long first, long count) {
         Args.isTrue(count <= Integer.MAX_VALUE
-                , "The argument 'count' have got limit %s but the current value is %s"
+                , "The argument '%s' have got limit %s but the current value is %s"
+                , "first"
+                , Integer.MAX_VALUE
+                , first);
+        Args.isTrue(count <= Integer.MAX_VALUE
+                , "The argument '%s' have got limit %s but the current value is %s"
+                , "count"
                 , Integer.MAX_VALUE
                 , count);
 
         List<T> rows = getRows(criterion.getObject());
-        return UjoIterator.of(rows);
 
-        // TODO :
-//        List<T> rows = createQuery(criterion.getObject())
-//                .setLimit((int) count, first)
-//                .addOrderBy(getSortKey());
-//        fetchDatabaseColumns(query);
-//        sortDatabaseQuery(query);
-//        return query.iterator();
+        // Sort:
+        if (sortRequest) {
+            UjoComparator.of(getSortKey()).sort(rows);
+        }
+
+        final int last = (int) Math.min(first + count, rows.size());
+        final int frst = (int) Math.min(first, last);
+        return UjoIterator.of(rows.subList(frst, last));
     }
 
     /** Method calculate the size using special SQL requst.
