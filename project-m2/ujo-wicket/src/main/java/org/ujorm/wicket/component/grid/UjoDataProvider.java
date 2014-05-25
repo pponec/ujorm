@@ -95,7 +95,8 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
     @Override
     public Iterator<T> iterator(long first, long count) {
         Args.isTrue(count <= Integer.MAX_VALUE
-                , "The argument 'count' have got limit %s but the current value is %s"
+                , "The argument '%s' have got limit %s but the current value is %s"
+                , "count"
                 , Integer.MAX_VALUE
                 , count);
         Query<T> query = createQuery(criterion.getObject())
