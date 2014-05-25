@@ -16,6 +16,7 @@
 package org.ujorm.wicket.component.grid;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -32,7 +33,7 @@ import org.ujorm.criterion.ValueCriterion;
 import org.ujorm.orm.OrmUjo;
 
 /**
- * <p>This class called <strong>UjoDataProvider</strong> is an database
+ * <p>This class called <strong>ListDataProvider</strong> is an database
  * Wicket DataProvider. For a customization you can use a your own {@link IColumn} implementations
  * or you can owerwrite selected methods of this provider.
  * </p><p>
@@ -88,23 +89,30 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
         this.sortRequest = defaultSort != null;
     }
 
+    /** Assign data resource */
     public void setRows(List<T> dataRows) {
         this.dataRows = dataRows;
         this.filteredRows = null;
         this.size = null;
     }
 
+    /** Returns original data rows */
+    public List<T> getRows() {
+        return this.dataRows;
+    }
+
     /** Returns a filtered rows and cach the result */
-    public List<T> getRows(Criterion<T> crn) {
-        body:
+    protected List<T> getFileredRows() {
+        condition:
         if (filteredRows == null) {
+            final Criterion<T> crn  = super.criterion.getObject();
             if (crn instanceof ValueCriterion) {
                 final ValueCriterion<T> valCrn = (ValueCriterion) crn;
                 if (valCrn.getOperator() == Operator.XFIXED) {
                     filteredRows = Boolean.TRUE.equals(valCrn.getRightNode())
-                            ? dataRows
-                            : new ArrayList();
-                    break body;
+                        ? dataRows
+                        : Collections.<T>emptyList();
+                    break condition;
                 }
             }
             filteredRows = new ArrayList<T>();
@@ -133,13 +141,14 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
                 , Integer.MAX_VALUE
                 , count);
 
-        List<T> rows = getRows(criterion.getObject());
+        final List<T> rows = getFileredRows();
 
         // Sort:
         if (sortRequest) {
             UjoComparator.of(getSortKey()).sort(rows);
         }
 
+        // Sublist:
         final int last = (int) Math.min(first + count, rows.size());
         final int frst = (int) Math.min(first, last);
         return UjoIterator.of(rows.subList(frst, last));
@@ -152,7 +161,7 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     @Override
     public long size() {
        if (size == null) {
-           size = (long) getRows(criterion.getObject()).size();
+           size = (long) getFileredRows().size();
        }
        return size;
     }
