@@ -130,7 +130,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     /** Create the Label for a Value component */
-    private Component createValueCoponent(final String componentId, final IModel<?> valueModel) {
+    protected Component createValueCoponent(final String componentId, final IModel<?> valueModel) {
         return new Label(componentId, valueModel);
     }
 
