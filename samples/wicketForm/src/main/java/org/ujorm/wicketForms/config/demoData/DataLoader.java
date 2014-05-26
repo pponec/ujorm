@@ -15,39 +15,34 @@
  */
 package org.ujorm.wicketForms.config.demoData;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import org.ujorm.core.UjoManagerCSV;
-import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.wicketForms.entity.City;
 import org.ujorm.wicketForms.entity.Customer;
 import org.ujorm.wicketForms.entity.Hotel;
-import org.ujorm.orm.InitializationBatch;
-import org.ujorm.orm.Session;
 import static org.ujorm.core.UjoService.*;
 
 /**
  * Data loader from CSV resources
  * @author ponec
  */
-public class DataLoader implements InitializationBatch {
+public class DataLoader {
 
-    /** Load data from a CSV file */
-    @Override
-    public void run(Session session) throws Exception {
-//        if (!session.exists(City.class)) {
-//            session.save(getCities());
-//        }
-//        if (!session.exists(Hotel.class)) {
-//            session.save(getHotels());
-//        }
-//        if (!session.exists(Customer.class)) {
-//            session.save(getCustomers());
-//        }
+    /** Get hotels from CSV file as a Map */
+    public Map<Integer,City> getCityMap() {
+        final List<City> cities = getCities();
+        final Map<Integer,City> result = new HashMap<>(cities.size());
+        for (City city : cities) {
+            result.put(city.getId(), city);
+        }
+        return result;
     }
 
     /** Get hotels from CSV file */
-    @PackagePrivate List<City> getCities() throws Exception {
+    public List<City> getCities() {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
@@ -63,7 +58,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    @PackagePrivate List<Hotel> getHotels() throws Exception {
+    public List<Hotel> getHotels() {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
@@ -88,7 +83,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    @PackagePrivate List<Customer> getCustomers() throws Exception {
+    public List<Customer> getCustomers() {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8.name());
         UjoManagerCSV manager = UjoManagerCSV.of
                 ( Customer.LOGIN

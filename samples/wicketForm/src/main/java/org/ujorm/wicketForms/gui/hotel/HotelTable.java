@@ -25,6 +25,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
+import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
+import org.ujorm.wicket.component.grid.KeyColumn;
+import org.ujorm.wicket.component.grid.ListDataProvider;
+import org.ujorm.wicket.component.tools.LocalizedModel;
 import org.ujorm.wicketForms.entity.Booking;
 import org.ujorm.wicketForms.entity.City;
 import org.ujorm.wicketForms.entity.Hotel;
@@ -34,14 +39,9 @@ import org.ujorm.wicketForms.gui.hotel.action.InsertHotel;
 import org.ujorm.wicketForms.gui.hotel.action.Toolbar;
 import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicketForms.services.DbService;
-import org.ujorm.wicket.UjoEvent;
-import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
-import org.ujorm.wicket.component.grid.KeyColumn;
-import org.ujorm.wicket.component.grid.UjoDataProvider;
-import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
-import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
 
 /**
  * Hotel Table
@@ -60,17 +60,18 @@ public class HotelTable extends Panel {
     public HotelTable(String id) {
         super(id);
 
-//        UjoDataProvider<Hotel> columns = UjoDataProvider.of(toolbar.getCriterion());
-//        columns.add(Hotel.NAME);
-//        columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
-//        columns.add(Hotel.STREET);
-//        columns.add(Hotel.PRICE);
-//        columns.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
-//        columns.add(Hotel.STARS);
-//        columns.add(Hotel.PHONE);
-//        columns.add(newActionColumn());
-//        columns.setSort(Hotel.NAME);
-//        add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
+        ListDataProvider<Hotel> columns = ListDataProvider.of(toolbar.getCriterion());
+
+        columns.add(Hotel.NAME);
+        columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
+        columns.add(Hotel.STREET);
+        columns.add(Hotel.PRICE);
+        columns.add(KeyColumn.of(Hotel.CURRENCY, SORTING_OFF));
+        columns.add(Hotel.STARS);
+        columns.add(Hotel.PHONE);
+        columns.add(newActionColumn());
+        columns.setSort(Hotel.NAME);
+        add(columns.createDataTable(DEFAULT_DATATABLE_ID, 10));
 
         add(toolbar);
         add((editDialog = HotelEditor.create("editDialog", 700, 410)).getModalWindow());
@@ -79,8 +80,10 @@ public class HotelTable extends Panel {
 
         DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
         table.addBottomToolbar(new InsertHotel(table));
-//        columns.setCssClass(Hotel.NAME, "hotelName");
-//        columns.setCssClass(Hotel.STREET, "streetName");
+        columns.setCssClass(Hotel.NAME, "hotelName");
+        columns.setCssClass(Hotel.STREET, "streetName");
+
+        columns.setRows(dbService.getHotels());
     }
 
     /** Manage events */
