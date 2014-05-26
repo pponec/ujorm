@@ -30,7 +30,6 @@ import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
 import org.ujorm.criterion.ValueCriterion;
-import org.ujorm.orm.OrmUjo;
 
 /**
  * <p>This class called <strong>ListDataProvider</strong> is an database
@@ -175,22 +174,22 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends OrmUjo> ListDataProvider<T> of(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
+    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
         return new ListDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> ListDataProvider<T> of(IModel<Criterion<T>> criterion) {
+    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<T>> criterion) {
         return new ListDataProvider<T>(criterion, null);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> ListDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
+    public static <T extends Ujo> ListDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
         return new ListDataProvider<T>(Model.of(criterion), defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> ListDataProvider<T> of(Criterion<T> criterion) {
+    public static <T extends Ujo> ListDataProvider<T> of(Criterion<T> criterion) {
         return new ListDataProvider<T>(Model.of(criterion), null);
     }
 
