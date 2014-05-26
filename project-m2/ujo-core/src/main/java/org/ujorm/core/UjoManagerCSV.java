@@ -213,61 +213,64 @@ public class UjoManagerCSV<UJO extends Ujo> extends UjoService<UJO> {
      * @return List of UJO
      * @throws IllegalStateException can be throwed in case the header check failed
      */
-    public List<UJO> loadCSV(Scanner inp, Object context)
-            throws InstantiationException, IllegalAccessException, IllegalStateException {
-        List<UJO> result = new ArrayList<UJO>(128);
-        StringBuilder value = new StringBuilder(32);
+    public List<UJO> loadCSV(Scanner inp, Object context) throws IllegalStateException {
+        final List<UJO> result = new ArrayList<UJO>(128);
+        final StringBuilder value = new StringBuilder(32);
         boolean readHeader = printHeader;
         boolean inside = false;
         int lineCounter = 0;
         UjoAction action = new UjoActionImpl(context);
 
-        while (inp.hasNextLine()) {
-            String line = inp.nextLine();
-            ++lineCounter;
+        try {
+            while (inp.hasNextLine()) {
+                String line = inp.nextLine();
+                ++lineCounter;
 
-            if (skipEmptyLines && line.length()==0) {
-                continue;
-            }
-
-            if (readHeader) {
-                if (isHeaderFilled()
-                && !line.startsWith(getHeaderContent())) {
-                    throw new IllegalStateException("The import header must start with the: " + headerContent);
+                if (skipEmptyLines && line.length()==0) {
+                    continue;
                 }
-                readHeader = false;
-                continue;
-            }
-            UJO ujo = (UJO) getUjoClass().newInstance();
-            result.add(ujo);
-            int keyPointer = 0;  // Key pointer
 
-            for (int i = 0; i < line.length(); i++) {
-                char c = line.charAt(i);
+                if (readHeader) {
+                    if (isHeaderFilled()
+                            && !line.startsWith(getHeaderContent())) {
+                        throw new IllegalStateException("The import header must start with the: " + headerContent);
+                    }
+                    readHeader = false;
+                    continue;
+                }
+                UJO ujo = (UJO) getUjoClass().newInstance();
+                result.add(ujo);
+                int keyPointer = 0;  // Key pointer
 
-                if (inside) { // Inside a quotation
-                    if (c == quotation) {
-                        int next = i + 1;
-                        if (next < line.length() && line.charAt(next) == '"') {
-                            i++;
+                for (int i = 0; i < line.length(); i++) {
+                    char c = line.charAt(i);
+
+                    if (inside) { // Inside a quotation
+                        if (c == quotation) {
+                            int next = i + 1;
+                            if (next < line.length() && line.charAt(next) == '"') {
+                                i++;
+                            } else {
+                                inside = false;
+                                continue;
+                            }
+                        }
+                        value.append(c);
+
+                    } else { // Outside a quotation
+                        if (c == separator) {
+                            writeValue(ujo, value, keyPointer++, lineCounter, action);
+                        } else if (c == quotation) {
+                            inside = true;
                         } else {
-                            inside = false;
-                            continue;
+                            value.append(c);
                         }
                     }
-                    value.append(c);
-
-                } else { // Outside a quotation
-                    if (c == separator) {
-                        writeValue(ujo, value, keyPointer++, lineCounter, action);
-                    } else if (c == quotation) {
-                        inside = true;
-                    } else {
-                        value.append(c);
-                    }
                 }
+                writeValue(ujo, value, keyPointer++, lineCounter, action);
             }
-            writeValue(ujo, value, keyPointer++, lineCounter, action);
+        } catch (Exception e) {
+            throwsCsvFailed(e, context);
         }
         return result;
     }
