@@ -64,19 +64,7 @@ public class CustomerTable extends Panel {
         final Form form = new Form("form");
         add(form);
 
-        FieldProvider<Customer> fields = new FieldProvider("fields");
-
-        fields.add(Customer.LOGIN);
-        fields.add(Customer.PASSWORD);
-        fields.add(Customer.TITLE);
-        fields.add(Customer.FIRSTNAME);
-        fields.add(Customer.SURNAME);
-        fields.add(Customer.EMAIL);
-        fields.add(Customer.ADMIN);
-        fields.add(Customer.ACTIVE);
-        form.add(fields.getRepeatingView());
-
-        fields.setDomain(new Customer());
+        createCustomForm("fields", form);
 
         // Dialogs:
         add((editDialog = CustomerEditor.create("editDialog", 700, 390)).getModalWindow());
@@ -154,5 +142,40 @@ public class CustomerTable extends Panel {
     private void reloadTable(UjoEvent event) {
         event.addTarget(get(DEFAULT_DATATABLE_ID));
     }
+
+    /** Create a customer edit form */
+    private void createCustomForm(final String id, final Form form) {
+        FieldProvider<Customer> fields = new FieldProvider(id);
+
+        fields.add(Customer.LOGIN);
+        fields.add(Customer.PASSWORD);
+        fields.add(Customer.TITLE);
+        fields.add(Customer.FIRSTNAME);
+        fields.add(Customer.SURNAME);
+        fields.add(Customer.EMAIL);
+        fields.add(Customer.ADMIN);
+        fields.add(Customer.ACTIVE);
+        form.add(fields.getRepeatingView());
+
+        fields.setDomain(new Customer());
+    }
+
+    /** Create a customer edit form */
+    private void createBookingTable(final Form form) {
+        FieldProvider<Customer> fields = new FieldProvider("fields");
+
+        fields.add(Customer.LOGIN);
+        fields.add(Customer.PASSWORD);
+        fields.add(Customer.TITLE);
+        fields.add(Customer.FIRSTNAME);
+        fields.add(Customer.SURNAME);
+        fields.add(Customer.EMAIL);
+        fields.add(Customer.ADMIN);
+        fields.add(Customer.ACTIVE);
+        form.add(fields.getRepeatingView());
+
+        fields.setDomain(new Customer());
+    }
+
 
 }
