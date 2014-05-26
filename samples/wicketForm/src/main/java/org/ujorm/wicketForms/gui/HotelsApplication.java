@@ -18,9 +18,7 @@ package org.ujorm.wicketForms.gui;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.ujorm.orm.OrmHandlerProvider;
 
 /**
  * Application object for your web application. If you want to run this

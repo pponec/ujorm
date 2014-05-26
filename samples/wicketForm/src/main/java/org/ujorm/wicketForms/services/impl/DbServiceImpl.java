@@ -16,18 +16,23 @@
 package org.ujorm.wicketForms.services.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.wicketForms.entity.Booking;
-import org.ujorm.wicketForms.entity.Customer;
-import org.ujorm.wicketForms.entity.Hotel;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicketForms.config.demoData.DataLoader;
+import org.ujorm.wicketForms.entity.Booking;
+import org.ujorm.wicketForms.entity.City;
+import org.ujorm.wicketForms.entity.Customer;
+import org.ujorm.wicketForms.entity.Hotel;
 import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicketForms.services.DbService;
 /**
@@ -39,6 +44,9 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
 
     @Autowired
     private AuthService authService;
+
+    /** Hotels */
+    private List<Hotel> hotels;
 
     /** Read only sign */
     private boolean readOnly;
@@ -168,6 +176,22 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     /** Calculate total price */
     private BigDecimal totalPrice(Booking booking) {
         return booking.getHotel().getPrice().multiply(new BigDecimal(booking.getNights() * booking.getPersons()));
+    }
+
+    /** Return all hotels with City attribues */
+    @Override
+    public synchronized List<Hotel> getHotels() {
+        if (hotels == null) {
+            final DataLoader dataLoader = new DataLoader();
+            final Map<Integer,City> cityMap = dataLoader.getCityMap();
+
+            hotels = dataLoader.getHotels();
+            for (Hotel hotel : hotels) {
+                final Integer cityId = hotel.getCity().getId();
+                hotel.setCity(cityMap.get(cityId));
+            }
+        }
+        return new ArrayList<>(hotels);
     }
 
 }

@@ -15,12 +15,13 @@
  */
 package org.ujorm.wicketForms.services;
 
+import java.util.List;
 import org.apache.wicket.model.IModel;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicketForms.entity.Booking;
 import org.ujorm.wicketForms.entity.Customer;
 import org.ujorm.wicketForms.entity.Hotel;
-import org.ujorm.wicket.UjoEvent;
 
 /**
  * Common database service
@@ -63,5 +64,8 @@ public interface DbService {
 
     /** Is the measuring code enabled? */
     public boolean isMeasuringCode();
+
+    /** Returns hotels */
+    public List<Hotel> getHotels();
 
 }
