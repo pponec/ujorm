@@ -179,9 +179,14 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return fields.values();
     }
 
-    /** Return field */
-    public Field getField(Key key) {
-        return fields.get(key.getName());
+    /** Returns the related Field */
+    public <T extends Field> T  getField(Key key) {
+        return (T) fields.get(key.getName());
+    }
+
+    /** Returns the last field */
+    public <T extends Field> T getLast() {
+        return (T) repeatingView.get(repeatingView.size() - 1);
     }
 
     /** Return all keys in a String format */
@@ -360,10 +365,5 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         if (field != null) {
             field.add(new CssAppender(cssStyle));
         }
-    }
-
-    /** Get the last field */
-    public Field getLast() {
-        return (Field) repeatingView.get(repeatingView.size() - 1);
     }
 }
