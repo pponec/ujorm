@@ -18,7 +18,6 @@ package org.ujorm.hotels.config.demoData;
 import java.util.List;
 import java.util.Scanner;
 import org.ujorm.core.UjoManagerCSV;
-import org.ujorm.core.annot.PackagePrivate;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
@@ -34,7 +33,7 @@ public class DataLoader implements InitializationBatch {
 
     /** Load data from a CSV file */
     @Override
-    public void run(Session session) throws Exception {
+    public void run(Session session) {
         if (!session.exists(City.class)) {
             session.save(getCities());
         }
@@ -47,7 +46,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    @PackagePrivate List<City> getCities() throws Exception {
+    public List<City> getCities() {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
@@ -63,7 +62,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    @PackagePrivate List<Hotel> getHotels() throws Exception {
+    public List<Hotel> getHotels() {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
@@ -88,7 +87,7 @@ public class DataLoader implements InitializationBatch {
     }
 
     /** Get hotels from CSV file */
-    @PackagePrivate List<Customer> getCustomers() throws Exception {
+    public List<Customer> getCustomers() {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8.name());
         UjoManagerCSV manager = UjoManagerCSV.of
                 ( Customer.LOGIN
@@ -103,5 +102,4 @@ public class DataLoader implements InitializationBatch {
                 );
         return manager.loadCSV(scanner, "CSV import");
     }
-
 }
