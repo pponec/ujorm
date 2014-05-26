@@ -26,7 +26,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
-import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.KeyModel;
 
 /**
@@ -154,8 +153,8 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     /** Get the Key */
-    public Key<UJO,?> getKey() {
-        return keySerializable.getFirstKey();
+    public Key<UJO,T> getKey() {
+        return (Key<UJO,T>) keySerializable.getFirstKey();
     }
 
     /** Append a CSS class - to overwriting only */
