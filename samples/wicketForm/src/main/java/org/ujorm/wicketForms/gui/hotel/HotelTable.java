@@ -29,13 +29,13 @@ import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
 import org.ujorm.wicket.component.grid.ListDataProvider;
+import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import org.ujorm.wicketForms.entity.Booking;
 import org.ujorm.wicketForms.entity.City;
 import org.ujorm.wicketForms.entity.Hotel;
 import org.ujorm.wicketForms.gui.booking.BookingEditor;
 import org.ujorm.wicketForms.gui.hotel.action.ActionPanel;
-import org.ujorm.wicketForms.gui.hotel.action.InsertHotel;
 import org.ujorm.wicketForms.gui.hotel.action.Toolbar;
 import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicketForms.services.DbService;
@@ -56,12 +56,12 @@ public class HotelTable extends Panel {
     private HotelEditor editDialog;
     private BookingEditor bookingDialog;
     private MessageDialogPane removeDialog;
+    private ListDataProvider<Hotel> columns;
 
     public HotelTable(String id) {
         super(id);
 
-        ListDataProvider<Hotel> columns = ListDataProvider.of(toolbar.getCriterion());
-
+        columns = ListDataProvider.of(toolbar.getCriterion(), Hotel.NAME);
         columns.add(Hotel.NAME);
         columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
         columns.add(Hotel.STREET);
@@ -79,9 +79,13 @@ public class HotelTable extends Panel {
         add((removeDialog = MessageDialogPane.create("removeDialog", 290, 160)).getModalWindow());
 
         DataTable table = ((DataTable) get(DEFAULT_DATATABLE_ID));
-        table.addBottomToolbar(new InsertHotel(table));
         columns.setCssClass(Hotel.NAME, "hotelName");
         columns.setCssClass(Hotel.STREET, "streetName");
+        table.addBottomToolbar(new InsertToolbar(table, Hotel.class) {
+            @Override public boolean isVisible() {
+                return false; // TODO: user access
+            }
+        });
 
         columns.setRows(dbService.getHotels());
     }
