@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.validator.ValidationException;
@@ -31,7 +32,6 @@ import org.ujorm.wicket.component.tabs.UjoTabbedPanel;
 import org.ujorm.wicketForms.entity.Customer;
 import org.ujorm.wicketForms.gui.about.AboutPanel;
 import org.ujorm.wicketForms.gui.about.MeasuringCode;
-import org.ujorm.wicketForms.gui.booking.BookingTable;
 import org.ujorm.wicketForms.gui.customer.CustomerTable;
 import org.ujorm.wicketForms.gui.hotel.HotelTable;
 import org.ujorm.wicketForms.services.AuthService;
@@ -80,5 +80,12 @@ public class HomePage extends WebPage {
             event.addTarget(HomePage.this.get("tabs"));
             event.addTarget(HomePage.this.get("login"));
         }
+    }
+
+    /** Set a MSIE compatibility mode to a response header */
+    @Override
+    protected void setHeaders(WebResponse response) {
+        super.setHeaders(response);
+        response.setHeader("X-UA-Compatible", "IE=edge");
     }
 }
