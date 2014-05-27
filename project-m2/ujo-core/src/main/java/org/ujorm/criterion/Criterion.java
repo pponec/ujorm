@@ -85,7 +85,7 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
     /** Returns a list of items which satisfies the condition in this Criterion.
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
-    final public List<UJO> evaluate(final Iterable<UJO> ujoList) {
+    public List<UJO> evaluate(final Iterable<UJO> ujoList) {
         final List<UJO> result = new ArrayList<UJO>();
         for (final UJO ujo : ujoList) {
             if (evaluate(ujo)) {
@@ -98,7 +98,7 @@ public abstract class Criterion<UJO extends Ujo> implements Serializable {
     /** Returns a list of items which satisfies the condition in this Criterion.
      * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
      */
-    final public List<UJO> evaluate(final UJO ... ujoList) {
+    public List<UJO> evaluate(final UJO ... ujoList) {
         final List<UJO> result = new ArrayList<UJO>();
         for (final UJO ujo : ujoList) {
             if (evaluate(ujo)) {

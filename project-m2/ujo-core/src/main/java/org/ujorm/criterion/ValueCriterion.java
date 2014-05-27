@@ -19,13 +19,17 @@ package org.ujorm.criterion;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.core.UjoCoder;
-import org.ujorm.core.UjoManager;
 
 /**
  * The value criterion implementation.
@@ -204,6 +208,38 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
         }
 
         throw new IllegalArgumentException("Illegal operator: " + operator);
+    }
+
+    /** Returns a list of items which satisfies the condition in this Criterion.
+     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
+     */
+    @Override
+    final public List<UJO> evaluate(final Iterable<UJO> ujoList) {
+        switch (operator) {
+            case XFIXED:
+                return Boolean.FALSE.equals(value)
+                     ? Collections.<UJO>emptyList()
+                     : ujoList instanceof Collection
+                     ? new ArrayList<UJO>((Collection) ujoList)
+                     : super.evaluate(ujoList);
+            default:
+                return super.evaluate(ujoList);
+        }
+    }
+
+    /** Returns a list of items which satisfies the condition in this Criterion.
+     * @see org.ujorm.criterion.CriteriaTool#select(java.util.List, org.ujorm.criterion.Criterion, org.ujorm.core.UjoComparator)
+     */
+    @Override
+    final public List<UJO> evaluate(final UJO ... ujoList) {
+        switch (operator) {
+            case XFIXED:
+                return Boolean.FALSE.equals(value)
+                     ? Collections.<UJO>emptyList()
+                     : Arrays.asList(ujoList);
+            default:
+                return super.evaluate(ujoList);
+        }
     }
 
     /** Test a value is an instance of CharSequence or a type Key is type of CharSequence.
