@@ -81,9 +81,8 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     public static final String DEFAULT_DATATABLE_ID = "datatable";
     /** Data size */
     protected Long size;
-
-    /** Data criterion model */
-    protected IModel<Criterion<T>> criterion;
+    /** Data criterion model for filtering the data resource */
+    protected IModel<Criterion<T>> filter;
     /** Domain model */
     protected KeyRing<T> model;
     /** Visible table columns */
@@ -101,12 +100,12 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     }
 
     /** Constructor
-     * @param criterion Model of a condition to a database query
+     * @param filter Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public AbstractDataProvider(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {        
-        this.criterion = Args.notNull(criterion, "Criterion is mandatory");
-        this.model = KeyRing.of((Class<T>)criterion.getObject().getDomain());
+    public AbstractDataProvider(IModel<Criterion<T>> filter, Key<T,?> defaultSort) {
+        this.filter = Args.notNull(filter, "Criterion is mandatory");
+        this.model = KeyRing.of((Class<T>)filter.getObject().getDomain());
 
         if (defaultSort == null) {
             defaultSort = model.getFirstKey();
@@ -154,6 +153,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     public abstract long size();
 
     /** Commit and close transaction */
+    @Override
     public abstract void detach();
 
     /** Get a bean Model */

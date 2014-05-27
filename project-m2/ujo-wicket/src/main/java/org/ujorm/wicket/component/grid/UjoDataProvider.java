@@ -72,7 +72,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
      * where the feature is enabled by default
      */
     private boolean fetchDatabaseColumns = true;
-    
+
     /** Constructor
      * @param criterion Condition to a database query
      */
@@ -99,7 +99,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
                 , "count"
                 , Integer.MAX_VALUE
                 , count);
-        Query<T> query = createQuery(criterion.getObject())
+        Query<T> query = createQuery(filter.getObject())
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKey());
         fetchDatabaseColumns(query);
@@ -114,7 +114,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
     @Override
     public long size() {
        if (size == null) {
-           size = createQuery(criterion.getObject()).getCount();
+           size = createQuery(filter.getObject()).getCount();
        }
        return size;
     }

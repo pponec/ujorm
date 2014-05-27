@@ -71,7 +71,7 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     private List<T> filteredRows;
     /** Sort request */
     private boolean sortRequest;
-    
+
     /** Constructor
      * @param criterion Condition to a database query
      */
@@ -80,11 +80,11 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     }
 
     /** Constructor
-     * @param criterion Model of a condition to a database query
+     * @param filter Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public ListDataProvider(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
-        super(criterion, defaultSort);
+    public ListDataProvider(IModel<Criterion<T>> filter, Key<T,?> defaultSort) {
+        super(filter, defaultSort);
         this.sortRequest = defaultSort != null;
     }
 
@@ -102,24 +102,8 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
 
     /** Returns a filtered rows and cach the result */
     protected List<T> getFileredRows() {
-        condition:
         if (filteredRows == null) {
-            final Criterion<T> crn  = super.criterion.getObject();
-            if (crn instanceof ValueCriterion) {
-                final ValueCriterion<T> valCrn = (ValueCriterion) crn;
-                if (valCrn.getOperator() == Operator.XFIXED) {
-                    filteredRows = Boolean.TRUE.equals(valCrn.getRightNode())
-                        ? dataRows
-                        : Collections.<T>emptyList();
-                    break condition;
-                }
-            }
-            filteredRows = new ArrayList<T>();
-            for (T t : dataRows) {
-                if (crn.evaluate(t)) {
-                    filteredRows.add(t);
-                }
-            }
+            filteredRows = filter.getObject().evaluate(dataRows);
         }
         return filteredRows;
     }
@@ -165,10 +149,14 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
        return size;
     }
 
-    /** Commit and close transaction */
+    /**
+     * Detaches model after use. This is generally used to null out transient references that can be
+     * re-attached later.
+     */
     @Override
     public void detach() {
-        // TODO ...
+        this.filteredRows = null;
+        this.size = null;
     }
 
     // ============= STATIC METHOD =============
