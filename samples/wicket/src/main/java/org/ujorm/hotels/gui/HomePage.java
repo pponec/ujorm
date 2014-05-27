@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
@@ -55,7 +56,7 @@ public class HomePage extends WebPage {
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoTabbedPanel("tabs", tabs));
 
-        // Login name and logout action:        
+        // Login name and logout action:
         add(new LoginName("login"));
 
         // Footer:
@@ -80,5 +81,12 @@ public class HomePage extends WebPage {
             event.addTarget(HomePage.this.get("tabs"));
             event.addTarget(HomePage.this.get("login"));
         }
+    }
+
+    /** Set a MSIE compatibility mode to a response header */
+    @Override
+    protected void setHeaders(WebResponse response) {
+        super.setHeaders(response);
+        response.setHeader("X-UA-Compatible", "IE=edge");
     }
 }
