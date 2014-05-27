@@ -49,7 +49,7 @@ public class HomePage extends WebPage {
 
         // create a list of ITab objects used to feed the tabbed panel
         List<ITab> tabs = new ArrayList<>();
-        //tabs.add(new UjoTab("Hotels", "hotel", HotelTable.class));
+        tabs.add(new UjoTab("Hotels", "hotel", HotelTable.class));
         //tabs.add(new UjoTab("Booking", "booking", BookingTable.class));
         tabs.add(new UjoTab("Customer", "customer", CustomerTable.class));
         tabs.add(new UjoTab("About", "about", AboutPanel.class));

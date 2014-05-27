@@ -18,10 +18,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.ujorm.criterion.Criterion;
 import org.ujorm.criterion.Operator;
-import org.ujorm.wicketForms.entity.City;
-import org.ujorm.wicketForms.entity.Hotel;
 import org.ujorm.wicket.CommonActions;
 import org.ujorm.wicket.component.toolbar.AbstractToolbar;
+import org.ujorm.wicketForms.entity.City;
+import org.ujorm.wicketForms.entity.Hotel;
 import static org.ujorm.core.UjoManager.*;
 
 /**
