@@ -219,6 +219,8 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
             case XFIXED:
                 return Boolean.FALSE.equals(value)
                      ? Collections.<UJO>emptyList()
+                     : ujoList instanceof List
+                     ? (List) ujoList
                      : ujoList instanceof Collection
                      ? new ArrayList<UJO>((Collection) ujoList)
                      : super.evaluate(ujoList);
