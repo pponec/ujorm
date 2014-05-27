@@ -106,7 +106,6 @@ public class Field extends Panel {
         add(input = createInput("input", getDefaultModel()));
         add(createLabel(input));
         add(feedback = new FeedbackLabel("message", input, (IModel)null));
-        feedback.setOutputMarkupId(true);
     }
 
     /** On configure */
