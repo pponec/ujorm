@@ -65,7 +65,6 @@ public class UjoSequencer {
 
             final MetaDatabase db = MetaTable.DATABASE.of(table);
             Connection connection = null;
-            ResultSet res = null;
             String sql = null;
             PreparedStatement statement = null;
             StringBuilder out = new StringBuilder(64);
@@ -76,24 +75,35 @@ public class UjoSequencer {
                 // UPDATE the next sequence:
                 out.setLength(0);
                 sql = db.getDialect().printSequenceNextValue(this, out).toString();
-                
-                if (LOGGER.isLoggable(UjoLogger.INFO)) { 
+
+                if (LOGGER.isLoggable(UjoLogger.INFO)) {
                     LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
                 }
-                statement = connection.prepareStatement(sql);
-                statement.setString(1, tableName);
-                int i = statement.executeUpdate();
+                int i = 0;
+                try {
+                    statement = connection.prepareStatement(sql);
+                    statement.setString(1, tableName);
+                    i = statement.executeUpdate();
+                } finally {
+                    MetaDatabase.close(null, statement, null, true);
+                }
 
                 if (i==0) {
                     // INSERT the new sequence:
                     out.setLength(0);
                     sql = db.getDialect().printSequenceInit(this, out).toString();
-                    if (LOGGER.isLoggable(UjoLogger.INFO)) { 
+                    if (LOGGER.isLoggable(UjoLogger.INFO)) {
                         LOGGER.log(UjoLogger.INFO, sql + "; ["+tableName+']');
                     }
-                    statement = connection.prepareStatement(sql);
-                    statement.setString(1, tableName);
-                    statement.executeUpdate();
+                    int j = 0;
+                    try {
+                        statement = connection.prepareStatement(sql);
+                        statement.setString(1, tableName);
+                        j = statement.executeUpdate();
+                    } finally {
+                        MetaDatabase.close(null, statement, null, true);
+                    }
+                    LOGGER.log(UjoLogger.DEBUG, "Insert {} rows", j);
                 }
 
                 // SELECT UPDATE:
@@ -110,15 +120,18 @@ public class UjoSequencer {
                             String msg = "The sequence '" + tableName + "' needs to raise the maximum value: " + maxValue;
                             throw new IllegalStateException(msg);
                         }
-                        statement.close();
                         out.setLength(0);
                         sql = db.getDialect().printSequenceNextValue(this, out).toString();
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
                             LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
                         }
-                        statement = connection.prepareStatement(sql);
-                        statement.setString(1, tableName);
-                        statement.execute();
+                        try {
+                            statement = connection.prepareStatement(sql);
+                            statement.setString(1, tableName);
+                            statement.execute();
+                        } finally {
+                            MetaDatabase.close(null, statement, null, true);
+                        }
                     }
                     if (maxValue>Long.MAX_VALUE-step) {
                         String msg = "The sequence attribute '"
@@ -141,11 +154,8 @@ public class UjoSequencer {
                 }
                 IllegalStateException exception = e instanceof IllegalStateException
                     ? (IllegalStateException) e
-                    : new IllegalStateException("ILLEGAL SQL: " + sql, e)
-                    ;
+                    : new IllegalStateException("ILLEGAL SQL: " + sql, e);
                 throw exception;
-            } finally {
-                MetaDatabase.close(null, statement, res, true);
             }
             return sequence;
         }
@@ -210,19 +220,23 @@ public class UjoSequencer {
         sql.setLength(0);
         db.getDialect().printSequenceCurrentValue(this, sql);
 
-        PreparedStatement statement = connection.prepareStatement(sql.toString());
-        statement.setString(1, tableName);
-        ResultSet res = statement.executeQuery();
-
-        if (res.next()) {
-            long[] result = new long[1 + SEQ_MAX_VALUE];
-            result[SEQ_LIMIT] = res.getLong(SEQ_LIMIT);
-            result[SEQ_STEP] = res.getLong(SEQ_STEP);
-            result[SEQ_MAX_VALUE] = res.getLong(SEQ_MAX_VALUE);
-            return result;
-        } else {
-            return null;
+        PreparedStatement statement = null;
+        ResultSet res = null;
+        try {
+            statement = connection.prepareStatement(sql.toString());
+            statement.setString(1, tableName);
+            res = statement.executeQuery();
+            if (res.next()) {
+                long[] result = new long[1 + SEQ_MAX_VALUE];
+                result[SEQ_LIMIT] = res.getLong(SEQ_LIMIT);
+                result[SEQ_STEP] = res.getLong(SEQ_STEP);
+                result[SEQ_MAX_VALUE] = res.getLong(SEQ_MAX_VALUE);
+                return result;
+            } else {
+                return null;
+            }
+        } finally {
+            MetaDatabase.close(null, statement, res, true);
         }
     }
-    
 }
