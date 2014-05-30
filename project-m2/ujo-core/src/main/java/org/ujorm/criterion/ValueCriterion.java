@@ -117,6 +117,24 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
         return operator;
     }
 
+    /** The implementation with an optimization */
+    public Criterion<UJO> and(Criterion<UJO> criterion) {
+        return operator != Operator.XFIXED
+             ? super.and(criterion)
+             : Boolean.TRUE.equals(value)
+             ? criterion
+             : this ;
+    }
+
+    /** The implementation with an optimization */
+    public Criterion<UJO> or(Criterion<UJO> criterion) {
+        return operator != Operator.XFIXED
+             ? super.or(criterion)
+             : Boolean.TRUE.equals(value)
+             ? this
+             : criterion ;
+    }
+
     @SuppressWarnings({"unchecked", "fallthrough"})
     @Override
     public boolean evaluate(UJO ujo) {
