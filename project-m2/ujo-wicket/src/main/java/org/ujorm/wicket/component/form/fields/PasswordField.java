@@ -38,18 +38,13 @@ public class PasswordField extends Field {
 
     /** Create Form inputComponent */
     @Override
+    @SuppressWarnings("unchecked")
     protected FormComponent createInput(String componentId, IModel model) {
         final FormComponent result = new PasswordTextField(componentId, model);
-
-        if (validator != null) {
-            result.add(validator);
-            addMaxLength(result);
-        }
 
         result.setRequired(false);
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;
-
     }
 }
