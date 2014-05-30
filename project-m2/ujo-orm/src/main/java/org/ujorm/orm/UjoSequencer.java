@@ -218,7 +218,10 @@ public class UjoSequencer {
     }
 
     /** Executes UPDATE for required parameters */
-    protected int executeSql(Connection connection, String sql, String tableName) throws SQLException {
+    protected int executeSql
+            ( final Connection connection
+            , final String sql
+            , final String tableName) throws SQLException {
         PreparedStatement statement = null;
         try {
             statement = connection.prepareStatement(sql);
