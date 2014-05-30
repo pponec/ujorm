@@ -19,7 +19,6 @@ import junit.framework.*;
 import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.MyTestCase;
-import org.ujorm.Ujo;
 import org.ujorm.extensions.PathProperty;
 import static org.ujorm.criterion.Person.*;
 
@@ -86,6 +85,34 @@ public class CriterionTest extends MyTestCase {
         noFilled = p.NAME.whereNotFilled().evaluate(p);
         assertEquals(expected, noFilled);
     }
+
+    /** Filled */
+    public void testJoin() {
+        final Criterion<Person> crnTrue, crnFalse, crnOther;
+        Person person = new Person();
+        Criterion<Person> result;
+
+        crnTrue = Person.NAME.forAll();
+        crnFalse = Person.NAME.forNone();
+        crnOther = Person.CASH.whereGt(10.00);
+        //
+        result = crnTrue.or(crnOther);
+        assertSame(crnTrue, result);
+        assertEquals(true, result.evaluate(person));
+        //
+        result = crnFalse.or(crnOther);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnTrue.and(crnOther);
+        assertSame(crnOther, result);
+        assertEquals(false, result.evaluate(person));
+        //
+        result = crnFalse.and(crnOther);
+        assertSame(crnFalse, result);
+        assertEquals(false, result.evaluate(person));
+    }
+
 
     /** Serialization 1 */
     public void testSerialization_1() throws Exception {
