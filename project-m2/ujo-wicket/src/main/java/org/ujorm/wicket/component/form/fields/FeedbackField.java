@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
  * Common Feedback Field
  * @author Pavel Ponec
  */
-public class FeedbackField extends Field {
+public class FeedbackField<T> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
 
