@@ -113,6 +113,12 @@ public class Field extends Panel {
     protected void onConfigure() {
         super.onConfigure();
 
+        if (validator != null) {
+            input.add(validator);
+            addMaxLength(input);
+            validator = null;
+        }
+
         if (behaviors!=null) {
             for (Behavior behavior : behaviors) {
                 input.add(behavior);
@@ -124,11 +130,6 @@ public class Field extends Panel {
     /** Create Form inputComponent */
     protected FormComponent createInput(String componentId, IModel model) {
         final FormComponent result = new TextField(componentId, model, key.getFirstKey().getType());
-
-        if (validator != null) {
-            result.add(validator);
-            addMaxLength(result);
-        }
 
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());

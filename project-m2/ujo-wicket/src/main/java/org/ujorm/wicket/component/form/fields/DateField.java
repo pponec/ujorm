@@ -44,16 +44,11 @@ public class DateField extends Field {
 
     /** Create Form inputComponent */
     @Override
+    @SuppressWarnings("unchecked")
     protected FormComponent createInput(String componentId, IModel model) {
         final DateTextField result = new com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker
                 (componentId, new Model<Date>(), getDatePattern(), createJQueryOptions());
         result.add(new CssAppender(getInputCssClass()));
-
-        if (validator != null) {
-            IValidator<? super java.util.Date> dateValidator = (IValidator<? super java.util.Date>) validator;
-            result.add(dateValidator);
-            addMaxLength(result);
-        }
 
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
