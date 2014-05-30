@@ -66,7 +66,6 @@ public class UjoSequencer {
             final MetaDatabase db = MetaTable.DATABASE.of(table);
             Connection connection = null;
             String sql = null;
-            PreparedStatement statement = null;
             StringBuilder out = new StringBuilder(64);
             try {
                 connection = session.getSeqConnection(db);
@@ -79,15 +78,7 @@ public class UjoSequencer {
                 if (LOGGER.isLoggable(UjoLogger.INFO)) {
                     LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
                 }
-                int i = 0;
-                try {
-                    statement = connection.prepareStatement(sql);
-                    statement.setString(1, tableName);
-                    i = statement.executeUpdate();
-                } finally {
-                    MetaDatabase.close(null, statement, null, true);
-                }
-
+                final int i = executeSql(connection, sql, tableName);
                 if (i==0) {
                     // INSERT the new sequence:
                     out.setLength(0);
@@ -95,15 +86,7 @@ public class UjoSequencer {
                     if (LOGGER.isLoggable(UjoLogger.INFO)) {
                         LOGGER.log(UjoLogger.INFO, sql + "; ["+tableName+']');
                     }
-                    int j = 0;
-                    try {
-                        statement = connection.prepareStatement(sql);
-                        statement.setString(1, tableName);
-                        j = statement.executeUpdate();
-                    } finally {
-                        MetaDatabase.close(null, statement, null, true);
-                    }
-                    LOGGER.log(UjoLogger.DEBUG, "Insert {} rows", j);
+                    executeSql(connection, sql, tableName);
                 }
 
                 // SELECT UPDATE:
@@ -125,13 +108,7 @@ public class UjoSequencer {
                         if (LOGGER.isLoggable(UjoLogger.INFO)) {
                             LOGGER.log(UjoLogger.INFO, sql + "; [" + tableName + ']');
                         }
-                        try {
-                            statement = connection.prepareStatement(sql);
-                            statement.setString(1, tableName);
-                            statement.execute();
-                        } finally {
-                            MetaDatabase.close(null, statement, null, true);
-                        }
+                        executeSql(connection, sql, tableName);
                     }
                     if (maxValue>Long.MAX_VALUE-step) {
                         String msg = "The sequence attribute '"
@@ -237,6 +214,18 @@ public class UjoSequencer {
             }
         } finally {
             MetaDatabase.close(null, statement, res, true);
+        }
+    }
+
+    /** Executes UPDATE for required parameters */
+    protected int executeSql(Connection connection, String sql, String tableName) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, tableName);
+            return statement.executeUpdate();
+        } finally {
+            MetaDatabase.close(null, statement, null, true);
         }
     }
 }
