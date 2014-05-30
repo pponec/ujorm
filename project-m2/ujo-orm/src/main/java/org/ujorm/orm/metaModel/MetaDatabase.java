@@ -339,7 +339,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Close a connection, statement and a result set. */
-    public static void close(Connection connection, JdbcStatement statement, ResultSet rs, boolean throwExcepton) throws IllegalStateException {
+    public static void close
+            ( final Connection connection
+            , final JdbcStatement statement
+            , final ResultSet rs
+            , final boolean throwExcepton) throws IllegalStateException {
 
         try {
             try {
@@ -368,8 +372,11 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
     }
 
     /** Close a connection, statement and a result set. */
-    public static void close(Connection connection, Statement statement, ResultSet rs, boolean throwExcepton) throws IllegalStateException {
-
+    public static void close
+            ( final Connection connection
+            , final Statement statement
+            , final ResultSet rs
+            , final boolean throwExcepton) throws IllegalStateException {
         try {
             try {
                 if (rs != null) {
