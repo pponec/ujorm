@@ -20,27 +20,28 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 
 /**
  * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
-public class TextAreaField extends Field {
+public class TextAreaField<T extends String> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
 
-    public TextAreaField(Key key) {
+    public <U extends Ujo> TextAreaField(Key<U,T> key) {
         super(key.getName(), key, null);
     }
 
-    public TextAreaField(String componentId, Key key, String cssClass) {
+    public <U extends Ujo> TextAreaField(String componentId, Key<U,T> key, String cssClass) {
         super(componentId, key, cssClass);
     }
 
     /** Create Form inputComponent */
     @Override
     protected FormComponent createInput(String componentId, IModel model) {
-        final TextArea<String> result = new TextArea<String>(componentId, model);
+        final TextArea<T> result = new TextArea<T>(componentId, model);
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         result.add(new AttributeModifier("rows", getRowCount()));

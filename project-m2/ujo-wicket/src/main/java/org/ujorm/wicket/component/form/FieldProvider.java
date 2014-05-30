@@ -50,6 +50,7 @@ import org.ujorm.wicket.component.form.fields.Field;
 import org.ujorm.wicket.component.form.fields.GridField;
 import org.ujorm.wicket.component.form.fields.PasswordField;
 import org.ujorm.wicket.component.form.fields.TextAreaField;
+import org.ujorm.wicket.component.form.fields.TextField;
 
 /**
  * Field Factory
@@ -65,12 +66,12 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     private U domain;
     private transient OrmHandler ormHandler;
 
-    /** Defalt constructor */
+    /** Default constructor */
     public FieldProvider(String repeatingViewId) {
         this(new RepeatingView(repeatingViewId));
     }
 
-    /** Defalt constructor with a repeatingView */
+    /** Default constructor with a repeatingView */
     public FieldProvider(RepeatingView repeatingView) {
         this(repeatingView, new LinkedHashMap<String, Field>(16) ) ;
     }
@@ -78,7 +79,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /**
      * Final constructor
      * @param repeatingView a repeating views
-     * @param fields Serializabe field map
+     * @param fields Serializable field map
      */
     public FieldProvider(RepeatingView repeatingView, Map<String, Field> fields) {
         this.repeatingView = repeatingView;
@@ -109,7 +110,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
                 final int length = ValidatorUtils.getMaxLength(key.getValidator());
                 field = length >= getTextAreaLimit()
                         ? new TextAreaField(key)
-                        : new Field(key);
+                        : new TextField(key);
             }
         } else if (key.isTypeOf(Enum.class)) {
             field = new EnumField(key, "combo");
@@ -158,9 +159,11 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         add(ComboField.of(key, crn, display));
     }
 
-    /** Get Value */
+    /** Get Value, or returns a default value */
+    @SuppressWarnings("unchecked")
     public <T> T getValue(Key<U, T> key) {
-        return (T) fields.get(key.getName()).getModelValue();
+        final Field filed = fields.get(key.getName());
+        return (T) filed != null ? (T) filed.getModelValue() : key.getDefault();
     }
 
     /** Set Value */
@@ -168,7 +171,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         fields.get(key.getName()).setModelValue(value);
     }
 
-    /** Set Value and repaing component */
+    /** Set Value and repaint the component */
     public <T> void setValue(Key<U, T> key, T value, AjaxRequestTarget target) {
         setValue(key, value);
         target.add(fields.get(key.getName()));
@@ -184,8 +187,11 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return (T) fields.get(key.getName());
     }
 
-    /** Returns the last field */
-    public <T extends Field> T getLast() {
+    /** Returns the last field or throw an exception
+     * @return Notnull always
+     * @throws ArrayIndexOutOfBoundsException No last filed was found.
+     */
+    public <T extends Field> T getLast() throws ArrayIndexOutOfBoundsException {
         return (T) repeatingView.get(repeatingView.size() - 1);
     }
 

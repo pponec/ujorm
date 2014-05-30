@@ -31,13 +31,14 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.Validator;
 import org.ujorm.core.KeyRing;
 import org.ujorm.validator.ValidatorUtils;
@@ -47,10 +48,10 @@ import org.ujorm.wicket.component.form.FieldEvent;
 import org.ujorm.wicket.component.form.UiValidator;
 
 /**
- * Input textfield with a Label including a feedback message.
+ * Common Input field with a Label including a feedback message.
  * @author Pavel Ponec
  */
-public class Field extends Panel {
+public class Field<T> extends GenericPanel<T> {
     private static final long serialVersionUID = 20130621L;
 
     /** Delay for searching fields is 400 [ms] by default */
@@ -63,15 +64,17 @@ public class Field extends Panel {
     public static final String PROPERTY_PREFIX = "label.";
 
     /** A form component */
-    private FormComponent input;
+    private FormComponent<T> input;
     protected FeedbackLabel feedback;
-    protected IValidator<?> validator;
+    protected IValidator<T> validator;
     protected String cssClass;
     /** Serializable key */
-    protected KeyRing key;
+    protected KeyRing<?> key;
     protected List<Behavior> behaviors;
+    /** Extended visible model, the {@code null} value means a default manner. */
+    private IModel<Boolean> visibleModel;
 
-    public Field(Key key) {
+    public <U extends Ujo> Field(Key<U,T> key) {
         this(key.getName(), key, null);
         this.setOutputMarkupPlaceholderTag(true);
     }
@@ -82,8 +85,9 @@ public class Field extends Panel {
      * @param key Optional Ujorm Key
      * @param cssClass Optional CSS class
      */
-    public Field(String componentId, Key key, String cssClass) {
-        super(componentId, Model.of());
+    @SuppressWarnings("unchecked")
+    public <U extends Ujo> Field(String componentId, Key<U,T> key, String cssClass) {
+        super(componentId, new Model());
         this.key = KeyRing.of(key);
         this.cssClass = cssClass;
     }
@@ -103,7 +107,7 @@ public class Field extends Panel {
             add(new CssAppender(cssClass));
         }
 
-        add(input = createInput("input", getDefaultModel()));
+        add(input = createInput("input", (IModel) getDefaultModel()));
         add(createLabel(input));
         add(feedback = new FeedbackLabel("message", input, (IModel)null));
     }
@@ -125,10 +129,15 @@ public class Field extends Panel {
             }
             behaviors = null;
         }
+
+        if (visibleModel!=null) {
+            setVisible(Boolean.TRUE.equals(visibleModel.getObject()));
+        }
     }
 
     /** Create Form inputComponent */
-    protected FormComponent createInput(String componentId, IModel model) {
+    protected FormComponent createInput(String componentId, IModel<T> model) {
+        @SuppressWarnings("unchecked")
         final FormComponent result = new TextField(componentId, model, key.getFirstKey().getType());
 
         result.setEnabled(isEnabled());
@@ -137,29 +146,29 @@ public class Field extends Panel {
     }
 
     /** Validator getter */
-    public IValidator<?> getValidator() {
+    public IValidator<T> getValidator() {
         return validator;
     }
 
     /** Validator setter */
-    public Field setValidator(IValidator<?> validator) {
+    public Field setValidator(IValidator<T> validator) {
         this.validator = validator;
         return this;
     }
 
-    /** Validator setter */
-    public Field setValidator(Validator<?> validator) {
+    /** The Validator setter */
+    public Field setValidator(Validator<T> validator) {
         this.validator = new UiValidator(validator, key);
         return this;
     }
 
     /** Returns an {@code input} value from model */
-    public Object getModelValue() {
-        return input.getDefaultModelObject();
+    public T getModelValue() {
+        return (T) input.getDefaultModelObject();
     }
 
     /** Set new value for the {@code input} and reset feedback messages */
-    public void setModelValue(Object value) {
+    public void setModelValue(T value) {
         input.getFeedbackMessages().clear();
         input.setDefaultModelObject(value);
     }
@@ -232,6 +241,16 @@ public class Field extends Panel {
     /** Returns a main CSS class */
     protected String getCssClass() {
         return "control-group";
+    }
+
+    /** Extended visible model, the {@code null} value means a default manner. */
+    public IModel<Boolean> getVisibleModel() {
+        return visibleModel;
+    }
+
+    /** Extended visible model, the {@code null} value means a default manner. */
+    public void setVisibleModel(IModel<Boolean> visibleModel) {
+        this.visibleModel = visibleModel;
     }
 
     /** Create an Updating Behavior with "keyup" event
