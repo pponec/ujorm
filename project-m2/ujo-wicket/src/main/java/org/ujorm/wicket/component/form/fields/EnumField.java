@@ -31,18 +31,18 @@ import org.ujorm.wicket.component.tools.ChoiceRendererNullable;
  * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
-public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
+public class EnumField<T extends Enum<T>> extends Field<T> {
     private static final long serialVersionUID = 20130621L;
     /** This component does not support the {@code null} item now. */
     private static final boolean NULL_SUPPORT = false;
     /** Available items */
-    private List<E> items;
+    private List<T> items;
 
-    public EnumField(Key<T, E> key) {
+    public <U extends Ujo> EnumField(Key<U, T> key) {
         this(key, null);
     }
 
-    public EnumField(Key<T, E> key, String cssClass) {
+    public <U extends Ujo> EnumField(Key<U, T> key, String cssClass) {
         super(key.getName(), key, null);
         this.items = Arrays.asList(key.getType().getEnumConstants());
         if (NULL_SUPPORT && !isRequired()) {
@@ -55,9 +55,9 @@ public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel model) {
-        DropDownChoice<E> result = new DropDownChoice<E>(componentId, new Model(), getItems());
-        result.setChoiceRenderer(new ChoiceRendererNullable<E>(this));
+    protected FormComponent createInput(String componentId, IModel<T> model) {
+        DropDownChoice<T> result = new DropDownChoice<T>(componentId, new Model(), getItems());
+        result.setChoiceRenderer(new ChoiceRendererNullable<T>(this));
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;
@@ -68,7 +68,7 @@ public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
      * @param object the actual object
      * @return the value meant for displaying to an end user
      */
-    protected Object getComboDisplayValue(E object) {
+    protected Object getComboDisplayValue(T object) {
         return object.name();
     }
 
@@ -84,12 +84,12 @@ public class EnumField<T extends Ujo, E extends Enum<E>> extends Field {
      * @param index The index of the object in the choices list.
      * @return String
      */
-    protected String getComboIdValue(E object, int index) {
+    protected String getComboIdValue(T object, int index) {
         return object.name();
     }
 
     /** Get component items */
-    public List<E> getItems() {
+    public List<T> getItems() {
         return items;
     }
 

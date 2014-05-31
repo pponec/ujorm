@@ -40,7 +40,7 @@ public class TextAreaField<T extends String> extends Field<T> {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel model) {
+    protected FormComponent createInput(String componentId, IModel<T> model) {
         final TextArea<T> result = new TextArea<T>(componentId, model);
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());

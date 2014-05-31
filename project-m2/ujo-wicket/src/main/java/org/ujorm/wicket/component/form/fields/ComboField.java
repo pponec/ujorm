@@ -38,19 +38,19 @@ import org.ujorm.wicket.component.form.FieldEvent;
  * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
-public class ComboField<T extends Ujo> extends Field {
+public class ComboField<T extends Ujo> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
     private KeyRing<T> keys;
     private List<T> items;
 
-    public ComboField(Key key, List<T> items, Key<T, ?> selectId, Key<T, ?> display) {
+    public <U extends Ujo> ComboField(Key<U,T> key, List<T> items, Key<T,?> selectId, Key<T,?> display) {
         super(key.getName(), key, null);
         this.keys = KeyRing.of(selectId, display);
         this.items = items;
     }
 
-    public ComboField(String componentId, Key<?, T> key, List<T> items, Key<T, ?> selectId, Key<T, ?> display, String cssClass) {
+    public <U extends Ujo> ComboField(String componentId, Key<U,T> key, List<T> items, Key<T, ?> selectId, Key<T,?> display, String cssClass) {
         super(componentId, key, cssClass);
         this.keys = KeyRing.of(selectId, display);
         this.items = items;
@@ -58,7 +58,7 @@ public class ComboField<T extends Ujo> extends Field {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel model) {
+    protected FormComponent createInput(String componentId, IModel<T> model) {
         DropDownChoice<T> result = new DropDownChoice<T>(componentId, new Model(), getItems(), new IChoiceRenderer<T>() {
             @Override
             public Object getDisplayValue(T object) {
@@ -155,8 +155,8 @@ public class ComboField<T extends Ujo> extends Field {
     }
 
     /** Create new ComboField using database request */
-    public static <T extends OrmUjo> ComboField<T> of(Key<?, ?> key, Query<T> query, Key<T, ?> display) {
-        final Key idKey = query.getTableModel().getFirstPK().getKey();
+    public static <T extends OrmUjo> ComboField<T> of(Key<?, T> key, Query<T> query, Key<T, ?> display) {
+        final Key<T,?> idKey = query.getTableModel().getFirstPK().getKey();
         return new ComboField<T>(key, query.list(), idKey, display);
     }
 
