@@ -61,7 +61,7 @@ public class BookingEditor extends EntityDialogPane<Booking> {
         fields.setEnabled(Booking.HOTEL.add(Hotel.CITY).add(City.NAME), false);
         fields.setEnabled(Booking.PRICE, false);
         fields.setEnabled(Booking.CURRENCY, false);
-        fields.setValidatorOld(Booking.DATE_FROM, future());
+        fields.addValidatorUnchecked(Booking.DATE_FROM, future());
 
         // Ajax Events.
         fields.onChange(Booking.NIGHTS);
