@@ -15,10 +15,9 @@
  */
 package org.ujorm.wicket.component.grid;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -28,8 +27,6 @@ import org.ujorm.Ujo;
 import org.ujorm.core.UjoComparator;
 import org.ujorm.core.UjoIterator;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.criterion.Operator;
-import org.ujorm.criterion.ValueCriterion;
 
 /**
  * <p>This class called <strong>ListDataProvider</strong> is an database
@@ -131,16 +128,13 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
             UjoComparator.of(getSortKey()).sort(rows);
         }
 
-        // Sublist:
+        // The sublist:
         final int last = (int) Math.min(first + count, rows.size());
         final int frst = (int) Math.min(first, last);
         return UjoIterator.of(rows.subList(frst, last));
     }
 
-    /** Method calculate the size using special SQL requst.
-     * Overwrite the method for an optimization.<br>
-     * Original documentation: {@inheritDoc}
-     */
+    /** Method calculate the size of filtered rows */
     @Override
     public long size() {
        if (size == null) {
@@ -155,8 +149,63 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
      */
     @Override
     public void detach() {
+        clearBuffer();
+    }
+
+    /**
+     * Clear a filterd rows
+     */
+    protected void clearBuffer() {
         this.filteredRows = null;
         this.size = null;
+    }
+
+    // --------- CRUD support ---------
+
+    /** Insert row to the data source
+     * @param row Insert the one table row
+     */
+    @Override
+    public boolean insertRow(@Nonnull final T row) {
+        clearBuffer();
+        return getRows().add(row);
+    }
+
+    /** Delete rows from the data source
+     * @param deleteCondition Remove all row with a condition.
+     */
+    @Override
+    public long deleteRow(@Nonnull final Criterion<T> deleteCondition) {
+        long result = 0;
+        final List<T> rows = getRows();
+        for (int i = rows.size() - 1; i >= 0; i--) {
+            final T row = rows.get(i);
+            if (deleteCondition.evaluate(row)) {
+                rows.remove(i);
+                ++result;
+            }
+        }
+        clearBuffer();
+        return result;
+    }
+
+    /** Update all rows with a codition using the row
+     * @param updateCondition Update condition
+     * @param row Updated row
+     */
+    @Override
+    public long updateRow(@Nonnull final Criterion<T> updateCondition, @Nonnull final T updatedRow) {
+        long result = 0;
+        final List<T> rows = getRows();
+        for (int i = rows.size() - 1; i >= 0; i--) {
+            final T row = rows.get(i);
+            if (updateCondition.evaluate(row)) {
+                rows.set(i, updatedRow);
+                ++result;
+            }
+        }
+        clearBuffer();
+        return result;
     }
 
     // ============= STATIC METHOD =============
@@ -180,5 +229,4 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     public static <T extends Ujo> ListDataProvider<T> of(Criterion<T> criterion) {
         return new ListDataProvider<T>(Model.of(criterion), null);
     }
-
 }

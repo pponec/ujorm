@@ -32,14 +32,10 @@ import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
-import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.orm.ColumnWrapper;
-import org.ujorm.orm.OrmHandler;
-import org.ujorm.orm.Query;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 
@@ -277,4 +273,32 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
             }
         }
     }
+
+    // --------- CRUD support ---------
+
+    /** Insert row to the data source.
+     * The method is not implemetned by default.
+     * @param row Insert one table row
+     */
+    public boolean insertRow(T row) {
+        throw new UnsupportedOperationException();
+    }
+
+    /** Delete rows from the data source
+     * The method is not implemetned by default.
+     * @param deleteCondition Remove all row with a condition.
+     */
+    public long deleteRow(Criterion<T> deleteCondition) {
+        throw new UnsupportedOperationException();
+    }
+
+    /** Update all rows with a codition using the row
+     * The method is not implemetned by default.
+     * @param updateCondition Update condition
+     * @param updatedRow Updated row
+     */
+    public long updateRow(Criterion<T> updateCondition, T updatedRow) {
+        throw new UnsupportedOperationException();
+    }
+
 }
