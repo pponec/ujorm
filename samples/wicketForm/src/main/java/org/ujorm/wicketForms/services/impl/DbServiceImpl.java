@@ -140,7 +140,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     @Override
     public IModel<Booking> prepareBooking(final UjoEvent<Hotel> event) {
         Booking result = new Booking();
-        result.setHotel(null);
+        result.setHotel(event.getDomain());
         result.setPrice(result.getHotel().getPrice());
         result.setCurrency(result.getHotel().getCurrency());
         result.setDateFrom(new java.sql.Date(System.currentTimeMillis() + DAY_AS_MILISEC));
