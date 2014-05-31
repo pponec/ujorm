@@ -18,6 +18,7 @@ package org.ujorm.wicket.component.form.fields;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -66,7 +67,7 @@ public class Field<T> extends GenericPanel<T> {
     /** A form component */
     private FormComponent<T> input;
     protected FeedbackLabel feedback;
-    protected IValidator<T> validator;
+    protected List<IValidator<? super T>> validators;
     protected String cssClass;
     /** Serializable key */
     protected KeyRing<?> key;
@@ -117,10 +118,12 @@ public class Field<T> extends GenericPanel<T> {
     protected void onConfigure() {
         super.onConfigure();
 
-        if (validator != null) {
-            input.add(validator);
-            addMaxLength(input);
-            validator = null;
+        if (validators != null) {
+            for (IValidator<? super T> validator : validators) {
+                input.add(validator);
+                addMaxLength(input);
+            }
+            validators = null;
         }
 
         if (behaviors!=null) {
@@ -146,20 +149,23 @@ public class Field<T> extends GenericPanel<T> {
     }
 
     /** Validator getter */
-    public IValidator<T> getValidator() {
-        return validator;
+    @Nonnull
+    public List<IValidator<? super T>> getValidators() {
+        return input.getValidators();
     }
 
     /** Validator setter */
-    public Field setValidator(IValidator<T> validator) {
-        this.validator = validator;
+    public Field addValidator(IValidator<T> validator) {
+        if (validators==null) {
+            validators = new ArrayList<IValidator<? super T>>();
+            validators.add(validator);
+        }
         return this;
     }
 
     /** The Validator setter */
-    public Field setValidator(Validator<T> validator) {
-        this.validator = new UiValidator(validator, key);
-        return this;
+    public Field addValidator(Validator<T> validator) {
+        return addValidator(new UiValidator(validator, key));
     }
 
     /** Returns an {@code input} value from model */
@@ -188,9 +194,9 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Add a {@code maxlength} of a text-field for String attributes */
     protected void addMaxLength(final FormComponent result) {
-        if (validator instanceof UiValidator
+        if (validators instanceof UiValidator
         && key.getFirstKey().isTypeOf(String.class)) {
-            int length = ValidatorUtils.getMaxLength(((UiValidator)validator).getValidator());
+            int length = ValidatorUtils.getMaxLength(((UiValidator)validators).getValidator());
             if (length >= 0) {
                result.add(new AttributeModifier("maxlength", Model.of(length)));
             }
@@ -223,8 +229,8 @@ public class Field<T> extends GenericPanel<T> {
 
     /** Is the field required ? */
     protected boolean isRequired() {
-        boolean result = validator instanceof UiValidator
-            && ValidatorUtils.isMandatoryValidator(((UiValidator) validator).getValidator());
+        boolean result = validators instanceof UiValidator
+            && ValidatorUtils.isMandatoryValidator(((UiValidator) validators).getValidator());
         return result;
     }
 
