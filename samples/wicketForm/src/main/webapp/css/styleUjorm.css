@@ -3,8 +3,12 @@ body {
 }
 
 /** Table */
-table tr.odd {
+tr.odd {
     background-color: buttonface;
+}
+
+tr.selected {
+    background-color: #e7cfcf;
 }
 
 table td, table th {
