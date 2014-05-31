@@ -22,21 +22,22 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.wicket.CssAppender;
 
 /**
  * GridField field with a Label including a feedback message.
  * @author Pavel Ponec
  */
-public class GridField extends Field {
+public class GridField<T> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
 
-    public GridField(Key key) {
+    public <U extends Ujo> GridField(Key<U,T> key) {
         super(key.getName(), key, null);
     }
 
-    public GridField(String componentId, Key key, String cssClass) {
+    public <U extends Ujo> GridField(String componentId, Key<U,T> key, String cssClass) {
         super(componentId, key, cssClass);
     }
 
@@ -56,7 +57,7 @@ public class GridField extends Field {
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel model) {
+    protected FormComponent createInput(String componentId, IModel<T> model) {
         final TextField<String> result = new TextField<String>(componentId, new Model(""));
         result.setEnabled(false);
         return result;

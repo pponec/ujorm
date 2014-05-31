@@ -94,7 +94,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             throw new IllegalStateException("Field is assigned for the key: " + field);
         }
         repeatingView.add(field);
-        setValidator(key, field);
+        addValidator(key, field);
     }
 
     /** Add new field to a repeating view*/
@@ -230,10 +230,10 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Set a validator of the Key to the Field from argument */
-    protected void setValidator(final Key<U, ?> key, final Field field) {
+    protected void addValidator(final Key<U, ?> key, final Field field) {
         final Validator validator = key.getValidator();
         if (validator != null) {
-            field.setValidator(new UiValidator(validator, key));
+            field.addValidator(new UiValidator(validator, key));
         } else if (isMandatory(key)) {
             Component input = field.getInput();
             if (input instanceof FormComponent) {
@@ -335,38 +335,35 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
 
-    /** Set a visible attribute for a required filed.
+    /** Add a validator for a required filed.
      * If the field is not found, the statement is ignored */
-    public <T> void setValidator(final Key<U, T> key, Validator<T> validator) {
+    public <T> void addValidator(final Key<U, T> key, Validator<T> validator) {
         final Field field = getField(key);
         if (field != null) {
-            field.setValidator(validator);
+            field.addValidator(validator);
         }
     }
 
-    /** Set a visible attribute for a required filed, where validator have not generic type.
+    /** Add a validator for a required filed, where the validator have <strong>no generic</strong> type.
      * If the field is not found, the statement is ignored
      * @see #setValidator(org.ujorm.Key, org.ujorm.Validator)
      */
-    public <T> void setValidatorOld(final Key<U, T> key, Validator validator) {
-        final Field field = getField(key);
-        if (field != null) {
-            field.setValidator(validator);
-        }
+    public <T> void addValidatorUnchecked(final Key<U, T> key, Validator validator) {
+        addValidator(key, validator);
     }
 
     /** Set a visible attribute for a required filed.
      * If the field is not found, the statement is ignored */
-    public <T> void setValidator(final Key<U, T> key, IValidator<T> validator) {
+    public <T> void addValidator(final Key<U, T> key, IValidator<T> validator) {
         final Field field = getField(key);
         if (field != null) {
-            field.setValidator(validator);
+            field.addValidator(validator);
         }
     }
 
     /** Add a CSS style to the field of required key.
      * If the field is not found, the statement is ignored */
-    public <T> void setNewCssStyle(final Key<U, T> key, String cssStyle) {
+    public <T> void addCssStyle(final Key<U, T> key, String cssStyle) {
         final Field field = getField(key);
         if (field != null) {
             field.add(new CssAppender(cssStyle));

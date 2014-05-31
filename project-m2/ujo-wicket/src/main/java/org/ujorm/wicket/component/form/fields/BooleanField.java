@@ -19,27 +19,28 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 
 /**
  * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
-public class BooleanField extends Field {
+public class BooleanField<T extends Boolean> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
 
-    public BooleanField(Key key) {
+    public <U extends Ujo> BooleanField(Key<U,T> key) {
         super(key.getName(), key, null);
     }
 
-    public BooleanField(String componentId, Key key, String cssClass) {
+    public <U extends Ujo> BooleanField(String componentId, Key<U,T> key, String cssClass) {
         super(componentId, key, cssClass);
     }
 
     /** Create Form inputComponent */
     @Override
-    protected FormComponent createInput(String componentId, IModel model) {
-        final CheckBox result = new CheckBox(componentId, model);
+    protected FormComponent createInput(String componentId, IModel<T> model) {
+        final CheckBox result = new CheckBox(componentId, (IModel) model);
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;

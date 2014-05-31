@@ -21,31 +21,31 @@ import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.validation.IValidator;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.wicket.CssAppender;
 
 /**
  * CheckBox field with a Label including a feedback message.
  * @author Pavel Ponec
  */
-public class DateField extends Field {
+public class DateField<T> extends Field<T> {
     private static final long serialVersionUID = 20130621L;
     /** Default CSS class have got value {@code datepicker} */
     public static final String CSS_DATEPICKER = "datePickerComponent";
 
-    public DateField(Key key) {
+    public <U extends Ujo> DateField(Key<U,T> key) {
         super(key.getName(), key, null);
     }
 
-    public DateField(String componentId, Key key, String cssClass) {
+    public <U extends Ujo> DateField(String componentId, Key<U,T> key, String cssClass) {
         super(componentId, key, cssClass);
     }
 
     /** Create Form inputComponent */
     @Override
     @SuppressWarnings("unchecked")
-    protected FormComponent createInput(String componentId, IModel model) {
+    protected FormComponent createInput(String componentId, IModel<T> model) {
         final DateTextField result = new com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker
                 (componentId, new Model<Date>(), getDatePattern(), createJQueryOptions());
         result.add(new CssAppender(getInputCssClass()));
@@ -62,10 +62,10 @@ public class DateField extends Field {
 
     /** Returns an {@code input} value from model */
     @Override
-    public Object getModelValue() {
-        final Object result = super.getModelValue();
+    public T getModelValue() {
+        final T result = super.getModelValue();
         return getKey().isTypeOf(java.sql.Date.class)
-             ? (result !=null ? new java.sql.Date(((java.util.Date)result).getTime()) : null)
+             ? (T)(result !=null ? new java.sql.Date(((java.util.Date)result).getTime()) : null)
              : result ;
     }
 

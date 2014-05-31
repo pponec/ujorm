@@ -19,20 +19,21 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 
 /**
  * Text field for a password including a feedback message.
  * @author Pavel Ponec
  */
-public class PasswordField extends Field {
+public class PasswordField <T> extends Field<T> {
 
     private static final long serialVersionUID = 20130621L;
 
-    public PasswordField(Key key) {
+    public <U extends Ujo> PasswordField(Key<U,T> key) {
         super(key.getName(), key, null);
     }
 
-    public PasswordField(String componentId, Key key, String cssClass) {
+    public <U extends Ujo> PasswordField(String componentId, Key<U,T> key, String cssClass) {
         super(componentId, key, cssClass);
     }
 
