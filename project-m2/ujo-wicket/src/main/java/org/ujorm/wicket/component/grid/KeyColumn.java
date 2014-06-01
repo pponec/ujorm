@@ -112,7 +112,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     public void populateItem(final Item<ICellPopulator<UJO>> item, final String componentId, final IModel<UJO> rowModel) {
         final UJO ujo = rowModel.getObject();
         final IModel<?> valueModel = createValueModel(ujo);
-        final Component value = createValueCoponent(componentId, valueModel);
+        final Component value = createValueCoponent(componentId, valueModel, ujo);
         appendCssClass(value, ujo);
         item.add(value);
     }
@@ -129,7 +129,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
     }
 
     /** Create the Label for a Value component */
-    protected Component createValueCoponent(final String componentId, final IModel<?> valueModel) {
+    protected Component createValueCoponent(final String componentId, final IModel<?> valueModel, final UJO ujo) {
         return new Label(componentId, valueModel);
     }
 
@@ -141,7 +141,7 @@ public class KeyColumn<UJO extends Ujo, T> extends AbstractColumn<UJO, KeyRing<U
      * @return model
      */
     protected IModel<?> createValueModel(final UJO ujo) {
-        final IModel result = KeyModel.of(ujo, keySerializable.getFirstKey());
+        final IModel<?> result = KeyModel.of(ujo, keySerializable.getFirstKey());
         return result;
     }
 
