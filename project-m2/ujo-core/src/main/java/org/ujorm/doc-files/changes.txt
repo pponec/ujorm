@@ -1,6 +1,15 @@
 The Ujorm release notes
 *******************************
 
+release 1.46 (2014-06-01)
++ CORE: UjoManagerCSV is running with runtime exceptions only
++ CORE: KeyColumn API is extended
++ CORE: performance of the method: Criterion.evaluate(Collection) has been improved for some cases of Criterions
++ ORM : the UjoSequencer have got fixed some prepare statements
++ ORM : the MySqlDialect is fixed for the statement DELETE from multiple tables
++ WICKET: bug fixing and an extended API implementations
++ JavaDoc bug fixing
+
 release 1.45 (2014-03-25)
 + the Ujorm release 1.45 is Java 8.0 ready
 + the method CompositeKey.setValue() creates all missing relations by default
