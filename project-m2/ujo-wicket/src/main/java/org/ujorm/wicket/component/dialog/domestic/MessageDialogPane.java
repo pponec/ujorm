@@ -74,7 +74,7 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
         final MessageDialogPane result = new MessageDialogPane(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
-        //modalWindow.setCookieName("modal-dialog");
+        //modalWindow.setCookieName(componentId + "-modalDialog");
 
         return result;
     }
