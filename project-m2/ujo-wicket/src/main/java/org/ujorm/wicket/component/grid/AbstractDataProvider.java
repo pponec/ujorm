@@ -35,6 +35,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
@@ -73,7 +74,7 @@ import org.ujorm.wicket.component.toolbar.InsertToolbar;
  * </pre>
  * @author Pavel Ponec
  */
-public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataProvider<T, Object> {
+public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataProvider<U, Object> {
     private static final long serialVersionUID = 1L;
     /** Default Datatable ID have got value {@code "datatable"}. */
     public static final String DEFAULT_DATATABLE_ID = "datatable";
@@ -82,11 +83,11 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     /** Data size */
     protected Long size;
     /** Data criterion model for filtering the data resource */
-    protected IModel<Criterion<T>> filter;
+    protected IModel<Criterion<U>> filter;
     /** Data criterion model for select data rows */
-    protected IModel<Criterion<T>> selected;
+    protected IModel<Criterion<U>> selected;
     /** Visible table columns */
-    private List<IColumn<T, ?>> columns = new ArrayList<IColumn<T, ?>>();
+    private List<IColumn<U, ?>> columns = new ArrayList<IColumn<U, ?>>();
     /** Default column sorting for the method {@link #addColumn(org.ujorm.Key) }
      * where the feature is enabled by default
      */
@@ -95,7 +96,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public AbstractDataProvider(@Nonnull IModel<Criterion<T>> criterion) {
+    public AbstractDataProvider(@Nonnull IModel<Criterion<U>> criterion) {
         this(criterion, null);
     }
 
@@ -104,12 +105,12 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * @param defaultSort Default sorting can be assigned optionally
      */
     public AbstractDataProvider
-            ( @Nonnull IModel<Criterion<T>> filter
-            , @Nullable Key<T,?> defaultSort) {
+            ( @Nonnull IModel<Criterion<U>> filter
+            , @Nullable Key<U,?> defaultSort) {
         this.filter = Args.notNull(filter, "The filter is required");
 
         if (defaultSort == null) {
-            KeyRing<T> keys = KeyRing.of((Class<T>)filter.getObject().getDomain());
+            KeyRing<U> keys = KeyRing.of((Class<U>)filter.getObject().getDomain());
             defaultSort =  keys.getFirstKey();
         }
         setSort(defaultSort);
@@ -123,19 +124,19 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * @param order
      * sort order
      */
-    final public void setSort(Key<T, ?> key) {
+    final public void setSort(Key<U, ?> key) {
         super.setSort((KeyRing)KeyRing.of(key), key.isAscending()
                 ? SortOrder.ASCENDING
                 : SortOrder.DESCENDING);
     }
 
     /** Vrací klíč pro řazení */
-    public Key<T,?> getSortKey() {
+    public Key<U,?> getSortKey() {
         final SortParam<Object> sort = getSort();
         if (sort != null) {
             final Object key = getSort().getProperty();
             return key instanceof KeyRing
-            ? ((KeyRing<T>)key).getFirstKey().descending(!sort.isAscending())
+            ? ((KeyRing<U>)key).getFirstKey().descending(!sort.isAscending())
             : null ;
         } else {
             return null;
@@ -146,7 +147,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * Overwrite the method for an optimization.<br>
      */
 
-    public abstract Iterator<T> iterator(long first, long count);
+    public abstract Iterator<U> iterator(long first, long count);
 
     /** Method calculate the size using special SQL requst.
      * Overwrite the method for an optimization.<br>
@@ -159,30 +160,37 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     public abstract void detach();
 
     /** Get a domann class */
-    public Class<T> getDomainClass() {
-        return (Class<T>) filter.getObject().getDomain();
+    public Class<U> getDomainClass() {
+        return (Class<U>) filter.getObject().getDomain();
     }
 
     /** Create a model */
     @Override
-    public IModel<T> model(T object) {
+    public IModel<U> model(U object) {
         return new Model((Serializable)object);
     }
 
     /** Add table column */
-    public boolean add(IColumn<T, ?> column) {
+    public boolean add(IColumn<U, ?> column) {
         return columns.add(column);
     }
 
+    /** Add table columns according to column type including CSS class */
+    public void add(KeyList<? super U> columns) {
+        for (Key t : columns) {
+            add(t);
+        }
+    }
+
     /** Add table column according to column type including CSS class */
-    public <V> boolean add(Key<T,V> column, CssAppender cssClass) {
+    public <V> boolean add(Key<U,V> column, CssAppender cssClass) {
         final boolean result = add(column);
         ((KeyColumn)columns.get(columns.size()-1)).setCssClass(cssClass.getCssClass());
         return result;
     }
 
     /** Add table column according to column type */
-    public <V> boolean add(Key<T,V> column) {
+    public <V> boolean add(Key<U,V> column) {
         if (column.isTypeOf(Boolean.class)) {
             return add(KeyColumnBoolean.of(column, isSortingEnabled(column)));
         }
@@ -203,22 +211,22 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     /** The sorting is enabled for a persistent Ujorm Key by default
      * @see #isDefaultColumnSorting()
      */
-    protected boolean isSortingEnabled(final Key<T, ?> column) throws IllegalArgumentException {
+    protected boolean isSortingEnabled(final Key<U, ?> column) throws IllegalArgumentException {
         return defaultColumnSorting;
     }
 
     /** Create AJAX-based DataTable with a {@link #DEFAULT_DATATABLE_ID} */
-    public final <S> DataTable<T,S> createDataTable(final int rowsPerPage) {
+    public final <S> DataTable<U,S> createDataTable(final int rowsPerPage) {
         return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage);
     }
 
     /** Create AJAX-based DataTable */
-    public final <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage) {
+    public final <S> DataTable<U,S> createDataTable(final String id, final int rowsPerPage) {
         return createDataTable(id, rowsPerPage, false);
     }
 
     /** Create AJAX-based DataTable */
-    public final <S> DataTable<T,S> createDataTable(final int rowsPerPage, boolean insertToolbar) {
+    public final <S> DataTable<U,S> createDataTable(final int rowsPerPage, boolean insertToolbar) {
         return createDataTable(DEFAULT_DATATABLE_ID, rowsPerPage, insertToolbar);
     }
 
@@ -228,17 +236,17 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * @param insertToolbar Append a generic toolbar for an insert action.
      * @return Create AJAX-based DataTable
      */
-    public <S> DataTable<T,S> createDataTable(final String id, final int rowsPerPage, boolean insertToolbar) {
-        final DataTable<T,S> result = new DataTable<T,S>(id, (List)columns, this, rowsPerPage) {
-            @Override protected Item<T> newRowItem
+    public <S> DataTable<U,S> createDataTable(final String id, final int rowsPerPage, boolean insertToolbar) {
+        final DataTable<U,S> result = new DataTable<U,S>(id, (List)columns, this, rowsPerPage) {
+            @Override protected Item<U> newRowItem
                     ( final String id
                     , final int index
-                    , final IModel<T> model) {
-                final Item<T> result = new OddEvenItem<T>(id, index, model);
+                    , final IModel<U> model) {
+                final Item<U> result = new OddEvenItem<U>(id, index, model);
 
                 // Mark a selected rows:
                 if (selected != null) {
-                    final Criterion<T> crn = selected.getObject();
+                    final Criterion<U> crn = selected.getObject();
                     if (crn!=null && crn.evaluate(model.getObject())) {
                        result.add(new CssAppender(getCssSelected()));
                     }
@@ -280,13 +288,13 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
     }
 
     /** Transient tableOf columns */
-    public List<IColumn<T, ?>> getColumns() {
+    public List<IColumn<U, ?>> getColumns() {
         return columns;
     }
 
     /** Assign a CSS class to a KeyColumn, if exists */
-    public void setCssClass(final Key<T, ?> key, final String cssClass) {
-        for (IColumn<T, ?> iColumn : columns) {
+    public void setCssClass(final Key<U, ?> key, final String cssClass) {
+        for (IColumn<U, ?> iColumn : columns) {
             if (iColumn instanceof KeyColumn
             && ((KeyColumn) iColumn).getKey().equals(key)) {
                ((KeyColumn) iColumn).setCssClass(cssClass);
@@ -300,7 +308,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * @return the selected
      */
     @Nullable
-    public IModel<Criterion<T>> getSelected() {
+    public IModel<Criterion<U>> getSelected() {
         return selected;
     }
 
@@ -308,7 +316,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * Data criterion model for select data rows
      * @param selected the selected to set
      */
-    public void setSelected(@Nullable IModel<Criterion<T>> selected) {
+    public void setSelected(@Nullable IModel<Criterion<U>> selected) {
         this.selected = selected;
     }
 
@@ -316,7 +324,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * Data criterion model for select data rows
      * @param selected the selected to set
      */
-    public void setSelected(@Nonnull Criterion<T> selected) {
+    public void setSelected(@Nonnull Criterion<U> selected) {
         setSelected(Model.of(selected));
     }
 
@@ -326,7 +334,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * The method is not implemetned by default.
      * @param row Insert one table row
      */
-    public boolean insertRow(T row) {
+    public boolean insertRow(U row) {
         throw new UnsupportedOperationException();
     }
 
@@ -334,7 +342,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * The method is not implemetned by default.
      * @param deleteCondition Remove all row with a condition.
      */
-    public long deleteRow(Criterion<T> deleteCondition) {
+    public long deleteRow(Criterion<U> deleteCondition) {
         throw new UnsupportedOperationException();
     }
 
@@ -343,7 +351,7 @@ public abstract class AbstractDataProvider<T extends Ujo> extends SortableDataPr
      * @param updateCondition Update condition
      * @param updatedRow Updated row
      */
-    public long updateRow(Criterion<T> updateCondition, T updatedRow) {
+    public long updateRow(Criterion<U> updateCondition, U updatedRow) {
         throw new UnsupportedOperationException();
  }
 
