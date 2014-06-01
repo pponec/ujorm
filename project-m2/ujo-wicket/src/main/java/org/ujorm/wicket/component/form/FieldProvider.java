@@ -98,8 +98,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add new field to a repeating view*/
-    public void add(Key key) {
-        Field field;
+    public <T extends Object> void add(Key<U,T> key) {
+        final Field field;
 
         if (key.isTypeOf(Boolean.class)) {
             field = new BooleanField(key);
@@ -129,14 +129,17 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add all fields of  a domain class to the form */
-    public <U extends Ujo> void add(Class<U> domainClass) {
-        final KeyList<U> keyList;
+    public void add(Class<U> domainClass) {
         try {
-            keyList = domainClass.newInstance().readKeys();
+            add(domainClass.newInstance().readKeys());
         } catch (Exception e) {
             throw new IllegalStateException("Can't get keys of the domain " + domainClass, e);
         }
-        for (Key<U, ?> key : keyList) {
+    }
+
+    /** Add all fields */
+    public void add(final KeyList<? super U> fields) {
+        for (Key key : fields) {
             add(key);
         }
     }
