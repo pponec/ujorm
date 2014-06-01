@@ -19,7 +19,7 @@ package org.ujorm;
 import java.util.Collection;
 import org.ujorm.criterion.*;
 
-public interface CriterionProvider<UJO extends Ujo, VALUE> {
+public interface CriterionProvider<U extends Ujo, VALUE> {
 
     /**
      * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
@@ -31,7 +31,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * </ul>
      * @return A new criterion
      */
-    public Criterion<UJO> where
+    public Criterion<U> where
         ( Operator operator
         , VALUE value
         );
@@ -47,7 +47,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * </ul>
      * @return A new criterion
      */
-    public Criterion<UJO> where
+    public Criterion<U> where
         ( Operator operator
         , Key<?,VALUE> value
         );
@@ -62,14 +62,14 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * </ul>
      * @return A the new immutable Criterion
      */
-    public Criterion<UJO> whereEq(VALUE value);
+    public Criterion<U> whereEq(VALUE value);
 
     /**
      * Create a new Criterion where this key value equals the parameter value.
      * @param key Key can be type a direct of indirect (for a relation) key
      * @return A the new immutable Criterion
      */
-    public Criterion<UJO> whereEq(Key<UJO,VALUE> key);
+    public Criterion<U> whereEq(Key<U,VALUE> key);
 
     /**
      * Create new Criterion where this key value is in the one of parameter values.
@@ -77,7 +77,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion.
      */
-    public Criterion<UJO> whereIn
+    public Criterion<U> whereIn
         ( Collection<VALUE> list
         );
 
@@ -87,7 +87,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
      */
-    public Criterion<UJO> whereNotIn
+    public Criterion<U> whereNotIn
         ( Collection<VALUE> list
         );
 
@@ -97,7 +97,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return A the new immutable Criterion
      */
-    public Criterion<UJO> whereIn
+    public Criterion<U> whereIn
         ( VALUE... list
         );
 
@@ -107,29 +107,29 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return A the new immutable Criterion.
      */
-    public Criterion<UJO> whereNotIn
+    public Criterion<U> whereNotIn
         ( VALUE... list
         );
 
     /** Create a new Criterion where this key value is not equals the value
      * @see org.ujorm.criterion.Operator#NOT_EQ */
-    public Criterion<UJO> whereNeq(VALUE value);
+    public Criterion<U> whereNeq(VALUE value);
 
     /** Create a new Criterion where this key is great then the value
      * @see org.ujorm.criterion.Operator#GT */
-    public Criterion<UJO> whereGt(VALUE value);
+    public Criterion<U> whereGt(VALUE value);
 
     /** Create a new Criterion where this key is great or equals the value
      * @see org.ujorm.criterion.Operator#GE */
-    public Criterion<UJO> whereGe(VALUE value);
+    public Criterion<U> whereGe(VALUE value);
 
     /** Create a new Criterion where this key is less then the value
      * @see org.ujorm.criterion.Operator#LT */
-    public Criterion<UJO> whereLt(VALUE value);
+    public Criterion<U> whereLt(VALUE value);
 
     /** Create a new Criterion where this key is less or equals than the value
      * @see org.ujorm.criterion.Operator#LE */
-    public Criterion<UJO> whereLe(VALUE value);
+    public Criterion<U> whereLe(VALUE value);
 
     /**
      * Create a new Criterion where this key is {@code null}.
@@ -141,7 +141,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    public Criterion<UJO> whereNull();
+    public Criterion<U> whereNull();
 
     /**
      * Create a new Criterion where this key is not {@code null}.
@@ -153,7 +153,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @see #whereNull(org.ujorm.Key)
      * @see Operator#NOT_EQ
      */
-    public Criterion<UJO> whereNotNull();
+    public Criterion<U> whereNotNull();
 
     /**
      * Create a new Criterion where this key is not {@code null} and is no empty text or empty list.
@@ -161,7 +161,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    public Criterion<UJO> whereFilled();
+    public Criterion<U> whereFilled();
 
     /**
      * Create a new Criterion where this key is a {@code null} or it is empty string or list.
@@ -169,7 +169,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @see #whereNotNull(org.ujorm.Key)
      * @see Operator#EQ
      */
-    public Criterion<UJO> whereNotFilled();
+    public Criterion<U> whereNotFilled();
 
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
@@ -186,7 +186,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * A substring {@code {0}} will be replaced for the current column name;
      * @see Operator#XSQL
      */
-    public Criterion<UJO> forSql(String sqlCondition);
+    public Criterion<U> forSql(String sqlCondition);
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
      * <ul>
@@ -204,7 +204,7 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @param value a codition value, array, list or an another key
      * @see Operator#XSQL
      */
-    public Criterion<UJO> forSql(String sqlTemplate, VALUE value);
+    public Criterion<U> forSql(String sqlTemplate, VALUE value);
     /** Create a new Criterion for a Native Criterion in SQL statement format.
      * Special features:
      * <ul>
@@ -222,18 +222,18 @@ public interface CriterionProvider<UJO extends Ujo, VALUE> {
      * @param value a codition value, array, list or an another key
      * @see Operator#XSQL
      */
-    public Criterion<UJO> forSqlUnchecked(String sqlTemplate, Object value);
+    public Criterion<U> forSqlUnchecked(String sqlTemplate, Object value);
 
     /** Create a new Criterion for this key where all results will be true (the result is independed on the value).
      *  The method evaluate(ujo) returns TRUE always.
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
-    public Criterion<UJO> forAll();
+    public Criterion<U> forAll();
 
     /** Create a new Criterion for this key where all results will be false (the result is independed on the value).
      *  The  method evaluate(method) returns FALSE always.
      * @param key The parameter is required by Ujorm to location a basic database table and the join relations in case a composed Property
      */
-    public Criterion<UJO> forNone();
+    public Criterion<U> forNone();
 
 }
