@@ -97,7 +97,7 @@ public class UjoEvent<U> {
      * @param action Nullable argument
      * @return The true value for the match.
      */
-    public final boolean isAction(String action) {
+    public final boolean isAction(final String action) {
         return action != null
             && this.action.hashCode() == action.hashCode()
             && this.action.equals(action);
