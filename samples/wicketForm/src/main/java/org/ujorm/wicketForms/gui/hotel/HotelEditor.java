@@ -58,7 +58,7 @@ public class HotelEditor extends EntityDialogPane<Hotel> {
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.edit.title"));
-        //modalWindow.setCookieName("modal-dialog");
+        //modalWindow.setCookieName(componentId + "-modalDialog");
 
         return result;
     }

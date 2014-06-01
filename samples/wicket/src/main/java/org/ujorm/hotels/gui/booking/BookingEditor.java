@@ -105,7 +105,7 @@ public class BookingEditor extends EntityDialogPane<Booking> {
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.booking.title"));
-        //modalWindow.setCookieName("modal-dialog");
+        //modalWindow.setCookieName(componentId + "-modalDialog");
 
         return result;
     }
