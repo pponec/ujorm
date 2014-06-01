@@ -186,8 +186,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Returns the related Field */
-    public <T extends Field> T  getField(Key key) {
-        return (T) fields.get(key.getName());
+    public <F extends Field> F getField(Key<? super U,?> key) {
+        return (F) fields.get(key.getName());
     }
 
     /** Returns the last field or throw an exception
@@ -322,8 +322,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Set an enabled attribute for a required filed.
      * If the field is not found, the statement is ignored */
-    public void setEnabled(final Key<U, ?> key, boolean enabled) {
-        final Field field = getField(key);
+    public <T extends Object>void setEnabled(final Key<U,T> key, boolean enabled) {
+        final Field<T> field = getField(key);
         if (field != null) {
             field.setEnabled(enabled);
         }
