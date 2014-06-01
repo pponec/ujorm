@@ -47,7 +47,7 @@ public class LoginDialog extends EntityDialogPane<Customer> {
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.login.title"));
-        //modalWindow.setCookieName("modal-dialog");
+        //modalWindow.setCookieName(componentId + "-modalDialog");
 
         return result;
     }
