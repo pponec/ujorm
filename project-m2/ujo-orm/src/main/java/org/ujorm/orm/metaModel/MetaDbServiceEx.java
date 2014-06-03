@@ -49,6 +49,15 @@ import static org.ujorm.orm.metaModel.MetaDatabase.*;
 @SuppressWarnings("unchecked")
 public class MetaDbServiceEx extends MetaDbService {
 
+    /** Logger */
+    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDbServiceEx.class);
+    /**
+     * Specifies if default values in DB are allowed. There are many problems
+     * with default value constraints in MSSQL, therefore it's recommended to
+     * not use them. Ujorm provides own mechanism to deal with default values
+     * and INSERTs and UPDATEs containt default values explicitly.
+     */
+    public static boolean DEFAULT_VALUES_IN_DB_ALLOWED = false;
     public static final String COLUMN_DEF_DEFAULT_VALUE = "COLUMN_DEF";
     public static final String COLUMN_DEF_NAME = "COLUMN_NAME";
     public static final String COLUMN_DEF_NULLABLE = "NULLABLE";
@@ -60,9 +69,6 @@ public class MetaDbServiceEx extends MetaDbService {
     //
     private static final String MYSQL_PRIMARY_KEY_NAME = "PRIMARY";
     private static final String ID_COLUMN_NAME = "ID";
-    //
-    /** Logger */
-    private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(MetaDbServiceEx.class);
 
     public void checkDBStructure(Session session, boolean repairDB) throws Exception {
         LOGGER.log(INFO, "UJORM checking db structure...");
@@ -142,13 +148,14 @@ public class MetaDbServiceEx extends MetaDbService {
         }
 
     }
-    
+
     private List<String> checkTables(Connection conn, List<MetaTable> mappedTables, boolean repairDB) throws Exception {
         ArrayList<String> messages = new ArrayList<String>();
         // 1) CHECK table exists
+        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for existence ...");
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
-                // Effective: Enable database modifications for the 'Repair mode' even if it is forbiden.
+                // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
                 if (repairDB) {
                     mappedTable.clearReadOnly();
                     MetaTable.ORM2DLL_POLICY.setValue(mappedTable, Orm2ddlPolicy.CREATE_OR_UPDATE_DDL);
@@ -173,6 +180,7 @@ public class MetaDbServiceEx extends MetaDbService {
             }
         }
         // 2) CHECK table missing columns
+        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for missing columns ...");
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
@@ -182,6 +190,7 @@ public class MetaDbServiceEx extends MetaDbService {
             }
         }
         // 3) CHECK table columns properties
+        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for columns properies ...");
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
@@ -191,6 +200,7 @@ public class MetaDbServiceEx extends MetaDbService {
             }
         }
         // 4) CHECK table primary keys
+        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for missing columns ...");
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
@@ -200,6 +210,7 @@ public class MetaDbServiceEx extends MetaDbService {
             }
         }
         // 5) CHECK table foreign keys
+        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for foreign keys ...");
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
@@ -209,6 +220,7 @@ public class MetaDbServiceEx extends MetaDbService {
             }
         }
         // 6) CHECK table for indexes
+        LOGGER.log(INFO, "Checking tables (" + mappedTables.size() + ") for indexes ...");
         for (MetaTable mappedTable : mappedTables) {
             if (mappedTable.isTable()) { // jen reálné tabulky
                 // pro repair mode je treba nastavit povoleni uprav i pokud je jinak zakazano
@@ -315,7 +327,7 @@ public class MetaDbServiceEx extends MetaDbService {
                 }
             }
 
-            if (mappedColumn.hasDefaultValue()) {
+            if (DEFAULT_VALUES_IN_DB_ALLOWED && mappedColumn.hasDefaultValue()) {
                 LOGGER.log(INFO, "    Checking column default constraint name ...");
                 Map<String, String> constraintInfo = (Map<String, String>) dbColumn.get(COLUMN_DEF_VALUE_CONSTRAINTS);
                 if (constraintInfo != null) {
@@ -362,7 +374,7 @@ public class MetaDbServiceEx extends MetaDbService {
                         dbDefaultValue = new BigDecimal(tempValue);
                     }
                 }
-                
+
                 boolean defaultValuesEqual = true;
                 // mozne problemy:
                 // 1) mapped == null AND db != null
@@ -379,7 +391,7 @@ public class MetaDbServiceEx extends MetaDbService {
                     BigDecimal decimalMapped = (BigDecimal) mappedDefaultValue;
                     defaultValuesEqual = decimalDb.compareTo(decimalMapped) == 0;
                 }
-                
+
                 if (!defaultValuesEqual) {
                     // !!! MISSING OR DIFFERENT DEFAULT VALUE
                     String msg = "    MISSING or DIFFERENT default value on column '" + columnName + "' in table '" + mappedTable.getAlias() + "': Mapped=" + mappedDefaultValue + ", Received=" + dbDefaultValue;
@@ -451,6 +463,7 @@ public class MetaDbServiceEx extends MetaDbService {
         Object dbDefaultValue = dbColumn.get(COLUMN_DEF_DEFAULT_VALUE);
         Object dbColumnName = dbColumn.get(COLUMN_DEF_NAME);
 
+        // specific for MySQL - 'id' column is allowed to have default value
         if (isDialectTypeMySql() && dbColumnName.equals("id") && dbDefaultValue != null && dbDefaultValue.equals("0")) {
             return true;
         }
@@ -613,10 +626,17 @@ public class MetaDbServiceEx extends MetaDbService {
                 getDialect().printFullTableName(mappedTable, sql);
                 tableSequenceIds.add(getDialect().printFullTableName(mappedTable, true, new StringBuilder()).toString());
                 // get from db
-                ResultSet res = conn.prepareStatement(sql.toString()).executeQuery();
-                res.next();
-                Long tableMaxID = res.getLong(1);
-                LOGGER.log(INFO, "  Table max id = " + tableMaxID);
+                PreparedStatement statement = conn.prepareStatement(sql.toString());
+                ResultSet rs = null;
+                Long tableMaxID = null;
+                try {
+                    rs = statement.executeQuery();
+                    rs.next();
+                    tableMaxID = rs.getLong(1);
+                    LOGGER.log(INFO, "  Table max id = " + tableMaxID);
+                } finally {
+                    MetaDatabase.close(null, statement, rs, true);
+                }
 
                 // UJORM MAX ID
                 long[] sqMap = mappedTable.getSequencer().getCurrentDBSequence(conn, null);
@@ -638,9 +658,13 @@ public class MetaDbServiceEx extends MetaDbService {
                         LOGGER.log(INFO, msg);
 
                         String tableName = getDialect().printFullTableName(mappedTable, true, new StringBuilder()).toString();
-                        PreparedStatement statement = conn.prepareStatement(sql.toString());
-                        statement.setString(1, tableName);
-                        statement.executeUpdate();
+                        PreparedStatement statement2 = conn.prepareStatement(sql.toString());
+                        try {
+                            statement2.setString(1, tableName);
+                            statement2.executeUpdate();
+                        } finally {
+                            MetaDatabase.close(null, statement2, null, true);
+                        }
 
                         mappedTable.getSequencer().reset();
                     }
@@ -659,9 +683,13 @@ public class MetaDbServiceEx extends MetaDbService {
                         LOGGER.log(INFO, msg);
 
                         String tableName = getDialect().printFullTableName(mappedTable, true, new StringBuilder()).toString();
-                        PreparedStatement statement = conn.prepareStatement(sql.toString());
-                        statement.setString(1, tableName);
-                        statement.executeUpdate();
+                        PreparedStatement statement2 = conn.prepareStatement(sql.toString());
+                        try {
+                            statement2.setString(1, tableName);
+                            statement2.executeUpdate();
+                        } finally {
+                            MetaDatabase.close(null, statement2, null, true);
+                        }
 
                         mappedTable.getSequencer().reset();
                     }
@@ -675,25 +703,35 @@ public class MetaDbServiceEx extends MetaDbService {
         StringBuilder sql = new StringBuilder();
         getDialectEx().printSequenceListAllId(findFirstSequencer(), sql);
         // get from db
-        ResultSet res = conn.prepareStatement(sql.toString()).executeQuery();
-        while (res.next()) {
-            String seqTableId = res.getString(1);
-            if (!tableSequenceIds.contains(seqTableId)) {
-                String msg = "  INVALID db sequence '" + seqTableId + "': there is no mapped table for that sequence";
-                LOGGER.log(WARN, msg);
-                messages.add(msg);
-                if (repairDB) {
-                    sql = new StringBuilder();
-                    getDialect().printSequenceDeleteById(findFirstSequencer(), seqTableId, sql);
+        PreparedStatement statement = conn.prepareStatement(sql.toString());
+        ResultSet rs = null;
+        try {
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                String seqTableId = rs.getString(1);
+                if (!tableSequenceIds.contains(seqTableId)) {
+                    String msg = "  INVALID db sequence '" + seqTableId + "': there is no mapped table for that sequence";
+                    LOGGER.log(WARN, msg);
+                    messages.add(msg);
+                    if (repairDB) {
+                        sql = new StringBuilder();
+                        getDialect().printSequenceDeleteById(findFirstSequencer(), seqTableId, sql);
 
-                    msg = "  REPAIR: Deleting invalid sequence '" + seqTableId + "' with SQL:\n" + sql;
-                    LOGGER.log(INFO, msg);
+                        msg = "  REPAIR: Deleting invalid sequence '" + seqTableId + "' with SQL:\n" + sql;
+                        LOGGER.log(INFO, msg);
 
-                    PreparedStatement statement = conn.prepareStatement(sql.toString());
-                    statement.setString(1, seqTableId);
-                    statement.executeUpdate();
+                        PreparedStatement statement2 = conn.prepareStatement(sql.toString());
+                        try {
+                            statement2.setString(1, seqTableId);
+                            statement2.executeUpdate();
+                        } finally {
+                            MetaDatabase.close(null, statement2, null, true);
+                        }
+                    }
                 }
             }
+        } finally {
+            MetaDatabase.close(null, statement, rs, true);
         }
         return messages;
     }
@@ -706,18 +744,22 @@ public class MetaDbServiceEx extends MetaDbService {
         // kontroluje se jen pro MSSQL, v MySQL nemají default hodnoty vlastní názvy
         HashMap<String, HashMap<String, String>> defaultValueConstraints = null;
         if (isDialectTypeMSSql()) {
-            PreparedStatement ps = dmd.getConnection().prepareStatement("SELECT o.name [table], c.name [column], object_name(d.constid) [constraint], cm.text [default_value] FROM sysconstraints d, sysobjects o, syscolumns c, syscomments cm WHERE  (o.id = d.id)   AND (c.id = o.id AND c.colid = d.colid)   AND (cm.id = d.constid)   AND (d.[status] & 5 = 5) AND (o.xtype = 'U')  AND (o.name = ?) ORDER BY [table], [column], [constraint];");
-            ps.setString(1, tableDBName);
-            ResultSet rs = ps.executeQuery();
-            defaultValueConstraints = new HashMap<String, HashMap<String, String>>();
-            while (rs.next()) {
-                String columnName = rs.getString("column");
-                HashMap<String, String> constraintInfo = new HashMap<String, String>();
-                defaultValueConstraints.put(columnName, constraintInfo);
-                constraintInfo.put("constraint", rs.getString("constraint"));
-                constraintInfo.put("default_value", rs.getString("default_value"));
+            PreparedStatement statement = dmd.getConnection().prepareStatement("SELECT o.name [table], c.name [column], object_name(d.constid) [constraint], cm.text [default_value] FROM sysconstraints d, sysobjects o, syscolumns c, syscomments cm WHERE  (o.id = d.id)   AND (c.id = o.id AND c.colid = d.colid)   AND (cm.id = d.constid)   AND (d.[status] & 5 = 5) AND (o.xtype = 'U')  AND (o.name = ?) ORDER BY [table], [column], [constraint];");
+            ResultSet rs = null;
+            try {
+                statement.setString(1, tableDBName);
+                rs = statement.executeQuery();
+                defaultValueConstraints = new HashMap<String, HashMap<String, String>>();
+                while (rs.next()) {
+                    String columnName = rs.getString("column");
+                    HashMap<String, String> constraintInfo = new HashMap<String, String>();
+                    defaultValueConstraints.put(columnName, constraintInfo);
+                    constraintInfo.put("constraint", rs.getString("constraint"));
+                    constraintInfo.put("default_value", rs.getString("default_value"));
+                }
+            } finally {
+                MetaDatabase.close(null, statement, rs, true);
             }
-            rs.close();
         }
 
         boolean catalog = isCatalog();
@@ -802,13 +844,12 @@ public class MetaDbServiceEx extends MetaDbService {
         rs.close();
         return dbTableIndexes;
     }
-    
+
     private boolean isDialectTypeMySql() {
         return getDialect() instanceof MySqlDialect;
     }
-    
+
     private boolean isDialectTypeMSSql() {
         return getDialect() instanceof MSSqlDialect;
     }
-        
 }
