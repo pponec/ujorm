@@ -47,7 +47,7 @@ public class UiValidator<T> implements IValidator<T>, INullAcceptingValidator<T>
      * @param validator Required validator
      * @param key Optional key
      */
-    public UiValidator(Validator validator, Key<Ujo,T> key) {
+    public UiValidator(Validator<T> validator, Key<Ujo,T> key) {
         this(validator, KeyRing.of(key));
     }
 
@@ -56,7 +56,7 @@ public class UiValidator<T> implements IValidator<T>, INullAcceptingValidator<T>
      * @param validator Required validator
      * @param key Optional key
      */
-    public UiValidator(@Nonnull Validator validator, @Nullable KeyRing key) {
+    public UiValidator(@Nonnull Validator<T> validator, @Nullable KeyRing key) {
         this.validator = Args.notNull(validator, "validator");
         this.key = key;
     }
