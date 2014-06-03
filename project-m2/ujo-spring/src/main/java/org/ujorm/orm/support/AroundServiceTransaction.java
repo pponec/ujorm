@@ -22,11 +22,10 @@ import org.ujorm.logger.UjoLoggerFactory;
 import org.ujorm.orm.Session;
 
 /**
- *
+ * ServiceTransaction
  * @author Hampl
  */
-//TODO : multithread testing
-public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
+public class AroundServiceTransaction {
 
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(AroundServiceTransaction.class);
     final private UjoSessionFactory ujoSessionFactory;
@@ -41,36 +40,38 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
     }
 
     public Object aroundFilter(ProceedingJoinPoint call) throws Throwable {
-
-        Exception ex = null;
+        Throwable ex = null;
         Object result = null;
 
-        if (incCalling()) {
-            LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
-            ujoSessionFactory.setAutoTransaction(true);
-            beginTransaction();
-        }
         try {
-            result = doCall(call);
-        } catch (Exception e) {
-            ex = e;
-            getSession().markForRolback();
-        }
-        if (decCalling()) {
-            LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
-            //rolback if there was error
-            if (getSession().isRollbackOnly()) {
-                LOGGER.log(UjoLogger.DEBUG, "Transaction rolling back because it has been marked as rollback-only");
-                rollback();
-                // if exception is not caught send it
-                return doReturn(ex, result);
-            } else {
-                //there was no error
-                commit();
+            if (incCalling()) {
+                LOGGER.log(UjoLogger.TRACE, "Auto transaction registred/started");
+                ujoSessionFactory.setAutoTransaction(true);
+            }
+            try {
+                result = doCall(call);
+            } catch (Throwable e) {
+                ex = e;
+                getSession().markForRolback();
+            }
+        } finally {
+            if (decCalling()) {
+                LOGGER.log(UjoLogger.TRACE, "Auto transaction ending (commit/rollback)");
+                Session session = getSession();
+                //rollback if there was error
+                if (session.isRollbackOnly()) {
+                    LOGGER.log(UjoLogger.DEBUG, "Transaction rolling back because it has been marked as rollback-only");
+                    session.rollback();
+                    // if exception is not caught send it
+                    return doReturn(ex, result);
+                } else {
+                    //there was no error
+                    session.commit();
+                    return doReturn(ex, result);
+                }
+            } else {//this is not las aop call
                 return doReturn(ex, result);
             }
-        } else {//this is not las aop call
-            return doReturn(ex, result);
         }
     }
 
@@ -117,20 +118,7 @@ public class AroundServiceTransaction /*extends AbstractServiceImpl*/ {
         }
     }
 
-    private void beginTransaction() {
-        getSession().beginTransaction();
-    }
-
-    private void rollback() {
-        getSession().rollbackTransaction();
-    }
-
-    private void commit() {
-        getSession().commitTransaction();
-
-    }
-
-    private Object doReturn(Exception ex, Object result) throws Throwable {
+    private Object doReturn(Throwable ex, Object result) throws Throwable {
         if (ex != null) {
             throw ex;
         } else {

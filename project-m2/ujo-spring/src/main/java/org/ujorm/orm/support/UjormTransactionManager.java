@@ -16,17 +16,19 @@
 package org.ujorm.orm.support;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import org.ujorm.logger.UjoLogger;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
+import org.ujorm.logger.UjoLogger;
 import org.ujorm.logger.UjoLoggerFactory;
 
 /**
  *
  * @author hampl
+ * @deprecated Use the {@link org.ujorm.spring.UjormTransactionManager UjormTransactionManager} rather
  */
+@Deprecated
 public class UjormTransactionManager extends AbstractPlatformTransactionManager {
 
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjormTransactionManager.class);
