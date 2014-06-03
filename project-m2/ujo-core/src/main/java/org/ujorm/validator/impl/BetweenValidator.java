@@ -56,13 +56,10 @@ public class BetweenValidator<VALUE extends Comparable> extends AbstractValidato
             final boolean ok = input==null
                     || input.compareTo(min) >= 0
                     && input.compareTo(max) < 0;
-            return !ok ? new ValidationError
+            return !ok ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map
                     ( MIN, min
                     , MAX, max

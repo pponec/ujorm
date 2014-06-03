@@ -35,13 +35,10 @@ public class NotNullValidator<VALUE extends Object> extends AbstractValidator<VA
     /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean failed = input==null;
-            return failed ? new ValidationError
+            return failed ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map())
                     : null;
     }

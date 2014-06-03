@@ -52,13 +52,10 @@ public class TypeValidator<VALUE extends Object> extends AbstractValidator<VALUE
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) throws NullPointerException {
             final boolean ok = input==null
                   || (type != null ? type : key.getType()).isInstance(input);
-            return !ok ? new ValidationError
+            return !ok ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map
                     ( TYPE, (type != null ? type : key.getType())))
                     : null;

@@ -61,13 +61,10 @@ public class ConstantsValidator<VALUE> extends AbstractValidator<VALUE> {
                     || ( forbidden
                     ?  ! set.contains(input)
                     :    set.contains(input) );
-            return !ok ? new ValidationError
+            return !ok ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map
                     ( SET, Collections.unmodifiableSet(set)
                     , FORBIDDEN, forbidden
