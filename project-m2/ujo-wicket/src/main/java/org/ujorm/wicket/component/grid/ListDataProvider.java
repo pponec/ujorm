@@ -15,6 +15,7 @@
  */
 package org.ujorm.wicket.component.grid;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -86,21 +87,24 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     }
 
     /** Assign data resource */
-    public void setRows(List<T> dataRows) {
-        this.dataRows = dataRows;
-        this.filteredRows = null;
-        this.size = null;
+    public void setRows(List<? super T> dataRows) {
+        this.dataRows = (List) dataRows;
+        clearBuffer();
     }
 
     /** Returns original data rows */
+    @Nonnull
     public List<T> getRows() {
-        return this.dataRows;
+        return dataRows != null
+             ? dataRows
+             : Collections.<T>emptyList();
     }
 
     /** Returns a filtered rows and cach the result */
+    @Nonnull
     protected List<T> getFileredRows() {
         if (filteredRows == null) {
-            filteredRows = filter.getObject().evaluate(dataRows);
+            filteredRows = filter.getObject().evaluate(getRows());
         }
         return filteredRows;
     }
@@ -152,9 +156,7 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
         clearBuffer();
     }
 
-    /**
-     * Clear a filterd rows
-     */
+    /** Clear a filterd rows and size */
     protected void clearBuffer() {
         this.filteredRows = null;
         this.size = null;
