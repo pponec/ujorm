@@ -18,25 +18,25 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.ujorm.wicketForms.entity.Booking;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicketForms.entity.Booking;
 import static org.ujorm.wicket.CommonActions.*;
 
 /**
  * The common action panel
  * @author Pavel Ponec
  */
-public class BookActionPanel<T extends Booking> extends Panel {
+public class BookActionPanel<U extends Booking> extends GenericPanel<U> {
 
         /** Default value is the same like the field */
     public static final String BOOKING = "BOOKING";
 
     /** Current row */
-    private T row;
+    private U row;
 
 
-    public BookActionPanel(String id, final T row) {
+    public BookActionPanel(String id, final U row) {
         super(id);
         this.row = row;
         add(createLink(DELETE, true));

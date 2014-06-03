@@ -19,7 +19,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -40,19 +40,19 @@ import org.ujorm.wicket.component.grid.UjoDataProvider;
 import org.ujorm.wicket.component.toolbar.InsertToolbar;
 import org.ujorm.wicket.component.tools.LocalizedModel;
 import static org.ujorm.wicket.CommonActions.*;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 import static org.ujorm.wicket.component.grid.KeyColumn.*;
-import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
 
 /**
  * Hotel Table
  * @author Pavel Ponec
  */
-public class HotelTable extends Panel {
+public class HotelTable<U extends Hotel> extends GenericPanel<U> {
 
     @SpringBean DbService dbService;
     @SpringBean AuthService authService;
 
-    private Toolbar toolbar = new Toolbar("toolbar");
+    private Toolbar<U> toolbar = new Toolbar("toolbar");
     private HotelEditor editDialog;
     private BookingEditor bookingDialog;
     private MessageDialogPane removeDialog;
@@ -60,7 +60,7 @@ public class HotelTable extends Panel {
     public HotelTable(String id) {
         super(id);
 
-        UjoDataProvider<Hotel> columns = UjoDataProvider.of(toolbar.getCriterion());
+        UjoDataProvider<U> columns = UjoDataProvider.of(toolbar.getCriterion());
         columns.add(Hotel.NAME);
         columns.add(Hotel.CITY.add(City.NAME)); // An example of relations
         columns.add(Hotel.STREET);

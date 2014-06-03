@@ -28,14 +28,14 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
  * Hotel Editor
  * @author Pavel Ponec
  */
-public class HotelEditor extends EntityDialogPane<Hotel> {
+public class HotelEditor<U extends Hotel> extends EntityDialogPane<U> {
     private static final long serialVersionUID = 0L;
 
-    public HotelEditor(ModalWindow modalWindow, IModel<Hotel> model) {
+    public HotelEditor(ModalWindow modalWindow, IModel<U> model) {
         super(modalWindow, model);
 
         // Create form fields:
-        FieldProvider fields = getFields(); // optional statement
+        FieldProvider<U> fields = getFields(); // optional statement
         fields.add(Hotel.NAME);
         fields.add(Hotel.CITY, City.NAME, City.ID.forAll());
         fields.add(Hotel.STREET);

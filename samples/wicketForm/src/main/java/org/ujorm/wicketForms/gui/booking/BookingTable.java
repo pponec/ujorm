@@ -17,32 +17,28 @@ package org.ujorm.wicketForms.gui.booking;
 
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.core.KeyRing;
 import org.ujorm.criterion.Criterion;
-import org.ujorm.wicketForms.entity.Booking;
-import org.ujorm.wicketForms.entity.City;
-import org.ujorm.wicketForms.entity.Customer;
-import org.ujorm.wicketForms.entity.Hotel;
-import org.ujorm.wicketForms.gui.booking.action.BookActionPanel;
-import org.ujorm.wicketForms.services.DbService;
 import org.ujorm.wicket.UjoEvent;
 import org.ujorm.wicket.component.dialog.domestic.MessageDialogPane;
 import org.ujorm.wicket.component.grid.KeyColumn;
-import org.ujorm.wicket.component.grid.UjoDataProvider;
 import org.ujorm.wicket.component.tools.LocalizedModel;
+import org.ujorm.wicketForms.entity.Booking;
+import org.ujorm.wicketForms.gui.booking.action.BookActionPanel;
+import org.ujorm.wicketForms.services.DbService;
 import static org.ujorm.wicket.CommonActions.*;
-import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
+import static org.ujorm.wicket.component.grid.AbstractDataProvider.DEFAULT_DATATABLE_ID;
 
 /**
  * BookingTable
  * @author Pavel Ponec
  */
-public class BookingTable extends Panel {
+public class BookingTable<U extends Booking> extends GenericPanel<U> {
 
     @SpringBean DbService dbService;
     private MessageDialogPane removeDialog;

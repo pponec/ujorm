@@ -20,7 +20,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -45,7 +45,7 @@ import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
  * Customer Panel
  * @author Pavel Ponec
  */
-public class CustomerTable extends Panel {
+public class CustomerTable<U extends Customer> extends GenericPanel<U> {
 
     @SpringBean private DbService dbService;
     @SpringBean private AuthService authService;
@@ -76,8 +76,8 @@ public class CustomerTable extends Panel {
     }
 
     /** Create a criterion for the table */
-    private IModel<Criterion<Customer>> getCriterion() {
-        return Model.of(authService.isAdmin()
+    private IModel<Criterion<? super U>> getCriterion() {
+        return new Model(authService.isAdmin()
              ? Customer.ACTIVE.forAll()
              : Customer.ACTIVE.whereEq(true));
     }
@@ -127,8 +127,8 @@ public class CustomerTable extends Panel {
     }
 
     /** Create action column */
-    private AbstractColumn<Customer, KeyRing<Customer>> createActionColumn() {
-        return new KeyColumn<Customer, Integer>(KeyRing.of(Customer.ID), null) {
+    private AbstractColumn<U, KeyRing<U>> createActionColumn() {
+        return new KeyColumn(KeyRing.of(Customer.ID), null) {
             @Override
             public void populateItem(Item item, String componentId, IModel model) {
                 final Customer customer = (Customer) model.getObject();
@@ -146,23 +146,6 @@ public class CustomerTable extends Panel {
     /** Create a customer edit form */
     private void createCustomForm(final String id, final Form form) {
         FieldProvider<Customer> fields = new FieldProvider(id);
-
-        fields.add(Customer.LOGIN);
-        fields.add(Customer.PASSWORD);
-        fields.add(Customer.TITLE);
-        fields.add(Customer.FIRSTNAME);
-        fields.add(Customer.SURNAME);
-        fields.add(Customer.EMAIL);
-        fields.add(Customer.ADMIN);
-        fields.add(Customer.ACTIVE);
-        form.add(fields.getRepeatingView());
-
-        fields.setDomain(new Customer());
-    }
-
-    /** Create a customer edit form */
-    private void createBookingTable(final Form form) {
-        FieldProvider<Customer> fields = new FieldProvider("fields");
 
         fields.add(Customer.LOGIN);
         fields.add(Customer.PASSWORD);

@@ -18,7 +18,7 @@ package org.ujorm.hotels.gui.customer.action;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.services.AuthService;
@@ -29,7 +29,7 @@ import static org.ujorm.wicket.CommonActions.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public class CustActionPanel<T extends Customer> extends Panel {
+public class CustActionPanel<T extends Customer> extends GenericPanel<T> {
 
     @SpringBean
     private AuthService authService;

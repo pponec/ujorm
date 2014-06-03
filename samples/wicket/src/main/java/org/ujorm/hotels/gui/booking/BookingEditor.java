@@ -34,7 +34,7 @@ import static org.ujorm.Validator.Build.*;
  * Booking Editor
  * @author Pavel Ponec
  */
-public class BookingEditor extends EntityDialogPane<Booking> {
+public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
     private static final long serialVersionUID = 0L;
 
     /** Default value is the same like the field */
@@ -42,7 +42,7 @@ public class BookingEditor extends EntityDialogPane<Booking> {
 
     @SpringBean AuthService authService;
 
-    public BookingEditor(ModalWindow modalWindow, IModel<Booking> model) {
+    public BookingEditor(ModalWindow modalWindow, IModel<U> model) {
         super(modalWindow, model);
 
         // Editable fields:

@@ -28,12 +28,12 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
  * Customer Editor
  * @author Pavel Ponec
  */
-public class CustomerEditor extends EntityDialogPane<Customer> {
+public class CustomerEditor<U extends Customer> extends EntityDialogPane<U> {
     private static final long serialVersionUID = 0L;
 
     @SpringBean private AuthService authService;
 
-    public CustomerEditor(ModalWindow modalWindow, IModel<Customer> model) {
+    public CustomerEditor(ModalWindow modalWindow, IModel<U> model) {
         super(modalWindow, model);
 
         // Editable fields:

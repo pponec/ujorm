@@ -19,7 +19,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -47,16 +47,16 @@ import static org.ujorm.wicket.component.grid.KeyColumn.*;
  * Hotel Table
  * @author Pavel Ponec
  */
-public class HotelTable extends Panel {
+public class HotelTable<U extends Hotel> extends GenericPanel<U> {
 
     @SpringBean DbService dbService;
     @SpringBean AuthService authService;
 
-    private Toolbar toolbar = new Toolbar("toolbar");
+    private Toolbar<U> toolbar = new Toolbar<U>("toolbar");
     private HotelEditor editDialog;
     private BookingEditor bookingDialog;
     private MessageDialogPane removeDialog;
-    private ListDataProvider<Hotel> columns;
+    private ListDataProvider<U> columns;
 
     public HotelTable(String id) {
         super(id);

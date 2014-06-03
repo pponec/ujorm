@@ -18,7 +18,7 @@ package org.ujorm.hotels.gui.customer;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -43,7 +43,7 @@ import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
  * Customer Panel
  * @author Pavel Ponec
  */
-public class CustomerTable extends Panel {
+public class CustomerTable<U extends Customer> extends GenericPanel<U> {
 
     @SpringBean private DbService dbService;
     @SpringBean private AuthService authService;
@@ -55,7 +55,7 @@ public class CustomerTable extends Panel {
     public CustomerTable(String id) {
         super(id);
 
-        UjoDataProvider<Customer> columns = UjoDataProvider.of(getCriterion());
+        UjoDataProvider<U> columns = UjoDataProvider.of(getCriterion());
         columns.add(Customer.LOGIN);
         columns.add(Customer.TITLE);
         columns.add(Customer.FIRSTNAME);
@@ -74,8 +74,8 @@ public class CustomerTable extends Panel {
     }
 
     /** Create a criterion for the table */
-    private IModel<Criterion<Customer>> getCriterion() {
-        return Model.of(authService.isAdmin()
+    private IModel<Criterion<? super U>> getCriterion() {
+        return new Model(authService.isAdmin()
              ? Customer.ACTIVE.forAll()
              : Customer.ACTIVE.whereEq(true));
     }
