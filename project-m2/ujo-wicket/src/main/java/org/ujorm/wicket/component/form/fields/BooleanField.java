@@ -15,11 +15,16 @@
  */
 package org.ujorm.wicket.component.form.fields;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.ujorm.Key;
 import org.ujorm.Ujo;
+import org.ujorm.wicket.component.form.FieldEvent;
 
 /**
  * CheckBox field with a Label including a feedback message.
@@ -44,5 +49,21 @@ public class BooleanField<T extends Boolean> extends Field<T> {
         result.setEnabled(isEnabled());
         result.setLabel(createLabelModel());
         return result;
+    }
+
+    /** Create an "onchange" event */
+    @Override
+    public void onChange(final String action) {
+        addBehaviour(createChangeBehaviour(action, "onchange"));
+    }
+
+    /** Create an AjaxFormComponentUpdatingBehavior with no delay. */
+    @Override
+    protected AjaxEventBehavior createChangeBehaviour(final String action, final String jsEvent) {
+        return new AjaxFormComponentUpdatingBehavior(jsEvent) {
+            @Override protected void onUpdate(AjaxRequestTarget target) {
+                send(BooleanField.this, Broadcast.BREADTH, new FieldEvent(action, key, target));
+            }
+        };
     }
 }
