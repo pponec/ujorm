@@ -282,8 +282,9 @@ public class FieldProvider<U extends Ujo> implements Serializable {
             final Object newValue = getValue(k);
             if (!k.equals(domain, newValue)) {
                 k.setValue(domain, newValue);
-            } else if (k.getValidator()!=null) {
-                k.getValidator().checkValue(newValue, k, domain);
+            //  Some fields can be inactive or hidden in the GUI:
+            //  } else if (k.getValidator()!=null) {
+            //  k.getValidator().checkValue(newValue, k, domain);
             }
         }
         return domain;

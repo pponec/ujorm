@@ -17,6 +17,7 @@
 package org.ujorm.wicket.component.form.fields;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.apache.wicket.AttributeModifier;
@@ -151,15 +152,21 @@ public class Field<T> extends GenericPanel<T> {
     /** Validator getter */
     @Nonnull
     public List<IValidator<? super T>> getValidators() {
-        return input.getValidators();
+        if (validators != null) {
+            return validators;
+        }
+        if (input != null) {
+            return input.getValidators();
+        }
+        return Collections.emptyList();
     }
 
     /** Validator setter */
     public Field addValidator(IValidator<T> validator) {
-        if (validators==null) {
+        if (validators == null) {
             validators = new ArrayList<IValidator<? super T>>();
-            validators.add(validator);
         }
+        validators.add(validator);
         return this;
     }
 
