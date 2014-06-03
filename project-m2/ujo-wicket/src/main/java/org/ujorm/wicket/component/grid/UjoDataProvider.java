@@ -64,7 +64,7 @@ import org.ujorm.wicket.OrmSessionProvider;
  * </pre>
  * @author Pavel Ponec
  */
-public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
+public class UjoDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     private static final long serialVersionUID = 1L;
     /** OrmSession */
     private OrmSessionProvider ormSession;
@@ -76,7 +76,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public UjoDataProvider(IModel<Criterion<T>> criterion) {
+    public UjoDataProvider(IModel<Criterion<? super U>> criterion) {
         this(criterion, null);
     }
 
@@ -84,7 +84,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
      * @param criterion Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public UjoDataProvider(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
+    public UjoDataProvider(IModel<Criterion<? super U>> criterion, Key<? super U,?> defaultSort) {
         super(criterion, defaultSort);
         this.ormSession = new OrmSessionProvider();
     }
@@ -93,13 +93,13 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
      * Overwrite the method for an optimization.<br>
      */
     @Override
-    public Iterator<T> iterator(long first, long count) {
+    public Iterator<U> iterator(long first, long count) {
         Args.isTrue(count <= Integer.MAX_VALUE
                 , "The argument '%s' have got limit %s but the current value is %s"
                 , "count"
                 , Integer.MAX_VALUE
                 , count);
-        Query<T> query = createQuery(filter.getObject())
+        Query<U> query = createQuery(filter.getObject())
                 .setLimit((int) count, first)
                 .addOrderBy(getSortKey());
         fetchDatabaseColumns(query);
@@ -132,7 +132,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
     }
 
     /** Create default Query */
-    protected Query<T> createQuery(Criterion<T> criterion) {
+    protected Query<U> createQuery(Criterion<U> criterion) {
         return getOrmSession().createQuery(criterion);
     }
 
@@ -141,7 +141,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
      * @see #isDefaultColumnSorting()
      */
     @Override
-    protected boolean isSortingEnabled(final Key<T, ?> column) throws IllegalArgumentException {
+    protected boolean isSortingEnabled(final Key<U, ?> column) throws IllegalArgumentException {
         return super.isSortingEnabled(column)
             && getOrmSession().getHandler().findColumnModel(column, false) != null;
     }
@@ -156,7 +156,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
      * so it can be a performance problem in some cases.
      * @see #isFetchDatabaseColumns()
      */
-    protected void fetchDatabaseColumns(Query<T> query) {
+    protected void fetchDatabaseColumns(Query<U> query) {
         if (!fetchDatabaseColumns) {
             return; // Fetching is disabled
         }
@@ -174,9 +174,9 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
             keys.add(c.getKey());
         }
 
-        for (IColumn<T, ?> iColumn : getColumns()) {
+        for (IColumn<U, ?> iColumn : getColumns()) {
             if (iColumn instanceof KeyColumn) {
-                Key<T,?> key = ((KeyColumn) iColumn).getKey();
+                Key<U,?> key = ((KeyColumn) iColumn).getKey();
                 if (key.isComposite()
                 && ((CompositeKey)key).getCompositeCount() > 1
                 && handler.findColumnModel(key) != null) {
@@ -189,7 +189,7 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
 
     /** Add sorting to a database Query,
      * an empty method causes a natural sorting from database */
-    protected void sortDatabaseQuery(Query<T> query) {
+    protected void sortDatabaseQuery(Query<U> query) {
         final Key sortKey = getSortKey();
         if (sortKey != null) {
             query.addOrderBy(sortKey);
@@ -218,23 +218,23 @@ public class UjoDataProvider<T extends OrmUjo> extends AbstractDataProvider<T> {
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<? super T>> criterion, Key<? super T,?> defaultSort) {
         return new UjoDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<? super T>> criterion) {
         return new UjoDataProvider<T>(criterion, null);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
-        return new UjoDataProvider<T>(Model.of(criterion), defaultSort);
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<? super T> criterion, Key<? super T,?> defaultSort) {
+        return new UjoDataProvider<T>(new Model(criterion), defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
-        return new UjoDataProvider<T>(Model.of(criterion), null);
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<? super T> criterion) {
+        return new UjoDataProvider<T>(new Model(criterion), null);
     }
 
 }

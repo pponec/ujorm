@@ -61,19 +61,19 @@ import org.ujorm.criterion.Criterion;
  * </pre>
  * @author Pavel Ponec
  */
-public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
+public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     private static final long serialVersionUID = 1L;
     /** Original row list */
-    private List<T> dataRows;
+    private List<U> dataRows;
     /** Filtered list rows */
-    private List<T> filteredRows;
+    private List<U> filteredRows;
     /** Sort request */
     private boolean sortRequest;
 
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public ListDataProvider(IModel<Criterion<T>> criterion) {
+    public ListDataProvider(IModel<Criterion<? super U>> criterion) {
         this(criterion, null);
     }
 
@@ -81,28 +81,28 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
      * @param filter Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public ListDataProvider(IModel<Criterion<T>> filter, Key<T,?> defaultSort) {
+    public ListDataProvider(IModel<Criterion<? super U>> filter, Key<? super U,?> defaultSort) {
         super(filter, defaultSort);
         this.sortRequest = defaultSort != null;
     }
 
     /** Assign data resource */
-    public void setRows(List<? super T> dataRows) {
+    public void setRows(List<? super U> dataRows) {
         this.dataRows = (List) dataRows;
         clearBuffer();
     }
 
     /** Returns original data rows */
     @Nonnull
-    public List<T> getRows() {
+    public List<U> getRows() {
         return dataRows != null
              ? dataRows
-             : Collections.<T>emptyList();
+             : Collections.<U>emptyList();
     }
 
     /** Returns a filtered rows and cach the result */
     @Nonnull
-    protected List<T> getFileredRows() {
+    protected List<U> getFileredRows() {
         if (filteredRows == null) {
             filteredRows = filter.getObject().evaluate(getRows());
         }
@@ -113,7 +113,7 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
      * Overwrite the method for an optimization.<br>
      */
     @Override
-    public Iterator<T> iterator(long first, long count) {
+    public Iterator<U> iterator(long first, long count) {
         Args.isTrue(count <= Integer.MAX_VALUE
                 , "The argument '%s' have got limit %s but the current value is %s"
                 , "first"
@@ -125,7 +125,7 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
                 , Integer.MAX_VALUE
                 , count);
 
-        final List<T> rows = getFileredRows();
+        final List<U> rows = getFileredRows();
 
         // Sort:
         if (sortRequest) {
@@ -168,7 +168,7 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
      * @param row Insert the one table row
      */
     @Override
-    public boolean insertRow(@Nonnull final T row) {
+    public boolean insertRow(@Nonnull final U row) {
         clearBuffer();
         return getRows().add(row);
     }
@@ -177,11 +177,11 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
      * @param deleteCondition Remove all row with a condition.
      */
     @Override
-    public long deleteRow(@Nonnull final Criterion<T> deleteCondition) {
+    public long deleteRow(@Nonnull final Criterion<? super U> deleteCondition) {
         long result = 0;
-        final List<T> rows = getRows();
+        final List<U> rows = getRows();
         for (int i = rows.size() - 1; i >= 0; i--) {
-            final T row = rows.get(i);
+            final U row = rows.get(i);
             if (deleteCondition.evaluate(row)) {
                 rows.remove(i);
                 ++result;
@@ -196,11 +196,11 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
      * @param row Updated row
      */
     @Override
-    public long updateRow(@Nonnull final Criterion<T> updateCondition, @Nonnull final T updatedRow) {
+    public long updateRow(@Nonnull final Criterion<? super U> updateCondition, @Nonnull final U updatedRow) {
         long result = 0;
-        final List<T> rows = getRows();
+        final List<U> rows = getRows();
         for (int i = rows.size() - 1; i >= 0; i--) {
-            final T row = rows.get(i);
+            final U row = rows.get(i);
             if (updateCondition.evaluate(row)) {
                 rows.set(i, updatedRow);
                 ++result;
@@ -213,22 +213,22 @@ public class ListDataProvider<T extends Ujo> extends AbstractDataProvider<T> {
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<T>> criterion, Key<T,?> defaultSort) {
+    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<? super T>> criterion, Key<? super T,?> defaultSort) {
         return new ListDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<T>> criterion) {
+    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<? super T>> criterion) {
         return new ListDataProvider<T>(criterion, null);
     }
 
     /** Factory for the class */
-    public static <T extends Ujo> ListDataProvider<T> of(Criterion<T> criterion, Key<T,?> defaultSort) {
-        return new ListDataProvider<T>(Model.of(criterion), defaultSort);
+    public static <T extends Ujo> ListDataProvider<T> of(Criterion<T> criterion, Key<? super T,?> defaultSort) {
+        return new ListDataProvider<T>(new Model(criterion), defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends Ujo> ListDataProvider<T> of(Criterion<T> criterion) {
-        return new ListDataProvider<T>(Model.of(criterion), null);
+    public static <T extends Ujo> ListDataProvider<T> of(Criterion<? super T> criterion) {
+        return new ListDataProvider<T>(new Model(criterion), null);
     }
 }

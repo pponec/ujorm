@@ -96,7 +96,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public AbstractDataProvider(@Nonnull IModel<Criterion<U>> criterion) {
+    public AbstractDataProvider(@Nonnull IModel<Criterion<? super U>> criterion) {
         this(criterion, null);
     }
 
@@ -105,9 +105,9 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param defaultSort Default sorting can be assigned optionally
      */
     public AbstractDataProvider
-            ( @Nonnull IModel<Criterion<U>> filter
-            , @Nullable Key<U,?> defaultSort) {
-        this.filter = Args.notNull(filter, "The filter is required");
+            ( @Nonnull IModel<Criterion<? super U>> filter
+            , @Nullable Key<? super U,?> defaultSort) {
+        this.filter = (IModel) Args.notNull(filter, "The filter is required");
 
         if (defaultSort == null) {
             KeyRing<U> keys = KeyRing.of((Class<U>)filter.getObject().getDomain());
@@ -124,7 +124,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param order
      * sort order
      */
-    final public void setSort(Key<U, ?> key) {
+    final public void setSort(Key<? super U, ?> key) {
         super.setSort((KeyRing)KeyRing.of(key), key.isAscending()
                 ? SortOrder.ASCENDING
                 : SortOrder.DESCENDING);
@@ -171,8 +171,8 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     }
 
     /** Add table column */
-    public boolean add(IColumn<U, ?> column) {
-        return columns.add(column);
+    public boolean add(IColumn<? super U, ?> column) {
+        return columns.add((IColumn)column);
     }
 
     /** Add table columns according to column type including CSS class */
@@ -183,22 +183,22 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     }
 
     /** Add table column according to column type including CSS class */
-    public <V> boolean add(Key<U,V> column, CssAppender cssClass) {
+    public <V> boolean add(Key<? super U,V> column, CssAppender cssClass) {
         final boolean result = add(column);
         ((KeyColumn)columns.get(columns.size()-1)).setCssClass(cssClass.getCssClass());
         return result;
     }
 
     /** Add table column according to column type */
-    public <V> boolean add(Key<U,V> column) {
+    public <V> boolean add(Key<? super U,V> column) {
         if (column.isTypeOf(Boolean.class)) {
-            return add(KeyColumnBoolean.of(column, isSortingEnabled(column)));
+            return add(KeyColumnBoolean.of(column, isSortingEnabled((Key) column)));
         }
         if (column.isTypeOf(Number.class)) {
-            return add(KeyColumn.of(column, isSortingEnabled(column), "number"));
+            return add(KeyColumn.of(column, isSortingEnabled((Key)column), "number"));
         }
         else {
-            return add(KeyColumn.of(column, isSortingEnabled(column), null));
+            return add(KeyColumn.of(column, isSortingEnabled((Key)column), null));
         }
     }
 
@@ -293,7 +293,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     }
 
     /** Assign a CSS class to a KeyColumn, if exists */
-    public void setCssClass(final Key<U, ?> key, final String cssClass) {
+    public void setCssClass(final Key<? super U, ?> key, final String cssClass) {
         for (IColumn<U, ?> iColumn : columns) {
             if (iColumn instanceof KeyColumn
             && ((KeyColumn) iColumn).getKey().equals(key)) {
@@ -316,16 +316,16 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * Data criterion model for select data rows
      * @param selected the selected to set
      */
-    public void setSelected(@Nullable IModel<Criterion<U>> selected) {
-        this.selected = selected;
+    public void setSelected(@Nullable IModel<Criterion<? super U>> selected) {
+        this.selected = (IModel) selected;
     }
 
     /**
      * Data criterion model for select data rows
      * @param selected the selected to set
      */
-    public void setSelected(@Nonnull Criterion<U> selected) {
-        setSelected(Model.of(selected));
+    public void setSelected(@Nonnull Criterion<? super U> selected) {
+        setSelected(new Model(selected));
     }
 
     // --------- CRUD support ---------
@@ -342,7 +342,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * The method is not implemetned by default.
      * @param deleteCondition Remove all row with a condition.
      */
-    public long deleteRow(Criterion<U> deleteCondition) {
+    public long deleteRow(Criterion<? super U> deleteCondition) {
         throw new UnsupportedOperationException();
     }
 
@@ -351,7 +351,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param updateCondition Update condition
      * @param updatedRow Updated row
      */
-    public long updateRow(Criterion<U> updateCondition, U updatedRow) {
+    public long updateRow(Criterion<? super U> updateCondition, U updatedRow) {
         throw new UnsupportedOperationException();
  }
 

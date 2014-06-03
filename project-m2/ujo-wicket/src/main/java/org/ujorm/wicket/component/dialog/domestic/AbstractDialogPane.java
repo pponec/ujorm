@@ -20,7 +20,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -36,7 +36,7 @@ import org.ujorm.wicket.UjoEvent;
  * Abstract Message Dialog Content
  * @author Pavel Ponec
  */
-public abstract class AbstractDialogPane<T> extends Panel {
+public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
     private static final long serialVersionUID = 20130621L;
     /** Default logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDialogPane.class);
@@ -55,8 +55,8 @@ public abstract class AbstractDialogPane<T> extends Panel {
     /** Action code */
     private String action = "";
 
-    public AbstractDialogPane(ModalWindow modalWindow, IModel<T> model) {
-        super(modalWindow.getContentId(), model);
+    public AbstractDialogPane(ModalWindow modalWindow, IModel<? super T> model) {
+        super(modalWindow.getContentId(), (IModel) model);
         this.modalWindow = modalWindow;
         this.setOutputMarkupPlaceholderTag(true);
 

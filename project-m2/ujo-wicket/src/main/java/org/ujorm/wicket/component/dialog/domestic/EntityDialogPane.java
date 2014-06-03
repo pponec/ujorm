@@ -26,14 +26,14 @@ import org.ujorm.wicket.component.form.fields.FeedbackField;
  * Entity Dialog Content
  * @author Pavel Ponec
  */
-public class EntityDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
+public class EntityDialogPane<U extends Ujo> extends AbstractDialogPane<U> {
     private static final long serialVersionUID = 20130621L;
 
     /** Input fields provider */
-    protected final FieldProvider<T> fields;
+    protected final FieldProvider<U> fields;
     private FeedbackField feedbackField;
 
-    public EntityDialogPane(ModalWindow modalWindow, IModel<T> model) {
+    public EntityDialogPane(ModalWindow modalWindow, IModel<? super U> model) {
         super(modalWindow, model);
         // Create a feedback:
         repeater.add(feedbackField = new FeedbackField(repeater.newChildId()));
@@ -41,10 +41,10 @@ public class EntityDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
         form.add((fields = new FieldProvider(repeater)).getRepeatingView());
     }
 
-    /** Input fields provider 
+    /** Input fields provider
      * @see #fields
      */
-    public FieldProvider<T> getFields() {
+    public FieldProvider<U> getFields() {
         return fields;
     }
 
@@ -56,14 +56,14 @@ public class EntityDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
      * @param target Target
      */
     @Override
-    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> body, String actionButtonProperty) {
+    public void show(AjaxRequestTarget target, IModel<String> title, IModel<U> body, String actionButtonProperty) {
         fields.setDomain(body.getObject());
         super.show(target, title, body, actionButtonProperty);
     }
 
     /** Returns a base model object / entity */
     @Override
-    public T getBaseModelObject() {
+    public U getBaseModelObject() {
         return fields.getDomain();
     }
 
