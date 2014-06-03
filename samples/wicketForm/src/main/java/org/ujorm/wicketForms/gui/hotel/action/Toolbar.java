@@ -28,7 +28,7 @@ import static org.ujorm.core.UjoManager.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public final class Toolbar extends AbstractToolbar<Hotel> {
+public final class Toolbar<T extends Hotel> extends AbstractToolbar<T> {
     /** Event action */
     public static final String FILTER_ACTION = CommonActions.FILTER;
 

@@ -17,7 +17,7 @@ package org.ujorm.hotels.gui.booking;
 
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -42,7 +42,7 @@ import static org.ujorm.wicket.component.grid.UjoDataProvider.*;
  * BookingTable
  * @author Pavel Ponec
  */
-public class BookingTable extends Panel {
+public class BookingTable<U extends Booking> extends GenericPanel<U> {
 
     @SpringBean DbService dbService;
     private MessageDialogPane removeDialog;
@@ -50,7 +50,7 @@ public class BookingTable extends Panel {
     public BookingTable(String id) {
         super(id);
 
-        UjoDataProvider<Booking> columns = UjoDataProvider.of(getCriterionModel());
+        UjoDataProvider<U> columns = UjoDataProvider.of(getCriterionModel());
         columns.add(Booking.DATE_FROM);
         columns.add(Booking.CUSTOMER.add(Customer.LOGIN));
         columns.add(Booking.HOTEL.add(Hotel.NAME));
@@ -68,8 +68,8 @@ public class BookingTable extends Panel {
     }
 
     /** Create a new criterion model from the {@code dbService} */
-    private Model<Criterion<Booking>> getCriterionModel() {
-        return new Model<Criterion<Booking>>(){
+    private Model<Criterion<? super U>> getCriterionModel() {
+        return new Model<Criterion<? super U>>(){
             @Override public Criterion<Booking> getObject() {
                 return dbService.getBookingPreview();
             }

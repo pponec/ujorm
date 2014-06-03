@@ -19,19 +19,19 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.ujorm.wicketForms.entity.Hotel;
-import org.ujorm.wicketForms.services.AuthService;
 import org.ujorm.wicket.CssAppender;
 import org.ujorm.wicket.UjoEvent;
+import org.ujorm.wicketForms.entity.Hotel;
+import org.ujorm.wicketForms.services.AuthService;
 import static org.ujorm.wicket.CommonActions.*;
 
 /**
  * The common action panel
  * @author Pavel Ponec
  */
-public class ActionPanel<T extends Hotel> extends Panel {
+public class ActionPanel<T extends Hotel> extends GenericPanel<T> {
 
         /** Default value is the same like the field */
     public static final String BOOKING = "BOOKING";

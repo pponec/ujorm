@@ -28,7 +28,7 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
  * Customer Editor
  * @author Pavel Ponec
  */
-public class CustomerEditor extends EntityDialogPane<Customer> {
+public class CustomerEditor<T extends Customer> extends EntityDialogPane<Customer> {
     private static final long serialVersionUID = 0L;
 
     @SpringBean private AuthService authService;

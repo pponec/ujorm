@@ -28,7 +28,7 @@ import static org.ujorm.core.UjoManager.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public final class Toolbar extends AbstractToolbar<Hotel> {
+public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
     /** Event action */
     public static final String FILTER_ACTION = CommonActions.FILTER;
 
@@ -66,7 +66,7 @@ public final class Toolbar extends AbstractToolbar<Hotel> {
                    , searchCity.getValue()));
         }
 
-        getCriterion().setObject(result);
+        getCriterion().setObject((Criterion<U>)result);
     }
 
     /** Default action name is {@link CommonActions#FILTER} */
