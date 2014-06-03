@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2010 Tomas Hampl
+ *  Copyright 2009-2014 Tomas Hampl
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.ujorm.orm.support;
 
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -44,10 +43,12 @@ public class OpenSessionInViewFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-        ujoSessionFactoryFilter.openSession();
-        chain.doFilter(request, response);
-        ujoSessionFactoryFilter.closeSession();
+        try {
+            ujoSessionFactoryFilter.openSession();
+            chain.doFilter(request, response);
+        } finally {
+            ujoSessionFactoryFilter.closeSession();
+        }
     }
 
     @Override

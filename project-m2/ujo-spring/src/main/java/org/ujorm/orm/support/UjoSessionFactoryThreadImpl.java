@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009-2010 Tomas Hampl
+ *  Copyright 2009-2014 Tomas Hampl
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.ujorm.logger.UjoLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.ujorm.logger.UjoLoggerFactory;
-
 import org.ujorm.orm.OrmHandler;
 import org.ujorm.orm.Session;
 
@@ -30,6 +29,7 @@ import org.ujorm.orm.Session;
 public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessionFactoryAOP, UjoSessionFactoryFilter {
 
     private static final UjoLogger LOGGER = UjoLoggerFactory.getLogger(UjoSessionFactoryThreadImpl.class);
+    //
     final private OrmHandler handler;
     private AtomicInteger deep;
     private Session session;
@@ -37,15 +37,16 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
 
     public UjoSessionFactoryThreadImpl(OrmHandler handler) {
         this.handler = handler;
-
     }
 
     @Override
     public Object aroundSession(ProceedingJoinPoint call) throws Throwable {
-        doIncCalling();
-        Object result = doCall(call);
-        doDecCalling();
-        return result;
+        try {
+            doIncCalling();
+            return doCall(call);
+        } finally {
+            doDecCalling();
+        }
     }
 
     private void doIncCalling() {
@@ -101,7 +102,7 @@ public class UjoSessionFactoryThreadImpl implements UjoSessionFactory, UjoSessio
 
     private Session getSession() {
         if (session == null) {
-            throw new IllegalStateException("ORM session does not exists, check pointcut mapping");
+            throw new IllegalStateException("ORM session doesnt exist, check pointcut mapping");
         } else {
             return session;
         }
