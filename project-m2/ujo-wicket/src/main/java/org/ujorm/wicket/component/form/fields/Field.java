@@ -78,7 +78,6 @@ public class Field<T> extends GenericPanel<T> {
 
     public <U extends Ujo> Field(Key<U,T> key) {
         this(key.getName(), key, null);
-        this.setOutputMarkupPlaceholderTag(true);
     }
 
     /**

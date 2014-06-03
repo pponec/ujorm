@@ -86,7 +86,8 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         this.fields = fields;
     }
 
-    /** Add any field to a repeating view */
+    /** Add any field to a repeating view
+     * and set the OutputMarkupPlaceholderTag to value {@code true}. */
     public void add(final Field field) {
         final Key key = field.getKey();
         Field oldField = fields.put(key.getName(), field);
@@ -95,6 +96,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
         repeatingView.add(field);
         addValidator(key, field);
+        field.setOutputMarkupPlaceholderTag(true);
     }
 
     /** Add new field to a repeating view*/
