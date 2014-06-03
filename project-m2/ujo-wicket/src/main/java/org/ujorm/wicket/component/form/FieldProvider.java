@@ -100,7 +100,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add new field to a repeating view*/
-    public <T extends Object> void add(Key<U,T> key) {
+    public <T extends Object> void add(Key<? super U,T> key) {
         final Field field;
 
         if (key.isTypeOf(Boolean.class)) {
@@ -131,9 +131,9 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add all fields of  a domain class to the form */
-    public void add(Class<U> domainClass) {
+    public void add(Class<? super U> domainClass) {
         try {
-            add(domainClass.newInstance().readKeys());
+            add(((U)domainClass.newInstance()).readKeys());
         } catch (Exception e) {
             throw new IllegalStateException("Can't get keys of the domain " + domainClass, e);
         }
@@ -151,7 +151,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * @param key Related Key
      * @param fieldClass Class must have got a one argument constructor type of {@link Key}.
      */
-    public <T extends Ujo> void add(Key<U, T> key, Class<? extends Field> fieldClass) {
+    public <T extends Ujo> void add(Key<? super U, T> key, Class<? extends Field> fieldClass) {
         try {
             add(fieldClass.getConstructor(Key.class).newInstance(key));
         } catch (Exception ex) {
@@ -160,24 +160,24 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Add a Combo-box for a <string>persistent</strong> entity */
-    public <T extends OrmUjo> void add(Key<U, T> key, Key<T,?> display, Criterion<T> crn) {
+    public <T extends OrmUjo> void add(Key<? super U,T> key, Key<T,?> display, Criterion<T> crn) {
         add(ComboField.of(key, crn, display));
     }
 
     /** Get Value, or returns a default value */
     @SuppressWarnings("unchecked")
-    public <T> T getValue(Key<U, T> key) {
+    public <T> T getValue(Key<? super U, T> key) {
         final Field filed = fields.get(key.getName());
         return (T) filed != null ? (T) filed.getModelValue() : key.getDefault();
     }
 
     /** Set Value */
-    public <T> void setValue(Key<U, T> key, T value) {
+    public <T> void setValue(Key<? super U, T> key, T value) {
         fields.get(key.getName()).setModelValue(value);
     }
 
     /** Set Value and repaint the component */
-    public <T> void setValue(Key<U, T> key, T value, AjaxRequestTarget target) {
+    public <T> void setValue(Key<? super U, T> key, T value, AjaxRequestTarget target) {
         setValue(key, value);
         target.add(fields.get(key.getName()));
     }
@@ -223,7 +223,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Is the key mandatory ? */
-    protected boolean isMandatory(Key<U, ?> key) {
+    protected boolean isMandatory(Key<? super U, ?> key) {
         final OrmHandler handler = getOrmHandler();
         if (handler != null) {
             MetaColumn column = handler.findColumnModel(key, false);
@@ -235,7 +235,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Set a validator of the Key to the Field from argument */
-    protected void addValidator(final Key<U, ?> key, final Field field) {
+    protected void addValidator(final Key<? super U, ?> key, final Field field) {
         final Validator validator = key.getValidator();
         if (validator != null) {
             field.addValidator(new UiValidator(validator, key));
@@ -307,25 +307,25 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     /** Is the key type of PasswordField ?
      * The default condition is: the last key name must be 'PASSWORD'.
      */
-    protected boolean isPasswordKey(Key<U, ?> key) {
+    protected boolean isPasswordKey(Key<? super U, ?> key) {
         return key.getName().endsWith(PASSWORD_KEY_NAME)
            && ((key.length()==PASSWORD_KEY_NAME.length()
            || key.charAt(key.length() - PASSWORD_KEY_NAME.length() - 1) == '.'));
     }
 
     /** Refresh component */
-    public void onChange(Key<U, ?> source) {
+    public void onChange(Key<? super U, ?> source) {
         onChange(source, "");
     }
 
     /** Refresh component */
-    public void onChange(Key<U, ?> source, String action) {
+    public void onChange(Key<? super U, ?> source, String action) {
         getField(source).onChange(action);
     }
 
     /** Set an enabled attribute for a required filed.
      * If the field is not found, the statement is ignored */
-    public <T extends Object>void setEnabled(final Key<U,T> key, boolean enabled) {
+    public <T extends Object>void setEnabled(final Key<? super U,T> key, boolean enabled) {
         final Field<T> field = getField(key);
         if (field != null) {
             field.setEnabled(enabled);
@@ -334,7 +334,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Set a visible attribute for a required filed.
      * If the field is not found, the statement is ignored */
-    public void setVisible(final Key<U, ?> key, boolean visible) {
+    public void setVisible(final Key<? super U, ?> key, boolean visible) {
         final Field field = getField(key);
         if (field != null) {
             field.setVisibilityAllowed(visible);
@@ -343,7 +343,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Add a validator for a required filed.
      * If the field is not found, the statement is ignored */
-    public <T> void addValidator(final Key<U, T> key, Validator<T> validator) {
+    public <T> void addValidator(final Key<? super U, T> key, Validator<T> validator) {
         final Field field = getField(key);
         if (field != null) {
             field.addValidator(validator);
@@ -354,13 +354,13 @@ public class FieldProvider<U extends Ujo> implements Serializable {
      * If the field is not found, the statement is ignored
      * @see #setValidator(org.ujorm.Key, org.ujorm.Validator)
      */
-    public <T> void addValidatorUnchecked(final Key<U, T> key, Validator validator) {
+    public <T> void addValidatorUnchecked(final Key<? super U, T> key, Validator validator) {
         addValidator(key, validator);
     }
 
     /** Set a visible attribute for a required filed.
      * If the field is not found, the statement is ignored */
-    public <T> void addValidator(final Key<U, T> key, IValidator<T> validator) {
+    public <T> void addValidator(final Key<? super U, T> key, IValidator<T> validator) {
         final Field field = getField(key);
         if (field != null) {
             field.addValidator(validator);
@@ -369,7 +369,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
 
     /** Add a CSS style to the field of required key.
      * If the field is not found, the statement is ignored */
-    public <T> void addCssStyle(final Key<U, T> key, String cssStyle) {
+    public <T> void addCssStyle(final Key<? super U, T> key, String cssStyle) {
         final Field field = getField(key);
         if (field != null) {
             field.add(new CssAppender(cssStyle));

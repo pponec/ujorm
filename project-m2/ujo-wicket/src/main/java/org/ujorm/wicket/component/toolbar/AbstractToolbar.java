@@ -23,7 +23,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -37,7 +37,7 @@ import org.ujorm.wicket.UjoEvent;
  * The common Toolbar panel
  * @author Pavel Ponec
  */
-abstract public class AbstractToolbar<U extends Ujo> extends Panel {
+abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
 
     /** Delay for searching fields is 400 [ms] by default */
     protected static final Duration DEFAULT_DELAY = Duration.milliseconds(400);
@@ -84,8 +84,8 @@ abstract public class AbstractToolbar<U extends Ujo> extends Panel {
      * for example all active hotels:
      * <pre>{@code Hotel.ACTIVE.whereEq(true)}</pre>
      */
-    public IModel<Criterion<U>> getCriterion() {
-        return criterionModel;
+    public IModel<Criterion<? super U>> getCriterion() {
+        return (IModel) criterionModel;
     }
 
     /** Modify internal Criteiron */

@@ -52,6 +52,7 @@ import org.ujorm.wicket.component.form.UiValidator;
 /**
  * Common Input field with a Label including a feedback message.
  * @author Pavel Ponec
+ * @param <T> Field value type
  */
 public class Field<T> extends GenericPanel<T> {
     private static final long serialVersionUID = 20130621L;
