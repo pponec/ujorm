@@ -51,13 +51,10 @@ public class PatternValidator<VALUE extends String> extends AbstractValidator<VA
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || pattern.matcher(input).matches();
-            return !ok ? new ValidationError
+            return !ok ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map
                     ( PATTERN, pattern.pattern()
                     ))

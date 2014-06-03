@@ -44,13 +44,10 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
     /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
         final boolean failed = readOnly;
-        return failed ? new ValidationError
+        return failed ? createError
                 ( input
                 , key
                 , bo
-                , getClass()
-                , getLocalizationKey()
-                , getDefaultTemplate()
                 , service.map())
                 : null;
     }
@@ -77,11 +74,11 @@ public class ReadOnlyValidator<VALUE> extends AbstractValidator<VALUE> {
     /** Sign to a state read-only / all enabled */
     public boolean isReadOnly() {
         return readOnly;
-    }    
-    
+    }
+
     /** Check if the validator is type of read-only */
     public static boolean isReadOnly(Validator<?> validator) {
-        return validator instanceof ReadOnlyValidator 
+        return validator instanceof ReadOnlyValidator
             && ((ReadOnlyValidator)validator).readOnly;
-    }    
+    }
 }

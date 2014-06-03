@@ -54,13 +54,10 @@ public class ComparableValidator<VALUE extends Comparable> extends AbstractValid
                     ? input.compareTo(limit) <= 0
                     : input.compareTo(limit) >= 0 )
                     ;
-            return !ok ? new ValidationError
+            return !ok ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map
                     ( LIMIT, limit
                     , MAX, max

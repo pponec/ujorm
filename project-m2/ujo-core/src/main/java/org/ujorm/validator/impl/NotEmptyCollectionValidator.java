@@ -32,13 +32,10 @@ public class NotEmptyCollectionValidator<VALUE extends Collection> extends Abstr
     /** {@inheritDoc} */
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean failed = input==null || input.size()==0;
-            return failed ? new ValidationError
+            return failed ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map())
                     : null;
     }

@@ -16,6 +16,7 @@
 package org.ujorm.validator;
 
 import java.io.Serializable;
+import java.util.Map;
 import org.ujorm.*;
 import org.ujorm.criterion.BinaryOperator;
 import org.ujorm.validator.impl.CompositeValidator;
@@ -53,12 +54,34 @@ public abstract class AbstractValidator<VALUE> implements Validator<VALUE>, Seri
         }
     }
 
+    /**
+     * Create an error object.
+     * @param <UJO> Domain object type
+     * @param input Input value (required)
+     * @param key Ujo Key (required)
+     * @param bo Domain objet (required)
+     * @param params A map of arguments (required)
+     * @return An instance of the class {@link ValidationError}.
+     */
+    protected <UJO extends Ujo> ValidationError createError
+            ( final VALUE input
+            , final Key<UJO, VALUE> key
+            , final UJO bo
+            , final Map<String, Object> params) {
+        return new ValidationError
+        ( input
+        , key
+        , bo
+        , getClass()
+        , getLocalizationKey()
+        , getDefaultTemplate()
+        , params);
+    }
+
    /** Returns a default message template without parametes
     * @see String#format(java.lang.String, java.lang.Object[])
     */
-    protected String getDefaultTemplate() {
-        return "Overwrite text of the error message";
-    }
+    protected abstract String getDefaultTemplate();
 
     /** @{@inheritDoc} */
     public final Validator<VALUE> and(Validator<VALUE> validator) {

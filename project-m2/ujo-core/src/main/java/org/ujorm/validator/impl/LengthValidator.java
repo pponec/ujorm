@@ -61,13 +61,10 @@ public class LengthValidator<VALUE extends String> extends AbstractValidator<VAL
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
         final int length = input != null ? input.length() : min;
         final boolean failed = length < min || length > max;
-        return failed ? new ValidationError
+        return failed ? createError
                 ( input
                 , key
                 , bo
-                , getClass()
-                , getLocalizationKey()
-                , getDefaultTemplate()
                 , service.map
                 ( MIN, min
                 , MAX, max

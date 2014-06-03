@@ -54,13 +54,10 @@ public class NotEmptyValidator<VALUE extends CharSequence> extends NotNullValida
                     ? input.toString().trim()
                     : input).length()
                     ;
-            return failed ? new ValidationError
+            return failed ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map
                     ( TRIM, trim
                     ))

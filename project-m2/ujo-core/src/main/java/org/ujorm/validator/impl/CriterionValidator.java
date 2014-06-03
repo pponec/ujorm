@@ -41,13 +41,10 @@ public class CriterionValidator<VALUE extends Ujo> extends AbstractValidator<VAL
     public <UJO extends Ujo> ValidationError validate(VALUE input, Key<UJO, VALUE> key, UJO bo) {
             final boolean ok = input==null
                     || crn.evaluate(input);
-            return !ok ? new ValidationError
+            return !ok ? createError
                     ( input
                     , key
                     , bo
-                    , getClass()
-                    , getLocalizationKey()
-                    , getDefaultTemplate()
                     , service.map
                     ( CRN, crn.toString()
                     ))
