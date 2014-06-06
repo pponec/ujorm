@@ -17,9 +17,9 @@
 package org.ujorm.extensions;
 
 import java.util.List;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
 import org.ujorm.ListKey;
+import org.ujorm.Ujo;
 
 /**
  * This is an <strong>middle extended Ujo</strong> interface designed for a more conventional key access evaluated by developers.
@@ -40,11 +40,11 @@ import org.ujorm.ListKey;
  * @author Pavel Ponec
  * @since UJO release 0.85
  */
-public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
+public interface UjoMiddle<UJO extends UjoMiddle> extends Ujo {
 
     /** Getter based on one Key */
-    public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( Key<UJO, VALUE> key);
+    public <VALUE> VALUE get
+        ( Key<? super UJO, VALUE> key);
 
     /** The setter  based on a composite Key.
      * If the {@code Key} argument is type of {@link CompositeKey} the method creates all missing relations.
@@ -56,12 +56,12 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
      * Every <strong>set()</strong> method creates a new mother's instance (type of Person)  before assigning its name.
      * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
      */
-    public <UJO extends UJO_IMPL, VALUE> Ujo set
-        ( Key<UJO, VALUE> key
+    public <VALUE> Ujo set
+        ( Key<? super UJO, VALUE> key
         , VALUE value);
 
     /** Get a <strong>not null</strong> list result */
-    public <UJO extends UJO_IMPL, VALUE> List<VALUE> getList(final ListKey<UJO, VALUE> key);
+    public <VALUE> List<VALUE> getList(final ListKey<? super UJO, VALUE> key);
 
     /**
      * Returns a String value by a NULL context.
@@ -82,6 +82,5 @@ public interface UjoMiddle<UJO_IMPL extends UjoMiddle> extends Ujo {
      * @param Key String value
      */
     public void setText(final Key key, final String Key);
-
 
 }

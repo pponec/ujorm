@@ -20,9 +20,9 @@ import org.ujorm.implementation.quick.SmartUjo;
  * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
-public class SmartUjoImpl extends SmartUjo<SmartUjoImpl> {
+public class SmartUjoImpl<U extends SmartUjoImpl> extends SmartUjo<U> {
     private static final KeyFactory<SmartUjoImpl> f = newFactory(SmartUjoImpl.class);
-    
+
     public static final Key<SmartUjoImpl,Long>    PRO_P0 = f.newKey();
     public static final Key<SmartUjoImpl,Integer> PRO_P1 = f.newKey();
     public static final Key<SmartUjoImpl,String>  PRO_P2 = f.newKey();

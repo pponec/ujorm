@@ -28,13 +28,13 @@ import org.ujorm.Key;
  * @since ujo-tool
  * @composed 1 - * FactoryProperty
  */
-abstract public class FactoryUjoExt<UJO_IMPL extends FactoryUjoExt> extends FactoryUjo {
-    
+abstract public class FactoryUjoExt<UJO extends FactoryUjoExt> extends FactoryUjo {
+
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( Key<UJO, VALUE> key) {
+    public <VALUE> VALUE get
+        ( Key<? super UJO, VALUE> key) {
         return key.of((UJO) this);
     }
 
-}    
+}

@@ -32,68 +32,70 @@ import org.ujorm.swing.UjoPropertyRow;
  * <br>Features: very simple implementation and a sufficient performance for common tasks. The architecture is useful for a rare assignment of values in object too.
  * @author Pavel Ponec
  */
-public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstractUjo implements UjoExt<UJO_IMPL> {
+public abstract class AbstractUjoExt<UJO extends AbstractUjoExt> extends SuperAbstractUjo implements UjoExt<UJO> {
 
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get
-        ( final Key<UJO, VALUE> key
+    public <VALUE> VALUE get
+        ( final Key<? super UJO, VALUE> key
         ) {
         return key.of((UJO)this);
     }
 
     /** Getter based on two keys */
     @SuppressWarnings("unchecked")
-    public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> VALUE get
-        ( final Key<UJO1, UJO2 > property1
+    public <UJO2 extends Ujo, VALUE> VALUE get
+        ( final Key<? super UJO, UJO2 > property1
         , final Key<UJO2, VALUE> property2) {
 
-        final PathProperty<UJO1, VALUE> path = PathProperty.of(property1, property2);
-        return get(path);    }
+        final Key<UJO, VALUE> path = PathProperty.of(property1, property2);
+        return get(path);
+    }
 
     /** Getter based on three keys */
     @SuppressWarnings("unchecked")
-    public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
-        ( final Key<UJO1, UJO2 > property1
+    public <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> VALUE get
+        ( final Key<? super UJO, UJO2 > property1
         , final Key<UJO2, UJO3 > property2
         , final Key<UJO3, VALUE> property3
         ) {
 
-        final PathProperty<UJO1, VALUE> path = PathProperty.of(property1, property2, property3);
-        return get(path);    }
+        final Key<UJO, VALUE> path = PathProperty.of(property1, property2, property3);
+        return get(path);
+    }
 
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings({"unchecked"})
-    public <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
-        ( final Key<UJO, VALUE> key
+    public <VALUE> UJO set
+        ( final Key<? super UJO, VALUE> key
         , final VALUE value
         ) {
         UjoManager.assertAssign(key, value);
         key.setValue((UJO)this, value);
-        return (UJO_IMPL) this;
+        return (UJO) this;
     }
 
     /** Setter  based on two keys. Type of value is checked in the runtime. */
-    public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, VALUE> void set
-        ( final Key<UJO1, UJO2 > property1
+    public <UJO2 extends Ujo, VALUE> void set
+        ( final Key<? super UJO, UJO2> property1
         , final Key<UJO2, VALUE> property2
         , final VALUE value
         ) {
 
-        final PathProperty<UJO1, VALUE> path = PathProperty.of(property1, property2);
+        final Key<UJO, VALUE> path = PathProperty.of(property1, property2);
         set(path, value);
     }
 
     /** Setter  based on three keys. Type of value is checked in the runtime. */
-    public <UJO1 extends UJO_IMPL, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
-        ( final Key<UJO1, UJO2 > property1
+    public <UJO2 extends Ujo, UJO3 extends Ujo, VALUE> void set
+        ( final Key<? super UJO, UJO2 > property1
         , final Key<UJO2, UJO3 > property2
         , final Key<UJO3, VALUE> property3
         , final VALUE value
         ) {
 
-        final PathProperty<UJO1, VALUE> path = PathProperty.of(property1, property2, property3);
-        set(path, value);
+        final Key<UJO, VALUE> path = PathProperty.of(property1, property2, property3);
+        set((Key)path, value);
     }
 
     // ------ LIST ----------
@@ -102,46 +104,46 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      * <br>Inside is called a method ListUjoPropertyCommon.getItemCount() internally.
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, ITEM> int getItemCount
-        ( final ListKey<UJO,ITEM> key
+    public <ITEM> int getItemCount
+        ( final ListKey<? super UJO,ITEM> key
         ) {
-        return ((ListKey)key).getItemCount(this);
+        return key.getItemCount((UJO)this);
     }
 
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.addItem(...) internally.
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, ITEM> UJO_IMPL add
-        ( final ListKey<UJO,ITEM> key
+    public <ITEM> UJO add
+        ( final ListKey<? super UJO,ITEM> key
         , final ITEM value
         ) {
         key.addItem((UJO) this, value);
-        return (UJO_IMPL) this;
+        return (UJO) this;
     }
 
     /** Add Value, if the List is null then the list will be created.
      * <br>Inside is called a method ListUjoPropertyCommon.setItem(...) internally.
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, ITEM> UJO_IMPL set
-        ( final ListKey<UJO,ITEM> key
+    public <ITEM> UJO set
+        ( final ListKey<? super UJO,ITEM> key
         , final int index
         , final ITEM value
         ) {
         key.setItem((UJO)this, index, value);
-        return (UJO_IMPL) this;
+        return (UJO) this;
     }
 
     /** Get Value
      * <br>Inside is called a method ListUjoPropertyCommon.getItem(...) internally.
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, ITEM> ITEM get
-        ( final ListKey<UJO,ITEM> key
+    public <ITEM> ITEM get
+        ( final ListKey<? super UJO,ITEM> key
         , final int index
         ) {
-        return (ITEM) ((ListKey)key).getItem(this, index);
+        return key.getItem((UJO)this, index);
     }
 
 
@@ -152,11 +154,11 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      * @return removed item
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, ITEM> ITEM remove
-        ( final ListKey<UJO,ITEM> key
+    public <ITEM> ITEM remove
+        ( final ListKey<? super UJO,ITEM> key
         , final int index
         ) {
-        return (ITEM) ((ListKey)key).getList(this).remove(index);
+        return key.getList((UJO)this).remove(index);
     }
 
     /**
@@ -166,36 +168,38 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      * @return true if the list is not null and contains the specified element
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, ITEM> boolean remove
-        ( final ListKey<UJO,ITEM> key
+    public <ITEM> boolean remove
+        ( final ListKey<? super UJO,ITEM> key
         , final ITEM item
         ) {
-        return ((ListKey)key).removeItem(this, item);
+        return key.removeItem((UJO)this, item);
     }
 
     /** Returns a not null List. If original list value is empty, the new List is created.
      * <br>Inside is called a method ListUjoPropertyCommon.getList() internally.
      */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, LIST extends List<ITEM>,ITEM> LIST list
-        ( final ListKey<UJO,ITEM> key
+    public <LIST extends List<ITEM>,ITEM> LIST list
+        ( final ListKey<? super UJO,ITEM> key
         ) {
-        return (LIST) ((ListKey)key).getList(this);
+        return (LIST) key.getList( (UJO) this);
     }
 
     /** Returns a not null List. If original list value is empty, the new List is created.
      * <br>Inside is called a method ListUjoPropertyCommon.getList() internally.
      */
     @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, ITEM> List<ITEM> getList(final ListKey<UJO,ITEM> key) {
+    @Override
+    final public <ITEM> List<ITEM> getList(final ListKey<? super UJO,ITEM> key) {
         return key.getList( (UJO) this);
     }
 
     /** Indicates whether a parameter value "equal to" key default value. */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> boolean isDefault
-        ( final Key<UJO, VALUE> key) {
-        final boolean result = ((Key) key).isDefault(this);
+    @Override
+    public <VALUE> boolean isDefault
+        ( final Key<? super UJO, VALUE> key) {
+        final boolean result = key.isDefault((UJO)this);
         return result;
     }
 
@@ -228,7 +232,7 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
 
     /** Compare the key value with a parametrer value. The key value can be null.  */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> boolean equals(Key<UJO,VALUE> key, VALUE value) {
+    public <VALUE> boolean equals(Key<? super UJO,VALUE> key, VALUE value) {
         return key.equals((UJO)this, value);
     }
 
@@ -261,8 +265,8 @@ public abstract class AbstractUjoExt<UJO_IMPL extends UjoExt> extends SuperAbstr
      */
     @Override
     @SuppressWarnings("unchecked")
-    public UJO_IMPL clone(final int depth, final Object context) {
-        return (UJO_IMPL) super.clone(depth, context);
+    public UJO clone(final int depth, final Object context) {
+        return (UJO) super.clone(depth, context);
     }
 
     /** Copy all attributes to the target */

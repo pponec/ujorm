@@ -16,9 +16,8 @@
 
 package org.ujorm.listener;
 
-import org.ujorm.Ujo;
 import org.ujorm.Key;
-
+import org.ujorm.Ujo;
 
 /**
  * EventRegistrar
@@ -26,7 +25,7 @@ import org.ujorm.Key;
  * @author Pavel Ponec
  */
 public interface EventRegistrar<UJO extends Ujo> {
-    
+
     /**
      * Add listener
      * @param key Property
@@ -35,15 +34,15 @@ public interface EventRegistrar<UJO extends Ujo> {
      * @return A result of the operation
      */
     public boolean addPropertyChangeListener
-        ( final Key<UJO,?> key
+        ( final Key<? super UJO,?> key
         , final Boolean before
         , final UjoPropertyChangeListener listener
         );
-    
+
 
     /** Remove listener */
     public boolean removePropertyChangeListener
-        ( final Key<UJO,?> key
+        ( final Key<? super UJO,?> key
         , final Boolean before
         , final UjoPropertyChangeListener listener
         );

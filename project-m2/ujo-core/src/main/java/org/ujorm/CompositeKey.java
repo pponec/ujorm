@@ -37,10 +37,10 @@ public interface CompositeKey<UJO extends Ujo, VALUE> extends Key<UJO, VALUE> {
     public static final String DEFAULT_ALIAS = null;
 
     /** Get the first key of the current object. The result is direct key always. */
-    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey();
+    public <U extends Ujo> Key<U, VALUE> getLastKey();
 
     /** Get the first key of the current object. The result is direct key always. */
-    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey();
+    public <U extends Ujo> Key<U, VALUE> getFirstKey();
 
     /** Export all <string>direct</strong> keys to the list from parameter. */
     public void exportKeys(Collection<Key<?,?>> result);

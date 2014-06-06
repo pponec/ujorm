@@ -156,14 +156,14 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
 
     /** Get the last key of the current object. The result may not be the direct key. */
     @SuppressWarnings("unchecked")
-    public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastPartialProperty() {
+    public <U extends Ujo> Key<U, VALUE> getLastPartialProperty() {
         return keys[keys.length - 1];
     }
 
     /** Get the first key of the current object. The result is direct key always. */
     @SuppressWarnings("unchecked")
     @Override
-    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getLastKey() {
+    final public <U extends Ujo> Key<U, VALUE> getLastKey() {
         Key result = keys[keys.length - 1];
         return result.isComposite()
             ? ((CompositeKey)result).getLastKey()
@@ -174,7 +174,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
     /** Get the first key of the current object. The result is direct key always. */
     @SuppressWarnings("unchecked")
     @Override
-    final public <UJO_IMPL extends Ujo> Key<UJO_IMPL, VALUE> getFirstKey() {
+    final public <u extends Ujo> Key<u, VALUE> getFirstKey() {
         Key result = keys[0];
         return result.isComposite()
             ? ((CompositeKey)result).getFirstKey()
@@ -728,7 +728,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     @SuppressWarnings("deprecation")
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<UJO, VALUE> key, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> sort(final Key<? super UJO, VALUE> key, final boolean ascending) {
         if (key.isAscending()==ascending) {
             return (Key<UJO, VALUE>) key;
         }
@@ -743,14 +743,14 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      * @see #sort(org.ujorm.Key, boolean) sort(..)
      */
-    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(final Key<UJO, VALUE> key, final boolean ascending) {
+    public static <UJO extends Ujo, VALUE> Key<UJO, VALUE> of(final Key<? super UJO, VALUE> key, final boolean ascending) {
         return sort(key, ascending);
     }
 
     /** Quick instance for the direct key.
      * @hidden
      */
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> of(final Key<UJO, VALUE> key) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> of(final Key<? super UJO, VALUE> key) {
         return key.isComposite()
             ? new PathProperty<UJO, VALUE>(key.isAscending(), CompositeKey.DEFAULT_ALIAS, key)
             : new PathProperty<UJO, VALUE>(new Key[]{key}, NO_ALIAS, key.isAscending())
@@ -761,7 +761,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
-        ( final Key<UJO1, UJO2> key1
+        ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, VALUE> key2
         ) {
         return key1.isComposite() || key2.isComposite()
@@ -774,7 +774,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
-        ( final Key<UJO1, UJO2> key1
+        ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, VALUE> key3
         ) {
@@ -785,7 +785,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> of
-        ( final Key<UJO1, UJO2> key1
+        ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, UJO4> key3
         , final Key<UJO4, VALUE> key4
@@ -797,7 +797,8 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     @SuppressWarnings("unchecked")
-    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create(Key<UJO, ? extends Object>... keys) {
+    public static <UJO extends Ujo, VALUE> PathProperty<UJO, VALUE> create
+            ( Key<UJO, ? extends Object>... keys) {
         return new PathProperty(DEFAULT_ALIAS, keys);
     }
 
@@ -841,7 +842,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<UJO1, UJO2> key1
+        ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, VALUE> key3
         ) {
@@ -853,7 +854,7 @@ public class PathProperty<UJO extends Ujo, VALUE> implements CompositeKey<UJO, V
      * @hidden
      */
     public static <UJO1 extends Ujo, UJO2 extends Ujo, UJO3 extends Ujo, UJO4 extends Ujo, VALUE> PathProperty<UJO1, VALUE> newInstance
-        ( final Key<UJO1, UJO2> key1
+        ( final Key<? super UJO1, UJO2> key1
         , final Key<UJO2, UJO3> key2
         , final Key<UJO3, UJO4> key3
         , final Key<UJO4, VALUE> key4

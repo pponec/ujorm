@@ -24,7 +24,7 @@ import org.ujorm.implementation.quick.SmartUjo;
  *
  * @author Pavel Ponec
  */
-public class Person extends SmartUjo<Person> {
+public class Person<U extends Person> extends SmartUjo<U> {
 
     protected static final KeyFactory<Person> f = KeyFactory.Builder.get(Person.class);
 

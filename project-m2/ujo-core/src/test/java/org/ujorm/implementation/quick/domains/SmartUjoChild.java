@@ -19,19 +19,19 @@ import org.ujorm.extensions.ListProperty;
  * An UnifiedDataObject Implementation
  * @author Pavel Ponec
  */
-public class SmartUjoChild extends SmartUjoImpl {
+public class SmartUjoChild<U extends SmartUjoChild> extends SmartUjoImpl<U> {
     private static final KeyFactory<SmartUjoChild> f = newFactory(SmartUjoChild.class);
-    
+
     public static final Key <SmartUjoChild, Long>    PRO_P5 = f.newKey();
     public static final Key <SmartUjoChild, Integer> PRO_P6 = f.newKey();
     public static final Key <SmartUjoChild, String>  PRO_P7 = f.newKey();
     public static final Key <SmartUjoChild, Date>    PRO_P8 = f.newKey();
     public static final Key <SmartUjoChild, Class>   PRO_P9 = f.newKey();
     public static final ListProperty <SmartUjoChild,Color> PRO_LST2 = f.newListKey();
-    
+
     // --- Mandatory initializaton ---
     static {
         f.lock();
     }
-    
+
 }
