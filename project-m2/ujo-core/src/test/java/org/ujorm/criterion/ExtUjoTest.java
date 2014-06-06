@@ -27,21 +27,13 @@ public class ExtUjoTest extends MyTestCase {
         return suite;
     }
 
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-
-
     public void testInit1() throws Throwable {
         String nameExp1 = "Jack1";
         String nameExp2 = "Jane" ;
         double cashExp  = 200D;
 
 
-        Person person = new Person();
+        Person<Person> person = new Person();
 
         person.set(NAME, nameExp1);
         person.set(MOTHER.add(NAME), nameExp2);
@@ -58,7 +50,7 @@ public class ExtUjoTest extends MyTestCase {
 
     public void testInit2() throws Throwable {
 
-        Person person = new Person();
+        Person<Person> person = new Person();
         person.init();
 
         String name = person.get(MOTHER.add(NAME));
@@ -67,7 +59,7 @@ public class ExtUjoTest extends MyTestCase {
 
     public void testInit3() throws Throwable {
 
-        Person person = new Person();
+        Person<Person> person = new Person();
         person.set(NAME, "Jack");
         person.set(CASH, 50d);
 

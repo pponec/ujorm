@@ -17,8 +17,8 @@ package org.ujorm.implementation.mapImpl;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import org.ujorm.Ujo;
 import org.ujorm.Key;
+import org.ujorm.Ujo;
 import org.ujorm.core.UjoManager;
 import org.ujorm.extensions.Property;
 import org.ujorm.extensions.UjoMiddle;
@@ -36,20 +36,20 @@ import org.ujorm.extensions.UjoMiddle;
  *  <span class="java-keywords">public static final</span> Key&lt;Person, String &gt; NAME = newKey(<span class="java-string-literal">&quot;Name&quot;</span> , String.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public static final</span> Key&lt;Person, Double &gt; CASH = newKey(<span class="java-string-literal">&quot;Cash&quot;</span> , Double.<span class="java-keywords">class</span>);
  *  <span class="java-keywords">public static final</span> Key&lt;Person, Person&gt; CHILD = newKey(<span class="java-string-literal">&quot;Child&quot;</span>, Person.<span class="java-keywords">class</span>);
- *    
+ *
  *  <span class="java-keywords">public</span> <span class="java-keywords">void</span> init() {
  *    set(NAME, <span class="java-string-literal">&quot;</span><span class="java-string-literal">George</span><span class="java-string-literal">&quot;</span>);
  *    String name = get(NAME);
  *  }
  *}</pre>
- * 
+ *
  * @see Property
  * @author Pavel Ponec
  * @since UJO release 0.85
  */
-abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
+abstract public class MapImplUjoMiddle<UJO extends MapImplUjoMiddle>
     extends MapImplUjo
-    implements UjoMiddle<UJO_IMPL>, Serializable
+    implements UjoMiddle<UJO>, Serializable
 {
 
     /** There is strongly recommended that all serializable classes explicitly declare serialVersionUID value */
@@ -65,13 +65,13 @@ abstract public class MapImplUjoMiddle<UJO_IMPL extends MapImplUjoMiddle>
 
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> key) {
+    public <VALUE> VALUE get(final Key<? super UJO, VALUE> key) {
         return key.of((UJO)this);
     }
 
     /** Setter  based on Key. Type of value is checked in the runtime. */
     @SuppressWarnings("unchecked")
-    public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> key, final VALUE value) {
+    public <VALUE> Ujo set(final Key<? super UJO, VALUE> key, final VALUE value) {
         assert UjoManager.assertDirectAssign(key, value, this);
         key.setValue((UJO)this, value);
         return this;

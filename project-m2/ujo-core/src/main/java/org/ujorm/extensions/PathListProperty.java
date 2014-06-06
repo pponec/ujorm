@@ -55,7 +55,7 @@ final public class PathListProperty<UJO extends Ujo, VALUE>
     /** Get the last Key of the current object. The result may not be the direct key. */
     @SuppressWarnings("unchecked")
     @Override
-    public final <UJO_IMPL extends Ujo> ListKey<UJO_IMPL, VALUE> getLastPartialProperty() {
+    public final <U extends Ujo> ListKey<U, VALUE> getLastPartialProperty() {
         return (ListKey) super.getLastPartialProperty();
     }
 

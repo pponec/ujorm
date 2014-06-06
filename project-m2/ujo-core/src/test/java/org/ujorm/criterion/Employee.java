@@ -20,7 +20,7 @@ import org.ujorm.extensions.PathProperty;
 import org.ujorm.implementation.map.MapUjoExt;
 
 /**
- *
+ * Domain class Employee
  * @author Pavel Ponec
  */
 public final class Employee extends MapUjoExt<Employee> {

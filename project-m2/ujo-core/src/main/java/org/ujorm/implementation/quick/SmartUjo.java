@@ -45,9 +45,9 @@ import org.ujorm.extensions.UjoMiddle;
  * @author Pavel Ponec
  * @composed 1 - * Property
  */
-abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
+abstract public class SmartUjo<UJO extends SmartUjo>
     extends QuickUjo
-    implements UjoMiddle<UJO_IMPL>
+    implements UjoMiddle<UJO>
 {
 
     /** Constructor */
@@ -61,7 +61,8 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
 
     /** Getter based on one Key */
     @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> key) {
+    @Override
+    final public <VALUE> VALUE get(final Key<? super UJO, VALUE> key) {
         return key.of((UJO) this);
     }
 
@@ -76,14 +77,16 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
      * @see CompositeKey#setValue(org.ujorm.Ujo, java.lang.Object, boolean)
      */
     @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, VALUE> Ujo set(final Key<UJO, VALUE> key, final VALUE value) {
+    @Override
+    final public <VALUE> Ujo set(final Key<? super UJO, VALUE> key, final VALUE value) {
         key.setValue((UJO)this, value);
         return this;
     }
 
     /** Get a not null result */
     @SuppressWarnings("unchecked")
-    final public <UJO extends UJO_IMPL, VALUE> List<VALUE> getList(final ListKey<UJO, VALUE> key) {
+    @Override
+    final public <VALUE> List<VALUE> getList(final ListKey<? super UJO, VALUE> key) {
         return key.getList((UJO)this);
     }
 
@@ -94,6 +97,7 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
      * @param key A Property
      * @return If key type is "container" then result is null.
      */
+    @Override
     public String getText(final Key key) {
         return readUjoManager().getText(this, key, null);
     }
@@ -104,6 +108,7 @@ abstract public class SmartUjo<UJO_IMPL extends SmartUjo>
      * @param key Property
      * @param value String value
      */
+    @Override
     public void setText(final Key key, final String value) {
         readUjoManager().setText(this, key, value, null, null);
     }

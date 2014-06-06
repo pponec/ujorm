@@ -22,7 +22,7 @@ import org.ujorm.core.KeyFactory;
  *
  * @author Pavel Ponec
  */
-public class User extends Person {
+public class User<U extends User> extends Person<U> {
 
     protected static final KeyFactory<User> f2 = KeyFactory.Builder.get(User.class, Person.f.getKeys());
 

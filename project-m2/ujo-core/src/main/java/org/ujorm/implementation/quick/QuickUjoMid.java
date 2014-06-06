@@ -42,7 +42,7 @@ import org.ujorm.extensions.UjoMiddle;
  * @deprecated  use the class {@link  SmartUjo} instead of.
  */
 @Deprecated
-abstract public class QuickUjoMid<UJO_IMPL extends QuickUjoMid> extends SmartUjo<UJO_IMPL> {
+abstract public class QuickUjoMid<UJO extends QuickUjoMid> extends SmartUjo<UJO> {
 
     /** Constructor */
     public QuickUjoMid(Object[] aData) {

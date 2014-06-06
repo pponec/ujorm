@@ -19,9 +19,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
-import org.ujorm.extensions.Property;
 import org.ujorm.extensions.AbstractUjoExt;
 import org.ujorm.extensions.ListProperty;
+import org.ujorm.extensions.Property;
 
 /**
  * This is an Groovy style implementation of a setter and getter methods for an easier access for developpers,

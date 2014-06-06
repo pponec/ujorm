@@ -17,16 +17,16 @@
 package org.ujorm.implementation.registrar;
 
 import org.ujorm.Key;
-import org.ujorm.listener.EventRegistrar;
-import org.ujorm.listener.UjoPropertyChangeSupport;
-import org.ujorm.listener.UjoPropertyChangeListener;
 import org.ujorm.implementation.map.MapUjoExt;
+import org.ujorm.listener.EventRegistrar;
+import org.ujorm.listener.UjoPropertyChangeListener;
+import org.ujorm.listener.UjoPropertyChangeSupport;
 
 /**
  * A MapUjoExt implementation with a Property change listener support.
  * <br>There is possible to implement the EventRegistrar interface very easy to any Ujo implementation by sample:
  * <pre class="pre"><span class="keyword-directive">public</span> <span class="keyword-directive">class</span> RegistrarUjoExt&lt;UJO <span class="keyword-directive">extends</span> RegistrarUjoExt&gt; <span class="keyword-directive">extends</span> MapUjoExt&lt;UJO&gt; <span class="keyword-directive">implements</span> EventRegistrar&lt;UJO&gt; {
- *    
+ *
  *  <span class="keyword-directive">final</span> <span class="keyword-directive">private</span> UjoPropertyChangeSupport eventRegistrar = <span class="keyword-directive">new</span> UjoPropertyChangeSupport(<span class="keyword-directive">this</span>);
  *
  *  <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> writeValue(Key key, Object value) {
@@ -56,7 +56,7 @@ import org.ujorm.implementation.map.MapUjoExt;
  */
 @SuppressWarnings("deprecation")
 public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO> implements EventRegistrar<UJO> {
-    
+
     final private UjoPropertyChangeSupport eventRegistrar = new UjoPropertyChangeSupport(this);
 
     @Override
@@ -70,7 +70,7 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
 
     /** Add key Listener */
     public boolean addPropertyChangeListener
-        ( Key<UJO,?> key
+        ( Key<? super UJO,?> key
         , Boolean before
         , UjoPropertyChangeListener listener
         ) {
@@ -79,7 +79,7 @@ public class RegistrarUjoExt<UJO extends RegistrarUjoExt> extends MapUjoExt<UJO>
 
     /** Remove key Listener */
     public boolean removePropertyChangeListener
-        ( Key<UJO,?> key
+        ( Key<? super UJO,?> key
         , Boolean before
         , UjoPropertyChangeListener listener) {
         return eventRegistrar.removePropertyChangeListener(key, before, listener);
