@@ -1,6 +1,9 @@
 The Ujorm release notes
 *******************************
 
+release 1.47 (2014-06-*)
++ WICKET: API changes
+
 release 1.46 (2014-06-01)
 + CORE: UjoManagerCSV is running with runtime exceptions only
 + CORE: KeyColumn API is extended

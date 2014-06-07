@@ -10,7 +10,7 @@ public class GenericDomain<U extends GenericDomain> {
 
     public static final Key<GenericDomain, Integer> ID = new Key("id");
     public static final Key<GenericDomain, String> NAME = new Key("name");
-    protected HashMap<String, Object> map = new HashMap<>();
+    protected HashMap<String, Object> map = new HashMap();
 
     public <VALUE> void set(Key<? super U, VALUE> key, VALUE value) {
         key.setValue((U) this, value);
