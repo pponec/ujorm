@@ -96,7 +96,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public AbstractDataProvider(@Nonnull IModel<Criterion<? super U>> criterion) {
+    public AbstractDataProvider(@Nonnull IModel<Criterion<U>> criterion) {
         this(criterion, null);
     }
 
@@ -105,7 +105,7 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * @param defaultSort Default sorting can be assigned optionally
      */
     public AbstractDataProvider
-            ( @Nonnull IModel<Criterion<? super U>> filter
+            ( @Nonnull IModel<Criterion<U>> filter
             , @Nullable Key<? super U,?> defaultSort) {
         this.filter = (IModel) Args.notNull(filter, "The filter is required");
 

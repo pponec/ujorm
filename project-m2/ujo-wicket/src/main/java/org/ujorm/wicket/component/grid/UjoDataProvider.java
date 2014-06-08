@@ -76,7 +76,7 @@ public class UjoDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public UjoDataProvider(IModel<Criterion<? super U>> criterion) {
+    public UjoDataProvider(IModel<Criterion<U>> criterion) {
         this(criterion, null);
     }
 
@@ -84,7 +84,7 @@ public class UjoDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
      * @param criterion Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public UjoDataProvider(IModel<Criterion<? super U>> criterion, Key<? super U,?> defaultSort) {
+    public UjoDataProvider(IModel<Criterion<U>> criterion, Key<? super U,?> defaultSort) {
         super(criterion, defaultSort);
         this.ormSession = new OrmSessionProvider();
     }
@@ -218,22 +218,22 @@ public class UjoDataProvider<U extends OrmUjo> extends AbstractDataProvider<U> {
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<? super T>> criterion, Key<? super T,?> defaultSort) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion, Key<? super T,?> defaultSort) {
         return new UjoDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<? super T>> criterion) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(IModel<Criterion<T>> criterion) {
         return new UjoDataProvider<T>(criterion, null);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<? super T> criterion, Key<? super T,?> defaultSort) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion, Key<? super T,?> defaultSort) {
         return new UjoDataProvider<T>(new Model(criterion), defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<? super T> criterion) {
+    public static <T extends OrmUjo> UjoDataProvider<T> of(Criterion<T> criterion) {
         return new UjoDataProvider<T>(new Model(criterion), null);
     }
 

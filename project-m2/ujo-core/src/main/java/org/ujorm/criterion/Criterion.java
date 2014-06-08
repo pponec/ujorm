@@ -171,12 +171,18 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         return false;
     }
 
+    /** Retype the criterion to an extented generic domain for the case
+     * that the original Key is from a parent class of the domain type.
+     */
+    public final <T extends U> Criterion<T> retype() {
+        return (Criterion<T>) this;
+    }
+
     /** Print the Criteron including the main domain name along the example: Order(id EQ 1)  */
     public String toStringFull() {
         final Class domain = getDomain();
         return domain.getSimpleName() + this;
     }
-
 
     // ------ STATIC FACTORY --------
 
