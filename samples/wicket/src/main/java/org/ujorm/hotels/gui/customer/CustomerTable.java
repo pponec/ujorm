@@ -74,7 +74,7 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
     }
 
     /** Create a criterion for the table */
-    private IModel<Criterion<? super U>> getCriterion() {
+    private IModel<Criterion<U>> getCriterion() {
         return new Model(authService.isAdmin()
              ? Customer.ACTIVE.forAll()
              : Customer.ACTIVE.whereEq(true));
