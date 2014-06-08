@@ -73,7 +73,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     /** Constructor
      * @param criterion Condition to a database query
      */
-    public ListDataProvider(IModel<Criterion<? super U>> criterion) {
+    public ListDataProvider(IModel<Criterion<U>> criterion) {
         this(criterion, null);
     }
 
@@ -81,7 +81,7 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
      * @param filter Model of a condition to a database query
      * @param defaultSort Default sorting can be assigned optionally
      */
-    public ListDataProvider(IModel<Criterion<? super U>> filter, Key<? super U,?> defaultSort) {
+    public ListDataProvider(IModel<Criterion<U>> filter, Key<? super U,?> defaultSort) {
         super(filter, defaultSort);
         this.sortRequest = defaultSort != null;
     }
@@ -213,12 +213,12 @@ public class ListDataProvider<U extends Ujo> extends AbstractDataProvider<U> {
     // ============= STATIC METHOD =============
 
     /** Factory for the class */
-    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<? super T>> criterion, Key<? super T,?> defaultSort) {
+    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<T>> criterion, Key<? super T,?> defaultSort) {
         return new ListDataProvider<T>(criterion, defaultSort);
     }
 
     /** Factory for the class */
-    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<? super T>> criterion) {
+    public static <T extends Ujo> ListDataProvider<T> of(IModel<Criterion<T>> criterion) {
         return new ListDataProvider<T>(criterion, null);
     }
 

@@ -84,8 +84,8 @@ abstract public class AbstractToolbar<U extends Ujo> extends GenericPanel<U> {
      * for example all active hotels:
      * <pre>{@code Hotel.ACTIVE.whereEq(true)}</pre>
      */
-    public IModel<Criterion<? super U>> getCriterion() {
-        return (IModel) criterionModel;
+    public IModel<Criterion<U>> getCriterion() {
+        return criterionModel;
     }
 
     /** Modify internal Criteiron */
