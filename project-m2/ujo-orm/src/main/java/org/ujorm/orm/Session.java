@@ -596,14 +596,16 @@ public class Session implements Closeable {
         return delete(table, criterion);
     }
 
-    /** Delete one object from the parameters.
+    /** Delete an optional object from the parameters.
      * <br />Warning: method does not remove deleted object from internal cache,
      *       however you can call method clearCache() to release all objects from the cache.
-     * @param bo Business object to delete
-     * @return Returns a number of the removing is OK.
+     * @param bo Business object to delete, or the {@code null} argument as a result of some nullable relation.
+     * @return Returns a number of the removing is OK or the zero if the argumetn is {@code null}.
      */
     public int delete(final OrmUjo bo) {
-        checkNotNull(bo, "delete");
+        if (bo == null) {
+            return 0;
+        }
         MetaTable table = handler.findTableModel(bo.getClass());
         table.assertChangeAllowed();
         MetaColumn PK = table.getFirstPK();
