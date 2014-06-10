@@ -33,7 +33,7 @@ public final class Toolbar<T extends Hotel> extends AbstractToolbar<T> {
     public static final String FILTER_ACTION = CommonActions.FILTER;
 
     /** Default criterion */
-    public static final Criterion<Hotel> defaultCriterion = Hotel.ACTIVE.whereEq(true);
+    public static final Criterion<Hotel> defaultCriterion = Hotel.ACTIVE.whereEq(true).cast();
     /** searchHotel */
     private TextField searchHotel;
     /** searchHotel */
@@ -55,7 +55,7 @@ public final class Toolbar<T extends Hotel> extends AbstractToolbar<T> {
      */
     @Override
     protected void buildCriterion() {
-        Criterion<Hotel> result = defaultCriterion;
+        Criterion<Hotel> result = defaultCriterion.cast();
 
         if (isFilled(searchHotel.getValue())) {
             result = result.and(Hotel.NAME.where(Operator.STARTS_CASE_INSENSITIVE
@@ -66,7 +66,7 @@ public final class Toolbar<T extends Hotel> extends AbstractToolbar<T> {
                    , searchCity.getValue()));
         }
 
-        getCriterion().setObject(result);
+        getCriterion().setObject((Criterion<T>)result);
     }
 
     /** Default action name is {@link CommonActions#FILTER} */
