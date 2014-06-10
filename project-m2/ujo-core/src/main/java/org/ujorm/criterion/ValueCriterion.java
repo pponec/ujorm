@@ -118,6 +118,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     }
 
     /** The implementation with an optimization */
+    @Override
     public Criterion<UJO> and(Criterion<UJO> criterion) {
         return operator != Operator.XFIXED
              ? super.and(criterion)
@@ -127,6 +128,7 @@ public class ValueCriterion<UJO extends Ujo> extends Criterion<UJO> implements S
     }
 
     /** The implementation with an optimization */
+    @Override
     public Criterion<UJO> or(Criterion<UJO> criterion) {
         return operator != Operator.XFIXED
              ? super.or(criterion)

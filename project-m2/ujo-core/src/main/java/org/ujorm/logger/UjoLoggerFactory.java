@@ -28,7 +28,7 @@ final public class UjoLoggerFactory implements UjoLogger {
 
     /** Sign to show a log */
     volatile private static boolean showLog = true;
-    
+
     /** Target Logger */
     final private Logger logger;
 
@@ -42,22 +42,27 @@ final public class UjoLoggerFactory implements UjoLogger {
     }
 
     /** {@inheritdoc} */
-    public boolean isLoggable(Level level) {
+    public boolean isLoggable(final Level level) {
         return logger.isLoggable(level);
     }
 
     /** {@inheritdoc} */
-    public void log(Level level, String message) {
+    public void log(final Level level, final String message) {
         logger.log(level, message);
     }
 
     /** {@inheritdoc} */
-    public void log(Level level, String message, Throwable e) {
+    public void log(final Level level, final String message, final Throwable e) {
         logger.log(level, message, e);
     }
 
     /** {@inheritdoc} */
-    public void log(Level level, String message, Object... parameters) {
+    public void log(final Level level, final String message, final Object parameter) {
+        logger.log(level, message, parameter);
+    }
+
+    /** {@inheritdoc} */
+    public void log(final Level level, final String message, final Object... parameters) {
         logger.log(level, message, parameters);
     }
 

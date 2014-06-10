@@ -37,7 +37,7 @@ public interface UjoLogger {
     /** A level alias for the constant {@code FINEST} from the class {@code java.util.logging.Level} */
     public static final Level TRACE = Level.FINEST;
 
-    
+
     /**
      * Check if a message of the given level would actually be logged
      * by this logger.  This check is based on the Loggers effective level,
@@ -86,8 +86,23 @@ public interface UjoLogger {
      * to all the registered output Handler objects.
      * <p>
      * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
-     * @param   msg	The string message (or a key in the message catalog)
-     * @param   params	array of parameters to the message
+     * @param   message	The string message (or a key in the message catalog)
+     * @param   parameter An optional parameter for the message
+     *          are replaced by the {@code {}} sequence or the {@code {0}} one
+     */
+    public void log(Level level, String message, Object parameter);
+
+    /**
+     * Log a message, with an array of object arguments.
+     * <p>
+     * If the logger is currently enabled for the given message
+     * level then a corresponding LogRecord is created and forwarded
+     * to all the registered output Handler objects.
+     * <p>
+     * @param	level   One of the message level identifiers, see for example {@link UjoLogger#ERROR},  {@link UjoLogger#DEBUG}
+     * @param   message	The string message (or a key in the message catalog)
+     * @param   parameters An optional array of parameters for the message
+     *          are replaced by the {@code {}} sequence or the {@code {0}} one
      */
     public void log(Level level, String message, Object ... parameters);
 
