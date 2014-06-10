@@ -178,7 +178,7 @@ public class CriterionTest extends MyTestCase {
         final Criterion<User> crn1, crn2, crn3;
 
         crn1 = User.LOGIN.whereEq("myLogin");
-        crn2 = User.NAME.whereEq("Pavel").retype();
+        crn2 = User.NAME.whereEq("Pavel").cast();
         crn3 = crn2.and(crn1);
 
         expected = "User(login EQ \"myLogin\")";
