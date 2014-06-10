@@ -277,7 +277,7 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
     @Override
     public Key[] toArray() {
         final Key[] result = new Key[size];
-        System.arraycopy(this.keys, 0, result, 0, result.length);
+        System.arraycopy(keys, 0, result, 0, result.length);
         return result;
     }
 
@@ -462,6 +462,21 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         final Key[] ps = new Key[keys.length];
         System.arraycopy(keys, 0, ps, 0, ps.length);
         return new KeyRing<UJO>(domainClass, ps);
+    }
+
+    /** Returns all domain keys excluding the argument key.
+     * @param domainClass The domain class where a not null value is recommended for better performance.
+     * @param keyExcluded Nullable excluded key
+     * @return
+     */
+    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(Class<UJO> domainClass, Key<? super UJO, ?> keyExcluded) {
+        final List<Key<? super UJO,?>> keys = new ArrayList();
+        for (Key key : of(domainClass)) {
+            if (key != keyExcluded) {
+                keys.add(key);
+            }
+        }
+        return of(keys);
     }
 
     /** Returns all direct properties form a domain class
