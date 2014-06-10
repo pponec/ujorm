@@ -176,12 +176,12 @@ public class MetaDbService {
 
                         boolean exists = items.contains(mc.getName().toUpperCase());
                         if (!exists) {
-                            LOGGER.log(INFO, "New DB column: " + mc.getFullName());
+                            LOGGER.log(INFO, "New DB column: {}", mc.getFullName());
                             newColumns.add(mc);
                         }
                     }
                 } else {
-                    LOGGER.log(INFO, "New DB table: " + MetaTable.NAME.of(table));
+                    LOGGER.log(INFO, "New DB table: {}", MetaTable.NAME.of(table));
                     newTables.add(table);
                 }
 
@@ -207,7 +207,7 @@ public class MetaDbService {
                 for (MetaIndex index : table.getIndexCollection()) {
                     boolean exists = items.contains(MetaIndex.NAME.of(index).toUpperCase());
                     if (!exists) {
-                        LOGGER.log(INFO, "New DB index: " + index);
+                        LOGGER.log(INFO, "New DB index: {}", index);
                         newIndexes.add(index);
                     }
                 }
@@ -319,7 +319,10 @@ public class MetaDbService {
                     try {
                         stat.executeUpdate(sql.toString());
                     } catch (SQLException e) {
-                        LOGGER.log(INFO, "{0}: {1}; {2}", new Object[]{e.getClass().getName(), sql.toString(), e.getMessage()});
+                        LOGGER.log(INFO, "{}: {}; {}"
+                                , e.getClass().getName()
+                                , sql.toString()
+                                , e.getMessage());
                         conn.rollback();
                     }
                 }
@@ -442,7 +445,7 @@ public class MetaDbService {
                 }
             }
         } catch (Exception e) {
-            LOGGER.log(ERROR, "Error on table comment: {0}", out);
+            LOGGER.log(ERROR, "Error on table comment: {}", out);
         }
     }
 
@@ -517,8 +520,8 @@ public class MetaDbService {
         return db.getDialect().getExtentedDialect();
     }
 
-    /** Does the database support a catalog? 
-     * The feature supports: MySqlDialect and MSSqlDialect. 
+    /** Does the database support a catalog?
+     * The feature supports: MySqlDialect and MSSqlDialect.
      * @return Result value is provided from a SqlDialog class.
      */
     final protected boolean isCatalog() {
