@@ -464,17 +464,20 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return new KeyRing<UJO>(domainClass, ps);
     }
 
-    /** Returns all domain keys excluding the argument key.
+    /** Returns all domain keys excluding the argument keys.
      * @param domainClass The domain class where a not null value is recommended for better performance.
-     * @param keyExcluded Nullable excluded key
-     * @return
+     * @param excludedKeys Array of the <strong>direct</strong> excluded keys.
      */
-    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(Class<UJO> domainClass, Key<? super UJO, ?> keyExcluded) {
-        final List<Key<? super UJO,?>> keys = new ArrayList();
-        for (Key key : of(domainClass)) {
-            if (key != keyExcluded) {
-                keys.add(key);
+    public static <UJO extends Ujo> KeyRing<UJO> ofExcluding(Class<UJO> domainClass, Key<?, ?>... excludedKeys) {
+        final List<Key<? super UJO, ?>> keys = new ArrayList<Key<? super UJO, ?>>();
+        main:
+        for (Key<UJO,?> key : of(domainClass)) {
+            for (Key<?, ?> ex : excludedKeys) {
+                if (key == ex) {
+                    continue main;
+                }
             }
+            keys.add(key);
         }
         return of(keys);
     }

@@ -62,6 +62,15 @@ public class KeyRingTest extends TestCase {
     }
 
     /**
+     * Test of the excluded keys
+     */
+    public void testExcludedKeys() throws Exception {
+          KeyRing<UjoCSV> ring = KeyRing.ofExcluding(UjoCSV.class, UjoCSV.P1, UjoCSV.P2);
+          assertEquals(1, ring.size());
+          assertEquals(UjoCSV.P3.getName(), ring.getFirstKey().getName());
+    }
+
+    /**
      * Test of getType method, of class KeyRing.
      */
     public void testGetBaseClass() throws Exception {
