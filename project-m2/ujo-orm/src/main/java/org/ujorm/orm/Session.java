@@ -212,7 +212,7 @@ public class Session implements Closeable {
                         conn.rollback();
                     }
                     if (LOGGER.isLoggable(fineLevel)) {
-                        LOGGER.log(fineLevel, "Rolback of the " + database.getId());
+                        LOGGER.log(fineLevel, "Rolback of the {}", database.getId());
                     }
                 }
             }
@@ -408,7 +408,7 @@ public class Session implements Closeable {
         // ---------------- VALIDATIONS -----------------------------------
 
         if (bos==null || bos.isEmpty()) {
-            LOGGER.log(UjoLogger.INFO, "The multi insert list is empty");
+            LOGGER.log(UjoLogger.DEBUG, "The multi insert list is empty");
             return;
         }
         final MetaTable table = handler.findTableModel(bos.get(0).getClass());
@@ -559,7 +559,7 @@ public class Session implements Closeable {
             MetaDatabase db = MetaTable.DATABASE.of(table);
             List<MetaColumn> changedColumns = getOrmColumns(bo.readChangedProperties(true));
             if (changedColumns.isEmpty()) {
-                LOGGER.log(UjoLogger.WARN, "No changes to update in the object: " + bo);
+                LOGGER.log(UjoLogger.DEBUG, "No changed column to update {} ", bo);
                 return result;
             }
             final CriterionDecoder decoder = new CriterionDecoder(criterion, table);
@@ -604,6 +604,7 @@ public class Session implements Closeable {
      */
     public int delete(final OrmUjo bo) {
         if (bo == null) {
+            LOGGER.log(UjoLogger.DEBUG, "A null object isn't deleted");
             return 0;
         }
         MetaTable table = handler.findTableModel(bo.getClass());

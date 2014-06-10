@@ -261,7 +261,7 @@ public class OrmHandler implements OrmHandlerProvider {
             Session session = null;
             try {
                 session = createSession();
-                LOGGER.log(UjoLogger.INFO, "The initializaton batch is running: " + batch.getClass().getName());
+                LOGGER.log(UjoLogger.INFO, "The initializaton batch is running: {}", batch.getClass().getName());
                 batch.run(session);
                 session.commit();
                 session.close();

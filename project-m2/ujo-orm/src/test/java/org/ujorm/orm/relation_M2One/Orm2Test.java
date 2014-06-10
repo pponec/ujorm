@@ -81,6 +81,7 @@ public class Orm2Test extends TestCase {
             sample.useRelation();
           //sample.useStoredProcedure(); // create db procedure first
             sample.useUpdate();
+            sample.useDelete_0();
             sample.useDelete_1();
             sample.useDelete_2();
             sample.useMetadata();
@@ -410,6 +411,15 @@ public class Orm2Test extends TestCase {
 
         session.update(order);
         session.commit();
+    }
+
+    /** How to DELETE the one loaded object? */
+    public void useDelete_0() {
+        Item item = null;
+
+        int deleted = session.delete(item);
+        session.commit();
+        assertEquals(0, deleted);
     }
 
     /** How to DELETE the one loaded object? */

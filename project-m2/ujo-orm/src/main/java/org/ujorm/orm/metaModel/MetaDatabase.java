@@ -434,7 +434,7 @@ final public class MetaDatabase extends AbstractMetaModel implements Comparable<
         final List<String> jndi = JNDI.of(this);
         if (!jndi.isEmpty()) {
 
-            LOGGER.log(UjoLogger.DEBUG, "JNDI: {0}", jndi);
+            LOGGER.log(UjoLogger.DEBUG, "JNDI: {}", jndi);
 
             InitialContext initContext = dialect.createJndiInitialContext(this);
             final int lastItem = jndi.size()-1;
