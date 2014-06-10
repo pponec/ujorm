@@ -171,10 +171,10 @@ public abstract class Criterion<U extends Ujo> implements Serializable {
         return false;
     }
 
-    /** Retype the criterion to an extented generic domain for the case
-     * that the original Key is from a parent class of the domain type.
+    /** Cast the current criterion to an extented generic domain for the case
+     * where the current Key domain is from a parent class.
      */
-    public final <T extends U> Criterion<T> retype() {
+    public final <T extends U> Criterion<T> cast() {
         return (Criterion<T>) this;
     }
 
