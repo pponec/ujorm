@@ -71,7 +71,7 @@ public class BookingTable<U extends Booking> extends GenericPanel<U> {
     private Model<Criterion<U>> getCriterionModel() {
         return new Model<Criterion<U>>(){
             @Override public Criterion<U> getObject() {
-                return dbService.getBookingPreview().retype();
+                return dbService.getBookingPreview().cast();
             }
         };
     }
