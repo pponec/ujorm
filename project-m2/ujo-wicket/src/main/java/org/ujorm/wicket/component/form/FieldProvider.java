@@ -271,9 +271,11 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return result != null ? result : domain;
     }
 
-    /** Get a default cloned depth for the method {@link #cloneDomain(org.ujorm.Ujo, org.ujorm.wicket.OrmSessionProvider) } */
+    /** Get a default cloned depth for the method {@link #cloneDomain(org.ujorm.Ujo, org.ujorm.wicket.OrmSessionProvider) }
+     * @return Minimal value is 1.
+     */
     protected int getClonedDepth() {
-        int result = 0;
+        int result = 1;
         for (Field field : getFields()) {
             final Key key = field.getKey();
             if (key instanceof CompositeKey) {
