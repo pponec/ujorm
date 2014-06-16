@@ -15,6 +15,7 @@
  */
 package org.ujorm.wicket.component.dialog.domestic;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -77,5 +78,15 @@ public class MessageDialogPane<T extends Ujo> extends AbstractDialogPane<T> {
         //modalWindow.setCookieName(componentId + "-modalDialog");
 
         return result;
+    }
+
+    /** Show the dialog with a message */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void show(AjaxRequestTarget target, IModel<String> title, IModel<T> message, String actionButtonProperty) {
+        if (message != null && ((Object) message.getObject()) instanceof String) {
+            setMessage((IModel) message);
+        }
+        super.show(target, title, message, actionButtonProperty);
     }
 }

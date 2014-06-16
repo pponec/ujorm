@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.IValidator;
+import org.ujorm.CompositeKey;
 import org.ujorm.Key;
 import org.ujorm.KeyList;
 import org.ujorm.ListKey;
@@ -168,10 +169,13 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     @SuppressWarnings("unchecked")
     public <T> T getValue(Key<? super U, T> key) {
         final Field filed = fields.get(key.getName());
-        return (T) filed != null ? (T) filed.getModelValue() : key.getDefault();
+        return (T) filed != null
+                ? (T) filed.getModelValue()
+                : key.getDefault();
     }
 
     /** Set Value */
+    @SuppressWarnings("unchecked")
     public <T> void setValue(Key<? super U, T> key, T value) {
         fields.get(key.getName()).setModelValue(value);
     }
@@ -193,7 +197,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
     }
 
     /** Returns the last field or throw an exception
-     * @return Notnull always
+     * @return Not {@code null} always
      * @throws ArrayIndexOutOfBoundsException No last filed was found.
      */
     public <T extends Field> T getLast() throws ArrayIndexOutOfBoundsException {
@@ -259,12 +263,24 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         }
     }
 
-    /** Clone the domain object of reload the persistent object from database. */
+    /** Clone the domain object or reload the ORM object from database. */
     protected U cloneDomain(U domain, OrmSessionProvider session) throws NoSuchElementException, IllegalStateException {
         final U result = domain instanceof OrmUjo
              ? (U) session.getSession().loadBy((OrmUjo) domain)
-             : (U) UjoManager.clone(domain, 2, "clone");
+             : (U) UjoManager.clone(domain, getClonedDepth(), "clone");
         return result != null ? result : domain;
+    }
+
+    /** Get a default cloned depth for the method {@link #cloneDomain(org.ujorm.Ujo, org.ujorm.wicket.OrmSessionProvider) } */
+    protected int getClonedDepth() {
+        int result = 0;
+        for (Field field : getFields()) {
+            final Key key = field.getKey();
+            if (key instanceof CompositeKey) {
+                result = Math.max(result, ((CompositeKey) key).getCompositeCount());
+            }
+        }
+        return result;
     }
 
     /** Assign values to required component fields in a transaction for a lazy loading case */
@@ -297,7 +313,7 @@ public class FieldProvider<U extends Ujo> implements Serializable {
         return domain;
     }
 
-    /** Returns a miminal text length to create a TextArea component.
+    /** Returns a minimal text length to create a TextArea component.
      * @return The default value is 180 characters
      */
     public int getTextAreaLimit() {
