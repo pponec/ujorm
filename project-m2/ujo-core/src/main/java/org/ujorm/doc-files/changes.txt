@@ -1,8 +1,13 @@
 The Ujorm release notes
 *******************************
 
-release 1.47 (2014-06-*)
-+ WICKET: API changes
+release 1.47 (2014-06-16)
++ CORE: the Criterion class have got a new method cast() for the case where a Key domain is parent of the Criterion generic domain
++ CORE: the Logging is API have got a better support for the one argument
++ CORE: some core classes have got extended a generic API for a better support an inheritance
++ ORM: The method Session.delete(OrmUjo) accept a NULL argument now where the argument can be a result of NULLABLE relation type of M:1
++ SPRING: The original class AroundServiceTransaction is fixed thank to the Effectiva Solution company
++ WICKET: API changes and some bugfixing is done
 
 release 1.46 (2014-06-01)
 + CORE: UjoManagerCSV is running with runtime exceptions only
