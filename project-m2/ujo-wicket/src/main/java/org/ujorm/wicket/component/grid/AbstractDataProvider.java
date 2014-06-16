@@ -316,22 +316,22 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
      * Data criterion model for select data rows
      * @param selected the selected to set
      */
-    public void setSelected(@Nullable IModel<Criterion<? super U>> selected) {
-        this.selected = (IModel) selected;
+    public void setSelected(@Nullable IModel<Criterion<U>> selected) {
+        this.selected = selected;
     }
 
     /**
      * Data criterion model for select data rows
      * @param selected the selected to set
      */
-    public void setSelected(@Nonnull Criterion<? super U> selected) {
+    public void setSelected(@Nonnull Criterion<U> selected) {
         setSelected(new Model(selected));
     }
 
     // --------- CRUD support ---------
 
     /** Insert row to the data source.
-     * The method is not implemetned by default.
+     * The method is not implemented by default.
      * @param row Insert one table row
      */
     public boolean insertRow(U row) {
@@ -339,15 +339,15 @@ public abstract class AbstractDataProvider<U extends Ujo> extends SortableDataPr
     }
 
     /** Delete rows from the data source
-     * The method is not implemetned by default.
+     * The method is not implemented by default.
      * @param deleteCondition Remove all row with a condition.
      */
     public long deleteRow(Criterion<? super U> deleteCondition) {
         throw new UnsupportedOperationException();
     }
 
-    /** Update all rows with a codition using the row
-     * The method is not implemetned by default.
+    /** Update all rows with a condition using the row
+     * The method is not implemented by default.
      * @param updateCondition Update condition
      * @param updatedRow Updated row
      */
