@@ -26,7 +26,7 @@ import org.ujorm.wicket.component.tools.LocalizedModel;
  * Customer Editor
  * @author Pavel Ponec
  */
-public class LoginDialog extends EntityDialogPane<Customer> {
+public class LoginDialog<U extends Customer> extends EntityDialogPane<U> {
     private static final long serialVersionUID = 0L;
 
     public LoginDialog(ModalWindow modalWindow, IModel<Customer> model) {

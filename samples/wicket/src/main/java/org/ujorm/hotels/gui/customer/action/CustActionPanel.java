@@ -29,15 +29,15 @@ import static org.ujorm.wicket.CommonActions.*;
  * The common action panel
  * @author Pavel Ponec
  */
-public class CustActionPanel<T extends Customer> extends GenericPanel<T> {
+public class CustActionPanel<U extends Customer> extends GenericPanel<U> {
 
     @SpringBean
     private AuthService authService;
 
     /** Table row */
-    private T row;
+    private U row;
 
-    public CustActionPanel(String id, T rowPar) {
+    public CustActionPanel(String id, U rowPar) {
         super(id);
         this.row = rowPar;
 
