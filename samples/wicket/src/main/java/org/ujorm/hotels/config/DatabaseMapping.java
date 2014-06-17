@@ -20,6 +20,8 @@ import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.City;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
+import org.ujorm.hotels.entity.ParamKey;
+import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.implementation.orm.RelationToMany;
 import org.ujorm.orm.annot.Db;
@@ -49,12 +51,20 @@ public class DatabaseMapping extends OrmTable<DatabaseMapping> {
     @Table("demo_customer")
     public static final RelationToMany<DatabaseMapping,Customer> CUSTOMER = newRelation();
 
-    /** Booling (a relation between Customers and Hotels type of many to many. */
+    /** Booking (a relation between Customers and Hotels type of many to many. */
     @Table("demo_booking")
     public static final RelationToMany<DatabaseMapping,Booking> BOOKING = newRelation();
 
-    /** Booling (a relation between Customers and Hotels type of many to many. */
+    /** City of the hotel. */
     @Table("demo_city")
     public static final RelationToMany<DatabaseMapping,City> CITY = newRelation();
+
+    /** Application parameter keys. */
+    @Table("param_key")
+    public static final RelationToMany<DatabaseMapping,ParamKey> PARAM_KEY = newRelation();
+
+    /** Application parameter values. */
+    @Table("param_value")
+    public static final RelationToMany<DatabaseMapping,ParamValue> PARAM_VALUE = newRelation();
 
 }
