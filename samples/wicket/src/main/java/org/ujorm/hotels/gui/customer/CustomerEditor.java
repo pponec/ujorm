@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public class CustomerEditor<U extends Customer> extends EntityDialogPane<U> {
 
     @SpringBean private AuthService authService;
 
-    public CustomerEditor(ModalWindow modalWindow, IModel<Customer> model) {
+    public CustomerEditor(ModalWindow modalWindow, IModel<U> model) {
         super(modalWindow, model);
 
         // Editable fields:
@@ -68,7 +68,7 @@ public class CustomerEditor<U extends Customer> extends EntityDialogPane<U> {
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final CustomerEditor result = new CustomerEditor(modalWindow, model);
+        final CustomerEditor<Customer> result = new CustomerEditor<>(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.edit.title"));

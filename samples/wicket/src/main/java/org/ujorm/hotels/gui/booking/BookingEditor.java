@@ -101,7 +101,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
         final ModalWindow modalWindow = new ModalWindow(componentId, model);
         modalWindow.setCssClassName(ModalWindow.CSS_CLASS_BLUE);
 
-        final BookingEditor result = new BookingEditor(modalWindow, model);
+        final BookingEditor<Booking> result = new BookingEditor<>(modalWindow, model);
         modalWindow.setInitialWidth(width);
         modalWindow.setInitialHeight(height);
         modalWindow.setTitle(new LocalizedModel("dialog.booking.title"));

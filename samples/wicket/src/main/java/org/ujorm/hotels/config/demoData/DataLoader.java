@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Pavel Ponec
+ * Copyright 2013-2014 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class DataLoader implements InitializationBatch {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCity.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
-        UjoManagerCSV manager = UjoManagerCSV.of
+        UjoManagerCSV<City> manager = UjoManagerCSV.of
                 ( City.ID
                 , City.NAME
                 , City.COUNTRY
@@ -66,7 +66,7 @@ public class DataLoader implements InitializationBatch {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceHotel.csv"), UTF_8.name());
         while (!scanner.nextLine().isEmpty()){}
 
-        UjoManagerCSV manager = UjoManagerCSV.of
+        UjoManagerCSV<Hotel> manager = UjoManagerCSV.of
                 ( Hotel.NAME
                 , Hotel.NOTE
                 , Hotel.CITY.add(City.ID) // The value is a foreign key!
@@ -89,7 +89,7 @@ public class DataLoader implements InitializationBatch {
     /** Get hotels from CSV file */
     public List<Customer> getCustomers() {
         final Scanner scanner = new Scanner(getClass().getResourceAsStream("ResourceCustomer.csv"), UTF_8.name());
-        UjoManagerCSV manager = UjoManagerCSV.of
+        UjoManagerCSV<Customer> manager = UjoManagerCSV.of
                 ( Customer.LOGIN
                 , Customer.PASSWORD
                 , Customer.PASSWORD_HASH

@@ -57,7 +57,7 @@ public class Hotel extends OrmTable<Hotel> {
     /** Hotel state, default is ACTIVE (the true or null is required) */
     @Comment("Hotel state (the true or null is required)")
     @Column(index=INDEX_HOTEL_NAME)
-    public static final Key<Hotel, Boolean> ACTIVE = f.newKeyDefault(true, mandatory());
+    public static final Key<Hotel, Boolean> ACTIVE = f.newKeyDefault(true, mandatory(Boolean.class));
 
     static {
         f.lock();
