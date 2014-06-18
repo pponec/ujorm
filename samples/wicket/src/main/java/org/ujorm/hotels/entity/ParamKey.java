@@ -20,6 +20,7 @@ import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
@@ -44,21 +45,25 @@ public class ParamKey extends OrmTable<ParamKey> {
     /** Parameter module */
     @Comment("Parameter module")
     @Column(name="module_code", uniqueIndex=UNIQUE_PARAM_KEY)
-    public static final Key<ParamKey, Module> MODULE = f.newKey(mandatory());
+    public static final Key<ParamKey, Module> MODULE = f.newKey(mandatory(Module.class));
     /** The System parameter has a the TRUE value and the User parameter has the FALSE value */
     @Comment("The System parameter has a the TRUE value and the User parameter has the FALSE value")
     public static final Key<ParamKey, Boolean> SYSTEM_PARAM = f.newKeyDefault(true);
     /** Description of the argument */
     @Comment("Description of the argument")
     public static final Key<ParamKey, String> NOTE = f.newKey(length(MANDATORY, 256));
-    /** Java class name of the argumetn with no package */
-    @Comment("Java class name of the argumetn with no package")
+    /** Java class name of the argument with no package */
+    @Comment("Java class name of the argument with no package")
     public static final Key<ParamKey, String> CLASS_NAME = f.newKey(length(MANDATORY, 64));
     /** Java class package of the argument */
     @Comment("Java class package of the argument")
     public static final Key<ParamKey, String> CLASS_PACKAGE = f.newKey(length(MANDATORY, 128));
-    /** Date of the param modification */
-    @Comment("Date of the last param modification")
+    /** Parameter default value in a text format */
+    @Comment("Parameter default value in a text format")
+    @Column(type = DbType.CLOB)
+    public static final Key<ParamKey, String> TEXT_DEFAULT_VALUE = f.newKey();
+    /** Date of the parameter modification */
+    @Comment("Date of the last parameter modification")
     public static final Key<ParamKey, Date> LAST_UPDATE = f.newKey(mandatory());
 
     static {
@@ -66,6 +71,24 @@ public class ParamKey extends OrmTable<ParamKey> {
     }
 
     // --- Getters / Setters ---
+
+    /** Save a class of parameter value */
+    public void setParamClass(Class<?> type) {
+        CLASS_NAME.setValue(this, type.getSimpleName());
+        CLASS_PACKAGE.setValue(this, type.getPackage().getName());
+    }
+
+    /** Get a class of parameter value */
+    public Class<?> getParamClass() throws IllegalStateException {
+        final String type = CLASS_PACKAGE.of(this) + '.' + CLASS_NAME.of(this);
+        try {
+            return Class.forName(type);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Class was not found: " + type, e);
+        }
+    }
+
+    // --- Generated Getters / Setters ---
 
     /** The primary identifier */
     public Integer getId() {
@@ -77,12 +100,12 @@ public class ParamKey extends OrmTable<ParamKey> {
         ParamKey.ID.setValue(this, id);
     }
 
-    /** Parameter module */
+    /** Parameter key name*/
     public String getName() {
         return NAME.of(this);
     }
 
-    /** Parameter module */
+    /** Parameter key name*/
     public void setName(String name) {
         ParamKey.NAME.setValue(this, name);
     }
@@ -97,12 +120,12 @@ public class ParamKey extends OrmTable<ParamKey> {
         ParamKey.MODULE.setValue(this, module);
     }
 
-    /** The System parameter (true) or the User parameter (false) */
+    /** The System parameter has a the TRUE value and the User parameter has the FALSE value */
     public Boolean getSystemParam() {
         return SYSTEM_PARAM.of(this);
     }
 
-    /** The System parameter (true) or the User parameter (false) */
+    /** The System parameter has a the TRUE value and the User parameter has the FALSE value */
     public void setSystemParam(Boolean systemParam) {
         ParamKey.SYSTEM_PARAM.setValue(this, systemParam);
     }
@@ -117,12 +140,12 @@ public class ParamKey extends OrmTable<ParamKey> {
         ParamKey.NOTE.setValue(this, note);
     }
 
-    /** Java class name of the argumetn with no package */
+    /** Java class name of the argument with no package */
     public String getClassName() {
         return CLASS_NAME.of(this);
     }
 
-    /** Java class name of the argumetn with no package */
+    /** Java class name of the argument with no package */
     public void setClassName(String className) {
         ParamKey.CLASS_NAME.setValue(this, className);
     }
@@ -137,12 +160,22 @@ public class ParamKey extends OrmTable<ParamKey> {
         ParamKey.CLASS_PACKAGE.setValue(this, classPackage);
     }
 
-    /** Date of the param modification */
+    /** Parameter default value in a text format */
+    public String getTextDefaultValue() {
+        return TEXT_DEFAULT_VALUE.of(this);
+    }
+
+    /** Parameter default value in a text format */
+    public void setTextDefaultValue(String textDefaultValue) {
+        ParamKey.TEXT_DEFAULT_VALUE.setValue(this, textDefaultValue);
+    }
+
+    /** Date of the parameter modification */
     public Date getLastUpdate() {
         return LAST_UPDATE.of(this);
     }
 
-    /** Date of the param modification */
+    /** Date of the parameter modification */
     public void setLastUpdate(Date lastUpdate) {
         ParamKey.LAST_UPDATE.setValue(this, lastUpdate);
     }
