@@ -17,6 +17,8 @@ import static org.ujorm.Validator.Build.*;
 
 /** Common User */
 public class Customer extends OrmTable<Customer> {
+    /** The system login name is forbidden to login */
+    public static final String SYSTEM_LOGIN = "LOGIN";
 
     /** Index name */
     private static final String UNIQUE_LOGIN = "idx_unique_login";
@@ -41,11 +43,11 @@ public class Customer extends OrmTable<Customer> {
     /** Title */
     @Comment("Title")
     public static final Key<Customer, TitleEnum> TITLE = f.newKey();
-    /** Firstname */
+    /** First name */
     @Comment("Firstname")
     public static final Key<Customer, String> FIRSTNAME = f.newKey(length(MANDATORY, 2, 60));
-    /** Firstname */
-    @Comment("Lastname")
+    /** Surname */
+    @Comment("Surname")
     public static final Key<Customer, String> SURNAME = f.newKey(length(MANDATORY, 2, 60));
     /** Email */
     @Comment("Email")
@@ -63,6 +65,11 @@ public class Customer extends OrmTable<Customer> {
     }
 
     // --- Getters / Setters ---
+
+    /** System login is forbidden to a login */
+    public boolean isSystem() {
+        return SYSTEM_LOGIN.equals(LOGIN.of(this));
+    }
 
     //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
 
@@ -116,22 +123,22 @@ public class Customer extends OrmTable<Customer> {
         Customer.TITLE.setValue(this, title);
     }
 
-    /** Firstname */
+    /** First name */
     public String getFirstname() {
         return FIRSTNAME.of(this);
     }
 
-    /** Firstname */
+    /** First name */
     public void setFirstname(String firstname) {
         Customer.FIRSTNAME.setValue(this, firstname);
     }
 
-    /** Firstname */
+    /** Surname */
     public String getSurname() {
         return SURNAME.of(this);
     }
 
-    /** Firstname */
+    /** Surname */
     public void setSurname(String surname) {
         Customer.SURNAME.setValue(this, surname);
     }

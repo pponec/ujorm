@@ -60,7 +60,7 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
 
     /** Is logged user ? */
     @Override
-    public boolean isCustomer() {
+    public boolean isLogged() {
         return getCurrentCustomer() != null;
     }
 

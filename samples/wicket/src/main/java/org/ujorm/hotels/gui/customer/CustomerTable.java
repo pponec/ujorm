@@ -75,9 +75,13 @@ public class CustomerTable<U extends Customer> extends GenericPanel<U> {
 
     /** Create a criterion for the table */
     private IModel<Criterion<U>> getCriterion() {
-        return new Model(authService.isAdmin()
+        final Criterion<Customer> crn1, crn2;
+        crn1 = Customer.LOGIN.whereNeq(Customer.SYSTEM_LOGIN);
+        crn2 = authService.isAdmin()
              ? Customer.ACTIVE.forAll()
-             : Customer.ACTIVE.whereEq(true));
+             : Customer.ACTIVE.whereEq(true);
+        final Criterion<U> crn3 = crn1.and(crn2).cast();
+        return Model.of(crn3);
     }
 
     /** Manage events */
