@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, Pavel Ponec
+ * Copyright 2013-2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.ujorm.hotels.gui.about.MeasuringCode;
 import org.ujorm.hotels.gui.booking.BookingTable;
 import org.ujorm.hotels.gui.customer.CustomerTable;
 import org.ujorm.hotels.gui.hotel.HotelTable;
+import org.ujorm.hotels.gui.params.ParamsTable;
 import org.ujorm.hotels.services.AuthService;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
@@ -53,6 +54,7 @@ public class HomePage extends WebPage {
         tabs.add(new UjoTab("Hotels", "hotel", HotelTable.class));
         tabs.add(new UjoTab("Booking", "booking", BookingTable.class));
         tabs.add(new UjoTab("Customer", "customer", CustomerTable.class));
+        tabs.add(new UjoTab("Parameters", "params", ParamsTable.class));
         tabs.add(new UjoTab("About", "about", AboutPanel.class));
         add(new UjoTabbedPanel("tabs", tabs));
 
