@@ -71,6 +71,15 @@ public class Customer extends OrmTable<Customer> {
         return SYSTEM_LOGIN.equals(LOGIN.of(this));
     }
 
+    /** Returns a full name of the Customer */
+    public String getFullName() {
+        final StringBuilder result = new StringBuilder(32);
+        result.append(FIRSTNAME.of(this));
+        result.append(" ");
+        result.append(SURNAME.of(this));
+        return result.toString();
+    }
+
     //<editor-fold defaultstate="collapsed" desc="Setters and Getters generated from NetBeans">
 
     /** The Primary Key */

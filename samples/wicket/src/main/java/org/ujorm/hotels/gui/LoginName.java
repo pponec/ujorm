@@ -74,7 +74,7 @@ public class LoginName extends MessageLink {
     private class LoginModel extends Model<String> {
         @Override public String getObject() {
             final Customer cust = getCurrentCustomer();
-            return cust != null ? cust.getLogin() : "Log-in";
+            return cust != null ? cust.getFullName() : "Login";
         }
     }
 
