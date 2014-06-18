@@ -23,6 +23,10 @@ div.tabpanel div.tab-row li a.customer {
     background-image: url("../images/icons/user.png");
 }
 
+div.tabpanel div.tab-row li a.params {
+    background-image: url("../images/icons/wrench.png");
+}
+
 div.tabpanel div.tab-row li a.about {
     background-image: url("../images/icons/help.png");
 }
