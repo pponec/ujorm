@@ -51,7 +51,7 @@ public class ParamValue extends OrmTable<ParamValue> {
     @Comment("Parameter value in a text format")
     @Column(type = DbType.CLOB)
     public static final Key<ParamValue, String> TEXT_VALUE = f.newKey();
-    /** Date of the param modification */
+    /** Date of the parameter modification */
     @Comment("Date of the last param modification")
     public static final Key<ParamValue, Date> LAST_UPDATE = f.newKey(mandatory());
 
