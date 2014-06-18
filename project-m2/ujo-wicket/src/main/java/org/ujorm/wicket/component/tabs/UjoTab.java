@@ -15,6 +15,8 @@
  */
 package org.ujorm.wicket.component.tabs;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -30,9 +32,10 @@ public class UjoTab extends AbstractTab {
     private final String cssClass;
     /** Default class for creating a panel of the tab */
     private final Class<? extends WebMarkupContainer> panel;
-
     /** Model for constructor of the Tab components */
     private IModel<?> tabModel;
+    /** Optional visible model */
+    private IModel<Boolean> visibleModel;
 
     /** Constructor */
     public UjoTab(IModel<String> title, Class<? extends WebMarkupContainer> panel) {
@@ -46,9 +49,33 @@ public class UjoTab extends AbstractTab {
 
     /** Constructor */
     public UjoTab(IModel<String> title, String cssClass, Class<? extends WebMarkupContainer> panel) {
+        this(title, cssClass, panel, (Model<Boolean>) null);
+    }
+
+    /**
+     * Constructor
+     * @param title Title model
+     * @param cssClass CSS class
+     * @param panel Panel class
+     * @param visible Optional visible model
+     */
+    public UjoTab
+            ( @Nonnull IModel<String> title
+            , @Nullable String cssClass
+            , @Nonnull Class<? extends WebMarkupContainer> panel
+            , @Nullable IModel<Boolean> visible) {
         super(title);
         this.cssClass = cssClass;
         this.panel = panel;
+        this.visibleModel = visible;
+    }
+
+    /** The method get a visibleModel if any */
+    @Override
+    public boolean isVisible() {
+        return visibleModel != null
+                ? Boolean.TRUE.equals(visibleModel.getObject())
+                : super.isVisible();
     }
 
     /** Model for constructor of the Tab components */
@@ -67,7 +94,7 @@ public class UjoTab extends AbstractTab {
     }
 
     /** Create new instance of the {@code panel} class.
-     * You can owerwrite the method for a special requirements.
+     * You can overwrite the method for a special requirements.
      * <br/>Original documentation: @{inheritDoc}
      */
     @Override

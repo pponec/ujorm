@@ -62,7 +62,7 @@ public class BooleanField<T extends Boolean> extends Field<T> {
     protected AjaxEventBehavior createChangeBehaviour(final String action, final String jsEvent) {
         return new AjaxFormComponentUpdatingBehavior(jsEvent) {
             @Override protected void onUpdate(AjaxRequestTarget target) {
-                send(BooleanField.this, Broadcast.BREADTH, new FieldEvent(action, key, target));
+                send(BooleanField.this, Broadcast.BUBBLE, new FieldEvent(action, key, target));
             }
         };
     }
