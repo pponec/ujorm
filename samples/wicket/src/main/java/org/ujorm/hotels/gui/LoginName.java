@@ -50,7 +50,7 @@ public class LoginName extends MessageLink {
 
     @Override
     public void onClick(AjaxRequestTarget target) {
-        if (authService.isCustomer()) {
+        if (authService.isLogged()) {
             authService.logout();
             target.add(this);
             send(getWebPage(), Broadcast.EXACT, new UjoEvent(LOGIN_CHANGED, null, target));

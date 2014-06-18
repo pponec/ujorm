@@ -37,6 +37,9 @@ public interface DbService {
     /** Find enabled customer  */
     public Customer findCustomer(String login, String password);
 
+    /** Create new instance of the system customer containing only two attributes: ID + LOGIN  */
+    public Customer getSystemCustomer();
+
     /** Delete hotel if no related booking was found, or inactive it */
     public void deleteHotel(Hotel hotel);
 

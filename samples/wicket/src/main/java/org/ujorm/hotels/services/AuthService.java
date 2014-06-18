@@ -29,10 +29,10 @@ public interface AuthService {
     /** Logout */
     public void logout();
 
-    /** Is logged user ? */
-    public boolean isCustomer();
+    /** Is logged any user ? */
+    public boolean isLogged();
 
-    /** Is logged admin */
+    /** Is logged an administrator ? */
     public boolean isAdmin();
 
     /** Is logged selected user */

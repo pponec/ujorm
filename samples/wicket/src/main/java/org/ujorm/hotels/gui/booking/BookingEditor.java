@@ -71,7 +71,7 @@ public class BookingEditor<U extends Booking> extends EntityDialogPane<U> {
     /** Enable/Disable login fields */
     @Override
     protected void onBeforeRender() {
-        final boolean enabled = !authService.isCustomer();
+        final boolean enabled = !authService.isLogged();
         fields.setEnabled(Booking.CUSTOMER.add(Customer.LOGIN), enabled);
         fields.setVisible(Booking.CUSTOMER.add(Customer.PASSWORD), enabled);
         super.onBeforeRender();
