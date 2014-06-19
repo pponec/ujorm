@@ -17,8 +17,6 @@ import static org.ujorm.Validator.Build.*;
 
 /** Common User */
 public class Customer extends OrmTable<Customer> {
-    /** The system login name is forbidden to login */
-    public static final String SYSTEM_LOGIN = "LOGIN";
 
     /** Index name */
     private static final String UNIQUE_LOGIN = "idx_unique_login";
@@ -65,11 +63,6 @@ public class Customer extends OrmTable<Customer> {
     }
 
     // --- Getters / Setters ---
-
-    /** System login is forbidden to a login */
-    public boolean isSystem() {
-        return SYSTEM_LOGIN.equals(LOGIN.of(this));
-    }
 
     /** Returns a full name of the Customer */
     public String getFullName() {

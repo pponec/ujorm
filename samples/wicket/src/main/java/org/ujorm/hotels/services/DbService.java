@@ -27,6 +27,8 @@ import org.ujorm.wicket.UjoEvent;
  * @author ponec
  */
 public interface DbService {
+    /** System account is {@code null} always */
+    public static final Customer SYSTEM_ACCOUNT = null;
 
     /** The one day in milisecond */
     public static final int DAY_AS_MILISEC = 1000 * 60 * 60 * 24;
@@ -36,9 +38,6 @@ public interface DbService {
 
     /** Find enabled customer  */
     public Customer findCustomer(String login, String password);
-
-    /** Create new instance of the system customer containing only two attributes: ID + LOGIN  */
-    public Customer getSystemCustomer();
 
     /** Delete hotel if no related booking was found, or inactive it */
     public void deleteHotel(Hotel hotel);
