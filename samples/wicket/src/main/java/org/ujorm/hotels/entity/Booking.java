@@ -30,14 +30,14 @@ public class Booking extends OrmTable<Booking> {
     /** Relation to hotel */
     @Comment("Relation to hotel")
     @Column(index=INDEX_NAME)
-    public static final Key<Booking, Hotel> HOTEL = f.newKey(notNull());
+    public static final Key<Booking, Hotel> HOTEL = f.newKey(notNull(Hotel.class));
     /** Relation to customer */
     @Comment("Relation to customer")
     @Column(index=INDEX_NAME)
-    public static final Key<Booking, Customer> CUSTOMER = f.newKey(notNull());
+    public static final Key<Booking, Customer> CUSTOMER = f.newKey(notNull(Customer.class));
     /** Date from */
     @Comment("Date from")
-    public static final Key<Booking, Date> DATE_FROM = f.newKey(mandatory());
+    public static final Key<Booking, Date> DATE_FROM = f.newKey(mandatory(Date.class));
     /** Number of nights */
     @Comment("Number of nights")
     public static final Key<Booking, Short> NIGHTS = f.newKeyDefault((short)1, range((short)1, (short)365));
@@ -52,7 +52,7 @@ public class Booking extends OrmTable<Booking> {
     public static final Key<Booking, String> CURRENCY = f.newKeyDefault("USD", length(MANDATORY, 3, 3));
     /** Creation date of booking. */
     @Comment("Creation date of booking.")
-    public static final Key<Booking, Date> CREATION_DATE = f.newKey(mandatory());
+    public static final Key<Booking, Date> CREATION_DATE = f.newKey(mandatory(Date.class));
 
     static {
         f.lock();

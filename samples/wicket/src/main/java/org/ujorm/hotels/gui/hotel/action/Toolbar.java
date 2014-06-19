@@ -66,7 +66,8 @@ public final class Toolbar<U extends Hotel> extends AbstractToolbar<U> {
                    , searchCity.getValue()));
         }
 
-        getCriterion().setObject((Criterion<U>)result);
+        final Criterion<U> resultCast = result.cast();
+        getCriterion().setObject(resultCast);
     }
 
     /** Default action name is {@link CommonActions#FILTER} */

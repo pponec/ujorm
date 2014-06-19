@@ -315,6 +315,7 @@
                     <target>1.7</target>
                     <debug>true</debug>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <!--DEBUG:<compilerArgument>-Xlint:unchecked</compilerArgument>-->
                 </configuration>
             </plugin>
             <plugin>
