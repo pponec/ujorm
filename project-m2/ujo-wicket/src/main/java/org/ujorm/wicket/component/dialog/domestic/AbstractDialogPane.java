@@ -178,7 +178,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
      * @param domain Domain object
      * @param target target
      */
-    public void show(UjoEvent event, IModel<String> title) {
+    public void show(UjoEvent<T> event, IModel<String> title) {
         setAction(event.getAction());
         show(event.getTarget(), title, event.getUjoModel());
     }
@@ -188,7 +188,7 @@ public abstract class AbstractDialogPane<T> extends GenericPanel<T> {
      * @param domain Domain object
      * @param target target
      */
-    public void show(UjoEvent event, IModel<String> title, String actionButtonProperty) {
+    public void show(UjoEvent<T> event, IModel<String> title, String actionButtonProperty) {
         setAction(event.getAction());
         show(event.getTarget(), title, event.getUjoModel(), actionButtonProperty);
     }
