@@ -44,6 +44,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         UjoDataProvider<U> columns = UjoDataProvider.of(getCriterion());
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.MODULE));
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.NAME));
+        columns.add(ParamValue.PARAM_KEY.add(ParamKey.SYSTEM_PARAM));
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.CLASS_NAME));
         columns.add(ParamValue.TEXT_VALUE);
         columns.add(ParamValue.PARAM_KEY.add(ParamKey.LAST_UPDATE));
@@ -61,8 +62,8 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         final Criterion<U> result;
         if (authService.isLogged()) {
             result = ParamValue.CUSTOMER.whereEq(authService.isAdmin()
-                    ? dbService.getSystemCustomer()
-                    : authService.getCurrentCustomer()).cast();
+                   ? DbService.SYSTEM_ACCOUNT
+                   : authService.getCurrentCustomer()).cast();
         } else {
             result = ParamValue.ID.forNone().cast();
         }

@@ -64,7 +64,7 @@ public class ParamKey extends OrmTable<ParamKey> {
     public static final Key<ParamKey, String> TEXT_DEFAULT_VALUE = f.newKey();
     /** Date of the parameter modification */
     @Comment("Date of the last parameter modification")
-    public static final Key<ParamKey, Date> LAST_UPDATE = f.newKey(mandatory());
+    public static final Key<ParamKey, Date> LAST_UPDATE = f.newKey(mandatory(Date.class));
 
     static {
         f.lock();

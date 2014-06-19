@@ -38,22 +38,22 @@ public class ParamValue extends OrmTable<ParamValue> {
     @Comment("The primary identifier")
     @Column(pk = true)
     public static final Key<ParamValue, Integer> ID = f.newKey();
-    /** Parameter Key */
-    @Comment("Parameter Key")
+    /** Parameter Key where the NULL value means a 'system parameter' */
+    @Comment("Parameter Key where the NULL value means a 'system parameter'")
     @Column(uniqueIndex=UNIQUE_PARAM_VALUE)
-    public static final Key<ParamValue, ParamKey> PARAM_KEY = f.newKey(mandatory());
+    public static final Key<ParamValue, ParamKey> PARAM_KEY = f.newKey();
     /** Related customer or a system customer for a system parameters
      * @see ParamKey#SYSTEM_PARAM */
     @Comment("Related customer or a system customer for a system parameter value")
     @Column(uniqueIndex=UNIQUE_PARAM_VALUE)
-    public static final Key<ParamValue, Customer> CUSTOMER = f.newKey(mandatory());
+    public static final Key<ParamValue, Customer> CUSTOMER = f.newKey(mandatory(Customer.class));
     /** Parameter value in a text format */
     @Comment("Parameter value in a text format")
     @Column(type = DbType.CLOB)
     public static final Key<ParamValue, String> TEXT_VALUE = f.newKey();
     /** Date of the parameter modification */
     @Comment("Date of the last param modification")
-    public static final Key<ParamValue, Date> LAST_UPDATE = f.newKey(mandatory());
+    public static final Key<ParamValue, Date> LAST_UPDATE = f.newKey(mandatory(Date.class));
 
     static {
         f.lock();
@@ -71,12 +71,12 @@ public class ParamValue extends OrmTable<ParamValue> {
         ParamValue.ID.setValue(this, id);
     }
 
-    /** Parameter Key */
+    /** Parameter Key where the NULL value means a 'system parameter' */
     public ParamKey getParamKey() {
         return PARAM_KEY.of(this);
     }
 
-    /** Parameter Key */
+    /** Parameter Key where the NULL value means a 'system parameter' */
     public void setParamKey(ParamKey paramKey) {
         ParamValue.PARAM_KEY.setValue(this, paramKey);
     }

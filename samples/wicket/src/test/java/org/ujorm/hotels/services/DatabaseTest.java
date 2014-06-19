@@ -108,15 +108,15 @@ public class DatabaseTest extends AbstractServiceImpl {
     /** Database query using the Ujorm <strong>Keys</strong> */
     @Test
     @Transactional
-    public void testNativeCriterion() {
+    public <T extends Booking> void testNativeCriterion() {
         Key<Booking, String> bookingCityName = Booking.HOTEL
                 .add(Hotel.CITY).add(City.NAME);
 
         String[] cities  = {"Prague", "Amsterdam"};
         Criterion crn = bookingCityName.forSqlUnchecked("{0} IN ({1})", cities);
 
-        Query<Booking> bookings = createQuery(crn);
-        List<Booking> result = bookings.list();
+        Query<T> bookings = createQuery(crn);
+        List<T> result = bookings.list();
         assertFalse(result.isEmpty());
     }
 
