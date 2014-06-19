@@ -29,7 +29,6 @@ import org.ujorm.criterion.Criterion;
 import org.ujorm.hotels.entity.Booking;
 import org.ujorm.hotels.entity.Customer;
 import org.ujorm.hotels.entity.Hotel;
-import org.ujorm.hotels.entity.enums.TitleEnum;
 import org.ujorm.hotels.services.*;
 import org.ujorm.validator.ValidationException;
 import org.ujorm.wicket.UjoEvent;
@@ -49,8 +48,6 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     private boolean readOnly;
     /** Is the measuring code enabled? */
     private boolean measuringCode;
-    /** System account ID*/
-    private Integer systemUserId;
 
     /** Read only sign */
     public void setReadOnly(boolean readOnly) {
@@ -87,37 +84,6 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         } else {
            getSession().update(hotel);
         }
-    }
-
-    /** Create new instance of the system customer containing only two attributes: ID + LOGIN  */
-    @Override
-    public Customer getSystemCustomer() {
-        final Customer result = new Customer();
-        result.setId(getSystemCustomerId());
-        result.setLogin(Customer.SYSTEM_LOGIN);
-        return result;
-    }
-
-    /** Get the system user ID  */
-    private Integer getSystemCustomerId() {
-        if (systemUserId == null) {
-            synchronized (this) {
-                Criterion<Customer> crn = Customer.LOGIN.whereEq(Customer.SYSTEM_LOGIN);
-                Customer cust = getSession().createQuery(crn).orderBy(Customer.ID).setLimit(1).uniqueResult();
-                if (cust == null) {
-                    cust = new Customer();
-                    cust.setLogin(Customer.SYSTEM_LOGIN);
-                    cust.setActive(false); // System user is forbiden to login
-                    cust.setPassword(Customer.SYSTEM_LOGIN + new Random().nextInt());
-                    cust.setFirstname(Customer.SYSTEM_LOGIN);
-                    cust.setSurname(Customer.SYSTEM_LOGIN);
-                    cust.setTitle(TitleEnum.MR);
-                    saveOrUpdateCustomer(cust);
-                }
-                systemUserId = cust.getId();
-           }
-        }
-        return systemUserId;
     }
 
     /** {@inheritDoc } */
