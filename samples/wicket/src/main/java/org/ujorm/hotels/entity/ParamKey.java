@@ -16,6 +16,7 @@
 package org.ujorm.hotels.entity;
 
 import java.util.Date;
+import javax.annotation.Nonnull;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.hotels.entity.enums.Module;
@@ -26,7 +27,7 @@ import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
 
 /** Key of persistent parameter */
-public class ParamKey extends OrmTable<ParamKey> {
+final public class ParamKey extends OrmTable<ParamKey> {
 
     /** Unique index name */
     private static final String UNIQUE_PARAM_KEY = "idx_unique_param_key";
@@ -68,6 +69,16 @@ public class ParamKey extends OrmTable<ParamKey> {
 
     static {
         f.lock();
+    }
+
+    /** Default constructor */
+    public ParamKey() {
+    }
+
+    /** Key constructor */
+    public ParamKey(@Nonnull final String name, @Nonnull final Module module) {
+        setName(name);
+        setModule(module);
     }
 
     // --- Getters / Setters ---
@@ -179,5 +190,4 @@ public class ParamKey extends OrmTable<ParamKey> {
     public void setLastUpdate(Date lastUpdate) {
         ParamKey.LAST_UPDATE.setValue(this, lastUpdate);
     }
-
 }

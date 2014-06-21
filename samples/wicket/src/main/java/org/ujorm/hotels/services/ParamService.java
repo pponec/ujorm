@@ -15,6 +15,8 @@
  */
 package org.ujorm.hotels.services;
 
+import org.ujorm.Key;
+import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
 
 /**
@@ -23,7 +25,10 @@ import org.ujorm.hotels.services.*;
  */
 public interface ParamService {
 
+    /** Get a value of the key */
+    public <U extends ParamService, T> T getValue(Key<? super U, T> key, Module module);
+
     /** Save all parameters into database */
-    public void init(ModuleParams moduleParams);
+    public void init(ModuleParams<?> params);
 
 }

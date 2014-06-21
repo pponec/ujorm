@@ -27,7 +27,7 @@ import org.ujorm.orm.annot.Comment;
 import static org.ujorm.Validator.Build.*;
 
 /** City with Country */
-public class ParamValue extends OrmTable<ParamValue> {
+public final class ParamValue extends OrmTable<ParamValue> {
 
     /** Unique index name */
     private static final String UNIQUE_PARAM_VALUE = "idx_unique_param_value";
@@ -68,6 +68,19 @@ public class ParamValue extends OrmTable<ParamValue> {
     public static final Key<ParamValue, Module> KEY_MODULE$ = PARAM_KEY.add(ParamKey.MODULE);
     /** System parameter */
     public static final Key<ParamValue, Boolean> KEY_SYSTEM$ = PARAM_KEY.add(ParamKey.SYSTEM_PARAM);
+
+
+    // --- Constructors ---
+
+    /** Default constructor */
+    public ParamValue() {
+    }
+
+    /** Key constructor assign paramKey and a text value */
+    public ParamValue(final ParamKey paramKey) {
+        setParamKey(paramKey);
+        setTextValue(paramKey.getTextDefaultValue());
+    }
 
     // --- Getters / Setters ---
 
