@@ -24,6 +24,7 @@ import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.annot.Immutable;
 import org.ujorm.extensions.AbstractUjo;
+import org.ujorm.extensions.UjoLockable;
 import org.ujorm.orm.metaModel.MetaParams;
 import org.ujorm.orm.metaModel.MoreParams;
 import org.ujorm.orm.utility.OrmTools;
@@ -33,12 +34,13 @@ import org.ujorm.orm.utility.OrmTools;
  * @author Pavel Ponec
  */
 @Immutable
-abstract public class AbstractMetaModel extends AbstractUjo {
+abstract public class AbstractMetaModel extends AbstractUjo implements UjoLockable {
 
     /** Read-only state */
     private boolean readOnly = false;
 
     /** Property values are locked to read-only. */
+    @Override
     public boolean readOnly() {
         return readOnly;
     }
@@ -54,7 +56,12 @@ abstract public class AbstractMetaModel extends AbstractUjo {
             throw new UnsupportedOperationException("The method must be enabled by parameter: " + enabledKey.toStringFull());
         }
     }
-    
+
+    /** Lock the class and all other relations */
+    @Override public void lock() {
+        setReadOnly(true);
+    }
+
     /** Set a read-only state. */
     @SuppressWarnings("unchecked")
     public void setReadOnly(boolean recurse) {
@@ -63,9 +70,10 @@ abstract public class AbstractMetaModel extends AbstractUjo {
         for (Key p : readKeys()) {
             if (p instanceof ListKey) {
                final List list = (List) p.of(this);
-               p.setValue(this, list!=null
-                   ? Collections.unmodifiableList(list)
-                   : Collections.EMPTY_LIST
+               // Skip validators:
+               writeValue(p, (list == null || list.isEmpty())
+                   ? Collections.EMPTY_LIST
+                   : Collections.unmodifiableList(list)
                );
             }
         }
@@ -97,8 +105,9 @@ abstract public class AbstractMetaModel extends AbstractUjo {
         return readOnly;
     }
 
+    /** Write a value if the operation is enabled */
     @Override
-    public void writeValue(final Key key, final Object value) {
+    public void writeValue(final Key<?,?> key, final Object value) throws UnsupportedOperationException {
         this.checkReadOnly(true);
         super.writeValue(key, value);
     }

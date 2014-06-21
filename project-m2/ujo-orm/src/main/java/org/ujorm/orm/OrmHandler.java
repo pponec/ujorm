@@ -232,7 +232,7 @@ public class OrmHandler implements OrmHandlerProvider {
         }
 
         // Lock the meta-model:
-     databases.setReadOnly(true);
+        databases.lock();
 
         // Log the meta-model:
         final Level level = MetaParams.LOG_METAMODEL_INFO.of(params)
