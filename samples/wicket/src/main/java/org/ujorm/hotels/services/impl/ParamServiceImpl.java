@@ -15,6 +15,12 @@
  */
 package org.ujorm.hotels.services.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
 import org.ujorm.criterion.Criterion;
+import org.ujorm.hotels.entity.ParamKey;
 import org.ujorm.hotels.entity.ParamValue;
 import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.hotels.services.*;
@@ -39,13 +46,8 @@ implements ParamService {
     @Autowired
     private AuthService authService;
 
-    /** Save all parameters into database */
-    @Override
-    public void init(ModuleParams moduleParams) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     /** Get a value of the key */
+    @Override
     public <U extends ParamService, T> T getValue(Key<? super U, T> key, Module module) {
         final Criterion<ParamValue> crn1, crn2, crn3, crn4, crn5;
         crn1 = ParamValue.KEY_NAME$.whereEq(key.getName());
@@ -66,4 +68,68 @@ implements ParamService {
                 ? UjoManager.getInstance().decodeValue(key,  param.getTextValue())
                 : key.getDefault();
     }
+
+    /** Save all parameters into database */
+    @Override
+    public void init(ModuleParams<?> params) {
+        final Map<String, ParamKey> paramKeyMap = getParamKeyMap(params);
+
+        // --- KEYS ----
+
+        final Date now = new Date();
+        for (Key key : params.readKeys()) {
+            ParamKey paramKey = paramKeyMap.get(key.getName());
+            if (paramKey == null) {
+                paramKey = new ParamKey(key.getName(), params.getModule());
+                paramKeyMap.put(key.getName(), paramKey);
+            }
+            paramKey.setParamClass(key.getType());
+            paramKey.setLastUpdate(now);
+            paramKey.setSystemParam(true); // TODO
+            paramKey.setNote("-"); // TODO
+            getSession().saveOrUpdate(paramKey);
+        }
+
+        // --- VALUES ----
+
+        final Map<String, ParamValue> valueMap = getParamValueMap(paramKeyMap.values());
+        for (Key key : params.readKeys()) {
+            ParamValue paramValue = valueMap.get(key.getName());
+            if (paramValue == null) {
+                paramValue = new ParamValue(paramKeyMap.get(key.getName()));
+                paramValue.setCustomer(null);
+                paramValue.setLastUpdate(now);
+                getSession().save(paramValue);
+            }
+        }
+    }
+
+    /** Returns a ParamKeySet for required module */
+    private Map<String, ParamKey> getParamKeyMap(ModuleParams<?> params) {
+        final List<String> keyNames = new ArrayList<>(params.readKeys().size());
+        for (Key key : params.readKeys()) {
+            keyNames.add(key.getName());
+        }
+        final Criterion<ParamKey> crn1, crn2, crn3;
+        crn1 = ParamKey.NAME.whereIn(keyNames);
+        crn2 = ParamKey.MODULE.whereIn(params.getModule());
+        crn3 = crn1.and(crn2);
+
+        final Map<String, ParamKey> result = new HashMap<>(keyNames.size());
+        for (ParamKey paramKey : getSession().createQuery(crn3)) {
+            result.put(paramKey.getName(), paramKey);
+        }
+        return result;
+    }
+
+    /** Returns a ParamValueSet for required module */
+    private Map<String, ParamValue> getParamValueMap(Collection<ParamKey> keys) {
+        final Map<String, ParamValue> result = new HashMap<>(keys.size());
+        final Criterion<ParamValue> crn = ParamValue.PARAM_KEY.whereIn(keys);
+        for (ParamValue value : getSession().createQuery(crn).addColumn(ParamValue.KEY_NAME$)) {
+            result.put(ParamValue.KEY_NAME$.of(value), value);
+        }
+        return result;
+    }
+
 }
