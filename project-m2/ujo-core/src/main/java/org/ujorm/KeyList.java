@@ -90,7 +90,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
 
     /** Get the last Property */
     public Key<UJO,?> getLastKey();
-    
+
     /** The the domain class of related Keys.
      * The value can be {@code null} if the Key array is empty. */
     public Class<UJO> getType();
@@ -116,7 +116,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
     /** Returns true if list contains key from the parameter. */
     public boolean contains(final Key<?,?> key);
 
-    /** Create an interator for all keys.
+    /** Create an iterator for all keys.
      * The return UjoProperty item type is used for a back compatibility only,
      * in feature it will be replaced by the Key interface.
      */
@@ -124,7 +124,7 @@ public interface KeyList<UJO extends Ujo> extends Iterable<Key<UJO,Object>> {
     public Iterator<Key<UJO,Object>> iterator();
 
     /** Returns or create UjoManager.
-     * In your own implementation keep in a mind a simple serialization freature of the current object.
+     * In your own implementation keep in a mind a simple serialization feature of the current object.
      */
     // public UjoManager getUjoManager();
 }

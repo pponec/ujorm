@@ -108,8 +108,8 @@ public class UjoManager implements Comparator<Key> {
 
     /** Read an KeyList instance. The first result is cached. */
     @SuppressWarnings("unchecked")
-    public KeyList<?> readKeys(Class type) {
-        KeyList<?> result = propertiesCache.get(type);
+    public <T extends Ujo> KeyList<T> readKeys(Class type) {
+        KeyList<T> result = propertiesCache.get(type);
         if (result==null) {
             final Key[] ps = readPropertiesNocache(type, true);
             result = ps.length==0
@@ -381,8 +381,8 @@ public class UjoManager implements Comparator<Key> {
             return ujo;
         }
         try {
-            Ujo result = (Ujo) ujo.getClass().newInstance();
-            for (Key key : ujo.readKeys()) {
+            Ujo result = ujo.getClass().newInstance();
+            for (Key<Ujo,?> key : ujo.readKeys()) {
                 Object value = ujo.readValue(key);
                 if (ujo.readAuthorization(action, key, value)) {
 

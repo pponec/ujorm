@@ -18,14 +18,14 @@ package org.ujorm.implementation.mapImpl;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import org.ujorm.Key;
 import org.ujorm.core.UjoManager;
-import org.ujorm.extensions.Property;
 import org.ujorm.extensions.ListProperty;
+import org.ujorm.extensions.Property;
 import org.ujorm.extensions.SuperAbstractUjo;
 
 /**

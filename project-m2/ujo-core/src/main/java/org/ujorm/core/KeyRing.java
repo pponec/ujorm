@@ -249,25 +249,23 @@ public class KeyRing<UJO extends Ujo> implements KeyList<UJO>, Serializable {
         return size == 0;
     }
 
-    /** Create Property Interator */
+    /** Create Key Iterator */
     @Override
     public Iterator<Key<UJO, Object>> iterator() {
         return new Iterator<Key<UJO, Object>>() {
             int i = -1;
 
-            public boolean hasNext() {
+            @Override public boolean hasNext() {
                 return (i + 1) < size;
             }
 
-            public Key<UJO,Object> next() {
+            @Override public Key<UJO,Object> next() {
                 return (Key<UJO,Object>) get(++i);
             }
 
-            /**
-             * The method is not supported.
-             */
+            /** The method is not supported. */
             @Deprecated
-            public void remove() throws UnsupportedOperationException {
+            @Override public void remove() throws UnsupportedOperationException {
                 throw new UnsupportedOperationException("The REMOVE operation is not supported.");
             }
         };

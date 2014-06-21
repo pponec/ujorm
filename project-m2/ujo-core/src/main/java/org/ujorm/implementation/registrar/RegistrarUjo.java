@@ -16,12 +16,12 @@
 
 package org.ujorm.implementation.registrar;
 
-import org.ujorm.Ujo;
 import org.ujorm.Key;
-import org.ujorm.listener.EventRegistrar;
-import org.ujorm.listener.UjoPropertyChangeSupport;
-import org.ujorm.listener.UjoPropertyChangeListener;
+import org.ujorm.Ujo;
 import org.ujorm.implementation.map.MapUjo;
+import org.ujorm.listener.EventRegistrar;
+import org.ujorm.listener.UjoPropertyChangeListener;
+import org.ujorm.listener.UjoPropertyChangeSupport;
 
 /**
  * A MapUjo implementation with a Property change listener support.

@@ -19,6 +19,7 @@ package org.ujorm.implementation.orm;
 import java.util.HashSet;
 import java.util.Set;
 import org.ujorm.Key;
+import org.ujorm.KeyList;
 import org.ujorm.Ujo;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
@@ -61,7 +62,7 @@ import static org.ujorm.extensions.Property.UNDEFINED_INDEX;
  * @see org.ujorm.implementation.orm.RelationToMany
  * @see org.ujorm.core.UjoIterator
  */
-public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements ExtendedOrmUjo<UJO_IMPL> {
+public abstract class OrmTable<U extends OrmTable> extends QuickUjo implements ExtendedOrmUjo<U> {
 
     /** An empty array of the UJO keys */
     @PackagePrivate
@@ -88,7 +89,7 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
 
     /** A method for an internal use only. */
     @Override
-    public void writeValue(Key key, Object value) {
+    public void writeValue(Key<?,?> key, Object value) {
         if (session!=null) {
             if (changes==null) {
                 changes = new HashSet<Key>(8);
@@ -119,9 +120,16 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
         return result;
     }
 
+    /** {@inheritDoc}
+     * @see Key#isDirect() */
+    @Override
+    public KeyList<U> readKeys() {
+        return super.readKeys();
+    }
+
     /** Getter based on Key implemeted by a pattern UjoExt */
     @SuppressWarnings("unchecked")
-    public final <UJO extends UJO_IMPL, VALUE> VALUE get(final Key<UJO, VALUE> key) {
+    public final <UJO extends U, VALUE> VALUE get(final Key<UJO, VALUE> key) {
         final VALUE result = key.of((UJO)this);
         return result;
     }
@@ -130,13 +138,13 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
      * The method was implemented by a pattern UjoExt.
      */
     @SuppressWarnings({"unchecked"})
-    public final <UJO extends UJO_IMPL, VALUE> UJO_IMPL set
+    public final <UJO extends U, VALUE> U set
         ( final Key<UJO, VALUE> key
         , final VALUE value
         ) {
         UjoManager.assertAssign(key, value);
         key.setValue((UJO)this, value);
-        return (UJO_IMPL) this;
+        return (U) this;
     }
 
     /** Test an authorization of the action. */
@@ -160,7 +168,7 @@ public abstract class OrmTable<UJO_IMPL extends Ujo> extends QuickUjo implements
      * @throws NullPointerException Method throws an exception if a Session is missing after a lazy initialization of the key.
      */
     @Override
-    public <UJO extends UJO_IMPL> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
+    public <UJO extends U> ForeignKey readFK(Key<UJO, ? extends OrmUjo> key) throws IllegalStateException {
         final Object value = super.readValue(key);
         if (value==null || value instanceof ForeignKey) {
             return (ForeignKey) value;
