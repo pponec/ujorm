@@ -17,6 +17,7 @@ package org.ujorm.hotels.services.impl;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import javax.annotation.Nullable;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,11 @@ import org.ujorm.hotels.services.*;
  * @author Pavel Ponec
  */
 public class AuthServiceImpl extends AbstractServiceImpl implements AuthService {
-
+    /** Session attribute name */
     private static final String CUSTOMER_ATTR = "CUSTOMER_ATTR";
 
-    @Autowired
-    private DbService dbService;
+    /** Common DB service */
+    @Autowired private DbService dbService;
 
     /** Authenticate the user and save the result to the Wicket session */
     @Override
@@ -43,7 +44,7 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
              , customer.getPassword());
 
         if (result != null) {
-            result.writeSession(null);
+            result.lock();
             getThreadSession().setAttribute(CUSTOMER_ATTR, result);
             return true;
         } else {
@@ -61,38 +62,44 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
     /** Is logged user ? */
     @Override
     public boolean isLogged() {
-        return getCurrentCustomer() != null;
+        return getLoggedCustomer() != null;
+    }
+
+    /** Get a login of the current Customer or the {@code null} value */
+    @Override
+    @Nullable
+    public String getLogin() {
+        final Customer lc = getLoggedCustomer();
+        return lc != null ? lc.getLogin() : null;
     }
 
     /** Get current customer from session  */
     @Override
-    public Customer getCurrentCustomer() {
-        Session session = getThreadSession();
-        Object result = session != null
+    public Customer getLoggedCustomer() {
+        final Session session = getThreadSession();
+        final Object result = session != null
                 ? session.getAttribute(CUSTOMER_ATTR) : null;
-        return result instanceof Customer
-                ? (Customer) result
-                : null ;
+        return (Customer) result;
     }
 
-    /** Get current customer from session of returns the default Value  */
+    /** Get an immutable logged Customer from session of returns the default Value  */
     @Override
-    public Customer getCurrentCustomer(Customer defaultValue) {
-        Customer result = getCurrentCustomer();
+    public Customer getLoggedCustomer(Customer defaultValue) {
+        final Customer result = getLoggedCustomer();
         return result != null ? result : defaultValue;
     }
 
     /** Is logged admin */
     @Override
     public boolean isAdmin() {
-        final Customer customer = (Customer) getThreadSession().getAttribute(CUSTOMER_ATTR);
-        return customer !=null && customer.getAdmin();
+        final Customer lc = getLoggedCustomer();
+        return lc !=null && lc.getAdmin();
     }
 
     /** Is logged selected user */
     @Override
     public boolean isLogged(Customer customer) {
-        final Customer lc = (Customer) getThreadSession().getAttribute(CUSTOMER_ATTR);
+        final Customer lc = getLoggedCustomer();
         return lc != null && lc.getLogin().equals(customer.getLogin());
     }
 
@@ -110,7 +117,6 @@ public class AuthServiceImpl extends AbstractServiceImpl implements AuthService 
             throw new IllegalStateException("Method getHash() failed. ", e);
         }
     }
-
 
     /** Return a Session or {@code null} if no session was found. */
     private Session getThreadSession() {

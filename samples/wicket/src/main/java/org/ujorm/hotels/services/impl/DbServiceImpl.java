@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 ponec.
+ * Copyright 2014, Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.ujorm.hotels.services.impl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Random;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
@@ -179,7 +178,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
         result.setPrice(result.getHotel().getPrice());
         result.setCurrency(result.getHotel().getCurrency());
         result.setDateFrom(new java.sql.Date(System.currentTimeMillis() + DAY_AS_MILISEC));
-        result.setCustomer(authService.getCurrentCustomer(new Customer()));
+        result.setCustomer(authService.getLoggedCustomer(new Customer()));
         result.getHotel().getCity(); // Fetching City
 
         return Model.of(result);
@@ -193,7 +192,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
             if (!authService.authenticate(cust)) {
                 throw new ValidationException("login.failed", "Login failed");
             }
-            booking.setCustomer(authService.getCurrentCustomer());
+            booking.setCustomer(authService.getLoggedCustomer());
         }
         // TODO: validations ...
 
@@ -213,7 +212,7 @@ public class DbServiceImpl extends AbstractServiceImpl implements DbService {
     /** Returns a booking criterion */
     @Override
     public Criterion<Booking> getBookingPreview() {
-        Customer cust = authService.getCurrentCustomer();
+        Customer cust = authService.getLoggedCustomer();
         if (cust == null) {
             return Booking.ID.forNone();
         }
