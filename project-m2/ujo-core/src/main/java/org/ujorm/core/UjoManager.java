@@ -585,7 +585,7 @@ public class UjoManager implements Comparator<Key> {
      * @param type Optional subtype class of the key type.
      * @return Instance of new result.
      */
-    public final Object decodeValue(final Key key, final String aValue, Class type) {
+    public final <T> T  decodeValue(final Key<?,T> key, final String aValue, Class type) {
         return coder.decodeValue(key, aValue, type);
     }
 
@@ -595,7 +595,7 @@ public class UjoManager implements Comparator<Key> {
      * @param aValue Text value to decode.
      * @return Instance of new result.
      */
-    public final Object decodeValue(final Key key, final String aValue) {
+    public final <T> T decodeValue(final Key<?,T> key, final String aValue) {
         return coder.decodeValue(key, aValue, null);
     }
 
@@ -605,8 +605,8 @@ public class UjoManager implements Comparator<Key> {
      * @param aValue Text value to decode.
      * @return Instance of new result.
      */
-    public final Object decodeValue(final Class type, final String aValue) {
-        return coder.decodeValue(type, aValue);
+    public final <T> T decodeValue(final Class<T> type, final String aValue) {
+        return (T) coder.decodeValue(type, aValue);
     }
 
     /** Convert value to a String representation. */
