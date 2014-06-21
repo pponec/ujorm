@@ -15,6 +15,7 @@
  */
 package org.ujorm.hotels.services;
 
+import javax.annotation.Nullable;
 import org.ujorm.hotels.entity.Customer;
 
 /**
@@ -38,11 +39,15 @@ public interface AuthService {
     /** Is logged selected user */
     public boolean isLogged(Customer customer);
 
-    /** Get current customer from session  */
-    public Customer getCurrentCustomer();
+    /** Get a login of the current Customer or the {@code null} value */
+    @Nullable
+    public String getLogin();
 
-    /** Get current customer from session  */
-    public Customer getCurrentCustomer(Customer defaultValue);
+    /** Get an immutable logged customer from session */
+    public Customer getLoggedCustomer();
+
+    /** Get an immutable logged customer from session or returns a default value  */
+    public Customer getLoggedCustomer(Customer defaultValue);
 
     /** Get a hash from the text */
     public long getHash(String text) throws IllegalStateException;

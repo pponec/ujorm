@@ -19,6 +19,7 @@ package org.ujorm.hotels.entity;
 import java.util.Date;
 import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
+import org.ujorm.hotels.entity.enums.Module;
 import org.ujorm.implementation.orm.OrmTable;
 import org.ujorm.orm.DbType;
 import org.ujorm.orm.annot.Column;
@@ -58,6 +59,15 @@ public class ParamValue extends OrmTable<ParamValue> {
     static {
         f.lock();
     }
+
+    // --- Composite keys ---
+
+    /** Composite KeyName */
+    public static final Key<ParamValue, String> KEY_NAME$ = PARAM_KEY.add(ParamKey.NAME);
+    /** Composite KeyModule */
+    public static final Key<ParamValue, Module> KEY_MODULE$ = PARAM_KEY.add(ParamKey.MODULE);
+    /** System parameter */
+    public static final Key<ParamValue, Boolean> KEY_SYSTEM$ = PARAM_KEY.add(ParamKey.SYSTEM_PARAM);
 
     // --- Getters / Setters ---
 
@@ -103,12 +113,12 @@ public class ParamValue extends OrmTable<ParamValue> {
         ParamValue.TEXT_VALUE.setValue(this, textValue);
     }
 
-    /** Date of the param modification */
+    /** Date of the parameter modification */
     public Date getLastUpdate() {
         return LAST_UPDATE.of(this);
     }
 
-    /** Date of the param modification */
+    /** Date of the parameter modification */
     public void setLastUpdate(Date lastUpdate) {
         ParamValue.LAST_UPDATE.setValue(this, lastUpdate);
     }

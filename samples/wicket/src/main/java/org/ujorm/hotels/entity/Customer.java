@@ -9,14 +9,14 @@ import org.ujorm.Key;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.Transient;
 import org.ujorm.hotels.entity.enums.TitleEnum;
-import org.ujorm.implementation.orm.OrmTable;
+import org.ujorm.implementation.orm.OrmTableLockable;
 import org.ujorm.orm.annot.Column;
 import org.ujorm.orm.annot.Comment;
 import org.ujorm.wicket.component.form.FieldProvider;
 import static org.ujorm.Validator.Build.*;
 
 /** Common User */
-public class Customer extends OrmTable<Customer> {
+public class Customer extends OrmTableLockable<Customer> {
 
     /** Index name */
     private static final String UNIQUE_LOGIN = "idx_unique_login";

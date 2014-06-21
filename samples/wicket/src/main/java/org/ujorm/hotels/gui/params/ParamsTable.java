@@ -63,7 +63,7 @@ public class ParamsTable<U extends ParamValue> extends GenericPanel<U> {
         if (authService.isLogged()) {
             result = ParamValue.CUSTOMER.whereEq(authService.isAdmin()
                    ? DbService.SYSTEM_ACCOUNT
-                   : authService.getCurrentCustomer()).cast();
+                   : authService.getLoggedCustomer()).cast();
         } else {
             result = ParamValue.ID.forNone().cast();
         }

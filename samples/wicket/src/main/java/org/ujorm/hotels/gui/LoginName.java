@@ -80,7 +80,7 @@ public class LoginName extends MessageLink {
 
     /** Returns logged user */
     private Customer getCurrentCustomer() {
-        return authService.getCurrentCustomer();
+        return authService.getLoggedCustomer();
     }
 
 }
